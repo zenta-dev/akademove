@@ -47,3 +47,10 @@ export class KeyValueError extends BaseError {
 		this.name = "KeyValueError";
 	}
 }
+
+export class StorageError extends BaseError {
+	constructor(message: string, { prevError }: ErrorOptions = {}) {
+		super(message, { prevError });
+		this.name = "StorageError";
+	}
+}
