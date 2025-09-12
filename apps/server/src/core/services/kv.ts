@@ -5,7 +5,7 @@ interface PutOptions {
 	expirationTtl?: number;
 }
 export interface KeyValueService {
-	get<T>(key: string): Promise<T | null>;
+	get<T>(key: string): Promise<T | undefined>;
 	put<T>(key: string, value: T, options?: PutOptions): Promise<void>;
 	delete(key: string): Promise<void>;
 }
@@ -16,11 +16,11 @@ export class CloudflareKVService implements KeyValueService {
 			throw new KeyValueError("KVNamespace is required");
 		}
 	}
-	async get<T>(key: string): Promise<T | null> {
+	async get<T>(key: string): Promise<T | undefined> {
 		try {
 			const value = await this.namespace.get(key);
-			if (value === null) {
-				return null;
+			if (!value) {
+				return undefined;
 			}
 			return JSON.parse(value) as T;
 		} catch (error) {
