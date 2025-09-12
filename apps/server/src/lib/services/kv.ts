@@ -1,3 +1,4 @@
+import type { KVNamespace } from "@cloudflare/workers-types";
 import { KeyValueError } from "@/core/error";
 
 interface PutOptions {
