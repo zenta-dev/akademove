@@ -1,9 +1,8 @@
-import { Hono } from "hono";
 import { describeResponse } from "hono-openapi";
-import type { HonoContext } from "@/lib/context";
+import { createHono } from "@/lib/hono";
 import { OAPISpecs } from "./oapi";
 
-export const router = new Hono<HonoContext>();
+export const router = createHono();
 
 router.get(
 	"/health",

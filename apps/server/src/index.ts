@@ -1,15 +1,14 @@
 import { env } from "cloudflare:workers";
 import { Scalar } from "@scalar/hono-api-reference";
-import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { openAPIRouteHandler } from "hono-openapi";
-import type { HonoContext } from "@/lib/context";
 import { getAuth } from "@/lib/services/auth";
 import { getDatabase } from "@/lib/services/db";
+import { createHono } from "./lib/hono";
 import { router } from "./routers";
 
-const app = new Hono<HonoContext>();
+const app = createHono();
 
 app.use(logger());
 app.use("*", async (c, next) => {
