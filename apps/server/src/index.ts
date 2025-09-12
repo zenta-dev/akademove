@@ -55,7 +55,10 @@ app.get(
 	"/",
 	Scalar({
 		theme: "saturn",
-		url: "/openapi.json",
+		sources: [
+			{ url: "/openapi.json", title: "API" },
+			{ url: "/auth/open-api/generate-schema", title: "AUTH" },
+		],
 	}),
 );
 app.onError((err, c) => {

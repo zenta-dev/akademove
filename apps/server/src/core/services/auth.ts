@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { scryptSync } from "node:crypto";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
 import type { DatabaseInstance } from "./db";
 import type { KeyValueService } from "./kv";
@@ -81,6 +82,7 @@ export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
 				httpOnly: true,
 			},
 		},
+		plugins: [openAPI()],
 	});
 
 export type AuthInstance = ReturnType<typeof getAuth>;
