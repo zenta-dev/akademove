@@ -1,7 +1,7 @@
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as auth from "@/tables/auth";
+import * as auth from "@/core/tables/auth";
 import { isDev } from "@/utils";
 
 export const getDatabase = () => {

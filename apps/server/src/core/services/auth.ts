@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { scryptSync } from "node:crypto";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import * as schema from "@/tables/auth";
+import * as schema from "@/core/tables/auth";
 import type { DatabaseInstance } from "./db";
 import type { KeyValueService } from "./kv";
 
