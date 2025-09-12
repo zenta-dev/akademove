@@ -3,10 +3,10 @@ import { Scalar } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { openAPIRouteHandler } from "hono-openapi";
-import { getAuth } from "@/lib/services/auth";
-import { getDatabase } from "@/lib/services/db";
-import { createHono } from "./lib/hono";
-import { CloudflareKVService } from "./lib/services/kv";
+import { getAuth } from "@/core/services/auth";
+import { getDatabase } from "@/core/services/db";
+import { createHono } from "./core/hono";
+import { CloudflareKVService } from "./core/services/kv";
 import { router } from "./routers";
 import { isCloudflare } from "./utils";
 

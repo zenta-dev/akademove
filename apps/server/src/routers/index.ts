@@ -1,5 +1,5 @@
 import { describeResponse } from "hono-openapi";
-import { createHono } from "@/lib/hono";
+import { createHono } from "@/core/hono";
 import { OAPISpecs } from "./oapi";
 
 export const router = createHono();
