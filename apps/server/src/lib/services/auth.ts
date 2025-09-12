@@ -4,14 +4,31 @@ import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "@/tables/auth";
 import type { DatabaseInstance } from "./db";
+import type { KeyValueService } from "./kv";
 
-export const getAuth = (db: DatabaseInstance) =>
+export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
 	betterAuth({
+		secret: env.AUTH_SECRET,
+		baseURL: env.AUTH_URL,
+		basePath: "/auth",
+		trustedOrigins: [env.CORS_ORIGIN],
+		telemetry: { enabled: false },
 		database: drizzleAdapter(db, {
 			provider: "pg",
 			schema: schema,
 		}),
-		trustedOrigins: [env.CORS_ORIGIN],
+		secondaryStorage: {
+			get: async (key) => await kv.get(key),
+			set: async (key, value, ttl) => {
+				if (ttl) await kv.put(key, value, { expirationTtl: ttl });
+				else await kv.put(key, value);
+			},
+			delete: async (key) => await kv.delete(key),
+		},
+		rateLimit: {
+			enabled: true,
+			storage: "secondary-storage",
+		},
 		emailAndPassword: {
 			enabled: true,
 			password: {
@@ -57,9 +74,6 @@ export const getAuth = (db: DatabaseInstance) =>
 				},
 			},
 		},
-		secret: env.AUTH_SECRET,
-		baseURL: env.AUTH_URL,
-		basePath: "/auth",
 		advanced: {
 			defaultCookieAttributes: {
 				sameSite: "none",
