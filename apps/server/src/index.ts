@@ -8,7 +8,7 @@ import { getDatabase } from "@/core/services/db";
 import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
-import { router } from "./routers";
+import { AppHandler } from "./features/handler";
 import { isCloudflare } from "./utils";
 
 const app = createHono();
@@ -38,10 +38,10 @@ app.use(
 );
 
 app.on(["POST", "GET"], "/auth/**", (c) => c.var.auth.handler(c.req.raw));
-app.route("/", router);
+app.route("/", AppHandler);
 app.get(
 	"/openapi.json",
-	openAPIRouteHandler(router, {
+	openAPIRouteHandler(AppHandler, {
 		documentation: {
 			info: {
 				title: "AkadeMove API",
