@@ -56,5 +56,27 @@ app.get(
 		url: "/openapi.json",
 	}),
 );
+app.onError((err, c) => {
+	console.error("Error:", err);
+	if ("getResponse" in err) {
+		return err.getResponse();
+	}
+	if (err instanceof Error) {
+		return c.json(
+			{
+				success: false,
+				message: err.message,
+			},
+			500,
+		);
+	}
+	return c.json(
+		{
+			success: false,
+			message: "Internal Server Error",
+		},
+		500,
+	);
+});
 
 export default app;
