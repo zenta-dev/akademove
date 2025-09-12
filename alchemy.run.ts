@@ -16,21 +16,21 @@ const isDev = NODE_ENV === "development";
 const zoneId = alchemy.env.ZONE_ID;
 
 const [mainDB, mainKV, sessionKV] = await Promise.all([
-	Hyperdrive(`${APP_NAME}-db-${NODE_ENV}`, {
-		name: `${APP_NAME}-db-${NODE_ENV}`,
+	Hyperdrive(`${APP_NAME}-db`, {
+		name: `${APP_NAME}-db`,
 		origin: alchemy.secret.env.DATABASE_URL,
 	}),
-	KVNamespace(`${APP_NAME}-main-kv-${NODE_ENV}`, {
-		title: `${APP_NAME}-main-kv-${NODE_ENV}`,
+	KVNamespace(`${APP_NAME}-main-kv`, {
+		title: `${APP_NAME}-main-kv`,
 	}),
-	KVNamespace(`${APP_NAME}-session-kv-${NODE_ENV}`, {
-		title: `${APP_NAME}-session-kv-${NODE_ENV}`,
+	KVNamespace(`${APP_NAME}-session-kv`, {
+		title: `${APP_NAME}-session-kv`,
 	}),
 ]);
 
 export const [server, web] = await Promise.all([
-	Worker(`${APP_NAME}-server-${NODE_ENV}`, {
-		name: `${APP_NAME}-server-${NODE_ENV}`,
+	Worker(`${APP_NAME}-server`, {
+		name: `${APP_NAME}-server`,
 		cwd: "apps/server",
 		entrypoint: "src/index.ts",
 		compatibility: "node",
@@ -53,12 +53,10 @@ export const [server, web] = await Promise.all([
 		dev: {
 			port: 3000,
 		},
-		domains: [
-			{ domainName: `${APP_NAME}-server-${NODE_ENV}.zenta.dev`, zoneId },
-		],
+		domains: [{ domainName: `${APP_NAME}-server.zenta.dev`, zoneId }],
 	}),
-	TanStackStart(`${APP_NAME}-web-${NODE_ENV}`, {
-		name: `${APP_NAME}-web-${NODE_ENV}`,
+	TanStackStart(`${APP_NAME}-web`, {
+		name: `${APP_NAME}-web`,
 		cwd: "apps/web",
 		bundle: { minify: !isDev, sourcemap: isDev },
 		bindings: {
@@ -68,7 +66,7 @@ export const [server, web] = await Promise.all([
 		dev: {
 			command: "bun run dev",
 		},
-		domains: [{ domainName: `${APP_NAME}-web-${NODE_ENV}.zenta.dev`, zoneId }],
+		domains: [{ domainName: `${APP_NAME}-web.zenta.dev`, zoneId }],
 	}),
 ]);
 
