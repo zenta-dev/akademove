@@ -1,5 +1,5 @@
+import { relations } from "drizzle-orm";
 import {
-	boolean,
 	decimal,
 	jsonb,
 	pgEnum,
@@ -74,3 +74,21 @@ export const order = pgTable("orders", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+///
+/// --- Relations --- ///
+
+export const orderRelations = relations(order, ({ one }) => ({
+	user: one(user, {
+		fields: [order.userId],
+		references: [user.id],
+	}),
+	driver: one(driver, {
+		fields: [order.driverId],
+		references: [driver.id],
+	}),
+	merchant: one(merchant, {
+		fields: [order.merchantId],
+		references: [merchant.id],
+	}),
+}));

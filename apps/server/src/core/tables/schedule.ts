@@ -1,10 +1,9 @@
+import { relations } from "drizzle-orm";
 import {
 	boolean,
-	decimal,
 	jsonb,
 	pgEnum,
 	pgTable,
-	text,
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
@@ -35,3 +34,13 @@ export const schedule = pgTable("schedules", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+///
+/// --- Relations --- ///
+///
+export const scheduleRelations = relations(schedule, ({ one }) => ({
+	driver: one(driver, {
+		fields: [schedule.driverId],
+		references: [driver.id],
+	}),
+}));
