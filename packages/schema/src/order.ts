@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { LocationSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
 export const OrderStatusSchema = z.enum([
 	"requested",
@@ -12,7 +13,7 @@ export const OrderStatusSchema = z.enum([
 	"cancelled_by_driver",
 	"cancelled_by_system",
 ]);
-export const OrderTypeSchema = z.enum(["ride", "delivery", "food"]);
+export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
 
 export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),

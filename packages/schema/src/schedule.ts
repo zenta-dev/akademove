@@ -1,15 +1,8 @@
 import * as z from "zod";
 import { TimeSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
-export const DayOfWeekSchema = z.enum([
-	"sunday",
-	"monday",
-	"tuesday",
-	"wednesday",
-	"thursday",
-	"friday",
-	"saturday",
-]);
+export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
 
 export const ScheduleSchema = z.object({
 	id: z.uuid(),

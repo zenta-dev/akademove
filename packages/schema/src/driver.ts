@@ -1,14 +1,8 @@
 import * as z from "zod";
 import { LocationSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
-export const DriverStatusSchema = z.enum([
-	"pending",
-	"approved",
-	"rejected",
-	"active",
-	"inactive",
-	"suspended",
-]);
+export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
 
 export const DriverSchema = z.object({
 	id: z.uuid(),

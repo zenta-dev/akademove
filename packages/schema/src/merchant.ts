@@ -1,7 +1,8 @@
 import * as z from "zod";
 import { LocationSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
-export const MerchantTypeSchema = z.enum(["merchant", "tenant"]);
+export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
 
 export const MerchantSchema = z.object({
 	id: z.uuid(),
