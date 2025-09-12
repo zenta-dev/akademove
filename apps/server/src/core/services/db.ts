@@ -6,16 +6,18 @@ import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
 import { isDev } from "@/utils";
 
+export const tables = {
+	...auth,
+	...driver,
+	...merchant,
+};
+
 export const getDatabase = () => {
 	const client = postgres(env.MAIN_DB.connectionString);
 	return drizzle({
 		client,
 		logger: isDev,
-		schema: {
-			...auth,
-			...driver,
-			...merchant,
-		},
+		schema: tables,
 	});
 };
 
