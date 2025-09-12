@@ -25,6 +25,8 @@
 			"!**/wrangler.jsonc",
 			"!**/.source",
 			"!**/mobile",
+			"!**/.output",
+			"!**/.tanstack",
 			"!**/*.css"
 		]
 	},
