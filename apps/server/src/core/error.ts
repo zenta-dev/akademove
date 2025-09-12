@@ -54,3 +54,10 @@ export class StorageError extends BaseError {
 		this.name = "StorageError";
 	}
 }
+
+export class RepositoryError extends BaseError {
+	constructor(message: string, { prevError }: ErrorOptions = {}) {
+		super(message, { prevError });
+		this.name = "RepositoryError";
+	}
+}
