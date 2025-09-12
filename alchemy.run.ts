@@ -15,10 +15,13 @@ const NODE_ENV = alchemy.env.NODE_ENV || "development";
 const isDev = NODE_ENV === "development";
 const zoneId = alchemy.env.ZONE_ID;
 
-const [mainDB, sessionKV] = await Promise.all([
+const [mainDB, mainKV, sessionKV] = await Promise.all([
 	Hyperdrive(`${APP_NAME}-db-${NODE_ENV}`, {
 		name: `${APP_NAME}-db-${NODE_ENV}`,
 		origin: alchemy.secret.env.DATABASE_URL,
+	}),
+	KVNamespace(`${APP_NAME}-main-kv-${NODE_ENV}`, {
+		title: `${APP_NAME}-main-kv-${NODE_ENV}`,
 	}),
 	KVNamespace(`${APP_NAME}-session-kv-${NODE_ENV}`, {
 		title: `${APP_NAME}-session-kv-${NODE_ENV}`,
@@ -44,6 +47,7 @@ export const [server, web] = await Promise.all([
 			S3_SECRET_ACCESS_KEY: alchemy.secret.env.S3_SECRET_ACCESS_KEY,
 			S3_PUBLIC_URL: alchemy.env.S3_PUBLIC_URL,
 			MAIN_DB: mainDB,
+			MAIN_KV: mainKV,
 			SESSION_KV: sessionKV,
 		},
 		dev: {
