@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 import { openAPIRouteHandler } from "hono-openapi";
 import { getAuth } from "@/core/services/auth";
 import { getDatabase } from "@/core/services/db";
+import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
 import { router } from "./routers";
@@ -61,6 +62,9 @@ app.onError((err, c) => {
 	console.error("Error:", err);
 	if ("getResponse" in err) {
 		return err.getResponse();
+	}
+	if (err instanceof BaseError) {
+		return err.toResponse();
 	}
 	if (err instanceof Error) {
 		return c.json(

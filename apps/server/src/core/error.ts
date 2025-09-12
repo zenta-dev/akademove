@@ -2,7 +2,7 @@ interface ErrorOptions {
 	prevError?: Error;
 }
 
-abstract class BaseError extends Error {
+export abstract class BaseError extends Error {
 	private readonly prevError?: Error;
 
 	constructor(message: string, { prevError }: ErrorOptions = {}) {
