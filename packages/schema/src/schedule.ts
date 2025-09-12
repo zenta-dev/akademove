@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { TimeSchema } from "./common.ts";
+import { DateSchema, TimeSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
@@ -11,10 +11,10 @@ export const ScheduleSchema = z.object({
 	startTime: TimeSchema,
 	endTime: TimeSchema,
 	isRecurring: z.boolean().default(true),
-	specificDate: z.date().optional(),
+	specificDate: DateSchema.optional(),
 	isActive: z.boolean().default(true),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
 });
 
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;

@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { LocationSchema } from "./common.ts";
+import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const OrderStatusSchema = z.enum([
@@ -34,11 +34,11 @@ export const OrderSchema = z.object({
 	tip: z.number().default(0.0),
 	totalPrice: z.number(),
 	note: OrderNoteSchema.optional(),
-	requestedAt: z.date(),
-	acceptedAt: z.date().nullable(),
-	arrivedAt: z.date().nullable(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	requestedAt: DateSchema,
+	acceptedAt: DateSchema.nullable(),
+	arrivedAt: DateSchema.nullable(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
 });
 
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
