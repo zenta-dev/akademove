@@ -7,6 +7,7 @@ import { getAuth } from "@/lib/services/auth";
 import { getDatabase } from "@/lib/services/db";
 import { createHono } from "./lib/hono";
 import { router } from "./routers";
+import { isCloudflare } from "./utils";
 
 const app = createHono();
 
@@ -20,7 +21,7 @@ app.use("*", async (c, next) => {
 	try {
 		await next();
 	} finally {
-		await db.$client.end();
+		if (isCloudflare) await db.$client.end();
 	}
 });
 
