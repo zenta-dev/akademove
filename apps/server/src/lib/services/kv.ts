@@ -1,8 +1,11 @@
 import { KeyValueError } from "@/core/error";
 
+interface PutOptions {
+	expirationTtl?: number;
+}
 export interface KeyValueService {
 	get<T>(key: string): Promise<T | null>;
-	set<T>(key: string, value: T): Promise<void>;
+	put<T>(key: string, value: T, options?: PutOptions): Promise<void>;
 	delete(key: string): Promise<void>;
 }
 
@@ -25,11 +28,11 @@ export class CloudflareKVService implements KeyValueService {
 			});
 		}
 	}
-	async set<T>(key: string, value: T): Promise<void> {
+	async put<T>(key: string, value: T, options?: PutOptions): Promise<void> {
 		try {
-			await this.namespace.put(key, JSON.stringify(value));
+			await this.namespace.put(key, JSON.stringify(value), options);
 		} catch (error) {
-			throw new KeyValueError(`Failed to set value for key "${key}"`, {
+			throw new KeyValueError(`Failed to put value for key "${key}"`, {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
