@@ -1,0 +1,19 @@
+{
+	"name": "@repo/schema",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"zod": "^4.1.8"
+	}
+}
