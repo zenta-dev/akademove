@@ -6,6 +6,7 @@ import { openAPIRouteHandler } from "hono-openapi";
 import { getAuth } from "@/lib/services/auth";
 import { getDatabase } from "@/lib/services/db";
 import { createHono } from "./lib/hono";
+import { CloudflareKVService } from "./lib/services/kv";
 import { router } from "./routers";
 import { isCloudflare } from "./utils";
 
@@ -15,7 +16,7 @@ app.use(logger());
 app.use("*", async (c, next) => {
 	const db = getDatabase();
 	c.set("db", db);
-	const auth = getAuth(db);
+	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV));
 	c.set("auth", auth);
 
 	try {
