@@ -1,3 +1,5 @@
+import type { Location } from "@repo/schema/common";
+import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -9,17 +11,9 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
-import type { Location } from "../interface";
 import { user } from "./auth";
 
-export const driverStatus = pgEnum("driver_status", [
-	"pending",
-	"approved",
-	"rejected",
-	"active",
-	"inactive",
-	"suspended",
-]);
+export const driverStatus = pgEnum("driver_status", CONSTANTS.DRIVER_STATUSES);
 
 export const driver = pgTable("drivers", {
 	id: uuid().primaryKey().defaultRandom(),

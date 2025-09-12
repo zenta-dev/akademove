@@ -1,3 +1,5 @@
+import type { Location } from "@repo/schema/common";
+import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	decimal,
@@ -8,7 +10,6 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
-import type { Location } from "../interface";
 import { user } from "./auth";
 import { driver } from "./driver";
 import { merchant } from "./merchant";
@@ -24,7 +25,7 @@ export const orderStatus = pgEnum("order_status", [
 	"cancelled_by_driver",
 	"cancelled_by_system",
 ]);
-export const orderType = pgEnum("order_type", ["ride", "delivery", "food"]);
+export const orderType = pgEnum("order_type", CONSTANTS.ORDER_TYPES);
 
 interface OrderNote {
 	pickup?: string;
@@ -77,7 +78,7 @@ export const order = pgTable("orders", {
 
 ///
 /// --- Relations --- ///
-
+///
 export const orderRelations = relations(order, ({ one }) => ({
 	user: one(user, {
 		fields: [order.userId],

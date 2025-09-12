@@ -1,3 +1,5 @@
+import type { Time } from "@repo/schema/common";
+import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -7,18 +9,9 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
-import type { Time } from "../interface";
 import { driver } from "./driver";
 
-export const dayOfWeek = pgEnum("day_of_week", [
-	"sunday",
-	"monday",
-	"tuesday",
-	"wednesday",
-	"thursday",
-	"friday",
-	"saturday",
-]);
+export const dayOfWeek = pgEnum("day_of_week", CONSTANTS.DAY_OF_WEEK);
 
 export const schedule = pgTable("schedules", {
 	id: uuid().primaryKey().defaultRandom(),

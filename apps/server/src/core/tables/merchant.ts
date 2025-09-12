@@ -1,3 +1,5 @@
+import type { Location } from "@repo/schema/common";
+import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -9,10 +11,9 @@ import {
 	timestamp,
 	uuid,
 } from "drizzle-orm/pg-core";
-import type { Location } from "../interface";
 import { user } from "./auth";
 
-export const merchantType = pgEnum("merchant_type", ["merchant", "tenant"]);
+export const merchantType = pgEnum("merchant_type", CONSTANTS.MERCHANT_TYPES);
 
 export const merchant = pgTable("merchants", {
 	id: uuid().primaryKey().defaultRandom(),
