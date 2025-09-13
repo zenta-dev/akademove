@@ -15,6 +15,12 @@ export const DateSchema = z.number();
 export const EmptySchema = z.null();
 
 export const UUIDParamSchema = z.object({ id: z.uuid() });
+export const GetQuerySchema = z.object({
+	fromCache: z.preprocess((v) => {
+		return v === "true" || v === true;
+	}, z.boolean().default(false)),
+});
+
 export const FailedResponseSchema = z.object({
 	success: z.literal(false),
 	message: z.string(),
