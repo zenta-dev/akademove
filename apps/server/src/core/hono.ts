@@ -10,6 +10,7 @@ export type HonoContext = {
 		db: DatabaseInstance;
 		auth: AuthInstance;
 		kv: KeyValueService;
+		userId: string;
 		repo: {
 			driver: DriverRepository;
 		};
