@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { FailedResponseSchema } from "@repo/schema/common";
 import { resolver } from "hono-openapi";
 
@@ -9,6 +10,7 @@ export const CACHE_TTLS = Object.freeze({
 export const CACHE_PREFIXES = Object.freeze({
 	DRIVER: "driver:",
 } as const);
+export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
 type ResponseContent = {
 	content: {

@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 import { openAPIRouteHandler } from "hono-openapi";
 import { getAuth } from "@/core/services/auth";
 import { getDatabase } from "@/core/services/db";
+import { TRUSTED_ORIGINS } from "./core/constants";
 import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
@@ -37,7 +38,7 @@ app.use("*", async (c, next) => {
 app.use(
 	"/*",
 	cors({
-		origin: env.CORS_ORIGIN || "",
+		origin: TRUSTED_ORIGINS,
 		allowMethods: ["GET", "POST", "OPTIONS"],
 		allowHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
