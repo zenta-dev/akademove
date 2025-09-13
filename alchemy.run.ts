@@ -7,12 +7,17 @@ import {
 } from "alchemy/cloudflare";
 import { config } from "dotenv";
 
-config({ path: "./.env" });
+const isDev =
+	process.argv.includes("dev") ||
+	process.argv.includes("development") ||
+	process.argv.includes("--dev") ||
+	process.argv.includes("--development") ||
+	(!process.argv.includes("--stage") && !process.argv.includes("production"));
+
+config({ path: isDev ? ".env" : ".env.prod" });
 
 const APP_NAME = "akademove";
 const app = await alchemy(APP_NAME);
-const NODE_ENV = alchemy.env.NODE_ENV || "development";
-const isDev = NODE_ENV === "development";
 const zoneId = alchemy.env.ZONE_ID;
 
 const [mainDB, mainKV, sessionKV] = await Promise.all([
@@ -66,7 +71,7 @@ export const [server, web] = await Promise.all([
 		dev: {
 			command: "bun run dev",
 		},
-		domains: [{ domainName: `${APP_NAME}-web.zenta.dev`, zoneId }],
+		domains: [{ domainName: `${APP_NAME}.zenta.dev`, zoneId }],
 	}),
 ]);
 
