@@ -14,6 +14,7 @@ export const DateSchema = z.number();
 
 export const EmptySchema = z.null();
 
+export const UUIDParamSchema = z.object({ id: z.uuid() });
 export const FailedResponseSchema = z.object({
 	success: z.literal(false),
 	message: z.string(),
