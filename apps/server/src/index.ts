@@ -8,6 +8,7 @@ import { getDatabase } from "@/core/services/db";
 import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
+import { DriverRepository } from "./features/driver/repository";
 import { AppHandler } from "./features/handler";
 import { isCloudflare } from "./utils";
 
@@ -21,6 +22,10 @@ app.use("*", async (c, next) => {
 	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
 	c.set("kv", kv);
+	const repo = {
+		driver: new DriverRepository(db, kv),
+	};
+	c.set("repo", repo);
 
 	try {
 		await next();
