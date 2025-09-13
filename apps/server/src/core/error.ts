@@ -24,10 +24,12 @@ export abstract class BaseError extends Error {
 		return {
 			success: false,
 			message: this.message,
-			error: {
-				name: this.name,
-				stack: this.stack,
-			},
+			errors: [
+				{
+					name: this.name,
+					stack: this.stack,
+				},
+			],
 		};
 	}
 
