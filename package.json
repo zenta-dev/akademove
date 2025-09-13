@@ -9,9 +9,10 @@
 	"scripts": {
 		"check": "biome check --write .",
 		"prepare": "husky",
-		"dev": "alchemy dev",
+		"dev": "bun run dev:alchemy",
 		"build": "turbo build",
 		"check-types": "turbo check-types",
+		"dev:alchemy": "alchemy dev",
 		"dev:native": "turbo -F native dev",
 		"dev:web": "turbo -F web dev",
 		"dev:server": "turbo -F server dev",
@@ -19,8 +20,8 @@
 		"db:studio": "turbo -F server db:studio",
 		"db:generate": "turbo -F server db:generate",
 		"db:migrate": "turbo -F server db:migrate",
-		"deploy": "alchemy deploy",
-		"destroy": "alchemy destroy"
+		"deploy": "alchemy deploy --stage production --env-file .env.prod",
+		"destroy": "alchemy destroy --stage production --env-file .env.prod"
 	},
 	"dependencies": {},
 	"devDependencies": {
