@@ -63,3 +63,10 @@ export class RepositoryError extends BaseError {
 		this.name = "RepositoryError";
 	}
 }
+
+export class MiddlewareError extends BaseError {
+	constructor(message: string, { prevError }: ErrorOptions = {}) {
+		super(message, { prevError });
+		this.name = "MiddlewareError";
+	}
+}
