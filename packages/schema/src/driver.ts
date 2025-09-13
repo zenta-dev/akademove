@@ -7,8 +7,8 @@ export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
 export const DriverSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
-	studentId: z.string(),
-	licenseNumber: z.string(),
+	studentId: z.string().min(10),
+	licenseNumber: z.string().min(6),
 	status: DriverStatusSchema,
 	rating: z.number(),
 	isOnline: z.boolean().default(false),
