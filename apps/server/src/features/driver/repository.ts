@@ -138,9 +138,7 @@ export class DriverRepository implements BaseRepository<Driver> {
 			const value = {
 				...existing,
 				...item,
-				lastLocationUpdate: item.lastLocationUpdate
-					? new Date(item.lastLocationUpdate)
-					: null,
+				lastLocationUpdate: new Date(existing.createdAt),
 				createdAt: new Date(existing.createdAt),
 				id,
 			};

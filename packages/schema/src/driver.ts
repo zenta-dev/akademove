@@ -25,6 +25,8 @@ export const InsertDriverSchema = DriverSchema.pick({
 export const UpdateDriverSchema = DriverSchema.omit({
 	id: true,
 	userId: true,
+	rating: true,
+	lastLocationUpdate: true,
 	createdAt: true,
 }).partial();
 
