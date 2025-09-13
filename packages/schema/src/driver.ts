@@ -18,13 +18,13 @@ export const DriverSchema = z.object({
 });
 
 export const InsertDriverSchema = DriverSchema.pick({
-	userId: true,
 	studentId: true,
 	licenseNumber: true,
 });
 
 export const UpdateDriverSchema = DriverSchema.omit({
 	id: true,
+	userId: true,
 	createdAt: true,
 }).partial();
 
