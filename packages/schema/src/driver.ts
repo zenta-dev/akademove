@@ -17,5 +17,18 @@ export const DriverSchema = z.object({
 	createdAt: DateSchema,
 });
 
+export const InsertDriverSchema = DriverSchema.pick({
+	userId: true,
+	studentId: true,
+	licenseNumber: true,
+});
+
+export const UpdateDriverSchema = DriverSchema.omit({
+	id: true,
+	createdAt: true,
+}).partial();
+
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 export type Driver = z.infer<typeof DriverSchema>;
+export type InsertDriver = z.infer<typeof InsertDriverSchema>;
+export type UpdateDriver = z.infer<typeof UpdateDriverSchema>;
