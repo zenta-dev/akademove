@@ -19,6 +19,8 @@ app.use("*", async (c, next) => {
 	c.set("db", db);
 	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV));
 	c.set("auth", auth);
+	const kv = new CloudflareKVService(env.MAIN_KV);
+	c.set("kv", kv);
 
 	try {
 		await next();
