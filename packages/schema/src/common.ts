@@ -12,7 +12,7 @@ export const TimeSchema = z.object({
 
 export const DateSchema = z.number();
 
-export const EmptySchema = z.union([z.null(), z.undefined()]);
+export const EmptySchema = z.null();
 
 export const FailedResponseSchema = z.object({
 	success: z.literal(false),
