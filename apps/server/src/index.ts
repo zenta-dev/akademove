@@ -50,6 +50,25 @@ app.get(
 				version: "1.0.0",
 				description: "API for the AkadeMove application",
 			},
+			components: {
+				securitySchemes: {
+					"Bearer Auth": {
+						type: "http",
+						scheme: "bearer",
+						bearerFormat: "JWT",
+					},
+				},
+			},
+			security: [
+				{
+					"Bearer Auth": [],
+				},
+			],
+			servers: [
+				{
+					url: env.AUTH_URL,
+				},
+			],
 		},
 	}),
 );
