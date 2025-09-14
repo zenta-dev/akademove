@@ -25,6 +25,7 @@
 			"!**/wrangler.jsonc",
 			"!**/.source",
 			"!**/mobile",
+			"!**/gen",
 			"!**/.output",
 			"!**/.nitro",
 			"!**/.tanstack",
