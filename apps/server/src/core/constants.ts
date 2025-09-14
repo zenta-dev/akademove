@@ -8,8 +8,8 @@ export const FEATURE_TAGS = Object.freeze({
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
-	"1h": 1 * 60 * 60,
-	"24h": 24 * 60 * 60,
+	"1h": 1 * 3600,
+	"24h": 24 * 3600,
 } as const);
 
 export const CACHE_PREFIXES = Object.freeze({
