@@ -5,6 +5,9 @@ import * as auth from "@/core/tables/auth";
 import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
 import * as order from "@/core/tables/order";
+import * as promo from "@/core/tables/promo";
+import * as report from "@/core/tables/report";
+import * as review from "@/core/tables/review";
 import * as schedule from "@/core/tables/schedule";
 import { isDev } from "@/utils";
 
@@ -13,6 +16,9 @@ export const tables = {
 	...driver,
 	...merchant,
 	...order,
+	...promo,
+	...report,
+	...review,
 	...schedule,
 };
 
