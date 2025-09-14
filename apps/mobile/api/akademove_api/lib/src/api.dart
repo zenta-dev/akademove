@@ -18,7 +18,7 @@ import 'package:akademove_api/src/api/review_api.dart';
 import 'package:akademove_api/src/api/schedule_api.dart';
 
 class AkademoveApi {
-  static const String basePath = r'http://localhost:3000';
+  static const String basePath = r'https://akademove-server.zenta.dev';
 
   final Dio dio;
   final Serializers serializers;
