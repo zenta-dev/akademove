@@ -11,11 +11,26 @@ export const ScheduleSchema = z.object({
 	startTime: TimeSchema,
 	endTime: TimeSchema,
 	isRecurring: z.boolean().default(true),
-	specificDate: DateSchema.optional(),
+	specificDate: DateSchema.nullable(),
 	isActive: z.boolean().default(true),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 });
 
+export const InsertScheduleSchema = ScheduleSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+});
+
+export const UpdateScheduleSchema = ScheduleSchema.omit({
+	id: true,
+	driverId: true,
+	createdAt: true,
+	updatedAt: true,
+});
+
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type Schedule = z.infer<typeof ScheduleSchema>;
+export type InsertSchedule = z.infer<typeof InsertScheduleSchema>;
+export type UpdateSchedule = z.infer<typeof UpdateScheduleSchema>;

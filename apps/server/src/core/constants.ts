@@ -6,6 +6,7 @@ export const FEATURE_TAGS = Object.freeze({
 	DRIVER: "Driver",
 	MERCHANT: "Merchant",
 	ORDER: "Order",
+	SCHEDULE: "Schedule",
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
@@ -17,6 +18,7 @@ export const CACHE_PREFIXES = Object.freeze({
 	DRIVER: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
 	MERCHANT: `${FEATURE_TAGS.MERCHANT.toLowerCase()}:`,
 	ORDER: `${FEATURE_TAGS.ORDER.toLowerCase()}:`,
+	SCHEDULE: `${FEATURE_TAGS.SCHEDULE.toLowerCase()}:`,
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
