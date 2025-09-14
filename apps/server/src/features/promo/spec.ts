@@ -1,7 +1,10 @@
-import { createSuccessResponseSchema, EmptySchema } from "@repo/schema/common";
+import {
+	createSuccessResponseSchema,
+	EmptySchema,
+	listifySchema,
+} from "@repo/schema/common";
 import { PromoSchema } from "@repo/schema/promo";
 import { describeRoute, resolver } from "hono-openapi";
-import z from "zod";
 import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const PromoSpec = Object.freeze({
@@ -12,7 +15,9 @@ export const PromoSpec = Object.freeze({
 				description: "List of promo",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(z.array(PromoSchema))),
+						schema: resolver(
+							createSuccessResponseSchema(listifySchema(PromoSchema)),
+						),
 					},
 				},
 			},

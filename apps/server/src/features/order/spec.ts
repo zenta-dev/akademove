@@ -1,7 +1,10 @@
-import { createSuccessResponseSchema, EmptySchema } from "@repo/schema/common";
+import {
+	createSuccessResponseSchema,
+	EmptySchema,
+	listifySchema,
+} from "@repo/schema/common";
 import { OrderSchema } from "@repo/schema/order";
 import { describeRoute, resolver } from "hono-openapi";
-import z from "zod";
 import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const OrderSpec = Object.freeze({
@@ -12,7 +15,9 @@ export const OrderSpec = Object.freeze({
 				description: "List of order",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(z.array(OrderSchema))),
+						schema: resolver(
+							createSuccessResponseSchema(listifySchema(OrderSchema)),
+						),
 					},
 				},
 			},

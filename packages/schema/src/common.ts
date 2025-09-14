@@ -34,6 +34,9 @@ export const createSuccessResponseSchema = <T>(schema: T) =>
 		data: schema,
 	});
 
+export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
+	z.array(schema);
+
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
 

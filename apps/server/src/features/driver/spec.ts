@@ -1,7 +1,10 @@
-import { createSuccessResponseSchema, EmptySchema } from "@repo/schema/common";
+import {
+	createSuccessResponseSchema,
+	EmptySchema,
+	listifySchema,
+} from "@repo/schema/common";
 import { DriverSchema } from "@repo/schema/driver";
 import { describeRoute, resolver } from "hono-openapi";
-import z from "zod";
 import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const DriverSpec = Object.freeze({
@@ -13,7 +16,7 @@ export const DriverSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(z.array(DriverSchema)),
+							createSuccessResponseSchema(listifySchema(DriverSchema)),
 						),
 					},
 				},
