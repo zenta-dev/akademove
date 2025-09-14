@@ -20,4 +20,5 @@ export const CONSTANTS = Object.freeze({
 	] as const,
 	REPORT_CATEGORIES: ["behavior", "safety", "fraud", "other"] as const,
 	REPORT_STATUS: ["pending", "investigating", "resolved", "dismissed"] as const,
+	REVIEW_CATEGORIES: ["cleanliness", "courtesy", "other"] as const,
 } as const);
