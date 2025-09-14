@@ -9,6 +9,7 @@ export const CACHE_TTLS = Object.freeze({
 
 export const CACHE_PREFIXES = Object.freeze({
 	DRIVER: "driver:",
+	MERCHANT: "merchant:",
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 

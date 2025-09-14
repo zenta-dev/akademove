@@ -25,7 +25,9 @@ export const merchant = pgTable("merchants", {
 	address: text().notNull(),
 	location: jsonb().$type<Location>(),
 	isActive: boolean("is_active").notNull().default(true),
-	rating: decimal({ precision: 2, scale: 1, mode: "number" }),
+	rating: decimal({ precision: 2, scale: 1, mode: "number" })
+		.notNull()
+		.default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

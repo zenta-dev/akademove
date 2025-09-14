@@ -17,5 +17,17 @@ export const MerchantSchema = z.object({
 	updatedAt: DateSchema,
 });
 
+export const InsertMerchantSchema = MerchantSchema.omit({
+	id: true,
+	userId: true,
+	rating: true,
+	createdAt: true,
+	updatedAt: true,
+});
+
+export const UpdateMerchantSchema = InsertMerchantSchema;
+
 export type MerchantType = z.infer<typeof MerchantTypeSchema>;
 export type Merchant = z.infer<typeof MerchantSchema>;
+export type InsertMerchant = z.infer<typeof InsertMerchantSchema>;
+export type UpdateMerchant = z.infer<typeof UpdateMerchantSchema>;

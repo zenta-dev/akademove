@@ -11,6 +11,7 @@ import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
 import { DriverRepository } from "./features/driver/repository";
 import { AppHandler } from "./features/handler";
+import { MerchantRepository } from "./features/merchant/repository";
 import { isCloudflare } from "./utils";
 
 const app = createHono();
@@ -25,6 +26,7 @@ app.use("*", async (c, next) => {
 	c.set("kv", kv);
 	const repo = {
 		driver: new DriverRepository(db, kv),
+		merchant: new MerchantRepository(db, kv),
 	};
 	c.set("repo", repo);
 
