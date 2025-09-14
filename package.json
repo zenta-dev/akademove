@@ -5,7 +5,7 @@
 	"workspaces": [
 		"apps/*",
 		"packages/*",
-		"gen/*"
+		"gen/ts/*"
 	],
 	"scripts": {
 		"check": "biome check --write .",
