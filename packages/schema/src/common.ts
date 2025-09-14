@@ -19,7 +19,7 @@ export const EmptySchema = z.null();
 
 export const UUIDParamSchema = z
 	.object({ id: z.uuid() })
-	.meta({ ref: "UUID Param" });
+	.meta({ ref: "UUIDParam" });
 export const GetQuerySchema = z
 	.object({
 		fromCache: z.preprocess((v) => {
@@ -39,15 +39,11 @@ export const FailedResponseSchema = z
 	});
 
 export const createSuccessResponseSchema = <T>(schema: T) =>
-	z
-		.object({
-			success: z.literal(true),
-			message: z.string(),
-			data: schema,
-		})
-		.meta({
-			ref: "GenericSuccessResponse",
-		});
+	z.object({
+		success: z.literal(true),
+		message: z.string(),
+		data: schema,
+	});
 
 export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 	z.array(schema);
