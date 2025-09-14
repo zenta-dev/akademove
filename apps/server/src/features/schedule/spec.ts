@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const ScheduleSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllSchedule",
 		tags: [FEATURE_TAGS.SCHEDULE],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const ScheduleSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(ScheduleSchema)),
+							createSuccessResponseSchema(listifySchema(ScheduleSchema)).meta({
+								title: "GetAllScheduleSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const ScheduleSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getScheduleById",
 		tags: [FEATURE_TAGS.SCHEDULE],
 		responses: {
 			200: {
 				description: "Get schedule by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ScheduleSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ScheduleSchema).meta({
+								title: "GetScheduleByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const ScheduleSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createSchedule",
 		tags: [FEATURE_TAGS.SCHEDULE],
 		responses: {
 			200: {
 				description: "Create schedule success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ScheduleSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ScheduleSchema).meta({
+								title: "CreateScheduleSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const ScheduleSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updateSchedule",
 		tags: [FEATURE_TAGS.SCHEDULE],
 		responses: {
 			200: {
 				description: "Update schedule success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ScheduleSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ScheduleSchema).meta({
+								title: "UpdateScheduleSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const ScheduleSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deleteSchedule",
 		tags: [FEATURE_TAGS.SCHEDULE],
 		responses: {
 			200: {
 				description: "Delete schedule success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeleteScheduleSuccessResponse",
+							}),
+						),
 					},
 				},
 			},

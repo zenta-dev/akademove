@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const ReportSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllReport",
 		tags: [FEATURE_TAGS.REPORT],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const ReportSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(ReportSchema)),
+							createSuccessResponseSchema(listifySchema(ReportSchema)).meta({
+								title: "GetAllReportSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const ReportSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getReportById",
 		tags: [FEATURE_TAGS.REPORT],
 		responses: {
 			200: {
 				description: "Get report by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReportSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReportSchema).meta({
+								title: "GetReportByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const ReportSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createReport",
 		tags: [FEATURE_TAGS.REPORT],
 		responses: {
 			200: {
 				description: "Create report success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReportSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReportSchema).meta({
+								title: "CreateReportSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const ReportSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updateReport",
 		tags: [FEATURE_TAGS.REPORT],
 		responses: {
 			200: {
 				description: "Update report success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReportSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReportSchema).meta({
+								title: "UpdateReportSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const ReportSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deleteReport",
 		tags: [FEATURE_TAGS.REPORT],
 		responses: {
 			200: {
 				description: "Delete report success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeleteReportSuccessResponse",
+							}),
+						),
 					},
 				},
 			},

@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const DriverSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllDriver",
 		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const DriverSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(DriverSchema)),
+							createSuccessResponseSchema(listifySchema(DriverSchema)).meta({
+								title: "GetAllDriverSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getDriverById",
 		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Get driver by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(DriverSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(DriverSchema).meta({
+								title: "GetDriverByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createDriver",
 		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Create driver success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(DriverSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(DriverSchema).meta({
+								title: "CreateDriverSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updateDriver",
 		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Update driver success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(DriverSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(DriverSchema).meta({
+								title: "UpdateDriverSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deleteDriver",
 		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Delete driver success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeleteDriverSuccessResponse",
+							}),
+						),
 					},
 				},
 			},

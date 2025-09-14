@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const PromoSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllPromo",
 		tags: [FEATURE_TAGS.PROMO],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const PromoSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(PromoSchema)),
+							createSuccessResponseSchema(listifySchema(PromoSchema)).meta({
+								title: "GetAllPromoSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const PromoSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getPromoById",
 		tags: [FEATURE_TAGS.PROMO],
 		responses: {
 			200: {
 				description: "Get promo by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(PromoSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(PromoSchema).meta({
+								title: "GetPromoByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const PromoSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createPromo",
 		tags: [FEATURE_TAGS.PROMO],
 		responses: {
 			200: {
 				description: "Create promo success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(PromoSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(PromoSchema).meta({
+								title: "CreatePromoSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const PromoSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updatePromo",
 		tags: [FEATURE_TAGS.PROMO],
 		responses: {
 			200: {
 				description: "Update promo success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(PromoSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(PromoSchema).meta({
+								title: "UpdatePromoSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const PromoSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deletePromo",
 		tags: [FEATURE_TAGS.PROMO],
 		responses: {
 			200: {
 				description: "Delete promo success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeletePromoSuccessResponse",
+							}),
+						),
 					},
 				},
 			},

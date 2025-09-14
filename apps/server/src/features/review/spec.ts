@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const ReviewSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllReview",
 		tags: [FEATURE_TAGS.REVIEW],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const ReviewSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(ReviewSchema)),
+							createSuccessResponseSchema(listifySchema(ReviewSchema)).meta({
+								title: "GetAllReviewSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const ReviewSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getReviewById",
 		tags: [FEATURE_TAGS.REVIEW],
 		responses: {
 			200: {
 				description: "Get review by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReviewSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReviewSchema).meta({
+								title: "GetReviewByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const ReviewSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createReview",
 		tags: [FEATURE_TAGS.REVIEW],
 		responses: {
 			200: {
 				description: "Create review success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReviewSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReviewSchema).meta({
+								title: "CreateReviewSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const ReviewSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updateReview",
 		tags: [FEATURE_TAGS.REVIEW],
 		responses: {
 			200: {
 				description: "Update review success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(ReviewSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(ReviewSchema).meta({
+								title: "UpdateReviewSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const ReviewSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deleteReview",
 		tags: [FEATURE_TAGS.REVIEW],
 		responses: {
 			200: {
 				description: "Delete review success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeleteReviewSuccessResponse",
+							}),
+						),
 					},
 				},
 			},

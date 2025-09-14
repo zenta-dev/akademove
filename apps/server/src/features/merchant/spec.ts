@@ -9,6 +9,7 @@ import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const MerchantSpec = Object.freeze({
 	list: describeRoute({
+		operationId: "getAllMerchant",
 		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
@@ -16,7 +17,9 @@ export const MerchantSpec = Object.freeze({
 				content: {
 					"application/json": {
 						schema: resolver(
-							createSuccessResponseSchema(listifySchema(MerchantSchema)),
+							createSuccessResponseSchema(listifySchema(MerchantSchema)).meta({
+								title: "GetAllMerchantSuccessResponse",
+							}),
 						),
 					},
 				},
@@ -26,13 +29,18 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		operationId: "getMerchantById",
 		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Get merchant by id success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(MerchantSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(MerchantSchema).meta({
+								title: "GetMerchantByIdSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -41,13 +49,18 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		operationId: "createMerchant",
 		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Create merchant success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(MerchantSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(MerchantSchema).meta({
+								title: "CreateMerchantSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -55,13 +68,18 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		operationId: "updateMerchant",
 		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Update merchant success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(MerchantSchema)),
+						schema: resolver(
+							createSuccessResponseSchema(MerchantSchema).meta({
+								title: "UpdateMerchantSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
@@ -70,13 +88,18 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		operationId: "deleteMerchant",
 		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Delete merchant success",
 				content: {
 					"application/json": {
-						schema: resolver(createSuccessResponseSchema(EmptySchema)),
+						schema: resolver(
+							createSuccessResponseSchema(EmptySchema).meta({
+								title: "DeleteMerchantSuccessResponse",
+							}),
+						),
 					},
 				},
 			},
