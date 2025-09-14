@@ -38,7 +38,7 @@ export const promo = pgTable("promos", {
 		mode: "number",
 	}).notNull(),
 	usageLimit: integer("usage_limit").notNull(),
-	used_count: integer("used_count").notNull(),
+	usedCount: integer("used_count").notNull(),
 	periodStart: timestamp("period_start").notNull(),
 	periodEnd: timestamp("period_end").notNull(),
 	isActive: boolean("is_active").notNull().default(false),
