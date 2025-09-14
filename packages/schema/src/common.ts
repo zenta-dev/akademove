@@ -10,7 +10,10 @@ export const TimeSchema = z.object({
 	m: z.number(),
 });
 
-export const DateSchema = z.number();
+export const DateSchema = z.number().meta({
+	description: "unix timestamp format",
+	example: 1757670225,
+});
 
 export const EmptySchema = z.null();
 
