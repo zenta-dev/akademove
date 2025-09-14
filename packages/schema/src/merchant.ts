@@ -18,6 +18,7 @@ export const MerchantSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({
+		title: "Merchant",
 		ref: "Merchant",
 	});
 

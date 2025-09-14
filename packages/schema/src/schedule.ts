@@ -18,6 +18,7 @@ export const ScheduleSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({
+		title: "Schedule",
 		ref: "Schedule",
 	});
 

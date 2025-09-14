@@ -12,6 +12,7 @@ export const UserSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({
+		title: "User",
 		ref: "User",
 	});
 
@@ -27,6 +28,7 @@ export const SessionSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({
+		title: "Session",
 		ref: "Session",
 	});
 

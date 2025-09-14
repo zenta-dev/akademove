@@ -18,6 +18,7 @@ export const DriverSchema = z
 		createdAt: DateSchema,
 	})
 	.meta({
+		title: "Driver",
 		ref: "Driver",
 	});
 

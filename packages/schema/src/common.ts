@@ -1,14 +1,24 @@
 import * as z from "zod";
 
-export const LocationSchema = z.object({
-	lat: z.number(),
-	lng: z.number(),
-});
+export const LocationSchema = z
+	.object({
+		lat: z.number(),
+		lng: z.number(),
+	})
+	.meta({
+		title: "Location",
+		ref: "Location",
+	});
 
-export const TimeSchema = z.object({
-	h: z.number(),
-	m: z.number(),
-});
+export const TimeSchema = z
+	.object({
+		h: z.number(),
+		m: z.number(),
+	})
+	.meta({
+		title: "Time",
+		ref: "Time",
+	});
 
 export const DateSchema = z.number().meta({
 	description: "unix timestamp format",
@@ -35,6 +45,7 @@ export const FailedResponseSchema = z
 		errors: z.array(z.string()),
 	})
 	.meta({
+		title: "FailedResponse",
 		ref: "FailedResponse",
 	});
 

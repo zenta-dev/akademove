@@ -42,6 +42,7 @@ export const OrderSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({
+		title: "Order",
 		ref: "Order",
 	});
 

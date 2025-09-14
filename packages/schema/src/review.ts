@@ -16,6 +16,7 @@ export const ReviewSchema = z
 		createdAt: DateSchema,
 	})
 	.meta({
+		title: "Review",
 		ref: "Review",
 	});
 

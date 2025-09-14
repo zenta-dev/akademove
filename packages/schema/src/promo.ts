@@ -20,6 +20,7 @@ export const PromoSchema = z
 		createdAt: DateSchema,
 	})
 	.meta({
+		title: "Promo",
 		ref: "Promo",
 	});
 

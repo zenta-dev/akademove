@@ -22,6 +22,7 @@ export const ReportSchema = z
 		resolvedAt: DateSchema.nullable(),
 	})
 	.meta({
+		title: "Report",
 		ref: "Report",
 	});
 
