@@ -1,0 +1,15 @@
+{
+	"name": "@gen/api-client",
+	"module": "src/index.ts",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./**/*": "./**/*.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^24.4.0"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
