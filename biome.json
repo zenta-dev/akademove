@@ -26,6 +26,7 @@
 			"!**/.source",
 			"!**/mobile",
 			"!**/.output",
+			"!**/.nitro",
 			"!**/.tanstack",
 			"!**/*.css"
 		]
