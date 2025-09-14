@@ -2,14 +2,19 @@ import { env } from "cloudflare:workers";
 import { FailedResponseSchema } from "@repo/schema/common";
 import { resolver } from "hono-openapi";
 
+export const FEATURE_TAGS = Object.freeze({
+	DRIVER: "Driver",
+	MERCHANT: "Merchant",
+} as const);
+
 export const CACHE_TTLS = Object.freeze({
 	"1h": 1 * 60 * 60,
 	"24h": 24 * 60 * 60,
 } as const);
 
 export const CACHE_PREFIXES = Object.freeze({
-	DRIVER: "driver:",
-	MERCHANT: "merchant:",
+	DRIVER: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
+	MERCHANT: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
