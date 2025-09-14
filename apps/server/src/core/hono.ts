@@ -4,6 +4,7 @@ import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantRepository } from "@/features/merchant/repository";
 import type { OrderRepository } from "@/features/order/repository";
 import type { PromoRepository } from "@/features/promo/repository";
+import type { ReportRepository } from "@/features/report/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { AuthInstance } from "./services/auth";
 import type { DatabaseInstance } from "./services/db";
@@ -21,6 +22,7 @@ export type HonoContext = {
 			order: OrderRepository;
 			schedule: ScheduleRepository;
 			promo: PromoRepository;
+			report: ReportRepository;
 		};
 	};
 	Bindings: Env;

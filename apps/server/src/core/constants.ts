@@ -8,6 +8,7 @@ export const FEATURE_TAGS = Object.freeze({
 	ORDER: "Order",
 	SCHEDULE: "Schedule",
 	PROMO: "Promo",
+	REPORT: "Report",
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
@@ -21,6 +22,7 @@ export const CACHE_PREFIXES = Object.freeze({
 	ORDER: `${FEATURE_TAGS.ORDER.toLowerCase()}:`,
 	SCHEDULE: `${FEATURE_TAGS.SCHEDULE.toLowerCase()}:`,
 	PROMO: `${FEATURE_TAGS.PROMO.toLowerCase()}:`,
+	REPORT: `${FEATURE_TAGS.REPORT.toLowerCase()}:`,
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 

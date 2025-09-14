@@ -14,6 +14,7 @@ import { AppHandler } from "./features/handler";
 import { MerchantRepository } from "./features/merchant/repository";
 import { OrderRepository } from "./features/order/repository";
 import { PromoRepository } from "./features/promo/repository";
+import { ReportRepository } from "./features/report/repository";
 import { ScheduleRepository } from "./features/schedule/repository";
 import { isCloudflare } from "./utils";
 
@@ -33,6 +34,7 @@ app.use("*", async (c, next) => {
 		order: new OrderRepository(db, kv),
 		schedule: new ScheduleRepository(db, kv),
 		promo: new PromoRepository(db, kv),
+		report: new ReportRepository(db, kv),
 	};
 	c.set("repo", repo);
 
