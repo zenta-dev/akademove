@@ -23,7 +23,6 @@
 		"deploy": "alchemy deploy --stage production --env-file .env.prod",
 		"destroy": "alchemy destroy --stage production --env-file .env.prod"
 	},
-	"dependencies": {},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",
 		"alchemy": "^0.66.0",
