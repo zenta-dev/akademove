@@ -20,26 +20,30 @@ export const OrderNoteSchema = z.object({
 	dropoff: z.string().optional(),
 });
 
-export const OrderSchema = z.object({
-	id: z.uuid(),
-	userId: z.string(),
-	driverId: z.string().nullable(),
-	merchantId: z.string().nullable(),
-	type: OrderTypeSchema,
-	status: OrderStatusSchema,
-	pickupLocation: LocationSchema,
-	dropoffLocation: LocationSchema,
-	distanceKm: z.number(),
-	basePrice: z.number(),
-	tip: z.number().default(0.0),
-	totalPrice: z.number(),
-	note: OrderNoteSchema.nullable(),
-	requestedAt: DateSchema,
-	acceptedAt: DateSchema.nullable(),
-	arrivedAt: DateSchema.nullable(),
-	createdAt: DateSchema,
-	updatedAt: DateSchema,
-});
+export const OrderSchema = z
+	.object({
+		id: z.uuid(),
+		userId: z.string(),
+		driverId: z.string().nullable(),
+		merchantId: z.string().nullable(),
+		type: OrderTypeSchema,
+		status: OrderStatusSchema,
+		pickupLocation: LocationSchema,
+		dropoffLocation: LocationSchema,
+		distanceKm: z.number(),
+		basePrice: z.number(),
+		tip: z.number().default(0.0),
+		totalPrice: z.number(),
+		note: OrderNoteSchema.nullable(),
+		requestedAt: DateSchema,
+		acceptedAt: DateSchema.nullable(),
+		arrivedAt: DateSchema.nullable(),
+		createdAt: DateSchema,
+		updatedAt: DateSchema,
+	})
+	.meta({
+		ref: "Order",
+	});
 
 export const InsertOrderSchema = OrderSchema.omit({
 	id: true,

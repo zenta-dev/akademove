@@ -17,25 +17,37 @@ export const DateSchema = z.number().meta({
 
 export const EmptySchema = z.null();
 
-export const UUIDParamSchema = z.object({ id: z.uuid() });
-export const GetQuerySchema = z.object({
-	fromCache: z.preprocess((v) => {
-		return v === "true" || v === true;
-	}, z.boolean().default(false)),
-});
+export const UUIDParamSchema = z
+	.object({ id: z.uuid() })
+	.meta({ ref: "UUID Param" });
+export const GetQuerySchema = z
+	.object({
+		fromCache: z.preprocess((v) => {
+			return v === "true" || v === true;
+		}, z.boolean().default(false)),
+	})
+	.meta({ ref: "GetQuery" });
 
-export const FailedResponseSchema = z.object({
-	success: z.literal(false),
-	message: z.string(),
-	errors: z.array(z.string()),
-});
+export const FailedResponseSchema = z
+	.object({
+		success: z.literal(false),
+		message: z.string(),
+		errors: z.array(z.string()),
+	})
+	.meta({
+		ref: "FailedResponse",
+	});
 
 export const createSuccessResponseSchema = <T>(schema: T) =>
-	z.object({
-		success: z.literal(true),
-		message: z.string(),
-		data: schema,
-	});
+	z
+		.object({
+			success: z.literal(true),
+			message: z.string(),
+			data: schema,
+		})
+		.meta({
+			ref: "GenericSuccessResponse",
+		});
 
 export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 	z.array(schema);

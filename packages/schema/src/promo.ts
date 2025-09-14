@@ -1,23 +1,27 @@
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
 
-export const PromoSchema = z.object({
-	id: z.uuid(),
-	name: z.string(),
-	code: z.string(),
-	rules: z.any(),
-	discountAmount: z.number(),
-	discountPercentage: z.number(),
-	minOrderAmount: z.number(),
-	maxOrderAmount: z.number(),
-	usageLimit: z.number(),
-	usedCount: z.number(),
-	periodStart: DateSchema,
-	periodEnd: DateSchema,
-	isActive: z.boolean(),
-	createdById: z.string(),
-	createdAt: DateSchema,
-});
+export const PromoSchema = z
+	.object({
+		id: z.uuid(),
+		name: z.string(),
+		code: z.string(),
+		rules: z.any(),
+		discountAmount: z.number(),
+		discountPercentage: z.number(),
+		minOrderAmount: z.number(),
+		maxOrderAmount: z.number(),
+		usageLimit: z.number(),
+		usedCount: z.number(),
+		periodStart: DateSchema,
+		periodEnd: DateSchema,
+		isActive: z.boolean(),
+		createdById: z.string(),
+		createdAt: DateSchema,
+	})
+	.meta({
+		ref: "Promo",
+	});
 
 export const InsertPromoSchema = PromoSchema.omit({
 	id: true,

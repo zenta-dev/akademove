@@ -4,16 +4,20 @@ import { CONSTANTS } from "./constants.ts";
 
 export const ReviewCategorySchema = z.enum(CONSTANTS.REVIEW_CATEGORIES);
 
-export const ReviewSchema = z.object({
-	id: z.uuid(),
-	orderId: z.uuid(),
-	fromUserId: z.string(),
-	toUserId: z.string(),
-	category: ReviewCategorySchema.default("other"),
-	score: z.number(),
-	comment: z.string().default(""),
-	createdAt: DateSchema,
-});
+export const ReviewSchema = z
+	.object({
+		id: z.uuid(),
+		orderId: z.uuid(),
+		fromUserId: z.string(),
+		toUserId: z.string(),
+		category: ReviewCategorySchema.default("other"),
+		score: z.number(),
+		comment: z.string().default(""),
+		createdAt: DateSchema,
+	})
+	.meta({
+		ref: "Review",
+	});
 
 export const InsertReviewSchema = ReviewSchema.omit({
 	id: true,

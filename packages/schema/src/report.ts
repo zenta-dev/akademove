@@ -6,20 +6,24 @@ export const ReportCategorySchema = z.enum(CONSTANTS.REPORT_CATEGORIES);
 
 export const ReportStatusSchema = z.enum(CONSTANTS.REPORT_STATUS);
 
-export const ReportSchema = z.object({
-	id: z.uuid(),
-	orderId: z.uuid().nullable(),
-	reporterId: z.uuid(),
-	targetUserId: z.uuid(),
-	category: ReportCategorySchema,
-	description: z.string(),
-	evidenceUrl: z.string().nullable(),
-	status: ReportStatusSchema.default("pending"),
-	handledById: z.string().nullable(),
-	resolution: z.string().nullable(),
-	reportedAt: DateSchema,
-	resolvedAt: DateSchema.nullable(),
-});
+export const ReportSchema = z
+	.object({
+		id: z.uuid(),
+		orderId: z.uuid().nullable(),
+		reporterId: z.uuid(),
+		targetUserId: z.uuid(),
+		category: ReportCategorySchema,
+		description: z.string(),
+		evidenceUrl: z.string().nullable(),
+		status: ReportStatusSchema.default("pending"),
+		handledById: z.string().nullable(),
+		resolution: z.string().nullable(),
+		reportedAt: DateSchema,
+		resolvedAt: DateSchema.nullable(),
+	})
+	.meta({
+		ref: "Report",
+	});
 
 export const InsertReportSchema = ReportSchema.omit({
 	id: true,

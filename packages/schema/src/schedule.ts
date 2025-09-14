@@ -4,18 +4,22 @@ import { CONSTANTS } from "./constants.ts";
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
 
-export const ScheduleSchema = z.object({
-	id: z.uuid(),
-	driverId: z.uuid(),
-	dayOfWeek: DayOfWeekSchema,
-	startTime: TimeSchema,
-	endTime: TimeSchema,
-	isRecurring: z.boolean().default(true),
-	specificDate: DateSchema.nullable(),
-	isActive: z.boolean().default(true),
-	createdAt: DateSchema,
-	updatedAt: DateSchema,
-});
+export const ScheduleSchema = z
+	.object({
+		id: z.uuid(),
+		driverId: z.uuid(),
+		dayOfWeek: DayOfWeekSchema,
+		startTime: TimeSchema,
+		endTime: TimeSchema,
+		isRecurring: z.boolean().default(true),
+		specificDate: DateSchema.nullable(),
+		isActive: z.boolean().default(true),
+		createdAt: DateSchema,
+		updatedAt: DateSchema,
+	})
+	.meta({
+		ref: "Schedule",
+	});
 
 export const InsertScheduleSchema = ScheduleSchema.omit({
 	id: true,

@@ -4,18 +4,22 @@ import { CONSTANTS } from "./constants.ts";
 
 export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
 
-export const MerchantSchema = z.object({
-	id: z.uuid(),
-	userId: z.string(),
-	type: MerchantTypeSchema,
-	name: z.string(),
-	address: z.string(),
-	location: LocationSchema.nullable(),
-	isActive: z.boolean().default(true),
-	rating: z.number(),
-	createdAt: DateSchema,
-	updatedAt: DateSchema,
-});
+export const MerchantSchema = z
+	.object({
+		id: z.uuid(),
+		userId: z.string(),
+		type: MerchantTypeSchema,
+		name: z.string(),
+		address: z.string(),
+		location: LocationSchema.nullable(),
+		isActive: z.boolean().default(true),
+		rating: z.number(),
+		createdAt: DateSchema,
+		updatedAt: DateSchema,
+	})
+	.meta({
+		ref: "Merchant",
+	});
 
 export const InsertMerchantSchema = MerchantSchema.omit({
 	id: true,
