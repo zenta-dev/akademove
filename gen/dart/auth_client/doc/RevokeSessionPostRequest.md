@@ -1,0 +1,15 @@
+# auth_client.model.RevokeSessionPostRequest
+
+## Load the model package
+```dart
+import 'package:auth_client/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**token** | **String** | The token to revoke | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
