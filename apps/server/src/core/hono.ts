@@ -5,6 +5,7 @@ import type { MerchantRepository } from "@/features/merchant/repository";
 import type { OrderRepository } from "@/features/order/repository";
 import type { PromoRepository } from "@/features/promo/repository";
 import type { ReportRepository } from "@/features/report/repository";
+import type { ReviewRepository } from "@/features/review/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { AuthInstance } from "./services/auth";
 import type { DatabaseInstance } from "./services/db";
@@ -23,6 +24,7 @@ export type HonoContext = {
 			schedule: ScheduleRepository;
 			promo: PromoRepository;
 			report: ReportRepository;
+			review: ReviewRepository;
 		};
 	};
 	Bindings: Env;

@@ -15,6 +15,7 @@ import { MerchantRepository } from "./features/merchant/repository";
 import { OrderRepository } from "./features/order/repository";
 import { PromoRepository } from "./features/promo/repository";
 import { ReportRepository } from "./features/report/repository";
+import { ReviewRepository } from "./features/review/repository";
 import { ScheduleRepository } from "./features/schedule/repository";
 import { isCloudflare } from "./utils";
 
@@ -35,6 +36,7 @@ app.use("*", async (c, next) => {
 		schedule: new ScheduleRepository(db, kv),
 		promo: new PromoRepository(db, kv),
 		report: new ReportRepository(db, kv),
+		review: new ReviewRepository(db, kv),
 	};
 	c.set("repo", repo);
 
