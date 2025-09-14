@@ -4,12 +4,14 @@ import postgres from "postgres";
 import * as auth from "@/core/tables/auth";
 import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
+import * as order from "@/core/tables/order";
 import { isDev } from "@/utils";
 
 export const tables = {
 	...auth,
 	...driver,
 	...merchant,
+	...order,
 };
 
 export const getDatabase = () => {

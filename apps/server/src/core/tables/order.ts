@@ -27,7 +27,7 @@ export const orderStatus = pgEnum("order_status", [
 ]);
 export const orderType = pgEnum("order_type", CONSTANTS.ORDER_TYPES);
 
-interface OrderNote {
+export interface OrderNote {
 	pickup?: string;
 	dropoff?: string;
 }

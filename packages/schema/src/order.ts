@@ -33,7 +33,7 @@ export const OrderSchema = z.object({
 	basePrice: z.number(),
 	tip: z.number().default(0.0),
 	totalPrice: z.number(),
-	note: OrderNoteSchema.optional(),
+	note: OrderNoteSchema.nullable(),
 	requestedAt: DateSchema,
 	acceptedAt: DateSchema.nullable(),
 	arrivedAt: DateSchema.nullable(),
@@ -41,7 +41,31 @@ export const OrderSchema = z.object({
 	updatedAt: DateSchema,
 });
 
+export const InsertOrderSchema = OrderSchema.omit({
+	id: true,
+	requestedAt: true,
+	acceptedAt: true,
+	arrivedAt: true,
+	createdAt: true,
+	updatedAt: true,
+});
+
+export const UpdateOrderSchema = OrderSchema.omit({
+	id: true,
+	userId: true,
+	pickupLocation: true,
+	dropoffLocation: true,
+	basePrice: true,
+	requestedAt: true,
+	acceptedAt: true,
+	arrivedAt: true,
+	createdAt: true,
+	updatedAt: true,
+});
+
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export type OrderType = z.infer<typeof OrderTypeSchema>;
 export type OrderNote = z.infer<typeof OrderNoteSchema>;
 export type Order = z.infer<typeof OrderSchema>;
+export type InsertOrder = z.infer<typeof InsertOrderSchema>;
+export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;

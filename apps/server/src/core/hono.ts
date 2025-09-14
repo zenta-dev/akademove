@@ -2,6 +2,7 @@ import { type Env, Hono, type ValidationTargets } from "hono";
 import type { StandardSchemaV1 } from "node_modules/zod/v4/core/standard-schema";
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantRepository } from "@/features/merchant/repository";
+import type { OrderRepository } from "@/features/order/repository";
 import type { AuthInstance } from "./services/auth";
 import type { DatabaseInstance } from "./services/db";
 import type { KeyValueService } from "./services/kv";
@@ -15,6 +16,7 @@ export type HonoContext = {
 		repo: {
 			driver: DriverRepository;
 			merchant: MerchantRepository;
+			order: OrderRepository;
 		};
 	};
 	Bindings: Env;
