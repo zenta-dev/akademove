@@ -2,10 +2,11 @@ import { createSuccessResponseSchema, EmptySchema } from "@repo/schema/common";
 import { DriverSchema } from "@repo/schema/driver";
 import { describeRoute, resolver } from "hono-openapi";
 import z from "zod";
-import { FAILED_RESPONSES } from "@/core/constants";
+import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const DriverSpec = Object.freeze({
 	list: describeRoute({
+		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "List of driver",
@@ -22,6 +23,7 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Get driver by id success",
@@ -36,6 +38,7 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Create driver success",
@@ -49,6 +52,7 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Update driver success",
@@ -63,6 +67,7 @@ export const DriverSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		tags: [FEATURE_TAGS.DRIVER],
 		responses: {
 			200: {
 				description: "Delete driver success",

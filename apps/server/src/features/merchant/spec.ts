@@ -2,10 +2,11 @@ import { createSuccessResponseSchema, EmptySchema } from "@repo/schema/common";
 import { MerchantSchema } from "@repo/schema/merchant";
 import { describeRoute, resolver } from "hono-openapi";
 import z from "zod";
-import { FAILED_RESPONSES } from "@/core/constants";
+import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
 
 export const MerchantSpec = Object.freeze({
 	list: describeRoute({
+		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "List of merchant",
@@ -22,6 +23,7 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	byID: describeRoute({
+		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Get merchant by id success",
@@ -36,6 +38,7 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	create: describeRoute({
+		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Create merchant success",
@@ -49,6 +52,7 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	update: describeRoute({
+		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Update merchant success",
@@ -63,6 +67,7 @@ export const MerchantSpec = Object.freeze({
 		},
 	}),
 	delete: describeRoute({
+		tags: [FEATURE_TAGS.MERCHANT],
 		responses: {
 			200: {
 				description: "Delete merchant success",
