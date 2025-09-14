@@ -8,7 +8,7 @@
 		"./*": "./src/*.ts"
 	},
 	"devDependencies": {
-		"@types/bun": "latest"
+		"@types/bun": "1.2.22"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
