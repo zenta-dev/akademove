@@ -13,6 +13,7 @@ import { DriverRepository } from "./features/driver/repository";
 import { AppHandler } from "./features/handler";
 import { MerchantRepository } from "./features/merchant/repository";
 import { OrderRepository } from "./features/order/repository";
+import { PromoRepository } from "./features/promo/repository";
 import { ScheduleRepository } from "./features/schedule/repository";
 import { isCloudflare } from "./utils";
 
@@ -31,6 +32,7 @@ app.use("*", async (c, next) => {
 		merchant: new MerchantRepository(db, kv),
 		order: new OrderRepository(db, kv),
 		schedule: new ScheduleRepository(db, kv),
+		promo: new PromoRepository(db, kv),
 	};
 	c.set("repo", repo);
 

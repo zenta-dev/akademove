@@ -3,6 +3,7 @@ import type { StandardSchemaV1 } from "node_modules/zod/v4/core/standard-schema"
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantRepository } from "@/features/merchant/repository";
 import type { OrderRepository } from "@/features/order/repository";
+import type { PromoRepository } from "@/features/promo/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { AuthInstance } from "./services/auth";
 import type { DatabaseInstance } from "./services/db";
@@ -19,6 +20,7 @@ export type HonoContext = {
 			merchant: MerchantRepository;
 			order: OrderRepository;
 			schedule: ScheduleRepository;
+			promo: PromoRepository;
 		};
 	};
 	Bindings: Env;
