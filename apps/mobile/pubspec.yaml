@@ -14,12 +14,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
+  openapi_generator_annotations: ^6.1.0
 
 dev_dependencies:
   bloc_test: ^10.0.0
+  build_runner: ^2.4.13
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.4
+  openapi_generator: ^6.1.0
   very_good_analysis: ^9.0.0
 
 flutter:
