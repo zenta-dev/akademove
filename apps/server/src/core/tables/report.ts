@@ -1,14 +1,6 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import {
-	boolean,
-	jsonb,
-	pgEnum,
-	pgTable,
-	text,
-	timestamp,
-	uuid,
-} from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { order } from "./order";
 
