@@ -70,7 +70,7 @@ app.get(
 			},
 			components: {
 				securitySchemes: {
-					"Bearer Auth": {
+					bearer_auth: {
 						type: "http",
 						scheme: "bearer",
 						bearerFormat: "JWT",
@@ -79,7 +79,7 @@ app.get(
 			},
 			security: [
 				{
-					"Bearer Auth": [],
+					bearer_auth: [],
 				},
 			],
 			servers: [
