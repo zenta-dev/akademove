@@ -35,10 +35,10 @@ const failContent: ResponseContent = {
 };
 
 export const FAILED_RESPONSES: {
-	readonly 400: FailedResponseFunction;
+	readonly 404: FailedResponseFunction;
 	readonly 500: FailedResponse;
 } = Object.freeze({
-	400: (resource: string): FailedResponse => ({
+	404: (resource: string): FailedResponse => ({
 		...failContent,
 		description: `${resource} not found`,
 	}),
