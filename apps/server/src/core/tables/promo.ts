@@ -10,6 +10,7 @@ import {
 	uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { order } from "./order";
 
 export const promo = pgTable("promos", {
 	id: uuid().primaryKey().defaultRandom(),
@@ -47,12 +48,46 @@ export const promo = pgTable("promos", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const promoUsage = pgTable("promo_usages", {
+	id: uuid().primaryKey().defaultRandom(),
+	promoId: uuid("promo_id")
+		.notNull()
+		.references(() => promo.id, { onDelete: "cascade" }),
+	orderId: uuid("order_id")
+		.notNull()
+		.references(() => order.id, { onDelete: "no action" }),
+	userId: text("user_id")
+		.notNull()
+		.references(() => user.id, { onDelete: "no action" }),
+	discountApplied: decimal("discount_applied", {
+		precision: 10,
+		scale: 2,
+		mode: "number",
+	}).notNull(),
+	usedAt: timestamp("used_at").notNull().defaultNow(),
+});
+
 ///
 /// --- Relations --- ///
 ///
 export const promoRelations = relations(promo, ({ one }) => ({
 	createdBy: one(user, {
 		fields: [promo.createdById],
+		references: [user.id],
+	}),
+}));
+
+export const promoUsageRelations = relations(promoUsage, ({ one }) => ({
+	promo: one(promo, {
+		fields: [promoUsage.promoId],
+		references: [promo.id],
+	}),
+	order: one(order, {
+		fields: [promoUsage.orderId],
+		references: [order.id],
+	}),
+	user: one(user, {
+		fields: [promoUsage.userId],
 		references: [user.id],
 	}),
 }));
