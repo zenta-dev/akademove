@@ -1,0 +1,28 @@
+name: akademove_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.8.0
+
+dev_dependencies:
+  melos: ^7.1.1
+
+workspace:
+  - apps/mobile
+  - gen/dart/api_client
+  - gen/dart/auth_client
+
+melos:
+  scripts:
+    generate:
+      run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build
+    analyze:
+      run: melos exec -c 1 -- "dart analyze . --fatal-infos"
+    format:
+      run: melos exec -c 1 -- "dart format --set-exit-if-changed ."
+    format:fix:
+      run: melos exec -c 1 -- "dart format ."
+    clean:
+      run: melos exec -c 1 -- "flutter clean"
+    get:
+      run: melos exec -c 1 -- "flutter packages get"
