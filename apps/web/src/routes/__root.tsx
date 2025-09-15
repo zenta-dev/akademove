@@ -1,3 +1,4 @@
+import type { QueryClient } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
@@ -6,6 +7,7 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { Client } from "@/api/client/types.gen";
 import Loader from "@/components/loader";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "../components/header";
@@ -13,6 +15,8 @@ import appCss from "../index.css?url";
 
 export type RouterAppContext = {
 	locale: string;
+	client: Client;
+	queryClient: QueryClient;
 };
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({

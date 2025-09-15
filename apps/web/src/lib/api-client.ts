@@ -1,3 +1,4 @@
+import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { client } from "@/api/client.gen";
 
 export async function setupApiClient() {
@@ -16,3 +17,18 @@ export async function setupApiClient() {
 		});
 	}
 }
+
+export const queryClient = new QueryClient({
+	queryCache: new QueryCache({
+		onError: (error) => {
+			toast.error(`Error: ${error.message}`, {
+				action: {
+					label: "retry",
+					onClick: () => {
+						queryClient.invalidateQueries();
+					},
+				},
+			});
+		},
+	}),
+});
