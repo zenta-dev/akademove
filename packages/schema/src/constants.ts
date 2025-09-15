@@ -22,3 +22,9 @@ export const CONSTANTS = Object.freeze({
 	REPORT_STATUS: ["pending", "investigating", "resolved", "dismissed"] as const,
 	REVIEW_CATEGORIES: ["cleanliness", "courtesy", "other"] as const,
 } as const);
+
+export const AUTH_CONSTANTS = Object.freeze({
+	SESSION_TOKEN: "AkadeMove-AMST",
+	SESSION_DATA: "AkadeMove-AMSD",
+	SESSION_DONT_REMEMBER: "AkadeMove-AMDR",
+} as const);

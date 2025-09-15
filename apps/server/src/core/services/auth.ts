@@ -1,9 +1,11 @@
 import { env } from "cloudflare:workers";
 import { scryptSync } from "node:crypto";
+import { AUTH_CONSTANTS } from "@repo/schema/constants";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer, jwt, openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
+import { isDev } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
 import type { DatabaseInstance } from "./db";
 import type { KeyValueService } from "./kv";
@@ -77,6 +79,12 @@ export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
 			},
 		},
 		advanced: {
+			cookiePrefix: isDev ? "" : "__Secure-",
+			cookies: {
+				session_token: { name: AUTH_CONSTANTS.SESSION_TOKEN },
+				session_data: { name: AUTH_CONSTANTS.SESSION_DATA },
+				dont_remember: { name: AUTH_CONSTANTS.SESSION_DONT_REMEMBER },
+			},
 			defaultCookieAttributes: {
 				sameSite: "none",
 				secure: true,
