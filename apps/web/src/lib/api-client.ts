@@ -1,6 +1,7 @@
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { client } from "@/api/client.gen";
+import { getServerHeaders } from "@/lib/actions";
 
 export function setupApiClient() {
 	if (typeof window !== "undefined") {
@@ -15,10 +16,10 @@ export function setupApiClient() {
 			},
 		});
 	} else {
-		import("@tanstack/react-start/server").then(({ getHeaders }) => {
+		getServerHeaders().then((headers) => {
 			client.setConfig({
 				baseUrl: import.meta.env.VITE_SERVER_URL,
-				headers: getHeaders(),
+				headers,
 			});
 		});
 	}
