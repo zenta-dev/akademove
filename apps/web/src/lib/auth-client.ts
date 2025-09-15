@@ -5,8 +5,10 @@ export const authClient = createAuthClient({
 	basePath: "/auth",
 	fetchOptions: {
 		onSuccess: ({ response }) => {
+			const authToken = response.headers.get("set-auth-token");
+			if (authToken) localStorage.setItem("bearer_token", authToken);
 			const jwt = response.headers.get("set-auth-jwt");
-			if (jwt) localStorage.setItem("bearer", jwt);
+			if (jwt) localStorage.setItem("jwt", jwt);
 		},
 	},
 });
