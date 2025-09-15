@@ -24,6 +24,7 @@
         "drizzle-orm": "^0.44.2",
         "hono": "^4.9.7",
         "hono-openapi": "^1.0.7",
+        "jose": "6.1.0",
         "postgres": "^3.4.7",
         "uuid": "^13.0.0",
         "zod": "^4.1.8",
@@ -67,6 +68,7 @@
         "zod": "^4.1.8",
       },
       "devDependencies": {
+        "@hey-api/openapi-ts": "0.83.1",
         "@tanstack/react-query-devtools": "^5.85.5",
         "@tanstack/react-router-devtools": "^1.131.42",
         "@testing-library/dom": "^10.4.0",
@@ -81,19 +83,6 @@
         "typescript": "^5.8.2",
         "vite": "^7.0.2",
         "web-vitals": "^5.0.3",
-      },
-    },
-    "gen/ts/api-client": {
-      "name": "@gen/api-client",
-      "dependencies": {
-        "@tanstack/react-query": "^5.87.4",
-      },
-      "devDependencies": {
-        "@hey-api/openapi-ts": "0.83.1",
-        "@types/node": "^24.4.0",
-      },
-      "peerDependencies": {
-        "typescript": "^5",
       },
     },
     "packages/schema": {
@@ -364,8 +353,6 @@
     "@floating-ui/react-dom": ["@floating-ui/react-dom@2.1.6", "", { "dependencies": { "@floating-ui/dom": "^1.7.4" }, "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-4JX6rEatQEvlmgU80wZyq9RT96HZJa88q8hp0pBd+LrczeDI4o6uA2M+uvxngVHo4Ihr8uibXxH6+70zhAFrVw=="],
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.10", "", {}, "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="],
-
-    "@gen/api-client": ["@gen/api-client@workspace:gen/ts/api-client"],
 
     "@hexagon/base64": ["@hexagon/base64@1.1.28", "", {}, "sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw=="],
 

@@ -5,7 +5,7 @@ gen-oapi-mobile:
 	openapi-generator-cli generate -i auth-oapi.json -o gen/dart/auth_client -g dart-dio --additional-properties=pubName=auth_client
 
 gen-oapi-web:
-	cd gen/ts/api-client && bun openapi-ts
+	cd apps/web && bun openapi-ts
 
 gen: 
 	$(MAKE) gen-oapi-mobile

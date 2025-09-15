@@ -1,14 +1,16 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import Loader from "./components/loader";
 import "./index.css";
+import { setupApiClient } from "./lib/api-client";
 import { routeTree } from "./routeTree.gen";
 
 export const createRouter = () => {
+	setupApiClient();
 	const router = createTanStackRouter({
 		routeTree,
 		scrollRestoration: true,
 		defaultPreloadStaleTime: 0,
-		context: {},
+		context: { locale: "en" },
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <div>Not Found</div>,
 		Wrap: ({ children }) => <>{children}</>,

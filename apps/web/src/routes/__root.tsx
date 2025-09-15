@@ -36,7 +36,6 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 			},
 		],
 	}),
-
 	component: RootDocument,
 });
 
