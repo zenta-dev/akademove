@@ -6,10 +6,17 @@
 		".": "./src/index.ts",
 		"./**/*": "./**/*.ts"
 	},
+	"scripts": {
+		"openapi-ts": "openapi-ts"
+	},
 	"devDependencies": {
+		"@hey-api/openapi-ts": "0.83.1",
 		"@types/node": "^24.4.0"
 	},
 	"peerDependencies": {
 		"typescript": "^5"
+	},
+	"dependencies": {
+		"@tanstack/react-query": "^5.87.4"
 	}
 }
