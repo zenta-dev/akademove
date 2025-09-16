@@ -31,7 +31,7 @@ const TITLE_TEXT = `
 
 function HomeComponent() {
 	const drivers2 = useQuery({
-		queryKey: [client.drivers.$url().toString()],
+		queryKey: [client.drivers.$url().pathname, { page: "1", limit: "10" }],
 		queryFn: async () => {
 			const response = await client.drivers.$get({
 				query: { page: "1", limit: "10" },
@@ -39,9 +39,8 @@ function HomeComponent() {
 			const result = await response.json();
 			if (result.success) {
 				return result.data;
-			} else {
-				return [];
 			}
+			return [];
 		},
 	});
 
@@ -53,9 +52,8 @@ function HomeComponent() {
 		console.log("SHIT", shit);
 		if (result.success) {
 			return result.data;
-		} else {
-			return [];
 		}
+		return [];
 	}
 
 	return (

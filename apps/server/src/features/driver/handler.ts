@@ -1,6 +1,7 @@
 import { GetQuerySchema, UUIDParamSchema } from "@repo/schema/common";
 import { InsertDriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { upgradeWebSocket } from "hono/cloudflare-workers";
 import { validator } from "hono-openapi";
 import { createHono, handleValidation } from "@/core/hono";
 import { requireAuthMiddleware } from "@/core/middlewares/auth";
@@ -8,6 +9,19 @@ import { DriverSpec } from "./spec";
 
 const h = createHono()
 	.use("*", requireAuthMiddleware)
+	.get("/track", async (c, next) => {
+		return upgradeWebSocket((_c) => {
+			return {
+				onMessage(event, ws) {
+					console.log(`Message from client: ${event.data}`);
+					ws.send("Hello from server!");
+				},
+				onClose: () => {
+					console.log("Connection closed");
+				},
+			};
+		})(c, next);
+	})
 	.get(
 		"/",
 		DriverSpec.list,

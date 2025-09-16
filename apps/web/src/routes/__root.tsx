@@ -1,4 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	createRootRouteWithContext,
 	HeadContent,
@@ -9,7 +10,6 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import Loader from "@/components/loader";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "../components/header";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
@@ -50,11 +50,11 @@ function RootDocument() {
 			</head>
 			<body>
 				<div className="grid h-svh grid-rows-[auto_1fr]">
-					<Header />
 					{isFetching ? <Loader /> : <Outlet />}
 				</div>
 				<Toaster richColors />
 				<TanStackRouterDevtools position="bottom-left" />
+				<ReactQueryDevtools />
 				<Scripts />
 			</body>
 		</html>

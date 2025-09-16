@@ -7,6 +7,7 @@ export default defineConfig({
 	entry: ["src/index.js"],
 	unbundle: true,
 	clean: false,
+	dts: true,
 	plugins: [
 		paraglideVitePlugin({
 			project: "./project.inlang",
