@@ -10,9 +10,6 @@
 	"scripts": {
 		"clean": "git clean -xdf .turbo node_modules"
 	},
-	"devDependencies": {
-		"@types/bun": "1.2.22"
-	},
 	"peerDependencies": {
 		"typescript": "^5"
 	},
