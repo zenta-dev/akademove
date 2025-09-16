@@ -68,8 +68,12 @@ export const ForgotPasswordSchema = z.object({
 
 export const ResetPasswordSchema = z
 	.object({
-		newPassword: z.string().min(8),
-		confirmPassword: z.string().min(8),
+		newPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.new_password(), min: 8 })),
+		confirmPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 })),
 	})
 	.refine((data) => data.newPassword === data.confirmPassword, {
 		path: ["confirmPassword"],
