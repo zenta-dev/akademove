@@ -91,7 +91,19 @@ export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
 				httpOnly: true,
 			},
 		},
-		plugins: [openAPI(), jwt(), bearer()],
+		plugins: [
+			openAPI(),
+			jwt({
+				jwt: {
+					definePayload: ({ user }) => {
+						return {
+							id: user.id,
+							email: user.email,
+						};
+					},
+				},
+			}),
+		],
 	});
 
 export type AuthInstance = ReturnType<typeof getAuth>;

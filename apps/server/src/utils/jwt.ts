@@ -1,0 +1,18 @@
+import { env } from "cloudflare:workers";
+import { createLocalJWKSet, type JWTPayload, jwtVerify } from "jose";
+import type { AuthInstance } from "@/core/services/auth";
+
+export async function validateToken(token: string, auth: AuthInstance) {
+	try {
+		const remoteJWKS = await auth.api.getJwks();
+		const JWKS = createLocalJWKSet(remoteJWKS);
+		const { payload } = await jwtVerify(token, JWKS, {
+			issuer: env.AUTH_URL,
+			audience: env.AUTH_URL,
+		});
+		return payload as JWTPayload & { id: string; email: string };
+	} catch (error) {
+		console.error("Token validation failed:", error);
+		throw error;
+	}
+}

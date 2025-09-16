@@ -24,7 +24,7 @@ const app = createHono();
 app.use(logger());
 app.use("*", async (c, next) => {
 	const db = getDatabase();
-	c.set("db", db);
+	// c.set("db", db);
 	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV));
 	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
@@ -57,7 +57,7 @@ app.use(
 	}),
 );
 
-app.on(["POST", "GET"], "/auth/**", (c) => c.var.auth.handler(c.req.raw));
+app.all("/auth/*", (c) => c.var.auth.handler(c.req.raw));
 app.route("/", AppHandler);
 app.get(
 	"/openapi.json",

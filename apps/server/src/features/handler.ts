@@ -7,14 +7,14 @@ import { ReportHandler } from "./report/handler";
 import { ReviewHandler } from "./review/handler";
 import { ScheduleHandler } from "./schedule/handler";
 
-const h = createHono();
-
-h.route("/drivers", DriverHandler);
-h.route("/merchants", MerchantHandler);
-h.route("/orders", OrderHandler);
-h.route("/schedules", ScheduleHandler);
-h.route("/promos", PromoHandler);
-h.route("/reports", ReportHandler);
-h.route("/review", ReviewHandler);
+const h = createHono()
+	.route("/drivers", DriverHandler)
+	.route("/merchants", MerchantHandler)
+	.route("/orders", OrderHandler)
+	.route("/schedules", ScheduleHandler)
+	.route("/promos", PromoHandler)
+	.route("/reports", ReportHandler)
+	.route("/review", ReviewHandler);
 
 export { h as AppHandler };
+export type AppHandlerRoutes = typeof h;

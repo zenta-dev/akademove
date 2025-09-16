@@ -13,7 +13,7 @@ import type { KeyValueService } from "./services/kv";
 
 export type HonoContext = {
 	Variables: {
-		db: DatabaseInstance;
+		// db: DatabaseInstance;
 		auth: AuthInstance;
 		kv: KeyValueService;
 		userId: string;
