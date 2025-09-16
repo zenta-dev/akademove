@@ -9,6 +9,7 @@
 	],
 	"scripts": {
 		"check": "biome check --write .",
+		"clean": "turbo clean && git clean -xdf .turbo node_modules",
 		"prepare": "husky",
 		"dev": "concurrently --names 'alchemy,i18n' --prefix-colors 'cyan,magenta' 'bun run dev:alchemy' 'bun run dev:i18n'",
 		"dev:i18n": "turbo -F @repo/i18n dev",

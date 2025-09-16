@@ -4,6 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "tsdown",
+		"clean": "git clean -xdf .turbo node_modules",
 		"check-types": "tsc -b",
 		"compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
 		"db:push": "bun with-env drizzle-kit push",

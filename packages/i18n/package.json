@@ -15,6 +15,7 @@
 	},
 	"scripts": {
 		"build": "tsdown",
+		"clean": "git clean -xdf .turbo node_modules",
 		"dev": "tsdown --watch",
 		"postinstall": "tsdown",
 		"machine-translate": "inlang machine translate --project project.inlang"
