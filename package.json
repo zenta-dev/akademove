@@ -4,8 +4,7 @@
 	"type": "module",
 	"workspaces": [
 		"apps/*",
-		"packages/*",
-		"gen/ts/*"
+		"packages/*"
 	],
 	"scripts": {
 		"check": "biome check --write .",
@@ -28,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.2.0",
-		"@openapitools/openapi-generator-cli": "^2.23.1",
+		"@openapitools/openapi-generator-cli": "^2.23.4",
 		"alchemy": "^0.66.0",
 		"concurrently": "^9.2.1",
 		"dotenv": "^17.2.1",
