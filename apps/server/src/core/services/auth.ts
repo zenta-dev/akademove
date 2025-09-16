@@ -3,14 +3,19 @@ import { scryptSync } from "node:crypto";
 import { AUTH_CONSTANTS } from "@repo/schema/constants";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { bearer, jwt, openAPI } from "better-auth/plugins";
+import { jwt, openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
 import { isDev } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
 import type { DatabaseInstance } from "./db";
 import type { KeyValueService } from "./kv";
+import type { MailService } from "./mail";
 
-export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
+export const getAuth = (
+	db: DatabaseInstance,
+	kv: KeyValueService,
+	mail: MailService,
+) =>
 	betterAuth({
 		secret: env.AUTH_SECRET,
 		baseURL: env.AUTH_URL,
@@ -76,6 +81,20 @@ export const getAuth = (db: DatabaseInstance, kv: KeyValueService) =>
 						.join("");
 					return targetKeyHex === keyHex;
 				},
+			},
+			sendResetPassword: async ({ user, url }) => {
+				const isTrusted = TRUSTED_ORIGINS.some((origin) =>
+					url.startsWith(origin),
+				);
+				if (!isTrusted) {
+					throw new BetterAuthError("Untrusted URL");
+				}
+				try {
+					await mail.sendResetPassword({ to: user.email, url });
+				} catch (error) {
+					console.error(error);
+					throw new BetterAuthError("Failed to send reset password");
+				}
 			},
 		},
 		advanced: {

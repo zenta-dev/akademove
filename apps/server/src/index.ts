@@ -26,12 +26,13 @@ app.use(logger());
 app.use("*", async (c, next) => {
 	const db = getDatabase();
 	// c.set("db", db);
-	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV));
+
+	const mail = new ResendMailService(env.RESEND_API_KEY);
+	c.set("mail", mail);
+	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV), mail);
 	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
 	c.set("kv", kv);
-	const mail = new ResendMailService(env.RESEND_API_KEY);
-	c.set("mail", mail);
 	const repo = {
 		driver: new DriverRepository(db, kv),
 		merchant: new MerchantRepository(db, kv),
