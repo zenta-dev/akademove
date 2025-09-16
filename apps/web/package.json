@@ -3,7 +3,6 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"openapi-ts": "openapi-ts",
 		"build": "vite build",
 		"dev": "vite dev --port=3001",
 		"serve": "vite preview"
@@ -32,7 +31,6 @@
 		"zod": "^4.1.8"
 	},
 	"devDependencies": {
-		"@hey-api/openapi-ts": "0.83.1",
 		"@tanstack/react-query-devtools": "^5.85.5",
 		"@tanstack/react-router-devtools": "^1.131.42",
 		"@testing-library/dom": "^10.4.0",
