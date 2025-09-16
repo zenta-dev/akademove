@@ -43,7 +43,7 @@ export const [server, web] = await Promise.all([
 		bindings: {
 			NODE_ENV: alchemy.env.NODE_ENV,
 			RUNTIME: alchemy.env.RUNTIME,
-			CORS_ORIGIN: alchemy.env.CORS_ORIGIN,
+			CORS_ORIGIN: alchemy.env.WEB_URL,
 			AUTH_SECRET: alchemy.secret(alchemy.env.AUTH_SECRET),
 			AUTH_URL: alchemy.env.AUTH_URL,
 			S3_ENDPOINT: alchemy.secret.env.S3_ENDPOINT,
@@ -51,6 +51,7 @@ export const [server, web] = await Promise.all([
 			S3_ACCESS_KEY_ID: alchemy.secret.env.S3_ACCESS_KEY_ID,
 			S3_SECRET_ACCESS_KEY: alchemy.secret.env.S3_SECRET_ACCESS_KEY,
 			S3_PUBLIC_URL: alchemy.env.S3_PUBLIC_URL,
+			RESEND_API_KEY: alchemy.secret.env.RESEND_API_KEY,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
 			SESSION_KV: sessionKV,
@@ -66,6 +67,7 @@ export const [server, web] = await Promise.all([
 		bundle: { minify: !isDev, sourcemap: isDev },
 		bindings: {
 			VITE_NODE_ENV: alchemy.env.NODE_ENV,
+			VITE_WEB_URL: alchemy.env.WEB_URL,
 			VITE_SERVER_URL: alchemy.env.SERVER_URL,
 		},
 		dev: {
