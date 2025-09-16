@@ -1,0 +1,31 @@
+{
+	"name": "@repo/i18n",
+	"type": "module",
+	"version": "0.0.0",
+	"private": true,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./src/index.js"
+		},
+		"./*": {
+			"types": "./dist/*.d.ts",
+			"import": "./src/*.js"
+		}
+	},
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch",
+		"postinstall": "tsdown",
+		"machine-translate": "inlang machine translate --project project.inlang"
+	},
+	"devDependencies": {
+		"@inlang/cli": "^3.0.0",
+		"@inlang/paraglide-js": "2.3.2",
+		"tsdown": "^0.15.1",
+		"unplugin-dts": "^1.0.0-beta.6"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}

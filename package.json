@@ -10,7 +10,8 @@
 	"scripts": {
 		"check": "biome check --write .",
 		"prepare": "husky",
-		"dev": "bun run dev:alchemy",
+		"dev": "concurrently --names 'alchemy,i18n' --prefix-colors 'cyan,magenta' 'bun run dev:alchemy' 'bun run dev:i18n'",
+		"dev:i18n": "turbo -F @repo/i18n dev",
 		"build": "turbo build",
 		"check-types": "turbo check-types",
 		"dev:alchemy": "alchemy dev",
