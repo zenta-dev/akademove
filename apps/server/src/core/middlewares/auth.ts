@@ -7,7 +7,7 @@ export const requireAuthMiddleware = createMiddleware<HonoContext>(
 	async (c, next) => {
 		try {
 			const h = c.req.header();
-			const authHeader = h["authorization"];
+			const authHeader = h.authorization;
 			if (authHeader) {
 				const token = authHeader.split(" ")[1];
 				console.log(token);

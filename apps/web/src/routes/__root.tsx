@@ -8,8 +8,10 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { useCallback, useEffect } from "react";
 import Loader from "@/components/loader";
 import { Toaster } from "@/components/ui/sonner";
+import { authClient } from "@/lib/auth-client";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
@@ -43,6 +45,12 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootDocument() {
 	const isFetching = useRouterState({ select: (s) => s.isLoading });
+
+	const getSession = useCallback(authClient.getSession, []);
+	useEffect(() => {
+		getSession();
+	}, [getSession]);
+
 	return (
 		<html lang="en" className="dark">
 			<head>

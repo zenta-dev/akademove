@@ -8,7 +8,6 @@ import type { ReportRepository } from "@/features/report/repository";
 import type { ReviewRepository } from "@/features/review/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { AuthInstance } from "./services/auth";
-import type { DatabaseInstance } from "./services/db";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
 

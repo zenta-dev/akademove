@@ -49,7 +49,20 @@ function RouteComponent() {
 			return data;
 		},
 		onSuccess: async (data) => {
-			toast.success(m.success_placeholder({ action: m.sign_in() }));
+			const result = await authClient.getSession();
+			if (result.error || !result.data) {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.sign_in().toLowerCase()),
+					}),
+				);
+				return;
+			}
+			toast.success(m.success_placeholder({ action: m.sign_in() }), {
+				description: m.welcome_back_placeholder({
+					name: result.data.user.name,
+				}),
+			});
 			if (data?.redirect && data?.url) {
 				await router.navigate({ to: data.url });
 			} else {
