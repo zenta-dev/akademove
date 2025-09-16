@@ -65,6 +65,8 @@ function RouteComponent() {
 			);
 			if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
 				form.setError("email", { message: error.message });
+			} else {
+				form.setError("confirmPassword", { message: error.message });
 			}
 		},
 	});

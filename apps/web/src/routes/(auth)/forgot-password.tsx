@@ -65,6 +65,7 @@ function RouteComponent() {
 					description: error.message || m.an_unexpected_error_occured(),
 				},
 			);
+			form.setError("email", { message: error.message });
 		},
 	});
 

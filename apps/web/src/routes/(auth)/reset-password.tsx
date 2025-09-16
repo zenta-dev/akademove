@@ -86,6 +86,7 @@ function RouteComponent() {
 					description: error.message || m.an_unexpected_error_occured(),
 				},
 			);
+			form.setError("confirmPassword", { message: error.message });
 		},
 	});
 
