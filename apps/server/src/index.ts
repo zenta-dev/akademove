@@ -9,6 +9,7 @@ import { TRUSTED_ORIGINS } from "./core/constants";
 import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
 import { CloudflareKVService } from "./core/services/kv";
+import { ResendMailService } from "./core/services/mail";
 import { DriverRepository } from "./features/driver/repository";
 import { AppHandler } from "./features/handler";
 import { MerchantRepository } from "./features/merchant/repository";
@@ -29,6 +30,8 @@ app.use("*", async (c, next) => {
 	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
 	c.set("kv", kv);
+	const mail = new ResendMailService(env.RESEND_API_KEY);
+	c.set("mail", mail);
 	const repo = {
 		driver: new DriverRepository(db, kv),
 		merchant: new MerchantRepository(db, kv),

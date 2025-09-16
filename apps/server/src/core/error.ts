@@ -50,6 +50,13 @@ export class KeyValueError extends BaseError {
 	}
 }
 
+export class MailError extends BaseError {
+	constructor(message: string, { prevError }: ErrorOptions = {}) {
+		super(message, { prevError });
+		this.name = "MailError";
+	}
+}
+
 export class StorageError extends BaseError {
 	constructor(message: string, { prevError }: ErrorOptions = {}) {
 		super(message, { prevError });

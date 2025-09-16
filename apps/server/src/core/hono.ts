@@ -1,5 +1,5 @@
+import type { StandardSchemaV1 } from "better-auth";
 import { type Env, Hono, type ValidationTargets } from "hono";
-import type { StandardSchemaV1 } from "node_modules/zod/v4/core/standard-schema";
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantRepository } from "@/features/merchant/repository";
 import type { OrderRepository } from "@/features/order/repository";
@@ -10,12 +10,14 @@ import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { AuthInstance } from "./services/auth";
 import type { DatabaseInstance } from "./services/db";
 import type { KeyValueService } from "./services/kv";
+import type { MailService } from "./services/mail";
 
 export type HonoContext = {
 	Variables: {
 		// db: DatabaseInstance;
 		auth: AuthInstance;
 		kv: KeyValueService;
+		mail: MailService;
 		userId: string;
 		repo: {
 			driver: DriverRepository;
