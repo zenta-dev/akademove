@@ -39,7 +39,6 @@
 	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {
 		"enabled": true,
-		"includes": ["!**/api-client"],
 		"rules": {
 			"recommended": true,
 			"correctness": {
