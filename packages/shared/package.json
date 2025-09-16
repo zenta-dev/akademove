@@ -1,0 +1,14 @@
+{
+	"name": "@repo/shared",
+	"type": "module",
+	"version": "0.0.1",
+	"private": true,
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.ts",
+		"./**/*": "./src/**/*.ts"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
+}
