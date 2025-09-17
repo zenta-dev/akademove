@@ -2,21 +2,6 @@ import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
 
-export const UserSchema = z
-	.object({
-		id: z.string(),
-		name: z.string(),
-		email: z.email(),
-		emailVerified: z.boolean().default(false),
-		image: z.url().optional(),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
-	})
-	.meta({
-		title: "User",
-		ref: "User",
-	});
-
 export const SessionSchema = z
 	.object({
 		id: z.string(),
@@ -80,7 +65,6 @@ export const ResetPasswordSchema = z
 		message: m.password_do_not_match(),
 	});
 
-export type User = z.infer<typeof UserSchema>;
 export type Session = z.infer<typeof SessionSchema>;
 export type SignIn = z.infer<typeof SignInSchema>;
 export type SignUp = z.infer<typeof SignUpSchema>;
