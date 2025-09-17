@@ -27,14 +27,19 @@ export const CursorPaginationQuerySchema = z.object({
 export const UnifiedPaginationQuerySchema = z
 	.object({
 		cursor: z.string().optional(),
-		page: z.preprocess(
-			(v) => (v ? Number(v) : undefined),
-			z.number().int().min(1).optional(),
-		),
-		limit: z.preprocess(
-			(v) => (v === undefined || v === "" ? 10 : Number(v)),
-			z.number().int().min(1).max(MAX_LIMIT).default(10),
-		),
+		page: z
+			.preprocess(
+				(v) => (v ? Number(v) : undefined),
+				z.number().int().min(1).optional(),
+			)
+			.optional(),
+		limit: z
+			.preprocess(
+				(v) => (v === undefined || v === "" ? 10 : Number(v)),
+				z.number().int().min(1).max(MAX_LIMIT).default(10),
+			)
+			.optional()
+			.default(10),
 	})
 	.refine((data) => !(data.cursor && data.page), {
 		message: "Cannot use both cursor and page at the same time.",
