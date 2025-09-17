@@ -10,6 +10,7 @@ export const FEATURE_TAGS = Object.freeze({
 	PROMO: "Promo",
 	REPORT: "Report",
 	REVIEW: "Review",
+	USER: "User",
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
@@ -25,6 +26,7 @@ export const CACHE_PREFIXES = Object.freeze({
 	PROMO: `${FEATURE_TAGS.PROMO.toLowerCase()}:`,
 	REPORT: `${FEATURE_TAGS.REPORT.toLowerCase()}:`,
 	REVIEW: `${FEATURE_TAGS.REVIEW.toLowerCase()}:`,
+	USER: `${FEATURE_TAGS.USER.toLowerCase()}:`,
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 

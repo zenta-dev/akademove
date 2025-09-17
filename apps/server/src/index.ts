@@ -18,6 +18,7 @@ import { PromoRepository } from "./features/promo/repository";
 import { ReportRepository } from "./features/report/repository";
 import { ReviewRepository } from "./features/review/repository";
 import { ScheduleRepository } from "./features/schedule/repository";
+import { UserRepository } from "./features/user/repository";
 import { isCloudflare } from "./utils";
 
 const app = createHono();
@@ -41,6 +42,7 @@ app.use("*", async (c, next) => {
 		promo: new PromoRepository(db, kv),
 		report: new ReportRepository(db, kv),
 		review: new ReviewRepository(db, kv),
+		user: new UserRepository(db, kv),
 	};
 	c.set("repo", repo);
 
