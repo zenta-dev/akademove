@@ -9,6 +9,7 @@ import type { ReviewRepository } from "@/features/review/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { UserRepository } from "@/features/user/repository";
 import type { AuthInstance } from "./services/auth";
+import type { HasPermissionRole } from "./services/auth.permission";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
 
@@ -18,7 +19,11 @@ export type HonoContext = {
 		auth: AuthInstance;
 		kv: KeyValueService;
 		mail: MailService;
-		userId: string;
+		user: {
+			id: string;
+			role: HasPermissionRole;
+			banned: boolean;
+		};
 		repo: {
 			driver: DriverRepository;
 			merchant: MerchantRepository;

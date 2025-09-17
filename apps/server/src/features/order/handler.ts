@@ -70,7 +70,7 @@ const h = createHono()
 			// TODO: fix this the logic is flaw
 			const result = await c.var.repo.order.create({
 				...c.req.valid("json"),
-				userId: c.var.userId,
+				userId: c.var.user.id,
 			});
 
 			return c.json(

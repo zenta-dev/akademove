@@ -3,7 +3,10 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { InsertUserSchema, UpdateUserSchema } from "@repo/schema/user";
 import { validator } from "hono-openapi";
 import { createHono, handleValidation } from "@/core/hono";
-import { requireAuthMiddleware } from "@/core/middlewares/auth";
+import {
+	requireAuthMiddleware,
+	requiredPermissions,
+} from "@/core/middlewares/auth";
 import { UserSpec } from "./spec";
 
 const h = createHono()
@@ -11,6 +14,7 @@ const h = createHono()
 	.get(
 		"/",
 		UserSpec.list,
+		requiredPermissions({ user: ["read-all"] }),
 		validator("query", UnifiedPaginationQuerySchema, handleValidation),
 		async (c) => {
 			const result = await c.var.repo.user.getAll(c.req.valid("query"));

@@ -83,7 +83,7 @@ const h = createHono()
 		async (c) => {
 			const result = await c.var.repo.driver.create({
 				...c.req.valid("json"),
-				userId: c.var.userId,
+				userId: c.var.user.id,
 			});
 
 			return c.json(

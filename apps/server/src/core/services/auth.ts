@@ -3,10 +3,11 @@ import { scryptSync } from "node:crypto";
 import { AUTH_CONSTANTS } from "@repo/schema/constants";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { jwt, openAPI } from "better-auth/plugins";
+import { admin, jwt, openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
 import { isDev } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
+import { ac, roles } from "./auth.permission";
 import type { DatabaseInstance } from "./db";
 import type { KeyValueService } from "./kv";
 import type { MailService } from "./mail";
@@ -118,10 +119,13 @@ export const getAuth = (
 						return {
 							id: user.id,
 							email: user.email,
+							role: user.role,
+							banned: user.banned,
 						};
 					},
 				},
 			}),
+			admin({ ac, roles }),
 		],
 	});
 
