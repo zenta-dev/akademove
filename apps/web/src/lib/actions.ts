@@ -45,3 +45,40 @@ export const getSession = createIsomorphicFn()
 		if (!result || !result.user) return undefined;
 		return result;
 	});
+
+type Permissions = Parameters<
+	(typeof authClient)["admin"]["hasPermission"]
+>["0"]["permissions"];
+
+export const hasAccess = createIsomorphicFn()
+	.client(async (permissions: Permissions) => {
+		console.log("client permissions", permissions);
+
+		const result = await authClient.admin.hasPermission({
+			permissions,
+		});
+		if (result.error || result.data.error || !result.data.success) return false;
+		return true;
+	})
+	.server(async (permissions: Permissions) => {
+		console.log("server permissions", permissions);
+		const headers = getHeaders();
+		const response = await fetch(
+			`${import.meta.env.VITE_SERVER_URL}/auth/admin/has-permission`,
+			{
+				credentials: "include",
+				method: "POST",
+				headers: {
+					Cookie: headers.cookie || "",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ permissions }),
+			},
+		);
+		if (!response.ok) return false;
+		const result = await response.json();
+		if (!result) return false;
+		if (result.error) return false;
+		if (!result.success) return false;
+		return true;
+	});

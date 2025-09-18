@@ -1,14 +1,14 @@
-import type { User, UserRole } from "@repo/schema/user";
-import { redirect } from "@tanstack/react-router";
+// import type { User, UserRole } from "@repo/schema/user";
+// import { redirect } from "@tanstack/react-router";
 
-export const requireRole = async (role: UserRole, user?: User) => {
-	if (!user) {
-		redirect({ to: "/", throw: true });
-		return false;
-	}
-	if (user.role !== role) {
-		redirect({ to: `/dash/${user.role}`, throw: true });
-		return false;
-	}
-	return true;
-};
+// export const requireRole = async (role: UserRole, user?: User) => {
+// 	if (!user) {
+// 		redirect({ to: "/", throw: true });
+// 		return false;
+// 	}
+// 	if (user.role !== role) {
+// 		redirect({ to: `/dash/${user.role}`, throw: true });
+// 		return false;
+// 	}
+// 	return true;
+// };

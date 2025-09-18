@@ -4,7 +4,7 @@ import { AUTH_CONSTANTS } from "@repo/schema/constants";
 import { authPermission } from "@repo/shared";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin, jwt, openAPI } from "better-auth/plugins";
+import { admin, openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
 import { isDev } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
@@ -105,10 +105,9 @@ export const getAuth = (
 				session_data: { name: AUTH_CONSTANTS.SESSION_DATA },
 				dont_remember: { name: AUTH_CONSTANTS.SESSION_DONT_REMEMBER },
 			},
-			defaultCookieAttributes: {
-				sameSite: "none",
-				secure: true,
-				httpOnly: true,
+			crossSubDomainCookies: {
+				enabled: true,
+				domain: isDev ? "localhost" : ".zenta.dev",
 			},
 		},
 		plugins: [

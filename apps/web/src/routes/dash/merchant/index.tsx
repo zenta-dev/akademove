@@ -1,14 +1,32 @@
 import { m } from "@repo/i18n";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Card, CardContent } from "@/components/ui/card";
+import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/merchant/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.OVERVIEW }] }),
+	beforeLoad: async () => {
+		const ok = await hasAccess({
+			merchant: ["get", "update"],
+			order: ["get", "update"],
+			review: ["get"],
+			report: ["get"],
+		});
+		if (!ok) redirect({ to: "/", throw: true });
+		return { allowed: ok };
+	},
+	loader: ({ context }) => {
+		return { allowed: context.allowed };
+	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
+	const { allowed } = Route.useLoaderData();
+	const navigate = useNavigate();
+	if (!allowed) navigate({ to: "/" });
+
 	return (
 		<>
 			<div>
