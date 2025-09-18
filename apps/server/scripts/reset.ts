@@ -1,7 +1,7 @@
+import * as readline from "node:readline";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { reset } from "drizzle-seed";
 import postgres from "postgres";
-import * as readline from "readline";
 
 import * as auth from "@/core/tables/auth";
 import * as driver from "@/core/tables/driver";
