@@ -11,6 +11,8 @@
 		"db:studio": "bun with-env drizzle-kit studio",
 		"db:generate": "bun with-env drizzle-kit generate",
 		"db:migrate": "bun with-env drizzle-kit migrate",
+		"db:seed": "bun with-env bun scripts/seed.ts",
+		"db:reset": "bun with-env bun scripts/reset.ts",
 		"dev": "alchemy dev",
 		"deploy": "alchemy deploy",
 		"destroy": "alchemy destroy",
@@ -40,6 +42,7 @@
 		"dotenv": "^17.2.1",
 		"dotenv-cli": "^10.0.0",
 		"drizzle-kit": "^0.31.2",
+		"drizzle-seed": "^0.3.1",
 		"tsdown": "^0.15.1",
 		"typescript": "^5.8.2",
 		"wrangler": "^4.37.1"
