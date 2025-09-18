@@ -30,6 +30,7 @@ export default defineConfig({
 			external: ["node:async_hooks", "cloudflare:workers"],
 			output: {
 				manualChunks(id) {
+					// console.log("IDDD => ", id);
 					if (id.includes("node_modules")) {
 						const parts = id.split("/");
 						const idx = parts.lastIndexOf("node_modules");
@@ -44,9 +45,13 @@ export default defineConfig({
 							return simpleHash("rsc");
 						}
 
-						if (id.includes("zod")) return simpleHash("z");
+						// if (id.includes("zod")) return simpleHash("z");
+						// if (id.includes("radix-ui")) return simpleHash("rdxui");
 						if (id.includes("lucide")) return simpleHash("l");
 						if (id.includes("sonner")) return simpleHash("s");
+						if (id.includes("framer-motion")) return simpleHash("fm");
+						if (id.includes("date-fns")) return simpleHash("dfns");
+						if (id.includes("react-day-picker")) return simpleHash("rdp");
 						if (parts[idx + 1] === "@tanstack") {
 							if (parts[idx + 2] === "react-query-devtools")
 								return simpleHash("tsrqd");
@@ -60,6 +65,7 @@ export default defineConfig({
 							if (parts[idx + 2] === "react-query") return simpleHash("tsrq");
 							if (parts[idx + 2] === "store") return simpleHash("tss");
 							if (parts[idx + 2] === "history") return simpleHash("tsh");
+							if (parts[idx + 2] === "react-table") return simpleHash("tsrt");
 							if (parts[idx + 2] === "react-router") return simpleHash("tsrr");
 							if (parts[idx + 2] === "query-core") return simpleHash("tsqc");
 							if (parts[idx + 2] === "router-core") return simpleHash("tsrc");
@@ -67,6 +73,21 @@ export default defineConfig({
 						}
 						return simpleHash("v");
 					}
+					if (id.includes("apps")) {
+						const parts = id.split("/");
+						const idx = parts.lastIndexOf("web");
+						const finalPath = parts.slice(idx + 1).join("/");
+						const filename = finalPath.split("/").pop() || "";
+						const [name, ext] = filename.includes(".")
+							? [
+									filename.slice(0, filename.lastIndexOf(".")),
+									filename.split(".").pop(),
+								]
+							: [filename, ""];
+
+						return simpleHash(`a${name}.${ext}`);
+					}
+
 					if (id.includes("packages")) {
 						const parts = id.split("/");
 						const fileName = parts[parts.length - 1]?.replace(
