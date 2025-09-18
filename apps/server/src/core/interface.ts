@@ -7,9 +7,9 @@ export interface GetAllOptions extends GetOptions, UnifiedPaginationQuery {}
 
 export abstract class BaseRepository<T> {
 	// Database specifix
-	abstract getAll(opts?: GetAllOptions): Promise<T[]>;
+	abstract getAll(opts?: GetAllOptions, ...args: unknown[]): Promise<T[]>;
 	abstract getById(id: string, opts?: GetOptions): Promise<T | undefined>;
-	abstract create(item: T): Promise<T>;
-	abstract update(id: string, item: Partial<T>): Promise<T>;
+	abstract create(item: unknown): Promise<T>;
+	abstract update(id: string, item: unknown, ...args: unknown[]): Promise<T>;
 	abstract delete(id: string): Promise<void>;
 }
