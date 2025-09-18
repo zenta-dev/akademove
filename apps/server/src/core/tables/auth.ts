@@ -1,3 +1,4 @@
+import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
 import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
@@ -7,7 +8,7 @@ export const user = pgTable("users", {
 	email: text("email").notNull().unique(),
 	emailVerified: boolean("email_verified").notNull(),
 	image: text("image"),
-	role: text().notNull().default("user"),
+	role: text().notNull().$type<UserRole>().default("user"),
 	banned: boolean().notNull().default(false),
 	banReason: text("ban_reason"),
 	banExpires: timestamp("ban_expires"),
