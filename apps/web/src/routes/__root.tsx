@@ -5,13 +5,10 @@ import {
 	HeadContent,
 	Outlet,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { useCallback, useEffect } from "react";
-import Loader from "@/components/loader";
 import { Toaster } from "@/components/ui/sonner";
-import { authClient } from "@/lib/auth-client";
+import { APP_NAME } from "@/lib/constants";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
@@ -30,7 +27,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "My App",
+				title: APP_NAME,
 			},
 		],
 		links: [
@@ -44,21 +41,14 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-	const isFetching = useRouterState({ select: (s) => s.isLoading });
-
-	const getSession = useCallback(authClient.getSession, []);
-	useEffect(() => {
-		getSession();
-	}, [getSession]);
-
 	return (
-		<html lang="en" className="dark">
+		<html lang="en" className="light">
 			<head>
 				<HeadContent />
 			</head>
-			<body>
-				<div className="grid h-svh grid-rows-[auto_1fr]">
-					{isFetching ? <Loader /> : <Outlet />}
+			<body className="h-svh w-svw">
+				<div className="grid h-svh grid-rows-[auto_1fr] bg-muted/50 dark:bg-muted/10">
+					<Outlet />
 				</div>
 				<Toaster richColors />
 				<TanStackRouterDevtools position="bottom-left" />
