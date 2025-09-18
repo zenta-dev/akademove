@@ -1,22 +1,10 @@
 import { m } from "@repo/i18n";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { SidebarIcon, UserRound } from "lucide-react";
+import { SidebarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { authClient } from "@/lib/auth-client";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Skeleton } from "../ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { UserDropdwon } from "./user-dropdown";
 
 export const DashboardHeader = ({ scope }: { scope: string }) => {
 	const sidebar = useSidebar();
@@ -50,55 +38,5 @@ export const DashboardHeader = ({ scope }: { scope: string }) => {
 				<UserDropdwon />
 			</div>
 		</header>
-	);
-};
-
-const UserDropdwon = () => {
-	const navigate = useNavigate();
-	const { data: user, isPending } = useQuery({
-		queryKey: ["my-session"],
-		queryFn: async () => {
-			const ses = await authClient.getSession();
-			return ses.data?.user;
-		},
-	});
-
-	if (isPending) {
-		return <Skeleton className="size-8 rounded-full" />;
-	}
-
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Avatar>
-					<AvatarImage src={user?.image || ""} />
-					<AvatarFallback>
-						<UserRound />
-					</AvatarFallback>
-				</Avatar>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent className="bg-card">
-				<DropdownMenuLabel>My Account</DropdownMenuLabel>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem>{user?.email}</DropdownMenuItem>
-				<DropdownMenuItem asChild>
-					<Button
-						variant="destructive"
-						className="w-full"
-						onClick={() => {
-							authClient.signOut({
-								fetchOptions: {
-									onSuccess: () => {
-										navigate({ to: "/sign-in" });
-									},
-								},
-							});
-						}}
-					>
-						Sign Out
-					</Button>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
 	);
 };
