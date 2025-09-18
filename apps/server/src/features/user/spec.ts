@@ -48,17 +48,17 @@ export const UserSpec = Object.freeze({
 			500: FAILED_RESPONSES["500"],
 		},
 	}),
-	create: describeRoute({
-		operationId: "createUser",
+	invite: describeRoute({
+		operationId: "inviteUser",
 		tags: [FEATURE_TAGS.USER],
 		responses: {
 			200: {
-				description: "Create user success",
+				description: "Invite user success",
 				content: {
 					"application/json": {
 						schema: resolver(
 							createSuccessResponseSchema(UserSchema).meta({
-								title: "CreateUserSuccessResponse",
+								title: "InviteUserSuccessResponse",
 							}),
 						),
 					},
@@ -83,7 +83,6 @@ export const UserSpec = Object.freeze({
 					},
 				},
 			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.USER),
 			500: FAILED_RESPONSES["500"],
 		},
 	}),
