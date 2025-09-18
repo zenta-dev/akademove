@@ -28,6 +28,7 @@
 			"!**/dart",
 			"!**/.output",
 			"!**/.nitro",
+			"!**/i18n",
 			"!**/.tanstack",
 			"!**/*.css"
 		]
