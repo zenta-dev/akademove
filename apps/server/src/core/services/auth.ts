@@ -113,18 +113,18 @@ export const getAuth = (
 		},
 		plugins: [
 			openAPI(),
-			jwt({
-				jwt: {
-					definePayload: ({ user }) => {
-						return {
-							id: user.id,
-							email: user.email,
-							role: user.role,
-							banned: user.banned,
-						};
-					},
-				},
-			}),
+			// jwt({
+			// 	jwt: {
+			// 		definePayload: ({ user }) => {
+			// 			return {
+			// 				id: user.id,
+			// 				email: user.email,
+			// 				role: user.role,
+			// 				banned: user.banned,
+			// 			};
+			// 		},
+			// 	},
+			// }),
 			admin({ ac, roles }),
 		],
 	});
