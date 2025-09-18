@@ -11,10 +11,23 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RefIndexRouteImport } from './routes/ref/index'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as DashUserRouteRouteImport } from './routes/dash/user/route'
+import { Route as DashOperatorRouteRouteImport } from './routes/dash/operator/route'
+import { Route as DashMerchantRouteRouteImport } from './routes/dash/merchant/route'
+import { Route as DashDriverRouteRouteImport } from './routes/dash/driver/route'
+import { Route as DashAdminRouteRouteImport } from './routes/dash/admin/route'
+import { Route as DashAdminIndexRouteImport } from './routes/dash/admin/index'
+import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
+import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
+import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
+import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
+import { Route as DashAdminConfigurationsRouteImport } from './routes/dash/admin/configurations'
+import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
 
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
@@ -23,6 +36,11 @@ const authRouteRoute = authRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RefIndexRoute = RefIndexRouteImport.update({
+  id: '/ref/',
+  path: '/ref/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authSignUpRoute = authSignUpRouteImport.update({
@@ -45,53 +63,200 @@ const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   path: '/forgot-password',
   getParentRoute: () => authRouteRoute,
 } as any)
+const DashUserRouteRoute = DashUserRouteRouteImport.update({
+  id: '/dash/user',
+  path: '/dash/user',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashOperatorRouteRoute = DashOperatorRouteRouteImport.update({
+  id: '/dash/operator',
+  path: '/dash/operator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashMerchantRouteRoute = DashMerchantRouteRouteImport.update({
+  id: '/dash/merchant',
+  path: '/dash/merchant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashDriverRouteRoute = DashDriverRouteRouteImport.update({
+  id: '/dash/driver',
+  path: '/dash/driver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashAdminRouteRoute = DashAdminRouteRouteImport.update({
+  id: '/dash/admin',
+  path: '/dash/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashAdminIndexRoute = DashAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminUsersRoute = DashAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminOrdersRoute = DashAdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminMerchantsRoute = DashAdminMerchantsRouteImport.update({
+  id: '/merchants',
+  path: '/merchants',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminDriversRoute = DashAdminDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminConfigurationsRoute = DashAdminConfigurationsRouteImport.update({
+  id: '/configurations',
+  path: '/configurations',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminAnalyticsRoute = DashAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof authRouteRouteWithChildren
+  '/dash/admin': typeof DashAdminRouteRouteWithChildren
+  '/dash/driver': typeof DashDriverRouteRoute
+  '/dash/merchant': typeof DashMerchantRouteRoute
+  '/dash/operator': typeof DashOperatorRouteRoute
+  '/dash/user': typeof DashUserRouteRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/ref': typeof RefIndexRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/admin/': typeof DashAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof authRouteRouteWithChildren
+  '/dash/driver': typeof DashDriverRouteRoute
+  '/dash/merchant': typeof DashMerchantRouteRoute
+  '/dash/operator': typeof DashOperatorRouteRoute
+  '/dash/user': typeof DashUserRouteRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/ref': typeof RefIndexRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/admin': typeof DashAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/dash/admin': typeof DashAdminRouteRouteWithChildren
+  '/dash/driver': typeof DashDriverRouteRoute
+  '/dash/merchant': typeof DashMerchantRouteRoute
+  '/dash/operator': typeof DashOperatorRouteRoute
+  '/dash/user': typeof DashUserRouteRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
+  '/ref/': typeof RefIndexRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/admin/': typeof DashAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/dash/admin'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/ref'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forgot-password' | '/reset-password' | '/sign-in' | '/sign-up'
+  to:
+    | '/'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
+    | '/ref'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/admin'
   id:
     | '__root__'
     | '/'
     | '/(auth)'
+    | '/dash/admin'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
+    | '/ref/'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  DashAdminRouteRoute: typeof DashAdminRouteRouteWithChildren
+  DashDriverRouteRoute: typeof DashDriverRouteRoute
+  DashMerchantRouteRoute: typeof DashMerchantRouteRoute
+  DashOperatorRouteRoute: typeof DashOperatorRouteRoute
+  DashUserRouteRoute: typeof DashUserRouteRoute
+  RefIndexRoute: typeof RefIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -108,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ref/': {
+      id: '/ref/'
+      path: '/ref'
+      fullPath: '/ref'
+      preLoaderRoute: typeof RefIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/sign-up': {
@@ -138,6 +310,90 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/dash/user': {
+      id: '/dash/user'
+      path: '/dash/user'
+      fullPath: '/dash/user'
+      preLoaderRoute: typeof DashUserRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dash/operator': {
+      id: '/dash/operator'
+      path: '/dash/operator'
+      fullPath: '/dash/operator'
+      preLoaderRoute: typeof DashOperatorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dash/merchant': {
+      id: '/dash/merchant'
+      path: '/dash/merchant'
+      fullPath: '/dash/merchant'
+      preLoaderRoute: typeof DashMerchantRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dash/driver': {
+      id: '/dash/driver'
+      path: '/dash/driver'
+      fullPath: '/dash/driver'
+      preLoaderRoute: typeof DashDriverRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dash/admin': {
+      id: '/dash/admin'
+      path: '/dash/admin'
+      fullPath: '/dash/admin'
+      preLoaderRoute: typeof DashAdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dash/admin/': {
+      id: '/dash/admin/'
+      path: '/'
+      fullPath: '/dash/admin/'
+      preLoaderRoute: typeof DashAdminIndexRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/users': {
+      id: '/dash/admin/users'
+      path: '/users'
+      fullPath: '/dash/admin/users'
+      preLoaderRoute: typeof DashAdminUsersRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/orders': {
+      id: '/dash/admin/orders'
+      path: '/orders'
+      fullPath: '/dash/admin/orders'
+      preLoaderRoute: typeof DashAdminOrdersRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/merchants': {
+      id: '/dash/admin/merchants'
+      path: '/merchants'
+      fullPath: '/dash/admin/merchants'
+      preLoaderRoute: typeof DashAdminMerchantsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/drivers': {
+      id: '/dash/admin/drivers'
+      path: '/drivers'
+      fullPath: '/dash/admin/drivers'
+      preLoaderRoute: typeof DashAdminDriversRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/configurations': {
+      id: '/dash/admin/configurations'
+      path: '/configurations'
+      fullPath: '/dash/admin/configurations'
+      preLoaderRoute: typeof DashAdminConfigurationsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/analytics': {
+      id: '/dash/admin/analytics'
+      path: '/analytics'
+      fullPath: '/dash/admin/analytics'
+      preLoaderRoute: typeof DashAdminAnalyticsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
   }
 }
 
@@ -159,9 +415,39 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface DashAdminRouteRouteChildren {
+  DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
+  DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
+  DashAdminDriversRoute: typeof DashAdminDriversRoute
+  DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
+  DashAdminOrdersRoute: typeof DashAdminOrdersRoute
+  DashAdminUsersRoute: typeof DashAdminUsersRoute
+  DashAdminIndexRoute: typeof DashAdminIndexRoute
+}
+
+const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
+  DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
+  DashAdminConfigurationsRoute: DashAdminConfigurationsRoute,
+  DashAdminDriversRoute: DashAdminDriversRoute,
+  DashAdminMerchantsRoute: DashAdminMerchantsRoute,
+  DashAdminOrdersRoute: DashAdminOrdersRoute,
+  DashAdminUsersRoute: DashAdminUsersRoute,
+  DashAdminIndexRoute: DashAdminIndexRoute,
+}
+
+const DashAdminRouteRouteWithChildren = DashAdminRouteRoute._addFileChildren(
+  DashAdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  DashAdminRouteRoute: DashAdminRouteRouteWithChildren,
+  DashDriverRouteRoute: DashDriverRouteRoute,
+  DashMerchantRouteRoute: DashMerchantRouteRoute,
+  DashOperatorRouteRoute: DashOperatorRouteRoute,
+  DashUserRouteRoute: DashUserRouteRoute,
+  RefIndexRoute: RefIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
