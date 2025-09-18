@@ -46,7 +46,6 @@ function RouteComponent() {
 	const signUpMutation = useMutation({
 		mutationFn: async (credentials: SignUp) => {
 			const { error, data } = await authClient.signUp.email(credentials);
-			console.log(error);
 			if (error) throw new BetterAuthClientError(error.message, error);
 			return data;
 		},
