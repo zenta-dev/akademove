@@ -1,13 +1,16 @@
 interface ErrorOptions {
+	code?: string | number;
 	prevError?: Error;
 }
 
 export abstract class BaseError extends Error {
+	private readonly code?: string | number;
 	private readonly prevError?: Error;
 
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
 		super(message);
 		this.name = this.constructor.name;
+		this.code = code;
 		this.prevError = prevError;
 		Error.captureStackTrace(this, this.constructor);
 	}
@@ -24,6 +27,7 @@ export abstract class BaseError extends Error {
 		return {
 			success: false,
 			message: this.message,
+			code: this.code,
 			errors: [
 				{
 					name: this.name,
@@ -44,36 +48,36 @@ export abstract class BaseError extends Error {
 }
 
 export class KeyValueError extends BaseError {
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
-		super(message, { prevError });
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
+		super(message, { code, prevError });
 		this.name = "KeyValueError";
 	}
 }
 
 export class MailError extends BaseError {
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
-		super(message, { prevError });
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
+		super(message, { code, prevError });
 		this.name = "MailError";
 	}
 }
 
 export class StorageError extends BaseError {
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
-		super(message, { prevError });
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
+		super(message, { code, prevError });
 		this.name = "StorageError";
 	}
 }
 
 export class RepositoryError extends BaseError {
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
-		super(message, { prevError });
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
+		super(message, { code, prevError });
 		this.name = "RepositoryError";
 	}
 }
 
 export class MiddlewareError extends BaseError {
-	constructor(message: string, { prevError }: ErrorOptions = {}) {
-		super(message, { prevError });
+	constructor(message: string, { code, prevError }: ErrorOptions = {}) {
+		super(message, { code, prevError });
 		this.name = "MiddlewareError";
 	}
 }
