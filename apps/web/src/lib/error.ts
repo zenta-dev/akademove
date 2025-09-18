@@ -6,6 +6,13 @@ export abstract class BaseError extends Error {
 	}
 }
 
+export class APIError extends BaseError {
+	constructor(message?: string) {
+		super(message);
+		this.name = "APIError";
+	}
+}
+
 interface BACOptions {
 	code?: string;
 }
