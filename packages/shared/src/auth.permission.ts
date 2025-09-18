@@ -6,13 +6,13 @@ import { createAccessControl } from "better-auth/plugins/access";
 ///
 
 const statement = {
-	driver: ["create", "read", "update", "delete", "ban", "approve"],
-	merchant: ["create", "read", "update", "delete", "approve"],
-	order: ["create", "read", "update", "delete", "cancel", "assign"],
-	schedule: ["create", "read", "update", "delete"],
-	promo: ["create", "read", "update", "delete", "approve"],
-	report: ["create", "read", "update", "delete", "export"],
-	review: ["create", "read", "update", "delete", "moderate"],
+	driver: ["create", "get", "update", "delete", "ban", "approve"],
+	merchant: ["create", "get", "update", "delete", "approve"],
+	order: ["create", "get", "update", "delete", "cancel", "assign"],
+	schedule: ["create", "get", "update", "delete"],
+	promo: ["create", "get", "update", "delete", "approve"],
+	report: ["create", "get", "update", "delete", "export"],
+	review: ["create", "get", "update", "delete"],
 	user: [
 		"invite",
 		"create",
@@ -28,18 +28,20 @@ const statement = {
 		"update",
 	],
 	session: ["list", "revoke", "delete"],
+	pricing: ["get", "update", "delete"],
+	bookings: ["create", "get", "update", "delete"],
 } as const;
 
 const ac = createAccessControl(statement);
 
 const admin = ac.newRole({
-	driver: ["read", "update", "ban", "approve"],
-	merchant: ["read", "update", "delete", "approve"],
-	order: ["read", "update", "delete", "cancel", "assign"],
-	schedule: ["read", "update", "delete"],
-	promo: ["create", "read", "update", "delete", "approve"],
-	report: ["create", "read", "update", "delete", "export"],
-	review: ["read", "update", "delete", "moderate"],
+	driver: ["get", "update", "ban", "approve"],
+	merchant: ["get", "update", "delete", "approve"],
+	order: ["get", "update", "delete", "cancel", "assign"],
+	schedule: ["get", "update", "delete"],
+	promo: ["create", "get", "update", "delete", "approve"],
+	report: ["create", "get", "update", "delete", "export"],
+	review: ["get", "update", "delete"],
 	user: [
 		"invite",
 		"list",
@@ -52,41 +54,44 @@ const admin = ac.newRole({
 		"ban",
 	],
 	session: ["list", "revoke", "delete"],
+	pricing: ["get", "update", "delete"],
+	bookings: ["create", "get", "update", "delete"],
 });
 
 const operator = ac.newRole({
-	driver: ["read", "update", "ban"],
-	merchant: ["read", "update"],
-	order: ["read", "update", "cancel", "assign"],
-	schedule: ["read", "update"],
-	promo: ["read", "update"],
-	report: ["create", "read", "export"],
-	review: ["read", "moderate"],
+	driver: ["get", "update", "ban"],
+	merchant: ["get", "update"],
+	order: ["get", "update", "cancel", "assign"],
+	schedule: ["get", "update"],
+	promo: ["get", "update"],
+	report: ["create", "get", "export"],
+	review: ["get"],
 	user: ["get", "update"],
+	pricing: ["get", "update", "delete"],
 });
 
 const merchant = ac.newRole({
-	merchant: ["read", "update"],
-	order: ["read", "update"],
-	review: ["read"],
-	report: ["read"],
-	promo: ["create", "read", "update"],
+	merchant: ["get", "update"],
+	order: ["get", "update"],
+	review: ["get"],
+	report: ["get"],
 });
 
 const driver = ac.newRole({
-	driver: ["read", "update"],
-	schedule: ["create", "read", "update", "delete"],
-	order: ["read", "update"],
-	review: ["read"],
-	report: ["read"],
+	driver: ["get", "update"],
+	schedule: ["create", "get", "update", "delete"],
+	order: ["get", "update"],
+	review: ["get"],
+	report: ["get"],
 });
 
 const user = ac.newRole({
 	user: ["get", "update"],
-	order: ["create", "read", "update", "cancel"],
-	review: ["create", "read", "update"],
-	merchant: ["read"],
-	promo: ["read"],
+	order: ["create", "get", "update", "cancel"],
+	review: ["create", "get", "update"],
+	merchant: ["get"],
+	promo: ["get"],
+	bookings: ["create", "get", "update", "delete"],
 });
 
 export const authPermission = {
