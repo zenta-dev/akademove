@@ -30,6 +30,11 @@ export const EmptySchema = z.null();
 export const UUIDParamSchema = z
 	.object({ id: z.uuid() })
 	.meta({ ref: "UUIDParam" });
+
+export const StringParamSchema = z
+	.object({ id: z.string() })
+	.meta({ ref: "UUIDParam" });
+
 export const GetQuerySchema = z
 	.object({
 		fromCache: z.preprocess((v) => {
