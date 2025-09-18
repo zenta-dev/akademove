@@ -14,7 +14,21 @@ const statement = {
 	promo: ["create", "read", "update", "delete", "approve"],
 	report: ["create", "read", "update", "delete", "export"],
 	review: ["create", "read", "update", "delete", "moderate"],
-	user: ["create", "read-one", "read-all", "update", "delete", "verify"],
+	user: [
+		"invite",
+		"create",
+		"get",
+		"list",
+		"update",
+		"delete",
+		"verify",
+		"set-role",
+		"ban",
+		"impersonate",
+		"set-password",
+		"update",
+	],
+	session: ["list", "revoke", "delete"],
 } as const;
 
 export const ac = createAccessControl(statement);
@@ -29,7 +43,18 @@ const admin = ac.newRole({
 	promo: ["create", "read", "update", "delete", "approve"],
 	report: ["create", "read", "update", "delete", "export"],
 	review: ["read", "update", "delete", "moderate"],
-	user: ["read-all", "read-one", "update", "delete", "verify"],
+	user: [
+		"invite",
+		"list",
+		"get",
+		"update",
+		"delete",
+		"verify",
+		"set-role",
+		"set-password",
+		"ban",
+	],
+	session: ["list", "revoke", "delete"],
 });
 
 const operator = ac.newRole({
@@ -40,7 +65,7 @@ const operator = ac.newRole({
 	promo: ["read", "update"],
 	report: ["create", "read", "export"],
 	review: ["read", "moderate"],
-	user: ["read-one", "update"],
+	user: ["get", "update"],
 });
 
 const merchant = ac.newRole({
@@ -60,7 +85,7 @@ const driver = ac.newRole({
 });
 
 const user = ac.newRole({
-	user: ["read-one", "update"],
+	user: ["get", "update"],
 	order: ["create", "read", "update", "cancel"],
 	review: ["create", "read", "update"],
 	merchant: ["read"],
