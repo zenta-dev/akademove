@@ -27,7 +27,9 @@ export const getSession = createIsomorphicFn()
 	.client(async () => {
 		const result = await authClient.getSession();
 		if (result.error) return undefined;
-		return result.data as unknown as { user: User; session: Session };
+		return (result.data ?? undefined) as unknown as
+			| { user: User; session: Session }
+			| undefined;
 	})
 	.server(async () => {
 		const headers = new Headers();

@@ -1,8 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { getSession } from "@/lib/actions";
 import { requireRole } from "@/lib/middleware";
 
 export const Route = createFileRoute("/dash/user")({
-	beforeLoad: async () => await requireRole("user"),
+	beforeLoad: async () => {
+		const user = await getSession();
+		await requireRole("user", user?.user);
+	},
 	component: RouteComponent,
 });
 

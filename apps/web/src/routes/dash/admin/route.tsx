@@ -4,12 +4,16 @@ import { DashboardHeader } from "@/components/header/dashboard";
 import { AdminSidebar } from "@/components/sidebar/admin";
 import { SidebarChildren } from "@/components/sidebar/children";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { getSession } from "@/lib/actions";
 import { ROUTE_TITLES } from "@/lib/constants";
 import { requireRole } from "@/lib/middleware";
 
 export const Route = createFileRoute("/dash/admin")({
 	head: () => ({ meta: [{ title: ROUTE_TITLES.ADMINISTRATOR }] }),
-	beforeLoad: async () => await requireRole("admin"),
+	beforeLoad: async () => {
+		const user = await getSession();
+		await requireRole("admin", user?.user);
+	},
 	component: RouteComponent,
 });
 
