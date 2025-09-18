@@ -19,6 +19,7 @@
 		"with-env": "dotenv -e ../../.env --"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.891.0",
 		"@hono/standard-validator": "^0.1.5",
 		"@repo/schema": "workspace:*",
 		"@repo/shared": "workspace:*",
