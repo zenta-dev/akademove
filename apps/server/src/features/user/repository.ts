@@ -1,55 +1,30 @@
-import type { InsertUser, UpdateUser, User } from "@repo/schema/user";
+import type { InsertUser, UpdateUser, User, UserRole } from "@repo/schema/user";
+import { APIError } from "better-auth";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
+import type { BaseRepository, GetAllOptions } from "@/core/interface";
+import type { AuthInstance } from "@/core/services/auth";
 import { type DatabaseInstance, tables } from "@/core/services/db";
-import type { KeyValueService } from "@/core/services/kv";
 
 export class UserRepository implements BaseRepository<User> {
 	constructor(
 		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
+		private readonly auth: AuthInstance,
 	) {}
 
 	private composeUser(
-		val: Omit<User, "updatedAt" | "createdAt"> & {
+		val: Omit<User, "banExpires" | "updatedAt" | "createdAt"> & {
+			banExpires: Date | null;
 			createdAt: Date;
 			updatedAt: Date;
 		},
 	): User {
 		return {
 			...val,
+			banExpires: val.banExpires?.getTime() ?? null,
 			createdAt: val.createdAt.getTime(),
 			updatedAt: val.updatedAt.getTime(),
 		};
-	}
-
-	private composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.USER}${id}`;
-	}
-
-	private async getCache(id: string): Promise<User | undefined> {
-		try {
-			return await this.kv.get(this.composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
-	private async setCache(id: string, data: User | undefined): Promise<void> {
-		if (data) {
-			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["1h"],
-				});
-			} catch {}
-		}
 	}
 
 	private async getUserFromDb(id: string): Promise<User | undefined> {
@@ -60,14 +35,17 @@ export class UserRepository implements BaseRepository<User> {
 		return result;
 	}
 
-	async getAll(opts?: GetAllOptions): Promise<User[]> {
+	async getAll(opts: GetAllOptions, userId: string): Promise<User[]> {
 		try {
-			let stmt = this.db.query.user.findMany();
+			let stmt = this.db.query.user.findMany({
+				where: (f, op) => op.ne(f.id, userId),
+			});
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
 					stmt = this.db.query.user.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
+						where: (f, op) =>
+							op.and(op.gt(f.createdAt, new Date(cursor)), op.ne(f.id, userId)),
 						limit: limit + 1,
 					});
 				}
@@ -77,6 +55,7 @@ export class UserRepository implements BaseRepository<User> {
 					stmt = this.db.query.user.findMany({
 						offset,
 						limit,
+						where: (f, op) => op.ne(f.id, userId),
 					});
 				}
 			}
@@ -89,16 +68,9 @@ export class UserRepository implements BaseRepository<User> {
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<User | undefined> {
+	async getById(id: string): Promise<User | undefined> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
-				if (cached) return cached;
-			}
-
 			const result = await this.getUserFromDb(id);
-
-			await this.setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -108,56 +80,104 @@ export class UserRepository implements BaseRepository<User> {
 		}
 	}
 
-	async create(item: InsertUser): Promise<User> {
+	async create(item: InsertUser): Promise<User & { password: string }> {
 		try {
-			const id = v4();
-			const value = {
-				...item,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				id,
-			};
-
-			const [operation] = await this.db
-				.insert(tables.user)
-				.values(value)
-				.returning();
-
-			const result = this.composeUser(operation);
-			await this.setCache(id, result);
-
-			return result;
-		} catch (error) {
-			throw new RepositoryError("Failed to create user", {
-				prevError: error instanceof Error ? error : undefined,
+			const { user } = await this.auth.api.createUser({
+				body: item,
 			});
+
+			const result = this.composeUser({
+				...user,
+				role: (user.role ?? "user") as UserRole,
+				image: user.image ?? null,
+				banned: user.banned ?? false,
+				banReason: user.banReason ?? null,
+				banExpires: user.banExpires ?? null,
+			});
+
+			return { ...result, password: item.password };
+		} catch (error) {
+			if (error instanceof APIError) {
+				throw new RepositoryError(error.message, {
+					code: error.body?.code,
+					prevError: error instanceof Error ? error : undefined,
+				});
+			}
+			throw new RepositoryError(
+				error instanceof Error ? error.message : "Failed to create user",
+				{
+					prevError: error instanceof Error ? error : undefined,
+				},
+			);
 		}
 	}
 
-	async update(id: string, item: UpdateUser): Promise<User> {
+	async update(
+		id: string,
+		item: UpdateUser,
+		reqHeader?: Record<string, string>,
+	): Promise<User> {
 		try {
 			const existing = await this.getUserFromDb(id);
 			if (!existing) {
 				throw new RepositoryError(`User with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				createdAt: new Date(existing.createdAt),
-				updatedAt: new Date(),
-				id,
-			};
 
-			const [operation] = await this.db
-				.update(tables.user)
-				.set(value)
-				.where(eq(tables.user.id, id))
-				.returning();
+			let result: User = existing;
 
-			const result = this.composeUser(operation);
+			const headers = new Headers();
+			if (reqHeader) {
+				for (const [k, v] of Object.entries(reqHeader)) {
+					headers.set(k, v);
+				}
+			}
+			if ("role" in item) {
+				const { user } = await this.auth.api.setRole({
+					body: { userId: id, role: item.role },
+					headers,
+				});
+				result = this.composeUser({
+					...user,
+					role: (user.role ?? "user") as UserRole,
+					image: user.image ?? null,
+					banned: user.banned ?? false,
+					banReason: user.banReason ?? null,
+					banExpires: user.banExpires ?? null,
+				});
+			}
+			if ("password" in item) {
+				const { status } = await this.auth.api.setUserPassword({
+					body: { userId: id, newPassword: item.password },
+					headers,
+				});
+				if (!status) {
+					throw new RepositoryError("Failed to update user password");
+				}
+			}
+			if ("banReason" in item) {
+				await this.auth.api.banUser({
+					body: { userId: id, ...item },
+					headers,
+				});
+				result.banned = true;
+				result.banReason = item.banReason;
+				if (item.banExpiresIn) {
+					result.banExpires = Date.now() + item.banExpiresIn;
+				}
+			}
+			if ("id" in item) {
+				await this.auth.api.banUser({
+					body: { userId: item.id },
+					headers,
+				});
+				result.banned = false;
+				result.banReason = null;
+				result.banExpires = null;
+			}
 
-			await this.setCache(id, result);
+			await this.auth.api.revokeUserSessions({ body: { userId: id }, headers });
 
+			if (!result) throw new RepositoryError("Failed to update user");
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
@@ -169,16 +189,10 @@ export class UserRepository implements BaseRepository<User> {
 
 	async delete(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			await this.db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
 				.returning();
-
-			if (result.length > 0) {
-				try {
-					await this.kv.delete(this.composeCacheKey(id));
-				} catch {}
-			}
 		} catch (error) {
 			throw new RepositoryError(`Failed to delete user with id "${id}"`, {
 				prevError: error instanceof Error ? error : undefined,

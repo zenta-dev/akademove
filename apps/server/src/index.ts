@@ -42,7 +42,7 @@ app.use("*", async (c, next) => {
 		promo: new PromoRepository(db, kv),
 		report: new ReportRepository(db, kv),
 		review: new ReviewRepository(db, kv),
-		user: new UserRepository(db, kv),
+		user: new UserRepository(db, auth),
 	};
 	c.set("repo", repo);
 
@@ -57,7 +57,7 @@ app.use(
 	"/*",
 	cors({
 		origin: TRUSTED_ORIGINS,
-		allowMethods: ["GET", "POST", "OPTIONS"],
+		allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
 		allowHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),

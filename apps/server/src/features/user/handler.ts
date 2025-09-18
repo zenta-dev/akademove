@@ -1,4 +1,4 @@
-import { GetQuerySchema, UUIDParamSchema } from "@repo/schema/common";
+import { GetQuerySchema, StringParamSchema } from "@repo/schema/common";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { InsertUserSchema, UpdateUserSchema } from "@repo/schema/user";
 import { validator } from "hono-openapi";
@@ -14,10 +14,13 @@ const h = createHono()
 	.get(
 		"/",
 		UserSpec.list,
-		requiredPermissions({ user: ["read-all"] }),
+		requiredPermissions({ user: ["list"] }),
 		validator("query", UnifiedPaginationQuerySchema, handleValidation),
 		async (c) => {
-			const result = await c.var.repo.user.getAll(c.req.valid("query"));
+			const result = await c.var.repo.user.getAll(
+				c.req.valid("query") ?? {},
+				c.var.user.id,
+			);
 			if (!result) {
 				return c.json(
 					{
@@ -41,11 +44,12 @@ const h = createHono()
 	.get(
 		"/:id",
 		UserSpec.byID,
-		validator("param", UUIDParamSchema, handleValidation),
+		requiredPermissions({ user: ["get"] }),
+		validator("param", StringParamSchema, handleValidation),
 		validator("query", GetQuerySchema, handleValidation),
 		async (c) => {
 			const { id } = c.req.valid("param");
-			const result = await c.var.repo.user.getById(id, c.req.valid("query"));
+			const result = await c.var.repo.user.getById(id);
 			if (!result) {
 				return c.json(
 					{
@@ -68,12 +72,15 @@ const h = createHono()
 	)
 	.post(
 		"/",
-		UserSpec.create,
+		UserSpec.invite,
+		requiredPermissions({ user: ["invite"] }),
 		validator("json", InsertUserSchema, handleValidation),
 		async (c) => {
 			const result = await c.var.repo.user.create({
 				...c.req.valid("json"),
 			});
+
+			await c.var.mail.sendInvitation({ ...result, to: result.email });
 
 			return c.json(
 				{
@@ -88,12 +95,16 @@ const h = createHono()
 	.put(
 		"/:id",
 		UserSpec.update,
-		validator("param", UUIDParamSchema, handleValidation),
+		requiredPermissions({
+			user: ["update", "set-role", "set-password", "ban"],
+		}),
+		validator("param", StringParamSchema, handleValidation),
 		validator("json", UpdateUserSchema, handleValidation),
 		async (c) => {
 			const result = await c.var.repo.user.update(
 				c.req.valid("param").id,
 				c.req.valid("json"),
+				c.req.header(),
 			);
 
 			return c.json(
@@ -109,7 +120,8 @@ const h = createHono()
 	.delete(
 		"/:id",
 		UserSpec.delete,
-		validator("param", UUIDParamSchema, handleValidation),
+		requiredPermissions({ user: ["delete"] }),
+		validator("param", StringParamSchema, handleValidation),
 		async (c) => {
 			await c.var.repo.user.delete(c.req.valid("param").id);
 
