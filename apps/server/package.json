@@ -38,6 +38,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20250913.0",
+		"@faker-js/faker": "^10.0.0",
 		"@types/node": "^24.5.0",
 		"alchemy": "^0.66.0",
 		"dotenv": "^17.2.1",

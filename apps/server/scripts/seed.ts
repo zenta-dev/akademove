@@ -1,11 +1,14 @@
 import { scryptSync } from "node:crypto";
 import * as readline from "node:readline";
+import { faker } from "@faker-js/faker";
+import { CONSTANTS } from "@repo/schema/constants";
+import type { InsertMerchant } from "@repo/schema/merchant";
 import type { InsertUser } from "@repo/schema/user";
 import { authPermission } from "@repo/shared";
-import { BetterAuthError, betterAuth, email } from "better-auth";
+import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "@/core/tables/auth";
@@ -13,13 +16,8 @@ import {
 	type ConfigurationDatabase,
 	configuration,
 } from "@/core/tables/configuration";
-import * as driver from "@/core/tables/driver";
-import * as merchant from "@/core/tables/merchant";
-import * as order from "@/core/tables/order";
-import * as promo from "@/core/tables/promo";
-import * as report from "@/core/tables/report";
-import * as review from "@/core/tables/review";
-import * as schedule from "@/core/tables/schedule";
+import { driver } from "@/core/tables/driver";
+import { merchant } from "@/core/tables/merchant";
 
 async function confirmExecution() {
 	if (process.env.NODE_ENV === "production") {
@@ -148,7 +146,11 @@ async function seedUser() {
 
 async function seedConfigurations() {
 	console.log("Seeding Configurations");
-	const _UPDATER_ID = "ize5yQd0uPJSZliK3vXZKxxdyRww9DCF"; // should pinning to master admin
+
+	const [admin] = await db
+		.select()
+		.from(schema.user)
+		.where(and(eq(schema.user.email, "test-admin-1@akademove.com")));
 
 	const _CONFIGS: ConfigurationDatabase[] = [
 		{
@@ -159,7 +161,7 @@ async function seedConfigurations() {
 				commission: 7,
 			},
 			description: "Current base price per km",
-			updatedById: _UPDATER_ID,
+			updatedById: admin.id,
 			updatedAt: new Date(),
 		},
 		{
@@ -170,7 +172,7 @@ async function seedConfigurations() {
 				commission: 5,
 			},
 			description: "Current base price per km",
-			updatedById: _UPDATER_ID,
+			updatedById: admin.id,
 			updatedAt: new Date(),
 		},
 		{
@@ -181,7 +183,7 @@ async function seedConfigurations() {
 				commission: 3,
 			},
 			description: "Current base price per km",
-			updatedById: _UPDATER_ID,
+			updatedById: admin.id,
 			updatedAt: new Date(),
 		},
 	];
@@ -192,15 +194,83 @@ async function seedConfigurations() {
 			.from(configuration)
 			.where(eq(configuration.key, conf.key));
 		if (find.length > 0) {
-			console.log(find);
 			continue;
 		}
-		const res = await db.insert(configuration).values(conf).returning();
-		console.log(res);
+		await db.insert(configuration).values(conf).returning();
 	}
 }
 
+async function seedMerchants() {
+	console.log("Seeding Merchants");
+	const users = await db
+		.select()
+		.from(schema.user)
+		.where(eq(schema.user.role, "user"));
+
+	if (users.length === 0) {
+		console.warn("No users with role 'user' found.");
+		return;
+	}
+
+	const merchants = Array.from({ length: 5 }).map(() => {
+		const randomUser = users[Math.floor(Math.random() * users.length)];
+		return {
+			userId: randomUser.id,
+			name: faker.company.name(),
+			type: Math.random() < 0.5 ? "merchant" : "tenant",
+			address: faker.location.streetAddress(),
+			location: {
+				lat: faker.location.latitude(),
+				lng: faker.location.longitude(),
+			},
+			isActive: Math.random() < 0.5,
+		} satisfies InsertMerchant & { userId: string };
+	});
+
+	await db.insert(merchant).values(merchants);
+	console.log(`Inserted ${merchants.length} merchants.`);
+}
+
+async function seedDrivers() {
+	console.log("Seeding Drivers");
+	const users = await db
+		.select()
+		.from(schema.user)
+		.where(eq(schema.user.role, "user"));
+
+	if (users.length === 0) {
+		console.warn("No users with role 'user' found.");
+		return;
+	}
+	const drivers = Array.from({ length: 5 }).map(() => {
+		const randomUser = users[Math.floor(Math.random() * users.length)];
+		return {
+			userId: randomUser.id,
+			studentId: faker.string.alphanumeric(10),
+			licenseNumber: faker.string.alphanumeric(8),
+			status: faker.helpers.arrayElement(CONSTANTS.DRIVER_STATUSES),
+			rating: Number.parseFloat(
+				faker.number.float({ min: 1, max: 5 }).toFixed(1),
+			),
+			isOnline: faker.datatype.boolean(),
+			currentLocation: faker.datatype.boolean()
+				? {
+						lat: faker.location.latitude(),
+						lng: faker.location.longitude(),
+					}
+				: null,
+			lastLocationUpdate: faker.datatype.boolean()
+				? faker.date.recent({ days: 10 })
+				: null,
+			createdAt: new Date(),
+		};
+	});
+
+	await db.insert(driver).values(drivers);
+	console.log(`Inserted ${drivers.length} drivers.`);
+}
+
 await seedUser();
-await seedConfigurations();
+await Promise.all([seedConfigurations(), seedMerchants(), seedDrivers()]);
 console.log("✅ Database seeded with test data.");
 process.exit();
