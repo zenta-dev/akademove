@@ -15,9 +15,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
-export const STATUS_ICONS: Record<MerchantType, React.ElementType> = {
-	merchant: StoreIcon,
-	tenant: HomeIcon,
+export const STATUS_ICONS: Record<
+	MerchantType,
+	{
+		name: string;
+		icon: React.ElementType;
+	}
+> = {
+	merchant: { name: m.merchant(), icon: StoreIcon },
+	tenant: { name: m.tenant(), icon: HomeIcon },
 };
 export const merchantTypeVariants = cva("", {
 	variants: {
@@ -85,12 +91,12 @@ export const MERCHANT_COLUMNS = [
 		cell: ({ row }) => {
 			const value = String(row.getValue("type")) as MerchantType;
 
-			const Icon = STATUS_ICONS[value];
+			const status = STATUS_ICONS[value];
 
 			return (
 				<Badge className={merchantTypeVariants({ intent: value })}>
-					<Icon className="mr-1 h-4 w-4" />
-					{capitalizeFirstLetter(value)}
+					<status.icon className="mr-1 h-4 w-4" />
+					{capitalizeFirstLetter(status.name)}
 				</Badge>
 			);
 		},

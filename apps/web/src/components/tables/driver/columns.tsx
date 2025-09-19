@@ -19,13 +19,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
-export const STATUS_ICONS: Record<DriverStatus, React.ElementType> = {
-	pending: Clock,
-	approved: CheckCircle,
-	rejected: XCircle,
-	active: PlayCircle,
-	inactive: PauseCircle,
-	suspended: Ban,
+export const STATUS_DICT: Record<
+	DriverStatus,
+	{
+		name: string;
+		icon: React.ElementType;
+	}
+> = {
+	pending: { name: m.pending(), icon: Clock },
+	approved: { name: m.approved(), icon: CheckCircle },
+	rejected: { name: m.rejected(), icon: XCircle },
+	active: { name: m.active(), icon: PlayCircle },
+	inactive: { name: m.inactive(), icon: PauseCircle },
+	suspended: { name: m.suspended(), icon: Ban },
 };
 export const statusVariants = cva("", {
 	variants: {
@@ -154,12 +160,12 @@ export const DRIVER_COLUMNS = [
 		cell: ({ row }) => {
 			const value = String(row.getValue("status")) as DriverStatus;
 
-			const Icon = STATUS_ICONS[value];
+			const status = STATUS_DICT[value];
 
 			return (
 				<Badge className={statusVariants({ intent: value })}>
-					<Icon className="mr-1 h-4 w-4" />
-					{capitalizeFirstLetter(value)}
+					<status.icon className="mr-1 h-4 w-4" />
+					{capitalizeFirstLetter(status.name)}
 				</Badge>
 			);
 		},
