@@ -1,4 +1,5 @@
 import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
+import type { User } from "@repo/schema/user";
 import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -15,7 +16,9 @@ export const createDriverRepository = (
 		return `${CACHE_PREFIXES.DRIVER}${id}`;
 	}
 
-	function _composeEntity(item: DriverDatabase): Driver {
+	function _composeEntity(
+		item: DriverDatabase & { user: Partial<User> },
+	): Driver {
 		return {
 			...item,
 			currentLocation: item.currentLocation ?? undefined,
@@ -34,6 +37,7 @@ export const createDriverRepository = (
 
 	async function _getFromDB(id: string): Promise<Driver | undefined> {
 		const result = await db.query.driver.findFirst({
+			with: { user: { columns: { name: true } } },
 			where: (f, op) => op.eq(f.id, id),
 		});
 		if (result) return _composeEntity(result);
@@ -52,11 +56,14 @@ export const createDriverRepository = (
 
 	async function list(opts?: GetAllOptions): Promise<Driver[]> {
 		try {
-			let stmt = db.query.driver.findMany();
+			let stmt = db.query.driver.findMany({
+				with: { user: { columns: { name: true } } },
+			});
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
 					stmt = db.query.driver.findMany({
+						with: { user: { columns: { name: true } } },
 						where: (f, op) => op.gt(f.lastLocationUpdate, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -65,12 +72,14 @@ export const createDriverRepository = (
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
 					stmt = db.query.driver.findMany({
+						with: { user: { columns: { name: true } } },
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
+			console.log("RESULT => ", result);
 			return result.map(_composeEntity);
 		} catch (error) {
 			throw new RepositoryError("Failed to listing drivers", {
@@ -104,12 +113,17 @@ export const createDriverRepository = (
 		item: InsertDriver & { userId: string },
 	): Promise<Driver> {
 		try {
+			const user = await db.query.user.findFirst({
+				columns: { name: true },
+				where: (f, op) => op.eq(f.id, item.userId),
+			});
+			if (!user) throw new RepositoryError("User not found");
 			const [operation] = await db
 				.insert(tables.driver)
 				.values(item)
 				.returning();
 
-			const result = _composeEntity(operation);
+			const result = _composeEntity({ ...operation, user });
 			await _setCache(result.id, result);
 
 			return result;
@@ -127,6 +141,12 @@ export const createDriverRepository = (
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 			}
 
+			const user = await db.query.user.findFirst({
+				columns: { name: true },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+			if (!user) throw new RepositoryError("User not found");
+
 			const [operation] = await db
 				.update(tables.driver)
 				.set({
@@ -138,7 +158,7 @@ export const createDriverRepository = (
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const result = _composeEntity(operation);
+			const result = _composeEntity({ ...operation, user });
 
 			await _setCache(id, result);
 
