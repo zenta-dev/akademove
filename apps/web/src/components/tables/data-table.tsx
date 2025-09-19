@@ -35,8 +35,8 @@ interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	isPending?: boolean;
-	columnVisibility: VisibilityState;
-	setColumnVisibility: React.Dispatch<React.SetStateAction<VisibilityState>>;
+	columnVisibility?: VisibilityState;
+	setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
 }
 
 export function DataTable<TData, TValue>({
