@@ -1,6 +1,5 @@
 import { m } from "@repo/i18n";
 import type { Merchant, MerchantType } from "@repo/schema/merchant";
-import { capitalizeFirstLetter } from "@repo/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
 import {
@@ -15,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
-export const STATUS_ICONS: Record<
+export const TYPE_ICONS: Record<
 	MerchantType,
 	{
 		name: string;
@@ -91,12 +90,12 @@ export const MERCHANT_COLUMNS = [
 		cell: ({ row }) => {
 			const value = String(row.getValue("type")) as MerchantType;
 
-			const status = STATUS_ICONS[value];
+			const status = TYPE_ICONS[value];
 
 			return (
 				<Badge className={merchantTypeVariants({ intent: value })}>
 					<status.icon className="mr-1 h-4 w-4" />
-					{capitalizeFirstLetter(status.name)}
+					{status.name}
 				</Badge>
 			);
 		},

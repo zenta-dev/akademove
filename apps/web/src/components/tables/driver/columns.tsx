@@ -1,6 +1,5 @@
 import { m } from "@repo/i18n";
 import type { Driver, DriverStatus } from "@repo/schema/driver";
-import { capitalizeFirstLetter } from "@repo/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
 import {
@@ -165,7 +164,7 @@ export const DRIVER_COLUMNS = [
 			return (
 				<Badge className={statusVariants({ intent: value })}>
 					<status.icon className="mr-1 h-4 w-4" />
-					{capitalizeFirstLetter(status.name)}
+					{status.name}
 				</Badge>
 			);
 		},
