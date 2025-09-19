@@ -22,6 +22,7 @@ export const createMerchantRepository = (
 	function _composeEntity(item: MerchantDatabase): Merchant {
 		return {
 			...item,
+			location: item.location ?? undefined,
 			createdAt: item.createdAt.getTime(),
 			updatedAt: item.updatedAt.getTime(),
 		};

@@ -18,9 +18,12 @@ export const createOrderRepository = (
 	function _composeEntity(item: OrderDatabase): Order {
 		return {
 			...item,
+			driverId: item.driverId ?? undefined,
+			merchantId: item.merchantId ?? undefined,
+			note: item.note ?? undefined,
 			requestedAt: item.requestedAt.getTime(),
-			acceptedAt: item.acceptedAt?.getTime() ?? null,
-			arrivedAt: item.arrivedAt?.getTime() ?? null,
+			acceptedAt: item.acceptedAt?.getTime(),
+			arrivedAt: item.arrivedAt?.getTime(),
 			createdAt: item.createdAt.getTime(),
 			updatedAt: item.updatedAt.getTime(),
 		};

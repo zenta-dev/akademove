@@ -22,7 +22,7 @@ export const createScheduleRepository = (
 	function _composeEntity(item: ScheduleDatabase): Schedule {
 		return {
 			...item,
-			specificDate: item.specificDate?.getTime() ?? null,
+			specificDate: item.specificDate?.getTime(),
 			createdAt: item.createdAt.getTime(),
 			updatedAt: item.updatedAt.getTime(),
 		};

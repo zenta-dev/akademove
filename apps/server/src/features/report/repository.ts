@@ -18,8 +18,12 @@ export const createReportRepository = (
 	function _composeEntity(item: ReportDatabase): Report {
 		return {
 			...item,
+			orderId: item.orderId ?? undefined,
+			evidenceUrl: item.evidenceUrl ?? undefined,
+			handledById: item.handledById ?? undefined,
+			resolution: item.resolution ?? undefined,
 			reportedAt: item.reportedAt.getTime(),
-			resolvedAt: item.resolvedAt?.getTime() ?? null,
+			resolvedAt: item.resolvedAt?.getTime(),
 		};
 	}
 
