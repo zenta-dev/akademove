@@ -49,7 +49,7 @@ export const UserDropdwon = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Avatar>
+				<Avatar className="border">
 					<AvatarImage src={user.image || ""} />
 					<AvatarFallback>
 						<UserRound />

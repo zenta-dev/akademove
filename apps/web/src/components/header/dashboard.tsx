@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
 import { ThemeToggle } from "../toggle/theme-toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { DashboardNavigator } from "./dashboard-navigator";
 import { UserDropdwon } from "./user-dropdown";
 
 export const DashboardHeader = ({ scope }: { scope: string }) => {
@@ -38,6 +39,7 @@ export const DashboardHeader = ({ scope }: { scope: string }) => {
 				</div>
 				<div className="flex items-center gap-2">
 					<ThemeToggle />
+					<DashboardNavigator />
 					<UserDropdwon />
 				</div>
 			</div>
