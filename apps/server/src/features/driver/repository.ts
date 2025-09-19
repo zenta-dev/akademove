@@ -1,104 +1,96 @@
 import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { DriverDatabase } from "@/core/tables/driver";
 
-export class DriverRepository implements BaseRepository<Driver> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composeDriver(
-		val: Omit<Driver, "lastLocationUpdate" | "createdAt"> & {
-			lastLocationUpdate: Date | null;
-			createdAt: Date;
-		},
-	): Driver {
-		return {
-			...val,
-			lastLocationUpdate: val.lastLocationUpdate?.getTime() ?? null,
-			createdAt: val.createdAt.getTime(),
-		};
-	}
-
-	private composeCacheKey(id: string): string {
+export const createDriverRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.DRIVER}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Driver | undefined> {
+	function _composeEntity(item: DriverDatabase): Driver {
+		return {
+			...item,
+			currentLocation: item.currentLocation ?? undefined,
+			lastLocationUpdate: item.lastLocationUpdate?.getTime(),
+			createdAt: item.createdAt?.getTime(),
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Driver | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(id: string, data: Driver | undefined): Promise<void> {
+	async function _getFromDB(id: string): Promise<Driver | undefined> {
+		const result = await db.query.driver.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Driver | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
+				await kv.put(_composeCacheKey(id), data, {
 					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getDriverFromDb(id: string): Promise<Driver | undefined> {
-		const result = await this.db.query.driver.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composeDriver(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Driver[]> {
+	async function list(opts?: GetAllOptions): Promise<Driver[]> {
 		try {
-			let stmt = this.db.query.driver.findMany();
+			let stmt = db.query.driver.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.driver.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
+					stmt = db.query.driver.findMany({
+						where: (f, op) => op.gt(f.lastLocationUpdate, new Date(cursor)),
 						limit: limit + 1,
 					});
 				}
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.driver.findMany({
+					stmt = db.query.driver.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeDriver(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all driver", {
+			throw new RepositoryError("Failed to listing drivers", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Driver | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getDriverFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get driver from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -108,18 +100,17 @@ export class DriverRepository implements BaseRepository<Driver> {
 		}
 	}
 
-	async create(item: InsertDriver & { userId: string }): Promise<Driver> {
+	async function create(
+		item: InsertDriver & { userId: string },
+	): Promise<Driver> {
 		try {
-			const id = v4();
-			const value = { ...item, id };
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.driver)
-				.values(value)
+				.values(item)
 				.returning();
 
-			const result = this.composeDriver(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -129,29 +120,27 @@ export class DriverRepository implements BaseRepository<Driver> {
 		}
 	}
 
-	async update(id: string, item: UpdateDriver): Promise<Driver> {
+	async function update(id: string, item: UpdateDriver): Promise<Driver> {
 		try {
-			const existing = await this.getDriverFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				lastLocationUpdate: new Date(existing.createdAt),
-				createdAt: new Date(existing.createdAt),
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.driver)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					createdAt: new Date(existing.createdAt),
+					lastLocationUpdate: item.isOnline ? new Date() : null,
+				})
 				.where(eq(tables.driver.id, id))
 				.returning();
 
-			const result = this.composeDriver(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -162,16 +151,16 @@ export class DriverRepository implements BaseRepository<Driver> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.driver)
 				.where(eq(tables.driver.id, id))
-				.returning();
+				.returning({ id: tables.driver.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -180,4 +169,8 @@ export class DriverRepository implements BaseRepository<Driver> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type DriverRepository = ReturnType<typeof createDriverRepository>;

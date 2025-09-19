@@ -1,109 +1,72 @@
+import { oc } from "@orpc/contract";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
-	createSuccessResponseSchema,
-	EmptySchema,
-	listifySchema,
-} from "@repo/schema/common";
-import { UserSchema } from "@repo/schema/user";
-import { describeRoute, resolver } from "hono-openapi";
-import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
+	InsertUserSchema,
+	UpdateUserSchema,
+	UserSchema,
+} from "@repo/schema/user";
+import * as z from "zod";
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-export const UserSpec = Object.freeze({
-	list: describeRoute({
-		operationId: "getAllUser",
-		tags: [FEATURE_TAGS.USER],
-		responses: {
-			200: {
-				description: "List of user",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(listifySchema(UserSchema)).meta({
-								title: "GetAllUserSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.USER),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	byID: describeRoute({
-		operationId: "getUserById",
-		tags: [FEATURE_TAGS.USER],
-		responses: {
-			200: {
-				description: "Get user by id success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(UserSchema).meta({
-								title: "GetUserByIdSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.USER),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	invite: describeRoute({
-		operationId: "inviteUser",
-		tags: [FEATURE_TAGS.USER],
-		responses: {
-			200: {
-				description: "Invite user success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(UserSchema).meta({
-								title: "InviteUserSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	update: describeRoute({
-		operationId: "updateUser",
-		tags: [FEATURE_TAGS.USER],
-		responses: {
-			200: {
-				description: "Update user success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(UserSchema).meta({
-								title: "UpdateUserSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	delete: describeRoute({
-		operationId: "deleteUser",
-		tags: [FEATURE_TAGS.USER],
-		responses: {
-			200: {
-				description: "Delete user success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(EmptySchema).meta({
-								title: "DeleteUserSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.USER),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-} as const);
+export const UserSpec = {
+	list: oc
+		.route({
+			tags: [FEATURE_TAGS.USER],
+			method: "GET",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(UserSchema),
+				"Successfully retrieved users data",
+			),
+		),
+	get: oc
+		.route({
+			tags: [FEATURE_TAGS.USER],
+			method: "GET",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(UserSchema, "Successfully retrieved user data")),
+	create: oc
+		.route({
+			tags: [FEATURE_TAGS.USER],
+			method: "POST",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: InsertUserSchema }))
+		.output(createSuccesSchema(UserSchema, "User created successfully")),
+	update: oc
+		.route({
+			tags: [FEATURE_TAGS.USER],
+			method: "PUT",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: UpdateUserSchema,
+			}),
+		)
+		.output(createSuccesSchema(UserSchema, "User updated successfully")),
+	remove: oc
+		.route({
+			tags: [FEATURE_TAGS.USER],
+			method: "DELETE",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(z.null(), "User deleted successfully")),
+};

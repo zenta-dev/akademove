@@ -1,110 +1,74 @@
+import { oc } from "@orpc/contract";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
-	createSuccessResponseSchema,
-	EmptySchema,
-	listifySchema,
-} from "@repo/schema/common";
-import { ReviewSchema } from "@repo/schema/review";
-import { describeRoute, resolver } from "hono-openapi";
-import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
+	InsertReviewSchema,
+	ReviewSchema,
+	UpdateReviewSchema,
+} from "@repo/schema/review";
+import * as z from "zod";
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-export const ReviewSpec = Object.freeze({
-	list: describeRoute({
-		operationId: "getAllReview",
-		tags: [FEATURE_TAGS.REVIEW],
-		responses: {
-			200: {
-				description: "List of review",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(listifySchema(ReviewSchema)).meta({
-								title: "GetAllReviewSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.REVIEW),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	byID: describeRoute({
-		operationId: "getReviewById",
-		tags: [FEATURE_TAGS.REVIEW],
-		responses: {
-			200: {
-				description: "Get review by id success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(ReviewSchema).meta({
-								title: "GetReviewByIdSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.REVIEW),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	create: describeRoute({
-		operationId: "createReview",
-		tags: [FEATURE_TAGS.REVIEW],
-		responses: {
-			200: {
-				description: "Create review success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(ReviewSchema).meta({
-								title: "CreateReviewSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	update: describeRoute({
-		operationId: "updateReview",
-		tags: [FEATURE_TAGS.REVIEW],
-		responses: {
-			200: {
-				description: "Update review success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(ReviewSchema).meta({
-								title: "UpdateReviewSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.REVIEW),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	delete: describeRoute({
-		operationId: "deleteReview",
-		tags: [FEATURE_TAGS.REVIEW],
-		responses: {
-			200: {
-				description: "Delete review success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(EmptySchema).meta({
-								title: "DeleteReviewSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.REVIEW),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-} as const);
+export const ReviewSpec = {
+	list: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "GET",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(ReviewSchema),
+				"Successfully retrieved reviews data",
+			),
+		),
+	get: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "GET",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(ReviewSchema, "Successfully retrieved review data"),
+		),
+	create: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "POST",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: InsertReviewSchema }))
+		.output(createSuccesSchema(ReviewSchema, "Review created successfully")),
+	update: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "PUT",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: UpdateReviewSchema,
+			}),
+		)
+		.output(createSuccesSchema(ReviewSchema, "Review updated successfully")),
+	remove: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "DELETE",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(z.null(), "Review deleted successfully")),
+};

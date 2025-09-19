@@ -1,8 +1,8 @@
 import { env } from "cloudflare:workers";
-import { FailedResponseSchema } from "@repo/schema/common";
-import { resolver } from "hono-openapi";
+import * as z from "zod";
 
 export const FEATURE_TAGS = Object.freeze({
+	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
 	MERCHANT: "Merchant",
 	ORDER: "Order",
@@ -19,6 +19,7 @@ export const CACHE_TTLS = Object.freeze({
 } as const);
 
 export const CACHE_PREFIXES = Object.freeze({
+	CONFIGURATION: `${FEATURE_TAGS.CONFIGURATION.toLowerCase()}:`,
 	DRIVER: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
 	MERCHANT: `${FEATURE_TAGS.MERCHANT.toLowerCase()}:`,
 	ORDER: `${FEATURE_TAGS.ORDER.toLowerCase()}:`,
@@ -30,38 +31,14 @@ export const CACHE_PREFIXES = Object.freeze({
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
-type ResponseContent = {
-	content: {
-		"application/json": {
-			schema: ReturnType<typeof resolver>;
-		};
-	};
-};
-
-type FailedResponse = ResponseContent & {
-	description: string;
-};
-
-type FailedResponseFunction = (resource: string) => FailedResponse;
-
-const failContent: ResponseContent = {
-	content: {
-		"application/json": {
-			schema: resolver(FailedResponseSchema),
-		},
-	},
-};
-
-export const FAILED_RESPONSES: {
-	readonly 404: FailedResponseFunction;
-	readonly 500: FailedResponse;
-} = Object.freeze({
-	404: (resource: string): FailedResponse => ({
-		...failContent,
-		description: `${resource} not found`,
-	}),
-	500: {
-		...failContent,
-		description: "Internal server error",
-	},
-} as const);
+export const createSuccesSchema = <TSchema, TDesc extends string>(
+	schema: TSchema,
+	description: TDesc,
+) =>
+	z.object({
+		status: z.literal(200).describe(description),
+		body: z.object({
+			message: z.string(),
+			data: schema,
+		}),
+	});

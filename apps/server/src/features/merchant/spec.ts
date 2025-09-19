@@ -1,110 +1,81 @@
+import { oc } from "@orpc/contract";
 import {
-	createSuccessResponseSchema,
-	EmptySchema,
-	listifySchema,
-} from "@repo/schema/common";
-import { MerchantSchema } from "@repo/schema/merchant";
-import { describeRoute, resolver } from "hono-openapi";
-import { FAILED_RESPONSES, FEATURE_TAGS } from "@/core/constants";
+	InsertMerchantSchema,
+	MerchantSchema,
+	UpdateMerchantSchema,
+} from "@repo/schema/merchant";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import * as z from "zod";
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-export const MerchantSpec = Object.freeze({
-	list: describeRoute({
-		operationId: "getAllMerchant",
-		tags: [FEATURE_TAGS.MERCHANT],
-		responses: {
-			200: {
-				description: "List of merchant",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(listifySchema(MerchantSchema)).meta({
-								title: "GetAllMerchantSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.MERCHANT),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	byID: describeRoute({
-		operationId: "getMerchantById",
-		tags: [FEATURE_TAGS.MERCHANT],
-		responses: {
-			200: {
-				description: "Get merchant by id success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(MerchantSchema).meta({
-								title: "GetMerchantByIdSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.MERCHANT),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	create: describeRoute({
-		operationId: "createMerchant",
-		tags: [FEATURE_TAGS.MERCHANT],
-		responses: {
-			200: {
-				description: "Create merchant success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(MerchantSchema).meta({
-								title: "CreateMerchantSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	update: describeRoute({
-		operationId: "updateMerchant",
-		tags: [FEATURE_TAGS.MERCHANT],
-		responses: {
-			200: {
-				description: "Update merchant success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(MerchantSchema).meta({
-								title: "UpdateMerchantSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.MERCHANT),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-	delete: describeRoute({
-		operationId: "deleteMerchant",
-		tags: [FEATURE_TAGS.MERCHANT],
-		responses: {
-			200: {
-				description: "Delete merchant success",
-				content: {
-					"application/json": {
-						schema: resolver(
-							createSuccessResponseSchema(EmptySchema).meta({
-								title: "DeleteMerchantSuccessResponse",
-							}),
-						),
-					},
-				},
-			},
-			404: FAILED_RESPONSES["404"](FEATURE_TAGS.MERCHANT),
-			500: FAILED_RESPONSES["500"],
-		},
-	}),
-} as const);
+export const MerchantSpec = {
+	list: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(MerchantSchema),
+				"Successfully retrieved merchants data",
+			),
+		),
+	get: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(
+				MerchantSchema,
+				"Successfully retrieved merchant data",
+			),
+		),
+	create: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "POST",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: InsertMerchantSchema }))
+		.output(
+			createSuccesSchema(MerchantSchema, "Merchant created successfully"),
+		),
+	update: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "PUT",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: UpdateMerchantSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(MerchantSchema, "Merchant updated successfully"),
+		),
+	remove: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "DELETE",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(z.null(), "Merchant deleted successfully")),
+};

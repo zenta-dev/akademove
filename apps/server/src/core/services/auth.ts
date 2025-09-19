@@ -8,12 +8,12 @@ import { admin, openAPI } from "better-auth/plugins";
 import * as schema from "@/core/tables/auth";
 import { isDev } from "@/utils";
 import { TRUSTED_ORIGINS } from "../constants";
-import type { DatabaseInstance } from "./db";
+import type { DatabaseService } from "./db";
 import type { KeyValueService } from "./kv";
 import type { MailService } from "./mail";
 
 export const getAuth = (
-	db: DatabaseInstance,
+	db: DatabaseService,
 	kv: KeyValueService,
 	mail: MailService,
 ) =>
@@ -128,4 +128,9 @@ export const getAuth = (
 		],
 	});
 
-export type AuthInstance = ReturnType<typeof getAuth>;
+export type AuthService = ReturnType<typeof getAuth>;
+export type HasPermissionBody = Parameters<
+	AuthService["api"]["userHasPermission"]
+>["0"]["body"];
+export type PermissionRole = HasPermissionBody["role"];
+export type Permissions = Exclude<HasPermissionBody["permissions"], undefined>;

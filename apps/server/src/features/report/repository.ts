@@ -1,72 +1,61 @@
 import type { InsertReport, Report, UpdateReport } from "@repo/schema/report";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { ReportDatabase } from "@/core/tables/report";
 
-export class ReportRepository implements BaseRepository<Report> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composeReport(
-		val: Omit<Report, "reportedAt" | "resolvedAt"> & {
-			reportedAt: Date;
-			resolvedAt: Date | null;
-		},
-	): Report {
-		return {
-			...val,
-			reportedAt: val.reportedAt.getTime(),
-			resolvedAt: val.resolvedAt?.getTime() ?? null,
-		};
-	}
-
-	private composeCacheKey(id: string): string {
+export const createReportRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.REPORT}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Report | undefined> {
+	function _composeEntity(item: ReportDatabase): Report {
+		return {
+			...item,
+			reportedAt: item.reportedAt.getTime(),
+			resolvedAt: item.resolvedAt?.getTime() ?? null,
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Report | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(id: string, data: Report | undefined): Promise<void> {
+	async function _getFromDB(id: string): Promise<Report | undefined> {
+		const result = await db.query.report.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Report | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["1h"],
+				await kv.put(_composeCacheKey(id), data, {
+					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getReportFromDb(id: string): Promise<Report | undefined> {
-		const result = await this.db.query.report.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composeReport(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Report[]> {
+	async function list(opts?: GetAllOptions): Promise<Report[]> {
 		try {
-			let stmt = this.db.query.report.findMany();
+			let stmt = db.query.report.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.report.findMany({
+					stmt = db.query.report.findMany({
 						where: (f, op) => op.gt(f.reportedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -74,31 +63,33 @@ export class ReportRepository implements BaseRepository<Report> {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.report.findMany({
+					stmt = db.query.report.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeReport(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all report", {
+			throw new RepositoryError("Failed to listing reports", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Report | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getReportFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get report from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -108,23 +99,17 @@ export class ReportRepository implements BaseRepository<Report> {
 		}
 	}
 
-	async create(item: InsertReport): Promise<Report> {
+	async function create(
+		item: InsertReport & { userId: string },
+	): Promise<Report> {
 		try {
-			const id = v4();
-			const value = {
-				...item,
-				usedCount: 0,
-				reportedAt: new Date(),
-				id,
-			};
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.report)
-				.values(value)
+				.values(item)
 				.returning();
 
-			const result = this.composeReport(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -134,29 +119,32 @@ export class ReportRepository implements BaseRepository<Report> {
 		}
 	}
 
-	async update(id: string, item: UpdateReport): Promise<Report> {
+	async function update(id: string, item: UpdateReport): Promise<Report> {
 		try {
-			const existing = await this.getReportFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Report with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				reportedAt: new Date(existing.reportedAt),
-				resolvedAt: existing.resolvedAt ? new Date(existing.resolvedAt) : null,
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.report)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					reportedAt: new Date(existing.reportedAt),
+					resolvedAt:
+						item.status === "resolved"
+							? new Date()
+							: existing.resolvedAt
+								? new Date(existing.resolvedAt)
+								: null,
+				})
 				.where(eq(tables.report.id, id))
 				.returning();
 
-			const result = this.composeReport(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -167,16 +155,16 @@ export class ReportRepository implements BaseRepository<Report> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.report)
 				.where(eq(tables.report.id, id))
-				.returning();
+				.returning({ id: tables.report.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -185,4 +173,8 @@ export class ReportRepository implements BaseRepository<Report> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type ReportRepository = ReturnType<typeof createReportRepository>;

@@ -1,138 +1,62 @@
-import { GetQuerySchema, UUIDParamSchema } from "@repo/schema/common";
-import { InsertDriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
-import { upgradeWebSocket } from "hono/cloudflare-workers";
-import { validator } from "hono-openapi";
-import { createHono, handleValidation } from "@/core/hono";
-import { requireAuthMiddleware } from "@/core/middlewares/auth";
+import { implement } from "@orpc/server";
+import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import type { ORPCCOntext } from "@/core/orpc";
 import { DriverSpec } from "./spec";
 
-const h = createHono()
-	.use("*", requireAuthMiddleware)
-	.get("/track", async (c, next) => {
-		return upgradeWebSocket((_c) => {
+const os = implement(DriverSpec).$context<ORPCCOntext>().use(authMiddleware);
+
+export const DriverHandler = os.router({
+	list: os.list
+		.use(hasPermission({ driver: ["list"] }))
+		.handler(async ({ context, input: { query } }) => {
+			const result = await context.repo.driver.list(query);
+
 			return {
-				onMessage(event, ws) {
-					console.log(`Message from client: ${event.data}`);
-					ws.send("Hello from server!");
-				},
-				onClose: () => {
-					console.log("Connection closed");
-				},
+				status: 200,
+				body: { message: "Successfully retrieved drivers data", data: result },
 			};
-		})(c, next);
-	})
-	.get(
-		"/",
-		DriverSpec.list,
-		validator("query", UnifiedPaginationQuerySchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.driver.getAll(c.req.valid("query"));
-			if (!result) {
-				return c.json(
-					{
-						success: false,
-						message: "Failed to retrieve drivers",
-						errors: [],
-					},
-					404,
-				);
-			}
-			return c.json(
-				{
-					success: true,
-					message: "Success retrieve drivers",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.get(
-		"/:id",
-		DriverSpec.byID,
-		validator("param", UUIDParamSchema, handleValidation),
-		validator("query", GetQuerySchema, handleValidation),
-		async (c) => {
-			const { id } = c.req.valid("param");
-			const result = await c.var.repo.driver.getById(id, c.req.valid("query"));
-			if (!result) {
-				return c.json(
-					{
-						success: false,
-						message: `Driver with id: ${id} not found`,
-						errors: [],
-					},
-					404,
-				);
-			}
-			return c.json(
-				{
-					success: true,
-					message: "Driver found",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.post(
-		"/",
-		DriverSpec.create,
-		validator("json", InsertDriverSchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.driver.create({
-				...c.req.valid("json"),
-				userId: c.var.user.id,
+		}),
+	get: os.get
+		.use(hasPermission({ driver: ["get"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.driver.get(params.id);
+
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved driver data", data: result },
+			};
+		}),
+	create: os.create
+		.use(hasPermission({ driver: ["create"] }))
+		.handler(async ({ context, input: { body } }) => {
+			const result = await context.repo.driver.create({
+				...body,
+				userId: context.user.id,
 			});
 
-			return c.json(
-				{
-					success: true,
-					message: "Driver created successfully",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.put(
-		"/:id",
-		DriverSpec.update,
-		validator("param", UUIDParamSchema, handleValidation),
-		validator("json", UpdateDriverSchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.driver.update(
-				c.req.valid("param").id,
-				c.req.valid("json"),
-			);
+			return {
+				status: 200,
+				body: { message: "Driver created successfully", data: result },
+			};
+		}),
+	update: os.update
+		.use(hasPermission({ driver: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const result = await context.repo.driver.update(params.id, body);
 
-			return c.json(
-				{
-					success: true,
-					message: "Driver updated successfully",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.delete(
-		"/:id",
-		DriverSpec.delete,
-		validator("param", UUIDParamSchema, handleValidation),
-		async (c) => {
-			await c.var.repo.driver.delete(c.req.valid("param").id);
+			return {
+				status: 200,
+				body: { message: "Driver updated successfully", data: result },
+			};
+		}),
+	remove: os.remove
+		.use(hasPermission({ driver: ["update"] }))
+		.handler(async ({ context, input: { params } }) => {
+			await context.repo.driver.remove(params.id);
 
-			return c.json(
-				{
-					success: true,
-					message: "Driver deleted successfully",
-					data: null,
-				},
-				200,
-			);
-		},
-	);
-
-export { h as DriverHandler };
+			return {
+				status: 200,
+				body: { message: "Driver deleted successfully", data: null },
+			};
+		}),
+});

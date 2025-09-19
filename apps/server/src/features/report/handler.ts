@@ -1,123 +1,65 @@
-import { GetQuerySchema, UUIDParamSchema } from "@repo/schema/common";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
-import { InsertReportSchema, UpdateReportSchema } from "@repo/schema/report";
-import { validator } from "hono-openapi";
-import { createHono, handleValidation } from "@/core/hono";
-import { requireAuthMiddleware } from "@/core/middlewares/auth";
+import { implement } from "@orpc/server";
+import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import type { ORPCCOntext } from "@/core/orpc";
 import { ReportSpec } from "./spec";
 
-const h = createHono()
-	.use("*", requireAuthMiddleware)
-	.get(
-		"/",
-		ReportSpec.list,
-		validator("query", UnifiedPaginationQuerySchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.report.getAll(c.req.valid("query"));
-			if (!result) {
-				return c.json(
-					{
-						success: false,
-						message: "Failed to retrieve reports",
-						errors: [],
-					},
-					404,
-				);
-			}
-			return c.json(
-				{
-					success: true,
-					message: "Success retrieve reports",
+const os = implement(ReportSpec).$context<ORPCCOntext>().use(authMiddleware);
+
+export const ReportHandler = os.router({
+	list: os.list
+		.use(hasPermission({ report: ["list"] }))
+		.handler(async ({ context, input: { query } }) => {
+			const result = await context.repo.report.list(query);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved reports data",
 					data: result,
 				},
-				200,
-			);
-		},
-	)
-	.get(
-		"/:id",
-		ReportSpec.byID,
-		validator("param", UUIDParamSchema, handleValidation),
-		validator("query", GetQuerySchema, handleValidation),
-		async (c) => {
-			const { id } = c.req.valid("param");
-			const result = await c.var.repo.report.getById(id, c.req.valid("query"));
-			if (!result) {
-				return c.json(
-					{
-						success: false,
-						message: `Report with id: ${id} not found`,
-						errors: [],
-					},
-					404,
-				);
-			}
-			return c.json(
-				{
-					success: true,
-					message: "Report found",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.post(
-		"/",
-		ReportSpec.create,
-		validator("json", InsertReportSchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.report.create({
-				...c.req.valid("json"),
+			};
+		}),
+	get: os.get
+		.use(hasPermission({ report: ["get"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.report.get(params.id);
+
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved report data", data: result },
+			};
+		}),
+	create: os.create
+		.use(hasPermission({ report: ["create"] }))
+		.handler(async ({ context, input: { body } }) => {
+			const result = await context.repo.report.create({
+				...body,
+				userId: context.user.id,
 			});
 
-			return c.json(
-				{
-					success: true,
-					message: "Report created successfully",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.put(
-		"/:id",
-		ReportSpec.update,
-		validator("param", UUIDParamSchema, handleValidation),
-		validator("json", UpdateReportSchema, handleValidation),
-		async (c) => {
-			const result = await c.var.repo.report.update(
-				c.req.valid("param").id,
-				c.req.valid("json"),
-			);
+			return {
+				status: 200,
+				body: { message: "Report created successfully", data: result },
+			};
+		}),
+	update: os.update
+		.use(hasPermission({ report: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const result = await context.repo.report.update(params.id, body);
 
-			return c.json(
-				{
-					success: true,
-					message: "Report updated successfully",
-					data: result,
-				},
-				200,
-			);
-		},
-	)
-	.delete(
-		"/:id",
-		ReportSpec.delete,
-		validator("param", UUIDParamSchema, handleValidation),
-		async (c) => {
-			await c.var.repo.report.delete(c.req.valid("param").id);
+			return {
+				status: 200,
+				body: { message: "Report updated successfully", data: result },
+			};
+		}),
+	remove: os.remove
+		.use(hasPermission({ report: ["update"] }))
+		.handler(async ({ context, input: { params } }) => {
+			await context.repo.report.remove(params.id);
 
-			return c.json(
-				{
-					success: true,
-					message: "Report deleted successfully",
-					data: null,
-				},
-				200,
-			);
-		},
-	);
-
-export { h as ReportHandler };
+			return {
+				status: 200,
+				body: { message: "Report deleted successfully", data: null },
+			};
+		}),
+});

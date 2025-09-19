@@ -1,113 +1,98 @@
 import type { InsertOrder, Order, UpdateOrder } from "@repo/schema/order";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { OrderDatabase } from "@/core/tables/order";
 
-export class OrderRepository implements BaseRepository<Order> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composeOrder(
-		val: Omit<
-			Order,
-			"requestedAt" | "acceptedAt" | "arrivedAt" | "updatedAt" | "createdAt"
-		> & {
-			requestedAt: Date;
-			acceptedAt: Date | null;
-			arrivedAt: Date | null;
-			createdAt: Date;
-			updatedAt: Date;
-		},
-	): Order {
-		return {
-			...val,
-			requestedAt: val.requestedAt.getTime(),
-			acceptedAt: val.acceptedAt?.getTime() ?? null,
-			arrivedAt: val.arrivedAt?.getTime() ?? null,
-			createdAt: val.createdAt.getTime(),
-			updatedAt: val.updatedAt.getTime(),
-		};
-	}
-
-	private composeCacheKey(id: string): string {
+export const createOrderRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.ORDER}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Order | undefined> {
+	function _composeEntity(item: OrderDatabase): Order {
+		return {
+			...item,
+			requestedAt: item.requestedAt.getTime(),
+			acceptedAt: item.acceptedAt?.getTime() ?? null,
+			arrivedAt: item.arrivedAt?.getTime() ?? null,
+			createdAt: item.createdAt.getTime(),
+			updatedAt: item.updatedAt.getTime(),
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Order | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(id: string, data: Order | undefined): Promise<void> {
+	async function _getFromDB(id: string): Promise<Order | undefined> {
+		const result = await db.query.order.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Order | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["1h"],
+				await kv.put(_composeCacheKey(id), data, {
+					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getOrderFromDb(id: string): Promise<Order | undefined> {
-		const result = await this.db.query.order.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composeOrder(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Order[]> {
+	async function list(opts?: GetAllOptions): Promise<Order[]> {
 		try {
-			let stmt = this.db.query.order.findMany();
+			let stmt = db.query.order.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.order.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
+					stmt = db.query.order.findMany({
+						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
 				}
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.order.findMany({
+					stmt = db.query.order.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeOrder(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all order", {
+			throw new RepositoryError("Failed to listing orders", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Order | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getOrderFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get order from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -117,19 +102,17 @@ export class OrderRepository implements BaseRepository<Order> {
 		}
 	}
 
-	// TODO: fix this the logic is flaw
-	async create(item: InsertOrder & { userId: string }): Promise<Order> {
+	async function create(
+		item: InsertOrder & { userId: string },
+	): Promise<Order> {
 		try {
-			const id = v4();
-			const value = { ...item, id };
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.order)
-				.values(value)
+				.values(item)
 				.returning();
 
-			const result = this.composeOrder(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -139,33 +122,32 @@ export class OrderRepository implements BaseRepository<Order> {
 		}
 	}
 
-	// TODO: fix this the logic is flaw
-	async update(id: string, item: UpdateOrder): Promise<Order> {
+	async function update(id: string, item: UpdateOrder): Promise<Order> {
 		try {
-			const existing = await this.getOrderFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Order with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				requestedAt: new Date(existing.requestedAt),
-				acceptedAt: existing.acceptedAt ? new Date(existing.acceptedAt) : null,
-				arrivedAt: existing.arrivedAt ? new Date(existing.arrivedAt) : null,
-				createdAt: new Date(existing.createdAt),
-				updatedAt: new Date(),
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.order)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					requestedAt: new Date(existing.requestedAt),
+					acceptedAt: existing.acceptedAt
+						? new Date(existing.acceptedAt)
+						: null,
+					arrivedAt: existing.arrivedAt ? new Date(existing.arrivedAt) : null,
+					createdAt: new Date(existing.createdAt),
+					updatedAt: new Date(),
+				})
 				.where(eq(tables.order.id, id))
 				.returning();
 
-			const result = this.composeOrder(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -176,16 +158,16 @@ export class OrderRepository implements BaseRepository<Order> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.order)
 				.where(eq(tables.order.id, id))
-				.returning();
+				.returning({ id: tables.order.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -194,4 +176,8 @@ export class OrderRepository implements BaseRepository<Order> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type OrderRepository = ReturnType<typeof createOrderRepository>;

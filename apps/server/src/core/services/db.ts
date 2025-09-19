@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as auth from "@/core/tables/auth";
+import * as configuration from "@/core/tables/configuration";
 import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
 import * as order from "@/core/tables/order";
@@ -20,6 +21,7 @@ export const tables = {
 	...report,
 	...review,
 	...schedule,
+	...configuration,
 };
 
 export const getDatabase = () => {
@@ -31,4 +33,4 @@ export const getDatabase = () => {
 	});
 };
 
-export type DatabaseInstance = ReturnType<typeof getDatabase>;
+export type DatabaseService = ReturnType<typeof getDatabase>;

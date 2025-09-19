@@ -4,107 +4,96 @@ import type {
 	UpdateMerchant,
 } from "@repo/schema/merchant";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { MerchantDatabase } from "@/core/tables/merchant";
 
-export class MerchantRepository implements BaseRepository<Merchant> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composeMerchant(
-		val: Omit<Merchant, "createdAt" | "updatedAt"> & {
-			createdAt: Date;
-			updatedAt: Date;
-		},
-	): Merchant {
-		return {
-			...val,
-			createdAt: val.createdAt.getTime(),
-			updatedAt: val.updatedAt.getTime(),
-		};
-	}
-	private composeCacheKey(id: string): string {
+export const createMerchantRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.MERCHANT}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Merchant | undefined> {
+	function _composeEntity(item: MerchantDatabase): Merchant {
+		return {
+			...item,
+			createdAt: item.createdAt.getTime(),
+			updatedAt: item.updatedAt.getTime(),
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Merchant | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(
-		id: string,
-		data: Merchant | undefined,
-	): Promise<void> {
+	async function _getFromDB(id: string): Promise<Merchant | undefined> {
+		const result = await db.query.merchant.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Merchant | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
+				await kv.put(_composeCacheKey(id), data, {
 					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getMerchantFromDb(id: string): Promise<Merchant | undefined> {
-		const result = await this.db.query.merchant.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composeMerchant(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Merchant[]> {
+	async function list(opts?: GetAllOptions): Promise<Merchant[]> {
 		try {
-			let stmt = this.db.query.merchant.findMany();
+			let stmt = db.query.merchant.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.merchant.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
+					stmt = db.query.merchant.findMany({
+						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
 				}
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.merchant.findMany({
+					stmt = db.query.merchant.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeMerchant(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all merchant", {
+			throw new RepositoryError("Failed to listing merchants", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Merchant | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getMerchantFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get merchant from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -114,18 +103,17 @@ export class MerchantRepository implements BaseRepository<Merchant> {
 		}
 	}
 
-	async create(item: InsertMerchant & { userId: string }): Promise<Merchant> {
+	async function create(
+		item: InsertMerchant & { userId: string },
+	): Promise<Merchant> {
 		try {
-			const id = v4();
-			const value = { ...item, id };
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.merchant)
-				.values(value)
+				.values(item)
 				.returning();
 
-			const result = this.composeMerchant(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -135,29 +123,27 @@ export class MerchantRepository implements BaseRepository<Merchant> {
 		}
 	}
 
-	async update(id: string, item: UpdateMerchant): Promise<Merchant> {
+	async function update(id: string, item: UpdateMerchant): Promise<Merchant> {
 		try {
-			const existing = await this.getMerchantFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Merchant with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				createdAt: new Date(existing.createdAt),
-				updatedAt: new Date(),
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.merchant)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					createdAt: new Date(existing.createdAt),
+					updatedAt: new Date(),
+				})
 				.where(eq(tables.merchant.id, id))
 				.returning();
 
-			const result = this.composeMerchant(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -168,16 +154,16 @@ export class MerchantRepository implements BaseRepository<Merchant> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.merchant)
 				.where(eq(tables.merchant.id, id))
-				.returning();
+				.returning({ id: tables.merchant.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -186,4 +172,8 @@ export class MerchantRepository implements BaseRepository<Merchant> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type MerchantRepository = ReturnType<typeof createMerchantRepository>;

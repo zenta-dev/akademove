@@ -1,24 +1,40 @@
 import { env } from "cloudflare:workers";
-import { Scalar } from "@scalar/hono-api-reference";
+import { OpenAPIHandler } from "@orpc/openapi/fetch";
+import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
+import { onError } from "@orpc/server";
+import { RPCHandler } from "@orpc/server/fetch";
+import { CORSPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
+import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { LocationSchema, TimeSchema } from "@repo/schema/common";
+import { ConfigurationSchema } from "@repo/schema/configuration";
+import { DriverSchema } from "@repo/schema/driver";
+import { MerchantSchema } from "@repo/schema/merchant";
+import { OrderSchema } from "@repo/schema/order";
+import { PromoSchema } from "@repo/schema/promo";
+import { ReportSchema } from "@repo/schema/report";
+import { ReviewSchema } from "@repo/schema/review";
+import { ScheduleSchema } from "@repo/schema/schedule";
+import { UserSchema } from "@repo/schema/user";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { openAPIRouteHandler } from "hono-openapi";
 import { getAuth } from "@/core/services/auth";
 import { getDatabase } from "@/core/services/db";
 import { TRUSTED_ORIGINS } from "./core/constants";
 import { BaseError } from "./core/error";
 import { createHono } from "./core/hono";
+import type { ORPCCOntext } from "./core/orpc";
 import { CloudflareKVService } from "./core/services/kv";
 import { ResendMailService } from "./core/services/mail";
-import { DriverRepository } from "./features/driver/repository";
-import { AppHandler } from "./features/handler";
-import { MerchantRepository } from "./features/merchant/repository";
-import { OrderRepository } from "./features/order/repository";
-import { PromoRepository } from "./features/promo/repository";
-import { ReportRepository } from "./features/report/repository";
-import { ReviewRepository } from "./features/review/repository";
-import { ScheduleRepository } from "./features/schedule/repository";
-import { UserRepository } from "./features/user/repository";
+import { ServerRouter } from "./features";
+import { createConfigurationRepository } from "./features/configuration/repository";
+import { createDriverRepository } from "./features/driver/repository";
+import { createMerchantRepository } from "./features/merchant/repository";
+import { createOrderRepository } from "./features/order/repository";
+import { createPromoRepository } from "./features/promo/repository";
+import { createReportRepository } from "./features/report/repository";
+import { createReviewRepository } from "./features/review/repository";
+import { createScheduleRepository } from "./features/schedule/repository";
+import { createUserRepository } from "./features/user/repository";
 import { isCloudflare } from "./utils";
 
 const app = createHono();
@@ -26,26 +42,13 @@ const app = createHono();
 app.use(logger());
 app.use("*", async (c, next) => {
 	const db = getDatabase();
-	// c.set("db", db);
-
+	c.set("db", db);
 	const mail = new ResendMailService(env.RESEND_API_KEY);
 	c.set("mail", mail);
 	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV), mail);
 	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
 	c.set("kv", kv);
-	const repo = {
-		driver: new DriverRepository(db, kv),
-		merchant: new MerchantRepository(db, kv),
-		order: new OrderRepository(db, kv),
-		schedule: new ScheduleRepository(db, kv),
-		promo: new PromoRepository(db, kv),
-		report: new ReportRepository(db, kv),
-		review: new ReviewRepository(db, kv),
-		user: new UserRepository(db, auth),
-	};
-	c.set("repo", repo);
-
 	try {
 		await next();
 	} finally {
@@ -64,48 +67,112 @@ app.use(
 );
 
 app.all("/auth/*", (c) => c.var.auth.handler(c.req.raw));
-app.route("/", AppHandler);
-app.get(
-	"/openapi.json",
-	openAPIRouteHandler(AppHandler, {
-		documentation: {
-			info: {
-				title: "AkadeMove API",
-				version: "1.0.0",
-				description: "API for the AkadeMove application",
-			},
-			components: {
-				securitySchemes: {
-					bearer_auth: {
-						type: "http",
-						scheme: "bearer",
-						bearerFormat: "JWT",
+const apiHandler = new OpenAPIHandler(ServerRouter, {
+	plugins: [
+		new CORSPlugin({
+			origin: TRUSTED_ORIGINS,
+			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
+			exposeHeaders: ["Content-Length"],
+			maxAge: 600,
+			credentials: true,
+		}),
+		new StrictGetMethodPlugin(),
+		new OpenAPIReferencePlugin({
+			schemaConverters: [new ZodToJsonSchemaConverter()],
+			specGenerateOptions: {
+				commonSchemas: {
+					// bussiness entities
+					Configuration: { schema: ConfigurationSchema, strategy: "output" },
+					Driver: { schema: DriverSchema, strategy: "output" },
+					Merchant: { schema: MerchantSchema, strategy: "output" },
+					Order: { schema: OrderSchema, strategy: "output" },
+					Report: { schema: ReportSchema, strategy: "output" },
+					Promo: { schema: PromoSchema, strategy: "output" },
+					Review: { schema: ReviewSchema, strategy: "output" },
+					Schedule: { schema: ScheduleSchema, strategy: "output" },
+					User: { schema: UserSchema, strategy: "output" },
+					// additional
+					Location: { schema: LocationSchema, strategy: "output" },
+					Time: { schema: TimeSchema, strategy: "output" },
+				},
+				info: {
+					title: "AkadeMove API",
+					version: "1.0.0",
+					description: "API for the AkadeMove application",
+				},
+				components: {
+					securitySchemes: {
+						bearer_auth: {
+							type: "http",
+							scheme: "bearer",
+							bearerFormat: "JWT",
+						},
 					},
 				},
+				security: [{ bearer_auth: [] }],
+				servers: [{ url: `${env.AUTH_URL}/api` }],
 			},
-			security: [
-				{
-					bearer_auth: [],
-				},
-			],
-			servers: [
-				{
-					url: env.AUTH_URL,
-				},
-			],
+		}),
+	],
+	interceptors: [
+		onError((error) => {
+			console.error("ORPC Error Interceptor:", error);
+		}),
+	],
+});
+
+export const rpcHandler = new RPCHandler(ServerRouter, {
+	interceptors: [
+		onError((error) => {
+			console.error(error);
+		}),
+	],
+});
+
+app.use("/*", async (c, next) => {
+	const context: ORPCCOntext = {
+		req: c.req.raw,
+		svc: {
+			db: c.var.db,
+			auth: c.var.auth,
+			kv: c.var.kv,
+			mail: c.var.mail,
 		},
-	}),
-);
-app.get(
-	"/",
-	Scalar({
-		theme: "saturn",
-		sources: [
-			{ url: "/openapi.json", title: "API" },
-			{ url: "/auth/open-api/generate-schema", title: "AUTH" },
-		],
-	}),
-);
+		repo: {
+			configuration: createConfigurationRepository(c.var.db, c.var.kv),
+			driver: createDriverRepository(c.var.db, c.var.kv),
+			merchant: createMerchantRepository(c.var.db, c.var.kv),
+			order: createOrderRepository(c.var.db, c.var.kv),
+			promo: createPromoRepository(c.var.db, c.var.kv),
+			report: createReportRepository(c.var.db, c.var.kv),
+			review: createReviewRepository(c.var.db, c.var.kv),
+			schedule: createScheduleRepository(c.var.db, c.var.kv),
+			user: createUserRepository(c.var.db, c.var.auth),
+		},
+		user: c.var.user,
+	};
+
+	const rpcResult = await rpcHandler.handle(c.req.raw, {
+		prefix: "/rpc",
+		context: context,
+	});
+
+	if (rpcResult.matched) {
+		return c.newResponse(rpcResult.response.body, rpcResult.response);
+	}
+
+	const apiResult = await apiHandler.handle(c.req.raw, {
+		prefix: "/api",
+		context: context,
+	});
+
+	if (apiResult.matched) {
+		return c.newResponse(apiResult.response.body, apiResult.response);
+	}
+
+	await next();
+});
+
 app.onError((err, c) => {
 	console.error("Error:", err);
 	if ("getResponse" in err) {

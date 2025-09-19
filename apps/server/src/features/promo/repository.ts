@@ -1,74 +1,62 @@
 import type { InsertPromo, Promo, UpdatePromo } from "@repo/schema/promo";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { PromoDatabase } from "@/core/tables/promo";
 
-export class PromoRepository implements BaseRepository<Promo> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composePromo(
-		val: Omit<Promo, "periodStart" | "periodEnd" | "createdAt"> & {
-			periodStart: Date;
-			periodEnd: Date;
-			createdAt: Date;
-		},
-	): Promo {
-		return {
-			...val,
-			periodStart: val.periodStart.getTime(),
-			periodEnd: val.periodEnd.getTime(),
-			createdAt: val.createdAt.getTime(),
-		};
-	}
-
-	private composeCacheKey(id: string): string {
+export const createPromoRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.PROMO}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Promo | undefined> {
+	function _composeEntity(item: PromoDatabase): Promo {
+		return {
+			...item,
+			periodStart: item.periodStart.getTime(),
+			periodEnd: item.periodEnd.getTime(),
+			createdAt: item.createdAt.getTime(),
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Promo | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(id: string, data: Promo | undefined): Promise<void> {
+	async function _getFromDB(id: string): Promise<Promo | undefined> {
+		const result = await db.query.promo.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Promo | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["1h"],
+				await kv.put(_composeCacheKey(id), data, {
+					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getPromoFromDb(id: string): Promise<Promo | undefined> {
-		const result = await this.db.query.promo.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composePromo(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Promo[]> {
+	async function list(opts?: GetAllOptions): Promise<Promo[]> {
 		try {
-			let stmt = this.db.query.promo.findMany();
+			let stmt = db.query.promo.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.promo.findMany({
+					stmt = db.query.promo.findMany({
 						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -76,31 +64,33 @@ export class PromoRepository implements BaseRepository<Promo> {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.promo.findMany({
+					stmt = db.query.promo.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composePromo(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all promo", {
+			throw new RepositoryError("Failed to listing promos", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Promo | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getPromoFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get promo from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -110,24 +100,20 @@ export class PromoRepository implements BaseRepository<Promo> {
 		}
 	}
 
-	async create(item: InsertPromo): Promise<Promo> {
+	async function create(item: InsertPromo): Promise<Promo> {
 		try {
-			const id = v4();
-			const value = {
-				...item,
-				usedCount: 0,
-				periodStart: new Date(item.periodStart),
-				periodEnd: new Date(item.periodEnd),
-				id,
-			};
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.promo)
-				.values(value)
+				.values({
+					...item,
+					usedCount: 0,
+					periodStart: new Date(item.periodStart),
+					periodEnd: new Date(item.periodEnd),
+				})
 				.returning();
 
-			const result = this.composePromo(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -137,30 +123,28 @@ export class PromoRepository implements BaseRepository<Promo> {
 		}
 	}
 
-	async update(id: string, item: UpdatePromo): Promise<Promo> {
+	async function update(id: string, item: UpdatePromo): Promise<Promo> {
 		try {
-			const existing = await this.getPromoFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Promo with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				periodStart: new Date(item.periodStart),
-				periodEnd: new Date(item.periodEnd),
-				createdAt: new Date(existing.createdAt),
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.promo)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					periodStart: new Date(item.periodStart ?? existing.periodStart),
+					periodEnd: new Date(item.periodEnd ?? existing.periodEnd),
+					createdAt: new Date(existing.createdAt),
+				})
 				.where(eq(tables.promo.id, id))
 				.returning();
 
-			const result = this.composePromo(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -171,16 +155,16 @@ export class PromoRepository implements BaseRepository<Promo> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.promo)
 				.where(eq(tables.promo.id, id))
-				.returning();
+				.returning({ id: tables.promo.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -189,4 +173,8 @@ export class PromoRepository implements BaseRepository<Promo> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type PromoRepository = ReturnType<typeof createPromoRepository>;

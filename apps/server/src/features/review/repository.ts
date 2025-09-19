@@ -1,70 +1,60 @@
 import type { InsertReview, Review, UpdateReview } from "@repo/schema/review";
 import { eq } from "drizzle-orm";
-import { v4 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	BaseRepository,
-	GetAllOptions,
-	GetOptions,
-} from "@/core/interface";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { ReviewDatabase } from "@/core/tables/review";
 
-export class ReviewRepository implements BaseRepository<Review> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly kv: KeyValueService,
-	) {}
-
-	private composeReview(
-		val: Omit<Review, "createdAt"> & {
-			createdAt: Date;
-		},
-	): Review {
-		return {
-			...val,
-			createdAt: val.createdAt.getTime(),
-		};
-	}
-
-	private composeCacheKey(id: string): string {
+export const createReviewRepository = (
+	db: DatabaseService,
+	kv: KeyValueService,
+) => {
+	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.REVIEW}${id}`;
 	}
 
-	private async getCache(id: string): Promise<Review | undefined> {
+	function _composeEntity(item: ReviewDatabase): Review {
+		return {
+			...item,
+			createdAt: item.createdAt.getTime(),
+		};
+	}
+
+	async function _getFromKV(id: string): Promise<Review | undefined> {
 		try {
-			return await this.kv.get(this.composeCacheKey(id));
+			return await kv.get(_composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	private async setCache(id: string, data: Review | undefined): Promise<void> {
+	async function _getFromDB(id: string): Promise<Review | undefined> {
+		const result = await db.query.review.findFirst({
+			where: (f, op) => op.eq(f.id, id),
+		});
+		if (result) return _composeEntity(result);
+		return undefined;
+	}
+
+	async function _setCache(id: string, data: Review | undefined) {
 		if (data) {
 			try {
-				await this.kv.put(this.composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["1h"],
+				await kv.put(_composeCacheKey(id), data, {
+					expirationTtl: CACHE_TTLS["24h"],
 				});
 			} catch {}
 		}
 	}
 
-	private async getReviewFromDb(id: string): Promise<Review | undefined> {
-		const result = await this.db.query.review.findFirst({
-			where: (f, op) => op.eq(f.id, id),
-		});
-		if (result) return this.composeReview(result);
-		return result;
-	}
-
-	async getAll(opts?: GetAllOptions): Promise<Review[]> {
+	async function list(opts?: GetAllOptions): Promise<Review[]> {
 		try {
-			let stmt = this.db.query.review.findMany();
+			let stmt = db.query.review.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.review.findMany({
+					stmt = db.query.review.findMany({
 						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -72,31 +62,33 @@ export class ReviewRepository implements BaseRepository<Review> {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.review.findMany({
+					stmt = db.query.review.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeReview(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all review", {
+			throw new RepositoryError("Failed to listing reviews", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string, opts?: GetOptions): Promise<Review | undefined> {
+	async function get(id: string, opts?: GetOptions) {
 		try {
 			if (opts?.fromCache) {
-				const cached = await this.getCache(id);
+				const cached = await _getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await this.getReviewFromDb(id);
+			const result = await _getFromDB(id);
 
-			await this.setCache(id, result);
+			if (!result) throw new RepositoryError("Failed get review from db");
+
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -106,22 +98,17 @@ export class ReviewRepository implements BaseRepository<Review> {
 		}
 	}
 
-	async create(item: InsertReview): Promise<Review> {
+	async function create(
+		item: InsertReview & { userId: string },
+	): Promise<Review> {
 		try {
-			const id = v4();
-			const value = {
-				...item,
-				usedCount: 0,
-				id,
-			};
-
-			const [operation] = await this.db
+			const [operation] = await db
 				.insert(tables.review)
-				.values(value)
+				.values(item)
 				.returning();
 
-			const result = this.composeReview(operation);
-			await this.setCache(id, result);
+			const result = _composeEntity(operation);
+			await _setCache(result.id, result);
 
 			return result;
 		} catch (error) {
@@ -131,28 +118,26 @@ export class ReviewRepository implements BaseRepository<Review> {
 		}
 	}
 
-	async update(id: string, item: UpdateReview): Promise<Review> {
+	async function update(id: string, item: UpdateReview): Promise<Review> {
 		try {
-			const existing = await this.getReviewFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Review with id "${id}" not found`);
 			}
-			const value = {
-				...existing,
-				...item,
-				createdAt: new Date(existing.createdAt),
-				id,
-			};
 
-			const [operation] = await this.db
+			const [operation] = await db
 				.update(tables.review)
-				.set(value)
+				.set({
+					...existing,
+					...item,
+					createdAt: new Date(existing.createdAt),
+				})
 				.where(eq(tables.review.id, id))
 				.returning();
 
-			const result = this.composeReview(operation);
+			const result = _composeEntity(operation);
 
-			await this.setCache(id, result);
+			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
@@ -163,16 +148,16 @@ export class ReviewRepository implements BaseRepository<Review> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			const result = await this.db
+			const result = await db
 				.delete(tables.review)
 				.where(eq(tables.review.id, id))
-				.returning();
+				.returning({ id: tables.review.id });
 
 			if (result.length > 0) {
 				try {
-					await this.kv.delete(this.composeCacheKey(id));
+					await kv.delete(_composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -181,4 +166,8 @@ export class ReviewRepository implements BaseRepository<Review> {
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type ReviewRepository = ReturnType<typeof createReviewRepository>;

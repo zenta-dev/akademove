@@ -2,48 +2,40 @@ import type { InsertUser, UpdateUser, User, UserRole } from "@repo/schema/user";
 import { APIError } from "better-auth";
 import { eq } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
-import type { BaseRepository, GetAllOptions } from "@/core/interface";
-import type { AuthInstance } from "@/core/services/auth";
-import { type DatabaseInstance, tables } from "@/core/services/db";
+import type { GetAllOptions } from "@/core/interface";
+import type { AuthService } from "@/core/services/auth";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { UserDatabase } from "@/core/tables/auth";
 
-export class UserRepository implements BaseRepository<User> {
-	constructor(
-		private readonly db: DatabaseInstance,
-		private readonly auth: AuthInstance,
-	) {}
-
-	private composeUser(
-		val: Omit<User, "banExpires" | "updatedAt" | "createdAt"> & {
-			banExpires: Date | null;
-			createdAt: Date;
-			updatedAt: Date;
-		},
-	): User {
+export const createUserRepository = (
+	db: DatabaseService,
+	auth: AuthService,
+) => {
+	function _composeEntity(item: UserDatabase): User {
 		return {
-			...val,
-			banExpires: val.banExpires?.getTime() ?? null,
-			createdAt: val.createdAt.getTime(),
-			updatedAt: val.updatedAt.getTime(),
+			...item,
+			image: item.image ?? undefined,
+			banReason: item.banReason ?? undefined,
+			banExpires: item.banExpires?.getTime() ?? undefined,
+			createdAt: item.createdAt.getTime(),
+			updatedAt: item.updatedAt.getTime(),
 		};
 	}
-
-	private async getUserFromDb(id: string): Promise<User | undefined> {
-		const result = await this.db.query.user.findFirst({
+	async function _getFromDB(id: string): Promise<User | undefined> {
+		const result = await db.query.user.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		if (result) return this.composeUser(result);
-		return result;
+		if (result) return _composeEntity(result);
+		return undefined;
 	}
 
-	async getAll(opts: GetAllOptions, userId: string): Promise<User[]> {
+	async function list(userId: string, opts?: GetAllOptions): Promise<User[]> {
 		try {
-			let stmt = this.db.query.user.findMany({
-				where: (f, op) => op.ne(f.id, userId),
-			});
+			let stmt = db.query.user.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = this.db.query.user.findMany({
+					stmt = db.query.user.findMany({
 						where: (f, op) =>
 							op.and(op.gt(f.createdAt, new Date(cursor)), op.ne(f.id, userId)),
 						limit: limit + 1,
@@ -52,25 +44,26 @@ export class UserRepository implements BaseRepository<User> {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.user.findMany({
+					stmt = db.query.user.findMany({
 						offset,
 						limit,
-						where: (f, op) => op.ne(f.id, userId),
 					});
 				}
 			}
 			const result = await stmt;
-			return result.map((v) => this.composeUser(v));
+			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to get all user", {
+			throw new RepositoryError("Failed to listing users", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async getById(id: string): Promise<User | undefined> {
+	async function get(id: string) {
 		try {
-			const result = await this.getUserFromDb(id);
+			const result = await _getFromDB(id);
+
+			if (!result) throw new RepositoryError("Failed get user from db");
 
 			return result;
 		} catch (error) {
@@ -80,13 +73,15 @@ export class UserRepository implements BaseRepository<User> {
 		}
 	}
 
-	async create(item: InsertUser): Promise<User & { password: string }> {
+	async function create(
+		item: InsertUser,
+	): Promise<User & { password: string }> {
 		try {
-			const { user } = await this.auth.api.createUser({
+			const { user } = await auth.api.createUser({
 				body: item,
 			});
 
-			const result = this.composeUser({
+			const result = _composeEntity({
 				...user,
 				role: (user.role ?? "user") as UserRole,
 				image: user.image ?? null,
@@ -112,31 +107,25 @@ export class UserRepository implements BaseRepository<User> {
 		}
 	}
 
-	async update(
+	async function update(
 		id: string,
 		item: UpdateUser,
-		reqHeader?: Record<string, string>,
+		headers: Headers,
 	): Promise<User> {
 		try {
-			const existing = await this.getUserFromDb(id);
+			const existing = await _getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`User with id "${id}" not found`);
 			}
 
 			let result: User = existing;
 
-			const headers = new Headers();
-			if (reqHeader) {
-				for (const [k, v] of Object.entries(reqHeader)) {
-					headers.set(k, v);
-				}
-			}
 			if ("role" in item) {
-				const { user } = await this.auth.api.setRole({
+				const { user } = await auth.api.setRole({
 					body: { userId: id, role: item.role },
 					headers,
 				});
-				result = this.composeUser({
+				result = _composeEntity({
 					...user,
 					role: (user.role ?? "user") as UserRole,
 					image: user.image ?? null,
@@ -146,7 +135,7 @@ export class UserRepository implements BaseRepository<User> {
 				});
 			}
 			if ("password" in item) {
-				const { status } = await this.auth.api.setUserPassword({
+				const { status } = await auth.api.setUserPassword({
 					body: { userId: id, newPassword: item.password },
 					headers,
 				});
@@ -155,7 +144,7 @@ export class UserRepository implements BaseRepository<User> {
 				}
 			}
 			if ("banReason" in item) {
-				await this.auth.api.banUser({
+				await auth.api.banUser({
 					body: { userId: id, ...item },
 					headers,
 				});
@@ -166,16 +155,16 @@ export class UserRepository implements BaseRepository<User> {
 				}
 			}
 			if ("id" in item) {
-				await this.auth.api.banUser({
+				await auth.api.banUser({
 					body: { userId: item.id },
 					headers,
 				});
 				result.banned = false;
-				result.banReason = null;
-				result.banExpires = null;
+				result.banReason = undefined;
+				result.banExpires = undefined;
 			}
 
-			await this.auth.api.revokeUserSessions({ body: { userId: id }, headers });
+			await auth.api.revokeUserSessions({ body: { userId: id }, headers });
 
 			if (!result) throw new RepositoryError("Failed to update user");
 			return result;
@@ -187,16 +176,20 @@ export class UserRepository implements BaseRepository<User> {
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	async function remove(id: string): Promise<void> {
 		try {
-			await this.db
+			await db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
-				.returning();
+				.returning({ id: tables.user.id });
 		} catch (error) {
 			throw new RepositoryError(`Failed to delete user with id "${id}"`, {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
-}
+
+	return { list, get, create, update, remove };
+};
+
+export type UserRepository = ReturnType<typeof createUserRepository>;

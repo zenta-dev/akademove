@@ -1,9 +1,9 @@
 import { env } from "cloudflare:workers";
 import { createLocalJWKSet, type JWTPayload, jwtVerify } from "jose";
-import type { AuthInstance } from "@/core/services/auth";
+import type { AuthService } from "@/core/services/auth";
 import type { HasPermissionRole } from "@/core/services/auth.permission";
 
-export async function validateToken(token: string, auth: AuthInstance) {
+export async function validateToken(token: string, auth: AuthService) {
 	try {
 		const remoteJWKS = await auth.api.getJwks();
 		const JWKS = createLocalJWKSet(remoteJWKS);
