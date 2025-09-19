@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { VisibilityState } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpcQuery } from "@/lib/client/orpc";
 import { DataTable } from "../../data-table";

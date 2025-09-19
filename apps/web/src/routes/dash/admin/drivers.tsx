@@ -1,12 +1,8 @@
 import { m } from "@repo/i18n";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { DRIVER_COLUMNS } from "@/components/tables/admin/driver/columns";
 import { DriverTable } from "@/components/tables/admin/driver/table";
-import { DataTable } from "@/components/tables/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
-import { orpcQuery } from "@/lib/client/orpc";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/admin/drivers")({
