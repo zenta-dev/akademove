@@ -3,15 +3,7 @@ import { m } from "@repo/i18n";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { capitalizeFirstLetter } from "better-auth";
-import {
-	Bike,
-	BikeIcon,
-	DollarSign,
-	Package,
-	PackageIcon,
-	PizzaIcon,
-	Save,
-} from "lucide-react";
+import { BikeIcon, PackageIcon, PizzaIcon, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -45,8 +37,14 @@ export const CONFIGURATIONS = [
 		textColor: "text-blue-500",
 		bgColor: "bg-blue-500/10",
 		tab: {
-			textColor: "data-[state=active]:text-blue-500",
-			bgColor: "data-[state=active]:bg-blue-500/10",
+			dark: {
+				textColor: "dark:data-[state=active]:text-blue-500",
+				bgColor: "dark:data-[state=active]:bg-blue-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-blue-500",
+				bgColor: "data-[state=active]:bg-blue-500/10",
+			},
 		},
 	},
 	{
@@ -56,8 +54,14 @@ export const CONFIGURATIONS = [
 		textColor: "text-green-500",
 		bgColor: "bg-green-500/10",
 		tab: {
-			textColor: "data-[state=active]:text-green-500",
-			bgColor: "data-[state=active]:bg-green-500/10",
+			dark: {
+				textColor: "dark:data-[state=active]:text-green-500",
+				bgColor: "dark:data-[state=active]:bg-green-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-green-500",
+				bgColor: "data-[state=active]:bg-green-500/10",
+			},
 		},
 	},
 	{
@@ -67,8 +71,14 @@ export const CONFIGURATIONS = [
 		textColor: "text-yellow-500",
 		bgColor: "bg-yellow-500/10",
 		tab: {
-			textColor: "data-[state=active]:text-yellow-500",
-			bgColor: "data-[state=active]:bg-yellow-500/10",
+			dark: {
+				textColor: "dark:data-[state=active]:text-yellow-500",
+				bgColor: "dark:data-[state=active]:bg-yellow-500/10",
+			},
+			light: {
+				textColor: "data-[state=active]:text-yellow-500",
+				bgColor: "data-[state=active]:bg-yellow-500/10",
+			},
 		},
 	},
 ];
@@ -108,7 +118,13 @@ function RouteComponent() {
 							<TabsTrigger
 								key={e.key}
 								value={e.key}
-								className={cn("p-4", e.tab.bgColor, e.tab.textColor)}
+								className={cn(
+									"p-4",
+									e.tab.light.bgColor,
+									e.tab.light.textColor,
+									e.tab.dark.bgColor,
+									e.tab.dark.textColor,
+								)}
 							>
 								<e.icon />
 								{e.name}
