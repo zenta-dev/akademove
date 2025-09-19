@@ -7,7 +7,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { client, queryClient } from "@/lib/api-client";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 import { Submitting } from "../submitting";
 import { Button } from "../ui/button";
@@ -45,44 +45,47 @@ export const BanUserDialog = ({ userId }: { userId: string }) => {
 		defaultValues: { banReason: "", banExpiresIn: undefined },
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (data: BanUser) => {
-			let banExpiresIn: number | undefined;
-			if (date) {
-				const [hours, minutes, seconds] = time.split(":").map(Number);
-				date.setHours(hours, minutes, seconds, 0);
-				banExpiresIn = date.getTime() - Date.now();
-			}
-			const response = await client.users[":id"].$put({
-				param: { id: userId },
-				json: { ...data, banExpiresIn },
-			});
-			const result = await response.json();
-			if (!result.success) throw new BetterAuthClientError(result.message);
-			return result.data;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries();
-			toast.success(m.success_placeholder({ action: m.ban_user() }));
-			setDialogOpen(false);
-			form.setValue("banReason", "");
-			form.clearErrors();
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.ban_user().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			form.setError("banExpiresIn", { message: error.message });
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.user.update.mutationOptions({
+			mutationFn: async (data) => {
+				const result = await orpcClient.user.update(data);
+				if (result.status !== 200) {
+					throw new BetterAuthClientError(result.body.message);
+				}
+				return result;
+			},
+			onSuccess: async () => {
+				queryClient.invalidateQueries();
+				toast.success(m.success_placeholder({ action: m.ban_user() }));
+				setDialogOpen(false);
+				form.setValue("banReason", "");
+				form.clearErrors();
+			},
+			onError: (error: BetterAuthClientError) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.ban_user().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
+				);
+				form.setError("banExpiresIn", { message: error.message });
+			},
+		}),
+	);
 
 	const onSubmit = async (values: BanUser) => {
-		await mutation.mutateAsync(values);
+		let banExpiresIn: number | undefined;
+		if (date) {
+			const [hours, minutes, seconds] = time.split(":").map(Number);
+			date.setHours(hours, minutes, seconds, 0);
+			banExpiresIn = date.getTime() - Date.now();
+		}
+		await mutation.mutateAsync({
+			params: { id: userId },
+			body: { ...values, banExpiresIn },
+		});
 	};
 
 	return (

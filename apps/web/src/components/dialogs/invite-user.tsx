@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { client, queryClient } from "@/lib/api-client";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 import { Submitting } from "../submitting";
 import { PasswordToggle } from "../toggle/password-toggle";
@@ -53,43 +53,46 @@ export const InviteUserDialog = () => {
 		},
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (credentials: InsertUser) => {
-			const response = await client.users.$post({ json: credentials });
-			const result = await response.json();
-			if (!result.success) throw new BetterAuthClientError(result.message);
-			return result.data;
-		},
-		onSuccess: async () => {
-			queryClient.invalidateQueries();
-			toast.success(m.success_placeholder({ action: m.invite_user() }));
-			setOpen(false);
-			form.setValue("name", "");
-			form.setValue("email", "");
-			form.setValue("role", "user");
-			form.setValue("password", "");
-			form.setValue("confirmPassword", "");
-			form.clearErrors();
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.invite_user().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
-				form.setError("email", { message: error.message });
-			} else {
-				form.setError("confirmPassword", { message: error.message });
-			}
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.user.create.mutationOptions({
+			mutationFn: async (data) => {
+				const result = await orpcClient.user.create(data);
+				if (result.status !== 200) {
+					throw new BetterAuthClientError(result.body.message);
+				}
+				return result;
+			},
+			onSuccess: async () => {
+				queryClient.invalidateQueries();
+				toast.success(m.success_placeholder({ action: m.invite_user() }));
+				setOpen(false);
+				form.setValue("name", "");
+				form.setValue("email", "");
+				form.setValue("role", "user");
+				form.setValue("password", "");
+				form.setValue("confirmPassword", "");
+				form.clearErrors();
+			},
+			onError: (error: BetterAuthClientError) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.invite_user().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
+				);
+				if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+					form.setError("email", { message: error.message });
+				} else {
+					form.setError("confirmPassword", { message: error.message });
+				}
+			},
+		}),
+	);
 
 	const onSubmit = async (values: InsertUser) => {
-		await mutation.mutateAsync(values);
+		await mutation.mutateAsync({ body: values });
 	};
 
 	return (

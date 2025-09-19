@@ -9,7 +9,7 @@ import { DataTable } from "@/components/tables/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { hasAccess } from "@/lib/actions";
-import { client } from "@/lib/api-client";
+import { orpcQuery } from "@/lib/client/orpc";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/admin/users")({
@@ -42,17 +42,10 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	if (!allowed) navigate({ to: "/" });
 
-	const users = useQuery({
-		queryKey: [client.users.$url().pathname, {}],
-		queryFn: async () => {
-			const response = await client.users.$get({
-				query: {},
-			});
-			const result = await response.json();
-			if (!result.success || !result.data) return [];
-			return result.data;
-		},
-	});
+	const users = useQuery(
+		orpcQuery.user.list.queryOptions({ input: { query: {} } }),
+	);
+
 	const isMobile = useIsMobile();
 	const [visibility, setVisibility] = useState<VisibilityState>({
 		name: true,
@@ -92,7 +85,7 @@ function RouteComponent() {
 				<CardContent className="p-0">
 					<DataTable
 						columns={USER_COLUMNS}
-						data={users.data ?? []}
+						data={users.data?.body.data ?? []}
 						isPending={users.isPending}
 						columnVisibility={visibility}
 						setColumnVisibility={setVisibility}

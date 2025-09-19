@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { client, queryClient } from "@/lib/api-client";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 import { Submitting } from "../submitting";
 import { Button } from "../ui/button";
@@ -43,38 +43,38 @@ export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 		defaultValues: { role: "user" },
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (data: UpdateUserRole) => {
-			const response = await client.users[":id"].$put({
-				param: { id: userId },
-				json: data,
-			});
-			const result = await response.json();
-			if (!result.success) throw new BetterAuthClientError(result.message);
-			return result.data;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries();
-			toast.success(m.success_placeholder({ action: m.update_user_role() }));
-			setOpen(false);
-			form.setValue("role", "user");
-			form.clearErrors();
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.update_user_role().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			form.setError("role", { message: error.message });
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.user.update.mutationOptions({
+			mutationFn: async (data) => {
+				const result = await orpcClient.user.update(data);
+				if (result.status !== 200) {
+					throw new BetterAuthClientError(result.body.message);
+				}
+				return result;
+			},
+			onSuccess: async () => {
+				queryClient.invalidateQueries();
+				toast.success(m.success_placeholder({ action: m.update_user_role() }));
+				setOpen(false);
+				form.setValue("role", "user");
+				form.clearErrors();
+			},
+			onError: (error: BetterAuthClientError) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.update_user_role().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
+				);
+				form.setError("role", { message: error.message });
+			},
+		}),
+	);
 
 	const onSubmit = async (values: UpdateUserRole) => {
-		await mutation.mutateAsync(values);
+		await mutation.mutateAsync({ params: { id: userId }, body: values });
 	};
 
 	return (
