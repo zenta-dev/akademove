@@ -18,6 +18,7 @@ export const USER_COLUMNS = [
 			return (
 				<Button
 					variant="ghost"
+					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					{m.name()}
@@ -34,6 +35,7 @@ export const USER_COLUMNS = [
 			return (
 				<Button
 					variant="ghost"
+					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					{m.email()}
@@ -49,6 +51,7 @@ export const USER_COLUMNS = [
 			return (
 				<Button
 					variant="ghost"
+					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
 					{m.role()}
@@ -144,7 +147,7 @@ export const USER_COLUMNS = [
 			const date = new Date(row.getValue("createdAt"));
 
 			return (
-				<div className="text-right font-medium">
+				<div className="text-start font-medium">
 					{date.toLocaleDateString("id-ID", {
 						day: "numeric",
 						month: "short",

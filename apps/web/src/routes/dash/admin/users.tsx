@@ -5,6 +5,7 @@ import type { VisibilityState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { InviteUserDialog } from "@/components/dialogs/invite-user";
 import { USER_COLUMNS } from "@/components/tables/admin/user/columns";
+import { UserTable } from "@/components/tables/admin/user/table";
 import { DataTable } from "@/components/tables/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -42,36 +43,6 @@ function RouteComponent() {
 	const navigate = useNavigate();
 	if (!allowed) navigate({ to: "/" });
 
-	const users = useQuery(
-		orpcQuery.user.list.queryOptions({ input: { query: {} } }),
-	);
-
-	const isMobile = useIsMobile();
-	const [visibility, setVisibility] = useState<VisibilityState>({
-		name: true,
-		email: true,
-		role: true,
-		emailVerified: !isMobile,
-		createdAt: !isMobile,
-		actions: true,
-	});
-
-	useEffect(() => {
-		if (isMobile) {
-			setVisibility((prev) => ({
-				...prev,
-				emailVerified: false,
-				createdAt: false,
-			}));
-		} else {
-			setVisibility((prev) => ({
-				...prev,
-				emailVerified: true,
-				createdAt: true,
-			}));
-		}
-	}, [isMobile]);
-
 	return (
 		<>
 			<div className="flex items-center justify-between">
@@ -83,13 +54,7 @@ function RouteComponent() {
 			</div>
 			<Card className="p-0">
 				<CardContent className="p-0">
-					<DataTable
-						columns={USER_COLUMNS}
-						data={users.data?.body.data ?? []}
-						isPending={users.isPending}
-						columnVisibility={visibility}
-						setColumnVisibility={setVisibility}
-					/>
+					<UserTable />
 				</CardContent>
 			</Card>
 		</>
