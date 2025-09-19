@@ -12,10 +12,12 @@ import {
 	Clock,
 	PauseCircle,
 	PlayCircle,
+	Star,
 	XCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/utils/cn";
 
 export const STATUS_ICONS: Record<DriverStatus, React.ElementType> = {
 	pending: Clock,
@@ -107,6 +109,29 @@ export const DRIVER_COLUMNS = [
 					{m.rating()}
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const rating = row.getValue<number>("rating") ?? 0;
+			const id = `rating-${row.index}`;
+			return (
+				<div className="flex items-center text-muted-foreground">
+					{[...Array(5)].map((_, i) => (
+						<Star
+							key={`${id}-star-${
+								// biome-ignore lint/suspicious/noArrayIndexKey: for now its just work
+								i
+							}`}
+							className={cn(
+								"h-4 w-4",
+								i < rating
+									? "fill-amber-400/80 text-amber-400/80"
+									: "text-gray-300 dark:text-gray-600",
+							)}
+						/>
+					))}
+					/({rating})
+				</div>
 			);
 		},
 	},
