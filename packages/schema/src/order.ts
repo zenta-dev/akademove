@@ -2,17 +2,7 @@ import * as z from "zod";
 import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
-export const OrderStatusSchema = z.enum([
-	"requested",
-	"matching",
-	"accepted",
-	"arriving",
-	"in_trip",
-	"completed",
-	"cancelled_by_user",
-	"cancelled_by_driver",
-	"cancelled_by_system",
-]);
+export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
 export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
 
 export const OrderNoteSchema = z.object({
@@ -32,7 +22,7 @@ export const OrderSchema = z
 		dropoffLocation: LocationSchema,
 		distanceKm: z.number(),
 		basePrice: z.number(),
-		tip: z.number().default(0.0),
+		tip: z.number().optional(),
 		totalPrice: z.number(),
 		note: OrderNoteSchema.optional(),
 		requestedAt: DateSchema,

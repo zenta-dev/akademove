@@ -14,17 +14,7 @@ import { user } from "./auth";
 import { driver } from "./driver";
 import { merchant } from "./merchant";
 
-export const orderStatus = pgEnum("order_status", [
-	"requested",
-	"matching",
-	"accepted",
-	"arriving",
-	"in_trip",
-	"completed",
-	"cancelled_by_user",
-	"cancelled_by_driver",
-	"cancelled_by_system",
-]);
+export const orderStatus = pgEnum("order_status", CONSTANTS.ORDER_STATUSES);
 export const orderType = pgEnum("order_type", CONSTANTS.ORDER_TYPES);
 
 export interface OrderNote {
@@ -60,9 +50,7 @@ export const order = pgTable("orders", {
 		precision: 10,
 		scale: 2,
 		mode: "number",
-	})
-		.notNull()
-		.default(0.0),
+	}),
 	totalPrice: decimal("total_price", {
 		precision: 10,
 		scale: 2,
