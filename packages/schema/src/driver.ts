@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { UserSchema } from "./user.ts";
 
 export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
 
@@ -13,9 +14,12 @@ export const DriverSchema = z
 		status: DriverStatusSchema,
 		rating: z.number(),
 		isOnline: z.boolean().default(false),
-		currentLocation: LocationSchema.nullable(),
-		lastLocationUpdate: DateSchema.nullable(),
+		currentLocation: LocationSchema.optional(),
+		lastLocationUpdate: DateSchema.optional(),
 		createdAt: DateSchema,
+
+		// relations
+		user: UserSchema.partial(),
 	})
 	.meta({
 		title: "Driver",

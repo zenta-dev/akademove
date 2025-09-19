@@ -12,7 +12,7 @@ export const ScheduleSchema = z
 		startTime: TimeSchema,
 		endTime: TimeSchema,
 		isRecurring: z.boolean().default(true),
-		specificDate: DateSchema.nullable(),
+		specificDate: DateSchema.optional(),
 		isActive: z.boolean().default(true),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
@@ -33,7 +33,7 @@ export const UpdateScheduleSchema = ScheduleSchema.omit({
 	driverId: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).partial();
 
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type Schedule = z.infer<typeof ScheduleSchema>;

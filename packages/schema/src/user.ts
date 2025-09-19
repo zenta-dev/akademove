@@ -22,12 +22,12 @@ export const UserSchema = z
 		email: z.email(
 			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
 		),
-		emailVerified: z.boolean().default(false),
-		image: z.url().nullable(),
+		emailVerified: z.boolean(),
+		image: z.url().optional(),
 		role: UserRoleSchema,
-		banned: z.boolean().default(false),
-		banReason: z.string().nullable(),
-		banExpires: DateSchema.nullable(),
+		banned: z.boolean(),
+		banReason: z.string().optional(),
+		banExpires: DateSchema.optional(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})

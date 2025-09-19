@@ -34,7 +34,7 @@ export const UpdatePromoSchema = PromoSchema.omit({
 	id: true,
 	usedCount: true,
 	createdAt: true,
-});
+}).partial();
 
 export type Promo = z.infer<typeof PromoSchema>;
 export type InsertPromo = z.infer<typeof InsertPromoSchema>;

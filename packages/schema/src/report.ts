@@ -9,17 +9,17 @@ export const ReportStatusSchema = z.enum(CONSTANTS.REPORT_STATUS);
 export const ReportSchema = z
 	.object({
 		id: z.uuid(),
-		orderId: z.uuid().nullable(),
+		orderId: z.uuid().optional(),
 		reporterId: z.uuid(),
 		targetUserId: z.uuid(),
 		category: ReportCategorySchema,
 		description: z.string(),
-		evidenceUrl: z.string().nullable(),
+		evidenceUrl: z.string().optional(),
 		status: ReportStatusSchema.default("pending"),
-		handledById: z.string().nullable(),
-		resolution: z.string().nullable(),
+		handledById: z.string().optional(),
+		resolution: z.string().optional(),
 		reportedAt: DateSchema,
-		resolvedAt: DateSchema.nullable(),
+		resolvedAt: DateSchema.optional(),
 	})
 	.meta({
 		title: "Report",
@@ -36,7 +36,7 @@ export const UpdateReportSchema = ReportSchema.omit({
 	id: true,
 	reportedAt: true,
 	resolvedAt: true,
-});
+}).partial();
 
 export type ReportCategory = z.infer<typeof ReportCategorySchema>;
 export type ReportStatus = z.infer<typeof ReportStatusSchema>;

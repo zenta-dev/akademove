@@ -28,7 +28,7 @@ export const InsertReviewSchema = ReviewSchema.omit({
 export const UpdateReviewSchema = ReviewSchema.omit({
 	id: true,
 	createdAt: true,
-});
+}).partial();
 
 export type ReviewCategory = z.infer<typeof ReviewCategorySchema>;
 export type Review = z.infer<typeof ReviewSchema>;

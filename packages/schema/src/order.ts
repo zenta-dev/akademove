@@ -24,8 +24,8 @@ export const OrderSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		driverId: z.string().nullable(),
-		merchantId: z.string().nullable(),
+		driverId: z.string().optional(),
+		merchantId: z.string().optional(),
 		type: OrderTypeSchema,
 		status: OrderStatusSchema,
 		pickupLocation: LocationSchema,
@@ -34,10 +34,10 @@ export const OrderSchema = z
 		basePrice: z.number(),
 		tip: z.number().default(0.0),
 		totalPrice: z.number(),
-		note: OrderNoteSchema.nullable(),
+		note: OrderNoteSchema.optional(),
 		requestedAt: DateSchema,
-		acceptedAt: DateSchema.nullable(),
-		arrivedAt: DateSchema.nullable(),
+		acceptedAt: DateSchema.optional(),
+		arrivedAt: DateSchema.optional(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
@@ -66,7 +66,7 @@ export const UpdateOrderSchema = OrderSchema.omit({
 	arrivedAt: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).partial();
 
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export type OrderType = z.infer<typeof OrderTypeSchema>;

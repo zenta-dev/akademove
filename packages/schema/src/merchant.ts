@@ -11,7 +11,7 @@ export const MerchantSchema = z
 		type: MerchantTypeSchema,
 		name: z.string(),
 		address: z.string(),
-		location: LocationSchema.nullable(),
+		location: LocationSchema.optional(),
 		isActive: z.boolean().default(true),
 		rating: z.number(),
 		createdAt: DateSchema,
@@ -30,7 +30,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	updatedAt: true,
 });
 
-export const UpdateMerchantSchema = InsertMerchantSchema;
+export const UpdateMerchantSchema = InsertMerchantSchema.partial();
 
 export type MerchantType = z.infer<typeof MerchantTypeSchema>;
 export type Merchant = z.infer<typeof MerchantSchema>;
