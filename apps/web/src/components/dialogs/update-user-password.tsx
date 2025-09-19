@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
+import { orpcClient, orpcQuery } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 import { Submitting } from "../submitting";
 import { PasswordToggle } from "../toggle/password-toggle";
