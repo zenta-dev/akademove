@@ -3,6 +3,7 @@ import { SidebarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
+import { ThemeToggle } from "../toggle/theme-toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { UserDropdwon } from "./user-dropdown";
 
@@ -35,7 +36,10 @@ export const DashboardHeader = ({ scope }: { scope: string }) => {
 						</span>
 					</h1>
 				</div>
-				<UserDropdwon />
+				<div className="flex items-center gap-2">
+					<ThemeToggle />
+					<UserDropdwon />
+				</div>
 			</div>
 		</header>
 	);
