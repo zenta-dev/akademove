@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { UnderDevelopment } from "@/components/under-development";
+import { MerchantTable } from "@/components/tables/merchant/table";
+import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
@@ -30,7 +31,11 @@ function RouteComponent() {
 				<h2 className="font-medium text-xl">{m.merchants()}</h2>
 				<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 			</div>
-			<UnderDevelopment />
+			<Card className="p-0">
+				<CardContent className="p-0">
+					<MerchantTable />
+				</CardContent>
+			</Card>
 		</>
 	);
 }

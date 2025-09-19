@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import type { Driver, DriverStatus } from "@repo/schema/driver";
+import type { Merchant, MerchantType } from "@repo/schema/merchant";
 import { capitalizeFirstLetter } from "@repo/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
@@ -7,44 +7,32 @@ import {
 	ArrowUpDown,
 	BadgeCheckIcon,
 	BadgeXIcon,
-	Ban,
-	CheckCircle,
-	Clock,
-	PauseCircle,
-	PlayCircle,
-	XCircle,
+	HomeIcon,
+	StoreIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export const STATUS_ICONS: Record<DriverStatus, React.ElementType> = {
-	pending: Clock,
-	approved: CheckCircle,
-	rejected: XCircle,
-	active: PlayCircle,
-	inactive: PauseCircle,
-	suspended: Ban,
+export const STATUS_ICONS: Record<MerchantType, React.ElementType> = {
+	merchant: StoreIcon,
+	tenant: HomeIcon,
 };
-export const statusVariants = cva("", {
+export const merchantTypeVariants = cva("", {
 	variants: {
 		intent: {
-			pending: "bg-yellow-500/10 text-yellow-500",
-			approved: "bg-green-500/10 text-green-500",
-			rejected: "bg-red-500/10 text-red-500",
-			active: "bg-blue-500/10 text-blue-500",
-			inactive: "bg-gray-500/10 text-gray-500",
-			suspended: "bg-orange-500/10 text-orange-500",
+			merchant: "bg-blue-500/10 text-blue-500",
+			tenant: "bg-yellow-500/10 text-yellow-500",
 		},
 	},
 	defaultVariants: {
-		intent: "inactive",
+		intent: "merchant",
 	},
 });
 
-export const DRIVER_COLUMNS = [
+export const MERCHANT_COLUMNS = [
 	{
-		id: "user.name",
-		accessorKey: "user.name",
+		id: "name",
+		accessorKey: "name",
 		enableHiding: false,
 		header: ({ column }) => {
 			return (
@@ -60,8 +48,8 @@ export const DRIVER_COLUMNS = [
 		},
 	},
 	{
-		id: "studentId",
-		accessorKey: "studentId",
+		id: "address",
+		accessorKey: "address",
 		enableHiding: false,
 		header: ({ column }) => {
 			return (
@@ -70,15 +58,15 @@ export const DRIVER_COLUMNS = [
 					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
-					{m.student_id()}
+					{m.address()}
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
 		},
 	},
 	{
-		id: "licenseNumber",
-		accessorKey: "licenseNumber",
+		id: "type",
+		accessorKey: "type",
 		enableHiding: false,
 		header: ({ column }) => {
 			return (
@@ -87,9 +75,21 @@ export const DRIVER_COLUMNS = [
 					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
-					{m.license_number()}
+					{m.type()}
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
+			);
+		},
+		cell: ({ row }) => {
+			const value = String(row.getValue("type")) as MerchantType;
+
+			const Icon = STATUS_ICONS[value];
+
+			return (
+				<Badge className={merchantTypeVariants({ intent: value })}>
+					<Icon className="mr-1 h-4 w-4" />
+					{capitalizeFirstLetter(value)}
+				</Badge>
 			);
 		},
 	},
@@ -111,40 +111,11 @@ export const DRIVER_COLUMNS = [
 		},
 	},
 	{
-		id: "status",
-		accessorKey: "status",
-		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.status()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		id: "isActive",
+		accessorKey: "isActive",
+		header: m.is_active(),
 		cell: ({ row }) => {
-			const value = String(row.getValue("status")) as DriverStatus;
-
-			const Icon = STATUS_ICONS[value];
-
-			return (
-				<Badge className={statusVariants({ intent: value })}>
-					<Icon className="mr-1 h-4 w-4" />
-					{capitalizeFirstLetter(value)}
-				</Badge>
-			);
-		},
-	},
-	{
-		id: "isOnline",
-		accessorKey: "isOnline",
-		header: m.is_online(),
-		cell: ({ row }) => {
-			const value = Boolean(row.getValue("isOnline"));
+			const value = Boolean(row.getValue("isActive"));
 			if (value) {
 				return (
 					<Badge
@@ -193,4 +164,4 @@ export const DRIVER_COLUMNS = [
 	// 		return <UserActionTable val={row.original} />;
 	// 	},
 	// },
-] as const satisfies ColumnDef<Driver>[];
+] as const satisfies ColumnDef<Merchant>[];
