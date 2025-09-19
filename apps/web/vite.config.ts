@@ -5,7 +5,7 @@ import alchemy from "alchemy/cloudflare/tanstack-start";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-function simpleHash(str: string) {
+function encodeString(str: string) {
 	const result = str
 		.split("")
 		.map((char) => String.fromCharCode(char.charCodeAt(0) + 5))
@@ -37,86 +37,86 @@ export default defineConfig({
 						const idx = parts.lastIndexOf("node_modules");
 
 						if (parts[idx + 1] === "react-dom") {
-							return simpleHash("rd");
+							return encodeString("rd");
 						}
 						if (parts[idx + 1] === "react") {
-							return simpleHash("r");
+							return encodeString("r");
 						}
 						if (parts[idx + 1] === "scheduler") {
-							return simpleHash("rsc");
+							return encodeString("rsc");
 						}
 
 						if (id.includes("zod")) {
-							return simpleHash("z");
+							return encodeString("z");
 						}
 						// if (id.includes("better-auth")) {
 						// 	return simpleHash("ba");
 						// }
 						if (id.includes("radix-ui")) {
-							return simpleHash("rdxui");
+							return encodeString("rdxui");
 						}
 						if (id.includes("lucide")) {
-							return simpleHash("l");
+							return encodeString("l");
 						}
 						if (id.includes("sonner")) {
-							return simpleHash("s");
+							return encodeString("s");
 						}
 						if (id.includes("framer-motion")) {
-							return simpleHash("fm");
+							return encodeString("fm");
 						}
 						if (id.includes("date-fns")) {
-							return simpleHash("df");
+							return encodeString("df");
 						}
 						if (id.includes("react-day-picker")) {
-							return simpleHash("rdp");
+							return encodeString("rdp");
 						}
 						if (id.includes("@orpc")) {
-							return simpleHash("orpc");
+							return encodeString("orpc");
 						}
 						if (parts[idx + 1] === "@tanstack") {
 							if (parts[idx + 2] === "start-server-functions-client") {
-								return simpleHash("tssfc");
+								return encodeString("tssfc");
 							}
 							if (parts[idx + 2] === "start-server-functions-fetcher") {
-								return simpleHash("tssff");
+								return encodeString("tssff");
 							}
 							if (parts[idx + 2] === "react-start-client") {
-								return simpleHash("trsc");
+								return encodeString("trsc");
 							}
 							if (parts[idx + 2] === "start-client-core") {
-								return simpleHash("tscc");
+								return encodeString("tscc");
 							}
 							if (parts[idx + 2] === "router-core") {
-								return simpleHash("trc");
+								return encodeString("trc");
 							}
 							if (parts[idx + 2] === "react-router") {
-								return simpleHash("trr");
+								return encodeString("trr");
 							}
 							if (parts[idx + 2] === "react-query") {
-								return simpleHash("trq");
+								return encodeString("trq");
 							}
 							if (parts[idx + 2] === "react-table") {
-								return simpleHash("trt");
+								return encodeString("trt");
 							}
 							if (parts[idx + 2] === "react-store") {
-								return simpleHash("trs");
+								return encodeString("trs");
 							}
 							if (parts[idx + 2] === "query-core") {
-								return simpleHash("tqc");
+								return encodeString("tqc");
 							}
 							if (parts[idx + 2] === "table-core") {
-								return simpleHash("ttc");
+								return encodeString("ttc");
 							}
 							if (parts[idx + 2] === "history") {
-								return simpleHash("th");
+								return encodeString("th");
 							}
 							if (parts[idx + 2] === "query") {
-								return simpleHash("tq");
+								return encodeString("tq");
 							}
 							if (parts[idx + 2] === "start") {
-								return simpleHash("ts");
+								return encodeString("ts");
 							}
-							return simpleHash("t");
+							return encodeString("t");
 						}
 					}
 
@@ -127,7 +127,7 @@ export default defineConfig({
 							"",
 						);
 
-						return simpleHash(`p${fileName}`);
+						return encodeString(`p${fileName}`);
 					}
 				},
 			},
