@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { InviteUserDialog } from "@/components/dialogs/invite-user";
-import { UserTable } from "@/components/tables/admin/user/table";
+import { UserTable } from "@/components/tables/user/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";

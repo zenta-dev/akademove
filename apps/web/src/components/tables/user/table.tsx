@@ -3,7 +3,7 @@ import type { VisibilityState } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { orpcQuery } from "@/lib/client/orpc";
-import { DataTable } from "../../data-table";
+import { DataTable } from "../data-table";
 import { USER_COLUMNS } from "./columns";
 
 export const UserTable = () => {

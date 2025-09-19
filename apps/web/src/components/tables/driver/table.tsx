@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { orpcQuery } from "@/lib/client/orpc";
-import { DataTable } from "../../data-table";
+import { DataTable } from "../data-table";
 import { DRIVER_COLUMNS } from "./columns";
 
 export const DriverTable = () => {
