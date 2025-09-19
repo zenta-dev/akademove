@@ -50,3 +50,5 @@ export const reviewRelations = relations(review, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type ReviewDatabase = typeof review.$inferSelect;

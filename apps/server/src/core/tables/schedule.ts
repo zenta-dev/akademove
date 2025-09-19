@@ -37,3 +37,5 @@ export const scheduleRelations = relations(schedule, ({ one }) => ({
 		references: [driver.id],
 	}),
 }));
+
+export type ScheduleDatabase = typeof schedule.$inferSelect;

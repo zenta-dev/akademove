@@ -87,3 +87,5 @@ export const sessionRelations = relations(session, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type UserDatabase = typeof user.$inferSelect;

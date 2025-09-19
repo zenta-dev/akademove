@@ -59,3 +59,5 @@ export const reportRelations = relations(report, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type ReportDatabase = typeof report.$inferSelect;

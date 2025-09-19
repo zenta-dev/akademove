@@ -93,3 +93,5 @@ export const orderRelations = relations(order, ({ one }) => ({
 		references: [merchant.id],
 	}),
 }));
+
+export type OrderDatabase = typeof order.$inferSelect;

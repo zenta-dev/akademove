@@ -41,3 +41,5 @@ export const driverRelations = relations(driver, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type DriverDatabase = typeof driver.$inferSelect;

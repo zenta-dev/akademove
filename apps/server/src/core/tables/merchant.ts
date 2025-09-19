@@ -41,3 +41,5 @@ export const merchantRelations = relations(merchant, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type MerchantDatabase = typeof merchant.$inferSelect;

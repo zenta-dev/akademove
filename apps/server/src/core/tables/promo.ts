@@ -91,3 +91,5 @@ export const promoUsageRelations = relations(promoUsage, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
+
+export type PromoDatabase = typeof promo.$inferSelect;
