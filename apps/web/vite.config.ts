@@ -6,14 +6,16 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 function simpleHash(str: string) {
-	let hash = 0;
-	const len = str.length;
-	if (len === 0) return "0";
+	const result = str
+		.split("")
+		.map((char) => String.fromCharCode(char.charCodeAt(0) + 5))
+		.join("");
 
-	for (let i = 0; i < len; i++) {
-		hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
-	}
-	return (hash >>> 0).toString(36);
+	return result.replace(/[-_~]/g, () => {
+		const chars =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		return chars.charAt(Math.floor(Math.random() * chars.length));
+	});
 }
 
 export default defineConfig({
@@ -30,7 +32,6 @@ export default defineConfig({
 			external: ["node:async_hooks", "cloudflare:workers"],
 			output: {
 				manualChunks(id) {
-					// console.log("IDDD => ", id);
 					if (id.includes("node_modules")) {
 						const parts = id.split("/");
 						const idx = parts.lastIndexOf("node_modules");
@@ -45,48 +46,79 @@ export default defineConfig({
 							return simpleHash("rsc");
 						}
 
-						if (id.includes("zod")) return simpleHash("z");
-						// if (id.includes("radix-ui")) return simpleHash("rdxui");
-						if (id.includes("lucide")) return simpleHash("l");
-						if (id.includes("sonner")) return simpleHash("s");
-						if (id.includes("framer-motion")) return simpleHash("fm");
-						if (id.includes("date-fns")) return simpleHash("dfns");
-						if (id.includes("react-day-picker")) return simpleHash("rdp");
-						// if (parts[idx + 1] === "@tanstack") {
-						// 	if (parts[idx + 2] === "react-query-devtools")
-						// 		return simpleHash("tsrqd");
-						// 	if (parts[idx + 2] === "react-router-devtools")
-						// 		return simpleHash("tsrrd");
-						// 	if (parts[idx + 2] === "react-start-client")
-						// 		return simpleHash("tsrsc");
-						// 	if (parts[idx + 2] === "react-store") return simpleHash("tsrs");
-						// 	if (parts[idx + 2] === "query-devtools")
-						// 		return simpleHash("tsqd");
-						// 	if (parts[idx + 2] === "react-query") return simpleHash("tsrq");
-						// 	if (parts[idx + 2] === "store") return simpleHash("tss");
-						// 	if (parts[idx + 2] === "history") return simpleHash("tsh");
-						// 	if (parts[idx + 2] === "react-table") return simpleHash("tsrt");
-						// 	if (parts[idx + 2] === "react-router") return simpleHash("tsrr");
-						// 	if (parts[idx + 2] === "query-core") return simpleHash("tsqc");
-						// 	if (parts[idx + 2] === "router-core") return simpleHash("tsrc");
-						// 	return simpleHash("ts/i");
+						if (id.includes("zod")) {
+							return simpleHash("z");
+						}
+						// if (id.includes("better-auth")) {
+						// 	return simpleHash("ba");
 						// }
-						// return simpleHash("v");
+						if (id.includes("radix-ui")) {
+							return simpleHash("rdxui");
+						}
+						if (id.includes("lucide")) {
+							return simpleHash("l");
+						}
+						if (id.includes("sonner")) {
+							return simpleHash("s");
+						}
+						if (id.includes("framer-motion")) {
+							return simpleHash("fm");
+						}
+						if (id.includes("date-fns")) {
+							return simpleHash("df");
+						}
+						if (id.includes("react-day-picker")) {
+							return simpleHash("rdp");
+						}
+						if (id.includes("@orpc")) {
+							return simpleHash("orpc");
+						}
+						if (parts[idx + 1] === "@tanstack") {
+							if (parts[idx + 2] === "start-server-functions-client") {
+								return simpleHash("tssfc");
+							}
+							if (parts[idx + 2] === "start-server-functions-fetcher") {
+								return simpleHash("tssff");
+							}
+							if (parts[idx + 2] === "react-start-client") {
+								return simpleHash("trsc");
+							}
+							if (parts[idx + 2] === "start-client-core") {
+								return simpleHash("tscc");
+							}
+							if (parts[idx + 2] === "router-core") {
+								return simpleHash("trc");
+							}
+							if (parts[idx + 2] === "react-router") {
+								return simpleHash("trr");
+							}
+							if (parts[idx + 2] === "react-query") {
+								return simpleHash("trq");
+							}
+							if (parts[idx + 2] === "react-table") {
+								return simpleHash("trt");
+							}
+							if (parts[idx + 2] === "react-store") {
+								return simpleHash("trs");
+							}
+							if (parts[idx + 2] === "query-core") {
+								return simpleHash("tqc");
+							}
+							if (parts[idx + 2] === "table-core") {
+								return simpleHash("ttc");
+							}
+							if (parts[idx + 2] === "history") {
+								return simpleHash("th");
+							}
+							if (parts[idx + 2] === "query") {
+								return simpleHash("tq");
+							}
+							if (parts[idx + 2] === "start") {
+								return simpleHash("ts");
+							}
+							return simpleHash("t");
+						}
 					}
-					// if (id.includes("apps")) {
-					// 	const parts = id.split("/");
-					// 	const idx = parts.lastIndexOf("web");
-					// 	const finalPath = parts.slice(idx + 1).join("/");
-					// 	const filename = finalPath.split("/").pop() || "";
-					// 	const [name, ext] = filename.includes(".")
-					// 		? [
-					// 				filename.slice(0, filename.lastIndexOf(".")),
-					// 				filename.split(".").pop(),
-					// 			]
-					// 		: [filename, ""];
-
-					// 	return simpleHash(`a${name}.${ext}`);
-					// }
 
 					if (id.includes("packages")) {
 						const parts = id.split("/");
@@ -94,9 +126,9 @@ export default defineConfig({
 							/\.(ts|tsx|js|jsx)$/,
 							"",
 						);
+
 						return simpleHash(`p${fileName}`);
 					}
-					return undefined;
 				},
 			},
 		},
