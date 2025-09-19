@@ -199,9 +199,13 @@ export function ConfigurationItem({
 	const onSubmit = (values: UpdatePricing) =>
 		mutation.mutateAsync({ params: { key }, body: { value: values } });
 
-	function calculateFinalPrice() {
-		return form.getValues("price_per_km") * EXAMPLE_KM;
-	}
+	const pricePerKm = form.watch("price_per_km") || 0;
+	const commissionPercent = form.watch("commission") || 0;
+
+	const totalPrice = pricePerKm * EXAMPLE_KM;
+	const commissionRate =
+		commissionPercent > 1 ? commissionPercent / 100 : commissionPercent;
+	const driverReceives = totalPrice * (1 - commissionRate);
 
 	return (
 		<TabsContent key={key} value={key}>
@@ -270,10 +274,13 @@ export function ConfigurationItem({
 								<div className="mt-4 flex flex-col gap-2 rounded-sm bg-muted-foreground/5 p-2 text-gray-700 dark:text-gray-400">
 									<p className="text-xs">Sample Fare ({EXAMPLE_KM} KM):</p>
 									<p className="font-medium text-foreground text-md">
-										Rp {calculateFinalPrice()}
+										Rp {totalPrice.toLocaleString("id-ID")}
 									</p>
-									<p className="text-xs">
-										{m.driver_receives()} : Rp {calculateFinalPrice()}
+									<p className="font-medium text-foreground text-sm">
+										<span className="text-gray-700 text-xs dark:text-gray-400">
+											{m.driver_receives()} :
+										</span>
+										<span> Rp {driverReceives.toLocaleString("id-ID")}</span>
 									</p>
 								</div>
 							)}
