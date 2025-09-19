@@ -8,6 +8,7 @@ import type { ServerSpecClient } from "../../../../server/src/features/index";
 export const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error) => {
+			if (error.message.includes("my-session")) return;
 			toast.error(`Error: ${error.message}`, {
 				action: {
 					label: "retry",

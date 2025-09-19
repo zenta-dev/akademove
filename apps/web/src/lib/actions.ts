@@ -3,7 +3,7 @@ import type { User } from "@repo/schema/user";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getHeaders } from "@tanstack/react-start/server";
 import { detectDevice } from "@/utils/user-agent";
-import { authClient } from "./auth-client";
+import { authClient } from "./client/auth";
 
 export const getServerHeaders = createServerFn({ method: "GET" }).handler(
 	async () => {
