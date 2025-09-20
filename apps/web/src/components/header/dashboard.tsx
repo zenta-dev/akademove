@@ -39,7 +39,6 @@ export const DashboardHeader = ({ scope }: { scope: string }) => {
 				</div>
 				<div className="flex items-center gap-2">
 					<ThemeToggle />
-					<DashboardNavigator />
 					<UserDropdwon />
 				</div>
 			</div>

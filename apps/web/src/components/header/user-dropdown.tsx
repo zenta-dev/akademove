@@ -15,6 +15,7 @@ import { authClient } from "@/lib/client/auth";
 import { cn } from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
+import { DashboardNavigator } from "./dashboard-navigator";
 
 export const UserDropdwon = () => {
 	const navigate = useNavigate();
@@ -47,53 +48,41 @@ export const UserDropdwon = () => {
 	}
 
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Avatar className="border">
-					<AvatarImage src={user.image || ""} />
-					<AvatarFallback>
-						<UserRound />
-					</AvatarFallback>
-				</Avatar>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent className="bg-card">
-				<DropdownMenuLabel>My Account</DropdownMenuLabel>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem>{user.email}</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				{user.role === "admin" && (
-					<>
-						<Link
-							to="/dash/admin"
-							className={cn(
-								buttonVariants({ variant: "ghost", size: "sm" }),
-								"w-full",
-							)}
-						>
-							{m.administrator()}
-						</Link>
-
-						<DropdownMenuSeparator />
-					</>
-				)}
-				<DropdownMenuItem asChild>
-					<Button
-						variant="destructive"
-						className="w-full"
-						onClick={() => {
-							authClient.signOut({
-								fetchOptions: {
-									onSuccess: () => {
-										navigate({ to: "/sign-in" });
+		<div className="flex items-center gap-2">
+			<DashboardNavigator />
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Avatar className="border">
+						<AvatarImage src={user.image || ""} />
+						<AvatarFallback>
+							<UserRound />
+						</AvatarFallback>
+					</Avatar>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					<DropdownMenuLabel>My Account</DropdownMenuLabel>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem>{user.email}</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem asChild>
+						<Button
+							variant="destructive"
+							className="w-full"
+							onClick={() => {
+								authClient.signOut({
+									fetchOptions: {
+										onSuccess: () => {
+											navigate({ to: "/sign-in" });
+										},
 									},
-								},
-							});
-						}}
-					>
-						Sign Out
-					</Button>
-				</DropdownMenuItem>
-			</DropdownMenuContent>
-		</DropdownMenu>
+								});
+							}}
+						>
+							Sign Out
+						</Button>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</div>
 	);
 };

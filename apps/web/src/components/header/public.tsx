@@ -18,7 +18,6 @@ export const PublicHeader = ({
 					</h1>
 				</div>
 				<div className="flex items-center gap-2">
-					<DashboardNavigator />
 					<UserDropdwon />
 				</div>
 			</div>
