@@ -1,6 +1,9 @@
 import * as z from "zod";
 import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { DriverSchema } from "./driver.ts";
+import { MerchantSchema } from "./merchant.ts";
+import { UserSchema } from "./user.ts";
 
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
 export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
@@ -30,6 +33,11 @@ export const OrderSchema = z
 		arrivedAt: DateSchema.optional(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
+
+		// relations
+		user: UserSchema.partial().optional(),
+		driver: DriverSchema.partial().optional(),
+		merchant: MerchantSchema.partial().optional(),
 	})
 	.meta({
 		title: "Order",
