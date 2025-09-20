@@ -12,7 +12,7 @@ export const Route = createFileRoute("/dash/admin/configurations")({
 			merchant: ["get", "update", "delete", "approve"],
 			order: ["get", "update", "delete", "cancel", "assign"],
 			schedule: ["get", "update", "delete"],
-			promo: ["create", "get", "update", "delete", "approve"],
+			coupon: ["create", "get", "update", "delete", "approve"],
 			report: ["create", "get", "update", "delete", "export"],
 			review: ["get", "update", "delete"],
 			user: [

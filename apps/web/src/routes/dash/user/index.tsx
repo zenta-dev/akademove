@@ -12,7 +12,7 @@ export const Route = createFileRoute("/dash/user/")({
 			order: ["create", "get", "update", "cancel"],
 			review: ["create", "get", "update"],
 			merchant: ["get"],
-			promo: ["get"],
+			coupon: ["get"],
 			bookings: ["create", "get", "update", "delete"],
 		});
 		if (!ok) redirect({ to: "/", throw: true });

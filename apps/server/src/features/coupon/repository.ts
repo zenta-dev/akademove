@@ -1,21 +1,21 @@
-import type { InsertPromo, Promo, UpdatePromo } from "@repo/schema/promo";
+import type { Coupon, InsertCoupon, UpdateCoupon } from "@repo/schema/coupon";
 import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { PromoDatabase } from "@/core/tables/promo";
+import type { CouponDatabase } from "@/core/tables/coupon";
 
-export const createPromoRepository = (
+export const createCouponRepository = (
 	db: DatabaseService,
 	kv: KeyValueService,
 ) => {
 	function _composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.PROMO}${id}`;
+		return `${CACHE_PREFIXES.COUPON}${id}`;
 	}
 
-	function _composeEntity(item: PromoDatabase): Promo {
+	function _composeEntity(item: CouponDatabase): Coupon {
 		return {
 			...item,
 			periodStart: item.periodStart.getTime(),
@@ -24,7 +24,7 @@ export const createPromoRepository = (
 		};
 	}
 
-	async function _getFromKV(id: string): Promise<Promo | undefined> {
+	async function _getFromKV(id: string): Promise<Coupon | undefined> {
 		try {
 			return await kv.get(_composeCacheKey(id));
 		} catch {
@@ -32,15 +32,15 @@ export const createPromoRepository = (
 		}
 	}
 
-	async function _getFromDB(id: string): Promise<Promo | undefined> {
-		const result = await db.query.promo.findFirst({
+	async function _getFromDB(id: string): Promise<Coupon | undefined> {
+		const result = await db.query.coupon.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		if (result) return _composeEntity(result);
 		return undefined;
 	}
 
-	async function _setCache(id: string, data: Promo | undefined) {
+	async function _setCache(id: string, data: Coupon | undefined) {
 		if (data) {
 			try {
 				await kv.put(_composeCacheKey(id), data, {
@@ -50,13 +50,13 @@ export const createPromoRepository = (
 		}
 	}
 
-	async function list(opts?: GetAllOptions): Promise<Promo[]> {
+	async function list(opts?: GetAllOptions): Promise<Coupon[]> {
 		try {
-			let stmt = db.query.promo.findMany();
+			let stmt = db.query.coupon.findMany();
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = db.query.promo.findMany({
+					stmt = db.query.coupon.findMany({
 						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -64,7 +64,7 @@ export const createPromoRepository = (
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = db.query.promo.findMany({
+					stmt = db.query.coupon.findMany({
 						offset,
 						limit,
 					});
@@ -73,7 +73,7 @@ export const createPromoRepository = (
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing promos", {
+			throw new RepositoryError("Failed to listing coupons", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
@@ -88,22 +88,22 @@ export const createPromoRepository = (
 
 			const result = await _getFromDB(id);
 
-			if (!result) throw new RepositoryError("Failed get promo from db");
+			if (!result) throw new RepositoryError("Failed get coupon from db");
 
 			await _setCache(id, result);
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get promo by id "${id}"`, {
+			throw new RepositoryError(`Failed to get coupon by id "${id}"`, {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async function create(item: InsertPromo): Promise<Promo> {
+	async function create(item: InsertCoupon): Promise<Coupon> {
 		try {
 			const [operation] = await db
-				.insert(tables.promo)
+				.insert(tables.coupon)
 				.values({
 					...item,
 					usedCount: 0,
@@ -117,21 +117,21 @@ export const createPromoRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError("Failed to create promo", {
+			throw new RepositoryError("Failed to create coupon", {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
 	}
 
-	async function update(id: string, item: UpdatePromo): Promise<Promo> {
+	async function update(id: string, item: UpdateCoupon): Promise<Coupon> {
 		try {
 			const existing = await _getFromDB(id);
 			if (!existing) {
-				throw new RepositoryError(`Promo with id "${id}" not found`);
+				throw new RepositoryError(`Coupon with id "${id}" not found`);
 			}
 
 			const [operation] = await db
-				.update(tables.promo)
+				.update(tables.coupon)
 				.set({
 					...existing,
 					...item,
@@ -139,7 +139,7 @@ export const createPromoRepository = (
 					periodEnd: new Date(item.periodEnd ?? existing.periodEnd),
 					createdAt: new Date(existing.createdAt),
 				})
-				.where(eq(tables.promo.id, id))
+				.where(eq(tables.coupon.id, id))
 				.returning();
 
 			const result = _composeEntity(operation);
@@ -149,7 +149,7 @@ export const createPromoRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update promo with id "${id}"`, {
+			throw new RepositoryError(`Failed to update coupon with id "${id}"`, {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
@@ -158,9 +158,9 @@ export const createPromoRepository = (
 	async function remove(id: string): Promise<void> {
 		try {
 			const result = await db
-				.delete(tables.promo)
-				.where(eq(tables.promo.id, id))
-				.returning({ id: tables.promo.id });
+				.delete(tables.coupon)
+				.where(eq(tables.coupon.id, id))
+				.returning({ id: tables.coupon.id });
 
 			if (result.length > 0) {
 				try {
@@ -168,7 +168,7 @@ export const createPromoRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete promo with id "${id}"`, {
+			throw new RepositoryError(`Failed to delete coupon with id "${id}"`, {
 				prevError: error instanceof Error ? error : undefined,
 			});
 		}
@@ -177,4 +177,4 @@ export const createPromoRepository = (
 	return { list, get, create, update, remove };
 };
 
-export type PromoRepository = ReturnType<typeof createPromoRepository>;
+export type CouponRepository = ReturnType<typeof createCouponRepository>;

@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
 
-export const PromoSchema = z
+export const CouponSchema = z
 	.object({
 		id: z.uuid(),
 		name: z.string(),
@@ -20,22 +20,22 @@ export const PromoSchema = z
 		createdAt: DateSchema,
 	})
 	.meta({
-		title: "Promo",
-		ref: "Promo",
+		title: "Coupon",
+		ref: "Coupon",
 	});
 
-export const InsertPromoSchema = PromoSchema.omit({
+export const InsertCouponSchema = CouponSchema.omit({
 	id: true,
 	usedCount: true,
 	createdAt: true,
 });
 
-export const UpdatePromoSchema = PromoSchema.omit({
+export const UpdateCouponSchema = CouponSchema.omit({
 	id: true,
 	usedCount: true,
 	createdAt: true,
 }).partial();
 
-export type Promo = z.infer<typeof PromoSchema>;
-export type InsertPromo = z.infer<typeof InsertPromoSchema>;
-export type UpdatePromo = z.infer<typeof UpdatePromoSchema>;
+export type Coupon = z.infer<typeof CouponSchema>;
+export type InsertCoupon = z.infer<typeof InsertCouponSchema>;
+export type UpdateCoupon = z.infer<typeof UpdateCouponSchema>;

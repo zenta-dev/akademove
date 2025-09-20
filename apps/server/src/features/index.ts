@@ -3,14 +3,14 @@ import { implement, type RouterClient } from "@orpc/server";
 import type { ORPCCOntext } from "@/core/orpc";
 import { ConfigurationHandler } from "./configuration/handler";
 import { ConfigurationSpec } from "./configuration/spec";
+import { CouponHandler } from "./coupon/handler";
+import { CouponSpec } from "./coupon/spec";
 import { DriverHandler } from "./driver/handler";
 import { DriverSpec } from "./driver/spec";
 import { MerchantHandler } from "./merchant/handler";
 import { MerchantSpec } from "./merchant/spec";
 import { OrderHandler } from "./order/handler";
 import { OrderSpec } from "./order/spec";
-import { PromoHandler } from "./promo/handler";
-import { PromoSpec } from "./promo/spec";
 import { ReportHandler } from "./report/handler";
 import { ReportSpec } from "./report/spec";
 import { ReviewHandler } from "./review/handler";
@@ -25,7 +25,7 @@ export const ServerSpec = oc.router({
 	driver: oc.prefix("/drivers").router(DriverSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
 	order: oc.prefix("/orders").router(OrderSpec),
-	promo: oc.prefix("/promos").router(PromoSpec),
+	coupon: oc.prefix("/coupons").router(CouponSpec),
 	report: oc.prefix("/reports").router(ReportSpec),
 	review: oc.prefix("/reviews").router(ReviewSpec),
 	schedule: oc.prefix("/schedules").router(ScheduleSpec),
@@ -38,7 +38,7 @@ export const ServerRouter = os.router({
 	driver: DriverHandler,
 	merchant: MerchantHandler,
 	order: OrderHandler,
-	promo: PromoHandler,
+	coupon: CouponHandler,
 	report: ReportHandler,
 	review: ReviewHandler,
 	schedule: ScheduleHandler,

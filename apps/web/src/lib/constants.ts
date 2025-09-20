@@ -26,7 +26,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		MERCHANTS: `${m.merchants()} - ${ROUTE_TITLES.OPERATOR}`,
 		ORDERS: `${m.orders()} - ${ROUTE_TITLES.OPERATOR}`,
 		PRICING: `${m.pricing()} - ${ROUTE_TITLES.OPERATOR}`,
-		PROMOTIONS: `${m.promotions()} - ${ROUTE_TITLES.OPERATOR}`,
+		COUPONS: `${m.coupons()} - ${ROUTE_TITLES.OPERATOR}`,
 		REPORTS: `${m.reports()} - ${ROUTE_TITLES.OPERATOR}`,
 	} as const,
 	MERCHANT: {

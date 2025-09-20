@@ -10,7 +10,7 @@ const statement = {
 	merchant: ["list", "get", "create", "update", "delete", "approve"],
 	order: ["list", "get", "create", "update", "delete", "cancel", "assign"],
 	schedule: ["list", "get", "create", "update", "delete"],
-	promo: ["list", "get", "create", "update", "delete", "approve"],
+	coupon: ["list", "get", "create", "update", "delete", "approve"],
 	report: ["list", "get", "create", "update", "delete", "export"],
 	review: ["list", "get", "create", "update", "delete"],
 	user: [
@@ -39,7 +39,7 @@ const admin = ac.newRole({
 	merchant: ["list", "get", "update", "delete", "approve"],
 	order: ["list", "get", "update", "delete", "cancel", "assign"],
 	schedule: ["list", "get", "update", "delete"],
-	promo: ["list", "get", "create", "update", "delete", "approve"],
+	coupon: ["list", "get", "create", "update", "delete", "approve"],
 	report: ["list", "get", "create", "update", "delete", "export"],
 	review: ["list", "get", "update", "delete"],
 	user: [
@@ -63,7 +63,7 @@ const operator = ac.newRole({
 	merchant: ["list", "get", "update"],
 	order: ["list", "get", "update", "cancel", "assign"],
 	schedule: ["list", "get", "update"],
-	promo: ["list", "get", "update"],
+	coupon: ["list", "get", "update"],
 	report: ["list", "get", "create", "export"],
 	review: ["list", "get"],
 	user: ["list", "get", "update"],
@@ -90,7 +90,7 @@ const user = ac.newRole({
 	order: ["get", "create", "update", "cancel"],
 	review: ["get", "create", "update"],
 	merchant: ["get"],
-	promo: ["get"],
+	coupon: ["get"],
 	bookings: ["get", "create", "update", "delete"],
 });
 

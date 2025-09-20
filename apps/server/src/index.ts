@@ -7,10 +7,10 @@ import { CORSPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { LocationSchema, TimeSchema } from "@repo/schema/common";
 import { ConfigurationSchema } from "@repo/schema/configuration";
+import { CouponSchema } from "@repo/schema/coupon";
 import { DriverSchema } from "@repo/schema/driver";
 import { MerchantSchema } from "@repo/schema/merchant";
 import { OrderSchema } from "@repo/schema/order";
-import { PromoSchema } from "@repo/schema/promo";
 import { ReportSchema } from "@repo/schema/report";
 import { ReviewSchema } from "@repo/schema/review";
 import { ScheduleSchema } from "@repo/schema/schedule";
@@ -27,10 +27,10 @@ import { CloudflareKVService } from "./core/services/kv";
 import { ResendMailService } from "./core/services/mail";
 import { ServerRouter } from "./features";
 import { createConfigurationRepository } from "./features/configuration/repository";
+import { createCouponRepository } from "./features/coupon/repository";
 import { createDriverRepository } from "./features/driver/repository";
 import { createMerchantRepository } from "./features/merchant/repository";
 import { createOrderRepository } from "./features/order/repository";
-import { createPromoRepository } from "./features/promo/repository";
 import { createReportRepository } from "./features/report/repository";
 import { createReviewRepository } from "./features/review/repository";
 import { createScheduleRepository } from "./features/schedule/repository";
@@ -87,7 +87,7 @@ const apiHandler = new OpenAPIHandler(ServerRouter, {
 					Merchant: { schema: MerchantSchema, strategy: "output" },
 					Order: { schema: OrderSchema, strategy: "output" },
 					Report: { schema: ReportSchema, strategy: "output" },
-					Promo: { schema: PromoSchema, strategy: "output" },
+					Cupon: { schema: CouponSchema, strategy: "output" },
 					Review: { schema: ReviewSchema, strategy: "output" },
 					Schedule: { schema: ScheduleSchema, strategy: "output" },
 					User: { schema: UserSchema, strategy: "output" },
@@ -143,7 +143,7 @@ app.use("/*", async (c, next) => {
 			driver: createDriverRepository(c.var.db, c.var.kv),
 			merchant: createMerchantRepository(c.var.db, c.var.kv),
 			order: createOrderRepository(c.var.db, c.var.kv),
-			promo: createPromoRepository(c.var.db, c.var.kv),
+			coupon: createCouponRepository(c.var.db, c.var.kv),
 			report: createReportRepository(c.var.db, c.var.kv),
 			review: createReviewRepository(c.var.db, c.var.kv),
 			schedule: createScheduleRepository(c.var.db, c.var.kv),

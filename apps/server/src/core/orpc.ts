@@ -2,11 +2,11 @@ import type { ConfigurationRepository } from "@/features/configuration/repositor
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantRepository } from "@/features/merchant/repository";
 import type { OrderRepository } from "@/features/order/repository";
-import type { PromoRepository } from "@/features/promo/repository";
 import type { ReportRepository } from "@/features/report/repository";
 import type { ReviewRepository } from "@/features/review/repository";
 import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { UserRepository } from "@/features/user/repository";
+import type { CouponRepository } from "../features/coupon/repository";
 import type { AuthService, PermissionRole } from "./services/auth";
 import type { DatabaseService } from "./services/db";
 import type { KeyValueService } from "./services/kv";
@@ -25,7 +25,7 @@ export interface ORPCCOntext {
 		driver: DriverRepository;
 		merchant: MerchantRepository;
 		order: OrderRepository;
-		promo: PromoRepository;
+		coupon: CouponRepository;
 		report: ReportRepository;
 		review: ReviewRepository;
 		schedule: ScheduleRepository;

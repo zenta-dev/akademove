@@ -47,8 +47,8 @@ const navMain = Object.freeze([
 		icon: DollarSign,
 	},
 	{
-		title: m.promotions(),
-		url: "/dash/operator/promotions",
+		title: m.coupons(),
+		url: "/dash/operator/coupons",
 		icon: Ticket,
 	},
 	{

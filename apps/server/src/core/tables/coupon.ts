@@ -12,7 +12,7 @@ import {
 import { user } from "./auth";
 import { order } from "./order";
 
-export const promo = pgTable("promos", {
+export const coupon = pgTable("coupons", {
 	id: uuid().primaryKey().defaultRandom(),
 	name: text().notNull(),
 	code: text().notNull(),
@@ -48,11 +48,11 @@ export const promo = pgTable("promos", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const promoUsage = pgTable("promo_usages", {
+export const couponUsage = pgTable("coupon_usages", {
 	id: uuid().primaryKey().defaultRandom(),
-	promoId: uuid("promo_id")
+	couponId: uuid("coupon_id")
 		.notNull()
-		.references(() => promo.id, { onDelete: "cascade" }),
+		.references(() => coupon.id, { onDelete: "cascade" }),
 	orderId: uuid("order_id")
 		.notNull()
 		.references(() => order.id, { onDelete: "no action" }),
@@ -70,26 +70,26 @@ export const promoUsage = pgTable("promo_usages", {
 ///
 /// --- Relations --- ///
 ///
-export const promoRelations = relations(promo, ({ one }) => ({
+export const couponRelations = relations(coupon, ({ one }) => ({
 	createdBy: one(user, {
-		fields: [promo.createdById],
+		fields: [coupon.createdById],
 		references: [user.id],
 	}),
 }));
 
-export const promoUsageRelations = relations(promoUsage, ({ one }) => ({
-	promo: one(promo, {
-		fields: [promoUsage.promoId],
-		references: [promo.id],
+export const couponUsageRelations = relations(couponUsage, ({ one }) => ({
+	coupon: one(coupon, {
+		fields: [couponUsage.couponId],
+		references: [coupon.id],
 	}),
 	order: one(order, {
-		fields: [promoUsage.orderId],
+		fields: [couponUsage.orderId],
 		references: [order.id],
 	}),
 	user: one(user, {
-		fields: [promoUsage.userId],
+		fields: [couponUsage.userId],
 		references: [user.id],
 	}),
 }));
 
-export type PromoDatabase = typeof promo.$inferSelect;
+export type CouponDatabase = typeof coupon.$inferSelect;

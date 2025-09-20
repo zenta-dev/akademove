@@ -12,7 +12,7 @@ export const Route = createFileRoute("/dash/operator/")({
 			merchant: ["get", "update"],
 			order: ["get", "update", "cancel", "assign"],
 			schedule: ["get", "update"],
-			promo: ["get", "update"],
+			coupon: ["get", "update"],
 			report: ["create", "get", "export"],
 			review: ["get"],
 			user: ["get", "update"],
