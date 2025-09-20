@@ -1,4 +1,7 @@
+import type { Driver } from "@repo/schema/driver";
+import type { Merchant } from "@repo/schema/merchant";
 import type { InsertOrder, Order, UpdateOrder } from "@repo/schema/order";
+import type { User } from "@repo/schema/user";
 import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -15,12 +18,22 @@ export const createOrderRepository = (
 		return `${CACHE_PREFIXES.ORDER}${id}`;
 	}
 
-	function _composeEntity(item: OrderDatabase): Order {
+	function _composeEntity(
+		item: OrderDatabase & {
+			user: Partial<User> | null;
+			driver: Partial<Driver> | null;
+			merchant: Partial<Merchant> | null;
+		},
+	): Order {
 		return {
 			...item,
+			user: item.user ? { name: item.user.name } : undefined,
+			driver: item.driver ? { user: item.driver.user } : undefined,
+			merchant: item.merchant ? { name: item.merchant.name } : undefined,
 			driverId: item.driverId ?? undefined,
 			merchantId: item.merchantId ?? undefined,
 			note: item.note ?? undefined,
+			tip: item.tip ?? undefined,
 			requestedAt: item.requestedAt.getTime(),
 			acceptedAt: item.acceptedAt?.getTime(),
 			arrivedAt: item.arrivedAt?.getTime(),
@@ -39,6 +52,11 @@ export const createOrderRepository = (
 
 	async function _getFromDB(id: string): Promise<Order | undefined> {
 		const result = await db.query.order.findFirst({
+			with: {
+				user: { columns: { name: true } },
+				driver: { columns: {}, with: { user: { columns: { name: true } } } },
+				merchant: { columns: { name: true } },
+			},
 			where: (f, op) => op.eq(f.id, id),
 		});
 		if (result) return _composeEntity(result);
@@ -57,11 +75,25 @@ export const createOrderRepository = (
 
 	async function list(opts?: GetAllOptions): Promise<Order[]> {
 		try {
-			let stmt = db.query.order.findMany();
+			let stmt = db.query.order.findMany({
+				with: {
+					user: { columns: { name: true } },
+					driver: { columns: {}, with: { user: { columns: { name: true } } } },
+					merchant: { columns: { name: true } },
+				},
+			});
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
 					stmt = db.query.order.findMany({
+						with: {
+							user: { columns: { name: true } },
+							driver: {
+								columns: {},
+								with: { user: { columns: { name: true } } },
+							},
+							merchant: { columns: { name: true } },
+						},
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -70,6 +102,14 @@ export const createOrderRepository = (
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
 					stmt = db.query.order.findMany({
+						with: {
+							user: { columns: { name: true } },
+							driver: {
+								columns: {},
+								with: { user: { columns: { name: true } } },
+							},
+							merchant: { columns: { name: true } },
+						},
 						offset,
 						limit,
 					});
@@ -112,9 +152,13 @@ export const createOrderRepository = (
 			const [operation] = await db
 				.insert(tables.order)
 				.values(item)
-				.returning();
+				.returning({ id: tables.order.id });
 
-			const result = _composeEntity(operation);
+			const result = await _getFromDB(operation.id);
+			if (!result) {
+				throw new RepositoryError("Failed to create order");
+			}
+
 			await _setCache(result.id, result);
 
 			return result;
@@ -146,9 +190,12 @@ export const createOrderRepository = (
 					updatedAt: new Date(),
 				})
 				.where(eq(tables.order.id, id))
-				.returning();
+				.returning({ id: tables.order.id });
 
-			const result = _composeEntity(operation);
+			const result = await _getFromDB(operation.id);
+			if (!result) {
+				throw new RepositoryError("Failed to create order");
+			}
 
 			await _setCache(id, result);
 
