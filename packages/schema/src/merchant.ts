@@ -12,7 +12,7 @@ export const MerchantSchema = z
 		name: z.string(),
 		address: z.string(),
 		location: LocationSchema.optional(),
-		isActive: z.boolean().default(true),
+		isActive: z.boolean(),
 		rating: z.number(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
