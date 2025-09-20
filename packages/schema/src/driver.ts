@@ -13,13 +13,13 @@ export const DriverSchema = z
 		licenseNumber: z.string().min(6),
 		status: DriverStatusSchema,
 		rating: z.number(),
-		isOnline: z.boolean().default(false),
+		isOnline: z.boolean(),
 		currentLocation: LocationSchema.optional(),
 		lastLocationUpdate: DateSchema.optional(),
 		createdAt: DateSchema,
 
 		// relations
-		user: UserSchema.partial(),
+		user: UserSchema.partial().optional(),
 	})
 	.meta({
 		title: "Driver",
