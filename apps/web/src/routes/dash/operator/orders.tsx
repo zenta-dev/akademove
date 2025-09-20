@@ -1,9 +1,9 @@
 import { m } from "@repo/i18n";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { UnderDevelopment } from "@/components/under-development";
+import { OrderTable } from "@/components/tables/order/table";
+import { Card, CardContent } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-
 export const Route = createFileRoute("/dash/operator/orders")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.ORDERS }] }),
 	beforeLoad: async () => {
@@ -30,7 +30,11 @@ function RouteComponent() {
 				<h2 className="font-medium text-xl">{m.orders()}</h2>
 				<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 			</div>
-			<UnderDevelopment />
+			<Card className="p-0">
+				<CardContent className="p-0">
+					<OrderTable />
+				</CardContent>
+			</Card>
 		</>
 	);
 }
