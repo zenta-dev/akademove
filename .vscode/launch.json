@@ -5,7 +5,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch development",
+      "name": "mobile (development mode)",
+      "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_development.dart",
@@ -17,18 +18,22 @@
       ]
     },
     {
-      "name": "Launch staging",
+      "name": "mobile (staging mode)",
+      "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_staging.dart",
-      "args": ["--flavor", "staging", "--target", "lib/main_staging.dart"]
+      "args": ["--flavor", "staging", "--target", "lib/main_staging.dart"],
+      "flutterMode": "profile"
     },
     {
-      "name": "Launch production",
+      "name": "mobile (release mode)",
+      "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_production.dart",
-      "args": ["--flavor", "production", "--target", "lib/main_production.dart"]
-    }
+      "args": ["--flavor", "production", "--target", "lib/main_production.dart"],
+      "flutterMode": "release"
+    }, 
   ]
 }
