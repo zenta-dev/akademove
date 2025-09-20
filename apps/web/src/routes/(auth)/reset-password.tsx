@@ -60,7 +60,7 @@ function RouteComponent() {
 		defaultValues: { newPassword: "", confirmPassword: "" },
 	});
 
-	const resetPasswordMutation = useMutation({
+	const mutation = useMutation({
 		mutationFn: async (credentials: ResetPassword) => {
 			const { error, data } = await authClient.resetPassword({
 				...credentials,
@@ -91,7 +91,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (values: ResetPassword) => {
-		await resetPasswordMutation.mutateAsync(values);
+		await mutation.mutateAsync(values);
 	};
 
 	return (
@@ -118,14 +118,14 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showNewPassword ? "text" : "password"}
-												disabled={resetPasswordMutation.isPending}
+												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
 												isVisible={showNewPassword}
 												setIsVisible={setShowNewPassword}
 												className="-translate-y-1/2 absolute top-1/2 right-0"
-												disabled={resetPasswordMutation.isPending}
+												disabled={mutation.isPending}
 											/>
 										</div>
 									</FormControl>
@@ -145,14 +145,14 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showConfirmPassword ? "text" : "password"}
-												disabled={resetPasswordMutation.isPending}
+												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
 												isVisible={showConfirmPassword}
 												setIsVisible={setShowConfirmPassword}
 												className="-translate-y-1/2 absolute top-1/2 right-0"
-												disabled={resetPasswordMutation.isPending}
+												disabled={mutation.isPending}
 											/>
 										</div>
 									</FormControl>
@@ -163,13 +163,9 @@ function RouteComponent() {
 						<Button
 							type="submit"
 							className="w-full"
-							disabled={resetPasswordMutation.isPending}
+							disabled={mutation.isPending}
 						>
-							{resetPasswordMutation.isPending ? (
-								<Submitting />
-							) : (
-								m.reset_password()
-							)}
+							{mutation.isPending ? <Submitting /> : m.reset_password()}
 						</Button>
 					</form>
 				</Form>

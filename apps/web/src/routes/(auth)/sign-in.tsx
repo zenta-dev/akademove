@@ -42,7 +42,7 @@ function RouteComponent() {
 		defaultValues: { email: "", password: "" },
 	});
 
-	const signInMutation = useMutation({
+	const mutation = useMutation({
 		mutationFn: async (credentials: SignIn) => {
 			const { error, data } = await authClient.signIn.email(credentials);
 			if (error) throw new BetterAuthClientError(error.message, error);
@@ -83,7 +83,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (values: SignIn) => {
-		await signInMutation.mutateAsync(values);
+		await mutation.mutateAsync(values);
 	};
 
 	return (
@@ -109,7 +109,7 @@ function RouteComponent() {
 											placeholder="johndoe@gmail.com"
 											autoComplete="email"
 											type="email"
-											disabled={signInMutation.isPending}
+											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -137,14 +137,14 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showPassword ? "text" : "password"}
-												disabled={signInMutation.isPending}
+												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
 												isVisible={showPassword}
 												setIsVisible={setShowPassword}
 												className="-translate-y-1/2 absolute top-1/2 right-0"
-												disabled={signInMutation.isPending}
+												disabled={mutation.isPending}
 											/>
 										</div>
 									</FormControl>
@@ -155,9 +155,9 @@ function RouteComponent() {
 						<Button
 							type="submit"
 							className="w-full"
-							disabled={signInMutation.isPending}
+							disabled={mutation.isPending}
 						>
-							{signInMutation.isPending ? <Submitting /> : m.sign_in()}
+							{mutation.isPending ? <Submitting /> : m.sign_in()}
 						</Button>
 					</form>
 				</Form>

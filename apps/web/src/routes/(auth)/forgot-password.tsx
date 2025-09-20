@@ -37,7 +37,7 @@ function RouteComponent() {
 		defaultValues: { email: "" },
 	});
 
-	const forgotPasswordMutation = useMutation({
+	const mutation = useMutation({
 		mutationFn: async (credentials: ForgotPassword) => {
 			const { error, data } = await authClient.requestPasswordReset({
 				...credentials,
@@ -70,7 +70,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (values: ForgotPassword) => {
-		await forgotPasswordMutation.mutateAsync(values);
+		await mutation.mutateAsync(values);
 	};
 
 	return (
@@ -96,7 +96,7 @@ function RouteComponent() {
 											placeholder="johndoe@gmail.com"
 											autoComplete="email"
 											type="email"
-											disabled={forgotPasswordMutation.isPending}
+											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -107,13 +107,9 @@ function RouteComponent() {
 						<Button
 							type="submit"
 							className="w-full"
-							disabled={forgotPasswordMutation.isPending}
+							disabled={mutation.isPending}
 						>
-							{forgotPasswordMutation.isPending ? (
-								<Submitting />
-							) : (
-								m.forgot_password()
-							)}
+							{mutation.isPending ? <Submitting /> : m.forgot_password()}
 						</Button>
 					</form>
 				</Form>

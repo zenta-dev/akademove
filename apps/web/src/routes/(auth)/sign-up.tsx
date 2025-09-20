@@ -43,7 +43,7 @@ function RouteComponent() {
 		defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
 	});
 
-	const signUpMutation = useMutation({
+	const mutation = useMutation({
 		mutationFn: async (credentials: SignUp) => {
 			const { error, data } = await authClient.signUp.email({
 				...credentials,
@@ -74,7 +74,7 @@ function RouteComponent() {
 	});
 
 	const onSubmit = async (values: SignUp) => {
-		await signUpMutation.mutateAsync(values);
+		await mutation.mutateAsync(values);
 	};
 
 	return (
@@ -99,7 +99,7 @@ function RouteComponent() {
 										<Input
 											placeholder="John Doe"
 											autoComplete="name"
-											disabled={signUpMutation.isPending}
+											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -117,7 +117,7 @@ function RouteComponent() {
 										<Input
 											placeholder="johndoe@gmail.com"
 											autoComplete="email"
-											disabled={signUpMutation.isPending}
+											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -137,7 +137,7 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showPassword ? "text" : "password"}
-												disabled={signUpMutation.isPending}
+												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
@@ -163,7 +163,7 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showConfirmPassword ? "text" : "password"}
-												disabled={signUpMutation.isPending}
+												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
@@ -180,9 +180,9 @@ function RouteComponent() {
 						<Button
 							type="submit"
 							className="w-full"
-							disabled={signUpMutation.isPending}
+							disabled={mutation.isPending}
 						>
-							{signUpMutation.isPending ? <Submitting /> : m.sign_up()}
+							{mutation.isPending ? <Submitting /> : m.sign_up()}
 						</Button>
 					</form>
 				</Form>
