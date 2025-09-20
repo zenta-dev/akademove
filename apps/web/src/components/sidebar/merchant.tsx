@@ -72,11 +72,7 @@ const SidebarItem = ({ item }: { item: NavMainItem }) => {
 	return (
 		<SidebarMenuItem>
 			<SidebarMenuButton tooltip={item.title} asChild>
-				<Link
-					to={item.url}
-					className={cn(isActive && "bg-primary/10")}
-					viewTransition
-				>
+				<Link to={item.url} className={cn(isActive && "bg-primary/10")}>
 					{item.icon && <item.icon />}
 					<span>{item.title}</span>
 				</Link>
