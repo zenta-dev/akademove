@@ -8,7 +8,7 @@ import { authPermission } from "@repo/shared";
 import { BetterAuthError, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "@/core/tables/auth";
@@ -18,6 +18,7 @@ import {
 } from "@/core/tables/configuration";
 import { driver } from "@/core/tables/driver";
 import { merchant } from "@/core/tables/merchant";
+import { order } from "@/core/tables/order";
 
 async function confirmExecution() {
 	if (process.env.NODE_ENV === "production") {
@@ -97,8 +98,8 @@ const auth = betterAuth({
 	plugins: [admin(authPermission)],
 });
 
-async function seedUser() {
-	const _USER: Omit<InsertUser, "confirmPassword">[] = [
+export async function seedUser() {
+	const FIXED_USERS: Omit<InsertUser, "confirmPassword">[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
@@ -131,17 +132,51 @@ async function seedUser() {
 		},
 	];
 
-	const promises = [];
-	for (const user of _USER) {
-		const find = await db
-			.select()
-			.from(schema.user)
-			.where(eq(schema.user.email, user.email));
-		if (find.length > 0) continue;
-		promises.push(auth.api.createUser({ body: user }));
+	const RANDOM_USERS: Omit<InsertUser, "confirmPassword">[] = Array.from({
+		length: 50,
+	}).map(() => {
+		const role = faker.helpers.arrayElement(["user", "driver", "merchant"]);
+		return {
+			name: faker.person.fullName(),
+			email: faker.internet.email().toLowerCase(),
+			role,
+			password: "Ch@ngEThi5",
+		};
+	});
+
+	const USERS = [...FIXED_USERS, ...RANDOM_USERS];
+
+	console.log("🔍 Checking existing users...");
+
+	const existing = await db
+		.select({ email: schema.user.email })
+		.from(schema.user)
+		.where(
+			inArray(
+				schema.user.email,
+				USERS.map((u) => u.email),
+			),
+		);
+
+	const existingEmails = new Set(existing.map((u) => u.email));
+
+	const missingUsers = USERS.filter((u) => !existingEmails.has(u.email));
+
+	if (missingUsers.length === 0) {
+		console.log("✅ All users already exist.");
+		return;
 	}
-	console.log(`SEEDING ${promises.length} USER`);
-	await Promise.all(promises);
+
+	console.log(`🌱 Seeding ${missingUsers.length} new users...`);
+
+	try {
+		await Promise.all(
+			missingUsers.map((user) => auth.api.createUser({ body: user })),
+		);
+		console.log("✅ User seeding complete.");
+	} catch (err) {
+		console.error("❌ Failed to seed users:", err);
+	}
 }
 
 async function seedConfigurations() {
@@ -212,7 +247,7 @@ async function seedMerchants() {
 		return;
 	}
 
-	const merchants = Array.from({ length: 5 }).map(() => {
+	const merchants = Array.from({ length: 50 }).map(() => {
 		const randomUser = users[Math.floor(Math.random() * users.length)];
 		return {
 			userId: randomUser.id,
@@ -242,7 +277,7 @@ async function seedDrivers() {
 		console.warn("No users with role 'user' found.");
 		return;
 	}
-	const drivers = Array.from({ length: 5 }).map(() => {
+	const drivers = Array.from({ length: 50 }).map(() => {
 		const randomUser = users[Math.floor(Math.random() * users.length)];
 		return {
 			userId: randomUser.id,
@@ -270,7 +305,61 @@ async function seedDrivers() {
 	console.log(`Inserted ${drivers.length} drivers.`);
 }
 
+async function seedOrders() {
+	console.log("Seeding Orders...");
+
+	const users = await db
+		.select()
+		.from(schema.user)
+		.where(eq(schema.user.role, "user"));
+	if (users.length === 0) {
+		console.warn("⚠️ No users with role 'user' found. Skipping order seeding.");
+		return;
+	}
+
+	const drivers = await db.select().from(driver);
+	const merchants = await db.select().from(merchant);
+
+	const maybePick = (arr: { id: string }[]) =>
+		arr.length > 0 && faker.datatype.boolean()
+			? arr[Math.floor(Math.random() * arr.length)].id
+			: null;
+
+	const orders = Array.from({ length: 50 }).map(() => {
+		const randomUser = faker.helpers.arrayElement(users);
+		const distanceKm = faker.number.float({ min: 1, max: 50 });
+
+		const baseFare = faker.number.int({ min: 500, max: 5000, multipleOf: 100 });
+		const perKmRate = faker.number.int({ min: 200, max: 1000, multipleOf: 50 });
+		const totalPrice = baseFare + distanceKm * perKmRate;
+
+		return {
+			userId: randomUser.id,
+			driverId: maybePick(drivers),
+			merchantId: maybePick(merchants),
+			type: faker.helpers.arrayElement(CONSTANTS.ORDER_TYPES),
+			status: faker.helpers.arrayElement(CONSTANTS.ORDER_STATUSES),
+			pickupLocation: {
+				lat: faker.location.latitude(),
+				lng: faker.location.longitude(),
+			},
+			dropoffLocation: {
+				lat: faker.location.latitude(),
+				lng: faker.location.longitude(),
+			},
+			distanceKm,
+			basePrice: baseFare,
+			totalPrice: Math.round(totalPrice),
+			createdAt: faker.date.recent({ days: 30 }),
+		};
+	});
+
+	await db.insert(order).values(orders);
+	console.log(`✅ Inserted ${orders.length} orders.`);
+}
+
 await seedUser();
 await Promise.all([seedConfigurations(), seedMerchants(), seedDrivers()]);
+await seedOrders();
 console.log("✅ Database seeded with test data.");
 process.exit();
