@@ -4,7 +4,7 @@ import { type SignIn, SignInSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/submitting";
@@ -82,9 +82,12 @@ function RouteComponent() {
 		},
 	});
 
-	const onSubmit = async (values: SignIn) => {
-		await mutation.mutateAsync(values);
-	};
+	const onSubmit = useCallback(
+		async (values: SignIn) => {
+			await mutation.mutateAsync(values);
+		},
+		[mutation.mutateAsync],
+	);
 
 	return (
 		<Card className="flex min-w-sm flex-col gap-2">

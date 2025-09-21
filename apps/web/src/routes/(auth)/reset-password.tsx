@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -90,9 +90,12 @@ function RouteComponent() {
 		},
 	});
 
-	const onSubmit = async (values: ResetPassword) => {
-		await mutation.mutateAsync(values);
-	};
+	const onSubmit = useCallback(
+		async (values: ResetPassword) => {
+			await mutation.mutateAsync(values);
+		},
+		[mutation.mutateAsync],
+	);
 
 	return (
 		<Card className="flex min-w-sm flex-col gap-2">

@@ -4,6 +4,7 @@ import { type ForgotPassword, ForgotPasswordSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/submitting";
@@ -69,9 +70,12 @@ function RouteComponent() {
 		},
 	});
 
-	const onSubmit = async (values: ForgotPassword) => {
-		await mutation.mutateAsync(values);
-	};
+	const onSubmit = useCallback(
+		async (values: ForgotPassword) => {
+			await mutation.mutateAsync(values);
+		},
+		[mutation.mutateAsync],
+	);
 
 	return (
 		<Card className="flex min-w-sm flex-col gap-2">
