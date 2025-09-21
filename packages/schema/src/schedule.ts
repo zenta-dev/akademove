@@ -1,8 +1,5 @@
 import * as z from "zod";
-import { DateSchema, TimeSchema } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-
-export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
+import { DateSchema, DayOfWeekSchema, TimeSchema } from "./common.ts";
 
 export const ScheduleSchema = z
 	.object({

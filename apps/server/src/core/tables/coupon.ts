@@ -1,3 +1,4 @@
+import type { CouponRules } from "@repo/schema/coupon";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -16,7 +17,7 @@ export const coupon = pgTable("coupons", {
 	id: uuid().primaryKey().defaultRandom(),
 	name: text().notNull(),
 	code: text().notNull(),
-	rules: jsonb().notNull(),
+	rules: jsonb().$type<CouponRules>().notNull(),
 	discountAmount: decimal("discount_amount", {
 		precision: 10,
 		scale: 2,
@@ -24,16 +25,6 @@ export const coupon = pgTable("coupons", {
 	}).notNull(),
 	discountPercentage: decimal("discount_percentage", {
 		precision: 3,
-		scale: 2,
-		mode: "number",
-	}).notNull(),
-	minOrderAmount: decimal("min_order_amount", {
-		precision: 10,
-		scale: 2,
-		mode: "number",
-	}).notNull(),
-	maxOrderAmount: decimal("max_order_amount", {
-		precision: 10,
 		scale: 2,
 		mode: "number",
 	}).notNull(),

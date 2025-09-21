@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { CONSTANTS } from "./constants.ts";
 
 export const LocationSchema = z
 	.object({
@@ -24,6 +25,8 @@ export const DateSchema = z.number().meta({
 	description: "unix timestamp format",
 	example: 1757670225,
 });
+
+export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
 
 export const EmptySchema = z.null();
 
