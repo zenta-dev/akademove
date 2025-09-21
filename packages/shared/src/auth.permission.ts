@@ -63,7 +63,7 @@ const operator = ac.newRole({
 	merchant: ["list", "get", "update"],
 	order: ["list", "get", "update", "cancel", "assign"],
 	schedule: ["list", "get", "update"],
-	coupon: ["list", "get", "update"],
+	coupon: ["list", "get", "create", "update"],
 	report: ["list", "get", "create", "export"],
 	review: ["list", "get"],
 	user: ["list", "get", "update"],
