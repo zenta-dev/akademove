@@ -5,6 +5,7 @@ export default defineNitroConfig({
 	cloudflare: {
 		nodeCompat: true,
 	},
+	sourceMap: process.env.NODE_ENV === "development",
 	minify: true,
 	compressPublicAssets: {
 		gzip: true,
