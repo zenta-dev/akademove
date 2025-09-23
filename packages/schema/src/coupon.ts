@@ -1,8 +1,9 @@
 import * as z from "zod";
 import { DateSchema, DayOfWeekSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
 const GeneralRulesSchema = z.object({
-	type: z.enum(["percentage", "fixed"]).default("percentage"),
+	type: z.enum(CONSTANTS.GENERAL_RULE_TYPES).optional().default("percentage"),
 	minOrderAmount: z.number().nonnegative().optional(),
 	maxDiscountAmount: z.number().nonnegative().optional(),
 });
@@ -25,8 +26,8 @@ export const CouponSchema = z
 		name: z.string(),
 		code: z.string(),
 		rules: CouponRulesSchema,
-		discountAmount: z.number(),
-		discountPercentage: z.number(),
+		discountAmount: z.number().optional(),
+		discountPercentage: z.number().optional(),
 		usageLimit: z.number(),
 		usedCount: z.number(),
 		periodStart: DateSchema,
@@ -43,15 +44,18 @@ export const CouponSchema = z
 export const InsertCouponSchema = CouponSchema.omit({
 	id: true,
 	usedCount: true,
+	createdById: true,
 	createdAt: true,
 });
 
 export const UpdateCouponSchema = CouponSchema.omit({
 	id: true,
 	usedCount: true,
+	createdById: true,
 	createdAt: true,
 }).partial();
 
+export type GeneralRuleType = z.infer<typeof GeneralRulesSchema>["type"];
 export type CouponRules = z.infer<typeof CouponRulesSchema>;
 export type Coupon = z.infer<typeof CouponSchema>;
 export type InsertCoupon = z.infer<typeof InsertCouponSchema>;
