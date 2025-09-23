@@ -1,4 +1,4 @@
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
@@ -28,19 +28,26 @@ export const UserDropdwon = () => {
 	});
 
 	if (isPending) {
-		return <Skeleton className="size-8 rounded-full" />;
+		return (
+			<div className="flex items-center gap-2">
+				<div className="p-1.5">
+					<Skeleton className="size-6" />
+				</div>
+				<Skeleton className="size-8 rounded-full" />
+			</div>
+		);
 	}
 
 	if (!user) {
 		return (
 			<div className="flex items-center gap-2">
 				<Link
-					to="/sign-in"
+					to={localizeHref("/sign-in")}
 					className={cn(buttonVariants({ variant: "outline" }))}
 				>
 					{m.sign_in()}
 				</Link>
-				<Link to="/sign-up" className={cn(buttonVariants())}>
+				<Link to={localizeHref("/sign-up")} className={cn(buttonVariants())}>
 					{m.sign_up()}
 				</Link>
 			</div>
@@ -72,7 +79,7 @@ export const UserDropdwon = () => {
 								authClient.signOut({
 									fetchOptions: {
 										onSuccess: () => {
-											navigate({ to: "/sign-in" });
+											navigate({ to: localizeHref("/sign-in") });
 										},
 									},
 								});

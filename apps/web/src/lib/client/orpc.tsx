@@ -2,7 +2,9 @@ import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
+import { RefreshCwIcon } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import type { ServerSpecClient } from "../../../../server/src/features/index";
 
 export const queryClient = new QueryClient({
@@ -11,7 +13,11 @@ export const queryClient = new QueryClient({
 			if (error.message.includes("my-session")) return;
 			toast.error(`Error: ${error.message}`, {
 				action: {
-					label: "retry",
+					label: (
+						<Button variant="ghost" size="icon">
+							<RefreshCwIcon />
+						</Button>
+					),
 					onClick: () => {
 						queryClient.invalidateQueries();
 					},

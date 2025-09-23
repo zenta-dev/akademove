@@ -1,5 +1,4 @@
 import { cn } from "@/utils/cn";
-import { DashboardNavigator } from "./dashboard-navigator";
 import { UserDropdwon } from "./user-dropdown";
 
 export const PublicHeader = ({

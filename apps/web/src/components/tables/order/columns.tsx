@@ -1,13 +1,10 @@
 import { m } from "@repo/i18n";
 import type { Order, OrderStatus, OrderType } from "@repo/schema/order";
-import { capitalizeFirstLetter } from "@repo/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
 import {
 	AlertTriangle,
 	ArrowUpDown,
-	BadgeCheckIcon,
-	BadgeXIcon,
 	BikeIcon,
 	Car,
 	CheckCircle2,
@@ -17,13 +14,11 @@ import {
 	PackageIcon,
 	PizzaIcon,
 	Search,
-	Star,
 	UserX,
 	XOctagon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/utils/cn";
 
 export const STATUS: Record<
 	OrderStatus,

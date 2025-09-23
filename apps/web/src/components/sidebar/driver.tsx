@@ -1,4 +1,4 @@
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
 	Calendar,
@@ -22,32 +22,32 @@ import {
 const navMain = Object.freeze([
 	{
 		title: m.overview(),
-		url: "/dash/driver",
+		href: localizeHref("/dash/driver"),
 		icon: Gauge,
 	},
 	{
 		title: m.schedule(),
-		url: "/dash/driver/schedule",
+		href: localizeHref("/dash/driver/schedule"),
 		icon: Calendar,
 	},
 	{
 		title: m.orders(),
-		url: "/dash/driver/orders",
+		href: localizeHref("/dash/driver/orders"),
 		icon: Receipt,
 	},
 	{
 		title: m.earnings(),
-		url: "/dash/driver/earnings",
+		href: localizeHref("/dash/driver/earnings"),
 		icon: LineChart,
 	},
 	{
 		title: m.ratings(),
-		url: "/dash/driver/ratings",
+		href: localizeHref("/dash/driver/ratings"),
 		icon: Star,
 	},
 	{
 		title: m.profile(),
-		url: "/dash/driver/profile",
+		href: localizeHref("/dash/driver/profile"),
 		icon: UserRound,
 	},
 ] as const);
@@ -79,12 +79,12 @@ export const DriverSidebar = ({
 
 const SidebarItem = ({ item }: { item: NavMainItem }) => {
 	const routerState = useRouterState();
-	const isActive = routerState.location.href === item.url;
+	const isActive = routerState.location.href === item.href;
 
 	return (
 		<SidebarMenuItem>
 			<SidebarMenuButton tooltip={item.title} asChild>
-				<Link to={item.url} className={cn(isActive && "bg-primary/10")}>
+				<Link to={item.href} className={cn(isActive && "bg-primary/10")}>
 					{item.icon && <item.icon />}
 					<span>{item.title}</span>
 				</Link>

@@ -1,4 +1,4 @@
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookMarked, Gauge, History, UserRound, Wallet } from "lucide-react";
 import { cn } from "@/utils/cn";
@@ -15,27 +15,27 @@ import {
 const navMain = Object.freeze([
 	{
 		title: m.overview(),
-		url: "/dash/user",
+		href: localizeHref("/dash/user"),
 		icon: Gauge,
 	},
 	{
 		title: m.bookings(),
-		url: "/dash/user/bookings",
+		href: localizeHref("/dash/user/bookings"),
 		icon: BookMarked,
 	},
 	{
 		title: m.history(),
-		url: "/dash/user/history",
+		href: localizeHref("/dash/user/history"),
 		icon: History,
 	},
 	{
 		title: m.wallet(),
-		url: "/dash/user/wallet",
+		href: localizeHref("/dash/user/wallet"),
 		icon: Wallet,
 	},
 	{
 		title: m.profile(),
-		url: "/dash/user/profile",
+		href: localizeHref("/dash/user/profile"),
 		icon: UserRound,
 	},
 ] as const);
@@ -67,12 +67,12 @@ export const UserSidebar = ({
 
 const SidebarItem = ({ item }: { item: NavMainItem }) => {
 	const routerState = useRouterState();
-	const isActive = routerState.location.href === item.url;
+	const isActive = routerState.location.href === item.href;
 
 	return (
 		<SidebarMenuItem>
 			<SidebarMenuButton tooltip={item.title} asChild>
-				<Link to={item.url} className={cn(isActive && "bg-primary/10")}>
+				<Link to={item.href} className={cn(isActive && "bg-primary/10")}>
 					{item.icon && <item.icon />}
 					<span>{item.title}</span>
 				</Link>

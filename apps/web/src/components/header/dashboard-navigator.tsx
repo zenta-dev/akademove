@@ -1,4 +1,4 @@
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { Link } from "@tanstack/react-router";
 import {
 	GripIcon,
@@ -20,27 +20,27 @@ import {
 const ROUTES = [
 	{
 		name: m.administrator(),
-		href: "/dash/admin",
+		href: localizeHref("/dash/admin"),
 		icon: <ShieldIcon className="mr-2 h-4 w-4" />,
 	},
 	{
 		name: m.operator(),
-		href: "/dash/operator",
+		href: localizeHref("/dash/operator"),
 		icon: <SettingsIcon className="mr-2 h-4 w-4" />,
 	},
 	{
 		name: m.merchant(),
-		href: "/dash/merchant",
+		href: localizeHref("/dash/merchant"),
 		icon: <StoreIcon className="mr-2 h-4 w-4" />,
 	},
 	{
 		name: m.driver(),
-		href: "/dash/driver",
+		href: localizeHref("/dash/driver"),
 		icon: <TruckIcon className="mr-2 h-4 w-4" />,
 	},
 	{
 		name: m.user(),
-		href: "/dash/user",
+		href: localizeHref("/dash/user"),
 		icon: <UserIcon className="mr-2 h-4 w-4" />,
 	},
 ];

@@ -3,7 +3,7 @@
 
 // export const requireRole = async (role: UserRole, user?: User) => {
 // 	if (!user) {
-// 		redirect({ to: "/", throw: true });
+// 		redirect({ to: "/{-$lang}", throw: true });
 // 		return false;
 // 	}
 // 	if (user.role !== role) {
