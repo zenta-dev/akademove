@@ -10,7 +10,7 @@ export const CouponHandler = os.router({
 		.use(hasPermission({ coupon: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.coupon.list(query);
-
+			console.log("COUPONS", result);
 			return {
 				status: 200,
 				body: {
@@ -32,7 +32,10 @@ export const CouponHandler = os.router({
 	create: os.create
 		.use(hasPermission({ coupon: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
-			const result = await context.repo.coupon.create(body);
+			const result = await context.repo.coupon.create({
+				...body,
+				userId: context.user.id,
+			});
 
 			return {
 				status: 200,
