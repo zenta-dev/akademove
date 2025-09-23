@@ -1,6 +1,6 @@
+import { m } from "@repo/i18n";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -23,13 +23,13 @@ export function ThemeToggle() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem onClick={() => setTheme("light")}>
-					Light
+					{m.light()}
 				</DropdownMenuItem>
 				<DropdownMenuItem onClick={() => setTheme("dark")}>
-					Dark
+					{m.dark()}
 				</DropdownMenuItem>
 				<DropdownMenuItem onClick={() => setTheme("system")}>
-					System
+					{m.system()}
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
