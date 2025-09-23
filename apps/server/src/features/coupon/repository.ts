@@ -18,6 +18,8 @@ export const createCouponRepository = (
 	function _composeEntity(item: CouponDatabase): Coupon {
 		return {
 			...item,
+			discountAmount: item.discountAmount ?? undefined,
+			discountPercentage: item.discountPercentage ?? undefined,
 			periodStart: item.periodStart.getTime(),
 			periodEnd: item.periodEnd.getTime(),
 			createdAt: item.createdAt.getTime(),
@@ -100,7 +102,9 @@ export const createCouponRepository = (
 		}
 	}
 
-	async function create(item: InsertCoupon): Promise<Coupon> {
+	async function create(
+		item: InsertCoupon & { userId: string },
+	): Promise<Coupon> {
 		try {
 			const [operation] = await db
 				.insert(tables.coupon)
@@ -109,6 +113,8 @@ export const createCouponRepository = (
 					usedCount: 0,
 					periodStart: new Date(item.periodStart),
 					periodEnd: new Date(item.periodEnd),
+					createdById: item.userId,
+					createdAt: new Date(),
 				})
 				.returning();
 
