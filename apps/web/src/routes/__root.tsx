@@ -1,3 +1,4 @@
+import { getLocale, type Locale } from "@repo/i18n";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -13,7 +14,7 @@ import { APP_NAME } from "@/lib/constants";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
-	locale: string;
+	locale: Locale;
 	queryClient: QueryClient;
 };
 
@@ -43,7 +44,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootDocument() {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang={getLocale()} suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
