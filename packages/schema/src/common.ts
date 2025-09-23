@@ -69,7 +69,7 @@ export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
-
+export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type FailedResponse = z.infer<typeof FailedResponseSchema>;
 export type SuccessResponse<T> = z.infer<
 	ReturnType<typeof createSuccessResponseSchema<T>>
