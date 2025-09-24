@@ -5,7 +5,7 @@
 import 'package:auth_client/api.dart';
 ```
 
-All URIs are relative to *http://localhost:3000/auth*
+All URIs are relative to *https://akademove-server.zenta.dev/auth*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

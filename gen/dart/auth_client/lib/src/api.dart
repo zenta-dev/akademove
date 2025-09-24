@@ -13,7 +13,7 @@ import 'package:auth_client/src/api/admin_api.dart';
 import 'package:auth_client/src/api/default_api.dart';
 
 class AuthClient {
-  static const String basePath = r'http://localhost:3000/auth';
+  static const String basePath = r'https://akademove-server.zenta.dev/auth';
 
   final Dio dio;
   final Serializers serializers;

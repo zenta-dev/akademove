@@ -61,7 +61,7 @@ try {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000/auth*
+All URIs are relative to *https://akademove-server.zenta.dev/auth*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

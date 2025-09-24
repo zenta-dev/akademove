@@ -195,7 +195,7 @@
 	],
 	"servers": [
 		{
-			"url": "http://localhost:3000/auth"
+			"url": "https://akademove-server.zenta.dev/auth"
 		}
 	],
 	"tags": [
@@ -964,7 +964,7 @@
 										"nullable": true
 									},
 									"rememberMe": {
-										"type": "string",
+										"type": "boolean",
 										"nullable": true
 									}
 								},

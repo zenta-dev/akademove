@@ -30,7 +30,7 @@ abstract class SignInEmailPostRequest implements Built<SignInEmailPostRequest, S
   String? get callbackURL;
 
   @BuiltValueField(wireName: r'rememberMe')
-  String? get rememberMe;
+  bool? get rememberMe;
 
   SignInEmailPostRequest._();
 
@@ -76,7 +76,7 @@ class _$SignInEmailPostRequestSerializer implements PrimitiveSerializer<SignInEm
       yield r'rememberMe';
       yield serializers.serialize(
         object.rememberMe,
-        specifiedType: const FullType(String),
+        specifiedType: const FullType(bool),
       );
     }
   }
@@ -126,8 +126,8 @@ class _$SignInEmailPostRequestSerializer implements PrimitiveSerializer<SignInEm
         case r'rememberMe':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType(String),
-          ) as String;
+            specifiedType: const FullType(bool),
+          ) as bool;
           result.rememberMe = valueDes;
           break;
         default:

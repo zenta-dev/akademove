@@ -14,7 +14,7 @@ class _$SignInEmailPostRequest extends SignInEmailPostRequest {
   @override
   final String? callbackURL;
   @override
-  final String? rememberMe;
+  final bool? rememberMe;
 
   factory _$SignInEmailPostRequest([
     void Function(SignInEmailPostRequestBuilder)? updates,
@@ -83,9 +83,9 @@ class SignInEmailPostRequestBuilder
   String? get callbackURL => _$this._callbackURL;
   set callbackURL(String? callbackURL) => _$this._callbackURL = callbackURL;
 
-  String? _rememberMe;
-  String? get rememberMe => _$this._rememberMe;
-  set rememberMe(String? rememberMe) => _$this._rememberMe = rememberMe;
+  bool? _rememberMe;
+  bool? get rememberMe => _$this._rememberMe;
+  set rememberMe(bool? rememberMe) => _$this._rememberMe = rememberMe;
 
   SignInEmailPostRequestBuilder() {
     SignInEmailPostRequest._defaults(this);
