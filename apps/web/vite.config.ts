@@ -20,7 +20,7 @@ function encodeString(str: string) {
 
 let counter = 0;
 
-function simpleHash(str: string) {
+function _simpleHash(str: string) {
 	let hash = 0;
 	for (let i = 0; i < str.length; i++) {
 		hash = (hash << 5) - hash + str.charCodeAt(i);

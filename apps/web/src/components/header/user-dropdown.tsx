@@ -1,6 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
