@@ -1,4 +1,3 @@
-import { AsyncLocalStorage } from "node:async_hooks";
 import { createMiddleware } from "@tanstack/react-start";
 import {
   baseLocale,
@@ -20,7 +19,8 @@ export const localeMiddleware = createMiddleware({ type: "function" })
       },
     });
   })
-  .server(({ context: { locale }, next }) => {
+  .server(async ({ context: { locale }, next }) => {
+    const {AsyncLocalStorage}=await import('node:async_hooks');
     const storage = new AsyncLocalStorage<Locale>();
     overwriteGetLocale(() => storage.getStore() ?? baseLocale);
 

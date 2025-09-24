@@ -18,6 +18,21 @@ function encodeString(str: string) {
 	});
 }
 
+let counter = 0;
+
+function simpleHash(str: string) {
+	let hash = 0;
+	for (let i = 0; i < str.length; i++) {
+		hash = (hash << 5) - hash + str.charCodeAt(i);
+		hash |= 0; // force 32-bit
+	}
+
+	counter++;
+	const unique = hash ^ Date.now() ^ counter;
+
+	return Math.abs(unique).toString(36);
+}
+
 export default defineConfig({
 	plugins: [
 		tsconfigPaths(),
@@ -26,7 +41,11 @@ export default defineConfig({
 		viteReact(),
 		alchemy(),
 	],
+	optimizeDeps: {
+		exclude: ["async_hooks"], // prevent pre-bundling
+	},
 	build: {
+		// minify: false,
 		target: "esnext",
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
@@ -45,13 +64,30 @@ export default defineConfig({
 						if (parts[idx + 1] === "scheduler") {
 							return encodeString("rsc");
 						}
-
 						if (id.includes("zod")) {
 							return encodeString("z");
 						}
-						// if (id.includes("better-auth")) {
-						// 	return simpleHash("ba");
+						// if (id.includes("@better-auth")) {
+						// 	return encodeString("ba1");
 						// }
+						// if (id.includes("better-auth")) {
+						// 	return encodeString("ba2");
+						// }
+						if (id.includes("next-themes")) {
+							return encodeString("nt");
+						}
+						if (id.includes("react-hook-form")) {
+							return encodeString("rhf");
+						}
+						if (id.includes("class-variance-authority")) {
+							return encodeString("cva");
+						}
+						if (id.includes("clsx")) {
+							return encodeString("clsx");
+						}
+						if (id.includes("tailwind-merge")) {
+							return encodeString("twm");
+						}
 						if (id.includes("radix-ui")) {
 							return encodeString("rdxui");
 						}
@@ -119,6 +155,15 @@ export default defineConfig({
 							return encodeString("t");
 						}
 					}
+					// if (id.includes("apps")) {
+					// 	const parts = id.split("/");
+					// 	const idx = parts.lastIndexOf("src");
+
+					// 	if (idx !== -1 && idx < parts.length - 1) {
+					// 		const rest = parts.slice(idx + 1).join("/");
+					// 		return simpleHash(rest);
+					// 	}
+					// }
 
 					if (id.includes("packages")) {
 						const parts = id.split("/");
