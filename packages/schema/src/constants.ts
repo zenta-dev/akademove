@@ -33,6 +33,7 @@ export const CONSTANTS = Object.freeze({
 	REPORT_STATUS: ["pending", "investigating", "resolved", "dismissed"] as const,
 	REVIEW_CATEGORIES: ["cleanliness", "courtesy", "other"] as const,
 	GENERAL_RULE_TYPES: ["percentage", "fixed"] as const,
+	USER_ROLES: ["admin", "operator", "merchant", "driver", "user"] as const,
 } as const);
 
 export const AUTH_CONSTANTS = Object.freeze({

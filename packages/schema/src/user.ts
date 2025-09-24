@@ -1,19 +1,12 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 
-export const UserRoleSchema = z
-	.union([
-		z.literal("admin"),
-		z.literal("operator"),
-		z.literal("merchant"),
-		z.literal("driver"),
-		z.literal("user"),
-	])
-	.meta({
-		title: "UserRole",
-		ref: "UserRole",
-	});
+export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES).meta({
+	title: "UserRole",
+	ref: "UserRole",
+});
 
 export const UserSchema = z
 	.object({
