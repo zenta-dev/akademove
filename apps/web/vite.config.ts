@@ -37,7 +37,22 @@ export default defineConfig({
 	plugins: [
 		tsconfigPaths(),
 		tailwindcss(),
-		tanstackStart({ customViteReactPlugin: true, target: "cloudflare-module" }),
+		tanstackStart({
+			customViteReactPlugin: true,
+			target: "cloudflare-module",
+			prerender: {
+				enabled: true,
+				autoSubfolderIndex: true,
+				concurrency: 14,
+				onSuccess: ({ page }) => {
+					console.log(`Rendered ${page.path}!`);
+				},
+			},
+			sitemap: {
+				enabled: true,
+				host: process.env.WEB_URL || "http://localhost:3001",
+			},
+		}),
 		viteReact(),
 		alchemy(),
 	],
