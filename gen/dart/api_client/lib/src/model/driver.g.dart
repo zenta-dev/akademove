@@ -112,13 +112,15 @@ class _$Driver extends Driver {
   @override
   final num rating;
   @override
-  final bool? isOnline;
+  final bool isOnline;
   @override
   final Location? currentLocation;
   @override
   final num? lastLocationUpdate;
   @override
   final num createdAt;
+  @override
+  final DriverUpdateRequestUser? user;
 
   factory _$Driver([void Function(DriverBuilder)? updates]) =>
       (DriverBuilder()..update(updates))._build();
@@ -130,10 +132,11 @@ class _$Driver extends Driver {
     required this.licenseNumber,
     required this.status,
     required this.rating,
-    this.isOnline,
+    required this.isOnline,
     this.currentLocation,
     this.lastLocationUpdate,
     required this.createdAt,
+    this.user,
   }) : super._();
   @override
   Driver rebuild(void Function(DriverBuilder) updates) =>
@@ -155,7 +158,8 @@ class _$Driver extends Driver {
         isOnline == other.isOnline &&
         currentLocation == other.currentLocation &&
         lastLocationUpdate == other.lastLocationUpdate &&
-        createdAt == other.createdAt;
+        createdAt == other.createdAt &&
+        user == other.user;
   }
 
   @override
@@ -171,6 +175,7 @@ class _$Driver extends Driver {
     _$hash = $jc(_$hash, currentLocation.hashCode);
     _$hash = $jc(_$hash, lastLocationUpdate.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
+    _$hash = $jc(_$hash, user.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -187,7 +192,8 @@ class _$Driver extends Driver {
           ..add('isOnline', isOnline)
           ..add('currentLocation', currentLocation)
           ..add('lastLocationUpdate', lastLocationUpdate)
-          ..add('createdAt', createdAt))
+          ..add('createdAt', createdAt)
+          ..add('user', user))
         .toString();
   }
 }
@@ -239,6 +245,11 @@ class DriverBuilder implements Builder<Driver, DriverBuilder> {
   num? get createdAt => _$this._createdAt;
   set createdAt(num? createdAt) => _$this._createdAt = createdAt;
 
+  DriverUpdateRequestUserBuilder? _user;
+  DriverUpdateRequestUserBuilder get user =>
+      _$this._user ??= DriverUpdateRequestUserBuilder();
+  set user(DriverUpdateRequestUserBuilder? user) => _$this._user = user;
+
   DriverBuilder() {
     Driver._defaults(this);
   }
@@ -256,6 +267,7 @@ class DriverBuilder implements Builder<Driver, DriverBuilder> {
       _currentLocation = $v.currentLocation?.toBuilder();
       _lastLocationUpdate = $v.lastLocationUpdate;
       _createdAt = $v.createdAt;
+      _user = $v.user?.toBuilder();
       _$v = null;
     }
     return this;
@@ -306,7 +318,11 @@ class DriverBuilder implements Builder<Driver, DriverBuilder> {
               r'Driver',
               'rating',
             ),
-            isOnline: isOnline,
+            isOnline: BuiltValueNullFieldError.checkNotNull(
+              isOnline,
+              r'Driver',
+              'isOnline',
+            ),
             currentLocation: _currentLocation?.build(),
             lastLocationUpdate: lastLocationUpdate,
             createdAt: BuiltValueNullFieldError.checkNotNull(
@@ -314,12 +330,16 @@ class DriverBuilder implements Builder<Driver, DriverBuilder> {
               r'Driver',
               'createdAt',
             ),
+            user: _user?.build(),
           );
     } catch (_) {
       late String _$failedField;
       try {
         _$failedField = 'currentLocation';
         _currentLocation?.build();
+
+        _$failedField = 'user';
+        _user?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(
           r'Driver',

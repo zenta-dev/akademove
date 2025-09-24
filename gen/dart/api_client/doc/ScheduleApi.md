@@ -5,19 +5,19 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev*
+All URIs are relative to *https://akademove-server.zenta.dev/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createSchedule**](ScheduleApi.md#createschedule) | **POST** /schedules | 
-[**deleteSchedule**](ScheduleApi.md#deleteschedule) | **DELETE** /schedules/{id} | 
-[**getAllSchedule**](ScheduleApi.md#getallschedule) | **GET** /schedules | 
-[**getScheduleById**](ScheduleApi.md#getschedulebyid) | **GET** /schedules/{id} | 
-[**updateSchedule**](ScheduleApi.md#updateschedule) | **PUT** /schedules/{id} | 
+[**scheduleCreate**](ScheduleApi.md#schedulecreate) | **POST** /schedules | 
+[**scheduleGet**](ScheduleApi.md#scheduleget) | **GET** /schedules/{id} | 
+[**scheduleList**](ScheduleApi.md#schedulelist) | **GET** /schedules | 
+[**scheduleRemove**](ScheduleApi.md#scheduleremove) | **DELETE** /schedules/{id} | 
+[**scheduleUpdate**](ScheduleApi.md#scheduleupdate) | **PUT** /schedules/{id} | 
 
 
-# **createSchedule**
-> CreateScheduleSuccessResponse createSchedule(createScheduleRequest)
+# **scheduleCreate**
+> ScheduleCreate200Response scheduleCreate(scheduleCreateRequest)
 
 
 
@@ -26,13 +26,13 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final CreateScheduleRequest createScheduleRequest = ; // CreateScheduleRequest | 
+final ScheduleCreateRequest scheduleCreateRequest = ; // ScheduleCreateRequest | 
 
 try {
-    final response = api.createSchedule(createScheduleRequest);
+    final response = api.scheduleCreate(scheduleCreateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ScheduleApi->createSchedule: $e\n');
+    print('Exception when calling ScheduleApi->scheduleCreate: $e\n');
 }
 ```
 
@@ -40,11 +40,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createScheduleRequest** | [**CreateScheduleRequest**](CreateScheduleRequest.md)|  | [optional] 
+ **scheduleCreateRequest** | [**ScheduleCreateRequest**](ScheduleCreateRequest.md)|  | 
 
 ### Return type
 
-[**CreateScheduleSuccessResponse**](CreateScheduleSuccessResponse.md)
+[**ScheduleCreate200Response**](ScheduleCreate200Response.md)
 
 ### Authorization
 
@@ -57,8 +57,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteSchedule**
-> DeleteScheduleSuccessResponse deleteSchedule(id)
+# **scheduleGet**
+> ScheduleCreate200Response scheduleGet(id)
 
 
 
@@ -67,13 +67,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.deleteSchedule(id);
+    final response = api.scheduleGet(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ScheduleApi->deleteSchedule: $e\n');
+    print('Exception when calling ScheduleApi->scheduleGet: $e\n');
 }
 ```
 
@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DeleteScheduleSuccessResponse**](DeleteScheduleSuccessResponse.md)
+[**ScheduleCreate200Response**](ScheduleCreate200Response.md)
 
 ### Authorization
 
@@ -98,8 +98,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllSchedule**
-> GetAllScheduleSuccessResponse getAllSchedule(page, limit, cursor)
+# **scheduleList**
+> ScheduleList200Response scheduleList(cursor, page, limit)
 
 
 
@@ -108,15 +108,15 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final int page = 56; // int | 
-final int limit = 56; // int | 
 final String cursor = cursor_example; // String | 
+final JsonObject page = ; // JsonObject | 
+final JsonObject limit = ; // JsonObject | 
 
 try {
-    final response = api.getAllSchedule(page, limit, cursor);
+    final response = api.scheduleList(cursor, page, limit);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ScheduleApi->getAllSchedule: $e\n');
+    print('Exception when calling ScheduleApi->scheduleList: $e\n');
 }
 ```
 
@@ -124,13 +124,13 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int**|  | 
- **limit** | **int**|  | [default to 10]
  **cursor** | **String**|  | [optional] 
+ **page** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**JsonObject**](.md)|  | [optional] 
 
 ### Return type
 
-[**GetAllScheduleSuccessResponse**](GetAllScheduleSuccessResponse.md)
+[**ScheduleList200Response**](ScheduleList200Response.md)
 
 ### Authorization
 
@@ -143,8 +143,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getScheduleById**
-> GetScheduleByIdSuccessResponse getScheduleById(id, fromCache)
+# **scheduleRemove**
+> DriverRemove200Response scheduleRemove(id)
 
 
 
@@ -153,14 +153,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final bool fromCache = true; // bool | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.getScheduleById(id, fromCache);
+    final response = api.scheduleRemove(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ScheduleApi->getScheduleById: $e\n');
+    print('Exception when calling ScheduleApi->scheduleRemove: $e\n');
 }
 ```
 
@@ -169,11 +168,10 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **fromCache** | **bool**|  | [default to false]
 
 ### Return type
 
-[**GetScheduleByIdSuccessResponse**](GetScheduleByIdSuccessResponse.md)
+[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 
@@ -186,8 +184,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updateSchedule**
-> UpdateScheduleSuccessResponse updateSchedule(id, updateScheduleRequest)
+# **scheduleUpdate**
+> ScheduleCreate200Response scheduleUpdate(id, scheduleUpdateRequest)
 
 
 
@@ -196,14 +194,14 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final UpdateScheduleRequest updateScheduleRequest = ; // UpdateScheduleRequest | 
+final String id = id_example; // String | 
+final ScheduleUpdateRequest scheduleUpdateRequest = ; // ScheduleUpdateRequest | 
 
 try {
-    final response = api.updateSchedule(id, updateScheduleRequest);
+    final response = api.scheduleUpdate(id, scheduleUpdateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ScheduleApi->updateSchedule: $e\n');
+    print('Exception when calling ScheduleApi->scheduleUpdate: $e\n');
 }
 ```
 
@@ -212,11 +210,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateScheduleRequest** | [**UpdateScheduleRequest**](UpdateScheduleRequest.md)|  | [optional] 
+ **scheduleUpdateRequest** | [**ScheduleUpdateRequest**](ScheduleUpdateRequest.md)|  | 
 
 ### Return type
 
-[**UpdateScheduleSuccessResponse**](UpdateScheduleSuccessResponse.md)
+[**ScheduleCreate200Response**](ScheduleCreate200Response.md)
 
 ### Authorization
 

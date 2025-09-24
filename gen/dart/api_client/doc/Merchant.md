@@ -13,8 +13,8 @@ Name | Type | Description | Notes
 **type** | **String** |  | 
 **name** | **String** |  | 
 **address** | **String** |  | 
-**location** | [**Location**](Location.md) |  | 
-**isActive** | **bool** |  | [optional] [default to true]
+**location** | [**Location**](Location.md) |  | [optional] 
+**isActive** | **bool** |  | 
 **rating** | **num** |  | 
 **createdAt** | **num** | unix timestamp format | 
 **updatedAt** | **num** | unix timestamp format | 

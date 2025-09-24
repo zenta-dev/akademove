@@ -5,6 +5,7 @@
 // ignore_for_file: unused_element
 import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/driver_update_request_user.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -23,6 +24,7 @@ part 'driver.g.dart';
 /// * [currentLocation] 
 /// * [lastLocationUpdate] - unix timestamp format
 /// * [createdAt] - unix timestamp format
+/// * [user] 
 @BuiltValue()
 abstract class Driver implements Built<Driver, DriverBuilder> {
   @BuiltValueField(wireName: r'id')
@@ -45,7 +47,7 @@ abstract class Driver implements Built<Driver, DriverBuilder> {
   num get rating;
 
   @BuiltValueField(wireName: r'isOnline')
-  bool? get isOnline;
+  bool get isOnline;
 
   @BuiltValueField(wireName: r'currentLocation')
   Location? get currentLocation;
@@ -58,13 +60,15 @@ abstract class Driver implements Built<Driver, DriverBuilder> {
   @BuiltValueField(wireName: r'createdAt')
   num get createdAt;
 
+  @BuiltValueField(wireName: r'user')
+  DriverUpdateRequestUser? get user;
+
   Driver._();
 
   factory Driver([void updates(DriverBuilder b)]) = _$Driver;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverBuilder b) => b
-      ..isOnline = false;
+  static void _defaults(DriverBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Driver> get serializer => _$DriverSerializer();
@@ -112,28 +116,37 @@ class _$DriverSerializer implements PrimitiveSerializer<Driver> {
       object.rating,
       specifiedType: const FullType(num),
     );
-    if (object.isOnline != null) {
-      yield r'isOnline';
+    yield r'isOnline';
+    yield serializers.serialize(
+      object.isOnline,
+      specifiedType: const FullType(bool),
+    );
+    if (object.currentLocation != null) {
+      yield r'currentLocation';
       yield serializers.serialize(
-        object.isOnline,
-        specifiedType: const FullType(bool),
+        object.currentLocation,
+        specifiedType: const FullType(Location),
       );
     }
-    yield r'currentLocation';
-    yield object.currentLocation == null ? null : serializers.serialize(
-      object.currentLocation,
-      specifiedType: const FullType.nullable(Location),
-    );
-    yield r'lastLocationUpdate';
-    yield object.lastLocationUpdate == null ? null : serializers.serialize(
-      object.lastLocationUpdate,
-      specifiedType: const FullType.nullable(num),
-    );
+    if (object.lastLocationUpdate != null) {
+      yield r'lastLocationUpdate';
+      yield serializers.serialize(
+        object.lastLocationUpdate,
+        specifiedType: const FullType(num),
+      );
+    }
     yield r'createdAt';
     yield serializers.serialize(
       object.createdAt,
       specifiedType: const FullType(num),
     );
+    if (object.user != null) {
+      yield r'user';
+      yield serializers.serialize(
+        object.user,
+        specifiedType: const FullType(DriverUpdateRequestUser),
+      );
+    }
   }
 
   @override
@@ -209,17 +222,15 @@ class _$DriverSerializer implements PrimitiveSerializer<Driver> {
         case r'currentLocation':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(Location),
-          ) as Location?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(Location),
+          ) as Location;
           result.currentLocation.replace(valueDes);
           break;
         case r'lastLocationUpdate':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(num),
-          ) as num?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(num),
+          ) as num;
           result.lastLocationUpdate = valueDes;
           break;
         case r'createdAt':
@@ -228,6 +239,13 @@ class _$DriverSerializer implements PrimitiveSerializer<Driver> {
             specifiedType: const FullType(num),
           ) as num;
           result.createdAt = valueDes;
+          break;
+        case r'user':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(DriverUpdateRequestUser),
+          ) as DriverUpdateRequestUser;
+          result.user.replace(valueDes);
           break;
         default:
           unhandled.add(key);

@@ -12,11 +12,15 @@ Serializers _$serializers =
           ..add(AccountInfoPost200Response.serializer)
           ..add(AccountInfoPost200ResponseUser.serializer)
           ..add(AccountInfoPostRequest.serializer)
+          ..add(AdminHasPermissionPost200Response.serializer)
+          ..add(AdminHasPermissionPostRequest.serializer)
+          ..add(BanUserRequest.serializer)
           ..add(ChangeEmailPost200Response.serializer)
           ..add(ChangeEmailPost200ResponseMessageEnum.serializer)
           ..add(ChangeEmailPostRequest.serializer)
           ..add(ChangePasswordPost200Response.serializer)
           ..add(ChangePasswordPostRequest.serializer)
+          ..add(CreateUserRequest.serializer)
           ..add(DeleteUserCallbackGet200Response.serializer)
           ..add(DeleteUserCallbackGet200ResponseMessageEnum.serializer)
           ..add(DeleteUserPost200Response.serializer)
@@ -25,10 +29,14 @@ Serializers _$serializers =
           ..add(ForgetPasswordPost200Response.serializer)
           ..add(ForgetPasswordPostRequest.serializer)
           ..add(GetSessionGet200Response.serializer)
+          ..add(ImpersonateUser200Response.serializer)
           ..add(LinkSocialPost200Response.serializer)
           ..add(LinkSocialPostRequest.serializer)
           ..add(LinkSocialPostRequestIdToken.serializer)
           ..add(ListAccountsGet200ResponseInner.serializer)
+          ..add(ListUserSessions200Response.serializer)
+          ..add(ListUserSessionsRequest.serializer)
+          ..add(ListUsers200Response.serializer)
           ..add(OkGet200Response.serializer)
           ..add(RefreshTokenPost200Response.serializer)
           ..add(RefreshTokenPostRequest.serializer)
@@ -39,10 +47,14 @@ Serializers _$serializers =
           ..add(RevokeSessionPost200Response.serializer)
           ..add(RevokeSessionPostRequest.serializer)
           ..add(RevokeSessionsPost200Response.serializer)
+          ..add(RevokeUserSessionRequest.serializer)
           ..add(SendVerificationEmailPost200Response.serializer)
           ..add(SendVerificationEmailPost400Response.serializer)
           ..add(SendVerificationEmailPostRequest.serializer)
           ..add(Session.serializer)
+          ..add(SetRole200Response.serializer)
+          ..add(SetRoleRequest.serializer)
+          ..add(SetUserPasswordRequest.serializer)
           ..add(SignInEmailPost200Response.serializer)
           ..add(SignInEmailPost200ResponseRedirectEnum.serializer)
           ..add(SignInEmailPost200ResponseUser.serializer)
@@ -60,13 +72,22 @@ Serializers _$serializers =
           ..add(UnlinkAccountPostRequest.serializer)
           ..add(UpdateUserPost200Response.serializer)
           ..add(UpdateUserPostRequest.serializer)
+          ..add(UpdateUserRequest.serializer)
           ..add(User.serializer)
           ..add(Verification.serializer)
           ..add(VerifyEmailGet200Response.serializer)
           ..add(VerifyEmailGet200ResponseUser.serializer)
           ..addBuilderFactory(
+            const FullType(BuiltList, const [const FullType(Session)]),
+            () => ListBuilder<Session>(),
+          )
+          ..addBuilderFactory(
             const FullType(BuiltList, const [const FullType(String)]),
             () => ListBuilder<String>(),
+          )
+          ..addBuilderFactory(
+            const FullType(BuiltList, const [const FullType(User)]),
+            () => ListBuilder<User>(),
           )
           ..addBuilderFactory(
             const FullType(BuiltList, const [

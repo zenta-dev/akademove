@@ -5,19 +5,19 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev*
+All URIs are relative to *https://akademove-server.zenta.dev/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createReport**](ReportApi.md#createreport) | **POST** /reports | 
-[**deleteReport**](ReportApi.md#deletereport) | **DELETE** /reports/{id} | 
-[**getAllReport**](ReportApi.md#getallreport) | **GET** /reports | 
-[**getReportById**](ReportApi.md#getreportbyid) | **GET** /reports/{id} | 
-[**updateReport**](ReportApi.md#updatereport) | **PUT** /reports/{id} | 
+[**reportCreate**](ReportApi.md#reportcreate) | **POST** /reports | 
+[**reportGet**](ReportApi.md#reportget) | **GET** /reports/{id} | 
+[**reportList**](ReportApi.md#reportlist) | **GET** /reports | 
+[**reportRemove**](ReportApi.md#reportremove) | **DELETE** /reports/{id} | 
+[**reportUpdate**](ReportApi.md#reportupdate) | **PUT** /reports/{id} | 
 
 
-# **createReport**
-> CreateReportSuccessResponse createReport(createReportRequest)
+# **reportCreate**
+> ReportCreate200Response reportCreate(reportCreateRequest)
 
 
 
@@ -26,13 +26,13 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final CreateReportRequest createReportRequest = ; // CreateReportRequest | 
+final ReportCreateRequest reportCreateRequest = ; // ReportCreateRequest | 
 
 try {
-    final response = api.createReport(createReportRequest);
+    final response = api.reportCreate(reportCreateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ReportApi->createReport: $e\n');
+    print('Exception when calling ReportApi->reportCreate: $e\n');
 }
 ```
 
@@ -40,11 +40,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createReportRequest** | [**CreateReportRequest**](CreateReportRequest.md)|  | [optional] 
+ **reportCreateRequest** | [**ReportCreateRequest**](ReportCreateRequest.md)|  | 
 
 ### Return type
 
-[**CreateReportSuccessResponse**](CreateReportSuccessResponse.md)
+[**ReportCreate200Response**](ReportCreate200Response.md)
 
 ### Authorization
 
@@ -57,8 +57,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteReport**
-> DeleteReportSuccessResponse deleteReport(id)
+# **reportGet**
+> ReportCreate200Response reportGet(id)
 
 
 
@@ -67,13 +67,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.deleteReport(id);
+    final response = api.reportGet(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ReportApi->deleteReport: $e\n');
+    print('Exception when calling ReportApi->reportGet: $e\n');
 }
 ```
 
@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DeleteReportSuccessResponse**](DeleteReportSuccessResponse.md)
+[**ReportCreate200Response**](ReportCreate200Response.md)
 
 ### Authorization
 
@@ -98,8 +98,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllReport**
-> GetAllReportSuccessResponse getAllReport(page, limit, cursor)
+# **reportList**
+> ReportList200Response reportList(cursor, page, limit)
 
 
 
@@ -108,15 +108,15 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final int page = 56; // int | 
-final int limit = 56; // int | 
 final String cursor = cursor_example; // String | 
+final JsonObject page = ; // JsonObject | 
+final JsonObject limit = ; // JsonObject | 
 
 try {
-    final response = api.getAllReport(page, limit, cursor);
+    final response = api.reportList(cursor, page, limit);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ReportApi->getAllReport: $e\n');
+    print('Exception when calling ReportApi->reportList: $e\n');
 }
 ```
 
@@ -124,13 +124,13 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int**|  | 
- **limit** | **int**|  | [default to 10]
  **cursor** | **String**|  | [optional] 
+ **page** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**JsonObject**](.md)|  | [optional] 
 
 ### Return type
 
-[**GetAllReportSuccessResponse**](GetAllReportSuccessResponse.md)
+[**ReportList200Response**](ReportList200Response.md)
 
 ### Authorization
 
@@ -143,8 +143,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getReportById**
-> GetReportByIdSuccessResponse getReportById(id, fromCache)
+# **reportRemove**
+> DriverRemove200Response reportRemove(id)
 
 
 
@@ -153,14 +153,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final bool fromCache = true; // bool | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.getReportById(id, fromCache);
+    final response = api.reportRemove(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ReportApi->getReportById: $e\n');
+    print('Exception when calling ReportApi->reportRemove: $e\n');
 }
 ```
 
@@ -169,11 +168,10 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **fromCache** | **bool**|  | [default to false]
 
 ### Return type
 
-[**GetReportByIdSuccessResponse**](GetReportByIdSuccessResponse.md)
+[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 
@@ -186,8 +184,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updateReport**
-> UpdateReportSuccessResponse updateReport(id, createReportRequest)
+# **reportUpdate**
+> ReportCreate200Response reportUpdate(id, reportUpdateRequest)
 
 
 
@@ -196,14 +194,14 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final CreateReportRequest createReportRequest = ; // CreateReportRequest | 
+final String id = id_example; // String | 
+final ReportUpdateRequest reportUpdateRequest = ; // ReportUpdateRequest | 
 
 try {
-    final response = api.updateReport(id, createReportRequest);
+    final response = api.reportUpdate(id, reportUpdateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling ReportApi->updateReport: $e\n');
+    print('Exception when calling ReportApi->reportUpdate: $e\n');
 }
 ```
 
@@ -212,11 +210,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **createReportRequest** | [**CreateReportRequest**](CreateReportRequest.md)|  | [optional] 
+ **reportUpdateRequest** | [**ReportUpdateRequest**](ReportUpdateRequest.md)|  | 
 
 ### Return type
 
-[**UpdateReportSuccessResponse**](UpdateReportSuccessResponse.md)
+[**ReportCreate200Response**](ReportCreate200Response.md)
 
 ### Authorization
 

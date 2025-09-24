@@ -3,9 +3,12 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/order_create_request_note.dart';
 import 'package:built_collection/built_collection.dart';
-import 'package:api_client/src/model/create_order_request_note.dart';
 import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/driver_update_request_user.dart';
+import 'package:api_client/src/model/order_create_request_merchant.dart';
+import 'package:api_client/src/model/order_create_request_driver.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
@@ -32,6 +35,9 @@ part 'order.g.dart';
 /// * [arrivedAt] - unix timestamp format
 /// * [createdAt] - unix timestamp format
 /// * [updatedAt] - unix timestamp format
+/// * [user] 
+/// * [driver] 
+/// * [merchant] 
 @BuiltValue()
 abstract class Order implements Built<Order, OrderBuilder> {
   @BuiltValueField(wireName: r'id')
@@ -73,7 +79,7 @@ abstract class Order implements Built<Order, OrderBuilder> {
   num get totalPrice;
 
   @BuiltValueField(wireName: r'note')
-  CreateOrderRequestNote? get note;
+  OrderCreateRequestNote? get note;
 
   /// unix timestamp format
   @BuiltValueField(wireName: r'requestedAt')
@@ -95,13 +101,21 @@ abstract class Order implements Built<Order, OrderBuilder> {
   @BuiltValueField(wireName: r'updatedAt')
   num get updatedAt;
 
+  @BuiltValueField(wireName: r'user')
+  DriverUpdateRequestUser? get user;
+
+  @BuiltValueField(wireName: r'driver')
+  OrderCreateRequestDriver? get driver;
+
+  @BuiltValueField(wireName: r'merchant')
+  OrderCreateRequestMerchant? get merchant;
+
   Order._();
 
   factory Order([void updates(OrderBuilder b)]) = _$Order;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderBuilder b) => b
-      ..tip = 0;
+  static void _defaults(OrderBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Order> get serializer => _$OrderSerializer();
@@ -129,16 +143,20 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
       object.userId,
       specifiedType: const FullType(String),
     );
-    yield r'driverId';
-    yield object.driverId == null ? null : serializers.serialize(
-      object.driverId,
-      specifiedType: const FullType.nullable(String),
-    );
-    yield r'merchantId';
-    yield object.merchantId == null ? null : serializers.serialize(
-      object.merchantId,
-      specifiedType: const FullType.nullable(String),
-    );
+    if (object.driverId != null) {
+      yield r'driverId';
+      yield serializers.serialize(
+        object.driverId,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.merchantId != null) {
+      yield r'merchantId';
+      yield serializers.serialize(
+        object.merchantId,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'type';
     yield serializers.serialize(
       object.type,
@@ -181,26 +199,32 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
       object.totalPrice,
       specifiedType: const FullType(num),
     );
-    yield r'note';
-    yield object.note == null ? null : serializers.serialize(
-      object.note,
-      specifiedType: const FullType.nullable(CreateOrderRequestNote),
-    );
+    if (object.note != null) {
+      yield r'note';
+      yield serializers.serialize(
+        object.note,
+        specifiedType: const FullType(OrderCreateRequestNote),
+      );
+    }
     yield r'requestedAt';
     yield serializers.serialize(
       object.requestedAt,
       specifiedType: const FullType(num),
     );
-    yield r'acceptedAt';
-    yield object.acceptedAt == null ? null : serializers.serialize(
-      object.acceptedAt,
-      specifiedType: const FullType.nullable(num),
-    );
-    yield r'arrivedAt';
-    yield object.arrivedAt == null ? null : serializers.serialize(
-      object.arrivedAt,
-      specifiedType: const FullType.nullable(num),
-    );
+    if (object.acceptedAt != null) {
+      yield r'acceptedAt';
+      yield serializers.serialize(
+        object.acceptedAt,
+        specifiedType: const FullType(num),
+      );
+    }
+    if (object.arrivedAt != null) {
+      yield r'arrivedAt';
+      yield serializers.serialize(
+        object.arrivedAt,
+        specifiedType: const FullType(num),
+      );
+    }
     yield r'createdAt';
     yield serializers.serialize(
       object.createdAt,
@@ -211,6 +235,27 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
       object.updatedAt,
       specifiedType: const FullType(num),
     );
+    if (object.user != null) {
+      yield r'user';
+      yield serializers.serialize(
+        object.user,
+        specifiedType: const FullType(DriverUpdateRequestUser),
+      );
+    }
+    if (object.driver != null) {
+      yield r'driver';
+      yield serializers.serialize(
+        object.driver,
+        specifiedType: const FullType(OrderCreateRequestDriver),
+      );
+    }
+    if (object.merchant != null) {
+      yield r'merchant';
+      yield serializers.serialize(
+        object.merchant,
+        specifiedType: const FullType(OrderCreateRequestMerchant),
+      );
+    }
   }
 
   @override
@@ -251,17 +296,15 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
         case r'driverId':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.driverId = valueDes;
           break;
         case r'merchantId':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.merchantId = valueDes;
           break;
         case r'type':
@@ -323,9 +366,8 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
         case r'note':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(CreateOrderRequestNote),
-          ) as CreateOrderRequestNote?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(OrderCreateRequestNote),
+          ) as OrderCreateRequestNote;
           result.note.replace(valueDes);
           break;
         case r'requestedAt':
@@ -338,17 +380,15 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
         case r'acceptedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(num),
-          ) as num?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(num),
+          ) as num;
           result.acceptedAt = valueDes;
           break;
         case r'arrivedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(num),
-          ) as num?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(num),
+          ) as num;
           result.arrivedAt = valueDes;
           break;
         case r'createdAt':
@@ -364,6 +404,27 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
             specifiedType: const FullType(num),
           ) as num;
           result.updatedAt = valueDes;
+          break;
+        case r'user':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(DriverUpdateRequestUser),
+          ) as DriverUpdateRequestUser;
+          result.user.replace(valueDes);
+          break;
+        case r'driver':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(OrderCreateRequestDriver),
+          ) as OrderCreateRequestDriver;
+          result.driver.replace(valueDes);
+          break;
+        case r'merchant':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(OrderCreateRequestMerchant),
+          ) as OrderCreateRequestMerchant;
+          result.merchant.replace(valueDes);
           break;
         default:
           unhandled.add(key);

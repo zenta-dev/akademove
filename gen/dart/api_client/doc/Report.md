@@ -9,17 +9,17 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**orderId** | **String** |  | 
+**orderId** | **String** |  | [optional] 
 **reporterId** | **String** |  | 
 **targetUserId** | **String** |  | 
 **category** | **String** |  | 
 **description** | **String** |  | 
-**evidenceUrl** | **String** |  | 
+**evidenceUrl** | **String** |  | [optional] 
 **status** | **String** |  | [optional] [default to 'pending']
-**handledById** | **String** |  | 
-**resolution** | **String** |  | 
+**handledById** | **String** |  | [optional] 
+**resolution** | **String** |  | [optional] 
 **reportedAt** | **num** | unix timestamp format | 
-**resolvedAt** | **num** | unix timestamp format | 
+**resolvedAt** | **num** | unix timestamp format | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

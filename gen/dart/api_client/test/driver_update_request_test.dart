@@ -1,0 +1,41 @@
+import 'package:test/test.dart';
+import 'package:api_client/api_client.dart';
+
+// tests for DriverUpdateRequest
+void main() {
+  final instance = DriverUpdateRequestBuilder();
+  // TODO add properties to the builder and call build()
+
+  group(DriverUpdateRequest, () {
+    // String studentId
+    test('to test the property `studentId`', () async {
+      // TODO
+    });
+
+    // String licenseNumber
+    test('to test the property `licenseNumber`', () async {
+      // TODO
+    });
+
+    // String status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
+    // bool isOnline
+    test('to test the property `isOnline`', () async {
+      // TODO
+    });
+
+    // Location currentLocation
+    test('to test the property `currentLocation`', () async {
+      // TODO
+    });
+
+    // DriverUpdateRequestUser user
+    test('to test the property `user`', () async {
+      // TODO
+    });
+
+  });
+}

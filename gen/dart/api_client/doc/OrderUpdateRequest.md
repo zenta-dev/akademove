@@ -1,0 +1,25 @@
+# api_client.model.OrderUpdateRequest
+
+## Load the model package
+```dart
+import 'package:api_client/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**driverId** | **String** |  | [optional] 
+**merchantId** | **String** |  | [optional] 
+**type** | **String** |  | [optional] 
+**status** | **String** |  | [optional] 
+**distanceKm** | **num** |  | [optional] 
+**tip** | **num** |  | [optional] 
+**totalPrice** | **num** |  | [optional] 
+**note** | [**OrderCreateRequestNote**](OrderCreateRequestNote.md) |  | [optional] 
+**user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 
+**driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
+**merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

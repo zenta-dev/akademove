@@ -5,19 +5,19 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev*
+All URIs are relative to *https://akademove-server.zenta.dev/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createOrder**](OrderApi.md#createorder) | **POST** /orders | 
-[**deleteOrder**](OrderApi.md#deleteorder) | **DELETE** /orders/{id} | 
-[**getAllOrder**](OrderApi.md#getallorder) | **GET** /orders | 
-[**getOrderById**](OrderApi.md#getorderbyid) | **GET** /orders/{id} | 
-[**updateOrder**](OrderApi.md#updateorder) | **PUT** /orders/{id} | 
+[**orderCreate**](OrderApi.md#ordercreate) | **POST** /orders | 
+[**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
+[**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
+[**orderRemove**](OrderApi.md#orderremove) | **DELETE** /orders/{id} | 
+[**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 
 
-# **createOrder**
-> CreateOrderSuccessResponse createOrder(createOrderRequest)
+# **orderCreate**
+> OrderCreate200Response orderCreate(orderCreateRequest)
 
 
 
@@ -26,13 +26,13 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final CreateOrderRequest createOrderRequest = ; // CreateOrderRequest | 
+final OrderCreateRequest orderCreateRequest = ; // OrderCreateRequest | 
 
 try {
-    final response = api.createOrder(createOrderRequest);
+    final response = api.orderCreate(orderCreateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->createOrder: $e\n');
+    print('Exception when calling OrderApi->orderCreate: $e\n');
 }
 ```
 
@@ -40,11 +40,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createOrderRequest** | [**CreateOrderRequest**](CreateOrderRequest.md)|  | [optional] 
+ **orderCreateRequest** | [**OrderCreateRequest**](OrderCreateRequest.md)|  | 
 
 ### Return type
 
-[**CreateOrderSuccessResponse**](CreateOrderSuccessResponse.md)
+[**OrderCreate200Response**](OrderCreate200Response.md)
 
 ### Authorization
 
@@ -57,8 +57,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteOrder**
-> DeleteOrderSuccessResponse deleteOrder(id)
+# **orderGet**
+> OrderCreate200Response orderGet(id)
 
 
 
@@ -67,13 +67,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.deleteOrder(id);
+    final response = api.orderGet(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->deleteOrder: $e\n');
+    print('Exception when calling OrderApi->orderGet: $e\n');
 }
 ```
 
@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DeleteOrderSuccessResponse**](DeleteOrderSuccessResponse.md)
+[**OrderCreate200Response**](OrderCreate200Response.md)
 
 ### Authorization
 
@@ -98,8 +98,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllOrder**
-> GetAllOrderSuccessResponse getAllOrder(page, limit, cursor)
+# **orderList**
+> OrderList200Response orderList(cursor, page, limit)
 
 
 
@@ -108,15 +108,15 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final int page = 56; // int | 
-final int limit = 56; // int | 
 final String cursor = cursor_example; // String | 
+final JsonObject page = ; // JsonObject | 
+final JsonObject limit = ; // JsonObject | 
 
 try {
-    final response = api.getAllOrder(page, limit, cursor);
+    final response = api.orderList(cursor, page, limit);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->getAllOrder: $e\n');
+    print('Exception when calling OrderApi->orderList: $e\n');
 }
 ```
 
@@ -124,13 +124,13 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int**|  | 
- **limit** | **int**|  | [default to 10]
  **cursor** | **String**|  | [optional] 
+ **page** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**JsonObject**](.md)|  | [optional] 
 
 ### Return type
 
-[**GetAllOrderSuccessResponse**](GetAllOrderSuccessResponse.md)
+[**OrderList200Response**](OrderList200Response.md)
 
 ### Authorization
 
@@ -143,8 +143,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getOrderById**
-> GetOrderByIdSuccessResponse getOrderById(id, fromCache)
+# **orderRemove**
+> DriverRemove200Response orderRemove(id)
 
 
 
@@ -153,14 +153,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final bool fromCache = true; // bool | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.getOrderById(id, fromCache);
+    final response = api.orderRemove(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->getOrderById: $e\n');
+    print('Exception when calling OrderApi->orderRemove: $e\n');
 }
 ```
 
@@ -169,11 +168,10 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **fromCache** | **bool**|  | [default to false]
 
 ### Return type
 
-[**GetOrderByIdSuccessResponse**](GetOrderByIdSuccessResponse.md)
+[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 
@@ -186,8 +184,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updateOrder**
-> UpdateOrderSuccessResponse updateOrder(id, updateOrderRequest)
+# **orderUpdate**
+> OrderCreate200Response orderUpdate(id, orderUpdateRequest)
 
 
 
@@ -196,14 +194,14 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final UpdateOrderRequest updateOrderRequest = ; // UpdateOrderRequest | 
+final String id = id_example; // String | 
+final OrderUpdateRequest orderUpdateRequest = ; // OrderUpdateRequest | 
 
 try {
-    final response = api.updateOrder(id, updateOrderRequest);
+    final response = api.orderUpdate(id, orderUpdateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->updateOrder: $e\n');
+    print('Exception when calling OrderApi->orderUpdate: $e\n');
 }
 ```
 
@@ -212,11 +210,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateOrderRequest** | [**UpdateOrderRequest**](UpdateOrderRequest.md)|  | [optional] 
+ **orderUpdateRequest** | [**OrderUpdateRequest**](OrderUpdateRequest.md)|  | 
 
 ### Return type
 
-[**UpdateOrderSuccessResponse**](UpdateOrderSuccessResponse.md)
+[**OrderCreate200Response**](OrderCreate200Response.md)
 
 ### Authorization
 

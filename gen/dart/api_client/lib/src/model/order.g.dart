@@ -208,7 +208,7 @@ class _$Order extends Order {
   @override
   final num totalPrice;
   @override
-  final CreateOrderRequestNote? note;
+  final OrderCreateRequestNote? note;
   @override
   final num requestedAt;
   @override
@@ -219,6 +219,12 @@ class _$Order extends Order {
   final num createdAt;
   @override
   final num updatedAt;
+  @override
+  final DriverUpdateRequestUser? user;
+  @override
+  final OrderCreateRequestDriver? driver;
+  @override
+  final OrderCreateRequestMerchant? merchant;
 
   factory _$Order([void Function(OrderBuilder)? updates]) =>
       (OrderBuilder()..update(updates))._build();
@@ -242,6 +248,9 @@ class _$Order extends Order {
     this.arrivedAt,
     required this.createdAt,
     required this.updatedAt,
+    this.user,
+    this.driver,
+    this.merchant,
   }) : super._();
   @override
   Order rebuild(void Function(OrderBuilder) updates) =>
@@ -271,7 +280,10 @@ class _$Order extends Order {
         acceptedAt == other.acceptedAt &&
         arrivedAt == other.arrivedAt &&
         createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
+        updatedAt == other.updatedAt &&
+        user == other.user &&
+        driver == other.driver &&
+        merchant == other.merchant;
   }
 
   @override
@@ -295,6 +307,9 @@ class _$Order extends Order {
     _$hash = $jc(_$hash, arrivedAt.hashCode);
     _$hash = $jc(_$hash, createdAt.hashCode);
     _$hash = $jc(_$hash, updatedAt.hashCode);
+    _$hash = $jc(_$hash, user.hashCode);
+    _$hash = $jc(_$hash, driver.hashCode);
+    _$hash = $jc(_$hash, merchant.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -319,7 +334,10 @@ class _$Order extends Order {
           ..add('acceptedAt', acceptedAt)
           ..add('arrivedAt', arrivedAt)
           ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
+          ..add('updatedAt', updatedAt)
+          ..add('user', user)
+          ..add('driver', driver)
+          ..add('merchant', merchant))
         .toString();
   }
 }
@@ -379,10 +397,10 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
   num? get totalPrice => _$this._totalPrice;
   set totalPrice(num? totalPrice) => _$this._totalPrice = totalPrice;
 
-  CreateOrderRequestNoteBuilder? _note;
-  CreateOrderRequestNoteBuilder get note =>
-      _$this._note ??= CreateOrderRequestNoteBuilder();
-  set note(CreateOrderRequestNoteBuilder? note) => _$this._note = note;
+  OrderCreateRequestNoteBuilder? _note;
+  OrderCreateRequestNoteBuilder get note =>
+      _$this._note ??= OrderCreateRequestNoteBuilder();
+  set note(OrderCreateRequestNoteBuilder? note) => _$this._note = note;
 
   num? _requestedAt;
   num? get requestedAt => _$this._requestedAt;
@@ -403,6 +421,23 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
   num? _updatedAt;
   num? get updatedAt => _$this._updatedAt;
   set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
+
+  DriverUpdateRequestUserBuilder? _user;
+  DriverUpdateRequestUserBuilder get user =>
+      _$this._user ??= DriverUpdateRequestUserBuilder();
+  set user(DriverUpdateRequestUserBuilder? user) => _$this._user = user;
+
+  OrderCreateRequestDriverBuilder? _driver;
+  OrderCreateRequestDriverBuilder get driver =>
+      _$this._driver ??= OrderCreateRequestDriverBuilder();
+  set driver(OrderCreateRequestDriverBuilder? driver) =>
+      _$this._driver = driver;
+
+  OrderCreateRequestMerchantBuilder? _merchant;
+  OrderCreateRequestMerchantBuilder get merchant =>
+      _$this._merchant ??= OrderCreateRequestMerchantBuilder();
+  set merchant(OrderCreateRequestMerchantBuilder? merchant) =>
+      _$this._merchant = merchant;
 
   OrderBuilder() {
     Order._defaults(this);
@@ -429,6 +464,9 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
       _arrivedAt = $v.arrivedAt;
       _createdAt = $v.createdAt;
       _updatedAt = $v.updatedAt;
+      _user = $v.user?.toBuilder();
+      _driver = $v.driver?.toBuilder();
+      _merchant = $v.merchant?.toBuilder();
       _$v = null;
     }
     return this;
@@ -503,6 +541,9 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
               r'Order',
               'updatedAt',
             ),
+            user: _user?.build(),
+            driver: _driver?.build(),
+            merchant: _merchant?.build(),
           );
     } catch (_) {
       late String _$failedField;
@@ -514,6 +555,13 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
 
         _$failedField = 'note';
         _note?.build();
+
+        _$failedField = 'user';
+        _user?.build();
+        _$failedField = 'driver';
+        _driver?.build();
+        _$failedField = 'merchant';
+        _merchant?.build();
       } catch (e) {
         throw BuiltValueNestedFieldError(r'Order', _$failedField, e.toString());
       }

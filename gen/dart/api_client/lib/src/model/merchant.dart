@@ -45,7 +45,7 @@ abstract class Merchant implements Built<Merchant, MerchantBuilder> {
   Location? get location;
 
   @BuiltValueField(wireName: r'isActive')
-  bool? get isActive;
+  bool get isActive;
 
   @BuiltValueField(wireName: r'rating')
   num get rating;
@@ -63,8 +63,7 @@ abstract class Merchant implements Built<Merchant, MerchantBuilder> {
   factory Merchant([void updates(MerchantBuilder b)]) = _$Merchant;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(MerchantBuilder b) => b
-      ..isActive = true;
+  static void _defaults(MerchantBuilder b) => b;
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Merchant> get serializer => _$MerchantSerializer();
@@ -107,18 +106,18 @@ class _$MerchantSerializer implements PrimitiveSerializer<Merchant> {
       object.address,
       specifiedType: const FullType(String),
     );
-    yield r'location';
-    yield object.location == null ? null : serializers.serialize(
-      object.location,
-      specifiedType: const FullType.nullable(Location),
-    );
-    if (object.isActive != null) {
-      yield r'isActive';
+    if (object.location != null) {
+      yield r'location';
       yield serializers.serialize(
-        object.isActive,
-        specifiedType: const FullType(bool),
+        object.location,
+        specifiedType: const FullType(Location),
       );
     }
+    yield r'isActive';
+    yield serializers.serialize(
+      object.isActive,
+      specifiedType: const FullType(bool),
+    );
     yield r'rating';
     yield serializers.serialize(
       object.rating,
@@ -195,9 +194,8 @@ class _$MerchantSerializer implements PrimitiveSerializer<Merchant> {
         case r'location':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(Location),
-          ) as Location?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(Location),
+          ) as Location;
           result.location.replace(valueDes);
           break;
         case r'isActive':

@@ -23,6 +23,8 @@ class _$Session extends Session {
   final String? userAgent;
   @override
   final String userId;
+  @override
+  final String? impersonatedBy;
 
   factory _$Session([void Function(SessionBuilder)? updates]) =>
       (SessionBuilder()..update(updates))._build();
@@ -36,6 +38,7 @@ class _$Session extends Session {
     this.ipAddress,
     this.userAgent,
     required this.userId,
+    this.impersonatedBy,
   }) : super._();
   @override
   Session rebuild(void Function(SessionBuilder) updates) =>
@@ -55,7 +58,8 @@ class _$Session extends Session {
         updatedAt == other.updatedAt &&
         ipAddress == other.ipAddress &&
         userAgent == other.userAgent &&
-        userId == other.userId;
+        userId == other.userId &&
+        impersonatedBy == other.impersonatedBy;
   }
 
   @override
@@ -69,6 +73,7 @@ class _$Session extends Session {
     _$hash = $jc(_$hash, ipAddress.hashCode);
     _$hash = $jc(_$hash, userAgent.hashCode);
     _$hash = $jc(_$hash, userId.hashCode);
+    _$hash = $jc(_$hash, impersonatedBy.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -83,7 +88,8 @@ class _$Session extends Session {
           ..add('updatedAt', updatedAt)
           ..add('ipAddress', ipAddress)
           ..add('userAgent', userAgent)
-          ..add('userId', userId))
+          ..add('userId', userId)
+          ..add('impersonatedBy', impersonatedBy))
         .toString();
   }
 }
@@ -123,6 +129,11 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
   String? get userId => _$this._userId;
   set userId(String? userId) => _$this._userId = userId;
 
+  String? _impersonatedBy;
+  String? get impersonatedBy => _$this._impersonatedBy;
+  set impersonatedBy(String? impersonatedBy) =>
+      _$this._impersonatedBy = impersonatedBy;
+
   SessionBuilder() {
     Session._defaults(this);
   }
@@ -138,6 +149,7 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
       _ipAddress = $v.ipAddress;
       _userAgent = $v.userAgent;
       _userId = $v.userId;
+      _impersonatedBy = $v.impersonatedBy;
       _$v = null;
     }
     return this;
@@ -188,6 +200,7 @@ class SessionBuilder implements Builder<Session, SessionBuilder> {
             r'Session',
             'userId',
           ),
+          impersonatedBy: impersonatedBy,
         );
     replace(_$result);
     return _$result;

@@ -14,10 +14,11 @@ Name | Type | Description | Notes
 **licenseNumber** | **String** |  | 
 **status** | **String** |  | 
 **rating** | **num** |  | 
-**isOnline** | **bool** |  | [optional] [default to false]
-**currentLocation** | [**Location**](Location.md) |  | 
-**lastLocationUpdate** | **num** | unix timestamp format | 
+**isOnline** | **bool** |  | 
+**currentLocation** | [**Location**](Location.md) |  | [optional] 
+**lastLocationUpdate** | **num** | unix timestamp format | [optional] 
 **createdAt** | **num** | unix timestamp format | 
+**user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

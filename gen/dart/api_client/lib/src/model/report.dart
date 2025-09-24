@@ -95,11 +95,13 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
       object.id,
       specifiedType: const FullType(String),
     );
-    yield r'orderId';
-    yield object.orderId == null ? null : serializers.serialize(
-      object.orderId,
-      specifiedType: const FullType.nullable(String),
-    );
+    if (object.orderId != null) {
+      yield r'orderId';
+      yield serializers.serialize(
+        object.orderId,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'reporterId';
     yield serializers.serialize(
       object.reporterId,
@@ -120,11 +122,13 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
       object.description,
       specifiedType: const FullType(String),
     );
-    yield r'evidenceUrl';
-    yield object.evidenceUrl == null ? null : serializers.serialize(
-      object.evidenceUrl,
-      specifiedType: const FullType.nullable(String),
-    );
+    if (object.evidenceUrl != null) {
+      yield r'evidenceUrl';
+      yield serializers.serialize(
+        object.evidenceUrl,
+        specifiedType: const FullType(String),
+      );
+    }
     if (object.status != null) {
       yield r'status';
       yield serializers.serialize(
@@ -132,26 +136,32 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
         specifiedType: const FullType(ReportStatusEnum),
       );
     }
-    yield r'handledById';
-    yield object.handledById == null ? null : serializers.serialize(
-      object.handledById,
-      specifiedType: const FullType.nullable(String),
-    );
-    yield r'resolution';
-    yield object.resolution == null ? null : serializers.serialize(
-      object.resolution,
-      specifiedType: const FullType.nullable(String),
-    );
+    if (object.handledById != null) {
+      yield r'handledById';
+      yield serializers.serialize(
+        object.handledById,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.resolution != null) {
+      yield r'resolution';
+      yield serializers.serialize(
+        object.resolution,
+        specifiedType: const FullType(String),
+      );
+    }
     yield r'reportedAt';
     yield serializers.serialize(
       object.reportedAt,
       specifiedType: const FullType(num),
     );
-    yield r'resolvedAt';
-    yield object.resolvedAt == null ? null : serializers.serialize(
-      object.resolvedAt,
-      specifiedType: const FullType.nullable(num),
-    );
+    if (object.resolvedAt != null) {
+      yield r'resolvedAt';
+      yield serializers.serialize(
+        object.resolvedAt,
+        specifiedType: const FullType(num),
+      );
+    }
   }
 
   @override
@@ -185,9 +195,8 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
         case r'orderId':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.orderId = valueDes;
           break;
         case r'reporterId':
@@ -221,9 +230,8 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
         case r'evidenceUrl':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.evidenceUrl = valueDes;
           break;
         case r'status':
@@ -236,17 +244,15 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
         case r'handledById':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.handledById = valueDes;
           break;
         case r'resolution':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(String),
-          ) as String?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(String),
+          ) as String;
           result.resolution = valueDes;
           break;
         case r'reportedAt':
@@ -259,9 +265,8 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
         case r'resolvedAt':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(num),
-          ) as num?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(num),
+          ) as num;
           result.resolvedAt = valueDes;
           break;
         default:

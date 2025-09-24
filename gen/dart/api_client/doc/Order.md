@@ -10,22 +10,25 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **userId** | **String** |  | 
-**driverId** | **String** |  | 
-**merchantId** | **String** |  | 
+**driverId** | **String** |  | [optional] 
+**merchantId** | **String** |  | [optional] 
 **type** | **String** |  | 
 **status** | **String** |  | 
 **pickupLocation** | [**Location**](Location.md) |  | 
 **dropoffLocation** | [**Location**](Location.md) |  | 
 **distanceKm** | **num** |  | 
 **basePrice** | **num** |  | 
-**tip** | **num** |  | [optional] [default to 0]
+**tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | 
-**note** | [**CreateOrderRequestNote**](CreateOrderRequestNote.md) |  | 
+**note** | [**OrderCreateRequestNote**](OrderCreateRequestNote.md) |  | [optional] 
 **requestedAt** | **num** | unix timestamp format | 
-**acceptedAt** | **num** | unix timestamp format | 
-**arrivedAt** | **num** | unix timestamp format | 
+**acceptedAt** | **num** | unix timestamp format | [optional] 
+**arrivedAt** | **num** | unix timestamp format | [optional] 
 **createdAt** | **num** | unix timestamp format | 
 **updatedAt** | **num** | unix timestamp format | 
+**user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 
+**driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
+**merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

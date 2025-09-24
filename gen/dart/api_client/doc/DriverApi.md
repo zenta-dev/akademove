@@ -5,19 +5,19 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev*
+All URIs are relative to *https://akademove-server.zenta.dev/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**createDriver**](DriverApi.md#createdriver) | **POST** /drivers | 
-[**deleteDriver**](DriverApi.md#deletedriver) | **DELETE** /drivers/{id} | 
-[**getAllDriver**](DriverApi.md#getalldriver) | **GET** /drivers | 
-[**getDriverById**](DriverApi.md#getdriverbyid) | **GET** /drivers/{id} | 
-[**updateDriver**](DriverApi.md#updatedriver) | **PUT** /drivers/{id} | 
+[**driverCreate**](DriverApi.md#drivercreate) | **POST** /drivers | 
+[**driverGet**](DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
+[**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
+[**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
 
-# **createDriver**
-> CreateDriverSuccessResponse createDriver(createDriverRequest)
+# **driverCreate**
+> DriverCreate200Response driverCreate(driverCreateRequest)
 
 
 
@@ -26,13 +26,13 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
-final CreateDriverRequest createDriverRequest = ; // CreateDriverRequest | 
+final DriverCreateRequest driverCreateRequest = ; // DriverCreateRequest | 
 
 try {
-    final response = api.createDriver(createDriverRequest);
+    final response = api.driverCreate(driverCreateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling DriverApi->createDriver: $e\n');
+    print('Exception when calling DriverApi->driverCreate: $e\n');
 }
 ```
 
@@ -40,11 +40,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **createDriverRequest** | [**CreateDriverRequest**](CreateDriverRequest.md)|  | [optional] 
+ **driverCreateRequest** | [**DriverCreateRequest**](DriverCreateRequest.md)|  | 
 
 ### Return type
 
-[**CreateDriverSuccessResponse**](CreateDriverSuccessResponse.md)
+[**DriverCreate200Response**](DriverCreate200Response.md)
 
 ### Authorization
 
@@ -57,8 +57,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteDriver**
-> DeleteDriverSuccessResponse deleteDriver(id)
+# **driverGet**
+> DriverCreate200Response driverGet(id)
 
 
 
@@ -67,13 +67,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.deleteDriver(id);
+    final response = api.driverGet(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling DriverApi->deleteDriver: $e\n');
+    print('Exception when calling DriverApi->driverGet: $e\n');
 }
 ```
 
@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DeleteDriverSuccessResponse**](DeleteDriverSuccessResponse.md)
+[**DriverCreate200Response**](DriverCreate200Response.md)
 
 ### Authorization
 
@@ -98,8 +98,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getAllDriver**
-> GetAllDriverSuccessResponse getAllDriver(page, limit, cursor)
+# **driverList**
+> DriverList200Response driverList(cursor, page, limit)
 
 
 
@@ -108,15 +108,15 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
-final int page = 56; // int | 
-final int limit = 56; // int | 
 final String cursor = cursor_example; // String | 
+final JsonObject page = ; // JsonObject | 
+final JsonObject limit = ; // JsonObject | 
 
 try {
-    final response = api.getAllDriver(page, limit, cursor);
+    final response = api.driverList(cursor, page, limit);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling DriverApi->getAllDriver: $e\n');
+    print('Exception when calling DriverApi->driverList: $e\n');
 }
 ```
 
@@ -124,13 +124,13 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **page** | **int**|  | 
- **limit** | **int**|  | [default to 10]
  **cursor** | **String**|  | [optional] 
+ **page** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**JsonObject**](.md)|  | [optional] 
 
 ### Return type
 
-[**GetAllDriverSuccessResponse**](GetAllDriverSuccessResponse.md)
+[**DriverList200Response**](DriverList200Response.md)
 
 ### Authorization
 
@@ -143,8 +143,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getDriverById**
-> GetDriverByIdSuccessResponse getDriverById(id, fromCache)
+# **driverRemove**
+> DriverRemove200Response driverRemove(id)
 
 
 
@@ -153,14 +153,13 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final bool fromCache = true; // bool | 
+final String id = id_example; // String | 
 
 try {
-    final response = api.getDriverById(id, fromCache);
+    final response = api.driverRemove(id);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling DriverApi->getDriverById: $e\n');
+    print('Exception when calling DriverApi->driverRemove: $e\n');
 }
 ```
 
@@ -169,11 +168,10 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **fromCache** | **bool**|  | [default to false]
 
 ### Return type
 
-[**GetDriverByIdSuccessResponse**](GetDriverByIdSuccessResponse.md)
+[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 
@@ -186,8 +184,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **updateDriver**
-> UpdateDriverSuccessResponse updateDriver(id, updateDriverRequest)
+# **driverUpdate**
+> DriverCreate200Response driverUpdate(id, driverUpdateRequest)
 
 
 
@@ -196,14 +194,14 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
-final UpdateDriverRequest updateDriverRequest = ; // UpdateDriverRequest | 
+final String id = id_example; // String | 
+final DriverUpdateRequest driverUpdateRequest = ; // DriverUpdateRequest | 
 
 try {
-    final response = api.updateDriver(id, updateDriverRequest);
+    final response = api.driverUpdate(id, driverUpdateRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling DriverApi->updateDriver: $e\n');
+    print('Exception when calling DriverApi->driverUpdate: $e\n');
 }
 ```
 
@@ -212,11 +210,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateDriverRequest** | [**UpdateDriverRequest**](UpdateDriverRequest.md)|  | [optional] 
+ **driverUpdateRequest** | [**DriverUpdateRequest**](DriverUpdateRequest.md)|  | 
 
 ### Return type
 
-[**UpdateDriverSuccessResponse**](UpdateDriverSuccessResponse.md)
+[**DriverCreate200Response**](DriverCreate200Response.md)
 
 ### Authorization
 

@@ -47,119 +47,142 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:api_client/api_client.dart';
 
 
-final api = ApiClient().getDriverApi();
-final CreateDriverRequest createDriverRequest = ; // CreateDriverRequest | 
+final api = ApiClient().getConfigurationApi();
+final String key = key_example; // String | 
 
 try {
-    final response = await api.createDriver(createDriverRequest);
+    final response = await api.configurationGet(key);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling DriverApi->createDriver: $e\n");
+    print("Exception when calling ConfigurationApi->configurationGet: $e\n");
 }
 
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://akademove-server.zenta.dev*
+All URIs are relative to *https://akademove-server.zenta.dev/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-[*DriverApi*](doc/DriverApi.md) | [**createDriver**](doc/DriverApi.md#createdriver) | **POST** /drivers | 
-[*DriverApi*](doc/DriverApi.md) | [**deleteDriver**](doc/DriverApi.md#deletedriver) | **DELETE** /drivers/{id} | 
-[*DriverApi*](doc/DriverApi.md) | [**getAllDriver**](doc/DriverApi.md#getalldriver) | **GET** /drivers | 
-[*DriverApi*](doc/DriverApi.md) | [**getDriverById**](doc/DriverApi.md#getdriverbyid) | **GET** /drivers/{id} | 
-[*DriverApi*](doc/DriverApi.md) | [**updateDriver**](doc/DriverApi.md#updatedriver) | **PUT** /drivers/{id} | 
-[*MerchantApi*](doc/MerchantApi.md) | [**createMerchant**](doc/MerchantApi.md#createmerchant) | **POST** /merchants | 
-[*MerchantApi*](doc/MerchantApi.md) | [**deleteMerchant**](doc/MerchantApi.md#deletemerchant) | **DELETE** /merchants/{id} | 
-[*MerchantApi*](doc/MerchantApi.md) | [**getAllMerchant**](doc/MerchantApi.md#getallmerchant) | **GET** /merchants | 
-[*MerchantApi*](doc/MerchantApi.md) | [**getMerchantById**](doc/MerchantApi.md#getmerchantbyid) | **GET** /merchants/{id} | 
-[*MerchantApi*](doc/MerchantApi.md) | [**updateMerchant**](doc/MerchantApi.md#updatemerchant) | **PUT** /merchants/{id} | 
-[*OrderApi*](doc/OrderApi.md) | [**createOrder**](doc/OrderApi.md#createorder) | **POST** /orders | 
-[*OrderApi*](doc/OrderApi.md) | [**deleteOrder**](doc/OrderApi.md#deleteorder) | **DELETE** /orders/{id} | 
-[*OrderApi*](doc/OrderApi.md) | [**getAllOrder**](doc/OrderApi.md#getallorder) | **GET** /orders | 
-[*OrderApi*](doc/OrderApi.md) | [**getOrderById**](doc/OrderApi.md#getorderbyid) | **GET** /orders/{id} | 
-[*OrderApi*](doc/OrderApi.md) | [**updateOrder**](doc/OrderApi.md#updateorder) | **PUT** /orders/{id} | 
-[*PromoApi*](doc/PromoApi.md) | [**createPromo**](doc/PromoApi.md#createpromo) | **POST** /promos | 
-[*PromoApi*](doc/PromoApi.md) | [**deletePromo**](doc/PromoApi.md#deletepromo) | **DELETE** /promos/{id} | 
-[*PromoApi*](doc/PromoApi.md) | [**getAllPromo**](doc/PromoApi.md#getallpromo) | **GET** /promos | 
-[*PromoApi*](doc/PromoApi.md) | [**getPromoById**](doc/PromoApi.md#getpromobyid) | **GET** /promos/{id} | 
-[*PromoApi*](doc/PromoApi.md) | [**updatePromo**](doc/PromoApi.md#updatepromo) | **PUT** /promos/{id} | 
-[*ReportApi*](doc/ReportApi.md) | [**createReport**](doc/ReportApi.md#createreport) | **POST** /reports | 
-[*ReportApi*](doc/ReportApi.md) | [**deleteReport**](doc/ReportApi.md#deletereport) | **DELETE** /reports/{id} | 
-[*ReportApi*](doc/ReportApi.md) | [**getAllReport**](doc/ReportApi.md#getallreport) | **GET** /reports | 
-[*ReportApi*](doc/ReportApi.md) | [**getReportById**](doc/ReportApi.md#getreportbyid) | **GET** /reports/{id} | 
-[*ReportApi*](doc/ReportApi.md) | [**updateReport**](doc/ReportApi.md#updatereport) | **PUT** /reports/{id} | 
-[*ReviewApi*](doc/ReviewApi.md) | [**createReview**](doc/ReviewApi.md#createreview) | **POST** /review | 
-[*ReviewApi*](doc/ReviewApi.md) | [**deleteReview**](doc/ReviewApi.md#deletereview) | **DELETE** /review/{id} | 
-[*ReviewApi*](doc/ReviewApi.md) | [**getAllReview**](doc/ReviewApi.md#getallreview) | **GET** /review | 
-[*ReviewApi*](doc/ReviewApi.md) | [**getReviewById**](doc/ReviewApi.md#getreviewbyid) | **GET** /review/{id} | 
-[*ReviewApi*](doc/ReviewApi.md) | [**updateReview**](doc/ReviewApi.md#updatereview) | **PUT** /review/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**createSchedule**](doc/ScheduleApi.md#createschedule) | **POST** /schedules | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**deleteSchedule**](doc/ScheduleApi.md#deleteschedule) | **DELETE** /schedules/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**getAllSchedule**](doc/ScheduleApi.md#getallschedule) | **GET** /schedules | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**getScheduleById**](doc/ScheduleApi.md#getschedulebyid) | **GET** /schedules/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**updateSchedule**](doc/ScheduleApi.md#updateschedule) | **PUT** /schedules/{id} | 
+[*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGet**](doc/ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
+[*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationList**](doc/ConfigurationApi.md#configurationlist) | **GET** /configurations | 
+[*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponCreate**](doc/CouponApi.md#couponcreate) | **POST** /coupons | 
+[*CouponApi*](doc/CouponApi.md) | [**couponGet**](doc/CouponApi.md#couponget) | **GET** /coupons/{id} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponList**](doc/CouponApi.md#couponlist) | **GET** /coupons | 
+[*CouponApi*](doc/CouponApi.md) | [**couponRemove**](doc/CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponUpdate**](doc/CouponApi.md#couponupdate) | **PUT** /coupons/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverCreate**](doc/DriverApi.md#drivercreate) | **POST** /drivers | 
+[*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
+[*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantCreate**](doc/MerchantApi.md#merchantcreate) | **POST** /merchants | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCreate**](doc/MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuGet**](doc/MerchantApi.md#merchantmenuget) | **GET** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuRemove**](doc/MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuUpdate**](doc/MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderCreate**](doc/OrderApi.md#ordercreate) | **POST** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderRemove**](doc/OrderApi.md#orderremove) | **DELETE** /orders/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
+[*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 
+[*ReportApi*](doc/ReportApi.md) | [**reportList**](doc/ReportApi.md#reportlist) | **GET** /reports | 
+[*ReportApi*](doc/ReportApi.md) | [**reportRemove**](doc/ReportApi.md#reportremove) | **DELETE** /reports/{id} | 
+[*ReportApi*](doc/ReportApi.md) | [**reportUpdate**](doc/ReportApi.md#reportupdate) | **PUT** /reports/{id} | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewCreate**](doc/ReviewApi.md#reviewcreate) | **POST** /reviews | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewGet**](doc/ReviewApi.md#reviewget) | **GET** /reviews/{id} | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewList**](doc/ReviewApi.md#reviewlist) | **GET** /reviews | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewRemove**](doc/ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
+[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleCreate**](doc/ScheduleApi.md#schedulecreate) | **POST** /schedules | 
+[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleGet**](doc/ScheduleApi.md#scheduleget) | **GET** /schedules/{id} | 
+[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleList**](doc/ScheduleApi.md#schedulelist) | **GET** /schedules | 
+[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleRemove**](doc/ScheduleApi.md#scheduleremove) | **DELETE** /schedules/{id} | 
+[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleUpdate**](doc/ScheduleApi.md#scheduleupdate) | **PUT** /schedules/{id} | 
+[*UserApi*](doc/UserApi.md) | [**userCreate**](doc/UserApi.md#usercreate) | **POST** /users | 
+[*UserApi*](doc/UserApi.md) | [**userGet**](doc/UserApi.md#userget) | **GET** /users/{id} | 
+[*UserApi*](doc/UserApi.md) | [**userList**](doc/UserApi.md#userlist) | **GET** /users | 
+[*UserApi*](doc/UserApi.md) | [**userRemove**](doc/UserApi.md#userremove) | **DELETE** /users/{id} | 
+[*UserApi*](doc/UserApi.md) | [**userUpdate**](doc/UserApi.md#userupdate) | **PUT** /users/{id} | 
 
 
 ## Documentation For Models
 
- - [CreateDriverRequest](doc/CreateDriverRequest.md)
- - [CreateDriverSuccessResponse](doc/CreateDriverSuccessResponse.md)
- - [CreateMerchantRequest](doc/CreateMerchantRequest.md)
- - [CreateMerchantSuccessResponse](doc/CreateMerchantSuccessResponse.md)
- - [CreateOrderRequest](doc/CreateOrderRequest.md)
- - [CreateOrderRequestNote](doc/CreateOrderRequestNote.md)
- - [CreateOrderSuccessResponse](doc/CreateOrderSuccessResponse.md)
- - [CreatePromoRequest](doc/CreatePromoRequest.md)
- - [CreatePromoSuccessResponse](doc/CreatePromoSuccessResponse.md)
- - [CreateReportRequest](doc/CreateReportRequest.md)
- - [CreateReportSuccessResponse](doc/CreateReportSuccessResponse.md)
- - [CreateReviewRequest](doc/CreateReviewRequest.md)
- - [CreateReviewSuccessResponse](doc/CreateReviewSuccessResponse.md)
- - [CreateScheduleRequest](doc/CreateScheduleRequest.md)
- - [CreateScheduleSuccessResponse](doc/CreateScheduleSuccessResponse.md)
- - [DeleteDriverSuccessResponse](doc/DeleteDriverSuccessResponse.md)
- - [DeleteMerchantSuccessResponse](doc/DeleteMerchantSuccessResponse.md)
- - [DeleteOrderSuccessResponse](doc/DeleteOrderSuccessResponse.md)
- - [DeletePromoSuccessResponse](doc/DeletePromoSuccessResponse.md)
- - [DeleteReportSuccessResponse](doc/DeleteReportSuccessResponse.md)
- - [DeleteReviewSuccessResponse](doc/DeleteReviewSuccessResponse.md)
- - [DeleteScheduleSuccessResponse](doc/DeleteScheduleSuccessResponse.md)
+ - [BanUserSchemaRequest](doc/BanUserSchemaRequest.md)
+ - [Configuration](doc/Configuration.md)
+ - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
+ - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
+ - [ConfigurationUpdateRequest](doc/ConfigurationUpdateRequest.md)
+ - [Coupon](doc/Coupon.md)
+ - [CouponCreate200Response](doc/CouponCreate200Response.md)
+ - [CouponCreateRequest](doc/CouponCreateRequest.md)
+ - [CouponCreateRequestRules](doc/CouponCreateRequestRules.md)
+ - [CouponCreateRequestRulesGeneral](doc/CouponCreateRequestRulesGeneral.md)
+ - [CouponCreateRequestRulesTime](doc/CouponCreateRequestRulesTime.md)
+ - [CouponCreateRequestRulesUser](doc/CouponCreateRequestRulesUser.md)
+ - [CouponList200Response](doc/CouponList200Response.md)
+ - [CouponUpdateRequest](doc/CouponUpdateRequest.md)
  - [Driver](doc/Driver.md)
- - [FailedResponse](doc/FailedResponse.md)
- - [GetAllDriverSuccessResponse](doc/GetAllDriverSuccessResponse.md)
- - [GetAllMerchantSuccessResponse](doc/GetAllMerchantSuccessResponse.md)
- - [GetAllOrderSuccessResponse](doc/GetAllOrderSuccessResponse.md)
- - [GetAllPromoSuccessResponse](doc/GetAllPromoSuccessResponse.md)
- - [GetAllReportSuccessResponse](doc/GetAllReportSuccessResponse.md)
- - [GetAllReviewSuccessResponse](doc/GetAllReviewSuccessResponse.md)
- - [GetAllScheduleSuccessResponse](doc/GetAllScheduleSuccessResponse.md)
- - [GetDriverByIdSuccessResponse](doc/GetDriverByIdSuccessResponse.md)
- - [GetMerchantByIdSuccessResponse](doc/GetMerchantByIdSuccessResponse.md)
- - [GetOrderByIdSuccessResponse](doc/GetOrderByIdSuccessResponse.md)
- - [GetPromoByIdSuccessResponse](doc/GetPromoByIdSuccessResponse.md)
- - [GetReportByIdSuccessResponse](doc/GetReportByIdSuccessResponse.md)
- - [GetReviewByIdSuccessResponse](doc/GetReviewByIdSuccessResponse.md)
- - [GetScheduleByIdSuccessResponse](doc/GetScheduleByIdSuccessResponse.md)
+ - [DriverCreate200Response](doc/DriverCreate200Response.md)
+ - [DriverCreateRequest](doc/DriverCreateRequest.md)
+ - [DriverList200Response](doc/DriverList200Response.md)
+ - [DriverRemove200Response](doc/DriverRemove200Response.md)
+ - [DriverUpdateRequest](doc/DriverUpdateRequest.md)
+ - [DriverUpdateRequestUser](doc/DriverUpdateRequestUser.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
+ - [MerchantCreateRequest](doc/MerchantCreateRequest.md)
+ - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
+ - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
+ - [MerchantList200Response](doc/MerchantList200Response.md)
+ - [MerchantMenu](doc/MerchantMenu.md)
+ - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
+ - [MerchantMenuCreateRequest](doc/MerchantMenuCreateRequest.md)
+ - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
+ - [MerchantMenuUpdateRequest](doc/MerchantMenuUpdateRequest.md)
+ - [MerchantUpdateRequest](doc/MerchantUpdateRequest.md)
  - [Order](doc/Order.md)
- - [Promo](doc/Promo.md)
+ - [OrderCreate200Response](doc/OrderCreate200Response.md)
+ - [OrderCreateRequest](doc/OrderCreateRequest.md)
+ - [OrderCreateRequestDriver](doc/OrderCreateRequestDriver.md)
+ - [OrderCreateRequestMerchant](doc/OrderCreateRequestMerchant.md)
+ - [OrderCreateRequestNote](doc/OrderCreateRequestNote.md)
+ - [OrderList200Response](doc/OrderList200Response.md)
+ - [OrderUpdateRequest](doc/OrderUpdateRequest.md)
  - [Report](doc/Report.md)
+ - [ReportCreate200Response](doc/ReportCreate200Response.md)
+ - [ReportCreateRequest](doc/ReportCreateRequest.md)
+ - [ReportList200Response](doc/ReportList200Response.md)
+ - [ReportUpdateRequest](doc/ReportUpdateRequest.md)
  - [Review](doc/Review.md)
+ - [ReviewCreate200Response](doc/ReviewCreate200Response.md)
+ - [ReviewCreateRequest](doc/ReviewCreateRequest.md)
+ - [ReviewList200Response](doc/ReviewList200Response.md)
+ - [ReviewUpdateRequest](doc/ReviewUpdateRequest.md)
  - [Schedule](doc/Schedule.md)
+ - [ScheduleCreate200Response](doc/ScheduleCreate200Response.md)
+ - [ScheduleCreateRequest](doc/ScheduleCreateRequest.md)
+ - [ScheduleList200Response](doc/ScheduleList200Response.md)
+ - [ScheduleUpdateRequest](doc/ScheduleUpdateRequest.md)
  - [Time](doc/Time.md)
- - [UpdateDriverRequest](doc/UpdateDriverRequest.md)
- - [UpdateDriverSuccessResponse](doc/UpdateDriverSuccessResponse.md)
- - [UpdateMerchantSuccessResponse](doc/UpdateMerchantSuccessResponse.md)
- - [UpdateOrderRequest](doc/UpdateOrderRequest.md)
- - [UpdateOrderSuccessResponse](doc/UpdateOrderSuccessResponse.md)
- - [UpdatePromoSuccessResponse](doc/UpdatePromoSuccessResponse.md)
- - [UpdateReportSuccessResponse](doc/UpdateReportSuccessResponse.md)
- - [UpdateReviewSuccessResponse](doc/UpdateReviewSuccessResponse.md)
- - [UpdateScheduleRequest](doc/UpdateScheduleRequest.md)
- - [UpdateScheduleSuccessResponse](doc/UpdateScheduleSuccessResponse.md)
+ - [UnbanUserSchemaRequest](doc/UnbanUserSchemaRequest.md)
+ - [UpdateUserPasswordRequest](doc/UpdateUserPasswordRequest.md)
+ - [UpdateUserRoleRequest](doc/UpdateUserRoleRequest.md)
+ - [User](doc/User.md)
+ - [UserCreate200Response](doc/UserCreate200Response.md)
+ - [UserCreateRequest](doc/UserCreateRequest.md)
+ - [UserList200Response](doc/UserList200Response.md)
+ - [UserUpdateRequest](doc/UserUpdateRequest.md)
 
 
 ## Documentation For Authorization

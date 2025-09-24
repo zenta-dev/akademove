@@ -116,11 +116,13 @@ class _$ScheduleSerializer implements PrimitiveSerializer<Schedule> {
         specifiedType: const FullType(bool),
       );
     }
-    yield r'specificDate';
-    yield object.specificDate == null ? null : serializers.serialize(
-      object.specificDate,
-      specifiedType: const FullType.nullable(num),
-    );
+    if (object.specificDate != null) {
+      yield r'specificDate';
+      yield serializers.serialize(
+        object.specificDate,
+        specifiedType: const FullType(num),
+      );
+    }
     if (object.isActive != null) {
       yield r'isActive';
       yield serializers.serialize(
@@ -206,9 +208,8 @@ class _$ScheduleSerializer implements PrimitiveSerializer<Schedule> {
         case r'specificDate':
           final valueDes = serializers.deserialize(
             value,
-            specifiedType: const FullType.nullable(num),
-          ) as num?;
-          if (valueDes == null) continue;
+            specifiedType: const FullType(num),
+          ) as num;
           result.specificDate = valueDes;
           break;
         case r'isActive':

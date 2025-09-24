@@ -9,16 +9,18 @@ import 'package:api_client/src/auth/api_key_auth.dart';
 import 'package:api_client/src/auth/basic_auth.dart';
 import 'package:api_client/src/auth/bearer_auth.dart';
 import 'package:api_client/src/auth/oauth.dart';
+import 'package:api_client/src/api/configuration_api.dart';
+import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
 import 'package:api_client/src/api/order_api.dart';
-import 'package:api_client/src/api/promo_api.dart';
 import 'package:api_client/src/api/report_api.dart';
 import 'package:api_client/src/api/review_api.dart';
 import 'package:api_client/src/api/schedule_api.dart';
+import 'package:api_client/src/api/user_api.dart';
 
 class ApiClient {
-  static const String basePath = r'https://akademove-server.zenta.dev';
+  static const String basePath = r'https://akademove-server.zenta.dev/api';
 
   final Dio dio;
   final Serializers serializers;
@@ -71,6 +73,18 @@ class ApiClient {
     }
   }
 
+  /// Get ConfigurationApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  ConfigurationApi getConfigurationApi() {
+    return ConfigurationApi(dio, serializers);
+  }
+
+  /// Get CouponApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  CouponApi getCouponApi() {
+    return CouponApi(dio, serializers);
+  }
+
   /// Get DriverApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   DriverApi getDriverApi() {
@@ -89,12 +103,6 @@ class ApiClient {
     return OrderApi(dio, serializers);
   }
 
-  /// Get PromoApi instance, base route and serializer can be overridden by a given but be careful,
-  /// by doing that all interceptors will not be executed
-  PromoApi getPromoApi() {
-    return PromoApi(dio, serializers);
-  }
-
   /// Get ReportApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   ReportApi getReportApi() {
@@ -111,5 +119,11 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   ScheduleApi getScheduleApi() {
     return ScheduleApi(dio, serializers);
+  }
+
+  /// Get UserApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  UserApi getUserApi() {
+    return UserApi(dio, serializers);
   }
 }

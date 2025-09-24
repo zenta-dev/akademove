@@ -80,7 +80,7 @@ class _$Merchant extends Merchant {
   @override
   final Location? location;
   @override
-  final bool? isActive;
+  final bool isActive;
   @override
   final num rating;
   @override
@@ -98,7 +98,7 @@ class _$Merchant extends Merchant {
     required this.name,
     required this.address,
     this.location,
-    this.isActive,
+    required this.isActive,
     required this.rating,
     required this.createdAt,
     required this.updatedAt,
@@ -266,7 +266,11 @@ class MerchantBuilder implements Builder<Merchant, MerchantBuilder> {
               'address',
             ),
             location: _location?.build(),
-            isActive: isActive,
+            isActive: BuiltValueNullFieldError.checkNotNull(
+              isActive,
+              r'Merchant',
+              'isActive',
+            ),
             rating: BuiltValueNullFieldError.checkNotNull(
               rating,
               r'Merchant',
