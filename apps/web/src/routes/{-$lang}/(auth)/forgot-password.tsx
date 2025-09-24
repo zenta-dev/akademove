@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { m } from "@repo/i18n";
+import { localizeUrl, m } from "@repo/i18n";
 import { type ForgotPassword, ForgotPasswordSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -42,7 +42,7 @@ function RouteComponent() {
 		mutationFn: async (credentials: ForgotPassword) => {
 			const { error, data } = await authClient.requestPasswordReset({
 				...credentials,
-				redirectTo: `${import.meta.env.VITE_WEB_URL}/reset-password`,
+				redirectTo: `${localizeUrl(import.meta.env.VITE_WEB_URL)}/reset-password`,
 			});
 			if (error) throw new BetterAuthClientError(error.message, error);
 			return data;

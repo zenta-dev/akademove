@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { type SignUp, SignUpSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/client/auth";
+import { queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/sign-up")({
@@ -54,7 +55,11 @@ function RouteComponent() {
 		},
 		onSuccess: async () => {
 			toast.success(m.success_placeholder({ action: m.sign_up() }));
-			await router.navigate({ to: "/sign-in" });
+			await Promise.all([
+				router.invalidate(),
+				queryClient.invalidateQueries(),
+				router.navigate({ to: localizeHref("/sign-in") }),
+			]);
 		},
 		onError: (error: BetterAuthClientError) => {
 			toast.error(
@@ -191,7 +196,10 @@ function RouteComponent() {
 				</Form>
 				<div className="mt-6 flex items-center justify-center gap-2 text-sm">
 					<p className="text-muted-foreground">{m.already_have_an_account()}</p>
-					<Link to="/sign-in" className="text-blue-500 hover:underline">
+					<Link
+						to={localizeHref("/sign-in")}
+						className="text-blue-500 hover:underline"
+					>
 						{m.sign_in_here()}
 					</Link>
 				</div>

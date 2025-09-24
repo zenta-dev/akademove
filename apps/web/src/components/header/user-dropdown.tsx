@@ -1,6 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -12,13 +12,14 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/client/auth";
+import { queryClient } from "@/lib/client/orpc";
 import { cn } from "@/utils/cn";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { DashboardNavigator } from "./dashboard-navigator";
 
 export const UserDropdwon = () => {
-	const navigate = useNavigate();
+	const router = useRouter();
 	const { data: user, isPending } = useQuery({
 		queryKey: ["my-session"],
 		queryFn: async () => {
@@ -78,8 +79,12 @@ export const UserDropdwon = () => {
 							onClick={() => {
 								authClient.signOut({
 									fetchOptions: {
-										onSuccess: () => {
-											navigate({ to: localizeHref("/sign-in") });
+										onSuccess: async () => {
+											await Promise.all([
+												queryClient.invalidateQueries(),
+												router.invalidate(),
+												router.navigate({ to: localizeHref("/sign-in") }),
+											]);
 										},
 									},
 								});

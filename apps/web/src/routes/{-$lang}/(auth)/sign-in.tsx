@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { type SignIn, SignInSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/client/auth";
+import { queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/sign-in")({
@@ -63,10 +64,11 @@ function RouteComponent() {
 					name: result.data.user.name,
 				}),
 			});
+			await Promise.all([router.invalidate(), queryClient.invalidateQueries()]);
 			if (data?.redirect && data?.url) {
 				await router.navigate({ to: data.url });
 			} else {
-				await router.navigate({ to: "/{-$lang}" });
+				await router.navigate({ to: localizeHref("/") });
 			}
 		},
 		onError: (error: BetterAuthClientError) => {
@@ -128,7 +130,7 @@ function RouteComponent() {
 									<div className="flex items-center justify-between">
 										<FormLabel>{m.password()}</FormLabel>
 										<Link
-											to="/forgot-password"
+											to="/{-$lang}/forgot-password"
 											className="text-blue-500 text-sm hover:underline"
 										>
 											{m.forgot_password()}?
@@ -166,7 +168,10 @@ function RouteComponent() {
 				</Form>
 				<div className="mt-6 flex items-center justify-center gap-2 text-sm">
 					<p className="text-muted-foreground">{m.dont_have_an_account()}</p>
-					<Link to="/sign-up" className="text-blue-500 hover:underline">
+					<Link
+						to={localizeHref("/sign-up")}
+						className="text-blue-500 hover:underline"
+					>
 						{m.create_an_account()}
 					</Link>
 				</div>

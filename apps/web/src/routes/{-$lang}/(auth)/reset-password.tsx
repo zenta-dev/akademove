@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { m } from "@repo/i18n";
+import { localizeHref, m } from "@repo/i18n";
 import { type ResetPassword, ResetPasswordSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/client/auth";
+import { queryClient } from "@/lib/client/orpc";
 import { BetterAuthClientError } from "@/lib/error";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/reset-password")({
@@ -41,7 +42,8 @@ export const Route = createFileRoute("/{-$lang}/(auth)/reset-password")({
 	),
 	component: RouteComponent,
 	beforeLoad: ({ search }) => {
-		if (!search.token) redirect({ to: "/forgot-password", throw: true });
+		if (!search.token)
+			redirect({ to: localizeHref("/forgot-password"), throw: true });
 		return search;
 	},
 	loaderDeps: (c) => {
@@ -75,7 +77,11 @@ function RouteComponent() {
 					action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
 				}),
 			);
-			await router.navigate({ to: "/sign-in" });
+			await Promise.all([
+				router.invalidate(),
+				queryClient.invalidateQueries(),
+				router.navigate({ to: localizeHref("/sign-in") }),
+			]);
 		},
 		onError: (error: BetterAuthClientError) => {
 			toast.error(
