@@ -104,6 +104,21 @@ export const createMerchantMainRepository = (
 		}
 	}
 
+	async function getByUserId(id: string) {
+		try {
+			const result = await db.query.merchant.findFirst({
+				where: (f, op) => op.eq(f.userId, id),
+			});
+
+			if (!result) throw new RepositoryError("Failed get merchant from db");
+			return _composeEntity(result);
+		} catch (error) {
+			throw new RepositoryError(`Failed to get merchant by user id "${id}"`, {
+				prevError: error instanceof Error ? error : undefined,
+			});
+		}
+	}
+
 	async function create(
 		item: InsertMerchant & { userId: string },
 	): Promise<Merchant> {
@@ -174,7 +189,7 @@ export const createMerchantMainRepository = (
 		}
 	}
 
-	return { list, get, create, update, remove };
+	return { list, get, getByUserId, create, update, remove };
 };
 
 export type MerchantMainRepository = ReturnType<

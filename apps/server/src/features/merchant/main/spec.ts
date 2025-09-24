@@ -9,6 +9,18 @@ import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
 export const MerchantMainSpec = {
+	getMine: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/mine",
+		})
+		.output(
+			createSuccesSchema(
+				MerchantSchema,
+				"Successfully retrieved my merchant data",
+			),
+		),
 	list: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],

@@ -8,6 +8,18 @@ const os = implement(MerchantMainSpec)
 	.use(authMiddleware);
 
 export const MerchantMainHandler = os.router({
+	getMine: os.getMine
+		.use(hasPermission({ merchant: ["get"] }))
+		.handler(async ({ context }) => {
+			const result = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved merchant data", data: result },
+			};
+		}),
 	list: os.list
 		.use(hasPermission({ merchant: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
