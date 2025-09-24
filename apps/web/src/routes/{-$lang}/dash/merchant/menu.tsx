@@ -1,7 +1,11 @@
 import { m } from "@repo/i18n";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { UnderDevelopment } from "@/components/under-development";
+import { MerchantMenuTable } from "@/components/tables/menu/table";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
+import { orpcQuery } from "@/lib/client/orpc";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/{-$lang}/dash/merchant/menu")({
@@ -13,7 +17,7 @@ export const Route = createFileRoute("/{-$lang}/dash/merchant/menu")({
 		if (!ok) redirect({ to: "/{-$lang}", throw: true });
 		return { allowed: ok };
 	},
-	loader: ({ context }) => {
+	loader: async ({ context }) => {
 		return { allowed: context.allowed };
 	},
 	component: RouteComponent,
@@ -23,6 +27,7 @@ function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
 	if (!allowed) navigate({ to: "/{-$lang}" });
+	const merchant = useQuery(orpcQuery.merchant.getMine.queryOptions());
 
 	return (
 		<>
@@ -30,7 +35,15 @@ function RouteComponent() {
 				<h2 className="font-medium text-xl">{m.menu()}</h2>
 				<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 			</div>
-			<UnderDevelopment />
+			{merchant.isPending ? (
+				<Skeleton className="h-96 w-full" />
+			) : (
+				<Card className="p-0">
+					<CardContent className="p-0">
+						<MerchantMenuTable merchantId={merchant.data?.body.data.id ?? ""} />
+					</CardContent>
+				</Card>
+			)}
 		</>
 	);
 }
