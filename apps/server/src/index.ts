@@ -89,7 +89,7 @@ const apiHandler = new OpenAPIHandler(ServerRouter, {
 					MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
 					Order: { schema: OrderSchema, strategy: "output" },
 					Report: { schema: ReportSchema, strategy: "output" },
-					Cupon: { schema: CouponSchema, strategy: "output" },
+					Coupon: { schema: CouponSchema, strategy: "output" },
 					Review: { schema: ReviewSchema, strategy: "output" },
 					Schedule: { schema: ScheduleSchema, strategy: "output" },
 					User: { schema: UserSchema, strategy: "output" },

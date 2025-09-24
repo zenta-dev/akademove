@@ -39,6 +39,10 @@ export const getAuth = (
 			enabled: true,
 			storage: "secondary-storage",
 		},
+		// uncomment this if want generate full oapi spec
+		// session: {
+		// 	storeSessionInDatabase: true, // for generate oapi
+		// },
 		emailAndPassword: {
 			enabled: true,
 			password: {

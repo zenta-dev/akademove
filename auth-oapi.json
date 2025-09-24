@@ -10,46 +10,127 @@
 			"User": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "string" },
-					"name": { "type": "string" },
-					"email": { "type": "string" },
-					"emailVerified": { "type": "boolean", "default": false },
-					"image": { "type": "string" },
-					"createdAt": { "type": "string", "default": "Generated at runtime" },
-					"updatedAt": { "type": "string", "default": "Generated at runtime" }
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"emailVerified": {
+						"type": "boolean",
+						"default": false
+					},
+					"image": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					},
+					"updatedAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					},
+					"role": {
+						"type": "string",
+						"readOnly": true
+					},
+					"banned": {
+						"type": "boolean",
+						"default": false,
+						"readOnly": true
+					},
+					"banReason": {
+						"type": "string",
+						"readOnly": true
+					},
+					"banExpires": {
+						"type": "string",
+						"readOnly": true
+					}
 				},
 				"required": ["name", "email", "emailVerified", "createdAt", "updatedAt"]
 			},
 			"Session": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "string" },
-					"expiresAt": { "type": "string" },
-					"token": { "type": "string" },
-					"createdAt": { "type": "string", "default": "Generated at runtime" },
-					"updatedAt": { "type": "string" },
-					"ipAddress": { "type": "string" },
-					"userAgent": { "type": "string" },
-					"userId": { "type": "string" }
+					"id": {
+						"type": "string"
+					},
+					"expiresAt": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					},
+					"updatedAt": {
+						"type": "string"
+					},
+					"ipAddress": {
+						"type": "string"
+					},
+					"userAgent": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"impersonatedBy": {
+						"type": "string"
+					}
 				},
 				"required": ["expiresAt", "token", "createdAt", "updatedAt", "userId"]
 			},
 			"Account": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "string" },
-					"accountId": { "type": "string" },
-					"providerId": { "type": "string" },
-					"userId": { "type": "string" },
-					"accessToken": { "type": "string" },
-					"refreshToken": { "type": "string" },
-					"idToken": { "type": "string" },
-					"accessTokenExpiresAt": { "type": "string" },
-					"refreshTokenExpiresAt": { "type": "string" },
-					"scope": { "type": "string" },
-					"password": { "type": "string" },
-					"createdAt": { "type": "string", "default": "Generated at runtime" },
-					"updatedAt": { "type": "string" }
+					"id": {
+						"type": "string"
+					},
+					"accountId": {
+						"type": "string"
+					},
+					"providerId": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"accessToken": {
+						"type": "string"
+					},
+					"refreshToken": {
+						"type": "string"
+					},
+					"idToken": {
+						"type": "string"
+					},
+					"accessTokenExpiresAt": {
+						"type": "string"
+					},
+					"refreshTokenExpiresAt": {
+						"type": "string"
+					},
+					"scope": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					},
+					"updatedAt": {
+						"type": "string"
+					}
 				},
 				"required": [
 					"accountId",
@@ -62,12 +143,26 @@
 			"Verification": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "string" },
-					"identifier": { "type": "string" },
-					"value": { "type": "string" },
-					"expiresAt": { "type": "string" },
-					"createdAt": { "type": "string", "default": "Generated at runtime" },
-					"updatedAt": { "type": "string", "default": "Generated at runtime" }
+					"id": {
+						"type": "string"
+					},
+					"identifier": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					},
+					"expiresAt": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					},
+					"updatedAt": {
+						"type": "string",
+						"default": "Generated at runtime"
+					}
 				},
 				"required": [
 					"identifier",
@@ -92,8 +187,17 @@
 			}
 		}
 	},
-	"security": [{ "apiKeyCookie": [], "bearerAuth": [] }],
-	"servers": [{ "url": "https://akademove-server.zenta.dev/auth" }],
+	"security": [
+		{
+			"apiKeyCookie": [],
+			"bearerAuth": []
+		}
+	],
+	"servers": [
+		{
+			"url": "http://localhost:3000/auth"
+		}
+	],
 	"tags": [
 		{
 			"name": "Default",
@@ -106,7 +210,11 @@
 				"tags": ["Default"],
 				"description": "Sign in with a social provider",
 				"operationId": "socialSignIn",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -120,13 +228,18 @@
 										"description": "Callback URL to redirect to after the user has signed in",
 										"nullable": true
 									},
-									"newUserCallbackURL": { "type": "string", "nullable": true },
+									"newUserCallbackURL": {
+										"type": "string",
+										"nullable": true
+									},
 									"errorCallbackURL": {
 										"type": "string",
 										"description": "Callback URL to redirect to if an error happens",
 										"nullable": true
 									},
-									"provider": { "type": "string" },
+									"provider": {
+										"type": "string"
+									},
 									"disableRedirect": {
 										"type": "boolean",
 										"description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself",
@@ -193,19 +306,37 @@
 									"type": "object",
 									"description": "Session response when idToken is provided",
 									"properties": {
-										"redirect": { "type": "boolean", "enum": [false] },
+										"redirect": {
+											"type": "boolean",
+											"enum": [false]
+										},
 										"token": {
 											"type": "string",
 											"description": "Session token",
-											"url": { "type": "null", "nullable": true },
+											"url": {
+												"type": "null",
+												"nullable": true
+											},
 											"user": {
 												"type": "object",
 												"properties": {
-													"id": { "type": "string" },
-													"email": { "type": "string" },
-													"name": { "type": "string", "nullable": true },
-													"image": { "type": "string", "nullable": true },
-													"emailVerified": { "type": "boolean" },
+													"id": {
+														"type": "string"
+													},
+													"email": {
+														"type": "string"
+													},
+													"name": {
+														"type": "string",
+														"nullable": true
+													},
+													"image": {
+														"type": "string",
+														"nullable": true
+													},
+													"emailVerified": {
+														"type": "boolean"
+													},
 													"createdAt": {
 														"type": "string",
 														"format": "date-time"
@@ -235,7 +366,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -247,7 +382,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -259,7 +398,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -270,7 +413,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -281,7 +428,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -292,7 +443,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -305,7 +460,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Get the current session",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"responses": {
 					"200": {
@@ -315,8 +474,12 @@
 								"schema": {
 									"type": "object",
 									"properties": {
-										"session": { "$ref": "#/components/schemas/Session" },
-										"user": { "$ref": "#/components/schemas/User" }
+										"session": {
+											"$ref": "#/components/schemas/Session"
+										},
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
 									},
 									"required": ["session", "user"]
 								}
@@ -328,7 +491,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -340,7 +507,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -352,7 +523,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -363,7 +538,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -374,7 +553,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -385,7 +568,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -398,12 +585,19 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Sign out the current user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
-							"schema": { "type": "object", "properties": {} }
+							"schema": {
+								"type": "object",
+								"properties": {}
+							}
 						}
 					}
 				},
@@ -414,7 +608,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "success": { "type": "boolean" } }
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
 								}
 							}
 						}
@@ -424,7 +622,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -436,7 +638,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -448,7 +654,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -459,7 +669,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -470,7 +684,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -481,7 +699,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -494,7 +716,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Sign up a user using email and password",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
@@ -602,7 +828,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -614,7 +844,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -626,7 +860,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -637,7 +875,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -649,7 +891,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						}
@@ -659,7 +905,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -670,7 +920,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -683,7 +937,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Sign in with email and password",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -705,7 +963,10 @@
 										"description": "Callback URL to use as a redirect for email verification",
 										"nullable": true
 									},
-									"rememberMe": { "type": "string", "nullable": true }
+									"rememberMe": {
+										"type": "string",
+										"nullable": true
+									}
 								},
 								"required": ["email", "password"]
 							}
@@ -721,25 +982,46 @@
 									"type": "object",
 									"description": "Session response when idToken is provided",
 									"properties": {
-										"redirect": { "type": "boolean", "enum": [false] },
+										"redirect": {
+											"type": "boolean",
+											"enum": [false]
+										},
 										"token": {
 											"type": "string",
 											"description": "Session token"
 										},
-										"url": { "type": "null", "nullable": true },
+										"url": {
+											"type": "null",
+											"nullable": true
+										},
 										"user": {
 											"type": "object",
 											"properties": {
-												"id": { "type": "string" },
-												"email": { "type": "string" },
-												"name": { "type": "string", "nullable": true },
-												"image": { "type": "string", "nullable": true },
-												"emailVerified": { "type": "boolean" },
+												"id": {
+													"type": "string"
+												},
+												"email": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string",
+													"nullable": true
+												},
+												"image": {
+													"type": "string",
+													"nullable": true
+												},
+												"emailVerified": {
+													"type": "boolean"
+												},
 												"createdAt": {
 													"type": "string",
 													"format": "date-time"
 												},
-												"updatedAt": { "type": "string", "format": "date-time" }
+												"updatedAt": {
+													"type": "string",
+													"format": "date-time"
+												}
 											},
 											"required": [
 												"id",
@@ -760,7 +1042,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -772,7 +1058,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -784,7 +1074,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -795,7 +1089,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -806,7 +1104,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -817,7 +1119,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -830,7 +1136,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Send a password reset email to the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -862,8 +1172,12 @@
 								"schema": {
 									"type": "object",
 									"properties": {
-										"status": { "type": "boolean" },
-										"message": { "type": "string" }
+										"status": {
+											"type": "boolean"
+										},
+										"message": {
+											"type": "string"
+										}
 									}
 								}
 							}
@@ -874,7 +1188,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -886,7 +1204,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -898,7 +1220,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -909,7 +1235,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -920,7 +1250,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -931,7 +1265,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -944,7 +1282,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Reset the password for a user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -975,7 +1317,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "status": { "type": "boolean" } }
+									"properties": {
+										"status": {
+											"type": "boolean"
+										}
+									}
 								}
 							}
 						}
@@ -985,7 +1331,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -997,7 +1347,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1009,7 +1363,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1020,7 +1378,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1031,7 +1393,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1042,7 +1408,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1055,21 +1425,29 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Verify the email of the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [
 					{
 						"name": "token",
 						"in": "query",
 						"description": "The token to verify the email",
 						"required": true,
-						"schema": { "type": "string" }
+						"schema": {
+							"type": "string"
+						}
 					},
 					{
 						"name": "callbackURL",
 						"in": "query",
 						"description": "The URL to redirect to after email verification",
 						"required": false,
-						"schema": { "type": "string" }
+						"schema": {
+							"type": "string"
+						}
 					}
 				],
 				"responses": {
@@ -1083,7 +1461,10 @@
 										"user": {
 											"type": "object",
 											"properties": {
-												"id": { "type": "string", "description": "User ID" },
+												"id": {
+													"type": "string",
+													"description": "User ID"
+												},
 												"email": {
 													"type": "string",
 													"description": "User email"
@@ -1134,7 +1515,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1146,7 +1531,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1158,7 +1547,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1169,7 +1562,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1180,7 +1577,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1191,7 +1592,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1204,7 +1609,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Send a verification email to the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
@@ -1269,7 +1678,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1281,7 +1694,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1292,7 +1709,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1303,7 +1724,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1314,7 +1739,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1326,7 +1755,11 @@
 		"/change-email": {
 			"post": {
 				"tags": ["Default"],
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1379,7 +1812,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1391,7 +1828,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1403,7 +1844,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1414,7 +1859,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1426,7 +1875,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						}
@@ -1436,7 +1889,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1447,7 +1904,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1460,7 +1921,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Change the password of the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1558,7 +2023,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1570,7 +2039,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1582,7 +2055,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1593,7 +2070,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1604,7 +2085,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1615,7 +2100,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1628,7 +2117,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Update the current user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
@@ -1671,7 +2164,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1683,7 +2180,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1695,7 +2196,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1706,7 +2211,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1717,7 +2226,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1728,7 +2241,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1741,7 +2258,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Delete the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1799,7 +2320,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1811,7 +2336,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1823,7 +2352,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1834,7 +2367,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1845,7 +2382,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1856,7 +2397,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1869,13 +2414,19 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Redirects the user to the callback URL with the token",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [
 					{
 						"name": "token",
 						"in": "path",
 						"required": true,
-						"schema": { "type": "string" },
+						"schema": {
+							"type": "string"
+						},
 						"description": "Password reset token"
 					},
 					{
@@ -1894,7 +2445,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "token": { "type": "string" } }
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						}
@@ -1904,7 +2459,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1916,7 +2475,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -1928,7 +2491,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1939,7 +2506,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1950,7 +2521,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1961,7 +2536,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -1974,7 +2553,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Send a password reset email to the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2006,8 +2589,12 @@
 								"schema": {
 									"type": "object",
 									"properties": {
-										"status": { "type": "boolean" },
-										"message": { "type": "string" }
+										"status": {
+											"type": "boolean"
+										},
+										"message": {
+											"type": "string"
+										}
 									}
 								}
 							}
@@ -2018,7 +2605,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2030,7 +2621,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2042,7 +2637,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2053,7 +2652,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2064,7 +2667,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2075,7 +2682,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2088,7 +2699,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "List all active sessions for the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"responses": {
 					"200": {
@@ -2097,7 +2712,9 @@
 							"application/json": {
 								"schema": {
 									"type": "array",
-									"items": { "$ref": "#/components/schemas/Session" }
+									"items": {
+										"$ref": "#/components/schemas/Session"
+									}
 								}
 							}
 						}
@@ -2107,7 +2724,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2119,7 +2740,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2131,7 +2756,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2142,7 +2771,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2153,7 +2786,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2164,7 +2801,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2177,7 +2818,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Revoke a single session",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
@@ -2218,7 +2863,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2230,7 +2879,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2242,7 +2895,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2253,7 +2910,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2264,7 +2925,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2275,7 +2940,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2288,12 +2957,19 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Revoke all sessions for the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
-							"schema": { "type": "object", "properties": {} }
+							"schema": {
+								"type": "object",
+								"properties": {}
+							}
 						}
 					}
 				},
@@ -2320,7 +2996,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2332,7 +3012,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2344,7 +3028,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2355,7 +3043,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2366,7 +3058,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2377,7 +3073,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2390,12 +3090,19 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Revoke all other sessions for the user except the current one",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"content": {
 						"application/json": {
-							"schema": { "type": "object", "properties": {} }
+							"schema": {
+								"type": "object",
+								"properties": {}
+							}
 						}
 					}
 				},
@@ -2422,7 +3129,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2434,7 +3145,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2446,7 +3161,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2457,7 +3176,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2468,7 +3191,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2479,7 +3206,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2492,7 +3223,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Link a social account to the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2506,20 +3241,39 @@
 										"description": "The URL to redirect to after the user has signed in",
 										"nullable": true
 									},
-									"provider": { "type": "string" },
+									"provider": {
+										"type": "string"
+									},
 									"idToken": {
 										"type": "object",
 										"properties": {
-											"token": { "type": "string" },
-											"nonce": { "type": "string", "nullable": true },
-											"accessToken": { "type": "string", "nullable": true },
-											"refreshToken": { "type": "string", "nullable": true },
-											"scopes": { "type": "array", "nullable": true }
+											"token": {
+												"type": "string"
+											},
+											"nonce": {
+												"type": "string",
+												"nullable": true
+											},
+											"accessToken": {
+												"type": "string",
+												"nullable": true
+											},
+											"refreshToken": {
+												"type": "string",
+												"nullable": true
+											},
+											"scopes": {
+												"type": "array",
+												"nullable": true
+											}
 										},
 										"required": ["token"],
 										"nullable": true
 									},
-									"requestSignUp": { "type": "boolean", "nullable": true },
+									"requestSignUp": {
+										"type": "boolean",
+										"nullable": true
+									},
 									"scopes": {
 										"type": "array",
 										"description": "Additional scopes to request from the provider",
@@ -2557,7 +3311,9 @@
 											"type": "boolean",
 											"description": "Indicates if the user should be redirected to the authorization URL"
 										},
-										"status": { "type": "boolean" }
+										"status": {
+											"type": "boolean"
+										}
 									},
 									"required": ["redirect"]
 								}
@@ -2569,7 +3325,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2581,7 +3341,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2593,7 +3357,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2604,7 +3372,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2615,7 +3387,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2626,7 +3402,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2639,7 +3419,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "List all accounts linked to the user",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"responses": {
 					"200": {
@@ -2651,14 +3435,28 @@
 									"items": {
 										"type": "object",
 										"properties": {
-											"id": { "type": "string" },
-											"providerId": { "type": "string" },
-											"createdAt": { "type": "string", "format": "date-time" },
-											"updatedAt": { "type": "string", "format": "date-time" },
-											"accountId": { "type": "string" },
+											"id": {
+												"type": "string"
+											},
+											"providerId": {
+												"type": "string"
+											},
+											"createdAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"updatedAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"accountId": {
+												"type": "string"
+											},
 											"scopes": {
 												"type": "array",
-												"items": { "type": "string" }
+												"items": {
+													"type": "string"
+												}
 											}
 										},
 										"required": [
@@ -2679,7 +3477,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2691,7 +3493,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2703,7 +3509,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2714,7 +3524,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2725,7 +3539,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2736,7 +3554,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2749,7 +3571,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Callback to complete user deletion with verification token",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [
 					{
 						"name": "token",
@@ -2797,7 +3623,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2809,7 +3639,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2821,7 +3655,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2832,7 +3670,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2843,7 +3685,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2854,7 +3700,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2867,7 +3717,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Unlink an account",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2876,8 +3730,13 @@
 							"schema": {
 								"type": "object",
 								"properties": {
-									"providerId": { "type": "string" },
-									"accountId": { "type": "string", "nullable": true }
+									"providerId": {
+										"type": "string"
+									},
+									"accountId": {
+										"type": "string",
+										"nullable": true
+									}
 								},
 								"required": ["providerId"]
 							}
@@ -2891,7 +3750,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "status": { "type": "boolean" } }
+									"properties": {
+										"status": {
+											"type": "boolean"
+										}
+									}
 								}
 							}
 						}
@@ -2901,7 +3764,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2913,7 +3780,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -2925,7 +3796,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2936,7 +3811,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2947,7 +3826,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2958,7 +3841,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -2971,7 +3858,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Refresh the access token using a refresh token",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3008,10 +3899,18 @@
 								"schema": {
 									"type": "object",
 									"properties": {
-										"tokenType": { "type": "string" },
-										"idToken": { "type": "string" },
-										"accessToken": { "type": "string" },
-										"refreshToken": { "type": "string" },
+										"tokenType": {
+											"type": "string"
+										},
+										"idToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
 										"accessTokenExpiresAt": {
 											"type": "string",
 											"format": "date-time"
@@ -3033,7 +3932,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3045,7 +3948,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3056,7 +3963,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3067,7 +3978,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3078,7 +3993,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3091,7 +4010,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Get a valid access token, doing a refresh if needed",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3128,10 +4051,18 @@
 								"schema": {
 									"type": "object",
 									"properties": {
-										"tokenType": { "type": "string" },
-										"idToken": { "type": "string" },
-										"accessToken": { "type": "string" },
-										"refreshToken": { "type": "string" },
+										"tokenType": {
+											"type": "string"
+										},
+										"idToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
 										"accessTokenExpiresAt": {
 											"type": "string",
 											"format": "date-time"
@@ -3153,7 +4084,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3165,7 +4100,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3176,7 +4115,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3187,7 +4130,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3198,7 +4145,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3211,7 +4162,11 @@
 			"post": {
 				"tags": ["Default"],
 				"description": "Get the account info provided by the provider",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3241,11 +4196,21 @@
 										"user": {
 											"type": "object",
 											"properties": {
-												"id": { "type": "string" },
-												"name": { "type": "string" },
-												"email": { "type": "string" },
-												"image": { "type": "string" },
-												"emailVerified": { "type": "boolean" }
+												"id": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												},
+												"email": {
+													"type": "string"
+												},
+												"image": {
+													"type": "string"
+												},
+												"emailVerified": {
+													"type": "boolean"
+												}
 											},
 											"required": ["id", "emailVerified"]
 										},
@@ -3266,7 +4231,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3278,7 +4247,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3290,7 +4263,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3301,7 +4278,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3312,7 +4293,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3323,7 +4308,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3336,7 +4325,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Check if the API is working",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"responses": {
 					"200": {
@@ -3361,7 +4354,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3373,7 +4370,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3385,7 +4386,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3396,7 +4401,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3407,7 +4416,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3418,7 +4431,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3431,7 +4448,11 @@
 			"get": {
 				"tags": ["Default"],
 				"description": "Displays an error page",
-				"security": [{ "bearerAuth": [] }],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
 				"parameters": [],
 				"responses": {
 					"200": {
@@ -3450,7 +4471,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3462,7 +4487,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } },
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
 									"required": ["message"]
 								}
 							}
@@ -3474,7 +4503,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3485,7 +4518,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3496,7 +4533,11 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
@@ -3507,7 +4548,2188 @@
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"properties": { "message": { "type": "string" } }
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/set-role": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Set the role of a user",
+				"operationId": "setRole",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									},
+									"role": {
+										"type": "string",
+										"description": "The role to set, this can be a string or an array of strings. Eg: `admin` or `[admin, user]`"
+									}
+								},
+								"required": ["userId", "role"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User role updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/get-user": {
+			"get": {
+				"tags": ["Admin"],
+				"description": "Get an existing user",
+				"operationId": "getUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The id of the User"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "User",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/create-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Create a new user",
+				"operationId": "createUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string",
+										"description": "The email of the user"
+									},
+									"password": {
+										"type": "string",
+										"description": "The password of the user"
+									},
+									"name": {
+										"type": "string",
+										"description": "The name of the user"
+									},
+									"role": {
+										"type": "string",
+										"nullable": true
+									},
+									"data": {
+										"type": "string",
+										"nullable": true
+									}
+								},
+								"required": ["email", "password", "name"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/update-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Update a user's details",
+				"operationId": "updateUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									},
+									"data": {
+										"type": "string",
+										"description": "The user data to update"
+									}
+								},
+								"required": ["userId", "data"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/list-users": {
+			"get": {
+				"tags": ["Admin"],
+				"description": "List users",
+				"operationId": "listUsers",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"name": "searchValue",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "searchField",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The field to search in, defaults to email. Can be `email` or `name`. Eg: \"name\"",
+							"nullable": true
+						}
+					},
+					{
+						"name": "searchOperator",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The operator to use for the search. Can be `contains`, `starts_with` or `ends_with`. Eg: \"contains\"",
+							"nullable": true
+						}
+					},
+					{
+						"name": "limit",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "offset",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "sortBy",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The field to sort by",
+							"nullable": true
+						}
+					},
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The direction to sort by",
+							"nullable": true
+						}
+					},
+					{
+						"name": "filterField",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The field to filter by",
+							"nullable": true
+						}
+					},
+					{
+						"name": "filterValue",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "filterOperator",
+						"in": "query",
+						"schema": {
+							"type": "string",
+							"description": "The operator to use for the filter",
+							"nullable": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "List of users",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"users": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/User"
+											}
+										},
+										"total": {
+											"type": "number"
+										},
+										"limit": {
+											"type": "number"
+										},
+										"offset": {
+											"type": "number"
+										}
+									},
+									"required": ["users", "total"]
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/list-user-sessions": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "List user sessions",
+				"operationId": "listUserSessions",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "List of user sessions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"sessions": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Session"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/unban-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Unban a user",
+				"operationId": "unbanUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User unbanned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/ban-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Ban a user",
+				"operationId": "banUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									},
+									"banReason": {
+										"type": "string",
+										"description": "The reason for the ban",
+										"nullable": true
+									},
+									"banExpiresIn": {
+										"type": "number",
+										"description": "The number of seconds until the ban expires",
+										"nullable": true
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User banned",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/impersonate-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Impersonate a user",
+				"operationId": "impersonateUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Impersonation session created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"session": {
+											"$ref": "#/components/schemas/Session"
+										},
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/stop-impersonating": {
+			"post": {
+				"tags": ["Admin"],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"responses": {
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/revoke-user-session": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Revoke a user session",
+				"operationId": "revokeUserSession",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"sessionToken": {
+										"type": "string",
+										"description": "The session token"
+									}
+								},
+								"required": ["sessionToken"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Session revoked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/revoke-user-sessions": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Revoke all user sessions",
+				"operationId": "revokeUserSessions",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Sessions revoked",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/remove-user": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Delete a user and all their sessions and accounts. Cannot be undone.",
+				"operationId": "removeUser",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User removed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/set-user-password": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Set a user's password",
+				"operationId": "setUserPassword",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"newPassword": {
+										"type": "string",
+										"description": "The new password"
+									},
+									"userId": {
+										"type": "string",
+										"description": "The user id"
+									}
+								},
+								"required": ["newPassword", "userId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Password set",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "boolean"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Internal Server Error. This is a problem with the server that you cannot fix."
+					}
+				}
+			}
+		},
+		"/admin/has-permission": {
+			"post": {
+				"tags": ["Admin"],
+				"description": "Check if the user has permission",
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"permission": {
+										"type": "object",
+										"description": "The permission to check",
+										"deprecated": true
+									},
+									"permissions": {
+										"type": "object",
+										"description": "The permission to check"
+									}
+								},
+								"required": ["permissions"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "string"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": ["success"]
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Bad Request. Usually due to missing parameters, or invalid parameters."
+					},
+					"401": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": ["message"]
+								}
+							}
+						},
+						"description": "Unauthorized. Due to missing or invalid authentication."
+					},
+					"403": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Forbidden. You do not have permission to access this resource or to perform this action."
+					},
+					"404": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Not Found. The requested resource was not found."
+					},
+					"429": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						},
+						"description": "Too Many Requests. You have exceeded the rate limit. Try again later."
+					},
+					"500": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
 								}
 							}
 						},
