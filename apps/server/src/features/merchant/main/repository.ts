@@ -11,7 +11,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 
-export const createMerchantRepository = (
+export const createMerchantMainRepository = (
 	db: DatabaseService,
 	kv: KeyValueService,
 ) => {
@@ -177,4 +177,6 @@ export const createMerchantRepository = (
 	return { list, get, create, update, remove };
 };
 
-export type MerchantRepository = ReturnType<typeof createMerchantRepository>;
+export type MerchantMainRepository = ReturnType<
+	typeof createMerchantMainRepository
+>;

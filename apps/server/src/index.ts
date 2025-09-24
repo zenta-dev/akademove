@@ -9,7 +9,7 @@ import { LocationSchema, TimeSchema } from "@repo/schema/common";
 import { ConfigurationSchema } from "@repo/schema/configuration";
 import { CouponSchema } from "@repo/schema/coupon";
 import { DriverSchema } from "@repo/schema/driver";
-import { MerchantSchema } from "@repo/schema/merchant";
+import { MerchantMenuSchema, MerchantSchema } from "@repo/schema/merchant";
 import { OrderSchema } from "@repo/schema/order";
 import { ReportSchema } from "@repo/schema/report";
 import { ReviewSchema } from "@repo/schema/review";
@@ -29,7 +29,8 @@ import { ServerRouter } from "./features";
 import { createConfigurationRepository } from "./features/configuration/repository";
 import { createCouponRepository } from "./features/coupon/repository";
 import { createDriverRepository } from "./features/driver/repository";
-import { createMerchantRepository } from "./features/merchant/repository";
+import { createMerchantMainRepository } from "./features/merchant/main/repository";
+import { createMerchantMenuRepository } from "./features/merchant/menu/repository";
 import { createOrderRepository } from "./features/order/repository";
 import { createReportRepository } from "./features/report/repository";
 import { createReviewRepository } from "./features/review/repository";
@@ -85,6 +86,7 @@ const apiHandler = new OpenAPIHandler(ServerRouter, {
 					Configuration: { schema: ConfigurationSchema, strategy: "output" },
 					Driver: { schema: DriverSchema, strategy: "output" },
 					Merchant: { schema: MerchantSchema, strategy: "output" },
+					MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
 					Order: { schema: OrderSchema, strategy: "output" },
 					Report: { schema: ReportSchema, strategy: "output" },
 					Cupon: { schema: CouponSchema, strategy: "output" },
@@ -141,7 +143,10 @@ app.use("/*", async (c, next) => {
 		repo: {
 			configuration: createConfigurationRepository(c.var.db, c.var.kv),
 			driver: createDriverRepository(c.var.db, c.var.kv),
-			merchant: createMerchantRepository(c.var.db, c.var.kv),
+			merchant: {
+				main: createMerchantMainRepository(c.var.db, c.var.kv),
+				menu: createMerchantMenuRepository(c.var.db, c.var.kv),
+			},
 			order: createOrderRepository(c.var.db, c.var.kv),
 			coupon: createCouponRepository(c.var.db, c.var.kv),
 			report: createReportRepository(c.var.db, c.var.kv),
