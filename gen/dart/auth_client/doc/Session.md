@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **ipAddress** | **String** |  | [optional] 
 **userAgent** | **String** |  | [optional] 
 **userId** | **String** |  | 
+**impersonatedBy** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

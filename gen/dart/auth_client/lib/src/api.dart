@@ -9,10 +9,11 @@ import 'package:auth_client/src/auth/api_key_auth.dart';
 import 'package:auth_client/src/auth/basic_auth.dart';
 import 'package:auth_client/src/auth/bearer_auth.dart';
 import 'package:auth_client/src/auth/oauth.dart';
+import 'package:auth_client/src/api/admin_api.dart';
 import 'package:auth_client/src/api/default_api.dart';
 
 class AuthClient {
-  static const String basePath = r'https://akademove-server.zenta.dev/auth';
+  static const String basePath = r'http://localhost:3000/auth';
 
   final Dio dio;
   final Serializers serializers;
@@ -63,6 +64,12 @@ class AuthClient {
     if (this.dio.interceptors.any((i) => i is ApiKeyAuthInterceptor)) {
       (this.dio.interceptors.firstWhere((element) => element is ApiKeyAuthInterceptor) as ApiKeyAuthInterceptor).apiKeys[name] = apiKey;
     }
+  }
+
+  /// Get AdminApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  AdminApi getAdminApi() {
+    return AdminApi(dio, serializers);
   }
 
   /// Get DefaultApi instance, base route and serializer can be overridden by a given but be careful,

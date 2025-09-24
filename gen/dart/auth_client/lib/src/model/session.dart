@@ -19,6 +19,7 @@ part 'session.g.dart';
 /// * [ipAddress] 
 /// * [userAgent] 
 /// * [userId] 
+/// * [impersonatedBy] 
 @BuiltValue()
 abstract class Session implements Built<Session, SessionBuilder> {
   @BuiltValueField(wireName: r'id')
@@ -44,6 +45,9 @@ abstract class Session implements Built<Session, SessionBuilder> {
 
   @BuiltValueField(wireName: r'userId')
   String get userId;
+
+  @BuiltValueField(wireName: r'impersonatedBy')
+  String? get impersonatedBy;
 
   Session._();
 
@@ -115,6 +119,13 @@ class _$SessionSerializer implements PrimitiveSerializer<Session> {
       object.userId,
       specifiedType: const FullType(String),
     );
+    if (object.impersonatedBy != null) {
+      yield r'impersonatedBy';
+      yield serializers.serialize(
+        object.impersonatedBy,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override
@@ -193,6 +204,13 @@ class _$SessionSerializer implements PrimitiveSerializer<Session> {
             specifiedType: const FullType(String),
           ) as String;
           result.userId = valueDes;
+          break;
+        case r'impersonatedBy':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.impersonatedBy = valueDes;
           break;
         default:
           unhandled.add(key);

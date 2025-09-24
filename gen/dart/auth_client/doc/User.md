@@ -15,6 +15,10 @@ Name | Type | Description | Notes
 **image** | **String** |  | [optional] 
 **createdAt** | **String** |  | [default to 'Generated at runtime']
 **updatedAt** | **String** |  | [default to 'Generated at runtime']
+**role** | **String** |  | [optional] 
+**banned** | **bool** |  | [optional] [default to false]
+**banReason** | **String** |  | [optional] 
+**banExpires** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

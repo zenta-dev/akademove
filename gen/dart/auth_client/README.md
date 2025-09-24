@@ -47,24 +47,39 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:auth_client/auth_client.dart';
 
 
-final api = AuthClient().getDefaultApi();
-final AccountInfoPostRequest accountInfoPostRequest = ; // AccountInfoPostRequest | 
+final api = AuthClient().getAdminApi();
+final AdminHasPermissionPostRequest adminHasPermissionPostRequest = ; // AdminHasPermissionPostRequest | 
 
 try {
-    final response = await api.accountInfoPost(accountInfoPostRequest);
+    final response = await api.adminHasPermissionPost(adminHasPermissionPostRequest);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling DefaultApi->accountInfoPost: $e\n");
+    print("Exception when calling AdminApi->adminHasPermissionPost: $e\n");
 }
 
 ```
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://akademove-server.zenta.dev/auth*
+All URIs are relative to *http://localhost:3000/auth*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AdminApi*](doc/AdminApi.md) | [**adminHasPermissionPost**](doc/AdminApi.md#adminhaspermissionpost) | **POST** /admin/has-permission | 
+[*AdminApi*](doc/AdminApi.md) | [**adminStopImpersonatingPost**](doc/AdminApi.md#adminstopimpersonatingpost) | **POST** /admin/stop-impersonating | 
+[*AdminApi*](doc/AdminApi.md) | [**banUser**](doc/AdminApi.md#banuser) | **POST** /admin/ban-user | 
+[*AdminApi*](doc/AdminApi.md) | [**createUser**](doc/AdminApi.md#createuser) | **POST** /admin/create-user | 
+[*AdminApi*](doc/AdminApi.md) | [**getUser**](doc/AdminApi.md#getuser) | **GET** /admin/get-user | 
+[*AdminApi*](doc/AdminApi.md) | [**impersonateUser**](doc/AdminApi.md#impersonateuser) | **POST** /admin/impersonate-user | 
+[*AdminApi*](doc/AdminApi.md) | [**listUserSessions**](doc/AdminApi.md#listusersessions) | **POST** /admin/list-user-sessions | 
+[*AdminApi*](doc/AdminApi.md) | [**listUsers**](doc/AdminApi.md#listusers) | **GET** /admin/list-users | 
+[*AdminApi*](doc/AdminApi.md) | [**removeUser**](doc/AdminApi.md#removeuser) | **POST** /admin/remove-user | 
+[*AdminApi*](doc/AdminApi.md) | [**revokeUserSession**](doc/AdminApi.md#revokeusersession) | **POST** /admin/revoke-user-session | 
+[*AdminApi*](doc/AdminApi.md) | [**revokeUserSessions**](doc/AdminApi.md#revokeusersessions) | **POST** /admin/revoke-user-sessions | 
+[*AdminApi*](doc/AdminApi.md) | [**setRole**](doc/AdminApi.md#setrole) | **POST** /admin/set-role | 
+[*AdminApi*](doc/AdminApi.md) | [**setUserPassword**](doc/AdminApi.md#setuserpassword) | **POST** /admin/set-user-password | 
+[*AdminApi*](doc/AdminApi.md) | [**unbanUser**](doc/AdminApi.md#unbanuser) | **POST** /admin/unban-user | 
+[*AdminApi*](doc/AdminApi.md) | [**updateUser**](doc/AdminApi.md#updateuser) | **POST** /admin/update-user | 
 [*DefaultApi*](doc/DefaultApi.md) | [**accountInfoPost**](doc/DefaultApi.md#accountinfopost) | **POST** /account-info | 
 [*DefaultApi*](doc/DefaultApi.md) | [**changeEmailPost**](doc/DefaultApi.md#changeemailpost) | **POST** /change-email | 
 [*DefaultApi*](doc/DefaultApi.md) | [**changePasswordPost**](doc/DefaultApi.md#changepasswordpost) | **POST** /change-password | 
@@ -101,20 +116,28 @@ Class | Method | HTTP request | Description
  - [AccountInfoPost200Response](doc/AccountInfoPost200Response.md)
  - [AccountInfoPost200ResponseUser](doc/AccountInfoPost200ResponseUser.md)
  - [AccountInfoPostRequest](doc/AccountInfoPostRequest.md)
+ - [AdminHasPermissionPost200Response](doc/AdminHasPermissionPost200Response.md)
+ - [AdminHasPermissionPostRequest](doc/AdminHasPermissionPostRequest.md)
+ - [BanUserRequest](doc/BanUserRequest.md)
  - [ChangeEmailPost200Response](doc/ChangeEmailPost200Response.md)
  - [ChangeEmailPostRequest](doc/ChangeEmailPostRequest.md)
  - [ChangePasswordPost200Response](doc/ChangePasswordPost200Response.md)
  - [ChangePasswordPostRequest](doc/ChangePasswordPostRequest.md)
+ - [CreateUserRequest](doc/CreateUserRequest.md)
  - [DeleteUserCallbackGet200Response](doc/DeleteUserCallbackGet200Response.md)
  - [DeleteUserPost200Response](doc/DeleteUserPost200Response.md)
  - [DeleteUserPostRequest](doc/DeleteUserPostRequest.md)
  - [ForgetPasswordPost200Response](doc/ForgetPasswordPost200Response.md)
  - [ForgetPasswordPostRequest](doc/ForgetPasswordPostRequest.md)
  - [GetSessionGet200Response](doc/GetSessionGet200Response.md)
+ - [ImpersonateUser200Response](doc/ImpersonateUser200Response.md)
  - [LinkSocialPost200Response](doc/LinkSocialPost200Response.md)
  - [LinkSocialPostRequest](doc/LinkSocialPostRequest.md)
  - [LinkSocialPostRequestIdToken](doc/LinkSocialPostRequestIdToken.md)
  - [ListAccountsGet200ResponseInner](doc/ListAccountsGet200ResponseInner.md)
+ - [ListUserSessions200Response](doc/ListUserSessions200Response.md)
+ - [ListUserSessionsRequest](doc/ListUserSessionsRequest.md)
+ - [ListUsers200Response](doc/ListUsers200Response.md)
  - [OkGet200Response](doc/OkGet200Response.md)
  - [RefreshTokenPost200Response](doc/RefreshTokenPost200Response.md)
  - [RefreshTokenPostRequest](doc/RefreshTokenPostRequest.md)
@@ -125,10 +148,14 @@ Class | Method | HTTP request | Description
  - [RevokeSessionPost200Response](doc/RevokeSessionPost200Response.md)
  - [RevokeSessionPostRequest](doc/RevokeSessionPostRequest.md)
  - [RevokeSessionsPost200Response](doc/RevokeSessionsPost200Response.md)
+ - [RevokeUserSessionRequest](doc/RevokeUserSessionRequest.md)
  - [SendVerificationEmailPost200Response](doc/SendVerificationEmailPost200Response.md)
  - [SendVerificationEmailPost400Response](doc/SendVerificationEmailPost400Response.md)
  - [SendVerificationEmailPostRequest](doc/SendVerificationEmailPostRequest.md)
  - [Session](doc/Session.md)
+ - [SetRole200Response](doc/SetRole200Response.md)
+ - [SetRoleRequest](doc/SetRoleRequest.md)
+ - [SetUserPasswordRequest](doc/SetUserPasswordRequest.md)
  - [SignInEmailPost200Response](doc/SignInEmailPost200Response.md)
  - [SignInEmailPost200ResponseUser](doc/SignInEmailPost200ResponseUser.md)
  - [SignInEmailPostRequest](doc/SignInEmailPostRequest.md)
@@ -144,6 +171,7 @@ Class | Method | HTTP request | Description
  - [UnlinkAccountPostRequest](doc/UnlinkAccountPostRequest.md)
  - [UpdateUserPost200Response](doc/UpdateUserPost200Response.md)
  - [UpdateUserPostRequest](doc/UpdateUserPostRequest.md)
+ - [UpdateUserRequest](doc/UpdateUserRequest.md)
  - [User](doc/User.md)
  - [Verification](doc/Verification.md)
  - [VerifyEmailGet200Response](doc/VerifyEmailGet200Response.md)

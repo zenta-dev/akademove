@@ -18,6 +18,10 @@ part 'user.g.dart';
 /// * [image] 
 /// * [createdAt] 
 /// * [updatedAt] 
+/// * [role] 
+/// * [banned] 
+/// * [banReason] 
+/// * [banExpires] 
 @BuiltValue()
 abstract class User implements Built<User, UserBuilder> {
   @BuiltValueField(wireName: r'id')
@@ -41,6 +45,18 @@ abstract class User implements Built<User, UserBuilder> {
   @BuiltValueField(wireName: r'updatedAt')
   String get updatedAt;
 
+  @BuiltValueField(wireName: r'role')
+  String? get role;
+
+  @BuiltValueField(wireName: r'banned')
+  bool? get banned;
+
+  @BuiltValueField(wireName: r'banReason')
+  String? get banReason;
+
+  @BuiltValueField(wireName: r'banExpires')
+  String? get banExpires;
+
   User._();
 
   factory User([void updates(UserBuilder b)]) = _$User;
@@ -49,7 +65,8 @@ abstract class User implements Built<User, UserBuilder> {
   static void _defaults(UserBuilder b) => b
       ..emailVerified = false
       ..createdAt = 'Generated at runtime'
-      ..updatedAt = 'Generated at runtime';
+      ..updatedAt = 'Generated at runtime'
+      ..banned = false;
 
   @BuiltValueSerializer(custom: true)
   static Serializer<User> get serializer => _$UserSerializer();
@@ -106,6 +123,34 @@ class _$UserSerializer implements PrimitiveSerializer<User> {
       object.updatedAt,
       specifiedType: const FullType(String),
     );
+    if (object.role != null) {
+      yield r'role';
+      yield serializers.serialize(
+        object.role,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.banned != null) {
+      yield r'banned';
+      yield serializers.serialize(
+        object.banned,
+        specifiedType: const FullType(bool),
+      );
+    }
+    if (object.banReason != null) {
+      yield r'banReason';
+      yield serializers.serialize(
+        object.banReason,
+        specifiedType: const FullType(String),
+      );
+    }
+    if (object.banExpires != null) {
+      yield r'banExpires';
+      yield serializers.serialize(
+        object.banExpires,
+        specifiedType: const FullType(String),
+      );
+    }
   }
 
   @override
@@ -177,6 +222,34 @@ class _$UserSerializer implements PrimitiveSerializer<User> {
             specifiedType: const FullType(String),
           ) as String;
           result.updatedAt = valueDes;
+          break;
+        case r'role':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.role = valueDes;
+          break;
+        case r'banned':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(bool),
+          ) as bool;
+          result.banned = valueDes;
+          break;
+        case r'banReason':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.banReason = valueDes;
+          break;
+        case r'banExpires':
+          final valueDes = serializers.deserialize(
+            value,
+            specifiedType: const FullType(String),
+          ) as String;
+          result.banExpires = valueDes;
           break;
         default:
           unhandled.add(key);
