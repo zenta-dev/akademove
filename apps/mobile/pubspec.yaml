@@ -25,6 +25,7 @@ dependencies:
   go_router: ^16.2.4
   intl: ^0.20.2
   shadcn_flutter: ^0.0.44
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   bloc_test: ^10.0.0
