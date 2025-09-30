@@ -14,7 +14,8 @@
         "--flavor",
         "development",
         "--target",
-        "lib/main_development.dart"
+        "lib/main_development.dart",
+        "--verbose"
       ]
     },
     {
