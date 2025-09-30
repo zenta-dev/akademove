@@ -27,8 +27,8 @@ class SignInStateMapper extends ClassMapperBase<SignInState> {
     _$data,
     opt: true,
   );
-  static Exception? _$error(SignInState v) => v.error;
-  static const Field<SignInState, Exception> _f$error = Field(
+  static BaseError? _$error(SignInState v) => v.error;
+  static const Field<SignInState, BaseError> _f$error = Field(
     'error',
     _$error,
     opt: true,
@@ -116,7 +116,7 @@ extension SignInStateValueCopy<$R, $Out>
 
 abstract class SignInStateCopyWith<$R, $In extends SignInState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({UserEntity? data, Exception? error, CubitState? state});
+  $R call({UserEntity? data, BaseError? error, CubitState? state});
   SignInStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

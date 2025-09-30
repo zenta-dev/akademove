@@ -1,4 +1,4 @@
-import 'package:akademove/core/state.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
@@ -12,6 +12,6 @@ class SignUpState extends BaseState<UserEntity> with SignUpStateMappable {
   factory SignUpState.loading() => const SignUpState(state: CubitState.loading);
   factory SignUpState.success(UserEntity user) =>
       SignUpState(data: user, state: CubitState.success);
-  factory SignUpState.failure(Exception error) =>
+  factory SignUpState.failure(BaseError error) =>
       SignUpState(error: error, state: CubitState.failure);
 }

@@ -1,4 +1,6 @@
 import 'package:akademove/features/features.dart';
+import 'package:akademove/locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 enum Routes {
@@ -21,12 +23,18 @@ final router = GoRouter(
         GoRoute(
           name: Routes.authSplash.name,
           path: Routes.authSplash.path,
-          builder: (context, state) => const SplashScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<SplashCubit>()..init(),
+            child: const SplashScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.authSignIn.name,
           path: Routes.authSignIn.path,
-          builder: (context, state) => const SignInScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<SignInCubit>()..init(),
+            child: const SignInScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.authSignUpDriver.name,

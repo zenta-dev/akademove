@@ -27,8 +27,8 @@ class SplashStateMapper extends ClassMapperBase<SplashState> {
     _$data,
     opt: true,
   );
-  static Exception? _$error(SplashState v) => v.error;
-  static const Field<SplashState, Exception> _f$error = Field(
+  static BaseError? _$error(SplashState v) => v.error;
+  static const Field<SplashState, BaseError> _f$error = Field(
     'error',
     _$error,
     opt: true,
@@ -116,7 +116,7 @@ extension SplashStateValueCopy<$R, $Out>
 
 abstract class SplashStateCopyWith<$R, $In extends SplashState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? data, Exception? error, CubitState? state});
+  $R call({int? data, BaseError? error, CubitState? state});
   SplashStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

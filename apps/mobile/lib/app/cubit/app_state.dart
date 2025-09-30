@@ -1,3 +1,4 @@
+import 'package:akademove/core/errors.dart';
 import 'package:akademove/core/state.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -12,7 +13,7 @@ class AppState extends BaseState<InternalAppState> with AppStateMappable {
   factory AppState.loading() => const AppState(state: CubitState.loading);
   factory AppState.success(InternalAppState state) =>
       AppState(data: state, state: CubitState.success);
-  factory AppState.failure(Exception error) =>
+  factory AppState.failure(BaseError error) =>
       AppState(error: error, state: CubitState.failure);
 }
 

@@ -28,8 +28,8 @@ class AppStateMapper extends ClassMapperBase<AppState> {
     _$data,
     opt: true,
   );
-  static Exception? _$error(AppState v) => v.error;
-  static const Field<AppState, Exception> _f$error = Field(
+  static BaseError? _$error(AppState v) => v.error;
+  static const Field<AppState, BaseError> _f$error = Field(
     'error',
     _$error,
     opt: true,
@@ -115,7 +115,7 @@ extension AppStateValueCopy<$R, $Out> on ObjectCopyWith<$R, AppState, $Out> {
 abstract class AppStateCopyWith<$R, $In extends AppState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   InternalAppStateCopyWith<$R, InternalAppState, InternalAppState>? get data;
-  $R call({InternalAppState? data, Exception? error, CubitState? state});
+  $R call({InternalAppState? data, BaseError? error, CubitState? state});
   AppStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

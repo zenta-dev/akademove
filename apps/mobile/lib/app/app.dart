@@ -17,7 +17,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => sl<AppCubit>()),
       ],
       child: ScreenUtilInit(
-        designSize: const Size(360, 800),
+        // designSize: const Size(360, 800),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, _) => BlocBuilder<AppCubit, AppState>(
@@ -32,7 +32,7 @@ class App extends StatelessWidget {
             builder: (context, child) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(1.sp),
+                  textScaler: TextScaler.linear(0.8.sp),
                   alwaysUse24HourFormat: true,
                 ),
                 child:

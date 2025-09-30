@@ -1,16 +1,18 @@
-import 'package:akademove/core/helpers.dart';
-import 'package:akademove/core/state.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
 class SplashCubit extends BaseCubit<SplashState> {
-  SplashCubit() : super(SplashState.initial());
+  SplashCubit(this.authRepository) : super(SplashState.initial());
+  final AuthRepository authRepository;
 
   @override
   Future<void> init() async {
     emit(SplashState.loading());
-
-    await delay(const Duration(seconds: 10));
-
-    emit(SplashState.success());
+    try {
+      await authRepository.authenticate();
+      emit(SplashState.success());
+    } on BaseError catch (e) {
+      emit(SplashState.failure(e));
+    }
   }
 }

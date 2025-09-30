@@ -11,28 +11,16 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SplashCubit()..init(),
-      child: BlocListener<SplashCubit, SplashState>(
+    return Scaffold(
+      body: BlocListener<SplashCubit, SplashState>(
         listener: (context, state) {
           if (state.isSuccess) {
             context.goNamed(Routes.authSignIn.name);
           }
         },
-        child: const _SplashView(),
-      ),
-    );
-  }
-}
-
-class _SplashView extends StatelessWidget {
-  const _SplashView();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Assets.images.brand.svg(width: 200.h, height: 200.h),
+        child: Center(
+          child: Assets.images.brand.svg(width: 200.h, height: 200.h),
+        ),
       ),
     );
   }

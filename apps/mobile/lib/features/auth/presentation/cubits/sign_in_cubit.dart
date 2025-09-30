@@ -1,13 +1,30 @@
-import 'package:akademove/core/state.dart';
+import 'dart:developer';
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:auth_client/auth_client.dart' as auth;
 
 class SignInCubit extends BaseCubit<SignInState> {
-  SignInCubit() : super(SignInState.initial());
+  SignInCubit(this._authRepository) : super(SignInState.initial());
+  final AuthRepository _authRepository;
 
   @override
-  Future<void> init() async {
-    emit(SignInState.loading());
+  Future<void> init() async {}
 
-    await Future.delayed(const Duration(seconds: 1), () => {});
+  Future<void> signIn(String email, String password) async {
+    try {
+      final res = await _authRepository.signIn(
+        auth.SignInEmailPostRequest(
+          (b) => b
+            ..email = email
+            ..password = password
+            ..rememberMe = true,
+        ),
+      );
+
+      emit(SignInState.success(res));
+    } on BaseError catch (e, st) {
+      log('[SignInCubit] - Error: ${e.message}', stackTrace: st);
+      emit(SignInState.failure(e));
+    }
   }
 }

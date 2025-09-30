@@ -1,3 +1,4 @@
+import 'package:akademove/core/_export.dart';
 import 'package:bloc/bloc.dart';
 
 enum CubitState { initial, loading, success, failure }
@@ -10,7 +11,7 @@ abstract class BaseState<T> {
   });
 
   final T? data;
-  final Exception? error;
+  final BaseError? error;
   final CubitState state;
 
   bool get isInitial => state == CubitState.initial;
