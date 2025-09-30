@@ -15,14 +15,14 @@ workspace:
 melos:
   scripts:
     generate:
-      run: melos exec -c 1 --depends-on build_runner -- dart run build_runner build
+      run: melos exec -c 10 --depends-on build_runner -- dart run build_runner build
     analyze:
-      run: melos exec -c 1 -- "dart analyze . --fatal-infos"
+      run: melos exec -c 10 -- "dart analyze . --fatal-infos"
     format:
-      run: melos exec -c 1 -- "dart format --set-exit-if-changed ."
+      run: melos exec -c 10 -- "dart format --set-exit-if-changed ."
     format:fix:
-      run: melos exec -c 1 -- "dart format ."
+      run: melos exec -c 10 -- "dart format ."
     clean:
-      run: melos exec -c 1 -- "flutter clean"
+      run: melos exec -c 10 -- "flutter clean"
     get:
-      run: melos exec -c 1 -- "flutter packages get"
+      run: melos exec -c 10 -- "flutter packages get"
