@@ -1,15 +1,16 @@
 import 'package:akademove/app/_export.dart';
-import 'package:bloc/bloc.dart';
+import 'package:akademove/core/state.dart';
 import 'package:flutter/material.dart';
 
-class AppCubit extends Cubit<AppState> {
+class AppCubit extends BaseCubit<AppState> {
   AppCubit() : super(AppState.initial());
 
+  @override
   Future<void> init() async {
     // should emit from local storage
     emit(
       AppState.success(
-        const InternalAppState(themeMode: ThemeMode.dark, locale: Locale('en')),
+        const InternalAppState(themeMode: ThemeMode.dark),
       ),
     );
   }

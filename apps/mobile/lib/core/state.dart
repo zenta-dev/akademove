@@ -1,3 +1,5 @@
+import 'package:bloc/bloc.dart';
+
 enum CubitState { initial, loading, success, failure }
 
 abstract class BaseState<T> {
@@ -17,4 +19,10 @@ abstract class BaseState<T> {
   bool get isFailure => state == CubitState.failure;
 
   bool get hasData => data != null;
+}
+
+abstract class BaseCubit<T> extends Cubit<T> {
+  BaseCubit(super.initialState);
+
+  Future<void> init();
 }

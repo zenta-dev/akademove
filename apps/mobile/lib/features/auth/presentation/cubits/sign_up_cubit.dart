@@ -1,9 +1,10 @@
+import 'package:akademove/core/state.dart';
 import 'package:akademove/features/features.dart';
-import 'package:bloc/bloc.dart';
 
-class SignUpCubit extends Cubit<SignUpState> {
+class SignUpCubit extends BaseCubit<SignUpState> {
   SignUpCubit() : super(SignUpState.initial());
 
+  @override
   Future<void> init() async {
     emit(SignUpState.loading());
 

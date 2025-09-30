@@ -1,10 +1,11 @@
 import 'package:akademove/core/helpers.dart';
+import 'package:akademove/core/state.dart';
 import 'package:akademove/features/features.dart';
-import 'package:bloc/bloc.dart';
 
-class SplashCubit extends Cubit<SplashState> {
+class SplashCubit extends BaseCubit<SplashState> {
   SplashCubit() : super(SplashState.initial());
 
+  @override
   Future<void> init() async {
     emit(SplashState.loading());
 
