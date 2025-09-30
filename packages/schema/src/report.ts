@@ -12,7 +12,7 @@ export const ReportSchema = z
 		orderId: z.uuid().optional(),
 		reporterId: z.uuid(),
 		targetUserId: z.uuid(),
-		category: ReportCategorySchema,
+		category: ReportCategorySchema.default("other"),
 		description: z.string(),
 		evidenceUrl: z.string().optional(),
 		status: ReportStatusSchema.default("pending"),

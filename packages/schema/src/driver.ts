@@ -11,7 +11,7 @@ export const DriverSchema = z
 		userId: z.string(),
 		studentId: z.string().min(10),
 		licenseNumber: z.string().min(6),
-		status: DriverStatusSchema,
+		status: DriverStatusSchema.default("pending"),
 		rating: z.number(),
 		isOnline: z.boolean(),
 		currentLocation: LocationSchema.optional(),

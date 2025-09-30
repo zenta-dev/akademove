@@ -8,7 +8,7 @@ export const MerchantSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		type: MerchantTypeSchema,
+		type: MerchantTypeSchema.default("merchant"),
 		name: z.string(),
 		address: z.string(),
 		location: LocationSchema.optional(),

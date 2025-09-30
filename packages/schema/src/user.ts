@@ -17,7 +17,7 @@ export const UserSchema = z
 		),
 		emailVerified: z.boolean(),
 		image: z.url().optional(),
-		role: UserRoleSchema,
+		role: UserRoleSchema.default("user"),
 		banned: z.boolean(),
 		banReason: z.string().optional(),
 		banExpires: DateSchema.optional(),

@@ -26,7 +26,7 @@ export const DateSchema = z.number().meta({
 	example: 1757670225,
 });
 
-export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
+export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK).default("sunday");
 
 export const EmptySchema = z.null();
 
