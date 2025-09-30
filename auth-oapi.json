@@ -982,10 +982,6 @@
 									"type": "object",
 									"description": "Session response when idToken is provided",
 									"properties": {
-										"redirect": {
-											"type": "boolean",
-											"enum": [false]
-										},
 										"token": {
 											"type": "string",
 											"description": "Session token"
