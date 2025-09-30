@@ -30,6 +30,7 @@ const statement = {
 	session: ["list", "revoke", "delete"],
 	pricing: ["get", "update", "delete"],
 	bookings: ["list", "get", "create", "update", "delete"],
+	configurations: ["list", "get", "update"],
 } as const;
 
 const ac = createAccessControl(statement);
@@ -56,6 +57,7 @@ const admin = ac.newRole({
 	session: ["list", "revoke", "delete"],
 	pricing: ["get", "update", "delete"],
 	bookings: ["list", "get", "create", "update", "delete"],
+	configurations: ["list", "get", "update"],
 });
 
 const operator = ac.newRole({
