@@ -9,7 +9,7 @@ class SplashCubit extends BaseCubit<SplashState> {
   Future<void> init() async {
     emit(SplashState.loading());
 
-    await delay(const Duration(seconds: 4));
+    await delay(const Duration(seconds: 10));
 
     emit(SplashState.success());
   }
