@@ -1,6 +1,6 @@
 import 'package:akademove/core/state.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter/material.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 part 'app_state.mapper.dart';
 

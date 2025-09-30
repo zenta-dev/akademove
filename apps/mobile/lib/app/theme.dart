@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 abstract class AppTheme {
-  static ThemeData light = ThemeData.light(useMaterial3: true).copyWith();
-  static ThemeData dark = ThemeData.dark(useMaterial3: true).copyWith();
+  static ThemeData light = ThemeData().copyWith();
+  static ThemeData dark = ThemeData.dark().copyWith();
 }
