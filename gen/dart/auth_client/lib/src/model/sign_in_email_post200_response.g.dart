@@ -6,68 +6,7 @@ part of 'sign_in_email_post200_response.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
-const SignInEmailPost200ResponseRedirectEnum
-_$signInEmailPost200ResponseRedirectEnum_false_ =
-    const SignInEmailPost200ResponseRedirectEnum._('false_');
-
-SignInEmailPost200ResponseRedirectEnum
-_$signInEmailPost200ResponseRedirectEnumValueOf(String name) {
-  switch (name) {
-    case 'false_':
-      return _$signInEmailPost200ResponseRedirectEnum_false_;
-    default:
-      throw ArgumentError(name);
-  }
-}
-
-final BuiltSet<SignInEmailPost200ResponseRedirectEnum>
-_$signInEmailPost200ResponseRedirectEnumValues =
-    BuiltSet<SignInEmailPost200ResponseRedirectEnum>(
-      const <SignInEmailPost200ResponseRedirectEnum>[
-        _$signInEmailPost200ResponseRedirectEnum_false_,
-      ],
-    );
-
-Serializer<SignInEmailPost200ResponseRedirectEnum>
-_$signInEmailPost200ResponseRedirectEnumSerializer =
-    _$SignInEmailPost200ResponseRedirectEnumSerializer();
-
-class _$SignInEmailPost200ResponseRedirectEnumSerializer
-    implements PrimitiveSerializer<SignInEmailPost200ResponseRedirectEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'false_': 'false',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'false': 'false_',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[
-    SignInEmailPost200ResponseRedirectEnum,
-  ];
-  @override
-  final String wireName = 'SignInEmailPost200ResponseRedirectEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    SignInEmailPost200ResponseRedirectEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  SignInEmailPost200ResponseRedirectEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => SignInEmailPost200ResponseRedirectEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
-}
-
 class _$SignInEmailPost200Response extends SignInEmailPost200Response {
-  @override
-  final SignInEmailPost200ResponseRedirectEnum redirect;
   @override
   final String token;
   @override
@@ -80,7 +19,6 @@ class _$SignInEmailPost200Response extends SignInEmailPost200Response {
   ]) => (SignInEmailPost200ResponseBuilder()..update(updates))._build();
 
   _$SignInEmailPost200Response._({
-    required this.redirect,
     required this.token,
     this.url,
     required this.user,
@@ -98,7 +36,6 @@ class _$SignInEmailPost200Response extends SignInEmailPost200Response {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is SignInEmailPost200Response &&
-        redirect == other.redirect &&
         token == other.token &&
         url == other.url &&
         user == other.user;
@@ -107,7 +44,6 @@ class _$SignInEmailPost200Response extends SignInEmailPost200Response {
   @override
   int get hashCode {
     var _$hash = 0;
-    _$hash = $jc(_$hash, redirect.hashCode);
     _$hash = $jc(_$hash, token.hashCode);
     _$hash = $jc(_$hash, url.hashCode);
     _$hash = $jc(_$hash, user.hashCode);
@@ -118,7 +54,6 @@ class _$SignInEmailPost200Response extends SignInEmailPost200Response {
   @override
   String toString() {
     return (newBuiltValueToStringHelper(r'SignInEmailPost200Response')
-          ..add('redirect', redirect)
           ..add('token', token)
           ..add('url', url)
           ..add('user', user))
@@ -130,11 +65,6 @@ class SignInEmailPost200ResponseBuilder
     implements
         Builder<SignInEmailPost200Response, SignInEmailPost200ResponseBuilder> {
   _$SignInEmailPost200Response? _$v;
-
-  SignInEmailPost200ResponseRedirectEnum? _redirect;
-  SignInEmailPost200ResponseRedirectEnum? get redirect => _$this._redirect;
-  set redirect(SignInEmailPost200ResponseRedirectEnum? redirect) =>
-      _$this._redirect = redirect;
 
   String? _token;
   String? get token => _$this._token;
@@ -156,7 +86,6 @@ class SignInEmailPost200ResponseBuilder
   SignInEmailPost200ResponseBuilder get _$this {
     final $v = _$v;
     if ($v != null) {
-      _redirect = $v.redirect;
       _token = $v.token;
       _url = $v.url;
       _user = $v.user.toBuilder();
@@ -184,11 +113,6 @@ class SignInEmailPost200ResponseBuilder
       _$result =
           _$v ??
           _$SignInEmailPost200Response._(
-            redirect: BuiltValueNullFieldError.checkNotNull(
-              redirect,
-              r'SignInEmailPost200Response',
-              'redirect',
-            ),
             token: BuiltValueNullFieldError.checkNotNull(
               token,
               r'SignInEmailPost200Response',

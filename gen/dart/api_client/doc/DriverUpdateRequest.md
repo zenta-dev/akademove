@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **studentId** | **String** |  | [optional] 
 **licenseNumber** | **String** |  | [optional] 
-**status** | **String** |  | [optional] 
+**status** | **String** |  | [optional] [default to 'pending']
 **isOnline** | **bool** |  | [optional] 
 **currentLocation** | [**Location**](Location.md) |  | [optional] 
 **user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 

@@ -41,7 +41,7 @@ abstract class User implements Built<User, UserBuilder> {
   String? get image;
 
   @BuiltValueField(wireName: r'role')
-  UserRoleEnum get role;
+  UserRoleEnum? get role;
   // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
 
   @BuiltValueField(wireName: r'banned')
@@ -67,7 +67,8 @@ abstract class User implements Built<User, UserBuilder> {
   factory User([void updates(UserBuilder b)]) = _$User;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserBuilder b) => b;
+  static void _defaults(UserBuilder b) => b
+      ..role = const UserRoleEnum._('user');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<User> get serializer => _$UserSerializer();
@@ -112,11 +113,13 @@ class _$UserSerializer implements PrimitiveSerializer<User> {
         specifiedType: const FullType(String),
       );
     }
-    yield r'role';
-    yield serializers.serialize(
-      object.role,
-      specifiedType: const FullType(UserRoleEnum),
-    );
+    if (object.role != null) {
+      yield r'role';
+      yield serializers.serialize(
+        object.role,
+        specifiedType: const FullType(UserRoleEnum),
+      );
+    }
     yield r'banned';
     yield serializers.serialize(
       object.banned,

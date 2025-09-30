@@ -192,9 +192,9 @@ class _$OrderCreateRequest extends OrderCreateRequest {
   @override
   final String? merchantId;
   @override
-  final OrderCreateRequestTypeEnum type;
+  final OrderCreateRequestTypeEnum? type;
   @override
-  final OrderCreateRequestStatusEnum status;
+  final OrderCreateRequestStatusEnum? status;
   @override
   final Location pickupLocation;
   @override
@@ -224,8 +224,8 @@ class _$OrderCreateRequest extends OrderCreateRequest {
     required this.userId,
     this.driverId,
     this.merchantId,
-    required this.type,
-    required this.status,
+    this.type,
+    this.status,
     required this.pickupLocation,
     required this.dropoffLocation,
     required this.distanceKm,
@@ -438,16 +438,8 @@ class OrderCreateRequestBuilder
             ),
             driverId: driverId,
             merchantId: merchantId,
-            type: BuiltValueNullFieldError.checkNotNull(
-              type,
-              r'OrderCreateRequest',
-              'type',
-            ),
-            status: BuiltValueNullFieldError.checkNotNull(
-              status,
-              r'OrderCreateRequest',
-              'status',
-            ),
+            type: type,
+            status: status,
             pickupLocation: pickupLocation.build(),
             dropoffLocation: dropoffLocation.build(),
             distanceKm: BuiltValueNullFieldError.checkNotNull(

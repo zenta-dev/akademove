@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **String** |  | 
+**type** | **String** |  | [optional] [default to 'merchant']
 **name** | **String** |  | 
 **address** | **String** |  | 
 **location** | [**Location**](Location.md) |  | [optional] 

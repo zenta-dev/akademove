@@ -56,7 +56,6 @@ Serializers _$serializers =
           ..add(SetRoleRequest.serializer)
           ..add(SetUserPasswordRequest.serializer)
           ..add(SignInEmailPost200Response.serializer)
-          ..add(SignInEmailPost200ResponseRedirectEnum.serializer)
           ..add(SignInEmailPost200ResponseUser.serializer)
           ..add(SignInEmailPostRequest.serializer)
           ..add(SignOutPost200Response.serializer)

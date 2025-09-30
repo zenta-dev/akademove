@@ -170,7 +170,7 @@ class _$ReportCreateRequest extends ReportCreateRequest {
   @override
   final String targetUserId;
   @override
-  final ReportCreateRequestCategoryEnum category;
+  final ReportCreateRequestCategoryEnum? category;
   @override
   final String description;
   @override
@@ -190,7 +190,7 @@ class _$ReportCreateRequest extends ReportCreateRequest {
     this.orderId,
     required this.reporterId,
     required this.targetUserId,
-    required this.category,
+    this.category,
     required this.description,
     this.evidenceUrl,
     this.status,
@@ -343,11 +343,7 @@ class ReportCreateRequestBuilder
             r'ReportCreateRequest',
             'targetUserId',
           ),
-          category: BuiltValueNullFieldError.checkNotNull(
-            category,
-            r'ReportCreateRequest',
-            'category',
-          ),
+          category: category,
           description: BuiltValueNullFieldError.checkNotNull(
             description,
             r'ReportCreateRequest',

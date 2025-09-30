@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **email** | **String** |  | 
 **emailVerified** | **bool** |  | 
 **image** | **String** |  | [optional] 
-**role** | **String** |  | 
+**role** | **String** |  | [optional] [default to 'user']
 **banned** | **bool** |  | 
 **banReason** | **String** |  | [optional] 
 **banExpires** | **num** | unix timestamp format | [optional] 

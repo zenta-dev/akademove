@@ -72,7 +72,7 @@ class _$Merchant extends Merchant {
   @override
   final String userId;
   @override
-  final MerchantTypeEnum type;
+  final MerchantTypeEnum? type;
   @override
   final String name;
   @override
@@ -94,7 +94,7 @@ class _$Merchant extends Merchant {
   _$Merchant._({
     required this.id,
     required this.userId,
-    required this.type,
+    this.type,
     required this.name,
     required this.address,
     this.location,
@@ -250,11 +250,7 @@ class MerchantBuilder implements Builder<Merchant, MerchantBuilder> {
               r'Merchant',
               'userId',
             ),
-            type: BuiltValueNullFieldError.checkNotNull(
-              type,
-              r'Merchant',
-              'type',
-            ),
+            type: type,
             name: BuiltValueNullFieldError.checkNotNull(
               name,
               r'Merchant',

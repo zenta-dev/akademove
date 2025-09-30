@@ -46,7 +46,8 @@ abstract class DriverUpdateRequest implements Built<DriverUpdateRequest, DriverU
   factory DriverUpdateRequest([void updates(DriverUpdateRequestBuilder b)]) = _$DriverUpdateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverUpdateRequestBuilder b) => b;
+  static void _defaults(DriverUpdateRequestBuilder b) => b
+      ..status = const DriverUpdateRequestStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<DriverUpdateRequest> get serializer => _$DriverUpdateRequestSerializer();

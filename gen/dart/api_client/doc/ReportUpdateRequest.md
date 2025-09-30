@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | [optional] 
 **reporterId** | **String** |  | [optional] 
 **targetUserId** | **String** |  | [optional] 
-**category** | **String** |  | [optional] 
+**category** | **String** |  | [optional] [default to 'other']
 **description** | **String** |  | [optional] 
 **evidenceUrl** | **String** |  | [optional] 
 **status** | **String** |  | [optional] [default to 'pending']

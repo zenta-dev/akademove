@@ -68,7 +68,8 @@ abstract class OrderCreateRequestDriver implements Built<OrderCreateRequestDrive
   factory OrderCreateRequestDriver([void updates(OrderCreateRequestDriverBuilder b)]) = _$OrderCreateRequestDriver;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderCreateRequestDriverBuilder b) => b;
+  static void _defaults(OrderCreateRequestDriverBuilder b) => b
+      ..status = const OrderCreateRequestDriverStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<OrderCreateRequestDriver> get serializer => _$OrderCreateRequestDriverSerializer();

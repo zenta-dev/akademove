@@ -116,7 +116,7 @@ class _$ScheduleCreateRequest extends ScheduleCreateRequest {
   @override
   final String driverId;
   @override
-  final ScheduleCreateRequestDayOfWeekEnum dayOfWeek;
+  final ScheduleCreateRequestDayOfWeekEnum? dayOfWeek;
   @override
   final Time startTime;
   @override
@@ -134,7 +134,7 @@ class _$ScheduleCreateRequest extends ScheduleCreateRequest {
 
   _$ScheduleCreateRequest._({
     required this.driverId,
-    required this.dayOfWeek,
+    this.dayOfWeek,
     required this.startTime,
     required this.endTime,
     this.isRecurring,
@@ -267,11 +267,7 @@ class ScheduleCreateRequestBuilder
               r'ScheduleCreateRequest',
               'driverId',
             ),
-            dayOfWeek: BuiltValueNullFieldError.checkNotNull(
-              dayOfWeek,
-              r'ScheduleCreateRequest',
-              'dayOfWeek',
-            ),
+            dayOfWeek: dayOfWeek,
             startTime: startTime.build(),
             endTime: endTime.build(),
             isRecurring: isRecurring,

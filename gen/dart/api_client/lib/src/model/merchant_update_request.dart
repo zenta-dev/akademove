@@ -41,7 +41,8 @@ abstract class MerchantUpdateRequest implements Built<MerchantUpdateRequest, Mer
   factory MerchantUpdateRequest([void updates(MerchantUpdateRequestBuilder b)]) = _$MerchantUpdateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(MerchantUpdateRequestBuilder b) => b;
+  static void _defaults(MerchantUpdateRequestBuilder b) => b
+      ..type = const MerchantUpdateRequestTypeEnum._('merchant');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<MerchantUpdateRequest> get serializer => _$MerchantUpdateRequestSerializer();

@@ -16,7 +16,7 @@ part 'update_user_role_request.g.dart';
 @BuiltValue()
 abstract class UpdateUserRoleRequest implements Built<UpdateUserRoleRequest, UpdateUserRoleRequestBuilder> {
   @BuiltValueField(wireName: r'role')
-  UpdateUserRoleRequestRoleEnum get role;
+  UpdateUserRoleRequestRoleEnum? get role;
   // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
 
   UpdateUserRoleRequest._();
@@ -24,7 +24,8 @@ abstract class UpdateUserRoleRequest implements Built<UpdateUserRoleRequest, Upd
   factory UpdateUserRoleRequest([void updates(UpdateUserRoleRequestBuilder b)]) = _$UpdateUserRoleRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UpdateUserRoleRequestBuilder b) => b;
+  static void _defaults(UpdateUserRoleRequestBuilder b) => b
+      ..role = const UpdateUserRoleRequestRoleEnum._('user');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<UpdateUserRoleRequest> get serializer => _$UpdateUserRoleRequestSerializer();
@@ -42,11 +43,13 @@ class _$UpdateUserRoleRequestSerializer implements PrimitiveSerializer<UpdateUse
     UpdateUserRoleRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'role';
-    yield serializers.serialize(
-      object.role,
-      specifiedType: const FullType(UpdateUserRoleRequestRoleEnum),
-    );
+    if (object.role != null) {
+      yield r'role';
+      yield serializers.serialize(
+        object.role,
+        specifiedType: const FullType(UpdateUserRoleRequestRoleEnum),
+      );
+    }
   }
 
   @override

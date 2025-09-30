@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **String** |  | 
 **email** | **String** |  | 
-**role** | **String** |  | 
+**role** | **String** |  | [optional] [default to 'user']
 **password** | **String** |  | 
 **confirmPassword** | **String** |  | 
 

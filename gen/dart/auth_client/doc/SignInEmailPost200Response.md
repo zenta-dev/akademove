@@ -8,7 +8,6 @@ import 'package:auth_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**redirect** | **bool** |  | 
 **token** | **String** | Session token | 
 **url** | [**JsonObject**](.md) |  | [optional] 
 **user** | [**SignInEmailPost200ResponseUser**](SignInEmailPost200ResponseUser.md) |  | 

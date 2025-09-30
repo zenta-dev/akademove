@@ -26,7 +26,7 @@ abstract class UserCreateRequest implements Built<UserCreateRequest, UserCreateR
   String get email;
 
   @BuiltValueField(wireName: r'role')
-  UserCreateRequestRoleEnum get role;
+  UserCreateRequestRoleEnum? get role;
   // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
 
   @BuiltValueField(wireName: r'password')
@@ -40,7 +40,8 @@ abstract class UserCreateRequest implements Built<UserCreateRequest, UserCreateR
   factory UserCreateRequest([void updates(UserCreateRequestBuilder b)]) = _$UserCreateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserCreateRequestBuilder b) => b;
+  static void _defaults(UserCreateRequestBuilder b) => b
+      ..role = const UserCreateRequestRoleEnum._('user');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<UserCreateRequest> get serializer => _$UserCreateRequestSerializer();
@@ -68,11 +69,13 @@ class _$UserCreateRequestSerializer implements PrimitiveSerializer<UserCreateReq
       object.email,
       specifiedType: const FullType(String),
     );
-    yield r'role';
-    yield serializers.serialize(
-      object.role,
-      specifiedType: const FullType(UserCreateRequestRoleEnum),
-    );
+    if (object.role != null) {
+      yield r'role';
+      yield serializers.serialize(
+        object.role,
+        specifiedType: const FullType(UserCreateRequestRoleEnum),
+      );
+    }
     yield r'password';
     yield serializers.serialize(
       object.password,

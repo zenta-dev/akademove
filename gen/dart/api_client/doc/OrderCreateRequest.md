@@ -11,8 +11,8 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
-**type** | **String** |  | 
-**status** | **String** |  | 
+**type** | **String** |  | [optional] [default to 'ride']
+**status** | **String** |  | [optional] [default to 'requested']
 **pickupLocation** | [**Location**](Location.md) |  | 
 **dropoffLocation** | [**Location**](Location.md) |  | 
 **distanceKm** | **num** |  | 

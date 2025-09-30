@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
 **userId** | **String** |  | [optional] 
-**type** | **String** |  | [optional] 
+**type** | **String** |  | [optional] [default to 'merchant']
 **name** | **String** |  | [optional] 
 **address** | **String** |  | [optional] 
 **location** | [**Location**](Location.md) |  | [optional] 

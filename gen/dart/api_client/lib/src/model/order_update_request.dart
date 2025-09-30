@@ -69,7 +69,9 @@ abstract class OrderUpdateRequest implements Built<OrderUpdateRequest, OrderUpda
   factory OrderUpdateRequest([void updates(OrderUpdateRequestBuilder b)]) = _$OrderUpdateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderUpdateRequestBuilder b) => b;
+  static void _defaults(OrderUpdateRequestBuilder b) => b
+      ..type = const OrderUpdateRequestTypeEnum._('ride')
+      ..status = const OrderUpdateRequestStatusEnum._('requested');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<OrderUpdateRequest> get serializer => _$OrderUpdateRequestSerializer();

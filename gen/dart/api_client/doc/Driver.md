@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **studentId** | **String** |  | 
 **licenseNumber** | **String** |  | 
-**status** | **String** |  | 
+**status** | **String** |  | [optional] [default to 'pending']
 **rating** | **num** |  | 
 **isOnline** | **bool** |  | 
 **currentLocation** | [**Location**](Location.md) |  | [optional] 

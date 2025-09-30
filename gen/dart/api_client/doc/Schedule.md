@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **driverId** | **String** |  | 
-**dayOfWeek** | **String** |  | 
+**dayOfWeek** | **String** |  | [optional] [default to 'sunday']
 **startTime** | [**Time**](Time.md) |  | 
 **endTime** | [**Time**](Time.md) |  | 
 **isRecurring** | **bool** |  | [optional] [default to true]

@@ -71,7 +71,7 @@ class _$MerchantCreateRequestTypeEnumSerializer
 
 class _$MerchantCreateRequest extends MerchantCreateRequest {
   @override
-  final MerchantCreateRequestTypeEnum type;
+  final MerchantCreateRequestTypeEnum? type;
   @override
   final String name;
   @override
@@ -86,7 +86,7 @@ class _$MerchantCreateRequest extends MerchantCreateRequest {
   ]) => (MerchantCreateRequestBuilder()..update(updates))._build();
 
   _$MerchantCreateRequest._({
-    required this.type,
+    this.type,
     required this.name,
     required this.address,
     this.location,
@@ -196,11 +196,7 @@ class MerchantCreateRequestBuilder
       _$result =
           _$v ??
           _$MerchantCreateRequest._(
-            type: BuiltValueNullFieldError.checkNotNull(
-              type,
-              r'MerchantCreateRequest',
-              'type',
-            ),
+            type: type,
             name: BuiltValueNullFieldError.checkNotNull(
               name,
               r'MerchantCreateRequest',

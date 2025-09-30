@@ -67,7 +67,8 @@ abstract class DriverUpdateRequestUser implements Built<DriverUpdateRequestUser,
   factory DriverUpdateRequestUser([void updates(DriverUpdateRequestUserBuilder b)]) = _$DriverUpdateRequestUser;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverUpdateRequestUserBuilder b) => b;
+  static void _defaults(DriverUpdateRequestUserBuilder b) => b
+      ..role = const DriverUpdateRequestUserRoleEnum._('user');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<DriverUpdateRequestUser> get serializer => _$DriverUpdateRequestUserSerializer();

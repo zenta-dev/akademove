@@ -108,7 +108,7 @@ class _$Driver extends Driver {
   @override
   final String licenseNumber;
   @override
-  final DriverStatusEnum status;
+  final DriverStatusEnum? status;
   @override
   final num rating;
   @override
@@ -130,7 +130,7 @@ class _$Driver extends Driver {
     required this.userId,
     required this.studentId,
     required this.licenseNumber,
-    required this.status,
+    this.status,
     required this.rating,
     required this.isOnline,
     this.currentLocation,
@@ -308,11 +308,7 @@ class DriverBuilder implements Builder<Driver, DriverBuilder> {
               r'Driver',
               'licenseNumber',
             ),
-            status: BuiltValueNullFieldError.checkNotNull(
-              status,
-              r'Driver',
-              'status',
-            ),
+            status: status,
             rating: BuiltValueNullFieldError.checkNotNull(
               rating,
               r'Driver',

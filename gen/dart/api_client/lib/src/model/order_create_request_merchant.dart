@@ -63,7 +63,8 @@ abstract class OrderCreateRequestMerchant implements Built<OrderCreateRequestMer
   factory OrderCreateRequestMerchant([void updates(OrderCreateRequestMerchantBuilder b)]) = _$OrderCreateRequestMerchant;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderCreateRequestMerchantBuilder b) => b;
+  static void _defaults(OrderCreateRequestMerchantBuilder b) => b
+      ..type = const OrderCreateRequestMerchantTypeEnum._('merchant');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<OrderCreateRequestMerchant> get serializer => _$OrderCreateRequestMerchantSerializer();

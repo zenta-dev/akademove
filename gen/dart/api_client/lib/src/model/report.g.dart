@@ -162,7 +162,7 @@ class _$Report extends Report {
   @override
   final String targetUserId;
   @override
-  final ReportCategoryEnum category;
+  final ReportCategoryEnum? category;
   @override
   final String description;
   @override
@@ -186,7 +186,7 @@ class _$Report extends Report {
     this.orderId,
     required this.reporterId,
     required this.targetUserId,
-    required this.category,
+    this.category,
     required this.description,
     this.evidenceUrl,
     this.status,
@@ -362,11 +362,7 @@ class ReportBuilder implements Builder<Report, ReportBuilder> {
             r'Report',
             'targetUserId',
           ),
-          category: BuiltValueNullFieldError.checkNotNull(
-            category,
-            r'Report',
-            'category',
-          ),
+          category: category,
           description: BuiltValueNullFieldError.checkNotNull(
             description,
             r'Report',

@@ -39,7 +39,7 @@ abstract class Report implements Built<Report, ReportBuilder> {
   String get targetUserId;
 
   @BuiltValueField(wireName: r'category')
-  ReportCategoryEnum get category;
+  ReportCategoryEnum? get category;
   // enum categoryEnum {  behavior,  safety,  fraud,  other,  };
 
   @BuiltValueField(wireName: r'description')
@@ -72,6 +72,7 @@ abstract class Report implements Built<Report, ReportBuilder> {
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ReportBuilder b) => b
+      ..category = const ReportCategoryEnum._('other')
       ..status = const ReportStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)
@@ -112,11 +113,13 @@ class _$ReportSerializer implements PrimitiveSerializer<Report> {
       object.targetUserId,
       specifiedType: const FullType(String),
     );
-    yield r'category';
-    yield serializers.serialize(
-      object.category,
-      specifiedType: const FullType(ReportCategoryEnum),
-    );
+    if (object.category != null) {
+      yield r'category';
+      yield serializers.serialize(
+        object.category,
+        specifiedType: const FullType(ReportCategoryEnum),
+      );
+    }
     yield r'description';
     yield serializers.serialize(
       object.description,

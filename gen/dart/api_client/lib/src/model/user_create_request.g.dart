@@ -91,7 +91,7 @@ class _$UserCreateRequest extends UserCreateRequest {
   @override
   final String email;
   @override
-  final UserCreateRequestRoleEnum role;
+  final UserCreateRequestRoleEnum? role;
   @override
   final String password;
   @override
@@ -104,7 +104,7 @@ class _$UserCreateRequest extends UserCreateRequest {
   _$UserCreateRequest._({
     required this.name,
     required this.email,
-    required this.role,
+    this.role,
     required this.password,
     required this.confirmPassword,
   }) : super._();
@@ -220,11 +220,7 @@ class UserCreateRequestBuilder
             r'UserCreateRequest',
             'email',
           ),
-          role: BuiltValueNullFieldError.checkNotNull(
-            role,
-            r'UserCreateRequest',
-            'role',
-          ),
+          role: role,
           password: BuiltValueNullFieldError.checkNotNull(
             password,
             r'UserCreateRequest',

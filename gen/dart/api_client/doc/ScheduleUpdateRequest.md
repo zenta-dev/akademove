@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**dayOfWeek** | **String** |  | [optional] 
+**dayOfWeek** | **String** |  | [optional] [default to 'sunday']
 **startTime** | [**Time**](Time.md) |  | [optional] 
 **endTime** | [**Time**](Time.md) |  | [optional] 
 **isRecurring** | **bool** |  | [optional] [default to true]

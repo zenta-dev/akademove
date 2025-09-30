@@ -192,9 +192,9 @@ class _$Order extends Order {
   @override
   final String? merchantId;
   @override
-  final OrderTypeEnum type;
+  final OrderTypeEnum? type;
   @override
-  final OrderStatusEnum status;
+  final OrderStatusEnum? status;
   @override
   final Location pickupLocation;
   @override
@@ -234,8 +234,8 @@ class _$Order extends Order {
     required this.userId,
     this.driverId,
     this.merchantId,
-    required this.type,
-    required this.status,
+    this.type,
+    this.status,
     required this.pickupLocation,
     required this.dropoffLocation,
     required this.distanceKm,
@@ -499,12 +499,8 @@ class OrderBuilder implements Builder<Order, OrderBuilder> {
             ),
             driverId: driverId,
             merchantId: merchantId,
-            type: BuiltValueNullFieldError.checkNotNull(type, r'Order', 'type'),
-            status: BuiltValueNullFieldError.checkNotNull(
-              status,
-              r'Order',
-              'status',
-            ),
+            type: type,
+            status: status,
             pickupLocation: pickupLocation.build(),
             dropoffLocation: dropoffLocation.build(),
             distanceKm: BuiltValueNullFieldError.checkNotNull(

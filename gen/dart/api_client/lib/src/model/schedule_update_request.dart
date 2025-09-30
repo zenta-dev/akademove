@@ -47,6 +47,7 @@ abstract class ScheduleUpdateRequest implements Built<ScheduleUpdateRequest, Sch
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ScheduleUpdateRequestBuilder b) => b
+      ..dayOfWeek = const ScheduleUpdateRequestDayOfWeekEnum._('sunday')
       ..isRecurring = true
       ..isActive = true;
 

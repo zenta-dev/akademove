@@ -26,7 +26,7 @@ abstract class ScheduleCreateRequest implements Built<ScheduleCreateRequest, Sch
   String get driverId;
 
   @BuiltValueField(wireName: r'dayOfWeek')
-  ScheduleCreateRequestDayOfWeekEnum get dayOfWeek;
+  ScheduleCreateRequestDayOfWeekEnum? get dayOfWeek;
   // enum dayOfWeekEnum {  sunday,  monday,  tuesday,  wednesday,  thursday,  friday,  saturday,  };
 
   @BuiltValueField(wireName: r'startTime')
@@ -51,6 +51,7 @@ abstract class ScheduleCreateRequest implements Built<ScheduleCreateRequest, Sch
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ScheduleCreateRequestBuilder b) => b
+      ..dayOfWeek = const ScheduleCreateRequestDayOfWeekEnum._('sunday')
       ..isRecurring = true
       ..isActive = true;
 
@@ -75,11 +76,13 @@ class _$ScheduleCreateRequestSerializer implements PrimitiveSerializer<ScheduleC
       object.driverId,
       specifiedType: const FullType(String),
     );
-    yield r'dayOfWeek';
-    yield serializers.serialize(
-      object.dayOfWeek,
-      specifiedType: const FullType(ScheduleCreateRequestDayOfWeekEnum),
-    );
+    if (object.dayOfWeek != null) {
+      yield r'dayOfWeek';
+      yield serializers.serialize(
+        object.dayOfWeek,
+        specifiedType: const FullType(ScheduleCreateRequestDayOfWeekEnum),
+      );
+    }
     yield r'startTime';
     yield serializers.serialize(
       object.startTime,

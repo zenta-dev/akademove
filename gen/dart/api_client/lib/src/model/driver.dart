@@ -40,7 +40,7 @@ abstract class Driver implements Built<Driver, DriverBuilder> {
   String get licenseNumber;
 
   @BuiltValueField(wireName: r'status')
-  DriverStatusEnum get status;
+  DriverStatusEnum? get status;
   // enum statusEnum {  pending,  approved,  rejected,  active,  inactive,  suspended,  };
 
   @BuiltValueField(wireName: r'rating')
@@ -68,7 +68,8 @@ abstract class Driver implements Built<Driver, DriverBuilder> {
   factory Driver([void updates(DriverBuilder b)]) = _$Driver;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverBuilder b) => b;
+  static void _defaults(DriverBuilder b) => b
+      ..status = const DriverStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Driver> get serializer => _$DriverSerializer();
@@ -106,11 +107,13 @@ class _$DriverSerializer implements PrimitiveSerializer<Driver> {
       object.licenseNumber,
       specifiedType: const FullType(String),
     );
-    yield r'status';
-    yield serializers.serialize(
-      object.status,
-      specifiedType: const FullType(DriverStatusEnum),
-    );
+    if (object.status != null) {
+      yield r'status';
+      yield serializers.serialize(
+        object.status,
+        specifiedType: const FullType(DriverStatusEnum),
+      );
+    }
     yield r'rating';
     yield serializers.serialize(
       object.rating,

@@ -10,8 +10,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **driverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
-**type** | **String** |  | [optional] 
-**status** | **String** |  | [optional] 
+**type** | **String** |  | [optional] [default to 'ride']
+**status** | **String** |  | [optional] [default to 'requested']
 **distanceKm** | **num** |  | [optional] 
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | [optional] 

@@ -53,11 +53,11 @@ abstract class Order implements Built<Order, OrderBuilder> {
   String? get merchantId;
 
   @BuiltValueField(wireName: r'type')
-  OrderTypeEnum get type;
+  OrderTypeEnum? get type;
   // enum typeEnum {  ride,  delivery,  food,  };
 
   @BuiltValueField(wireName: r'status')
-  OrderStatusEnum get status;
+  OrderStatusEnum? get status;
   // enum statusEnum {  requested,  matching,  accepted,  arriving,  in_trip,  completed,  cancelled_by_user,  cancelled_by_driver,  cancelled_by_system,  };
 
   @BuiltValueField(wireName: r'pickupLocation')
@@ -115,7 +115,9 @@ abstract class Order implements Built<Order, OrderBuilder> {
   factory Order([void updates(OrderBuilder b)]) = _$Order;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderBuilder b) => b;
+  static void _defaults(OrderBuilder b) => b
+      ..type = const OrderTypeEnum._('ride')
+      ..status = const OrderStatusEnum._('requested');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Order> get serializer => _$OrderSerializer();
@@ -157,16 +159,20 @@ class _$OrderSerializer implements PrimitiveSerializer<Order> {
         specifiedType: const FullType(String),
       );
     }
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(OrderTypeEnum),
-    );
-    yield r'status';
-    yield serializers.serialize(
-      object.status,
-      specifiedType: const FullType(OrderStatusEnum),
-    );
+    if (object.type != null) {
+      yield r'type';
+      yield serializers.serialize(
+        object.type,
+        specifiedType: const FullType(OrderTypeEnum),
+      );
+    }
+    if (object.status != null) {
+      yield r'status';
+      yield serializers.serialize(
+        object.status,
+        specifiedType: const FullType(OrderStatusEnum),
+      );
+    }
     yield r'pickupLocation';
     yield serializers.serialize(
       object.pickupLocation,

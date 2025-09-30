@@ -21,7 +21,7 @@ part 'merchant_create_request.g.dart';
 @BuiltValue()
 abstract class MerchantCreateRequest implements Built<MerchantCreateRequest, MerchantCreateRequestBuilder> {
   @BuiltValueField(wireName: r'type')
-  MerchantCreateRequestTypeEnum get type;
+  MerchantCreateRequestTypeEnum? get type;
   // enum typeEnum {  merchant,  tenant,  };
 
   @BuiltValueField(wireName: r'name')
@@ -41,7 +41,8 @@ abstract class MerchantCreateRequest implements Built<MerchantCreateRequest, Mer
   factory MerchantCreateRequest([void updates(MerchantCreateRequestBuilder b)]) = _$MerchantCreateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(MerchantCreateRequestBuilder b) => b;
+  static void _defaults(MerchantCreateRequestBuilder b) => b
+      ..type = const MerchantCreateRequestTypeEnum._('merchant');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<MerchantCreateRequest> get serializer => _$MerchantCreateRequestSerializer();
@@ -59,11 +60,13 @@ class _$MerchantCreateRequestSerializer implements PrimitiveSerializer<MerchantC
     MerchantCreateRequest object, {
     FullType specifiedType = FullType.unspecified,
   }) sync* {
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(MerchantCreateRequestTypeEnum),
-    );
+    if (object.type != null) {
+      yield r'type';
+      yield serializers.serialize(
+        object.type,
+        specifiedType: const FullType(MerchantCreateRequestTypeEnum),
+      );
+    }
     yield r'name';
     yield serializers.serialize(
       object.name,

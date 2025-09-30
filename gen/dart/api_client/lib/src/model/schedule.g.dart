@@ -105,7 +105,7 @@ class _$Schedule extends Schedule {
   @override
   final String driverId;
   @override
-  final ScheduleDayOfWeekEnum dayOfWeek;
+  final ScheduleDayOfWeekEnum? dayOfWeek;
   @override
   final Time startTime;
   @override
@@ -127,7 +127,7 @@ class _$Schedule extends Schedule {
   _$Schedule._({
     required this.id,
     required this.driverId,
-    required this.dayOfWeek,
+    this.dayOfWeek,
     required this.startTime,
     required this.endTime,
     this.isRecurring,
@@ -284,11 +284,7 @@ class ScheduleBuilder implements Builder<Schedule, ScheduleBuilder> {
               r'Schedule',
               'driverId',
             ),
-            dayOfWeek: BuiltValueNullFieldError.checkNotNull(
-              dayOfWeek,
-              r'Schedule',
-              'dayOfWeek',
-            ),
+            dayOfWeek: dayOfWeek,
             startTime: startTime.build(),
             endTime: endTime.build(),
             isRecurring: isRecurring,

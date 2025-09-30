@@ -44,11 +44,11 @@ abstract class OrderCreateRequest implements Built<OrderCreateRequest, OrderCrea
   String? get merchantId;
 
   @BuiltValueField(wireName: r'type')
-  OrderCreateRequestTypeEnum get type;
+  OrderCreateRequestTypeEnum? get type;
   // enum typeEnum {  ride,  delivery,  food,  };
 
   @BuiltValueField(wireName: r'status')
-  OrderCreateRequestStatusEnum get status;
+  OrderCreateRequestStatusEnum? get status;
   // enum statusEnum {  requested,  matching,  accepted,  arriving,  in_trip,  completed,  cancelled_by_user,  cancelled_by_driver,  cancelled_by_system,  };
 
   @BuiltValueField(wireName: r'pickupLocation')
@@ -86,7 +86,9 @@ abstract class OrderCreateRequest implements Built<OrderCreateRequest, OrderCrea
   factory OrderCreateRequest([void updates(OrderCreateRequestBuilder b)]) = _$OrderCreateRequest;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderCreateRequestBuilder b) => b;
+  static void _defaults(OrderCreateRequestBuilder b) => b
+      ..type = const OrderCreateRequestTypeEnum._('ride')
+      ..status = const OrderCreateRequestStatusEnum._('requested');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<OrderCreateRequest> get serializer => _$OrderCreateRequestSerializer();
@@ -123,16 +125,20 @@ class _$OrderCreateRequestSerializer implements PrimitiveSerializer<OrderCreateR
         specifiedType: const FullType(String),
       );
     }
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(OrderCreateRequestTypeEnum),
-    );
-    yield r'status';
-    yield serializers.serialize(
-      object.status,
-      specifiedType: const FullType(OrderCreateRequestStatusEnum),
-    );
+    if (object.type != null) {
+      yield r'type';
+      yield serializers.serialize(
+        object.type,
+        specifiedType: const FullType(OrderCreateRequestTypeEnum),
+      );
+    }
+    if (object.status != null) {
+      yield r'status';
+      yield serializers.serialize(
+        object.status,
+        specifiedType: const FullType(OrderCreateRequestStatusEnum),
+      );
+    }
     yield r'pickupLocation';
     yield serializers.serialize(
       object.pickupLocation,

@@ -33,7 +33,7 @@ abstract class ReportCreateRequest implements Built<ReportCreateRequest, ReportC
   String get targetUserId;
 
   @BuiltValueField(wireName: r'category')
-  ReportCreateRequestCategoryEnum get category;
+  ReportCreateRequestCategoryEnum? get category;
   // enum categoryEnum {  behavior,  safety,  fraud,  other,  };
 
   @BuiltValueField(wireName: r'description')
@@ -58,6 +58,7 @@ abstract class ReportCreateRequest implements Built<ReportCreateRequest, ReportC
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ReportCreateRequestBuilder b) => b
+      ..category = const ReportCreateRequestCategoryEnum._('other')
       ..status = const ReportCreateRequestStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)
@@ -93,11 +94,13 @@ class _$ReportCreateRequestSerializer implements PrimitiveSerializer<ReportCreat
       object.targetUserId,
       specifiedType: const FullType(String),
     );
-    yield r'category';
-    yield serializers.serialize(
-      object.category,
-      specifiedType: const FullType(ReportCreateRequestCategoryEnum),
-    );
+    if (object.category != null) {
+      yield r'category';
+      yield serializers.serialize(
+        object.category,
+        specifiedType: const FullType(ReportCreateRequestCategoryEnum),
+      );
+    }
     yield r'description';
     yield serializers.serialize(
       object.description,

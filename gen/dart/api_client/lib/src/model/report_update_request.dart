@@ -58,6 +58,7 @@ abstract class ReportUpdateRequest implements Built<ReportUpdateRequest, ReportU
 
   @BuiltValueHook(initializeBuilder: true)
   static void _defaults(ReportUpdateRequestBuilder b) => b
+      ..category = const ReportUpdateRequestCategoryEnum._('other')
       ..status = const ReportUpdateRequestStatusEnum._('pending');
 
   @BuiltValueSerializer(custom: true)

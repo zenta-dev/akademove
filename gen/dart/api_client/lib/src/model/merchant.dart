@@ -32,7 +32,7 @@ abstract class Merchant implements Built<Merchant, MerchantBuilder> {
   String get userId;
 
   @BuiltValueField(wireName: r'type')
-  MerchantTypeEnum get type;
+  MerchantTypeEnum? get type;
   // enum typeEnum {  merchant,  tenant,  };
 
   @BuiltValueField(wireName: r'name')
@@ -63,7 +63,8 @@ abstract class Merchant implements Built<Merchant, MerchantBuilder> {
   factory Merchant([void updates(MerchantBuilder b)]) = _$Merchant;
 
   @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(MerchantBuilder b) => b;
+  static void _defaults(MerchantBuilder b) => b
+      ..type = const MerchantTypeEnum._('merchant');
 
   @BuiltValueSerializer(custom: true)
   static Serializer<Merchant> get serializer => _$MerchantSerializer();
@@ -91,11 +92,13 @@ class _$MerchantSerializer implements PrimitiveSerializer<Merchant> {
       object.userId,
       specifiedType: const FullType(String),
     );
-    yield r'type';
-    yield serializers.serialize(
-      object.type,
-      specifiedType: const FullType(MerchantTypeEnum),
-    );
+    if (object.type != null) {
+      yield r'type';
+      yield serializers.serialize(
+        object.type,
+        specifiedType: const FullType(MerchantTypeEnum),
+      );
+    }
     yield r'name';
     yield serializers.serialize(
       object.name,

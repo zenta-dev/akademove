@@ -90,7 +90,7 @@ class _$User extends User {
   @override
   final String? image;
   @override
-  final UserRoleEnum role;
+  final UserRoleEnum? role;
   @override
   final bool banned;
   @override
@@ -111,7 +111,7 @@ class _$User extends User {
     required this.email,
     required this.emailVerified,
     this.image,
-    required this.role,
+    this.role,
     required this.banned,
     this.banReason,
     this.banExpires,
@@ -275,7 +275,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
             'emailVerified',
           ),
           image: image,
-          role: BuiltValueNullFieldError.checkNotNull(role, r'User', 'role'),
+          role: role,
           banned: BuiltValueNullFieldError.checkNotNull(
             banned,
             r'User',

@@ -92,13 +92,13 @@ class _$UpdateUserRoleRequestRoleEnumSerializer
 
 class _$UpdateUserRoleRequest extends UpdateUserRoleRequest {
   @override
-  final UpdateUserRoleRequestRoleEnum role;
+  final UpdateUserRoleRequestRoleEnum? role;
 
   factory _$UpdateUserRoleRequest([
     void Function(UpdateUserRoleRequestBuilder)? updates,
   ]) => (UpdateUserRoleRequestBuilder()..update(updates))._build();
 
-  _$UpdateUserRoleRequest._({required this.role}) : super._();
+  _$UpdateUserRoleRequest._({this.role}) : super._();
   @override
   UpdateUserRoleRequest rebuild(
     void Function(UpdateUserRoleRequestBuilder) updates,
@@ -165,15 +165,7 @@ class UpdateUserRoleRequestBuilder
   UpdateUserRoleRequest build() => _build();
 
   _$UpdateUserRoleRequest _build() {
-    final _$result =
-        _$v ??
-        _$UpdateUserRoleRequest._(
-          role: BuiltValueNullFieldError.checkNotNull(
-            role,
-            r'UpdateUserRoleRequest',
-            'role',
-          ),
-        );
+    final _$result = _$v ?? _$UpdateUserRoleRequest._(role: role);
     replace(_$result);
     return _$result;
   }
