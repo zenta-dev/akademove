@@ -13,6 +13,7 @@ enum Routes {
 }
 
 final router = GoRouter(
+  initialLocation: Routes.authSplash.path,
   routes: [
     ShellRoute(
       builder: (context, state, child) => child,
