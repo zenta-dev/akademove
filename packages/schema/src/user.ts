@@ -8,6 +8,11 @@ export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES).meta({
 	ref: "UserRole",
 });
 
+export const UserGenderSchema = z.enum(CONSTANTS.USER_GENDERS).meta({
+	title: "UserGender",
+	ref: "UserGender",
+});
+
 export const UserSchema = z
 	.object({
 		id: z.string(),
@@ -21,6 +26,8 @@ export const UserSchema = z
 		banned: z.boolean(),
 		banReason: z.string().optional(),
 		banExpires: DateSchema.optional(),
+		gender: UserGenderSchema,
+		phone: z.string(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
@@ -84,6 +91,7 @@ export const UpdateUserSchema = z.union([
 ]);
 
 export type UserRole = z.infer<typeof UserRoleSchema>;
+export type UserGender = z.infer<typeof UserGenderSchema>;
 export type User = z.infer<typeof UserSchema>;
 export type InsertUser = z.infer<typeof InsertUserSchema>;
 export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
