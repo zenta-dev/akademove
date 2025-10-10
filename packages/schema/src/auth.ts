@@ -1,6 +1,10 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
+import { InsertDriverSchema } from "./driver.ts";
+import { InsertMerchantSchema } from "./merchant.ts";
+import { UserGenderSchema, UserSchema } from "./user.ts";
 
 export const SessionSchema = z
 	.object({
@@ -33,6 +37,9 @@ export const SignUpSchema = z
 		email: z.email(
 			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
 		),
+		photo: z.file().mime("image/*").optional(),
+		gender: UserGenderSchema,
+		phone: z.string(),
 		password: z
 			.string()
 			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
@@ -44,6 +51,31 @@ export const SignUpSchema = z
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
 	});
+
+export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
+	{
+		photo: z.file().mime("image/*"),
+		detail: z.object({
+			...InsertDriverSchema.shape,
+		}),
+		studentCard: z.file().mime(["image/*"]),
+		driverLicense: z.file().mime(["image/*"]),
+		vehicleCertificate: z.file().mime(["image/*"]),
+	},
+);
+
+export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
+
+export const SignUpMerchantSchema = SignUpSchema.safeExtend({
+	detail: z.object({
+		...InsertMerchantSchema.shape,
+		bank: z.object({
+			provider: z.union([z.string(), BankProviderSchema]),
+			number: z.string(),
+		}),
+	}),
+	document: z.file().optional(),
+});
 
 export const ForgotPasswordSchema = z.object({
 	email: z.email(
@@ -65,8 +97,29 @@ export const ResetPasswordSchema = z
 		message: m.password_do_not_match(),
 	});
 
+export const SignInResponseSchema = z.object({
+	token: z.string(),
+	user: UserSchema,
+});
+
+export const SignUpResponseSchema = z.object({
+	user: UserSchema,
+});
+
+export const GetSessionResponseSchema = z
+	.object({
+		token: z.string().optional(),
+		user: UserSchema,
+	})
+	.nullable();
+
 export type Session = z.infer<typeof SessionSchema>;
 export type SignIn = z.infer<typeof SignInSchema>;
 export type SignUp = z.infer<typeof SignUpSchema>;
+export type SignUpDriver = z.infer<typeof SignUpDriverSchema>;
+export type SignUpMerchant = z.infer<typeof SignUpMerchantSchema>;
 export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
 export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
+export type SignInResponse = z.infer<typeof SignInResponseSchema>;
+export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
+export type GetSessionResponse = z.infer<typeof GetSessionResponseSchema>;
