@@ -10,7 +10,6 @@ resolution: workspace
 
 dependencies:
   api_client: ^1.0.0
-  auth_client: ^1.0.0
   bloc: ^9.0.0
   dart_mappable: ^4.6.1
   dio: ^5.9.0

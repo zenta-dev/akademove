@@ -10,7 +10,6 @@ dev_dependencies:
 workspace:
   - apps/mobile
   - gen/dart/api_client
-  - gen/dart/auth_client
 
 melos:
   scripts:
