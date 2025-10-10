@@ -64,6 +64,8 @@ export const createSuccessResponseSchema = <T>(schema: T) =>
 export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 	z.array(schema);
 
+export const ClientAgentSchema = z.enum(["web", "mobile", "unknown"]);
+
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
@@ -71,3 +73,4 @@ export type FailedResponse = z.infer<typeof FailedResponseSchema>;
 export type SuccessResponse<T> = z.infer<
 	ReturnType<typeof createSuccessResponseSchema<T>>
 >;
+export type ClientAgent = z.infer<typeof ClientAgentSchema>;
