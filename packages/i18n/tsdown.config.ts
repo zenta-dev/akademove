@@ -8,6 +8,7 @@ export default defineConfig({
 	unbundle: true,
 	clean: false,
 	dts: true,
+	ignoreWatch:[".turbo"],
 	plugins: [
 		paraglideVitePlugin({
 			project: "./project.inlang",
