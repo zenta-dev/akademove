@@ -1,13 +1,16 @@
-import type { Session } from "@repo/schema/auth";
-import type { User } from "@repo/schema/user";
+import type { Permissions } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
-import { getHeaders } from "@tanstack/react-start/server";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import { detectDevice } from "@/utils/user-agent";
-import { authClient } from "./client/auth";
+import { orpcClient } from "./client/orpc";
 
 export const getServerHeaders = createServerFn({ method: "GET" }).handler(
 	async () => {
-		return getHeaders();
+		const headers: Record<string, string> = {};
+		for (const [key, value] of getRequestHeaders().entries()) {
+			headers[key] = value;
+		}
+		return;
 	},
 );
 
@@ -18,67 +21,58 @@ export const getLayout = createIsomorphicFn()
 		return detectDevice(ua);
 	})
 	.server(() => {
-		const headers = getHeaders();
-		const ua = headers["user-agent"] ?? headers["User-Agent"];
+		const headers = getRequestHeaders();
+		const ua = headers.get("User-Agent") ?? "";
 		return detectDevice(ua);
 	});
 
 export const getSession = createIsomorphicFn()
 	.client(async () => {
-		const result = await authClient.getSession();
-		if (result.error) return undefined;
-		return (result.data ?? undefined) as unknown as
-			| { user: User; session: Session }
-			| undefined;
+		try {
+			const result = await orpcClient.auth.getSession();
+			const user = result.body.data?.user;
+			if (!user) return undefined;
+			return user;
+		} catch (_error) {
+			return undefined;
+		}
 	})
 	.server(async () => {
 		const headers = new Headers();
-		for (const [k, v] of Object.entries(await getServerHeaders())) {
+		for (const [k, v] of getRequestHeaders().entries()) {
 			if (v) headers.set(k, v);
 		}
-		const response = await fetch(
-			`${import.meta.env.VITE_SERVER_URL}/auth/get-session`,
-			{ method: "GET", headers },
-		);
-		const result: { user: User; session: Session } | null =
-			await response.json();
-		if (!result || !result.user) return undefined;
-		return result;
+		try {
+			const result = await orpcClient.auth.getSession(
+				{},
+				{ context: { headers } },
+			);
+			const user = result.body.data?.user;
+			if (!user) return undefined;
+			return user;
+		} catch (_error) {
+			return undefined;
+		}
 	});
-
-type Permissions = Parameters<
-	(typeof authClient)["admin"]["hasPermission"]
->["0"]["permissions"];
 
 export const hasAccess = createIsomorphicFn()
 	.client(async (permissions: Permissions) => {
-		console.log("client permissions", permissions);
-
-		const result = await authClient.admin.hasPermission({
-			permissions,
-		});
-		if (result.error || result.data.error || !result.data.success) return false;
-		return true;
+		try {
+			await orpcClient.auth.hasPermission({
+				body: { permissions },
+			});
+			return true;
+		} catch (_error) {
+			return false;
+		}
 	})
 	.server(async (permissions: Permissions) => {
-		console.log("server permissions", permissions);
-		const headers = getHeaders();
-		const response = await fetch(
-			`${import.meta.env.VITE_SERVER_URL}/auth/admin/has-permission`,
-			{
-				credentials: "include",
-				method: "POST",
-				headers: {
-					Cookie: headers.cookie || "",
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ permissions }),
-			},
-		);
-		if (!response.ok) return false;
-		const result = await response.json();
-		if (!result) return false;
-		if (result.error) return false;
-		if (!result.success) return false;
-		return true;
+		try {
+			await orpcClient.auth.hasPermission({
+				body: { permissions },
+			});
+			return true;
+		} catch (_error) {
+			return false;
+		}
 	});
