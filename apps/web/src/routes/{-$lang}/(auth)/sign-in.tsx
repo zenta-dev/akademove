@@ -7,6 +7,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { SignUpDialog } from "@/components/dialogs/sign-up-dialog";
 import { Submitting } from "@/components/submitting";
 import { PasswordToggle } from "@/components/toggle/password-toggle";
 import { Button } from "@/components/ui/button";
@@ -26,9 +27,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/client/auth";
-import { queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
+import { orpcQuery, queryClient } from "@/lib/client/orpc";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/sign-in")({
 	component: RouteComponent,
@@ -43,50 +42,37 @@ function RouteComponent() {
 		defaultValues: { email: "", password: "" },
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (credentials: SignIn) => {
-			const { error, data } = await authClient.signIn.email(credentials);
-			if (error) throw new BetterAuthClientError(error.message, error);
-			return data;
-		},
-		onSuccess: async (data) => {
-			const result = await authClient.getSession();
-			if (result.error || !result.data) {
+	const mutation = useMutation(
+		orpcQuery.auth.signIn.mutationOptions({
+			onSuccess: async (data) => {
+				toast.success(m.success_placeholder({ action: m.sign_in() }), {
+					description: m.welcome_back_placeholder({
+						name: data.body.data.user.name,
+					}),
+				});
+				await Promise.all([
+					router.invalidate(),
+					queryClient.invalidateQueries(),
+					router.navigate({ to: localizeHref("/") }),
+				]);
+			},
+			onError: (error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(m.sign_in().toLowerCase()),
 					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
 				);
-				return;
-			}
-			toast.success(m.success_placeholder({ action: m.sign_in() }), {
-				description: m.welcome_back_placeholder({
-					name: result.data.user.name,
-				}),
-			});
-			await Promise.all([router.invalidate(), queryClient.invalidateQueries()]);
-			if (data?.redirect && data?.url) {
-				await router.navigate({ to: data.url });
-			} else {
-				await router.navigate({ to: localizeHref("/") });
-			}
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.sign_in().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			form.setError("password", { message: error.message });
-		},
-	});
+				form.setError("password", { message: error.message });
+			},
+		}),
+	);
 
 	const onSubmit = useCallback(
 		async (values: SignIn) => {
-			await mutation.mutateAsync(values);
+			await mutation.mutateAsync({ body: values });
 		},
 		[mutation.mutateAsync],
 	);
@@ -168,12 +154,11 @@ function RouteComponent() {
 				</Form>
 				<div className="mt-6 flex items-center justify-center gap-2 text-sm">
 					<p className="text-muted-foreground">{m.dont_have_an_account()}</p>
-					<Link
-						to={localizeHref("/sign-up")}
-						className="text-blue-500 hover:underline"
-					>
-						{m.create_an_account()}
-					</Link>
+					<SignUpDialog asChild>
+						<p className="text-blue-500 hover:underline">
+							{m.create_an_account()}
+						</p>
+					</SignUpDialog>
 				</div>
 			</CardContent>
 		</Card>

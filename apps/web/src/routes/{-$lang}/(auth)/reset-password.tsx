@@ -28,9 +28,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/client/auth";
-import { queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
+import { orpcQuery, queryClient } from "@/lib/client/orpc";
+import type { BetterAuthClientError } from "@/lib/error";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/reset-password")({
 	validateSearch: zodValidator(
@@ -62,43 +61,37 @@ function RouteComponent() {
 		defaultValues: { newPassword: "", confirmPassword: "" },
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (credentials: ResetPassword) => {
-			const { error, data } = await authClient.resetPassword({
-				...credentials,
-				token,
-			});
-			if (error) throw new BetterAuthClientError(error.message, error);
-			return data;
-		},
-		onSuccess: async () => {
-			toast.success(
-				m.success_placeholder({
-					action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
-				}),
-			);
-			await Promise.all([
-				router.invalidate(),
-				queryClient.invalidateQueries(),
-				router.navigate({ to: localizeHref("/sign-in") }),
-			]);
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			form.setError("confirmPassword", { message: error.message });
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.auth.resetPassword.mutationOptions({
+			onSuccess: async () => {
+				toast.success(
+					m.success_placeholder({
+						action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
+					}),
+				);
+				await Promise.all([
+					router.invalidate(),
+					queryClient.invalidateQueries(),
+					router.navigate({ to: localizeHref("/sign-in") }),
+				]);
+			},
+			onError: (error: BetterAuthClientError) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
+				);
+				form.setError("confirmPassword", { message: error.message });
+			},
+		}),
+	);
 
 	const onSubmit = useCallback(
 		async (values: ResetPassword) => {
-			await mutation.mutateAsync(values);
+			await mutation.mutateAsync({ body: values });
 		},
 		[mutation.mutateAsync],
 	);

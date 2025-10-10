@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { localizeUrl, m } from "@repo/i18n";
+import { m } from "@repo/i18n";
 import { type ForgotPassword, ForgotPasswordSchema } from "@repo/schema/auth";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -25,8 +25,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/client/auth";
-import { BetterAuthClientError } from "@/lib/error";
+import { orpcQuery } from "@/lib/client/orpc";
+import type { BetterAuthClientError } from "@/lib/error";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/forgot-password")({
 	component: RouteComponent,
@@ -38,41 +38,35 @@ function RouteComponent() {
 		defaultValues: { email: "" },
 	});
 
-	const mutation = useMutation({
-		mutationFn: async (credentials: ForgotPassword) => {
-			const { error, data } = await authClient.requestPasswordReset({
-				...credentials,
-				redirectTo: `${localizeUrl(import.meta.env.VITE_WEB_URL)}/reset-password`,
-			});
-			if (error) throw new BetterAuthClientError(error.message, error);
-			return data;
-		},
-		onSuccess: async () => {
-			toast.success(
-				m.success_placeholder({
-					action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
-				}),
-				{
-					description: m.please_check_your_email(),
-				},
-			);
-		},
-		onError: (error: BetterAuthClientError) => {
-			toast.error(
-				m.failed_placeholder({
-					action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
-				}),
-				{
-					description: error.message || m.an_unexpected_error_occured(),
-				},
-			);
-			form.setError("email", { message: error.message });
-		},
-	});
+	const mutation = useMutation(
+		orpcQuery.auth.forgotPassword.mutationOptions({
+			onSuccess: async () => {
+				toast.success(
+					m.success_placeholder({
+						action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
+					}),
+					{
+						description: m.please_check_your_email(),
+					},
+				);
+			},
+			onError: (error: BetterAuthClientError) => {
+				toast.error(
+					m.failed_placeholder({
+						action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
+					}),
+					{
+						description: error.message || m.an_unexpected_error_occured(),
+					},
+				);
+				form.setError("email", { message: error.message });
+			},
+		}),
+	);
 
 	const onSubmit = useCallback(
 		async (values: ForgotPassword) => {
-			await mutation.mutateAsync(values);
+			await mutation.mutateAsync({ body: values });
 		},
 		[mutation.mutateAsync],
 	);
