@@ -11,8 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as Char123LangChar125IndexRouteImport } from './routes/{-$lang}/index'
 import { Route as Char123LangChar125authRouteRouteImport } from './routes/{-$lang}/(auth)/route'
-import { Route as Char123LangChar125RefIndexRouteImport } from './routes/{-$lang}/ref/index'
-import { Route as Char123LangChar125authSignUpRouteImport } from './routes/{-$lang}/(auth)/sign-up'
 import { Route as Char123LangChar125authSignInRouteImport } from './routes/{-$lang}/(auth)/sign-in'
 import { Route as Char123LangChar125authResetPasswordRouteImport } from './routes/{-$lang}/(auth)/reset-password'
 import { Route as Char123LangChar125authForgotPasswordRouteImport } from './routes/{-$lang}/(auth)/forgot-password'
@@ -50,6 +48,9 @@ import { Route as Char123LangChar125DashAdminMerchantsRouteImport } from './rout
 import { Route as Char123LangChar125DashAdminDriversRouteImport } from './routes/{-$lang}/dash/admin/drivers'
 import { Route as Char123LangChar125DashAdminConfigurationsRouteImport } from './routes/{-$lang}/dash/admin/configurations'
 import { Route as Char123LangChar125DashAdminAnalyticsRouteImport } from './routes/{-$lang}/dash/admin/analytics'
+import { Route as Char123LangChar125authSignUpUserRouteImport } from './routes/{-$lang}/(auth)/sign-up/user'
+import { Route as Char123LangChar125authSignUpMerchantRouteImport } from './routes/{-$lang}/(auth)/sign-up/merchant'
+import { Route as Char123LangChar125authSignUpDriverRouteImport } from './routes/{-$lang}/(auth)/sign-up/driver'
 import { Route as Char123LangChar125DashOperatorCouponsIndexRouteImport } from './routes/{-$lang}/dash/operator/coupons/index'
 import { Route as Char123LangChar125DashOperatorCouponsNewRouteImport } from './routes/{-$lang}/dash/operator/coupons/new'
 
@@ -63,18 +64,6 @@ const Char123LangChar125authRouteRoute =
     id: '/{-$lang}/(auth)',
     path: '/{-$lang}/',
     getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125RefIndexRoute =
-  Char123LangChar125RefIndexRouteImport.update({
-    id: '/{-$lang}/ref/',
-    path: '/{-$lang}/ref/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125authSignUpRoute =
-  Char123LangChar125authSignUpRouteImport.update({
-    id: '/sign-up',
-    path: '/sign-up',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
   } as any)
 const Char123LangChar125authSignInRoute =
   Char123LangChar125authSignInRouteImport.update({
@@ -298,6 +287,24 @@ const Char123LangChar125DashAdminAnalyticsRoute =
     path: '/analytics',
     getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
   } as any)
+const Char123LangChar125authSignUpUserRoute =
+  Char123LangChar125authSignUpUserRouteImport.update({
+    id: '/sign-up/user',
+    path: '/sign-up/user',
+    getParentRoute: () => Char123LangChar125authRouteRoute,
+  } as any)
+const Char123LangChar125authSignUpMerchantRoute =
+  Char123LangChar125authSignUpMerchantRouteImport.update({
+    id: '/sign-up/merchant',
+    path: '/sign-up/merchant',
+    getParentRoute: () => Char123LangChar125authRouteRoute,
+  } as any)
+const Char123LangChar125authSignUpDriverRoute =
+  Char123LangChar125authSignUpDriverRouteImport.update({
+    id: '/sign-up/driver',
+    path: '/sign-up/driver',
+    getParentRoute: () => Char123LangChar125authRouteRoute,
+  } as any)
 const Char123LangChar125DashOperatorCouponsIndexRoute =
   Char123LangChar125DashOperatorCouponsIndexRouteImport.update({
     id: '/coupons/',
@@ -321,8 +328,9 @@ export interface FileRoutesByFullPath {
   '/{-$lang}/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
   '/{-$lang}/reset-password': typeof Char123LangChar125authResetPasswordRoute
   '/{-$lang}/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/sign-up': typeof Char123LangChar125authSignUpRoute
-  '/{-$lang}/ref': typeof Char123LangChar125RefIndexRoute
+  '/{-$lang}/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
+  '/{-$lang}/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
+  '/{-$lang}/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
   '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
   '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
   '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
@@ -360,8 +368,9 @@ export interface FileRoutesByTo {
   '/{-$lang}/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
   '/{-$lang}/reset-password': typeof Char123LangChar125authResetPasswordRoute
   '/{-$lang}/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/sign-up': typeof Char123LangChar125authSignUpRoute
-  '/{-$lang}/ref': typeof Char123LangChar125RefIndexRoute
+  '/{-$lang}/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
+  '/{-$lang}/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
+  '/{-$lang}/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
   '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
   '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
   '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
@@ -406,8 +415,9 @@ export interface FileRoutesById {
   '/{-$lang}/(auth)/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
   '/{-$lang}/(auth)/reset-password': typeof Char123LangChar125authResetPasswordRoute
   '/{-$lang}/(auth)/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/(auth)/sign-up': typeof Char123LangChar125authSignUpRoute
-  '/{-$lang}/ref/': typeof Char123LangChar125RefIndexRoute
+  '/{-$lang}/(auth)/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
+  '/{-$lang}/(auth)/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
+  '/{-$lang}/(auth)/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
   '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
   '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
   '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
@@ -452,8 +462,9 @@ export interface FileRouteTypes {
     | '/{-$lang}/forgot-password'
     | '/{-$lang}/reset-password'
     | '/{-$lang}/sign-in'
-    | '/{-$lang}/sign-up'
-    | '/{-$lang}/ref'
+    | '/{-$lang}/sign-up/driver'
+    | '/{-$lang}/sign-up/merchant'
+    | '/{-$lang}/sign-up/user'
     | '/{-$lang}/dash/admin/analytics'
     | '/{-$lang}/dash/admin/configurations'
     | '/{-$lang}/dash/admin/drivers'
@@ -491,8 +502,9 @@ export interface FileRouteTypes {
     | '/{-$lang}/forgot-password'
     | '/{-$lang}/reset-password'
     | '/{-$lang}/sign-in'
-    | '/{-$lang}/sign-up'
-    | '/{-$lang}/ref'
+    | '/{-$lang}/sign-up/driver'
+    | '/{-$lang}/sign-up/merchant'
+    | '/{-$lang}/sign-up/user'
     | '/{-$lang}/dash/admin/analytics'
     | '/{-$lang}/dash/admin/configurations'
     | '/{-$lang}/dash/admin/drivers'
@@ -536,8 +548,9 @@ export interface FileRouteTypes {
     | '/{-$lang}/(auth)/forgot-password'
     | '/{-$lang}/(auth)/reset-password'
     | '/{-$lang}/(auth)/sign-in'
-    | '/{-$lang}/(auth)/sign-up'
-    | '/{-$lang}/ref/'
+    | '/{-$lang}/(auth)/sign-up/driver'
+    | '/{-$lang}/(auth)/sign-up/merchant'
+    | '/{-$lang}/(auth)/sign-up/user'
     | '/{-$lang}/dash/admin/analytics'
     | '/{-$lang}/dash/admin/configurations'
     | '/{-$lang}/dash/admin/drivers'
@@ -579,7 +592,6 @@ export interface RootRouteChildren {
   Char123LangChar125DashMerchantRouteRoute: typeof Char123LangChar125DashMerchantRouteRouteWithChildren
   Char123LangChar125DashOperatorRouteRoute: typeof Char123LangChar125DashOperatorRouteRouteWithChildren
   Char123LangChar125DashUserRouteRoute: typeof Char123LangChar125DashUserRouteRouteWithChildren
-  Char123LangChar125RefIndexRoute: typeof Char123LangChar125RefIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -597,20 +609,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/{-$lang}'
       preLoaderRoute: typeof Char123LangChar125authRouteRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/{-$lang}/ref/': {
-      id: '/{-$lang}/ref/'
-      path: '/{-$lang}/ref'
-      fullPath: '/{-$lang}/ref'
-      preLoaderRoute: typeof Char123LangChar125RefIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/{-$lang}/(auth)/sign-up': {
-      id: '/{-$lang}/(auth)/sign-up'
-      path: '/sign-up'
-      fullPath: '/{-$lang}/sign-up'
-      preLoaderRoute: typeof Char123LangChar125authSignUpRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
     }
     '/{-$lang}/(auth)/sign-in': {
       id: '/{-$lang}/(auth)/sign-in'
@@ -871,6 +869,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char123LangChar125DashAdminAnalyticsRouteImport
       parentRoute: typeof Char123LangChar125DashAdminRouteRoute
     }
+    '/{-$lang}/(auth)/sign-up/user': {
+      id: '/{-$lang}/(auth)/sign-up/user'
+      path: '/sign-up/user'
+      fullPath: '/{-$lang}/sign-up/user'
+      preLoaderRoute: typeof Char123LangChar125authSignUpUserRouteImport
+      parentRoute: typeof Char123LangChar125authRouteRoute
+    }
+    '/{-$lang}/(auth)/sign-up/merchant': {
+      id: '/{-$lang}/(auth)/sign-up/merchant'
+      path: '/sign-up/merchant'
+      fullPath: '/{-$lang}/sign-up/merchant'
+      preLoaderRoute: typeof Char123LangChar125authSignUpMerchantRouteImport
+      parentRoute: typeof Char123LangChar125authRouteRoute
+    }
+    '/{-$lang}/(auth)/sign-up/driver': {
+      id: '/{-$lang}/(auth)/sign-up/driver'
+      path: '/sign-up/driver'
+      fullPath: '/{-$lang}/sign-up/driver'
+      preLoaderRoute: typeof Char123LangChar125authSignUpDriverRouteImport
+      parentRoute: typeof Char123LangChar125authRouteRoute
+    }
     '/{-$lang}/dash/operator/coupons/': {
       id: '/{-$lang}/dash/operator/coupons/'
       path: '/coupons'
@@ -892,7 +911,9 @@ interface Char123LangChar125authRouteRouteChildren {
   Char123LangChar125authForgotPasswordRoute: typeof Char123LangChar125authForgotPasswordRoute
   Char123LangChar125authResetPasswordRoute: typeof Char123LangChar125authResetPasswordRoute
   Char123LangChar125authSignInRoute: typeof Char123LangChar125authSignInRoute
-  Char123LangChar125authSignUpRoute: typeof Char123LangChar125authSignUpRoute
+  Char123LangChar125authSignUpDriverRoute: typeof Char123LangChar125authSignUpDriverRoute
+  Char123LangChar125authSignUpMerchantRoute: typeof Char123LangChar125authSignUpMerchantRoute
+  Char123LangChar125authSignUpUserRoute: typeof Char123LangChar125authSignUpUserRoute
 }
 
 const Char123LangChar125authRouteRouteChildren: Char123LangChar125authRouteRouteChildren =
@@ -902,7 +923,12 @@ const Char123LangChar125authRouteRouteChildren: Char123LangChar125authRouteRoute
     Char123LangChar125authResetPasswordRoute:
       Char123LangChar125authResetPasswordRoute,
     Char123LangChar125authSignInRoute: Char123LangChar125authSignInRoute,
-    Char123LangChar125authSignUpRoute: Char123LangChar125authSignUpRoute,
+    Char123LangChar125authSignUpDriverRoute:
+      Char123LangChar125authSignUpDriverRoute,
+    Char123LangChar125authSignUpMerchantRoute:
+      Char123LangChar125authSignUpMerchantRoute,
+    Char123LangChar125authSignUpUserRoute:
+      Char123LangChar125authSignUpUserRoute,
   }
 
 const Char123LangChar125authRouteRouteWithChildren =
@@ -1076,8 +1102,16 @@ const rootRouteChildren: RootRouteChildren = {
     Char123LangChar125DashOperatorRouteRouteWithChildren,
   Char123LangChar125DashUserRouteRoute:
     Char123LangChar125DashUserRouteRouteWithChildren,
-  Char123LangChar125RefIndexRoute: Char123LangChar125RefIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
