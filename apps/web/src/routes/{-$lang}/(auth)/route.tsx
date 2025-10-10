@@ -8,12 +8,12 @@ export const Route = createFileRoute("/{-$lang}/(auth)")({
 
 function RouteComponent() {
 	return (
-		<div className="flex min-h-svh flex-col items-center justify-center">
-			<PublicHeader className="mx-auto mt-2 max-w-3xl rounded-xl border p-2" />
+		<div className="mx-auto flex h-full max-w-3xl flex-col items-center justify-between">
+			<PublicHeader className="mt-2 rounded-xl border p-2" />
 			<div className="flex grow" />
 			<Outlet />
 			<div className="flex grow" />
-			<PublicFooter className="mb-2 max-w-3xl rounded-xl border p-2" />
+			<PublicFooter className="mb-2 rounded-xl border p-2" />
 		</div>
 	);
 }
