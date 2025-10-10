@@ -20,16 +20,13 @@ const APP_NAME = "akademove";
 const app = await alchemy(APP_NAME);
 const zoneId = alchemy.env.ZONE_ID;
 
-const [mainDB, mainKV, sessionKV] = await Promise.all([
+const [mainDB, mainKV] = await Promise.all([
 	Hyperdrive(`${APP_NAME}-db`, {
 		name: `${APP_NAME}-db`,
 		origin: alchemy.secret.env.DATABASE_URL,
 	}),
 	KVNamespace(`${APP_NAME}-main-kv`, {
 		title: `${APP_NAME}-main-kv`,
-	}),
-	KVNamespace(`${APP_NAME}-session-kv`, {
-		title: `${APP_NAME}-session-kv`,
 	}),
 ]);
 
@@ -43,6 +40,7 @@ export const [server, web] = await Promise.all([
 		bindings: {
 			NODE_ENV: alchemy.env.NODE_ENV,
 			RUNTIME: alchemy.env.RUNTIME,
+			ROOT_DOMAIN: alchemy.env.ROOT_DOMAIN,
 			CORS_ORIGIN: alchemy.env.WEB_URL,
 			AUTH_SECRET: alchemy.secret(alchemy.env.AUTH_SECRET),
 			AUTH_URL: alchemy.env.AUTH_URL,
@@ -51,10 +49,11 @@ export const [server, web] = await Promise.all([
 			S3_ACCESS_KEY_ID: alchemy.secret.env.S3_ACCESS_KEY_ID,
 			S3_SECRET_ACCESS_KEY: alchemy.secret.env.S3_SECRET_ACCESS_KEY,
 			S3_PUBLIC_URL: alchemy.env.S3_PUBLIC_URL,
+			LOG_SOURCE_TOKEN: alchemy.secret.env.RESEND_API_KEY,
+			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
 			RESEND_API_KEY: alchemy.secret.env.RESEND_API_KEY,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
-			SESSION_KV: sessionKV,
 		},
 		dev: {
 			port: 3000,
@@ -69,6 +68,9 @@ export const [server, web] = await Promise.all([
 			VITE_NODE_ENV: alchemy.env.NODE_ENV,
 			VITE_WEB_URL: alchemy.env.WEB_URL,
 			VITE_SERVER_URL: alchemy.env.SERVER_URL,
+			VITE_GOOGLE_MAPS_API_KEY: alchemy.env.GOOGLE_MAPS_API_KEY,
+			LOG_SOURCE_TOKEN: alchemy.secret.env.RESEND_API_KEY,
+			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
 		},
 		dev: {
 			command: "bun run dev",
