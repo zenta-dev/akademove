@@ -7,7 +7,10 @@ export const PublicHeader = ({
 }: React.ComponentProps<"header">) => {
 	return (
 		<header
-			className={cn("sticky top-0 z-50 flex w-full items-center", className)}
+			className={cn(
+				"sticky top-0 z-50 flex w-full items-center bg-background/50 backdrop-blur-2xl",
+				className,
+			)}
 			{...props}
 		>
 			<div className="flex h-(--header-height) w-full items-center justify-between px-2">
