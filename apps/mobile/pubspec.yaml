@@ -42,6 +42,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/bg/
+    - assets/images/character/
+    - assets/images/hero/
     - assets/icons/
 
 flutter_gen:
