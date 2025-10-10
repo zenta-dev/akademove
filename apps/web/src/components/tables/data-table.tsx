@@ -37,6 +37,7 @@ interface DataTableProps<TData, TValue> {
 	isPending?: boolean;
 	columnVisibility?: VisibilityState;
 	setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
+	filterKey?: keyof TData;
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +46,7 @@ export function DataTable<TData, TValue>({
 	isPending = false,
 	columnVisibility,
 	setColumnVisibility,
+	filterKey,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -65,17 +67,28 @@ export function DataTable<TData, TValue>({
 	return (
 		<div className="p-2">
 			<div className="flex items-center">
-				<Input
-					placeholder="Filter emails..."
-					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-					onChange={(event) =>
-						table.getColumn("email")?.setFilterValue(event.target.value)
-					}
-					className="max-w-sm"
-				/>
+				{filterKey && (
+					<Input
+						placeholder="Filter items..."
+						value={
+							filterKey
+								? ((table
+										.getColumn(String(filterKey))
+										?.getFilterValue() as string) ?? "")
+								: ""
+						}
+						onChange={(event) => {
+							if (filterKey)
+								table
+									.getColumn(String(filterKey))
+									?.setFilterValue(event.target.value);
+						}}
+						className="max-w-sm"
+					/>
+				)}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant="outline" className="ml-auto">
+						<Button variant="outline" size="sm" className="ml-auto">
 							{m.columns()}
 						</Button>
 					</DropdownMenuTrigger>
