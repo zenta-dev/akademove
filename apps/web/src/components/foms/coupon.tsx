@@ -12,7 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { CalendarIcon, Check, InfoIcon } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/submitting";
@@ -204,8 +204,11 @@ export const CouponForm = ({
 		[coupon, insertMutation, updateMutation, kind],
 	);
 
-	const isLoading =
-		kind === "new" ? insertMutation.isPending : updateMutation.isPending;
+	const isLoading = useMemo(
+		() =>
+			kind === "new" ? insertMutation.isPending : updateMutation.isPending,
+		[kind, insertMutation.isPending, updateMutation.isPending],
+	);
 
 	return (
 		<Form {...form}>
