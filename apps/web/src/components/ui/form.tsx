@@ -1,6 +1,7 @@
+"use client";
+
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { type HTMLMotionProps, motion } from "framer-motion";
 import * as React from "react";
 import {
 	Controller,
@@ -134,7 +135,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 	);
 }
 
-function FormMessage({ className, ...props }: HTMLMotionProps<"p">) {
+function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
 	const { error, formMessageId } = useFormField();
 	const body = error ? String(error?.message ?? "") : props.children;
 
@@ -143,18 +144,14 @@ function FormMessage({ className, ...props }: HTMLMotionProps<"p">) {
 	}
 
 	return (
-		<motion.p
+		<p
 			data-slot="form-message"
 			id={formMessageId}
-			initial={{ opacity: 0, y: -10 }} // 👈 start slightly above
-			animate={{ opacity: 1, y: 0 }} // 👈 fade in and slide down
-			exit={{ opacity: 0, y: -10 }} // 👈 fade out upward (optional)
-			transition={{ duration: 0.3, ease: "easeOut" }}
 			className={cn("text-destructive text-sm", className)}
 			{...props}
 		>
 			{body}
-		</motion.p>
+		</p>
 	);
 }
 
