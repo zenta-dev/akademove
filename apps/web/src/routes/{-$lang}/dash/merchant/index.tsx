@@ -9,6 +9,7 @@ export const Route = createFileRoute("/{-$lang}/dash/merchant/")({
 	beforeLoad: async () => {
 		const ok = await hasAccess({
 			merchant: ["get", "update"],
+			merchantMenu: ["list", "get", "create", "update", "delete"],
 			order: ["get", "update"],
 			review: ["get"],
 			report: ["get"],
