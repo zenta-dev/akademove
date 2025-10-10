@@ -1,5 +1,5 @@
 import { localizeHref, m } from "@repo/i18n";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -11,22 +11,33 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { authClient } from "@/lib/client/auth";
-import { queryClient } from "@/lib/client/orpc";
+import { orpcQuery, queryClient } from "@/lib/client/orpc";
 import { cn } from "@/utils/cn";
+import { SignUpDialog } from "../dialogs/sign-up-dialog";
+import { Submitting } from "../submitting";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { DashboardNavigator } from "./dashboard-navigator";
 
 export const UserDropdwon = () => {
 	const router = useRouter();
-	const { data: user, isPending } = useQuery({
-		queryKey: ["my-session"],
-		queryFn: async () => {
-			const ses = await authClient.getSession();
-			return ses.data?.user;
-		},
-	});
+	const { data, isPending } = useQuery(
+		orpcQuery.auth.getSession.queryOptions({
+			retry: 1,
+		}),
+	);
+
+	const mutation = useMutation(
+		orpcQuery.auth.signOut.mutationOptions({
+			onSuccess: async () => {
+				await Promise.all([
+					queryClient.invalidateQueries(),
+					router.invalidate(),
+					router.navigate({ to: localizeHref("/sign-in") }),
+				]);
+			},
+		}),
+	);
 
 	if (isPending) {
 		return (
@@ -39,7 +50,7 @@ export const UserDropdwon = () => {
 		);
 	}
 
-	if (!user) {
+	if (!data?.body.data) {
 		return (
 			<div className="flex items-center gap-2">
 				<Link
@@ -48,20 +59,20 @@ export const UserDropdwon = () => {
 				>
 					{m.sign_in()}
 				</Link>
-				<Link to={localizeHref("/sign-up")} className={cn(buttonVariants())}>
-					{m.sign_up()}
-				</Link>
+				<SignUpDialog asChild>
+					<Button>{m.sign_up()}</Button>
+				</SignUpDialog>
 			</div>
 		);
 	}
 
 	return (
 		<div className="flex items-center gap-2">
-			<DashboardNavigator />
+			<DashboardNavigator role={data.body.data.user.role} />
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Avatar className="border">
-						<AvatarImage src={user.image || ""} />
+						<AvatarImage src={data.body.data.user.image || ""} />
 						<AvatarFallback>
 							<UserRound />
 						</AvatarFallback>
@@ -70,27 +81,16 @@ export const UserDropdwon = () => {
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>My Account</DropdownMenuLabel>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem>{user.email}</DropdownMenuItem>
+					<DropdownMenuItem>{data.body.data.user.email}</DropdownMenuItem>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem asChild>
 						<Button
 							variant="destructive"
 							className="w-full"
-							onClick={() => {
-								authClient.signOut({
-									fetchOptions: {
-										onSuccess: async () => {
-											await Promise.all([
-												queryClient.invalidateQueries(),
-												router.invalidate(),
-												router.navigate({ to: localizeHref("/sign-in") }),
-											]);
-										},
-									},
-								});
-							}}
+							disabled={mutation.isPending}
+							onClick={async () => await mutation.mutateAsync({})}
 						>
-							Sign Out
+							{mutation.isPending ? <Submitting /> : m.sign_out()}
 						</Button>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
