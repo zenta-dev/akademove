@@ -21,10 +21,7 @@ export const TimeSchema = z
 		ref: "Time",
 	});
 
-export const DateSchema = z.number().meta({
-	description: "unix timestamp format",
-	example: 1757670225,
-});
+export const DateSchema = z.coerce.date();
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK).default("sunday");
 
