@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
+import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { capitalizeFirstLetter } from "better-auth";
 import { BikeIcon, PackageIcon, PizzaIcon, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
