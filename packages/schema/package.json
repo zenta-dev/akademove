@@ -11,10 +11,10 @@
 		"clean": "git clean -xdf .turbo node_modules"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@repo/i18n": "workspace:*",
-		"zod": "^4.1.8"
+		"zod": "^4.1.11"
 	}
 }
