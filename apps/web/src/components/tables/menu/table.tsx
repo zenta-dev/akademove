@@ -20,6 +20,7 @@ export const MerchantMenuTable = ({ merchantId }: { merchantId: string }) => {
 			isPending={menus.isPending}
 			columnVisibility={visibility}
 			setColumnVisibility={setVisibility}
+			filterKey={"name"}
 		/>
 	);
 };
