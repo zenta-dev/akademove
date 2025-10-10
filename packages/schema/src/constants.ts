@@ -34,6 +34,16 @@ export const CONSTANTS = Object.freeze({
 	REVIEW_CATEGORIES: ["cleanliness", "courtesy", "other"] as const,
 	GENERAL_RULE_TYPES: ["percentage", "fixed"] as const,
 	USER_ROLES: ["admin", "operator", "merchant", "driver", "user"] as const,
+	USER_GENDERS: ["male", "female"] as const,
+	BANK_PROVIDERS: [
+		"BCA",
+		"BNI",
+		"BRI",
+		"Mandiri",
+		"Permata",
+		"CIMB",
+		"Danamon",
+	] as const,
 } as const);
 
 export const AUTH_CONSTANTS = Object.freeze({
