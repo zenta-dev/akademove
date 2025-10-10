@@ -3,17 +3,19 @@ import { paraglideMiddleware } from "@repo/i18n/paraglide/server";
 import {
 	createStartHandler,
 	defaultStreamHandler,
-	getWebRequest,
+	defineHandlerCallback,
+	getRequest,
 } from "@tanstack/react-start/server";
-import { router } from "./router";
 
-import "./global-middleware";
-
-export default createStartHandler({
-	createRouter: () => router,
-})((event) =>
-	paraglideMiddleware(getWebRequest(), ({ locale }) => {
+const customHandler = defineHandlerCallback((ctx) => {
+	return paraglideMiddleware(getRequest(), ({ locale }) => {
 		overwriteGetLocale(() => locale);
-		return defaultStreamHandler(event);
-	}),
-);
+		return defaultStreamHandler(ctx);
+	});
+});
+
+const fetch = createStartHandler(customHandler);
+
+export default {
+	fetch,
+};
