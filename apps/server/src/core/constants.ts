@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import * as z from "zod";
 
 export const FEATURE_TAGS = Object.freeze({
+	AUTH: "Auth",
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
 	MERCHANT: "Merchant",
@@ -20,6 +21,7 @@ export const CACHE_TTLS = Object.freeze({
 } as const);
 
 export const CACHE_PREFIXES = Object.freeze({
+	AUTH: `${FEATURE_TAGS.AUTH.toLowerCase()}:`,
 	CONFIGURATION: `${FEATURE_TAGS.CONFIGURATION.toLowerCase()}:`,
 	DRIVER: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
 	MERCHANT: `${FEATURE_TAGS.MERCHANT.toLowerCase()}:`,
