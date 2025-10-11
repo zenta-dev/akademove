@@ -1,27 +1,49 @@
+import { CONSTANTS } from "@repo/schema/constants";
 import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+	boolean,
+	pgEnum,
+	pgTable,
+	text,
+	timestamp,
+	varchar,
+} from "drizzle-orm/pg-core";
+
+export const userGender = pgEnum("user_gender", CONSTANTS.USER_GENDERS);
 
 export const user = pgTable("users", {
 	id: text("id").primaryKey(),
 	name: text("name").notNull(),
 	email: text("email").notNull().unique(),
-	emailVerified: boolean("email_verified").notNull(),
+	emailVerified: boolean("email_verified").notNull().default(false),
 	image: text("image"),
 	role: text().notNull().$type<UserRole>().default("user"),
 	banned: boolean().notNull().default(false),
 	banReason: text("ban_reason"),
-	banExpires: timestamp("ban_expires"),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
+	gender: userGender().notNull(),
+	phone: varchar({ length: 15 }).notNull().unique(),
+	banExpires: timestamp("ban_expires", { mode: "date" }),
+	createdAt: timestamp("created_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: timestamp("updated_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date())
+		.$onUpdateFn(() => new Date()),
 });
 
 export const session = pgTable("sessions", {
 	id: text("id").primaryKey(),
-	expiresAt: timestamp("expires_at").notNull(),
+	expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
 	token: text("token").notNull().unique(),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
+	createdAt: timestamp("created_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: timestamp("updated_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date())
+		.$onUpdateFn(() => new Date()),
 	ipAddress: text("ip_address"),
 	userAgent: text("user_agent"),
 	impersonatedBy: text("impersonated_by").references(() => user.id, {
@@ -42,28 +64,35 @@ export const account = pgTable("accounts", {
 	accessToken: text("access_token"),
 	refreshToken: text("refresh_token"),
 	idToken: text("id_token"),
-	accessTokenExpiresAt: timestamp("access_token_expires_at"),
-	refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+	accessTokenExpiresAt: timestamp("access_token_expires_at", { mode: "date" }),
+	refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+		mode: "date",
+	}),
 	scope: text("scope"),
 	password: text("password"),
-	createdAt: timestamp("created_at").notNull(),
-	updatedAt: timestamp("updated_at").notNull(),
+	createdAt: timestamp("created_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date()),
+	updatedAt: timestamp("updated_at", { mode: "date" })
+		.notNull()
+		.$defaultFn(() => new Date())
+		.$onUpdateFn(() => new Date()),
 });
 
 export const verification = pgTable("verifications", {
 	id: text("id").primaryKey(),
 	identifier: text("identifier").notNull(),
 	value: text("value").notNull(),
-	expiresAt: timestamp("expires_at").notNull(),
-	createdAt: timestamp("created_at"),
-	updatedAt: timestamp("updated_at"),
+	expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
+	createdAt: timestamp("created_at", { mode: "date" }),
+	updatedAt: timestamp("updated_at", { mode: "date" }),
 });
 
 export const jwks = pgTable("jwks", {
 	id: text("id").primaryKey(),
 	publicKey: text("public_key").notNull(),
 	privateKey: text("private_key").notNull(),
-	createdAt: timestamp("created_at").notNull(),
+	createdAt: timestamp("created_at", { mode: "date" }).notNull(),
 });
 
 ///
@@ -71,7 +100,7 @@ export const jwks = pgTable("jwks", {
 ///
 export const userRelations = relations(user, ({ many }) => ({
 	accounts: many(account),
-	sessions: many(session),
+	// sessions: many(session),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
@@ -81,11 +110,11 @@ export const accountRelations = relations(account, ({ one }) => ({
 	}),
 }));
 
-export const sessionRelations = relations(session, ({ one }) => ({
-	user: one(user, {
-		fields: [session.userId],
-		references: [user.id],
-	}),
-}));
+// export const sessionRelations = relations(session, ({ one }) => ({
+// 	user: one(user, {
+// 		fields: [session.userId],
+// 		references: [user.id],
+// 	}),
+// }));
 
 export type UserDatabase = typeof user.$inferSelect;
