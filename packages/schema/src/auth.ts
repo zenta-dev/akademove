@@ -85,6 +85,7 @@ export const ForgotPasswordSchema = z.object({
 
 export const ResetPasswordSchema = z
 	.object({
+		token: z.string(),
 		newPassword: z
 			.string()
 			.min(8, m.min_placeholder({ field: m.new_password(), min: 8 })),
