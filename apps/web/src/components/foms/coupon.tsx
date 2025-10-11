@@ -15,8 +15,18 @@ import { CalendarIcon, Check, InfoIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Submitting } from "@/components/submitting";
+import { Submitting } from "@/components/misc/submitting";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+} from "@/components/ui/command";
 import {
 	Form,
 	FormControl,
@@ -25,26 +35,20 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
-import { cn } from "@/utils/cn";
-import { Calendar } from "../ui/calendar";
-import { Checkbox } from "../ui/checkbox";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
-} from "../ui/command";
 import {
 	HoverCard,
 	HoverCardContent,
 	HoverCardTrigger,
-} from "../ui/hover-card";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+} from "@/components/ui/hover-card";
+import { Input } from "@/components/ui/input";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { orpcQuery, queryClient } from "@/lib/orpc";
+import { cn } from "@/utils/cn";
 
 const GENERAL_RULE_TYPES: { id: GeneralRuleType; name: string }[] = [
 	{

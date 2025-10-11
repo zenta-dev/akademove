@@ -9,7 +9,6 @@ import {
 	Store,
 	Ticket,
 } from "lucide-react";
-import { cn } from "@/utils/cn";
 import {
 	Sidebar,
 	SidebarContent,
@@ -18,7 +17,8 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarRail,
-} from "../ui/sidebar";
+} from "@/components/ui/sidebar";
+import { cn } from "@/utils/cn";
 
 const navMain = Object.freeze([
 	{

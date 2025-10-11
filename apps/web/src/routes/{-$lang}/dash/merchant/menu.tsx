@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
-import { orpcQuery } from "@/lib/client/orpc";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
+import { orpcQuery } from "@/lib/orpc";
 
 export const Route = createFileRoute("/{-$lang}/dash/merchant/menu")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.MENU }] }),

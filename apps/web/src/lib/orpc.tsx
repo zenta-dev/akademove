@@ -1,14 +1,12 @@
-import { createORPCClient, ORPCError, onError, onStart } from "@orpc/client";
+import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
-import { getAuthToken } from "@repo/shared";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { RefreshCwIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { isDev } from "@/utils";
 import { log } from "@/utils/logger";
-import type { ServerSpecClient } from "../../../../server/src/features/index";
+import type { ServerSpecClient } from "../../../server/src/features/index";
 
 export const queryClient = new QueryClient({
 	queryCache: new QueryCache({

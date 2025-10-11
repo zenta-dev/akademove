@@ -9,7 +9,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Submitting } from "@/components/submitting";
+import { Submitting } from "@/components/misc/submitting";
 import { PasswordToggle } from "@/components/toggle/password-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { scrollToField } from "@/utils/form";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/sign-up/driver")({

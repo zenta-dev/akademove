@@ -6,10 +6,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
-import { Submitting } from "../submitting";
-import { Button } from "../ui/button";
+import { Submitting } from "@/components/misc/submitting";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -19,7 +17,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
@@ -27,14 +25,16 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
+import { BetterAuthClientError } from "@/lib/error";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 	const [open, setOpen] = useState(false);

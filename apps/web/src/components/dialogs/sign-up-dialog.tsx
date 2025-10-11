@@ -4,8 +4,7 @@ import { type FC, type ReactNode, useState } from "react";
 import DriverChar from "@/assets/character/driver.svg?url";
 import MerchantChar from "@/assets/character/merchant.svg?url";
 import UserChar from "@/assets/character/user.svg?url";
-import type { FileRouteTypes } from "@/routeTree.gen";
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
@@ -13,7 +12,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
+import type { FileRouteTypes } from "@/routeTree.gen";
 
 interface SignUpDialogProps {
 	asChild?: boolean;

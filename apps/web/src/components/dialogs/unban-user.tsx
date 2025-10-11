@@ -6,10 +6,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
-import { Submitting } from "../submitting";
-import { Button } from "../ui/button";
+import { Submitting } from "@/components/misc/submitting";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -19,8 +17,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
-import { Form } from "../ui/form";
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { BetterAuthClientError } from "@/lib/error";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);

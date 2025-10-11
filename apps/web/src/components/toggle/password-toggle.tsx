@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
-import { Button } from "../ui/button";
 
 type Props = {
 	isVisible: boolean;

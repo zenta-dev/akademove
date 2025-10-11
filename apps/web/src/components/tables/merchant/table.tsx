@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { VisibilityState } from "@tanstack/react-table";
 import { useState } from "react";
-import { orpcQuery } from "@/lib/client/orpc";
-import { DataTable } from "../data-table";
+import { DataTable } from "@/components/tables/data-table";
+import { orpcQuery } from "@/lib/orpc";
 import { MERCHANT_COLUMNS } from "./columns";
 
 export const MerchantTable = () => {

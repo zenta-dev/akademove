@@ -1,7 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookMarked, Gauge, History, UserRound, Wallet } from "lucide-react";
-import { cn } from "@/utils/cn";
 import {
 	Sidebar,
 	SidebarContent,
@@ -10,7 +9,8 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarRail,
-} from "../ui/sidebar";
+} from "@/components/ui/sidebar";
+import { cn } from "@/utils/cn";
 
 const navMain = Object.freeze([
 	{

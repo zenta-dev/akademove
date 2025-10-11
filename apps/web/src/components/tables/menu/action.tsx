@@ -6,7 +6,7 @@ import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { MerchantMenuForm } from "@/components/foms/merchant-menu";
-import { Submitting } from "@/components/submitting";
+import { Submitting } from "@/components/misc/submitting";
 import {
 	AlertDialog,
 	AlertDialogCancel,
@@ -35,7 +35,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {

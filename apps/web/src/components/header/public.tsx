@@ -1,5 +1,5 @@
+import { UserDropdwon } from "@/components/header/user-dropdown";
 import { cn } from "@/utils/cn";
-import { UserDropdwon } from "./user-dropdown";
 
 export const PublicHeader = ({
 	className,

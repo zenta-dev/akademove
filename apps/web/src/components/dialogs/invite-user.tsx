@@ -6,11 +6,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
-import { Submitting } from "../submitting";
-import { PasswordToggle } from "../toggle/password-toggle";
-import { Button } from "../ui/button";
+import { Submitting } from "@/components/misc/submitting";
+import { PasswordToggle } from "@/components/toggle/password-toggle";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -20,7 +18,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
@@ -28,15 +26,17 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
+import { BetterAuthClientError } from "@/lib/error";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const InviteUserDialog = () => {
 	const [open, setOpen] = useState(false);

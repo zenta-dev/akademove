@@ -2,6 +2,10 @@ import { localizeHref, m } from "@repo/i18n";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
+import { SignUpDialog } from "@/components/dialogs/sign-up-dialog";
+import { DashboardNavigator } from "@/components/header/dashboard-navigator";
+import { Submitting } from "@/components/misc/submitting";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -11,13 +15,9 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
+import { Skeleton } from "@/components/ui/skeleton";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
-import { SignUpDialog } from "../dialogs/sign-up-dialog";
-import { Submitting } from "../submitting";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Skeleton } from "../ui/skeleton";
-import { DashboardNavigator } from "./dashboard-navigator";
 
 export const UserDropdwon = () => {
 	const router = useRouter();

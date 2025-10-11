@@ -3,7 +3,7 @@ import type { UserRole } from "@repo/schema/user";
 import { Link } from "@tanstack/react-router";
 import { GripIcon } from "lucide-react";
 import { useMemo } from "react";
-import { buttonVariants } from "../ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 export const DashboardNavigator = ({ role }: { role: UserRole }) => {
 	const route = useMemo(() => {

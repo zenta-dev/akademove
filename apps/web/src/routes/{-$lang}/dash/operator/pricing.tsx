@@ -6,11 +6,11 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { BikeIcon, PackageIcon, PizzaIcon, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Submitting } from "@/components/misc/submitting";
 import {
 	type UpdatePricing,
 	UpdatePricingSchema,
 } from "@/components/schema/pricing";
-import { Submitting } from "@/components/submitting";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -25,8 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const CONFIGURATIONS = [

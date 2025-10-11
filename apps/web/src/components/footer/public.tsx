@@ -1,7 +1,7 @@
 import type React from "react";
+import { LangToggle } from "@/components/toggle/lang-toggle";
+import { ThemeToggle } from "@/components/toggle/theme-toggle";
 import { cn } from "@/utils/cn";
-import { LangToggle } from "../toggle/lang-toggle";
-import { ThemeToggle } from "../toggle/theme-toggle";
 
 export const PublicFooter = ({
 	className,

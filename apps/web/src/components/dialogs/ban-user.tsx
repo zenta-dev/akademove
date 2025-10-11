@@ -7,11 +7,9 @@ import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/client/orpc";
-import { BetterAuthClientError } from "@/lib/error";
-import { Submitting } from "../submitting";
-import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
+import { Submitting } from "@/components/misc/submitting";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
 	Dialog,
 	DialogClose,
@@ -21,7 +19,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "../ui/dialog";
+} from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
@@ -29,10 +27,16 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { BetterAuthClientError } from "@/lib/error";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const BanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);

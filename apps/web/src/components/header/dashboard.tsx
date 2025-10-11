@@ -1,12 +1,16 @@
 import { m } from "@repo/i18n";
 import { SidebarIcon } from "lucide-react";
+import { UserDropdwon } from "@/components/header/user-dropdown";
+import { LangToggle } from "@/components/toggle/lang-toggle";
+import { ThemeToggle } from "@/components/toggle/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebar } from "@/components/ui/sidebar";
-import { LangToggle } from "../toggle/lang-toggle";
-import { ThemeToggle } from "../toggle/theme-toggle";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { UserDropdwon } from "./user-dropdown";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const DashboardHeader = ({ scope }: { scope: string }) => {
 	const sidebar = useSidebar();

@@ -2,7 +2,7 @@ import type { Permissions } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { detectDevice } from "@/utils/user-agent";
-import { orpcClient } from "./client/orpc";
+import { orpcClient } from "./orpc";
 
 export const getServerHeaders = createServerFn({ method: "GET" }).handler(
 	async () => {

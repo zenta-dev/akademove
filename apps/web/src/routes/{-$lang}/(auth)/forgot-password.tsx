@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Submitting } from "@/components/submitting";
+import { Submitting } from "@/components/misc/submitting";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -25,8 +25,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { orpcQuery } from "@/lib/client/orpc";
 import type { BetterAuthClientError } from "@/lib/error";
+import { orpcQuery } from "@/lib/orpc";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/forgot-password")({
 	component: RouteComponent,

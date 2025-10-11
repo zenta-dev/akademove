@@ -9,7 +9,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { Submitting } from "@/components/submitting";
+import { Submitting } from "@/components/misc/submitting";
 import { PasswordToggle } from "@/components/toggle/password-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,8 +28,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { orpcQuery, queryClient } from "@/lib/client/orpc";
 import type { BetterAuthClientError } from "@/lib/error";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const Route = createFileRoute("/{-$lang}/(auth)/reset-password")({
 	validateSearch: zodValidator(
@@ -41,8 +41,6 @@ export const Route = createFileRoute("/{-$lang}/(auth)/reset-password")({
 	),
 	component: RouteComponent,
 	beforeLoad: ({ search }) => {
-		if (!search.token)
-			redirect({ to: localizeHref("/forgot-password"), throw: true });
 		return search;
 	},
 	loaderDeps: (c) => {
@@ -58,7 +56,7 @@ function RouteComponent() {
 
 	const form = useForm<ResetPassword>({
 		resolver: zodResolver(ResetPasswordSchema),
-		defaultValues: { newPassword: "", confirmPassword: "" },
+		defaultValues: { newPassword: "", confirmPassword: "", token },
 	});
 
 	const mutation = useMutation(
@@ -96,6 +94,10 @@ function RouteComponent() {
 		[mutation.mutateAsync],
 	);
 
+	if (!token) {
+		return redirect({ to: localizeHref("/forgot-password"), throw: true });
+	}
+
 	return (
 		<Card className="flex min-w-sm flex-col gap-2">
 			<CardHeader className="text-center">
@@ -108,6 +110,18 @@ function RouteComponent() {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="mt-4 space-y-6"
 					>
+						<FormField
+							control={form.control}
+							name="token"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<input {...field} className="hidden" />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={form.control}
 							name="newPassword"

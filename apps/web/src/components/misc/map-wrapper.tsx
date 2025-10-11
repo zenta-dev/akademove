@@ -8,7 +8,7 @@ import {
 } from "@vis.gl/react-google-maps";
 import { useTheme } from "next-themes";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 
 export const MapWrapper = ({
 	value,

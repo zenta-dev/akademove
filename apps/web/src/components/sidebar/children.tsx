@@ -1,6 +1,6 @@
 import { Outlet } from "@tanstack/react-router";
+import { SidebarInset } from "@/components/ui/sidebar";
 import { cn } from "@/utils/cn";
-import { SidebarInset } from "../ui/sidebar";
 
 export const SidebarChildren = () => {
 	return (
