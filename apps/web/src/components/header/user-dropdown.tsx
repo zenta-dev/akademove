@@ -24,12 +24,20 @@ export const UserDropdwon = () => {
 	const { data, isPending } = useQuery(
 		orpcQuery.auth.getSession.queryOptions({
 			retry: 1,
+			onError: async () => {
+				queryClient.clear();
+				await Promise.all([
+					queryClient.invalidateQueries(),
+					router.invalidate(),
+				]);
+			},
 		}),
 	);
 
 	const mutation = useMutation(
 		orpcQuery.auth.signOut.mutationOptions({
 			onSuccess: async () => {
+				queryClient.clear();
 				await Promise.all([
 					queryClient.invalidateQueries(),
 					router.invalidate(),
@@ -37,6 +45,7 @@ export const UserDropdwon = () => {
 				]);
 			},
 			onError: async () => {
+				queryClient.clear();
 				await Promise.all([
 					queryClient.invalidateQueries(),
 					router.invalidate(),
