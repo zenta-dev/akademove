@@ -1,7 +1,9 @@
+import { ORPCError } from "@orpc/client";
 import { localizeHref, m } from "@repo/i18n";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useRouter } from "@tanstack/react-router";
 import { UserRound } from "lucide-react";
+import { useState } from "react";
 import { SignUpDialog } from "@/components/dialogs/sign-up-dialog";
 import { DashboardNavigator } from "@/components/header/dashboard-navigator";
 import { Submitting } from "@/components/misc/submitting";
@@ -21,10 +23,22 @@ import { cn } from "@/utils/cn";
 
 export const UserDropdwon = () => {
 	const router = useRouter();
+	const [errorCount, setErrorCount] = useState(0);
 	const { data, isPending } = useQuery(
 		orpcQuery.auth.getSession.queryOptions({
 			retry: 1,
+			queryFn: async () => {
+				if (errorCount > 2) {
+					throw new ORPCError("UNAUTHORIZED", { message: "Invalid session" });
+				}
+				const res = await orpcQuery.auth.getSession.call();
+				return res;
+			},
+			onSuccess: () => {
+				setErrorCount(0);
+			},
 			onError: async () => {
+				setErrorCount((prev) => prev + 1);
 				queryClient.clear();
 				await Promise.all([
 					queryClient.invalidateQueries(),
@@ -37,6 +51,7 @@ export const UserDropdwon = () => {
 	const mutation = useMutation(
 		orpcQuery.auth.signOut.mutationOptions({
 			onSuccess: async () => {
+				setErrorCount(0);
 				queryClient.clear();
 				await Promise.all([
 					queryClient.invalidateQueries(),
