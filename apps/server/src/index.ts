@@ -1,9 +1,15 @@
+import "./polyfill";
+
 import { env } from "cloudflare:workers";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { onError } from "@orpc/server";
+import { ORPCError, ValidationError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
-import { CORSPlugin, StrictGetMethodPlugin } from "@orpc/server/plugins";
+import {
+	CORSPlugin,
+	ResponseHeadersPlugin,
+	StrictGetMethodPlugin,
+} from "@orpc/server/plugins";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { LocationSchema, TimeSchema } from "@repo/schema/common";
 import { ConfigurationSchema } from "@repo/schema/configuration";
@@ -17,15 +23,17 @@ import { ScheduleSchema } from "@repo/schema/schedule";
 import { UserSchema } from "@repo/schema/user";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { getAuth } from "@/core/services/auth";
 import { getDatabase } from "@/core/services/db";
 import { TRUSTED_ORIGINS } from "./core/constants";
-import { BaseError } from "./core/error";
+import { BaseError, UnknownError } from "./core/error";
 import { createHono } from "./core/hono";
-import type { ORPCCOntext } from "./core/orpc";
+import type { ORPCContext } from "./core/orpc";
 import { CloudflareKVService } from "./core/services/kv";
 import { ResendMailService } from "./core/services/mail";
+import { RBACService } from "./core/services/rbac";
+import { S3StorageService } from "./core/services/storage";
 import { ServerRouter } from "./features";
+import { AuthRepository } from "./features/auth/repository";
 import { createConfigurationRepository } from "./features/configuration/repository";
 import { createCouponRepository } from "./features/coupon/repository";
 import { createDriverRepository } from "./features/driver/repository";
@@ -46,10 +54,19 @@ app.use("*", async (c, next) => {
 	c.set("db", db);
 	const mail = new ResendMailService(env.RESEND_API_KEY);
 	c.set("mail", mail);
-	const auth = getAuth(db, new CloudflareKVService(env.SESSION_KV), mail);
-	c.set("auth", auth);
 	const kv = new CloudflareKVService(env.MAIN_KV);
 	c.set("kv", kv);
+	const storage = new S3StorageService({
+		endpoint: env.S3_ENDPOINT,
+		region: env.S3_REGION,
+		accessKeyId: env.S3_ACCESS_KEY_ID,
+		secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+		publicUrl: env.S3_PUBLIC_URL,
+	});
+	c.set("storage", storage);
+	const rbac = new RBACService();
+	c.set("rbac", rbac);
+
 	try {
 		await next();
 	} finally {
@@ -62,24 +79,30 @@ app.use(
 	cors({
 		origin: TRUSTED_ORIGINS,
 		allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
-		allowHeaders: ["Content-Type", "Authorization"],
+		allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
 		credentials: true,
 	}),
 );
 
-app.all("/auth/*", (c) => c.var.auth.handler(c.req.raw));
+const converter = new ZodToJsonSchemaConverter();
+const sharedPlugins = [
+	new CORSPlugin({
+		origin: TRUSTED_ORIGINS,
+		allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
+		allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
+		exposeHeaders: ["Content-Length"],
+		maxAge: 600,
+		credentials: true,
+	}),
+	new ResponseHeadersPlugin(),
+];
+
 const apiHandler = new OpenAPIHandler(ServerRouter, {
 	plugins: [
-		new CORSPlugin({
-			origin: TRUSTED_ORIGINS,
-			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
-			exposeHeaders: ["Content-Length"],
-			maxAge: 600,
-			credentials: true,
-		}),
+		...sharedPlugins,
 		new StrictGetMethodPlugin(),
 		new OpenAPIReferencePlugin({
-			schemaConverters: [new ZodToJsonSchemaConverter()],
+			schemaConverters: [converter],
 			specGenerateOptions: {
 				commonSchemas: {
 					// bussiness entities
@@ -96,6 +119,7 @@ const apiHandler = new OpenAPIHandler(ServerRouter, {
 					// additional
 					Location: { schema: LocationSchema, strategy: "output" },
 					Time: { schema: TimeSchema, strategy: "output" },
+					Statements: { schema: RBACService.schema, strategy: "input" },
 				},
 				info: {
 					title: "AkadeMove API",
@@ -117,30 +141,71 @@ const apiHandler = new OpenAPIHandler(ServerRouter, {
 		}),
 	],
 	interceptors: [
-		onError((error) => {
-			console.error("ORPC Error Interceptor:", error);
-		}),
+		async (opts) => {
+			try {
+				return await opts.next();
+			} catch (error) {
+				console.error("ORPC Error Interceptor:", error);
+				if (error instanceof ORPCError) {
+					const { cause } = error;
+					if (cause instanceof ValidationError) {
+						for (const iss of cause.issues) {
+							console.error(iss);
+						}
+					}
+				}
+				if (error instanceof BaseError) {
+					throw error.toORPCError();
+				}
+
+				throw new UnknownError("An error occured", {
+					code: "INTERNAL_SERVER_ERROR",
+				}).toORPCError();
+			}
+		},
 	],
 });
 
 export const rpcHandler = new RPCHandler(ServerRouter, {
+	plugins: [...sharedPlugins],
 	interceptors: [
-		onError((error) => {
-			console.error(error);
-		}),
+		async (opts) => {
+			try {
+				return await opts.next();
+			} catch (error) {
+				console.error("ORPC Error Interceptor:", error);
+				if (error instanceof ORPCError) {
+					const { cause } = error;
+					if (cause instanceof ValidationError) {
+						for (const iss of cause.issues) {
+							console.error(iss);
+						}
+					}
+				}
+				if (error instanceof BaseError) {
+					throw error.toORPCError();
+				}
+
+				throw new UnknownError("An error occured", {
+					code: "INTERNAL_SERVER_ERROR",
+				}).toORPCError();
+			}
+		},
 	],
 });
 
 app.use("/*", async (c, next) => {
-	const context: ORPCCOntext = {
+	const context: ORPCContext = {
 		req: c.req.raw,
 		svc: {
 			db: c.var.db,
-			auth: c.var.auth,
 			kv: c.var.kv,
 			mail: c.var.mail,
+			storage: c.var.storage,
+			rbac: c.var.rbac,
 		},
 		repo: {
+			auth: new AuthRepository(c.var.db, c.var.kv, c.var.storage),
 			configuration: createConfigurationRepository(c.var.db, c.var.kv),
 			driver: createDriverRepository(c.var.db, c.var.kv),
 			merchant: {
@@ -152,9 +217,10 @@ app.use("/*", async (c, next) => {
 			report: createReportRepository(c.var.db, c.var.kv),
 			review: createReviewRepository(c.var.db, c.var.kv),
 			schedule: createScheduleRepository(c.var.db, c.var.kv),
-			user: createUserRepository(c.var.db, c.var.auth),
+			user: createUserRepository(c.var.db),
 		},
 		user: c.var.user,
+		clientAgent: "unknown",
 	};
 
 	const rpcResult = await rpcHandler.handle(c.req.raw, {
