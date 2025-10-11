@@ -1,21 +1,16 @@
-import { overwriteGetLocale } from "@repo/i18n/paraglide/runtime";
-import { paraglideMiddleware } from "@repo/i18n/paraglide/server";
 import {
-	createStartHandler,
-	defaultStreamHandler,
-	defineHandlerCallback,
-	getRequest,
-} from "@tanstack/react-start/server";
-
-const customHandler = defineHandlerCallback((ctx) => {
-	return paraglideMiddleware(getRequest(), ({ locale }) => {
-		overwriteGetLocale(() => locale);
-		return defaultStreamHandler(ctx);
-	});
-});
-
-const fetch = createStartHandler(customHandler);
+	overwriteGetLocale,
+	overwriteGetUrlOrigin,
+	paraglideMiddleware,
+} from "@repo/i18n";
+import handler from "@tanstack/react-start/server-entry";
 
 export default {
-	fetch,
+	fetch(req: Request): Promise<Response> {
+		return paraglideMiddleware(req, ({ request, locale }) => {
+			overwriteGetLocale(() => locale);
+			overwriteGetUrlOrigin(() => new URL(request.url).origin);
+			return handler.fetch(request);
+		});
+	},
 };
