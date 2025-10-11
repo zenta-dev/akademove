@@ -13,10 +13,12 @@ export default defineConfig({
 		paraglideVitePlugin({
 			project: "./project.inlang",
 			outdir: "./src/paraglide",
+			outputStructure:'message-modules',
 			cookieName: "locale",
 			localStorageKey: "locale",
-			disableAsyncLocalStorage: true,
-			strategy: ["url", "cookie", "baseLocale", "globalVariable"],
+			disableAsyncLocalStorage: false,
+			cleanOutdir: false,
+			strategy: ["url", "cookie", "preferredLanguage", "baseLocale"],
 		}),
 		dts({
 			insertTypesEntry: true,
