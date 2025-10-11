@@ -1,0 +1,264 @@
+import { env } from "cloudflare:workers";
+import { randomBytes } from "node:crypto";
+import type {
+	ForgotPassword,
+	ResetPassword,
+	SignIn,
+	SignUp,
+	SignUpDriver,
+	SignUpMerchant,
+} from "@repo/schema/auth";
+import type { ClientAgent } from "@repo/schema/common";
+import type { UserRole } from "@repo/schema/user";
+import { getFileExtension } from "@repo/shared";
+import { FEATURE_TAGS } from "@/core/constants";
+import { AuthError, BaseError, RepositoryError } from "@/core/error";
+import { log } from "@/core/logger";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
+import { JwtManager } from "@/utils/jwt";
+import { PasswordManager } from "@/utils/password";
+
+export class AuthRepository {
+	#db: DatabaseService;
+	#kv: KeyValueService;
+	#storage: StorageService;
+	#jwt: JwtManager;
+	#pw: PasswordManager;
+
+	private readonly JWT_EXPIRY = "7d";
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
+		this.#db = db;
+		this.#kv = kv;
+		this.#storage = storage;
+		this.#jwt = new JwtManager({ secret: env.AUTH_SECRET });
+		this.#pw = new PasswordManager();
+	}
+
+	private composeKey(id: string) {
+		return `${FEATURE_TAGS.AUTH}:${FEATURE_TAGS.USER}:${id}`;
+	}
+
+	private generateId(): string {
+		return randomBytes(32).toString("hex");
+	}
+
+	async signIn(params: SignIn & { clientAgent?: ClientAgent }) {
+		log.debug(params, `${this.signIn.name} body`);
+
+		try {
+			const user = await this.#db.query.user.findFirst({
+				with: {
+					accounts: {
+						columns: { password: true },
+						where: (f, op) => op.eq(f.providerId, "credentials"),
+					},
+				},
+				where: (f, op) => op.eq(f.email, params.email),
+			});
+
+			if (!user?.accounts[0]) {
+				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
+			}
+
+			const isValidPassword = this.#pw.verify(
+				user.accounts[0].password ?? "",
+				params.password,
+			);
+
+			if (!isValidPassword) {
+				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
+			}
+
+			// biome-ignore lint/correctness/noUnusedVariables: to exclude accounts to result
+			const { accounts, ...userData } = user;
+			const [token, _] = await Promise.all([
+				this.#jwt.sign({
+					id: userData.id,
+					role: userData.role,
+					expiration: this.JWT_EXPIRY,
+					clientAgent: params.clientAgent,
+				}),
+				this.#kv.put(this.composeKey(user.id), user),
+			]);
+			log.debug(userData, `${this.signIn.name} success`);
+			return { token, user: userData };
+		} catch (error) {
+			log.error(error, `${this.signIn.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("An error occured", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	async signUp(params: SignUp & { role?: UserRole }) {
+		log.debug(params, `${this.signUp.name} body`);
+
+		try {
+			const existingUser = await this.#db.query.user.findFirst({
+				columns: { id: true },
+				where: (f, op) =>
+					op.or(op.eq(f.email, params.email), op.eq(f.phone, params.phone)),
+			});
+
+			if (existingUser) {
+				throw new AuthError("Email or phone already used", {
+					code: "FORBIDDEN",
+				});
+			}
+
+			const hashedPassword = this.#pw.hash(params.password);
+			const userId = this.generateId();
+
+			const [user] = await this.#db
+				.insert(tables.user)
+				.values({
+					...params,
+					id: userId,
+					role: params.role ?? "user",
+				})
+				.returning();
+
+			const promises: Promise<unknown>[] = [
+				this.#db.insert(tables.account).values({
+					id: this.generateId(),
+					accountId: this.generateId(),
+					userId: user.id,
+					providerId: "credentials",
+					password: hashedPassword,
+				}),
+			];
+
+			if (params.photo) {
+				const extension = getFileExtension(params.photo);
+				promises.push(
+					this.#storage.upload({
+						bucket: "user",
+						key: `PP-${user.id}.${extension}`,
+						file: params.photo,
+					}),
+				);
+			}
+
+			await Promise.all(promises);
+			return { user };
+		} catch (error) {
+			log.error(error, `${this.signUp.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("An error occured", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	async signUpDriver(params: SignUpDriver) {
+		try {
+			const { user } = await this.signUp({ ...params, role: "driver" });
+			const uploadItems = [
+				{ prefix: "SC", file: params.studentCard },
+				{ prefix: "DL", file: params.driverLicense },
+				{ prefix: "VC", file: params.vehicleCertificate },
+			];
+
+			await Promise.all([
+				...uploadItems.map(({ prefix, file }) =>
+					this.#storage.upload({
+						bucket: "driver",
+						key: `${prefix}-${user.id}.${getFileExtension(file)}`,
+						file,
+					}),
+				),
+			]);
+
+			return { user };
+		} catch (error) {
+			log.error(error, `${this.signUpDriver.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("An error occured", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	async signUpMerchant(params: SignUpMerchant) {
+		try {
+			const { user } = await this.signUp({ ...params, role: "merchant" });
+
+			const doc = params.document;
+			if (doc) {
+				await this.#storage.upload({
+					bucket: "merchant",
+					key: `D-${user.id}.${getFileExtension(doc)}`,
+					file: doc,
+				});
+			}
+			return { user };
+		} catch (error) {
+			log.error(error, `${this.signUpMerchant.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("An error occured", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	async getSession(token: string) {
+		log.debug(
+			{ jwt: `${token.substring(0, 20)}...` },
+			`${this.getSession.name} | JWT => `,
+		);
+
+		try {
+			const payload = await this.#jwt.verify(token);
+
+			const user = await this.#kv.get(this.composeKey(payload.id), {
+				fallback: async () =>
+					await this.#db.query.user.findFirst({
+						where: (f, op) => op.eq(f.id, payload.id),
+					}),
+			});
+
+			if (!user) {
+				throw new AuthError("User not found", { code: "UNAUTHORIZED" });
+			}
+
+			let newToken: string | undefined;
+			if (payload.shouldRotate) {
+				newToken = await this.#jwt.sign({
+					id: user.id,
+					role: user.role,
+					expiration: this.JWT_EXPIRY,
+				});
+			}
+
+			return {
+				user,
+				token: newToken,
+				payload,
+			};
+		} catch (error) {
+			log.error(error, `${this.getSession.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("Invalid or expired token", {
+				code: "UNAUTHORIZED",
+			});
+		}
+	}
+
+	async forgotPassword(_params: ForgotPassword) {
+		// TODO: Implement this
+		throw new RepositoryError("UNIMPLEMENTED");
+	}
+
+	async resetPassword(_params: ResetPassword) {
+		// TODO: Implement this
+		throw new RepositoryError("UNIMPLEMENTED");
+	}
+}
