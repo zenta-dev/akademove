@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MerchantDatabase } from "@/core/tables/merchant";
@@ -23,8 +24,6 @@ export const createMerchantMainRepository = (
 		return {
 			...item,
 			location: item.location ?? undefined,
-			createdAt: item.createdAt.getTime(),
-			updatedAt: item.updatedAt.getTime(),
 		};
 	}
 
@@ -77,9 +76,10 @@ export const createMerchantMainRepository = (
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing merchants", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to listing merchants");
 		}
 	}
 
@@ -98,9 +98,10 @@ export const createMerchantMainRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get merchant by id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get merchant by id "${id}"`);
 		}
 	}
 
@@ -113,9 +114,10 @@ export const createMerchantMainRepository = (
 			if (!result) throw new RepositoryError("Failed get merchant from db");
 			return _composeEntity(result);
 		} catch (error) {
-			throw new RepositoryError(`Failed to get merchant by user id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get merchant by user id "${id}"`);
 		}
 	}
 
@@ -133,9 +135,10 @@ export const createMerchantMainRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError("Failed to create merchant", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to create merchant");
 		}
 	}
 
@@ -164,9 +167,7 @@ export const createMerchantMainRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update merchant with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			throw new RepositoryError(`Failed to update merchant with id "${id}"`);
 		}
 	}
 
@@ -183,9 +184,10 @@ export const createMerchantMainRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete merchant with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to delete merchant with id "${id}"`);
 		}
 	}
 

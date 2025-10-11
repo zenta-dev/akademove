@@ -1,18 +1,17 @@
 import { implement } from "@orpc/server";
 import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
-import type { ORPCCOntext } from "@/core/orpc";
+import type { ORPCContext } from "@/core/orpc";
 import { MerchantMenuSpec } from "./spec";
 
 const os = implement(MerchantMenuSpec)
-	.$context<ORPCCOntext>()
+	.$context<ORPCContext>()
 	.use(authMiddleware);
 
 export const MerchantMenuHandler = os.router({
 	list: os.list
-		.use(hasPermission({ merchant: ["list"] }))
+		.use(hasPermission({ merchantMenu: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.merchant.menu.list(query);
-
 			return {
 				status: 200,
 				body: {
@@ -22,7 +21,7 @@ export const MerchantMenuHandler = os.router({
 			};
 		}),
 	get: os.get
-		.use(hasPermission({ merchant: ["get"] }))
+		.use(hasPermission({ merchantMenu: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.merchant.menu.get(params.id);
 
@@ -35,7 +34,7 @@ export const MerchantMenuHandler = os.router({
 			};
 		}),
 	create: os.create
-		.use(hasPermission({ merchant: ["create"] }))
+		.use(hasPermission({ merchantMenu: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const result = await context.repo.merchant.menu.create({
 				...body,
@@ -47,7 +46,7 @@ export const MerchantMenuHandler = os.router({
 			};
 		}),
 	update: os.update
-		.use(hasPermission({ merchant: ["update"] }))
+		.use(hasPermission({ merchantMenu: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.merchant.menu.update(params.id, body);
 
@@ -57,7 +56,7 @@ export const MerchantMenuHandler = os.router({
 			};
 		}),
 	remove: os.remove
-		.use(hasPermission({ merchant: ["update"] }))
+		.use(hasPermission({ merchantMenu: ["delete"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.menu.remove(params.id);
 

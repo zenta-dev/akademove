@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverDatabase } from "@/core/tables/driver";
@@ -22,8 +23,6 @@ export const createDriverRepository = (
 		return {
 			...item,
 			currentLocation: item.currentLocation ?? undefined,
-			lastLocationUpdate: item.lastLocationUpdate?.getTime(),
-			createdAt: item.createdAt?.getTime(),
 		};
 	}
 
@@ -82,9 +81,10 @@ export const createDriverRepository = (
 			console.log("RESULT => ", result);
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing drivers", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to listing drivers");
 		}
 	}
 
@@ -103,9 +103,10 @@ export const createDriverRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get driver by id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get driver by id "${id}"`);
 		}
 	}
 
@@ -128,9 +129,10 @@ export const createDriverRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError("Failed to create driver", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to create driver");
 		}
 	}
 
@@ -165,9 +167,7 @@ export const createDriverRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update driver with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			throw new RepositoryError(`Failed to update driver with id "${id}"`);
 		}
 	}
 
@@ -184,9 +184,10 @@ export const createDriverRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete driver with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to delete driver with id "${id}"`);
 		}
 	}
 

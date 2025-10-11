@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
@@ -22,8 +23,7 @@ export const createReportRepository = (
 			evidenceUrl: item.evidenceUrl ?? undefined,
 			handledById: item.handledById ?? undefined,
 			resolution: item.resolution ?? undefined,
-			reportedAt: item.reportedAt.getTime(),
-			resolvedAt: item.resolvedAt?.getTime(),
+			resolvedAt: item.resolvedAt ?? undefined,
 		};
 	}
 
@@ -76,9 +76,10 @@ export const createReportRepository = (
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing reports", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to listing reports");
 		}
 	}
 
@@ -97,9 +98,10 @@ export const createReportRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get report by id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get report by id "${id}"`);
 		}
 	}
 
@@ -117,9 +119,10 @@ export const createReportRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError("Failed to create report", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to create report");
 		}
 	}
 
@@ -153,9 +156,7 @@ export const createReportRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update report with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			throw new RepositoryError(`Failed to update report with id "${id}"`);
 		}
 	}
 
@@ -172,9 +173,10 @@ export const createReportRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete report with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to delete report with id "${id}"`);
 		}
 	}
 

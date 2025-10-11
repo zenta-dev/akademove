@@ -1,24 +1,21 @@
 import type { InsertUser, UpdateUser, User, UserRole } from "@repo/schema/user";
-import { APIError } from "better-auth";
 import { eq } from "drizzle-orm";
-import { RepositoryError } from "@/core/error";
+import { BaseError, RepositoryError } from "@/core/error";
 import type { GetAllOptions } from "@/core/interface";
-import type { AuthService } from "@/core/services/auth";
+import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { UserDatabase } from "@/core/tables/auth";
 
 export const createUserRepository = (
 	db: DatabaseService,
-	auth: AuthService,
+	// auth: AuthService,
 ) => {
 	function _composeEntity(item: UserDatabase): User {
 		return {
 			...item,
 			image: item.image ?? undefined,
 			banReason: item.banReason ?? undefined,
-			banExpires: item.banExpires?.getTime() ?? undefined,
-			createdAt: item.createdAt.getTime(),
-			updatedAt: item.updatedAt.getTime(),
+			banExpires: item.banExpires ?? undefined,
 		};
 	}
 	async function _getFromDB(id: string): Promise<User | undefined> {
@@ -53,9 +50,10 @@ export const createUserRepository = (
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing users", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to listing users");
 		}
 	}
 
@@ -67,9 +65,10 @@ export const createUserRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get user by id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get user by id "${id}"`);
 		}
 	}
 
@@ -92,17 +91,13 @@ export const createUserRepository = (
 
 			return { ...result, password: item.password };
 		} catch (error) {
-			if (error instanceof APIError) {
+			if (error instanceof BaseError) {
 				throw new RepositoryError(error.message, {
-					code: error.body?.code,
-					prevError: error instanceof Error ? error : undefined,
+					code: error.code,
 				});
 			}
 			throw new RepositoryError(
 				error instanceof Error ? error.message : "Failed to create user",
-				{
-					prevError: error instanceof Error ? error : undefined,
-				},
 			);
 		}
 	}
@@ -170,9 +165,7 @@ export const createUserRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update user with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			throw new RepositoryError(`Failed to update user with id "${id}"`);
 		}
 	}
 
@@ -183,9 +176,10 @@ export const createUserRepository = (
 				.where(eq(tables.user.id, id))
 				.returning({ id: tables.user.id });
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete user with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to delete user with id "${id}"`);
 		}
 	}
 

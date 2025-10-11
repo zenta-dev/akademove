@@ -1,9 +1,9 @@
 import { implement } from "@orpc/server";
 import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
-import type { ORPCCOntext } from "@/core/orpc";
+import type { ORPCContext } from "@/core/orpc";
 import { ReviewSpec } from "./spec";
 
-const os = implement(ReviewSpec).$context<ORPCCOntext>().use(authMiddleware);
+const os = implement(ReviewSpec).$context<ORPCContext>().use(authMiddleware);
 
 export const ReviewHandler = os.router({
 	list: os.list

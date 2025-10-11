@@ -7,6 +7,7 @@ import {
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const MerchantMenuSpec = {
 	list: oc
@@ -55,6 +56,10 @@ export const MerchantMenuSpec = {
 			path: "/",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(InsertMerchantMenuSchema),
+			}),
 		})
 		.input(
 			z.object({
@@ -75,6 +80,10 @@ export const MerchantMenuSpec = {
 			path: "/{id}",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(UpdateMerchantMenuSchema),
+			}),
 		})
 		.input(
 			z.object({

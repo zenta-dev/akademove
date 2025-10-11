@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
+import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
@@ -16,10 +17,7 @@ export const createReviewRepository = (
 	}
 
 	function _composeEntity(item: ReviewDatabase): Review {
-		return {
-			...item,
-			createdAt: item.createdAt.getTime(),
-		};
+		return item;
 	}
 
 	async function _getFromKV(id: string): Promise<Review | undefined> {
@@ -71,9 +69,10 @@ export const createReviewRepository = (
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			throw new RepositoryError("Failed to listing reviews", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to listing reviews");
 		}
 	}
 
@@ -92,9 +91,10 @@ export const createReviewRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError(`Failed to get review by id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to get review by id "${id}"`);
 		}
 	}
 
@@ -112,9 +112,10 @@ export const createReviewRepository = (
 
 			return result;
 		} catch (error) {
-			throw new RepositoryError("Failed to create review", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError("Failed to create review");
 		}
 	}
 
@@ -142,9 +143,7 @@ export const createReviewRepository = (
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update review with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			throw new RepositoryError(`Failed to update review with id "${id}"`);
 		}
 	}
 
@@ -161,9 +160,10 @@ export const createReviewRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			throw new RepositoryError(`Failed to delete review with id "${id}"`, {
-				prevError: error instanceof Error ? error : undefined,
-			});
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+
+			throw new RepositoryError(`Failed to delete review with id "${id}"`);
 		}
 	}
 
