@@ -24,6 +24,8 @@ export const merchant = pgTable("merchants", {
 		.references(() => user.id, { onDelete: "cascade" }),
 	type: merchantType().notNull(),
 	name: text().notNull(),
+	email: text().notNull().unique(),
+	phone: text().notNull().unique(),
 	address: text().notNull(),
 	location: jsonb().$type<Location>(),
 	isActive: boolean("is_active").notNull().default(true),
