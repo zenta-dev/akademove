@@ -62,7 +62,7 @@ function RouteComponent() {
 						action: capitalizeFirstLetter(m.sign_in().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("password", { message: error.message });
@@ -156,7 +156,7 @@ function RouteComponent() {
 					<p className="text-muted-foreground">{m.dont_have_an_account()}</p>
 					<SignUpDialog asChild>
 						<p className="text-blue-500 hover:underline">
-							{m.create_an_account()}
+							{m.create_account()}
 						</p>
 					</SignUpDialog>
 				</div>

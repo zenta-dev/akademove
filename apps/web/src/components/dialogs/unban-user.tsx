@@ -51,7 +51,7 @@ export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 						action: capitalizeFirstLetter(m.unban_user().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 			},

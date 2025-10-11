@@ -163,7 +163,7 @@ export const CouponForm = ({
 				),
 			}),
 			{
-				description: error.message || m.an_unexpected_error_occured(),
+				description: error.message || m.an_unexpected_error_occurred(),
 			},
 		);
 	}, []);
@@ -503,7 +503,10 @@ export const CouponForm = ({
 													/>
 													<CommandList>
 														<CommandEmpty>
-															{m.no_found_placeholder({ field: m.type() })}.
+															{m.no_results_placeholder({
+																field: m.type().toLowerCase(),
+															})}
+															.
 														</CommandEmpty>
 														<CommandGroup>
 															{GENERAL_RULE_TYPES.map((type) => (

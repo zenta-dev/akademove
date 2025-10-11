@@ -90,7 +90,7 @@ function RouteComponent() {
 						action: capitalizeFirstLetter(m.merchant_sign_up().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 
@@ -302,7 +302,7 @@ function RouteComponent() {
 										onClick={() => setCopyPersonal(!copyPersonal)}
 										type="button"
 									>
-										{m.copy_from_my_personal_data()}
+										{m.copy_from_personal_data()}
 									</button>
 								</div>
 							</div>

@@ -71,7 +71,7 @@ export const BanUserDialog = ({ userId }: { userId: string }) => {
 						action: capitalizeFirstLetter(m.ban_user().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("banExpiresIn", { message: error.message });

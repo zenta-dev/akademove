@@ -189,7 +189,7 @@ export function ConfigurationItem({
 						action: capitalizeFirstLetter(m.update_pricing().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 			},

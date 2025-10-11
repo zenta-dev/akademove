@@ -79,7 +79,7 @@ export const InviteUserDialog = () => {
 						action: capitalizeFirstLetter(m.invite_user().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {

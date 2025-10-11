@@ -79,7 +79,7 @@ function RouteComponent() {
 						action: capitalizeFirstLetter(m.reset_password().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("confirmPassword", { message: error.message });

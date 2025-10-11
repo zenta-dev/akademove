@@ -65,7 +65,7 @@ export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 						action: capitalizeFirstLetter(m.update_user_role().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("role", { message: error.message });

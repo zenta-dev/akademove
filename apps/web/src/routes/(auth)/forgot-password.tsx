@@ -56,7 +56,7 @@ function RouteComponent() {
 						action: capitalizeFirstLetter(m.forgot_password().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("email", { message: error.message });

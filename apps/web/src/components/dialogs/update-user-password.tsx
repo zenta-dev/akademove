@@ -70,7 +70,7 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 						),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 				form.setError("password", { message: error.message });

@@ -82,7 +82,7 @@ function RouteComponent() {
 						action: capitalizeFirstLetter(m.driver_sign_up().toLowerCase()),
 					}),
 					{
-						description: error.message || m.an_unexpected_error_occured(),
+						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
 

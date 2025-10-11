@@ -84,7 +84,7 @@ export const MerchantMenuForm = ({
 				),
 			}),
 			{
-				description: error.message || m.an_unexpected_error_occured(),
+				description: error.message || m.an_unexpected_error_occurred(),
 			},
 		);
 	}, []);

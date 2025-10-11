@@ -47,7 +47,7 @@ export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="h-8 w-8 p-0">
 					<span className="sr-only">
-						{m.perform_merchant_menu_action_placeholder({ name: val.name })}
+						{m.perform_menu_action_placeholder({ name: val.name })}
 					</span>
 					<MoreHorizontal className="h-4 w-4" />
 				</Button>
