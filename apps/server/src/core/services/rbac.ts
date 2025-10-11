@@ -5,8 +5,9 @@
  *  └───────────────────────────────────────────┘
  */
 
+import { createStatementSchema } from "@repo/schema/rbac";
 import type { UserRole } from "@repo/schema/user";
-import type { PermissionMap, Permissions } from "@repo/shared";
+import { type PermissionMap, type Permissions, statement } from "@repo/shared";
 import { log } from "@/core/logger";
 import { AuthError, BaseError } from "../error";
 
@@ -105,4 +106,9 @@ export class RBACService {
 			});
 		}
 	}
+
+	static schema = createStatementSchema(statement).partial().meta({
+		title: "Statements",
+		ref: "Statements",
+	});
 }
