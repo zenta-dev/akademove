@@ -36,6 +36,13 @@ export const UserDropdwon = () => {
 					router.navigate({ to: localizeHref("/sign-in") }),
 				]);
 			},
+			onError: async () => {
+				await Promise.all([
+					queryClient.invalidateQueries(),
+					router.invalidate(),
+					router.navigate({ to: localizeHref("/sign-in") }),
+				]);
+			},
 		}),
 	);
 
