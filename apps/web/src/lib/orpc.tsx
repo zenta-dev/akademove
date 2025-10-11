@@ -1,4 +1,4 @@
-import { createORPCClient, onError } from "@orpc/client";
+import { type ClientContext, createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
@@ -29,9 +29,14 @@ export const queryClient = new QueryClient({
 	}),
 });
 
-export const link = new RPCLink({
+interface MyContext extends ClientContext {
+	headers?: Headers;
+}
+
+export const link = new RPCLink<MyContext>({
 	url: `${import.meta.env.VITE_SERVER_URL}/rpc`,
 	method: ({ context }, path) => {
+		if (path.includes("hasPermission")) return "POST";
 		if (context?.cache) {
 			return "GET";
 		}
@@ -52,6 +57,10 @@ export const link = new RPCLink({
 			credentials: "include",
 			cache: context?.cache,
 		});
+	},
+	headers(options) {
+		if (options.context.headers) return options.context.headers;
+		return new Headers();
 	},
 	adapterInterceptors: [
 		async (c) => {
