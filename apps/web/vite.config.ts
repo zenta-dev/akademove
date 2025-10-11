@@ -16,11 +16,6 @@ function hashString(str: string): string {
 	return hash;
 }
 
-const prerender = {
-	crawlLinks: true,
-	retryCount: 2,
-	retryDelay: 1000,
-};
 export default defineConfig({
 	define: {
 		"globalThis.Cloudflare.compatibilityFlags": {
@@ -32,26 +27,32 @@ export default defineConfig({
 		tailwindcss(),
 		tanstackStart({
 			prerender: {
-				...prerender,
 				enabled: true,
+				crawlLinks: true,
+				retryCount: 2,
+				retryDelay: 1000,
 				autoSubfolderIndex: true,
 				concurrency: 14,
-				onSuccess: ({ page }) => {
-					console.log(`Rendered ${page.path}!`);
-				},
 			},
 			pages: [
-				{ path: "/", prerender },
-				{ path: "/sign-in", prerender },
-				{ path: "/sign-up/driver", prerender },
-				{ path: "/sign-up/merchant", prerender },
-				{ path: "/sign-up/user", prerender },
-				{ path: "/reset-password", prerender },
-				{ path: "/forgot-password", prerender },
+				{ path: "/" },
+				{ path: "/sign-in" },
+				{ path: "/sign-up/driver" },
+				{ path: "/sign-up/merchant" },
+				{ path: "/sign-up/user" },
+				{ path: "/reset-password" },
+				{ path: "/forgot-password" },
+				{ path: "/id" },
+				{ path: "/id/sign-in" },
+				{ path: "/id/sign-up/driver" },
+				{ path: "/id/sign-up/merchant" },
+				{ path: "/id/sign-up/user" },
+				{ path: "/id/reset-password" },
+				{ path: "/id/forgot-password" },
 			],
 			sitemap: {
 				enabled: true,
-				host: process.env.WEB_URL || "http://localhost:3001",
+				host: process.env.VITE_WEB_URL || "http://localhost:3001",
 			},
 		}),
 		viteReact(),
@@ -61,6 +62,7 @@ export default defineConfig({
 		exclude: ["async_hooks"], // prevent pre-bundling
 	},
 	build: {
+		minify: true,
 		target: "esnext",
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
@@ -126,56 +128,6 @@ export default defineConfig({
 						if (id.includes("pino")) {
 							return hashString("pino");
 						}
-					}
-					if (id.includes("apps")) {
-						if (id.includes("ui")) {
-							const parts = id.split("/");
-							const fileName = parts[parts.length - 1]?.replace(
-								/\.(ts|tsx|js|jsx)$/,
-								"",
-							);
-							return hashString(`a-ui-${fileName}`);
-						}
-						if (id.includes("utils")) {
-							const parts = id.split("/");
-							const fileName = parts[parts.length - 1]?.replace(
-								/\.(ts|tsx|js|jsx)$/,
-								"",
-							);
-							return hashString(`a-ut-${fileName}`);
-						}
-						if (id.includes("hook")) {
-							const parts = id.split("/");
-							const fileName = parts[parts.length - 1]?.replace(
-								/\.(ts|tsx|js|jsx)$/,
-								"",
-							);
-							return hashString(`a-hook-${fileName}`);
-						}
-						if (id.includes("toggle")) {
-							const parts = id.split("/");
-							const fileName = parts[parts.length - 1]?.replace(
-								/\.(ts|tsx|js|jsx)$/,
-								"",
-							);
-							return hashString(`a-toggle-${fileName}`);
-						}
-						if (id.includes("misc")) {
-							const parts = id.split("/");
-							const fileName = parts[parts.length - 1]?.replace(
-								/\.(ts|tsx|js|jsx)$/,
-								"",
-							);
-							return hashString(`a-misc-${fileName}`);
-						}
-					}
-					if (id.includes("packages")) {
-						const parts = id.split("/");
-						const fileName = parts[parts.length - 1]?.replace(
-							/\.(ts|tsx|js|jsx)$/,
-							"",
-						);
-						return hashString(`p-${fileName}`);
 					}
 				},
 			},
