@@ -12,6 +12,15 @@ export function getAuthTokenName(isDev?: boolean): string {
 		: `__Secure-${AUTH_CONSTANTS.SESSION_TOKEN}`;
 }
 
+export function cookieParser(str: string) {
+	return Object.fromEntries(
+		str.split(";").map((c) => {
+			const [key, value] = c.trim().split("=");
+			return [key, value];
+		}),
+	);
+}
+
 export function getAuthToken({
 	headers,
 	isDev,
@@ -28,12 +37,7 @@ export function getAuthToken({
 
 	let cookieToken: string | undefined;
 	if (cookieHeader) {
-		const cookies = Object.fromEntries(
-			cookieHeader.split(";").map((c) => {
-				const [key, value] = c.trim().split("=");
-				return [key, value];
-			}),
-		);
+		const cookies = cookieParser(cookieHeader);
 		cookieToken = cookies[getAuthTokenName(isDev)];
 	}
 	return bearerToken ?? cookieToken;
