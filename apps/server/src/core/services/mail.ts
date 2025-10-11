@@ -44,10 +44,8 @@ export class ResendMailService implements MailService {
 	async sendMail(props: BaseSendMailProps): Promise<void> {
 		try {
 			await this.#client.emails.send(props);
-		} catch (error) {
-			throw new MailError("Failed to send email", {
-				prevError: error instanceof Error ? error : undefined,
-			});
+		} catch (_error) {
+			throw new MailError("Failed to send email");
 		}
 	}
 
