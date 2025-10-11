@@ -8,7 +8,7 @@ export const Route = createFileRoute("/(auth)")({
 
 function RouteComponent() {
 	return (
-		<div className="mx-auto flex h-full max-w-3xl flex-col items-center justify-between">
+		<div className="mx-auto flex h-screen max-w-3xl flex-col items-center justify-between">
 			<PublicHeader className="mt-2 rounded-xl border p-2" />
 			<div className="flex grow" />
 			<Outlet />
