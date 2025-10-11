@@ -1,13 +1,17 @@
 import {
+	type BucketLocationConstraint,
 	CreateBucketCommand,
+	DeleteObjectCommand,
 	HeadBucketCommand,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
+import { log } from "@/core/logger";
+import type { StorageBucket } from "../constants";
 import { StorageError } from "../error";
 
 interface StorageBaseOptions {
-	bucket: string;
+	bucket: StorageBucket;
 	key: string;
 }
 
@@ -17,7 +21,7 @@ interface UploadOptions extends StorageBaseOptions {
 }
 
 export interface StorageService {
-	ensureBucket(bucket: string): Promise<void>;
+	ensureBucket(bucket: StorageBucket): Promise<void>;
 	upload(options: UploadOptions): Promise<string>;
 	delete(options: StorageBaseOptions): Promise<void>;
 	getPublicUrl(options: StorageBaseOptions): string;
@@ -30,57 +34,109 @@ interface S3StorageOptions {
 	secretAccessKey: string;
 	publicUrl: string;
 }
+
 export class S3StorageService implements StorageService {
-	private s3Client: S3Client;
+	#client: S3Client;
 	private publicUrl: string;
 
+	private _bucketExists: Record<StorageBucket, boolean> = {
+		driver: false,
+		merchant: false,
+		user: false,
+	};
+
 	constructor(options: S3StorageOptions) {
-		this.s3Client = new S3Client({
+		this.#client = new S3Client({
 			endpoint: options.endpoint,
 			region: options.region,
 			credentials: {
 				accessKeyId: options.accessKeyId,
 				secretAccessKey: options.secretAccessKey,
 			},
+			forcePathStyle: true,
 		});
 		this.publicUrl = options.publicUrl;
 	}
 
-	async ensureBucket(bucket: string): Promise<void> {
+	async ensureBucket(bucket: StorageBucket): Promise<void> {
+		if (this._bucketExists[bucket]) return;
+
 		try {
-			await this.s3Client.send(new HeadBucketCommand({ Bucket: bucket }));
+			await this.#client.send(new HeadBucketCommand({ Bucket: bucket }));
+			this._bucketExists[bucket] = true;
+			log.info(`Bucket ${bucket} already exists.`);
 		} catch (error) {
-			if (error instanceof Error && error.name === "NotFound") {
-				await this.s3Client.send(new CreateBucketCommand({ Bucket: bucket }));
+			if ((error as any).$metadata?.httpStatusCode === 404) {
+				try {
+					await this.#client.send(
+						new CreateBucketCommand({
+							Bucket: bucket,
+							CreateBucketConfiguration: {
+								LocationConstraint: this.#client.config
+									.region as BucketLocationConstraint,
+							},
+						}),
+					);
+					this._bucketExists[bucket] = true;
+					log.info(`Bucket ${bucket} created successfully.`);
+				} catch (createError) {
+					log.error(createError);
+					throw new StorageError(
+						createError instanceof Error
+							? createError.message
+							: "Failed to create bucket",
+					);
+				}
 			} else {
-				throw new StorageError(`Failed to ensure bucket "${bucket}" exists`, {
-					prevError: error instanceof Error ? error : undefined,
-				});
+				log.error(error);
+				throw new StorageError(
+					error instanceof Error
+						? error.message
+						: "Failed to check bucket existence",
+				);
 			}
 		}
 	}
 
 	async upload(options: UploadOptions): Promise<string> {
-		await this.ensureBucket(options.bucket);
-		const { file, bucket, key } = options;
-		const command = new PutObjectCommand({
-			Bucket: bucket,
-			Key: key,
-			Body: file.stream(),
-			ContentType: file.type,
-			Metadata: options.userId ? { uid: options.userId } : undefined,
-		});
-		await this.s3Client.send(command);
-		return this.getPublicUrl({ bucket, key });
+		try {
+			await this.ensureBucket(options.bucket);
+			const { file, bucket, key } = options;
+
+			const arrayBuffer = await file.arrayBuffer();
+			const body = new Uint8Array(arrayBuffer);
+
+			const command = new PutObjectCommand({
+				Bucket: bucket,
+				Key: key,
+				Body: body,
+				ContentType: file.type,
+				Metadata: options.userId ? { uid: options.userId } : undefined,
+			});
+
+			await this.#client.send(command);
+			return this.getPublicUrl({ bucket, key });
+		} catch (error) {
+			log.error(error);
+			throw new StorageError(
+				error instanceof Error ? error.message : "Failed to upload file",
+			);
+		}
 	}
 
 	async delete(options: StorageBaseOptions): Promise<void> {
-		const { DeleteObjectCommand } = await import("@aws-sdk/client-s3");
-		const command = new DeleteObjectCommand({
-			Bucket: options.bucket,
-			Key: options.key,
-		});
-		await this.s3Client.send(command);
+		try {
+			const command = new DeleteObjectCommand({
+				Bucket: options.bucket,
+				Key: options.key,
+			});
+			await this.#client.send(command);
+		} catch (error) {
+			log.error(error);
+			throw new StorageError(
+				error instanceof Error ? error.message : "Failed to delete file",
+			);
+		}
 	}
 
 	getPublicUrl(options: StorageBaseOptions): string {
