@@ -1,104 +1,37 @@
-import { ORPCError, os } from "@orpc/server";
-import { createMiddleware } from "hono/factory";
-import { validateToken } from "@/utils/jwt";
-import { MiddlewareError } from "../error";
-import type { HonoContext } from "../hono";
-import type { ORPCCOntext } from "../orpc";
-import type { PermissionRole, Permissions } from "../services/auth";
-
-export const requireAuthMiddleware = createMiddleware<HonoContext>(
-	async (c, next) => {
-		try {
-			const h = c.req.header();
-			const authHeader = h.authorization;
-			if (authHeader) {
-				const token = authHeader.split(" ")[1];
-				const payload = await validateToken(token, c.var.auth);
-				if (!payload.id) {
-					throw new MiddlewareError("Failed to authenticate session");
-				}
-				c.set("user", {
-					id: payload.id,
-					role: payload.role,
-					banned: payload.banned,
-				});
-			} else {
-				const headers = new Headers();
-				for (const [k, v] of Object.entries(c.req.header())) {
-					headers.set(k, v);
-				}
-				const session = await c.var.auth.api.getSession({ headers });
-				if (!session) {
-					throw new MiddlewareError("Failed to authenticate session");
-				}
-				c.set("user", {
-					id: session.user.id,
-					role: session.user.role as PermissionRole,
-					banned: session.user.banned ?? true,
-				});
-			}
-			await next();
-		} catch (error) {
-			throw new MiddlewareError("Failed to authenticate session", {
-				prevError: error instanceof Error ? error : undefined,
-			});
-		}
-	},
-);
-
-export const requiredPermissions = (permissions: Permissions) =>
-	createMiddleware<HonoContext>(async (c, next) => {
-		try {
-			const { error, success } = await c.var.auth.api.userHasPermission({
-				body: {
-					userId: c.var.user.id,
-					role: c.var.user.role,
-					permissions: permissions,
-				},
-			});
-
-			if (error || !success) throw new MiddlewareError("Unathorized access");
-			await next();
-		} catch (error) {
-			throw new MiddlewareError("Failed to authorize session", {
-				prevError: error instanceof Error ? error : undefined,
-			});
-		}
-	});
+import { os } from "@orpc/server";
+import type { Permissions } from "@repo/shared";
+import { getAuthToken } from "@repo/shared";
+import { isDev } from "@/utils";
+import { AuthError, MiddlewareError } from "../error";
+import type { ORPCContext } from "../orpc";
 
 export const authMiddleware = os
-	.$context<ORPCCOntext>()
+	.$context<ORPCContext>()
 	.middleware(async ({ context, next }) => {
-		const session = await context.svc.auth.api.getSession({
-			headers: context.req.headers,
-		});
-		if (!session) {
-			throw new ORPCError("UNAUTHORIZED", {
-				message: "Failed to authenticate session",
+		const token = getAuthToken({ headers: context.req.headers, isDev });
+		if (!token) {
+			throw new AuthError("Missing or invalid authentication token", {
+				code: "BAD_REQUEST",
 			});
 		}
 
-		return await next({
+		const session = await context.repo.auth.getSession(token);
+
+		return next({
 			context: {
 				user: {
 					id: session.user.id,
-					role: (session.user.role ?? "user") as PermissionRole,
-					banned: session.user.banned ?? true,
+					role: session.user.role,
+					banned: session.user.banned,
 				},
+				token,
 			},
 		});
 	});
-
 export const hasPermission = (permissions: Permissions) =>
-	os.$context<ORPCCOntext>().middleware(async ({ context, next }) => {
-		const { error, success } = await context.svc.auth.api.userHasPermission({
-			body: {
-				userId: context.user.id,
-				role: context.user.role,
-				permissions: permissions,
-			},
-		});
-
-		if (error || !success) throw new MiddlewareError("Unathorized access");
+	os.$context<ORPCContext>().middleware(async ({ context, next }) => {
+		const { user, svc } = context;
+		const ok = svc.rbac.hasPermission({ role: user.role, permissions });
+		if (!ok) throw new MiddlewareError("Unathorized access");
 		return await next();
 	});
