@@ -1,3 +1,7 @@
+import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
+import type { ClientAgent } from "@repo/schema/common";
+import type { UserRole } from "@repo/schema/user";
+import type { AuthRepository } from "@/features/auth/repository";
 import type { ConfigurationRepository } from "@/features/configuration/repository";
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/repository";
@@ -8,20 +12,23 @@ import type { ScheduleRepository } from "@/features/schedule/repository";
 import type { UserRepository } from "@/features/user/repository";
 import type { CouponRepository } from "../features/coupon/repository";
 import type { MerchantMenuRepository } from "../features/merchant/menu/repository";
-import type { AuthService, PermissionRole } from "./services/auth";
 import type { DatabaseService } from "./services/db";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
+import type { RBACService } from "./services/rbac";
+import type { StorageService } from "./services/storage";
 
-export interface ORPCCOntext {
+export interface ORPCContext extends ResponseHeadersPluginContext {
 	req: Request;
 	svc: {
 		db: DatabaseService;
-		auth: AuthService;
 		kv: KeyValueService;
 		mail: MailService;
+		storage: StorageService;
+		rbac: RBACService;
 	};
 	repo: {
+		auth: AuthRepository;
 		configuration: ConfigurationRepository;
 		driver: DriverRepository;
 		merchant: {
@@ -37,7 +44,9 @@ export interface ORPCCOntext {
 	};
 	user: {
 		id: string;
-		role: PermissionRole;
+		role: UserRole;
 		banned: boolean;
 	};
+	clientAgent: ClientAgent;
+	token?: string;
 }
