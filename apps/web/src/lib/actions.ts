@@ -1,6 +1,7 @@
+import { extractLocaleFromRequest, getLocale } from "@repo/i18n";
 import { cookieParser, type Permissions } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
+import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
 import * as z from "zod";
 import { detectDevice } from "@/utils/user-agent";
 import { orpcClient } from "./orpc";
@@ -39,10 +40,7 @@ export const getSession = createIsomorphicFn()
 		}
 	})
 	.server(async () => {
-		const headers = new Headers();
-		for (const [k, v] of getRequestHeaders().entries()) {
-			if (v) headers.set(k, v);
-		}
+		const headers = getRequestHeaders();
 		try {
 			const result = await orpcClient.auth.getSession(
 				{},
@@ -59,21 +57,25 @@ export const getSession = createIsomorphicFn()
 export const hasAccess = createIsomorphicFn()
 	.client(async (permissions: Permissions) => {
 		try {
-			await orpcClient.auth.hasPermission({
+			const res = await orpcClient.auth.hasPermission({
 				body: { permissions },
 			});
-			return true;
-		} catch (_error) {
+			return res.body.data;
+		} catch (_) {
 			return false;
 		}
 	})
 	.server(async (permissions: Permissions) => {
 		try {
-			await orpcClient.auth.hasPermission({
-				body: { permissions },
-			});
-			return true;
-		} catch (_error) {
+			const headers = getRequestHeaders();
+			const res = await orpcClient.auth.hasPermission(
+				{
+					body: { permissions },
+				},
+				{ context: { headers } },
+			);
+			return res.body.data;
+		} catch (_) {
 			return false;
 		}
 	});
@@ -93,3 +95,9 @@ export const getThemeCookie = createServerFn({ method: "GET" }).handler(
 		return cookie.theme ?? "system";
 	},
 );
+
+export const getLocaleIsomorphic = createIsomorphicFn()
+	.client(getLocale)
+	.server(() => {
+		return extractLocaleFromRequest(getRequest());
+	});
