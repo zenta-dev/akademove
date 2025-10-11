@@ -1,4 +1,4 @@
-import { type Locale, setLocale } from "@repo/i18n";
+import { type Locale, m, setLocale } from "@repo/i18n";
 import { GlobeIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,8 +24,7 @@ export function LangToggle() {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" size="icon">
-					<GlobeIcon />
-					<span className="sr-only">Select Language</span>
+					<GlobeIcon /> <span className="sr-only">{m.switch_language()}</span>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
