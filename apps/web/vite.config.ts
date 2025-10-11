@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
@@ -5,24 +6,49 @@ import alchemy from "alchemy/cloudflare/tanstack-start";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-function encodeString(str: string) {
-	const result = str
-		.split("")
-		.map((char) => String.fromCharCode(char.charCodeAt(0) + 5))
-		.join("");
+const hashCache = new Map<string, string>();
 
-	return result.replace(/[-_~]/g, () => {
-		const chars =
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		return chars.charAt(Math.floor(Math.random() * chars.length));
-	});
+function hashString(str: string): string {
+	if (hashCache.has(str)) return hashCache.get(str) ?? "";
+
+	const hash = createHash("sha256").update(str).digest("hex").slice(0, 5);
+	hashCache.set(str, hash);
+	return hash;
 }
 
+const prerender = {
+	crawlLinks: true,
+	retryCount: 2,
+	retryDelay: 1000,
+};
 export default defineConfig({
+	define: {
+		"globalThis.Cloudflare.compatibilityFlags": {
+			enable_nodejs_process_v2: true,
+		},
+	},
 	plugins: [
 		tsconfigPaths(),
 		tailwindcss(),
 		tanstackStart({
+			prerender: {
+				...prerender,
+				enabled: true,
+				autoSubfolderIndex: true,
+				concurrency: 14,
+				onSuccess: ({ page }) => {
+					console.log(`Rendered ${page.path}!`);
+				},
+			},
+			pages: [
+				{ path: "/", prerender },
+				{ path: "/sign-in", prerender },
+				{ path: "/sign-up/driver", prerender },
+				{ path: "/sign-up/merchant", prerender },
+				{ path: "/sign-up/user", prerender },
+				{ path: "/reset-password", prerender },
+				{ path: "/forgot-password", prerender },
+			],
 			sitemap: {
 				enabled: true,
 				host: process.env.WEB_URL || "http://localhost:3001",
@@ -35,7 +61,6 @@ export default defineConfig({
 		exclude: ["async_hooks"], // prevent pre-bundling
 	},
 	build: {
-		// minify: false,
 		target: "esnext",
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
@@ -45,52 +70,103 @@ export default defineConfig({
 						const parts = id.split("/");
 						const idx = parts.lastIndexOf("node_modules");
 						if (parts[idx + 1] === "react-dom") {
-							return encodeString("rd");
+							return hashString("rd");
 						}
 						if (parts[idx + 1] === "react") {
-							return encodeString("r");
+							return hashString("r");
 						}
 						if (parts[idx + 1] === "scheduler") {
-							return encodeString("rsc");
+							return hashString("rsc");
 						}
 						if (id.includes("zod")) {
-							return encodeString("z");
+							return hashString("z");
 						}
 						if (id.includes("next-themes")) {
-							return encodeString("nt");
+							return hashString("nt");
 						}
 						if (id.includes("react-hook-form")) {
-							return encodeString("rhf");
+							return hashString("rhf");
 						}
 						if (id.includes("class-variance-authority")) {
-							return encodeString("cva");
+							return hashString("cva");
 						}
 						if (id.includes("clsx")) {
-							return encodeString("clsx");
+							return hashString("clsx");
 						}
 						if (id.includes("tailwind-merge")) {
-							return encodeString("twm");
+							return hashString("twm");
 						}
-						if (id.includes("radix-ui")) {
-							return encodeString("rdxui");
+						if (parts[idx + 1].includes("radix-ui")) {
+							return hashString(`rdxui${parts[idx + 2]}`);
 						}
 						if (id.includes("lucide")) {
-							return encodeString("l");
+							return hashString("l");
 						}
 						if (id.includes("sonner")) {
-							return encodeString("s");
+							return hashString("s");
 						}
 						if (id.includes("framer-motion")) {
-							return encodeString("fm");
+							return hashString("fm");
 						}
 						if (id.includes("date-fns")) {
-							return encodeString("df");
+							return hashString("df");
 						}
 						if (id.includes("react-day-picker")) {
-							return encodeString("rdp");
+							return hashString("rdp");
 						}
 						if (id.includes("@orpc")) {
-							return encodeString("orpc");
+							return hashString("orpc");
+						}
+						if (id.includes("radash")) {
+							return hashString("radash");
+						}
+						if (id.includes("cmdk")) {
+							return hashString("cmdk");
+						}
+						if (id.includes("pino")) {
+							return hashString("pino");
+						}
+					}
+					if (id.includes("apps")) {
+						if (id.includes("ui")) {
+							const parts = id.split("/");
+							const fileName = parts[parts.length - 1]?.replace(
+								/\.(ts|tsx|js|jsx)$/,
+								"",
+							);
+							return hashString(`a-ui-${fileName}`);
+						}
+						if (id.includes("utils")) {
+							const parts = id.split("/");
+							const fileName = parts[parts.length - 1]?.replace(
+								/\.(ts|tsx|js|jsx)$/,
+								"",
+							);
+							return hashString(`a-ut-${fileName}`);
+						}
+						if (id.includes("hook")) {
+							const parts = id.split("/");
+							const fileName = parts[parts.length - 1]?.replace(
+								/\.(ts|tsx|js|jsx)$/,
+								"",
+							);
+							return hashString(`a-hook-${fileName}`);
+						}
+						if (id.includes("toggle")) {
+							const parts = id.split("/");
+							const fileName = parts[parts.length - 1]?.replace(
+								/\.(ts|tsx|js|jsx)$/,
+								"",
+							);
+							return hashString(`a-toggle-${fileName}`);
+						}
+						if (id.includes("misc")) {
+							const parts = id.split("/");
+							const fileName = parts[parts.length - 1]?.replace(
+								/\.(ts|tsx|js|jsx)$/,
+								"",
+							);
+							return hashString(`a-misc-${fileName}`);
 						}
 					}
 					if (id.includes("packages")) {
@@ -99,7 +175,7 @@ export default defineConfig({
 							/\.(ts|tsx|js|jsx)$/,
 							"",
 						);
-						return encodeString(`p-${fileName}`);
+						return hashString(`p-${fileName}`);
 					}
 				},
 			},
