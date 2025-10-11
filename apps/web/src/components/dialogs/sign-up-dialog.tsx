@@ -30,19 +30,19 @@ const ROUTES: Array<{
 		name: m.user(),
 		desc: m.sign_up_dialog_user_desc(),
 		image: UserChar,
-		path: "/{-$lang}/sign-up/user",
+		path: "/sign-up/user",
 	},
 	{
 		name: m.driver(),
 		desc: m.sign_up_dialog_driver_desc(),
 		image: DriverChar,
-		path: "/{-$lang}/sign-up/driver",
+		path: "/sign-up/driver",
 	},
 	{
 		name: m.merchant(),
 		desc: m.sign_up_dialog_merchant_desc(),
 		image: MerchantChar,
-		path: "/{-$lang}/sign-up/merchant",
+		path: "/sign-up/merchant",
 	},
 ];
 

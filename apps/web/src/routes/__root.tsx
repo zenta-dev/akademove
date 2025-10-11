@@ -1,4 +1,3 @@
-import { getLocale, type Locale } from "@repo/i18n";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -11,23 +10,19 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ThemeProvider } from "@/components/providers/theme";
 import { Toaster } from "@/components/ui/sonner";
-import { getThemeCookie } from "@/lib/actions";
+import { getLocaleIsomorphic, getThemeCookie } from "@/lib/actions";
 import { APP_NAME } from "@/lib/constants";
 import { cn } from "@/utils/cn";
 import appCss from "../index.css?url";
 
 export type RouterAppContext = {
-	locale: Locale;
 	queryClient: QueryClient;
 };
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
-	beforeLoad: async () => {
+	loader: async () => {
 		const theme = await getThemeCookie();
 		return { theme };
-	},
-	loader: ({ context }) => {
-		return { theme: context.theme };
 	},
 	head: () => ({
 		meta: [
@@ -57,7 +52,11 @@ function RootDocument() {
 	const { theme } = Route.useLoaderData();
 
 	return (
-		<html lang={getLocale()} className={theme} suppressHydrationWarning>
+		<html
+			lang={getLocaleIsomorphic()}
+			className={theme}
+			suppressHydrationWarning
+		>
 			<head>
 				<HeadContent />
 			</head>

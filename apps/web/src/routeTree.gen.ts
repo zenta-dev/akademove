@@ -9,1109 +9,1012 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as Char123LangChar125IndexRouteImport } from './routes/{-$lang}/index'
-import { Route as Char123LangChar125authRouteRouteImport } from './routes/{-$lang}/(auth)/route'
-import { Route as Char123LangChar125authSignInRouteImport } from './routes/{-$lang}/(auth)/sign-in'
-import { Route as Char123LangChar125authResetPasswordRouteImport } from './routes/{-$lang}/(auth)/reset-password'
-import { Route as Char123LangChar125authForgotPasswordRouteImport } from './routes/{-$lang}/(auth)/forgot-password'
-import { Route as Char123LangChar125DashUserRouteRouteImport } from './routes/{-$lang}/dash/user/route'
-import { Route as Char123LangChar125DashOperatorRouteRouteImport } from './routes/{-$lang}/dash/operator/route'
-import { Route as Char123LangChar125DashMerchantRouteRouteImport } from './routes/{-$lang}/dash/merchant/route'
-import { Route as Char123LangChar125DashDriverRouteRouteImport } from './routes/{-$lang}/dash/driver/route'
-import { Route as Char123LangChar125DashAdminRouteRouteImport } from './routes/{-$lang}/dash/admin/route'
-import { Route as Char123LangChar125DashUserIndexRouteImport } from './routes/{-$lang}/dash/user/index'
-import { Route as Char123LangChar125DashOperatorIndexRouteImport } from './routes/{-$lang}/dash/operator/index'
-import { Route as Char123LangChar125DashMerchantIndexRouteImport } from './routes/{-$lang}/dash/merchant/index'
-import { Route as Char123LangChar125DashDriverIndexRouteImport } from './routes/{-$lang}/dash/driver/index'
-import { Route as Char123LangChar125DashAdminIndexRouteImport } from './routes/{-$lang}/dash/admin/index'
-import { Route as Char123LangChar125DashUserWalletRouteImport } from './routes/{-$lang}/dash/user/wallet'
-import { Route as Char123LangChar125DashUserProfileRouteImport } from './routes/{-$lang}/dash/user/profile'
-import { Route as Char123LangChar125DashUserHistoryRouteImport } from './routes/{-$lang}/dash/user/history'
-import { Route as Char123LangChar125DashUserBookingsRouteImport } from './routes/{-$lang}/dash/user/bookings'
-import { Route as Char123LangChar125DashOperatorReportsRouteImport } from './routes/{-$lang}/dash/operator/reports'
-import { Route as Char123LangChar125DashOperatorPricingRouteImport } from './routes/{-$lang}/dash/operator/pricing'
-import { Route as Char123LangChar125DashOperatorOrdersRouteImport } from './routes/{-$lang}/dash/operator/orders'
-import { Route as Char123LangChar125DashOperatorMerchantsRouteImport } from './routes/{-$lang}/dash/operator/merchants'
-import { Route as Char123LangChar125DashOperatorDriversRouteImport } from './routes/{-$lang}/dash/operator/drivers'
-import { Route as Char123LangChar125DashMerchantSalesRouteImport } from './routes/{-$lang}/dash/merchant/sales'
-import { Route as Char123LangChar125DashMerchantProfileRouteImport } from './routes/{-$lang}/dash/merchant/profile'
-import { Route as Char123LangChar125DashMerchantOrdersRouteImport } from './routes/{-$lang}/dash/merchant/orders'
-import { Route as Char123LangChar125DashMerchantMenuRouteImport } from './routes/{-$lang}/dash/merchant/menu'
-import { Route as Char123LangChar125DashDriverScheduleRouteImport } from './routes/{-$lang}/dash/driver/schedule'
-import { Route as Char123LangChar125DashDriverRatingsRouteImport } from './routes/{-$lang}/dash/driver/ratings'
-import { Route as Char123LangChar125DashDriverProfileRouteImport } from './routes/{-$lang}/dash/driver/profile'
-import { Route as Char123LangChar125DashDriverOrdersRouteImport } from './routes/{-$lang}/dash/driver/orders'
-import { Route as Char123LangChar125DashDriverEarningsRouteImport } from './routes/{-$lang}/dash/driver/earnings'
-import { Route as Char123LangChar125DashAdminUsersRouteImport } from './routes/{-$lang}/dash/admin/users'
-import { Route as Char123LangChar125DashAdminOrdersRouteImport } from './routes/{-$lang}/dash/admin/orders'
-import { Route as Char123LangChar125DashAdminMerchantsRouteImport } from './routes/{-$lang}/dash/admin/merchants'
-import { Route as Char123LangChar125DashAdminDriversRouteImport } from './routes/{-$lang}/dash/admin/drivers'
-import { Route as Char123LangChar125DashAdminConfigurationsRouteImport } from './routes/{-$lang}/dash/admin/configurations'
-import { Route as Char123LangChar125DashAdminAnalyticsRouteImport } from './routes/{-$lang}/dash/admin/analytics'
-import { Route as Char123LangChar125authSignUpUserRouteImport } from './routes/{-$lang}/(auth)/sign-up/user'
-import { Route as Char123LangChar125authSignUpMerchantRouteImport } from './routes/{-$lang}/(auth)/sign-up/merchant'
-import { Route as Char123LangChar125authSignUpDriverRouteImport } from './routes/{-$lang}/(auth)/sign-up/driver'
-import { Route as Char123LangChar125DashOperatorCouponsIndexRouteImport } from './routes/{-$lang}/dash/operator/coupons/index'
-import { Route as Char123LangChar125DashOperatorCouponsNewRouteImport } from './routes/{-$lang}/dash/operator/coupons/new'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
+import { Route as DashUserRouteRouteImport } from './routes/dash/user/route'
+import { Route as DashOperatorRouteRouteImport } from './routes/dash/operator/route'
+import { Route as DashMerchantRouteRouteImport } from './routes/dash/merchant/route'
+import { Route as DashDriverRouteRouteImport } from './routes/dash/driver/route'
+import { Route as DashAdminRouteRouteImport } from './routes/dash/admin/route'
+import { Route as DashUserIndexRouteImport } from './routes/dash/user/index'
+import { Route as DashOperatorIndexRouteImport } from './routes/dash/operator/index'
+import { Route as DashMerchantIndexRouteImport } from './routes/dash/merchant/index'
+import { Route as DashDriverIndexRouteImport } from './routes/dash/driver/index'
+import { Route as DashAdminIndexRouteImport } from './routes/dash/admin/index'
+import { Route as DashUserWalletRouteImport } from './routes/dash/user/wallet'
+import { Route as DashUserProfileRouteImport } from './routes/dash/user/profile'
+import { Route as DashUserHistoryRouteImport } from './routes/dash/user/history'
+import { Route as DashUserBookingsRouteImport } from './routes/dash/user/bookings'
+import { Route as DashOperatorReportsRouteImport } from './routes/dash/operator/reports'
+import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/pricing'
+import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
+import { Route as DashOperatorMerchantsRouteImport } from './routes/dash/operator/merchants'
+import { Route as DashOperatorDriversRouteImport } from './routes/dash/operator/drivers'
+import { Route as DashMerchantSalesRouteImport } from './routes/dash/merchant/sales'
+import { Route as DashMerchantProfileRouteImport } from './routes/dash/merchant/profile'
+import { Route as DashMerchantOrdersRouteImport } from './routes/dash/merchant/orders'
+import { Route as DashMerchantMenuRouteImport } from './routes/dash/merchant/menu'
+import { Route as DashDriverScheduleRouteImport } from './routes/dash/driver/schedule'
+import { Route as DashDriverRatingsRouteImport } from './routes/dash/driver/ratings'
+import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/profile'
+import { Route as DashDriverOrdersRouteImport } from './routes/dash/driver/orders'
+import { Route as DashDriverEarningsRouteImport } from './routes/dash/driver/earnings'
+import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
+import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
+import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
+import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
+import { Route as DashAdminConfigurationsRouteImport } from './routes/dash/admin/configurations'
+import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
+import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
+import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/merchant'
+import { Route as authSignUpDriverRouteImport } from './routes/(auth)/sign-up/driver'
+import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
+import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 
-const Char123LangChar125IndexRoute = Char123LangChar125IndexRouteImport.update({
-  id: '/{-$lang}/',
-  path: '/{-$lang}/',
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char123LangChar125authRouteRoute =
-  Char123LangChar125authRouteRouteImport.update({
-    id: '/{-$lang}/(auth)',
-    path: '/{-$lang}/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125authSignInRoute =
-  Char123LangChar125authSignInRouteImport.update({
-    id: '/sign-in',
-    path: '/sign-in',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125authResetPasswordRoute =
-  Char123LangChar125authResetPasswordRouteImport.update({
-    id: '/reset-password',
-    path: '/reset-password',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125authForgotPasswordRoute =
-  Char123LangChar125authForgotPasswordRouteImport.update({
-    id: '/forgot-password',
-    path: '/forgot-password',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125DashUserRouteRoute =
-  Char123LangChar125DashUserRouteRouteImport.update({
-    id: '/{-$lang}/dash/user',
-    path: '/{-$lang}/dash/user',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125DashOperatorRouteRoute =
-  Char123LangChar125DashOperatorRouteRouteImport.update({
-    id: '/{-$lang}/dash/operator',
-    path: '/{-$lang}/dash/operator',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125DashMerchantRouteRoute =
-  Char123LangChar125DashMerchantRouteRouteImport.update({
-    id: '/{-$lang}/dash/merchant',
-    path: '/{-$lang}/dash/merchant',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125DashDriverRouteRoute =
-  Char123LangChar125DashDriverRouteRouteImport.update({
-    id: '/{-$lang}/dash/driver',
-    path: '/{-$lang}/dash/driver',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125DashAdminRouteRoute =
-  Char123LangChar125DashAdminRouteRouteImport.update({
-    id: '/{-$lang}/dash/admin',
-    path: '/{-$lang}/dash/admin',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char123LangChar125DashUserIndexRoute =
-  Char123LangChar125DashUserIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LangChar125DashUserRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorIndexRoute =
-  Char123LangChar125DashOperatorIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashMerchantIndexRoute =
-  Char123LangChar125DashMerchantIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LangChar125DashMerchantRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverIndexRoute =
-  Char123LangChar125DashDriverIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminIndexRoute =
-  Char123LangChar125DashAdminIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashUserWalletRoute =
-  Char123LangChar125DashUserWalletRouteImport.update({
-    id: '/wallet',
-    path: '/wallet',
-    getParentRoute: () => Char123LangChar125DashUserRouteRoute,
-  } as any)
-const Char123LangChar125DashUserProfileRoute =
-  Char123LangChar125DashUserProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => Char123LangChar125DashUserRouteRoute,
-  } as any)
-const Char123LangChar125DashUserHistoryRoute =
-  Char123LangChar125DashUserHistoryRouteImport.update({
-    id: '/history',
-    path: '/history',
-    getParentRoute: () => Char123LangChar125DashUserRouteRoute,
-  } as any)
-const Char123LangChar125DashUserBookingsRoute =
-  Char123LangChar125DashUserBookingsRouteImport.update({
-    id: '/bookings',
-    path: '/bookings',
-    getParentRoute: () => Char123LangChar125DashUserRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorReportsRoute =
-  Char123LangChar125DashOperatorReportsRouteImport.update({
-    id: '/reports',
-    path: '/reports',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorPricingRoute =
-  Char123LangChar125DashOperatorPricingRouteImport.update({
-    id: '/pricing',
-    path: '/pricing',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorOrdersRoute =
-  Char123LangChar125DashOperatorOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorMerchantsRoute =
-  Char123LangChar125DashOperatorMerchantsRouteImport.update({
-    id: '/merchants',
-    path: '/merchants',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorDriversRoute =
-  Char123LangChar125DashOperatorDriversRouteImport.update({
-    id: '/drivers',
-    path: '/drivers',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
-const Char123LangChar125DashMerchantSalesRoute =
-  Char123LangChar125DashMerchantSalesRouteImport.update({
-    id: '/sales',
-    path: '/sales',
-    getParentRoute: () => Char123LangChar125DashMerchantRouteRoute,
-  } as any)
-const Char123LangChar125DashMerchantProfileRoute =
-  Char123LangChar125DashMerchantProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => Char123LangChar125DashMerchantRouteRoute,
-  } as any)
-const Char123LangChar125DashMerchantOrdersRoute =
-  Char123LangChar125DashMerchantOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
-    getParentRoute: () => Char123LangChar125DashMerchantRouteRoute,
-  } as any)
-const Char123LangChar125DashMerchantMenuRoute =
-  Char123LangChar125DashMerchantMenuRouteImport.update({
-    id: '/menu',
-    path: '/menu',
-    getParentRoute: () => Char123LangChar125DashMerchantRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverScheduleRoute =
-  Char123LangChar125DashDriverScheduleRouteImport.update({
-    id: '/schedule',
-    path: '/schedule',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverRatingsRoute =
-  Char123LangChar125DashDriverRatingsRouteImport.update({
-    id: '/ratings',
-    path: '/ratings',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverProfileRoute =
-  Char123LangChar125DashDriverProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverOrdersRoute =
-  Char123LangChar125DashDriverOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashDriverEarningsRoute =
-  Char123LangChar125DashDriverEarningsRouteImport.update({
-    id: '/earnings',
-    path: '/earnings',
-    getParentRoute: () => Char123LangChar125DashDriverRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminUsersRoute =
-  Char123LangChar125DashAdminUsersRouteImport.update({
-    id: '/users',
-    path: '/users',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminOrdersRoute =
-  Char123LangChar125DashAdminOrdersRouteImport.update({
-    id: '/orders',
-    path: '/orders',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminMerchantsRoute =
-  Char123LangChar125DashAdminMerchantsRouteImport.update({
-    id: '/merchants',
-    path: '/merchants',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminDriversRoute =
-  Char123LangChar125DashAdminDriversRouteImport.update({
-    id: '/drivers',
-    path: '/drivers',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminConfigurationsRoute =
-  Char123LangChar125DashAdminConfigurationsRouteImport.update({
-    id: '/configurations',
-    path: '/configurations',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125DashAdminAnalyticsRoute =
-  Char123LangChar125DashAdminAnalyticsRouteImport.update({
-    id: '/analytics',
-    path: '/analytics',
-    getParentRoute: () => Char123LangChar125DashAdminRouteRoute,
-  } as any)
-const Char123LangChar125authSignUpUserRoute =
-  Char123LangChar125authSignUpUserRouteImport.update({
-    id: '/sign-up/user',
-    path: '/sign-up/user',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125authSignUpMerchantRoute =
-  Char123LangChar125authSignUpMerchantRouteImport.update({
-    id: '/sign-up/merchant',
-    path: '/sign-up/merchant',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125authSignUpDriverRoute =
-  Char123LangChar125authSignUpDriverRouteImport.update({
-    id: '/sign-up/driver',
-    path: '/sign-up/driver',
-    getParentRoute: () => Char123LangChar125authRouteRoute,
-  } as any)
-const Char123LangChar125DashOperatorCouponsIndexRoute =
-  Char123LangChar125DashOperatorCouponsIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authResetPasswordRoute = authResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const DashUserRouteRoute = DashUserRouteRouteImport.update({
+  id: '/dash/user',
+  path: '/dash/user',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashOperatorRouteRoute = DashOperatorRouteRouteImport.update({
+  id: '/dash/operator',
+  path: '/dash/operator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashMerchantRouteRoute = DashMerchantRouteRouteImport.update({
+  id: '/dash/merchant',
+  path: '/dash/merchant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashDriverRouteRoute = DashDriverRouteRouteImport.update({
+  id: '/dash/driver',
+  path: '/dash/driver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashAdminRouteRoute = DashAdminRouteRouteImport.update({
+  id: '/dash/admin',
+  path: '/dash/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashUserIndexRoute = DashUserIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashOperatorIndexRoute = DashOperatorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashMerchantIndexRoute = DashMerchantIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
+const DashDriverIndexRoute = DashDriverIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashAdminIndexRoute = DashAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashUserWalletRoute = DashUserWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashUserProfileRoute = DashUserProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashUserHistoryRoute = DashUserHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashUserBookingsRoute = DashUserBookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashOperatorReportsRoute = DashOperatorReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorPricingRoute = DashOperatorPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorOrdersRoute = DashOperatorOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorMerchantsRoute = DashOperatorMerchantsRouteImport.update({
+  id: '/merchants',
+  path: '/merchants',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorDriversRoute = DashOperatorDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashMerchantSalesRoute = DashMerchantSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
+const DashMerchantProfileRoute = DashMerchantProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
+const DashMerchantOrdersRoute = DashMerchantOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
+const DashMerchantMenuRoute = DashMerchantMenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
+const DashDriverScheduleRoute = DashDriverScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashDriverRatingsRoute = DashDriverRatingsRouteImport.update({
+  id: '/ratings',
+  path: '/ratings',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashDriverProfileRoute = DashDriverProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashDriverOrdersRoute = DashDriverOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashDriverEarningsRoute = DashDriverEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
+const DashAdminUsersRoute = DashAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminOrdersRoute = DashAdminOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminMerchantsRoute = DashAdminMerchantsRouteImport.update({
+  id: '/merchants',
+  path: '/merchants',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminDriversRoute = DashAdminDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminConfigurationsRoute = DashAdminConfigurationsRouteImport.update({
+  id: '/configurations',
+  path: '/configurations',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminAnalyticsRoute = DashAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const authSignUpUserRoute = authSignUpUserRouteImport.update({
+  id: '/sign-up/user',
+  path: '/sign-up/user',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSignUpMerchantRoute = authSignUpMerchantRouteImport.update({
+  id: '/sign-up/merchant',
+  path: '/sign-up/merchant',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const authSignUpDriverRoute = authSignUpDriverRouteImport.update({
+  id: '/sign-up/driver',
+  path: '/sign-up/driver',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const DashOperatorCouponsIndexRoute =
+  DashOperatorCouponsIndexRouteImport.update({
     id: '/coupons/',
     path: '/coupons/',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
+    getParentRoute: () => DashOperatorRouteRoute,
   } as any)
-const Char123LangChar125DashOperatorCouponsNewRoute =
-  Char123LangChar125DashOperatorCouponsNewRouteImport.update({
-    id: '/coupons/new',
-    path: '/coupons/new',
-    getParentRoute: () => Char123LangChar125DashOperatorRouteRoute,
-  } as any)
+const DashOperatorCouponsNewRoute = DashOperatorCouponsNewRouteImport.update({
+  id: '/coupons/new',
+  path: '/coupons/new',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/{-$lang}': typeof Char123LangChar125IndexRoute
-  '/{-$lang}/dash/admin': typeof Char123LangChar125DashAdminRouteRouteWithChildren
-  '/{-$lang}/dash/driver': typeof Char123LangChar125DashDriverRouteRouteWithChildren
-  '/{-$lang}/dash/merchant': typeof Char123LangChar125DashMerchantRouteRouteWithChildren
-  '/{-$lang}/dash/operator': typeof Char123LangChar125DashOperatorRouteRouteWithChildren
-  '/{-$lang}/dash/user': typeof Char123LangChar125DashUserRouteRouteWithChildren
-  '/{-$lang}/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
-  '/{-$lang}/reset-password': typeof Char123LangChar125authResetPasswordRoute
-  '/{-$lang}/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
-  '/{-$lang}/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
-  '/{-$lang}/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
-  '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
-  '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
-  '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
-  '/{-$lang}/dash/admin/merchants': typeof Char123LangChar125DashAdminMerchantsRoute
-  '/{-$lang}/dash/admin/orders': typeof Char123LangChar125DashAdminOrdersRoute
-  '/{-$lang}/dash/admin/users': typeof Char123LangChar125DashAdminUsersRoute
-  '/{-$lang}/dash/driver/earnings': typeof Char123LangChar125DashDriverEarningsRoute
-  '/{-$lang}/dash/driver/orders': typeof Char123LangChar125DashDriverOrdersRoute
-  '/{-$lang}/dash/driver/profile': typeof Char123LangChar125DashDriverProfileRoute
-  '/{-$lang}/dash/driver/ratings': typeof Char123LangChar125DashDriverRatingsRoute
-  '/{-$lang}/dash/driver/schedule': typeof Char123LangChar125DashDriverScheduleRoute
-  '/{-$lang}/dash/merchant/menu': typeof Char123LangChar125DashMerchantMenuRoute
-  '/{-$lang}/dash/merchant/orders': typeof Char123LangChar125DashMerchantOrdersRoute
-  '/{-$lang}/dash/merchant/profile': typeof Char123LangChar125DashMerchantProfileRoute
-  '/{-$lang}/dash/merchant/sales': typeof Char123LangChar125DashMerchantSalesRoute
-  '/{-$lang}/dash/operator/drivers': typeof Char123LangChar125DashOperatorDriversRoute
-  '/{-$lang}/dash/operator/merchants': typeof Char123LangChar125DashOperatorMerchantsRoute
-  '/{-$lang}/dash/operator/orders': typeof Char123LangChar125DashOperatorOrdersRoute
-  '/{-$lang}/dash/operator/pricing': typeof Char123LangChar125DashOperatorPricingRoute
-  '/{-$lang}/dash/operator/reports': typeof Char123LangChar125DashOperatorReportsRoute
-  '/{-$lang}/dash/user/bookings': typeof Char123LangChar125DashUserBookingsRoute
-  '/{-$lang}/dash/user/history': typeof Char123LangChar125DashUserHistoryRoute
-  '/{-$lang}/dash/user/profile': typeof Char123LangChar125DashUserProfileRoute
-  '/{-$lang}/dash/user/wallet': typeof Char123LangChar125DashUserWalletRoute
-  '/{-$lang}/dash/admin/': typeof Char123LangChar125DashAdminIndexRoute
-  '/{-$lang}/dash/driver/': typeof Char123LangChar125DashDriverIndexRoute
-  '/{-$lang}/dash/merchant/': typeof Char123LangChar125DashMerchantIndexRoute
-  '/{-$lang}/dash/operator/': typeof Char123LangChar125DashOperatorIndexRoute
-  '/{-$lang}/dash/user/': typeof Char123LangChar125DashUserIndexRoute
-  '/{-$lang}/dash/operator/coupons/new': typeof Char123LangChar125DashOperatorCouponsNewRoute
-  '/{-$lang}/dash/operator/coupons': typeof Char123LangChar125DashOperatorCouponsIndexRoute
+  '/': typeof authRouteRouteWithChildren
+  '/dash/admin': typeof DashAdminRouteRouteWithChildren
+  '/dash/driver': typeof DashDriverRouteRouteWithChildren
+  '/dash/merchant': typeof DashMerchantRouteRouteWithChildren
+  '/dash/operator': typeof DashOperatorRouteRouteWithChildren
+  '/dash/user': typeof DashUserRouteRouteWithChildren
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up/driver': typeof authSignUpDriverRoute
+  '/sign-up/merchant': typeof authSignUpMerchantRoute
+  '/sign-up/user': typeof authSignUpUserRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/earnings': typeof DashDriverEarningsRoute
+  '/dash/driver/orders': typeof DashDriverOrdersRoute
+  '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/ratings': typeof DashDriverRatingsRoute
+  '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/menu': typeof DashMerchantMenuRoute
+  '/dash/merchant/orders': typeof DashMerchantOrdersRoute
+  '/dash/merchant/profile': typeof DashMerchantProfileRoute
+  '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/operator/drivers': typeof DashOperatorDriversRoute
+  '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
+  '/dash/operator/orders': typeof DashOperatorOrdersRoute
+  '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/user/bookings': typeof DashUserBookingsRoute
+  '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/profile': typeof DashUserProfileRoute
+  '/dash/user/wallet': typeof DashUserWalletRoute
+  '/dash/admin/': typeof DashAdminIndexRoute
+  '/dash/driver/': typeof DashDriverIndexRoute
+  '/dash/merchant/': typeof DashMerchantIndexRoute
+  '/dash/operator/': typeof DashOperatorIndexRoute
+  '/dash/user/': typeof DashUserIndexRoute
+  '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/{-$lang}': typeof Char123LangChar125IndexRoute
-  '/{-$lang}/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
-  '/{-$lang}/reset-password': typeof Char123LangChar125authResetPasswordRoute
-  '/{-$lang}/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
-  '/{-$lang}/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
-  '/{-$lang}/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
-  '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
-  '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
-  '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
-  '/{-$lang}/dash/admin/merchants': typeof Char123LangChar125DashAdminMerchantsRoute
-  '/{-$lang}/dash/admin/orders': typeof Char123LangChar125DashAdminOrdersRoute
-  '/{-$lang}/dash/admin/users': typeof Char123LangChar125DashAdminUsersRoute
-  '/{-$lang}/dash/driver/earnings': typeof Char123LangChar125DashDriverEarningsRoute
-  '/{-$lang}/dash/driver/orders': typeof Char123LangChar125DashDriverOrdersRoute
-  '/{-$lang}/dash/driver/profile': typeof Char123LangChar125DashDriverProfileRoute
-  '/{-$lang}/dash/driver/ratings': typeof Char123LangChar125DashDriverRatingsRoute
-  '/{-$lang}/dash/driver/schedule': typeof Char123LangChar125DashDriverScheduleRoute
-  '/{-$lang}/dash/merchant/menu': typeof Char123LangChar125DashMerchantMenuRoute
-  '/{-$lang}/dash/merchant/orders': typeof Char123LangChar125DashMerchantOrdersRoute
-  '/{-$lang}/dash/merchant/profile': typeof Char123LangChar125DashMerchantProfileRoute
-  '/{-$lang}/dash/merchant/sales': typeof Char123LangChar125DashMerchantSalesRoute
-  '/{-$lang}/dash/operator/drivers': typeof Char123LangChar125DashOperatorDriversRoute
-  '/{-$lang}/dash/operator/merchants': typeof Char123LangChar125DashOperatorMerchantsRoute
-  '/{-$lang}/dash/operator/orders': typeof Char123LangChar125DashOperatorOrdersRoute
-  '/{-$lang}/dash/operator/pricing': typeof Char123LangChar125DashOperatorPricingRoute
-  '/{-$lang}/dash/operator/reports': typeof Char123LangChar125DashOperatorReportsRoute
-  '/{-$lang}/dash/user/bookings': typeof Char123LangChar125DashUserBookingsRoute
-  '/{-$lang}/dash/user/history': typeof Char123LangChar125DashUserHistoryRoute
-  '/{-$lang}/dash/user/profile': typeof Char123LangChar125DashUserProfileRoute
-  '/{-$lang}/dash/user/wallet': typeof Char123LangChar125DashUserWalletRoute
-  '/{-$lang}/dash/admin': typeof Char123LangChar125DashAdminIndexRoute
-  '/{-$lang}/dash/driver': typeof Char123LangChar125DashDriverIndexRoute
-  '/{-$lang}/dash/merchant': typeof Char123LangChar125DashMerchantIndexRoute
-  '/{-$lang}/dash/operator': typeof Char123LangChar125DashOperatorIndexRoute
-  '/{-$lang}/dash/user': typeof Char123LangChar125DashUserIndexRoute
-  '/{-$lang}/dash/operator/coupons/new': typeof Char123LangChar125DashOperatorCouponsNewRoute
-  '/{-$lang}/dash/operator/coupons': typeof Char123LangChar125DashOperatorCouponsIndexRoute
+  '/': typeof authRouteRouteWithChildren
+  '/forgot-password': typeof authForgotPasswordRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up/driver': typeof authSignUpDriverRoute
+  '/sign-up/merchant': typeof authSignUpMerchantRoute
+  '/sign-up/user': typeof authSignUpUserRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/earnings': typeof DashDriverEarningsRoute
+  '/dash/driver/orders': typeof DashDriverOrdersRoute
+  '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/ratings': typeof DashDriverRatingsRoute
+  '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/menu': typeof DashMerchantMenuRoute
+  '/dash/merchant/orders': typeof DashMerchantOrdersRoute
+  '/dash/merchant/profile': typeof DashMerchantProfileRoute
+  '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/operator/drivers': typeof DashOperatorDriversRoute
+  '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
+  '/dash/operator/orders': typeof DashOperatorOrdersRoute
+  '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/user/bookings': typeof DashUserBookingsRoute
+  '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/profile': typeof DashUserProfileRoute
+  '/dash/user/wallet': typeof DashUserWalletRoute
+  '/dash/admin': typeof DashAdminIndexRoute
+  '/dash/driver': typeof DashDriverIndexRoute
+  '/dash/merchant': typeof DashMerchantIndexRoute
+  '/dash/operator': typeof DashOperatorIndexRoute
+  '/dash/user': typeof DashUserIndexRoute
+  '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/{-$lang}/(auth)': typeof Char123LangChar125authRouteRouteWithChildren
-  '/{-$lang}/': typeof Char123LangChar125IndexRoute
-  '/{-$lang}/dash/admin': typeof Char123LangChar125DashAdminRouteRouteWithChildren
-  '/{-$lang}/dash/driver': typeof Char123LangChar125DashDriverRouteRouteWithChildren
-  '/{-$lang}/dash/merchant': typeof Char123LangChar125DashMerchantRouteRouteWithChildren
-  '/{-$lang}/dash/operator': typeof Char123LangChar125DashOperatorRouteRouteWithChildren
-  '/{-$lang}/dash/user': typeof Char123LangChar125DashUserRouteRouteWithChildren
-  '/{-$lang}/(auth)/forgot-password': typeof Char123LangChar125authForgotPasswordRoute
-  '/{-$lang}/(auth)/reset-password': typeof Char123LangChar125authResetPasswordRoute
-  '/{-$lang}/(auth)/sign-in': typeof Char123LangChar125authSignInRoute
-  '/{-$lang}/(auth)/sign-up/driver': typeof Char123LangChar125authSignUpDriverRoute
-  '/{-$lang}/(auth)/sign-up/merchant': typeof Char123LangChar125authSignUpMerchantRoute
-  '/{-$lang}/(auth)/sign-up/user': typeof Char123LangChar125authSignUpUserRoute
-  '/{-$lang}/dash/admin/analytics': typeof Char123LangChar125DashAdminAnalyticsRoute
-  '/{-$lang}/dash/admin/configurations': typeof Char123LangChar125DashAdminConfigurationsRoute
-  '/{-$lang}/dash/admin/drivers': typeof Char123LangChar125DashAdminDriversRoute
-  '/{-$lang}/dash/admin/merchants': typeof Char123LangChar125DashAdminMerchantsRoute
-  '/{-$lang}/dash/admin/orders': typeof Char123LangChar125DashAdminOrdersRoute
-  '/{-$lang}/dash/admin/users': typeof Char123LangChar125DashAdminUsersRoute
-  '/{-$lang}/dash/driver/earnings': typeof Char123LangChar125DashDriverEarningsRoute
-  '/{-$lang}/dash/driver/orders': typeof Char123LangChar125DashDriverOrdersRoute
-  '/{-$lang}/dash/driver/profile': typeof Char123LangChar125DashDriverProfileRoute
-  '/{-$lang}/dash/driver/ratings': typeof Char123LangChar125DashDriverRatingsRoute
-  '/{-$lang}/dash/driver/schedule': typeof Char123LangChar125DashDriverScheduleRoute
-  '/{-$lang}/dash/merchant/menu': typeof Char123LangChar125DashMerchantMenuRoute
-  '/{-$lang}/dash/merchant/orders': typeof Char123LangChar125DashMerchantOrdersRoute
-  '/{-$lang}/dash/merchant/profile': typeof Char123LangChar125DashMerchantProfileRoute
-  '/{-$lang}/dash/merchant/sales': typeof Char123LangChar125DashMerchantSalesRoute
-  '/{-$lang}/dash/operator/drivers': typeof Char123LangChar125DashOperatorDriversRoute
-  '/{-$lang}/dash/operator/merchants': typeof Char123LangChar125DashOperatorMerchantsRoute
-  '/{-$lang}/dash/operator/orders': typeof Char123LangChar125DashOperatorOrdersRoute
-  '/{-$lang}/dash/operator/pricing': typeof Char123LangChar125DashOperatorPricingRoute
-  '/{-$lang}/dash/operator/reports': typeof Char123LangChar125DashOperatorReportsRoute
-  '/{-$lang}/dash/user/bookings': typeof Char123LangChar125DashUserBookingsRoute
-  '/{-$lang}/dash/user/history': typeof Char123LangChar125DashUserHistoryRoute
-  '/{-$lang}/dash/user/profile': typeof Char123LangChar125DashUserProfileRoute
-  '/{-$lang}/dash/user/wallet': typeof Char123LangChar125DashUserWalletRoute
-  '/{-$lang}/dash/admin/': typeof Char123LangChar125DashAdminIndexRoute
-  '/{-$lang}/dash/driver/': typeof Char123LangChar125DashDriverIndexRoute
-  '/{-$lang}/dash/merchant/': typeof Char123LangChar125DashMerchantIndexRoute
-  '/{-$lang}/dash/operator/': typeof Char123LangChar125DashOperatorIndexRoute
-  '/{-$lang}/dash/user/': typeof Char123LangChar125DashUserIndexRoute
-  '/{-$lang}/dash/operator/coupons/new': typeof Char123LangChar125DashOperatorCouponsNewRoute
-  '/{-$lang}/dash/operator/coupons/': typeof Char123LangChar125DashOperatorCouponsIndexRoute
+  '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/dash/admin': typeof DashAdminRouteRouteWithChildren
+  '/dash/driver': typeof DashDriverRouteRouteWithChildren
+  '/dash/merchant': typeof DashMerchantRouteRouteWithChildren
+  '/dash/operator': typeof DashOperatorRouteRouteWithChildren
+  '/dash/user': typeof DashUserRouteRouteWithChildren
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
+  '/(auth)/reset-password': typeof authResetPasswordRoute
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up/driver': typeof authSignUpDriverRoute
+  '/(auth)/sign-up/merchant': typeof authSignUpMerchantRoute
+  '/(auth)/sign-up/user': typeof authSignUpUserRoute
+  '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/drivers': typeof DashAdminDriversRoute
+  '/dash/admin/merchants': typeof DashAdminMerchantsRoute
+  '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/users': typeof DashAdminUsersRoute
+  '/dash/driver/earnings': typeof DashDriverEarningsRoute
+  '/dash/driver/orders': typeof DashDriverOrdersRoute
+  '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/ratings': typeof DashDriverRatingsRoute
+  '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/menu': typeof DashMerchantMenuRoute
+  '/dash/merchant/orders': typeof DashMerchantOrdersRoute
+  '/dash/merchant/profile': typeof DashMerchantProfileRoute
+  '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/operator/drivers': typeof DashOperatorDriversRoute
+  '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
+  '/dash/operator/orders': typeof DashOperatorOrdersRoute
+  '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/user/bookings': typeof DashUserBookingsRoute
+  '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/profile': typeof DashUserProfileRoute
+  '/dash/user/wallet': typeof DashUserWalletRoute
+  '/dash/admin/': typeof DashAdminIndexRoute
+  '/dash/driver/': typeof DashDriverIndexRoute
+  '/dash/merchant/': typeof DashMerchantIndexRoute
+  '/dash/operator/': typeof DashOperatorIndexRoute
+  '/dash/user/': typeof DashUserIndexRoute
+  '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/coupons/': typeof DashOperatorCouponsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/{-$lang}'
-    | '/{-$lang}/dash/admin'
-    | '/{-$lang}/dash/driver'
-    | '/{-$lang}/dash/merchant'
-    | '/{-$lang}/dash/operator'
-    | '/{-$lang}/dash/user'
-    | '/{-$lang}/forgot-password'
-    | '/{-$lang}/reset-password'
-    | '/{-$lang}/sign-in'
-    | '/{-$lang}/sign-up/driver'
-    | '/{-$lang}/sign-up/merchant'
-    | '/{-$lang}/sign-up/user'
-    | '/{-$lang}/dash/admin/analytics'
-    | '/{-$lang}/dash/admin/configurations'
-    | '/{-$lang}/dash/admin/drivers'
-    | '/{-$lang}/dash/admin/merchants'
-    | '/{-$lang}/dash/admin/orders'
-    | '/{-$lang}/dash/admin/users'
-    | '/{-$lang}/dash/driver/earnings'
-    | '/{-$lang}/dash/driver/orders'
-    | '/{-$lang}/dash/driver/profile'
-    | '/{-$lang}/dash/driver/ratings'
-    | '/{-$lang}/dash/driver/schedule'
-    | '/{-$lang}/dash/merchant/menu'
-    | '/{-$lang}/dash/merchant/orders'
-    | '/{-$lang}/dash/merchant/profile'
-    | '/{-$lang}/dash/merchant/sales'
-    | '/{-$lang}/dash/operator/drivers'
-    | '/{-$lang}/dash/operator/merchants'
-    | '/{-$lang}/dash/operator/orders'
-    | '/{-$lang}/dash/operator/pricing'
-    | '/{-$lang}/dash/operator/reports'
-    | '/{-$lang}/dash/user/bookings'
-    | '/{-$lang}/dash/user/history'
-    | '/{-$lang}/dash/user/profile'
-    | '/{-$lang}/dash/user/wallet'
-    | '/{-$lang}/dash/admin/'
-    | '/{-$lang}/dash/driver/'
-    | '/{-$lang}/dash/merchant/'
-    | '/{-$lang}/dash/operator/'
-    | '/{-$lang}/dash/user/'
-    | '/{-$lang}/dash/operator/coupons/new'
-    | '/{-$lang}/dash/operator/coupons'
+    | '/'
+    | '/dash/admin'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up/driver'
+    | '/sign-up/merchant'
+    | '/sign-up/user'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/driver/earnings'
+    | '/dash/driver/orders'
+    | '/dash/driver/profile'
+    | '/dash/driver/ratings'
+    | '/dash/driver/schedule'
+    | '/dash/merchant/menu'
+    | '/dash/merchant/orders'
+    | '/dash/merchant/profile'
+    | '/dash/merchant/sales'
+    | '/dash/operator/drivers'
+    | '/dash/operator/merchants'
+    | '/dash/operator/orders'
+    | '/dash/operator/pricing'
+    | '/dash/operator/reports'
+    | '/dash/user/bookings'
+    | '/dash/user/history'
+    | '/dash/user/profile'
+    | '/dash/user/wallet'
+    | '/dash/admin/'
+    | '/dash/driver/'
+    | '/dash/merchant/'
+    | '/dash/operator/'
+    | '/dash/user/'
+    | '/dash/operator/coupons/new'
+    | '/dash/operator/coupons'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/{-$lang}'
-    | '/{-$lang}/forgot-password'
-    | '/{-$lang}/reset-password'
-    | '/{-$lang}/sign-in'
-    | '/{-$lang}/sign-up/driver'
-    | '/{-$lang}/sign-up/merchant'
-    | '/{-$lang}/sign-up/user'
-    | '/{-$lang}/dash/admin/analytics'
-    | '/{-$lang}/dash/admin/configurations'
-    | '/{-$lang}/dash/admin/drivers'
-    | '/{-$lang}/dash/admin/merchants'
-    | '/{-$lang}/dash/admin/orders'
-    | '/{-$lang}/dash/admin/users'
-    | '/{-$lang}/dash/driver/earnings'
-    | '/{-$lang}/dash/driver/orders'
-    | '/{-$lang}/dash/driver/profile'
-    | '/{-$lang}/dash/driver/ratings'
-    | '/{-$lang}/dash/driver/schedule'
-    | '/{-$lang}/dash/merchant/menu'
-    | '/{-$lang}/dash/merchant/orders'
-    | '/{-$lang}/dash/merchant/profile'
-    | '/{-$lang}/dash/merchant/sales'
-    | '/{-$lang}/dash/operator/drivers'
-    | '/{-$lang}/dash/operator/merchants'
-    | '/{-$lang}/dash/operator/orders'
-    | '/{-$lang}/dash/operator/pricing'
-    | '/{-$lang}/dash/operator/reports'
-    | '/{-$lang}/dash/user/bookings'
-    | '/{-$lang}/dash/user/history'
-    | '/{-$lang}/dash/user/profile'
-    | '/{-$lang}/dash/user/wallet'
-    | '/{-$lang}/dash/admin'
-    | '/{-$lang}/dash/driver'
-    | '/{-$lang}/dash/merchant'
-    | '/{-$lang}/dash/operator'
-    | '/{-$lang}/dash/user'
-    | '/{-$lang}/dash/operator/coupons/new'
-    | '/{-$lang}/dash/operator/coupons'
+    | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up/driver'
+    | '/sign-up/merchant'
+    | '/sign-up/user'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/driver/earnings'
+    | '/dash/driver/orders'
+    | '/dash/driver/profile'
+    | '/dash/driver/ratings'
+    | '/dash/driver/schedule'
+    | '/dash/merchant/menu'
+    | '/dash/merchant/orders'
+    | '/dash/merchant/profile'
+    | '/dash/merchant/sales'
+    | '/dash/operator/drivers'
+    | '/dash/operator/merchants'
+    | '/dash/operator/orders'
+    | '/dash/operator/pricing'
+    | '/dash/operator/reports'
+    | '/dash/user/bookings'
+    | '/dash/user/history'
+    | '/dash/user/profile'
+    | '/dash/user/wallet'
+    | '/dash/admin'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
+    | '/dash/operator/coupons/new'
+    | '/dash/operator/coupons'
   id:
     | '__root__'
-    | '/{-$lang}/(auth)'
-    | '/{-$lang}/'
-    | '/{-$lang}/dash/admin'
-    | '/{-$lang}/dash/driver'
-    | '/{-$lang}/dash/merchant'
-    | '/{-$lang}/dash/operator'
-    | '/{-$lang}/dash/user'
-    | '/{-$lang}/(auth)/forgot-password'
-    | '/{-$lang}/(auth)/reset-password'
-    | '/{-$lang}/(auth)/sign-in'
-    | '/{-$lang}/(auth)/sign-up/driver'
-    | '/{-$lang}/(auth)/sign-up/merchant'
-    | '/{-$lang}/(auth)/sign-up/user'
-    | '/{-$lang}/dash/admin/analytics'
-    | '/{-$lang}/dash/admin/configurations'
-    | '/{-$lang}/dash/admin/drivers'
-    | '/{-$lang}/dash/admin/merchants'
-    | '/{-$lang}/dash/admin/orders'
-    | '/{-$lang}/dash/admin/users'
-    | '/{-$lang}/dash/driver/earnings'
-    | '/{-$lang}/dash/driver/orders'
-    | '/{-$lang}/dash/driver/profile'
-    | '/{-$lang}/dash/driver/ratings'
-    | '/{-$lang}/dash/driver/schedule'
-    | '/{-$lang}/dash/merchant/menu'
-    | '/{-$lang}/dash/merchant/orders'
-    | '/{-$lang}/dash/merchant/profile'
-    | '/{-$lang}/dash/merchant/sales'
-    | '/{-$lang}/dash/operator/drivers'
-    | '/{-$lang}/dash/operator/merchants'
-    | '/{-$lang}/dash/operator/orders'
-    | '/{-$lang}/dash/operator/pricing'
-    | '/{-$lang}/dash/operator/reports'
-    | '/{-$lang}/dash/user/bookings'
-    | '/{-$lang}/dash/user/history'
-    | '/{-$lang}/dash/user/profile'
-    | '/{-$lang}/dash/user/wallet'
-    | '/{-$lang}/dash/admin/'
-    | '/{-$lang}/dash/driver/'
-    | '/{-$lang}/dash/merchant/'
-    | '/{-$lang}/dash/operator/'
-    | '/{-$lang}/dash/user/'
-    | '/{-$lang}/dash/operator/coupons/new'
-    | '/{-$lang}/dash/operator/coupons/'
+    | '/'
+    | '/(auth)'
+    | '/dash/admin'
+    | '/dash/driver'
+    | '/dash/merchant'
+    | '/dash/operator'
+    | '/dash/user'
+    | '/(auth)/forgot-password'
+    | '/(auth)/reset-password'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up/driver'
+    | '/(auth)/sign-up/merchant'
+    | '/(auth)/sign-up/user'
+    | '/dash/admin/analytics'
+    | '/dash/admin/configurations'
+    | '/dash/admin/drivers'
+    | '/dash/admin/merchants'
+    | '/dash/admin/orders'
+    | '/dash/admin/users'
+    | '/dash/driver/earnings'
+    | '/dash/driver/orders'
+    | '/dash/driver/profile'
+    | '/dash/driver/ratings'
+    | '/dash/driver/schedule'
+    | '/dash/merchant/menu'
+    | '/dash/merchant/orders'
+    | '/dash/merchant/profile'
+    | '/dash/merchant/sales'
+    | '/dash/operator/drivers'
+    | '/dash/operator/merchants'
+    | '/dash/operator/orders'
+    | '/dash/operator/pricing'
+    | '/dash/operator/reports'
+    | '/dash/user/bookings'
+    | '/dash/user/history'
+    | '/dash/user/profile'
+    | '/dash/user/wallet'
+    | '/dash/admin/'
+    | '/dash/driver/'
+    | '/dash/merchant/'
+    | '/dash/operator/'
+    | '/dash/user/'
+    | '/dash/operator/coupons/new'
+    | '/dash/operator/coupons/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  Char123LangChar125authRouteRoute: typeof Char123LangChar125authRouteRouteWithChildren
-  Char123LangChar125IndexRoute: typeof Char123LangChar125IndexRoute
-  Char123LangChar125DashAdminRouteRoute: typeof Char123LangChar125DashAdminRouteRouteWithChildren
-  Char123LangChar125DashDriverRouteRoute: typeof Char123LangChar125DashDriverRouteRouteWithChildren
-  Char123LangChar125DashMerchantRouteRoute: typeof Char123LangChar125DashMerchantRouteRouteWithChildren
-  Char123LangChar125DashOperatorRouteRoute: typeof Char123LangChar125DashOperatorRouteRouteWithChildren
-  Char123LangChar125DashUserRouteRoute: typeof Char123LangChar125DashUserRouteRouteWithChildren
+  IndexRoute: typeof IndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
+  DashAdminRouteRoute: typeof DashAdminRouteRouteWithChildren
+  DashDriverRouteRoute: typeof DashDriverRouteRouteWithChildren
+  DashMerchantRouteRoute: typeof DashMerchantRouteRouteWithChildren
+  DashOperatorRouteRoute: typeof DashOperatorRouteRouteWithChildren
+  DashUserRouteRoute: typeof DashUserRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/{-$lang}/': {
-      id: '/{-$lang}/'
-      path: '/{-$lang}'
-      fullPath: '/{-$lang}'
-      preLoaderRoute: typeof Char123LangChar125IndexRouteImport
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/(auth)': {
-      id: '/{-$lang}/(auth)'
-      path: '/{-$lang}'
-      fullPath: '/{-$lang}'
-      preLoaderRoute: typeof Char123LangChar125authRouteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/(auth)/sign-in': {
-      id: '/{-$lang}/(auth)/sign-in'
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
       path: '/sign-in'
-      fullPath: '/{-$lang}/sign-in'
-      preLoaderRoute: typeof Char123LangChar125authSignInRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/(auth)/reset-password': {
-      id: '/{-$lang}/(auth)/reset-password'
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
       path: '/reset-password'
-      fullPath: '/{-$lang}/reset-password'
-      preLoaderRoute: typeof Char123LangChar125authResetPasswordRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/(auth)/forgot-password': {
-      id: '/{-$lang}/(auth)/forgot-password'
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
       path: '/forgot-password'
-      fullPath: '/{-$lang}/forgot-password'
-      preLoaderRoute: typeof Char123LangChar125authForgotPasswordRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/dash/user': {
-      id: '/{-$lang}/dash/user'
-      path: '/{-$lang}/dash/user'
-      fullPath: '/{-$lang}/dash/user'
-      preLoaderRoute: typeof Char123LangChar125DashUserRouteRouteImport
+    '/dash/user': {
+      id: '/dash/user'
+      path: '/dash/user'
+      fullPath: '/dash/user'
+      preLoaderRoute: typeof DashUserRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/dash/operator': {
-      id: '/{-$lang}/dash/operator'
-      path: '/{-$lang}/dash/operator'
-      fullPath: '/{-$lang}/dash/operator'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorRouteRouteImport
+    '/dash/operator': {
+      id: '/dash/operator'
+      path: '/dash/operator'
+      fullPath: '/dash/operator'
+      preLoaderRoute: typeof DashOperatorRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/dash/merchant': {
-      id: '/{-$lang}/dash/merchant'
-      path: '/{-$lang}/dash/merchant'
-      fullPath: '/{-$lang}/dash/merchant'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantRouteRouteImport
+    '/dash/merchant': {
+      id: '/dash/merchant'
+      path: '/dash/merchant'
+      fullPath: '/dash/merchant'
+      preLoaderRoute: typeof DashMerchantRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/dash/driver': {
-      id: '/{-$lang}/dash/driver'
-      path: '/{-$lang}/dash/driver'
-      fullPath: '/{-$lang}/dash/driver'
-      preLoaderRoute: typeof Char123LangChar125DashDriverRouteRouteImport
+    '/dash/driver': {
+      id: '/dash/driver'
+      path: '/dash/driver'
+      fullPath: '/dash/driver'
+      preLoaderRoute: typeof DashDriverRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/dash/admin': {
-      id: '/{-$lang}/dash/admin'
-      path: '/{-$lang}/dash/admin'
-      fullPath: '/{-$lang}/dash/admin'
-      preLoaderRoute: typeof Char123LangChar125DashAdminRouteRouteImport
+    '/dash/admin': {
+      id: '/dash/admin'
+      path: '/dash/admin'
+      fullPath: '/dash/admin'
+      preLoaderRoute: typeof DashAdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/{-$lang}/dash/user/': {
-      id: '/{-$lang}/dash/user/'
+    '/dash/user/': {
+      id: '/dash/user/'
       path: '/'
-      fullPath: '/{-$lang}/dash/user/'
-      preLoaderRoute: typeof Char123LangChar125DashUserIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashUserRouteRoute
+      fullPath: '/dash/user/'
+      preLoaderRoute: typeof DashUserIndexRouteImport
+      parentRoute: typeof DashUserRouteRoute
     }
-    '/{-$lang}/dash/operator/': {
-      id: '/{-$lang}/dash/operator/'
+    '/dash/operator/': {
+      id: '/dash/operator/'
       path: '/'
-      fullPath: '/{-$lang}/dash/operator/'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/'
+      preLoaderRoute: typeof DashOperatorIndexRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/merchant/': {
-      id: '/{-$lang}/dash/merchant/'
+    '/dash/merchant/': {
+      id: '/dash/merchant/'
       path: '/'
-      fullPath: '/{-$lang}/dash/merchant/'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashMerchantRouteRoute
+      fullPath: '/dash/merchant/'
+      preLoaderRoute: typeof DashMerchantIndexRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
     }
-    '/{-$lang}/dash/driver/': {
-      id: '/{-$lang}/dash/driver/'
+    '/dash/driver/': {
+      id: '/dash/driver/'
       path: '/'
-      fullPath: '/{-$lang}/dash/driver/'
-      preLoaderRoute: typeof Char123LangChar125DashDriverIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/'
+      preLoaderRoute: typeof DashDriverIndexRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/admin/': {
-      id: '/{-$lang}/dash/admin/'
+    '/dash/admin/': {
+      id: '/dash/admin/'
       path: '/'
-      fullPath: '/{-$lang}/dash/admin/'
-      preLoaderRoute: typeof Char123LangChar125DashAdminIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/'
+      preLoaderRoute: typeof DashAdminIndexRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/user/wallet': {
-      id: '/{-$lang}/dash/user/wallet'
+    '/dash/user/wallet': {
+      id: '/dash/user/wallet'
       path: '/wallet'
-      fullPath: '/{-$lang}/dash/user/wallet'
-      preLoaderRoute: typeof Char123LangChar125DashUserWalletRouteImport
-      parentRoute: typeof Char123LangChar125DashUserRouteRoute
+      fullPath: '/dash/user/wallet'
+      preLoaderRoute: typeof DashUserWalletRouteImport
+      parentRoute: typeof DashUserRouteRoute
     }
-    '/{-$lang}/dash/user/profile': {
-      id: '/{-$lang}/dash/user/profile'
+    '/dash/user/profile': {
+      id: '/dash/user/profile'
       path: '/profile'
-      fullPath: '/{-$lang}/dash/user/profile'
-      preLoaderRoute: typeof Char123LangChar125DashUserProfileRouteImport
-      parentRoute: typeof Char123LangChar125DashUserRouteRoute
+      fullPath: '/dash/user/profile'
+      preLoaderRoute: typeof DashUserProfileRouteImport
+      parentRoute: typeof DashUserRouteRoute
     }
-    '/{-$lang}/dash/user/history': {
-      id: '/{-$lang}/dash/user/history'
+    '/dash/user/history': {
+      id: '/dash/user/history'
       path: '/history'
-      fullPath: '/{-$lang}/dash/user/history'
-      preLoaderRoute: typeof Char123LangChar125DashUserHistoryRouteImport
-      parentRoute: typeof Char123LangChar125DashUserRouteRoute
+      fullPath: '/dash/user/history'
+      preLoaderRoute: typeof DashUserHistoryRouteImport
+      parentRoute: typeof DashUserRouteRoute
     }
-    '/{-$lang}/dash/user/bookings': {
-      id: '/{-$lang}/dash/user/bookings'
+    '/dash/user/bookings': {
+      id: '/dash/user/bookings'
       path: '/bookings'
-      fullPath: '/{-$lang}/dash/user/bookings'
-      preLoaderRoute: typeof Char123LangChar125DashUserBookingsRouteImport
-      parentRoute: typeof Char123LangChar125DashUserRouteRoute
+      fullPath: '/dash/user/bookings'
+      preLoaderRoute: typeof DashUserBookingsRouteImport
+      parentRoute: typeof DashUserRouteRoute
     }
-    '/{-$lang}/dash/operator/reports': {
-      id: '/{-$lang}/dash/operator/reports'
+    '/dash/operator/reports': {
+      id: '/dash/operator/reports'
       path: '/reports'
-      fullPath: '/{-$lang}/dash/operator/reports'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorReportsRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/reports'
+      preLoaderRoute: typeof DashOperatorReportsRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/operator/pricing': {
-      id: '/{-$lang}/dash/operator/pricing'
+    '/dash/operator/pricing': {
+      id: '/dash/operator/pricing'
       path: '/pricing'
-      fullPath: '/{-$lang}/dash/operator/pricing'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorPricingRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/pricing'
+      preLoaderRoute: typeof DashOperatorPricingRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/operator/orders': {
-      id: '/{-$lang}/dash/operator/orders'
+    '/dash/operator/orders': {
+      id: '/dash/operator/orders'
       path: '/orders'
-      fullPath: '/{-$lang}/dash/operator/orders'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorOrdersRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/orders'
+      preLoaderRoute: typeof DashOperatorOrdersRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/operator/merchants': {
-      id: '/{-$lang}/dash/operator/merchants'
+    '/dash/operator/merchants': {
+      id: '/dash/operator/merchants'
       path: '/merchants'
-      fullPath: '/{-$lang}/dash/operator/merchants'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorMerchantsRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/merchants'
+      preLoaderRoute: typeof DashOperatorMerchantsRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/operator/drivers': {
-      id: '/{-$lang}/dash/operator/drivers'
+    '/dash/operator/drivers': {
+      id: '/dash/operator/drivers'
       path: '/drivers'
-      fullPath: '/{-$lang}/dash/operator/drivers'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorDriversRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/drivers'
+      preLoaderRoute: typeof DashOperatorDriversRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/merchant/sales': {
-      id: '/{-$lang}/dash/merchant/sales'
+    '/dash/merchant/sales': {
+      id: '/dash/merchant/sales'
       path: '/sales'
-      fullPath: '/{-$lang}/dash/merchant/sales'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantSalesRouteImport
-      parentRoute: typeof Char123LangChar125DashMerchantRouteRoute
+      fullPath: '/dash/merchant/sales'
+      preLoaderRoute: typeof DashMerchantSalesRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
     }
-    '/{-$lang}/dash/merchant/profile': {
-      id: '/{-$lang}/dash/merchant/profile'
+    '/dash/merchant/profile': {
+      id: '/dash/merchant/profile'
       path: '/profile'
-      fullPath: '/{-$lang}/dash/merchant/profile'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantProfileRouteImport
-      parentRoute: typeof Char123LangChar125DashMerchantRouteRoute
+      fullPath: '/dash/merchant/profile'
+      preLoaderRoute: typeof DashMerchantProfileRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
     }
-    '/{-$lang}/dash/merchant/orders': {
-      id: '/{-$lang}/dash/merchant/orders'
+    '/dash/merchant/orders': {
+      id: '/dash/merchant/orders'
       path: '/orders'
-      fullPath: '/{-$lang}/dash/merchant/orders'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantOrdersRouteImport
-      parentRoute: typeof Char123LangChar125DashMerchantRouteRoute
+      fullPath: '/dash/merchant/orders'
+      preLoaderRoute: typeof DashMerchantOrdersRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
     }
-    '/{-$lang}/dash/merchant/menu': {
-      id: '/{-$lang}/dash/merchant/menu'
+    '/dash/merchant/menu': {
+      id: '/dash/merchant/menu'
       path: '/menu'
-      fullPath: '/{-$lang}/dash/merchant/menu'
-      preLoaderRoute: typeof Char123LangChar125DashMerchantMenuRouteImport
-      parentRoute: typeof Char123LangChar125DashMerchantRouteRoute
+      fullPath: '/dash/merchant/menu'
+      preLoaderRoute: typeof DashMerchantMenuRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
     }
-    '/{-$lang}/dash/driver/schedule': {
-      id: '/{-$lang}/dash/driver/schedule'
+    '/dash/driver/schedule': {
+      id: '/dash/driver/schedule'
       path: '/schedule'
-      fullPath: '/{-$lang}/dash/driver/schedule'
-      preLoaderRoute: typeof Char123LangChar125DashDriverScheduleRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/schedule'
+      preLoaderRoute: typeof DashDriverScheduleRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/driver/ratings': {
-      id: '/{-$lang}/dash/driver/ratings'
+    '/dash/driver/ratings': {
+      id: '/dash/driver/ratings'
       path: '/ratings'
-      fullPath: '/{-$lang}/dash/driver/ratings'
-      preLoaderRoute: typeof Char123LangChar125DashDriverRatingsRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/ratings'
+      preLoaderRoute: typeof DashDriverRatingsRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/driver/profile': {
-      id: '/{-$lang}/dash/driver/profile'
+    '/dash/driver/profile': {
+      id: '/dash/driver/profile'
       path: '/profile'
-      fullPath: '/{-$lang}/dash/driver/profile'
-      preLoaderRoute: typeof Char123LangChar125DashDriverProfileRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/profile'
+      preLoaderRoute: typeof DashDriverProfileRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/driver/orders': {
-      id: '/{-$lang}/dash/driver/orders'
+    '/dash/driver/orders': {
+      id: '/dash/driver/orders'
       path: '/orders'
-      fullPath: '/{-$lang}/dash/driver/orders'
-      preLoaderRoute: typeof Char123LangChar125DashDriverOrdersRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/orders'
+      preLoaderRoute: typeof DashDriverOrdersRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/driver/earnings': {
-      id: '/{-$lang}/dash/driver/earnings'
+    '/dash/driver/earnings': {
+      id: '/dash/driver/earnings'
       path: '/earnings'
-      fullPath: '/{-$lang}/dash/driver/earnings'
-      preLoaderRoute: typeof Char123LangChar125DashDriverEarningsRouteImport
-      parentRoute: typeof Char123LangChar125DashDriverRouteRoute
+      fullPath: '/dash/driver/earnings'
+      preLoaderRoute: typeof DashDriverEarningsRouteImport
+      parentRoute: typeof DashDriverRouteRoute
     }
-    '/{-$lang}/dash/admin/users': {
-      id: '/{-$lang}/dash/admin/users'
+    '/dash/admin/users': {
+      id: '/dash/admin/users'
       path: '/users'
-      fullPath: '/{-$lang}/dash/admin/users'
-      preLoaderRoute: typeof Char123LangChar125DashAdminUsersRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/users'
+      preLoaderRoute: typeof DashAdminUsersRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/admin/orders': {
-      id: '/{-$lang}/dash/admin/orders'
+    '/dash/admin/orders': {
+      id: '/dash/admin/orders'
       path: '/orders'
-      fullPath: '/{-$lang}/dash/admin/orders'
-      preLoaderRoute: typeof Char123LangChar125DashAdminOrdersRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/orders'
+      preLoaderRoute: typeof DashAdminOrdersRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/admin/merchants': {
-      id: '/{-$lang}/dash/admin/merchants'
+    '/dash/admin/merchants': {
+      id: '/dash/admin/merchants'
       path: '/merchants'
-      fullPath: '/{-$lang}/dash/admin/merchants'
-      preLoaderRoute: typeof Char123LangChar125DashAdminMerchantsRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/merchants'
+      preLoaderRoute: typeof DashAdminMerchantsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/admin/drivers': {
-      id: '/{-$lang}/dash/admin/drivers'
+    '/dash/admin/drivers': {
+      id: '/dash/admin/drivers'
       path: '/drivers'
-      fullPath: '/{-$lang}/dash/admin/drivers'
-      preLoaderRoute: typeof Char123LangChar125DashAdminDriversRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/drivers'
+      preLoaderRoute: typeof DashAdminDriversRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/admin/configurations': {
-      id: '/{-$lang}/dash/admin/configurations'
+    '/dash/admin/configurations': {
+      id: '/dash/admin/configurations'
       path: '/configurations'
-      fullPath: '/{-$lang}/dash/admin/configurations'
-      preLoaderRoute: typeof Char123LangChar125DashAdminConfigurationsRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/configurations'
+      preLoaderRoute: typeof DashAdminConfigurationsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/dash/admin/analytics': {
-      id: '/{-$lang}/dash/admin/analytics'
+    '/dash/admin/analytics': {
+      id: '/dash/admin/analytics'
       path: '/analytics'
-      fullPath: '/{-$lang}/dash/admin/analytics'
-      preLoaderRoute: typeof Char123LangChar125DashAdminAnalyticsRouteImport
-      parentRoute: typeof Char123LangChar125DashAdminRouteRoute
+      fullPath: '/dash/admin/analytics'
+      preLoaderRoute: typeof DashAdminAnalyticsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
-    '/{-$lang}/(auth)/sign-up/user': {
-      id: '/{-$lang}/(auth)/sign-up/user'
+    '/(auth)/sign-up/user': {
+      id: '/(auth)/sign-up/user'
       path: '/sign-up/user'
-      fullPath: '/{-$lang}/sign-up/user'
-      preLoaderRoute: typeof Char123LangChar125authSignUpUserRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/sign-up/user'
+      preLoaderRoute: typeof authSignUpUserRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/(auth)/sign-up/merchant': {
-      id: '/{-$lang}/(auth)/sign-up/merchant'
+    '/(auth)/sign-up/merchant': {
+      id: '/(auth)/sign-up/merchant'
       path: '/sign-up/merchant'
-      fullPath: '/{-$lang}/sign-up/merchant'
-      preLoaderRoute: typeof Char123LangChar125authSignUpMerchantRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/sign-up/merchant'
+      preLoaderRoute: typeof authSignUpMerchantRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/(auth)/sign-up/driver': {
-      id: '/{-$lang}/(auth)/sign-up/driver'
+    '/(auth)/sign-up/driver': {
+      id: '/(auth)/sign-up/driver'
       path: '/sign-up/driver'
-      fullPath: '/{-$lang}/sign-up/driver'
-      preLoaderRoute: typeof Char123LangChar125authSignUpDriverRouteImport
-      parentRoute: typeof Char123LangChar125authRouteRoute
+      fullPath: '/sign-up/driver'
+      preLoaderRoute: typeof authSignUpDriverRouteImport
+      parentRoute: typeof authRouteRoute
     }
-    '/{-$lang}/dash/operator/coupons/': {
-      id: '/{-$lang}/dash/operator/coupons/'
+    '/dash/operator/coupons/': {
+      id: '/dash/operator/coupons/'
       path: '/coupons'
-      fullPath: '/{-$lang}/dash/operator/coupons'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorCouponsIndexRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/coupons'
+      preLoaderRoute: typeof DashOperatorCouponsIndexRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
-    '/{-$lang}/dash/operator/coupons/new': {
-      id: '/{-$lang}/dash/operator/coupons/new'
+    '/dash/operator/coupons/new': {
+      id: '/dash/operator/coupons/new'
       path: '/coupons/new'
-      fullPath: '/{-$lang}/dash/operator/coupons/new'
-      preLoaderRoute: typeof Char123LangChar125DashOperatorCouponsNewRouteImport
-      parentRoute: typeof Char123LangChar125DashOperatorRouteRoute
+      fullPath: '/dash/operator/coupons/new'
+      preLoaderRoute: typeof DashOperatorCouponsNewRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
   }
 }
 
-interface Char123LangChar125authRouteRouteChildren {
-  Char123LangChar125authForgotPasswordRoute: typeof Char123LangChar125authForgotPasswordRoute
-  Char123LangChar125authResetPasswordRoute: typeof Char123LangChar125authResetPasswordRoute
-  Char123LangChar125authSignInRoute: typeof Char123LangChar125authSignInRoute
-  Char123LangChar125authSignUpDriverRoute: typeof Char123LangChar125authSignUpDriverRoute
-  Char123LangChar125authSignUpMerchantRoute: typeof Char123LangChar125authSignUpMerchantRoute
-  Char123LangChar125authSignUpUserRoute: typeof Char123LangChar125authSignUpUserRoute
+interface authRouteRouteChildren {
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
+  authResetPasswordRoute: typeof authResetPasswordRoute
+  authSignInRoute: typeof authSignInRoute
+  authSignUpDriverRoute: typeof authSignUpDriverRoute
+  authSignUpMerchantRoute: typeof authSignUpMerchantRoute
+  authSignUpUserRoute: typeof authSignUpUserRoute
 }
 
-const Char123LangChar125authRouteRouteChildren: Char123LangChar125authRouteRouteChildren =
-  {
-    Char123LangChar125authForgotPasswordRoute:
-      Char123LangChar125authForgotPasswordRoute,
-    Char123LangChar125authResetPasswordRoute:
-      Char123LangChar125authResetPasswordRoute,
-    Char123LangChar125authSignInRoute: Char123LangChar125authSignInRoute,
-    Char123LangChar125authSignUpDriverRoute:
-      Char123LangChar125authSignUpDriverRoute,
-    Char123LangChar125authSignUpMerchantRoute:
-      Char123LangChar125authSignUpMerchantRoute,
-    Char123LangChar125authSignUpUserRoute:
-      Char123LangChar125authSignUpUserRoute,
-  }
-
-const Char123LangChar125authRouteRouteWithChildren =
-  Char123LangChar125authRouteRoute._addFileChildren(
-    Char123LangChar125authRouteRouteChildren,
-  )
-
-interface Char123LangChar125DashAdminRouteRouteChildren {
-  Char123LangChar125DashAdminAnalyticsRoute: typeof Char123LangChar125DashAdminAnalyticsRoute
-  Char123LangChar125DashAdminConfigurationsRoute: typeof Char123LangChar125DashAdminConfigurationsRoute
-  Char123LangChar125DashAdminDriversRoute: typeof Char123LangChar125DashAdminDriversRoute
-  Char123LangChar125DashAdminMerchantsRoute: typeof Char123LangChar125DashAdminMerchantsRoute
-  Char123LangChar125DashAdminOrdersRoute: typeof Char123LangChar125DashAdminOrdersRoute
-  Char123LangChar125DashAdminUsersRoute: typeof Char123LangChar125DashAdminUsersRoute
-  Char123LangChar125DashAdminIndexRoute: typeof Char123LangChar125DashAdminIndexRoute
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authForgotPasswordRoute: authForgotPasswordRoute,
+  authResetPasswordRoute: authResetPasswordRoute,
+  authSignInRoute: authSignInRoute,
+  authSignUpDriverRoute: authSignUpDriverRoute,
+  authSignUpMerchantRoute: authSignUpMerchantRoute,
+  authSignUpUserRoute: authSignUpUserRoute,
 }
 
-const Char123LangChar125DashAdminRouteRouteChildren: Char123LangChar125DashAdminRouteRouteChildren =
-  {
-    Char123LangChar125DashAdminAnalyticsRoute:
-      Char123LangChar125DashAdminAnalyticsRoute,
-    Char123LangChar125DashAdminConfigurationsRoute:
-      Char123LangChar125DashAdminConfigurationsRoute,
-    Char123LangChar125DashAdminDriversRoute:
-      Char123LangChar125DashAdminDriversRoute,
-    Char123LangChar125DashAdminMerchantsRoute:
-      Char123LangChar125DashAdminMerchantsRoute,
-    Char123LangChar125DashAdminOrdersRoute:
-      Char123LangChar125DashAdminOrdersRoute,
-    Char123LangChar125DashAdminUsersRoute:
-      Char123LangChar125DashAdminUsersRoute,
-    Char123LangChar125DashAdminIndexRoute:
-      Char123LangChar125DashAdminIndexRoute,
-  }
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
 
-const Char123LangChar125DashAdminRouteRouteWithChildren =
-  Char123LangChar125DashAdminRouteRoute._addFileChildren(
-    Char123LangChar125DashAdminRouteRouteChildren,
-  )
-
-interface Char123LangChar125DashDriverRouteRouteChildren {
-  Char123LangChar125DashDriverEarningsRoute: typeof Char123LangChar125DashDriverEarningsRoute
-  Char123LangChar125DashDriverOrdersRoute: typeof Char123LangChar125DashDriverOrdersRoute
-  Char123LangChar125DashDriverProfileRoute: typeof Char123LangChar125DashDriverProfileRoute
-  Char123LangChar125DashDriverRatingsRoute: typeof Char123LangChar125DashDriverRatingsRoute
-  Char123LangChar125DashDriverScheduleRoute: typeof Char123LangChar125DashDriverScheduleRoute
-  Char123LangChar125DashDriverIndexRoute: typeof Char123LangChar125DashDriverIndexRoute
+interface DashAdminRouteRouteChildren {
+  DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
+  DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
+  DashAdminDriversRoute: typeof DashAdminDriversRoute
+  DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
+  DashAdminOrdersRoute: typeof DashAdminOrdersRoute
+  DashAdminUsersRoute: typeof DashAdminUsersRoute
+  DashAdminIndexRoute: typeof DashAdminIndexRoute
 }
 
-const Char123LangChar125DashDriverRouteRouteChildren: Char123LangChar125DashDriverRouteRouteChildren =
-  {
-    Char123LangChar125DashDriverEarningsRoute:
-      Char123LangChar125DashDriverEarningsRoute,
-    Char123LangChar125DashDriverOrdersRoute:
-      Char123LangChar125DashDriverOrdersRoute,
-    Char123LangChar125DashDriverProfileRoute:
-      Char123LangChar125DashDriverProfileRoute,
-    Char123LangChar125DashDriverRatingsRoute:
-      Char123LangChar125DashDriverRatingsRoute,
-    Char123LangChar125DashDriverScheduleRoute:
-      Char123LangChar125DashDriverScheduleRoute,
-    Char123LangChar125DashDriverIndexRoute:
-      Char123LangChar125DashDriverIndexRoute,
-  }
-
-const Char123LangChar125DashDriverRouteRouteWithChildren =
-  Char123LangChar125DashDriverRouteRoute._addFileChildren(
-    Char123LangChar125DashDriverRouteRouteChildren,
-  )
-
-interface Char123LangChar125DashMerchantRouteRouteChildren {
-  Char123LangChar125DashMerchantMenuRoute: typeof Char123LangChar125DashMerchantMenuRoute
-  Char123LangChar125DashMerchantOrdersRoute: typeof Char123LangChar125DashMerchantOrdersRoute
-  Char123LangChar125DashMerchantProfileRoute: typeof Char123LangChar125DashMerchantProfileRoute
-  Char123LangChar125DashMerchantSalesRoute: typeof Char123LangChar125DashMerchantSalesRoute
-  Char123LangChar125DashMerchantIndexRoute: typeof Char123LangChar125DashMerchantIndexRoute
+const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
+  DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
+  DashAdminConfigurationsRoute: DashAdminConfigurationsRoute,
+  DashAdminDriversRoute: DashAdminDriversRoute,
+  DashAdminMerchantsRoute: DashAdminMerchantsRoute,
+  DashAdminOrdersRoute: DashAdminOrdersRoute,
+  DashAdminUsersRoute: DashAdminUsersRoute,
+  DashAdminIndexRoute: DashAdminIndexRoute,
 }
 
-const Char123LangChar125DashMerchantRouteRouteChildren: Char123LangChar125DashMerchantRouteRouteChildren =
-  {
-    Char123LangChar125DashMerchantMenuRoute:
-      Char123LangChar125DashMerchantMenuRoute,
-    Char123LangChar125DashMerchantOrdersRoute:
-      Char123LangChar125DashMerchantOrdersRoute,
-    Char123LangChar125DashMerchantProfileRoute:
-      Char123LangChar125DashMerchantProfileRoute,
-    Char123LangChar125DashMerchantSalesRoute:
-      Char123LangChar125DashMerchantSalesRoute,
-    Char123LangChar125DashMerchantIndexRoute:
-      Char123LangChar125DashMerchantIndexRoute,
-  }
+const DashAdminRouteRouteWithChildren = DashAdminRouteRoute._addFileChildren(
+  DashAdminRouteRouteChildren,
+)
 
-const Char123LangChar125DashMerchantRouteRouteWithChildren =
-  Char123LangChar125DashMerchantRouteRoute._addFileChildren(
-    Char123LangChar125DashMerchantRouteRouteChildren,
-  )
-
-interface Char123LangChar125DashOperatorRouteRouteChildren {
-  Char123LangChar125DashOperatorDriversRoute: typeof Char123LangChar125DashOperatorDriversRoute
-  Char123LangChar125DashOperatorMerchantsRoute: typeof Char123LangChar125DashOperatorMerchantsRoute
-  Char123LangChar125DashOperatorOrdersRoute: typeof Char123LangChar125DashOperatorOrdersRoute
-  Char123LangChar125DashOperatorPricingRoute: typeof Char123LangChar125DashOperatorPricingRoute
-  Char123LangChar125DashOperatorReportsRoute: typeof Char123LangChar125DashOperatorReportsRoute
-  Char123LangChar125DashOperatorIndexRoute: typeof Char123LangChar125DashOperatorIndexRoute
-  Char123LangChar125DashOperatorCouponsNewRoute: typeof Char123LangChar125DashOperatorCouponsNewRoute
-  Char123LangChar125DashOperatorCouponsIndexRoute: typeof Char123LangChar125DashOperatorCouponsIndexRoute
+interface DashDriverRouteRouteChildren {
+  DashDriverEarningsRoute: typeof DashDriverEarningsRoute
+  DashDriverOrdersRoute: typeof DashDriverOrdersRoute
+  DashDriverProfileRoute: typeof DashDriverProfileRoute
+  DashDriverRatingsRoute: typeof DashDriverRatingsRoute
+  DashDriverScheduleRoute: typeof DashDriverScheduleRoute
+  DashDriverIndexRoute: typeof DashDriverIndexRoute
 }
 
-const Char123LangChar125DashOperatorRouteRouteChildren: Char123LangChar125DashOperatorRouteRouteChildren =
-  {
-    Char123LangChar125DashOperatorDriversRoute:
-      Char123LangChar125DashOperatorDriversRoute,
-    Char123LangChar125DashOperatorMerchantsRoute:
-      Char123LangChar125DashOperatorMerchantsRoute,
-    Char123LangChar125DashOperatorOrdersRoute:
-      Char123LangChar125DashOperatorOrdersRoute,
-    Char123LangChar125DashOperatorPricingRoute:
-      Char123LangChar125DashOperatorPricingRoute,
-    Char123LangChar125DashOperatorReportsRoute:
-      Char123LangChar125DashOperatorReportsRoute,
-    Char123LangChar125DashOperatorIndexRoute:
-      Char123LangChar125DashOperatorIndexRoute,
-    Char123LangChar125DashOperatorCouponsNewRoute:
-      Char123LangChar125DashOperatorCouponsNewRoute,
-    Char123LangChar125DashOperatorCouponsIndexRoute:
-      Char123LangChar125DashOperatorCouponsIndexRoute,
-  }
-
-const Char123LangChar125DashOperatorRouteRouteWithChildren =
-  Char123LangChar125DashOperatorRouteRoute._addFileChildren(
-    Char123LangChar125DashOperatorRouteRouteChildren,
-  )
-
-interface Char123LangChar125DashUserRouteRouteChildren {
-  Char123LangChar125DashUserBookingsRoute: typeof Char123LangChar125DashUserBookingsRoute
-  Char123LangChar125DashUserHistoryRoute: typeof Char123LangChar125DashUserHistoryRoute
-  Char123LangChar125DashUserProfileRoute: typeof Char123LangChar125DashUserProfileRoute
-  Char123LangChar125DashUserWalletRoute: typeof Char123LangChar125DashUserWalletRoute
-  Char123LangChar125DashUserIndexRoute: typeof Char123LangChar125DashUserIndexRoute
+const DashDriverRouteRouteChildren: DashDriverRouteRouteChildren = {
+  DashDriverEarningsRoute: DashDriverEarningsRoute,
+  DashDriverOrdersRoute: DashDriverOrdersRoute,
+  DashDriverProfileRoute: DashDriverProfileRoute,
+  DashDriverRatingsRoute: DashDriverRatingsRoute,
+  DashDriverScheduleRoute: DashDriverScheduleRoute,
+  DashDriverIndexRoute: DashDriverIndexRoute,
 }
 
-const Char123LangChar125DashUserRouteRouteChildren: Char123LangChar125DashUserRouteRouteChildren =
-  {
-    Char123LangChar125DashUserBookingsRoute:
-      Char123LangChar125DashUserBookingsRoute,
-    Char123LangChar125DashUserHistoryRoute:
-      Char123LangChar125DashUserHistoryRoute,
-    Char123LangChar125DashUserProfileRoute:
-      Char123LangChar125DashUserProfileRoute,
-    Char123LangChar125DashUserWalletRoute:
-      Char123LangChar125DashUserWalletRoute,
-    Char123LangChar125DashUserIndexRoute: Char123LangChar125DashUserIndexRoute,
-  }
+const DashDriverRouteRouteWithChildren = DashDriverRouteRoute._addFileChildren(
+  DashDriverRouteRouteChildren,
+)
 
-const Char123LangChar125DashUserRouteRouteWithChildren =
-  Char123LangChar125DashUserRouteRoute._addFileChildren(
-    Char123LangChar125DashUserRouteRouteChildren,
-  )
+interface DashMerchantRouteRouteChildren {
+  DashMerchantMenuRoute: typeof DashMerchantMenuRoute
+  DashMerchantOrdersRoute: typeof DashMerchantOrdersRoute
+  DashMerchantProfileRoute: typeof DashMerchantProfileRoute
+  DashMerchantSalesRoute: typeof DashMerchantSalesRoute
+  DashMerchantIndexRoute: typeof DashMerchantIndexRoute
+}
+
+const DashMerchantRouteRouteChildren: DashMerchantRouteRouteChildren = {
+  DashMerchantMenuRoute: DashMerchantMenuRoute,
+  DashMerchantOrdersRoute: DashMerchantOrdersRoute,
+  DashMerchantProfileRoute: DashMerchantProfileRoute,
+  DashMerchantSalesRoute: DashMerchantSalesRoute,
+  DashMerchantIndexRoute: DashMerchantIndexRoute,
+}
+
+const DashMerchantRouteRouteWithChildren =
+  DashMerchantRouteRoute._addFileChildren(DashMerchantRouteRouteChildren)
+
+interface DashOperatorRouteRouteChildren {
+  DashOperatorDriversRoute: typeof DashOperatorDriversRoute
+  DashOperatorMerchantsRoute: typeof DashOperatorMerchantsRoute
+  DashOperatorOrdersRoute: typeof DashOperatorOrdersRoute
+  DashOperatorPricingRoute: typeof DashOperatorPricingRoute
+  DashOperatorReportsRoute: typeof DashOperatorReportsRoute
+  DashOperatorIndexRoute: typeof DashOperatorIndexRoute
+  DashOperatorCouponsNewRoute: typeof DashOperatorCouponsNewRoute
+  DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
+}
+
+const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
+  DashOperatorDriversRoute: DashOperatorDriversRoute,
+  DashOperatorMerchantsRoute: DashOperatorMerchantsRoute,
+  DashOperatorOrdersRoute: DashOperatorOrdersRoute,
+  DashOperatorPricingRoute: DashOperatorPricingRoute,
+  DashOperatorReportsRoute: DashOperatorReportsRoute,
+  DashOperatorIndexRoute: DashOperatorIndexRoute,
+  DashOperatorCouponsNewRoute: DashOperatorCouponsNewRoute,
+  DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,
+}
+
+const DashOperatorRouteRouteWithChildren =
+  DashOperatorRouteRoute._addFileChildren(DashOperatorRouteRouteChildren)
+
+interface DashUserRouteRouteChildren {
+  DashUserBookingsRoute: typeof DashUserBookingsRoute
+  DashUserHistoryRoute: typeof DashUserHistoryRoute
+  DashUserProfileRoute: typeof DashUserProfileRoute
+  DashUserWalletRoute: typeof DashUserWalletRoute
+  DashUserIndexRoute: typeof DashUserIndexRoute
+}
+
+const DashUserRouteRouteChildren: DashUserRouteRouteChildren = {
+  DashUserBookingsRoute: DashUserBookingsRoute,
+  DashUserHistoryRoute: DashUserHistoryRoute,
+  DashUserProfileRoute: DashUserProfileRoute,
+  DashUserWalletRoute: DashUserWalletRoute,
+  DashUserIndexRoute: DashUserIndexRoute,
+}
+
+const DashUserRouteRouteWithChildren = DashUserRouteRoute._addFileChildren(
+  DashUserRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  Char123LangChar125authRouteRoute:
-    Char123LangChar125authRouteRouteWithChildren,
-  Char123LangChar125IndexRoute: Char123LangChar125IndexRoute,
-  Char123LangChar125DashAdminRouteRoute:
-    Char123LangChar125DashAdminRouteRouteWithChildren,
-  Char123LangChar125DashDriverRouteRoute:
-    Char123LangChar125DashDriverRouteRouteWithChildren,
-  Char123LangChar125DashMerchantRouteRoute:
-    Char123LangChar125DashMerchantRouteRouteWithChildren,
-  Char123LangChar125DashOperatorRouteRoute:
-    Char123LangChar125DashOperatorRouteRouteWithChildren,
-  Char123LangChar125DashUserRouteRoute:
-    Char123LangChar125DashUserRouteRouteWithChildren,
+  IndexRoute: IndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
+  DashAdminRouteRoute: DashAdminRouteRouteWithChildren,
+  DashDriverRouteRoute: DashDriverRouteRouteWithChildren,
+  DashMerchantRouteRoute: DashMerchantRouteRouteWithChildren,
+  DashOperatorRouteRoute: DashOperatorRouteRouteWithChildren,
+  DashUserRouteRoute: DashUserRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

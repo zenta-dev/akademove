@@ -147,7 +147,7 @@ export const CouponForm = ({
 				}),
 			);
 			form.reset();
-			await router.navigate({ to: "/{-$lang}/dash/operator/coupons" });
+			await router.navigate({ to: "/dash/operator/coupons" });
 		},
 		[form.reset, router.navigate],
 	);
