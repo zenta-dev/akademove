@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -8,9 +9,18 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { setThemeCookie } from "@/lib/actions";
 
 export function ThemeToggle() {
 	const { setTheme } = useTheme();
+
+	const _setTheme = useCallback(
+		(theme: "system" | "dark" | "light") => {
+			setTheme(theme);
+			setThemeCookie({ data: theme });
+		},
+		[setTheme],
+	);
 
 	return (
 		<DropdownMenu>
@@ -22,13 +32,13 @@ export function ThemeToggle() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				<DropdownMenuItem onClick={() => setTheme("light")}>
+				<DropdownMenuItem onClick={() => _setTheme("light")}>
 					{m.light()}
 				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("dark")}>
+				<DropdownMenuItem onClick={() => _setTheme("dark")}>
 					{m.dark()}
 				</DropdownMenuItem>
-				<DropdownMenuItem onClick={() => setTheme("system")}>
+				<DropdownMenuItem onClick={() => _setTheme("system")}>
 					{m.system()}
 				</DropdownMenuItem>
 			</DropdownMenuContent>

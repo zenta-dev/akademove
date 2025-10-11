@@ -1,6 +1,7 @@
-import type { Permissions } from "@repo/shared";
+import { cookieParser, type Permissions } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
+import * as z from "zod";
 import { detectDevice } from "@/utils/user-agent";
 import { orpcClient } from "./orpc";
 
@@ -10,7 +11,7 @@ export const getServerHeaders = createServerFn({ method: "GET" }).handler(
 		for (const [key, value] of getRequestHeaders().entries()) {
 			headers[key] = value;
 		}
-		return;
+		return headers;
 	},
 );
 
@@ -76,3 +77,19 @@ export const hasAccess = createIsomorphicFn()
 			return false;
 		}
 	});
+
+export const setThemeCookie = createServerFn({ method: "POST" })
+	.inputValidator(z.enum(["system", "dark", "light"]))
+	.handler(async ({ data }) => {
+		const headers = new Headers();
+		headers.set("Set-Cookie", `theme=${data}; path=/; max-age=34560000;`);
+		return new Response(JSON.stringify({ ok: true }), { headers });
+	});
+
+export const getThemeCookie = createServerFn({ method: "GET" }).handler(
+	async () => {
+		const headers = await getServerHeaders();
+		const cookie = cookieParser(headers.cookie ?? "");
+		return cookie.theme ?? "system";
+	},
+);
