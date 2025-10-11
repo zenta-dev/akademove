@@ -1,19 +1,21 @@
-import type { StandardSchemaV1 } from "better-auth";
-import { type Env, Hono, type ValidationTargets } from "hono";
-import type { AuthService, PermissionRole } from "./services/auth";
+import type { UserRole } from "@repo/schema/user";
+import { type Env, Hono } from "hono";
 import type { DatabaseService } from "./services/db";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
+import type { RBACService } from "./services/rbac";
+import type { StorageService } from "./services/storage";
 
 export type HonoContext = {
 	Variables: {
 		db: DatabaseService;
-		auth: AuthService;
 		kv: KeyValueService;
 		mail: MailService;
+		storage: StorageService;
+		rbac: RBACService;
 		user: {
 			id: string;
-			role: PermissionRole;
+			role: UserRole;
 			banned: boolean;
 		};
 	};
@@ -21,37 +23,3 @@ export type HonoContext = {
 };
 
 export const createHono = () => new Hono<HonoContext>();
-
-export const handleValidation = <
-	Schema extends StandardSchemaV1,
-	Target extends keyof ValidationTargets,
->(
-	result: (
-		| { success: true; data: StandardSchemaV1.InferOutput<Schema> }
-		| {
-				success: false;
-				error: readonly StandardSchemaV1.Issue[];
-				data: StandardSchemaV1.InferOutput<Schema>;
-		  }
-	) & { target: Target },
-) => {
-	if (!result.success) {
-		return new Response(
-			JSON.stringify({
-				success: false,
-				message: "Invalid request body",
-				errors: result.error.map((v) => ({
-					name: "ValidationError",
-					path: v.path?.at(0) ?? v.path,
-					cause: v.message,
-				})),
-			}),
-			{
-				status: 400,
-				headers: {
-					"Content-Type": "application/json",
-				},
-			},
-		);
-	}
-};
