@@ -53,6 +53,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,
 	image: true,
+	merchantId: true,
 	createdAt: true,
 	updatedAt: true,
 }).extend({

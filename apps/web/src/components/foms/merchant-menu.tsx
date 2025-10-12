@@ -59,7 +59,6 @@ export const MerchantMenuForm = ({
 				: {
 						image: undefined,
 						name: "",
-						merchantId,
 						price: 0,
 						stock: 0,
 						category: "",

@@ -35,9 +35,10 @@ export const MerchantMenuHandler = os.router({
 		}),
 	create: os.create
 		.use(hasPermission({ merchantMenu: ["create"] }))
-		.handler(async ({ context, input: { body } }) => {
+		.handler(async ({ context, input: { body, params } }) => {
 			const result = await context.repo.merchant.menu.create({
 				...body,
+				...params,
 			});
 
 			return {
@@ -48,7 +49,10 @@ export const MerchantMenuHandler = os.router({
 	update: os.update
 		.use(hasPermission({ merchantMenu: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.merchant.menu.update(params.id, body);
+			const result = await context.repo.merchant.menu.update(params.id, {
+				...body,
+				merchantId: params.merchantId,
+			});
 
 			return {
 				status: 200,

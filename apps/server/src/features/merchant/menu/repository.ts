@@ -136,7 +136,9 @@ export class MerchantMenuRepository {
 		}
 	}
 
-	async create(item: InsertMerchantMenu): Promise<MerchantMenu> {
+	async create(
+		item: InsertMerchantMenu & { merchantId: string },
+	): Promise<MerchantMenu> {
 		try {
 			const id = v7();
 			const image = item.image;
@@ -170,7 +172,10 @@ export class MerchantMenuRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateMerchantMenu): Promise<MerchantMenu> {
+	async update(
+		id: string,
+		item: UpdateMerchantMenu & { merchantId: string },
+	): Promise<MerchantMenu> {
 		try {
 			const existing = await this.getFromDB(id);
 			if (!existing)
