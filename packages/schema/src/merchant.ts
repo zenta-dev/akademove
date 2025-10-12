@@ -16,6 +16,7 @@ export const MerchantSchema = z
 		location: LocationSchema.optional(),
 		isActive: z.boolean(),
 		rating: z.number(),
+		document: z.url().optional(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
@@ -40,8 +41,13 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	userId: true,
 	rating: true,
 	isActive: true,
+	document: true,
 	createdAt: true,
 	updatedAt: true,
+}).extend({
+	document: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"]),
 });
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,

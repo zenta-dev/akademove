@@ -209,7 +209,7 @@ app.use("/*", async (c, next) => {
 			configuration: createConfigurationRepository(c.var.db, c.var.kv),
 			driver: new DriverRepository(c.var.db, c.var.kv, c.var.storage),
 			merchant: {
-				main: createMerchantMainRepository(c.var.db, c.var.kv),
+				main: createMerchantMainRepository(c.var.db, c.var.kv, c.var.storage),
 				menu: createMerchantMenuRepository(c.var.db, c.var.kv),
 			},
 			order: createOrderRepository(c.var.db, c.var.kv),

@@ -51,18 +51,18 @@ export const MerchantMainSpec = {
 				"Successfully retrieved merchant data",
 			),
 		),
-	create: oc
-		.route({
-			tags: [FEATURE_TAGS.MERCHANT],
-			method: "POST",
-			path: "/",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(z.object({ body: InsertMerchantSchema }))
-		.output(
-			createSuccesSchema(MerchantSchema, "Merchant created successfully"),
-		),
+	// create: oc
+	// 	.route({
+	// 		tags: [FEATURE_TAGS.MERCHANT],
+	// 		method: "POST",
+	// 		path: "/",
+	// 		inputStructure: "detailed",
+	// 		outputStructure: "detailed",
+	// 	})
+	// 	.input(z.object({ body: InsertMerchantSchema }))
+	// 	.output(
+	// 		createSuccesSchema(MerchantSchema, "Merchant created successfully"),
+	// 	),
 	update: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],

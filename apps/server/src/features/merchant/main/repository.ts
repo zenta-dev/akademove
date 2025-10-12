@@ -3,27 +3,45 @@ import type {
 	Merchant,
 	UpdateMerchant,
 } from "@repo/schema/merchant";
+import { getFileExtension } from "@repo/shared";
 import { eq } from "drizzle-orm";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { v7 } from "uuid";
+import {
+	CACHE_PREFIXES,
+	CACHE_TTLS,
+	type StorageBucket,
+} from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 
 export const createMerchantMainRepository = (
 	db: DatabaseService,
 	kv: KeyValueService,
+	storage: StorageService,
 ) => {
+	const bucket: StorageBucket = "merchant";
+
 	function _composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.MERCHANT}${id}`;
 	}
 
-	function _composeEntity(item: MerchantDatabase): Merchant {
+	async function _composeEntity(
+		item: MerchantDatabase,
+	): Promise<Merchant & { documentId?: string }> {
+		const document = item.document
+			? await storage.getPresignedUrl({ bucket, key: item.document })
+			: undefined;
+
 		return {
 			...item,
 			location: item.location ?? undefined,
+			documentId: item.document ?? undefined,
+			document,
 		};
 	}
 
@@ -35,12 +53,13 @@ export const createMerchantMainRepository = (
 		}
 	}
 
-	async function _getFromDB(id: string): Promise<Merchant | undefined> {
+	async function _getFromDB(
+		id: string,
+	): Promise<(Merchant & { documentId?: string }) | undefined> {
 		const result = await db.query.merchant.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		if (result) return _composeEntity(result);
-		return undefined;
+		return result ? _composeEntity(result) : undefined;
 	}
 
 	async function _setCache(id: string, data: Merchant | undefined) {
@@ -74,7 +93,7 @@ export const createMerchantMainRepository = (
 				}
 			}
 			const result = await stmt;
-			return result.map(_composeEntity);
+			return await Promise.all(result.map(_composeEntity));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -91,16 +110,13 @@ export const createMerchantMainRepository = (
 			}
 
 			const result = await _getFromDB(id);
-
 			if (!result) throw new RepositoryError("Failed get merchant from db");
 
 			await _setCache(id, result);
-
 			return result;
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to get merchant by id "${id}"`);
 		}
 	}
@@ -116,7 +132,6 @@ export const createMerchantMainRepository = (
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to get merchant by user id "${id}"`);
 		}
 	}
@@ -125,19 +140,27 @@ export const createMerchantMainRepository = (
 		item: InsertMerchant & { userId: string },
 	): Promise<Merchant> {
 		try {
-			const [operation] = await db
-				.insert(tables.merchant)
-				.values(item)
-				.returning();
+			const id = v7();
+			const doc = item.document;
+			const docKey = doc ? `D-${id}.${getFileExtension(doc)}` : undefined;
 
-			const result = _composeEntity(operation);
+			const [operation] = await Promise.all([
+				db
+					.insert(tables.merchant)
+					.values({ ...item, id, document: docKey })
+					.returning()
+					.then((r) => r[0]),
+				doc && docKey
+					? storage.upload({ bucket, key: docKey, file: doc })
+					: Promise.resolve(),
+			]);
+
+			const result = await _composeEntity(operation);
 			await _setCache(result.id, result);
-
 			return result;
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError("Failed to create merchant");
 		}
 	}
@@ -149,21 +172,31 @@ export const createMerchantMainRepository = (
 				throw new RepositoryError(`Merchant with id "${id}" not found`);
 			}
 
-			const [operation] = await db
-				.update(tables.merchant)
-				.set({
-					...existing,
-					...item,
-					createdAt: new Date(existing.createdAt),
-					updatedAt: new Date(),
-				})
-				.where(eq(tables.merchant.id, id))
-				.returning();
+			const upload = item.document
+				? storage.upload({
+						bucket,
+						key: `D-${id}.${getFileExtension(item.document)}`,
+						file: item.document,
+					})
+				: Promise.resolve();
 
-			const result = _composeEntity(operation);
+			const [operation] = await Promise.all([
+				db
+					.update(tables.merchant)
+					.set({
+						...item,
+						document: existing.documentId,
+						createdAt: new Date(existing.createdAt),
+						updatedAt: new Date(),
+					})
+					.where(eq(tables.merchant.id, id))
+					.returning()
+					.then((r) => r[0]),
+				upload,
+			]);
 
+			const result = await _composeEntity(operation);
 			await _setCache(id, result);
-
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
@@ -173,10 +206,20 @@ export const createMerchantMainRepository = (
 
 	async function remove(id: string): Promise<void> {
 		try {
-			const result = await db
-				.delete(tables.merchant)
-				.where(eq(tables.merchant.id, id))
-				.returning({ id: tables.merchant.id });
+			const find = await _getFromDB(id);
+			if (!find) {
+				throw new RepositoryError("Merchant not found", { code: "NOT_FOUND" });
+			}
+
+			const [result] = await Promise.all([
+				db
+					.delete(tables.merchant)
+					.where(eq(tables.merchant.id, id))
+					.returning({ id: tables.merchant.id }),
+				find.documentId
+					? storage.delete({ bucket, key: find.documentId })
+					: Promise.resolve(),
+			]);
 
 			if (result.length > 0) {
 				try {
@@ -186,7 +229,6 @@ export const createMerchantMainRepository = (
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to delete merchant with id "${id}"`);
 		}
 	}

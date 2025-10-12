@@ -43,19 +43,19 @@ export const MerchantMainHandler = os.router({
 				body: { message: "Successfully retrieved merchant data", data: result },
 			};
 		}),
-	create: os.create
-		.use(hasPermission({ merchant: ["create"] }))
-		.handler(async ({ context, input: { body } }) => {
-			const result = await context.repo.merchant.main.create({
-				...body,
-				userId: context.user.id,
-			});
+	// create: os.create
+	// 	.use(hasPermission({ merchant: ["create"] }))
+	// 	.handler(async ({ context, input: { body } }) => {
+	// 		const result = await context.repo.merchant.main.create({
+	// 			...body,
+	// 			userId: context.user.id,
+	// 		});
 
-			return {
-				status: 200,
-				body: { message: "Merchant created successfully", data: result },
-			};
-		}),
+	// 		return {
+	// 			status: 200,
+	// 			body: { message: "Merchant created successfully", data: result },
+	// 		};
+	// 	}),
 	update: os.update
 		.use(hasPermission({ merchant: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {

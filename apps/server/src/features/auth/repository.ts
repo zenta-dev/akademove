@@ -196,15 +196,6 @@ export class AuthRepository {
 	async signUpMerchant(params: SignUpMerchant) {
 		try {
 			const { user } = await this.signUp({ ...params, role: "merchant" });
-
-			const doc = params.document;
-			if (doc) {
-				await this.#storage.upload({
-					bucket: "merchant",
-					key: `D-${user.id}.${getFileExtension(doc)}`,
-					file: doc,
-				});
-			}
 			return { user };
 		} catch (error) {
 			log.error(error, `${this.signUpMerchant.name} failed`);
