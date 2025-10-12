@@ -9,6 +9,7 @@ import { log } from "@/utils/logger";
 import type { ServerSpecClient } from "../../../server/src/features/index";
 
 export const queryClient = new QueryClient({
+	defaultOptions: { queries: { staleTime: 60 * 1000 } },
 	queryCache: new QueryCache({
 		onError: (error) => {
 			if (error.message.toLowerCase().includes("session")) return;
