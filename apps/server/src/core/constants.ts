@@ -35,7 +35,12 @@ export const CACHE_PREFIXES = Object.freeze({
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
-export const STORAGE_BUCKETS = ["driver", "merchant", "user"] as const;
+export const STORAGE_BUCKETS = [
+	"driver",
+	"merchant",
+	"user",
+	"merchant-menu",
+] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
 export const createSuccesSchema = <TSchema, TDesc extends string>(

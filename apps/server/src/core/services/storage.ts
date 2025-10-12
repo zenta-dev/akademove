@@ -50,6 +50,7 @@ export class S3StorageService implements StorageService {
 		driver: false,
 		merchant: false,
 		user: false,
+		"merchant-menu": false,
 	};
 
 	constructor(options: S3StorageOptions) {
