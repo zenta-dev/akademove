@@ -136,6 +136,10 @@ function RouteComponent() {
 												variant="ghost"
 												size="icon"
 												className="absolute top-2 right-2 z-10"
+												onClick={() => {
+													field.onChange(undefined);
+													setPhotoPreview(undefined);
+												}}
 											>
 												<X />
 												<span className="sr-only">{m.remove_file()}</span>
@@ -149,7 +153,7 @@ function RouteComponent() {
 												onDrop={(files) => {
 													if (files.length > 0) {
 														createPhotoPreviewUrl(files, {
-															onSuccess: (url) => setPhotoPreview(url),
+															onSuccess: setPhotoPreview,
 														});
 														field.onChange(files[0]);
 													}
