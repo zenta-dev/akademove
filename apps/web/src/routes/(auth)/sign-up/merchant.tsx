@@ -7,6 +7,7 @@ import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,8 +39,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Dropzone,
+	DropzoneContent,
+	DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import { cn } from "@/utils/cn";
+import { createPhotoPreviewUrl } from "@/utils/file";
 import { scrollToField } from "@/utils/form";
 
 export const Route = createFileRoute("/(auth)/sign-up/merchant")({
@@ -47,6 +55,8 @@ export const Route = createFileRoute("/(auth)/sign-up/merchant")({
 });
 
 function RouteComponent() {
+	const [photoPreview, setPhotoPreview] = useState<string | undefined>();
+	const [documentPreview, setDocumentPreview] = useState<string | undefined>();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [copyPersonal, setCopyPersonal] = useState(false);
@@ -153,6 +163,68 @@ function RouteComponent() {
 							<div className="space-y-2 md:col-span-2">
 								<p className="font-medium text-md">{m.personal_detail()}</p>
 							</div>
+
+							<FormField
+								control={form.control}
+								name="photo"
+								render={({ field }) => (
+									<FormItem className="md:col-span-2">
+										<FormLabel className="mx-auto">{m.photo()}</FormLabel>
+										<FormControl>
+											<div className="relative mx-auto h-48 w-48 overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setPhotoPreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setPhotoPreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("photo", { message: err.message });
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-48">
+														{photoPreview && (
+															<div className="relative h-48 w-48">
+																<img
+																	alt="Preview"
+																	src={photoPreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 							<FormField
 								control={form.control}
 								name="name"
@@ -380,6 +452,7 @@ function RouteComponent() {
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
 								name="document"
@@ -387,22 +460,62 @@ function RouteComponent() {
 									<FormItem className="md:col-span-2">
 										<FormLabel>{m.government_document()}</FormLabel>
 										<FormControl>
-											<Input
-												type="file"
-												disabled={mutation.isPending}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													field.onChange(file);
-												}}
-												onBlur={field.onBlur}
-												name={field.name}
-												ref={field.ref}
-											/>
+											<div className="relative mx-auto h-48 w-full overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setDocumentPreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setDocumentPreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("document", {
+															message: err.message,
+														});
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-full">
+														{documentPreview && (
+															<div className="relative h-48 w-full">
+																<img
+																	alt="Preview"
+																	src={documentPreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
 								name="detail.bank.provider"
