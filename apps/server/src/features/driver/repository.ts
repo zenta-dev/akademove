@@ -16,18 +16,27 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
 
-export const createDriverRepository = (
-	db: DatabaseService,
-	kv: KeyValueService,
-	storage: StorageService,
-) => {
-	const bucket: StorageBucket = "driver";
+export class DriverRepository {
+	readonly #db: DatabaseService;
+	readonly #kv: KeyValueService;
+	readonly #storage: StorageService;
+	readonly #bucket: StorageBucket = "driver";
 
-	function _composeCacheKey(id: string): string {
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
+		this.#db = db;
+		this.#kv = kv;
+		this.#storage = storage;
+	}
+
+	private composeCacheKey(id: string): string {
 		return `${CACHE_PREFIXES.DRIVER}${id}`;
 	}
 
-	async function _composeEntity(
+	private async composeEntity(
 		item: DriverDatabase & { user: Partial<User> },
 	): Promise<
 		Driver & {
@@ -37,10 +46,20 @@ export const createDriverRepository = (
 		}
 	> {
 		const [studentCard, driverLicense, vehicleCertificate] = await Promise.all([
-			storage.getPresignedUrl({ bucket, key: item.studentCard }),
-			storage.getPresignedUrl({ bucket, key: item.driverLicense }),
-			storage.getPresignedUrl({ bucket, key: item.vehicleCertificate }),
+			this.#storage.getPresignedUrl({
+				bucket: this.#bucket,
+				key: item.studentCard,
+			}),
+			this.#storage.getPresignedUrl({
+				bucket: this.#bucket,
+				key: item.driverLicense,
+			}),
+			this.#storage.getPresignedUrl({
+				bucket: this.#bucket,
+				key: item.vehicleCertificate,
+			}),
 		]);
+
 		return {
 			...item,
 			currentLocation: item.currentLocation ?? undefined,
@@ -54,15 +73,15 @@ export const createDriverRepository = (
 		};
 	}
 
-	async function _getFromKV(id: string): Promise<Driver | undefined> {
+	private async getFromKV(id: string): Promise<Driver | undefined> {
 		try {
-			return await kv.get(_composeCacheKey(id));
+			return await this.#kv.get(this.composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	async function _getFromDB(id: string): Promise<
+	private async getFromDB(id: string): Promise<
 		| (Driver & {
 				studentCardId: string;
 				driverLicenseId: string;
@@ -70,70 +89,67 @@ export const createDriverRepository = (
 		  })
 		| undefined
 	> {
-		const result = await db.query.driver.findFirst({
+		const result = await this.#db.query.driver.findFirst({
 			with: { user: { columns: { name: true } } },
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? await _composeEntity(result) : undefined;
+
+		return result ? await this.composeEntity(result) : undefined;
 	}
 
-	async function _setCache(id: string, data: Driver | undefined) {
-		if (data) {
-			try {
-				await kv.put(_composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["24h"],
-				});
-			} catch {}
-		}
-	}
-
-	async function list(opts?: GetAllOptions): Promise<Driver[]> {
+	private async setCache(id: string, data: Driver | undefined) {
+		if (!data) return;
 		try {
-			let stmt = db.query.driver.findMany({
+			await this.#kv.put(this.composeCacheKey(id), data, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
+		} catch {}
+	}
+
+	async list(opts?: GetAllOptions): Promise<Driver[]> {
+		try {
+			let stmt = this.#db.query.driver.findMany({
 				with: { user: { columns: { name: true } } },
 			});
+
 			if (opts) {
 				const { cursor, page, limit } = opts;
 				if (cursor) {
-					stmt = db.query.driver.findMany({
+					stmt = this.#db.query.driver.findMany({
 						with: { user: { columns: { name: true } } },
 						where: (f, op) => op.gt(f.lastLocationUpdate, new Date(cursor)),
 						limit: limit + 1,
 					});
-				}
-				if (page) {
-					const pageNum = page;
-					const offset = (pageNum - 1) * limit;
-					stmt = db.query.driver.findMany({
+				} else if (page) {
+					const offset = (page - 1) * limit;
+					stmt = this.#db.query.driver.findMany({
 						with: { user: { columns: { name: true } } },
 						offset,
 						limit,
 					});
 				}
 			}
-			const result = await stmt;
-			console.log("RESULT => ", result);
 
-			return await Promise.all(result.map(_composeEntity));
+			const result = await stmt;
+			return await Promise.all(result.map((r) => this.composeEntity(r)));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
-			throw new RepositoryError("Failed to listing drivers");
+			throw new RepositoryError("Failed to list drivers");
 		}
 	}
 
-	async function get(id: string, opts?: GetOptions) {
+	async get(id: string, opts?: GetOptions): Promise<Driver> {
 		try {
 			if (opts?.fromCache) {
-				const cached = await _getFromKV(id);
+				const cached = await this.getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await _getFromDB(id);
-			if (!result) throw new RepositoryError("Failed get driver from db");
+			const result = await this.getFromDB(id);
+			if (!result) throw new RepositoryError("Failed to get driver from DB");
 
-			await _setCache(id, result);
+			await this.setCache(id, result);
 			return result;
 		} catch (error) {
 			log.error(error);
@@ -142,11 +158,9 @@ export const createDriverRepository = (
 		}
 	}
 
-	async function create(
-		item: InsertDriver & { userId: string },
-	): Promise<Driver> {
+	async create(item: InsertDriver & { userId: string }): Promise<Driver> {
 		try {
-			const user = await db.query.user.findFirst({
+			const user = await this.#db.query.user.findFirst({
 				columns: { name: true },
 				where: (f, op) => op.eq(f.id, item.userId),
 			});
@@ -160,30 +174,30 @@ export const createDriverRepository = (
 			};
 
 			const [operation] = await Promise.all([
-				db
+				this.#db
 					.insert(tables.driver)
 					.values({ ...item, id, ...fileKeys })
 					.returning()
 					.then((r) => r[0]),
-				storage.upload({
-					bucket,
+				this.#storage.upload({
+					bucket: this.#bucket,
 					key: fileKeys.studentCard,
 					file: item.studentCard,
 				}),
-				storage.upload({
-					bucket,
+				this.#storage.upload({
+					bucket: this.#bucket,
 					key: fileKeys.driverLicense,
 					file: item.driverLicense,
 				}),
-				storage.upload({
-					bucket,
+				this.#storage.upload({
+					bucket: this.#bucket,
 					key: fileKeys.vehicleCertificate,
 					file: item.vehicleCertificate,
 				}),
 			]);
 
-			const result = await _composeEntity({ ...operation, user });
-			await _setCache(result.id, result);
+			const result = await this.composeEntity({ ...operation, user });
+			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
 			log.error(error);
@@ -192,14 +206,13 @@ export const createDriverRepository = (
 		}
 	}
 
-	async function update(id: string, item: UpdateDriver): Promise<Driver> {
+	async update(id: string, item: UpdateDriver): Promise<Driver> {
 		try {
-			const existing = await _getFromDB(id);
-			if (!existing) {
+			const existing = await this.getFromDB(id);
+			if (!existing)
 				throw new RepositoryError(`Driver with id "${id}" not found`);
-			}
 
-			const user = await db.query.user.findFirst({
+			const user = await this.#db.query.user.findFirst({
 				columns: { name: true },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
@@ -207,27 +220,27 @@ export const createDriverRepository = (
 
 			const uploads = [
 				item.studentCard &&
-					storage.upload({
-						bucket,
+					this.#storage.upload({
+						bucket: this.#bucket,
 						key: `SC-${id}.${getFileExtension(item.studentCard)}`,
 						file: item.studentCard,
 					}),
 				item.driverLicense &&
-					storage.upload({
-						bucket,
+					this.#storage.upload({
+						bucket: this.#bucket,
 						key: `DL-${id}.${getFileExtension(item.driverLicense)}`,
 						file: item.driverLicense,
 					}),
 				item.vehicleCertificate &&
-					storage.upload({
-						bucket,
+					this.#storage.upload({
+						bucket: this.#bucket,
 						key: `VC-${id}.${getFileExtension(item.vehicleCertificate)}`,
 						file: item.vehicleCertificate,
 					}),
 			].filter(Boolean);
 
 			const [operation] = await Promise.all([
-				db
+				this.#db
 					.update(tables.driver)
 					.set({
 						...existing,
@@ -243,8 +256,8 @@ export const createDriverRepository = (
 				...uploads,
 			]);
 
-			const result = await _composeEntity({ ...operation, user });
-			await _setCache(id, result);
+			const result = await this.composeEntity({ ...operation, user });
+			await this.setCache(id, result);
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
@@ -252,26 +265,31 @@ export const createDriverRepository = (
 		}
 	}
 
-	async function remove(id: string): Promise<void> {
+	async remove(id: string): Promise<void> {
 		try {
-			const find = await _getFromDB(id);
-			if (!find) {
+			const find = await this.getFromDB(id);
+			if (!find)
 				throw new RepositoryError("Driver not found", { code: "NOT_FOUND" });
-			}
 
 			const [result] = await Promise.all([
-				db
+				this.#db
 					.delete(tables.driver)
 					.where(eq(tables.driver.id, id))
 					.returning({ id: tables.driver.id }),
-				storage.delete({ bucket, key: find.studentCardId }),
-				storage.delete({ bucket, key: find.driverLicenseId }),
-				storage.delete({ bucket, key: find.vehicleCertificateId }),
+				this.#storage.delete({ bucket: this.#bucket, key: find.studentCardId }),
+				this.#storage.delete({
+					bucket: this.#bucket,
+					key: find.driverLicenseId,
+				}),
+				this.#storage.delete({
+					bucket: this.#bucket,
+					key: find.vehicleCertificateId,
+				}),
 			]);
 
 			if (result.length > 0) {
 				try {
-					await kv.delete(_composeCacheKey(id));
+					await this.#kv.delete(this.composeCacheKey(id));
 				} catch {}
 			}
 		} catch (error) {
@@ -280,8 +298,4 @@ export const createDriverRepository = (
 			throw new RepositoryError(`Failed to delete driver with id "${id}"`);
 		}
 	}
-
-	return { list, get, create, update, remove };
-};
-
-export type DriverRepository = ReturnType<typeof createDriverRepository>;
+}

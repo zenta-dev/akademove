@@ -36,7 +36,7 @@ import { ServerRouter } from "./features";
 import { AuthRepository } from "./features/auth/repository";
 import { createConfigurationRepository } from "./features/configuration/repository";
 import { createCouponRepository } from "./features/coupon/repository";
-import { createDriverRepository } from "./features/driver/repository";
+import { DriverRepository } from "./features/driver/repository";
 import { createMerchantMainRepository } from "./features/merchant/main/repository";
 import { createMerchantMenuRepository } from "./features/merchant/menu/repository";
 import { createOrderRepository } from "./features/order/repository";
@@ -207,7 +207,7 @@ app.use("/*", async (c, next) => {
 		repo: {
 			auth: new AuthRepository(c.var.db, c.var.kv, c.var.storage),
 			configuration: createConfigurationRepository(c.var.db, c.var.kv),
-			driver: createDriverRepository(c.var.db, c.var.kv, c.var.storage),
+			driver: new DriverRepository(c.var.db, c.var.kv, c.var.storage),
 			merchant: {
 				main: createMerchantMainRepository(c.var.db, c.var.kv),
 				menu: createMerchantMenuRepository(c.var.db, c.var.kv),
