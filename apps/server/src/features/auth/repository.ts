@@ -22,13 +22,13 @@ import { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 
 export class AuthRepository {
-	#db: DatabaseService;
-	#kv: KeyValueService;
-	#storage: StorageService;
-	#jwt: JwtManager;
-	#pw: PasswordManager;
+	readonly #db: DatabaseService;
+	readonly #kv: KeyValueService;
+	readonly #storage: StorageService;
+	readonly #jwt: JwtManager;
+	readonly #pw: PasswordManager;
 
-	private readonly JWT_EXPIRY = "7d";
+	readonly #JWT_EXPIRY = "7d";
 
 	constructor(
 		db: DatabaseService,
@@ -97,7 +97,7 @@ export class AuthRepository {
 				this.#jwt.sign({
 					id: userData.id,
 					role: userData.role,
-					expiration: this.JWT_EXPIRY,
+					expiration: this.#JWT_EXPIRY,
 					clientAgent: params.clientAgent,
 				}),
 				this.#kv.put(this.composeKey(user.id), user),
@@ -230,7 +230,7 @@ export class AuthRepository {
 				newToken = await this.#jwt.sign({
 					id: user.id,
 					role: user.role,
-					expiration: this.JWT_EXPIRY,
+					expiration: this.#JWT_EXPIRY,
 				});
 			}
 
