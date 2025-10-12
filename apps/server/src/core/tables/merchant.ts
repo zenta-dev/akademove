@@ -32,6 +32,7 @@ export const merchant = pgTable("merchants", {
 	rating: decimal({ precision: 2, scale: 1, mode: "number" })
 		.notNull()
 		.default(0),
+	document: text(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
