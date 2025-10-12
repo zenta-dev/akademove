@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/shadcn-io/dropzone";
 import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
+import { createPhotoPreviewUrl } from "@/utils/file";
 import { scrollToField } from "@/utils/form";
 
 export const Route = createFileRoute("/(auth)/sign-up/user")({
@@ -50,6 +51,7 @@ export const Route = createFileRoute("/(auth)/sign-up/user")({
 });
 
 function RouteComponent() {
+	const [photoPreview, setPhotoPreview] = useState<string | undefined>();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const router = useRouter();
@@ -101,18 +103,7 @@ function RouteComponent() {
 			},
 		}),
 	);
-	const [photoPreview, setPhotoPreview] = useState<string | undefined>();
-	const createPhotoPreview = (files: File[]) => {
-		if (files.length > 0) {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				if (typeof e.target?.result === "string") {
-					setPhotoPreview(e.target?.result);
-				}
-			};
-			reader.readAsDataURL(files[0]);
-		}
-	};
+
 	const onSubmit = useCallback(
 		async (values: SignUp) => {
 			await mutation.mutateAsync({ body: values });
@@ -157,7 +148,9 @@ function RouteComponent() {
 												}}
 												onDrop={(files) => {
 													if (files.length > 0) {
-														createPhotoPreview(files);
+														createPhotoPreviewUrl(files, {
+															onSuccess: (url) => setPhotoPreview(url),
+														});
 														field.onChange(files[0]);
 													}
 												}}
