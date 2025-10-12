@@ -52,8 +52,14 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 });
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,
+	image: true,
 	createdAt: true,
 	updatedAt: true,
+}).extend({
+	image: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
+		.optional(),
 });
 
 export const UpdateMerchantSchema = InsertMerchantSchema.partial();

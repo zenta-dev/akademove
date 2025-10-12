@@ -38,7 +38,7 @@ import { createConfigurationRepository } from "./features/configuration/reposito
 import { createCouponRepository } from "./features/coupon/repository";
 import { DriverRepository } from "./features/driver/repository";
 import { MerchantMainRepository } from "./features/merchant/main/repository";
-import { createMerchantMenuRepository } from "./features/merchant/menu/repository";
+import { MerchantMenuRepository } from "./features/merchant/menu/repository";
 import { createOrderRepository } from "./features/order/repository";
 import { createReportRepository } from "./features/report/repository";
 import { createReviewRepository } from "./features/review/repository";
@@ -210,7 +210,7 @@ app.use("/*", async (c, next) => {
 			driver: new DriverRepository(c.var.db, c.var.kv, c.var.storage),
 			merchant: {
 				main: new MerchantMainRepository(c.var.db, c.var.kv, c.var.storage),
-				menu: createMerchantMenuRepository(c.var.db, c.var.kv),
+				menu: new MerchantMenuRepository(c.var.db, c.var.kv, c.var.storage),
 			},
 			order: createOrderRepository(c.var.db, c.var.kv),
 			coupon: createCouponRepository(c.var.db, c.var.kv),
