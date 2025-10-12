@@ -50,6 +50,7 @@ export const merchantMenu = pgTable("merchant_menus", {
 		mode: "number",
 	}).notNull(),
 	stock: integer().notNull(),
+	image: text(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
