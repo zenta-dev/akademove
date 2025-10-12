@@ -43,7 +43,7 @@ export class MerchantMenuRepository {
 		item: MerchantMenuDatabase,
 	): Promise<MerchantMenu & { imageId?: string }> {
 		const image = item.image
-			? await this.#storage.getPresignedUrl({
+			? this.#storage.getPublicUrl({
 					bucket: this.#bucket,
 					key: item.image,
 				})
@@ -155,6 +155,7 @@ export class MerchantMenuRepository {
 							bucket: this.#bucket,
 							key: imageKey,
 							file: image,
+							isPublic: true,
 						})
 					: Promise.resolve(),
 			]);
@@ -180,6 +181,7 @@ export class MerchantMenuRepository {
 						bucket: this.#bucket,
 						key: `MM-${id}.${getFileExtension(item.image)}`,
 						file: item.image,
+						isPublic: true,
 					})
 				: Promise.resolve();
 
