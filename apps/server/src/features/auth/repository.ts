@@ -9,14 +9,15 @@ import type {
 	SignUpMerchant,
 } from "@repo/schema/auth";
 import type { ClientAgent } from "@repo/schema/common";
-import type { UserRole } from "@repo/schema/user";
-import { getFileExtension } from "@repo/shared";
+import type { User, UserRole } from "@repo/schema/user";
+import { getFileExtension, nullToUndefined } from "@repo/shared";
 import { FEATURE_TAGS } from "@/core/constants";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
+import type { UserDatabase } from "@/core/tables/auth";
 import { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 
@@ -39,6 +40,20 @@ export class AuthRepository {
 		this.#storage = storage;
 		this.#jwt = new JwtManager({ secret: env.AUTH_SECRET });
 		this.#pw = new PasswordManager();
+	}
+
+	private async composeUser(
+		user: UserDatabase,
+		options?: { expiresIn?: number },
+	) {
+		if (user.image) {
+			user.image = await this.#storage.getPresignedUrl({
+				bucket: "user",
+				key: user.image,
+				expiresIn: options?.expiresIn,
+			});
+		}
+		return user;
 	}
 
 	private composeKey(id: string) {
@@ -88,7 +103,7 @@ export class AuthRepository {
 				this.#kv.put(this.composeKey(user.id), user),
 			]);
 			log.debug(userData, `${this.signIn.name} success`);
-			return { token, user: userData };
+			return { token, user: await this.composeUser(userData) };
 		} catch (error) {
 			log.error(error, `${this.signIn.name} failed`);
 			if (error instanceof BaseError) throw error;
@@ -117,12 +132,19 @@ export class AuthRepository {
 			const hashedPassword = this.#pw.hash(params.password);
 			const userId = this.generateId();
 
+			let photoKey: string | undefined;
+			if (params.photo) {
+				const extension = getFileExtension(params.photo);
+				photoKey = `PP-${userId}.${extension}`;
+			}
+
 			const [user] = await this.#db
 				.insert(tables.user)
 				.values({
 					...params,
 					id: userId,
 					role: params.role ?? "user",
+					image: photoKey,
 				})
 				.returning();
 
@@ -136,19 +158,19 @@ export class AuthRepository {
 				}),
 			];
 
-			if (params.photo) {
-				const extension = getFileExtension(params.photo);
+			if (photoKey && params.photo) {
 				promises.push(
 					this.#storage.upload({
 						bucket: "user",
-						key: `PP-${user.id}.${extension}`,
+						key: photoKey,
 						file: params.photo,
 					}),
 				);
 			}
 
 			await Promise.all(promises);
-			return { user };
+
+			return { user: await this.composeUser(user) };
 		} catch (error) {
 			log.error(error, `${this.signUp.name} failed`);
 			if (error instanceof BaseError) throw error;
@@ -217,7 +239,6 @@ export class AuthRepository {
 
 		try {
 			const payload = await this.#jwt.verify(token);
-
 			const user = await this.#kv.get(this.composeKey(payload.id), {
 				fallback: async () =>
 					await this.#db.query.user.findFirst({
@@ -239,7 +260,7 @@ export class AuthRepository {
 			}
 
 			return {
-				user,
+				user: await this.composeUser(user),
 				token: newToken,
 				payload,
 			};
