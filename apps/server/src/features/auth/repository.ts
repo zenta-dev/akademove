@@ -103,7 +103,10 @@ export class AuthRepository {
 				this.#kv.put(this.composeKey(user.id), user),
 			]);
 			log.debug(userData, `${this.signIn.name} success`);
-			return { token, user: await this.composeUser(userData) };
+			return {
+				token,
+				user: await this.composeUser(userData, { expiresIn: 604800 }),
+			};
 		} catch (error) {
 			log.error(error, `${this.signIn.name} failed`);
 			if (error instanceof BaseError) throw error;
