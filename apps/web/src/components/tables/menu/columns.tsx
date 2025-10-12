@@ -25,16 +25,16 @@ export const MERCHANT_MENU_COLUMNS = [
 				);
 
 			return (
-				<ImageZoom className="sm:size-12 md:size-14 lg:size-16 xl:size-18">
-					<Image
-						key={`${image}-${updatedAt ?? ""}`}
-						src={`${image}?v=${updatedAt.getTime() ?? Date.now()}`}
-						layout="constrained"
-						width={1080}
-						height={1080}
-						alt={name}
-					/>
-				</ImageZoom>
+				<ImageZoom
+					key={`${image}-${updatedAt ?? ""}`}
+					src={`${image}?v=${updatedAt.getTime() ?? Date.now()}`}
+					layout="constrained"
+					width={72}
+					height={72}
+					background="auto"
+					alt={name}
+					className="sm:size-12 md:size-14 lg:size-16 xl:size-18"
+				/>
 			);
 		},
 	},
