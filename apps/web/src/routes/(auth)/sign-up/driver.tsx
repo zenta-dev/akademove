@@ -6,6 +6,7 @@ import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -35,7 +36,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Dropzone,
+	DropzoneContent,
+	DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import { cn } from "@/utils/cn";
+import { createPhotoPreviewUrl } from "@/utils/file";
 import { scrollToField } from "@/utils/form";
 
 export const Route = createFileRoute("/(auth)/sign-up/driver")({
@@ -43,6 +51,16 @@ export const Route = createFileRoute("/(auth)/sign-up/driver")({
 });
 
 function RouteComponent() {
+	const [photoPreview, setPhotoPreview] = useState<string | undefined>();
+	const [studentCardPreview, setStudentCardPreview] = useState<
+		string | undefined
+	>();
+	const [driverLicensePreview, setDriverLicensePreview] = useState<
+		string | undefined
+	>();
+	const [vehicleCertificatePreview, setvehicleCertificatePreview] = useState<
+		string | undefined
+	>();
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -126,6 +144,68 @@ function RouteComponent() {
 							<div className="space-y-2 md:col-span-2">
 								<p className="font-medium text-md">{m.personal_detail()}</p>
 							</div>
+
+							<FormField
+								control={form.control}
+								name="photo"
+								render={({ field }) => (
+									<FormItem className="md:col-span-2">
+										<FormLabel className="mx-auto">{m.photo()}</FormLabel>
+										<FormControl>
+											<div className="relative mx-auto h-48 w-48 overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setPhotoPreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setPhotoPreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("photo", { message: err.message });
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-48">
+														{photoPreview && (
+															<div className="relative h-48 w-48">
+																<img
+																	alt="Preview"
+																	src={photoPreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
+										</FormControl>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 							<FormField
 								control={form.control}
 								name="name"
@@ -287,6 +367,7 @@ function RouteComponent() {
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
 								name="studentCard"
@@ -294,17 +375,56 @@ function RouteComponent() {
 									<FormItem>
 										<FormLabel>{m.student_card()}</FormLabel>
 										<FormControl>
-											<Input
-												type="file"
-												disabled={mutation.isPending}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													field.onChange(file);
-												}}
-												onBlur={field.onBlur}
-												name={field.name}
-												ref={field.ref}
-											/>
+											<div className="relative mx-auto h-48 w-full overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setStudentCardPreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setStudentCardPreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("studentCard", {
+															message: err.message,
+														});
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-full">
+														{studentCardPreview && (
+															<div className="relative h-48 w-full">
+																<img
+																	alt="Preview"
+																	src={studentCardPreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -317,22 +437,62 @@ function RouteComponent() {
 									<FormItem>
 										<FormLabel>{m.driver_license()}</FormLabel>
 										<FormControl>
-											<Input
-												type="file"
-												disabled={mutation.isPending}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													field.onChange(file);
-												}}
-												onBlur={field.onBlur}
-												name={field.name}
-												ref={field.ref}
-											/>
+											<div className="relative mx-auto h-48 w-full overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setDriverLicensePreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setDriverLicensePreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("driverLicense", {
+															message: err.message,
+														});
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-full">
+														{driverLicensePreview && (
+															<div className="relative h-48 w-full">
+																<img
+																	alt="Preview"
+																	src={driverLicensePreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
 								name="vehicleCertificate"
@@ -340,17 +500,56 @@ function RouteComponent() {
 									<FormItem>
 										<FormLabel>{m.vehicle_certificate()}</FormLabel>
 										<FormControl>
-											<Input
-												type="file"
-												disabled={mutation.isPending}
-												onChange={(e) => {
-													const file = e.target.files?.[0];
-													field.onChange(file);
-												}}
-												onBlur={field.onBlur}
-												name={field.name}
-												ref={field.ref}
-											/>
+											<div className="relative mx-auto h-48 w-full overflow-hidden rounded-md">
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="absolute top-2 right-2 z-10"
+													onClick={() => {
+														field.onChange(undefined);
+														setvehicleCertificatePreview(undefined);
+													}}
+												>
+													<X />
+													<span className="sr-only">{m.remove_file()}</span>
+												</Button>
+
+												<Dropzone
+													accept={{
+														"image/jpeg": [".jpeg", ".jpg"],
+														"image/png": [".png"],
+													}}
+													onDrop={(files) => {
+														if (files.length > 0) {
+															createPhotoPreviewUrl(files, {
+																onSuccess: setvehicleCertificatePreview,
+															});
+															field.onChange(files[0]);
+														}
+													}}
+													onError={(err) => {
+														form.setError("vehicleCertificate", {
+															message: err.message,
+														});
+													}}
+													src={field.value ? [field.value] : undefined}
+													className={cn("relative z-0", field.value && "p-0")}
+												>
+													<DropzoneEmptyState />
+													<DropzoneContent className="h-48 w-full">
+														{vehicleCertificatePreview && (
+															<div className="relative h-48 w-full">
+																<img
+																	alt="Preview"
+																	src={vehicleCertificatePreview}
+																	className="absolute inset-0 h-full w-full object-cover"
+																/>
+															</div>
+														)}
+													</DropzoneContent>
+												</Dropzone>
+											</div>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
