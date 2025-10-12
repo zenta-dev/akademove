@@ -207,7 +207,7 @@ app.use("/*", async (c, next) => {
 		repo: {
 			auth: new AuthRepository(c.var.db, c.var.kv, c.var.storage),
 			configuration: createConfigurationRepository(c.var.db, c.var.kv),
-			driver: createDriverRepository(c.var.db, c.var.kv),
+			driver: createDriverRepository(c.var.db, c.var.kv, c.var.storage),
 			merchant: {
 				main: createMerchantMainRepository(c.var.db, c.var.kv),
 				menu: createMerchantMenuRepository(c.var.db, c.var.kv),

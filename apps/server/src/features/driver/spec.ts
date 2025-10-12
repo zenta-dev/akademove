@@ -36,16 +36,16 @@ export const DriverSpec = {
 		.output(
 			createSuccesSchema(DriverSchema, "Successfully retrieved driver data"),
 		),
-	create: oc
-		.route({
-			tags: [FEATURE_TAGS.DRIVER],
-			method: "POST",
-			path: "/",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(z.object({ body: InsertDriverSchema }))
-		.output(createSuccesSchema(DriverSchema, "Driver created successfully")),
+	// create: oc
+	// 	.route({
+	// 		tags: [FEATURE_TAGS.DRIVER],
+	// 		method: "POST",
+	// 		path: "/",
+	// 		inputStructure: "detailed",
+	// 		outputStructure: "detailed",
+	// 	})
+	// 	.input(z.object({ body: InsertDriverSchema }))
+	// 	.output(createSuccesSchema(DriverSchema, "Driver created successfully")),
 	update: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],

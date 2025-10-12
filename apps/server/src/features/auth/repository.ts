@@ -9,8 +9,8 @@ import type {
 	SignUpMerchant,
 } from "@repo/schema/auth";
 import type { ClientAgent } from "@repo/schema/common";
-import type { User, UserRole } from "@repo/schema/user";
-import { getFileExtension, nullToUndefined } from "@repo/shared";
+import type { UserRole } from "@repo/schema/user";
+import { getFileExtension } from "@repo/shared";
 import { FEATURE_TAGS } from "@/core/constants";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { log } from "@/core/logger";
@@ -183,22 +183,6 @@ export class AuthRepository {
 	async signUpDriver(params: SignUpDriver) {
 		try {
 			const { user } = await this.signUp({ ...params, role: "driver" });
-			const uploadItems = [
-				{ prefix: "SC", file: params.studentCard },
-				{ prefix: "DL", file: params.driverLicense },
-				{ prefix: "VC", file: params.vehicleCertificate },
-			];
-
-			await Promise.all([
-				...uploadItems.map(({ prefix, file }) =>
-					this.#storage.upload({
-						bucket: "driver",
-						key: `${prefix}-${user.id}.${getFileExtension(file)}`,
-						file,
-					}),
-				),
-			]);
-
 			return { user };
 		} catch (error) {
 			log.error(error, `${this.signUpDriver.name} failed`);

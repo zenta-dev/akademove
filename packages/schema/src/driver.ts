@@ -18,6 +18,9 @@ export const DriverSchema = z
 		lastLocationUpdate: DateSchema.optional(),
 		createdAt: DateSchema,
 
+		studentCard: z.url(),
+		driverLicense: z.url(),
+		vehicleCertificate: z.url(),
 		// relations
 		user: UserSchema.partial().optional(),
 	})
@@ -26,18 +29,29 @@ export const DriverSchema = z
 		ref: "Driver",
 	});
 
+export const DriverDocumentSchema = z.object({
+	studentCard: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"]),
+	driverLicense: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"]),
+	vehicleCertificate: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"]),
+});
+
 export const InsertDriverSchema = DriverSchema.pick({
 	studentId: true,
 	licenseNumber: true,
+	studentCard: true,
+	driverLicense: true,
+	vehicleCertificate: true,
+}).extend({
+	...DriverDocumentSchema.shape,
 });
 
-export const UpdateDriverSchema = DriverSchema.omit({
-	id: true,
-	userId: true,
-	rating: true,
-	lastLocationUpdate: true,
-	createdAt: true,
-}).partial();
+export const UpdateDriverSchema = InsertDriverSchema.partial();
 
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 export type Driver = z.infer<typeof DriverSchema>;
