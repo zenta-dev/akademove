@@ -91,7 +91,7 @@ function RouteComponent() {
 				await Promise.all([
 					router.invalidate(),
 					queryClient.invalidateQueries(),
-					// router.navigate({ to: localizeHref("/sign-in") }),
+					router.navigate({ to: localizeHref("/sign-in") }),
 				]);
 			},
 			onError: (error) => {
