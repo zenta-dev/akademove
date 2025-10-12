@@ -70,7 +70,7 @@ export const SignUpMerchantSchema = SignUpSchema.safeExtend({
 	detail: z.object({
 		...InsertMerchantSchema.shape,
 		bank: z.object({
-			provider: z.union([z.string(), BankProviderSchema]),
+			provider: z.string(),
 			number: z.string(),
 		}),
 	}),
