@@ -43,6 +43,7 @@ export const AuthHandler = os.router({
 			const result = await context.repo.auth.signUpDriver(body);
 
 			await context.repo.driver.create({
+				...body,
 				...body.detail,
 				userId: result.user.id,
 			});
@@ -57,6 +58,7 @@ export const AuthHandler = os.router({
 		async ({ context, input: { body } }) => {
 			const result = await context.repo.auth.signUpMerchant(body);
 			await context.repo.merchant.main.create({
+				...body,
 				...body.detail,
 				userId: result.user.id,
 			});

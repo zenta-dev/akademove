@@ -28,7 +28,7 @@ export const MerchantMenuSchema = z.object({
 	id: z.uuid(),
 	merchantId: z.uuid(),
 	name: z.string(),
-	image: z.file().mime(["image/*"]).optional(),
+	image: z.url().optional(),
 	category: z.string().optional(),
 	price: z.coerce.number<number>().nonnegative(),
 	stock: z.coerce.number<number>().int().nonnegative(),
@@ -47,7 +47,8 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 }).extend({
 	document: z
 		.file()
-		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"]),
+		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
+		.optional(),
 });
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,

@@ -56,7 +56,11 @@ export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	{
 		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]),
 		detail: z.object({
-			...InsertDriverSchema.shape,
+			...InsertDriverSchema.omit({
+				studentCard: true,
+				driverLicense: true,
+				vehicleCertificate: true,
+			}).shape,
 		}),
 		...DriverDocumentSchema.shape,
 	},
@@ -66,7 +70,7 @@ export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
 	detail: z.object({
-		...InsertMerchantSchema.shape,
+		...InsertMerchantSchema.omit({ document: true }).shape,
 		bank: z.object({
 			provider: z.string(),
 			number: z.string(),
