@@ -157,7 +157,7 @@ export class MerchantMainRepository {
 		try {
 			const id = v7();
 			const doc = item.document;
-			const docKey = doc ? `D-${id}.${getFileExtension(doc)}` : undefined;
+			const docKey = doc ? `M-${id}.${getFileExtension(doc)}` : undefined;
 
 			const [operation] = await Promise.all([
 				this.#db
@@ -193,7 +193,7 @@ export class MerchantMainRepository {
 			const upload = item.document
 				? this.#storage.upload({
 						bucket: this.#bucket,
-						key: `D-${id}.${getFileExtension(item.document)}`,
+						key: `M-${id}.${getFileExtension(item.document)}`,
 						file: item.document,
 					})
 				: Promise.resolve();
