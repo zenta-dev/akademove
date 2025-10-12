@@ -6,6 +6,7 @@ import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { CloudUpload, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -35,7 +36,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Dropzone,
+	DropzoneContent,
+	DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import { cn } from "@/utils/cn";
 import { scrollToField } from "@/utils/form";
 
 export const Route = createFileRoute("/(auth)/sign-up/user")({
@@ -94,7 +101,18 @@ function RouteComponent() {
 			},
 		}),
 	);
-
+	const [photoPreview, setPhotoPreview] = useState<string | undefined>();
+	const createPhotoPreview = (files: File[]) => {
+		if (files.length > 0) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				if (typeof e.target?.result === "string") {
+					setPhotoPreview(e.target?.result);
+				}
+			};
+			reader.readAsDataURL(files[0]);
+		}
+	};
 	const onSubmit = useCallback(
 		async (values: SignUp) => {
 			await mutation.mutateAsync({ body: values });
@@ -114,6 +132,61 @@ function RouteComponent() {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="mt-4 space-y-6"
 					>
+						<FormField
+							control={form.control}
+							name="photo"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{m.photo()}</FormLabel>
+									<FormControl>
+										<div className="relative mx-auto h-48 w-48 overflow-hidden rounded-md">
+											<Button
+												type="button"
+												variant="ghost"
+												size="icon"
+												className="absolute top-2 right-2 z-10"
+											>
+												<X />
+												<span className="sr-only">{m.remove_file()}</span>
+											</Button>
+
+											<Dropzone
+												accept={{
+													"image/jpeg": [".jpeg", ".jpg"],
+													"image/png": [".png"],
+												}}
+												onDrop={(files) => {
+													if (files.length > 0) {
+														createPhotoPreview(files);
+														field.onChange(files[0]);
+													}
+												}}
+												onError={(err) => {
+													form.setError("photo", { message: err.message });
+												}}
+												src={field.value ? [field.value] : undefined}
+												className={cn("relative z-0", field.value && "p-0")}
+											>
+												<DropzoneEmptyState />
+												<DropzoneContent className="h-48 w-48">
+													{photoPreview && (
+														<div className="relative h-48 w-48">
+															<img
+																alt="Preview"
+																src={photoPreview}
+																className="absolute inset-0 h-full w-full object-cover"
+															/>
+														</div>
+													)}
+												</DropzoneContent>
+											</Dropzone>
+										</div>
+									</FormControl>
+
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<FormField
 							control={form.control}
 							name="name"
