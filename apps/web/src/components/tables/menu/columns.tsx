@@ -1,11 +1,43 @@
 import { m } from "@repo/i18n";
 import type { MerchantMenu } from "@repo/schema/merchant";
 import type { ColumnDef } from "@tanstack/react-table";
+import { Image } from "@unpic/react";
 import { ArrowUpDown } from "lucide-react";
+import { NoImageIcon } from "@/components/misc/no-image-icon";
 import { Button } from "@/components/ui/button";
+import { ImageZoom } from "@/components/ui/shadcn-io/image-zoom";
 import { MerchantMenuActionTable } from "./action";
 
 export const MERCHANT_MENU_COLUMNS = [
+	{
+		id: "image",
+		accessorKey: "image",
+		header: m.image(),
+		cell: ({ row }) => {
+			const { name, image, updatedAt } = row.original;
+
+			if (!image)
+				return (
+					<NoImageIcon
+						size="xs"
+						className="sm:size-12 md:size-14 lg:size-16 xl:size-18"
+					/>
+				);
+
+			return (
+				<ImageZoom className="sm:size-12 md:size-14 lg:size-16 xl:size-18">
+					<Image
+						key={`${image}-${updatedAt ?? ""}`}
+						src={`${image}?v=${updatedAt.getTime() ?? Date.now()}`}
+						layout="constrained"
+						width={1080}
+						height={1080}
+						alt={name}
+					/>
+				</ImageZoom>
+			);
+		},
+	},
 	{
 		id: "name",
 		accessorKey: "name",
