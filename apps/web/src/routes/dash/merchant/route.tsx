@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/header/dashboard";
 import { SidebarChildren } from "@/components/sidebar/children";
 import { MerchantSidebar } from "@/components/sidebar/merchant";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { MyMerchantProvider } from "@/providers/merchant";
 
 export const Route = createFileRoute("/dash/merchant")({
 	component: RouteComponent,
@@ -16,7 +17,9 @@ function RouteComponent() {
 				<DashboardHeader scope={m.merchant()} />
 				<div className="flex flex-1">
 					<MerchantSidebar />
-					<SidebarChildren />
+					<MyMerchantProvider>
+						<SidebarChildren />
+					</MyMerchantProvider>
 				</div>
 			</SidebarProvider>
 		</div>

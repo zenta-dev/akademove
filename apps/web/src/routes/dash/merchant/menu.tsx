@@ -1,5 +1,4 @@
 import { m } from "@repo/i18n";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery } from "@/lib/orpc";
+import { useMyMerchant } from "@/providers/merchant";
 
 export const Route = createFileRoute("/dash/merchant/menu")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.MENU }] }),
@@ -36,12 +35,12 @@ export const Route = createFileRoute("/dash/merchant/menu")({
 });
 
 function RouteComponent() {
-	const [open, setOpen] = useState(false);
-
 	const { allowed } = Route.useLoaderData();
+	const [open, setOpen] = useState(false);
 	const navigate = useNavigate();
+	const merchant = useMyMerchant();
+
 	if (!allowed) navigate({ to: "/" });
-	const merchant = useQuery(orpcQuery.merchant.getMine.queryOptions());
 
 	return (
 		<>
@@ -50,7 +49,7 @@ function RouteComponent() {
 					<h2 className="font-medium text-xl">{m.menu()}</h2>
 					<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 				</div>
-				{merchant.isPending ? (
+				{merchant.isLoading ? (
 					<Skeleton className="h-8 w-32" />
 				) : (
 					<Dialog open={open} onOpenChange={setOpen}>
@@ -67,19 +66,19 @@ function RouteComponent() {
 							</DialogHeader>
 							<MerchantMenuForm
 								kind="new"
-								merchantId={merchant.data?.body.data.id ?? ""}
+								merchantId={merchant.value?.id ?? ""}
 								onSuccess={() => setOpen(false)}
 							/>
 						</DialogContent>
 					</Dialog>
 				)}
 			</div>
-			{merchant.isPending ? (
+			{merchant.isLoading ? (
 				<Skeleton className="h-96 w-full" />
 			) : (
 				<Card className="p-0">
 					<CardContent className="p-0">
-						<MerchantMenuTable merchantId={merchant.data?.body.data.id ?? ""} />
+						<MerchantMenuTable merchantId={merchant.value?.id ?? ""} />
 					</CardContent>
 				</Card>
 			)}
