@@ -2,10 +2,12 @@ import {
 	type BucketLocationConstraint,
 	CreateBucketCommand,
 	DeleteObjectCommand,
+	GetObjectCommand,
 	HeadBucketCommand,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { log } from "@/core/logger";
 import type { StorageBucket } from "../constants";
 import { StorageError } from "../error";
@@ -20,10 +22,15 @@ interface UploadOptions extends StorageBaseOptions {
 	userId?: string;
 }
 
+interface GetPresignedUrl extends StorageBaseOptions {
+	expiresIn?: number;
+}
+
 export interface StorageService {
 	ensureBucket(bucket: StorageBucket): Promise<void>;
 	upload(options: UploadOptions): Promise<string>;
 	delete(options: StorageBaseOptions): Promise<void>;
+	getPresignedUrl(options: GetPresignedUrl): Promise<string>;
 	getPublicUrl(options: StorageBaseOptions): string;
 }
 
@@ -135,6 +142,29 @@ export class S3StorageService implements StorageService {
 			log.error(error);
 			throw new StorageError(
 				error instanceof Error ? error.message : "Failed to delete file",
+			);
+		}
+	}
+
+	async getPresignedUrl(options: GetPresignedUrl): Promise<string> {
+		try {
+			await this.ensureBucket(options.bucket);
+
+			const command = new GetObjectCommand({
+				Bucket: options.bucket,
+				Key: options.key,
+			});
+
+			const url = await getSignedUrl(this.#client, command, {
+				expiresIn: options.expiresIn ?? 900,
+			});
+			return url;
+		} catch (error) {
+			log.error(error);
+			throw new StorageError(
+				error instanceof Error
+					? error.message
+					: "Failed to generate presigned URL",
 			);
 		}
 	}
