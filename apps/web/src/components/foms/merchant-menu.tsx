@@ -7,7 +7,8 @@ import {
 } from "@repo/schema/merchant";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
+import { X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
@@ -21,8 +22,15 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+	Dropzone,
+	DropzoneContent,
+	DropzoneEmptyState,
+} from "@/components/ui/shadcn-io/dropzone";
 import type { ActionKind } from "@/lib/interface";
 import { orpcQuery, queryClient } from "@/lib/orpc";
+import { cn } from "@/utils/cn";
+import { createPhotoPreviewUrl } from "@/utils/file";
 
 export type MerchantMenuFormProps = {
 	kind: ActionKind;
@@ -37,14 +45,19 @@ export const MerchantMenuForm = ({
 	data,
 	onSuccess,
 }: MerchantMenuFormProps) => {
+	console.log("data", data);
+	const [imagePreview, setImagePreview] = useState<string | undefined>(
+		data?.image,
+	);
 	const form = useForm({
 		resolver: zodResolver(
 			kind === "new" ? InsertMerchantMenuSchema : UpdateMerchantMenuSchema,
 		),
 		defaultValues:
 			kind === "edit" && data
-				? data
+				? { ...data, image: undefined }
 				: {
+						image: undefined,
 						name: "",
 						merchantId,
 						price: 0,
@@ -70,6 +83,7 @@ export const MerchantMenuForm = ({
 					),
 				}),
 			);
+			setImagePreview(undefined);
 			form.reset();
 			onSuccess?.();
 		},
@@ -137,6 +151,15 @@ export const MerchantMenuForm = ({
 			kind === "new" ? insertMutation.isPending : updateMutation.isPending,
 		[kind, insertMutation.isPending, updateMutation.isPending],
 	);
+	useEffect(() => {
+		if (kind === "edit" && data) {
+			form.reset({
+				...data,
+				image: undefined,
+			});
+			setImagePreview(data.image);
+		}
+	}, [kind, data, form]);
 
 	return (
 		<Form {...form}>
@@ -144,6 +167,76 @@ export const MerchantMenuForm = ({
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="grid grid-cols-1 gap-4"
 			>
+				<FormField
+					control={form.control}
+					name="image"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>{m.image()}</FormLabel>
+							<FormControl>
+								<div className="relative mx-auto h-48 w-48 overflow-hidden rounded-md">
+									<Button
+										type="button"
+										variant="ghost"
+										size="icon"
+										className="absolute top-2 right-2 z-10"
+										onClick={() => {
+											field.onChange(undefined);
+											setImagePreview(undefined);
+										}}
+									>
+										<X />
+										<span className="sr-only">{m.remove_file()}</span>
+									</Button>
+
+									<Dropzone
+										accept={{
+											"image/jpeg": [".jpeg", ".jpg"],
+											"image/png": [".png"],
+										}}
+										onDrop={(files) => {
+											if (files.length > 0) {
+												createPhotoPreviewUrl(files, {
+													onSuccess: setImagePreview,
+												});
+												field.onChange(files[0]);
+											}
+										}}
+										onError={(err) => {
+											form.setError("image", { message: err.message });
+										}}
+										src={
+											field.value
+												? [field.value]
+												: data?.image !== undefined && kind === "edit"
+													? []
+													: undefined
+										}
+										className={cn(
+											"relative z-0 h-48 w-48",
+											field.value && "p-0",
+										)}
+									>
+										<DropzoneEmptyState />
+										<DropzoneContent>
+											{imagePreview && (
+												<div className="relative h-48 w-48">
+													<img
+														alt="Preview"
+														src={imagePreview}
+														className="absolute inset-0 h-full w-full object-cover"
+													/>
+												</div>
+											)}
+										</DropzoneContent>
+									</Dropzone>
+								</div>
+							</FormControl>
+
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				<FormField
 					control={form.control}
 					name="name"
