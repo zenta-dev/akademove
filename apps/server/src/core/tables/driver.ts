@@ -29,6 +29,9 @@ export const driver = pgTable("drivers", {
 	isOnline: boolean("is_online").notNull().default(false),
 	currentLocation: jsonb("current_location").$type<Location>(),
 	lastLocationUpdate: timestamp("last_location_update"),
+	studentCard: text("student_card").notNull(),
+	driverLicense: text("driver_license").notNull(),
+	vehicleCertificate: text("vehicle_certificate").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
