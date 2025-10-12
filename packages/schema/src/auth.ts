@@ -2,7 +2,7 @@ import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
-import { InsertDriverSchema } from "./driver.ts";
+import { DriverDocumentSchema, InsertDriverSchema } from "./driver.ts";
 import { InsertMerchantSchema } from "./merchant.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
@@ -37,7 +37,7 @@ export const SignUpSchema = z
 		email: z.email(
 			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
 		),
-		photo: z.file().mime("image/*").optional(),
+		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 		gender: UserGenderSchema,
 		phone: z.string(),
 		password: z
@@ -54,13 +54,11 @@ export const SignUpSchema = z
 
 export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	{
-		photo: z.file().mime("image/*"),
+		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]),
 		detail: z.object({
 			...InsertDriverSchema.shape,
 		}),
-		studentCard: z.file().mime(["image/*"]),
-		driverLicense: z.file().mime(["image/*"]),
-		vehicleCertificate: z.file().mime(["image/*"]),
+		...DriverDocumentSchema.shape,
 	},
 );
 
