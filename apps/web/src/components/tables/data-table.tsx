@@ -12,7 +12,7 @@ import {
 	useReactTable,
 	type VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -38,6 +38,8 @@ interface DataTableProps<TData, TValue> {
 	columnVisibility?: VisibilityState;
 	setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
 	filterKey?: keyof TData;
+	totalPages?: number;
+	children?: ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -47,6 +49,8 @@ export function DataTable<TData, TValue>({
 	columnVisibility,
 	setColumnVisibility,
 	filterKey,
+	totalPages,
+	children,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -62,6 +66,7 @@ export function DataTable<TData, TValue>({
 		getFilteredRowModel: getFilteredRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		state: { sorting, columnFilters, columnVisibility },
+		pageCount: totalPages,
 	});
 
 	return (
@@ -135,7 +140,7 @@ export function DataTable<TData, TValue>({
 					</TableHeader>
 					<TableBody>
 						{isPending ? (
-							Array.from({ length: 5 }).map((_, i) => (
+							Array.from({ length: 12 }).map((_, i) => (
 								<TableRow key={i}>
 									{Array.from({
 										length: table.getVisibleFlatColumns().length,
@@ -175,24 +180,7 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex items-center justify-end space-x-2">
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
-				>
-					{m.previous()}
-				</Button>
-				<Button
-					variant="outline"
-					size="sm"
-					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
-				>
-					{m.next()}
-				</Button>
-			</div>
+			{children}
 		</div>
 	);
 }
