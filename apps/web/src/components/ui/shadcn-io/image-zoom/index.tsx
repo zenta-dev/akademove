@@ -6,7 +6,6 @@ import { cn } from "@/utils/cn";
 export type ImageZoomProps = {
 	className?: string;
 	backdropClassName?: string;
-	key?: string;
 	src: string;
 	width: number;
 	height: number;
@@ -18,7 +17,6 @@ export type ImageZoomProps = {
 export const ImageZoom = ({
 	className,
 	backdropClassName,
-	key,
 	src,
 	width,
 	height,
@@ -39,11 +37,11 @@ export const ImageZoom = ({
 		if (!isPreloaded) {
 			const img = new Image();
 			const url = new URL(src);
-			url.searchParams.set("width", "1080");
-			url.searchParams.set("height", "1080");
+			url.searchParams.set("width", "720");
+			url.searchParams.set("height", "720");
 			img.src = url.toString();
-			img.width = 1080;
-			img.height = 1080;
+			img.width = 720;
+			img.height = 720;
 			setIsPreloaded(true);
 		}
 	};
@@ -84,11 +82,10 @@ export const ImageZoom = ({
 				{...props}
 			>
 				<UnpicImage
-					key={key}
 					src={src}
 					layout={layout}
-					width={isZoomed ? 1080 : width}
-					height={isZoomed ? 1080 : height}
+					width={isZoomed ? 720 : width}
+					height={isZoomed ? 720 : height}
 					background={background}
 					alt={alt}
 				/>
