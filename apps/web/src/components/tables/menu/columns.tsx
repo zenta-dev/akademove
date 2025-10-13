@@ -1,9 +1,7 @@
 import { m } from "@repo/i18n";
 import type { MerchantMenu } from "@repo/schema/merchant";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import { NoImageIcon } from "@/components/misc/no-image-icon";
-import { Button } from "@/components/ui/button";
 import { ImageZoom } from "@/components/ui/shadcn-io/image-zoom";
 import { MerchantMenuActionTable } from "./action";
 
@@ -40,69 +38,25 @@ export const MERCHANT_MENU_COLUMNS = [
 		id: "name",
 		accessorKey: "name",
 		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.name()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: m.name(),
 	},
 	{
 		id: "category",
 		accessorKey: "category",
 		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.category()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: m.category(),
 	},
 	{
 		id: "price",
 		accessorKey: "price",
 		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.price()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: m.price(),
 	},
 	{
 		id: "stock",
 		accessorKey: "stock",
 		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.stock()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
+		header: m.stock(),
 	},
 	{
 		id: "createdAt",
