@@ -45,7 +45,6 @@ export const MerchantMenuForm = ({
 	data,
 	onSuccess,
 }: MerchantMenuFormProps) => {
-	console.log("data", data);
 	const [imagePreview, setImagePreview] = useState<string | undefined>(
 		data?.image,
 	);

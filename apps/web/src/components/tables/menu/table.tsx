@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import type { OffsetPaginationQuery } from "@repo/schema/pagination";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import type { VisibilityState } from "@tanstack/react-table";
@@ -13,6 +13,7 @@ import { useCallback, useMemo, useState } from "react";
 import { DataTable } from "@/components/tables/data-table";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@/hooks/use-debounce";
 import { orpcQuery } from "@/lib/orpc";
 import type { FileRouteTypes } from "@/routeTree.gen";
 import { MERCHANT_MENU_COLUMNS } from "./columns";
@@ -23,19 +24,28 @@ export const MerchantMenuTable = ({
 	to,
 }: {
 	merchantId: string;
-	search: OffsetPaginationQuery;
+	search: UnifiedPaginationQuery;
 	to: FileRouteTypes["to"];
 }) => {
+	const [filter, setFilter] = useState<string | undefined>(search.query);
+	const debouncedFilter = useDebounce(filter ?? search.query, 500);
+
 	const menus = useQuery(
 		orpcQuery.merchant.menu.list.queryOptions({
-			input: { params: { merchantId }, query: search },
+			input: {
+				params: { merchantId },
+				query: {
+					...search,
+					query: debouncedFilter?.trim() ?? search.query?.trim(),
+				},
+			},
 		}),
 	);
 	const [visibility, setVisibility] = useState<VisibilityState>({});
 
 	const composeSearch = useCallback(
-		(page: number) => ({ ...search, page }),
-		[search],
+		(page: number) => ({ ...search, page, query: debouncedFilter }),
+		[search, debouncedFilter],
 	);
 	const totalPages = useMemo(
 		() => menus.data?.body.totalPages,
@@ -50,7 +60,9 @@ export const MerchantMenuTable = ({
 			isPending={menus.isPending}
 			columnVisibility={visibility}
 			setColumnVisibility={setVisibility}
-			filterKey={"name"}
+			filterKeys={m.name().toLowerCase()}
+			filterValue={filter}
+			onFilterChange={setFilter}
 		>
 			{menus.isPending ? (
 				<div className="flex items-center justify-end space-x-2">
@@ -79,14 +91,14 @@ export const MerchantMenuTable = ({
 						disabled={search?.page === 1}
 						asChild
 					>
-						<Link to={to} search={composeSearch(search.page - 1)}>
+						<Link to={to} search={composeSearch((search?.page ?? 1) - 1)}>
 							<ChevronLeft />
 							<span className="sr-only">{m.previous()}</span>
 						</Link>
 					</Button>
 					<span className="text-muted-foreground text-sm">
 						{m.pagination_desc({
-							page: search.page,
+							page: search?.page ?? 1,
 							totalPages: totalPages ?? 0,
 						})}
 					</span>
@@ -96,7 +108,7 @@ export const MerchantMenuTable = ({
 						disabled={search?.page === totalPages}
 						asChild
 					>
-						<Link to={to} search={composeSearch(search.page + 1)}>
+						<Link to={to} search={composeSearch((search?.page ?? 0) + 1)}>
 							<ChevronRight />
 							<span className="sr-only">{m.next()}</span>
 						</Link>

@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import { OffsetPaginationQuerySchema } from "@repo/schema/pagination";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -22,7 +22,7 @@ import { useMyMerchant } from "@/providers/merchant";
 
 export const Route = createFileRoute("/dash/merchant/menu")({
 	validateSearch: (values) => {
-		const search = OffsetPaginationQuerySchema.parse(values);
+		const search = UnifiedPaginationQuerySchema.parse(values);
 		if (!values.limit) return { ...search, limit: 7 };
 		return search;
 	},
