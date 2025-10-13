@@ -18,6 +18,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
+import { MerchantMenuSortBySchema } from "./spec";
 
 export class MerchantMenuRepository {
 	readonly #db: DatabaseService;
@@ -121,7 +122,7 @@ export class MerchantMenuRepository {
 			let stmt = this.#db.query.merchantMenu.findMany();
 
 			if (opts) {
-				const { cursor, page, limit, query } = opts;
+				const { cursor, page, limit, query, sortBy, order } = opts;
 
 				if (cursor) {
 					stmt = this.#db.query.merchantMenu.findMany({
@@ -136,6 +137,14 @@ export class MerchantMenuRepository {
 						where: (f, op) => {
 							if (!query) return undefined;
 							return op.ilike(f.name, `%${query}%`);
+						},
+						orderBy: (f, op) => {
+							if (sortBy) {
+								const parse = MerchantMenuSortBySchema.safeParse(sortBy);
+								if (!parse.success) return op[order](f.id);
+								return op[order](f[parse.data]);
+							}
+							return op[order](f.id);
 						},
 					});
 					if (!query) {
