@@ -1,9 +1,5 @@
 import { oc } from "@orpc/contract";
-import {
-	InsertMerchantSchema,
-	MerchantSchema,
-	UpdateMerchantSchema,
-} from "@repo/schema/merchant";
+import { MerchantSchema, UpdateMerchantSchema } from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";

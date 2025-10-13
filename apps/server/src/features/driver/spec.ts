@@ -1,9 +1,5 @@
 import { oc } from "@orpc/contract";
-import {
-	DriverSchema,
-	InsertDriverSchema,
-	UpdateDriverSchema,
-} from "@repo/schema/driver";
+import { DriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
