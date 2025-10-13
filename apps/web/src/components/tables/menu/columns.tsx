@@ -1,7 +1,6 @@
 import { m } from "@repo/i18n";
 import type { MerchantMenu } from "@repo/schema/merchant";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Image } from "@unpic/react";
 import { ArrowUpDown } from "lucide-react";
 import { NoImageIcon } from "@/components/misc/no-image-icon";
 import { Button } from "@/components/ui/button";
@@ -20,13 +19,12 @@ export const MERCHANT_MENU_COLUMNS = [
 				return (
 					<NoImageIcon
 						size="xs"
-						className="sm:size-12 md:size-14 lg:size-16 xl:size-18"
+						className="text-destructive sm:size-12 md:size-14 lg:size-16 xl:size-18"
 					/>
 				);
 
 			return (
 				<ImageZoom
-					key={`${image}-${updatedAt ?? ""}`}
 					src={`${image}?v=${updatedAt.getTime() ?? Date.now()}`}
 					layout="constrained"
 					width={72}
