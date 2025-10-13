@@ -4,7 +4,7 @@ import type {
 	UpdateMerchantMenu,
 } from "@repo/schema/merchant";
 import { getFileExtension } from "@repo/shared";
-import { count, eq } from "drizzle-orm";
+import { count, eq, ilike } from "drizzle-orm";
 import { v7 } from "uuid";
 import {
 	CACHE_PREFIXES,
@@ -121,7 +121,7 @@ export class MerchantMenuRepository {
 			let stmt = this.#db.query.merchantMenu.findMany();
 
 			if (opts) {
-				const { cursor, page, limit } = opts;
+				const { cursor, page, limit, query } = opts;
 
 				if (cursor) {
 					stmt = this.#db.query.merchantMenu.findMany({
@@ -133,10 +133,25 @@ export class MerchantMenuRepository {
 					stmt = this.#db.query.merchantMenu.findMany({
 						offset,
 						limit,
+						where: (f, op) => {
+							if (!query) return undefined;
+							return op.ilike(f.name, `%${query}%`);
+						},
 					});
-					const count = (await this.getTotalRow()) ?? 0;
-					await this.setTotalRowCache(count);
-					totalPages = Math.ceil(count / limit);
+					if (!query) {
+						const count = (await this.getTotalRow()) ?? 0;
+						await this.setTotalRowCache(count);
+						totalPages = Math.ceil(count / limit);
+					} else {
+						try {
+							const [dbResult] = await this.#db
+								.select({ count: count(tables.merchantMenu.id) })
+								.from(tables.merchantMenu)
+								.where(ilike(tables.merchantMenu.name, `%${query}%`));
+							const dbCount = dbResult.count;
+							totalPages = Math.ceil(dbCount / limit);
+						} catch {}
+					}
 				}
 			}
 
