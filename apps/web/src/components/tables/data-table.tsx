@@ -5,7 +5,6 @@ import {
 	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
 	type SortingState,
@@ -37,8 +36,10 @@ interface DataTableProps<TData, TValue> {
 	isPending?: boolean;
 	columnVisibility?: VisibilityState;
 	setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
-	filterKey?: keyof TData;
+	filterKeys?: string;
 	totalPages?: number;
+	filterValue?: string;
+	onFilterChange?: (str: string) => void;
 	children?: ReactNode;
 }
 
@@ -48,8 +49,10 @@ export function DataTable<TData, TValue>({
 	isPending = false,
 	columnVisibility,
 	setColumnVisibility,
-	filterKey,
+	filterKeys,
 	totalPages,
+	filterValue,
+	onFilterChange,
 	children,
 }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -59,11 +62,9 @@ export function DataTable<TData, TValue>({
 		data,
 		columns,
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
-		getFilteredRowModel: getFilteredRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
 		state: { sorting, columnFilters, columnVisibility },
 		pageCount: totalPages,
@@ -72,21 +73,14 @@ export function DataTable<TData, TValue>({
 	return (
 		<div className="p-2">
 			<div className="flex items-center">
-				{filterKey && (
+				{onFilterChange && (
 					<Input
-						placeholder="Filter items..."
-						value={
-							filterKey
-								? ((table
-										.getColumn(String(filterKey))
-										?.getFilterValue() as string) ?? "")
-								: ""
+						placeholder={
+							filterKeys && m.search_placeholder({ field: filterKeys })
 						}
+						value={filterValue ?? ""}
 						onChange={(event) => {
-							if (filterKey)
-								table
-									.getColumn(String(filterKey))
-									?.setFilterValue(event.target.value);
+							onFilterChange?.(event.target.value);
 						}}
 						className="max-w-sm"
 					/>
