@@ -29,6 +29,8 @@ export const UnifiedPaginationQuerySchema = z
 		...CursorPaginationQuerySchema.shape,
 		...OffsetPaginationQuerySchema.shape,
 		query: z.string().optional(),
+		sortBy: z.string().optional(),
+		order: z.enum(["asc", "desc"]).optional().default("desc"),
 	})
 	.refine((data) => !(data.cursor && data.page), {
 		message: "Cannot use both cursor and page at the same time.",
