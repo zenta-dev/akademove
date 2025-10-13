@@ -4,7 +4,7 @@ import type {
 	UpdateMerchantMenu,
 } from "@repo/schema/merchant";
 import { getFileExtension } from "@repo/shared";
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import {
 	CACHE_PREFIXES,
@@ -86,8 +86,38 @@ export class MerchantMenuRepository {
 		} catch {}
 	}
 
-	async list(opts?: GetAllOptions): Promise<MerchantMenu[]> {
+	private async setTotalRowCache(total: number) {
 		try {
+			await this.#kv.put(
+				this.composeCacheKey("count"),
+				{ total },
+				{
+					expirationTtl: CACHE_TTLS["24h"],
+				},
+			);
+		} catch {}
+	}
+
+	private async getTotalRow() {
+		try {
+			const kvResult = await this.#kv.get<{ total: number }>(
+				this.composeCacheKey("count"),
+			);
+			if (kvResult?.total) return kvResult.total;
+			const [dbResult] = await this.#db
+				.select({ count: count(tables.merchantMenu.id) })
+				.from(tables.merchantMenu);
+			return dbResult.count;
+		} catch {
+			return undefined;
+		}
+	}
+
+	async list(
+		opts?: GetAllOptions,
+	): Promise<{ rows: MerchantMenu[]; totalPages?: number }> {
+		try {
+			let totalPages: number | undefined;
 			let stmt = this.#db.query.merchantMenu.findMany();
 
 			if (opts) {
@@ -104,11 +134,15 @@ export class MerchantMenuRepository {
 						offset,
 						limit,
 					});
+					const count = (await this.getTotalRow()) ?? 0;
+					await this.setTotalRowCache(count);
+					totalPages = Math.ceil(count / limit);
 				}
 			}
 
 			const result = await stmt;
-			return await Promise.all(result.map((r) => this.composeEntity(r)));
+			const rows = await Promise.all(result.map((r) => this.composeEntity(r)));
+			return { rows, totalPages };
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -162,8 +196,15 @@ export class MerchantMenuRepository {
 					: Promise.resolve(),
 			]);
 
-			const result = await this.composeEntity(operation);
-			await this.setCache(result.id, result);
+			const [result, count] = await Promise.all([
+				this.composeEntity(operation),
+				this.getTotalRow(),
+			]);
+			await Promise.all([
+				this.setCache(result.id, result),
+				this.setTotalRowCache((count ?? 0) + 1),
+			]);
+
 			return result;
 		} catch (error) {
 			log.error(error);
@@ -224,6 +265,8 @@ export class MerchantMenuRepository {
 					code: "NOT_FOUND",
 				});
 
+			const count = await this.getTotalRow();
+
 			const [result] = await Promise.all([
 				this.#db
 					.delete(tables.merchantMenu)
@@ -236,7 +279,10 @@ export class MerchantMenuRepository {
 
 			if (result.length > 0) {
 				try {
-					await this.#kv.delete(this.composeCacheKey(id));
+					await Promise.all([
+						this.#kv.delete(this.composeCacheKey(id)),
+						this.setTotalRowCache((count ?? 1) - 1),
+					]);
 				} catch {}
 			}
 		} catch (error) {

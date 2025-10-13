@@ -52,5 +52,6 @@ export const createSuccesSchema = <TSchema, TDesc extends string>(
 		body: z.object({
 			message: z.string(),
 			data: schema,
+			totalPages: z.number().optional(),
 		}),
 	});

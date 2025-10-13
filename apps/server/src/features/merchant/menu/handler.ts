@@ -11,12 +11,13 @@ export const MerchantMenuHandler = os.router({
 	list: os.list
 		.use(hasPermission({ merchantMenu: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.merchant.menu.list(query);
+			const { rows, totalPages } = await context.repo.merchant.menu.list(query);
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved merchantmenus data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),
