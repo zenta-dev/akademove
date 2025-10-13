@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import { OffsetPaginationQuerySchema } from "@repo/schema/pagination";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
@@ -20,6 +21,11 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { useMyMerchant } from "@/providers/merchant";
 
 export const Route = createFileRoute("/dash/merchant/menu")({
+	validateSearch: (values) => {
+		const search = OffsetPaginationQuerySchema.parse(values);
+		if (!values.limit) return { ...search, limit: 7 };
+		return search;
+	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.MENU }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
@@ -37,6 +43,7 @@ export const Route = createFileRoute("/dash/merchant/menu")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const [open, setOpen] = useState(false);
+	const search = Route.useSearch();
 	const navigate = useNavigate();
 	const merchant = useMyMerchant();
 
@@ -74,11 +81,15 @@ function RouteComponent() {
 				)}
 			</div>
 			{merchant.isLoading ? (
-				<Skeleton className="h-96 w-full" />
+				<Skeleton className="h-full max-h-[85vh] w-full" />
 			) : (
 				<Card className="p-0">
 					<CardContent className="p-0">
-						<MerchantMenuTable merchantId={merchant.value?.id ?? ""} />
+						<MerchantMenuTable
+							merchantId={merchant.value?.id ?? ""}
+							search={search}
+							to="/dash/merchant/menu"
+						/>
 					</CardContent>
 				</Card>
 			)}
