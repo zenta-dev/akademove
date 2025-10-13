@@ -1,6 +1,6 @@
 import { os } from "@orpc/server";
 import { ClientAgentSchema } from "@repo/schema/common";
-import type { ORPCContext } from "../orpc";
+import type { ORPCContext } from "../interface";
 
 export const clientMiddleware = os
 	.$context<ORPCContext>()

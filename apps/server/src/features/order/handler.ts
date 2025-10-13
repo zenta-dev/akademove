@@ -1,6 +1,6 @@
 import { implement } from "@orpc/server";
+import type { ORPCContext } from "@/core/interface";
 import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
-import type { ORPCContext } from "@/core/orpc";
 import { OrderSpec } from "./spec";
 
 const os = implement(OrderSpec).$context<ORPCContext>().use(authMiddleware);

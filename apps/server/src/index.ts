@@ -23,50 +23,48 @@ import { ScheduleSchema } from "@repo/schema/schedule";
 import { UserSchema } from "@repo/schema/user";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { TRUSTED_ORIGINS } from "@/core/constants";
+import { BaseError, UnknownError } from "@/core/error";
+import { createHono } from "@/core/hono";
+import type { ORPCContext } from "@/core/interface";
 import { getDatabase } from "@/core/services/db";
-import { TRUSTED_ORIGINS } from "./core/constants";
-import { BaseError, UnknownError } from "./core/error";
-import { createHono } from "./core/hono";
-import type { ORPCContext } from "./core/orpc";
-import { CloudflareKVService } from "./core/services/kv";
-import { ResendMailService } from "./core/services/mail";
-import { RBACService } from "./core/services/rbac";
-import { S3StorageService } from "./core/services/storage";
-import { ServerRouter } from "./features";
-import { AuthRepository } from "./features/auth/repository";
-import { createConfigurationRepository } from "./features/configuration/repository";
-import { createCouponRepository } from "./features/coupon/repository";
-import { DriverRepository } from "./features/driver/repository";
-import { MerchantMainRepository } from "./features/merchant/main/repository";
-import { MerchantMenuRepository } from "./features/merchant/menu/repository";
-import { createOrderRepository } from "./features/order/repository";
-import { createReportRepository } from "./features/report/repository";
-import { createReviewRepository } from "./features/review/repository";
-import { createScheduleRepository } from "./features/schedule/repository";
-import { createUserRepository } from "./features/user/repository";
-import { isCloudflare } from "./utils";
+import { CloudflareKVService } from "@/core/services/kv";
+import { ResendMailService } from "@/core/services/mail";
+import { RBACService } from "@/core/services/rbac";
+import { S3StorageService } from "@/core/services/storage";
+import { ServerRouter } from "@/features";
+import { AuthRepository } from "@/features/auth/repository";
+import { createConfigurationRepository } from "@/features/configuration/repository";
+import { createCouponRepository } from "@/features/coupon/repository";
+import { DriverRepository } from "@/features/driver/repository";
+import { MerchantMainRepository } from "@/features/merchant/main/repository";
+import { MerchantMenuRepository } from "@/features/merchant/menu/repository";
+import { createOrderRepository } from "@/features/order/repository";
+import { createReportRepository } from "@/features/report/repository";
+import { createReviewRepository } from "@/features/review/repository";
+import { createScheduleRepository } from "@/features/schedule/repository";
+import { createUserRepository } from "@/features/user/repository";
+import { isCloudflare } from "@/utils";
 
 const app = createHono();
 
 app.use(logger());
 app.use("*", async (c, next) => {
 	const db = getDatabase();
-	c.set("db", db);
-	const mail = new ResendMailService(env.RESEND_API_KEY);
-	c.set("mail", mail);
-	const kv = new CloudflareKVService(env.MAIN_KV);
-	c.set("kv", kv);
-	const storage = new S3StorageService({
-		endpoint: env.S3_ENDPOINT,
-		region: env.S3_REGION,
-		accessKeyId: env.S3_ACCESS_KEY_ID,
-		secretAccessKey: env.S3_SECRET_ACCESS_KEY,
-		publicUrl: env.S3_PUBLIC_URL,
-	});
-	c.set("storage", storage);
-	const rbac = new RBACService();
-	c.set("rbac", rbac);
 
+	c.set("svc", {
+		db,
+		mail: new ResendMailService(env.RESEND_API_KEY),
+		kv: new CloudflareKVService(env.MAIN_KV),
+		storage: new S3StorageService({
+			endpoint: env.S3_ENDPOINT,
+			region: env.S3_REGION,
+			accessKeyId: env.S3_ACCESS_KEY_ID,
+			secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+			publicUrl: env.S3_PUBLIC_URL,
+		}),
+		rbac: new RBACService(),
+	});
 	try {
 		await next();
 	} finally {
@@ -195,31 +193,26 @@ export const rpcHandler = new RPCHandler(ServerRouter, {
 });
 
 app.use("/*", async (c, next) => {
+	const { svc, user } = c.var;
 	const context: ORPCContext = {
 		req: c.req.raw,
-		svc: {
-			db: c.var.db,
-			kv: c.var.kv,
-			mail: c.var.mail,
-			storage: c.var.storage,
-			rbac: c.var.rbac,
-		},
+		svc,
 		repo: {
-			auth: new AuthRepository(c.var.db, c.var.kv, c.var.storage),
-			configuration: createConfigurationRepository(c.var.db, c.var.kv),
-			driver: new DriverRepository(c.var.db, c.var.kv, c.var.storage),
+			auth: new AuthRepository(svc.db, svc.kv, svc.storage),
+			configuration: createConfigurationRepository(svc.db, svc.kv),
+			driver: new DriverRepository(svc.db, svc.kv, svc.storage),
 			merchant: {
-				main: new MerchantMainRepository(c.var.db, c.var.kv, c.var.storage),
-				menu: new MerchantMenuRepository(c.var.db, c.var.kv, c.var.storage),
+				main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
+				menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
 			},
-			order: createOrderRepository(c.var.db, c.var.kv),
-			coupon: createCouponRepository(c.var.db, c.var.kv),
-			report: createReportRepository(c.var.db, c.var.kv),
-			review: createReviewRepository(c.var.db, c.var.kv),
-			schedule: createScheduleRepository(c.var.db, c.var.kv),
-			user: createUserRepository(c.var.db),
+			order: createOrderRepository(svc.db, svc.kv),
+			coupon: createCouponRepository(svc.db, svc.kv),
+			report: createReportRepository(svc.db, svc.kv),
+			review: createReviewRepository(svc.db, svc.kv),
+			schedule: createScheduleRepository(svc.db, svc.kv),
+			user: createUserRepository(svc.db),
 		},
-		user: c.var.user,
+		user,
 		clientAgent: "unknown",
 	};
 

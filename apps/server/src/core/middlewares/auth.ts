@@ -3,7 +3,7 @@ import type { Permissions } from "@repo/shared";
 import { getAuthToken } from "@repo/shared";
 import { isDev } from "@/utils";
 import { AuthError, MiddlewareError } from "../error";
-import type { ORPCContext } from "../orpc";
+import type { ORPCContext } from "../interface";
 
 export const authMiddleware = os
 	.$context<ORPCContext>()

@@ -5,8 +5,8 @@ import {
 	type Permissions,
 } from "@repo/shared";
 import { AuthError } from "@/core/error";
+import type { ORPCContext } from "@/core/interface";
 import { authMiddleware } from "@/core/middlewares/auth";
-import type { ORPCContext } from "@/core/orpc";
 import { isDev } from "@/utils";
 import { AuthSpec } from "./spec";
 

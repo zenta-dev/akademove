@@ -1,7 +1,7 @@
 import { oc } from "@orpc/contract";
 import { implement, type RouterClient } from "@orpc/server";
+import type { ORPCContext } from "@/core/interface";
 import { clientMiddleware } from "@/core/middlewares/client";
-import type { ORPCContext } from "@/core/orpc";
 import { AuthHandler } from "./auth/handler";
 import { AuthSpec } from "./auth/spec";
 import { ConfigurationHandler } from "./configuration/handler";

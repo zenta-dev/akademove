@@ -1,6 +1,6 @@
 import { implement } from "@orpc/server";
+import type { ORPCContext } from "@/core/interface";
 import { authMiddleware } from "@/core/middlewares/auth";
-import type { ORPCContext } from "@/core/orpc";
 import { MerchantMainHandler } from "./main/handler";
 import { MerchantMenuHandler } from "./menu/handler";
 import { MerchantSpec } from "./spec";
