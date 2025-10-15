@@ -248,7 +248,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     child: isLoading
                         ? const Submiting()
                         : Text(
-                            'Sign In',
+                            'Sign Up',
                             style: context.theme.typography.medium.copyWith(
                               color: Colors.white,
                             ),
