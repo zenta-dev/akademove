@@ -18,7 +18,7 @@ class SignInCubit extends BaseCubit<SignInState> {
       );
       emit(SignInState.success(res.data, message: res.message));
     } on BaseError catch (e, st) {
-      log('[SignInCubit] - Error: ${e.message}', stackTrace: st);
+      logger.e('[SignInCubit] - Error: ${e.message}',error: e, stackTrace: st);
       emit(SignInState.failure(e));
     }
   }
