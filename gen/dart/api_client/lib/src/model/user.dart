@@ -3,299 +3,161 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'user.g.dart';
 
-/// User
-///
-/// Properties:
-/// * [id] 
-/// * [name] 
-/// * [email] 
-/// * [emailVerified] 
-/// * [image] 
-/// * [role] 
-/// * [banned] 
-/// * [banReason] 
-/// * [banExpires] - unix timestamp format
-/// * [createdAt] - unix timestamp format
-/// * [updatedAt] - unix timestamp format
-@BuiltValue()
-abstract class User implements Built<User, UserBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class User {
+  /// Returns a new [User] instance.
+  User({
+    required this.id,
 
-  @BuiltValueField(wireName: r'name')
-  String get name;
+    required this.name,
 
-  @BuiltValueField(wireName: r'email')
-  String get email;
+    required this.email,
 
-  @BuiltValueField(wireName: r'emailVerified')
-  bool get emailVerified;
+    required this.emailVerified,
 
-  @BuiltValueField(wireName: r'image')
-  String? get image;
+    this.image,
 
-  @BuiltValueField(wireName: r'role')
-  UserRoleEnum? get role;
-  // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
+    required this.role,
 
-  @BuiltValueField(wireName: r'banned')
-  bool get banned;
+    required this.banned,
 
-  @BuiltValueField(wireName: r'banReason')
-  String? get banReason;
+    this.banReason,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'banExpires')
-  num? get banExpires;
+    this.banExpires,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'createdAt')
-  num get createdAt;
+    required this.gender,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'updatedAt')
-  num get updatedAt;
+    required this.phone,
 
-  User._();
+    required this.createdAt,
 
-  factory User([void updates(UserBuilder b)]) = _$User;
+    required this.updatedAt,
+  });
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserBuilder b) => b
-      ..role = const UserRoleEnum._('user');
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<User> get serializer => _$UserSerializer();
-}
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
-class _$UserSerializer implements PrimitiveSerializer<User> {
-  @override
-  final Iterable<Type> types = const [User, _$User];
+  @JsonKey(name: r'email', required: true, includeIfNull: false)
+  final String email;
 
-  @override
-  final String wireName = r'User';
+  @JsonKey(name: r'emailVerified', required: true, includeIfNull: false)
+  final bool emailVerified;
 
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    User object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'email';
-    yield serializers.serialize(
-      object.email,
-      specifiedType: const FullType(String),
-    );
-    yield r'emailVerified';
-    yield serializers.serialize(
-      object.emailVerified,
-      specifiedType: const FullType(bool),
-    );
-    if (object.image != null) {
-      yield r'image';
-      yield serializers.serialize(
-        object.image,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.role != null) {
-      yield r'role';
-      yield serializers.serialize(
-        object.role,
-        specifiedType: const FullType(UserRoleEnum),
-      );
-    }
-    yield r'banned';
-    yield serializers.serialize(
-      object.banned,
-      specifiedType: const FullType(bool),
-    );
-    if (object.banReason != null) {
-      yield r'banReason';
-      yield serializers.serialize(
-        object.banReason,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.banExpires != null) {
-      yield r'banExpires';
-      yield serializers.serialize(
-        object.banExpires,
-        specifiedType: const FullType(num),
-      );
-    }
-    yield r'createdAt';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(num),
-    );
-    yield r'updatedAt';
-    yield serializers.serialize(
-      object.updatedAt,
-      specifiedType: const FullType(num),
-    );
-  }
+  @JsonKey(name: r'image', required: false, includeIfNull: false)
+  final String? image;
+
+  @JsonKey(name: r'role', required: true, includeIfNull: false)
+  final UserRoleEnum role;
+
+  @JsonKey(name: r'banned', required: true, includeIfNull: false)
+  final bool banned;
+
+  @JsonKey(name: r'banReason', required: false, includeIfNull: false)
+  final String? banReason;
+
+  @JsonKey(name: r'banExpires', required: false, includeIfNull: false)
+  final DateTime? banExpires;
+
+  @JsonKey(name: r'gender', required: true, includeIfNull: false)
+  final UserGenderEnum gender;
+
+  @JsonKey(name: r'phone', required: true, includeIfNull: false)
+  final String phone;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
+
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    User object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required UserBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'email':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.email = valueDes;
-          break;
-        case r'emailVerified':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.emailVerified = valueDes;
-          break;
-        case r'image':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.image = valueDes;
-          break;
-        case r'role':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(UserRoleEnum),
-          ) as UserRoleEnum;
-          result.role = valueDes;
-          break;
-        case r'banned':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.banned = valueDes;
-          break;
-        case r'banReason':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.banReason = valueDes;
-          break;
-        case r'banExpires':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.banExpires = valueDes;
-          break;
-        case r'createdAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.createdAt = valueDes;
-          break;
-        case r'updatedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.updatedAt = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is User &&
+          other.id == id &&
+          other.name == name &&
+          other.email == email &&
+          other.emailVerified == emailVerified &&
+          other.image == image &&
+          other.role == role &&
+          other.banned == banned &&
+          other.banReason == banReason &&
+          other.banExpires == banExpires &&
+          other.gender == gender &&
+          other.phone == phone &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
-  User deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UserBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      id.hashCode +
+      name.hashCode +
+      email.hashCode +
+      emailVerified.hashCode +
+      image.hashCode +
+      role.hashCode +
+      banned.hashCode +
+      banReason.hashCode +
+      banExpires.hashCode +
+      gender.hashCode +
+      phone.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class UserRoleEnum extends EnumClass {
+enum UserRoleEnum {
+  @JsonValue(r'admin')
+  admin(r'admin'),
+  @JsonValue(r'operator')
+  operator_(r'operator'),
+  @JsonValue(r'merchant')
+  merchant(r'merchant'),
+  @JsonValue(r'driver')
+  driver(r'driver'),
+  @JsonValue(r'user')
+  user(r'user');
 
-  @BuiltValueEnumConst(wireName: r'admin')
-  static const UserRoleEnum admin = _$userRoleEnum_admin;
-  @BuiltValueEnumConst(wireName: r'operator')
-  static const UserRoleEnum operator_ = _$userRoleEnum_operator_;
-  @BuiltValueEnumConst(wireName: r'merchant')
-  static const UserRoleEnum merchant = _$userRoleEnum_merchant;
-  @BuiltValueEnumConst(wireName: r'driver')
-  static const UserRoleEnum driver = _$userRoleEnum_driver;
-  @BuiltValueEnumConst(wireName: r'user')
-  static const UserRoleEnum user = _$userRoleEnum_user;
+  const UserRoleEnum(this.value);
 
-  static Serializer<UserRoleEnum> get serializer => _$userRoleEnumSerializer;
+  final String value;
 
-  const UserRoleEnum._(String name): super(name);
-
-  static BuiltSet<UserRoleEnum> get values => _$userRoleEnumValues;
-  static UserRoleEnum valueOf(String name) => _$userRoleEnumValueOf(name);
+  @override
+  String toString() => value;
 }
 
+enum UserGenderEnum {
+  @JsonValue(r'male')
+  male(r'male'),
+  @JsonValue(r'female')
+  female(r'female');
+
+  const UserGenderEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}

@@ -3,302 +3,158 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/location.dart';
-import 'package:api_client/src/model/driver_update_request_user.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:api_client/src/model/order_create_request_user.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'driver.g.dart';
 
-/// Driver
-///
-/// Properties:
-/// * [id] 
-/// * [userId] 
-/// * [studentId] 
-/// * [licenseNumber] 
-/// * [status] 
-/// * [rating] 
-/// * [isOnline] 
-/// * [currentLocation] 
-/// * [lastLocationUpdate] - unix timestamp format
-/// * [createdAt] - unix timestamp format
-/// * [user] 
-@BuiltValue()
-abstract class Driver implements Built<Driver, DriverBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Driver {
+  /// Returns a new [Driver] instance.
+  Driver({
+    required this.id,
 
-  @BuiltValueField(wireName: r'userId')
-  String get userId;
+    required this.userId,
 
-  @BuiltValueField(wireName: r'studentId')
-  String get studentId;
+    required this.studentId,
 
-  @BuiltValueField(wireName: r'licenseNumber')
-  String get licenseNumber;
+    required this.licenseNumber,
 
-  @BuiltValueField(wireName: r'status')
-  DriverStatusEnum? get status;
-  // enum statusEnum {  pending,  approved,  rejected,  active,  inactive,  suspended,  };
+    required this.status,
 
-  @BuiltValueField(wireName: r'rating')
-  num get rating;
+    required this.rating,
 
-  @BuiltValueField(wireName: r'isOnline')
-  bool get isOnline;
+    required this.isOnline,
 
-  @BuiltValueField(wireName: r'currentLocation')
-  Location? get currentLocation;
+    this.currentLocation,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'lastLocationUpdate')
-  num? get lastLocationUpdate;
+    this.lastLocationUpdate,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'createdAt')
-  num get createdAt;
+    required this.createdAt,
 
-  @BuiltValueField(wireName: r'user')
-  DriverUpdateRequestUser? get user;
+    required this.studentCard,
 
-  Driver._();
+    required this.driverLicense,
 
-  factory Driver([void updates(DriverBuilder b)]) = _$Driver;
+    required this.vehicleCertificate,
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverBuilder b) => b
-      ..status = const DriverStatusEnum._('pending');
+    this.user,
+  });
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Driver> get serializer => _$DriverSerializer();
-}
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-class _$DriverSerializer implements PrimitiveSerializer<Driver> {
-  @override
-  final Iterable<Type> types = const [Driver, _$Driver];
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
-  @override
-  final String wireName = r'Driver';
+  @JsonKey(name: r'studentId', required: true, includeIfNull: false)
+  final String studentId;
 
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Driver object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-    yield r'userId';
-    yield serializers.serialize(
-      object.userId,
-      specifiedType: const FullType(String),
-    );
-    yield r'studentId';
-    yield serializers.serialize(
-      object.studentId,
-      specifiedType: const FullType(String),
-    );
-    yield r'licenseNumber';
-    yield serializers.serialize(
-      object.licenseNumber,
-      specifiedType: const FullType(String),
-    );
-    if (object.status != null) {
-      yield r'status';
-      yield serializers.serialize(
-        object.status,
-        specifiedType: const FullType(DriverStatusEnum),
-      );
-    }
-    yield r'rating';
-    yield serializers.serialize(
-      object.rating,
-      specifiedType: const FullType(num),
-    );
-    yield r'isOnline';
-    yield serializers.serialize(
-      object.isOnline,
-      specifiedType: const FullType(bool),
-    );
-    if (object.currentLocation != null) {
-      yield r'currentLocation';
-      yield serializers.serialize(
-        object.currentLocation,
-        specifiedType: const FullType(Location),
-      );
-    }
-    if (object.lastLocationUpdate != null) {
-      yield r'lastLocationUpdate';
-      yield serializers.serialize(
-        object.lastLocationUpdate,
-        specifiedType: const FullType(num),
-      );
-    }
-    yield r'createdAt';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(num),
-    );
-    if (object.user != null) {
-      yield r'user';
-      yield serializers.serialize(
-        object.user,
-        specifiedType: const FullType(DriverUpdateRequestUser),
-      );
-    }
-  }
+  @JsonKey(name: r'licenseNumber', required: true, includeIfNull: false)
+  final String licenseNumber;
+
+  @JsonKey(name: r'status', required: true, includeIfNull: false)
+  final DriverStatusEnum status;
+
+  @JsonKey(name: r'rating', required: true, includeIfNull: false)
+  final num rating;
+
+  @JsonKey(name: r'isOnline', required: true, includeIfNull: false)
+  final bool isOnline;
+
+  @JsonKey(name: r'currentLocation', required: false, includeIfNull: false)
+  final Location? currentLocation;
+
+  @JsonKey(name: r'lastLocationUpdate', required: false, includeIfNull: false)
+  final DateTime? lastLocationUpdate;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
+
+  @JsonKey(name: r'studentCard', required: true, includeIfNull: false)
+  final String studentCard;
+
+  @JsonKey(name: r'driverLicense', required: true, includeIfNull: false)
+  final String driverLicense;
+
+  @JsonKey(name: r'vehicleCertificate', required: true, includeIfNull: false)
+  final String vehicleCertificate;
+
+  @JsonKey(name: r'user', required: false, includeIfNull: false)
+  final OrderCreateRequestUser? user;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Driver object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required DriverBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        case r'userId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.userId = valueDes;
-          break;
-        case r'studentId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.studentId = valueDes;
-          break;
-        case r'licenseNumber':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.licenseNumber = valueDes;
-          break;
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DriverStatusEnum),
-          ) as DriverStatusEnum;
-          result.status = valueDes;
-          break;
-        case r'rating':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.rating = valueDes;
-          break;
-        case r'isOnline':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(bool),
-          ) as bool;
-          result.isOnline = valueDes;
-          break;
-        case r'currentLocation':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Location),
-          ) as Location;
-          result.currentLocation.replace(valueDes);
-          break;
-        case r'lastLocationUpdate':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.lastLocationUpdate = valueDes;
-          break;
-        case r'createdAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.createdAt = valueDes;
-          break;
-        case r'user':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DriverUpdateRequestUser),
-          ) as DriverUpdateRequestUser;
-          result.user.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Driver &&
+          other.id == id &&
+          other.userId == userId &&
+          other.studentId == studentId &&
+          other.licenseNumber == licenseNumber &&
+          other.status == status &&
+          other.rating == rating &&
+          other.isOnline == isOnline &&
+          other.currentLocation == currentLocation &&
+          other.lastLocationUpdate == lastLocationUpdate &&
+          other.createdAt == createdAt &&
+          other.studentCard == studentCard &&
+          other.driverLicense == driverLicense &&
+          other.vehicleCertificate == vehicleCertificate &&
+          other.user == user;
 
   @override
-  Driver deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = DriverBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      id.hashCode +
+      userId.hashCode +
+      studentId.hashCode +
+      licenseNumber.hashCode +
+      status.hashCode +
+      rating.hashCode +
+      isOnline.hashCode +
+      currentLocation.hashCode +
+      lastLocationUpdate.hashCode +
+      createdAt.hashCode +
+      studentCard.hashCode +
+      driverLicense.hashCode +
+      vehicleCertificate.hashCode +
+      user.hashCode;
+
+  factory Driver.fromJson(Map<String, dynamic> json) => _$DriverFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DriverToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class DriverStatusEnum extends EnumClass {
+enum DriverStatusEnum {
+  @JsonValue(r'pending')
+  pending(r'pending'),
+  @JsonValue(r'approved')
+  approved(r'approved'),
+  @JsonValue(r'rejected')
+  rejected(r'rejected'),
+  @JsonValue(r'active')
+  active(r'active'),
+  @JsonValue(r'inactive')
+  inactive(r'inactive'),
+  @JsonValue(r'suspended')
+  suspended(r'suspended');
 
-  @BuiltValueEnumConst(wireName: r'pending')
-  static const DriverStatusEnum pending = _$driverStatusEnum_pending;
-  @BuiltValueEnumConst(wireName: r'approved')
-  static const DriverStatusEnum approved = _$driverStatusEnum_approved;
-  @BuiltValueEnumConst(wireName: r'rejected')
-  static const DriverStatusEnum rejected = _$driverStatusEnum_rejected;
-  @BuiltValueEnumConst(wireName: r'active')
-  static const DriverStatusEnum active = _$driverStatusEnum_active;
-  @BuiltValueEnumConst(wireName: r'inactive')
-  static const DriverStatusEnum inactive = _$driverStatusEnum_inactive;
-  @BuiltValueEnumConst(wireName: r'suspended')
-  static const DriverStatusEnum suspended = _$driverStatusEnum_suspended;
+  const DriverStatusEnum(this.value);
 
-  static Serializer<DriverStatusEnum> get serializer => _$driverStatusEnumSerializer;
+  final String value;
 
-  const DriverStatusEnum._(String name): super(name);
-
-  static BuiltSet<DriverStatusEnum> get values => _$driverStatusEnumValues;
-  static DriverStatusEnum valueOf(String name) => _$driverStatusEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

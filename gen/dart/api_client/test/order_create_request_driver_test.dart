@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderCreateRequestDriver
 void main() {
-  final instance = OrderCreateRequestDriverBuilder();
-  // TODO add properties to the builder and call build()
+  final OrderCreateRequestDriver? instance = /* OrderCreateRequestDriver(...) */
+      null;
+  // TODO add properties to the entity
 
   group(OrderCreateRequestDriver, () {
     // String id
@@ -47,22 +48,34 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num lastLocationUpdate
+    // DateTime lastLocationUpdate
     test('to test the property `lastLocationUpdate`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // DriverUpdateRequestUser user
-    test('to test the property `user`', () async {
+    // String studentCard
+    test('to test the property `studentCard`', () async {
       // TODO
     });
 
+    // String driverLicense
+    test('to test the property `driverLicense`', () async {
+      // TODO
+    });
+
+    // String vehicleCertificate
+    test('to test the property `vehicleCertificate`', () async {
+      // TODO
+    });
+
+    // OrderCreateRequestUser user
+    test('to test the property `user`', () async {
+      // TODO
+    });
   });
 }

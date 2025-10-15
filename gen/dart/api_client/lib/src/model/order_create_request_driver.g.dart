@@ -3,339 +3,283 @@
 part of 'order_create_request_driver.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_pending =
-    const OrderCreateRequestDriverStatusEnum._('pending');
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_approved =
-    const OrderCreateRequestDriverStatusEnum._('approved');
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_rejected =
-    const OrderCreateRequestDriverStatusEnum._('rejected');
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_active =
-    const OrderCreateRequestDriverStatusEnum._('active');
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_inactive =
-    const OrderCreateRequestDriverStatusEnum._('inactive');
-const OrderCreateRequestDriverStatusEnum
-_$orderCreateRequestDriverStatusEnum_suspended =
-    const OrderCreateRequestDriverStatusEnum._('suspended');
+abstract class _$OrderCreateRequestDriverCWProxy {
+  OrderCreateRequestDriver id(String? id);
 
-OrderCreateRequestDriverStatusEnum _$orderCreateRequestDriverStatusEnumValueOf(
-  String name,
-) {
-  switch (name) {
-    case 'pending':
-      return _$orderCreateRequestDriverStatusEnum_pending;
-    case 'approved':
-      return _$orderCreateRequestDriverStatusEnum_approved;
-    case 'rejected':
-      return _$orderCreateRequestDriverStatusEnum_rejected;
-    case 'active':
-      return _$orderCreateRequestDriverStatusEnum_active;
-    case 'inactive':
-      return _$orderCreateRequestDriverStatusEnum_inactive;
-    case 'suspended':
-      return _$orderCreateRequestDriverStatusEnum_suspended;
-    default:
-      throw ArgumentError(name);
-  }
+  OrderCreateRequestDriver userId(String? userId);
+
+  OrderCreateRequestDriver studentId(String? studentId);
+
+  OrderCreateRequestDriver licenseNumber(String? licenseNumber);
+
+  OrderCreateRequestDriver status(OrderCreateRequestDriverStatusEnum? status);
+
+  OrderCreateRequestDriver rating(num? rating);
+
+  OrderCreateRequestDriver isOnline(bool? isOnline);
+
+  OrderCreateRequestDriver currentLocation(Location? currentLocation);
+
+  OrderCreateRequestDriver lastLocationUpdate(DateTime? lastLocationUpdate);
+
+  OrderCreateRequestDriver createdAt(DateTime? createdAt);
+
+  OrderCreateRequestDriver studentCard(String? studentCard);
+
+  OrderCreateRequestDriver driverLicense(String? driverLicense);
+
+  OrderCreateRequestDriver vehicleCertificate(String? vehicleCertificate);
+
+  OrderCreateRequestDriver user(OrderCreateRequestUser? user);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestDriver(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestDriver call({
+    String? id,
+    String? userId,
+    String? studentId,
+    String? licenseNumber,
+    OrderCreateRequestDriverStatusEnum? status,
+    num? rating,
+    bool? isOnline,
+    Location? currentLocation,
+    DateTime? lastLocationUpdate,
+    DateTime? createdAt,
+    String? studentCard,
+    String? driverLicense,
+    String? vehicleCertificate,
+    OrderCreateRequestUser? user,
+  });
 }
 
-final BuiltSet<OrderCreateRequestDriverStatusEnum>
-_$orderCreateRequestDriverStatusEnumValues =
-    BuiltSet<OrderCreateRequestDriverStatusEnum>(
-      const <OrderCreateRequestDriverStatusEnum>[
-        _$orderCreateRequestDriverStatusEnum_pending,
-        _$orderCreateRequestDriverStatusEnum_approved,
-        _$orderCreateRequestDriverStatusEnum_rejected,
-        _$orderCreateRequestDriverStatusEnum_active,
-        _$orderCreateRequestDriverStatusEnum_inactive,
-        _$orderCreateRequestDriverStatusEnum_suspended,
-      ],
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderCreateRequestDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderCreateRequestDriver.copyWith.fieldName(...)`
+class _$OrderCreateRequestDriverCWProxyImpl
+    implements _$OrderCreateRequestDriverCWProxy {
+  const _$OrderCreateRequestDriverCWProxyImpl(this._value);
+
+  final OrderCreateRequestDriver _value;
+
+  @override
+  OrderCreateRequestDriver id(String? id) => this(id: id);
+
+  @override
+  OrderCreateRequestDriver userId(String? userId) => this(userId: userId);
+
+  @override
+  OrderCreateRequestDriver studentId(String? studentId) =>
+      this(studentId: studentId);
+
+  @override
+  OrderCreateRequestDriver licenseNumber(String? licenseNumber) =>
+      this(licenseNumber: licenseNumber);
+
+  @override
+  OrderCreateRequestDriver status(OrderCreateRequestDriverStatusEnum? status) =>
+      this(status: status);
+
+  @override
+  OrderCreateRequestDriver rating(num? rating) => this(rating: rating);
+
+  @override
+  OrderCreateRequestDriver isOnline(bool? isOnline) => this(isOnline: isOnline);
+
+  @override
+  OrderCreateRequestDriver currentLocation(Location? currentLocation) =>
+      this(currentLocation: currentLocation);
+
+  @override
+  OrderCreateRequestDriver lastLocationUpdate(DateTime? lastLocationUpdate) =>
+      this(lastLocationUpdate: lastLocationUpdate);
+
+  @override
+  OrderCreateRequestDriver createdAt(DateTime? createdAt) =>
+      this(createdAt: createdAt);
+
+  @override
+  OrderCreateRequestDriver studentCard(String? studentCard) =>
+      this(studentCard: studentCard);
+
+  @override
+  OrderCreateRequestDriver driverLicense(String? driverLicense) =>
+      this(driverLicense: driverLicense);
+
+  @override
+  OrderCreateRequestDriver vehicleCertificate(String? vehicleCertificate) =>
+      this(vehicleCertificate: vehicleCertificate);
+
+  @override
+  OrderCreateRequestDriver user(OrderCreateRequestUser? user) =>
+      this(user: user);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestDriver(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestDriver call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? studentId = const $CopyWithPlaceholder(),
+    Object? licenseNumber = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
+    Object? isOnline = const $CopyWithPlaceholder(),
+    Object? currentLocation = const $CopyWithPlaceholder(),
+    Object? lastLocationUpdate = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? studentCard = const $CopyWithPlaceholder(),
+    Object? driverLicense = const $CopyWithPlaceholder(),
+    Object? vehicleCertificate = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+  }) {
+    return OrderCreateRequestDriver(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String?,
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String?,
+      studentId: studentId == const $CopyWithPlaceholder()
+          ? _value.studentId
+          // ignore: cast_nullable_to_non_nullable
+          : studentId as String?,
+      licenseNumber: licenseNumber == const $CopyWithPlaceholder()
+          ? _value.licenseNumber
+          // ignore: cast_nullable_to_non_nullable
+          : licenseNumber as String?,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as OrderCreateRequestDriverStatusEnum?,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num?,
+      isOnline: isOnline == const $CopyWithPlaceholder()
+          ? _value.isOnline
+          // ignore: cast_nullable_to_non_nullable
+          : isOnline as bool?,
+      currentLocation: currentLocation == const $CopyWithPlaceholder()
+          ? _value.currentLocation
+          // ignore: cast_nullable_to_non_nullable
+          : currentLocation as Location?,
+      lastLocationUpdate: lastLocationUpdate == const $CopyWithPlaceholder()
+          ? _value.lastLocationUpdate
+          // ignore: cast_nullable_to_non_nullable
+          : lastLocationUpdate as DateTime?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime?,
+      studentCard: studentCard == const $CopyWithPlaceholder()
+          ? _value.studentCard
+          // ignore: cast_nullable_to_non_nullable
+          : studentCard as String?,
+      driverLicense: driverLicense == const $CopyWithPlaceholder()
+          ? _value.driverLicense
+          // ignore: cast_nullable_to_non_nullable
+          : driverLicense as String?,
+      vehicleCertificate: vehicleCertificate == const $CopyWithPlaceholder()
+          ? _value.vehicleCertificate
+          // ignore: cast_nullable_to_non_nullable
+          : vehicleCertificate as String?,
+      user: user == const $CopyWithPlaceholder()
+          ? _value.user
+          // ignore: cast_nullable_to_non_nullable
+          : user as OrderCreateRequestUser?,
     );
+  }
+}
 
-Serializer<OrderCreateRequestDriverStatusEnum>
-_$orderCreateRequestDriverStatusEnumSerializer =
-    _$OrderCreateRequestDriverStatusEnumSerializer();
+extension $OrderCreateRequestDriverCopyWith on OrderCreateRequestDriver {
+  /// Returns a callable class that can be used as follows: `instanceOfOrderCreateRequestDriver.copyWith(...)` or like so:`instanceOfOrderCreateRequestDriver.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$OrderCreateRequestDriverCWProxy get copyWith =>
+      _$OrderCreateRequestDriverCWProxyImpl(this);
+}
 
-class _$OrderCreateRequestDriverStatusEnumSerializer
-    implements PrimitiveSerializer<OrderCreateRequestDriverStatusEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'pending': 'pending',
-    'approved': 'approved',
-    'rejected': 'rejected',
-    'active': 'active',
-    'inactive': 'inactive',
-    'suspended': 'suspended',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'pending': 'pending',
-    'approved': 'approved',
-    'rejected': 'rejected',
-    'active': 'active',
-    'inactive': 'inactive',
-    'suspended': 'suspended',
-  };
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-  @override
-  final Iterable<Type> types = const <Type>[OrderCreateRequestDriverStatusEnum];
-  @override
-  final String wireName = 'OrderCreateRequestDriverStatusEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    OrderCreateRequestDriverStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  OrderCreateRequestDriverStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => OrderCreateRequestDriverStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+OrderCreateRequestDriver _$OrderCreateRequestDriverFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderCreateRequestDriver', json, ($checkedConvert) {
+  final val = OrderCreateRequestDriver(
+    id: $checkedConvert('id', (v) => v as String?),
+    userId: $checkedConvert('userId', (v) => v as String?),
+    studentId: $checkedConvert('studentId', (v) => v as String?),
+    licenseNumber: $checkedConvert('licenseNumber', (v) => v as String?),
+    status: $checkedConvert(
+      'status',
+      (v) =>
+          $enumDecodeNullable(_$OrderCreateRequestDriverStatusEnumEnumMap, v),
+    ),
+    rating: $checkedConvert('rating', (v) => v as num?),
+    isOnline: $checkedConvert('isOnline', (v) => v as bool?),
+    currentLocation: $checkedConvert(
+      'currentLocation',
+      (v) => v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+    ),
+    lastLocationUpdate: $checkedConvert(
+      'lastLocationUpdate',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    createdAt: $checkedConvert(
+      'createdAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    studentCard: $checkedConvert('studentCard', (v) => v as String?),
+    driverLicense: $checkedConvert('driverLicense', (v) => v as String?),
+    vehicleCertificate: $checkedConvert(
+      'vehicleCertificate',
+      (v) => v as String?,
+    ),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null
+          ? null
+          : OrderCreateRequestUser.fromJson(v as Map<String, dynamic>),
+    ),
   );
-}
+  return val;
+});
 
-class _$OrderCreateRequestDriver extends OrderCreateRequestDriver {
-  @override
-  final String? id;
-  @override
-  final String? userId;
-  @override
-  final String? studentId;
-  @override
-  final String? licenseNumber;
-  @override
-  final OrderCreateRequestDriverStatusEnum? status;
-  @override
-  final num? rating;
-  @override
-  final bool? isOnline;
-  @override
-  final Location? currentLocation;
-  @override
-  final num? lastLocationUpdate;
-  @override
-  final num? createdAt;
-  @override
-  final DriverUpdateRequestUser? user;
+Map<String, dynamic> _$OrderCreateRequestDriverToJson(
+  OrderCreateRequestDriver instance,
+) => <String, dynamic>{
+  'id': ?instance.id,
+  'userId': ?instance.userId,
+  'studentId': ?instance.studentId,
+  'licenseNumber': ?instance.licenseNumber,
+  'status': ?_$OrderCreateRequestDriverStatusEnumEnumMap[instance.status],
+  'rating': ?instance.rating,
+  'isOnline': ?instance.isOnline,
+  'currentLocation': ?instance.currentLocation?.toJson(),
+  'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
+  'createdAt': ?instance.createdAt?.toIso8601String(),
+  'studentCard': ?instance.studentCard,
+  'driverLicense': ?instance.driverLicense,
+  'vehicleCertificate': ?instance.vehicleCertificate,
+  'user': ?instance.user?.toJson(),
+};
 
-  factory _$OrderCreateRequestDriver([
-    void Function(OrderCreateRequestDriverBuilder)? updates,
-  ]) => (OrderCreateRequestDriverBuilder()..update(updates))._build();
-
-  _$OrderCreateRequestDriver._({
-    this.id,
-    this.userId,
-    this.studentId,
-    this.licenseNumber,
-    this.status,
-    this.rating,
-    this.isOnline,
-    this.currentLocation,
-    this.lastLocationUpdate,
-    this.createdAt,
-    this.user,
-  }) : super._();
-  @override
-  OrderCreateRequestDriver rebuild(
-    void Function(OrderCreateRequestDriverBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
-
-  @override
-  OrderCreateRequestDriverBuilder toBuilder() =>
-      OrderCreateRequestDriverBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is OrderCreateRequestDriver &&
-        id == other.id &&
-        userId == other.userId &&
-        studentId == other.studentId &&
-        licenseNumber == other.licenseNumber &&
-        status == other.status &&
-        rating == other.rating &&
-        isOnline == other.isOnline &&
-        currentLocation == other.currentLocation &&
-        lastLocationUpdate == other.lastLocationUpdate &&
-        createdAt == other.createdAt &&
-        user == other.user;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, userId.hashCode);
-    _$hash = $jc(_$hash, studentId.hashCode);
-    _$hash = $jc(_$hash, licenseNumber.hashCode);
-    _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, rating.hashCode);
-    _$hash = $jc(_$hash, isOnline.hashCode);
-    _$hash = $jc(_$hash, currentLocation.hashCode);
-    _$hash = $jc(_$hash, lastLocationUpdate.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, user.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'OrderCreateRequestDriver')
-          ..add('id', id)
-          ..add('userId', userId)
-          ..add('studentId', studentId)
-          ..add('licenseNumber', licenseNumber)
-          ..add('status', status)
-          ..add('rating', rating)
-          ..add('isOnline', isOnline)
-          ..add('currentLocation', currentLocation)
-          ..add('lastLocationUpdate', lastLocationUpdate)
-          ..add('createdAt', createdAt)
-          ..add('user', user))
-        .toString();
-  }
-}
-
-class OrderCreateRequestDriverBuilder
-    implements
-        Builder<OrderCreateRequestDriver, OrderCreateRequestDriverBuilder> {
-  _$OrderCreateRequestDriver? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _userId;
-  String? get userId => _$this._userId;
-  set userId(String? userId) => _$this._userId = userId;
-
-  String? _studentId;
-  String? get studentId => _$this._studentId;
-  set studentId(String? studentId) => _$this._studentId = studentId;
-
-  String? _licenseNumber;
-  String? get licenseNumber => _$this._licenseNumber;
-  set licenseNumber(String? licenseNumber) =>
-      _$this._licenseNumber = licenseNumber;
-
-  OrderCreateRequestDriverStatusEnum? _status;
-  OrderCreateRequestDriverStatusEnum? get status => _$this._status;
-  set status(OrderCreateRequestDriverStatusEnum? status) =>
-      _$this._status = status;
-
-  num? _rating;
-  num? get rating => _$this._rating;
-  set rating(num? rating) => _$this._rating = rating;
-
-  bool? _isOnline;
-  bool? get isOnline => _$this._isOnline;
-  set isOnline(bool? isOnline) => _$this._isOnline = isOnline;
-
-  LocationBuilder? _currentLocation;
-  LocationBuilder get currentLocation =>
-      _$this._currentLocation ??= LocationBuilder();
-  set currentLocation(LocationBuilder? currentLocation) =>
-      _$this._currentLocation = currentLocation;
-
-  num? _lastLocationUpdate;
-  num? get lastLocationUpdate => _$this._lastLocationUpdate;
-  set lastLocationUpdate(num? lastLocationUpdate) =>
-      _$this._lastLocationUpdate = lastLocationUpdate;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  DriverUpdateRequestUserBuilder? _user;
-  DriverUpdateRequestUserBuilder get user =>
-      _$this._user ??= DriverUpdateRequestUserBuilder();
-  set user(DriverUpdateRequestUserBuilder? user) => _$this._user = user;
-
-  OrderCreateRequestDriverBuilder() {
-    OrderCreateRequestDriver._defaults(this);
-  }
-
-  OrderCreateRequestDriverBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _userId = $v.userId;
-      _studentId = $v.studentId;
-      _licenseNumber = $v.licenseNumber;
-      _status = $v.status;
-      _rating = $v.rating;
-      _isOnline = $v.isOnline;
-      _currentLocation = $v.currentLocation?.toBuilder();
-      _lastLocationUpdate = $v.lastLocationUpdate;
-      _createdAt = $v.createdAt;
-      _user = $v.user?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(OrderCreateRequestDriver other) {
-    _$v = other as _$OrderCreateRequestDriver;
-  }
-
-  @override
-  void update(void Function(OrderCreateRequestDriverBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  OrderCreateRequestDriver build() => _build();
-
-  _$OrderCreateRequestDriver _build() {
-    _$OrderCreateRequestDriver _$result;
-    try {
-      _$result =
-          _$v ??
-          _$OrderCreateRequestDriver._(
-            id: id,
-            userId: userId,
-            studentId: studentId,
-            licenseNumber: licenseNumber,
-            status: status,
-            rating: rating,
-            isOnline: isOnline,
-            currentLocation: _currentLocation?.build(),
-            lastLocationUpdate: lastLocationUpdate,
-            createdAt: createdAt,
-            user: _user?.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'currentLocation';
-        _currentLocation?.build();
-
-        _$failedField = 'user';
-        _user?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'OrderCreateRequestDriver',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$OrderCreateRequestDriverStatusEnumEnumMap = {
+  OrderCreateRequestDriverStatusEnum.pending: 'pending',
+  OrderCreateRequestDriverStatusEnum.approved: 'approved',
+  OrderCreateRequestDriverStatusEnum.rejected: 'rejected',
+  OrderCreateRequestDriverStatusEnum.active: 'active',
+  OrderCreateRequestDriverStatusEnum.inactive: 'inactive',
+  OrderCreateRequestDriverStatusEnum.suspended: 'suspended',
+};

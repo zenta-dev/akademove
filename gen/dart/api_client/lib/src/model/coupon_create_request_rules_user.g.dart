@@ -3,94 +3,72 @@
 part of 'coupon_create_request_rules_user.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$CouponCreateRequestRulesUser extends CouponCreateRequestRulesUser {
-  @override
-  final bool? newUserOnly;
+abstract class _$CouponCreateRequestRulesUserCWProxy {
+  CouponCreateRequestRulesUser newUserOnly(bool? newUserOnly);
 
-  factory _$CouponCreateRequestRulesUser([
-    void Function(CouponCreateRequestRulesUserBuilder)? updates,
-  ]) => (CouponCreateRequestRulesUserBuilder()..update(updates))._build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRulesUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRulesUser(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRulesUser call({bool? newUserOnly});
+}
 
-  _$CouponCreateRequestRulesUser._({this.newUserOnly}) : super._();
-  @override
-  CouponCreateRequestRulesUser rebuild(
-    void Function(CouponCreateRequestRulesUserBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreateRequestRulesUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreateRequestRulesUser.copyWith.fieldName(...)`
+class _$CouponCreateRequestRulesUserCWProxyImpl
+    implements _$CouponCreateRequestRulesUserCWProxy {
+  const _$CouponCreateRequestRulesUserCWProxyImpl(this._value);
 
-  @override
-  CouponCreateRequestRulesUserBuilder toBuilder() =>
-      CouponCreateRequestRulesUserBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is CouponCreateRequestRulesUser &&
-        newUserOnly == other.newUserOnly;
-  }
+  final CouponCreateRequestRulesUser _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, newUserOnly.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  CouponCreateRequestRulesUser newUserOnly(bool? newUserOnly) =>
+      this(newUserOnly: newUserOnly);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(
-      r'CouponCreateRequestRulesUser',
-    )..add('newUserOnly', newUserOnly)).toString();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRulesUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRulesUser(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRulesUser call({
+    Object? newUserOnly = const $CopyWithPlaceholder(),
+  }) {
+    return CouponCreateRequestRulesUser(
+      newUserOnly: newUserOnly == const $CopyWithPlaceholder()
+          ? _value.newUserOnly
+          // ignore: cast_nullable_to_non_nullable
+          : newUserOnly as bool?,
+    );
   }
 }
 
-class CouponCreateRequestRulesUserBuilder
-    implements
-        Builder<
-          CouponCreateRequestRulesUser,
-          CouponCreateRequestRulesUserBuilder
-        > {
-  _$CouponCreateRequestRulesUser? _$v;
-
-  bool? _newUserOnly;
-  bool? get newUserOnly => _$this._newUserOnly;
-  set newUserOnly(bool? newUserOnly) => _$this._newUserOnly = newUserOnly;
-
-  CouponCreateRequestRulesUserBuilder() {
-    CouponCreateRequestRulesUser._defaults(this);
-  }
-
-  CouponCreateRequestRulesUserBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _newUserOnly = $v.newUserOnly;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(CouponCreateRequestRulesUser other) {
-    _$v = other as _$CouponCreateRequestRulesUser;
-  }
-
-  @override
-  void update(void Function(CouponCreateRequestRulesUserBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  CouponCreateRequestRulesUser build() => _build();
-
-  _$CouponCreateRequestRulesUser _build() {
-    final _$result =
-        _$v ?? _$CouponCreateRequestRulesUser._(newUserOnly: newUserOnly);
-    replace(_$result);
-    return _$result;
-  }
+extension $CouponCreateRequestRulesUserCopyWith
+    on CouponCreateRequestRulesUser {
+  /// Returns a callable class that can be used as follows: `instanceOfCouponCreateRequestRulesUser.copyWith(...)` or like so:`instanceOfCouponCreateRequestRulesUser.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$CouponCreateRequestRulesUserCWProxy get copyWith =>
+      _$CouponCreateRequestRulesUserCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+CouponCreateRequestRulesUser _$CouponCreateRequestRulesUserFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('CouponCreateRequestRulesUser', json, ($checkedConvert) {
+  final val = CouponCreateRequestRulesUser(
+    newUserOnly: $checkedConvert('newUserOnly', (v) => v as bool?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$CouponCreateRequestRulesUserToJson(
+  CouponCreateRequestRulesUser instance,
+) => <String, dynamic>{'newUserOnly': ?instance.newUserOnly};

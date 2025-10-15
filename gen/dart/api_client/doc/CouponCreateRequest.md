@@ -14,8 +14,8 @@ Name | Type | Description | Notes
 **discountAmount** | **num** |  | [optional] 
 **discountPercentage** | **num** |  | [optional] 
 **usageLimit** | **num** |  | 
-**periodStart** | **num** | unix timestamp format | 
-**periodEnd** | **num** | unix timestamp format | 
+**periodStart** | [**DateTime**](DateTime.md) |  | 
+**periodEnd** | [**DateTime**](DateTime.md) |  | 
 **isActive** | **bool** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

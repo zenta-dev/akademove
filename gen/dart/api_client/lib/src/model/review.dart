@@ -3,242 +3,113 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'review.g.dart';
 
-/// Review
-///
-/// Properties:
-/// * [id] 
-/// * [orderId] 
-/// * [fromUserId] 
-/// * [toUserId] 
-/// * [category] 
-/// * [score] 
-/// * [comment] 
-/// * [createdAt] - unix timestamp format
-@BuiltValue()
-abstract class Review implements Built<Review, ReviewBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Review {
+  /// Returns a new [Review] instance.
+  Review({
+    required this.id,
 
-  @BuiltValueField(wireName: r'orderId')
-  String get orderId;
+    required this.orderId,
 
-  @BuiltValueField(wireName: r'fromUserId')
-  String get fromUserId;
+    required this.fromUserId,
 
-  @BuiltValueField(wireName: r'toUserId')
-  String get toUserId;
+    required this.toUserId,
 
-  @BuiltValueField(wireName: r'category')
-  ReviewCategoryEnum? get category;
-  // enum categoryEnum {  cleanliness,  courtesy,  other,  };
+    required this.category,
 
-  @BuiltValueField(wireName: r'score')
-  num get score;
+    required this.score,
 
-  @BuiltValueField(wireName: r'comment')
-  String? get comment;
+    this.comment = '',
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'createdAt')
-  num get createdAt;
+    required this.createdAt,
+  });
 
-  Review._();
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  factory Review([void updates(ReviewBuilder b)]) = _$Review;
+  @JsonKey(name: r'orderId', required: true, includeIfNull: false)
+  final String orderId;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReviewBuilder b) => b
-      ..category = const ReviewCategoryEnum._('other')
-      ..comment = '';
+  @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
+  final String fromUserId;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Review> get serializer => _$ReviewSerializer();
-}
+  @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
+  final String toUserId;
 
-class _$ReviewSerializer implements PrimitiveSerializer<Review> {
-  @override
-  final Iterable<Type> types = const [Review, _$Review];
+  @JsonKey(name: r'category', required: true, includeIfNull: false)
+  final ReviewCategoryEnum category;
 
-  @override
-  final String wireName = r'Review';
+  @JsonKey(name: r'score', required: true, includeIfNull: false)
+  final num score;
 
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Review object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-    yield r'orderId';
-    yield serializers.serialize(
-      object.orderId,
-      specifiedType: const FullType(String),
-    );
-    yield r'fromUserId';
-    yield serializers.serialize(
-      object.fromUserId,
-      specifiedType: const FullType(String),
-    );
-    yield r'toUserId';
-    yield serializers.serialize(
-      object.toUserId,
-      specifiedType: const FullType(String),
-    );
-    if (object.category != null) {
-      yield r'category';
-      yield serializers.serialize(
-        object.category,
-        specifiedType: const FullType(ReviewCategoryEnum),
-      );
-    }
-    yield r'score';
-    yield serializers.serialize(
-      object.score,
-      specifiedType: const FullType(num),
-    );
-    if (object.comment != null) {
-      yield r'comment';
-      yield serializers.serialize(
-        object.comment,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'createdAt';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(num),
-    );
-  }
+  @JsonKey(
+    defaultValue: '',
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? comment;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Review object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReviewBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        case r'orderId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.orderId = valueDes;
-          break;
-        case r'fromUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.fromUserId = valueDes;
-          break;
-        case r'toUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.toUserId = valueDes;
-          break;
-        case r'category':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReviewCategoryEnum),
-          ) as ReviewCategoryEnum;
-          result.category = valueDes;
-          break;
-        case r'score':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.score = valueDes;
-          break;
-        case r'comment':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.comment = valueDes;
-          break;
-        case r'createdAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.createdAt = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Review &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.fromUserId == fromUserId &&
+          other.toUserId == toUserId &&
+          other.category == category &&
+          other.score == score &&
+          other.comment == comment &&
+          other.createdAt == createdAt;
 
   @override
-  Review deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReviewBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      id.hashCode +
+      orderId.hashCode +
+      fromUserId.hashCode +
+      toUserId.hashCode +
+      category.hashCode +
+      score.hashCode +
+      comment.hashCode +
+      createdAt.hashCode;
+
+  factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReviewToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class ReviewCategoryEnum extends EnumClass {
+enum ReviewCategoryEnum {
+  @JsonValue(r'cleanliness')
+  cleanliness(r'cleanliness'),
+  @JsonValue(r'courtesy')
+  courtesy(r'courtesy'),
+  @JsonValue(r'other')
+  other(r'other');
 
-  @BuiltValueEnumConst(wireName: r'cleanliness')
-  static const ReviewCategoryEnum cleanliness = _$reviewCategoryEnum_cleanliness;
-  @BuiltValueEnumConst(wireName: r'courtesy')
-  static const ReviewCategoryEnum courtesy = _$reviewCategoryEnum_courtesy;
-  @BuiltValueEnumConst(wireName: r'other')
-  static const ReviewCategoryEnum other = _$reviewCategoryEnum_other;
+  const ReviewCategoryEnum(this.value);
 
-  static Serializer<ReviewCategoryEnum> get serializer => _$reviewCategoryEnumSerializer;
+  final String value;
 
-  const ReviewCategoryEnum._(String name): super(name);
-
-  static BuiltSet<ReviewCategoryEnum> get values => _$reviewCategoryEnumValues;
-  static ReviewCategoryEnum valueOf(String name) => _$reviewCategoryEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

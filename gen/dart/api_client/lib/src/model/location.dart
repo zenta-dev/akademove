@@ -3,120 +3,43 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'location.g.dart';
 
-/// Location
-///
-/// Properties:
-/// * [lat] 
-/// * [lng] 
-@BuiltValue()
-abstract class Location implements Built<Location, LocationBuilder> {
-  @BuiltValueField(wireName: r'lat')
-  num get lat;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Location {
+  /// Returns a new [Location] instance.
+  Location({required this.lat, required this.lng});
 
-  @BuiltValueField(wireName: r'lng')
-  num get lng;
+  @JsonKey(name: r'lat', required: true, includeIfNull: false)
+  final num lat;
 
-  Location._();
-
-  factory Location([void updates(LocationBuilder b)]) = _$Location;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(LocationBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Location> get serializer => _$LocationSerializer();
-}
-
-class _$LocationSerializer implements PrimitiveSerializer<Location> {
-  @override
-  final Iterable<Type> types = const [Location, _$Location];
+  @JsonKey(name: r'lng', required: true, includeIfNull: false)
+  final num lng;
 
   @override
-  final String wireName = r'Location';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Location object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'lat';
-    yield serializers.serialize(
-      object.lat,
-      specifiedType: const FullType(num),
-    );
-    yield r'lng';
-    yield serializers.serialize(
-      object.lng,
-      specifiedType: const FullType(num),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Location && other.lat == lat && other.lng == lng;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Location object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => lat.hashCode + lng.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required LocationBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'lat':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.lat = valueDes;
-          break;
-        case r'lng':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.lng = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
 
   @override
-  Location deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = LocationBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

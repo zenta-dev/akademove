@@ -3,260 +3,184 @@
 part of 'review.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const ReviewCategoryEnum _$reviewCategoryEnum_cleanliness =
-    const ReviewCategoryEnum._('cleanliness');
-const ReviewCategoryEnum _$reviewCategoryEnum_courtesy =
-    const ReviewCategoryEnum._('courtesy');
-const ReviewCategoryEnum _$reviewCategoryEnum_other =
-    const ReviewCategoryEnum._('other');
+abstract class _$ReviewCWProxy {
+  Review id(String id);
 
-ReviewCategoryEnum _$reviewCategoryEnumValueOf(String name) {
-  switch (name) {
-    case 'cleanliness':
-      return _$reviewCategoryEnum_cleanliness;
-    case 'courtesy':
-      return _$reviewCategoryEnum_courtesy;
-    case 'other':
-      return _$reviewCategoryEnum_other;
-    default:
-      throw ArgumentError(name);
+  Review orderId(String orderId);
+
+  Review fromUserId(String fromUserId);
+
+  Review toUserId(String toUserId);
+
+  Review category(ReviewCategoryEnum category);
+
+  Review score(num score);
+
+  Review comment(String? comment);
+
+  Review createdAt(DateTime createdAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Review(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Review(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Review call({
+    String id,
+    String orderId,
+    String fromUserId,
+    String toUserId,
+    ReviewCategoryEnum category,
+    num score,
+    String? comment,
+    DateTime createdAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReview.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReview.copyWith.fieldName(...)`
+class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
+  const _$ReviewCWProxyImpl(this._value);
+
+  final Review _value;
+
+  @override
+  Review id(String id) => this(id: id);
+
+  @override
+  Review orderId(String orderId) => this(orderId: orderId);
+
+  @override
+  Review fromUserId(String fromUserId) => this(fromUserId: fromUserId);
+
+  @override
+  Review toUserId(String toUserId) => this(toUserId: toUserId);
+
+  @override
+  Review category(ReviewCategoryEnum category) => this(category: category);
+
+  @override
+  Review score(num score) => this(score: score);
+
+  @override
+  Review comment(String? comment) => this(comment: comment);
+
+  @override
+  Review createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Review(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Review(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Review call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? orderId = const $CopyWithPlaceholder(),
+    Object? fromUserId = const $CopyWithPlaceholder(),
+    Object? toUserId = const $CopyWithPlaceholder(),
+    Object? category = const $CopyWithPlaceholder(),
+    Object? score = const $CopyWithPlaceholder(),
+    Object? comment = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+  }) {
+    return Review(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      orderId: orderId == const $CopyWithPlaceholder()
+          ? _value.orderId
+          // ignore: cast_nullable_to_non_nullable
+          : orderId as String,
+      fromUserId: fromUserId == const $CopyWithPlaceholder()
+          ? _value.fromUserId
+          // ignore: cast_nullable_to_non_nullable
+          : fromUserId as String,
+      toUserId: toUserId == const $CopyWithPlaceholder()
+          ? _value.toUserId
+          // ignore: cast_nullable_to_non_nullable
+          : toUserId as String,
+      category: category == const $CopyWithPlaceholder()
+          ? _value.category
+          // ignore: cast_nullable_to_non_nullable
+          : category as ReviewCategoryEnum,
+      score: score == const $CopyWithPlaceholder()
+          ? _value.score
+          // ignore: cast_nullable_to_non_nullable
+          : score as num,
+      comment: comment == const $CopyWithPlaceholder()
+          ? _value.comment
+          // ignore: cast_nullable_to_non_nullable
+          : comment as String?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+    );
   }
 }
 
-final BuiltSet<ReviewCategoryEnum> _$reviewCategoryEnumValues =
-    BuiltSet<ReviewCategoryEnum>(const <ReviewCategoryEnum>[
-      _$reviewCategoryEnum_cleanliness,
-      _$reviewCategoryEnum_courtesy,
-      _$reviewCategoryEnum_other,
-    ]);
-
-Serializer<ReviewCategoryEnum> _$reviewCategoryEnumSerializer =
-    _$ReviewCategoryEnumSerializer();
-
-class _$ReviewCategoryEnumSerializer
-    implements PrimitiveSerializer<ReviewCategoryEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'cleanliness': 'cleanliness',
-    'courtesy': 'courtesy',
-    'other': 'other',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'cleanliness': 'cleanliness',
-    'courtesy': 'courtesy',
-    'other': 'other',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[ReviewCategoryEnum];
-  @override
-  final String wireName = 'ReviewCategoryEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    ReviewCategoryEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ReviewCategoryEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ReviewCategoryEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+extension $ReviewCopyWith on Review {
+  /// Returns a callable class that can be used as follows: `instanceOfReview.copyWith(...)` or like so:`instanceOfReview.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ReviewCWProxy get copyWith => _$ReviewCWProxyImpl(this);
 }
 
-class _$Review extends Review {
-  @override
-  final String id;
-  @override
-  final String orderId;
-  @override
-  final String fromUserId;
-  @override
-  final String toUserId;
-  @override
-  final ReviewCategoryEnum? category;
-  @override
-  final num score;
-  @override
-  final String? comment;
-  @override
-  final num createdAt;
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-  factory _$Review([void Function(ReviewBuilder)? updates]) =>
-      (ReviewBuilder()..update(updates))._build();
+Review _$ReviewFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Review', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'orderId',
+          'fromUserId',
+          'toUserId',
+          'category',
+          'score',
+          'createdAt',
+        ],
+      );
+      final val = Review(
+        id: $checkedConvert('id', (v) => v as String),
+        orderId: $checkedConvert('orderId', (v) => v as String),
+        fromUserId: $checkedConvert('fromUserId', (v) => v as String),
+        toUserId: $checkedConvert('toUserId', (v) => v as String),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecode(_$ReviewCategoryEnumEnumMap, v),
+        ),
+        score: $checkedConvert('score', (v) => v as num),
+        comment: $checkedConvert('comment', (v) => v as String? ?? ''),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
 
-  _$Review._({
-    required this.id,
-    required this.orderId,
-    required this.fromUserId,
-    required this.toUserId,
-    this.category,
-    required this.score,
-    this.comment,
-    required this.createdAt,
-  }) : super._();
-  @override
-  Review rebuild(void Function(ReviewBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
+  'id': instance.id,
+  'orderId': instance.orderId,
+  'fromUserId': instance.fromUserId,
+  'toUserId': instance.toUserId,
+  'category': _$ReviewCategoryEnumEnumMap[instance.category]!,
+  'score': instance.score,
+  'comment': ?instance.comment,
+  'createdAt': instance.createdAt.toIso8601String(),
+};
 
-  @override
-  ReviewBuilder toBuilder() => ReviewBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Review &&
-        id == other.id &&
-        orderId == other.orderId &&
-        fromUserId == other.fromUserId &&
-        toUserId == other.toUserId &&
-        category == other.category &&
-        score == other.score &&
-        comment == other.comment &&
-        createdAt == other.createdAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, orderId.hashCode);
-    _$hash = $jc(_$hash, fromUserId.hashCode);
-    _$hash = $jc(_$hash, toUserId.hashCode);
-    _$hash = $jc(_$hash, category.hashCode);
-    _$hash = $jc(_$hash, score.hashCode);
-    _$hash = $jc(_$hash, comment.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Review')
-          ..add('id', id)
-          ..add('orderId', orderId)
-          ..add('fromUserId', fromUserId)
-          ..add('toUserId', toUserId)
-          ..add('category', category)
-          ..add('score', score)
-          ..add('comment', comment)
-          ..add('createdAt', createdAt))
-        .toString();
-  }
-}
-
-class ReviewBuilder implements Builder<Review, ReviewBuilder> {
-  _$Review? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _orderId;
-  String? get orderId => _$this._orderId;
-  set orderId(String? orderId) => _$this._orderId = orderId;
-
-  String? _fromUserId;
-  String? get fromUserId => _$this._fromUserId;
-  set fromUserId(String? fromUserId) => _$this._fromUserId = fromUserId;
-
-  String? _toUserId;
-  String? get toUserId => _$this._toUserId;
-  set toUserId(String? toUserId) => _$this._toUserId = toUserId;
-
-  ReviewCategoryEnum? _category;
-  ReviewCategoryEnum? get category => _$this._category;
-  set category(ReviewCategoryEnum? category) => _$this._category = category;
-
-  num? _score;
-  num? get score => _$this._score;
-  set score(num? score) => _$this._score = score;
-
-  String? _comment;
-  String? get comment => _$this._comment;
-  set comment(String? comment) => _$this._comment = comment;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  ReviewBuilder() {
-    Review._defaults(this);
-  }
-
-  ReviewBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _orderId = $v.orderId;
-      _fromUserId = $v.fromUserId;
-      _toUserId = $v.toUserId;
-      _category = $v.category;
-      _score = $v.score;
-      _comment = $v.comment;
-      _createdAt = $v.createdAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Review other) {
-    _$v = other as _$Review;
-  }
-
-  @override
-  void update(void Function(ReviewBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Review build() => _build();
-
-  _$Review _build() {
-    final _$result =
-        _$v ??
-        _$Review._(
-          id: BuiltValueNullFieldError.checkNotNull(id, r'Review', 'id'),
-          orderId: BuiltValueNullFieldError.checkNotNull(
-            orderId,
-            r'Review',
-            'orderId',
-          ),
-          fromUserId: BuiltValueNullFieldError.checkNotNull(
-            fromUserId,
-            r'Review',
-            'fromUserId',
-          ),
-          toUserId: BuiltValueNullFieldError.checkNotNull(
-            toUserId,
-            r'Review',
-            'toUserId',
-          ),
-          category: category,
-          score: BuiltValueNullFieldError.checkNotNull(
-            score,
-            r'Review',
-            'score',
-          ),
-          comment: comment,
-          createdAt: BuiltValueNullFieldError.checkNotNull(
-            createdAt,
-            r'Review',
-            'createdAt',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$ReviewCategoryEnumEnumMap = {
+  ReviewCategoryEnum.cleanliness: 'cleanliness',
+  ReviewCategoryEnum.courtesy: 'courtesy',
+  ReviewCategoryEnum.other: 'other',
+};

@@ -4,131 +4,25 @@
 
 import 'dart:async';
 
-import 'package:built_value/json_object.dart';
-import 'package:built_value/serializer.dart';
+// ignore: unused_import
+import 'dart:convert';
+import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_client/src/api_util.dart';
-import 'package:api_client/src/model/driver_create200_response.dart';
-import 'package:api_client/src/model/driver_create_request.dart';
+import 'package:api_client/src/model/driver_get200_response.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_remove200_response.dart';
-import 'package:api_client/src/model/driver_update_request.dart';
 
 class DriverApi {
-
   final Dio _dio;
 
-  final Serializers _serializers;
-
-  const DriverApi(this._dio, this._serializers);
-
-  /// driverCreate
-  /// 
-  ///
-  /// Parameters:
-  /// * [driverCreateRequest] 
-  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
-  /// * [headers] - Can be used to add additional headers to the request
-  /// * [extras] - Can be used to add flags to the request
-  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
-  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
-  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
-  ///
-  /// Returns a [Future] containing a [Response] with a [DriverCreate200Response] as data
-  /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverCreate200Response>> driverCreate({ 
-    required DriverCreateRequest driverCreateRequest,
-    CancelToken? cancelToken,
-    Map<String, dynamic>? headers,
-    Map<String, dynamic>? extra,
-    ValidateStatus? validateStatus,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) async {
-    final _path = r'/drivers';
-    final _options = Options(
-      method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
-      extra: <String, dynamic>{
-        'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
-        ],
-        ...?extra,
-      },
-      contentType: 'application/json',
-      validateStatus: validateStatus,
-    );
-
-    dynamic _bodyData;
-
-    try {
-      const _type = FullType(DriverCreateRequest);
-      _bodyData = _serializers.serialize(driverCreateRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
-      throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    final _response = await _dio.request<Object>(
-      _path,
-      data: _bodyData,
-      options: _options,
-      cancelToken: cancelToken,
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress,
-    );
-
-    DriverCreate200Response? _responseData;
-
-    try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DriverCreate200Response),
-      ) as DriverCreate200Response;
-
-    } catch (error, stackTrace) {
-      throw DioException(
-        requestOptions: _response.requestOptions,
-        response: _response,
-        type: DioExceptionType.unknown,
-        error: error,
-        stackTrace: stackTrace,
-      );
-    }
-
-    return Response<DriverCreate200Response>(
-      data: _responseData,
-      headers: _response.headers,
-      isRedirect: _response.isRedirect,
-      requestOptions: _response.requestOptions,
-      redirects: _response.redirects,
-      statusCode: _response.statusCode,
-      statusMessage: _response.statusMessage,
-      extra: _response.extra,
-    );
-  }
+  const DriverApi(this._dio);
 
   /// driverGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -136,9 +30,9 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverCreate200Response] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverCreate200Response>> driverGet({ 
+  Future<Response<DriverGet200Response>> driverGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -147,19 +41,18 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -174,15 +67,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverCreate200Response? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DriverCreate200Response),
-      ) as DriverCreate200Response;
-
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -193,7 +88,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverCreate200Response>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -206,12 +101,15 @@ class DriverApi {
   }
 
   /// driverList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [page] 
-  /// * [limit] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -221,10 +119,13 @@ class DriverApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverList200Response>> driverList({ 
+  Future<Response<DriverList200Response>> driverList({
     String? cursor,
-    JsonObject? page,
-    JsonObject? limit,
+    Object? limit,
+    Object? page,
+    String? query,
+    String? sortBy,
+    String? order = 'desc',
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -235,16 +136,10 @@ class DriverApi {
     final _path = r'/drivers';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -252,9 +147,12 @@ class DriverApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (cursor != null) r'cursor': encodeQueryParameter(_serializers, cursor, const FullType(String)),
-      if (page != null) r'page': encodeQueryParameter(_serializers, page, const FullType(JsonObject)),
-      if (limit != null) r'limit': encodeQueryParameter(_serializers, limit, const FullType(JsonObject)),
+      if (cursor != null) r'cursor': cursor,
+      if (limit != null) r'limit': limit,
+      if (page != null) r'page': page,
+      if (query != null) r'query': query,
+      if (sortBy != null) r'sortBy': sortBy,
+      if (order != null) r'order': order,
     };
 
     final _response = await _dio.request<Object>(
@@ -269,12 +167,14 @@ class DriverApi {
     DriverList200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DriverList200Response),
-      ) as DriverList200Response;
-
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverList200Response, DriverList200Response>(
+              rawData,
+              'DriverList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -298,10 +198,10 @@ class DriverApi {
   }
 
   /// driverRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -311,7 +211,7 @@ class DriverApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> driverRemove({ 
+  Future<Response<DriverRemove200Response>> driverRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -320,19 +220,18 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -350,12 +249,14 @@ class DriverApi {
     DriverRemove200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DriverRemove200Response),
-      ) as DriverRemove200Response;
-
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverRemove200Response, DriverRemove200Response>(
+              rawData,
+              'DriverRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -379,11 +280,15 @@ class DriverApi {
   }
 
   /// driverUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [driverUpdateRequest] 
+  /// * [id]
+  /// * [studentId]
+  /// * [licenseNumber]
+  /// * [studentCard]
+  /// * [driverLicense]
+  /// * [vehicleCertificate]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -391,11 +296,15 @@ class DriverApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverCreate200Response] as data
+  /// Returns a [Future] containing a [Response] with a [DriverGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverCreate200Response>> driverUpdate({ 
+  Future<Response<DriverGet200Response>> driverUpdate({
     required String id,
-    required DriverUpdateRequest driverUpdateRequest,
+    String? studentId,
+    String? licenseNumber,
+    MultipartFile? studentCard,
+    MultipartFile? driverLicense,
+    MultipartFile? vehicleCertificate,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -403,38 +312,39 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/drivers/{id}'.replaceAll('{' r'id' '}', encodeQueryParameter(_serializers, id, const FullType(String)).toString());
+    final _path = r'/drivers/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      const _type = FullType(DriverUpdateRequest);
-      _bodyData = _serializers.serialize(driverUpdateRequest, specifiedType: _type);
-
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        if (studentId != null) r'studentId': studentId,
+        if (licenseNumber != null) r'licenseNumber': licenseNumber,
+        if (studentCard != null) r'studentCard': studentCard,
+        if (driverLicense != null) r'driverLicense': driverLicense,
+        if (vehicleCertificate != null)
+          r'vehicleCertificate': vehicleCertificate,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -450,15 +360,17 @@ class DriverApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverCreate200Response? _responseData;
+    DriverGet200Response? _responseData;
 
     try {
-      final rawResponse = _response.data;
-      _responseData = rawResponse == null ? null : _serializers.deserialize(
-        rawResponse,
-        specifiedType: const FullType(DriverCreate200Response),
-      ) as DriverCreate200Response;
-
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverGet200Response, DriverGet200Response>(
+              rawData,
+              'DriverGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -469,7 +381,7 @@ class DriverApi {
       );
     }
 
-    return Response<DriverCreate200Response>(
+    return Response<DriverGet200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -480,5 +392,4 @@ class DriverApi {
       extra: _response.extra,
     );
   }
-
 }

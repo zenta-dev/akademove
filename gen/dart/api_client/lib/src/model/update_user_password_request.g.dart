@@ -3,117 +3,87 @@
 part of 'update_user_password_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$UpdateUserPasswordRequest extends UpdateUserPasswordRequest {
-  @override
-  final String password;
-  @override
-  final String confirmPassword;
+abstract class _$UpdateUserPasswordRequestCWProxy {
+  UpdateUserPasswordRequest password(String password);
 
-  factory _$UpdateUserPasswordRequest([
-    void Function(UpdateUserPasswordRequestBuilder)? updates,
-  ]) => (UpdateUserPasswordRequestBuilder()..update(updates))._build();
+  UpdateUserPasswordRequest confirmPassword(String confirmPassword);
 
-  _$UpdateUserPasswordRequest._({
-    required this.password,
-    required this.confirmPassword,
-  }) : super._();
-  @override
-  UpdateUserPasswordRequest rebuild(
-    void Function(UpdateUserPasswordRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPasswordRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UpdateUserPasswordRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UpdateUserPasswordRequest call({String password, String confirmPassword});
+}
 
-  @override
-  UpdateUserPasswordRequestBuilder toBuilder() =>
-      UpdateUserPasswordRequestBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateUserPasswordRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateUserPasswordRequest.copyWith.fieldName(...)`
+class _$UpdateUserPasswordRequestCWProxyImpl
+    implements _$UpdateUserPasswordRequestCWProxy {
+  const _$UpdateUserPasswordRequestCWProxyImpl(this._value);
+
+  final UpdateUserPasswordRequest _value;
 
   @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is UpdateUserPasswordRequest &&
-        password == other.password &&
-        confirmPassword == other.confirmPassword;
-  }
+  UpdateUserPasswordRequest password(String password) =>
+      this(password: password);
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, password.hashCode);
-    _$hash = $jc(_$hash, confirmPassword.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  UpdateUserPasswordRequest confirmPassword(String confirmPassword) =>
+      this(confirmPassword: confirmPassword);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'UpdateUserPasswordRequest')
-          ..add('password', password)
-          ..add('confirmPassword', confirmPassword))
-        .toString();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPasswordRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UpdateUserPasswordRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UpdateUserPasswordRequest call({
+    Object? password = const $CopyWithPlaceholder(),
+    Object? confirmPassword = const $CopyWithPlaceholder(),
+  }) {
+    return UpdateUserPasswordRequest(
+      password: password == const $CopyWithPlaceholder()
+          ? _value.password
+          // ignore: cast_nullable_to_non_nullable
+          : password as String,
+      confirmPassword: confirmPassword == const $CopyWithPlaceholder()
+          ? _value.confirmPassword
+          // ignore: cast_nullable_to_non_nullable
+          : confirmPassword as String,
+    );
   }
 }
 
-class UpdateUserPasswordRequestBuilder
-    implements
-        Builder<UpdateUserPasswordRequest, UpdateUserPasswordRequestBuilder> {
-  _$UpdateUserPasswordRequest? _$v;
-
-  String? _password;
-  String? get password => _$this._password;
-  set password(String? password) => _$this._password = password;
-
-  String? _confirmPassword;
-  String? get confirmPassword => _$this._confirmPassword;
-  set confirmPassword(String? confirmPassword) =>
-      _$this._confirmPassword = confirmPassword;
-
-  UpdateUserPasswordRequestBuilder() {
-    UpdateUserPasswordRequest._defaults(this);
-  }
-
-  UpdateUserPasswordRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _password = $v.password;
-      _confirmPassword = $v.confirmPassword;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(UpdateUserPasswordRequest other) {
-    _$v = other as _$UpdateUserPasswordRequest;
-  }
-
-  @override
-  void update(void Function(UpdateUserPasswordRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  UpdateUserPasswordRequest build() => _build();
-
-  _$UpdateUserPasswordRequest _build() {
-    final _$result =
-        _$v ??
-        _$UpdateUserPasswordRequest._(
-          password: BuiltValueNullFieldError.checkNotNull(
-            password,
-            r'UpdateUserPasswordRequest',
-            'password',
-          ),
-          confirmPassword: BuiltValueNullFieldError.checkNotNull(
-            confirmPassword,
-            r'UpdateUserPasswordRequest',
-            'confirmPassword',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $UpdateUserPasswordRequestCopyWith on UpdateUserPasswordRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfUpdateUserPasswordRequest.copyWith(...)` or like so:`instanceOfUpdateUserPasswordRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$UpdateUserPasswordRequestCWProxy get copyWith =>
+      _$UpdateUserPasswordRequestCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UpdateUserPasswordRequest _$UpdateUserPasswordRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UpdateUserPasswordRequest', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['password', 'confirmPassword']);
+  final val = UpdateUserPasswordRequest(
+    password: $checkedConvert('password', (v) => v as String),
+    confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$UpdateUserPasswordRequestToJson(
+  UpdateUserPasswordRequest instance,
+) => <String, dynamic>{
+  'password': instance.password,
+  'confirmPassword': instance.confirmPassword,
+};

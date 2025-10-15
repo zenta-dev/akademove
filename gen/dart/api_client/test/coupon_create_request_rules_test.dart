@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponCreateRequestRules
 void main() {
-  final instance = CouponCreateRequestRulesBuilder();
-  // TODO add properties to the builder and call build()
+  final CouponCreateRequestRules? instance = /* CouponCreateRequestRules(...) */
+      null;
+  // TODO add properties to the entity
 
   group(CouponCreateRequestRules, () {
     // CouponCreateRequestRulesGeneral general
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `time`', () async {
       // TODO
     });
-
   });
 }

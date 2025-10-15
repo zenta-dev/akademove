@@ -3,168 +3,144 @@
 part of 'configuration.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$Configuration extends Configuration {
-  @override
-  final String key;
-  @override
-  final String name;
-  @override
-  final JsonObject? value;
-  @override
-  final String? description;
-  @override
-  final String updatedById;
-  @override
-  final num updatedAt;
+abstract class _$ConfigurationCWProxy {
+  Configuration key(String key);
 
-  factory _$Configuration([void Function(ConfigurationBuilder)? updates]) =>
-      (ConfigurationBuilder()..update(updates))._build();
+  Configuration name(String name);
 
-  _$Configuration._({
-    required this.key,
-    required this.name,
-    this.value,
-    this.description,
-    required this.updatedById,
-    required this.updatedAt,
-  }) : super._();
-  @override
-  Configuration rebuild(void Function(ConfigurationBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  Configuration value(Object? value);
 
-  @override
-  ConfigurationBuilder toBuilder() => ConfigurationBuilder()..replace(this);
+  Configuration description(String? description);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Configuration &&
-        key == other.key &&
-        name == other.name &&
-        value == other.value &&
-        description == other.description &&
-        updatedById == other.updatedById &&
-        updatedAt == other.updatedAt;
-  }
+  Configuration updatedById(String updatedById);
+
+  Configuration updatedAt(DateTime updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Configuration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Configuration(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Configuration call({
+    String key,
+    String name,
+    Object? value,
+    String? description,
+    String updatedById,
+    DateTime updatedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfConfiguration.copyWith.fieldName(...)`
+class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
+  const _$ConfigurationCWProxyImpl(this._value);
+
+  final Configuration _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, key.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, value.hashCode);
-    _$hash = $jc(_$hash, description.hashCode);
-    _$hash = $jc(_$hash, updatedById.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  Configuration key(String key) => this(key: key);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Configuration')
-          ..add('key', key)
-          ..add('name', name)
-          ..add('value', value)
-          ..add('description', description)
-          ..add('updatedById', updatedById)
-          ..add('updatedAt', updatedAt))
-        .toString();
+  Configuration name(String name) => this(name: name);
+
+  @override
+  Configuration value(Object? value) => this(value: value);
+
+  @override
+  Configuration description(String? description) =>
+      this(description: description);
+
+  @override
+  Configuration updatedById(String updatedById) =>
+      this(updatedById: updatedById);
+
+  @override
+  Configuration updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Configuration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Configuration(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Configuration call({
+    Object? key = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? value = const $CopyWithPlaceholder(),
+    Object? description = const $CopyWithPlaceholder(),
+    Object? updatedById = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return Configuration(
+      key: key == const $CopyWithPlaceholder()
+          ? _value.key
+          // ignore: cast_nullable_to_non_nullable
+          : key as String,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      value: value == const $CopyWithPlaceholder()
+          ? _value.value
+          // ignore: cast_nullable_to_non_nullable
+          : value as Object?,
+      description: description == const $CopyWithPlaceholder()
+          ? _value.description
+          // ignore: cast_nullable_to_non_nullable
+          : description as String?,
+      updatedById: updatedById == const $CopyWithPlaceholder()
+          ? _value.updatedById
+          // ignore: cast_nullable_to_non_nullable
+          : updatedById as String,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+    );
   }
 }
 
-class ConfigurationBuilder
-    implements Builder<Configuration, ConfigurationBuilder> {
-  _$Configuration? _$v;
-
-  String? _key;
-  String? get key => _$this._key;
-  set key(String? key) => _$this._key = key;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  JsonObject? _value;
-  JsonObject? get value => _$this._value;
-  set value(JsonObject? value) => _$this._value = value;
-
-  String? _description;
-  String? get description => _$this._description;
-  set description(String? description) => _$this._description = description;
-
-  String? _updatedById;
-  String? get updatedById => _$this._updatedById;
-  set updatedById(String? updatedById) => _$this._updatedById = updatedById;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  ConfigurationBuilder() {
-    Configuration._defaults(this);
-  }
-
-  ConfigurationBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _key = $v.key;
-      _name = $v.name;
-      _value = $v.value;
-      _description = $v.description;
-      _updatedById = $v.updatedById;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Configuration other) {
-    _$v = other as _$Configuration;
-  }
-
-  @override
-  void update(void Function(ConfigurationBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Configuration build() => _build();
-
-  _$Configuration _build() {
-    final _$result =
-        _$v ??
-        _$Configuration._(
-          key: BuiltValueNullFieldError.checkNotNull(
-            key,
-            r'Configuration',
-            'key',
-          ),
-          name: BuiltValueNullFieldError.checkNotNull(
-            name,
-            r'Configuration',
-            'name',
-          ),
-          value: value,
-          description: description,
-          updatedById: BuiltValueNullFieldError.checkNotNull(
-            updatedById,
-            r'Configuration',
-            'updatedById',
-          ),
-          updatedAt: BuiltValueNullFieldError.checkNotNull(
-            updatedAt,
-            r'Configuration',
-            'updatedAt',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $ConfigurationCopyWith on Configuration {
+  /// Returns a callable class that can be used as follows: `instanceOfConfiguration.copyWith(...)` or like so:`instanceOfConfiguration.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ConfigurationCWProxy get copyWith => _$ConfigurationCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Configuration', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const ['key', 'name', 'updatedById', 'updatedAt'],
+      );
+      final val = Configuration(
+        key: $checkedConvert('key', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String),
+        value: $checkedConvert('value', (v) => v),
+        description: $checkedConvert('description', (v) => v as String?),
+        updatedById: $checkedConvert('updatedById', (v) => v as String),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$ConfigurationToJson(Configuration instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'name': instance.name,
+      'value': ?instance.value,
+      'description': ?instance.description,
+      'updatedById': instance.updatedById,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };

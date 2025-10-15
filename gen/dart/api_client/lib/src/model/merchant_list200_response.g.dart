@@ -3,126 +3,107 @@
 part of 'merchant_list200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$MerchantList200Response extends MerchantList200Response {
-  @override
-  final String message;
-  @override
-  final BuiltList<Merchant> data;
+abstract class _$MerchantList200ResponseCWProxy {
+  MerchantList200Response message(String message);
 
-  factory _$MerchantList200Response([
-    void Function(MerchantList200ResponseBuilder)? updates,
-  ]) => (MerchantList200ResponseBuilder()..update(updates))._build();
+  MerchantList200Response data(List<Merchant> data);
 
-  _$MerchantList200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  MerchantList200Response rebuild(
-    void Function(MerchantList200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  MerchantList200Response totalPages(num? totalPages);
 
-  @override
-  MerchantList200ResponseBuilder toBuilder() =>
-      MerchantList200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantList200Response call({
+    String message,
+    List<Merchant> data,
+    num? totalPages,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is MerchantList200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantList200Response.copyWith.fieldName(...)`
+class _$MerchantList200ResponseCWProxyImpl
+    implements _$MerchantList200ResponseCWProxy {
+  const _$MerchantList200ResponseCWProxyImpl(this._value);
+
+  final MerchantList200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  MerchantList200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'MerchantList200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  MerchantList200Response data(List<Merchant> data) => this(data: data);
+
+  @override
+  MerchantList200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantList200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return MerchantList200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as List<Merchant>,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class MerchantList200ResponseBuilder
-    implements
-        Builder<MerchantList200Response, MerchantList200ResponseBuilder> {
-  _$MerchantList200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ListBuilder<Merchant>? _data;
-  ListBuilder<Merchant> get data => _$this._data ??= ListBuilder<Merchant>();
-  set data(ListBuilder<Merchant>? data) => _$this._data = data;
-
-  MerchantList200ResponseBuilder() {
-    MerchantList200Response._defaults(this);
-  }
-
-  MerchantList200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(MerchantList200Response other) {
-    _$v = other as _$MerchantList200Response;
-  }
-
-  @override
-  void update(void Function(MerchantList200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  MerchantList200Response build() => _build();
-
-  _$MerchantList200Response _build() {
-    _$MerchantList200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$MerchantList200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'MerchantList200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'MerchantList200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $MerchantList200ResponseCopyWith on MerchantList200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfMerchantList200Response.copyWith(...)` or like so:`instanceOfMerchantList200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$MerchantList200ResponseCWProxy get copyWith =>
+      _$MerchantList200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+MerchantList200Response _$MerchantList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Merchant.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$MerchantList200ResponseToJson(
+  MerchantList200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'totalPages': ?instance.totalPages,
+};

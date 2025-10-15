@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReviewCreateRequest
 void main() {
-  final instance = ReviewCreateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final ReviewCreateRequest? instance = /* ReviewCreateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(ReviewCreateRequest, () {
     // String orderId
@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    // String category (default value: 'other')
+    // String category
     test('to test the property `category`', () async {
       // TODO
     });
@@ -36,6 +36,5 @@ void main() {
     test('to test the property `comment`', () async {
       // TODO
     });
-
   });
 }

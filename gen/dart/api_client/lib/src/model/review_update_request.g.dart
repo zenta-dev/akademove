@@ -3,229 +3,149 @@
 part of 'review_update_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const ReviewUpdateRequestCategoryEnum
-_$reviewUpdateRequestCategoryEnum_cleanliness =
-    const ReviewUpdateRequestCategoryEnum._('cleanliness');
-const ReviewUpdateRequestCategoryEnum
-_$reviewUpdateRequestCategoryEnum_courtesy =
-    const ReviewUpdateRequestCategoryEnum._('courtesy');
-const ReviewUpdateRequestCategoryEnum _$reviewUpdateRequestCategoryEnum_other =
-    const ReviewUpdateRequestCategoryEnum._('other');
+abstract class _$ReviewUpdateRequestCWProxy {
+  ReviewUpdateRequest orderId(String? orderId);
 
-ReviewUpdateRequestCategoryEnum _$reviewUpdateRequestCategoryEnumValueOf(
-  String name,
-) {
-  switch (name) {
-    case 'cleanliness':
-      return _$reviewUpdateRequestCategoryEnum_cleanliness;
-    case 'courtesy':
-      return _$reviewUpdateRequestCategoryEnum_courtesy;
-    case 'other':
-      return _$reviewUpdateRequestCategoryEnum_other;
-    default:
-      throw ArgumentError(name);
-  }
+  ReviewUpdateRequest fromUserId(String? fromUserId);
+
+  ReviewUpdateRequest toUserId(String? toUserId);
+
+  ReviewUpdateRequest category(ReviewUpdateRequestCategoryEnum? category);
+
+  ReviewUpdateRequest score(num? score);
+
+  ReviewUpdateRequest comment(String? comment);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReviewUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReviewUpdateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReviewUpdateRequest call({
+    String? orderId,
+    String? fromUserId,
+    String? toUserId,
+    ReviewUpdateRequestCategoryEnum? category,
+    num? score,
+    String? comment,
+  });
 }
 
-final BuiltSet<ReviewUpdateRequestCategoryEnum>
-_$reviewUpdateRequestCategoryEnumValues =
-    BuiltSet<ReviewUpdateRequestCategoryEnum>(
-      const <ReviewUpdateRequestCategoryEnum>[
-        _$reviewUpdateRequestCategoryEnum_cleanliness,
-        _$reviewUpdateRequestCategoryEnum_courtesy,
-        _$reviewUpdateRequestCategoryEnum_other,
-      ],
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReviewUpdateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReviewUpdateRequest.copyWith.fieldName(...)`
+class _$ReviewUpdateRequestCWProxyImpl implements _$ReviewUpdateRequestCWProxy {
+  const _$ReviewUpdateRequestCWProxyImpl(this._value);
+
+  final ReviewUpdateRequest _value;
+
+  @override
+  ReviewUpdateRequest orderId(String? orderId) => this(orderId: orderId);
+
+  @override
+  ReviewUpdateRequest fromUserId(String? fromUserId) =>
+      this(fromUserId: fromUserId);
+
+  @override
+  ReviewUpdateRequest toUserId(String? toUserId) => this(toUserId: toUserId);
+
+  @override
+  ReviewUpdateRequest category(ReviewUpdateRequestCategoryEnum? category) =>
+      this(category: category);
+
+  @override
+  ReviewUpdateRequest score(num? score) => this(score: score);
+
+  @override
+  ReviewUpdateRequest comment(String? comment) => this(comment: comment);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReviewUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReviewUpdateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReviewUpdateRequest call({
+    Object? orderId = const $CopyWithPlaceholder(),
+    Object? fromUserId = const $CopyWithPlaceholder(),
+    Object? toUserId = const $CopyWithPlaceholder(),
+    Object? category = const $CopyWithPlaceholder(),
+    Object? score = const $CopyWithPlaceholder(),
+    Object? comment = const $CopyWithPlaceholder(),
+  }) {
+    return ReviewUpdateRequest(
+      orderId: orderId == const $CopyWithPlaceholder()
+          ? _value.orderId
+          // ignore: cast_nullable_to_non_nullable
+          : orderId as String?,
+      fromUserId: fromUserId == const $CopyWithPlaceholder()
+          ? _value.fromUserId
+          // ignore: cast_nullable_to_non_nullable
+          : fromUserId as String?,
+      toUserId: toUserId == const $CopyWithPlaceholder()
+          ? _value.toUserId
+          // ignore: cast_nullable_to_non_nullable
+          : toUserId as String?,
+      category: category == const $CopyWithPlaceholder()
+          ? _value.category
+          // ignore: cast_nullable_to_non_nullable
+          : category as ReviewUpdateRequestCategoryEnum?,
+      score: score == const $CopyWithPlaceholder()
+          ? _value.score
+          // ignore: cast_nullable_to_non_nullable
+          : score as num?,
+      comment: comment == const $CopyWithPlaceholder()
+          ? _value.comment
+          // ignore: cast_nullable_to_non_nullable
+          : comment as String?,
     );
-
-Serializer<ReviewUpdateRequestCategoryEnum>
-_$reviewUpdateRequestCategoryEnumSerializer =
-    _$ReviewUpdateRequestCategoryEnumSerializer();
-
-class _$ReviewUpdateRequestCategoryEnumSerializer
-    implements PrimitiveSerializer<ReviewUpdateRequestCategoryEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'cleanliness': 'cleanliness',
-    'courtesy': 'courtesy',
-    'other': 'other',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'cleanliness': 'cleanliness',
-    'courtesy': 'courtesy',
-    'other': 'other',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[ReviewUpdateRequestCategoryEnum];
-  @override
-  final String wireName = 'ReviewUpdateRequestCategoryEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    ReviewUpdateRequestCategoryEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ReviewUpdateRequestCategoryEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ReviewUpdateRequestCategoryEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
-}
-
-class _$ReviewUpdateRequest extends ReviewUpdateRequest {
-  @override
-  final String? orderId;
-  @override
-  final String? fromUserId;
-  @override
-  final String? toUserId;
-  @override
-  final ReviewUpdateRequestCategoryEnum? category;
-  @override
-  final num? score;
-  @override
-  final String? comment;
-
-  factory _$ReviewUpdateRequest([
-    void Function(ReviewUpdateRequestBuilder)? updates,
-  ]) => (ReviewUpdateRequestBuilder()..update(updates))._build();
-
-  _$ReviewUpdateRequest._({
-    this.orderId,
-    this.fromUserId,
-    this.toUserId,
-    this.category,
-    this.score,
-    this.comment,
-  }) : super._();
-  @override
-  ReviewUpdateRequest rebuild(
-    void Function(ReviewUpdateRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
-
-  @override
-  ReviewUpdateRequestBuilder toBuilder() =>
-      ReviewUpdateRequestBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ReviewUpdateRequest &&
-        orderId == other.orderId &&
-        fromUserId == other.fromUserId &&
-        toUserId == other.toUserId &&
-        category == other.category &&
-        score == other.score &&
-        comment == other.comment;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, orderId.hashCode);
-    _$hash = $jc(_$hash, fromUserId.hashCode);
-    _$hash = $jc(_$hash, toUserId.hashCode);
-    _$hash = $jc(_$hash, category.hashCode);
-    _$hash = $jc(_$hash, score.hashCode);
-    _$hash = $jc(_$hash, comment.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ReviewUpdateRequest')
-          ..add('orderId', orderId)
-          ..add('fromUserId', fromUserId)
-          ..add('toUserId', toUserId)
-          ..add('category', category)
-          ..add('score', score)
-          ..add('comment', comment))
-        .toString();
   }
 }
 
-class ReviewUpdateRequestBuilder
-    implements Builder<ReviewUpdateRequest, ReviewUpdateRequestBuilder> {
-  _$ReviewUpdateRequest? _$v;
-
-  String? _orderId;
-  String? get orderId => _$this._orderId;
-  set orderId(String? orderId) => _$this._orderId = orderId;
-
-  String? _fromUserId;
-  String? get fromUserId => _$this._fromUserId;
-  set fromUserId(String? fromUserId) => _$this._fromUserId = fromUserId;
-
-  String? _toUserId;
-  String? get toUserId => _$this._toUserId;
-  set toUserId(String? toUserId) => _$this._toUserId = toUserId;
-
-  ReviewUpdateRequestCategoryEnum? _category;
-  ReviewUpdateRequestCategoryEnum? get category => _$this._category;
-  set category(ReviewUpdateRequestCategoryEnum? category) =>
-      _$this._category = category;
-
-  num? _score;
-  num? get score => _$this._score;
-  set score(num? score) => _$this._score = score;
-
-  String? _comment;
-  String? get comment => _$this._comment;
-  set comment(String? comment) => _$this._comment = comment;
-
-  ReviewUpdateRequestBuilder() {
-    ReviewUpdateRequest._defaults(this);
-  }
-
-  ReviewUpdateRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _orderId = $v.orderId;
-      _fromUserId = $v.fromUserId;
-      _toUserId = $v.toUserId;
-      _category = $v.category;
-      _score = $v.score;
-      _comment = $v.comment;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ReviewUpdateRequest other) {
-    _$v = other as _$ReviewUpdateRequest;
-  }
-
-  @override
-  void update(void Function(ReviewUpdateRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ReviewUpdateRequest build() => _build();
-
-  _$ReviewUpdateRequest _build() {
-    final _$result =
-        _$v ??
-        _$ReviewUpdateRequest._(
-          orderId: orderId,
-          fromUserId: fromUserId,
-          toUserId: toUserId,
-          category: category,
-          score: score,
-          comment: comment,
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $ReviewUpdateRequestCopyWith on ReviewUpdateRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfReviewUpdateRequest.copyWith(...)` or like so:`instanceOfReviewUpdateRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ReviewUpdateRequestCWProxy get copyWith =>
+      _$ReviewUpdateRequestCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ReviewUpdateRequest _$ReviewUpdateRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ReviewUpdateRequest', json, ($checkedConvert) {
+      final val = ReviewUpdateRequest(
+        orderId: $checkedConvert('orderId', (v) => v as String?),
+        fromUserId: $checkedConvert('fromUserId', (v) => v as String?),
+        toUserId: $checkedConvert('toUserId', (v) => v as String?),
+        category: $checkedConvert(
+          'category',
+          (v) =>
+              $enumDecodeNullable(_$ReviewUpdateRequestCategoryEnumEnumMap, v),
+        ),
+        score: $checkedConvert('score', (v) => v as num?),
+        comment: $checkedConvert('comment', (v) => v as String? ?? ''),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$ReviewUpdateRequestToJson(
+  ReviewUpdateRequest instance,
+) => <String, dynamic>{
+  'orderId': ?instance.orderId,
+  'fromUserId': ?instance.fromUserId,
+  'toUserId': ?instance.toUserId,
+  'category': ?_$ReviewUpdateRequestCategoryEnumEnumMap[instance.category],
+  'score': ?instance.score,
+  'comment': ?instance.comment,
+};
+
+const _$ReviewUpdateRequestCategoryEnumEnumMap = {
+  ReviewUpdateRequestCategoryEnum.cleanliness: 'cleanliness',
+  ReviewUpdateRequestCategoryEnum.courtesy: 'courtesy',
+  ReviewUpdateRequestCategoryEnum.other: 'other',
+};

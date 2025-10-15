@@ -3,194 +3,120 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'user_create_request.g.dart';
 
-/// UserCreateRequest
-///
-/// Properties:
-/// * [name] 
-/// * [email] 
-/// * [role] 
-/// * [password] 
-/// * [confirmPassword] 
-@BuiltValue()
-abstract class UserCreateRequest implements Built<UserCreateRequest, UserCreateRequestBuilder> {
-  @BuiltValueField(wireName: r'name')
-  String get name;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class UserCreateRequest {
+  /// Returns a new [UserCreateRequest] instance.
+  UserCreateRequest({
+    required this.name,
 
-  @BuiltValueField(wireName: r'email')
-  String get email;
+    required this.email,
 
-  @BuiltValueField(wireName: r'role')
-  UserCreateRequestRoleEnum? get role;
-  // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
+    required this.role,
 
-  @BuiltValueField(wireName: r'password')
-  String get password;
+    required this.gender,
 
-  @BuiltValueField(wireName: r'confirmPassword')
-  String get confirmPassword;
+    required this.phone,
 
-  UserCreateRequest._();
+    required this.password,
 
-  factory UserCreateRequest([void updates(UserCreateRequestBuilder b)]) = _$UserCreateRequest;
+    required this.confirmPassword,
+  });
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserCreateRequestBuilder b) => b
-      ..role = const UserCreateRequestRoleEnum._('user');
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<UserCreateRequest> get serializer => _$UserCreateRequestSerializer();
-}
+  @JsonKey(name: r'email', required: true, includeIfNull: false)
+  final String email;
 
-class _$UserCreateRequestSerializer implements PrimitiveSerializer<UserCreateRequest> {
-  @override
-  final Iterable<Type> types = const [UserCreateRequest, _$UserCreateRequest];
+  @JsonKey(name: r'role', required: true, includeIfNull: false)
+  final UserCreateRequestRoleEnum role;
 
-  @override
-  final String wireName = r'UserCreateRequest';
+  @JsonKey(name: r'gender', required: true, includeIfNull: false)
+  final UserCreateRequestGenderEnum gender;
 
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    UserCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'name';
-    yield serializers.serialize(
-      object.name,
-      specifiedType: const FullType(String),
-    );
-    yield r'email';
-    yield serializers.serialize(
-      object.email,
-      specifiedType: const FullType(String),
-    );
-    if (object.role != null) {
-      yield r'role';
-      yield serializers.serialize(
-        object.role,
-        specifiedType: const FullType(UserCreateRequestRoleEnum),
-      );
-    }
-    yield r'password';
-    yield serializers.serialize(
-      object.password,
-      specifiedType: const FullType(String),
-    );
-    yield r'confirmPassword';
-    yield serializers.serialize(
-      object.confirmPassword,
-      specifiedType: const FullType(String),
-    );
-  }
+  @JsonKey(name: r'phone', required: true, includeIfNull: false)
+  final String phone;
+
+  @JsonKey(name: r'password', required: true, includeIfNull: false)
+  final String password;
+
+  @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
+  final String confirmPassword;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UserCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required UserCreateRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'name':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.name = valueDes;
-          break;
-        case r'email':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.email = valueDes;
-          break;
-        case r'role':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(UserCreateRequestRoleEnum),
-          ) as UserCreateRequestRoleEnum;
-          result.role = valueDes;
-          break;
-        case r'password':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.password = valueDes;
-          break;
-        case r'confirmPassword':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.confirmPassword = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserCreateRequest &&
+          other.name == name &&
+          other.email == email &&
+          other.role == role &&
+          other.gender == gender &&
+          other.phone == phone &&
+          other.password == password &&
+          other.confirmPassword == confirmPassword;
 
   @override
-  UserCreateRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UserCreateRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      name.hashCode +
+      email.hashCode +
+      role.hashCode +
+      gender.hashCode +
+      phone.hashCode +
+      password.hashCode +
+      confirmPassword.hashCode;
+
+  factory UserCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$UserCreateRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserCreateRequestToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class UserCreateRequestRoleEnum extends EnumClass {
+enum UserCreateRequestRoleEnum {
+  @JsonValue(r'admin')
+  admin(r'admin'),
+  @JsonValue(r'operator')
+  operator_(r'operator'),
+  @JsonValue(r'merchant')
+  merchant(r'merchant'),
+  @JsonValue(r'driver')
+  driver(r'driver'),
+  @JsonValue(r'user')
+  user(r'user');
 
-  @BuiltValueEnumConst(wireName: r'admin')
-  static const UserCreateRequestRoleEnum admin = _$userCreateRequestRoleEnum_admin;
-  @BuiltValueEnumConst(wireName: r'operator')
-  static const UserCreateRequestRoleEnum operator_ = _$userCreateRequestRoleEnum_operator_;
-  @BuiltValueEnumConst(wireName: r'merchant')
-  static const UserCreateRequestRoleEnum merchant = _$userCreateRequestRoleEnum_merchant;
-  @BuiltValueEnumConst(wireName: r'driver')
-  static const UserCreateRequestRoleEnum driver = _$userCreateRequestRoleEnum_driver;
-  @BuiltValueEnumConst(wireName: r'user')
-  static const UserCreateRequestRoleEnum user = _$userCreateRequestRoleEnum_user;
+  const UserCreateRequestRoleEnum(this.value);
 
-  static Serializer<UserCreateRequestRoleEnum> get serializer => _$userCreateRequestRoleEnumSerializer;
+  final String value;
 
-  const UserCreateRequestRoleEnum._(String name): super(name);
-
-  static BuiltSet<UserCreateRequestRoleEnum> get values => _$userCreateRequestRoleEnumValues;
-  static UserCreateRequestRoleEnum valueOf(String name) => _$userCreateRequestRoleEnumValueOf(name);
+  @override
+  String toString() => value;
 }
 
+enum UserCreateRequestGenderEnum {
+  @JsonValue(r'male')
+  male(r'male'),
+  @JsonValue(r'female')
+  female(r'female');
+
+  const UserCreateRequestGenderEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}

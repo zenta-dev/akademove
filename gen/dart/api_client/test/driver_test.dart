@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Driver
 void main() {
-  final instance = DriverBuilder();
-  // TODO add properties to the builder and call build()
+  final Driver? instance = /* Driver(...) */ null;
+  // TODO add properties to the entity
 
   group(Driver, () {
     // String id
@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    // bool isOnline (default value: false)
+    // bool isOnline
     test('to test the property `isOnline`', () async {
       // TODO
     });
@@ -47,17 +47,34 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num lastLocationUpdate
+    // DateTime lastLocationUpdate
     test('to test the property `lastLocationUpdate`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
+    // String studentCard
+    test('to test the property `studentCard`', () async {
+      // TODO
+    });
+
+    // String driverLicense
+    test('to test the property `driverLicense`', () async {
+      // TODO
+    });
+
+    // String vehicleCertificate
+    test('to test the property `vehicleCertificate`', () async {
+      // TODO
+    });
+
+    // OrderCreateRequestUser user
+    test('to test the property `user`', () async {
+      // TODO
+    });
   });
 }

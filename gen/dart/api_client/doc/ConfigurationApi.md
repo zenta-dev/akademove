@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **configurationList**
-> ConfigurationList200Response configurationList(cursor, page, limit)
+> ConfigurationList200Response configurationList(cursor, limit, page, query, sortBy, order)
 
 
 
@@ -66,11 +66,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getConfigurationApi();
 final String cursor = cursor_example; // String | 
-final JsonObject page = ; // JsonObject | 
-final JsonObject limit = ; // JsonObject | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
 
 try {
-    final response = api.configurationList(cursor, page, limit);
+    final response = api.configurationList(cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ConfigurationApi->configurationList: $e\n');
@@ -82,8 +85,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
- **page** | [**JsonObject**](.md)|  | [optional] 
- **limit** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
 
 ### Return type
 

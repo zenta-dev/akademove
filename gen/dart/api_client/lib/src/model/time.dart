@@ -3,120 +3,41 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'time.g.dart';
 
-/// Time
-///
-/// Properties:
-/// * [h] 
-/// * [m] 
-@BuiltValue()
-abstract class Time implements Built<Time, TimeBuilder> {
-  @BuiltValueField(wireName: r'h')
-  num get h;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Time {
+  /// Returns a new [Time] instance.
+  Time({required this.h, required this.m});
 
-  @BuiltValueField(wireName: r'm')
-  num get m;
+  @JsonKey(name: r'h', required: true, includeIfNull: false)
+  final num h;
 
-  Time._();
-
-  factory Time([void updates(TimeBuilder b)]) = _$Time;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(TimeBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Time> get serializer => _$TimeSerializer();
-}
-
-class _$TimeSerializer implements PrimitiveSerializer<Time> {
-  @override
-  final Iterable<Type> types = const [Time, _$Time];
+  @JsonKey(name: r'm', required: true, includeIfNull: false)
+  final num m;
 
   @override
-  final String wireName = r'Time';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Time object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'h';
-    yield serializers.serialize(
-      object.h,
-      specifiedType: const FullType(num),
-    );
-    yield r'm';
-    yield serializers.serialize(
-      object.m,
-      specifiedType: const FullType(num),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Time && other.h == h && other.m == m;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Time object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => h.hashCode + m.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required TimeBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'h':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.h = valueDes;
-          break;
-        case r'm':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.m = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Time.fromJson(Map<String, dynamic> json) => _$TimeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TimeToJson(this);
 
   @override
-  Time deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = TimeBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

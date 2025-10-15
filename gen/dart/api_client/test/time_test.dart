@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Time
 void main() {
-  final instance = TimeBuilder();
-  // TODO add properties to the builder and call build()
+  final Time? instance = /* Time(...) */ null;
+  // TODO add properties to the entity
 
   group(Time, () {
     // num h
@@ -16,6 +16,5 @@ void main() {
     test('to test the property `m`', () async {
       // TODO
     });
-
   });
 }

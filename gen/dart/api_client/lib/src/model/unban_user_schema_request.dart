@@ -3,104 +3,40 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'unban_user_schema_request.g.dart';
 
-/// UnbanUserSchemaRequest
-///
-/// Properties:
-/// * [id] 
-@BuiltValue()
-abstract class UnbanUserSchemaRequest implements Built<UnbanUserSchemaRequest, UnbanUserSchemaRequestBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class UnbanUserSchemaRequest {
+  /// Returns a new [UnbanUserSchemaRequest] instance.
+  UnbanUserSchemaRequest({required this.id});
 
-  UnbanUserSchemaRequest._();
-
-  factory UnbanUserSchemaRequest([void updates(UnbanUserSchemaRequestBuilder b)]) = _$UnbanUserSchemaRequest;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UnbanUserSchemaRequestBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<UnbanUserSchemaRequest> get serializer => _$UnbanUserSchemaRequestSerializer();
-}
-
-class _$UnbanUserSchemaRequestSerializer implements PrimitiveSerializer<UnbanUserSchemaRequest> {
-  @override
-  final Iterable<Type> types = const [UnbanUserSchemaRequest, _$UnbanUserSchemaRequest];
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
   @override
-  final String wireName = r'UnbanUserSchemaRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    UnbanUserSchemaRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UnbanUserSchemaRequest && other.id == id;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UnbanUserSchemaRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => id.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required UnbanUserSchemaRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory UnbanUserSchemaRequest.fromJson(Map<String, dynamic> json) =>
+      _$UnbanUserSchemaRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UnbanUserSchemaRequestToJson(this);
 
   @override
-  UnbanUserSchemaRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UnbanUserSchemaRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

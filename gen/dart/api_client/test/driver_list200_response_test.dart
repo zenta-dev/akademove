@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverList200Response
 void main() {
-  final instance = DriverList200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final DriverList200Response? instance = /* DriverList200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(DriverList200Response, () {
     // String message
@@ -12,10 +12,14 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Driver> data
+    // List<Driver> data
     test('to test the property `data`', () async {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

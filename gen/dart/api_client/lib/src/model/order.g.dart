@@ -3,569 +3,409 @@
 part of 'order.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const OrderTypeEnum _$orderTypeEnum_ride = const OrderTypeEnum._('ride');
-const OrderTypeEnum _$orderTypeEnum_delivery = const OrderTypeEnum._(
-  'delivery',
-);
-const OrderTypeEnum _$orderTypeEnum_food = const OrderTypeEnum._('food');
+abstract class _$OrderCWProxy {
+  Order id(String id);
 
-OrderTypeEnum _$orderTypeEnumValueOf(String name) {
-  switch (name) {
-    case 'ride':
-      return _$orderTypeEnum_ride;
-    case 'delivery':
-      return _$orderTypeEnum_delivery;
-    case 'food':
-      return _$orderTypeEnum_food;
-    default:
-      throw ArgumentError(name);
+  Order userId(String userId);
+
+  Order driverId(String? driverId);
+
+  Order merchantId(String? merchantId);
+
+  Order type(OrderTypeEnum type);
+
+  Order status(OrderStatusEnum status);
+
+  Order pickupLocation(Location pickupLocation);
+
+  Order dropoffLocation(Location dropoffLocation);
+
+  Order distanceKm(num distanceKm);
+
+  Order basePrice(num basePrice);
+
+  Order tip(num? tip);
+
+  Order totalPrice(num totalPrice);
+
+  Order note(OrderCreateRequestNote? note);
+
+  Order requestedAt(DateTime requestedAt);
+
+  Order acceptedAt(DateTime? acceptedAt);
+
+  Order arrivedAt(DateTime? arrivedAt);
+
+  Order createdAt(DateTime createdAt);
+
+  Order updatedAt(DateTime updatedAt);
+
+  Order user(OrderCreateRequestUser? user);
+
+  Order driver(OrderCreateRequestDriver? driver);
+
+  Order merchant(OrderCreateRequestMerchant? merchant);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Order(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Order call({
+    String id,
+    String userId,
+    String? driverId,
+    String? merchantId,
+    OrderTypeEnum type,
+    OrderStatusEnum status,
+    Location pickupLocation,
+    Location dropoffLocation,
+    num distanceKm,
+    num basePrice,
+    num? tip,
+    num totalPrice,
+    OrderCreateRequestNote? note,
+    DateTime requestedAt,
+    DateTime? acceptedAt,
+    DateTime? arrivedAt,
+    DateTime createdAt,
+    DateTime updatedAt,
+    OrderCreateRequestUser? user,
+    OrderCreateRequestDriver? driver,
+    OrderCreateRequestMerchant? merchant,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrder.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrder.copyWith.fieldName(...)`
+class _$OrderCWProxyImpl implements _$OrderCWProxy {
+  const _$OrderCWProxyImpl(this._value);
+
+  final Order _value;
+
+  @override
+  Order id(String id) => this(id: id);
+
+  @override
+  Order userId(String userId) => this(userId: userId);
+
+  @override
+  Order driverId(String? driverId) => this(driverId: driverId);
+
+  @override
+  Order merchantId(String? merchantId) => this(merchantId: merchantId);
+
+  @override
+  Order type(OrderTypeEnum type) => this(type: type);
+
+  @override
+  Order status(OrderStatusEnum status) => this(status: status);
+
+  @override
+  Order pickupLocation(Location pickupLocation) =>
+      this(pickupLocation: pickupLocation);
+
+  @override
+  Order dropoffLocation(Location dropoffLocation) =>
+      this(dropoffLocation: dropoffLocation);
+
+  @override
+  Order distanceKm(num distanceKm) => this(distanceKm: distanceKm);
+
+  @override
+  Order basePrice(num basePrice) => this(basePrice: basePrice);
+
+  @override
+  Order tip(num? tip) => this(tip: tip);
+
+  @override
+  Order totalPrice(num totalPrice) => this(totalPrice: totalPrice);
+
+  @override
+  Order note(OrderCreateRequestNote? note) => this(note: note);
+
+  @override
+  Order requestedAt(DateTime requestedAt) => this(requestedAt: requestedAt);
+
+  @override
+  Order acceptedAt(DateTime? acceptedAt) => this(acceptedAt: acceptedAt);
+
+  @override
+  Order arrivedAt(DateTime? arrivedAt) => this(arrivedAt: arrivedAt);
+
+  @override
+  Order createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  Order updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  Order user(OrderCreateRequestUser? user) => this(user: user);
+
+  @override
+  Order driver(OrderCreateRequestDriver? driver) => this(driver: driver);
+
+  @override
+  Order merchant(OrderCreateRequestMerchant? merchant) =>
+      this(merchant: merchant);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Order(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Order call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? driverId = const $CopyWithPlaceholder(),
+    Object? merchantId = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
+    Object? pickupLocation = const $CopyWithPlaceholder(),
+    Object? dropoffLocation = const $CopyWithPlaceholder(),
+    Object? distanceKm = const $CopyWithPlaceholder(),
+    Object? basePrice = const $CopyWithPlaceholder(),
+    Object? tip = const $CopyWithPlaceholder(),
+    Object? totalPrice = const $CopyWithPlaceholder(),
+    Object? note = const $CopyWithPlaceholder(),
+    Object? requestedAt = const $CopyWithPlaceholder(),
+    Object? acceptedAt = const $CopyWithPlaceholder(),
+    Object? arrivedAt = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+    Object? driver = const $CopyWithPlaceholder(),
+    Object? merchant = const $CopyWithPlaceholder(),
+  }) {
+    return Order(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String,
+      driverId: driverId == const $CopyWithPlaceholder()
+          ? _value.driverId
+          // ignore: cast_nullable_to_non_nullable
+          : driverId as String?,
+      merchantId: merchantId == const $CopyWithPlaceholder()
+          ? _value.merchantId
+          // ignore: cast_nullable_to_non_nullable
+          : merchantId as String?,
+      type: type == const $CopyWithPlaceholder()
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as OrderTypeEnum,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as OrderStatusEnum,
+      pickupLocation: pickupLocation == const $CopyWithPlaceholder()
+          ? _value.pickupLocation
+          // ignore: cast_nullable_to_non_nullable
+          : pickupLocation as Location,
+      dropoffLocation: dropoffLocation == const $CopyWithPlaceholder()
+          ? _value.dropoffLocation
+          // ignore: cast_nullable_to_non_nullable
+          : dropoffLocation as Location,
+      distanceKm: distanceKm == const $CopyWithPlaceholder()
+          ? _value.distanceKm
+          // ignore: cast_nullable_to_non_nullable
+          : distanceKm as num,
+      basePrice: basePrice == const $CopyWithPlaceholder()
+          ? _value.basePrice
+          // ignore: cast_nullable_to_non_nullable
+          : basePrice as num,
+      tip: tip == const $CopyWithPlaceholder()
+          ? _value.tip
+          // ignore: cast_nullable_to_non_nullable
+          : tip as num?,
+      totalPrice: totalPrice == const $CopyWithPlaceholder()
+          ? _value.totalPrice
+          // ignore: cast_nullable_to_non_nullable
+          : totalPrice as num,
+      note: note == const $CopyWithPlaceholder()
+          ? _value.note
+          // ignore: cast_nullable_to_non_nullable
+          : note as OrderCreateRequestNote?,
+      requestedAt: requestedAt == const $CopyWithPlaceholder()
+          ? _value.requestedAt
+          // ignore: cast_nullable_to_non_nullable
+          : requestedAt as DateTime,
+      acceptedAt: acceptedAt == const $CopyWithPlaceholder()
+          ? _value.acceptedAt
+          // ignore: cast_nullable_to_non_nullable
+          : acceptedAt as DateTime?,
+      arrivedAt: arrivedAt == const $CopyWithPlaceholder()
+          ? _value.arrivedAt
+          // ignore: cast_nullable_to_non_nullable
+          : arrivedAt as DateTime?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+      user: user == const $CopyWithPlaceholder()
+          ? _value.user
+          // ignore: cast_nullable_to_non_nullable
+          : user as OrderCreateRequestUser?,
+      driver: driver == const $CopyWithPlaceholder()
+          ? _value.driver
+          // ignore: cast_nullable_to_non_nullable
+          : driver as OrderCreateRequestDriver?,
+      merchant: merchant == const $CopyWithPlaceholder()
+          ? _value.merchant
+          // ignore: cast_nullable_to_non_nullable
+          : merchant as OrderCreateRequestMerchant?,
+    );
   }
 }
 
-final BuiltSet<OrderTypeEnum> _$orderTypeEnumValues = BuiltSet<OrderTypeEnum>(
-  const <OrderTypeEnum>[
-    _$orderTypeEnum_ride,
-    _$orderTypeEnum_delivery,
-    _$orderTypeEnum_food,
-  ],
-);
-
-const OrderStatusEnum _$orderStatusEnum_requested = const OrderStatusEnum._(
-  'requested',
-);
-const OrderStatusEnum _$orderStatusEnum_matching = const OrderStatusEnum._(
-  'matching',
-);
-const OrderStatusEnum _$orderStatusEnum_accepted = const OrderStatusEnum._(
-  'accepted',
-);
-const OrderStatusEnum _$orderStatusEnum_arriving = const OrderStatusEnum._(
-  'arriving',
-);
-const OrderStatusEnum _$orderStatusEnum_inTrip = const OrderStatusEnum._(
-  'inTrip',
-);
-const OrderStatusEnum _$orderStatusEnum_completed = const OrderStatusEnum._(
-  'completed',
-);
-const OrderStatusEnum _$orderStatusEnum_cancelledByUser =
-    const OrderStatusEnum._('cancelledByUser');
-const OrderStatusEnum _$orderStatusEnum_cancelledByDriver =
-    const OrderStatusEnum._('cancelledByDriver');
-const OrderStatusEnum _$orderStatusEnum_cancelledBySystem =
-    const OrderStatusEnum._('cancelledBySystem');
-
-OrderStatusEnum _$orderStatusEnumValueOf(String name) {
-  switch (name) {
-    case 'requested':
-      return _$orderStatusEnum_requested;
-    case 'matching':
-      return _$orderStatusEnum_matching;
-    case 'accepted':
-      return _$orderStatusEnum_accepted;
-    case 'arriving':
-      return _$orderStatusEnum_arriving;
-    case 'inTrip':
-      return _$orderStatusEnum_inTrip;
-    case 'completed':
-      return _$orderStatusEnum_completed;
-    case 'cancelledByUser':
-      return _$orderStatusEnum_cancelledByUser;
-    case 'cancelledByDriver':
-      return _$orderStatusEnum_cancelledByDriver;
-    case 'cancelledBySystem':
-      return _$orderStatusEnum_cancelledBySystem;
-    default:
-      throw ArgumentError(name);
-  }
+extension $OrderCopyWith on Order {
+  /// Returns a callable class that can be used as follows: `instanceOfOrder.copyWith(...)` or like so:`instanceOfOrder.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$OrderCWProxy get copyWith => _$OrderCWProxyImpl(this);
 }
 
-final BuiltSet<OrderStatusEnum> _$orderStatusEnumValues =
-    BuiltSet<OrderStatusEnum>(const <OrderStatusEnum>[
-      _$orderStatusEnum_requested,
-      _$orderStatusEnum_matching,
-      _$orderStatusEnum_accepted,
-      _$orderStatusEnum_arriving,
-      _$orderStatusEnum_inTrip,
-      _$orderStatusEnum_completed,
-      _$orderStatusEnum_cancelledByUser,
-      _$orderStatusEnum_cancelledByDriver,
-      _$orderStatusEnum_cancelledBySystem,
-    ]);
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-Serializer<OrderTypeEnum> _$orderTypeEnumSerializer =
-    _$OrderTypeEnumSerializer();
-Serializer<OrderStatusEnum> _$orderStatusEnumSerializer =
-    _$OrderStatusEnumSerializer();
-
-class _$OrderTypeEnumSerializer implements PrimitiveSerializer<OrderTypeEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'ride': 'ride',
-    'delivery': 'delivery',
-    'food': 'food',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'ride': 'ride',
-    'delivery': 'delivery',
-    'food': 'food',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[OrderTypeEnum];
-  @override
-  final String wireName = 'OrderTypeEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    OrderTypeEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  OrderTypeEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => OrderTypeEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+Order _$OrderFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Order', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'userId',
+      'type',
+      'status',
+      'pickupLocation',
+      'dropoffLocation',
+      'distanceKm',
+      'basePrice',
+      'totalPrice',
+      'requestedAt',
+      'createdAt',
+      'updatedAt',
+    ],
   );
-}
-
-class _$OrderStatusEnumSerializer
-    implements PrimitiveSerializer<OrderStatusEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'requested': 'requested',
-    'matching': 'matching',
-    'accepted': 'accepted',
-    'arriving': 'arriving',
-    'inTrip': 'in_trip',
-    'completed': 'completed',
-    'cancelledByUser': 'cancelled_by_user',
-    'cancelledByDriver': 'cancelled_by_driver',
-    'cancelledBySystem': 'cancelled_by_system',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'requested': 'requested',
-    'matching': 'matching',
-    'accepted': 'accepted',
-    'arriving': 'arriving',
-    'in_trip': 'inTrip',
-    'completed': 'completed',
-    'cancelled_by_user': 'cancelledByUser',
-    'cancelled_by_driver': 'cancelledByDriver',
-    'cancelled_by_system': 'cancelledBySystem',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[OrderStatusEnum];
-  @override
-  final String wireName = 'OrderStatusEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    OrderStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  OrderStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => OrderStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+  final val = Order(
+    id: $checkedConvert('id', (v) => v as String),
+    userId: $checkedConvert('userId', (v) => v as String),
+    driverId: $checkedConvert('driverId', (v) => v as String?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$OrderTypeEnumEnumMap, v),
+    ),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecode(_$OrderStatusEnumEnumMap, v),
+    ),
+    pickupLocation: $checkedConvert(
+      'pickupLocation',
+      (v) => Location.fromJson(v as Map<String, dynamic>),
+    ),
+    dropoffLocation: $checkedConvert(
+      'dropoffLocation',
+      (v) => Location.fromJson(v as Map<String, dynamic>),
+    ),
+    distanceKm: $checkedConvert('distanceKm', (v) => v as num),
+    basePrice: $checkedConvert('basePrice', (v) => v as num),
+    tip: $checkedConvert('tip', (v) => v as num?),
+    totalPrice: $checkedConvert('totalPrice', (v) => v as num),
+    note: $checkedConvert(
+      'note',
+      (v) => v == null
+          ? null
+          : OrderCreateRequestNote.fromJson(v as Map<String, dynamic>),
+    ),
+    requestedAt: $checkedConvert(
+      'requestedAt',
+      (v) => DateTime.parse(v as String),
+    ),
+    acceptedAt: $checkedConvert(
+      'acceptedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    arrivedAt: $checkedConvert(
+      'arrivedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null
+          ? null
+          : OrderCreateRequestUser.fromJson(v as Map<String, dynamic>),
+    ),
+    driver: $checkedConvert(
+      'driver',
+      (v) => v == null
+          ? null
+          : OrderCreateRequestDriver.fromJson(v as Map<String, dynamic>),
+    ),
+    merchant: $checkedConvert(
+      'merchant',
+      (v) => v == null
+          ? null
+          : OrderCreateRequestMerchant.fromJson(v as Map<String, dynamic>),
+    ),
   );
-}
+  return val;
+});
 
-class _$Order extends Order {
-  @override
-  final String id;
-  @override
-  final String userId;
-  @override
-  final String? driverId;
-  @override
-  final String? merchantId;
-  @override
-  final OrderTypeEnum? type;
-  @override
-  final OrderStatusEnum? status;
-  @override
-  final Location pickupLocation;
-  @override
-  final Location dropoffLocation;
-  @override
-  final num distanceKm;
-  @override
-  final num basePrice;
-  @override
-  final num? tip;
-  @override
-  final num totalPrice;
-  @override
-  final OrderCreateRequestNote? note;
-  @override
-  final num requestedAt;
-  @override
-  final num? acceptedAt;
-  @override
-  final num? arrivedAt;
-  @override
-  final num createdAt;
-  @override
-  final num updatedAt;
-  @override
-  final DriverUpdateRequestUser? user;
-  @override
-  final OrderCreateRequestDriver? driver;
-  @override
-  final OrderCreateRequestMerchant? merchant;
+Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'driverId': ?instance.driverId,
+  'merchantId': ?instance.merchantId,
+  'type': _$OrderTypeEnumEnumMap[instance.type]!,
+  'status': _$OrderStatusEnumEnumMap[instance.status]!,
+  'pickupLocation': instance.pickupLocation.toJson(),
+  'dropoffLocation': instance.dropoffLocation.toJson(),
+  'distanceKm': instance.distanceKm,
+  'basePrice': instance.basePrice,
+  'tip': ?instance.tip,
+  'totalPrice': instance.totalPrice,
+  'note': ?instance.note?.toJson(),
+  'requestedAt': instance.requestedAt.toIso8601String(),
+  'acceptedAt': ?instance.acceptedAt?.toIso8601String(),
+  'arrivedAt': ?instance.arrivedAt?.toIso8601String(),
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+  'user': ?instance.user?.toJson(),
+  'driver': ?instance.driver?.toJson(),
+  'merchant': ?instance.merchant?.toJson(),
+};
 
-  factory _$Order([void Function(OrderBuilder)? updates]) =>
-      (OrderBuilder()..update(updates))._build();
+const _$OrderTypeEnumEnumMap = {
+  OrderTypeEnum.ride: 'ride',
+  OrderTypeEnum.delivery: 'delivery',
+  OrderTypeEnum.food: 'food',
+};
 
-  _$Order._({
-    required this.id,
-    required this.userId,
-    this.driverId,
-    this.merchantId,
-    this.type,
-    this.status,
-    required this.pickupLocation,
-    required this.dropoffLocation,
-    required this.distanceKm,
-    required this.basePrice,
-    this.tip,
-    required this.totalPrice,
-    this.note,
-    required this.requestedAt,
-    this.acceptedAt,
-    this.arrivedAt,
-    required this.createdAt,
-    required this.updatedAt,
-    this.user,
-    this.driver,
-    this.merchant,
-  }) : super._();
-  @override
-  Order rebuild(void Function(OrderBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  OrderBuilder toBuilder() => OrderBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Order &&
-        id == other.id &&
-        userId == other.userId &&
-        driverId == other.driverId &&
-        merchantId == other.merchantId &&
-        type == other.type &&
-        status == other.status &&
-        pickupLocation == other.pickupLocation &&
-        dropoffLocation == other.dropoffLocation &&
-        distanceKm == other.distanceKm &&
-        basePrice == other.basePrice &&
-        tip == other.tip &&
-        totalPrice == other.totalPrice &&
-        note == other.note &&
-        requestedAt == other.requestedAt &&
-        acceptedAt == other.acceptedAt &&
-        arrivedAt == other.arrivedAt &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt &&
-        user == other.user &&
-        driver == other.driver &&
-        merchant == other.merchant;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, userId.hashCode);
-    _$hash = $jc(_$hash, driverId.hashCode);
-    _$hash = $jc(_$hash, merchantId.hashCode);
-    _$hash = $jc(_$hash, type.hashCode);
-    _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, pickupLocation.hashCode);
-    _$hash = $jc(_$hash, dropoffLocation.hashCode);
-    _$hash = $jc(_$hash, distanceKm.hashCode);
-    _$hash = $jc(_$hash, basePrice.hashCode);
-    _$hash = $jc(_$hash, tip.hashCode);
-    _$hash = $jc(_$hash, totalPrice.hashCode);
-    _$hash = $jc(_$hash, note.hashCode);
-    _$hash = $jc(_$hash, requestedAt.hashCode);
-    _$hash = $jc(_$hash, acceptedAt.hashCode);
-    _$hash = $jc(_$hash, arrivedAt.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jc(_$hash, user.hashCode);
-    _$hash = $jc(_$hash, driver.hashCode);
-    _$hash = $jc(_$hash, merchant.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Order')
-          ..add('id', id)
-          ..add('userId', userId)
-          ..add('driverId', driverId)
-          ..add('merchantId', merchantId)
-          ..add('type', type)
-          ..add('status', status)
-          ..add('pickupLocation', pickupLocation)
-          ..add('dropoffLocation', dropoffLocation)
-          ..add('distanceKm', distanceKm)
-          ..add('basePrice', basePrice)
-          ..add('tip', tip)
-          ..add('totalPrice', totalPrice)
-          ..add('note', note)
-          ..add('requestedAt', requestedAt)
-          ..add('acceptedAt', acceptedAt)
-          ..add('arrivedAt', arrivedAt)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt)
-          ..add('user', user)
-          ..add('driver', driver)
-          ..add('merchant', merchant))
-        .toString();
-  }
-}
-
-class OrderBuilder implements Builder<Order, OrderBuilder> {
-  _$Order? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _userId;
-  String? get userId => _$this._userId;
-  set userId(String? userId) => _$this._userId = userId;
-
-  String? _driverId;
-  String? get driverId => _$this._driverId;
-  set driverId(String? driverId) => _$this._driverId = driverId;
-
-  String? _merchantId;
-  String? get merchantId => _$this._merchantId;
-  set merchantId(String? merchantId) => _$this._merchantId = merchantId;
-
-  OrderTypeEnum? _type;
-  OrderTypeEnum? get type => _$this._type;
-  set type(OrderTypeEnum? type) => _$this._type = type;
-
-  OrderStatusEnum? _status;
-  OrderStatusEnum? get status => _$this._status;
-  set status(OrderStatusEnum? status) => _$this._status = status;
-
-  LocationBuilder? _pickupLocation;
-  LocationBuilder get pickupLocation =>
-      _$this._pickupLocation ??= LocationBuilder();
-  set pickupLocation(LocationBuilder? pickupLocation) =>
-      _$this._pickupLocation = pickupLocation;
-
-  LocationBuilder? _dropoffLocation;
-  LocationBuilder get dropoffLocation =>
-      _$this._dropoffLocation ??= LocationBuilder();
-  set dropoffLocation(LocationBuilder? dropoffLocation) =>
-      _$this._dropoffLocation = dropoffLocation;
-
-  num? _distanceKm;
-  num? get distanceKm => _$this._distanceKm;
-  set distanceKm(num? distanceKm) => _$this._distanceKm = distanceKm;
-
-  num? _basePrice;
-  num? get basePrice => _$this._basePrice;
-  set basePrice(num? basePrice) => _$this._basePrice = basePrice;
-
-  num? _tip;
-  num? get tip => _$this._tip;
-  set tip(num? tip) => _$this._tip = tip;
-
-  num? _totalPrice;
-  num? get totalPrice => _$this._totalPrice;
-  set totalPrice(num? totalPrice) => _$this._totalPrice = totalPrice;
-
-  OrderCreateRequestNoteBuilder? _note;
-  OrderCreateRequestNoteBuilder get note =>
-      _$this._note ??= OrderCreateRequestNoteBuilder();
-  set note(OrderCreateRequestNoteBuilder? note) => _$this._note = note;
-
-  num? _requestedAt;
-  num? get requestedAt => _$this._requestedAt;
-  set requestedAt(num? requestedAt) => _$this._requestedAt = requestedAt;
-
-  num? _acceptedAt;
-  num? get acceptedAt => _$this._acceptedAt;
-  set acceptedAt(num? acceptedAt) => _$this._acceptedAt = acceptedAt;
-
-  num? _arrivedAt;
-  num? get arrivedAt => _$this._arrivedAt;
-  set arrivedAt(num? arrivedAt) => _$this._arrivedAt = arrivedAt;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  DriverUpdateRequestUserBuilder? _user;
-  DriverUpdateRequestUserBuilder get user =>
-      _$this._user ??= DriverUpdateRequestUserBuilder();
-  set user(DriverUpdateRequestUserBuilder? user) => _$this._user = user;
-
-  OrderCreateRequestDriverBuilder? _driver;
-  OrderCreateRequestDriverBuilder get driver =>
-      _$this._driver ??= OrderCreateRequestDriverBuilder();
-  set driver(OrderCreateRequestDriverBuilder? driver) =>
-      _$this._driver = driver;
-
-  OrderCreateRequestMerchantBuilder? _merchant;
-  OrderCreateRequestMerchantBuilder get merchant =>
-      _$this._merchant ??= OrderCreateRequestMerchantBuilder();
-  set merchant(OrderCreateRequestMerchantBuilder? merchant) =>
-      _$this._merchant = merchant;
-
-  OrderBuilder() {
-    Order._defaults(this);
-  }
-
-  OrderBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _userId = $v.userId;
-      _driverId = $v.driverId;
-      _merchantId = $v.merchantId;
-      _type = $v.type;
-      _status = $v.status;
-      _pickupLocation = $v.pickupLocation.toBuilder();
-      _dropoffLocation = $v.dropoffLocation.toBuilder();
-      _distanceKm = $v.distanceKm;
-      _basePrice = $v.basePrice;
-      _tip = $v.tip;
-      _totalPrice = $v.totalPrice;
-      _note = $v.note?.toBuilder();
-      _requestedAt = $v.requestedAt;
-      _acceptedAt = $v.acceptedAt;
-      _arrivedAt = $v.arrivedAt;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _user = $v.user?.toBuilder();
-      _driver = $v.driver?.toBuilder();
-      _merchant = $v.merchant?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Order other) {
-    _$v = other as _$Order;
-  }
-
-  @override
-  void update(void Function(OrderBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Order build() => _build();
-
-  _$Order _build() {
-    _$Order _$result;
-    try {
-      _$result =
-          _$v ??
-          _$Order._(
-            id: BuiltValueNullFieldError.checkNotNull(id, r'Order', 'id'),
-            userId: BuiltValueNullFieldError.checkNotNull(
-              userId,
-              r'Order',
-              'userId',
-            ),
-            driverId: driverId,
-            merchantId: merchantId,
-            type: type,
-            status: status,
-            pickupLocation: pickupLocation.build(),
-            dropoffLocation: dropoffLocation.build(),
-            distanceKm: BuiltValueNullFieldError.checkNotNull(
-              distanceKm,
-              r'Order',
-              'distanceKm',
-            ),
-            basePrice: BuiltValueNullFieldError.checkNotNull(
-              basePrice,
-              r'Order',
-              'basePrice',
-            ),
-            tip: tip,
-            totalPrice: BuiltValueNullFieldError.checkNotNull(
-              totalPrice,
-              r'Order',
-              'totalPrice',
-            ),
-            note: _note?.build(),
-            requestedAt: BuiltValueNullFieldError.checkNotNull(
-              requestedAt,
-              r'Order',
-              'requestedAt',
-            ),
-            acceptedAt: acceptedAt,
-            arrivedAt: arrivedAt,
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt,
-              r'Order',
-              'createdAt',
-            ),
-            updatedAt: BuiltValueNullFieldError.checkNotNull(
-              updatedAt,
-              r'Order',
-              'updatedAt',
-            ),
-            user: _user?.build(),
-            driver: _driver?.build(),
-            merchant: _merchant?.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'pickupLocation';
-        pickupLocation.build();
-        _$failedField = 'dropoffLocation';
-        dropoffLocation.build();
-
-        _$failedField = 'note';
-        _note?.build();
-
-        _$failedField = 'user';
-        _user?.build();
-        _$failedField = 'driver';
-        _driver?.build();
-        _$failedField = 'merchant';
-        _merchant?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(r'Order', _$failedField, e.toString());
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$OrderStatusEnumEnumMap = {
+  OrderStatusEnum.requested: 'requested',
+  OrderStatusEnum.matching: 'matching',
+  OrderStatusEnum.accepted: 'accepted',
+  OrderStatusEnum.arriving: 'arriving',
+  OrderStatusEnum.inTrip: 'in_trip',
+  OrderStatusEnum.completed: 'completed',
+  OrderStatusEnum.cancelledByUser: 'cancelled_by_user',
+  OrderStatusEnum.cancelledByDriver: 'cancelled_by_driver',
+  OrderStatusEnum.cancelledBySystem: 'cancelled_by_system',
+};

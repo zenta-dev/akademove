@@ -11,8 +11,8 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
-**type** | **String** |  | [optional] [default to 'ride']
-**status** | **String** |  | [optional] [default to 'requested']
+**type** | **String** |  | 
+**status** | **String** |  | 
 **pickupLocation** | [**Location**](Location.md) |  | 
 **dropoffLocation** | [**Location**](Location.md) |  | 
 **distanceKm** | **num** |  | 
@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | 
 **note** | [**OrderCreateRequestNote**](OrderCreateRequestNote.md) |  | [optional] 
-**user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 
+**user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
 **driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
 **merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 
 

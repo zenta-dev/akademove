@@ -3,290 +3,250 @@
 part of 'coupon.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$Coupon extends Coupon {
-  @override
-  final String id;
-  @override
-  final String name;
-  @override
-  final String code;
-  @override
-  final CouponCreateRequestRules rules;
-  @override
-  final num? discountAmount;
-  @override
-  final num? discountPercentage;
-  @override
-  final num usageLimit;
-  @override
-  final num usedCount;
-  @override
-  final num periodStart;
-  @override
-  final num periodEnd;
-  @override
-  final bool isActive;
-  @override
-  final String createdById;
-  @override
-  final num createdAt;
+abstract class _$CouponCWProxy {
+  Coupon id(String id);
 
-  factory _$Coupon([void Function(CouponBuilder)? updates]) =>
-      (CouponBuilder()..update(updates))._build();
+  Coupon name(String name);
 
-  _$Coupon._({
-    required this.id,
-    required this.name,
-    required this.code,
-    required this.rules,
-    this.discountAmount,
-    this.discountPercentage,
-    required this.usageLimit,
-    required this.usedCount,
-    required this.periodStart,
-    required this.periodEnd,
-    required this.isActive,
-    required this.createdById,
-    required this.createdAt,
-  }) : super._();
-  @override
-  Coupon rebuild(void Function(CouponBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  Coupon code(String code);
 
-  @override
-  CouponBuilder toBuilder() => CouponBuilder()..replace(this);
+  Coupon rules(CouponCreateRequestRules rules);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Coupon &&
-        id == other.id &&
-        name == other.name &&
-        code == other.code &&
-        rules == other.rules &&
-        discountAmount == other.discountAmount &&
-        discountPercentage == other.discountPercentage &&
-        usageLimit == other.usageLimit &&
-        usedCount == other.usedCount &&
-        periodStart == other.periodStart &&
-        periodEnd == other.periodEnd &&
-        isActive == other.isActive &&
-        createdById == other.createdById &&
-        createdAt == other.createdAt;
-  }
+  Coupon discountAmount(num? discountAmount);
+
+  Coupon discountPercentage(num? discountPercentage);
+
+  Coupon usageLimit(num usageLimit);
+
+  Coupon usedCount(num usedCount);
+
+  Coupon periodStart(DateTime periodStart);
+
+  Coupon periodEnd(DateTime periodEnd);
+
+  Coupon isActive(bool isActive);
+
+  Coupon createdById(String createdById);
+
+  Coupon createdAt(DateTime createdAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Coupon(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Coupon call({
+    String id,
+    String name,
+    String code,
+    CouponCreateRequestRules rules,
+    num? discountAmount,
+    num? discountPercentage,
+    num usageLimit,
+    num usedCount,
+    DateTime periodStart,
+    DateTime periodEnd,
+    bool isActive,
+    String createdById,
+    DateTime createdAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCoupon.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCoupon.copyWith.fieldName(...)`
+class _$CouponCWProxyImpl implements _$CouponCWProxy {
+  const _$CouponCWProxyImpl(this._value);
+
+  final Coupon _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, code.hashCode);
-    _$hash = $jc(_$hash, rules.hashCode);
-    _$hash = $jc(_$hash, discountAmount.hashCode);
-    _$hash = $jc(_$hash, discountPercentage.hashCode);
-    _$hash = $jc(_$hash, usageLimit.hashCode);
-    _$hash = $jc(_$hash, usedCount.hashCode);
-    _$hash = $jc(_$hash, periodStart.hashCode);
-    _$hash = $jc(_$hash, periodEnd.hashCode);
-    _$hash = $jc(_$hash, isActive.hashCode);
-    _$hash = $jc(_$hash, createdById.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  Coupon id(String id) => this(id: id);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Coupon')
-          ..add('id', id)
-          ..add('name', name)
-          ..add('code', code)
-          ..add('rules', rules)
-          ..add('discountAmount', discountAmount)
-          ..add('discountPercentage', discountPercentage)
-          ..add('usageLimit', usageLimit)
-          ..add('usedCount', usedCount)
-          ..add('periodStart', periodStart)
-          ..add('periodEnd', periodEnd)
-          ..add('isActive', isActive)
-          ..add('createdById', createdById)
-          ..add('createdAt', createdAt))
-        .toString();
+  Coupon name(String name) => this(name: name);
+
+  @override
+  Coupon code(String code) => this(code: code);
+
+  @override
+  Coupon rules(CouponCreateRequestRules rules) => this(rules: rules);
+
+  @override
+  Coupon discountAmount(num? discountAmount) =>
+      this(discountAmount: discountAmount);
+
+  @override
+  Coupon discountPercentage(num? discountPercentage) =>
+      this(discountPercentage: discountPercentage);
+
+  @override
+  Coupon usageLimit(num usageLimit) => this(usageLimit: usageLimit);
+
+  @override
+  Coupon usedCount(num usedCount) => this(usedCount: usedCount);
+
+  @override
+  Coupon periodStart(DateTime periodStart) => this(periodStart: periodStart);
+
+  @override
+  Coupon periodEnd(DateTime periodEnd) => this(periodEnd: periodEnd);
+
+  @override
+  Coupon isActive(bool isActive) => this(isActive: isActive);
+
+  @override
+  Coupon createdById(String createdById) => this(createdById: createdById);
+
+  @override
+  Coupon createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Coupon(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Coupon call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? code = const $CopyWithPlaceholder(),
+    Object? rules = const $CopyWithPlaceholder(),
+    Object? discountAmount = const $CopyWithPlaceholder(),
+    Object? discountPercentage = const $CopyWithPlaceholder(),
+    Object? usageLimit = const $CopyWithPlaceholder(),
+    Object? usedCount = const $CopyWithPlaceholder(),
+    Object? periodStart = const $CopyWithPlaceholder(),
+    Object? periodEnd = const $CopyWithPlaceholder(),
+    Object? isActive = const $CopyWithPlaceholder(),
+    Object? createdById = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+  }) {
+    return Coupon(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      code: code == const $CopyWithPlaceholder()
+          ? _value.code
+          // ignore: cast_nullable_to_non_nullable
+          : code as String,
+      rules: rules == const $CopyWithPlaceholder()
+          ? _value.rules
+          // ignore: cast_nullable_to_non_nullable
+          : rules as CouponCreateRequestRules,
+      discountAmount: discountAmount == const $CopyWithPlaceholder()
+          ? _value.discountAmount
+          // ignore: cast_nullable_to_non_nullable
+          : discountAmount as num?,
+      discountPercentage: discountPercentage == const $CopyWithPlaceholder()
+          ? _value.discountPercentage
+          // ignore: cast_nullable_to_non_nullable
+          : discountPercentage as num?,
+      usageLimit: usageLimit == const $CopyWithPlaceholder()
+          ? _value.usageLimit
+          // ignore: cast_nullable_to_non_nullable
+          : usageLimit as num,
+      usedCount: usedCount == const $CopyWithPlaceholder()
+          ? _value.usedCount
+          // ignore: cast_nullable_to_non_nullable
+          : usedCount as num,
+      periodStart: periodStart == const $CopyWithPlaceholder()
+          ? _value.periodStart
+          // ignore: cast_nullable_to_non_nullable
+          : periodStart as DateTime,
+      periodEnd: periodEnd == const $CopyWithPlaceholder()
+          ? _value.periodEnd
+          // ignore: cast_nullable_to_non_nullable
+          : periodEnd as DateTime,
+      isActive: isActive == const $CopyWithPlaceholder()
+          ? _value.isActive
+          // ignore: cast_nullable_to_non_nullable
+          : isActive as bool,
+      createdById: createdById == const $CopyWithPlaceholder()
+          ? _value.createdById
+          // ignore: cast_nullable_to_non_nullable
+          : createdById as String,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+    );
   }
 }
 
-class CouponBuilder implements Builder<Coupon, CouponBuilder> {
-  _$Coupon? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  String? _code;
-  String? get code => _$this._code;
-  set code(String? code) => _$this._code = code;
-
-  CouponCreateRequestRulesBuilder? _rules;
-  CouponCreateRequestRulesBuilder get rules =>
-      _$this._rules ??= CouponCreateRequestRulesBuilder();
-  set rules(CouponCreateRequestRulesBuilder? rules) => _$this._rules = rules;
-
-  num? _discountAmount;
-  num? get discountAmount => _$this._discountAmount;
-  set discountAmount(num? discountAmount) =>
-      _$this._discountAmount = discountAmount;
-
-  num? _discountPercentage;
-  num? get discountPercentage => _$this._discountPercentage;
-  set discountPercentage(num? discountPercentage) =>
-      _$this._discountPercentage = discountPercentage;
-
-  num? _usageLimit;
-  num? get usageLimit => _$this._usageLimit;
-  set usageLimit(num? usageLimit) => _$this._usageLimit = usageLimit;
-
-  num? _usedCount;
-  num? get usedCount => _$this._usedCount;
-  set usedCount(num? usedCount) => _$this._usedCount = usedCount;
-
-  num? _periodStart;
-  num? get periodStart => _$this._periodStart;
-  set periodStart(num? periodStart) => _$this._periodStart = periodStart;
-
-  num? _periodEnd;
-  num? get periodEnd => _$this._periodEnd;
-  set periodEnd(num? periodEnd) => _$this._periodEnd = periodEnd;
-
-  bool? _isActive;
-  bool? get isActive => _$this._isActive;
-  set isActive(bool? isActive) => _$this._isActive = isActive;
-
-  String? _createdById;
-  String? get createdById => _$this._createdById;
-  set createdById(String? createdById) => _$this._createdById = createdById;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  CouponBuilder() {
-    Coupon._defaults(this);
-  }
-
-  CouponBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _name = $v.name;
-      _code = $v.code;
-      _rules = $v.rules.toBuilder();
-      _discountAmount = $v.discountAmount;
-      _discountPercentage = $v.discountPercentage;
-      _usageLimit = $v.usageLimit;
-      _usedCount = $v.usedCount;
-      _periodStart = $v.periodStart;
-      _periodEnd = $v.periodEnd;
-      _isActive = $v.isActive;
-      _createdById = $v.createdById;
-      _createdAt = $v.createdAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Coupon other) {
-    _$v = other as _$Coupon;
-  }
-
-  @override
-  void update(void Function(CouponBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Coupon build() => _build();
-
-  _$Coupon _build() {
-    _$Coupon _$result;
-    try {
-      _$result =
-          _$v ??
-          _$Coupon._(
-            id: BuiltValueNullFieldError.checkNotNull(id, r'Coupon', 'id'),
-            name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'Coupon',
-              'name',
-            ),
-            code: BuiltValueNullFieldError.checkNotNull(
-              code,
-              r'Coupon',
-              'code',
-            ),
-            rules: rules.build(),
-            discountAmount: discountAmount,
-            discountPercentage: discountPercentage,
-            usageLimit: BuiltValueNullFieldError.checkNotNull(
-              usageLimit,
-              r'Coupon',
-              'usageLimit',
-            ),
-            usedCount: BuiltValueNullFieldError.checkNotNull(
-              usedCount,
-              r'Coupon',
-              'usedCount',
-            ),
-            periodStart: BuiltValueNullFieldError.checkNotNull(
-              periodStart,
-              r'Coupon',
-              'periodStart',
-            ),
-            periodEnd: BuiltValueNullFieldError.checkNotNull(
-              periodEnd,
-              r'Coupon',
-              'periodEnd',
-            ),
-            isActive: BuiltValueNullFieldError.checkNotNull(
-              isActive,
-              r'Coupon',
-              'isActive',
-            ),
-            createdById: BuiltValueNullFieldError.checkNotNull(
-              createdById,
-              r'Coupon',
-              'createdById',
-            ),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt,
-              r'Coupon',
-              'createdAt',
-            ),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'rules';
-        rules.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'Coupon',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $CouponCopyWith on Coupon {
+  /// Returns a callable class that can be used as follows: `instanceOfCoupon.copyWith(...)` or like so:`instanceOfCoupon.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$CouponCWProxy get copyWith => _$CouponCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Coupon _$CouponFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Coupon', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'name',
+      'code',
+      'rules',
+      'usageLimit',
+      'usedCount',
+      'periodStart',
+      'periodEnd',
+      'isActive',
+      'createdById',
+      'createdAt',
+    ],
+  );
+  final val = Coupon(
+    id: $checkedConvert('id', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
+    code: $checkedConvert('code', (v) => v as String),
+    rules: $checkedConvert(
+      'rules',
+      (v) => CouponCreateRequestRules.fromJson(v as Map<String, dynamic>),
+    ),
+    discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
+    discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),
+    usageLimit: $checkedConvert('usageLimit', (v) => v as num),
+    usedCount: $checkedConvert('usedCount', (v) => v as num),
+    periodStart: $checkedConvert(
+      'periodStart',
+      (v) => DateTime.parse(v as String),
+    ),
+    periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
+    isActive: $checkedConvert('isActive', (v) => v as bool),
+    createdById: $checkedConvert('createdById', (v) => v as String),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$CouponToJson(Coupon instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'code': instance.code,
+  'rules': instance.rules.toJson(),
+  'discountAmount': ?instance.discountAmount,
+  'discountPercentage': ?instance.discountPercentage,
+  'usageLimit': instance.usageLimit,
+  'usedCount': instance.usedCount,
+  'periodStart': instance.periodStart.toIso8601String(),
+  'periodEnd': instance.periodEnd.toIso8601String(),
+  'isActive': instance.isActive,
+  'createdById': instance.createdById,
+  'createdAt': instance.createdAt.toIso8601String(),
+};

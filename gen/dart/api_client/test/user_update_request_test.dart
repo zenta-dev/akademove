@@ -3,11 +3,11 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserUpdateRequest
 void main() {
-  final instance = UserUpdateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final UserUpdateRequest? instance = /* UserUpdateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(UserUpdateRequest, () {
-    // JsonObject role
+    // String role
     test('to test the property `role`', () async {
       // TODO
     });
@@ -36,6 +36,5 @@ void main() {
     test('to test the property `id`', () async {
       // TODO
     });
-
   });
 }

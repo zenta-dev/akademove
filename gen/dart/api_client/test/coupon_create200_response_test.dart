@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponCreate200Response
 void main() {
-  final instance = CouponCreate200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final CouponCreate200Response? instance = /* CouponCreate200Response(...) */
+      null;
+  // TODO add properties to the entity
 
   group(CouponCreate200Response, () {
     // String message
@@ -17,5 +18,9 @@ void main() {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

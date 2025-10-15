@@ -3,200 +3,187 @@
 part of 'merchant_menu.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$MerchantMenu extends MerchantMenu {
-  @override
-  final String id;
-  @override
-  final String merchantId;
-  @override
-  final String name;
-  @override
-  final String? category;
-  @override
-  final num price;
-  @override
-  final num stock;
-  @override
-  final num createdAt;
-  @override
-  final num updatedAt;
+abstract class _$MerchantMenuCWProxy {
+  MerchantMenu id(String id);
 
-  factory _$MerchantMenu([void Function(MerchantMenuBuilder)? updates]) =>
-      (MerchantMenuBuilder()..update(updates))._build();
+  MerchantMenu merchantId(String merchantId);
 
-  _$MerchantMenu._({
-    required this.id,
-    required this.merchantId,
-    required this.name,
-    this.category,
-    required this.price,
-    required this.stock,
-    required this.createdAt,
-    required this.updatedAt,
-  }) : super._();
-  @override
-  MerchantMenu rebuild(void Function(MerchantMenuBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  MerchantMenu name(String name);
 
-  @override
-  MerchantMenuBuilder toBuilder() => MerchantMenuBuilder()..replace(this);
+  MerchantMenu image(String? image);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is MerchantMenu &&
-        id == other.id &&
-        merchantId == other.merchantId &&
-        name == other.name &&
-        category == other.category &&
-        price == other.price &&
-        stock == other.stock &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
-  }
+  MerchantMenu category(String? category);
+
+  MerchantMenu price(num price);
+
+  MerchantMenu stock(int stock);
+
+  MerchantMenu createdAt(DateTime createdAt);
+
+  MerchantMenu updatedAt(DateTime updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenu(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantMenu(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantMenu call({
+    String id,
+    String merchantId,
+    String name,
+    String? image,
+    String? category,
+    num price,
+    int stock,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantMenu.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantMenu.copyWith.fieldName(...)`
+class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
+  const _$MerchantMenuCWProxyImpl(this._value);
+
+  final MerchantMenu _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, merchantId.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, category.hashCode);
-    _$hash = $jc(_$hash, price.hashCode);
-    _$hash = $jc(_$hash, stock.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  MerchantMenu id(String id) => this(id: id);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'MerchantMenu')
-          ..add('id', id)
-          ..add('merchantId', merchantId)
-          ..add('name', name)
-          ..add('category', category)
-          ..add('price', price)
-          ..add('stock', stock)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
-        .toString();
+  MerchantMenu merchantId(String merchantId) => this(merchantId: merchantId);
+
+  @override
+  MerchantMenu name(String name) => this(name: name);
+
+  @override
+  MerchantMenu image(String? image) => this(image: image);
+
+  @override
+  MerchantMenu category(String? category) => this(category: category);
+
+  @override
+  MerchantMenu price(num price) => this(price: price);
+
+  @override
+  MerchantMenu stock(int stock) => this(stock: stock);
+
+  @override
+  MerchantMenu createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  MerchantMenu updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenu(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantMenu(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantMenu call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? merchantId = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? image = const $CopyWithPlaceholder(),
+    Object? category = const $CopyWithPlaceholder(),
+    Object? price = const $CopyWithPlaceholder(),
+    Object? stock = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return MerchantMenu(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      merchantId: merchantId == const $CopyWithPlaceholder()
+          ? _value.merchantId
+          // ignore: cast_nullable_to_non_nullable
+          : merchantId as String,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      image: image == const $CopyWithPlaceholder()
+          ? _value.image
+          // ignore: cast_nullable_to_non_nullable
+          : image as String?,
+      category: category == const $CopyWithPlaceholder()
+          ? _value.category
+          // ignore: cast_nullable_to_non_nullable
+          : category as String?,
+      price: price == const $CopyWithPlaceholder()
+          ? _value.price
+          // ignore: cast_nullable_to_non_nullable
+          : price as num,
+      stock: stock == const $CopyWithPlaceholder()
+          ? _value.stock
+          // ignore: cast_nullable_to_non_nullable
+          : stock as int,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+    );
   }
 }
 
-class MerchantMenuBuilder
-    implements Builder<MerchantMenu, MerchantMenuBuilder> {
-  _$MerchantMenu? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _merchantId;
-  String? get merchantId => _$this._merchantId;
-  set merchantId(String? merchantId) => _$this._merchantId = merchantId;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  String? _category;
-  String? get category => _$this._category;
-  set category(String? category) => _$this._category = category;
-
-  num? _price;
-  num? get price => _$this._price;
-  set price(num? price) => _$this._price = price;
-
-  num? _stock;
-  num? get stock => _$this._stock;
-  set stock(num? stock) => _$this._stock = stock;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  MerchantMenuBuilder() {
-    MerchantMenu._defaults(this);
-  }
-
-  MerchantMenuBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _merchantId = $v.merchantId;
-      _name = $v.name;
-      _category = $v.category;
-      _price = $v.price;
-      _stock = $v.stock;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(MerchantMenu other) {
-    _$v = other as _$MerchantMenu;
-  }
-
-  @override
-  void update(void Function(MerchantMenuBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  MerchantMenu build() => _build();
-
-  _$MerchantMenu _build() {
-    final _$result =
-        _$v ??
-        _$MerchantMenu._(
-          id: BuiltValueNullFieldError.checkNotNull(id, r'MerchantMenu', 'id'),
-          merchantId: BuiltValueNullFieldError.checkNotNull(
-            merchantId,
-            r'MerchantMenu',
-            'merchantId',
-          ),
-          name: BuiltValueNullFieldError.checkNotNull(
-            name,
-            r'MerchantMenu',
-            'name',
-          ),
-          category: category,
-          price: BuiltValueNullFieldError.checkNotNull(
-            price,
-            r'MerchantMenu',
-            'price',
-          ),
-          stock: BuiltValueNullFieldError.checkNotNull(
-            stock,
-            r'MerchantMenu',
-            'stock',
-          ),
-          createdAt: BuiltValueNullFieldError.checkNotNull(
-            createdAt,
-            r'MerchantMenu',
-            'createdAt',
-          ),
-          updatedAt: BuiltValueNullFieldError.checkNotNull(
-            updatedAt,
-            r'MerchantMenu',
-            'updatedAt',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $MerchantMenuCopyWith on MerchantMenu {
+  /// Returns a callable class that can be used as follows: `instanceOfMerchantMenu.copyWith(...)` or like so:`instanceOfMerchantMenu.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$MerchantMenuCWProxy get copyWith => _$MerchantMenuCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+MerchantMenu _$MerchantMenuFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantMenu', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'merchantId',
+      'name',
+      'price',
+      'stock',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
+  final val = MerchantMenu(
+    id: $checkedConvert('id', (v) => v as String),
+    merchantId: $checkedConvert('merchantId', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
+    image: $checkedConvert('image', (v) => v as String?),
+    category: $checkedConvert('category', (v) => v as String?),
+    price: $checkedConvert('price', (v) => v as num),
+    stock: $checkedConvert('stock', (v) => (v as num).toInt()),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$MerchantMenuToJson(MerchantMenu instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'merchantId': instance.merchantId,
+      'name': instance.name,
+      'image': ?instance.image,
+      'category': ?instance.category,
+      'price': instance.price,
+      'stock': instance.stock,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };

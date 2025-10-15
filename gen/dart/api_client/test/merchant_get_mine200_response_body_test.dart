@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantGetMine200ResponseBody
 void main() {
-  final instance = MerchantGetMine200ResponseBodyBuilder();
-  // TODO add properties to the builder and call build()
+  final MerchantGetMine200ResponseBody?
+  instance = /* MerchantGetMine200ResponseBody(...) */ null;
+  // TODO add properties to the entity
 
   group(MerchantGetMine200ResponseBody, () {
     // String message
@@ -17,5 +18,9 @@ void main() {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

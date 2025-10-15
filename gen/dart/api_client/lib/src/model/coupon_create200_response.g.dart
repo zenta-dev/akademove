@@ -3,126 +3,101 @@
 part of 'coupon_create200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$CouponCreate200Response extends CouponCreate200Response {
-  @override
-  final String message;
-  @override
-  final Coupon data;
+abstract class _$CouponCreate200ResponseCWProxy {
+  CouponCreate200Response message(String message);
 
-  factory _$CouponCreate200Response([
-    void Function(CouponCreate200ResponseBuilder)? updates,
-  ]) => (CouponCreate200ResponseBuilder()..update(updates))._build();
+  CouponCreate200Response data(Coupon data);
 
-  _$CouponCreate200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  CouponCreate200Response rebuild(
-    void Function(CouponCreate200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  CouponCreate200Response totalPages(num? totalPages);
 
-  @override
-  CouponCreate200ResponseBuilder toBuilder() =>
-      CouponCreate200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreate200Response call({String message, Coupon data, num? totalPages});
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is CouponCreate200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreate200Response.copyWith.fieldName(...)`
+class _$CouponCreate200ResponseCWProxyImpl
+    implements _$CouponCreate200ResponseCWProxy {
+  const _$CouponCreate200ResponseCWProxyImpl(this._value);
+
+  final CouponCreate200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  CouponCreate200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'CouponCreate200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  CouponCreate200Response data(Coupon data) => this(data: data);
+
+  @override
+  CouponCreate200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreate200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return CouponCreate200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as Coupon,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class CouponCreate200ResponseBuilder
-    implements
-        Builder<CouponCreate200Response, CouponCreate200ResponseBuilder> {
-  _$CouponCreate200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  CouponBuilder? _data;
-  CouponBuilder get data => _$this._data ??= CouponBuilder();
-  set data(CouponBuilder? data) => _$this._data = data;
-
-  CouponCreate200ResponseBuilder() {
-    CouponCreate200Response._defaults(this);
-  }
-
-  CouponCreate200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(CouponCreate200Response other) {
-    _$v = other as _$CouponCreate200Response;
-  }
-
-  @override
-  void update(void Function(CouponCreate200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  CouponCreate200Response build() => _build();
-
-  _$CouponCreate200Response _build() {
-    _$CouponCreate200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$CouponCreate200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'CouponCreate200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'CouponCreate200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $CouponCreate200ResponseCopyWith on CouponCreate200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfCouponCreate200Response.copyWith(...)` or like so:`instanceOfCouponCreate200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$CouponCreate200ResponseCWProxy get copyWith =>
+      _$CouponCreate200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+CouponCreate200Response _$CouponCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('CouponCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = CouponCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Coupon.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$CouponCreate200ResponseToJson(
+  CouponCreate200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'totalPages': ?instance.totalPages,
+};

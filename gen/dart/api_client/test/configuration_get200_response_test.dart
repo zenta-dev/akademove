@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for ConfigurationGet200Response
 void main() {
-  final instance = ConfigurationGet200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final ConfigurationGet200Response?
+  instance = /* ConfigurationGet200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(ConfigurationGet200Response, () {
     // String message
@@ -17,5 +18,9 @@ void main() {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

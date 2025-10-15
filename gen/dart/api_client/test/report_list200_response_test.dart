@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReportList200Response
 void main() {
-  final instance = ReportList200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final ReportList200Response? instance = /* ReportList200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(ReportList200Response, () {
     // String message
@@ -12,10 +12,14 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Report> data
+    // List<Report> data
     test('to test the property `data`', () async {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

@@ -12,14 +12,14 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | [optional] 
 **reporterId** | **String** |  | 
 **targetUserId** | **String** |  | 
-**category** | **String** |  | [optional] [default to 'other']
+**category** | **String** |  | 
 **description** | **String** |  | 
 **evidenceUrl** | **String** |  | [optional] 
-**status** | **String** |  | [optional] [default to 'pending']
+**status** | **String** |  | 
 **handledById** | **String** |  | [optional] 
 **resolution** | **String** |  | [optional] 
-**reportedAt** | **num** | unix timestamp format | 
-**resolvedAt** | **num** | unix timestamp format | [optional] 
+**reportedAt** | [**DateTime**](DateTime.md) |  | 
+**resolvedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

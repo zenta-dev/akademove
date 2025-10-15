@@ -3,11 +3,12 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponCreateRequestRulesGeneral
 void main() {
-  final instance = CouponCreateRequestRulesGeneralBuilder();
-  // TODO add properties to the builder and call build()
+  final CouponCreateRequestRulesGeneral?
+  instance = /* CouponCreateRequestRulesGeneral(...) */ null;
+  // TODO add properties to the entity
 
   group(CouponCreateRequestRulesGeneral, () {
-    // String type (default value: 'percentage')
+    // String type
     test('to test the property `type`', () async {
       // TODO
     });
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `maxDiscountAmount`', () async {
       // TODO
     });
-
   });
 }

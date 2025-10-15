@@ -3,125 +3,101 @@
 part of 'user_create200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$UserCreate200Response extends UserCreate200Response {
-  @override
-  final String message;
-  @override
-  final User data;
+abstract class _$UserCreate200ResponseCWProxy {
+  UserCreate200Response message(String message);
 
-  factory _$UserCreate200Response([
-    void Function(UserCreate200ResponseBuilder)? updates,
-  ]) => (UserCreate200ResponseBuilder()..update(updates))._build();
+  UserCreate200Response data(User data);
 
-  _$UserCreate200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  UserCreate200Response rebuild(
-    void Function(UserCreate200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  UserCreate200Response totalPages(num? totalPages);
 
-  @override
-  UserCreate200ResponseBuilder toBuilder() =>
-      UserCreate200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UserCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UserCreate200Response call({String message, User data, num? totalPages});
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is UserCreate200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserCreate200Response.copyWith.fieldName(...)`
+class _$UserCreate200ResponseCWProxyImpl
+    implements _$UserCreate200ResponseCWProxy {
+  const _$UserCreate200ResponseCWProxyImpl(this._value);
+
+  final UserCreate200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  UserCreate200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'UserCreate200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  UserCreate200Response data(User data) => this(data: data);
+
+  @override
+  UserCreate200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UserCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UserCreate200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return UserCreate200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as User,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class UserCreate200ResponseBuilder
-    implements Builder<UserCreate200Response, UserCreate200ResponseBuilder> {
-  _$UserCreate200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  UserBuilder? _data;
-  UserBuilder get data => _$this._data ??= UserBuilder();
-  set data(UserBuilder? data) => _$this._data = data;
-
-  UserCreate200ResponseBuilder() {
-    UserCreate200Response._defaults(this);
-  }
-
-  UserCreate200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(UserCreate200Response other) {
-    _$v = other as _$UserCreate200Response;
-  }
-
-  @override
-  void update(void Function(UserCreate200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  UserCreate200Response build() => _build();
-
-  _$UserCreate200Response _build() {
-    _$UserCreate200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$UserCreate200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'UserCreate200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'UserCreate200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $UserCreate200ResponseCopyWith on UserCreate200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfUserCreate200Response.copyWith(...)` or like so:`instanceOfUserCreate200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$UserCreate200ResponseCWProxy get copyWith =>
+      _$UserCreate200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UserCreate200Response _$UserCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UserCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = UserCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => User.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$UserCreate200ResponseToJson(
+  UserCreate200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'totalPages': ?instance.totalPages,
+};

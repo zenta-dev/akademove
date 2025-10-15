@@ -4,120 +4,55 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/review.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'review_create200_response.g.dart';
 
-/// ReviewCreate200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class ReviewCreate200Response implements Built<ReviewCreate200Response, ReviewCreate200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class ReviewCreate200Response {
+  /// Returns a new [ReviewCreate200Response] instance.
+  ReviewCreate200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  Review get data;
+    required this.data,
 
-  ReviewCreate200Response._();
+    this.totalPages,
+  });
 
-  factory ReviewCreate200Response([void updates(ReviewCreate200ResponseBuilder b)]) = _$ReviewCreate200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReviewCreate200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final Review data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<ReviewCreate200Response> get serializer => _$ReviewCreate200ResponseSerializer();
-}
-
-class _$ReviewCreate200ResponseSerializer implements PrimitiveSerializer<ReviewCreate200Response> {
-  @override
-  final Iterable<Type> types = const [ReviewCreate200Response, _$ReviewCreate200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'ReviewCreate200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    ReviewCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(Review),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    ReviewCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReviewCreate200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Review),
-          ) as Review;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory ReviewCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$ReviewCreate200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReviewCreate200ResponseToJson(this);
 
   @override
-  ReviewCreate200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReviewCreate200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

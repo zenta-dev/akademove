@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for ConfigurationUpdateRequest
 void main() {
-  final instance = ConfigurationUpdateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final ConfigurationUpdateRequest?
+  instance = /* ConfigurationUpdateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(ConfigurationUpdateRequest, () {
     // String name
@@ -12,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // JsonObject value
+    // Object value
     test('to test the property `value`', () async {
       // TODO
     });
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `description`', () async {
       // TODO
     });
-
   });
 }

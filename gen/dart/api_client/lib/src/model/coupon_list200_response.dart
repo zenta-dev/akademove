@@ -4,121 +4,55 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coupon.dart';
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon_list200_response.g.dart';
 
-/// CouponList200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class CouponList200Response implements Built<CouponList200Response, CouponList200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class CouponList200Response {
+  /// Returns a new [CouponList200Response] instance.
+  CouponList200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  BuiltList<Coupon> get data;
+    required this.data,
 
-  CouponList200Response._();
+    this.totalPages,
+  });
 
-  factory CouponList200Response([void updates(CouponList200ResponseBuilder b)]) = _$CouponList200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(CouponList200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final List<Coupon> data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<CouponList200Response> get serializer => _$CouponList200ResponseSerializer();
-}
-
-class _$CouponList200ResponseSerializer implements PrimitiveSerializer<CouponList200Response> {
-  @override
-  final Iterable<Type> types = const [CouponList200Response, _$CouponList200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'CouponList200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    CouponList200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(BuiltList, [FullType(Coupon)]),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponList200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    CouponList200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required CouponList200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(Coupon)]),
-          ) as BuiltList<Coupon>;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory CouponList200Response.fromJson(Map<String, dynamic> json) =>
+      _$CouponList200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CouponList200ResponseToJson(this);
 
   @override
-  CouponList200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = CouponList200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

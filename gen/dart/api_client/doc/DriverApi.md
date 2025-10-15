@@ -5,60 +5,18 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**driverCreate**](DriverApi.md#drivercreate) | **POST** /drivers | 
 [**driverGet**](DriverApi.md#driverget) | **GET** /drivers/{id} | 
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
 [**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
 
-# **driverCreate**
-> DriverCreate200Response driverCreate(driverCreateRequest)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getDriverApi();
-final DriverCreateRequest driverCreateRequest = ; // DriverCreateRequest | 
-
-try {
-    final response = api.driverCreate(driverCreateRequest);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling DriverApi->driverCreate: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **driverCreateRequest** | [**DriverCreateRequest**](DriverCreateRequest.md)|  | 
-
-### Return type
-
-[**DriverCreate200Response**](DriverCreate200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **driverGet**
-> DriverCreate200Response driverGet(id)
+> DriverGet200Response driverGet(id)
 
 
 
@@ -85,7 +43,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverCreate200Response**](DriverCreate200Response.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -99,7 +57,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverList**
-> DriverList200Response driverList(cursor, page, limit)
+> DriverList200Response driverList(cursor, limit, page, query, sortBy, order)
 
 
 
@@ -109,11 +67,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
 final String cursor = cursor_example; // String | 
-final JsonObject page = ; // JsonObject | 
-final JsonObject limit = ; // JsonObject | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
 
 try {
-    final response = api.driverList(cursor, page, limit);
+    final response = api.driverList(cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverList: $e\n');
@@ -125,8 +86,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
- **page** | [**JsonObject**](.md)|  | [optional] 
- **limit** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
 
 ### Return type
 
@@ -185,7 +149,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverCreate200Response driverUpdate(id, driverUpdateRequest)
+> DriverGet200Response driverUpdate(id, studentId, licenseNumber, studentCard, driverLicense, vehicleCertificate)
 
 
 
@@ -195,10 +159,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
 final String id = id_example; // String | 
-final DriverUpdateRequest driverUpdateRequest = ; // DriverUpdateRequest | 
+final String studentId = studentId_example; // String | 
+final String licenseNumber = licenseNumber_example; // String | 
+final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile | 
+final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
+final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.driverUpdate(id, driverUpdateRequest);
+    final response = api.driverUpdate(id, studentId, licenseNumber, studentCard, driverLicense, vehicleCertificate);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -210,11 +178,15 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **driverUpdateRequest** | [**DriverUpdateRequest**](DriverUpdateRequest.md)|  | 
+ **studentId** | **String**|  | [optional] 
+ **licenseNumber** | **String**|  | [optional] 
+ **studentCard** | **MultipartFile**|  | [optional] 
+ **driverLicense** | **MultipartFile**|  | [optional] 
+ **vehicleCertificate** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
-[**DriverCreate200Response**](DriverCreate200Response.md)
+[**DriverGet200Response**](DriverGet200Response.md)
 
 ### Authorization
 
@@ -222,7 +194,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

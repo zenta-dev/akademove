@@ -3,287 +3,136 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'report_create_request.g.dart';
 
-/// ReportCreateRequest
-///
-/// Properties:
-/// * [orderId] 
-/// * [reporterId] 
-/// * [targetUserId] 
-/// * [category] 
-/// * [description] 
-/// * [evidenceUrl] 
-/// * [status] 
-/// * [handledById] 
-/// * [resolution] 
-@BuiltValue()
-abstract class ReportCreateRequest implements Built<ReportCreateRequest, ReportCreateRequestBuilder> {
-  @BuiltValueField(wireName: r'orderId')
-  String? get orderId;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class ReportCreateRequest {
+  /// Returns a new [ReportCreateRequest] instance.
+  ReportCreateRequest({
+    this.orderId,
 
-  @BuiltValueField(wireName: r'reporterId')
-  String get reporterId;
+    required this.reporterId,
 
-  @BuiltValueField(wireName: r'targetUserId')
-  String get targetUserId;
+    required this.targetUserId,
 
-  @BuiltValueField(wireName: r'category')
-  ReportCreateRequestCategoryEnum? get category;
-  // enum categoryEnum {  behavior,  safety,  fraud,  other,  };
+    required this.category,
 
-  @BuiltValueField(wireName: r'description')
-  String get description;
+    required this.description,
 
-  @BuiltValueField(wireName: r'evidenceUrl')
-  String? get evidenceUrl;
+    this.evidenceUrl,
 
-  @BuiltValueField(wireName: r'status')
-  ReportCreateRequestStatusEnum? get status;
-  // enum statusEnum {  pending,  investigating,  resolved,  dismissed,  };
+    required this.status,
 
-  @BuiltValueField(wireName: r'handledById')
-  String? get handledById;
+    this.handledById,
 
-  @BuiltValueField(wireName: r'resolution')
-  String? get resolution;
+    this.resolution,
+  });
 
-  ReportCreateRequest._();
+  @JsonKey(name: r'orderId', required: false, includeIfNull: false)
+  final String? orderId;
 
-  factory ReportCreateRequest([void updates(ReportCreateRequestBuilder b)]) = _$ReportCreateRequest;
+  @JsonKey(name: r'reporterId', required: true, includeIfNull: false)
+  final String reporterId;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReportCreateRequestBuilder b) => b
-      ..category = const ReportCreateRequestCategoryEnum._('other')
-      ..status = const ReportCreateRequestStatusEnum._('pending');
+  @JsonKey(name: r'targetUserId', required: true, includeIfNull: false)
+  final String targetUserId;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<ReportCreateRequest> get serializer => _$ReportCreateRequestSerializer();
-}
+  @JsonKey(name: r'category', required: true, includeIfNull: false)
+  final ReportCreateRequestCategoryEnum category;
 
-class _$ReportCreateRequestSerializer implements PrimitiveSerializer<ReportCreateRequest> {
-  @override
-  final Iterable<Type> types = const [ReportCreateRequest, _$ReportCreateRequest];
+  @JsonKey(name: r'description', required: true, includeIfNull: false)
+  final String description;
+
+  @JsonKey(name: r'evidenceUrl', required: false, includeIfNull: false)
+  final String? evidenceUrl;
+
+  @JsonKey(name: r'status', required: true, includeIfNull: false)
+  final ReportCreateRequestStatusEnum status;
+
+  @JsonKey(name: r'handledById', required: false, includeIfNull: false)
+  final String? handledById;
+
+  @JsonKey(name: r'resolution', required: false, includeIfNull: false)
+  final String? resolution;
 
   @override
-  final String wireName = r'ReportCreateRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    ReportCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.orderId != null) {
-      yield r'orderId';
-      yield serializers.serialize(
-        object.orderId,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'reporterId';
-    yield serializers.serialize(
-      object.reporterId,
-      specifiedType: const FullType(String),
-    );
-    yield r'targetUserId';
-    yield serializers.serialize(
-      object.targetUserId,
-      specifiedType: const FullType(String),
-    );
-    if (object.category != null) {
-      yield r'category';
-      yield serializers.serialize(
-        object.category,
-        specifiedType: const FullType(ReportCreateRequestCategoryEnum),
-      );
-    }
-    yield r'description';
-    yield serializers.serialize(
-      object.description,
-      specifiedType: const FullType(String),
-    );
-    if (object.evidenceUrl != null) {
-      yield r'evidenceUrl';
-      yield serializers.serialize(
-        object.evidenceUrl,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.status != null) {
-      yield r'status';
-      yield serializers.serialize(
-        object.status,
-        specifiedType: const FullType(ReportCreateRequestStatusEnum),
-      );
-    }
-    if (object.handledById != null) {
-      yield r'handledById';
-      yield serializers.serialize(
-        object.handledById,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.resolution != null) {
-      yield r'resolution';
-      yield serializers.serialize(
-        object.resolution,
-        specifiedType: const FullType(String),
-      );
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReportCreateRequest &&
+          other.orderId == orderId &&
+          other.reporterId == reporterId &&
+          other.targetUserId == targetUserId &&
+          other.category == category &&
+          other.description == description &&
+          other.evidenceUrl == evidenceUrl &&
+          other.status == status &&
+          other.handledById == handledById &&
+          other.resolution == resolution;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    ReportCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode =>
+      orderId.hashCode +
+      reporterId.hashCode +
+      targetUserId.hashCode +
+      category.hashCode +
+      description.hashCode +
+      evidenceUrl.hashCode +
+      status.hashCode +
+      handledById.hashCode +
+      resolution.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReportCreateRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'orderId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.orderId = valueDes;
-          break;
-        case r'reporterId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.reporterId = valueDes;
-          break;
-        case r'targetUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.targetUserId = valueDes;
-          break;
-        case r'category':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReportCreateRequestCategoryEnum),
-          ) as ReportCreateRequestCategoryEnum;
-          result.category = valueDes;
-          break;
-        case r'description':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.description = valueDes;
-          break;
-        case r'evidenceUrl':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.evidenceUrl = valueDes;
-          break;
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReportCreateRequestStatusEnum),
-          ) as ReportCreateRequestStatusEnum;
-          result.status = valueDes;
-          break;
-        case r'handledById':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.handledById = valueDes;
-          break;
-        case r'resolution':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.resolution = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory ReportCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$ReportCreateRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportCreateRequestToJson(this);
 
   @override
-  ReportCreateRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReportCreateRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class ReportCreateRequestCategoryEnum extends EnumClass {
+enum ReportCreateRequestCategoryEnum {
+  @JsonValue(r'behavior')
+  behavior(r'behavior'),
+  @JsonValue(r'safety')
+  safety(r'safety'),
+  @JsonValue(r'fraud')
+  fraud(r'fraud'),
+  @JsonValue(r'other')
+  other(r'other');
 
-  @BuiltValueEnumConst(wireName: r'behavior')
-  static const ReportCreateRequestCategoryEnum behavior = _$reportCreateRequestCategoryEnum_behavior;
-  @BuiltValueEnumConst(wireName: r'safety')
-  static const ReportCreateRequestCategoryEnum safety = _$reportCreateRequestCategoryEnum_safety;
-  @BuiltValueEnumConst(wireName: r'fraud')
-  static const ReportCreateRequestCategoryEnum fraud = _$reportCreateRequestCategoryEnum_fraud;
-  @BuiltValueEnumConst(wireName: r'other')
-  static const ReportCreateRequestCategoryEnum other = _$reportCreateRequestCategoryEnum_other;
+  const ReportCreateRequestCategoryEnum(this.value);
 
-  static Serializer<ReportCreateRequestCategoryEnum> get serializer => _$reportCreateRequestCategoryEnumSerializer;
+  final String value;
 
-  const ReportCreateRequestCategoryEnum._(String name): super(name);
-
-  static BuiltSet<ReportCreateRequestCategoryEnum> get values => _$reportCreateRequestCategoryEnumValues;
-  static ReportCreateRequestCategoryEnum valueOf(String name) => _$reportCreateRequestCategoryEnumValueOf(name);
+  @override
+  String toString() => value;
 }
 
-class ReportCreateRequestStatusEnum extends EnumClass {
+enum ReportCreateRequestStatusEnum {
+  @JsonValue(r'pending')
+  pending(r'pending'),
+  @JsonValue(r'investigating')
+  investigating(r'investigating'),
+  @JsonValue(r'resolved')
+  resolved(r'resolved'),
+  @JsonValue(r'dismissed')
+  dismissed(r'dismissed');
 
-  @BuiltValueEnumConst(wireName: r'pending')
-  static const ReportCreateRequestStatusEnum pending = _$reportCreateRequestStatusEnum_pending;
-  @BuiltValueEnumConst(wireName: r'investigating')
-  static const ReportCreateRequestStatusEnum investigating = _$reportCreateRequestStatusEnum_investigating;
-  @BuiltValueEnumConst(wireName: r'resolved')
-  static const ReportCreateRequestStatusEnum resolved = _$reportCreateRequestStatusEnum_resolved;
-  @BuiltValueEnumConst(wireName: r'dismissed')
-  static const ReportCreateRequestStatusEnum dismissed = _$reportCreateRequestStatusEnum_dismissed;
+  const ReportCreateRequestStatusEnum(this.value);
 
-  static Serializer<ReportCreateRequestStatusEnum> get serializer => _$reportCreateRequestStatusEnumSerializer;
+  final String value;
 
-  const ReportCreateRequestStatusEnum._(String name): super(name);
-
-  static BuiltSet<ReportCreateRequestStatusEnum> get values => _$reportCreateRequestStatusEnumValues;
-  static ReportCreateRequestStatusEnum valueOf(String name) => _$reportCreateRequestStatusEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

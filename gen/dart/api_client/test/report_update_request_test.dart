@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReportUpdateRequest
 void main() {
-  final instance = ReportUpdateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final ReportUpdateRequest? instance = /* ReportUpdateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(ReportUpdateRequest, () {
     // String orderId
@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    // String status (default value: 'pending')
+    // String status
     test('to test the property `status`', () async {
       // TODO
     });
@@ -51,6 +51,5 @@ void main() {
     test('to test the property `resolution`', () async {
       // TODO
     });
-
   });
 }

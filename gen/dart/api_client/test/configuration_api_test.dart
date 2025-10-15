@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ConfigurationApi
 void main() {
   final instance = ApiClient().getConfigurationApi();
@@ -12,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<ConfigurationList200Response> configurationList({ String cursor, JsonObject page, JsonObject limit }) async
+    //Future<ConfigurationList200Response> configurationList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
     test('test configurationList', () async {
       // TODO
     });
@@ -21,6 +20,5 @@ void main() {
     test('test configurationUpdate', () async {
       // TODO
     });
-
   });
 }

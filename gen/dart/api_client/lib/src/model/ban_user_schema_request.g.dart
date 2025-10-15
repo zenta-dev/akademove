@@ -3,109 +3,87 @@
 part of 'ban_user_schema_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$BanUserSchemaRequest extends BanUserSchemaRequest {
-  @override
-  final String banReason;
-  @override
-  final num? banExpiresIn;
+abstract class _$BanUserSchemaRequestCWProxy {
+  BanUserSchemaRequest banReason(String banReason);
 
-  factory _$BanUserSchemaRequest([
-    void Function(BanUserSchemaRequestBuilder)? updates,
-  ]) => (BanUserSchemaRequestBuilder()..update(updates))._build();
+  BanUserSchemaRequest banExpiresIn(num? banExpiresIn);
 
-  _$BanUserSchemaRequest._({required this.banReason, this.banExpiresIn})
-    : super._();
-  @override
-  BanUserSchemaRequest rebuild(
-    void Function(BanUserSchemaRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BanUserSchemaRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// BanUserSchemaRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  BanUserSchemaRequest call({String banReason, num? banExpiresIn});
+}
 
-  @override
-  BanUserSchemaRequestBuilder toBuilder() =>
-      BanUserSchemaRequestBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBanUserSchemaRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBanUserSchemaRequest.copyWith.fieldName(...)`
+class _$BanUserSchemaRequestCWProxyImpl
+    implements _$BanUserSchemaRequestCWProxy {
+  const _$BanUserSchemaRequestCWProxyImpl(this._value);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is BanUserSchemaRequest &&
-        banReason == other.banReason &&
-        banExpiresIn == other.banExpiresIn;
-  }
+  final BanUserSchemaRequest _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, banReason.hashCode);
-    _$hash = $jc(_$hash, banExpiresIn.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  BanUserSchemaRequest banReason(String banReason) =>
+      this(banReason: banReason);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'BanUserSchemaRequest')
-          ..add('banReason', banReason)
-          ..add('banExpiresIn', banExpiresIn))
-        .toString();
+  BanUserSchemaRequest banExpiresIn(num? banExpiresIn) =>
+      this(banExpiresIn: banExpiresIn);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BanUserSchemaRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// BanUserSchemaRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  BanUserSchemaRequest call({
+    Object? banReason = const $CopyWithPlaceholder(),
+    Object? banExpiresIn = const $CopyWithPlaceholder(),
+  }) {
+    return BanUserSchemaRequest(
+      banReason: banReason == const $CopyWithPlaceholder()
+          ? _value.banReason
+          // ignore: cast_nullable_to_non_nullable
+          : banReason as String,
+      banExpiresIn: banExpiresIn == const $CopyWithPlaceholder()
+          ? _value.banExpiresIn
+          // ignore: cast_nullable_to_non_nullable
+          : banExpiresIn as num?,
+    );
   }
 }
 
-class BanUserSchemaRequestBuilder
-    implements Builder<BanUserSchemaRequest, BanUserSchemaRequestBuilder> {
-  _$BanUserSchemaRequest? _$v;
-
-  String? _banReason;
-  String? get banReason => _$this._banReason;
-  set banReason(String? banReason) => _$this._banReason = banReason;
-
-  num? _banExpiresIn;
-  num? get banExpiresIn => _$this._banExpiresIn;
-  set banExpiresIn(num? banExpiresIn) => _$this._banExpiresIn = banExpiresIn;
-
-  BanUserSchemaRequestBuilder() {
-    BanUserSchemaRequest._defaults(this);
-  }
-
-  BanUserSchemaRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _banReason = $v.banReason;
-      _banExpiresIn = $v.banExpiresIn;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(BanUserSchemaRequest other) {
-    _$v = other as _$BanUserSchemaRequest;
-  }
-
-  @override
-  void update(void Function(BanUserSchemaRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  BanUserSchemaRequest build() => _build();
-
-  _$BanUserSchemaRequest _build() {
-    final _$result =
-        _$v ??
-        _$BanUserSchemaRequest._(
-          banReason: BuiltValueNullFieldError.checkNotNull(
-            banReason,
-            r'BanUserSchemaRequest',
-            'banReason',
-          ),
-          banExpiresIn: banExpiresIn,
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $BanUserSchemaRequestCopyWith on BanUserSchemaRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfBanUserSchemaRequest.copyWith(...)` or like so:`instanceOfBanUserSchemaRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$BanUserSchemaRequestCWProxy get copyWith =>
+      _$BanUserSchemaRequestCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+BanUserSchemaRequest _$BanUserSchemaRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('BanUserSchemaRequest', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['banReason']);
+  final val = BanUserSchemaRequest(
+    banReason: $checkedConvert('banReason', (v) => v as String),
+    banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$BanUserSchemaRequestToJson(
+  BanUserSchemaRequest instance,
+) => <String, dynamic>{
+  'banReason': instance.banReason,
+  'banExpiresIn': ?instance.banExpiresIn,
+};

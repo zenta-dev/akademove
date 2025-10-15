@@ -3,209 +3,100 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'review_create_request.g.dart';
 
-/// ReviewCreateRequest
-///
-/// Properties:
-/// * [orderId] 
-/// * [fromUserId] 
-/// * [toUserId] 
-/// * [category] 
-/// * [score] 
-/// * [comment] 
-@BuiltValue()
-abstract class ReviewCreateRequest implements Built<ReviewCreateRequest, ReviewCreateRequestBuilder> {
-  @BuiltValueField(wireName: r'orderId')
-  String get orderId;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class ReviewCreateRequest {
+  /// Returns a new [ReviewCreateRequest] instance.
+  ReviewCreateRequest({
+    required this.orderId,
 
-  @BuiltValueField(wireName: r'fromUserId')
-  String get fromUserId;
+    required this.fromUserId,
 
-  @BuiltValueField(wireName: r'toUserId')
-  String get toUserId;
+    required this.toUserId,
 
-  @BuiltValueField(wireName: r'category')
-  ReviewCreateRequestCategoryEnum? get category;
-  // enum categoryEnum {  cleanliness,  courtesy,  other,  };
+    required this.category,
 
-  @BuiltValueField(wireName: r'score')
-  num get score;
+    required this.score,
 
-  @BuiltValueField(wireName: r'comment')
-  String? get comment;
+    this.comment = '',
+  });
 
-  ReviewCreateRequest._();
+  @JsonKey(name: r'orderId', required: true, includeIfNull: false)
+  final String orderId;
 
-  factory ReviewCreateRequest([void updates(ReviewCreateRequestBuilder b)]) = _$ReviewCreateRequest;
+  @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
+  final String fromUserId;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReviewCreateRequestBuilder b) => b
-      ..category = const ReviewCreateRequestCategoryEnum._('other')
-      ..comment = '';
+  @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
+  final String toUserId;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<ReviewCreateRequest> get serializer => _$ReviewCreateRequestSerializer();
-}
+  @JsonKey(name: r'category', required: true, includeIfNull: false)
+  final ReviewCreateRequestCategoryEnum category;
 
-class _$ReviewCreateRequestSerializer implements PrimitiveSerializer<ReviewCreateRequest> {
-  @override
-  final Iterable<Type> types = const [ReviewCreateRequest, _$ReviewCreateRequest];
+  @JsonKey(name: r'score', required: true, includeIfNull: false)
+  final num score;
 
-  @override
-  final String wireName = r'ReviewCreateRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    ReviewCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'orderId';
-    yield serializers.serialize(
-      object.orderId,
-      specifiedType: const FullType(String),
-    );
-    yield r'fromUserId';
-    yield serializers.serialize(
-      object.fromUserId,
-      specifiedType: const FullType(String),
-    );
-    yield r'toUserId';
-    yield serializers.serialize(
-      object.toUserId,
-      specifiedType: const FullType(String),
-    );
-    if (object.category != null) {
-      yield r'category';
-      yield serializers.serialize(
-        object.category,
-        specifiedType: const FullType(ReviewCreateRequestCategoryEnum),
-      );
-    }
-    yield r'score';
-    yield serializers.serialize(
-      object.score,
-      specifiedType: const FullType(num),
-    );
-    if (object.comment != null) {
-      yield r'comment';
-      yield serializers.serialize(
-        object.comment,
-        specifiedType: const FullType(String),
-      );
-    }
-  }
+  @JsonKey(
+    defaultValue: '',
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
+  final String? comment;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    ReviewCreateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReviewCreateRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'orderId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.orderId = valueDes;
-          break;
-        case r'fromUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.fromUserId = valueDes;
-          break;
-        case r'toUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.toUserId = valueDes;
-          break;
-        case r'category':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReviewCreateRequestCategoryEnum),
-          ) as ReviewCreateRequestCategoryEnum;
-          result.category = valueDes;
-          break;
-        case r'score':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.score = valueDes;
-          break;
-        case r'comment':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.comment = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReviewCreateRequest &&
+          other.orderId == orderId &&
+          other.fromUserId == fromUserId &&
+          other.toUserId == toUserId &&
+          other.category == category &&
+          other.score == score &&
+          other.comment == comment;
 
   @override
-  ReviewCreateRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReviewCreateRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      orderId.hashCode +
+      fromUserId.hashCode +
+      toUserId.hashCode +
+      category.hashCode +
+      score.hashCode +
+      comment.hashCode;
+
+  factory ReviewCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$ReviewCreateRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReviewCreateRequestToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class ReviewCreateRequestCategoryEnum extends EnumClass {
+enum ReviewCreateRequestCategoryEnum {
+  @JsonValue(r'cleanliness')
+  cleanliness(r'cleanliness'),
+  @JsonValue(r'courtesy')
+  courtesy(r'courtesy'),
+  @JsonValue(r'other')
+  other(r'other');
 
-  @BuiltValueEnumConst(wireName: r'cleanliness')
-  static const ReviewCreateRequestCategoryEnum cleanliness = _$reviewCreateRequestCategoryEnum_cleanliness;
-  @BuiltValueEnumConst(wireName: r'courtesy')
-  static const ReviewCreateRequestCategoryEnum courtesy = _$reviewCreateRequestCategoryEnum_courtesy;
-  @BuiltValueEnumConst(wireName: r'other')
-  static const ReviewCreateRequestCategoryEnum other = _$reviewCreateRequestCategoryEnum_other;
+  const ReviewCreateRequestCategoryEnum(this.value);
 
-  static Serializer<ReviewCreateRequestCategoryEnum> get serializer => _$reviewCreateRequestCategoryEnumSerializer;
+  final String value;
 
-  const ReviewCreateRequestCategoryEnum._(String name): super(name);
-
-  static BuiltSet<ReviewCreateRequestCategoryEnum> get values => _$reviewCreateRequestCategoryEnumValues;
-  static ReviewCreateRequestCategoryEnum valueOf(String name) => _$reviewCreateRequestCategoryEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

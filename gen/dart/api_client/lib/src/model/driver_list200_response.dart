@@ -3,122 +3,56 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/driver.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'driver_list200_response.g.dart';
 
-/// DriverList200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class DriverList200Response implements Built<DriverList200Response, DriverList200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class DriverList200Response {
+  /// Returns a new [DriverList200Response] instance.
+  DriverList200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  BuiltList<Driver> get data;
+    required this.data,
 
-  DriverList200Response._();
+    this.totalPages,
+  });
 
-  factory DriverList200Response([void updates(DriverList200ResponseBuilder b)]) = _$DriverList200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(DriverList200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final List<Driver> data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<DriverList200Response> get serializer => _$DriverList200ResponseSerializer();
-}
-
-class _$DriverList200ResponseSerializer implements PrimitiveSerializer<DriverList200Response> {
-  @override
-  final Iterable<Type> types = const [DriverList200Response, _$DriverList200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'DriverList200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    DriverList200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(BuiltList, [FullType(Driver)]),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverList200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    DriverList200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required DriverList200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(Driver)]),
-          ) as BuiltList<Driver>;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory DriverList200Response.fromJson(Map<String, dynamic> json) =>
+      _$DriverList200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DriverList200ResponseToJson(this);
 
   @override
-  DriverList200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = DriverList200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

@@ -3,98 +3,80 @@
 part of 'time.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$Time extends Time {
-  @override
-  final num h;
-  @override
-  final num m;
+abstract class _$TimeCWProxy {
+  Time h(num h);
 
-  factory _$Time([void Function(TimeBuilder)? updates]) =>
-      (TimeBuilder()..update(updates))._build();
+  Time m(num m);
 
-  _$Time._({required this.h, required this.m}) : super._();
-  @override
-  Time rebuild(void Function(TimeBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Time(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Time(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Time call({num h, num m});
+}
 
-  @override
-  TimeBuilder toBuilder() => TimeBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTime.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfTime.copyWith.fieldName(...)`
+class _$TimeCWProxyImpl implements _$TimeCWProxy {
+  const _$TimeCWProxyImpl(this._value);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Time && h == other.h && m == other.m;
-  }
+  final Time _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, h.hashCode);
-    _$hash = $jc(_$hash, m.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  Time h(num h) => this(h: h);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Time')
-          ..add('h', h)
-          ..add('m', m))
-        .toString();
+  Time m(num m) => this(m: m);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Time(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Time(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Time call({
+    Object? h = const $CopyWithPlaceholder(),
+    Object? m = const $CopyWithPlaceholder(),
+  }) {
+    return Time(
+      h: h == const $CopyWithPlaceholder()
+          ? _value.h
+          // ignore: cast_nullable_to_non_nullable
+          : h as num,
+      m: m == const $CopyWithPlaceholder()
+          ? _value.m
+          // ignore: cast_nullable_to_non_nullable
+          : m as num,
+    );
   }
 }
 
-class TimeBuilder implements Builder<Time, TimeBuilder> {
-  _$Time? _$v;
-
-  num? _h;
-  num? get h => _$this._h;
-  set h(num? h) => _$this._h = h;
-
-  num? _m;
-  num? get m => _$this._m;
-  set m(num? m) => _$this._m = m;
-
-  TimeBuilder() {
-    Time._defaults(this);
-  }
-
-  TimeBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _h = $v.h;
-      _m = $v.m;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Time other) {
-    _$v = other as _$Time;
-  }
-
-  @override
-  void update(void Function(TimeBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Time build() => _build();
-
-  _$Time _build() {
-    final _$result =
-        _$v ??
-        _$Time._(
-          h: BuiltValueNullFieldError.checkNotNull(h, r'Time', 'h'),
-          m: BuiltValueNullFieldError.checkNotNull(m, r'Time', 'm'),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $TimeCopyWith on Time {
+  /// Returns a callable class that can be used as follows: `instanceOfTime.copyWith(...)` or like so:`instanceOfTime.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$TimeCWProxy get copyWith => _$TimeCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Time _$TimeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Time', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['h', 'm']);
+      final val = Time(
+        h: $checkedConvert('h', (v) => v as num),
+        m: $checkedConvert('m', (v) => v as num),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$TimeToJson(Time instance) => <String, dynamic>{
+  'h': instance.h,
+  'm': instance.m,
+};

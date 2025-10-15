@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Order
 void main() {
-  final instance = OrderBuilder();
-  // TODO add properties to the builder and call build()
+  final Order? instance = /* Order(...) */ null;
+  // TODO add properties to the entity
 
   group(Order, () {
     // String id
@@ -57,7 +57,7 @@ void main() {
       // TODO
     });
 
-    // num tip (default value: 0)
+    // num tip
     test('to test the property `tip`', () async {
       // TODO
     });
@@ -67,40 +67,49 @@ void main() {
       // TODO
     });
 
-    // CreateOrderRequestNote note
+    // OrderCreateRequestNote note
     test('to test the property `note`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num requestedAt
+    // DateTime requestedAt
     test('to test the property `requestedAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num acceptedAt
+    // DateTime acceptedAt
     test('to test the property `acceptedAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num arrivedAt
+    // DateTime arrivedAt
     test('to test the property `arrivedAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
 
+    // OrderCreateRequestUser user
+    test('to test the property `user`', () async {
+      // TODO
+    });
+
+    // OrderCreateRequestDriver driver
+    test('to test the property `driver`', () async {
+      // TODO
+    });
+
+    // OrderCreateRequestMerchant merchant
+    test('to test the property `merchant`', () async {
+      // TODO
+    });
   });
 }

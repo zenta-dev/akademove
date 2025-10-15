@@ -4,120 +4,55 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/order.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'order_create200_response.g.dart';
 
-/// OrderCreate200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class OrderCreate200Response implements Built<OrderCreate200Response, OrderCreate200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class OrderCreate200Response {
+  /// Returns a new [OrderCreate200Response] instance.
+  OrderCreate200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  Order get data;
+    required this.data,
 
-  OrderCreate200Response._();
+    this.totalPages,
+  });
 
-  factory OrderCreate200Response([void updates(OrderCreate200ResponseBuilder b)]) = _$OrderCreate200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderCreate200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final Order data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<OrderCreate200Response> get serializer => _$OrderCreate200ResponseSerializer();
-}
-
-class _$OrderCreate200ResponseSerializer implements PrimitiveSerializer<OrderCreate200Response> {
-  @override
-  final Iterable<Type> types = const [OrderCreate200Response, _$OrderCreate200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'OrderCreate200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    OrderCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(Order),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    OrderCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required OrderCreate200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Order),
-          ) as Order;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory OrderCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$OrderCreate200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OrderCreate200ResponseToJson(this);
 
   @override
-  OrderCreate200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = OrderCreate200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

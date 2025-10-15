@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderUpdateRequest
 void main() {
-  final instance = OrderUpdateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final OrderUpdateRequest? instance = /* OrderUpdateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(OrderUpdateRequest, () {
     // String driverId
@@ -61,6 +61,5 @@ void main() {
     test('to test the property `merchant`', () async {
       // TODO
     });
-
   });
 }

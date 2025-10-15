@@ -1,0 +1,47 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'auth_sign_in_request.g.dart';
+
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class AuthSignInRequest {
+  /// Returns a new [AuthSignInRequest] instance.
+  AuthSignInRequest({required this.email, required this.password});
+
+  @JsonKey(name: r'email', required: true, includeIfNull: false)
+  final String email;
+
+  @JsonKey(name: r'password', required: true, includeIfNull: false)
+  final String password;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthSignInRequest &&
+          other.email == email &&
+          other.password == password;
+
+  @override
+  int get hashCode => email.hashCode + password.hashCode;
+
+  factory AuthSignInRequest.fromJson(Map<String, dynamic> json) =>
+      _$AuthSignInRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AuthSignInRequestToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+}

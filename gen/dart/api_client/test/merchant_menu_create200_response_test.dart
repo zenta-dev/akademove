@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantMenuCreate200Response
 void main() {
-  final instance = MerchantMenuCreate200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final MerchantMenuCreate200Response?
+  instance = /* MerchantMenuCreate200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(MerchantMenuCreate200Response, () {
     // String message
@@ -17,5 +18,9 @@ void main() {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

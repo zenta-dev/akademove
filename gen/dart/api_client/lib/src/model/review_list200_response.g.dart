@@ -3,125 +3,107 @@
 part of 'review_list200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$ReviewList200Response extends ReviewList200Response {
-  @override
-  final String message;
-  @override
-  final BuiltList<Review> data;
+abstract class _$ReviewList200ResponseCWProxy {
+  ReviewList200Response message(String message);
 
-  factory _$ReviewList200Response([
-    void Function(ReviewList200ResponseBuilder)? updates,
-  ]) => (ReviewList200ResponseBuilder()..update(updates))._build();
+  ReviewList200Response data(List<Review> data);
 
-  _$ReviewList200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  ReviewList200Response rebuild(
-    void Function(ReviewList200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  ReviewList200Response totalPages(num? totalPages);
 
-  @override
-  ReviewList200ResponseBuilder toBuilder() =>
-      ReviewList200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReviewList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReviewList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReviewList200Response call({
+    String message,
+    List<Review> data,
+    num? totalPages,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ReviewList200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReviewList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReviewList200Response.copyWith.fieldName(...)`
+class _$ReviewList200ResponseCWProxyImpl
+    implements _$ReviewList200ResponseCWProxy {
+  const _$ReviewList200ResponseCWProxyImpl(this._value);
+
+  final ReviewList200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  ReviewList200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ReviewList200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  ReviewList200Response data(List<Review> data) => this(data: data);
+
+  @override
+  ReviewList200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReviewList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReviewList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReviewList200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return ReviewList200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as List<Review>,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class ReviewList200ResponseBuilder
-    implements Builder<ReviewList200Response, ReviewList200ResponseBuilder> {
-  _$ReviewList200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ListBuilder<Review>? _data;
-  ListBuilder<Review> get data => _$this._data ??= ListBuilder<Review>();
-  set data(ListBuilder<Review>? data) => _$this._data = data;
-
-  ReviewList200ResponseBuilder() {
-    ReviewList200Response._defaults(this);
-  }
-
-  ReviewList200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ReviewList200Response other) {
-    _$v = other as _$ReviewList200Response;
-  }
-
-  @override
-  void update(void Function(ReviewList200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ReviewList200Response build() => _build();
-
-  _$ReviewList200Response _build() {
-    _$ReviewList200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$ReviewList200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'ReviewList200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'ReviewList200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $ReviewList200ResponseCopyWith on ReviewList200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfReviewList200Response.copyWith(...)` or like so:`instanceOfReviewList200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ReviewList200ResponseCWProxy get copyWith =>
+      _$ReviewList200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ReviewList200Response _$ReviewList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ReviewList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = ReviewList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Review.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$ReviewList200ResponseToJson(
+  ReviewList200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'totalPages': ?instance.totalPages,
+};

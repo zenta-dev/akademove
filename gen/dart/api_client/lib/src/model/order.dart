@@ -4,506 +4,231 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/order_create_request_note.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/location.dart';
-import 'package:api_client/src/model/driver_update_request_user.dart';
+import 'package:api_client/src/model/order_create_request_user.dart';
 import 'package:api_client/src/model/order_create_request_merchant.dart';
 import 'package:api_client/src/model/order_create_request_driver.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'order.g.dart';
 
-/// Order
-///
-/// Properties:
-/// * [id] 
-/// * [userId] 
-/// * [driverId] 
-/// * [merchantId] 
-/// * [type] 
-/// * [status] 
-/// * [pickupLocation] 
-/// * [dropoffLocation] 
-/// * [distanceKm] 
-/// * [basePrice] 
-/// * [tip] 
-/// * [totalPrice] 
-/// * [note] 
-/// * [requestedAt] - unix timestamp format
-/// * [acceptedAt] - unix timestamp format
-/// * [arrivedAt] - unix timestamp format
-/// * [createdAt] - unix timestamp format
-/// * [updatedAt] - unix timestamp format
-/// * [user] 
-/// * [driver] 
-/// * [merchant] 
-@BuiltValue()
-abstract class Order implements Built<Order, OrderBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Order {
+  /// Returns a new [Order] instance.
+  Order({
+    required this.id,
 
-  @BuiltValueField(wireName: r'userId')
-  String get userId;
+    required this.userId,
 
-  @BuiltValueField(wireName: r'driverId')
-  String? get driverId;
+    this.driverId,
 
-  @BuiltValueField(wireName: r'merchantId')
-  String? get merchantId;
+    this.merchantId,
 
-  @BuiltValueField(wireName: r'type')
-  OrderTypeEnum? get type;
-  // enum typeEnum {  ride,  delivery,  food,  };
+    required this.type,
 
-  @BuiltValueField(wireName: r'status')
-  OrderStatusEnum? get status;
-  // enum statusEnum {  requested,  matching,  accepted,  arriving,  in_trip,  completed,  cancelled_by_user,  cancelled_by_driver,  cancelled_by_system,  };
+    required this.status,
 
-  @BuiltValueField(wireName: r'pickupLocation')
-  Location get pickupLocation;
+    required this.pickupLocation,
 
-  @BuiltValueField(wireName: r'dropoffLocation')
-  Location get dropoffLocation;
+    required this.dropoffLocation,
 
-  @BuiltValueField(wireName: r'distanceKm')
-  num get distanceKm;
+    required this.distanceKm,
 
-  @BuiltValueField(wireName: r'basePrice')
-  num get basePrice;
+    required this.basePrice,
 
-  @BuiltValueField(wireName: r'tip')
-  num? get tip;
+    this.tip,
 
-  @BuiltValueField(wireName: r'totalPrice')
-  num get totalPrice;
+    required this.totalPrice,
 
-  @BuiltValueField(wireName: r'note')
-  OrderCreateRequestNote? get note;
+    this.note,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'requestedAt')
-  num get requestedAt;
+    required this.requestedAt,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'acceptedAt')
-  num? get acceptedAt;
+    this.acceptedAt,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'arrivedAt')
-  num? get arrivedAt;
+    this.arrivedAt,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'createdAt')
-  num get createdAt;
+    required this.createdAt,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'updatedAt')
-  num get updatedAt;
+    required this.updatedAt,
 
-  @BuiltValueField(wireName: r'user')
-  DriverUpdateRequestUser? get user;
+    this.user,
 
-  @BuiltValueField(wireName: r'driver')
-  OrderCreateRequestDriver? get driver;
+    this.driver,
 
-  @BuiltValueField(wireName: r'merchant')
-  OrderCreateRequestMerchant? get merchant;
+    this.merchant,
+  });
 
-  Order._();
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  factory Order([void updates(OrderBuilder b)]) = _$Order;
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(OrderBuilder b) => b
-      ..type = const OrderTypeEnum._('ride')
-      ..status = const OrderStatusEnum._('requested');
+  @JsonKey(name: r'driverId', required: false, includeIfNull: false)
+  final String? driverId;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Order> get serializer => _$OrderSerializer();
-}
+  @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
+  final String? merchantId;
 
-class _$OrderSerializer implements PrimitiveSerializer<Order> {
-  @override
-  final Iterable<Type> types = const [Order, _$Order];
+  @JsonKey(name: r'type', required: true, includeIfNull: false)
+  final OrderTypeEnum type;
 
-  @override
-  final String wireName = r'Order';
+  @JsonKey(name: r'status', required: true, includeIfNull: false)
+  final OrderStatusEnum status;
 
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Order object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-    yield r'userId';
-    yield serializers.serialize(
-      object.userId,
-      specifiedType: const FullType(String),
-    );
-    if (object.driverId != null) {
-      yield r'driverId';
-      yield serializers.serialize(
-        object.driverId,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.merchantId != null) {
-      yield r'merchantId';
-      yield serializers.serialize(
-        object.merchantId,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.type != null) {
-      yield r'type';
-      yield serializers.serialize(
-        object.type,
-        specifiedType: const FullType(OrderTypeEnum),
-      );
-    }
-    if (object.status != null) {
-      yield r'status';
-      yield serializers.serialize(
-        object.status,
-        specifiedType: const FullType(OrderStatusEnum),
-      );
-    }
-    yield r'pickupLocation';
-    yield serializers.serialize(
-      object.pickupLocation,
-      specifiedType: const FullType(Location),
-    );
-    yield r'dropoffLocation';
-    yield serializers.serialize(
-      object.dropoffLocation,
-      specifiedType: const FullType(Location),
-    );
-    yield r'distanceKm';
-    yield serializers.serialize(
-      object.distanceKm,
-      specifiedType: const FullType(num),
-    );
-    yield r'basePrice';
-    yield serializers.serialize(
-      object.basePrice,
-      specifiedType: const FullType(num),
-    );
-    if (object.tip != null) {
-      yield r'tip';
-      yield serializers.serialize(
-        object.tip,
-        specifiedType: const FullType(num),
-      );
-    }
-    yield r'totalPrice';
-    yield serializers.serialize(
-      object.totalPrice,
-      specifiedType: const FullType(num),
-    );
-    if (object.note != null) {
-      yield r'note';
-      yield serializers.serialize(
-        object.note,
-        specifiedType: const FullType(OrderCreateRequestNote),
-      );
-    }
-    yield r'requestedAt';
-    yield serializers.serialize(
-      object.requestedAt,
-      specifiedType: const FullType(num),
-    );
-    if (object.acceptedAt != null) {
-      yield r'acceptedAt';
-      yield serializers.serialize(
-        object.acceptedAt,
-        specifiedType: const FullType(num),
-      );
-    }
-    if (object.arrivedAt != null) {
-      yield r'arrivedAt';
-      yield serializers.serialize(
-        object.arrivedAt,
-        specifiedType: const FullType(num),
-      );
-    }
-    yield r'createdAt';
-    yield serializers.serialize(
-      object.createdAt,
-      specifiedType: const FullType(num),
-    );
-    yield r'updatedAt';
-    yield serializers.serialize(
-      object.updatedAt,
-      specifiedType: const FullType(num),
-    );
-    if (object.user != null) {
-      yield r'user';
-      yield serializers.serialize(
-        object.user,
-        specifiedType: const FullType(DriverUpdateRequestUser),
-      );
-    }
-    if (object.driver != null) {
-      yield r'driver';
-      yield serializers.serialize(
-        object.driver,
-        specifiedType: const FullType(OrderCreateRequestDriver),
-      );
-    }
-    if (object.merchant != null) {
-      yield r'merchant';
-      yield serializers.serialize(
-        object.merchant,
-        specifiedType: const FullType(OrderCreateRequestMerchant),
-      );
-    }
-  }
+  @JsonKey(name: r'pickupLocation', required: true, includeIfNull: false)
+  final Location pickupLocation;
+
+  @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
+  final Location dropoffLocation;
+
+  @JsonKey(name: r'distanceKm', required: true, includeIfNull: false)
+  final num distanceKm;
+
+  @JsonKey(name: r'basePrice', required: true, includeIfNull: false)
+  final num basePrice;
+
+  @JsonKey(name: r'tip', required: false, includeIfNull: false)
+  final num? tip;
+
+  @JsonKey(name: r'totalPrice', required: true, includeIfNull: false)
+  final num totalPrice;
+
+  @JsonKey(name: r'note', required: false, includeIfNull: false)
+  final OrderCreateRequestNote? note;
+
+  @JsonKey(name: r'requestedAt', required: true, includeIfNull: false)
+  final DateTime requestedAt;
+
+  @JsonKey(name: r'acceptedAt', required: false, includeIfNull: false)
+  final DateTime? acceptedAt;
+
+  @JsonKey(name: r'arrivedAt', required: false, includeIfNull: false)
+  final DateTime? arrivedAt;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
+
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
+
+  @JsonKey(name: r'user', required: false, includeIfNull: false)
+  final OrderCreateRequestUser? user;
+
+  @JsonKey(name: r'driver', required: false, includeIfNull: false)
+  final OrderCreateRequestDriver? driver;
+
+  @JsonKey(name: r'merchant', required: false, includeIfNull: false)
+  final OrderCreateRequestMerchant? merchant;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Order object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
-
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required OrderBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        case r'userId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.userId = valueDes;
-          break;
-        case r'driverId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.driverId = valueDes;
-          break;
-        case r'merchantId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.merchantId = valueDes;
-          break;
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(OrderTypeEnum),
-          ) as OrderTypeEnum;
-          result.type = valueDes;
-          break;
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(OrderStatusEnum),
-          ) as OrderStatusEnum;
-          result.status = valueDes;
-          break;
-        case r'pickupLocation':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Location),
-          ) as Location;
-          result.pickupLocation.replace(valueDes);
-          break;
-        case r'dropoffLocation':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Location),
-          ) as Location;
-          result.dropoffLocation.replace(valueDes);
-          break;
-        case r'distanceKm':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.distanceKm = valueDes;
-          break;
-        case r'basePrice':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.basePrice = valueDes;
-          break;
-        case r'tip':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.tip = valueDes;
-          break;
-        case r'totalPrice':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.totalPrice = valueDes;
-          break;
-        case r'note':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(OrderCreateRequestNote),
-          ) as OrderCreateRequestNote;
-          result.note.replace(valueDes);
-          break;
-        case r'requestedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.requestedAt = valueDes;
-          break;
-        case r'acceptedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.acceptedAt = valueDes;
-          break;
-        case r'arrivedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.arrivedAt = valueDes;
-          break;
-        case r'createdAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.createdAt = valueDes;
-          break;
-        case r'updatedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.updatedAt = valueDes;
-          break;
-        case r'user':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(DriverUpdateRequestUser),
-          ) as DriverUpdateRequestUser;
-          result.user.replace(valueDes);
-          break;
-        case r'driver':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(OrderCreateRequestDriver),
-          ) as OrderCreateRequestDriver;
-          result.driver.replace(valueDes);
-          break;
-        case r'merchant':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(OrderCreateRequestMerchant),
-          ) as OrderCreateRequestMerchant;
-          result.merchant.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Order &&
+          other.id == id &&
+          other.userId == userId &&
+          other.driverId == driverId &&
+          other.merchantId == merchantId &&
+          other.type == type &&
+          other.status == status &&
+          other.pickupLocation == pickupLocation &&
+          other.dropoffLocation == dropoffLocation &&
+          other.distanceKm == distanceKm &&
+          other.basePrice == basePrice &&
+          other.tip == tip &&
+          other.totalPrice == totalPrice &&
+          other.note == note &&
+          other.requestedAt == requestedAt &&
+          other.acceptedAt == acceptedAt &&
+          other.arrivedAt == arrivedAt &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.user == user &&
+          other.driver == driver &&
+          other.merchant == merchant;
 
   @override
-  Order deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = OrderBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  int get hashCode =>
+      id.hashCode +
+      userId.hashCode +
+      driverId.hashCode +
+      merchantId.hashCode +
+      type.hashCode +
+      status.hashCode +
+      pickupLocation.hashCode +
+      dropoffLocation.hashCode +
+      distanceKm.hashCode +
+      basePrice.hashCode +
+      tip.hashCode +
+      totalPrice.hashCode +
+      note.hashCode +
+      requestedAt.hashCode +
+      acceptedAt.hashCode +
+      arrivedAt.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode +
+      user.hashCode +
+      driver.hashCode +
+      merchant.hashCode;
+
+  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OrderToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class OrderTypeEnum extends EnumClass {
+enum OrderTypeEnum {
+  @JsonValue(r'ride')
+  ride(r'ride'),
+  @JsonValue(r'delivery')
+  delivery(r'delivery'),
+  @JsonValue(r'food')
+  food(r'food');
 
-  @BuiltValueEnumConst(wireName: r'ride')
-  static const OrderTypeEnum ride = _$orderTypeEnum_ride;
-  @BuiltValueEnumConst(wireName: r'delivery')
-  static const OrderTypeEnum delivery = _$orderTypeEnum_delivery;
-  @BuiltValueEnumConst(wireName: r'food')
-  static const OrderTypeEnum food = _$orderTypeEnum_food;
+  const OrderTypeEnum(this.value);
 
-  static Serializer<OrderTypeEnum> get serializer => _$orderTypeEnumSerializer;
+  final String value;
 
-  const OrderTypeEnum._(String name): super(name);
-
-  static BuiltSet<OrderTypeEnum> get values => _$orderTypeEnumValues;
-  static OrderTypeEnum valueOf(String name) => _$orderTypeEnumValueOf(name);
+  @override
+  String toString() => value;
 }
 
-class OrderStatusEnum extends EnumClass {
+enum OrderStatusEnum {
+  @JsonValue(r'requested')
+  requested(r'requested'),
+  @JsonValue(r'matching')
+  matching(r'matching'),
+  @JsonValue(r'accepted')
+  accepted(r'accepted'),
+  @JsonValue(r'arriving')
+  arriving(r'arriving'),
+  @JsonValue(r'in_trip')
+  inTrip(r'in_trip'),
+  @JsonValue(r'completed')
+  completed(r'completed'),
+  @JsonValue(r'cancelled_by_user')
+  cancelledByUser(r'cancelled_by_user'),
+  @JsonValue(r'cancelled_by_driver')
+  cancelledByDriver(r'cancelled_by_driver'),
+  @JsonValue(r'cancelled_by_system')
+  cancelledBySystem(r'cancelled_by_system');
 
-  @BuiltValueEnumConst(wireName: r'requested')
-  static const OrderStatusEnum requested = _$orderStatusEnum_requested;
-  @BuiltValueEnumConst(wireName: r'matching')
-  static const OrderStatusEnum matching = _$orderStatusEnum_matching;
-  @BuiltValueEnumConst(wireName: r'accepted')
-  static const OrderStatusEnum accepted = _$orderStatusEnum_accepted;
-  @BuiltValueEnumConst(wireName: r'arriving')
-  static const OrderStatusEnum arriving = _$orderStatusEnum_arriving;
-  @BuiltValueEnumConst(wireName: r'in_trip')
-  static const OrderStatusEnum inTrip = _$orderStatusEnum_inTrip;
-  @BuiltValueEnumConst(wireName: r'completed')
-  static const OrderStatusEnum completed = _$orderStatusEnum_completed;
-  @BuiltValueEnumConst(wireName: r'cancelled_by_user')
-  static const OrderStatusEnum cancelledByUser = _$orderStatusEnum_cancelledByUser;
-  @BuiltValueEnumConst(wireName: r'cancelled_by_driver')
-  static const OrderStatusEnum cancelledByDriver = _$orderStatusEnum_cancelledByDriver;
-  @BuiltValueEnumConst(wireName: r'cancelled_by_system')
-  static const OrderStatusEnum cancelledBySystem = _$orderStatusEnum_cancelledBySystem;
+  const OrderStatusEnum(this.value);
 
-  static Serializer<OrderStatusEnum> get serializer => _$orderStatusEnumSerializer;
+  final String value;
 
-  const OrderStatusEnum._(String name): super(name);
-
-  static BuiltSet<OrderStatusEnum> get values => _$orderStatusEnumValues;
-  static OrderStatusEnum valueOf(String name) => _$orderStatusEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

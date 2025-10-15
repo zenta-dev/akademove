@@ -12,13 +12,16 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **studentId** | **String** |  | 
 **licenseNumber** | **String** |  | 
-**status** | **String** |  | [optional] [default to 'pending']
+**status** | **String** |  | 
 **rating** | **num** |  | 
 **isOnline** | **bool** |  | 
 **currentLocation** | [**Location**](Location.md) |  | [optional] 
-**lastLocationUpdate** | **num** | unix timestamp format | [optional] 
-**createdAt** | **num** | unix timestamp format | 
-**user** | [**DriverUpdateRequestUser**](DriverUpdateRequestUser.md) |  | [optional] 
+**lastLocationUpdate** | [**DateTime**](DateTime.md) |  | [optional] 
+**createdAt** | [**DateTime**](DateTime.md) |  | 
+**studentCard** | **String** |  | 
+**driverLicense** | **String** |  | 
+**vehicleCertificate** | **String** |  | 
+**user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

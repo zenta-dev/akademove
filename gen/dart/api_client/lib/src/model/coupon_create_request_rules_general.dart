@@ -3,160 +3,73 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon_create_request_rules_general.g.dart';
 
-/// CouponCreateRequestRulesGeneral
-///
-/// Properties:
-/// * [type] 
-/// * [minOrderAmount] 
-/// * [maxDiscountAmount] 
-@BuiltValue()
-abstract class CouponCreateRequestRulesGeneral implements Built<CouponCreateRequestRulesGeneral, CouponCreateRequestRulesGeneralBuilder> {
-  @BuiltValueField(wireName: r'type')
-  CouponCreateRequestRulesGeneralTypeEnum? get type;
-  // enum typeEnum {  percentage,  fixed,  };
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class CouponCreateRequestRulesGeneral {
+  /// Returns a new [CouponCreateRequestRulesGeneral] instance.
+  CouponCreateRequestRulesGeneral({
+    this.type,
 
-  @BuiltValueField(wireName: r'minOrderAmount')
-  num? get minOrderAmount;
+    this.minOrderAmount,
 
-  @BuiltValueField(wireName: r'maxDiscountAmount')
-  num? get maxDiscountAmount;
+    this.maxDiscountAmount,
+  });
 
-  CouponCreateRequestRulesGeneral._();
+  @JsonKey(name: r'type', required: false, includeIfNull: false)
+  final CouponCreateRequestRulesGeneralTypeEnum? type;
 
-  factory CouponCreateRequestRulesGeneral([void updates(CouponCreateRequestRulesGeneralBuilder b)]) = _$CouponCreateRequestRulesGeneral;
+  // minimum: 0
+  @JsonKey(name: r'minOrderAmount', required: false, includeIfNull: false)
+  final num? minOrderAmount;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(CouponCreateRequestRulesGeneralBuilder b) => b
-      ..type = const CouponCreateRequestRulesGeneralTypeEnum._('percentage');
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<CouponCreateRequestRulesGeneral> get serializer => _$CouponCreateRequestRulesGeneralSerializer();
-}
-
-class _$CouponCreateRequestRulesGeneralSerializer implements PrimitiveSerializer<CouponCreateRequestRulesGeneral> {
-  @override
-  final Iterable<Type> types = const [CouponCreateRequestRulesGeneral, _$CouponCreateRequestRulesGeneral];
+  // minimum: 0
+  @JsonKey(name: r'maxDiscountAmount', required: false, includeIfNull: false)
+  final num? maxDiscountAmount;
 
   @override
-  final String wireName = r'CouponCreateRequestRulesGeneral';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    CouponCreateRequestRulesGeneral object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.type != null) {
-      yield r'type';
-      yield serializers.serialize(
-        object.type,
-        specifiedType: const FullType(CouponCreateRequestRulesGeneralTypeEnum),
-      );
-    }
-    if (object.minOrderAmount != null) {
-      yield r'minOrderAmount';
-      yield serializers.serialize(
-        object.minOrderAmount,
-        specifiedType: const FullType(num),
-      );
-    }
-    if (object.maxDiscountAmount != null) {
-      yield r'maxDiscountAmount';
-      yield serializers.serialize(
-        object.maxDiscountAmount,
-        specifiedType: const FullType(num),
-      );
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponCreateRequestRulesGeneral &&
+          other.type == type &&
+          other.minOrderAmount == minOrderAmount &&
+          other.maxDiscountAmount == maxDiscountAmount;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    CouponCreateRequestRulesGeneral object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode =>
+      type.hashCode + minOrderAmount.hashCode + maxDiscountAmount.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required CouponCreateRequestRulesGeneralBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'type':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(CouponCreateRequestRulesGeneralTypeEnum),
-          ) as CouponCreateRequestRulesGeneralTypeEnum;
-          result.type = valueDes;
-          break;
-        case r'minOrderAmount':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.minOrderAmount = valueDes;
-          break;
-        case r'maxDiscountAmount':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.maxDiscountAmount = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory CouponCreateRequestRulesGeneral.fromJson(Map<String, dynamic> json) =>
+      _$CouponCreateRequestRulesGeneralFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$CouponCreateRequestRulesGeneralToJson(this);
 
   @override
-  CouponCreateRequestRulesGeneral deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = CouponCreateRequestRulesGeneralBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class CouponCreateRequestRulesGeneralTypeEnum extends EnumClass {
+enum CouponCreateRequestRulesGeneralTypeEnum {
+  @JsonValue(r'percentage')
+  percentage(r'percentage'),
+  @JsonValue(r'fixed')
+  fixed(r'fixed');
 
-  @BuiltValueEnumConst(wireName: r'percentage')
-  static const CouponCreateRequestRulesGeneralTypeEnum percentage = _$couponCreateRequestRulesGeneralTypeEnum_percentage;
-  @BuiltValueEnumConst(wireName: r'fixed')
-  static const CouponCreateRequestRulesGeneralTypeEnum fixed = _$couponCreateRequestRulesGeneralTypeEnum_fixed;
+  const CouponCreateRequestRulesGeneralTypeEnum(this.value);
 
-  static Serializer<CouponCreateRequestRulesGeneralTypeEnum> get serializer => _$couponCreateRequestRulesGeneralTypeEnumSerializer;
+  final String value;
 
-  const CouponCreateRequestRulesGeneralTypeEnum._(String name): super(name);
-
-  static BuiltSet<CouponCreateRequestRulesGeneralTypeEnum> get values => _$couponCreateRequestRulesGeneralTypeEnumValues;
-  static CouponCreateRequestRulesGeneralTypeEnum valueOf(String name) => _$couponCreateRequestRulesGeneralTypeEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

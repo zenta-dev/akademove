@@ -5,7 +5,7 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -99,7 +99,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderList**
-> OrderList200Response orderList(cursor, page, limit)
+> OrderList200Response orderList(cursor, limit, page, query, sortBy, order)
 
 
 
@@ -109,11 +109,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String cursor = cursor_example; // String | 
-final JsonObject page = ; // JsonObject | 
-final JsonObject limit = ; // JsonObject | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
 
 try {
-    final response = api.orderList(cursor, page, limit);
+    final response = api.orderList(cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderList: $e\n');
@@ -125,8 +128,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
- **page** | [**JsonObject**](.md)|  | [optional] 
- **limit** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
 
 ### Return type
 

@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for ScheduleList200Response
 void main() {
-  final instance = ScheduleList200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final ScheduleList200Response? instance = /* ScheduleList200Response(...) */
+      null;
+  // TODO add properties to the entity
 
   group(ScheduleList200Response, () {
     // String message
@@ -12,10 +13,14 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Schedule> data
+    // List<Schedule> data
     test('to test the property `data`', () async {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

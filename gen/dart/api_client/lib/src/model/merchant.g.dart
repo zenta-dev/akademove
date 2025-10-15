@@ -3,303 +3,253 @@
 part of 'merchant.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const MerchantTypeEnum _$merchantTypeEnum_merchant = const MerchantTypeEnum._(
-  'merchant',
-);
-const MerchantTypeEnum _$merchantTypeEnum_tenant = const MerchantTypeEnum._(
-  'tenant',
-);
+abstract class _$MerchantCWProxy {
+  Merchant id(String id);
 
-MerchantTypeEnum _$merchantTypeEnumValueOf(String name) {
-  switch (name) {
-    case 'merchant':
-      return _$merchantTypeEnum_merchant;
-    case 'tenant':
-      return _$merchantTypeEnum_tenant;
-    default:
-      throw ArgumentError(name);
+  Merchant userId(String userId);
+
+  Merchant type(MerchantTypeEnum type);
+
+  Merchant name(String name);
+
+  Merchant email(String email);
+
+  Merchant phone(String phone);
+
+  Merchant address(String address);
+
+  Merchant location(Location? location);
+
+  Merchant isActive(bool isActive);
+
+  Merchant rating(num rating);
+
+  Merchant document(String? document);
+
+  Merchant createdAt(DateTime createdAt);
+
+  Merchant updatedAt(DateTime updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Merchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Merchant(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Merchant call({
+    String id,
+    String userId,
+    MerchantTypeEnum type,
+    String name,
+    String email,
+    String phone,
+    String address,
+    Location? location,
+    bool isActive,
+    num rating,
+    String? document,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchant.copyWith.fieldName(...)`
+class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
+  const _$MerchantCWProxyImpl(this._value);
+
+  final Merchant _value;
+
+  @override
+  Merchant id(String id) => this(id: id);
+
+  @override
+  Merchant userId(String userId) => this(userId: userId);
+
+  @override
+  Merchant type(MerchantTypeEnum type) => this(type: type);
+
+  @override
+  Merchant name(String name) => this(name: name);
+
+  @override
+  Merchant email(String email) => this(email: email);
+
+  @override
+  Merchant phone(String phone) => this(phone: phone);
+
+  @override
+  Merchant address(String address) => this(address: address);
+
+  @override
+  Merchant location(Location? location) => this(location: location);
+
+  @override
+  Merchant isActive(bool isActive) => this(isActive: isActive);
+
+  @override
+  Merchant rating(num rating) => this(rating: rating);
+
+  @override
+  Merchant document(String? document) => this(document: document);
+
+  @override
+  Merchant createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  Merchant updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Merchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Merchant(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Merchant call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? phone = const $CopyWithPlaceholder(),
+    Object? address = const $CopyWithPlaceholder(),
+    Object? location = const $CopyWithPlaceholder(),
+    Object? isActive = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
+    Object? document = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return Merchant(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String,
+      type: type == const $CopyWithPlaceholder()
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as MerchantTypeEnum,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      email: email == const $CopyWithPlaceholder()
+          ? _value.email
+          // ignore: cast_nullable_to_non_nullable
+          : email as String,
+      phone: phone == const $CopyWithPlaceholder()
+          ? _value.phone
+          // ignore: cast_nullable_to_non_nullable
+          : phone as String,
+      address: address == const $CopyWithPlaceholder()
+          ? _value.address
+          // ignore: cast_nullable_to_non_nullable
+          : address as String,
+      location: location == const $CopyWithPlaceholder()
+          ? _value.location
+          // ignore: cast_nullable_to_non_nullable
+          : location as Location?,
+      isActive: isActive == const $CopyWithPlaceholder()
+          ? _value.isActive
+          // ignore: cast_nullable_to_non_nullable
+          : isActive as bool,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num,
+      document: document == const $CopyWithPlaceholder()
+          ? _value.document
+          // ignore: cast_nullable_to_non_nullable
+          : document as String?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+    );
   }
 }
 
-final BuiltSet<MerchantTypeEnum> _$merchantTypeEnumValues =
-    BuiltSet<MerchantTypeEnum>(const <MerchantTypeEnum>[
-      _$merchantTypeEnum_merchant,
-      _$merchantTypeEnum_tenant,
-    ]);
+extension $MerchantCopyWith on Merchant {
+  /// Returns a callable class that can be used as follows: `instanceOfMerchant.copyWith(...)` or like so:`instanceOfMerchant.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$MerchantCWProxy get copyWith => _$MerchantCWProxyImpl(this);
+}
 
-Serializer<MerchantTypeEnum> _$merchantTypeEnumSerializer =
-    _$MerchantTypeEnumSerializer();
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-class _$MerchantTypeEnumSerializer
-    implements PrimitiveSerializer<MerchantTypeEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'merchant': 'merchant',
-    'tenant': 'tenant',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'merchant': 'merchant',
-    'tenant': 'tenant',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[MerchantTypeEnum];
-  @override
-  final String wireName = 'MerchantTypeEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    MerchantTypeEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  MerchantTypeEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => MerchantTypeEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+Merchant _$MerchantFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Merchant', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'userId',
+      'type',
+      'name',
+      'email',
+      'phone',
+      'address',
+      'isActive',
+      'rating',
+      'createdAt',
+      'updatedAt',
+    ],
   );
-}
+  final val = Merchant(
+    id: $checkedConvert('id', (v) => v as String),
+    userId: $checkedConvert('userId', (v) => v as String),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$MerchantTypeEnumEnumMap, v),
+    ),
+    name: $checkedConvert('name', (v) => v as String),
+    email: $checkedConvert('email', (v) => v as String),
+    phone: $checkedConvert('phone', (v) => v as String),
+    address: $checkedConvert('address', (v) => v as String),
+    location: $checkedConvert(
+      'location',
+      (v) => v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+    ),
+    isActive: $checkedConvert('isActive', (v) => v as bool),
+    rating: $checkedConvert('rating', (v) => v as num),
+    document: $checkedConvert('document', (v) => v as String?),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
-class _$Merchant extends Merchant {
-  @override
-  final String id;
-  @override
-  final String userId;
-  @override
-  final MerchantTypeEnum? type;
-  @override
-  final String name;
-  @override
-  final String address;
-  @override
-  final Location? location;
-  @override
-  final bool isActive;
-  @override
-  final num rating;
-  @override
-  final num createdAt;
-  @override
-  final num updatedAt;
+Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'type': _$MerchantTypeEnumEnumMap[instance.type]!,
+  'name': instance.name,
+  'email': instance.email,
+  'phone': instance.phone,
+  'address': instance.address,
+  'location': ?instance.location?.toJson(),
+  'isActive': instance.isActive,
+  'rating': instance.rating,
+  'document': ?instance.document,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};
 
-  factory _$Merchant([void Function(MerchantBuilder)? updates]) =>
-      (MerchantBuilder()..update(updates))._build();
-
-  _$Merchant._({
-    required this.id,
-    required this.userId,
-    this.type,
-    required this.name,
-    required this.address,
-    this.location,
-    required this.isActive,
-    required this.rating,
-    required this.createdAt,
-    required this.updatedAt,
-  }) : super._();
-  @override
-  Merchant rebuild(void Function(MerchantBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  MerchantBuilder toBuilder() => MerchantBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Merchant &&
-        id == other.id &&
-        userId == other.userId &&
-        type == other.type &&
-        name == other.name &&
-        address == other.address &&
-        location == other.location &&
-        isActive == other.isActive &&
-        rating == other.rating &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, userId.hashCode);
-    _$hash = $jc(_$hash, type.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, address.hashCode);
-    _$hash = $jc(_$hash, location.hashCode);
-    _$hash = $jc(_$hash, isActive.hashCode);
-    _$hash = $jc(_$hash, rating.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Merchant')
-          ..add('id', id)
-          ..add('userId', userId)
-          ..add('type', type)
-          ..add('name', name)
-          ..add('address', address)
-          ..add('location', location)
-          ..add('isActive', isActive)
-          ..add('rating', rating)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
-        .toString();
-  }
-}
-
-class MerchantBuilder implements Builder<Merchant, MerchantBuilder> {
-  _$Merchant? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _userId;
-  String? get userId => _$this._userId;
-  set userId(String? userId) => _$this._userId = userId;
-
-  MerchantTypeEnum? _type;
-  MerchantTypeEnum? get type => _$this._type;
-  set type(MerchantTypeEnum? type) => _$this._type = type;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  String? _address;
-  String? get address => _$this._address;
-  set address(String? address) => _$this._address = address;
-
-  LocationBuilder? _location;
-  LocationBuilder get location => _$this._location ??= LocationBuilder();
-  set location(LocationBuilder? location) => _$this._location = location;
-
-  bool? _isActive;
-  bool? get isActive => _$this._isActive;
-  set isActive(bool? isActive) => _$this._isActive = isActive;
-
-  num? _rating;
-  num? get rating => _$this._rating;
-  set rating(num? rating) => _$this._rating = rating;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  MerchantBuilder() {
-    Merchant._defaults(this);
-  }
-
-  MerchantBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _userId = $v.userId;
-      _type = $v.type;
-      _name = $v.name;
-      _address = $v.address;
-      _location = $v.location?.toBuilder();
-      _isActive = $v.isActive;
-      _rating = $v.rating;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Merchant other) {
-    _$v = other as _$Merchant;
-  }
-
-  @override
-  void update(void Function(MerchantBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Merchant build() => _build();
-
-  _$Merchant _build() {
-    _$Merchant _$result;
-    try {
-      _$result =
-          _$v ??
-          _$Merchant._(
-            id: BuiltValueNullFieldError.checkNotNull(id, r'Merchant', 'id'),
-            userId: BuiltValueNullFieldError.checkNotNull(
-              userId,
-              r'Merchant',
-              'userId',
-            ),
-            type: type,
-            name: BuiltValueNullFieldError.checkNotNull(
-              name,
-              r'Merchant',
-              'name',
-            ),
-            address: BuiltValueNullFieldError.checkNotNull(
-              address,
-              r'Merchant',
-              'address',
-            ),
-            location: _location?.build(),
-            isActive: BuiltValueNullFieldError.checkNotNull(
-              isActive,
-              r'Merchant',
-              'isActive',
-            ),
-            rating: BuiltValueNullFieldError.checkNotNull(
-              rating,
-              r'Merchant',
-              'rating',
-            ),
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt,
-              r'Merchant',
-              'createdAt',
-            ),
-            updatedAt: BuiltValueNullFieldError.checkNotNull(
-              updatedAt,
-              r'Merchant',
-              'updatedAt',
-            ),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'location';
-        _location?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'Merchant',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$MerchantTypeEnumEnumMap = {
+  MerchantTypeEnum.merchant: 'merchant',
+  MerchantTypeEnum.tenant: 'tenant',
+};

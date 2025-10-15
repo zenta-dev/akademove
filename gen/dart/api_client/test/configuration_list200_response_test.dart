@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for ConfigurationList200Response
 void main() {
-  final instance = ConfigurationList200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final ConfigurationList200Response?
+  instance = /* ConfigurationList200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(ConfigurationList200Response, () {
     // String message
@@ -12,10 +13,14 @@ void main() {
       // TODO
     });
 
-    // BuiltList<Configuration> data
+    // List<Configuration> data
     test('to test the property `data`', () async {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

@@ -3,126 +3,101 @@
 part of 'report_create200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$ReportCreate200Response extends ReportCreate200Response {
-  @override
-  final String message;
-  @override
-  final Report data;
+abstract class _$ReportCreate200ResponseCWProxy {
+  ReportCreate200Response message(String message);
 
-  factory _$ReportCreate200Response([
-    void Function(ReportCreate200ResponseBuilder)? updates,
-  ]) => (ReportCreate200ResponseBuilder()..update(updates))._build();
+  ReportCreate200Response data(Report data);
 
-  _$ReportCreate200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  ReportCreate200Response rebuild(
-    void Function(ReportCreate200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  ReportCreate200Response totalPages(num? totalPages);
 
-  @override
-  ReportCreate200ResponseBuilder toBuilder() =>
-      ReportCreate200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReportCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReportCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReportCreate200Response call({String message, Report data, num? totalPages});
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ReportCreate200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReportCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReportCreate200Response.copyWith.fieldName(...)`
+class _$ReportCreate200ResponseCWProxyImpl
+    implements _$ReportCreate200ResponseCWProxy {
+  const _$ReportCreate200ResponseCWProxyImpl(this._value);
+
+  final ReportCreate200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  ReportCreate200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ReportCreate200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  ReportCreate200Response data(Report data) => this(data: data);
+
+  @override
+  ReportCreate200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReportCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ReportCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ReportCreate200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return ReportCreate200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as Report,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class ReportCreate200ResponseBuilder
-    implements
-        Builder<ReportCreate200Response, ReportCreate200ResponseBuilder> {
-  _$ReportCreate200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ReportBuilder? _data;
-  ReportBuilder get data => _$this._data ??= ReportBuilder();
-  set data(ReportBuilder? data) => _$this._data = data;
-
-  ReportCreate200ResponseBuilder() {
-    ReportCreate200Response._defaults(this);
-  }
-
-  ReportCreate200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ReportCreate200Response other) {
-    _$v = other as _$ReportCreate200Response;
-  }
-
-  @override
-  void update(void Function(ReportCreate200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ReportCreate200Response build() => _build();
-
-  _$ReportCreate200Response _build() {
-    _$ReportCreate200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$ReportCreate200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'ReportCreate200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'ReportCreate200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $ReportCreate200ResponseCopyWith on ReportCreate200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfReportCreate200Response.copyWith(...)` or like so:`instanceOfReportCreate200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ReportCreate200ResponseCWProxy get copyWith =>
+      _$ReportCreate200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ReportCreate200Response _$ReportCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ReportCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = ReportCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Report.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$ReportCreate200ResponseToJson(
+  ReportCreate200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'totalPages': ?instance.totalPages,
+};

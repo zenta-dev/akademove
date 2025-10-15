@@ -3,96 +3,69 @@
 part of 'unban_user_schema_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$UnbanUserSchemaRequest extends UnbanUserSchemaRequest {
-  @override
-  final String id;
+abstract class _$UnbanUserSchemaRequestCWProxy {
+  UnbanUserSchemaRequest id(String id);
 
-  factory _$UnbanUserSchemaRequest([
-    void Function(UnbanUserSchemaRequestBuilder)? updates,
-  ]) => (UnbanUserSchemaRequestBuilder()..update(updates))._build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UnbanUserSchemaRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UnbanUserSchemaRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UnbanUserSchemaRequest call({String id});
+}
 
-  _$UnbanUserSchemaRequest._({required this.id}) : super._();
-  @override
-  UnbanUserSchemaRequest rebuild(
-    void Function(UnbanUserSchemaRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUnbanUserSchemaRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUnbanUserSchemaRequest.copyWith.fieldName(...)`
+class _$UnbanUserSchemaRequestCWProxyImpl
+    implements _$UnbanUserSchemaRequestCWProxy {
+  const _$UnbanUserSchemaRequestCWProxyImpl(this._value);
 
-  @override
-  UnbanUserSchemaRequestBuilder toBuilder() =>
-      UnbanUserSchemaRequestBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is UnbanUserSchemaRequest && id == other.id;
-  }
+  final UnbanUserSchemaRequest _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  UnbanUserSchemaRequest id(String id) => this(id: id);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(
-      r'UnbanUserSchemaRequest',
-    )..add('id', id)).toString();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UnbanUserSchemaRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UnbanUserSchemaRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UnbanUserSchemaRequest call({Object? id = const $CopyWithPlaceholder()}) {
+    return UnbanUserSchemaRequest(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+    );
   }
 }
 
-class UnbanUserSchemaRequestBuilder
-    implements Builder<UnbanUserSchemaRequest, UnbanUserSchemaRequestBuilder> {
-  _$UnbanUserSchemaRequest? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  UnbanUserSchemaRequestBuilder() {
-    UnbanUserSchemaRequest._defaults(this);
-  }
-
-  UnbanUserSchemaRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(UnbanUserSchemaRequest other) {
-    _$v = other as _$UnbanUserSchemaRequest;
-  }
-
-  @override
-  void update(void Function(UnbanUserSchemaRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  UnbanUserSchemaRequest build() => _build();
-
-  _$UnbanUserSchemaRequest _build() {
-    final _$result =
-        _$v ??
-        _$UnbanUserSchemaRequest._(
-          id: BuiltValueNullFieldError.checkNotNull(
-            id,
-            r'UnbanUserSchemaRequest',
-            'id',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $UnbanUserSchemaRequestCopyWith on UnbanUserSchemaRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfUnbanUserSchemaRequest.copyWith(...)` or like so:`instanceOfUnbanUserSchemaRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$UnbanUserSchemaRequestCWProxy get copyWith =>
+      _$UnbanUserSchemaRequestCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UnbanUserSchemaRequest _$UnbanUserSchemaRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UnbanUserSchemaRequest', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id']);
+  final val = UnbanUserSchemaRequest(
+    id: $checkedConvert('id', (v) => v as String),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$UnbanUserSchemaRequestToJson(
+  UnbanUserSchemaRequest instance,
+) => <String, dynamic>{'id': instance.id};

@@ -1,36 +1,34 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ReportApi
 void main() {
   final instance = ApiClient().getReportApi();
 
   group(ReportApi, () {
-    //Future<CreateReportSuccessResponse> createReport({ CreateReportRequest createReportRequest }) async
-    test('test createReport', () async {
+    //Future<ReportCreate200Response> reportCreate(ReportCreateRequest reportCreateRequest) async
+    test('test reportCreate', () async {
       // TODO
     });
 
-    //Future<DeleteReportSuccessResponse> deleteReport(String id) async
-    test('test deleteReport', () async {
+    //Future<ReportCreate200Response> reportGet(String id) async
+    test('test reportGet', () async {
       // TODO
     });
 
-    //Future<GetAllReportSuccessResponse> getAllReport(int page, int limit, { String cursor }) async
-    test('test getAllReport', () async {
+    //Future<ReportList200Response> reportList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    test('test reportList', () async {
       // TODO
     });
 
-    //Future<GetReportByIdSuccessResponse> getReportById(String id, bool fromCache) async
-    test('test getReportById', () async {
+    //Future<DriverRemove200Response> reportRemove(String id) async
+    test('test reportRemove', () async {
       // TODO
     });
 
-    //Future<UpdateReportSuccessResponse> updateReport(String id, { CreateReportRequest createReportRequest }) async
-    test('test updateReport', () async {
+    //Future<ReportCreate200Response> reportUpdate(String id, ReportUpdateRequest reportUpdateRequest) async
+    test('test reportUpdate', () async {
       // TODO
     });
-
   });
 }

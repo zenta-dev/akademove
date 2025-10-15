@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderCreateRequest
 void main() {
-  final instance = OrderCreateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final OrderCreateRequest? instance = /* OrderCreateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(OrderCreateRequest, () {
     // String userId
@@ -81,6 +81,5 @@ void main() {
     test('to test the property `merchant`', () async {
       // TODO
     });
-
   });
 }

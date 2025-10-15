@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantMenu
 void main() {
-  final instance = MerchantMenuBuilder();
-  // TODO add properties to the builder and call build()
+  final MerchantMenu? instance = /* MerchantMenu(...) */ null;
+  // TODO add properties to the entity
 
   group(MerchantMenu, () {
     // String id
@@ -22,6 +22,11 @@ void main() {
       // TODO
     });
 
+    // String image
+    test('to test the property `image`', () async {
+      // TODO
+    });
+
     // String category
     test('to test the property `category`', () async {
       // TODO
@@ -32,22 +37,19 @@ void main() {
       // TODO
     });
 
-    // num stock
+    // int stock
     test('to test the property `stock`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

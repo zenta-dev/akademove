@@ -3,122 +3,45 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'ban_user_schema_request.g.dart';
 
-/// BanUserSchemaRequest
-///
-/// Properties:
-/// * [banReason] 
-/// * [banExpiresIn] 
-@BuiltValue()
-abstract class BanUserSchemaRequest implements Built<BanUserSchemaRequest, BanUserSchemaRequestBuilder> {
-  @BuiltValueField(wireName: r'banReason')
-  String get banReason;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class BanUserSchemaRequest {
+  /// Returns a new [BanUserSchemaRequest] instance.
+  BanUserSchemaRequest({required this.banReason, this.banExpiresIn});
 
-  @BuiltValueField(wireName: r'banExpiresIn')
-  num? get banExpiresIn;
+  @JsonKey(name: r'banReason', required: true, includeIfNull: false)
+  final String banReason;
 
-  BanUserSchemaRequest._();
-
-  factory BanUserSchemaRequest([void updates(BanUserSchemaRequestBuilder b)]) = _$BanUserSchemaRequest;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(BanUserSchemaRequestBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<BanUserSchemaRequest> get serializer => _$BanUserSchemaRequestSerializer();
-}
-
-class _$BanUserSchemaRequestSerializer implements PrimitiveSerializer<BanUserSchemaRequest> {
-  @override
-  final Iterable<Type> types = const [BanUserSchemaRequest, _$BanUserSchemaRequest];
+  @JsonKey(name: r'banExpiresIn', required: false, includeIfNull: false)
+  final num? banExpiresIn;
 
   @override
-  final String wireName = r'BanUserSchemaRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    BanUserSchemaRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'banReason';
-    yield serializers.serialize(
-      object.banReason,
-      specifiedType: const FullType(String),
-    );
-    if (object.banExpiresIn != null) {
-      yield r'banExpiresIn';
-      yield serializers.serialize(
-        object.banExpiresIn,
-        specifiedType: const FullType(num),
-      );
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BanUserSchemaRequest &&
+          other.banReason == banReason &&
+          other.banExpiresIn == banExpiresIn;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    BanUserSchemaRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => banReason.hashCode + banExpiresIn.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required BanUserSchemaRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'banReason':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.banReason = valueDes;
-          break;
-        case r'banExpiresIn':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.banExpiresIn = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory BanUserSchemaRequest.fromJson(Map<String, dynamic> json) =>
+      _$BanUserSchemaRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BanUserSchemaRequestToJson(this);
 
   @override
-  BanUserSchemaRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = BanUserSchemaRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

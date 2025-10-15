@@ -3,323 +3,223 @@
 part of 'schedule.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_sunday =
-    const ScheduleDayOfWeekEnum._('sunday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_monday =
-    const ScheduleDayOfWeekEnum._('monday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_tuesday =
-    const ScheduleDayOfWeekEnum._('tuesday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_wednesday =
-    const ScheduleDayOfWeekEnum._('wednesday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_thursday =
-    const ScheduleDayOfWeekEnum._('thursday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_friday =
-    const ScheduleDayOfWeekEnum._('friday');
-const ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnum_saturday =
-    const ScheduleDayOfWeekEnum._('saturday');
+abstract class _$ScheduleCWProxy {
+  Schedule id(String id);
 
-ScheduleDayOfWeekEnum _$scheduleDayOfWeekEnumValueOf(String name) {
-  switch (name) {
-    case 'sunday':
-      return _$scheduleDayOfWeekEnum_sunday;
-    case 'monday':
-      return _$scheduleDayOfWeekEnum_monday;
-    case 'tuesday':
-      return _$scheduleDayOfWeekEnum_tuesday;
-    case 'wednesday':
-      return _$scheduleDayOfWeekEnum_wednesday;
-    case 'thursday':
-      return _$scheduleDayOfWeekEnum_thursday;
-    case 'friday':
-      return _$scheduleDayOfWeekEnum_friday;
-    case 'saturday':
-      return _$scheduleDayOfWeekEnum_saturday;
-    default:
-      throw ArgumentError(name);
+  Schedule driverId(String driverId);
+
+  Schedule dayOfWeek(ScheduleDayOfWeekEnum dayOfWeek);
+
+  Schedule startTime(Time startTime);
+
+  Schedule endTime(Time endTime);
+
+  Schedule isRecurring(bool? isRecurring);
+
+  Schedule specificDate(DateTime? specificDate);
+
+  Schedule isActive(bool? isActive);
+
+  Schedule createdAt(DateTime createdAt);
+
+  Schedule updatedAt(DateTime updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Schedule(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Schedule(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Schedule call({
+    String id,
+    String driverId,
+    ScheduleDayOfWeekEnum dayOfWeek,
+    Time startTime,
+    Time endTime,
+    bool? isRecurring,
+    DateTime? specificDate,
+    bool? isActive,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfSchedule.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfSchedule.copyWith.fieldName(...)`
+class _$ScheduleCWProxyImpl implements _$ScheduleCWProxy {
+  const _$ScheduleCWProxyImpl(this._value);
+
+  final Schedule _value;
+
+  @override
+  Schedule id(String id) => this(id: id);
+
+  @override
+  Schedule driverId(String driverId) => this(driverId: driverId);
+
+  @override
+  Schedule dayOfWeek(ScheduleDayOfWeekEnum dayOfWeek) =>
+      this(dayOfWeek: dayOfWeek);
+
+  @override
+  Schedule startTime(Time startTime) => this(startTime: startTime);
+
+  @override
+  Schedule endTime(Time endTime) => this(endTime: endTime);
+
+  @override
+  Schedule isRecurring(bool? isRecurring) => this(isRecurring: isRecurring);
+
+  @override
+  Schedule specificDate(DateTime? specificDate) =>
+      this(specificDate: specificDate);
+
+  @override
+  Schedule isActive(bool? isActive) => this(isActive: isActive);
+
+  @override
+  Schedule createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  Schedule updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Schedule(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Schedule(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Schedule call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? driverId = const $CopyWithPlaceholder(),
+    Object? dayOfWeek = const $CopyWithPlaceholder(),
+    Object? startTime = const $CopyWithPlaceholder(),
+    Object? endTime = const $CopyWithPlaceholder(),
+    Object? isRecurring = const $CopyWithPlaceholder(),
+    Object? specificDate = const $CopyWithPlaceholder(),
+    Object? isActive = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return Schedule(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      driverId: driverId == const $CopyWithPlaceholder()
+          ? _value.driverId
+          // ignore: cast_nullable_to_non_nullable
+          : driverId as String,
+      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder()
+          ? _value.dayOfWeek
+          // ignore: cast_nullable_to_non_nullable
+          : dayOfWeek as ScheduleDayOfWeekEnum,
+      startTime: startTime == const $CopyWithPlaceholder()
+          ? _value.startTime
+          // ignore: cast_nullable_to_non_nullable
+          : startTime as Time,
+      endTime: endTime == const $CopyWithPlaceholder()
+          ? _value.endTime
+          // ignore: cast_nullable_to_non_nullable
+          : endTime as Time,
+      isRecurring: isRecurring == const $CopyWithPlaceholder()
+          ? _value.isRecurring
+          // ignore: cast_nullable_to_non_nullable
+          : isRecurring as bool?,
+      specificDate: specificDate == const $CopyWithPlaceholder()
+          ? _value.specificDate
+          // ignore: cast_nullable_to_non_nullable
+          : specificDate as DateTime?,
+      isActive: isActive == const $CopyWithPlaceholder()
+          ? _value.isActive
+          // ignore: cast_nullable_to_non_nullable
+          : isActive as bool?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+    );
   }
 }
 
-final BuiltSet<ScheduleDayOfWeekEnum> _$scheduleDayOfWeekEnumValues =
-    BuiltSet<ScheduleDayOfWeekEnum>(const <ScheduleDayOfWeekEnum>[
-      _$scheduleDayOfWeekEnum_sunday,
-      _$scheduleDayOfWeekEnum_monday,
-      _$scheduleDayOfWeekEnum_tuesday,
-      _$scheduleDayOfWeekEnum_wednesday,
-      _$scheduleDayOfWeekEnum_thursday,
-      _$scheduleDayOfWeekEnum_friday,
-      _$scheduleDayOfWeekEnum_saturday,
-    ]);
+extension $ScheduleCopyWith on Schedule {
+  /// Returns a callable class that can be used as follows: `instanceOfSchedule.copyWith(...)` or like so:`instanceOfSchedule.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ScheduleCWProxy get copyWith => _$ScheduleCWProxyImpl(this);
+}
 
-Serializer<ScheduleDayOfWeekEnum> _$scheduleDayOfWeekEnumSerializer =
-    _$ScheduleDayOfWeekEnumSerializer();
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-class _$ScheduleDayOfWeekEnumSerializer
-    implements PrimitiveSerializer<ScheduleDayOfWeekEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[ScheduleDayOfWeekEnum];
-  @override
-  final String wireName = 'ScheduleDayOfWeekEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    ScheduleDayOfWeekEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ScheduleDayOfWeekEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ScheduleDayOfWeekEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+Schedule _$ScheduleFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Schedule', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'driverId',
+      'dayOfWeek',
+      'startTime',
+      'endTime',
+      'createdAt',
+      'updatedAt',
+    ],
   );
-}
+  final val = Schedule(
+    id: $checkedConvert('id', (v) => v as String),
+    driverId: $checkedConvert('driverId', (v) => v as String),
+    dayOfWeek: $checkedConvert(
+      'dayOfWeek',
+      (v) => $enumDecode(_$ScheduleDayOfWeekEnumEnumMap, v),
+    ),
+    startTime: $checkedConvert(
+      'startTime',
+      (v) => Time.fromJson(v as Map<String, dynamic>),
+    ),
+    endTime: $checkedConvert(
+      'endTime',
+      (v) => Time.fromJson(v as Map<String, dynamic>),
+    ),
+    isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
+    specificDate: $checkedConvert(
+      'specificDate',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
-class _$Schedule extends Schedule {
-  @override
-  final String id;
-  @override
-  final String driverId;
-  @override
-  final ScheduleDayOfWeekEnum? dayOfWeek;
-  @override
-  final Time startTime;
-  @override
-  final Time endTime;
-  @override
-  final bool? isRecurring;
-  @override
-  final num? specificDate;
-  @override
-  final bool? isActive;
-  @override
-  final num createdAt;
-  @override
-  final num updatedAt;
+Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
+  'id': instance.id,
+  'driverId': instance.driverId,
+  'dayOfWeek': _$ScheduleDayOfWeekEnumEnumMap[instance.dayOfWeek]!,
+  'startTime': instance.startTime.toJson(),
+  'endTime': instance.endTime.toJson(),
+  'isRecurring': ?instance.isRecurring,
+  'specificDate': ?instance.specificDate?.toIso8601String(),
+  'isActive': ?instance.isActive,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};
 
-  factory _$Schedule([void Function(ScheduleBuilder)? updates]) =>
-      (ScheduleBuilder()..update(updates))._build();
-
-  _$Schedule._({
-    required this.id,
-    required this.driverId,
-    this.dayOfWeek,
-    required this.startTime,
-    required this.endTime,
-    this.isRecurring,
-    this.specificDate,
-    this.isActive,
-    required this.createdAt,
-    required this.updatedAt,
-  }) : super._();
-  @override
-  Schedule rebuild(void Function(ScheduleBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  ScheduleBuilder toBuilder() => ScheduleBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Schedule &&
-        id == other.id &&
-        driverId == other.driverId &&
-        dayOfWeek == other.dayOfWeek &&
-        startTime == other.startTime &&
-        endTime == other.endTime &&
-        isRecurring == other.isRecurring &&
-        specificDate == other.specificDate &&
-        isActive == other.isActive &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, driverId.hashCode);
-    _$hash = $jc(_$hash, dayOfWeek.hashCode);
-    _$hash = $jc(_$hash, startTime.hashCode);
-    _$hash = $jc(_$hash, endTime.hashCode);
-    _$hash = $jc(_$hash, isRecurring.hashCode);
-    _$hash = $jc(_$hash, specificDate.hashCode);
-    _$hash = $jc(_$hash, isActive.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Schedule')
-          ..add('id', id)
-          ..add('driverId', driverId)
-          ..add('dayOfWeek', dayOfWeek)
-          ..add('startTime', startTime)
-          ..add('endTime', endTime)
-          ..add('isRecurring', isRecurring)
-          ..add('specificDate', specificDate)
-          ..add('isActive', isActive)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
-        .toString();
-  }
-}
-
-class ScheduleBuilder implements Builder<Schedule, ScheduleBuilder> {
-  _$Schedule? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _driverId;
-  String? get driverId => _$this._driverId;
-  set driverId(String? driverId) => _$this._driverId = driverId;
-
-  ScheduleDayOfWeekEnum? _dayOfWeek;
-  ScheduleDayOfWeekEnum? get dayOfWeek => _$this._dayOfWeek;
-  set dayOfWeek(ScheduleDayOfWeekEnum? dayOfWeek) =>
-      _$this._dayOfWeek = dayOfWeek;
-
-  TimeBuilder? _startTime;
-  TimeBuilder get startTime => _$this._startTime ??= TimeBuilder();
-  set startTime(TimeBuilder? startTime) => _$this._startTime = startTime;
-
-  TimeBuilder? _endTime;
-  TimeBuilder get endTime => _$this._endTime ??= TimeBuilder();
-  set endTime(TimeBuilder? endTime) => _$this._endTime = endTime;
-
-  bool? _isRecurring;
-  bool? get isRecurring => _$this._isRecurring;
-  set isRecurring(bool? isRecurring) => _$this._isRecurring = isRecurring;
-
-  num? _specificDate;
-  num? get specificDate => _$this._specificDate;
-  set specificDate(num? specificDate) => _$this._specificDate = specificDate;
-
-  bool? _isActive;
-  bool? get isActive => _$this._isActive;
-  set isActive(bool? isActive) => _$this._isActive = isActive;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  ScheduleBuilder() {
-    Schedule._defaults(this);
-  }
-
-  ScheduleBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _driverId = $v.driverId;
-      _dayOfWeek = $v.dayOfWeek;
-      _startTime = $v.startTime.toBuilder();
-      _endTime = $v.endTime.toBuilder();
-      _isRecurring = $v.isRecurring;
-      _specificDate = $v.specificDate;
-      _isActive = $v.isActive;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Schedule other) {
-    _$v = other as _$Schedule;
-  }
-
-  @override
-  void update(void Function(ScheduleBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Schedule build() => _build();
-
-  _$Schedule _build() {
-    _$Schedule _$result;
-    try {
-      _$result =
-          _$v ??
-          _$Schedule._(
-            id: BuiltValueNullFieldError.checkNotNull(id, r'Schedule', 'id'),
-            driverId: BuiltValueNullFieldError.checkNotNull(
-              driverId,
-              r'Schedule',
-              'driverId',
-            ),
-            dayOfWeek: dayOfWeek,
-            startTime: startTime.build(),
-            endTime: endTime.build(),
-            isRecurring: isRecurring,
-            specificDate: specificDate,
-            isActive: isActive,
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt,
-              r'Schedule',
-              'createdAt',
-            ),
-            updatedAt: BuiltValueNullFieldError.checkNotNull(
-              updatedAt,
-              r'Schedule',
-              'updatedAt',
-            ),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'startTime';
-        startTime.build();
-        _$failedField = 'endTime';
-        endTime.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'Schedule',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$ScheduleDayOfWeekEnumEnumMap = {
+  ScheduleDayOfWeekEnum.sunday: 'sunday',
+  ScheduleDayOfWeekEnum.monday: 'monday',
+  ScheduleDayOfWeekEnum.tuesday: 'tuesday',
+  ScheduleDayOfWeekEnum.wednesday: 'wednesday',
+  ScheduleDayOfWeekEnum.thursday: 'thursday',
+  ScheduleDayOfWeekEnum.friday: 'friday',
+  ScheduleDayOfWeekEnum.saturday: 'saturday',
+};

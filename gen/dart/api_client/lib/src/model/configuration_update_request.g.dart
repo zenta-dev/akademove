@@ -3,117 +3,101 @@
 part of 'configuration_update_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$ConfigurationUpdateRequest extends ConfigurationUpdateRequest {
-  @override
-  final String? name;
-  @override
-  final JsonObject? value;
-  @override
-  final String? description;
+abstract class _$ConfigurationUpdateRequestCWProxy {
+  ConfigurationUpdateRequest name(String? name);
 
-  factory _$ConfigurationUpdateRequest([
-    void Function(ConfigurationUpdateRequestBuilder)? updates,
-  ]) => (ConfigurationUpdateRequestBuilder()..update(updates))._build();
+  ConfigurationUpdateRequest value(Object? value);
 
-  _$ConfigurationUpdateRequest._({this.name, this.value, this.description})
-    : super._();
-  @override
-  ConfigurationUpdateRequest rebuild(
-    void Function(ConfigurationUpdateRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  ConfigurationUpdateRequest description(String? description);
 
-  @override
-  ConfigurationUpdateRequestBuilder toBuilder() =>
-      ConfigurationUpdateRequestBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ConfigurationUpdateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ConfigurationUpdateRequest call({
+    String? name,
+    Object? value,
+    String? description,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ConfigurationUpdateRequest &&
-        name == other.name &&
-        value == other.value &&
-        description == other.description;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfConfigurationUpdateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfConfigurationUpdateRequest.copyWith.fieldName(...)`
+class _$ConfigurationUpdateRequestCWProxyImpl
+    implements _$ConfigurationUpdateRequestCWProxy {
+  const _$ConfigurationUpdateRequestCWProxyImpl(this._value);
+
+  final ConfigurationUpdateRequest _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, value.hashCode);
-    _$hash = $jc(_$hash, description.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  ConfigurationUpdateRequest name(String? name) => this(name: name);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ConfigurationUpdateRequest')
-          ..add('name', name)
-          ..add('value', value)
-          ..add('description', description))
-        .toString();
+  ConfigurationUpdateRequest value(Object? value) => this(value: value);
+
+  @override
+  ConfigurationUpdateRequest description(String? description) =>
+      this(description: description);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ConfigurationUpdateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ConfigurationUpdateRequest call({
+    Object? name = const $CopyWithPlaceholder(),
+    Object? value = const $CopyWithPlaceholder(),
+    Object? description = const $CopyWithPlaceholder(),
+  }) {
+    return ConfigurationUpdateRequest(
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String?,
+      value: value == const $CopyWithPlaceholder()
+          ? _value.value
+          // ignore: cast_nullable_to_non_nullable
+          : value as Object?,
+      description: description == const $CopyWithPlaceholder()
+          ? _value.description
+          // ignore: cast_nullable_to_non_nullable
+          : description as String?,
+    );
   }
 }
 
-class ConfigurationUpdateRequestBuilder
-    implements
-        Builder<ConfigurationUpdateRequest, ConfigurationUpdateRequestBuilder> {
-  _$ConfigurationUpdateRequest? _$v;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  JsonObject? _value;
-  JsonObject? get value => _$this._value;
-  set value(JsonObject? value) => _$this._value = value;
-
-  String? _description;
-  String? get description => _$this._description;
-  set description(String? description) => _$this._description = description;
-
-  ConfigurationUpdateRequestBuilder() {
-    ConfigurationUpdateRequest._defaults(this);
-  }
-
-  ConfigurationUpdateRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _name = $v.name;
-      _value = $v.value;
-      _description = $v.description;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ConfigurationUpdateRequest other) {
-    _$v = other as _$ConfigurationUpdateRequest;
-  }
-
-  @override
-  void update(void Function(ConfigurationUpdateRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ConfigurationUpdateRequest build() => _build();
-
-  _$ConfigurationUpdateRequest _build() {
-    final _$result =
-        _$v ??
-        _$ConfigurationUpdateRequest._(
-          name: name,
-          value: value,
-          description: description,
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $ConfigurationUpdateRequestCopyWith on ConfigurationUpdateRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfConfigurationUpdateRequest.copyWith(...)` or like so:`instanceOfConfigurationUpdateRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ConfigurationUpdateRequestCWProxy get copyWith =>
+      _$ConfigurationUpdateRequestCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ConfigurationUpdateRequest _$ConfigurationUpdateRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ConfigurationUpdateRequest', json, ($checkedConvert) {
+  final val = ConfigurationUpdateRequest(
+    name: $checkedConvert('name', (v) => v as String?),
+    value: $checkedConvert('value', (v) => v),
+    description: $checkedConvert('description', (v) => v as String?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$ConfigurationUpdateRequestToJson(
+  ConfigurationUpdateRequest instance,
+) => <String, dynamic>{
+  'name': ?instance.name,
+  'value': ?instance.value,
+  'description': ?instance.description,
+};

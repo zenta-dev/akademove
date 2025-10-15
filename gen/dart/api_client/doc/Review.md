@@ -12,10 +12,10 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | 
 **fromUserId** | **String** |  | 
 **toUserId** | **String** |  | 
-**category** | **String** |  | [optional] [default to 'other']
+**category** | **String** |  | 
 **score** | **num** |  | 
 **comment** | **String** |  | [optional] [default to '']
-**createdAt** | **num** | unix timestamp format | 
+**createdAt** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserCreateRequest
 void main() {
-  final instance = UserCreateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final UserCreateRequest? instance = /* UserCreateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(UserCreateRequest, () {
     // String name
@@ -17,8 +17,18 @@ void main() {
       // TODO
     });
 
-    // JsonObject role
+    // String role
     test('to test the property `role`', () async {
+      // TODO
+    });
+
+    // String gender
+    test('to test the property `gender`', () async {
+      // TODO
+    });
+
+    // String phone
+    test('to test the property `phone`', () async {
       // TODO
     });
 
@@ -31,6 +41,5 @@ void main() {
     test('to test the property `confirmPassword`', () async {
       // TODO
     });
-
   });
 }

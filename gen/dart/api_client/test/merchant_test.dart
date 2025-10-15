@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Merchant
 void main() {
-  final instance = MerchantBuilder();
-  // TODO add properties to the builder and call build()
+  final Merchant? instance = /* Merchant(...) */ null;
+  // TODO add properties to the entity
 
   group(Merchant, () {
     // String id
@@ -27,6 +27,16 @@ void main() {
       // TODO
     });
 
+    // String email
+    test('to test the property `email`', () async {
+      // TODO
+    });
+
+    // String phone
+    test('to test the property `phone`', () async {
+      // TODO
+    });
+
     // String address
     test('to test the property `address`', () async {
       // TODO
@@ -37,7 +47,7 @@ void main() {
       // TODO
     });
 
-    // bool isActive (default value: true)
+    // bool isActive
     test('to test the property `isActive`', () async {
       // TODO
     });
@@ -47,17 +57,19 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // String document
+    test('to test the property `document`', () async {
+      // TODO
+    });
+
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

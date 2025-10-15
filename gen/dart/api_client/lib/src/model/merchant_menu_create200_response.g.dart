@@ -3,129 +3,107 @@
 part of 'merchant_menu_create200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$MerchantMenuCreate200Response extends MerchantMenuCreate200Response {
-  @override
-  final String message;
-  @override
-  final MerchantMenu data;
+abstract class _$MerchantMenuCreate200ResponseCWProxy {
+  MerchantMenuCreate200Response message(String message);
 
-  factory _$MerchantMenuCreate200Response([
-    void Function(MerchantMenuCreate200ResponseBuilder)? updates,
-  ]) => (MerchantMenuCreate200ResponseBuilder()..update(updates))._build();
+  MerchantMenuCreate200Response data(MerchantMenu data);
 
-  _$MerchantMenuCreate200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  MerchantMenuCreate200Response rebuild(
-    void Function(MerchantMenuCreate200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  MerchantMenuCreate200Response totalPages(num? totalPages);
 
-  @override
-  MerchantMenuCreate200ResponseBuilder toBuilder() =>
-      MerchantMenuCreate200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenuCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantMenuCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantMenuCreate200Response call({
+    String message,
+    MerchantMenu data,
+    num? totalPages,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is MerchantMenuCreate200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantMenuCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`
+class _$MerchantMenuCreate200ResponseCWProxyImpl
+    implements _$MerchantMenuCreate200ResponseCWProxy {
+  const _$MerchantMenuCreate200ResponseCWProxyImpl(this._value);
+
+  final MerchantMenuCreate200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  MerchantMenuCreate200Response message(String message) =>
+      this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'MerchantMenuCreate200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  MerchantMenuCreate200Response data(MerchantMenu data) => this(data: data);
+
+  @override
+  MerchantMenuCreate200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenuCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantMenuCreate200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantMenuCreate200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return MerchantMenuCreate200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as MerchantMenu,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class MerchantMenuCreate200ResponseBuilder
-    implements
-        Builder<
-          MerchantMenuCreate200Response,
-          MerchantMenuCreate200ResponseBuilder
-        > {
-  _$MerchantMenuCreate200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  MerchantMenuBuilder? _data;
-  MerchantMenuBuilder get data => _$this._data ??= MerchantMenuBuilder();
-  set data(MerchantMenuBuilder? data) => _$this._data = data;
-
-  MerchantMenuCreate200ResponseBuilder() {
-    MerchantMenuCreate200Response._defaults(this);
-  }
-
-  MerchantMenuCreate200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(MerchantMenuCreate200Response other) {
-    _$v = other as _$MerchantMenuCreate200Response;
-  }
-
-  @override
-  void update(void Function(MerchantMenuCreate200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  MerchantMenuCreate200Response build() => _build();
-
-  _$MerchantMenuCreate200Response _build() {
-    _$MerchantMenuCreate200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$MerchantMenuCreate200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'MerchantMenuCreate200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'MerchantMenuCreate200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $MerchantMenuCreate200ResponseCopyWith
+    on MerchantMenuCreate200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfMerchantMenuCreate200Response.copyWith(...)` or like so:`instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$MerchantMenuCreate200ResponseCWProxy get copyWith =>
+      _$MerchantMenuCreate200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+MerchantMenuCreate200Response _$MerchantMenuCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantMenuCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantMenuCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => MerchantMenu.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$MerchantMenuCreate200ResponseToJson(
+  MerchantMenuCreate200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'totalPages': ?instance.totalPages,
+};

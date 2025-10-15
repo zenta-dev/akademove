@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | [optional] 
 **fromUserId** | **String** |  | [optional] 
 **toUserId** | **String** |  | [optional] 
-**category** | **String** |  | [optional] [default to 'other']
+**category** | **String** |  | [optional] 
 **score** | **num** |  | [optional] 
 **comment** | **String** |  | [optional] [default to '']
 

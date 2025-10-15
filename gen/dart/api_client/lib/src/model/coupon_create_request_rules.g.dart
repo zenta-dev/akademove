@@ -3,141 +3,118 @@
 part of 'coupon_create_request_rules.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$CouponCreateRequestRules extends CouponCreateRequestRules {
-  @override
-  final CouponCreateRequestRulesGeneral? general;
-  @override
-  final CouponCreateRequestRulesUser? user;
-  @override
-  final CouponCreateRequestRulesTime? time;
+abstract class _$CouponCreateRequestRulesCWProxy {
+  CouponCreateRequestRules general(CouponCreateRequestRulesGeneral? general);
 
-  factory _$CouponCreateRequestRules([
-    void Function(CouponCreateRequestRulesBuilder)? updates,
-  ]) => (CouponCreateRequestRulesBuilder()..update(updates))._build();
+  CouponCreateRequestRules user(CouponCreateRequestRulesUser? user);
 
-  _$CouponCreateRequestRules._({this.general, this.user, this.time})
-    : super._();
-  @override
-  CouponCreateRequestRules rebuild(
-    void Function(CouponCreateRequestRulesBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  CouponCreateRequestRules time(CouponCreateRequestRulesTime? time);
 
-  @override
-  CouponCreateRequestRulesBuilder toBuilder() =>
-      CouponCreateRequestRulesBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRules(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRules call({
+    CouponCreateRequestRulesGeneral? general,
+    CouponCreateRequestRulesUser? user,
+    CouponCreateRequestRulesTime? time,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is CouponCreateRequestRules &&
-        general == other.general &&
-        user == other.user &&
-        time == other.time;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreateRequestRules.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreateRequestRules.copyWith.fieldName(...)`
+class _$CouponCreateRequestRulesCWProxyImpl
+    implements _$CouponCreateRequestRulesCWProxy {
+  const _$CouponCreateRequestRulesCWProxyImpl(this._value);
+
+  final CouponCreateRequestRules _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, general.hashCode);
-    _$hash = $jc(_$hash, user.hashCode);
-    _$hash = $jc(_$hash, time.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  CouponCreateRequestRules general(CouponCreateRequestRulesGeneral? general) =>
+      this(general: general);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'CouponCreateRequestRules')
-          ..add('general', general)
-          ..add('user', user)
-          ..add('time', time))
-        .toString();
+  CouponCreateRequestRules user(CouponCreateRequestRulesUser? user) =>
+      this(user: user);
+
+  @override
+  CouponCreateRequestRules time(CouponCreateRequestRulesTime? time) =>
+      this(time: time);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRules(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRules call({
+    Object? general = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+    Object? time = const $CopyWithPlaceholder(),
+  }) {
+    return CouponCreateRequestRules(
+      general: general == const $CopyWithPlaceholder()
+          ? _value.general
+          // ignore: cast_nullable_to_non_nullable
+          : general as CouponCreateRequestRulesGeneral?,
+      user: user == const $CopyWithPlaceholder()
+          ? _value.user
+          // ignore: cast_nullable_to_non_nullable
+          : user as CouponCreateRequestRulesUser?,
+      time: time == const $CopyWithPlaceholder()
+          ? _value.time
+          // ignore: cast_nullable_to_non_nullable
+          : time as CouponCreateRequestRulesTime?,
+    );
   }
 }
 
-class CouponCreateRequestRulesBuilder
-    implements
-        Builder<CouponCreateRequestRules, CouponCreateRequestRulesBuilder> {
-  _$CouponCreateRequestRules? _$v;
-
-  CouponCreateRequestRulesGeneralBuilder? _general;
-  CouponCreateRequestRulesGeneralBuilder get general =>
-      _$this._general ??= CouponCreateRequestRulesGeneralBuilder();
-  set general(CouponCreateRequestRulesGeneralBuilder? general) =>
-      _$this._general = general;
-
-  CouponCreateRequestRulesUserBuilder? _user;
-  CouponCreateRequestRulesUserBuilder get user =>
-      _$this._user ??= CouponCreateRequestRulesUserBuilder();
-  set user(CouponCreateRequestRulesUserBuilder? user) => _$this._user = user;
-
-  CouponCreateRequestRulesTimeBuilder? _time;
-  CouponCreateRequestRulesTimeBuilder get time =>
-      _$this._time ??= CouponCreateRequestRulesTimeBuilder();
-  set time(CouponCreateRequestRulesTimeBuilder? time) => _$this._time = time;
-
-  CouponCreateRequestRulesBuilder() {
-    CouponCreateRequestRules._defaults(this);
-  }
-
-  CouponCreateRequestRulesBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _general = $v.general?.toBuilder();
-      _user = $v.user?.toBuilder();
-      _time = $v.time?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(CouponCreateRequestRules other) {
-    _$v = other as _$CouponCreateRequestRules;
-  }
-
-  @override
-  void update(void Function(CouponCreateRequestRulesBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  CouponCreateRequestRules build() => _build();
-
-  _$CouponCreateRequestRules _build() {
-    _$CouponCreateRequestRules _$result;
-    try {
-      _$result =
-          _$v ??
-          _$CouponCreateRequestRules._(
-            general: _general?.build(),
-            user: _user?.build(),
-            time: _time?.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'general';
-        _general?.build();
-        _$failedField = 'user';
-        _user?.build();
-        _$failedField = 'time';
-        _time?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'CouponCreateRequestRules',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $CouponCreateRequestRulesCopyWith on CouponCreateRequestRules {
+  /// Returns a callable class that can be used as follows: `instanceOfCouponCreateRequestRules.copyWith(...)` or like so:`instanceOfCouponCreateRequestRules.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$CouponCreateRequestRulesCWProxy get copyWith =>
+      _$CouponCreateRequestRulesCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+CouponCreateRequestRules _$CouponCreateRequestRulesFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('CouponCreateRequestRules', json, ($checkedConvert) {
+  final val = CouponCreateRequestRules(
+    general: $checkedConvert(
+      'general',
+      (v) => v == null
+          ? null
+          : CouponCreateRequestRulesGeneral.fromJson(v as Map<String, dynamic>),
+    ),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null
+          ? null
+          : CouponCreateRequestRulesUser.fromJson(v as Map<String, dynamic>),
+    ),
+    time: $checkedConvert(
+      'time',
+      (v) => v == null
+          ? null
+          : CouponCreateRequestRulesTime.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$CouponCreateRequestRulesToJson(
+  CouponCreateRequestRules instance,
+) => <String, dynamic>{
+  'general': ?instance.general?.toJson(),
+  'user': ?instance.user?.toJson(),
+  'time': ?instance.time?.toJson(),
+};

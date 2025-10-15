@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**role** | **String** |  | [optional] [default to 'user']
+**role** | **String** |  | 
 **password** | **String** |  | 
 **confirmPassword** | **String** |  | 
 **banReason** | **String** |  | 

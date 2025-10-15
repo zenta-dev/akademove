@@ -3,296 +3,182 @@
 part of 'schedule_create_request.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_sunday =
-    const ScheduleCreateRequestDayOfWeekEnum._('sunday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_monday =
-    const ScheduleCreateRequestDayOfWeekEnum._('monday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_tuesday =
-    const ScheduleCreateRequestDayOfWeekEnum._('tuesday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_wednesday =
-    const ScheduleCreateRequestDayOfWeekEnum._('wednesday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_thursday =
-    const ScheduleCreateRequestDayOfWeekEnum._('thursday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_friday =
-    const ScheduleCreateRequestDayOfWeekEnum._('friday');
-const ScheduleCreateRequestDayOfWeekEnum
-_$scheduleCreateRequestDayOfWeekEnum_saturday =
-    const ScheduleCreateRequestDayOfWeekEnum._('saturday');
+abstract class _$ScheduleCreateRequestCWProxy {
+  ScheduleCreateRequest driverId(String driverId);
 
-ScheduleCreateRequestDayOfWeekEnum _$scheduleCreateRequestDayOfWeekEnumValueOf(
-  String name,
-) {
-  switch (name) {
-    case 'sunday':
-      return _$scheduleCreateRequestDayOfWeekEnum_sunday;
-    case 'monday':
-      return _$scheduleCreateRequestDayOfWeekEnum_monday;
-    case 'tuesday':
-      return _$scheduleCreateRequestDayOfWeekEnum_tuesday;
-    case 'wednesday':
-      return _$scheduleCreateRequestDayOfWeekEnum_wednesday;
-    case 'thursday':
-      return _$scheduleCreateRequestDayOfWeekEnum_thursday;
-    case 'friday':
-      return _$scheduleCreateRequestDayOfWeekEnum_friday;
-    case 'saturday':
-      return _$scheduleCreateRequestDayOfWeekEnum_saturday;
-    default:
-      throw ArgumentError(name);
-  }
+  ScheduleCreateRequest dayOfWeek(ScheduleCreateRequestDayOfWeekEnum dayOfWeek);
+
+  ScheduleCreateRequest startTime(Time startTime);
+
+  ScheduleCreateRequest endTime(Time endTime);
+
+  ScheduleCreateRequest isRecurring(bool? isRecurring);
+
+  ScheduleCreateRequest specificDate(DateTime? specificDate);
+
+  ScheduleCreateRequest isActive(bool? isActive);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ScheduleCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ScheduleCreateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ScheduleCreateRequest call({
+    String driverId,
+    ScheduleCreateRequestDayOfWeekEnum dayOfWeek,
+    Time startTime,
+    Time endTime,
+    bool? isRecurring,
+    DateTime? specificDate,
+    bool? isActive,
+  });
 }
 
-final BuiltSet<ScheduleCreateRequestDayOfWeekEnum>
-_$scheduleCreateRequestDayOfWeekEnumValues =
-    BuiltSet<ScheduleCreateRequestDayOfWeekEnum>(
-      const <ScheduleCreateRequestDayOfWeekEnum>[
-        _$scheduleCreateRequestDayOfWeekEnum_sunday,
-        _$scheduleCreateRequestDayOfWeekEnum_monday,
-        _$scheduleCreateRequestDayOfWeekEnum_tuesday,
-        _$scheduleCreateRequestDayOfWeekEnum_wednesday,
-        _$scheduleCreateRequestDayOfWeekEnum_thursday,
-        _$scheduleCreateRequestDayOfWeekEnum_friday,
-        _$scheduleCreateRequestDayOfWeekEnum_saturday,
-      ],
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfScheduleCreateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfScheduleCreateRequest.copyWith.fieldName(...)`
+class _$ScheduleCreateRequestCWProxyImpl
+    implements _$ScheduleCreateRequestCWProxy {
+  const _$ScheduleCreateRequestCWProxyImpl(this._value);
+
+  final ScheduleCreateRequest _value;
+
+  @override
+  ScheduleCreateRequest driverId(String driverId) => this(driverId: driverId);
+
+  @override
+  ScheduleCreateRequest dayOfWeek(
+    ScheduleCreateRequestDayOfWeekEnum dayOfWeek,
+  ) => this(dayOfWeek: dayOfWeek);
+
+  @override
+  ScheduleCreateRequest startTime(Time startTime) => this(startTime: startTime);
+
+  @override
+  ScheduleCreateRequest endTime(Time endTime) => this(endTime: endTime);
+
+  @override
+  ScheduleCreateRequest isRecurring(bool? isRecurring) =>
+      this(isRecurring: isRecurring);
+
+  @override
+  ScheduleCreateRequest specificDate(DateTime? specificDate) =>
+      this(specificDate: specificDate);
+
+  @override
+  ScheduleCreateRequest isActive(bool? isActive) => this(isActive: isActive);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ScheduleCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ScheduleCreateRequest(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ScheduleCreateRequest call({
+    Object? driverId = const $CopyWithPlaceholder(),
+    Object? dayOfWeek = const $CopyWithPlaceholder(),
+    Object? startTime = const $CopyWithPlaceholder(),
+    Object? endTime = const $CopyWithPlaceholder(),
+    Object? isRecurring = const $CopyWithPlaceholder(),
+    Object? specificDate = const $CopyWithPlaceholder(),
+    Object? isActive = const $CopyWithPlaceholder(),
+  }) {
+    return ScheduleCreateRequest(
+      driverId: driverId == const $CopyWithPlaceholder()
+          ? _value.driverId
+          // ignore: cast_nullable_to_non_nullable
+          : driverId as String,
+      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder()
+          ? _value.dayOfWeek
+          // ignore: cast_nullable_to_non_nullable
+          : dayOfWeek as ScheduleCreateRequestDayOfWeekEnum,
+      startTime: startTime == const $CopyWithPlaceholder()
+          ? _value.startTime
+          // ignore: cast_nullable_to_non_nullable
+          : startTime as Time,
+      endTime: endTime == const $CopyWithPlaceholder()
+          ? _value.endTime
+          // ignore: cast_nullable_to_non_nullable
+          : endTime as Time,
+      isRecurring: isRecurring == const $CopyWithPlaceholder()
+          ? _value.isRecurring
+          // ignore: cast_nullable_to_non_nullable
+          : isRecurring as bool?,
+      specificDate: specificDate == const $CopyWithPlaceholder()
+          ? _value.specificDate
+          // ignore: cast_nullable_to_non_nullable
+          : specificDate as DateTime?,
+      isActive: isActive == const $CopyWithPlaceholder()
+          ? _value.isActive
+          // ignore: cast_nullable_to_non_nullable
+          : isActive as bool?,
     );
+  }
+}
 
-Serializer<ScheduleCreateRequestDayOfWeekEnum>
-_$scheduleCreateRequestDayOfWeekEnumSerializer =
-    _$ScheduleCreateRequestDayOfWeekEnumSerializer();
+extension $ScheduleCreateRequestCopyWith on ScheduleCreateRequest {
+  /// Returns a callable class that can be used as follows: `instanceOfScheduleCreateRequest.copyWith(...)` or like so:`instanceOfScheduleCreateRequest.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ScheduleCreateRequestCWProxy get copyWith =>
+      _$ScheduleCreateRequestCWProxyImpl(this);
+}
 
-class _$ScheduleCreateRequestDayOfWeekEnumSerializer
-    implements PrimitiveSerializer<ScheduleCreateRequestDayOfWeekEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-  @override
-  final Iterable<Type> types = const <Type>[ScheduleCreateRequestDayOfWeekEnum];
-  @override
-  final String wireName = 'ScheduleCreateRequestDayOfWeekEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    ScheduleCreateRequestDayOfWeekEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ScheduleCreateRequestDayOfWeekEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ScheduleCreateRequestDayOfWeekEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+ScheduleCreateRequest _$ScheduleCreateRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ScheduleCreateRequest', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const ['driverId', 'dayOfWeek', 'startTime', 'endTime'],
   );
-}
+  final val = ScheduleCreateRequest(
+    driverId: $checkedConvert('driverId', (v) => v as String),
+    dayOfWeek: $checkedConvert(
+      'dayOfWeek',
+      (v) => $enumDecode(_$ScheduleCreateRequestDayOfWeekEnumEnumMap, v),
+    ),
+    startTime: $checkedConvert(
+      'startTime',
+      (v) => Time.fromJson(v as Map<String, dynamic>),
+    ),
+    endTime: $checkedConvert(
+      'endTime',
+      (v) => Time.fromJson(v as Map<String, dynamic>),
+    ),
+    isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
+    specificDate: $checkedConvert(
+      'specificDate',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
+  );
+  return val;
+});
 
-class _$ScheduleCreateRequest extends ScheduleCreateRequest {
-  @override
-  final String driverId;
-  @override
-  final ScheduleCreateRequestDayOfWeekEnum? dayOfWeek;
-  @override
-  final Time startTime;
-  @override
-  final Time endTime;
-  @override
-  final bool? isRecurring;
-  @override
-  final num? specificDate;
-  @override
-  final bool? isActive;
+Map<String, dynamic> _$ScheduleCreateRequestToJson(
+  ScheduleCreateRequest instance,
+) => <String, dynamic>{
+  'driverId': instance.driverId,
+  'dayOfWeek': _$ScheduleCreateRequestDayOfWeekEnumEnumMap[instance.dayOfWeek]!,
+  'startTime': instance.startTime.toJson(),
+  'endTime': instance.endTime.toJson(),
+  'isRecurring': ?instance.isRecurring,
+  'specificDate': ?instance.specificDate?.toIso8601String(),
+  'isActive': ?instance.isActive,
+};
 
-  factory _$ScheduleCreateRequest([
-    void Function(ScheduleCreateRequestBuilder)? updates,
-  ]) => (ScheduleCreateRequestBuilder()..update(updates))._build();
-
-  _$ScheduleCreateRequest._({
-    required this.driverId,
-    this.dayOfWeek,
-    required this.startTime,
-    required this.endTime,
-    this.isRecurring,
-    this.specificDate,
-    this.isActive,
-  }) : super._();
-  @override
-  ScheduleCreateRequest rebuild(
-    void Function(ScheduleCreateRequestBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
-
-  @override
-  ScheduleCreateRequestBuilder toBuilder() =>
-      ScheduleCreateRequestBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ScheduleCreateRequest &&
-        driverId == other.driverId &&
-        dayOfWeek == other.dayOfWeek &&
-        startTime == other.startTime &&
-        endTime == other.endTime &&
-        isRecurring == other.isRecurring &&
-        specificDate == other.specificDate &&
-        isActive == other.isActive;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, driverId.hashCode);
-    _$hash = $jc(_$hash, dayOfWeek.hashCode);
-    _$hash = $jc(_$hash, startTime.hashCode);
-    _$hash = $jc(_$hash, endTime.hashCode);
-    _$hash = $jc(_$hash, isRecurring.hashCode);
-    _$hash = $jc(_$hash, specificDate.hashCode);
-    _$hash = $jc(_$hash, isActive.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ScheduleCreateRequest')
-          ..add('driverId', driverId)
-          ..add('dayOfWeek', dayOfWeek)
-          ..add('startTime', startTime)
-          ..add('endTime', endTime)
-          ..add('isRecurring', isRecurring)
-          ..add('specificDate', specificDate)
-          ..add('isActive', isActive))
-        .toString();
-  }
-}
-
-class ScheduleCreateRequestBuilder
-    implements Builder<ScheduleCreateRequest, ScheduleCreateRequestBuilder> {
-  _$ScheduleCreateRequest? _$v;
-
-  String? _driverId;
-  String? get driverId => _$this._driverId;
-  set driverId(String? driverId) => _$this._driverId = driverId;
-
-  ScheduleCreateRequestDayOfWeekEnum? _dayOfWeek;
-  ScheduleCreateRequestDayOfWeekEnum? get dayOfWeek => _$this._dayOfWeek;
-  set dayOfWeek(ScheduleCreateRequestDayOfWeekEnum? dayOfWeek) =>
-      _$this._dayOfWeek = dayOfWeek;
-
-  TimeBuilder? _startTime;
-  TimeBuilder get startTime => _$this._startTime ??= TimeBuilder();
-  set startTime(TimeBuilder? startTime) => _$this._startTime = startTime;
-
-  TimeBuilder? _endTime;
-  TimeBuilder get endTime => _$this._endTime ??= TimeBuilder();
-  set endTime(TimeBuilder? endTime) => _$this._endTime = endTime;
-
-  bool? _isRecurring;
-  bool? get isRecurring => _$this._isRecurring;
-  set isRecurring(bool? isRecurring) => _$this._isRecurring = isRecurring;
-
-  num? _specificDate;
-  num? get specificDate => _$this._specificDate;
-  set specificDate(num? specificDate) => _$this._specificDate = specificDate;
-
-  bool? _isActive;
-  bool? get isActive => _$this._isActive;
-  set isActive(bool? isActive) => _$this._isActive = isActive;
-
-  ScheduleCreateRequestBuilder() {
-    ScheduleCreateRequest._defaults(this);
-  }
-
-  ScheduleCreateRequestBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _driverId = $v.driverId;
-      _dayOfWeek = $v.dayOfWeek;
-      _startTime = $v.startTime.toBuilder();
-      _endTime = $v.endTime.toBuilder();
-      _isRecurring = $v.isRecurring;
-      _specificDate = $v.specificDate;
-      _isActive = $v.isActive;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ScheduleCreateRequest other) {
-    _$v = other as _$ScheduleCreateRequest;
-  }
-
-  @override
-  void update(void Function(ScheduleCreateRequestBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ScheduleCreateRequest build() => _build();
-
-  _$ScheduleCreateRequest _build() {
-    _$ScheduleCreateRequest _$result;
-    try {
-      _$result =
-          _$v ??
-          _$ScheduleCreateRequest._(
-            driverId: BuiltValueNullFieldError.checkNotNull(
-              driverId,
-              r'ScheduleCreateRequest',
-              'driverId',
-            ),
-            dayOfWeek: dayOfWeek,
-            startTime: startTime.build(),
-            endTime: endTime.build(),
-            isRecurring: isRecurring,
-            specificDate: specificDate,
-            isActive: isActive,
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'startTime';
-        startTime.build();
-        _$failedField = 'endTime';
-        endTime.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'ScheduleCreateRequest',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$ScheduleCreateRequestDayOfWeekEnumEnumMap = {
+  ScheduleCreateRequestDayOfWeekEnum.sunday: 'sunday',
+  ScheduleCreateRequestDayOfWeekEnum.monday: 'monday',
+  ScheduleCreateRequestDayOfWeekEnum.tuesday: 'tuesday',
+  ScheduleCreateRequestDayOfWeekEnum.wednesday: 'wednesday',
+  ScheduleCreateRequestDayOfWeekEnum.thursday: 'thursday',
+  ScheduleCreateRequestDayOfWeekEnum.friday: 'friday',
+  ScheduleCreateRequestDayOfWeekEnum.saturday: 'saturday',
+};

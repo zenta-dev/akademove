@@ -3,351 +3,289 @@
 part of 'driver.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const DriverStatusEnum _$driverStatusEnum_pending = const DriverStatusEnum._(
-  'pending',
-);
-const DriverStatusEnum _$driverStatusEnum_approved = const DriverStatusEnum._(
-  'approved',
-);
-const DriverStatusEnum _$driverStatusEnum_rejected = const DriverStatusEnum._(
-  'rejected',
-);
-const DriverStatusEnum _$driverStatusEnum_active = const DriverStatusEnum._(
-  'active',
-);
-const DriverStatusEnum _$driverStatusEnum_inactive = const DriverStatusEnum._(
-  'inactive',
-);
-const DriverStatusEnum _$driverStatusEnum_suspended = const DriverStatusEnum._(
-  'suspended',
-);
+abstract class _$DriverCWProxy {
+  Driver id(String id);
 
-DriverStatusEnum _$driverStatusEnumValueOf(String name) {
-  switch (name) {
-    case 'pending':
-      return _$driverStatusEnum_pending;
-    case 'approved':
-      return _$driverStatusEnum_approved;
-    case 'rejected':
-      return _$driverStatusEnum_rejected;
-    case 'active':
-      return _$driverStatusEnum_active;
-    case 'inactive':
-      return _$driverStatusEnum_inactive;
-    case 'suspended':
-      return _$driverStatusEnum_suspended;
-    default:
-      throw ArgumentError(name);
+  Driver userId(String userId);
+
+  Driver studentId(String studentId);
+
+  Driver licenseNumber(String licenseNumber);
+
+  Driver status(DriverStatusEnum status);
+
+  Driver rating(num rating);
+
+  Driver isOnline(bool isOnline);
+
+  Driver currentLocation(Location? currentLocation);
+
+  Driver lastLocationUpdate(DateTime? lastLocationUpdate);
+
+  Driver createdAt(DateTime createdAt);
+
+  Driver studentCard(String studentCard);
+
+  Driver driverLicense(String driverLicense);
+
+  Driver vehicleCertificate(String vehicleCertificate);
+
+  Driver user(OrderCreateRequestUser? user);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Driver(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Driver call({
+    String id,
+    String userId,
+    String studentId,
+    String licenseNumber,
+    DriverStatusEnum status,
+    num rating,
+    bool isOnline,
+    Location? currentLocation,
+    DateTime? lastLocationUpdate,
+    DateTime createdAt,
+    String studentCard,
+    String driverLicense,
+    String vehicleCertificate,
+    OrderCreateRequestUser? user,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriver.copyWith.fieldName(...)`
+class _$DriverCWProxyImpl implements _$DriverCWProxy {
+  const _$DriverCWProxyImpl(this._value);
+
+  final Driver _value;
+
+  @override
+  Driver id(String id) => this(id: id);
+
+  @override
+  Driver userId(String userId) => this(userId: userId);
+
+  @override
+  Driver studentId(String studentId) => this(studentId: studentId);
+
+  @override
+  Driver licenseNumber(String licenseNumber) =>
+      this(licenseNumber: licenseNumber);
+
+  @override
+  Driver status(DriverStatusEnum status) => this(status: status);
+
+  @override
+  Driver rating(num rating) => this(rating: rating);
+
+  @override
+  Driver isOnline(bool isOnline) => this(isOnline: isOnline);
+
+  @override
+  Driver currentLocation(Location? currentLocation) =>
+      this(currentLocation: currentLocation);
+
+  @override
+  Driver lastLocationUpdate(DateTime? lastLocationUpdate) =>
+      this(lastLocationUpdate: lastLocationUpdate);
+
+  @override
+  Driver createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  Driver studentCard(String studentCard) => this(studentCard: studentCard);
+
+  @override
+  Driver driverLicense(String driverLicense) =>
+      this(driverLicense: driverLicense);
+
+  @override
+  Driver vehicleCertificate(String vehicleCertificate) =>
+      this(vehicleCertificate: vehicleCertificate);
+
+  @override
+  Driver user(OrderCreateRequestUser? user) => this(user: user);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Driver(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Driver call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? studentId = const $CopyWithPlaceholder(),
+    Object? licenseNumber = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
+    Object? isOnline = const $CopyWithPlaceholder(),
+    Object? currentLocation = const $CopyWithPlaceholder(),
+    Object? lastLocationUpdate = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? studentCard = const $CopyWithPlaceholder(),
+    Object? driverLicense = const $CopyWithPlaceholder(),
+    Object? vehicleCertificate = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+  }) {
+    return Driver(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String,
+      studentId: studentId == const $CopyWithPlaceholder()
+          ? _value.studentId
+          // ignore: cast_nullable_to_non_nullable
+          : studentId as String,
+      licenseNumber: licenseNumber == const $CopyWithPlaceholder()
+          ? _value.licenseNumber
+          // ignore: cast_nullable_to_non_nullable
+          : licenseNumber as String,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as DriverStatusEnum,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num,
+      isOnline: isOnline == const $CopyWithPlaceholder()
+          ? _value.isOnline
+          // ignore: cast_nullable_to_non_nullable
+          : isOnline as bool,
+      currentLocation: currentLocation == const $CopyWithPlaceholder()
+          ? _value.currentLocation
+          // ignore: cast_nullable_to_non_nullable
+          : currentLocation as Location?,
+      lastLocationUpdate: lastLocationUpdate == const $CopyWithPlaceholder()
+          ? _value.lastLocationUpdate
+          // ignore: cast_nullable_to_non_nullable
+          : lastLocationUpdate as DateTime?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      studentCard: studentCard == const $CopyWithPlaceholder()
+          ? _value.studentCard
+          // ignore: cast_nullable_to_non_nullable
+          : studentCard as String,
+      driverLicense: driverLicense == const $CopyWithPlaceholder()
+          ? _value.driverLicense
+          // ignore: cast_nullable_to_non_nullable
+          : driverLicense as String,
+      vehicleCertificate: vehicleCertificate == const $CopyWithPlaceholder()
+          ? _value.vehicleCertificate
+          // ignore: cast_nullable_to_non_nullable
+          : vehicleCertificate as String,
+      user: user == const $CopyWithPlaceholder()
+          ? _value.user
+          // ignore: cast_nullable_to_non_nullable
+          : user as OrderCreateRequestUser?,
+    );
   }
 }
 
-final BuiltSet<DriverStatusEnum> _$driverStatusEnumValues =
-    BuiltSet<DriverStatusEnum>(const <DriverStatusEnum>[
-      _$driverStatusEnum_pending,
-      _$driverStatusEnum_approved,
-      _$driverStatusEnum_rejected,
-      _$driverStatusEnum_active,
-      _$driverStatusEnum_inactive,
-      _$driverStatusEnum_suspended,
-    ]);
-
-Serializer<DriverStatusEnum> _$driverStatusEnumSerializer =
-    _$DriverStatusEnumSerializer();
-
-class _$DriverStatusEnumSerializer
-    implements PrimitiveSerializer<DriverStatusEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'pending': 'pending',
-    'approved': 'approved',
-    'rejected': 'rejected',
-    'active': 'active',
-    'inactive': 'inactive',
-    'suspended': 'suspended',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'pending': 'pending',
-    'approved': 'approved',
-    'rejected': 'rejected',
-    'active': 'active',
-    'inactive': 'inactive',
-    'suspended': 'suspended',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[DriverStatusEnum];
-  @override
-  final String wireName = 'DriverStatusEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    DriverStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  DriverStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => DriverStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
+extension $DriverCopyWith on Driver {
+  /// Returns a callable class that can be used as follows: `instanceOfDriver.copyWith(...)` or like so:`instanceOfDriver.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$DriverCWProxy get copyWith => _$DriverCWProxyImpl(this);
 }
 
-class _$Driver extends Driver {
-  @override
-  final String id;
-  @override
-  final String userId;
-  @override
-  final String studentId;
-  @override
-  final String licenseNumber;
-  @override
-  final DriverStatusEnum? status;
-  @override
-  final num rating;
-  @override
-  final bool isOnline;
-  @override
-  final Location? currentLocation;
-  @override
-  final num? lastLocationUpdate;
-  @override
-  final num createdAt;
-  @override
-  final DriverUpdateRequestUser? user;
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-  factory _$Driver([void Function(DriverBuilder)? updates]) =>
-      (DriverBuilder()..update(updates))._build();
+Driver _$DriverFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Driver', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'userId',
+          'studentId',
+          'licenseNumber',
+          'status',
+          'rating',
+          'isOnline',
+          'createdAt',
+          'studentCard',
+          'driverLicense',
+          'vehicleCertificate',
+        ],
+      );
+      final val = Driver(
+        id: $checkedConvert('id', (v) => v as String),
+        userId: $checkedConvert('userId', (v) => v as String),
+        studentId: $checkedConvert('studentId', (v) => v as String),
+        licenseNumber: $checkedConvert('licenseNumber', (v) => v as String),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$DriverStatusEnumEnumMap, v),
+        ),
+        rating: $checkedConvert('rating', (v) => v as num),
+        isOnline: $checkedConvert('isOnline', (v) => v as bool),
+        currentLocation: $checkedConvert(
+          'currentLocation',
+          (v) =>
+              v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+        ),
+        lastLocationUpdate: $checkedConvert(
+          'lastLocationUpdate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => DateTime.parse(v as String),
+        ),
+        studentCard: $checkedConvert('studentCard', (v) => v as String),
+        driverLicense: $checkedConvert('driverLicense', (v) => v as String),
+        vehicleCertificate: $checkedConvert(
+          'vehicleCertificate',
+          (v) => v as String,
+        ),
+        user: $checkedConvert(
+          'user',
+          (v) => v == null
+              ? null
+              : OrderCreateRequestUser.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    });
 
-  _$Driver._({
-    required this.id,
-    required this.userId,
-    required this.studentId,
-    required this.licenseNumber,
-    this.status,
-    required this.rating,
-    required this.isOnline,
-    this.currentLocation,
-    this.lastLocationUpdate,
-    required this.createdAt,
-    this.user,
-  }) : super._();
-  @override
-  Driver rebuild(void Function(DriverBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'studentId': instance.studentId,
+  'licenseNumber': instance.licenseNumber,
+  'status': _$DriverStatusEnumEnumMap[instance.status]!,
+  'rating': instance.rating,
+  'isOnline': instance.isOnline,
+  'currentLocation': ?instance.currentLocation?.toJson(),
+  'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
+  'createdAt': instance.createdAt.toIso8601String(),
+  'studentCard': instance.studentCard,
+  'driverLicense': instance.driverLicense,
+  'vehicleCertificate': instance.vehicleCertificate,
+  'user': ?instance.user?.toJson(),
+};
 
-  @override
-  DriverBuilder toBuilder() => DriverBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Driver &&
-        id == other.id &&
-        userId == other.userId &&
-        studentId == other.studentId &&
-        licenseNumber == other.licenseNumber &&
-        status == other.status &&
-        rating == other.rating &&
-        isOnline == other.isOnline &&
-        currentLocation == other.currentLocation &&
-        lastLocationUpdate == other.lastLocationUpdate &&
-        createdAt == other.createdAt &&
-        user == other.user;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, userId.hashCode);
-    _$hash = $jc(_$hash, studentId.hashCode);
-    _$hash = $jc(_$hash, licenseNumber.hashCode);
-    _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, rating.hashCode);
-    _$hash = $jc(_$hash, isOnline.hashCode);
-    _$hash = $jc(_$hash, currentLocation.hashCode);
-    _$hash = $jc(_$hash, lastLocationUpdate.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, user.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Driver')
-          ..add('id', id)
-          ..add('userId', userId)
-          ..add('studentId', studentId)
-          ..add('licenseNumber', licenseNumber)
-          ..add('status', status)
-          ..add('rating', rating)
-          ..add('isOnline', isOnline)
-          ..add('currentLocation', currentLocation)
-          ..add('lastLocationUpdate', lastLocationUpdate)
-          ..add('createdAt', createdAt)
-          ..add('user', user))
-        .toString();
-  }
-}
-
-class DriverBuilder implements Builder<Driver, DriverBuilder> {
-  _$Driver? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _userId;
-  String? get userId => _$this._userId;
-  set userId(String? userId) => _$this._userId = userId;
-
-  String? _studentId;
-  String? get studentId => _$this._studentId;
-  set studentId(String? studentId) => _$this._studentId = studentId;
-
-  String? _licenseNumber;
-  String? get licenseNumber => _$this._licenseNumber;
-  set licenseNumber(String? licenseNumber) =>
-      _$this._licenseNumber = licenseNumber;
-
-  DriverStatusEnum? _status;
-  DriverStatusEnum? get status => _$this._status;
-  set status(DriverStatusEnum? status) => _$this._status = status;
-
-  num? _rating;
-  num? get rating => _$this._rating;
-  set rating(num? rating) => _$this._rating = rating;
-
-  bool? _isOnline;
-  bool? get isOnline => _$this._isOnline;
-  set isOnline(bool? isOnline) => _$this._isOnline = isOnline;
-
-  LocationBuilder? _currentLocation;
-  LocationBuilder get currentLocation =>
-      _$this._currentLocation ??= LocationBuilder();
-  set currentLocation(LocationBuilder? currentLocation) =>
-      _$this._currentLocation = currentLocation;
-
-  num? _lastLocationUpdate;
-  num? get lastLocationUpdate => _$this._lastLocationUpdate;
-  set lastLocationUpdate(num? lastLocationUpdate) =>
-      _$this._lastLocationUpdate = lastLocationUpdate;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  DriverUpdateRequestUserBuilder? _user;
-  DriverUpdateRequestUserBuilder get user =>
-      _$this._user ??= DriverUpdateRequestUserBuilder();
-  set user(DriverUpdateRequestUserBuilder? user) => _$this._user = user;
-
-  DriverBuilder() {
-    Driver._defaults(this);
-  }
-
-  DriverBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _userId = $v.userId;
-      _studentId = $v.studentId;
-      _licenseNumber = $v.licenseNumber;
-      _status = $v.status;
-      _rating = $v.rating;
-      _isOnline = $v.isOnline;
-      _currentLocation = $v.currentLocation?.toBuilder();
-      _lastLocationUpdate = $v.lastLocationUpdate;
-      _createdAt = $v.createdAt;
-      _user = $v.user?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Driver other) {
-    _$v = other as _$Driver;
-  }
-
-  @override
-  void update(void Function(DriverBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Driver build() => _build();
-
-  _$Driver _build() {
-    _$Driver _$result;
-    try {
-      _$result =
-          _$v ??
-          _$Driver._(
-            id: BuiltValueNullFieldError.checkNotNull(id, r'Driver', 'id'),
-            userId: BuiltValueNullFieldError.checkNotNull(
-              userId,
-              r'Driver',
-              'userId',
-            ),
-            studentId: BuiltValueNullFieldError.checkNotNull(
-              studentId,
-              r'Driver',
-              'studentId',
-            ),
-            licenseNumber: BuiltValueNullFieldError.checkNotNull(
-              licenseNumber,
-              r'Driver',
-              'licenseNumber',
-            ),
-            status: status,
-            rating: BuiltValueNullFieldError.checkNotNull(
-              rating,
-              r'Driver',
-              'rating',
-            ),
-            isOnline: BuiltValueNullFieldError.checkNotNull(
-              isOnline,
-              r'Driver',
-              'isOnline',
-            ),
-            currentLocation: _currentLocation?.build(),
-            lastLocationUpdate: lastLocationUpdate,
-            createdAt: BuiltValueNullFieldError.checkNotNull(
-              createdAt,
-              r'Driver',
-              'createdAt',
-            ),
-            user: _user?.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'currentLocation';
-        _currentLocation?.build();
-
-        _$failedField = 'user';
-        _user?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'Driver',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$DriverStatusEnumEnumMap = {
+  DriverStatusEnum.pending: 'pending',
+  DriverStatusEnum.approved: 'approved',
+  DriverStatusEnum.rejected: 'rejected',
+  DriverStatusEnum.active: 'active',
+  DriverStatusEnum.inactive: 'inactive',
+  DriverStatusEnum.suspended: 'suspended',
+};

@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverRemove200Response
 void main() {
-  final instance = DriverRemove200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final DriverRemove200Response? instance = /* DriverRemove200Response(...) */
+      null;
+  // TODO add properties to the entity
 
   group(DriverRemove200Response, () {
     // String message
@@ -12,10 +13,14 @@ void main() {
       // TODO
     });
 
-    // JsonObject data
+    // Object data
     test('to test the property `data`', () async {
       // TODO
     });
 
+    // num totalPages
+    test('to test the property `totalPages`', () async {
+      // TODO
+    });
   });
 }

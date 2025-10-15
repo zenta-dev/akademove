@@ -10,10 +10,10 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **key** | **String** |  | 
 **name** | **String** |  | 
-**value** | [**JsonObject**](.md) |  | [optional] 
+**value** | **Object** |  | [optional] 
 **description** | **String** |  | [optional] 
 **updatedById** | **String** |  | 
-**updatedAt** | **num** | unix timestamp format | 
+**updatedAt** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

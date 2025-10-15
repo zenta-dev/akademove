@@ -1,36 +1,34 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ReviewApi
 void main() {
   final instance = ApiClient().getReviewApi();
 
   group(ReviewApi, () {
-    //Future<CreateReviewSuccessResponse> createReview({ CreateReviewRequest createReviewRequest }) async
-    test('test createReview', () async {
+    //Future<ReviewCreate200Response> reviewCreate(ReviewCreateRequest reviewCreateRequest) async
+    test('test reviewCreate', () async {
       // TODO
     });
 
-    //Future<DeleteReviewSuccessResponse> deleteReview(String id) async
-    test('test deleteReview', () async {
+    //Future<ReviewCreate200Response> reviewGet(String id) async
+    test('test reviewGet', () async {
       // TODO
     });
 
-    //Future<GetAllReviewSuccessResponse> getAllReview(int page, int limit, { String cursor }) async
-    test('test getAllReview', () async {
+    //Future<ReviewList200Response> reviewList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    test('test reviewList', () async {
       // TODO
     });
 
-    //Future<GetReviewByIdSuccessResponse> getReviewById(String id, bool fromCache) async
-    test('test getReviewById', () async {
+    //Future<DriverRemove200Response> reviewRemove(String id) async
+    test('test reviewRemove', () async {
       // TODO
     });
 
-    //Future<UpdateReviewSuccessResponse> updateReview(String id, { CreateReviewRequest createReviewRequest }) async
-    test('test updateReview', () async {
+    //Future<ReviewCreate200Response> reviewUpdate(String id, ReviewUpdateRequest reviewUpdateRequest) async
+    test('test reviewUpdate', () async {
       // TODO
     });
-
   });
 }

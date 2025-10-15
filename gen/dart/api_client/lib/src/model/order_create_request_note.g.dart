@@ -3,100 +3,84 @@
 part of 'order_create_request_note.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$OrderCreateRequestNote extends OrderCreateRequestNote {
-  @override
-  final String? pickup;
-  @override
-  final String? dropoff;
+abstract class _$OrderCreateRequestNoteCWProxy {
+  OrderCreateRequestNote pickup(String? pickup);
 
-  factory _$OrderCreateRequestNote([
-    void Function(OrderCreateRequestNoteBuilder)? updates,
-  ]) => (OrderCreateRequestNoteBuilder()..update(updates))._build();
+  OrderCreateRequestNote dropoff(String? dropoff);
 
-  _$OrderCreateRequestNote._({this.pickup, this.dropoff}) : super._();
-  @override
-  OrderCreateRequestNote rebuild(
-    void Function(OrderCreateRequestNoteBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestNote(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestNote(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestNote call({String? pickup, String? dropoff});
+}
 
-  @override
-  OrderCreateRequestNoteBuilder toBuilder() =>
-      OrderCreateRequestNoteBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderCreateRequestNote.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderCreateRequestNote.copyWith.fieldName(...)`
+class _$OrderCreateRequestNoteCWProxyImpl
+    implements _$OrderCreateRequestNoteCWProxy {
+  const _$OrderCreateRequestNoteCWProxyImpl(this._value);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is OrderCreateRequestNote &&
-        pickup == other.pickup &&
-        dropoff == other.dropoff;
-  }
+  final OrderCreateRequestNote _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, pickup.hashCode);
-    _$hash = $jc(_$hash, dropoff.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  OrderCreateRequestNote pickup(String? pickup) => this(pickup: pickup);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'OrderCreateRequestNote')
-          ..add('pickup', pickup)
-          ..add('dropoff', dropoff))
-        .toString();
+  OrderCreateRequestNote dropoff(String? dropoff) => this(dropoff: dropoff);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestNote(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestNote(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestNote call({
+    Object? pickup = const $CopyWithPlaceholder(),
+    Object? dropoff = const $CopyWithPlaceholder(),
+  }) {
+    return OrderCreateRequestNote(
+      pickup: pickup == const $CopyWithPlaceholder()
+          ? _value.pickup
+          // ignore: cast_nullable_to_non_nullable
+          : pickup as String?,
+      dropoff: dropoff == const $CopyWithPlaceholder()
+          ? _value.dropoff
+          // ignore: cast_nullable_to_non_nullable
+          : dropoff as String?,
+    );
   }
 }
 
-class OrderCreateRequestNoteBuilder
-    implements Builder<OrderCreateRequestNote, OrderCreateRequestNoteBuilder> {
-  _$OrderCreateRequestNote? _$v;
-
-  String? _pickup;
-  String? get pickup => _$this._pickup;
-  set pickup(String? pickup) => _$this._pickup = pickup;
-
-  String? _dropoff;
-  String? get dropoff => _$this._dropoff;
-  set dropoff(String? dropoff) => _$this._dropoff = dropoff;
-
-  OrderCreateRequestNoteBuilder() {
-    OrderCreateRequestNote._defaults(this);
-  }
-
-  OrderCreateRequestNoteBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _pickup = $v.pickup;
-      _dropoff = $v.dropoff;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(OrderCreateRequestNote other) {
-    _$v = other as _$OrderCreateRequestNote;
-  }
-
-  @override
-  void update(void Function(OrderCreateRequestNoteBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  OrderCreateRequestNote build() => _build();
-
-  _$OrderCreateRequestNote _build() {
-    final _$result =
-        _$v ?? _$OrderCreateRequestNote._(pickup: pickup, dropoff: dropoff);
-    replace(_$result);
-    return _$result;
-  }
+extension $OrderCreateRequestNoteCopyWith on OrderCreateRequestNote {
+  /// Returns a callable class that can be used as follows: `instanceOfOrderCreateRequestNote.copyWith(...)` or like so:`instanceOfOrderCreateRequestNote.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$OrderCreateRequestNoteCWProxy get copyWith =>
+      _$OrderCreateRequestNoteCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+OrderCreateRequestNote _$OrderCreateRequestNoteFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderCreateRequestNote', json, ($checkedConvert) {
+  final val = OrderCreateRequestNote(
+    pickup: $checkedConvert('pickup', (v) => v as String?),
+    dropoff: $checkedConvert('dropoff', (v) => v as String?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$OrderCreateRequestNoteToJson(
+  OrderCreateRequestNote instance,
+) => <String, dynamic>{
+  'pickup': ?instance.pickup,
+  'dropoff': ?instance.dropoff,
+};

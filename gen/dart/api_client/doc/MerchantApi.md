@@ -5,11 +5,10 @@
 import 'package:api_client/api.dart';
 ```
 
-All URIs are relative to *https://akademove-server.zenta.dev/api*
+All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**merchantCreate**](MerchantApi.md#merchantcreate) | **POST** /merchants | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -21,47 +20,6 @@ Method | HTTP request | Description
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 
-
-# **merchantCreate**
-> MerchantGetMine200ResponseBody merchantCreate(merchantCreateRequest)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getMerchantApi();
-final MerchantCreateRequest merchantCreateRequest = ; // MerchantCreateRequest | 
-
-try {
-    final response = api.merchantCreate(merchantCreateRequest);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling MerchantApi->merchantCreate: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **merchantCreateRequest** | [**MerchantCreateRequest**](MerchantCreateRequest.md)|  | 
-
-### Return type
-
-[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantGet**
 > MerchantGetMine200ResponseBody merchantGet(id)
@@ -142,7 +100,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantList**
-> MerchantList200Response merchantList(cursor, page, limit)
+> MerchantList200Response merchantList(cursor, limit, page, query, sortBy, order)
 
 
 
@@ -152,11 +110,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String cursor = cursor_example; // String | 
-final JsonObject page = ; // JsonObject | 
-final JsonObject limit = ; // JsonObject | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
 
 try {
-    final response = api.merchantList(cursor, page, limit);
+    final response = api.merchantList(cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantList: $e\n');
@@ -168,8 +129,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
- **page** | [**JsonObject**](.md)|  | [optional] 
- **limit** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
 
 ### Return type
 
@@ -187,7 +151,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantMenuCreate**
-> MerchantMenuCreate200Response merchantMenuCreate(merchantId, merchantMenuCreateRequest)
+> MerchantMenuCreate200Response merchantMenuCreate(merchantId, name, price, stock, category, image)
 
 
 
@@ -197,10 +161,14 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
-final MerchantMenuCreateRequest merchantMenuCreateRequest = ; // MerchantMenuCreateRequest | 
+final String name = name_example; // String | 
+final num price = 8.14; // num | 
+final int stock = 56; // int | 
+final String category = category_example; // String | 
+final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantMenuCreate(merchantId, merchantMenuCreateRequest);
+    final response = api.merchantMenuCreate(merchantId, name, price, stock, category, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantMenuCreate: $e\n');
@@ -212,7 +180,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
- **merchantMenuCreateRequest** | [**MerchantMenuCreateRequest**](MerchantMenuCreateRequest.md)|  | 
+ **name** | **String**|  | 
+ **price** | **num**|  | 
+ **stock** | **int**|  | 
+ **category** | **String**|  | [optional] 
+ **image** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
@@ -224,7 +196,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -273,7 +245,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantMenuList**
-> MerchantMenuList200Response merchantMenuList(merchantId, cursor, page, limit)
+> MerchantMenuList200Response merchantMenuList(merchantId, cursor, limit, page, query, sortBy, order)
 
 
 
@@ -284,11 +256,14 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String cursor = cursor_example; // String | 
-final JsonObject page = ; // JsonObject | 
-final JsonObject limit = ; // JsonObject | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
 
 try {
-    final response = api.merchantMenuList(merchantId, cursor, page, limit);
+    final response = api.merchantMenuList(merchantId, cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantMenuList: $e\n');
@@ -301,8 +276,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **cursor** | **String**|  | [optional] 
- **page** | [**JsonObject**](.md)|  | [optional] 
- **limit** | [**JsonObject**](.md)|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
 
 ### Return type
 
@@ -363,7 +341,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantMenuUpdate**
-> MerchantMenuCreate200Response merchantMenuUpdate(merchantId, id, merchantMenuUpdateRequest)
+> MerchantMenuCreate200Response merchantMenuUpdate(merchantId, id, name, category, price, stock, image)
 
 
 
@@ -374,10 +352,14 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String merchantId = merchantId_example; // String | 
 final String id = id_example; // String | 
-final MerchantMenuUpdateRequest merchantMenuUpdateRequest = ; // MerchantMenuUpdateRequest | 
+final String name = name_example; // String | 
+final String category = category_example; // String | 
+final num price = 8.14; // num | 
+final int stock = 56; // int | 
+final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantMenuUpdate(merchantId, id, merchantMenuUpdateRequest);
+    final response = api.merchantMenuUpdate(merchantId, id, name, category, price, stock, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantMenuUpdate: $e\n');
@@ -390,7 +372,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **merchantId** | **String**|  | 
  **id** | **String**|  | 
- **merchantMenuUpdateRequest** | [**MerchantMenuUpdateRequest**](MerchantMenuUpdateRequest.md)|  | 
+ **name** | **String**|  | [optional] 
+ **category** | **String**|  | [optional] 
+ **price** | **num**|  | [optional] 
+ **stock** | **int**|  | [optional] 
+ **image** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
@@ -402,7 +388,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -449,7 +435,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantUpdate**
-> MerchantGetMine200ResponseBody merchantUpdate(id, merchantUpdateRequest)
+> MerchantGetMine200ResponseBody merchantUpdate(id, locationLat, locationLng, type, name, email, phone, address, document)
 
 
 
@@ -459,10 +445,17 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
-final MerchantUpdateRequest merchantUpdateRequest = ; // MerchantUpdateRequest | 
+final num locationLat = 8.14; // num | 
+final num locationLng = 8.14; // num | 
+final String type = type_example; // String | 
+final String name = name_example; // String | 
+final String email = email_example; // String | 
+final String phone = phone_example; // String | 
+final String address = address_example; // String | 
+final MultipartFile document = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantUpdate(id, merchantUpdateRequest);
+    final response = api.merchantUpdate(id, locationLat, locationLng, type, name, email, phone, address, document);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantUpdate: $e\n');
@@ -474,7 +467,14 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **merchantUpdateRequest** | [**MerchantUpdateRequest**](MerchantUpdateRequest.md)|  | 
+ **locationLat** | **num**|  | 
+ **locationLng** | **num**|  | 
+ **type** | **String**|  | [optional] 
+ **name** | **String**|  | [optional] 
+ **email** | **String**|  | [optional] 
+ **phone** | **String**|  | [optional] 
+ **address** | **String**|  | [optional] 
+ **document** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
@@ -486,7 +486,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

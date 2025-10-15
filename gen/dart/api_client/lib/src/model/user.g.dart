@@ -3,300 +3,260 @@
 part of 'user.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const UserRoleEnum _$userRoleEnum_admin = const UserRoleEnum._('admin');
-const UserRoleEnum _$userRoleEnum_operator_ = const UserRoleEnum._('operator_');
-const UserRoleEnum _$userRoleEnum_merchant = const UserRoleEnum._('merchant');
-const UserRoleEnum _$userRoleEnum_driver = const UserRoleEnum._('driver');
-const UserRoleEnum _$userRoleEnum_user = const UserRoleEnum._('user');
+abstract class _$UserCWProxy {
+  User id(String id);
 
-UserRoleEnum _$userRoleEnumValueOf(String name) {
-  switch (name) {
-    case 'admin':
-      return _$userRoleEnum_admin;
-    case 'operator_':
-      return _$userRoleEnum_operator_;
-    case 'merchant':
-      return _$userRoleEnum_merchant;
-    case 'driver':
-      return _$userRoleEnum_driver;
-    case 'user':
-      return _$userRoleEnum_user;
-    default:
-      throw ArgumentError(name);
+  User name(String name);
+
+  User email(String email);
+
+  User emailVerified(bool emailVerified);
+
+  User image(String? image);
+
+  User role(UserRoleEnum role);
+
+  User banned(bool banned);
+
+  User banReason(String? banReason);
+
+  User banExpires(DateTime? banExpires);
+
+  User gender(UserGenderEnum gender);
+
+  User phone(String phone);
+
+  User createdAt(DateTime createdAt);
+
+  User updatedAt(DateTime updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// User(...).copyWith(id: 12, name: "My name")
+  /// ````
+  User call({
+    String id,
+    String name,
+    String email,
+    bool emailVerified,
+    String? image,
+    UserRoleEnum role,
+    bool banned,
+    String? banReason,
+    DateTime? banExpires,
+    UserGenderEnum gender,
+    String phone,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUser.copyWith.fieldName(...)`
+class _$UserCWProxyImpl implements _$UserCWProxy {
+  const _$UserCWProxyImpl(this._value);
+
+  final User _value;
+
+  @override
+  User id(String id) => this(id: id);
+
+  @override
+  User name(String name) => this(name: name);
+
+  @override
+  User email(String email) => this(email: email);
+
+  @override
+  User emailVerified(bool emailVerified) => this(emailVerified: emailVerified);
+
+  @override
+  User image(String? image) => this(image: image);
+
+  @override
+  User role(UserRoleEnum role) => this(role: role);
+
+  @override
+  User banned(bool banned) => this(banned: banned);
+
+  @override
+  User banReason(String? banReason) => this(banReason: banReason);
+
+  @override
+  User banExpires(DateTime? banExpires) => this(banExpires: banExpires);
+
+  @override
+  User gender(UserGenderEnum gender) => this(gender: gender);
+
+  @override
+  User phone(String phone) => this(phone: phone);
+
+  @override
+  User createdAt(DateTime createdAt) => this(createdAt: createdAt);
+
+  @override
+  User updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// User(...).copyWith(id: 12, name: "My name")
+  /// ````
+  User call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? emailVerified = const $CopyWithPlaceholder(),
+    Object? image = const $CopyWithPlaceholder(),
+    Object? role = const $CopyWithPlaceholder(),
+    Object? banned = const $CopyWithPlaceholder(),
+    Object? banReason = const $CopyWithPlaceholder(),
+    Object? banExpires = const $CopyWithPlaceholder(),
+    Object? gender = const $CopyWithPlaceholder(),
+    Object? phone = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return User(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      email: email == const $CopyWithPlaceholder()
+          ? _value.email
+          // ignore: cast_nullable_to_non_nullable
+          : email as String,
+      emailVerified: emailVerified == const $CopyWithPlaceholder()
+          ? _value.emailVerified
+          // ignore: cast_nullable_to_non_nullable
+          : emailVerified as bool,
+      image: image == const $CopyWithPlaceholder()
+          ? _value.image
+          // ignore: cast_nullable_to_non_nullable
+          : image as String?,
+      role: role == const $CopyWithPlaceholder()
+          ? _value.role
+          // ignore: cast_nullable_to_non_nullable
+          : role as UserRoleEnum,
+      banned: banned == const $CopyWithPlaceholder()
+          ? _value.banned
+          // ignore: cast_nullable_to_non_nullable
+          : banned as bool,
+      banReason: banReason == const $CopyWithPlaceholder()
+          ? _value.banReason
+          // ignore: cast_nullable_to_non_nullable
+          : banReason as String?,
+      banExpires: banExpires == const $CopyWithPlaceholder()
+          ? _value.banExpires
+          // ignore: cast_nullable_to_non_nullable
+          : banExpires as DateTime?,
+      gender: gender == const $CopyWithPlaceholder()
+          ? _value.gender
+          // ignore: cast_nullable_to_non_nullable
+          : gender as UserGenderEnum,
+      phone: phone == const $CopyWithPlaceholder()
+          ? _value.phone
+          // ignore: cast_nullable_to_non_nullable
+          : phone as String,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
+    );
   }
 }
 
-final BuiltSet<UserRoleEnum> _$userRoleEnumValues =
-    BuiltSet<UserRoleEnum>(const <UserRoleEnum>[
-      _$userRoleEnum_admin,
-      _$userRoleEnum_operator_,
-      _$userRoleEnum_merchant,
-      _$userRoleEnum_driver,
-      _$userRoleEnum_user,
-    ]);
+extension $UserCopyWith on User {
+  /// Returns a callable class that can be used as follows: `instanceOfUser.copyWith(...)` or like so:`instanceOfUser.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$UserCWProxy get copyWith => _$UserCWProxyImpl(this);
+}
 
-Serializer<UserRoleEnum> _$userRoleEnumSerializer = _$UserRoleEnumSerializer();
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-class _$UserRoleEnumSerializer implements PrimitiveSerializer<UserRoleEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'admin': 'admin',
-    'operator_': 'operator',
-    'merchant': 'merchant',
-    'driver': 'driver',
-    'user': 'user',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'admin': 'admin',
-    'operator': 'operator_',
-    'merchant': 'merchant',
-    'driver': 'driver',
-    'user': 'user',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[UserRoleEnum];
-  @override
-  final String wireName = 'UserRoleEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    UserRoleEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  UserRoleEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => UserRoleEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
+  $checkedConvert,
+) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'name',
+      'email',
+      'emailVerified',
+      'role',
+      'banned',
+      'gender',
+      'phone',
+      'createdAt',
+      'updatedAt',
+    ],
   );
-}
+  final val = User(
+    id: $checkedConvert('id', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
+    email: $checkedConvert('email', (v) => v as String),
+    emailVerified: $checkedConvert('emailVerified', (v) => v as bool),
+    image: $checkedConvert('image', (v) => v as String?),
+    role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumEnumMap, v)),
+    banned: $checkedConvert('banned', (v) => v as bool),
+    banReason: $checkedConvert('banReason', (v) => v as String?),
+    banExpires: $checkedConvert(
+      'banExpires',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    gender: $checkedConvert(
+      'gender',
+      (v) => $enumDecode(_$UserGenderEnumEnumMap, v),
+    ),
+    phone: $checkedConvert('phone', (v) => v as String),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
-class _$User extends User {
-  @override
-  final String id;
-  @override
-  final String name;
-  @override
-  final String email;
-  @override
-  final bool emailVerified;
-  @override
-  final String? image;
-  @override
-  final UserRoleEnum? role;
-  @override
-  final bool banned;
-  @override
-  final String? banReason;
-  @override
-  final num? banExpires;
-  @override
-  final num createdAt;
-  @override
-  final num updatedAt;
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'email': instance.email,
+  'emailVerified': instance.emailVerified,
+  'image': ?instance.image,
+  'role': _$UserRoleEnumEnumMap[instance.role]!,
+  'banned': instance.banned,
+  'banReason': ?instance.banReason,
+  'banExpires': ?instance.banExpires?.toIso8601String(),
+  'gender': _$UserGenderEnumEnumMap[instance.gender]!,
+  'phone': instance.phone,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};
 
-  factory _$User([void Function(UserBuilder)? updates]) =>
-      (UserBuilder()..update(updates))._build();
+const _$UserRoleEnumEnumMap = {
+  UserRoleEnum.admin: 'admin',
+  UserRoleEnum.operator_: 'operator',
+  UserRoleEnum.merchant: 'merchant',
+  UserRoleEnum.driver: 'driver',
+  UserRoleEnum.user: 'user',
+};
 
-  _$User._({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.emailVerified,
-    this.image,
-    this.role,
-    required this.banned,
-    this.banReason,
-    this.banExpires,
-    required this.createdAt,
-    required this.updatedAt,
-  }) : super._();
-  @override
-  User rebuild(void Function(UserBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  UserBuilder toBuilder() => UserBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is User &&
-        id == other.id &&
-        name == other.name &&
-        email == other.email &&
-        emailVerified == other.emailVerified &&
-        image == other.image &&
-        role == other.role &&
-        banned == other.banned &&
-        banReason == other.banReason &&
-        banExpires == other.banExpires &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, email.hashCode);
-    _$hash = $jc(_$hash, emailVerified.hashCode);
-    _$hash = $jc(_$hash, image.hashCode);
-    _$hash = $jc(_$hash, role.hashCode);
-    _$hash = $jc(_$hash, banned.hashCode);
-    _$hash = $jc(_$hash, banReason.hashCode);
-    _$hash = $jc(_$hash, banExpires.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'User')
-          ..add('id', id)
-          ..add('name', name)
-          ..add('email', email)
-          ..add('emailVerified', emailVerified)
-          ..add('image', image)
-          ..add('role', role)
-          ..add('banned', banned)
-          ..add('banReason', banReason)
-          ..add('banExpires', banExpires)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
-        .toString();
-  }
-}
-
-class UserBuilder implements Builder<User, UserBuilder> {
-  _$User? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  String? _email;
-  String? get email => _$this._email;
-  set email(String? email) => _$this._email = email;
-
-  bool? _emailVerified;
-  bool? get emailVerified => _$this._emailVerified;
-  set emailVerified(bool? emailVerified) =>
-      _$this._emailVerified = emailVerified;
-
-  String? _image;
-  String? get image => _$this._image;
-  set image(String? image) => _$this._image = image;
-
-  UserRoleEnum? _role;
-  UserRoleEnum? get role => _$this._role;
-  set role(UserRoleEnum? role) => _$this._role = role;
-
-  bool? _banned;
-  bool? get banned => _$this._banned;
-  set banned(bool? banned) => _$this._banned = banned;
-
-  String? _banReason;
-  String? get banReason => _$this._banReason;
-  set banReason(String? banReason) => _$this._banReason = banReason;
-
-  num? _banExpires;
-  num? get banExpires => _$this._banExpires;
-  set banExpires(num? banExpires) => _$this._banExpires = banExpires;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  UserBuilder() {
-    User._defaults(this);
-  }
-
-  UserBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _name = $v.name;
-      _email = $v.email;
-      _emailVerified = $v.emailVerified;
-      _image = $v.image;
-      _role = $v.role;
-      _banned = $v.banned;
-      _banReason = $v.banReason;
-      _banExpires = $v.banExpires;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(User other) {
-    _$v = other as _$User;
-  }
-
-  @override
-  void update(void Function(UserBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  User build() => _build();
-
-  _$User _build() {
-    final _$result =
-        _$v ??
-        _$User._(
-          id: BuiltValueNullFieldError.checkNotNull(id, r'User', 'id'),
-          name: BuiltValueNullFieldError.checkNotNull(name, r'User', 'name'),
-          email: BuiltValueNullFieldError.checkNotNull(email, r'User', 'email'),
-          emailVerified: BuiltValueNullFieldError.checkNotNull(
-            emailVerified,
-            r'User',
-            'emailVerified',
-          ),
-          image: image,
-          role: role,
-          banned: BuiltValueNullFieldError.checkNotNull(
-            banned,
-            r'User',
-            'banned',
-          ),
-          banReason: banReason,
-          banExpires: banExpires,
-          createdAt: BuiltValueNullFieldError.checkNotNull(
-            createdAt,
-            r'User',
-            'createdAt',
-          ),
-          updatedAt: BuiltValueNullFieldError.checkNotNull(
-            updatedAt,
-            r'User',
-            'updatedAt',
-          ),
-        );
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$UserGenderEnumEnumMap = {
+  UserGenderEnum.male: 'male',
+  UserGenderEnum.female: 'female',
+};

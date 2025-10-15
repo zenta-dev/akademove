@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **String** |  | [optional] [default to 'percentage']
+**type** | **String** |  | [optional] 
 **minOrderAmount** | **num** |  | [optional] 
 **maxDiscountAmount** | **num** |  | [optional] 
 

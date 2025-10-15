@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponCreateRequest
 void main() {
-  final instance = CouponCreateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final CouponCreateRequest? instance = /* CouponCreateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(CouponCreateRequest, () {
     // String name
@@ -37,14 +37,12 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num periodStart
+    // DateTime periodStart
     test('to test the property `periodStart`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num periodEnd
+    // DateTime periodEnd
     test('to test the property `periodEnd`', () async {
       // TODO
     });
@@ -53,6 +51,5 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
-
   });
 }

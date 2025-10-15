@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for UserApi
 void main() {
   final instance = ApiClient().getUserApi();
@@ -17,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<UserList200Response> userList({ String cursor, JsonObject page, JsonObject limit }) async
+    //Future<UserList200Response> userList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
     test('test userList', () async {
       // TODO
     });
@@ -31,6 +30,5 @@ void main() {
     test('test userUpdate', () async {
       // TODO
     });
-
   });
 }

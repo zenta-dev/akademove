@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Report
 void main() {
-  final instance = ReportBuilder();
-  // TODO add properties to the builder and call build()
+  final Report? instance = /* Report(...) */ null;
+  // TODO add properties to the entity
 
   group(Report, () {
     // String id
@@ -42,7 +42,7 @@ void main() {
       // TODO
     });
 
-    // String status (default value: 'pending')
+    // String status
     test('to test the property `status`', () async {
       // TODO
     });
@@ -57,17 +57,14 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num reportedAt
+    // DateTime reportedAt
     test('to test the property `reportedAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num resolvedAt
+    // DateTime resolvedAt
     test('to test the property `resolvedAt`', () async {
       // TODO
     });
-
   });
 }

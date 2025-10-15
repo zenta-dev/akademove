@@ -3,241 +3,118 @@
 part of 'coupon_create_request_rules_time.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_sunday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('sunday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_monday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('monday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_tuesday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('tuesday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_wednesday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('wednesday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_thursday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('thursday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_friday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('friday');
-const CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnum_saturday =
-    const CouponCreateRequestRulesTimeAllowedDaysEnum._('saturday');
-
-CouponCreateRequestRulesTimeAllowedDaysEnum
-_$couponCreateRequestRulesTimeAllowedDaysEnumValueOf(String name) {
-  switch (name) {
-    case 'sunday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_sunday;
-    case 'monday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_monday;
-    case 'tuesday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_tuesday;
-    case 'wednesday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_wednesday;
-    case 'thursday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_thursday;
-    case 'friday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_friday;
-    case 'saturday':
-      return _$couponCreateRequestRulesTimeAllowedDaysEnum_saturday;
-    default:
-      throw ArgumentError(name);
-  }
-}
-
-final BuiltSet<CouponCreateRequestRulesTimeAllowedDaysEnum>
-_$couponCreateRequestRulesTimeAllowedDaysEnumValues =
-    BuiltSet<CouponCreateRequestRulesTimeAllowedDaysEnum>(
-      const <CouponCreateRequestRulesTimeAllowedDaysEnum>[
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_sunday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_monday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_tuesday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_wednesday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_thursday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_friday,
-        _$couponCreateRequestRulesTimeAllowedDaysEnum_saturday,
-      ],
-    );
-
-Serializer<CouponCreateRequestRulesTimeAllowedDaysEnum>
-_$couponCreateRequestRulesTimeAllowedDaysEnumSerializer =
-    _$CouponCreateRequestRulesTimeAllowedDaysEnumSerializer();
-
-class _$CouponCreateRequestRulesTimeAllowedDaysEnumSerializer
-    implements
-        PrimitiveSerializer<CouponCreateRequestRulesTimeAllowedDaysEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'sunday': 'sunday',
-    'monday': 'monday',
-    'tuesday': 'tuesday',
-    'wednesday': 'wednesday',
-    'thursday': 'thursday',
-    'friday': 'friday',
-    'saturday': 'saturday',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[
-    CouponCreateRequestRulesTimeAllowedDaysEnum,
-  ];
-  @override
-  final String wireName = 'CouponCreateRequestRulesTimeAllowedDaysEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    CouponCreateRequestRulesTimeAllowedDaysEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  CouponCreateRequestRulesTimeAllowedDaysEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => CouponCreateRequestRulesTimeAllowedDaysEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+abstract class _$CouponCreateRequestRulesTimeCWProxy {
+  CouponCreateRequestRulesTime allowedDays(
+    List<CouponCreateRequestRulesTimeAllowedDaysEnum>? allowedDays,
   );
+
+  CouponCreateRequestRulesTime allowedHours(List<int>? allowedHours);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRulesTime(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRulesTime(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRulesTime call({
+    List<CouponCreateRequestRulesTimeAllowedDaysEnum>? allowedDays,
+    List<int>? allowedHours,
+  });
 }
 
-class _$CouponCreateRequestRulesTime extends CouponCreateRequestRulesTime {
-  @override
-  final BuiltList<CouponCreateRequestRulesTimeAllowedDaysEnum>? allowedDays;
-  @override
-  final BuiltList<int>? allowedHours;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreateRequestRulesTime.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreateRequestRulesTime.copyWith.fieldName(...)`
+class _$CouponCreateRequestRulesTimeCWProxyImpl
+    implements _$CouponCreateRequestRulesTimeCWProxy {
+  const _$CouponCreateRequestRulesTimeCWProxyImpl(this._value);
 
-  factory _$CouponCreateRequestRulesTime([
-    void Function(CouponCreateRequestRulesTimeBuilder)? updates,
-  ]) => (CouponCreateRequestRulesTimeBuilder()..update(updates))._build();
-
-  _$CouponCreateRequestRulesTime._({this.allowedDays, this.allowedHours})
-    : super._();
-  @override
-  CouponCreateRequestRulesTime rebuild(
-    void Function(CouponCreateRequestRulesTimeBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  final CouponCreateRequestRulesTime _value;
 
   @override
-  CouponCreateRequestRulesTimeBuilder toBuilder() =>
-      CouponCreateRequestRulesTimeBuilder()..replace(this);
+  CouponCreateRequestRulesTime allowedDays(
+    List<CouponCreateRequestRulesTimeAllowedDaysEnum>? allowedDays,
+  ) => this(allowedDays: allowedDays);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is CouponCreateRequestRulesTime &&
-        allowedDays == other.allowedDays &&
-        allowedHours == other.allowedHours;
-  }
+  CouponCreateRequestRulesTime allowedHours(List<int>? allowedHours) =>
+      this(allowedHours: allowedHours);
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, allowedDays.hashCode);
-    _$hash = $jc(_$hash, allowedHours.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'CouponCreateRequestRulesTime')
-          ..add('allowedDays', allowedDays)
-          ..add('allowedHours', allowedHours))
-        .toString();
-  }
-}
-
-class CouponCreateRequestRulesTimeBuilder
-    implements
-        Builder<
-          CouponCreateRequestRulesTime,
-          CouponCreateRequestRulesTimeBuilder
-        > {
-  _$CouponCreateRequestRulesTime? _$v;
-
-  ListBuilder<CouponCreateRequestRulesTimeAllowedDaysEnum>? _allowedDays;
-  ListBuilder<CouponCreateRequestRulesTimeAllowedDaysEnum> get allowedDays =>
-      _$this._allowedDays ??=
-          ListBuilder<CouponCreateRequestRulesTimeAllowedDaysEnum>();
-  set allowedDays(
-    ListBuilder<CouponCreateRequestRulesTimeAllowedDaysEnum>? allowedDays,
-  ) => _$this._allowedDays = allowedDays;
-
-  ListBuilder<int>? _allowedHours;
-  ListBuilder<int> get allowedHours =>
-      _$this._allowedHours ??= ListBuilder<int>();
-  set allowedHours(ListBuilder<int>? allowedHours) =>
-      _$this._allowedHours = allowedHours;
-
-  CouponCreateRequestRulesTimeBuilder() {
-    CouponCreateRequestRulesTime._defaults(this);
-  }
-
-  CouponCreateRequestRulesTimeBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _allowedDays = $v.allowedDays?.toBuilder();
-      _allowedHours = $v.allowedHours?.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(CouponCreateRequestRulesTime other) {
-    _$v = other as _$CouponCreateRequestRulesTime;
-  }
-
-  @override
-  void update(void Function(CouponCreateRequestRulesTimeBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  CouponCreateRequestRulesTime build() => _build();
-
-  _$CouponCreateRequestRulesTime _build() {
-    _$CouponCreateRequestRulesTime _$result;
-    try {
-      _$result =
-          _$v ??
-          _$CouponCreateRequestRulesTime._(
-            allowedDays: _allowedDays?.build(),
-            allowedHours: _allowedHours?.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'allowedDays';
-        _allowedDays?.build();
-        _$failedField = 'allowedHours';
-        _allowedHours?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'CouponCreateRequestRulesTime',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreateRequestRulesTime(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// CouponCreateRequestRulesTime(...).copyWith(id: 12, name: "My name")
+  /// ````
+  CouponCreateRequestRulesTime call({
+    Object? allowedDays = const $CopyWithPlaceholder(),
+    Object? allowedHours = const $CopyWithPlaceholder(),
+  }) {
+    return CouponCreateRequestRulesTime(
+      allowedDays: allowedDays == const $CopyWithPlaceholder()
+          ? _value.allowedDays
+          // ignore: cast_nullable_to_non_nullable
+          : allowedDays as List<CouponCreateRequestRulesTimeAllowedDaysEnum>?,
+      allowedHours: allowedHours == const $CopyWithPlaceholder()
+          ? _value.allowedHours
+          // ignore: cast_nullable_to_non_nullable
+          : allowedHours as List<int>?,
+    );
   }
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+extension $CouponCreateRequestRulesTimeCopyWith
+    on CouponCreateRequestRulesTime {
+  /// Returns a callable class that can be used as follows: `instanceOfCouponCreateRequestRulesTime.copyWith(...)` or like so:`instanceOfCouponCreateRequestRulesTime.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$CouponCreateRequestRulesTimeCWProxy get copyWith =>
+      _$CouponCreateRequestRulesTimeCWProxyImpl(this);
+}
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+CouponCreateRequestRulesTime _$CouponCreateRequestRulesTimeFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('CouponCreateRequestRulesTime', json, ($checkedConvert) {
+  final val = CouponCreateRequestRulesTime(
+    allowedDays: $checkedConvert(
+      'allowedDays',
+      (v) => (v as List<dynamic>?)
+          ?.map(
+            (e) => $enumDecode(
+              _$CouponCreateRequestRulesTimeAllowedDaysEnumEnumMap,
+              e,
+            ),
+          )
+          .toList(),
+    ),
+    allowedHours: $checkedConvert(
+      'allowedHours',
+      (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+    ),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$CouponCreateRequestRulesTimeToJson(
+  CouponCreateRequestRulesTime instance,
+) => <String, dynamic>{
+  'allowedDays': ?instance.allowedDays
+      ?.map((e) => _$CouponCreateRequestRulesTimeAllowedDaysEnumEnumMap[e]!)
+      .toList(),
+  'allowedHours': ?instance.allowedHours,
+};
+
+const _$CouponCreateRequestRulesTimeAllowedDaysEnumEnumMap = {
+  CouponCreateRequestRulesTimeAllowedDaysEnum.sunday: 'sunday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.monday: 'monday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.tuesday: 'tuesday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.wednesday: 'wednesday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.thursday: 'thursday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.friday: 'friday',
+  CouponCreateRequestRulesTimeAllowedDaysEnum.saturday: 'saturday',
+};

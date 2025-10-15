@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for UpdateUserPasswordRequest
 void main() {
-  final instance = UpdateUserPasswordRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final UpdateUserPasswordRequest?
+  instance = /* UpdateUserPasswordRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(UpdateUserPasswordRequest, () {
     // String password
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `confirmPassword`', () async {
       // TODO
     });
-
   });
 }

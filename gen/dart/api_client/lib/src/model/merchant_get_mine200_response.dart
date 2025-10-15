@@ -4,122 +4,45 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
-import 'package:built_value/json_object.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'merchant_get_mine200_response.g.dart';
 
-/// MerchantGetMine200Response
-///
-/// Properties:
-/// * [status] 
-/// * [body] 
-@BuiltValue()
-abstract class MerchantGetMine200Response implements Built<MerchantGetMine200Response, MerchantGetMine200ResponseBuilder> {
-  @BuiltValueField(wireName: r'status')
-  JsonObject? get status;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class MerchantGetMine200Response {
+  /// Returns a new [MerchantGetMine200Response] instance.
+  MerchantGetMine200Response({required this.status, required this.body});
 
-  @BuiltValueField(wireName: r'body')
-  MerchantGetMine200ResponseBody get body;
+  @JsonKey(name: r'status', required: true, includeIfNull: true)
+  final Object? status;
 
-  MerchantGetMine200Response._();
-
-  factory MerchantGetMine200Response([void updates(MerchantGetMine200ResponseBuilder b)]) = _$MerchantGetMine200Response;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(MerchantGetMine200ResponseBuilder b) => b;
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<MerchantGetMine200Response> get serializer => _$MerchantGetMine200ResponseSerializer();
-}
-
-class _$MerchantGetMine200ResponseSerializer implements PrimitiveSerializer<MerchantGetMine200Response> {
-  @override
-  final Iterable<Type> types = const [MerchantGetMine200Response, _$MerchantGetMine200Response];
+  @JsonKey(name: r'body', required: true, includeIfNull: false)
+  final MerchantGetMine200ResponseBody body;
 
   @override
-  final String wireName = r'MerchantGetMine200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    MerchantGetMine200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'status';
-    yield object.status == null ? null : serializers.serialize(
-      object.status,
-      specifiedType: const FullType.nullable(JsonObject),
-    );
-    yield r'body';
-    yield serializers.serialize(
-      object.body,
-      specifiedType: const FullType(MerchantGetMine200ResponseBody),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantGetMine200Response &&
+          other.status == status &&
+          other.body == body;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    MerchantGetMine200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => (status == null ? 0 : status.hashCode) + body.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required MerchantGetMine200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType.nullable(JsonObject),
-          ) as JsonObject?;
-          if (valueDes == null) continue;
-          result.status = valueDes;
-          break;
-        case r'body':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(MerchantGetMine200ResponseBody),
-          ) as MerchantGetMine200ResponseBody;
-          result.body.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory MerchantGetMine200Response.fromJson(Map<String, dynamic> json) =>
+      _$MerchantGetMine200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MerchantGetMine200ResponseToJson(this);
 
   @override
-  MerchantGetMine200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = MerchantGetMine200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

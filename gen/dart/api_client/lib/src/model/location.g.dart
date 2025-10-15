@@ -3,98 +3,80 @@
 part of 'location.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$Location extends Location {
-  @override
-  final num lat;
-  @override
-  final num lng;
+abstract class _$LocationCWProxy {
+  Location lat(num lat);
 
-  factory _$Location([void Function(LocationBuilder)? updates]) =>
-      (LocationBuilder()..update(updates))._build();
+  Location lng(num lng);
 
-  _$Location._({required this.lat, required this.lng}) : super._();
-  @override
-  Location rebuild(void Function(LocationBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Location(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Location(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Location call({num lat, num lng});
+}
 
-  @override
-  LocationBuilder toBuilder() => LocationBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfLocation.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfLocation.copyWith.fieldName(...)`
+class _$LocationCWProxyImpl implements _$LocationCWProxy {
+  const _$LocationCWProxyImpl(this._value);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Location && lat == other.lat && lng == other.lng;
-  }
+  final Location _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, lat.hashCode);
-    _$hash = $jc(_$hash, lng.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  Location lat(num lat) => this(lat: lat);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Location')
-          ..add('lat', lat)
-          ..add('lng', lng))
-        .toString();
+  Location lng(num lng) => this(lng: lng);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Location(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Location(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Location call({
+    Object? lat = const $CopyWithPlaceholder(),
+    Object? lng = const $CopyWithPlaceholder(),
+  }) {
+    return Location(
+      lat: lat == const $CopyWithPlaceholder()
+          ? _value.lat
+          // ignore: cast_nullable_to_non_nullable
+          : lat as num,
+      lng: lng == const $CopyWithPlaceholder()
+          ? _value.lng
+          // ignore: cast_nullable_to_non_nullable
+          : lng as num,
+    );
   }
 }
 
-class LocationBuilder implements Builder<Location, LocationBuilder> {
-  _$Location? _$v;
-
-  num? _lat;
-  num? get lat => _$this._lat;
-  set lat(num? lat) => _$this._lat = lat;
-
-  num? _lng;
-  num? get lng => _$this._lng;
-  set lng(num? lng) => _$this._lng = lng;
-
-  LocationBuilder() {
-    Location._defaults(this);
-  }
-
-  LocationBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _lat = $v.lat;
-      _lng = $v.lng;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Location other) {
-    _$v = other as _$Location;
-  }
-
-  @override
-  void update(void Function(LocationBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Location build() => _build();
-
-  _$Location _build() {
-    final _$result =
-        _$v ??
-        _$Location._(
-          lat: BuiltValueNullFieldError.checkNotNull(lat, r'Location', 'lat'),
-          lng: BuiltValueNullFieldError.checkNotNull(lng, r'Location', 'lng'),
-        );
-    replace(_$result);
-    return _$result;
-  }
+extension $LocationCopyWith on Location {
+  /// Returns a callable class that can be used as follows: `instanceOfLocation.copyWith(...)` or like so:`instanceOfLocation.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$LocationCWProxy get copyWith => _$LocationCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Location _$LocationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Location', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['lat', 'lng']);
+      final val = Location(
+        lat: $checkedConvert('lat', (v) => v as num),
+        lng: $checkedConvert('lng', (v) => v as num),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
+  'lat': instance.lat,
+  'lng': instance.lng,
+};

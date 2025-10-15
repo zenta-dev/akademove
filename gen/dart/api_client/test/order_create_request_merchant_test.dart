@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderCreateRequestMerchant
 void main() {
-  final instance = OrderCreateRequestMerchantBuilder();
-  // TODO add properties to the builder and call build()
+  final OrderCreateRequestMerchant?
+  instance = /* OrderCreateRequestMerchant(...) */ null;
+  // TODO add properties to the entity
 
   group(OrderCreateRequestMerchant, () {
     // String id
@@ -24,6 +25,16 @@ void main() {
 
     // String name
     test('to test the property `name`', () async {
+      // TODO
+    });
+
+    // String email
+    test('to test the property `email`', () async {
+      // TODO
+    });
+
+    // String phone
+    test('to test the property `phone`', () async {
       // TODO
     });
 
@@ -47,17 +58,19 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // String document
+    test('to test the property `document`', () async {
+      // TODO
+    });
+
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

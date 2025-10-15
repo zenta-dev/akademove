@@ -3,125 +3,107 @@
 part of 'driver_list200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$DriverList200Response extends DriverList200Response {
-  @override
-  final String message;
-  @override
-  final BuiltList<Driver> data;
+abstract class _$DriverList200ResponseCWProxy {
+  DriverList200Response message(String message);
 
-  factory _$DriverList200Response([
-    void Function(DriverList200ResponseBuilder)? updates,
-  ]) => (DriverList200ResponseBuilder()..update(updates))._build();
+  DriverList200Response data(List<Driver> data);
 
-  _$DriverList200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  DriverList200Response rebuild(
-    void Function(DriverList200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  DriverList200Response totalPages(num? totalPages);
 
-  @override
-  DriverList200ResponseBuilder toBuilder() =>
-      DriverList200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// DriverList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  DriverList200Response call({
+    String message,
+    List<Driver> data,
+    num? totalPages,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is DriverList200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverList200Response.copyWith.fieldName(...)`
+class _$DriverList200ResponseCWProxyImpl
+    implements _$DriverList200ResponseCWProxy {
+  const _$DriverList200ResponseCWProxyImpl(this._value);
+
+  final DriverList200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  DriverList200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'DriverList200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  DriverList200Response data(List<Driver> data) => this(data: data);
+
+  @override
+  DriverList200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// DriverList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  DriverList200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return DriverList200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as List<Driver>,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class DriverList200ResponseBuilder
-    implements Builder<DriverList200Response, DriverList200ResponseBuilder> {
-  _$DriverList200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ListBuilder<Driver>? _data;
-  ListBuilder<Driver> get data => _$this._data ??= ListBuilder<Driver>();
-  set data(ListBuilder<Driver>? data) => _$this._data = data;
-
-  DriverList200ResponseBuilder() {
-    DriverList200Response._defaults(this);
-  }
-
-  DriverList200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(DriverList200Response other) {
-    _$v = other as _$DriverList200Response;
-  }
-
-  @override
-  void update(void Function(DriverList200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  DriverList200Response build() => _build();
-
-  _$DriverList200Response _build() {
-    _$DriverList200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$DriverList200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'DriverList200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'DriverList200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $DriverList200ResponseCopyWith on DriverList200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfDriverList200Response.copyWith(...)` or like so:`instanceOfDriverList200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$DriverList200ResponseCWProxy get copyWith =>
+      _$DriverList200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+DriverList200Response _$DriverList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('DriverList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = DriverList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Driver.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$DriverList200ResponseToJson(
+  DriverList200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'totalPages': ?instance.totalPages,
+};

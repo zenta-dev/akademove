@@ -4,120 +4,55 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/schedule.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'schedule_create200_response.g.dart';
 
-/// ScheduleCreate200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class ScheduleCreate200Response implements Built<ScheduleCreate200Response, ScheduleCreate200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class ScheduleCreate200Response {
+  /// Returns a new [ScheduleCreate200Response] instance.
+  ScheduleCreate200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  Schedule get data;
+    required this.data,
 
-  ScheduleCreate200Response._();
+    this.totalPages,
+  });
 
-  factory ScheduleCreate200Response([void updates(ScheduleCreate200ResponseBuilder b)]) = _$ScheduleCreate200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ScheduleCreate200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final Schedule data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<ScheduleCreate200Response> get serializer => _$ScheduleCreate200ResponseSerializer();
-}
-
-class _$ScheduleCreate200ResponseSerializer implements PrimitiveSerializer<ScheduleCreate200Response> {
-  @override
-  final Iterable<Type> types = const [ScheduleCreate200Response, _$ScheduleCreate200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'ScheduleCreate200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    ScheduleCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(Schedule),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ScheduleCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    ScheduleCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ScheduleCreate200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Schedule),
-          ) as Schedule;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory ScheduleCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleCreate200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ScheduleCreate200ResponseToJson(this);
 
   @override
-  ScheduleCreate200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ScheduleCreate200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

@@ -3,385 +3,250 @@
 part of 'report.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const ReportCategoryEnum _$reportCategoryEnum_behavior =
-    const ReportCategoryEnum._('behavior');
-const ReportCategoryEnum _$reportCategoryEnum_safety =
-    const ReportCategoryEnum._('safety');
-const ReportCategoryEnum _$reportCategoryEnum_fraud =
-    const ReportCategoryEnum._('fraud');
-const ReportCategoryEnum _$reportCategoryEnum_other =
-    const ReportCategoryEnum._('other');
+abstract class _$ReportCWProxy {
+  Report id(String id);
 
-ReportCategoryEnum _$reportCategoryEnumValueOf(String name) {
-  switch (name) {
-    case 'behavior':
-      return _$reportCategoryEnum_behavior;
-    case 'safety':
-      return _$reportCategoryEnum_safety;
-    case 'fraud':
-      return _$reportCategoryEnum_fraud;
-    case 'other':
-      return _$reportCategoryEnum_other;
-    default:
-      throw ArgumentError(name);
+  Report orderId(String? orderId);
+
+  Report reporterId(String reporterId);
+
+  Report targetUserId(String targetUserId);
+
+  Report category(ReportCategoryEnum category);
+
+  Report description(String description);
+
+  Report evidenceUrl(String? evidenceUrl);
+
+  Report status(ReportStatusEnum status);
+
+  Report handledById(String? handledById);
+
+  Report resolution(String? resolution);
+
+  Report reportedAt(DateTime reportedAt);
+
+  Report resolvedAt(DateTime? resolvedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Report(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Report(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Report call({
+    String id,
+    String? orderId,
+    String reporterId,
+    String targetUserId,
+    ReportCategoryEnum category,
+    String description,
+    String? evidenceUrl,
+    ReportStatusEnum status,
+    String? handledById,
+    String? resolution,
+    DateTime reportedAt,
+    DateTime? resolvedAt,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReport.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReport.copyWith.fieldName(...)`
+class _$ReportCWProxyImpl implements _$ReportCWProxy {
+  const _$ReportCWProxyImpl(this._value);
+
+  final Report _value;
+
+  @override
+  Report id(String id) => this(id: id);
+
+  @override
+  Report orderId(String? orderId) => this(orderId: orderId);
+
+  @override
+  Report reporterId(String reporterId) => this(reporterId: reporterId);
+
+  @override
+  Report targetUserId(String targetUserId) => this(targetUserId: targetUserId);
+
+  @override
+  Report category(ReportCategoryEnum category) => this(category: category);
+
+  @override
+  Report description(String description) => this(description: description);
+
+  @override
+  Report evidenceUrl(String? evidenceUrl) => this(evidenceUrl: evidenceUrl);
+
+  @override
+  Report status(ReportStatusEnum status) => this(status: status);
+
+  @override
+  Report handledById(String? handledById) => this(handledById: handledById);
+
+  @override
+  Report resolution(String? resolution) => this(resolution: resolution);
+
+  @override
+  Report reportedAt(DateTime reportedAt) => this(reportedAt: reportedAt);
+
+  @override
+  Report resolvedAt(DateTime? resolvedAt) => this(resolvedAt: resolvedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Report(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Report(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Report call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? orderId = const $CopyWithPlaceholder(),
+    Object? reporterId = const $CopyWithPlaceholder(),
+    Object? targetUserId = const $CopyWithPlaceholder(),
+    Object? category = const $CopyWithPlaceholder(),
+    Object? description = const $CopyWithPlaceholder(),
+    Object? evidenceUrl = const $CopyWithPlaceholder(),
+    Object? status = const $CopyWithPlaceholder(),
+    Object? handledById = const $CopyWithPlaceholder(),
+    Object? resolution = const $CopyWithPlaceholder(),
+    Object? reportedAt = const $CopyWithPlaceholder(),
+    Object? resolvedAt = const $CopyWithPlaceholder(),
+  }) {
+    return Report(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String,
+      orderId: orderId == const $CopyWithPlaceholder()
+          ? _value.orderId
+          // ignore: cast_nullable_to_non_nullable
+          : orderId as String?,
+      reporterId: reporterId == const $CopyWithPlaceholder()
+          ? _value.reporterId
+          // ignore: cast_nullable_to_non_nullable
+          : reporterId as String,
+      targetUserId: targetUserId == const $CopyWithPlaceholder()
+          ? _value.targetUserId
+          // ignore: cast_nullable_to_non_nullable
+          : targetUserId as String,
+      category: category == const $CopyWithPlaceholder()
+          ? _value.category
+          // ignore: cast_nullable_to_non_nullable
+          : category as ReportCategoryEnum,
+      description: description == const $CopyWithPlaceholder()
+          ? _value.description
+          // ignore: cast_nullable_to_non_nullable
+          : description as String,
+      evidenceUrl: evidenceUrl == const $CopyWithPlaceholder()
+          ? _value.evidenceUrl
+          // ignore: cast_nullable_to_non_nullable
+          : evidenceUrl as String?,
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as ReportStatusEnum,
+      handledById: handledById == const $CopyWithPlaceholder()
+          ? _value.handledById
+          // ignore: cast_nullable_to_non_nullable
+          : handledById as String?,
+      resolution: resolution == const $CopyWithPlaceholder()
+          ? _value.resolution
+          // ignore: cast_nullable_to_non_nullable
+          : resolution as String?,
+      reportedAt: reportedAt == const $CopyWithPlaceholder()
+          ? _value.reportedAt
+          // ignore: cast_nullable_to_non_nullable
+          : reportedAt as DateTime,
+      resolvedAt: resolvedAt == const $CopyWithPlaceholder()
+          ? _value.resolvedAt
+          // ignore: cast_nullable_to_non_nullable
+          : resolvedAt as DateTime?,
+    );
   }
 }
 
-final BuiltSet<ReportCategoryEnum> _$reportCategoryEnumValues =
-    BuiltSet<ReportCategoryEnum>(const <ReportCategoryEnum>[
-      _$reportCategoryEnum_behavior,
-      _$reportCategoryEnum_safety,
-      _$reportCategoryEnum_fraud,
-      _$reportCategoryEnum_other,
-    ]);
-
-const ReportStatusEnum _$reportStatusEnum_pending = const ReportStatusEnum._(
-  'pending',
-);
-const ReportStatusEnum _$reportStatusEnum_investigating =
-    const ReportStatusEnum._('investigating');
-const ReportStatusEnum _$reportStatusEnum_resolved = const ReportStatusEnum._(
-  'resolved',
-);
-const ReportStatusEnum _$reportStatusEnum_dismissed = const ReportStatusEnum._(
-  'dismissed',
-);
-
-ReportStatusEnum _$reportStatusEnumValueOf(String name) {
-  switch (name) {
-    case 'pending':
-      return _$reportStatusEnum_pending;
-    case 'investigating':
-      return _$reportStatusEnum_investigating;
-    case 'resolved':
-      return _$reportStatusEnum_resolved;
-    case 'dismissed':
-      return _$reportStatusEnum_dismissed;
-    default:
-      throw ArgumentError(name);
-  }
+extension $ReportCopyWith on Report {
+  /// Returns a callable class that can be used as follows: `instanceOfReport.copyWith(...)` or like so:`instanceOfReport.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ReportCWProxy get copyWith => _$ReportCWProxyImpl(this);
 }
 
-final BuiltSet<ReportStatusEnum> _$reportStatusEnumValues =
-    BuiltSet<ReportStatusEnum>(const <ReportStatusEnum>[
-      _$reportStatusEnum_pending,
-      _$reportStatusEnum_investigating,
-      _$reportStatusEnum_resolved,
-      _$reportStatusEnum_dismissed,
-    ]);
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-Serializer<ReportCategoryEnum> _$reportCategoryEnumSerializer =
-    _$ReportCategoryEnumSerializer();
-Serializer<ReportStatusEnum> _$reportStatusEnumSerializer =
-    _$ReportStatusEnumSerializer();
+Report _$ReportFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Report', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'reporterId',
+          'targetUserId',
+          'category',
+          'description',
+          'status',
+          'reportedAt',
+        ],
+      );
+      final val = Report(
+        id: $checkedConvert('id', (v) => v as String),
+        orderId: $checkedConvert('orderId', (v) => v as String?),
+        reporterId: $checkedConvert('reporterId', (v) => v as String),
+        targetUserId: $checkedConvert('targetUserId', (v) => v as String),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecode(_$ReportCategoryEnumEnumMap, v),
+        ),
+        description: $checkedConvert('description', (v) => v as String),
+        evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$ReportStatusEnumEnumMap, v),
+        ),
+        handledById: $checkedConvert('handledById', (v) => v as String?),
+        resolution: $checkedConvert('resolution', (v) => v as String?),
+        reportedAt: $checkedConvert(
+          'reportedAt',
+          (v) => DateTime.parse(v as String),
+        ),
+        resolvedAt: $checkedConvert(
+          'resolvedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+      );
+      return val;
+    });
 
-class _$ReportCategoryEnumSerializer
-    implements PrimitiveSerializer<ReportCategoryEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'behavior': 'behavior',
-    'safety': 'safety',
-    'fraud': 'fraud',
-    'other': 'other',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'behavior': 'behavior',
-    'safety': 'safety',
-    'fraud': 'fraud',
-    'other': 'other',
-  };
+Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
+  'id': instance.id,
+  'orderId': ?instance.orderId,
+  'reporterId': instance.reporterId,
+  'targetUserId': instance.targetUserId,
+  'category': _$ReportCategoryEnumEnumMap[instance.category]!,
+  'description': instance.description,
+  'evidenceUrl': ?instance.evidenceUrl,
+  'status': _$ReportStatusEnumEnumMap[instance.status]!,
+  'handledById': ?instance.handledById,
+  'resolution': ?instance.resolution,
+  'reportedAt': instance.reportedAt.toIso8601String(),
+  'resolvedAt': ?instance.resolvedAt?.toIso8601String(),
+};
 
-  @override
-  final Iterable<Type> types = const <Type>[ReportCategoryEnum];
-  @override
-  final String wireName = 'ReportCategoryEnum';
+const _$ReportCategoryEnumEnumMap = {
+  ReportCategoryEnum.behavior: 'behavior',
+  ReportCategoryEnum.safety: 'safety',
+  ReportCategoryEnum.fraud: 'fraud',
+  ReportCategoryEnum.other: 'other',
+};
 
-  @override
-  Object serialize(
-    Serializers serializers,
-    ReportCategoryEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ReportCategoryEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ReportCategoryEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
-}
-
-class _$ReportStatusEnumSerializer
-    implements PrimitiveSerializer<ReportStatusEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'pending': 'pending',
-    'investigating': 'investigating',
-    'resolved': 'resolved',
-    'dismissed': 'dismissed',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'pending': 'pending',
-    'investigating': 'investigating',
-    'resolved': 'resolved',
-    'dismissed': 'dismissed',
-  };
-
-  @override
-  final Iterable<Type> types = const <Type>[ReportStatusEnum];
-  @override
-  final String wireName = 'ReportStatusEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    ReportStatusEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  ReportStatusEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => ReportStatusEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
-  );
-}
-
-class _$Report extends Report {
-  @override
-  final String id;
-  @override
-  final String? orderId;
-  @override
-  final String reporterId;
-  @override
-  final String targetUserId;
-  @override
-  final ReportCategoryEnum? category;
-  @override
-  final String description;
-  @override
-  final String? evidenceUrl;
-  @override
-  final ReportStatusEnum? status;
-  @override
-  final String? handledById;
-  @override
-  final String? resolution;
-  @override
-  final num reportedAt;
-  @override
-  final num? resolvedAt;
-
-  factory _$Report([void Function(ReportBuilder)? updates]) =>
-      (ReportBuilder()..update(updates))._build();
-
-  _$Report._({
-    required this.id,
-    this.orderId,
-    required this.reporterId,
-    required this.targetUserId,
-    this.category,
-    required this.description,
-    this.evidenceUrl,
-    this.status,
-    this.handledById,
-    this.resolution,
-    required this.reportedAt,
-    this.resolvedAt,
-  }) : super._();
-  @override
-  Report rebuild(void Function(ReportBuilder) updates) =>
-      (toBuilder()..update(updates)).build();
-
-  @override
-  ReportBuilder toBuilder() => ReportBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is Report &&
-        id == other.id &&
-        orderId == other.orderId &&
-        reporterId == other.reporterId &&
-        targetUserId == other.targetUserId &&
-        category == other.category &&
-        description == other.description &&
-        evidenceUrl == other.evidenceUrl &&
-        status == other.status &&
-        handledById == other.handledById &&
-        resolution == other.resolution &&
-        reportedAt == other.reportedAt &&
-        resolvedAt == other.resolvedAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, orderId.hashCode);
-    _$hash = $jc(_$hash, reporterId.hashCode);
-    _$hash = $jc(_$hash, targetUserId.hashCode);
-    _$hash = $jc(_$hash, category.hashCode);
-    _$hash = $jc(_$hash, description.hashCode);
-    _$hash = $jc(_$hash, evidenceUrl.hashCode);
-    _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, handledById.hashCode);
-    _$hash = $jc(_$hash, resolution.hashCode);
-    _$hash = $jc(_$hash, reportedAt.hashCode);
-    _$hash = $jc(_$hash, resolvedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'Report')
-          ..add('id', id)
-          ..add('orderId', orderId)
-          ..add('reporterId', reporterId)
-          ..add('targetUserId', targetUserId)
-          ..add('category', category)
-          ..add('description', description)
-          ..add('evidenceUrl', evidenceUrl)
-          ..add('status', status)
-          ..add('handledById', handledById)
-          ..add('resolution', resolution)
-          ..add('reportedAt', reportedAt)
-          ..add('resolvedAt', resolvedAt))
-        .toString();
-  }
-}
-
-class ReportBuilder implements Builder<Report, ReportBuilder> {
-  _$Report? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _orderId;
-  String? get orderId => _$this._orderId;
-  set orderId(String? orderId) => _$this._orderId = orderId;
-
-  String? _reporterId;
-  String? get reporterId => _$this._reporterId;
-  set reporterId(String? reporterId) => _$this._reporterId = reporterId;
-
-  String? _targetUserId;
-  String? get targetUserId => _$this._targetUserId;
-  set targetUserId(String? targetUserId) => _$this._targetUserId = targetUserId;
-
-  ReportCategoryEnum? _category;
-  ReportCategoryEnum? get category => _$this._category;
-  set category(ReportCategoryEnum? category) => _$this._category = category;
-
-  String? _description;
-  String? get description => _$this._description;
-  set description(String? description) => _$this._description = description;
-
-  String? _evidenceUrl;
-  String? get evidenceUrl => _$this._evidenceUrl;
-  set evidenceUrl(String? evidenceUrl) => _$this._evidenceUrl = evidenceUrl;
-
-  ReportStatusEnum? _status;
-  ReportStatusEnum? get status => _$this._status;
-  set status(ReportStatusEnum? status) => _$this._status = status;
-
-  String? _handledById;
-  String? get handledById => _$this._handledById;
-  set handledById(String? handledById) => _$this._handledById = handledById;
-
-  String? _resolution;
-  String? get resolution => _$this._resolution;
-  set resolution(String? resolution) => _$this._resolution = resolution;
-
-  num? _reportedAt;
-  num? get reportedAt => _$this._reportedAt;
-  set reportedAt(num? reportedAt) => _$this._reportedAt = reportedAt;
-
-  num? _resolvedAt;
-  num? get resolvedAt => _$this._resolvedAt;
-  set resolvedAt(num? resolvedAt) => _$this._resolvedAt = resolvedAt;
-
-  ReportBuilder() {
-    Report._defaults(this);
-  }
-
-  ReportBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _orderId = $v.orderId;
-      _reporterId = $v.reporterId;
-      _targetUserId = $v.targetUserId;
-      _category = $v.category;
-      _description = $v.description;
-      _evidenceUrl = $v.evidenceUrl;
-      _status = $v.status;
-      _handledById = $v.handledById;
-      _resolution = $v.resolution;
-      _reportedAt = $v.reportedAt;
-      _resolvedAt = $v.resolvedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(Report other) {
-    _$v = other as _$Report;
-  }
-
-  @override
-  void update(void Function(ReportBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  Report build() => _build();
-
-  _$Report _build() {
-    final _$result =
-        _$v ??
-        _$Report._(
-          id: BuiltValueNullFieldError.checkNotNull(id, r'Report', 'id'),
-          orderId: orderId,
-          reporterId: BuiltValueNullFieldError.checkNotNull(
-            reporterId,
-            r'Report',
-            'reporterId',
-          ),
-          targetUserId: BuiltValueNullFieldError.checkNotNull(
-            targetUserId,
-            r'Report',
-            'targetUserId',
-          ),
-          category: category,
-          description: BuiltValueNullFieldError.checkNotNull(
-            description,
-            r'Report',
-            'description',
-          ),
-          evidenceUrl: evidenceUrl,
-          status: status,
-          handledById: handledById,
-          resolution: resolution,
-          reportedAt: BuiltValueNullFieldError.checkNotNull(
-            reportedAt,
-            r'Report',
-            'reportedAt',
-          ),
-          resolvedAt: resolvedAt,
-        );
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$ReportStatusEnumEnumMap = {
+  ReportStatusEnum.pending: 'pending',
+  ReportStatusEnum.investigating: 'investigating',
+  ReportStatusEnum.resolved: 'resolved',
+  ReportStatusEnum.dismissed: 'dismissed',
+};

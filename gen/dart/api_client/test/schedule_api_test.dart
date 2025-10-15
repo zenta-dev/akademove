@@ -1,36 +1,34 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for ScheduleApi
 void main() {
   final instance = ApiClient().getScheduleApi();
 
   group(ScheduleApi, () {
-    //Future<CreateScheduleSuccessResponse> createSchedule({ CreateScheduleRequest createScheduleRequest }) async
-    test('test createSchedule', () async {
+    //Future<ScheduleCreate200Response> scheduleCreate(ScheduleCreateRequest scheduleCreateRequest) async
+    test('test scheduleCreate', () async {
       // TODO
     });
 
-    //Future<DeleteScheduleSuccessResponse> deleteSchedule(String id) async
-    test('test deleteSchedule', () async {
+    //Future<ScheduleCreate200Response> scheduleGet(String id) async
+    test('test scheduleGet', () async {
       // TODO
     });
 
-    //Future<GetAllScheduleSuccessResponse> getAllSchedule(int page, int limit, { String cursor }) async
-    test('test getAllSchedule', () async {
+    //Future<ScheduleList200Response> scheduleList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    test('test scheduleList', () async {
       // TODO
     });
 
-    //Future<GetScheduleByIdSuccessResponse> getScheduleById(String id, bool fromCache) async
-    test('test getScheduleById', () async {
+    //Future<DriverRemove200Response> scheduleRemove(String id) async
+    test('test scheduleRemove', () async {
       // TODO
     });
 
-    //Future<UpdateScheduleSuccessResponse> updateSchedule(String id, { UpdateScheduleRequest updateScheduleRequest }) async
-    test('test updateSchedule', () async {
+    //Future<ScheduleCreate200Response> scheduleUpdate(String id, ScheduleUpdateRequest scheduleUpdateRequest) async
+    test('test scheduleUpdate', () async {
       // TODO
     });
-
   });
 }

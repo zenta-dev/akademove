@@ -16,11 +16,11 @@ Name | Type | Description | Notes
 **discountPercentage** | **num** |  | [optional] 
 **usageLimit** | **num** |  | 
 **usedCount** | **num** |  | 
-**periodStart** | **num** | unix timestamp format | 
-**periodEnd** | **num** | unix timestamp format | 
+**periodStart** | [**DateTime**](DateTime.md) |  | 
+**periodEnd** | [**DateTime**](DateTime.md) |  | 
 **isActive** | **bool** |  | 
 **createdById** | **String** |  | 
-**createdAt** | **num** | unix timestamp format | 
+**createdAt** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

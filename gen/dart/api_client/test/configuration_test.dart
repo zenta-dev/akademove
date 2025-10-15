@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Configuration
 void main() {
-  final instance = ConfigurationBuilder();
-  // TODO add properties to the builder and call build()
+  final Configuration? instance = /* Configuration(...) */ null;
+  // TODO add properties to the entity
 
   group(Configuration, () {
     // String key
@@ -17,7 +17,7 @@ void main() {
       // TODO
     });
 
-    // JsonObject value
+    // Object value
     test('to test the property `value`', () async {
       // TODO
     });
@@ -32,11 +32,9 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

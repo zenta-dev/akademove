@@ -3,8 +3,9 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderCreateRequestUser
 void main() {
-  final instance = OrderCreateRequestUserBuilder();
-  // TODO add properties to the builder and call build()
+  final OrderCreateRequestUser? instance = /* OrderCreateRequestUser(...) */
+      null;
+  // TODO add properties to the entity
 
   group(OrderCreateRequestUser, () {
     // String id
@@ -32,7 +33,7 @@ void main() {
       // TODO
     });
 
-    // JsonObject role
+    // String role
     test('to test the property `role`', () async {
       // TODO
     });
@@ -47,23 +48,29 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num banExpires
+    // DateTime banExpires
     test('to test the property `banExpires`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // String gender
+    test('to test the property `gender`', () async {
+      // TODO
+    });
+
+    // String phone
+    test('to test the property `phone`', () async {
+      // TODO
+    });
+
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

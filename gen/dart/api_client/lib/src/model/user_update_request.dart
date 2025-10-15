@@ -4,98 +4,102 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/ban_user_schema_request.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:api_client/src/model/update_user_password_request.dart';
 import 'package:api_client/src/model/unban_user_schema_request.dart';
 import 'package:api_client/src/model/update_user_role_request.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
-import 'package:one_of/any_of.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'user_update_request.g.dart';
 
-/// UserUpdateRequest
-///
-/// Properties:
-/// * [role] 
-/// * [password] 
-/// * [confirmPassword] 
-/// * [banReason] 
-/// * [banExpiresIn] 
-/// * [id] 
-@BuiltValue()
-abstract class UserUpdateRequest implements Built<UserUpdateRequest, UserUpdateRequestBuilder> {
-  /// Any Of [BanUserSchemaRequest], [UnbanUserSchemaRequest], [UpdateUserPasswordRequest], [UpdateUserRoleRequest]
-  AnyOf get anyOf;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class UserUpdateRequest {
+  /// Returns a new [UserUpdateRequest] instance.
+  UserUpdateRequest({
+    required this.role,
 
-  UserUpdateRequest._();
+    required this.password,
 
-  factory UserUpdateRequest([void updates(UserUpdateRequestBuilder b)]) = _$UserUpdateRequest;
+    required this.confirmPassword,
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UserUpdateRequestBuilder b) => b;
+    required this.banReason,
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<UserUpdateRequest> get serializer => _$UserUpdateRequestSerializer();
+    this.banExpiresIn,
+
+    required this.id,
+  });
+
+  @JsonKey(name: r'role', required: true, includeIfNull: false)
+  final UserUpdateRequestRoleEnum role;
+
+  @JsonKey(name: r'password', required: true, includeIfNull: false)
+  final String password;
+
+  @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
+  final String confirmPassword;
+
+  @JsonKey(name: r'banReason', required: true, includeIfNull: false)
+  final String banReason;
+
+  @JsonKey(name: r'banExpiresIn', required: false, includeIfNull: false)
+  final num? banExpiresIn;
+
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserUpdateRequest &&
+          other.role == role &&
+          other.password == password &&
+          other.confirmPassword == confirmPassword &&
+          other.banReason == banReason &&
+          other.banExpiresIn == banExpiresIn &&
+          other.id == id;
+
+  @override
+  int get hashCode =>
+      role.hashCode +
+      password.hashCode +
+      confirmPassword.hashCode +
+      banReason.hashCode +
+      banExpiresIn.hashCode +
+      id.hashCode;
+
+  factory UserUpdateRequest.fromJson(Map<String, dynamic> json) =>
+      _$UserUpdateRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserUpdateRequestToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
 
-class _$UserUpdateRequestSerializer implements PrimitiveSerializer<UserUpdateRequest> {
-  @override
-  final Iterable<Type> types = const [UserUpdateRequest, _$UserUpdateRequest];
+enum UserUpdateRequestRoleEnum {
+  @JsonValue(r'admin')
+  admin(r'admin'),
+  @JsonValue(r'operator')
+  operator_(r'operator'),
+  @JsonValue(r'merchant')
+  merchant(r'merchant'),
+  @JsonValue(r'driver')
+  driver(r'driver'),
+  @JsonValue(r'user')
+  user(r'user');
+
+  const UserUpdateRequestRoleEnum(this.value);
+
+  final String value;
 
   @override
-  final String wireName = r'UserUpdateRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    UserUpdateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-  }
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    UserUpdateRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final anyOf = object.anyOf;
-    return serializers.serialize(anyOf, specifiedType: FullType(AnyOf, anyOf.valueTypes.map((type) => FullType(type)).toList()))!;
-  }
-
-  @override
-  UserUpdateRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UserUpdateRequestBuilder();
-    Object? anyOfDataSrc;
-    final targetType = const FullType(AnyOf, [FullType(UpdateUserRoleRequest), FullType(UpdateUserPasswordRequest), FullType(BanUserSchemaRequest), FullType(UnbanUserSchemaRequest), ]);
-    anyOfDataSrc = serialized;
-    result.anyOf = serializers.deserialize(anyOfDataSrc, specifiedType: targetType) as AnyOf;
-    return result.build();
-  }
+  String toString() => value;
 }
-
-class UserUpdateRequestRoleEnum extends EnumClass {
-
-  @BuiltValueEnumConst(wireName: r'admin')
-  static const UserUpdateRequestRoleEnum admin = _$userUpdateRequestRoleEnum_admin;
-  @BuiltValueEnumConst(wireName: r'operator')
-  static const UserUpdateRequestRoleEnum operator_ = _$userUpdateRequestRoleEnum_operator_;
-  @BuiltValueEnumConst(wireName: r'merchant')
-  static const UserUpdateRequestRoleEnum merchant = _$userUpdateRequestRoleEnum_merchant;
-  @BuiltValueEnumConst(wireName: r'driver')
-  static const UserUpdateRequestRoleEnum driver = _$userUpdateRequestRoleEnum_driver;
-  @BuiltValueEnumConst(wireName: r'user')
-  static const UserUpdateRequestRoleEnum user = _$userUpdateRequestRoleEnum_user;
-
-  static Serializer<UserUpdateRequestRoleEnum> get serializer => _$userUpdateRequestRoleEnumSerializer;
-
-  const UserUpdateRequestRoleEnum._(String name): super(name);
-
-  static BuiltSet<UserUpdateRequestRoleEnum> get values => _$userUpdateRequestRoleEnumValues;
-  static UserUpdateRequestRoleEnum valueOf(String name) => _$userUpdateRequestRoleEnumValueOf(name);
-}
-

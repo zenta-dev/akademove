@@ -4,120 +4,55 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/report.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'report_create200_response.g.dart';
 
-/// ReportCreate200Response
-///
-/// Properties:
-/// * [message] 
-/// * [data] 
-@BuiltValue()
-abstract class ReportCreate200Response implements Built<ReportCreate200Response, ReportCreate200ResponseBuilder> {
-  @BuiltValueField(wireName: r'message')
-  String get message;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class ReportCreate200Response {
+  /// Returns a new [ReportCreate200Response] instance.
+  ReportCreate200Response({
+    required this.message,
 
-  @BuiltValueField(wireName: r'data')
-  Report get data;
+    required this.data,
 
-  ReportCreate200Response._();
+    this.totalPages,
+  });
 
-  factory ReportCreate200Response([void updates(ReportCreate200ResponseBuilder b)]) = _$ReportCreate200Response;
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReportCreate200ResponseBuilder b) => b;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final Report data;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<ReportCreate200Response> get serializer => _$ReportCreate200ResponseSerializer();
-}
-
-class _$ReportCreate200ResponseSerializer implements PrimitiveSerializer<ReportCreate200Response> {
-  @override
-  final Iterable<Type> types = const [ReportCreate200Response, _$ReportCreate200Response];
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final num? totalPages;
 
   @override
-  final String wireName = r'ReportCreate200Response';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    ReportCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'message';
-    yield serializers.serialize(
-      object.message,
-      specifiedType: const FullType(String),
-    );
-    yield r'data';
-    yield serializers.serialize(
-      object.data,
-      specifiedType: const FullType(Report),
-    );
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReportCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    ReportCreate200Response object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReportCreate200ResponseBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'message':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.message = valueDes;
-          break;
-        case r'data':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(Report),
-          ) as Report;
-          result.data.replace(valueDes);
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory ReportCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$ReportCreate200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportCreate200ResponseToJson(this);
 
   @override
-  ReportCreate200Response deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReportCreate200ResponseBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
-

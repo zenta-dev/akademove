@@ -3,125 +3,101 @@
 part of 'user_list200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$UserList200Response extends UserList200Response {
-  @override
-  final String message;
-  @override
-  final BuiltList<User> data;
+abstract class _$UserList200ResponseCWProxy {
+  UserList200Response message(String message);
 
-  factory _$UserList200Response([
-    void Function(UserList200ResponseBuilder)? updates,
-  ]) => (UserList200ResponseBuilder()..update(updates))._build();
+  UserList200Response data(List<User> data);
 
-  _$UserList200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  UserList200Response rebuild(
-    void Function(UserList200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  UserList200Response totalPages(num? totalPages);
 
-  @override
-  UserList200ResponseBuilder toBuilder() =>
-      UserList200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UserList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UserList200Response call({String message, List<User> data, num? totalPages});
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is UserList200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserList200Response.copyWith.fieldName(...)`
+class _$UserList200ResponseCWProxyImpl implements _$UserList200ResponseCWProxy {
+  const _$UserList200ResponseCWProxyImpl(this._value);
+
+  final UserList200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  UserList200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'UserList200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  UserList200Response data(List<User> data) => this(data: data);
+
+  @override
+  UserList200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// UserList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  UserList200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return UserList200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as List<User>,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class UserList200ResponseBuilder
-    implements Builder<UserList200Response, UserList200ResponseBuilder> {
-  _$UserList200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ListBuilder<User>? _data;
-  ListBuilder<User> get data => _$this._data ??= ListBuilder<User>();
-  set data(ListBuilder<User>? data) => _$this._data = data;
-
-  UserList200ResponseBuilder() {
-    UserList200Response._defaults(this);
-  }
-
-  UserList200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(UserList200Response other) {
-    _$v = other as _$UserList200Response;
-  }
-
-  @override
-  void update(void Function(UserList200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  UserList200Response build() => _build();
-
-  _$UserList200Response _build() {
-    _$UserList200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$UserList200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'UserList200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'UserList200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $UserList200ResponseCopyWith on UserList200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfUserList200Response.copyWith(...)` or like so:`instanceOfUserList200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$UserList200ResponseCWProxy get copyWith =>
+      _$UserList200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UserList200Response _$UserList200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('UserList200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = UserList200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert(
+          'data',
+          (v) => (v as List<dynamic>)
+              .map((e) => User.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => v as num?),
+      );
+      return val;
+    });
+
+Map<String, dynamic> _$UserList200ResponseToJson(
+  UserList200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'totalPages': ?instance.totalPages,
+};

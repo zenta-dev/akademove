@@ -3,119 +3,92 @@
 part of 'merchant_get_mine200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$MerchantGetMine200Response extends MerchantGetMine200Response {
-  @override
-  final JsonObject? status;
-  @override
-  final MerchantGetMine200ResponseBody body;
+abstract class _$MerchantGetMine200ResponseCWProxy {
+  MerchantGetMine200Response status(Object? status);
 
-  factory _$MerchantGetMine200Response([
-    void Function(MerchantGetMine200ResponseBuilder)? updates,
-  ]) => (MerchantGetMine200ResponseBuilder()..update(updates))._build();
+  MerchantGetMine200Response body(MerchantGetMine200ResponseBody body);
 
-  _$MerchantGetMine200Response._({this.status, required this.body}) : super._();
-  @override
-  MerchantGetMine200Response rebuild(
-    void Function(MerchantGetMine200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantGetMine200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantGetMine200Response call({
+    Object? status,
+    MerchantGetMine200ResponseBody body,
+  });
+}
 
-  @override
-  MerchantGetMine200ResponseBuilder toBuilder() =>
-      MerchantGetMine200ResponseBuilder()..replace(this);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantGetMine200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantGetMine200Response.copyWith.fieldName(...)`
+class _$MerchantGetMine200ResponseCWProxyImpl
+    implements _$MerchantGetMine200ResponseCWProxy {
+  const _$MerchantGetMine200ResponseCWProxyImpl(this._value);
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is MerchantGetMine200Response &&
-        status == other.status &&
-        body == other.body;
-  }
+  final MerchantGetMine200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, status.hashCode);
-    _$hash = $jc(_$hash, body.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  MerchantGetMine200Response status(Object? status) => this(status: status);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'MerchantGetMine200Response')
-          ..add('status', status)
-          ..add('body', body))
-        .toString();
+  MerchantGetMine200Response body(MerchantGetMine200ResponseBody body) =>
+      this(body: body);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// MerchantGetMine200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  MerchantGetMine200Response call({
+    Object? status = const $CopyWithPlaceholder(),
+    Object? body = const $CopyWithPlaceholder(),
+  }) {
+    return MerchantGetMine200Response(
+      status: status == const $CopyWithPlaceholder()
+          ? _value.status
+          // ignore: cast_nullable_to_non_nullable
+          : status as Object?,
+      body: body == const $CopyWithPlaceholder()
+          ? _value.body
+          // ignore: cast_nullable_to_non_nullable
+          : body as MerchantGetMine200ResponseBody,
+    );
   }
 }
 
-class MerchantGetMine200ResponseBuilder
-    implements
-        Builder<MerchantGetMine200Response, MerchantGetMine200ResponseBuilder> {
-  _$MerchantGetMine200Response? _$v;
-
-  JsonObject? _status;
-  JsonObject? get status => _$this._status;
-  set status(JsonObject? status) => _$this._status = status;
-
-  MerchantGetMine200ResponseBodyBuilder? _body;
-  MerchantGetMine200ResponseBodyBuilder get body =>
-      _$this._body ??= MerchantGetMine200ResponseBodyBuilder();
-  set body(MerchantGetMine200ResponseBodyBuilder? body) => _$this._body = body;
-
-  MerchantGetMine200ResponseBuilder() {
-    MerchantGetMine200Response._defaults(this);
-  }
-
-  MerchantGetMine200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _status = $v.status;
-      _body = $v.body.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(MerchantGetMine200Response other) {
-    _$v = other as _$MerchantGetMine200Response;
-  }
-
-  @override
-  void update(void Function(MerchantGetMine200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  MerchantGetMine200Response build() => _build();
-
-  _$MerchantGetMine200Response _build() {
-    _$MerchantGetMine200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$MerchantGetMine200Response._(status: status, body: body.build());
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'body';
-        body.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'MerchantGetMine200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $MerchantGetMine200ResponseCopyWith on MerchantGetMine200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfMerchantGetMine200Response.copyWith(...)` or like so:`instanceOfMerchantGetMine200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$MerchantGetMine200ResponseCWProxy get copyWith =>
+      _$MerchantGetMine200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+MerchantGetMine200Response _$MerchantGetMine200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantGetMine200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['status', 'body']);
+  final val = MerchantGetMine200Response(
+    status: $checkedConvert('status', (v) => v),
+    body: $checkedConvert(
+      'body',
+      (v) => MerchantGetMine200ResponseBody.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$MerchantGetMine200ResponseToJson(
+  MerchantGetMine200Response instance,
+) => <String, dynamic>{
+  'status': instance.status,
+  'body': instance.body.toJson(),
+};

@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ScheduleUpdateRequest
 void main() {
-  final instance = ScheduleUpdateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final ScheduleUpdateRequest? instance = /* ScheduleUpdateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(ScheduleUpdateRequest, () {
     // String dayOfWeek
@@ -27,8 +27,7 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num specificDate
+    // DateTime specificDate
     test('to test the property `specificDate`', () async {
       // TODO
     });
@@ -37,6 +36,5 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
-
   });
 }

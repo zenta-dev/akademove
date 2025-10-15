@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Review
 void main() {
-  final instance = ReviewBuilder();
-  // TODO add properties to the builder and call build()
+  final Review? instance = /* Review(...) */ null;
+  // TODO add properties to the entity
 
   group(Review, () {
     // String id
@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    // String category (default value: 'other')
+    // String category
     test('to test the property `category`', () async {
       // TODO
     });
@@ -42,11 +42,9 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
-
   });
 }

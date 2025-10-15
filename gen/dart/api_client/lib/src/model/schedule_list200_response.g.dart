@@ -3,126 +3,107 @@
 part of 'schedule_list200_response.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-class _$ScheduleList200Response extends ScheduleList200Response {
-  @override
-  final String message;
-  @override
-  final BuiltList<Schedule> data;
+abstract class _$ScheduleList200ResponseCWProxy {
+  ScheduleList200Response message(String message);
 
-  factory _$ScheduleList200Response([
-    void Function(ScheduleList200ResponseBuilder)? updates,
-  ]) => (ScheduleList200ResponseBuilder()..update(updates))._build();
+  ScheduleList200Response data(List<Schedule> data);
 
-  _$ScheduleList200Response._({required this.message, required this.data})
-    : super._();
-  @override
-  ScheduleList200Response rebuild(
-    void Function(ScheduleList200ResponseBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
+  ScheduleList200Response totalPages(num? totalPages);
 
-  @override
-  ScheduleList200ResponseBuilder toBuilder() =>
-      ScheduleList200ResponseBuilder()..replace(this);
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ScheduleList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ScheduleList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ScheduleList200Response call({
+    String message,
+    List<Schedule> data,
+    num? totalPages,
+  });
+}
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is ScheduleList200Response &&
-        message == other.message &&
-        data == other.data;
-  }
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfScheduleList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfScheduleList200Response.copyWith.fieldName(...)`
+class _$ScheduleList200ResponseCWProxyImpl
+    implements _$ScheduleList200ResponseCWProxy {
+  const _$ScheduleList200ResponseCWProxyImpl(this._value);
+
+  final ScheduleList200Response _value;
 
   @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, message.hashCode);
-    _$hash = $jc(_$hash, data.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
+  ScheduleList200Response message(String message) => this(message: message);
 
   @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'ScheduleList200Response')
-          ..add('message', message)
-          ..add('data', data))
-        .toString();
+  ScheduleList200Response data(List<Schedule> data) => this(data: data);
+
+  @override
+  ScheduleList200Response totalPages(num? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ScheduleList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// ScheduleList200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  ScheduleList200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return ScheduleList200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as List<Schedule>,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as num?,
+    );
   }
 }
 
-class ScheduleList200ResponseBuilder
-    implements
-        Builder<ScheduleList200Response, ScheduleList200ResponseBuilder> {
-  _$ScheduleList200Response? _$v;
-
-  String? _message;
-  String? get message => _$this._message;
-  set message(String? message) => _$this._message = message;
-
-  ListBuilder<Schedule>? _data;
-  ListBuilder<Schedule> get data => _$this._data ??= ListBuilder<Schedule>();
-  set data(ListBuilder<Schedule>? data) => _$this._data = data;
-
-  ScheduleList200ResponseBuilder() {
-    ScheduleList200Response._defaults(this);
-  }
-
-  ScheduleList200ResponseBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _message = $v.message;
-      _data = $v.data.toBuilder();
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(ScheduleList200Response other) {
-    _$v = other as _$ScheduleList200Response;
-  }
-
-  @override
-  void update(void Function(ScheduleList200ResponseBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  ScheduleList200Response build() => _build();
-
-  _$ScheduleList200Response _build() {
-    _$ScheduleList200Response _$result;
-    try {
-      _$result =
-          _$v ??
-          _$ScheduleList200Response._(
-            message: BuiltValueNullFieldError.checkNotNull(
-              message,
-              r'ScheduleList200Response',
-              'message',
-            ),
-            data: data.build(),
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'data';
-        data.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'ScheduleList200Response',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
+extension $ScheduleList200ResponseCopyWith on ScheduleList200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfScheduleList200Response.copyWith(...)` or like so:`instanceOfScheduleList200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$ScheduleList200ResponseCWProxy get copyWith =>
+      _$ScheduleList200ResponseCWProxyImpl(this);
 }
 
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ScheduleList200Response _$ScheduleList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ScheduleList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = ScheduleList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Schedule.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$ScheduleList200ResponseToJson(
+  ScheduleList200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'totalPages': ?instance.totalPages,
+};

@@ -10,14 +10,17 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **userId** | **String** |  | 
-**type** | **String** |  | [optional] [default to 'merchant']
+**type** | **String** |  | 
 **name** | **String** |  | 
+**email** | **String** |  | 
+**phone** | **String** |  | 
 **address** | **String** |  | 
 **location** | [**Location**](Location.md) |  | [optional] 
 **isActive** | **bool** |  | 
 **rating** | **num** |  | 
-**createdAt** | **num** | unix timestamp format | 
-**updatedAt** | **num** | unix timestamp format | 
+**document** | **String** |  | [optional] 
+**createdAt** | [**DateTime**](DateTime.md) |  | 
+**updatedAt** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

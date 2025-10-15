@@ -3,130 +3,60 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'update_user_role_request.g.dart';
 
-/// UpdateUserRoleRequest
-///
-/// Properties:
-/// * [role] 
-@BuiltValue()
-abstract class UpdateUserRoleRequest implements Built<UpdateUserRoleRequest, UpdateUserRoleRequestBuilder> {
-  @BuiltValueField(wireName: r'role')
-  UpdateUserRoleRequestRoleEnum? get role;
-  // enum roleEnum {  admin,  operator,  merchant,  driver,  user,  };
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class UpdateUserRoleRequest {
+  /// Returns a new [UpdateUserRoleRequest] instance.
+  UpdateUserRoleRequest({required this.role});
 
-  UpdateUserRoleRequest._();
-
-  factory UpdateUserRoleRequest([void updates(UpdateUserRoleRequestBuilder b)]) = _$UpdateUserRoleRequest;
-
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(UpdateUserRoleRequestBuilder b) => b
-      ..role = const UpdateUserRoleRequestRoleEnum._('user');
-
-  @BuiltValueSerializer(custom: true)
-  static Serializer<UpdateUserRoleRequest> get serializer => _$UpdateUserRoleRequestSerializer();
-}
-
-class _$UpdateUserRoleRequestSerializer implements PrimitiveSerializer<UpdateUserRoleRequest> {
-  @override
-  final Iterable<Type> types = const [UpdateUserRoleRequest, _$UpdateUserRoleRequest];
+  @JsonKey(name: r'role', required: true, includeIfNull: false)
+  final UpdateUserRoleRequestRoleEnum role;
 
   @override
-  final String wireName = r'UpdateUserRoleRequest';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    UpdateUserRoleRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    if (object.role != null) {
-      yield r'role';
-      yield serializers.serialize(
-        object.role,
-        specifiedType: const FullType(UpdateUserRoleRequestRoleEnum),
-      );
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateUserRoleRequest && other.role == role;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    UpdateUserRoleRequest object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode => role.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required UpdateUserRoleRequestBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'role':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(UpdateUserRoleRequestRoleEnum),
-          ) as UpdateUserRoleRequestRoleEnum;
-          result.role = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory UpdateUserRoleRequest.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserRoleRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UpdateUserRoleRequestToJson(this);
 
   @override
-  UpdateUserRoleRequest deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = UpdateUserRoleRequestBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class UpdateUserRoleRequestRoleEnum extends EnumClass {
+enum UpdateUserRoleRequestRoleEnum {
+  @JsonValue(r'admin')
+  admin(r'admin'),
+  @JsonValue(r'operator')
+  operator_(r'operator'),
+  @JsonValue(r'merchant')
+  merchant(r'merchant'),
+  @JsonValue(r'driver')
+  driver(r'driver'),
+  @JsonValue(r'user')
+  user(r'user');
 
-  @BuiltValueEnumConst(wireName: r'admin')
-  static const UpdateUserRoleRequestRoleEnum admin = _$updateUserRoleRequestRoleEnum_admin;
-  @BuiltValueEnumConst(wireName: r'operator')
-  static const UpdateUserRoleRequestRoleEnum operator_ = _$updateUserRoleRequestRoleEnum_operator_;
-  @BuiltValueEnumConst(wireName: r'merchant')
-  static const UpdateUserRoleRequestRoleEnum merchant = _$updateUserRoleRequestRoleEnum_merchant;
-  @BuiltValueEnumConst(wireName: r'driver')
-  static const UpdateUserRoleRequestRoleEnum driver = _$updateUserRoleRequestRoleEnum_driver;
-  @BuiltValueEnumConst(wireName: r'user')
-  static const UpdateUserRoleRequestRoleEnum user = _$updateUserRoleRequestRoleEnum_user;
+  const UpdateUserRoleRequestRoleEnum(this.value);
 
-  static Serializer<UpdateUserRoleRequestRoleEnum> get serializer => _$updateUserRoleRequestRoleEnumSerializer;
+  final String value;
 
-  const UpdateUserRoleRequestRoleEnum._(String name): super(name);
-
-  static BuiltSet<UpdateUserRoleRequestRoleEnum> get values => _$updateUserRoleRequestRoleEnumValues;
-  static UpdateUserRoleRequestRoleEnum valueOf(String name) => _$updateUserRoleRequestRoleEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-

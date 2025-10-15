@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ScheduleCreateRequest
 void main() {
-  final instance = ScheduleCreateRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final ScheduleCreateRequest? instance = /* ScheduleCreateRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(ScheduleCreateRequest, () {
     // String driverId
@@ -32,8 +32,7 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num specificDate
+    // DateTime specificDate
     test('to test the property `specificDate`', () async {
       // TODO
     });
@@ -42,6 +41,5 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
-
   });
 }

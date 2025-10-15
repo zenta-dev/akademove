@@ -11,10 +11,10 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | [optional] 
 **reporterId** | **String** |  | [optional] 
 **targetUserId** | **String** |  | [optional] 
-**category** | **String** |  | [optional] [default to 'other']
+**category** | **String** |  | [optional] 
 **description** | **String** |  | [optional] 
 **evidenceUrl** | **String** |  | [optional] 
-**status** | **String** |  | [optional] [default to 'pending']
+**status** | **String** |  | [optional] 
 **handledById** | **String** |  | [optional] 
 **resolution** | **String** |  | [optional] 
 

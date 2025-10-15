@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Schedule
 void main() {
-  final instance = ScheduleBuilder();
-  // TODO add properties to the builder and call build()
+  final Schedule? instance = /* Schedule(...) */ null;
+  // TODO add properties to the entity
 
   group(Schedule, () {
     // String id
@@ -37,8 +37,7 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num specificDate
+    // DateTime specificDate
     test('to test the property `specificDate`', () async {
       // TODO
     });
@@ -48,17 +47,14 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num updatedAt
+    // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
       // TODO
     });
-
   });
 }

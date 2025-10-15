@@ -1,36 +1,34 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-
 /// tests for OrderApi
 void main() {
   final instance = ApiClient().getOrderApi();
 
   group(OrderApi, () {
-    //Future<CreateOrderSuccessResponse> createOrder({ CreateOrderRequest createOrderRequest }) async
-    test('test createOrder', () async {
+    //Future<OrderCreate200Response> orderCreate(OrderCreateRequest orderCreateRequest) async
+    test('test orderCreate', () async {
       // TODO
     });
 
-    //Future<DeleteOrderSuccessResponse> deleteOrder(String id) async
-    test('test deleteOrder', () async {
+    //Future<OrderCreate200Response> orderGet(String id) async
+    test('test orderGet', () async {
       // TODO
     });
 
-    //Future<GetAllOrderSuccessResponse> getAllOrder(int page, int limit, { String cursor }) async
-    test('test getAllOrder', () async {
+    //Future<OrderList200Response> orderList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    test('test orderList', () async {
       // TODO
     });
 
-    //Future<GetOrderByIdSuccessResponse> getOrderById(String id, bool fromCache) async
-    test('test getOrderById', () async {
+    //Future<DriverRemove200Response> orderRemove(String id) async
+    test('test orderRemove', () async {
       // TODO
     });
 
-    //Future<UpdateOrderSuccessResponse> updateOrder(String id, { UpdateOrderRequest updateOrderRequest }) async
-    test('test updateOrder', () async {
+    //Future<OrderCreate200Response> orderUpdate(String id, OrderUpdateRequest orderUpdateRequest) async
+    test('test orderUpdate', () async {
       // TODO
     });
-
   });
 }

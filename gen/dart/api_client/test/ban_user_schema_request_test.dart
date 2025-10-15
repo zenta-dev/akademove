@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BanUserSchemaRequest
 void main() {
-  final instance = BanUserSchemaRequestBuilder();
-  // TODO add properties to the builder and call build()
+  final BanUserSchemaRequest? instance = /* BanUserSchemaRequest(...) */ null;
+  // TODO add properties to the entity
 
   group(BanUserSchemaRequest, () {
     // String banReason
@@ -16,6 +16,5 @@ void main() {
     test('to test the property `banExpiresIn`', () async {
       // TODO
     });
-
   });
 }

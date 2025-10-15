@@ -3,286 +3,254 @@
 part of 'order_create_request_merchant.dart';
 
 // **************************************************************************
-// BuiltValueGenerator
+// CopyWithGenerator
 // **************************************************************************
 
-const OrderCreateRequestMerchantTypeEnum
-_$orderCreateRequestMerchantTypeEnum_merchant =
-    const OrderCreateRequestMerchantTypeEnum._('merchant');
-const OrderCreateRequestMerchantTypeEnum
-_$orderCreateRequestMerchantTypeEnum_tenant =
-    const OrderCreateRequestMerchantTypeEnum._('tenant');
+abstract class _$OrderCreateRequestMerchantCWProxy {
+  OrderCreateRequestMerchant id(String? id);
 
-OrderCreateRequestMerchantTypeEnum _$orderCreateRequestMerchantTypeEnumValueOf(
-  String name,
-) {
-  switch (name) {
-    case 'merchant':
-      return _$orderCreateRequestMerchantTypeEnum_merchant;
-    case 'tenant':
-      return _$orderCreateRequestMerchantTypeEnum_tenant;
-    default:
-      throw ArgumentError(name);
-  }
+  OrderCreateRequestMerchant userId(String? userId);
+
+  OrderCreateRequestMerchant type(OrderCreateRequestMerchantTypeEnum? type);
+
+  OrderCreateRequestMerchant name(String? name);
+
+  OrderCreateRequestMerchant email(String? email);
+
+  OrderCreateRequestMerchant phone(String? phone);
+
+  OrderCreateRequestMerchant address(String? address);
+
+  OrderCreateRequestMerchant location(Location? location);
+
+  OrderCreateRequestMerchant isActive(bool? isActive);
+
+  OrderCreateRequestMerchant rating(num? rating);
+
+  OrderCreateRequestMerchant document(String? document);
+
+  OrderCreateRequestMerchant createdAt(DateTime? createdAt);
+
+  OrderCreateRequestMerchant updatedAt(DateTime? updatedAt);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestMerchant(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestMerchant call({
+    String? id,
+    String? userId,
+    OrderCreateRequestMerchantTypeEnum? type,
+    String? name,
+    String? email,
+    String? phone,
+    String? address,
+    Location? location,
+    bool? isActive,
+    num? rating,
+    String? document,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
-final BuiltSet<OrderCreateRequestMerchantTypeEnum>
-_$orderCreateRequestMerchantTypeEnumValues =
-    BuiltSet<OrderCreateRequestMerchantTypeEnum>(
-      const <OrderCreateRequestMerchantTypeEnum>[
-        _$orderCreateRequestMerchantTypeEnum_merchant,
-        _$orderCreateRequestMerchantTypeEnum_tenant,
-      ],
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderCreateRequestMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderCreateRequestMerchant.copyWith.fieldName(...)`
+class _$OrderCreateRequestMerchantCWProxyImpl
+    implements _$OrderCreateRequestMerchantCWProxy {
+  const _$OrderCreateRequestMerchantCWProxyImpl(this._value);
+
+  final OrderCreateRequestMerchant _value;
+
+  @override
+  OrderCreateRequestMerchant id(String? id) => this(id: id);
+
+  @override
+  OrderCreateRequestMerchant userId(String? userId) => this(userId: userId);
+
+  @override
+  OrderCreateRequestMerchant type(OrderCreateRequestMerchantTypeEnum? type) =>
+      this(type: type);
+
+  @override
+  OrderCreateRequestMerchant name(String? name) => this(name: name);
+
+  @override
+  OrderCreateRequestMerchant email(String? email) => this(email: email);
+
+  @override
+  OrderCreateRequestMerchant phone(String? phone) => this(phone: phone);
+
+  @override
+  OrderCreateRequestMerchant address(String? address) => this(address: address);
+
+  @override
+  OrderCreateRequestMerchant location(Location? location) =>
+      this(location: location);
+
+  @override
+  OrderCreateRequestMerchant isActive(bool? isActive) =>
+      this(isActive: isActive);
+
+  @override
+  OrderCreateRequestMerchant rating(num? rating) => this(rating: rating);
+
+  @override
+  OrderCreateRequestMerchant document(String? document) =>
+      this(document: document);
+
+  @override
+  OrderCreateRequestMerchant createdAt(DateTime? createdAt) =>
+      this(createdAt: createdAt);
+
+  @override
+  OrderCreateRequestMerchant updatedAt(DateTime? updatedAt) =>
+      this(updatedAt: updatedAt);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// OrderCreateRequestMerchant(...).copyWith(id: 12, name: "My name")
+  /// ````
+  OrderCreateRequestMerchant call({
+    Object? id = const $CopyWithPlaceholder(),
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? phone = const $CopyWithPlaceholder(),
+    Object? address = const $CopyWithPlaceholder(),
+    Object? location = const $CopyWithPlaceholder(),
+    Object? isActive = const $CopyWithPlaceholder(),
+    Object? rating = const $CopyWithPlaceholder(),
+    Object? document = const $CopyWithPlaceholder(),
+    Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
+  }) {
+    return OrderCreateRequestMerchant(
+      id: id == const $CopyWithPlaceholder()
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as String?,
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String?,
+      type: type == const $CopyWithPlaceholder()
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as OrderCreateRequestMerchantTypeEnum?,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String?,
+      email: email == const $CopyWithPlaceholder()
+          ? _value.email
+          // ignore: cast_nullable_to_non_nullable
+          : email as String?,
+      phone: phone == const $CopyWithPlaceholder()
+          ? _value.phone
+          // ignore: cast_nullable_to_non_nullable
+          : phone as String?,
+      address: address == const $CopyWithPlaceholder()
+          ? _value.address
+          // ignore: cast_nullable_to_non_nullable
+          : address as String?,
+      location: location == const $CopyWithPlaceholder()
+          ? _value.location
+          // ignore: cast_nullable_to_non_nullable
+          : location as Location?,
+      isActive: isActive == const $CopyWithPlaceholder()
+          ? _value.isActive
+          // ignore: cast_nullable_to_non_nullable
+          : isActive as bool?,
+      rating: rating == const $CopyWithPlaceholder()
+          ? _value.rating
+          // ignore: cast_nullable_to_non_nullable
+          : rating as num?,
+      document: document == const $CopyWithPlaceholder()
+          ? _value.document
+          // ignore: cast_nullable_to_non_nullable
+          : document as String?,
+      createdAt: createdAt == const $CopyWithPlaceholder()
+          ? _value.createdAt
+          // ignore: cast_nullable_to_non_nullable
+          : createdAt as DateTime?,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime?,
     );
+  }
+}
 
-Serializer<OrderCreateRequestMerchantTypeEnum>
-_$orderCreateRequestMerchantTypeEnumSerializer =
-    _$OrderCreateRequestMerchantTypeEnumSerializer();
+extension $OrderCreateRequestMerchantCopyWith on OrderCreateRequestMerchant {
+  /// Returns a callable class that can be used as follows: `instanceOfOrderCreateRequestMerchant.copyWith(...)` or like so:`instanceOfOrderCreateRequestMerchant.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$OrderCreateRequestMerchantCWProxy get copyWith =>
+      _$OrderCreateRequestMerchantCWProxyImpl(this);
+}
 
-class _$OrderCreateRequestMerchantTypeEnumSerializer
-    implements PrimitiveSerializer<OrderCreateRequestMerchantTypeEnum> {
-  static const Map<String, Object> _toWire = const <String, Object>{
-    'merchant': 'merchant',
-    'tenant': 'tenant',
-  };
-  static const Map<Object, String> _fromWire = const <Object, String>{
-    'merchant': 'merchant',
-    'tenant': 'tenant',
-  };
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
 
-  @override
-  final Iterable<Type> types = const <Type>[OrderCreateRequestMerchantTypeEnum];
-  @override
-  final String wireName = 'OrderCreateRequestMerchantTypeEnum';
-
-  @override
-  Object serialize(
-    Serializers serializers,
-    OrderCreateRequestMerchantTypeEnum object, {
-    FullType specifiedType = FullType.unspecified,
-  }) => _toWire[object.name] ?? object.name;
-
-  @override
-  OrderCreateRequestMerchantTypeEnum deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) => OrderCreateRequestMerchantTypeEnum.valueOf(
-    _fromWire[serialized] ?? (serialized is String ? serialized : ''),
+OrderCreateRequestMerchant _$OrderCreateRequestMerchantFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderCreateRequestMerchant', json, ($checkedConvert) {
+  final val = OrderCreateRequestMerchant(
+    id: $checkedConvert('id', (v) => v as String?),
+    userId: $checkedConvert('userId', (v) => v as String?),
+    type: $checkedConvert(
+      'type',
+      (v) =>
+          $enumDecodeNullable(_$OrderCreateRequestMerchantTypeEnumEnumMap, v),
+    ),
+    name: $checkedConvert('name', (v) => v as String?),
+    email: $checkedConvert('email', (v) => v as String?),
+    phone: $checkedConvert('phone', (v) => v as String?),
+    address: $checkedConvert('address', (v) => v as String?),
+    location: $checkedConvert(
+      'location',
+      (v) => v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+    ),
+    isActive: $checkedConvert('isActive', (v) => v as bool?),
+    rating: $checkedConvert('rating', (v) => v as num?),
+    document: $checkedConvert('document', (v) => v as String?),
+    createdAt: $checkedConvert(
+      'createdAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    updatedAt: $checkedConvert(
+      'updatedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
-}
+  return val;
+});
 
-class _$OrderCreateRequestMerchant extends OrderCreateRequestMerchant {
-  @override
-  final String? id;
-  @override
-  final String? userId;
-  @override
-  final OrderCreateRequestMerchantTypeEnum? type;
-  @override
-  final String? name;
-  @override
-  final String? address;
-  @override
-  final Location? location;
-  @override
-  final bool? isActive;
-  @override
-  final num? rating;
-  @override
-  final num? createdAt;
-  @override
-  final num? updatedAt;
+Map<String, dynamic> _$OrderCreateRequestMerchantToJson(
+  OrderCreateRequestMerchant instance,
+) => <String, dynamic>{
+  'id': ?instance.id,
+  'userId': ?instance.userId,
+  'type': ?_$OrderCreateRequestMerchantTypeEnumEnumMap[instance.type],
+  'name': ?instance.name,
+  'email': ?instance.email,
+  'phone': ?instance.phone,
+  'address': ?instance.address,
+  'location': ?instance.location?.toJson(),
+  'isActive': ?instance.isActive,
+  'rating': ?instance.rating,
+  'document': ?instance.document,
+  'createdAt': ?instance.createdAt?.toIso8601String(),
+  'updatedAt': ?instance.updatedAt?.toIso8601String(),
+};
 
-  factory _$OrderCreateRequestMerchant([
-    void Function(OrderCreateRequestMerchantBuilder)? updates,
-  ]) => (OrderCreateRequestMerchantBuilder()..update(updates))._build();
-
-  _$OrderCreateRequestMerchant._({
-    this.id,
-    this.userId,
-    this.type,
-    this.name,
-    this.address,
-    this.location,
-    this.isActive,
-    this.rating,
-    this.createdAt,
-    this.updatedAt,
-  }) : super._();
-  @override
-  OrderCreateRequestMerchant rebuild(
-    void Function(OrderCreateRequestMerchantBuilder) updates,
-  ) => (toBuilder()..update(updates)).build();
-
-  @override
-  OrderCreateRequestMerchantBuilder toBuilder() =>
-      OrderCreateRequestMerchantBuilder()..replace(this);
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(other, this)) return true;
-    return other is OrderCreateRequestMerchant &&
-        id == other.id &&
-        userId == other.userId &&
-        type == other.type &&
-        name == other.name &&
-        address == other.address &&
-        location == other.location &&
-        isActive == other.isActive &&
-        rating == other.rating &&
-        createdAt == other.createdAt &&
-        updatedAt == other.updatedAt;
-  }
-
-  @override
-  int get hashCode {
-    var _$hash = 0;
-    _$hash = $jc(_$hash, id.hashCode);
-    _$hash = $jc(_$hash, userId.hashCode);
-    _$hash = $jc(_$hash, type.hashCode);
-    _$hash = $jc(_$hash, name.hashCode);
-    _$hash = $jc(_$hash, address.hashCode);
-    _$hash = $jc(_$hash, location.hashCode);
-    _$hash = $jc(_$hash, isActive.hashCode);
-    _$hash = $jc(_$hash, rating.hashCode);
-    _$hash = $jc(_$hash, createdAt.hashCode);
-    _$hash = $jc(_$hash, updatedAt.hashCode);
-    _$hash = $jf(_$hash);
-    return _$hash;
-  }
-
-  @override
-  String toString() {
-    return (newBuiltValueToStringHelper(r'OrderCreateRequestMerchant')
-          ..add('id', id)
-          ..add('userId', userId)
-          ..add('type', type)
-          ..add('name', name)
-          ..add('address', address)
-          ..add('location', location)
-          ..add('isActive', isActive)
-          ..add('rating', rating)
-          ..add('createdAt', createdAt)
-          ..add('updatedAt', updatedAt))
-        .toString();
-  }
-}
-
-class OrderCreateRequestMerchantBuilder
-    implements
-        Builder<OrderCreateRequestMerchant, OrderCreateRequestMerchantBuilder> {
-  _$OrderCreateRequestMerchant? _$v;
-
-  String? _id;
-  String? get id => _$this._id;
-  set id(String? id) => _$this._id = id;
-
-  String? _userId;
-  String? get userId => _$this._userId;
-  set userId(String? userId) => _$this._userId = userId;
-
-  OrderCreateRequestMerchantTypeEnum? _type;
-  OrderCreateRequestMerchantTypeEnum? get type => _$this._type;
-  set type(OrderCreateRequestMerchantTypeEnum? type) => _$this._type = type;
-
-  String? _name;
-  String? get name => _$this._name;
-  set name(String? name) => _$this._name = name;
-
-  String? _address;
-  String? get address => _$this._address;
-  set address(String? address) => _$this._address = address;
-
-  LocationBuilder? _location;
-  LocationBuilder get location => _$this._location ??= LocationBuilder();
-  set location(LocationBuilder? location) => _$this._location = location;
-
-  bool? _isActive;
-  bool? get isActive => _$this._isActive;
-  set isActive(bool? isActive) => _$this._isActive = isActive;
-
-  num? _rating;
-  num? get rating => _$this._rating;
-  set rating(num? rating) => _$this._rating = rating;
-
-  num? _createdAt;
-  num? get createdAt => _$this._createdAt;
-  set createdAt(num? createdAt) => _$this._createdAt = createdAt;
-
-  num? _updatedAt;
-  num? get updatedAt => _$this._updatedAt;
-  set updatedAt(num? updatedAt) => _$this._updatedAt = updatedAt;
-
-  OrderCreateRequestMerchantBuilder() {
-    OrderCreateRequestMerchant._defaults(this);
-  }
-
-  OrderCreateRequestMerchantBuilder get _$this {
-    final $v = _$v;
-    if ($v != null) {
-      _id = $v.id;
-      _userId = $v.userId;
-      _type = $v.type;
-      _name = $v.name;
-      _address = $v.address;
-      _location = $v.location?.toBuilder();
-      _isActive = $v.isActive;
-      _rating = $v.rating;
-      _createdAt = $v.createdAt;
-      _updatedAt = $v.updatedAt;
-      _$v = null;
-    }
-    return this;
-  }
-
-  @override
-  void replace(OrderCreateRequestMerchant other) {
-    _$v = other as _$OrderCreateRequestMerchant;
-  }
-
-  @override
-  void update(void Function(OrderCreateRequestMerchantBuilder)? updates) {
-    if (updates != null) updates(this);
-  }
-
-  @override
-  OrderCreateRequestMerchant build() => _build();
-
-  _$OrderCreateRequestMerchant _build() {
-    _$OrderCreateRequestMerchant _$result;
-    try {
-      _$result =
-          _$v ??
-          _$OrderCreateRequestMerchant._(
-            id: id,
-            userId: userId,
-            type: type,
-            name: name,
-            address: address,
-            location: _location?.build(),
-            isActive: isActive,
-            rating: rating,
-            createdAt: createdAt,
-            updatedAt: updatedAt,
-          );
-    } catch (_) {
-      late String _$failedField;
-      try {
-        _$failedField = 'location';
-        _location?.build();
-      } catch (e) {
-        throw BuiltValueNestedFieldError(
-          r'OrderCreateRequestMerchant',
-          _$failedField,
-          e.toString(),
-        );
-      }
-      rethrow;
-    }
-    replace(_$result);
-    return _$result;
-  }
-}
-
-// ignore_for_file: deprecated_member_use_from_same_package,type=lint
+const _$OrderCreateRequestMerchantTypeEnumEnumMap = {
+  OrderCreateRequestMerchantTypeEnum.merchant: 'merchant',
+  OrderCreateRequestMerchantTypeEnum.tenant: 'tenant',
+};

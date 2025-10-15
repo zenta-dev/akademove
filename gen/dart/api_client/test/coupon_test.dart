@@ -3,8 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for Coupon
 void main() {
-  final instance = CouponBuilder();
-  // TODO add properties to the builder and call build()
+  final Coupon? instance = /* Coupon(...) */ null;
+  // TODO add properties to the entity
 
   group(Coupon, () {
     // String id
@@ -47,14 +47,12 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num periodStart
+    // DateTime periodStart
     test('to test the property `periodStart`', () async {
       // TODO
     });
 
-    // unix timestamp format
-    // num periodEnd
+    // DateTime periodEnd
     test('to test the property `periodEnd`', () async {
       // TODO
     });
@@ -69,11 +67,9 @@ void main() {
       // TODO
     });
 
-    // unix timestamp format
-    // num createdAt
+    // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
     });
-
   });
 }

@@ -3,11 +3,12 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantGetMine200Response
 void main() {
-  final instance = MerchantGetMine200ResponseBuilder();
-  // TODO add properties to the builder and call build()
+  final MerchantGetMine200Response?
+  instance = /* MerchantGetMine200Response(...) */ null;
+  // TODO add properties to the entity
 
   group(MerchantGetMine200Response, () {
-    // JsonObject status
+    // Object status
     test('to test the property `status`', () async {
       // TODO
     });
@@ -16,6 +17,5 @@ void main() {
     test('to test the property `body`', () async {
       // TODO
     });
-
   });
 }

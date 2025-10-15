@@ -3,339 +3,156 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'report.g.dart';
 
-/// Report
-///
-/// Properties:
-/// * [id] 
-/// * [orderId] 
-/// * [reporterId] 
-/// * [targetUserId] 
-/// * [category] 
-/// * [description] 
-/// * [evidenceUrl] 
-/// * [status] 
-/// * [handledById] 
-/// * [resolution] 
-/// * [reportedAt] - unix timestamp format
-/// * [resolvedAt] - unix timestamp format
-@BuiltValue()
-abstract class Report implements Built<Report, ReportBuilder> {
-  @BuiltValueField(wireName: r'id')
-  String get id;
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Report {
+  /// Returns a new [Report] instance.
+  Report({
+    required this.id,
 
-  @BuiltValueField(wireName: r'orderId')
-  String? get orderId;
+    this.orderId,
 
-  @BuiltValueField(wireName: r'reporterId')
-  String get reporterId;
+    required this.reporterId,
 
-  @BuiltValueField(wireName: r'targetUserId')
-  String get targetUserId;
+    required this.targetUserId,
 
-  @BuiltValueField(wireName: r'category')
-  ReportCategoryEnum? get category;
-  // enum categoryEnum {  behavior,  safety,  fraud,  other,  };
+    required this.category,
 
-  @BuiltValueField(wireName: r'description')
-  String get description;
+    required this.description,
 
-  @BuiltValueField(wireName: r'evidenceUrl')
-  String? get evidenceUrl;
+    this.evidenceUrl,
 
-  @BuiltValueField(wireName: r'status')
-  ReportStatusEnum? get status;
-  // enum statusEnum {  pending,  investigating,  resolved,  dismissed,  };
+    required this.status,
 
-  @BuiltValueField(wireName: r'handledById')
-  String? get handledById;
+    this.handledById,
 
-  @BuiltValueField(wireName: r'resolution')
-  String? get resolution;
+    this.resolution,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'reportedAt')
-  num get reportedAt;
+    required this.reportedAt,
 
-  /// unix timestamp format
-  @BuiltValueField(wireName: r'resolvedAt')
-  num? get resolvedAt;
+    this.resolvedAt,
+  });
 
-  Report._();
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
 
-  factory Report([void updates(ReportBuilder b)]) = _$Report;
+  @JsonKey(name: r'orderId', required: false, includeIfNull: false)
+  final String? orderId;
 
-  @BuiltValueHook(initializeBuilder: true)
-  static void _defaults(ReportBuilder b) => b
-      ..category = const ReportCategoryEnum._('other')
-      ..status = const ReportStatusEnum._('pending');
+  @JsonKey(name: r'reporterId', required: true, includeIfNull: false)
+  final String reporterId;
 
-  @BuiltValueSerializer(custom: true)
-  static Serializer<Report> get serializer => _$ReportSerializer();
-}
+  @JsonKey(name: r'targetUserId', required: true, includeIfNull: false)
+  final String targetUserId;
 
-class _$ReportSerializer implements PrimitiveSerializer<Report> {
-  @override
-  final Iterable<Type> types = const [Report, _$Report];
+  @JsonKey(name: r'category', required: true, includeIfNull: false)
+  final ReportCategoryEnum category;
+
+  @JsonKey(name: r'description', required: true, includeIfNull: false)
+  final String description;
+
+  @JsonKey(name: r'evidenceUrl', required: false, includeIfNull: false)
+  final String? evidenceUrl;
+
+  @JsonKey(name: r'status', required: true, includeIfNull: false)
+  final ReportStatusEnum status;
+
+  @JsonKey(name: r'handledById', required: false, includeIfNull: false)
+  final String? handledById;
+
+  @JsonKey(name: r'resolution', required: false, includeIfNull: false)
+  final String? resolution;
+
+  @JsonKey(name: r'reportedAt', required: true, includeIfNull: false)
+  final DateTime reportedAt;
+
+  @JsonKey(name: r'resolvedAt', required: false, includeIfNull: false)
+  final DateTime? resolvedAt;
 
   @override
-  final String wireName = r'Report';
-
-  Iterable<Object?> _serializeProperties(
-    Serializers serializers,
-    Report object, {
-    FullType specifiedType = FullType.unspecified,
-  }) sync* {
-    yield r'id';
-    yield serializers.serialize(
-      object.id,
-      specifiedType: const FullType(String),
-    );
-    if (object.orderId != null) {
-      yield r'orderId';
-      yield serializers.serialize(
-        object.orderId,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'reporterId';
-    yield serializers.serialize(
-      object.reporterId,
-      specifiedType: const FullType(String),
-    );
-    yield r'targetUserId';
-    yield serializers.serialize(
-      object.targetUserId,
-      specifiedType: const FullType(String),
-    );
-    if (object.category != null) {
-      yield r'category';
-      yield serializers.serialize(
-        object.category,
-        specifiedType: const FullType(ReportCategoryEnum),
-      );
-    }
-    yield r'description';
-    yield serializers.serialize(
-      object.description,
-      specifiedType: const FullType(String),
-    );
-    if (object.evidenceUrl != null) {
-      yield r'evidenceUrl';
-      yield serializers.serialize(
-        object.evidenceUrl,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.status != null) {
-      yield r'status';
-      yield serializers.serialize(
-        object.status,
-        specifiedType: const FullType(ReportStatusEnum),
-      );
-    }
-    if (object.handledById != null) {
-      yield r'handledById';
-      yield serializers.serialize(
-        object.handledById,
-        specifiedType: const FullType(String),
-      );
-    }
-    if (object.resolution != null) {
-      yield r'resolution';
-      yield serializers.serialize(
-        object.resolution,
-        specifiedType: const FullType(String),
-      );
-    }
-    yield r'reportedAt';
-    yield serializers.serialize(
-      object.reportedAt,
-      specifiedType: const FullType(num),
-    );
-    if (object.resolvedAt != null) {
-      yield r'resolvedAt';
-      yield serializers.serialize(
-        object.resolvedAt,
-        specifiedType: const FullType(num),
-      );
-    }
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Report &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.reporterId == reporterId &&
+          other.targetUserId == targetUserId &&
+          other.category == category &&
+          other.description == description &&
+          other.evidenceUrl == evidenceUrl &&
+          other.status == status &&
+          other.handledById == handledById &&
+          other.resolution == resolution &&
+          other.reportedAt == reportedAt &&
+          other.resolvedAt == resolvedAt;
 
   @override
-  Object serialize(
-    Serializers serializers,
-    Report object, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
-  }
+  int get hashCode =>
+      id.hashCode +
+      orderId.hashCode +
+      reporterId.hashCode +
+      targetUserId.hashCode +
+      category.hashCode +
+      description.hashCode +
+      evidenceUrl.hashCode +
+      status.hashCode +
+      handledById.hashCode +
+      resolution.hashCode +
+      reportedAt.hashCode +
+      resolvedAt.hashCode;
 
-  void _deserializeProperties(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-    required List<Object?> serializedList,
-    required ReportBuilder result,
-    required List<Object?> unhandled,
-  }) {
-    for (var i = 0; i < serializedList.length; i += 2) {
-      final key = serializedList[i] as String;
-      final value = serializedList[i + 1];
-      switch (key) {
-        case r'id':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.id = valueDes;
-          break;
-        case r'orderId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.orderId = valueDes;
-          break;
-        case r'reporterId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.reporterId = valueDes;
-          break;
-        case r'targetUserId':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.targetUserId = valueDes;
-          break;
-        case r'category':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReportCategoryEnum),
-          ) as ReportCategoryEnum;
-          result.category = valueDes;
-          break;
-        case r'description':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.description = valueDes;
-          break;
-        case r'evidenceUrl':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.evidenceUrl = valueDes;
-          break;
-        case r'status':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(ReportStatusEnum),
-          ) as ReportStatusEnum;
-          result.status = valueDes;
-          break;
-        case r'handledById':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.handledById = valueDes;
-          break;
-        case r'resolution':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(String),
-          ) as String;
-          result.resolution = valueDes;
-          break;
-        case r'reportedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.reportedAt = valueDes;
-          break;
-        case r'resolvedAt':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(num),
-          ) as num;
-          result.resolvedAt = valueDes;
-          break;
-        default:
-          unhandled.add(key);
-          unhandled.add(value);
-          break;
-      }
-    }
-  }
+  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReportToJson(this);
 
   @override
-  Report deserialize(
-    Serializers serializers,
-    Object serialized, {
-    FullType specifiedType = FullType.unspecified,
-  }) {
-    final result = ReportBuilder();
-    final serializedList = (serialized as Iterable<Object?>).toList();
-    final unhandled = <Object?>[];
-    _deserializeProperties(
-      serializers,
-      serialized,
-      specifiedType: specifiedType,
-      serializedList: serializedList,
-      unhandled: unhandled,
-      result: result,
-    );
-    return result.build();
+  String toString() {
+    return toJson().toString();
   }
 }
 
-class ReportCategoryEnum extends EnumClass {
+enum ReportCategoryEnum {
+  @JsonValue(r'behavior')
+  behavior(r'behavior'),
+  @JsonValue(r'safety')
+  safety(r'safety'),
+  @JsonValue(r'fraud')
+  fraud(r'fraud'),
+  @JsonValue(r'other')
+  other(r'other');
 
-  @BuiltValueEnumConst(wireName: r'behavior')
-  static const ReportCategoryEnum behavior = _$reportCategoryEnum_behavior;
-  @BuiltValueEnumConst(wireName: r'safety')
-  static const ReportCategoryEnum safety = _$reportCategoryEnum_safety;
-  @BuiltValueEnumConst(wireName: r'fraud')
-  static const ReportCategoryEnum fraud = _$reportCategoryEnum_fraud;
-  @BuiltValueEnumConst(wireName: r'other')
-  static const ReportCategoryEnum other = _$reportCategoryEnum_other;
+  const ReportCategoryEnum(this.value);
 
-  static Serializer<ReportCategoryEnum> get serializer => _$reportCategoryEnumSerializer;
+  final String value;
 
-  const ReportCategoryEnum._(String name): super(name);
-
-  static BuiltSet<ReportCategoryEnum> get values => _$reportCategoryEnumValues;
-  static ReportCategoryEnum valueOf(String name) => _$reportCategoryEnumValueOf(name);
+  @override
+  String toString() => value;
 }
 
-class ReportStatusEnum extends EnumClass {
+enum ReportStatusEnum {
+  @JsonValue(r'pending')
+  pending(r'pending'),
+  @JsonValue(r'investigating')
+  investigating(r'investigating'),
+  @JsonValue(r'resolved')
+  resolved(r'resolved'),
+  @JsonValue(r'dismissed')
+  dismissed(r'dismissed');
 
-  @BuiltValueEnumConst(wireName: r'pending')
-  static const ReportStatusEnum pending = _$reportStatusEnum_pending;
-  @BuiltValueEnumConst(wireName: r'investigating')
-  static const ReportStatusEnum investigating = _$reportStatusEnum_investigating;
-  @BuiltValueEnumConst(wireName: r'resolved')
-  static const ReportStatusEnum resolved = _$reportStatusEnum_resolved;
-  @BuiltValueEnumConst(wireName: r'dismissed')
-  static const ReportStatusEnum dismissed = _$reportStatusEnum_dismissed;
+  const ReportStatusEnum(this.value);
 
-  static Serializer<ReportStatusEnum> get serializer => _$reportStatusEnumSerializer;
+  final String value;
 
-  const ReportStatusEnum._(String name): super(name);
-
-  static BuiltSet<ReportStatusEnum> get values => _$reportStatusEnumValues;
-  static ReportStatusEnum valueOf(String name) => _$reportStatusEnumValueOf(name);
+  @override
+  String toString() => value;
 }
-
