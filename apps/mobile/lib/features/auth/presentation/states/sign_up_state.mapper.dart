@@ -40,12 +40,19 @@ class SignUpStateMapper extends ClassMapperBase<SignUpState> {
     opt: true,
     def: CubitState.initial,
   );
+  static String? _$message(SignUpState v) => v.message;
+  static const Field<SignUpState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
 
   @override
   final MappableFields<SignUpState> fields = const {
     #data: _f$data,
     #error: _f$error,
     #state: _f$state,
+    #message: _f$message,
   };
 
   static SignUpState _instantiate(DecodingData data) {
@@ -53,6 +60,7 @@ class SignUpStateMapper extends ClassMapperBase<SignUpState> {
       data: data.dec(_f$data),
       error: data.dec(_f$error),
       state: data.dec(_f$state),
+      message: data.dec(_f$message),
     );
   }
 
@@ -116,7 +124,7 @@ extension SignUpStateValueCopy<$R, $Out>
 
 abstract class SignUpStateCopyWith<$R, $In extends SignUpState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({User? data, BaseError? error, CubitState? state});
+  $R call({User? data, BaseError? error, CubitState? state, String? message});
   SignUpStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -129,19 +137,25 @@ class _SignUpStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SignUpState> $mapper =
       SignUpStateMapper.ensureInitialized();
   @override
-  $R call({Object? data = $none, Object? error = $none, CubitState? state}) =>
-      $apply(
-        FieldCopyWithData({
-          if (data != $none) #data: data,
-          if (error != $none) #error: error,
-          if (state != null) #state: state,
-        }),
-      );
+  $R call({
+    Object? data = $none,
+    Object? error = $none,
+    CubitState? state,
+    Object? message = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (data != $none) #data: data,
+      if (error != $none) #error: error,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+    }),
+  );
   @override
   SignUpState $make(CopyWithData data) => SignUpState(
     data: data.get(#data, or: $value.data),
     error: data.get(#error, or: $value.error),
     state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
   );
 
   @override
