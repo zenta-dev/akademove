@@ -15,7 +15,7 @@ class SplashCubit extends BaseCubit<SplashState> {
       emit(SplashState.failure(e));
     }
   }
-  
+
   @override
   void reset() => emit(SplashState.initial());
 }
