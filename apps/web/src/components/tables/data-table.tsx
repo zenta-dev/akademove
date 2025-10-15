@@ -5,7 +5,6 @@ import {
 	type ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
-	getPaginationRowModel,
 	getSortedRowModel,
 	type SortingState,
 	useReactTable,

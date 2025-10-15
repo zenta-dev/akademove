@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ORPCError } from "@orpc/client";
 import { localizeHref, m } from "@repo/i18n";
-import { type SignUpMerchant, SignUpMerchantSchema } from "@repo/schema/auth";
+import {
+	type FlatSignUpMerchant,
+	FlatSignUpMerchantSchema,
+} from "@repo/schema/auth";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
@@ -63,7 +66,7 @@ function RouteComponent() {
 
 	const router = useRouter();
 	const form = useForm({
-		resolver: zodResolver(SignUpMerchantSchema),
+		resolver: zodResolver(FlatSignUpMerchantSchema),
 		defaultValues: {
 			name: "",
 			email: "",
@@ -71,16 +74,16 @@ function RouteComponent() {
 			phone: "",
 			password: "",
 			confirmPassword: "",
-			document: undefined,
-			detail: {
-				bank: { provider: "", number: "" },
-				name: "",
-				email: "",
-				phone: "",
-				address: "",
-				type: "merchant",
-				location: undefined,
-			},
+			detail_document: undefined,
+			detail_name: "",
+			detail_email: "",
+			detail_phone: "",
+			detail_address: "",
+			detail_type: "merchant",
+			detail_bank_provider: "",
+			detail_bank_number: "",
+			detail_location_lat: 0,
+			detail_location_lng: 0,
 		},
 	});
 
@@ -121,27 +124,26 @@ function RouteComponent() {
 	);
 
 	const onSubmit = useCallback(
-		async (values: SignUpMerchant) => {
-			console.error("FORM ERROR", form.formState.errors);
+		async (values: FlatSignUpMerchant) => {
 			await mutation.mutateAsync({ body: values });
 		},
-		[mutation.mutateAsync, form.formState.errors],
+		[mutation.mutateAsync],
 	);
 
 	useEffect(() => {
 		if (copyPersonal) {
 			const subscription = form.watch((value, { name }) => {
 				if (name === "email") {
-					form.setValue("detail.email", value.email || "");
+					form.setValue("detail_email", value.email || "");
 				}
 				if (name === "phone") {
-					form.setValue("detail.phone", value.phone || "");
+					form.setValue("detail_phone", value.phone || "");
 				}
 			});
 
 			const values = form.getValues();
-			form.setValue("detail.email", values.email);
-			form.setValue("detail.phone", values.phone);
+			form.setValue("detail_email", values.email);
+			form.setValue("detail_phone", values.phone);
 
 			return () => subscription.unsubscribe();
 		}
@@ -380,7 +382,7 @@ function RouteComponent() {
 							</div>
 							<FormField
 								control={form.control}
-								name="detail.name"
+								name="detail_name"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.name()}</FormLabel>
@@ -393,7 +395,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.email"
+								name="detail_email"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.email()}</FormLabel>
@@ -409,7 +411,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.phone"
+								name="detail_phone"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.phone()}</FormLabel>
@@ -425,7 +427,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.type"
+								name="detail_type"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.type()}</FormLabel>
@@ -455,7 +457,7 @@ function RouteComponent() {
 
 							<FormField
 								control={form.control}
-								name="document"
+								name="detail_document"
 								render={({ field }) => (
 									<FormItem className="md:col-span-2">
 										<FormLabel>{m.government_document()}</FormLabel>
@@ -489,7 +491,7 @@ function RouteComponent() {
 														}
 													}}
 													onError={(err) => {
-														form.setError("document", {
+														form.setError("detail_document", {
 															message: err.message,
 														});
 													}}
@@ -518,7 +520,7 @@ function RouteComponent() {
 
 							<FormField
 								control={form.control}
-								name="detail.bank.provider"
+								name="detail_bank_provider"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.bank_provider()}</FormLabel>
@@ -547,7 +549,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.bank.number"
+								name="detail_bank_number"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.bank_number()}</FormLabel>
@@ -561,7 +563,7 @@ function RouteComponent() {
 
 							<FormField
 								control={form.control}
-								name="detail.address"
+								name="detail_address"
 								render={({ field }) => (
 									<FormItem className="md:col-span-2">
 										<FormLabel>{m.address()}</FormLabel>
@@ -574,14 +576,20 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.location"
-								render={({ field }) => (
+								name="detail_location_lat"
+								render={() => (
 									<FormItem className="md:col-span-2">
 										<FormLabel>{m.pin_point()}</FormLabel>
 										<FormControl>
 											<MapWrapper
-												value={field.value}
-												onLocationChange={field.onChange}
+												value={{
+													lat: form.getValues("detail_location_lat"),
+													lng: form.getValues("detail_location_lng"),
+												}}
+												onLocationChange={({ lat, lng }) => {
+													form.setValue("detail_location_lat", lat);
+													form.setValue("detail_location_lng", lng);
+												}}
 											/>
 										</FormControl>
 										<FormMessage />

@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ORPCError } from "@orpc/client";
 import { localizeHref, m } from "@repo/i18n";
-import { type SignUpDriver, SignUpDriverSchema } from "@repo/schema/auth";
+import {
+	type FlatSignUpDriver,
+	FlatSignUpDriverSchema,
+} from "@repo/schema/auth";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -66,7 +69,7 @@ function RouteComponent() {
 
 	const router = useRouter();
 	const form = useForm({
-		resolver: zodResolver(SignUpDriverSchema),
+		resolver: zodResolver(FlatSignUpDriverSchema),
 		defaultValues: {
 			name: "",
 			email: "",
@@ -74,13 +77,11 @@ function RouteComponent() {
 			phone: "",
 			password: "",
 			confirmPassword: "",
-			detail: {
-				studentId: "",
-				licenseNumber: "",
-			},
-			studentCard: undefined,
-			driverLicense: undefined,
-			vehicleCertificate: undefined,
+			detail_studentId: "",
+			detail_licenseNumber: "",
+			detail_studentCard: undefined,
+			detail_driverLicense: undefined,
+			detail_vehicleCertificate: undefined,
 		},
 	});
 
@@ -122,7 +123,7 @@ function RouteComponent() {
 	);
 
 	const onSubmit = useCallback(
-		async (values: SignUpDriver) => {
+		async (values: FlatSignUpDriver) => {
 			await mutation.mutateAsync({ body: values });
 		},
 		[mutation.mutateAsync],
@@ -343,7 +344,7 @@ function RouteComponent() {
 							</div>
 							<FormField
 								control={form.control}
-								name="detail.studentId"
+								name="detail_studentId"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Student ID</FormLabel>
@@ -356,7 +357,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail.licenseNumber"
+								name="detail_licenseNumber"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>License Number</FormLabel>
@@ -370,7 +371,7 @@ function RouteComponent() {
 
 							<FormField
 								control={form.control}
-								name="studentCard"
+								name="detail_studentCard"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.student_card()}</FormLabel>
@@ -404,7 +405,7 @@ function RouteComponent() {
 														}
 													}}
 													onError={(err) => {
-														form.setError("studentCard", {
+														form.setError("detail_studentCard", {
 															message: err.message,
 														});
 													}}
@@ -432,7 +433,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="driverLicense"
+								name="detail_driverLicense"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.driver_license()}</FormLabel>
@@ -466,7 +467,7 @@ function RouteComponent() {
 														}
 													}}
 													onError={(err) => {
-														form.setError("driverLicense", {
+														form.setError("detail_driverLicense", {
 															message: err.message,
 														});
 													}}
@@ -495,7 +496,7 @@ function RouteComponent() {
 
 							<FormField
 								control={form.control}
-								name="vehicleCertificate"
+								name="detail_vehicleCertificate"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.vehicle_certificate()}</FormLabel>
@@ -529,7 +530,7 @@ function RouteComponent() {
 														}
 													}}
 													onError={(err) => {
-														form.setError("vehicleCertificate", {
+														form.setError("detail_vehicleCertificate", {
 															message: err.message,
 														});
 													}}
