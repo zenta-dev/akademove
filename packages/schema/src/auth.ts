@@ -2,7 +2,8 @@ import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
-import { DriverDocumentSchema, InsertDriverSchema } from "./driver.ts";
+import { InsertDriverSchema } from "./driver.ts";
+import { flattenZodObject } from "./flatten.helper.ts";
 import { InsertMerchantSchema } from "./merchant.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
@@ -55,29 +56,27 @@ export const SignUpSchema = z
 export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	{
 		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]),
-		detail: z.object({
-			...InsertDriverSchema.omit({
-				studentCard: true,
-				driverLicense: true,
-				vehicleCertificate: true,
-			}).shape,
-		}),
-		...DriverDocumentSchema.shape,
+		detail: InsertDriverSchema,
 	},
 );
+export const FlatSignUpDriverSchema = flattenZodObject(SignUpDriverSchema, "");
 
 export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
 	detail: z.object({
-		...InsertMerchantSchema.omit({ document: true }).shape,
+		...InsertMerchantSchema.shape,
 		bank: z.object({
 			provider: z.string(),
 			number: z.string(),
 		}),
 	}),
-	document: z.file().optional(),
 });
+
+export const FlatSignUpMerchantSchema = flattenZodObject(
+	SignUpMerchantSchema,
+	"",
+);
 
 export const ForgotPasswordSchema = z.object({
 	email: z.email(
@@ -121,6 +120,8 @@ export type SignIn = z.infer<typeof SignInSchema>;
 export type SignUp = z.infer<typeof SignUpSchema>;
 export type SignUpDriver = z.infer<typeof SignUpDriverSchema>;
 export type SignUpMerchant = z.infer<typeof SignUpMerchantSchema>;
+export type FlatSignUpDriver = z.infer<typeof FlatSignUpDriverSchema>;
+export type FlatSignUpMerchant = z.infer<typeof FlatSignUpMerchantSchema>;
 export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
 export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 export type SignInResponse = z.infer<typeof SignInResponseSchema>;
