@@ -1,6 +1,6 @@
 import 'package:akademove/features/features.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class SignUpMerchantScreen extends StatelessWidget {
   const SignUpMerchantScreen({super.key});
@@ -20,7 +20,7 @@ class _SignUpMerchantView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('SIGN UP')),
+      child: Center(child: Text('SIGN UP')),
     );
   }
 }

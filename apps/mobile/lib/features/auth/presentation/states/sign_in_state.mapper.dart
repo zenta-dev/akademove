@@ -21,8 +21,8 @@ class SignInStateMapper extends ClassMapperBase<SignInState> {
   @override
   final String id = 'SignInState';
 
-  static UserEntity? _$data(SignInState v) => v.data;
-  static const Field<SignInState, UserEntity> _f$data = Field(
+  static User? _$data(SignInState v) => v.data;
+  static const Field<SignInState, User> _f$data = Field(
     'data',
     _$data,
     opt: true,
@@ -40,12 +40,19 @@ class SignInStateMapper extends ClassMapperBase<SignInState> {
     opt: true,
     def: CubitState.initial,
   );
+  static String? _$message(SignInState v) => v.message;
+  static const Field<SignInState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
 
   @override
   final MappableFields<SignInState> fields = const {
     #data: _f$data,
     #error: _f$error,
     #state: _f$state,
+    #message: _f$message,
   };
 
   static SignInState _instantiate(DecodingData data) {
@@ -53,6 +60,7 @@ class SignInStateMapper extends ClassMapperBase<SignInState> {
       data: data.dec(_f$data),
       error: data.dec(_f$error),
       state: data.dec(_f$state),
+      message: data.dec(_f$message),
     );
   }
 
@@ -116,7 +124,7 @@ extension SignInStateValueCopy<$R, $Out>
 
 abstract class SignInStateCopyWith<$R, $In extends SignInState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({UserEntity? data, BaseError? error, CubitState? state});
+  $R call({User? data, BaseError? error, CubitState? state, String? message});
   SignInStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -129,19 +137,25 @@ class _SignInStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<SignInState> $mapper =
       SignInStateMapper.ensureInitialized();
   @override
-  $R call({Object? data = $none, Object? error = $none, CubitState? state}) =>
-      $apply(
-        FieldCopyWithData({
-          if (data != $none) #data: data,
-          if (error != $none) #error: error,
-          if (state != null) #state: state,
-        }),
-      );
+  $R call({
+    Object? data = $none,
+    Object? error = $none,
+    CubitState? state,
+    Object? message = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (data != $none) #data: data,
+      if (error != $none) #error: error,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+    }),
+  );
   @override
   SignInState $make(CopyWithData data) => SignInState(
     data: data.get(#data, or: $value.data),
     error: data.get(#error, or: $value.error),
     state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
   );
 
   @override

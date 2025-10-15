@@ -1,8 +1,11 @@
+import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -19,8 +22,8 @@ class SignInScreen extends StatelessWidget {
             tileSize: 400.w,
             colorFilter: ColorFilter.mode(
               context.isDarkMode
-                  ? Colors.neutral.shade100
-                  : Colors.neutral.shade900,
+                  ? Colors.neutral.shade900
+                  : Colors.neutral.shade100,
               BlendMode.srcIn,
             ),
           ),
@@ -63,7 +66,6 @@ class _SignInFormView extends StatefulWidget {
 
 class _SignInFormViewState extends State<_SignInFormView> {
   final FormKey<String> _emailKey = const TextFieldKey('email');
-
   final FormKey<String> _passwordKey = const TextFieldKey('password');
 
   @override
@@ -73,18 +75,45 @@ class _SignInFormViewState extends State<_SignInFormView> {
         if (state.isFailure) {
           showToast(
             context: context,
-            builder: (context, overlay) => buildToast(
-              context,
-              overlay,
-              state.error?.message ?? 'Unknown error',
+            builder: (context, overlay) => context.buildToast(
+              title: 'Sign In Failed',
+              message: state.error?.message ?? 'Unknown error',
             ),
-            location: ToastLocation.topRight,
+            location: ToastLocation.topCenter,
           );
+        }
+        if (state.isSuccess) {
+          showToast(
+            context: context,
+            builder: (context, overlay) => context.buildToast(
+              title: 'Sign In Success',
+              message: state.message ?? 'Successfully signed in',
+            ),
+            location: ToastLocation.topCenter,
+          );
+          switch (state.data?.role) {
+            case UserRoleEnum.user:
+              context.pushReplacementNamed(Routes.userHome.name);
+            case UserRoleEnum.merchant:
+              context.pushReplacementNamed(Routes.merchantHome.name);
+            case UserRoleEnum.driver:
+              context.pushReplacementNamed(Routes.driverHome.name);
+            case UserRoleEnum.admin:
+              // TODO: Handle this case.
+              throw UnimplementedError();
+            case UserRoleEnum.operator_:
+              // TODO: Handle this case.
+              throw UnimplementedError();
+            case null:
+              // TODO: Handle this case.
+              throw UnimplementedError();
+          }
         }
       },
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) async {
+            if (state.isLoading) return;
             final email = _emailKey[values];
             final password = _passwordKey[values];
             if (email == null || password == null) return;
@@ -115,7 +144,23 @@ class _SignInFormViewState extends State<_SignInFormView> {
                   ),
                   FormField(
                     key: _passwordKey,
-                    label: const Text('Password'),
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Password'),
+                        Button.link(
+                          onPressed: () {
+                            context.pushNamed(Routes.authForgotPassword.name);
+                          },
+                          child: Text(
+                            'Forgot Password?',
+                            style: context.theme.typography.small.copyWith(
+                              color: const Color(0xFF3B82F6),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     // validator: const SafePasswordValidator(),
                     validator: const LengthValidator(min: 8),
                     showErrors: const {
@@ -132,13 +177,48 @@ class _SignInFormViewState extends State<_SignInFormView> {
                   ),
                   FormErrorBuilder(
                     builder: (context, errors, child) {
-                      return PrimaryButton(
-                        onPressed: errors.isEmpty
+                      final hasErrors = errors.isNotEmpty;
+                      final isLoading = state.isLoading;
+
+                      return Button(
+                        style: isLoading || hasErrors
+                            ? const ButtonStyle.outline()
+                            : const ButtonStyle.primary(),
+                        onPressed: (!hasErrors && !isLoading)
                             ? () => context.submitForm()
                             : null,
-                        child: const Text('Submit'),
+                        child: isLoading
+                            ? const Submiting()
+                            : Text(
+                                'Sign In',
+                                style: context.theme.typography.medium.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
                       );
                     },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 4.w,
+                    children: [
+                      const Text("Didn't have an account?").small.muted,
+                      Button(
+                        style: const ButtonStyle.link(
+                          size: ButtonSize.small,
+                          density: ButtonDensity.compact,
+                        ),
+                        onPressed: () {
+                          context.pushNamed(Routes.authSignUpChoice.name);
+                        },
+                        child: Text(
+                          'Sign Up',
+                          style: context.theme.typography.small.copyWith(
+                            color: const Color(0xFF3B82F6),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ).gap(12.h),
@@ -146,20 +226,6 @@ class _SignInFormViewState extends State<_SignInFormView> {
           ),
         );
       },
-    );
-  }
-
-  Widget buildToast(
-    BuildContext context,
-    ToastOverlay overlay,
-    String message,
-  ) {
-    return SurfaceCard(
-      child: Basic(
-        title: const Text('Sign In Failed'),
-        subtitle: Text(message),
-        trailingAlignment: Alignment.center,
-      ),
     );
   }
 }

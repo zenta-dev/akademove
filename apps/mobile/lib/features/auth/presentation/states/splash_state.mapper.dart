@@ -21,8 +21,8 @@ class SplashStateMapper extends ClassMapperBase<SplashState> {
   @override
   final String id = 'SplashState';
 
-  static int? _$data(SplashState v) => v.data;
-  static const Field<SplashState, int> _f$data = Field(
+  static User? _$data(SplashState v) => v.data;
+  static const Field<SplashState, User> _f$data = Field(
     'data',
     _$data,
     opt: true,
@@ -116,7 +116,7 @@ extension SplashStateValueCopy<$R, $Out>
 
 abstract class SplashStateCopyWith<$R, $In extends SplashState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({int? data, BaseError? error, CubitState? state});
+  $R call({User? data, BaseError? error, CubitState? state});
   SplashStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

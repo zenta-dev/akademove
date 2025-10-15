@@ -21,8 +21,8 @@ class SignUpStateMapper extends ClassMapperBase<SignUpState> {
   @override
   final String id = 'SignUpState';
 
-  static UserEntity? _$data(SignUpState v) => v.data;
-  static const Field<SignUpState, UserEntity> _f$data = Field(
+  static User? _$data(SignUpState v) => v.data;
+  static const Field<SignUpState, User> _f$data = Field(
     'data',
     _$data,
     opt: true,
@@ -116,7 +116,7 @@ extension SignUpStateValueCopy<$R, $Out>
 
 abstract class SignUpStateCopyWith<$R, $In extends SignUpState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({UserEntity? data, BaseError? error, CubitState? state});
+  $R call({User? data, BaseError? error, CubitState? state});
   SignUpStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 

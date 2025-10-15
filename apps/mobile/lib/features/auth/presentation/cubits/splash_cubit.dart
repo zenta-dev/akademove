@@ -9,8 +9,8 @@ class SplashCubit extends BaseCubit<SplashState> {
   Future<void> init() async {
     emit(SplashState.loading());
     try {
-      await authRepository.authenticate();
-      emit(SplashState.success());
+      final res = await authRepository.authenticate();
+      emit(SplashState.success(res.data, message: res.message));
     } on BaseError catch (e) {
       emit(SplashState.failure(e));
     }
