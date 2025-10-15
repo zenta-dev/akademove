@@ -1,62 +1,72 @@
-import 'dart:developer';
+import 'dart:convert';
+import 'package:akademove/core/logger.dart';
 import 'package:dio/dio.dart';
 
 class LoggerInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    log('''
-================= 🚀 REQUEST =================
+    logger.i('''
+🚀 REQUEST
 [${options.method}] ${options.uri}
 
 Headers:
-${options.headers}
+${_prettyMap(options.headers)}
 
 Query Parameters:
-${options.queryParameters}
+${_prettyMap(options.queryParameters)}
 
 Data:
-${options.data}
-
-==============================================
+${_stringify(options.data)}
 ''');
     super.onRequest(options, handler);
   }
 
   @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
-    log('''
-================= ✅ RESPONSE =================
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    logger.d('''
+✅ RESPONSE
 [${response.requestOptions.method}] ${response.requestOptions.uri}
 
-Status: ${response.statusCode}
+Status Code: ${response.statusCode}
 
 Headers:
-${response.headers.map}
+${_prettyMap(response.headers.map)}
 
 Data:
-${response.data}
-
-===============================================
+${_stringify(response.data)}
 ''');
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    log('''
-================= ❌ ERROR =================
+    logger.e('''
+❌ ERROR
 [${err.requestOptions.method}] ${err.requestOptions.uri}
 
 Type: ${err.type}
 Message: ${err.message}
 
-Response: ${err.response?.data}
-
-============================================
+Response:
+${_stringify(err.response?.data)}
 ''');
     super.onError(err, handler);
+  }
+
+  String _prettyMap(Map? map) {
+    if (map == null || map.isEmpty) return '{}';
+    return map.entries.map((e) => '  ${e.key}: ${e.value}').join('\n');
+  }
+
+  String _stringify(dynamic data) {
+    try {
+      if (data == null) return 'null';
+      if (data is Map || data is List) {
+        return const JsonEncoder.withIndent('  ').convert(data);
+      }
+      return data.toString();
+    } catch (_) {
+      return data.toString();
+    }
   }
 }
