@@ -9,13 +9,13 @@
       "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_development.dart",
+      "program": "lib/main.dart",
       "args": [
         "--flavor",
         "development",
         "--target",
-        "lib/main_development.dart",
-        "--verbose"
+        "lib/main.dart",
+        // "--verbose"
       ]
     },
     {
@@ -23,8 +23,8 @@
       "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_staging.dart",
-      "args": ["--flavor", "staging", "--target", "lib/main_staging.dart"],
+      "program": "lib/main.dart",
+      "args": ["--flavor", "staging", "--target", "lib/main.dart"],
       "flutterMode": "profile"
     },
     {
@@ -32,8 +32,8 @@
       "cwd": "apps/mobile",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main_production.dart",
-      "args": ["--flavor", "production", "--target", "lib/main_production.dart"],
+      "program": "lib/main.dart",
+      "args": ["--flavor", "production", "--target", "lib/main.dart"],
       "flutterMode": "release"
     }, 
   ]
