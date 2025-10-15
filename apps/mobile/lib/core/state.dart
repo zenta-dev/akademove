@@ -6,11 +6,13 @@ enum CubitState { initial, loading, success, failure }
 abstract class BaseState<T> {
   const BaseState({
     this.data,
+    this.message,
     this.error,
     this.state = CubitState.initial,
   });
 
   final T? data;
+  final String? message;
   final BaseError? error;
   final CubitState state;
 
