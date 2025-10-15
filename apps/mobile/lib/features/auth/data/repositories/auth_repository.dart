@@ -4,6 +4,7 @@ import 'package:akademove/core/helpers.dart';
 import 'package:akademove/core/response.dart';
 import 'package:akademove/core/services/kv_service.dart';
 import 'package:api_client/api_client.dart';
+import 'package:dio/dio.dart';
 
 class AuthRepository extends BaseRepository {
   const AuthRepository({
@@ -29,6 +30,37 @@ class AuthRepository extends BaseRepository {
 
       apiClient.setBearerAuth('bearer_auth', data.data.token);
       await localKV.set(KeyValueKeys.token, data.data.token);
+
+      return SuccessResponse(message: data.message, data: data.data.user);
+    });
+  }
+
+  Future<BaseResponse<User>> signUpUser({
+    required String name,
+    required String email,
+    required String phone,
+    required UserGenderEnum gender,
+    required String password,
+    required String confirmPassword,
+    required MultipartFile? photo,
+  }) async {
+    return guard(() async {
+      final result = await apiClient.getAuthApi().authSignUpUser(
+        name: name,
+        email: email,
+        gender: gender.value,
+        phone: phone,
+        password: password,
+        confirmPassword: confirmPassword,
+        photo: photo,
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'An error occured',
+            code: ErrorCode.INTERNAL_SERVER_ERROR,
+          ));
 
       return SuccessResponse(message: data.message, data: data.data.user);
     });
