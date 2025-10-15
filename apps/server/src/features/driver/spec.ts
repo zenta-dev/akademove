@@ -3,6 +3,7 @@ import { DriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const DriverSpec = {
 	list: oc
@@ -49,6 +50,10 @@ export const DriverSpec = {
 			path: "/{id}",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(UpdateDriverSchema),
+			}),
 		})
 		.input(
 			z.object({
