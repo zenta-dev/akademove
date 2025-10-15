@@ -5,7 +5,7 @@ enum KeyValueKeys { token }
 abstract class KeyValueService {
   Future<T?> get<T>(KeyValueKeys key);
   Future<void> set<T>(KeyValueKeys key, T value);
-  Future<void> delete(KeyValueKeys key);
+  Future<void> remove(KeyValueKeys key);
   Future<void> clear();
 }
 
@@ -54,7 +54,7 @@ class SharedPrefKeyValueService implements KeyValueService {
   }
 
   @override
-  Future<void> delete(KeyValueKeys key) async {
+  Future<void> remove(KeyValueKeys key) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_mapKey(key));
   }
