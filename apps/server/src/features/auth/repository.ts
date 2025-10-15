@@ -209,6 +209,23 @@ export class AuthRepository {
 		}
 	}
 
+	async signOut(token: string) {
+		log.debug(`${this.signOut.name} | JWT => ${token.substring(0, 20)}...`);
+
+		try {
+			const payload = await this.#jwt.verify(token);
+			await this.#kv.delete(this.composeKey(payload.id));
+			log.debug(`${this.signOut.name} success`);
+			return true;
+		} catch (error) {
+			log.error(error, `${this.signOut.name} failed`);
+			if (error instanceof BaseError) throw error;
+			throw new AuthError("Invalid or expired token", {
+				code: "UNAUTHORIZED",
+			});
+		}
+	}
+
 	async getSession(token: string) {
 		log.debug(
 			{ jwt: `${token.substring(0, 20)}...` },
