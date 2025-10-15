@@ -45,7 +45,9 @@ export const AuthSpec = {
 		.input(z.object({ body: SignUpSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully"),
+				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully", {
+					status: 201,
+				}),
 			]),
 		),
 	signUpDriver: oc
@@ -63,7 +65,9 @@ export const AuthSpec = {
 		.input(z.object({ body: FlatSignUpDriverSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully"),
+				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully", {
+					status: 201,
+				}),
 			]),
 		),
 	signUpMerchant: oc
@@ -81,7 +85,9 @@ export const AuthSpec = {
 		.input(z.object({ body: FlatSignUpMerchantSchema }))
 		.output(
 			z.union([
-				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully"),
+				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully", {
+					status: 201,
+				}),
 			]),
 		),
 	signOut: oc

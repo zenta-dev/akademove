@@ -21,23 +21,29 @@ export const AuthHandler = os.router({
 			"Set-Cookie",
 			composeAuthCookieValue({
 				token: result.token,
-				isDev: isDev,
-				maxAge: 7 * 60 * 60 * 24,
+				isDev,
+				maxAge: 7 * 24 * 60 * 60,
 			}),
 		);
 
 		return {
 			status: 200,
-			body: { message: "OK", data: nullToUndefined(result) },
-		};
+			body: {
+				message: "User authenticated successfully.",
+				data: nullToUndefined(result),
+			},
+		} as const;
 	}),
 	signUpUser: os.signUpUser.handler(async ({ context, input: { body } }) => {
 		const result = await context.repo.auth.signUp({ ...body, role: "user" });
 
 		return {
-			status: 200,
-			body: { message: "OK", data: nullToUndefined(result) },
-		};
+			status: 201,
+			body: {
+				message: "User account created successfully.",
+				data: nullToUndefined(result),
+			},
+		} as const;
 	}),
 	signUpDriver: os.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
@@ -49,9 +55,12 @@ export const AuthHandler = os.router({
 			});
 
 			return {
-				status: 200,
-				body: { message: "OK", data: nullToUndefined(result) },
-			};
+				status: 201,
+				body: {
+					message: "Driver account registered successfully.",
+					data: nullToUndefined(result),
+				},
+			} as const;
 		},
 	),
 	signUpMerchant: os.signUpMerchant.handler(
@@ -64,9 +73,12 @@ export const AuthHandler = os.router({
 			});
 
 			return {
-				status: 200,
-				body: { message: "OK", data: nullToUndefined(result) },
-			};
+				status: 201,
+				body: {
+					message: "Merchant account registered successfully.",
+					data: nullToUndefined(result),
+				},
+			} as const;
 		},
 	),
 	signOut: os.signOut.use(authMiddleware).handler(async ({ context }) => {
@@ -74,24 +86,34 @@ export const AuthHandler = os.router({
 			"Set-Cookie",
 			composeAuthCookieValue({
 				token: "",
-				isDev: isDev,
+				isDev,
 				maxAge: 0,
 			}),
 		);
+
 		if (!context.token) {
-			throw new AuthError("Invalid token", { code: "BAD_REQUEST" });
+			throw new AuthError("Invalid authentication token.", {
+				code: "BAD_REQUEST",
+			});
 		}
+
 		await context.repo.auth.signOut(context.token);
 
 		return {
 			status: 200,
-			body: { message: "OK", data: true },
-		};
+			body: {
+				message: "User signed out successfully.",
+				data: true,
+			},
+		} as const;
 	}),
 	getSession: os.getSession.use(authMiddleware).handler(async ({ context }) => {
 		if (!context.token) {
-			throw new AuthError("Invalid token", { code: "BAD_REQUEST" });
+			throw new AuthError("Invalid authentication token.", {
+				code: "BAD_REQUEST",
+			});
 		}
+
 		const result = await context.repo.auth.getSession(context.token);
 
 		if (result.token) {
@@ -99,33 +121,44 @@ export const AuthHandler = os.router({
 				"Set-Cookie",
 				composeAuthCookieValue({
 					token: result.token,
-					isDev: isDev,
-					maxAge: 7 * 60 * 60 * 24,
+					isDev,
+					maxAge: 7 * 24 * 60 * 60,
 				}),
 			);
 		}
 
 		return {
 			status: 200,
-			body: { message: "OK", data: nullToUndefined(result) },
-		};
+			body: {
+				message: "Session retrieved successfully.",
+				data: nullToUndefined(result),
+			},
+		} as const;
 	}),
 	forgotPassword: os.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
-			const _res = await context.repo.auth.forgotPassword(body);
+			await context.repo.auth.forgotPassword(body);
+
 			return {
-				status: 200,
-				body: { message: "UNIMPELEMNTED", data: true },
+				status: 202,
+				body: {
+					message: "Password reset instructions sent to the registered email.",
+					data: true,
+				},
 			};
 		},
 	),
 	resetPassword: os.resetPassword.handler(
 		async ({ context, input: { body } }) => {
-			const _res = await context.repo.auth.resetPassword(body);
+			await context.repo.auth.resetPassword(body);
+
 			return {
 				status: 200,
-				body: { message: "UNIMPELEMNTED", data: true },
-			};
+				body: {
+					message: "Password has been reset successfully.",
+					data: true,
+				},
+			} as const;
 		},
 	),
 	hasPermission: os.hasPermission
@@ -138,7 +171,10 @@ export const AuthHandler = os.router({
 
 			return {
 				status: 200,
-				body: { message: "OK", data: ok },
-			};
+				body: {
+					message: "Permission verification completed.",
+					data: ok,
+				},
+			} as const;
 		}),
 });
