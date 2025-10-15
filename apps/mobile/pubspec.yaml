@@ -23,6 +23,7 @@ dependencies:
   flutter_svg: ^2.2.1
   get_it: ^8.2.0
   go_router: ^16.2.4
+  image_picker: ^1.2.0
   intl: ^0.20.2
   logger: ^2.6.2
   shadcn_flutter: ^0.0.44
