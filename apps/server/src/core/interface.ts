@@ -68,6 +68,7 @@ export interface HonoContext {
 	Variables: {
 		svc: ServiceContext;
 		user: UserInContext;
+		repo: RepositoryContext;
 	};
 	Bindings: Env;
 }
