@@ -43,12 +43,17 @@ export const STORAGE_BUCKETS = [
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
-export const createSuccesSchema = <TSchema, TDesc extends string>(
+export const createSuccesSchema = <
+	TSchema,
+	TDesc extends string,
+	TStatus extends number = 200 | 201 | 202,
+>(
 	schema: TSchema,
 	description: TDesc,
+	opts: { status: TStatus } = { status: 200 as TStatus },
 ) =>
 	z.object({
-		status: z.literal(200).describe(description),
+		status: z.literal(opts.status).describe(description),
 		body: z.object({
 			message: z.string(),
 			data: schema,
