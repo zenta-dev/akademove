@@ -301,10 +301,13 @@ export class MerchantMenuRepository {
 			}
 
 			const imageFile = item.image;
+			const key = imageFile
+				? `MM-${id}.${getFileExtension(imageFile)}`
+				: undefined;
 			const uploadPromise = imageFile
 				? this.#storage.upload({
 						bucket: this.#bucket,
-						key: `MM-${id}.${getFileExtension(imageFile)}`,
+						key: key ?? `MM-${id}.${getFileExtension(imageFile)}`,
 						file: imageFile,
 						isPublic: true,
 					})
@@ -315,7 +318,7 @@ export class MerchantMenuRepository {
 					.update(tables.merchantMenu)
 					.set({
 						...item,
-						image: existing.imageId,
+						image: existing.imageId ?? key,
 						createdAt: new Date(existing.createdAt),
 						updatedAt: new Date(),
 					})
