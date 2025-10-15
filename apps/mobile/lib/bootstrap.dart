@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/locator.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
@@ -12,29 +12,57 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     super.onChange(bloc, change);
-    log('onChange(${bloc.runtimeType}, $change)');
+    logger.d('''
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌀 BLOC CHANGE
+Bloc: ${bloc.runtimeType}
+
+Current → Next:
+${change.currentState} → ${change.nextState}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+''');
   }
 
   @override
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
-    log('onError(${bloc.runtimeType}, $error, $stackTrace)');
     super.onError(bloc, error, stackTrace);
+    logger.e('''
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 BLOC ERROR
+Bloc: ${bloc.runtimeType}
+
+Error: $error
+
+Stack Trace:
+$stackTrace
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+''');
   }
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
+  WidgetsFlutterBinding.ensureInitialized();
 
   Bloc.observer = const AppBlocObserver();
 
-  // Add cross-flavor configuration here
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.e('''
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💥 FLUTTER ERROR
+Exception: ${details.exceptionAsString()}
+
+Stack Trace:
+${details.stack}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+''');
+  };
+
   setupLocator();
-  WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations(
-    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
-  );
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(await builder());
 }
