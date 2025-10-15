@@ -1,4 +1,5 @@
 import { implement } from "@orpc/server";
+import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
 	nullToUndefined,
@@ -40,11 +41,10 @@ export const AuthHandler = os.router({
 	}),
 	signUpDriver: os.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
-			const result = await context.repo.auth.signUpDriver(body);
-
+			const unflatten = unflattenData(body);
+			const result = await context.repo.auth.signUpDriver(unflatten);
 			await context.repo.driver.create({
-				...body,
-				...body.detail,
+				...unflatten.detail,
 				userId: result.user.id,
 			});
 
@@ -56,10 +56,10 @@ export const AuthHandler = os.router({
 	),
 	signUpMerchant: os.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
-			const result = await context.repo.auth.signUpMerchant(body);
+			const unflatten = unflattenData(body);
+			const result = await context.repo.auth.signUpMerchant(unflatten);
 			await context.repo.merchant.main.create({
-				...body,
-				...body.detail,
+				...unflatten.detail,
 				userId: result.user.id,
 			});
 
@@ -78,6 +78,10 @@ export const AuthHandler = os.router({
 				maxAge: 0,
 			}),
 		);
+		if (!context.token) {
+			throw new AuthError("Invalid token", { code: "BAD_REQUEST" });
+		}
+		await context.repo.auth.signOut(context.token);
 
 		return {
 			status: 200,
