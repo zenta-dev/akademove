@@ -1,8 +1,12 @@
 import { oc } from "@orpc/contract";
-import { MerchantSchema, UpdateMerchantSchema } from "@repo/schema/merchant";
+import {
+	FlatUpdateMerchantSchema,
+	MerchantSchema,
+} from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const MerchantMainSpec = {
 	getMine: oc
@@ -66,11 +70,15 @@ export const MerchantMainSpec = {
 			path: "/{id}",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(FlatUpdateMerchantSchema),
+			}),
 		})
 		.input(
 			z.object({
 				params: z.object({ id: z.string() }),
-				body: UpdateMerchantSchema,
+				body: FlatUpdateMerchantSchema,
 			}),
 		)
 		.output(

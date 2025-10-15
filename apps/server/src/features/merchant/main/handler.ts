@@ -1,4 +1,5 @@
 import { implement } from "@orpc/server";
+import { unflattenData } from "@repo/schema/flatten.helper";
 import type { ORPCContext } from "@/core/interface";
 import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
 import { MerchantMainSpec } from "./spec";
@@ -59,7 +60,12 @@ export const MerchantMainHandler = os.router({
 	update: os.update
 		.use(hasPermission({ merchant: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.merchant.main.update(params.id, body);
+			const unflatten = unflattenData(body);
+
+			const result = await context.repo.merchant.main.update(
+				params.id,
+				unflatten,
+			);
 
 			return {
 				status: 200,
