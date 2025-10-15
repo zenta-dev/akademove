@@ -63,17 +63,26 @@ final router = GoRouter(
         GoRoute(
           name: Routes.authSignUpUser.name,
           path: Routes.authSignUpUser.path,
-          builder: (context, state) => const SignUpUserScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<SignUpCubit>()..init(),
+            child: const SignUpUserScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.authSignUpDriver.name,
           path: Routes.authSignUpDriver.path,
-          builder: (context, state) => const SignUpDriverScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<SignUpCubit>()..init(),
+            child: const SignUpDriverScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.authSignUpMerchant.name,
           path: Routes.authSignUpMerchant.path,
-          builder: (context, state) => const SignUpMerchantScreen(),
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<SignUpCubit>()..init(),
+            child: const SignUpMerchantScreen(),
+          ),
         ),
       ],
     ),

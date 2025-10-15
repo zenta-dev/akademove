@@ -41,5 +41,6 @@ void _setupCubit() {
   sl
     ..registerFactory(AppCubit.new)
     ..registerFactory(() => SplashCubit(sl<AuthRepository>()))
-    ..registerFactory(() => SignInCubit(sl<AuthRepository>()));
+    ..registerFactory(() => SignInCubit(sl<AuthRepository>()))
+    ..registerFactory(() => SignUpCubit(sl<AuthRepository>()));
 }
