@@ -1,10 +1,11 @@
+import type { ZodObject, ZodRawShape } from "zod";
 import * as z from "zod";
 import { CONSTANTS } from "./constants.ts";
 
 export const LocationSchema = z
 	.object({
-		lat: z.number(),
-		lng: z.number(),
+		lat: z.coerce.number(),
+		lng: z.coerce.number(),
 	})
 	.meta({
 		title: "Location",
@@ -23,7 +24,7 @@ export const TimeSchema = z
 
 export const DateSchema = z.coerce.date();
 
-export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK).default("sunday");
+export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
 
 export const EmptySchema = z.null();
 
@@ -45,9 +46,8 @@ export const GetQuerySchema = z
 
 export const FailedResponseSchema = z
 	.object({
-		success: z.literal(false),
 		message: z.string(),
-		errors: z.array(z.string()),
+		code: z.string(),
 	})
 	.meta({
 		title: "FailedResponse",
@@ -56,7 +56,6 @@ export const FailedResponseSchema = z
 
 export const createSuccessResponseSchema = <T>(schema: T) =>
 	z.object({
-		success: z.literal(true),
 		message: z.string(),
 		data: schema,
 	});
@@ -74,3 +73,23 @@ export type SuccessResponse<T> = z.infer<
 	ReturnType<typeof createSuccessResponseSchema<T>>
 >;
 export type ClientAgent = z.infer<typeof ClientAgentSchema>;
+
+type PrefixKeys<T extends ZodRawShape, Prefix extends string> = {
+	[K in keyof T as `${Prefix}${Extract<K, string>}`]: T[K];
+};
+
+export function prefixSchemaKeys<T extends ZodObject, Prefix extends string>(
+	schema: T,
+	prefix: Prefix,
+): ZodObject<PrefixKeys<T["shape"], Prefix>> {
+	const newShape = Object.fromEntries(
+		Object.entries(schema.shape).map(([key, value]) => [
+			`${prefix}${key}`,
+			value,
+		]),
+	) as PrefixKeys<T["shape"], Prefix>;
+
+	return z.object(newShape as unknown as ZodRawShape) as unknown as ZodObject<
+		PrefixKeys<T["shape"], Prefix>
+	>;
+}

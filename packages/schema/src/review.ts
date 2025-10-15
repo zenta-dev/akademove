@@ -10,7 +10,7 @@ export const ReviewSchema = z
 		orderId: z.uuid(),
 		fromUserId: z.string(),
 		toUserId: z.string(),
-		category: ReviewCategorySchema.default("other"),
+		category: ReviewCategorySchema,
 		score: z.number(),
 		comment: z.string().default(""),
 		createdAt: DateSchema,

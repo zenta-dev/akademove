@@ -3,7 +3,7 @@ import { DateSchema, DayOfWeekSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 const GeneralRulesSchema = z.object({
-	type: z.enum(CONSTANTS.GENERAL_RULE_TYPES).optional().default("percentage"),
+	type: z.enum(CONSTANTS.GENERAL_RULE_TYPES).optional(),
 	minOrderAmount: z.number().nonnegative().optional(),
 	maxDiscountAmount: z.number().nonnegative().optional(),
 });

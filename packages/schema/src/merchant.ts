@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { flattenZodObject } from "./flatten.helper.ts";
 
 export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
 
@@ -8,7 +9,7 @@ export const MerchantSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		type: MerchantTypeSchema.default("merchant"),
+		type: MerchantTypeSchema,
 		name: z.string(),
 		email: z.string(),
 		phone: z.string(),
@@ -66,6 +67,8 @@ export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 export const UpdateMerchantSchema = InsertMerchantSchema.partial();
 export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
 
+export const FlatUpdateMerchantSchema = flattenZodObject(UpdateMerchantSchema);
+
 export type MerchantType = z.infer<typeof MerchantTypeSchema>;
 export type Merchant = z.infer<typeof MerchantSchema>;
 export type MerchantMenu = z.infer<typeof MerchantMenuSchema>;
@@ -73,3 +76,4 @@ export type InsertMerchant = z.infer<typeof InsertMerchantSchema>;
 export type InsertMerchantMenu = z.infer<typeof InsertMerchantMenuSchema>;
 export type UpdateMerchant = z.infer<typeof UpdateMerchantSchema>;
 export type UpdateMerchantMenu = z.infer<typeof UpdateMerchantMenuSchema>;
+export type FlatUpdateMerchant = z.infer<typeof FlatUpdateMerchantSchema>;
