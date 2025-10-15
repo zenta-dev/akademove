@@ -82,16 +82,12 @@ class $AssetsImagesHeroGen {
   AssetGenImage get signUpMerchant1 =>
       const AssetGenImage('assets/images/hero/sign-up-merchant-1.png');
 
-  /// File path: assets/images/hero/sign-up-user.png
-  AssetGenImage get signUpUser =>
-      const AssetGenImage('assets/images/hero/sign-up-user.png');
+  /// File path: assets/images/hero/sign-up-user.svg
+  SvgGenImage get signUpUser =>
+      const SvgGenImage('assets/images/hero/sign-up-user.svg');
 
   /// List of all assets
-  List<AssetGenImage> get values => [
-    signUpDriver1,
-    signUpMerchant1,
-    signUpUser,
-  ];
+  List<dynamic> get values => [signUpDriver1, signUpMerchant1, signUpUser];
 }
 
 class Assets {
