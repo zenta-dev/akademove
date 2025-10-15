@@ -28,4 +28,5 @@ abstract class BaseCubit<T> extends Cubit<T> {
   BaseCubit(super.initialState);
 
   Future<void> init();
+  void reset();
 }

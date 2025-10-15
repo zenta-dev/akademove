@@ -22,4 +22,7 @@ class SignInCubit extends BaseCubit<SignInState> {
       emit(SignInState.failure(e));
     }
   }
+
+  @override
+  void reset() => emit(SignInState.initial());
 }

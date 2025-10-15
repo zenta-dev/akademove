@@ -14,4 +14,7 @@ class AppCubit extends BaseCubit<AppState> {
       ),
     );
   }
+
+  @override
+  void reset() => emit(AppState.initial());
 }
