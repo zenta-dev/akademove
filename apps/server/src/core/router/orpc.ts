@@ -28,11 +28,6 @@ import type { HonoContext, ORPCContext } from "@/core/interface";
 import { RBACService } from "@/core/services/rbac";
 import { ServerRouter } from "@/features";
 
-// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from spec
-let rpcHandler: RPCHandler<any> | null = null;
-// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from spec
-let apiHandler: OpenAPIHandler<any> | null = null;
-
 const errorInterceptor: Interceptor<
 	// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from orpc
 	any,
@@ -62,81 +57,6 @@ const errorInterceptor: Interceptor<
 	}
 };
 
-const corsPlugin = new CORSPlugin({
-	origin: TRUSTED_ORIGINS,
-	allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
-	allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
-	exposeHeaders: ["Content-Length"],
-	maxAge: 600,
-	credentials: true,
-});
-
-const responseHeadersPlugin = new ResponseHeadersPlugin();
-
-const commonSchemas = {
-	Configuration: { schema: ConfigurationSchema, strategy: "output" },
-	Driver: { schema: DriverSchema, strategy: "output" },
-	Merchant: { schema: MerchantSchema, strategy: "output" },
-	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
-	Order: { schema: OrderSchema, strategy: "output" },
-	Report: { schema: ReportSchema, strategy: "output" },
-	Coupon: { schema: CouponSchema, strategy: "output" },
-	Review: { schema: ReviewSchema, strategy: "output" },
-	Schedule: { schema: ScheduleSchema, strategy: "output" },
-	User: { schema: UserSchema, strategy: "output" },
-	Location: { schema: LocationSchema, strategy: "output" },
-	Time: { schema: TimeSchema, strategy: "output" },
-	Statements: { schema: RBACService.schema, strategy: "input" },
-} as const;
-
-function getRPCHandler() {
-	if (!rpcHandler) {
-		rpcHandler = new RPCHandler(ServerRouter, {
-			plugins: [corsPlugin, responseHeadersPlugin],
-			interceptors: [errorInterceptor],
-		});
-	}
-	return rpcHandler;
-}
-
-function getAPIHandler() {
-	if (!apiHandler) {
-		const converter = new ZodToJsonSchemaConverter();
-
-		apiHandler = new OpenAPIHandler(ServerRouter, {
-			plugins: [
-				corsPlugin,
-				responseHeadersPlugin,
-				new StrictGetMethodPlugin(),
-				new OpenAPIReferencePlugin({
-					schemaConverters: [converter],
-					specGenerateOptions: {
-						commonSchemas,
-						info: {
-							title: "AkadeMove API",
-							version: "1.0.0",
-							description: "API for the AkadeMove application",
-						},
-						components: {
-							securitySchemes: {
-								bearer_auth: {
-									type: "http",
-									scheme: "bearer",
-									bearerFormat: "JWT",
-								},
-							},
-						},
-						security: [{ bearer_auth: [] }],
-						servers: [{ url: `${env.AUTH_URL}/api` }],
-					},
-				}),
-			],
-			interceptors: [errorInterceptor],
-		});
-	}
-	return apiHandler;
-}
-
 export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 	app.use("/*", async (c, next) => {
 		const url = c.req.raw.url;
@@ -145,8 +65,19 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		const isAPI = url.includes("api");
 
 		if (!isRPC && !isAPI) {
-			return next();
+			return await next();
 		}
+
+		const corsPlugin = new CORSPlugin({
+			origin: TRUSTED_ORIGINS,
+			allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
+			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
+			exposeHeaders: ["Content-Length"],
+			maxAge: 600,
+			credentials: true,
+		});
+
+		const responseHeadersPlugin = new ResponseHeadersPlugin();
 
 		const { svc, repo, user } = c.var;
 		const context: ORPCContext = {
@@ -158,7 +89,10 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		};
 
 		if (isRPC) {
-			const handler = getRPCHandler();
+			const handler = new RPCHandler(ServerRouter, {
+				plugins: [corsPlugin, responseHeadersPlugin],
+				interceptors: [errorInterceptor],
+			});
 			const result = await handler.handle(c.req.raw, {
 				prefix: "/rpc",
 				context,
@@ -170,7 +104,58 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		}
 
 		if (isAPI) {
-			const handler = getAPIHandler();
+			const converter = new ZodToJsonSchemaConverter();
+
+			const handler = new OpenAPIHandler(ServerRouter, {
+				plugins: [
+					corsPlugin,
+					responseHeadersPlugin,
+					new StrictGetMethodPlugin(),
+					new OpenAPIReferencePlugin({
+						schemaConverters: [converter],
+						specGenerateOptions: {
+							commonSchemas: {
+								Configuration: {
+									schema: ConfigurationSchema,
+									strategy: "output",
+								},
+								Driver: { schema: DriverSchema, strategy: "output" },
+								Merchant: { schema: MerchantSchema, strategy: "output" },
+								MerchantMenu: {
+									schema: MerchantMenuSchema,
+									strategy: "output",
+								},
+								Order: { schema: OrderSchema, strategy: "output" },
+								Report: { schema: ReportSchema, strategy: "output" },
+								Coupon: { schema: CouponSchema, strategy: "output" },
+								Review: { schema: ReviewSchema, strategy: "output" },
+								Schedule: { schema: ScheduleSchema, strategy: "output" },
+								User: { schema: UserSchema, strategy: "output" },
+								Location: { schema: LocationSchema, strategy: "output" },
+								Time: { schema: TimeSchema, strategy: "output" },
+								Statements: { schema: RBACService.schema, strategy: "input" },
+							},
+							info: {
+								title: "AkadeMove API",
+								version: "1.0.0",
+								description: "API for the AkadeMove application",
+							},
+							components: {
+								securitySchemes: {
+									bearer_auth: {
+										type: "http",
+										scheme: "bearer",
+										bearerFormat: "JWT",
+									},
+								},
+							},
+							security: [{ bearer_auth: [] }],
+							servers: [{ url: `${env.AUTH_URL}/api` }],
+						},
+					}),
+				],
+				interceptors: [errorInterceptor],
+			});
 			const result = await handler.handle(c.req.raw, {
 				prefix: "/api",
 				context,
@@ -181,7 +166,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 			}
 		}
 
-		await next();
+		return await next();
 	});
 
 	return app;

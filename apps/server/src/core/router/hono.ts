@@ -4,11 +4,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError } from "@/core/error";
-import type {
-	HonoContext,
-	RepositoryContext,
-	ServiceContext,
-} from "@/core/interface";
+import type { HonoContext } from "@/core/interface";
 import { getDatabase } from "@/core/services/db";
 import { CloudflareKVService } from "@/core/services/kv";
 import { ResendMailService } from "@/core/services/mail";
@@ -29,23 +25,22 @@ import { isCloudflare } from "@/utils";
 
 export const createHono = () => new Hono<HonoContext>();
 
-let cachedService: ServiceContext | null = null;
-let cachedRepository: RepositoryContext | null = null;
+export const setupHonoRouter = () => {
+	const app = createHono();
 
-const corsOptions = {
-	origin: TRUSTED_ORIGINS,
-	allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
-	allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
-	credentials: true,
-};
+	app.use(logger());
+	app.use(
+		"/*",
+		cors({
+			origin: TRUSTED_ORIGINS,
+			allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
+			allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
+			credentials: true,
+		}),
+	);
 
-const internalServerErrorResponse = {
-	success: false,
-	message: "Internal Server Error",
-};
-function getService() {
-	if (!cachedService) {
-		cachedService = {
+	app.use("*", async (c, next) => {
+		const svc = {
 			db: getDatabase(),
 			mail: new ResendMailService(env.RESEND_API_KEY),
 			kv: new CloudflareKVService(env.MAIN_KV),
@@ -58,13 +53,8 @@ function getService() {
 			}),
 			rbac: new RBACService(),
 		};
-	}
-	return cachedService;
-}
-
-function getRepository(svc: ServiceContext) {
-	if (!cachedRepository) {
-		cachedRepository = {
+		c.set("svc", svc);
+		c.set("repo", {
 			auth: new AuthRepository(svc.db, svc.kv, svc.storage),
 			configuration: createConfigurationRepository(svc.db, svc.kv),
 			driver: new DriverRepository(svc.db, svc.kv, svc.storage),
@@ -78,23 +68,9 @@ function getRepository(svc: ServiceContext) {
 			review: createReviewRepository(svc.db, svc.kv),
 			schedule: createScheduleRepository(svc.db, svc.kv),
 			user: createUserRepository(svc.db),
-		};
-	}
-	return cachedRepository;
-}
-
-export const setupHonoRouter = () => {
-	const app = createHono();
-
-	app.use(logger());
-	app.use("/*", cors(corsOptions));
-
-	app.use("*", async (c, next) => {
-		const svc = getService();
-		c.set("svc", svc);
-		c.set("repo", getRepository(svc));
+		});
 		try {
-			await next();
+			return await next();
 		} finally {
 			if (isCloudflare) await svc.db.$client.end();
 		}
@@ -113,7 +89,10 @@ export const setupHonoRouter = () => {
 		const response =
 			err instanceof Error
 				? { success: false, message }
-				: internalServerErrorResponse;
+				: {
+						success: false,
+						message: "Internal Server Error",
+					};
 
 		return c.json(response, 500);
 	});
