@@ -78,6 +78,18 @@ class $AssetsImagesHeroGen {
   AssetGenImage get signUpDriver1 =>
       const AssetGenImage('assets/images/hero/sign-up-driver-1.png');
 
+  /// File path: assets/images/hero/sign-up-driver-2.png
+  AssetGenImage get signUpDriver2 =>
+      const AssetGenImage('assets/images/hero/sign-up-driver-2.png');
+
+  /// File path: assets/images/hero/sign-up-driver-3.png
+  AssetGenImage get signUpDriver3 =>
+      const AssetGenImage('assets/images/hero/sign-up-driver-3.png');
+
+  /// File path: assets/images/hero/sign-up-driver-4.png
+  AssetGenImage get signUpDriver4 =>
+      const AssetGenImage('assets/images/hero/sign-up-driver-4.png');
+
   /// File path: assets/images/hero/sign-up-merchant-1.png
   AssetGenImage get signUpMerchant1 =>
       const AssetGenImage('assets/images/hero/sign-up-merchant-1.png');
@@ -87,7 +99,14 @@ class $AssetsImagesHeroGen {
       const SvgGenImage('assets/images/hero/sign-up-user.svg');
 
   /// List of all assets
-  List<dynamic> get values => [signUpDriver1, signUpMerchant1, signUpUser];
+  List<dynamic> get values => [
+    signUpDriver1,
+    signUpDriver2,
+    signUpDriver3,
+    signUpDriver4,
+    signUpMerchant1,
+    signUpUser,
+  ];
 }
 
 class Assets {
