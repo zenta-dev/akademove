@@ -19,7 +19,8 @@ enum ErrorCode {
   BAD_GATEWAY,
   SERVICE_UNAVAILABLE,
   GATEWAY_TIMEOUT,
-  UNKNOWN;
+  UNKNOWN,
+  INVALID_TYPE;
 
   const ErrorCode();
 
@@ -65,6 +66,8 @@ enum ErrorCode {
         return ErrorCode.GATEWAY_TIMEOUT;
       case 'UNKNOWN':
         return ErrorCode.UNKNOWN;
+      case 'INVALID_TYPE':
+        return ErrorCode.INVALID_TYPE;
       default:
         return null;
     }
@@ -88,4 +91,12 @@ final class RepositoryError extends BaseError {
   @override
   String toString() =>
       'RepositoryError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
+}
+
+final class ServiceError extends BaseError {
+  const ServiceError(super.message, {super.code});
+
+  @override
+  String toString() =>
+      'ServiceError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
