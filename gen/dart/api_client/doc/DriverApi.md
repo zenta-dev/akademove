@@ -149,7 +149,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGet200Response driverUpdate(id, studentId, licenseNumber, studentCard, driverLicense, vehicleCertificate)
+> DriverGet200Response driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank)
 
 
 
@@ -160,13 +160,14 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getDriverApi();
 final String id = id_example; // String | 
 final String studentId = studentId_example; // String | 
-final String licenseNumber = licenseNumber_example; // String | 
+final String licensePlate = licensePlate_example; // String | 
 final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
+final DriverUpdateRequestBank bank = ; // DriverUpdateRequestBank | 
 
 try {
-    final response = api.driverUpdate(id, studentId, licenseNumber, studentCard, driverLicense, vehicleCertificate);
+    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -179,10 +180,11 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
  **studentId** | **String**|  | [optional] 
- **licenseNumber** | **String**|  | [optional] 
+ **licensePlate** | **String**|  | [optional] 
  **studentCard** | **MultipartFile**|  | [optional] 
  **driverLicense** | **MultipartFile**|  | [optional] 
  **vehicleCertificate** | **MultipartFile**|  | [optional] 
+ **bank** | [**DriverUpdateRequestBank**](DriverUpdateRequestBank.md)|  | [optional] 
 
 ### Return type
 

@@ -13,7 +13,7 @@ abstract class _$OrderCreateRequestDriverCWProxy {
 
   OrderCreateRequestDriver studentId(String? studentId);
 
-  OrderCreateRequestDriver licenseNumber(String? licenseNumber);
+  OrderCreateRequestDriver licensePlate(String? licensePlate);
 
   OrderCreateRequestDriver status(OrderCreateRequestDriverStatusEnum? status);
 
@@ -33,6 +33,8 @@ abstract class _$OrderCreateRequestDriverCWProxy {
 
   OrderCreateRequestDriver vehicleCertificate(String? vehicleCertificate);
 
+  OrderCreateRequestDriver bank(Bank? bank);
+
   OrderCreateRequestDriver user(OrderCreateRequestUser? user);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderCreateRequestDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -45,7 +47,7 @@ abstract class _$OrderCreateRequestDriverCWProxy {
     String? id,
     String? userId,
     String? studentId,
-    String? licenseNumber,
+    String? licensePlate,
     OrderCreateRequestDriverStatusEnum? status,
     num? rating,
     bool? isOnline,
@@ -55,6 +57,7 @@ abstract class _$OrderCreateRequestDriverCWProxy {
     String? studentCard,
     String? driverLicense,
     String? vehicleCertificate,
+    Bank? bank,
     OrderCreateRequestUser? user,
   });
 }
@@ -77,8 +80,8 @@ class _$OrderCreateRequestDriverCWProxyImpl
       this(studentId: studentId);
 
   @override
-  OrderCreateRequestDriver licenseNumber(String? licenseNumber) =>
-      this(licenseNumber: licenseNumber);
+  OrderCreateRequestDriver licensePlate(String? licensePlate) =>
+      this(licensePlate: licensePlate);
 
   @override
   OrderCreateRequestDriver status(OrderCreateRequestDriverStatusEnum? status) =>
@@ -115,6 +118,9 @@ class _$OrderCreateRequestDriverCWProxyImpl
       this(vehicleCertificate: vehicleCertificate);
 
   @override
+  OrderCreateRequestDriver bank(Bank? bank) => this(bank: bank);
+
+  @override
   OrderCreateRequestDriver user(OrderCreateRequestUser? user) =>
       this(user: user);
 
@@ -129,7 +135,7 @@ class _$OrderCreateRequestDriverCWProxyImpl
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
     Object? studentId = const $CopyWithPlaceholder(),
-    Object? licenseNumber = const $CopyWithPlaceholder(),
+    Object? licensePlate = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
@@ -139,6 +145,7 @@ class _$OrderCreateRequestDriverCWProxyImpl
     Object? studentCard = const $CopyWithPlaceholder(),
     Object? driverLicense = const $CopyWithPlaceholder(),
     Object? vehicleCertificate = const $CopyWithPlaceholder(),
+    Object? bank = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
   }) {
     return OrderCreateRequestDriver(
@@ -154,10 +161,10 @@ class _$OrderCreateRequestDriverCWProxyImpl
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
           : studentId as String?,
-      licenseNumber: licenseNumber == const $CopyWithPlaceholder()
-          ? _value.licenseNumber
+      licensePlate: licensePlate == const $CopyWithPlaceholder()
+          ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
-          : licenseNumber as String?,
+          : licensePlate as String?,
       status: status == const $CopyWithPlaceholder()
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
@@ -194,6 +201,10 @@ class _$OrderCreateRequestDriverCWProxyImpl
           ? _value.vehicleCertificate
           // ignore: cast_nullable_to_non_nullable
           : vehicleCertificate as String?,
+      bank: bank == const $CopyWithPlaceholder()
+          ? _value.bank
+          // ignore: cast_nullable_to_non_nullable
+          : bank as Bank?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -220,7 +231,7 @@ OrderCreateRequestDriver _$OrderCreateRequestDriverFromJson(
     id: $checkedConvert('id', (v) => v as String?),
     userId: $checkedConvert('userId', (v) => v as String?),
     studentId: $checkedConvert('studentId', (v) => v as String?),
-    licenseNumber: $checkedConvert('licenseNumber', (v) => v as String?),
+    licensePlate: $checkedConvert('licensePlate', (v) => v as String?),
     status: $checkedConvert(
       'status',
       (v) =>
@@ -246,6 +257,10 @@ OrderCreateRequestDriver _$OrderCreateRequestDriverFromJson(
       'vehicleCertificate',
       (v) => v as String?,
     ),
+    bank: $checkedConvert(
+      'bank',
+      (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>),
+    ),
     user: $checkedConvert(
       'user',
       (v) => v == null
@@ -262,7 +277,7 @@ Map<String, dynamic> _$OrderCreateRequestDriverToJson(
   'id': ?instance.id,
   'userId': ?instance.userId,
   'studentId': ?instance.studentId,
-  'licenseNumber': ?instance.licenseNumber,
+  'licensePlate': ?instance.licensePlate,
   'status': ?_$OrderCreateRequestDriverStatusEnumEnumMap[instance.status],
   'rating': ?instance.rating,
   'isOnline': ?instance.isOnline,
@@ -272,6 +287,7 @@ Map<String, dynamic> _$OrderCreateRequestDriverToJson(
   'studentCard': ?instance.studentCard,
   'driverLicense': ?instance.driverLicense,
   'vehicleCertificate': ?instance.vehicleCertificate,
+  'bank': ?instance.bank?.toJson(),
   'user': ?instance.user?.toJson(),
 };
 

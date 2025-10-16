@@ -13,9 +13,10 @@ doc/AuthSignIn200Response.md
 doc/AuthSignIn200ResponseData.md
 doc/AuthSignInRequest.md
 doc/AuthSignOut200Response.md
-doc/AuthSignUpUser200Response.md
-doc/AuthSignUpUser200ResponseData.md
+doc/AuthSignUpUser201Response.md
+doc/AuthSignUpUser201ResponseData.md
 doc/BanUserSchemaRequest.md
+doc/Bank.md
 doc/Configuration.md
 doc/ConfigurationApi.md
 doc/ConfigurationGet200Response.md
@@ -36,6 +37,7 @@ doc/DriverApi.md
 doc/DriverGet200Response.md
 doc/DriverList200Response.md
 doc/DriverRemove200Response.md
+doc/DriverUpdateRequestBank.md
 doc/Location.md
 doc/Merchant.md
 doc/MerchantApi.md
@@ -112,9 +114,10 @@ lib/src/model/auth_sign_in200_response.dart
 lib/src/model/auth_sign_in200_response_data.dart
 lib/src/model/auth_sign_in_request.dart
 lib/src/model/auth_sign_out200_response.dart
-lib/src/model/auth_sign_up_user200_response.dart
-lib/src/model/auth_sign_up_user200_response_data.dart
+lib/src/model/auth_sign_up_user201_response.dart
+lib/src/model/auth_sign_up_user201_response_data.dart
 lib/src/model/ban_user_schema_request.dart
+lib/src/model/bank.dart
 lib/src/model/configuration.dart
 lib/src/model/configuration_get200_response.dart
 lib/src/model/configuration_list200_response.dart
@@ -132,6 +135,7 @@ lib/src/model/driver.dart
 lib/src/model/driver_get200_response.dart
 lib/src/model/driver_list200_response.dart
 lib/src/model/driver_remove200_response.dart
+lib/src/model/driver_update_request_bank.dart
 lib/src/model/location.dart
 lib/src/model/merchant.dart
 lib/src/model/merchant_get_mine200_response.dart

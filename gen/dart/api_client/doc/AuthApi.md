@@ -259,7 +259,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpDriver**
-> AuthSignUpUser200Response authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicenseNumber, detailStudentCard, detailDriverLicense, detailVehicleCertificate)
+> AuthSignUpUser201Response authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber)
 
 
 
@@ -276,13 +276,15 @@ final String password = password_example; // String |
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 final String detailStudentId = detailStudentId_example; // String | 
-final String detailLicenseNumber = detailLicenseNumber_example; // String | 
+final String detailLicensePlate = detailLicensePlate_example; // String | 
 final MultipartFile detailStudentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailDriverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailVehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
+final String detailBankProvider = detailBankProvider_example; // String | 
+final num detailBankNumber = 8.14; // num | 
 
 try {
-    final response = api.authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicenseNumber, detailStudentCard, detailDriverLicense, detailVehicleCertificate);
+    final response = api.authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpDriver: $e\n');
@@ -301,14 +303,16 @@ Name | Type | Description  | Notes
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | 
  **detailStudentId** | **String**|  | 
- **detailLicenseNumber** | **String**|  | 
+ **detailLicensePlate** | **String**|  | 
  **detailStudentCard** | **MultipartFile**|  | 
  **detailDriverLicense** | **MultipartFile**|  | 
  **detailVehicleCertificate** | **MultipartFile**|  | 
+ **detailBankProvider** | **String**|  | 
+ **detailBankNumber** | **num**|  | 
 
 ### Return type
 
-[**AuthSignUpUser200Response**](AuthSignUpUser200Response.md)
+[**AuthSignUpUser201Response**](AuthSignUpUser201Response.md)
 
 ### Authorization
 
@@ -322,7 +326,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpMerchant**
-> AuthSignUpUser200Response authSignUpMerchant(name, email, gender, phone, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
+> AuthSignUpUser201Response authSignUpMerchant(name, email, gender, phone, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
 
 
 
@@ -345,7 +349,7 @@ final String detailAddress = detailAddress_example; // String |
 final num detailLocationLat = 8.14; // num | 
 final num detailLocationLng = 8.14; // num | 
 final String detailBankProvider = detailBankProvider_example; // String | 
-final String detailBankNumber = detailBankNumber_example; // String | 
+final num detailBankNumber = 8.14; // num | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailDocument = BINARY_DATA_HERE; // MultipartFile | 
 
@@ -375,13 +379,13 @@ Name | Type | Description  | Notes
  **detailLocationLat** | **num**|  | 
  **detailLocationLng** | **num**|  | 
  **detailBankProvider** | **String**|  | 
- **detailBankNumber** | **String**|  | 
+ **detailBankNumber** | **num**|  | 
  **photo** | **MultipartFile**|  | [optional] 
  **detailDocument** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
-[**AuthSignUpUser200Response**](AuthSignUpUser200Response.md)
+[**AuthSignUpUser201Response**](AuthSignUpUser201Response.md)
 
 ### Authorization
 
@@ -395,7 +399,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpUser**
-> AuthSignUpUser200Response authSignUpUser(name, email, gender, phone, password, confirmPassword, photo)
+> AuthSignUpUser201Response authSignUpUser(name, email, gender, phone, password, confirmPassword, photo)
 
 
 
@@ -434,7 +438,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AuthSignUpUser200Response**](AuthSignUpUser200Response.md)
+[**AuthSignUpUser201Response**](AuthSignUpUser201Response.md)
 
 ### Authorization
 

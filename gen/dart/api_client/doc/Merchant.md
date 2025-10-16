@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **isActive** | **bool** |  | 
 **rating** | **num** |  | 
 **document** | **String** |  | [optional] 
+**bank** | [**Bank**](Bank.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 

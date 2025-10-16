@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/bank.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -40,6 +41,8 @@ class OrderCreateRequestMerchant {
     this.rating,
 
     this.document,
+
+    this.bank,
 
     this.createdAt,
 
@@ -79,6 +82,9 @@ class OrderCreateRequestMerchant {
   @JsonKey(name: r'document', required: false, includeIfNull: false)
   final String? document;
 
+  @JsonKey(name: r'bank', required: false, includeIfNull: false)
+  final Bank? bank;
+
   @JsonKey(name: r'createdAt', required: false, includeIfNull: false)
   final DateTime? createdAt;
 
@@ -100,6 +106,7 @@ class OrderCreateRequestMerchant {
           other.isActive == isActive &&
           other.rating == rating &&
           other.document == document &&
+          other.bank == bank &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
 
@@ -116,6 +123,7 @@ class OrderCreateRequestMerchant {
       isActive.hashCode +
       rating.hashCode +
       document.hashCode +
+      bank.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode;
 

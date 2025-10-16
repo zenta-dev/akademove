@@ -8,9 +8,10 @@ import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_in200_response_data.dart';
 import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
-import 'package:api_client/src/model/auth_sign_up_user200_response.dart';
-import 'package:api_client/src/model/auth_sign_up_user200_response_data.dart';
+import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
+import 'package:api_client/src/model/auth_sign_up_user201_response_data.dart';
 import 'package:api_client/src/model/ban_user_schema_request.dart';
+import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
@@ -28,6 +29,7 @@ import 'package:api_client/src/model/driver.dart';
 import 'package:api_client/src/model/driver_get200_response.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_remove200_response.dart';
+import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/merchant.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
@@ -127,17 +129,19 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'AuthSignOut200Response':
       return AuthSignOut200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'AuthSignUpUser200Response':
-      return AuthSignUpUser200Response.fromJson(value as Map<String, dynamic>)
+    case 'AuthSignUpUser201Response':
+      return AuthSignUpUser201Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'AuthSignUpUser200ResponseData':
-      return AuthSignUpUser200ResponseData.fromJson(
+    case 'AuthSignUpUser201ResponseData':
+      return AuthSignUpUser201ResponseData.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
     case 'BanUserSchemaRequest':
       return BanUserSchemaRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'Bank':
+      return Bank.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Configuration':
       return Configuration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -194,6 +198,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'DriverRemove200Response':
       return DriverRemove200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'DriverUpdateRequestBank':
+      return DriverUpdateRequestBank.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'Location':
       return Location.fromJson(value as Map<String, dynamic>) as ReturnType;

@@ -5,6 +5,7 @@
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/order_create_request_user.dart';
+import 'package:api_client/src/model/bank.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -26,7 +27,7 @@ class Driver {
 
     required this.studentId,
 
-    required this.licenseNumber,
+    required this.licensePlate,
 
     required this.status,
 
@@ -46,6 +47,8 @@ class Driver {
 
     required this.vehicleCertificate,
 
+    required this.bank,
+
     this.user,
   });
 
@@ -58,8 +61,8 @@ class Driver {
   @JsonKey(name: r'studentId', required: true, includeIfNull: false)
   final String studentId;
 
-  @JsonKey(name: r'licenseNumber', required: true, includeIfNull: false)
-  final String licenseNumber;
+  @JsonKey(name: r'licensePlate', required: true, includeIfNull: false)
+  final String licensePlate;
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final DriverStatusEnum status;
@@ -88,6 +91,9 @@ class Driver {
   @JsonKey(name: r'vehicleCertificate', required: true, includeIfNull: false)
   final String vehicleCertificate;
 
+  @JsonKey(name: r'bank', required: true, includeIfNull: false)
+  final Bank bank;
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final OrderCreateRequestUser? user;
 
@@ -98,7 +104,7 @@ class Driver {
           other.id == id &&
           other.userId == userId &&
           other.studentId == studentId &&
-          other.licenseNumber == licenseNumber &&
+          other.licensePlate == licensePlate &&
           other.status == status &&
           other.rating == rating &&
           other.isOnline == isOnline &&
@@ -108,6 +114,7 @@ class Driver {
           other.studentCard == studentCard &&
           other.driverLicense == driverLicense &&
           other.vehicleCertificate == vehicleCertificate &&
+          other.bank == bank &&
           other.user == user;
 
   @override
@@ -115,7 +122,7 @@ class Driver {
       id.hashCode +
       userId.hashCode +
       studentId.hashCode +
-      licenseNumber.hashCode +
+      licensePlate.hashCode +
       status.hashCode +
       rating.hashCode +
       isOnline.hashCode +
@@ -125,6 +132,7 @@ class Driver {
       studentCard.hashCode +
       driverLicense.hashCode +
       vehicleCertificate.hashCode +
+      bank.hashCode +
       user.hashCode;
 
   factory Driver.fromJson(Map<String, dynamic> json) => _$DriverFromJson(json);

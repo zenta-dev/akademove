@@ -880,6 +880,8 @@ class MerchantApi {
   /// * [id]
   /// * [locationLat]
   /// * [locationLng]
+  /// * [bankProvider]
+  /// * [bankNumber]
   /// * [type]
   /// * [name]
   /// * [email]
@@ -899,6 +901,8 @@ class MerchantApi {
     required String id,
     required num locationLat,
     required num locationLng,
+    required String bankProvider,
+    required num bankNumber,
     String? type,
     String? name,
     String? email,
@@ -942,6 +946,8 @@ class MerchantApi {
         if (address != null) r'address': address,
         r'location_lat': locationLat,
         r'location_lng': locationLng,
+        r'bank_provider': bankProvider,
+        r'bank_number': bankNumber,
         if (document != null) r'document': document,
       });
     } catch (error, stackTrace) {

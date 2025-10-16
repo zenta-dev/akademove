@@ -29,6 +29,8 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
 
   OrderCreateRequestMerchant document(String? document);
 
+  OrderCreateRequestMerchant bank(Bank? bank);
+
   OrderCreateRequestMerchant createdAt(DateTime? createdAt);
 
   OrderCreateRequestMerchant updatedAt(DateTime? updatedAt);
@@ -51,6 +53,7 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
     bool? isActive,
     num? rating,
     String? document,
+    Bank? bank,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -101,6 +104,9 @@ class _$OrderCreateRequestMerchantCWProxyImpl
       this(document: document);
 
   @override
+  OrderCreateRequestMerchant bank(Bank? bank) => this(bank: bank);
+
+  @override
   OrderCreateRequestMerchant createdAt(DateTime? createdAt) =>
       this(createdAt: createdAt);
 
@@ -127,6 +133,7 @@ class _$OrderCreateRequestMerchantCWProxyImpl
     Object? isActive = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
+    Object? bank = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -175,6 +182,10 @@ class _$OrderCreateRequestMerchantCWProxyImpl
           ? _value.document
           // ignore: cast_nullable_to_non_nullable
           : document as String?,
+      bank: bank == const $CopyWithPlaceholder()
+          ? _value.bank
+          // ignore: cast_nullable_to_non_nullable
+          : bank as Bank?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -220,6 +231,10 @@ OrderCreateRequestMerchant _$OrderCreateRequestMerchantFromJson(
     isActive: $checkedConvert('isActive', (v) => v as bool?),
     rating: $checkedConvert('rating', (v) => v as num?),
     document: $checkedConvert('document', (v) => v as String?),
+    bank: $checkedConvert(
+      'bank',
+      (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>),
+    ),
     createdAt: $checkedConvert(
       'createdAt',
       (v) => v == null ? null : DateTime.parse(v as String),
@@ -246,6 +261,7 @@ Map<String, dynamic> _$OrderCreateRequestMerchantToJson(
   'isActive': ?instance.isActive,
   'rating': ?instance.rating,
   'document': ?instance.document,
+  'bank': ?instance.bank?.toJson(),
   'createdAt': ?instance.createdAt?.toIso8601String(),
   'updatedAt': ?instance.updatedAt?.toIso8601String(),
 };

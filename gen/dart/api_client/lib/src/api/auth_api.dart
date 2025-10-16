@@ -17,7 +17,7 @@ import 'package:api_client/src/model/auth_reset_password_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
-import 'package:api_client/src/model/auth_sign_up_user200_response.dart';
+import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 
 class AuthApi {
   final Dio _dio;
@@ -553,10 +553,12 @@ class AuthApi {
   /// * [confirmPassword]
   /// * [photo]
   /// * [detailStudentId]
-  /// * [detailLicenseNumber]
+  /// * [detailLicensePlate]
   /// * [detailStudentCard]
   /// * [detailDriverLicense]
   /// * [detailVehicleCertificate]
+  /// * [detailBankProvider]
+  /// * [detailBankNumber]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -564,9 +566,9 @@ class AuthApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthSignUpUser200Response>> authSignUpDriver({
+  Future<Response<AuthSignUpUser201Response>> authSignUpDriver({
     required String name,
     required String email,
     required String gender,
@@ -575,10 +577,12 @@ class AuthApi {
     required String confirmPassword,
     required MultipartFile photo,
     required String detailStudentId,
-    required String detailLicenseNumber,
+    required String detailLicensePlate,
     required MultipartFile detailStudentCard,
     required MultipartFile detailDriverLicense,
     required MultipartFile detailVehicleCertificate,
+    required String detailBankProvider,
+    required num detailBankNumber,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -612,10 +616,12 @@ class AuthApi {
         r'confirmPassword': confirmPassword,
         r'photo': photo,
         r'detail_studentId': detailStudentId,
-        r'detail_licenseNumber': detailLicenseNumber,
+        r'detail_licensePlate': detailLicensePlate,
         r'detail_studentCard': detailStudentCard,
         r'detail_driverLicense': detailDriverLicense,
         r'detail_vehicleCertificate': detailVehicleCertificate,
+        r'detail_bank_provider': detailBankProvider,
+        r'detail_bank_number': detailBankNumber,
       });
     } catch (error, stackTrace) {
       throw DioException(
@@ -635,15 +641,15 @@ class AuthApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    AuthSignUpUser200Response? _responseData;
+    AuthSignUpUser201Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthSignUpUser200Response, AuthSignUpUser200Response>(
+          : deserialize<AuthSignUpUser201Response, AuthSignUpUser201Response>(
               rawData,
-              'AuthSignUpUser200Response',
+              'AuthSignUpUser201Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -656,7 +662,7 @@ class AuthApi {
       );
     }
 
-    return Response<AuthSignUpUser200Response>(
+    return Response<AuthSignUpUser201Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -696,9 +702,9 @@ class AuthApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthSignUpUser200Response>> authSignUpMerchant({
+  Future<Response<AuthSignUpUser201Response>> authSignUpMerchant({
     required String name,
     required String email,
     required String gender,
@@ -713,7 +719,7 @@ class AuthApi {
     required num detailLocationLat,
     required num detailLocationLng,
     required String detailBankProvider,
-    required String detailBankNumber,
+    required num detailBankNumber,
     MultipartFile? photo,
     MultipartFile? detailDocument,
     CancelToken? cancelToken,
@@ -755,9 +761,9 @@ class AuthApi {
         r'detail_address': detailAddress,
         r'detail_location_lat': detailLocationLat,
         r'detail_location_lng': detailLocationLng,
-        if (detailDocument != null) r'detail_document': detailDocument,
         r'detail_bank_provider': detailBankProvider,
         r'detail_bank_number': detailBankNumber,
+        if (detailDocument != null) r'detail_document': detailDocument,
       });
     } catch (error, stackTrace) {
       throw DioException(
@@ -777,15 +783,15 @@ class AuthApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    AuthSignUpUser200Response? _responseData;
+    AuthSignUpUser201Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthSignUpUser200Response, AuthSignUpUser200Response>(
+          : deserialize<AuthSignUpUser201Response, AuthSignUpUser201Response>(
               rawData,
-              'AuthSignUpUser200Response',
+              'AuthSignUpUser201Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -798,7 +804,7 @@ class AuthApi {
       );
     }
 
-    return Response<AuthSignUpUser200Response>(
+    return Response<AuthSignUpUser201Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -828,9 +834,9 @@ class AuthApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AuthSignUpUser201Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthSignUpUser200Response>> authSignUpUser({
+  Future<Response<AuthSignUpUser201Response>> authSignUpUser({
     required String name,
     required String email,
     required String gender,
@@ -889,15 +895,15 @@ class AuthApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    AuthSignUpUser200Response? _responseData;
+    AuthSignUpUser201Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthSignUpUser200Response, AuthSignUpUser200Response>(
+          : deserialize<AuthSignUpUser201Response, AuthSignUpUser201Response>(
               rawData,
-              'AuthSignUpUser200Response',
+              'AuthSignUpUser201Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -910,7 +916,7 @@ class AuthApi {
       );
     }
 
-    return Response<AuthSignUpUser200Response>(
+    return Response<AuthSignUpUser201Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

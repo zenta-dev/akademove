@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  | 
 **userId** | **String** |  | 
 **studentId** | **String** |  | 
-**licenseNumber** | **String** |  | 
+**licensePlate** | **String** |  | 
 **status** | **String** |  | 
 **rating** | **num** |  | 
 **isOnline** | **bool** |  | 
@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **studentCard** | **String** |  | 
 **driverLicense** | **String** |  | 
 **vehicleCertificate** | **String** |  | 
+**bank** | [**Bank**](Bank.md) |  | 
 **user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

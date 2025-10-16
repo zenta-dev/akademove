@@ -12,6 +12,7 @@ import 'package:dio/dio.dart';
 import 'package:api_client/src/model/driver_get200_response.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_remove200_response.dart';
+import 'package:api_client/src/model/driver_update_request_bank.dart';
 
 class DriverApi {
   final Dio _dio;
@@ -285,10 +286,11 @@ class DriverApi {
   /// Parameters:
   /// * [id]
   /// * [studentId]
-  /// * [licenseNumber]
+  /// * [licensePlate]
   /// * [studentCard]
   /// * [driverLicense]
   /// * [vehicleCertificate]
+  /// * [bank]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -301,10 +303,11 @@ class DriverApi {
   Future<Response<DriverGet200Response>> driverUpdate({
     required String id,
     String? studentId,
-    String? licenseNumber,
+    String? licensePlate,
     MultipartFile? studentCard,
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
+    DriverUpdateRequestBank? bank,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -336,11 +339,12 @@ class DriverApi {
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
         if (studentId != null) r'studentId': studentId,
-        if (licenseNumber != null) r'licenseNumber': licenseNumber,
+        if (licensePlate != null) r'licensePlate': licensePlate,
         if (studentCard != null) r'studentCard': studentCard,
         if (driverLicense != null) r'driverLicense': driverLicense,
         if (vehicleCertificate != null)
           r'vehicleCertificate': vehicleCertificate,
+        if (bank != null) r'bank': bank,
       });
     } catch (error, stackTrace) {
       throw DioException(

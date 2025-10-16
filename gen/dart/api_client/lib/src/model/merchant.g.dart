@@ -29,6 +29,8 @@ abstract class _$MerchantCWProxy {
 
   Merchant document(String? document);
 
+  Merchant bank(Bank bank);
+
   Merchant createdAt(DateTime createdAt);
 
   Merchant updatedAt(DateTime updatedAt);
@@ -51,6 +53,7 @@ abstract class _$MerchantCWProxy {
     bool isActive,
     num rating,
     String? document,
+    Bank bank,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -96,6 +99,9 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant document(String? document) => this(document: document);
 
   @override
+  Merchant bank(Bank bank) => this(bank: bank);
+
+  @override
   Merchant createdAt(DateTime createdAt) => this(createdAt: createdAt);
 
   @override
@@ -120,6 +126,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
     Object? isActive = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
+    Object? bank = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
@@ -168,6 +175,10 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.document
           // ignore: cast_nullable_to_non_nullable
           : document as String?,
+      bank: bank == const $CopyWithPlaceholder()
+          ? _value.bank
+          // ignore: cast_nullable_to_non_nullable
+          : bank as Bank,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -205,6 +216,7 @@ Merchant _$MerchantFromJson(
       'address',
       'isActive',
       'rating',
+      'bank',
       'createdAt',
       'updatedAt',
     ],
@@ -227,6 +239,10 @@ Merchant _$MerchantFromJson(
     isActive: $checkedConvert('isActive', (v) => v as bool),
     rating: $checkedConvert('rating', (v) => v as num),
     document: $checkedConvert('document', (v) => v as String?),
+    bank: $checkedConvert(
+      'bank',
+      (v) => Bank.fromJson(v as Map<String, dynamic>),
+    ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
@@ -245,6 +261,7 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'isActive': instance.isActive,
   'rating': instance.rating,
   'document': ?instance.document,
+  'bank': instance.bank.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
 };

@@ -13,7 +13,7 @@ abstract class _$DriverCWProxy {
 
   Driver studentId(String studentId);
 
-  Driver licenseNumber(String licenseNumber);
+  Driver licensePlate(String licensePlate);
 
   Driver status(DriverStatusEnum status);
 
@@ -33,6 +33,8 @@ abstract class _$DriverCWProxy {
 
   Driver vehicleCertificate(String vehicleCertificate);
 
+  Driver bank(Bank bank);
+
   Driver user(OrderCreateRequestUser? user);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -45,7 +47,7 @@ abstract class _$DriverCWProxy {
     String id,
     String userId,
     String studentId,
-    String licenseNumber,
+    String licensePlate,
     DriverStatusEnum status,
     num rating,
     bool isOnline,
@@ -55,6 +57,7 @@ abstract class _$DriverCWProxy {
     String studentCard,
     String driverLicense,
     String vehicleCertificate,
+    Bank bank,
     OrderCreateRequestUser? user,
   });
 }
@@ -75,8 +78,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver studentId(String studentId) => this(studentId: studentId);
 
   @override
-  Driver licenseNumber(String licenseNumber) =>
-      this(licenseNumber: licenseNumber);
+  Driver licensePlate(String licensePlate) => this(licensePlate: licensePlate);
 
   @override
   Driver status(DriverStatusEnum status) => this(status: status);
@@ -110,6 +112,9 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       this(vehicleCertificate: vehicleCertificate);
 
   @override
+  Driver bank(Bank bank) => this(bank: bank);
+
+  @override
   Driver user(OrderCreateRequestUser? user) => this(user: user);
 
   @override
@@ -123,7 +128,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
     Object? studentId = const $CopyWithPlaceholder(),
-    Object? licenseNumber = const $CopyWithPlaceholder(),
+    Object? licensePlate = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
@@ -133,6 +138,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? studentCard = const $CopyWithPlaceholder(),
     Object? driverLicense = const $CopyWithPlaceholder(),
     Object? vehicleCertificate = const $CopyWithPlaceholder(),
+    Object? bank = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
   }) {
     return Driver(
@@ -148,10 +154,10 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
           : studentId as String,
-      licenseNumber: licenseNumber == const $CopyWithPlaceholder()
-          ? _value.licenseNumber
+      licensePlate: licensePlate == const $CopyWithPlaceholder()
+          ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
-          : licenseNumber as String,
+          : licensePlate as String,
       status: status == const $CopyWithPlaceholder()
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
@@ -188,6 +194,10 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.vehicleCertificate
           // ignore: cast_nullable_to_non_nullable
           : vehicleCertificate as String,
+      bank: bank == const $CopyWithPlaceholder()
+          ? _value.bank
+          // ignore: cast_nullable_to_non_nullable
+          : bank as Bank,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -214,7 +224,7 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'id',
           'userId',
           'studentId',
-          'licenseNumber',
+          'licensePlate',
           'status',
           'rating',
           'isOnline',
@@ -222,13 +232,14 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'studentCard',
           'driverLicense',
           'vehicleCertificate',
+          'bank',
         ],
       );
       final val = Driver(
         id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
         studentId: $checkedConvert('studentId', (v) => v as String),
-        licenseNumber: $checkedConvert('licenseNumber', (v) => v as String),
+        licensePlate: $checkedConvert('licensePlate', (v) => v as String),
         status: $checkedConvert(
           'status',
           (v) => $enumDecode(_$DriverStatusEnumEnumMap, v),
@@ -254,6 +265,10 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'vehicleCertificate',
           (v) => v as String,
         ),
+        bank: $checkedConvert(
+          'bank',
+          (v) => Bank.fromJson(v as Map<String, dynamic>),
+        ),
         user: $checkedConvert(
           'user',
           (v) => v == null
@@ -268,7 +283,7 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
   'studentId': instance.studentId,
-  'licenseNumber': instance.licenseNumber,
+  'licensePlate': instance.licensePlate,
   'status': _$DriverStatusEnumEnumMap[instance.status]!,
   'rating': instance.rating,
   'isOnline': instance.isOnline,
@@ -278,6 +293,7 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'studentCard': instance.studentCard,
   'driverLicense': instance.driverLicense,
   'vehicleCertificate': instance.vehicleCertificate,
+  'bank': instance.bank.toJson(),
   'user': ?instance.user?.toJson(),
 };
 
