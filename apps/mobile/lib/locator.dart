@@ -25,7 +25,8 @@ void _setupService() {
         basePathOverride: 'http://10.183.54.105:3000/api',
       ),
     )
-    ..registerSingleton<KeyValueService>(SharedPrefKeyValueService());
+    ..registerSingleton<KeyValueService>(SharedPrefKeyValueService())
+    ..registerSingleton<ImageService>(ImagePickerService());
 }
 
 void _setupRepository() {
