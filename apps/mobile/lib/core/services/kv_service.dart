@@ -1,8 +1,10 @@
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/core/base.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum KeyValueKeys { token }
 
-abstract class KeyValueService {
+abstract class KeyValueService extends BaseService {
   Future<T?> get<T>(KeyValueKeys key);
   Future<void> set<T>(KeyValueKeys key, T value);
   Future<void> remove(KeyValueKeys key);
@@ -10,14 +12,22 @@ abstract class KeyValueService {
 }
 
 class SharedPrefKeyValueService implements KeyValueService {
-  static String _mapKey(KeyValueKeys key) => key.toString();
+  SharedPrefKeyValueService();
+
+  late final SharedPreferences _prefs;
+
+  @override
+  Future<void> setup() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void teardown() {}
 
   @override
   Future<T?> get<T>(KeyValueKeys key) async {
-    final prefs = await SharedPreferences.getInstance();
-    final mappedKey = _mapKey(key);
-
-    final value = prefs.get(mappedKey);
+    await _ensureInitialized();
+    final value = _prefs.get(key.name);
 
     if (value == null) return null;
 
@@ -25,43 +35,52 @@ class SharedPrefKeyValueService implements KeyValueService {
       return value as T;
     }
 
-    throw Exception(
-      'Type mismatch for key $mappedKey. '
-      'Expected $T but got ${value.runtimeType}.',
+    throw ServiceError(
+      // ignore: lines_longer_than_80_chars
+      'Type mismatch for key "${key.name}". Expected $T but got ${value.runtimeType}.',
+      code: ErrorCode.INVALID_TYPE,
     );
   }
 
   @override
   Future<void> set<T>(KeyValueKeys key, T value) async {
-    final prefs = await SharedPreferences.getInstance();
-    final mappedKey = _mapKey(key);
+    await _ensureInitialized();
 
-    if (value is String) {
-      await prefs.setString(mappedKey, value);
-    } else if (value is int) {
-      await prefs.setInt(mappedKey, value);
-    } else if (value is double) {
-      await prefs.setDouble(mappedKey, value);
-    } else if (value is bool) {
-      await prefs.setBool(mappedKey, value);
-    } else if (value is List<String>) {
-      await prefs.setStringList(mappedKey, value);
-    } else {
-      throw Exception(
-        'Unsupported type ${value.runtimeType} for key $mappedKey',
+    final success = switch (value) {
+      final String v => await _prefs.setString(key.name, v),
+      final int v => await _prefs.setInt(key.name, v),
+      final double v => await _prefs.setDouble(key.name, v),
+      final bool v => await _prefs.setBool(key.name, v),
+      final List<String> v => await _prefs.setStringList(key.name, v),
+      _ => throw ServiceError(
+        'Unsupported type ${value.runtimeType} for key "${key.name}".',
+        code: ErrorCode.INVALID_TYPE,
+      ),
+    };
+
+    if (success == false) {
+      throw const ServiceError(
+        'Failed to write value to SharedPreferences',
+        code: ErrorCode.UNKNOWN,
       );
     }
   }
 
   @override
   Future<void> remove(KeyValueKeys key) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_mapKey(key));
+    await _ensureInitialized();
+    await _prefs.remove(key.name);
   }
 
   @override
   Future<void> clear() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await _ensureInitialized();
+    await _prefs.clear();
+  }
+
+  Future<void> _ensureInitialized() async {
+    if (!(_prefs is SharedPreferences)) {
+      _prefs = await SharedPreferences.getInstance();
+    }
   }
 }
