@@ -1,3 +1,4 @@
+export 'base.dart';
 export 'errors.dart';
 export 'helpers.dart';
 export 'logger.dart';
