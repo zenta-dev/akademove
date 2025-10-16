@@ -21,7 +21,15 @@ export const TimeSchema = z
 		title: "Time",
 		ref: "Time",
 	});
-
+export const BankSchema = z
+	.object({
+		provider: z.enum(["bca", "bni", "mandiri"]),
+		number: z.coerce.number(),
+	})
+	.meta({
+		title: "Bank",
+		ref: "Bank",
+	});
 export const DateSchema = z.coerce.date();
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
@@ -67,6 +75,7 @@ export const ClientAgentSchema = z.enum(["web", "mobile", "unknown"]);
 
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
+export type Bank = z.infer<typeof BankSchema>;
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type FailedResponse = z.infer<typeof FailedResponseSchema>;
 export type SuccessResponse<T> = z.infer<

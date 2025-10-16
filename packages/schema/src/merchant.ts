@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { DateSchema, LocationSchema } from "./common.ts";
+import { BankSchema, DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 
@@ -18,6 +18,7 @@ export const MerchantSchema = z
 		isActive: z.boolean(),
 		rating: z.number(),
 		document: z.url().optional(),
+		bank: BankSchema,
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})

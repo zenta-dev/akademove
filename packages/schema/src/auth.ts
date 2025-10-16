@@ -64,13 +64,7 @@ export const FlatSignUpDriverSchema = flattenZodObject(SignUpDriverSchema, "");
 export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
-	detail: z.object({
-		...InsertMerchantSchema.shape,
-		bank: z.object({
-			provider: z.string(),
-			number: z.string(),
-		}),
-	}),
+	detail: InsertMerchantSchema,
 });
 
 export const FlatSignUpMerchantSchema = flattenZodObject(

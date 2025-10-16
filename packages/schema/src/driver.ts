@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { DateSchema, LocationSchema } from "./common.ts";
+import { BankSchema, DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { UserSchema } from "./user.ts";
 
@@ -10,7 +10,7 @@ export const DriverSchema = z
 		id: z.uuid(),
 		userId: z.string(),
 		studentId: z.string().min(10),
-		licenseNumber: z.string().min(6),
+		licensePlate: z.string().min(6),
 		status: DriverStatusSchema,
 		rating: z.number(),
 		isOnline: z.boolean(),
@@ -21,6 +21,7 @@ export const DriverSchema = z
 		studentCard: z.url(),
 		driverLicense: z.url(),
 		vehicleCertificate: z.url(),
+		bank: BankSchema,
 		// relations
 		user: UserSchema.partial().optional(),
 	})
@@ -43,10 +44,11 @@ export const DriverDocumentSchema = z.object({
 
 export const InsertDriverSchema = DriverSchema.pick({
 	studentId: true,
-	licenseNumber: true,
+	licensePlate: true,
 	studentCard: true,
 	driverLicense: true,
 	vehicleCertificate: true,
+	bank: true,
 }).extend({
 	...DriverDocumentSchema.shape,
 });
