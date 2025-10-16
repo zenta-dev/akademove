@@ -1,3 +1,4 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/core/base.dart';
 import 'package:akademove/core/errors.dart';
 import 'package:akademove/core/helpers.dart';
@@ -53,6 +54,51 @@ class AuthRepository extends BaseRepository {
         password: password,
         confirmPassword: confirmPassword,
         photo: photo,
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'An error occured',
+            code: ErrorCode.INTERNAL_SERVER_ERROR,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.user);
+    });
+  }
+
+  Future<BaseResponse<User>> signUpDriver({
+    required String name,
+    required String email,
+    required String phone,
+    required UserGenderEnum gender,
+    required String password,
+    required String confirmPassword,
+    required MultipartFile photo,
+    required String studentId,
+    required String licensePlate,
+    required MultipartFile studentCard,
+    required MultipartFile driverLicense,
+    required MultipartFile vehicleCertificate,
+    required BankProviderEnum bankProvider,
+    required int bankNumber,
+  }) async {
+    return guard(() async {
+      final result = await apiClient.getAuthApi().authSignUpDriver(
+        name: name,
+        email: email,
+        gender: gender.value,
+        phone: phone,
+        password: password,
+        confirmPassword: confirmPassword,
+        photo: photo,
+        detailStudentId: studentId,
+        detailLicensePlate: licensePlate,
+        detailStudentCard: studentCard,
+        detailDriverLicense: driverLicense,
+        detailVehicleCertificate: vehicleCertificate,
+        detailBankProvider: bankProvider.value,
+        detailBankNumber: bankNumber,
       );
 
       final data =
