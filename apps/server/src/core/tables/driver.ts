@@ -1,4 +1,4 @@
-import type { Location } from "@repo/schema/common";
+import type { Bank, Location } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
@@ -21,13 +21,14 @@ export const driver = pgTable("drivers", {
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
 	studentId: text("student_id").notNull().unique(),
-	licenseNumber: text("license_number").notNull().unique(),
+	licensePlate: text("license_plate").notNull().unique(),
 	status: driverStatus().notNull().default("pending"),
 	rating: decimal({ precision: 2, scale: 1, mode: "number" })
 		.notNull()
 		.default(0.0),
 	isOnline: boolean("is_online").notNull().default(false),
 	currentLocation: jsonb("current_location").$type<Location>(),
+	bank: jsonb().$type<Bank>().notNull(),
 	lastLocationUpdate: timestamp("last_location_update"),
 	studentCard: text("student_card").notNull(),
 	driverLicense: text("driver_license").notNull(),

@@ -1,4 +1,4 @@
-import type { Location } from "@repo/schema/common";
+import type { Bank, Location } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
@@ -28,6 +28,7 @@ export const merchant = pgTable("merchants", {
 	phone: text().notNull().unique(),
 	address: text().notNull(),
 	location: jsonb().$type<Location>(),
+	bank: jsonb().$type<Bank>().notNull(),
 	isActive: boolean("is_active").notNull().default(true),
 	rating: decimal({ precision: 2, scale: 1, mode: "number" })
 		.notNull()
