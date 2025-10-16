@@ -5,7 +5,7 @@ import {
 	nullToUndefined,
 	type Permissions,
 } from "@repo/shared";
-import { AuthError } from "@/core/error";
+import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import type { ORPCContext } from "@/core/interface";
 import { authMiddleware } from "@/core/middlewares/auth";
 import { isDev } from "@/utils";
@@ -35,50 +35,102 @@ export const AuthHandler = os.router({
 		} as const;
 	}),
 	signUpUser: os.signUpUser.handler(async ({ context, input: { body } }) => {
-		const result = await context.repo.auth.signUp({ ...body, role: "user" });
+		return await context.svc.db.transaction(async (tx) => {
+			try {
+				const opts = { tx };
+				const result = await context.repo.auth.signUp(
+					{ ...body, role: "user" },
+					opts,
+				);
 
-		return {
-			status: 201,
-			body: {
-				message: "User account created successfully.",
-				data: nullToUndefined(result),
-			},
-		} as const;
+				return {
+					status: 201,
+					body: {
+						message: "User account created successfully.",
+						data: nullToUndefined(result),
+					},
+				} as const;
+			} catch (error) {
+				if (error instanceof BaseError) {
+					throw error;
+				}
+				console.error(error);
+				throw new RepositoryError("An error occured", {
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+		});
 	}),
 	signUpDriver: os.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
 			const unflatten = unflattenData(body);
-			const result = await context.repo.auth.signUpDriver(unflatten);
-			await context.repo.driver.create({
-				...unflatten.detail,
-				userId: result.user.id,
-			});
+			return await context.svc.db.transaction(async (tx) => {
+				try {
+					const opts = { tx };
+					const result = await context.repo.auth.signUpDriver(unflatten, opts);
+					await context.repo.driver.create(
+						{
+							...unflatten.detail,
+							userId: result.user.id,
+						},
+						opts,
+					);
 
-			return {
-				status: 201,
-				body: {
-					message: "Driver account registered successfully.",
-					data: nullToUndefined(result),
-				},
-			} as const;
+					return {
+						status: 201,
+						body: {
+							message: "Driver account registered successfully.",
+							data: nullToUndefined(result),
+						},
+					} as const;
+				} catch (error) {
+					if (error instanceof BaseError) {
+						throw error;
+					}
+					console.error(error);
+					throw new RepositoryError("An error occured", {
+						code: "INTERNAL_SERVER_ERROR",
+					});
+				}
+			});
 		},
 	),
 	signUpMerchant: os.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
 			const unflatten = unflattenData(body);
-			const result = await context.repo.auth.signUpMerchant(unflatten);
-			await context.repo.merchant.main.create({
-				...unflatten.detail,
-				userId: result.user.id,
-			});
 
-			return {
-				status: 201,
-				body: {
-					message: "Merchant account registered successfully.",
-					data: nullToUndefined(result),
-				},
-			} as const;
+			return await context.svc.db.transaction(async (tx) => {
+				try {
+					const opts = { tx };
+					const result = await context.repo.auth.signUpMerchant(
+						unflatten,
+						opts,
+					);
+					await context.repo.merchant.main.create(
+						{
+							...unflatten.detail,
+							userId: result.user.id,
+						},
+						opts,
+					);
+
+					return {
+						status: 201,
+						body: {
+							message: "Merchant account registered successfully.",
+							data: nullToUndefined(result),
+						},
+					} as const;
+				} catch (error) {
+					if (error instanceof BaseError) {
+						throw error;
+					}
+					console.error(error);
+					throw new RepositoryError("An error occured", {
+						code: "INTERNAL_SERVER_ERROR",
+					});
+				}
+			});
 		},
 	),
 	signOut: os.signOut.use(authMiddleware).handler(async ({ context }) => {

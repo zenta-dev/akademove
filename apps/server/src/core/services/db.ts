@@ -34,3 +34,6 @@ export const getDatabase = () => {
 };
 
 export type DatabaseService = ReturnType<typeof getDatabase>;
+export type DatabaseTransaction = Parameters<
+	Parameters<DatabaseService["transaction"]>["0"]
+>["0"];

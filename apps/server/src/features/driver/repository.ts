@@ -11,7 +11,11 @@ import {
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { log } from "@/core/logger";
-import { type DatabaseService, tables } from "@/core/services/db";
+import {
+	type DatabaseService,
+	type DatabaseTransaction,
+	tables,
+} from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
@@ -158,13 +162,52 @@ export class DriverRepository {
 		}
 	}
 
-	async create(item: InsertDriver & { userId: string }): Promise<Driver> {
+	async create(
+		item: InsertDriver & { userId: string },
+		opts?: { tx?: DatabaseTransaction },
+	): Promise<Driver> {
 		try {
-			const user = await this.#db.query.user.findFirst({
-				columns: { name: true },
-				where: (f, op) => op.eq(f.id, item.userId),
-			});
-			if (!user) throw new RepositoryError("User not found");
+			const [user, existingDriver] = await Promise.all([
+				(opts?.tx ?? this.#db).query.user.findFirst({
+					columns: { name: true },
+					where: (f, op) => op.eq(f.id, item.userId),
+				}),
+				(opts?.tx ?? this.#db).query.driver.findFirst({
+					columns: { studentId: true, licensePlate: true },
+					where: (f, op) =>
+						op.or(
+							op.eq(f.studentId, item.studentId),
+							op.eq(f.licensePlate, item.licensePlate),
+						),
+				}),
+			]);
+
+			if (!user)
+				throw new RepositoryError("User not found", { code: "NOT_FOUND" });
+
+			if (existingDriver) {
+				if (
+					existingDriver.studentId === item.studentId ||
+					existingDriver.licensePlate === item.licensePlate
+				) {
+					throw new RepositoryError(
+						"Student ID or License Plate already registered",
+						{
+							code: "CONFLICT",
+						},
+					);
+				}
+				if (existingDriver.studentId === item.studentId) {
+					throw new RepositoryError("Student ID already registered", {
+						code: "CONFLICT",
+					});
+				}
+				if (existingDriver.licensePlate === item.licensePlate) {
+					throw new RepositoryError("License Plate already registered", {
+						code: "CONFLICT",
+					});
+				}
+			}
 
 			const id = v7();
 			const fileKeys = {
@@ -174,7 +217,7 @@ export class DriverRepository {
 			};
 
 			const [operation] = await Promise.all([
-				this.#db
+				(opts?.tx ?? this.#db)
 					.insert(tables.driver)
 					.values({ ...item, id, ...fileKeys })
 					.returning()

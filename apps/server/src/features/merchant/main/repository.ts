@@ -14,7 +14,11 @@ import {
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { log } from "@/core/logger";
-import { type DatabaseService, tables } from "@/core/services/db";
+import {
+	type DatabaseService,
+	type DatabaseTransaction,
+	tables,
+} from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
@@ -153,14 +157,17 @@ export class MerchantMainRepository {
 		}
 	}
 
-	async create(item: InsertMerchant & { userId: string }): Promise<Merchant> {
+	async create(
+		item: InsertMerchant & { userId: string },
+		opts?: { tx?: DatabaseTransaction },
+	): Promise<Merchant> {
 		try {
 			const id = v7();
 			const doc = item.document;
 			const docKey = doc ? `M-${id}.${getFileExtension(doc)}` : undefined;
 
 			const [operation] = await Promise.all([
-				this.#db
+				(opts?.tx ?? this.#db)
 					.insert(tables.merchant)
 					.values({ ...item, id, document: docKey })
 					.returning()

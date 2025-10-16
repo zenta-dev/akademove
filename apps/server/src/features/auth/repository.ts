@@ -14,7 +14,11 @@ import { getFileExtension } from "@repo/shared";
 import { FEATURE_TAGS } from "@/core/constants";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { log } from "@/core/logger";
-import { type DatabaseService, tables } from "@/core/services/db";
+import {
+	type DatabaseService,
+	type DatabaseTransaction,
+	tables,
+} from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
@@ -116,20 +120,38 @@ export class AuthRepository {
 		}
 	}
 
-	async signUp(params: SignUp & { role?: UserRole }) {
+	async signUp(
+		params: SignUp & { role?: UserRole },
+		opts?: { tx?: DatabaseTransaction },
+	) {
 		log.debug(params, `${this.signUp.name} body`);
 
 		try {
-			const existingUser = await this.#db.query.user.findFirst({
-				columns: { id: true },
+			const existingUser = await (opts?.tx ?? this.#db).query.user.findFirst({
+				columns: { email: true, phone: true },
 				where: (f, op) =>
 					op.or(op.eq(f.email, params.email), op.eq(f.phone, params.phone)),
 			});
 
 			if (existingUser) {
-				throw new AuthError("Email or phone already used", {
-					code: "FORBIDDEN",
-				});
+				if (
+					existingUser.email === params.email ||
+					existingUser.phone === params.phone
+				) {
+					throw new RepositoryError("Email or phone Plate already registered", {
+						code: "CONFLICT",
+					});
+				}
+				if (existingUser.email === params.email) {
+					throw new RepositoryError("Email already registered", {
+						code: "CONFLICT",
+					});
+				}
+				if (existingUser.phone === params.phone) {
+					throw new RepositoryError("Phone already registered", {
+						code: "CONFLICT",
+					});
+				}
 			}
 
 			const hashedPassword = this.#pw.hash(params.password);
@@ -141,7 +163,7 @@ export class AuthRepository {
 				photoKey = `PP-${userId}.${extension}`;
 			}
 
-			const [user] = await this.#db
+			const [user] = await (opts?.tx ?? this.#db)
 				.insert(tables.user)
 				.values({
 					...params,
@@ -152,7 +174,7 @@ export class AuthRepository {
 				.returning();
 
 			const promises: Promise<unknown>[] = [
-				this.#db.insert(tables.account).values({
+				(opts?.tx ?? this.#db).insert(tables.account).values({
 					id: this.generateId(),
 					accountId: this.generateId(),
 					userId: user.id,
@@ -183,9 +205,12 @@ export class AuthRepository {
 		}
 	}
 
-	async signUpDriver(params: SignUpDriver) {
+	async signUpDriver(
+		params: SignUpDriver,
+		opts?: { tx?: DatabaseTransaction },
+	) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "driver" });
+			const { user } = await this.signUp({ ...params, role: "driver" }, opts);
 			return { user };
 		} catch (error) {
 			log.error(error, `${this.signUpDriver.name} failed`);
@@ -196,9 +221,12 @@ export class AuthRepository {
 		}
 	}
 
-	async signUpMerchant(params: SignUpMerchant) {
+	async signUpMerchant(
+		params: SignUpMerchant,
+		opts?: { tx?: DatabaseTransaction },
+	) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "merchant" });
+			const { user } = await this.signUp({ ...params, role: "merchant" }, opts);
 			return { user };
 		} catch (error) {
 			log.error(error, `${this.signUpMerchant.name} failed`);
