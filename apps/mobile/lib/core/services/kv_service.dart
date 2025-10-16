@@ -1,5 +1,4 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/base.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum KeyValueKeys { token }
@@ -17,8 +16,9 @@ class SharedPrefKeyValueService implements KeyValueService {
   late final SharedPreferences _prefs;
 
   @override
-  Future<void> setup() async {
+  Future<KeyValueService> setup() async {
     _prefs = await SharedPreferences.getInstance();
+    return this;
   }
 
   @override
@@ -26,7 +26,6 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<T?> get<T>(KeyValueKeys key) async {
-    await _ensureInitialized();
     final value = _prefs.get(key.name);
 
     if (value == null) return null;
@@ -44,8 +43,6 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<void> set<T>(KeyValueKeys key, T value) async {
-    await _ensureInitialized();
-
     final success = switch (value) {
       final String v => await _prefs.setString(key.name, v),
       final int v => await _prefs.setInt(key.name, v),
@@ -68,19 +65,11 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<void> remove(KeyValueKeys key) async {
-    await _ensureInitialized();
     await _prefs.remove(key.name);
   }
 
   @override
   Future<void> clear() async {
-    await _ensureInitialized();
     await _prefs.clear();
-  }
-
-  Future<void> _ensureInitialized() async {
-    if (!(_prefs is SharedPreferences)) {
-      _prefs = await SharedPreferences.getInstance();
-    }
   }
 }

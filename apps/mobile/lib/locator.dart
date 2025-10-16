@@ -24,8 +24,9 @@ void _setupService() {
         interceptors: interceptors,
         basePathOverride: 'http://10.183.54.105:3000/api',
       ),
+    ..registerSingletonAsync<KeyValueService>(
+      () async => SharedPrefKeyValueService().setup(),
     )
-    ..registerSingleton<KeyValueService>(SharedPrefKeyValueService())
     ..registerSingleton<ImageService>(ImagePickerService());
 }
 
