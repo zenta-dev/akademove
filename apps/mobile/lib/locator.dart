@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/core/interceptors/logger_interceptor.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
 final GetIt sl = GetIt.instance;
@@ -14,16 +15,21 @@ void setupLocator() {
 }
 
 void _setupService() {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://10.157.72.105:3000/api',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(minutes: 3),
+    ),
+  );
   final interceptors = [
     BearerAuthInterceptor(),
     LoggerInterceptor(),
   ];
   sl
     ..registerSingleton(
-      ApiClient(
-        interceptors: interceptors,
-        basePathOverride: 'http://10.183.54.105:3000/api',
-      ),
+      ApiClient(dio: dio, interceptors: interceptors),
+    )
     ..registerSingletonAsync<KeyValueService>(
       () async => SharedPrefKeyValueService().setup(),
     )
