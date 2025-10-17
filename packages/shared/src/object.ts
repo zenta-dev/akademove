@@ -23,3 +23,30 @@ export function unprefixKeys<
 	// biome-ignore lint/suspicious/noExplicitAny: cant cast the output
 	return result as any;
 }
+
+export function trimObjectValues<T extends Record<string, unknown>>(obj: T): T {
+	for (const key in obj) {
+		if (!Object.hasOwn(obj, key)) continue;
+
+		const val = obj[key];
+
+		if (typeof val === "string") {
+			obj[key] = val.trim() as T[Extract<keyof T, string>];
+		} else if (Array.isArray(val)) {
+			obj[key] = val.map((item) =>
+				typeof item === "object" && item !== null && !Array.isArray(item)
+					? trimObjectValues(item as Record<string, unknown>)
+					: typeof item === "string"
+						? item.trim()
+						: item,
+			) as T[Extract<keyof T, string>];
+		} else if (val !== null && typeof val === "object") {
+			obj[key] = trimObjectValues(val as Record<string, unknown>) as T[Extract<
+				keyof T,
+				string
+			>];
+		}
+	}
+
+	return obj;
+}
