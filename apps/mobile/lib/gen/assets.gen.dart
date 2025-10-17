@@ -94,6 +94,18 @@ class $AssetsImagesHeroGen {
   AssetGenImage get signUpMerchant1 =>
       const AssetGenImage('assets/images/hero/sign-up-merchant-1.png');
 
+  /// File path: assets/images/hero/sign-up-merchant-2.png
+  AssetGenImage get signUpMerchant2 =>
+      const AssetGenImage('assets/images/hero/sign-up-merchant-2.png');
+
+  /// File path: assets/images/hero/sign-up-merchant-3.png
+  AssetGenImage get signUpMerchant3 =>
+      const AssetGenImage('assets/images/hero/sign-up-merchant-3.png');
+
+  /// File path: assets/images/hero/sign-up-merchant-4.png
+  AssetGenImage get signUpMerchant4 =>
+      const AssetGenImage('assets/images/hero/sign-up-merchant-4.png');
+
   /// File path: assets/images/hero/sign-up-user.svg
   SvgGenImage get signUpUser =>
       const SvgGenImage('assets/images/hero/sign-up-user.svg');
@@ -105,6 +117,9 @@ class $AssetsImagesHeroGen {
     signUpDriver3,
     signUpDriver4,
     signUpMerchant1,
+    signUpMerchant2,
+    signUpMerchant3,
+    signUpMerchant4,
     signUpUser,
   ];
 }
