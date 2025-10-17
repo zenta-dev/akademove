@@ -120,6 +120,13 @@
       "when": 1760667509100,
       "tag": "0016_update-schedule-indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1760667622365,
+      "tag": "0017_update-coupon-indexes",
+      "breakpoints": true
     }
   ]
 }
