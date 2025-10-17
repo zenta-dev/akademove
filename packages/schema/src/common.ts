@@ -24,7 +24,7 @@ export const TimeSchema = z
 
 export const BankSchema = z
 	.object({
-		provider: z.enum(["bca", "bni", "mandiri"]),
+		provider: z.enum(CONSTANTS.BANK_PROVIDERS),
 		number: z.coerce.number(),
 	})
 	.meta({
@@ -35,7 +35,7 @@ export const BankSchema = z
 export const PhoneSchema = z
 	.object({
 		countryCode: z.enum(["ID"]),
-		number: z.coerce.number().min(10).max(15),
+		number: z.coerce.number(),
 	})
 	.meta({
 		title: "Phone",
@@ -82,7 +82,7 @@ export const createSuccessResponseSchema = <T>(schema: T) =>
 export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 	z.array(schema);
 
-export const ClientAgentSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
+export const ClientAgentSchema = z.enum(["unknown", "mobile", "web"]);
 
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
