@@ -9,7 +9,7 @@ export const DriverSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		studentId: z.string().min(10),
+		studentId: z.coerce.number().min(10).max(20),
 		licensePlate: z.string().min(6),
 		status: DriverStatusSchema,
 		rating: z.number(),

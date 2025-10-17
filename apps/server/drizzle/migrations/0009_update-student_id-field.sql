@@ -1,0 +1,1 @@
+ALTER TABLE "drivers" ALTER COLUMN "student_id" SET DATA TYPE numeric(20, 0);

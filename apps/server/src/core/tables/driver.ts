@@ -5,6 +5,7 @@ import {
 	boolean,
 	decimal,
 	jsonb,
+	numeric,
 	pgEnum,
 	pgTable,
 	text,
@@ -20,7 +21,9 @@ export const driver = pgTable("drivers", {
 	userId: text("user_id")
 		.notNull()
 		.references(() => user.id, { onDelete: "cascade" }),
-	studentId: text("student_id").notNull().unique(),
+	studentId: numeric("student_id", { precision: 20, scale: 0 })
+		.notNull()
+		.unique(),
 	licensePlate: text("license_plate").notNull().unique(),
 	status: driverStatus().notNull().default("pending"),
 	rating: decimal({ precision: 2, scale: 1, mode: "number" })
