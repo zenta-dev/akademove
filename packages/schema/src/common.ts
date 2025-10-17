@@ -21,6 +21,7 @@ export const TimeSchema = z
 		title: "Time",
 		ref: "Time",
 	});
+
 export const BankSchema = z
 	.object({
 		provider: z.enum(["bca", "bni", "mandiri"]),
@@ -29,6 +30,16 @@ export const BankSchema = z
 	.meta({
 		title: "Bank",
 		ref: "Bank",
+	});
+
+export const PhoneSchema = z
+	.object({
+		countryCode: z.enum(["ID"]),
+		number: z.coerce.number().min(10).max(15),
+	})
+	.meta({
+		title: "Phone",
+		ref: "Phone",
 	});
 export const DateSchema = z.coerce.date();
 
@@ -71,11 +82,12 @@ export const createSuccessResponseSchema = <T>(schema: T) =>
 export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 	z.array(schema);
 
-export const ClientAgentSchema = z.enum(["web", "mobile", "unknown"]);
+export const ClientAgentSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
 
 export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
 export type Bank = z.infer<typeof BankSchema>;
+export type Phone = z.infer<typeof PhoneSchema>;
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type FailedResponse = z.infer<typeof FailedResponseSchema>;
 export type SuccessResponse<T> = z.infer<

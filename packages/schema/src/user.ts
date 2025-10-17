@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema } from "./common.ts";
+import { DateSchema, PhoneSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES).meta({
@@ -27,7 +27,7 @@ export const UserSchema = z
 		banReason: z.string().optional(),
 		banExpires: DateSchema.optional(),
 		gender: UserGenderSchema,
-		phone: z.string(),
+		phone: PhoneSchema,
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})

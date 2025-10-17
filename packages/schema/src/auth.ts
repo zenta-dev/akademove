@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema } from "./common.ts";
+import { DateSchema, PhoneSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { InsertDriverSchema } from "./driver.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
@@ -40,7 +40,7 @@ export const SignUpSchema = z
 		),
 		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 		gender: UserGenderSchema,
-		phone: z.string(),
+		phone: PhoneSchema,
 		password: z
 			.string()
 			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
@@ -52,6 +52,7 @@ export const SignUpSchema = z
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
 	});
+export const FlatSignUpSchema = flattenZodObject(SignUpSchema, "");
 
 export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	{
@@ -60,8 +61,6 @@ export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	},
 );
 export const FlatSignUpDriverSchema = flattenZodObject(SignUpDriverSchema, "");
-
-export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
 	detail: InsertMerchantSchema,
@@ -114,6 +113,7 @@ export type SignIn = z.infer<typeof SignInSchema>;
 export type SignUp = z.infer<typeof SignUpSchema>;
 export type SignUpDriver = z.infer<typeof SignUpDriverSchema>;
 export type SignUpMerchant = z.infer<typeof SignUpMerchantSchema>;
+export type FlatSignUp = z.infer<typeof FlatSignUpSchema>;
 export type FlatSignUpDriver = z.infer<typeof FlatSignUpDriverSchema>;
 export type FlatSignUpMerchant = z.infer<typeof FlatSignUpMerchantSchema>;
 export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
