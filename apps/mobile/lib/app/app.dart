@@ -1,6 +1,7 @@
 import 'package:akademove/app/_export.dart';
 import 'package:akademove/app/router.dart';
 import 'package:akademove/app/theme.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +15,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => sl<AppCubit>()),
+        BlocProvider(create: (_) => sl<AppCubit>()..init()),
+        BlocProvider(create: (_) => sl<AuthCubit>()..init()),
       ],
       child: ScreenUtilInit(
         // designSize: const Size(360, 800),
