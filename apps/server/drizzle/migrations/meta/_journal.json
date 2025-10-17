@@ -71,6 +71,13 @@
       "when": 1760666102047,
       "tag": "0009_update-student_id-field",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1760666548350,
+      "tag": "0010_update-auth-indexes",
+      "breakpoints": true
     }
   ]
 }
