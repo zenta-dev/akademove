@@ -3,6 +3,7 @@ import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
 	nullToUndefined,
+	trimObjectValues,
 	type Permissions,
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
@@ -35,7 +36,7 @@ export const AuthHandler = os.router({
 		} as const;
 	}),
 	signUpUser: os.signUpUser.handler(async ({ context, input: { body } }) => {
-		const unflatten = unflattenData(body);
+		const unflatten = trimObjectValues(unflattenData(body));
 		return await context.svc.db.transaction(async (tx) => {
 			try {
 				const opts = { tx };
@@ -64,7 +65,7 @@ export const AuthHandler = os.router({
 	}),
 	signUpDriver: os.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
-			const unflatten = unflattenData(body);
+			const unflatten = trimObjectValues(unflattenData(body));
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
@@ -98,7 +99,7 @@ export const AuthHandler = os.router({
 	),
 	signUpMerchant: os.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
-			const unflatten = unflattenData(body);
+			const unflatten = trimObjectValues(unflattenData(body));
 
 			return await context.svc.db.transaction(async (tx) => {
 				try {
