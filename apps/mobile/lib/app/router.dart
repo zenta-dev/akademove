@@ -100,6 +100,16 @@ final router = GoRouter(
       builder: (context, state, child) => child,
       routes: [
         GoRoute(
+          name: Routes.driverHome.name,
+          path: Routes.driverHome.path,
+          builder: (context, state) => const DriverHomeScreen(),
+        ),
+      ],
+    ),
+    ShellRoute(
+      builder: (context, state, child) => child,
+      routes: [
+        GoRoute(
           name: Routes.merchantHome.name,
           path: Routes.merchantHome.path,
           builder: (context, state) => const MerchantHomeScreen(),
