@@ -171,7 +171,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     if (!_isStep4Valid) return;
     final cubit = context.read<SignUpCubit>();
     if (cubit.state.isLoading) return;
-    _formController.revalidate(context, FormValidationMode.changed);
 
     final formData = _extractFormData(values);
     if (formData == null) return;
@@ -187,7 +186,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       password: formData['password']!,
       confirmPassword: formData['confirmPassword']!,
       photoPath: _step2Docs[Step2Docs.photo]!.path,
-      studentId: formData['studentId']!,
+      studentId: int.parse(formData['studentId']!),
       licensePlate: formData['licensePlate']!,
       studentCardPath: _step2Docs[Step2Docs.studentCard]!.path,
       driverLicensePath: _step2Docs[Step2Docs.driverLicense]!.path,
@@ -240,7 +239,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   }) {
     _scrollToTop();
     if (isNext) {
-      _formController.revalidate(context, FormValidationMode.changed);
       if (validator()) _stepController.nextStep();
     } else {
       _stepController.previousStep();
@@ -313,7 +311,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
             label: 'NIM',
             placeholder: '25051204020',
             icon: LucideIcons.hash,
-            validator: const LengthValidator(min: 10),
+            validator: const LengthValidator(min: 10, max: 20),
             keyboardType: TextInputType.number,
             enabled: !state.isLoading,
           ),
@@ -333,7 +331,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
             label: 'Confirm Password',
             placeholder: '*******',
             icon: LucideIcons.key,
-            validator: const CompareWith<String>.equal(
+            // validator: null,
+            validator: const CompareWith.equal(
               _FormKeys.step1Password,
               message: 'Confirm password not same',
             ),
@@ -631,7 +630,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         FormValidationMode.changed,
         FormValidationMode.submitted,
       },
-      validator: const NotEmptyValidator(),
+      validator: NonNullValidator<T>(),
       child: SizedBox(
         width: double.infinity,
         child: Select<T>(
