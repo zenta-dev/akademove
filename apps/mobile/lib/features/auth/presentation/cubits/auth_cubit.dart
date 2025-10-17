@@ -1,8 +1,8 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
-class SplashCubit extends BaseCubit<SplashState> {
-  SplashCubit(this.authRepository) : super(SplashState.initial());
+class AuthCubit extends BaseCubit<SplashState> {
+  AuthCubit(this.authRepository) : super(SplashState.initial());
   final AuthRepository authRepository;
 
   @override

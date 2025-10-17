@@ -43,7 +43,7 @@ final router = GoRouter(
           name: Routes.authSplash.name,
           path: Routes.authSplash.path,
           builder: (context, state) => BlocProvider(
-            create: (_) => sl<SplashCubit>()..init(),
+            create: (_) => sl<AuthCubit>()..init(),
             child: const SplashScreen(),
           ),
         ),
