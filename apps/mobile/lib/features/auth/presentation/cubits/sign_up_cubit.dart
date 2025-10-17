@@ -52,7 +52,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String password,
     required String confirmPassword,
     required String photoPath,
-    required String studentId,
+    required int studentId,
     required String licensePlate,
     required String studentCardPath,
     required String driverLicensePath,

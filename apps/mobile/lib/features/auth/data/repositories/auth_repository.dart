@@ -43,13 +43,13 @@ class AuthRepository extends BaseRepository {
   }) async {
     return guard(() async {
       final result = await apiClient.getAuthApi().authSignUpUser(
-        name: name,
-        email: email,
-        gender: gender.value,
+        name: name.trim(),
+        email: email.trim(),
+        gender: gender.value.trim(),
         phoneCountryCode: phone.countryCode.value,
         phoneNumber: phone.number,
-        password: password,
-        confirmPassword: confirmPassword,
+        password: password.trim(),
+        confirmPassword: confirmPassword.trim(),
         photo: photo,
       );
 
@@ -72,7 +72,7 @@ class AuthRepository extends BaseRepository {
     required String password,
     required String confirmPassword,
     required MultipartFile photo,
-    required String studentId,
+    required int studentId,
     required String licensePlate,
     required MultipartFile studentCard,
     required MultipartFile driverLicense,
@@ -82,16 +82,16 @@ class AuthRepository extends BaseRepository {
   }) async {
     return guard(() async {
       final result = await apiClient.getAuthApi().authSignUpDriver(
-        name: name,
-        email: email,
+        name: name.trim(),
+        email: email.trim(),
         gender: gender.value,
         phoneCountryCode: phone.countryCode.value,
         phoneNumber: phone.number,
-        password: password,
-        confirmPassword: confirmPassword,
+        password: password.trim(),
+        confirmPassword: confirmPassword.trim(),
         photo: photo,
         detailStudentId: studentId,
-        detailLicensePlate: licensePlate,
+        detailLicensePlate: licensePlate.trim(),
         detailStudentCard: studentCard,
         detailDriverLicense: driverLicense,
         detailVehicleCertificate: vehicleCertificate,
