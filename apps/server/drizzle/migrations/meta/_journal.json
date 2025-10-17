@@ -78,6 +78,13 @@
       "when": 1760666548350,
       "tag": "0010_update-auth-indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1760666860648,
+      "tag": "0011_update-driver-indexes",
+      "breakpoints": true
     }
   ]
 }
