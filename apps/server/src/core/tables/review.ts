@@ -1,16 +1,16 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
+	index,
 	integer,
 	pgEnum,
 	pgTable,
 	text,
-	timestamp,
-	uuid,
-	index,
 	uniqueIndex,
+	uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier } from "./common";
 import { order } from "./order";
 
 export const reviewCategory = pgEnum(
@@ -34,7 +34,7 @@ export const review = pgTable(
 		category: reviewCategory().notNull().default("other"),
 		score: integer().notNull().default(0),
 		comment: text().notNull().default(""),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("review_order_from_user_idx").on(t.orderId, t.fromUserId),

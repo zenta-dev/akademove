@@ -4,18 +4,18 @@ import { relations } from "drizzle-orm";
 import {
 	boolean,
 	decimal,
+	index,
 	integer,
 	jsonb,
 	pgEnum,
 	pgTable,
 	text,
-	timestamp,
+	uniqueIndex,
 	uuid,
 	varchar,
-	uniqueIndex,
-	index,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier } from "./common";
 
 export const merchantType = pgEnum("merchant_type", CONSTANTS.MERCHANT_TYPES);
 
@@ -39,8 +39,7 @@ export const merchant = pgTable(
 			.notNull()
 			.default(0),
 		document: text(),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
-		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("merchant_user_id_idx").on(t.userId),
@@ -70,8 +69,7 @@ export const merchantMenu = pgTable(
 		}).notNull(),
 		stock: integer().notNull(),
 		image: text(),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
-		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		index("merchant_menu_merchant_id_idx").on(t.merchantId),

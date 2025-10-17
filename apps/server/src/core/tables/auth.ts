@@ -4,14 +4,14 @@ import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
+	index,
 	jsonb,
 	pgEnum,
 	pgTable,
 	text,
-	timestamp,
 	uniqueIndex,
-	index,
 } from "drizzle-orm/pg-core";
+import { DateModifier, timestamp } from "./common";
 
 export const userGender = pgEnum("user_gender", CONSTANTS.USER_GENDERS);
 
@@ -28,14 +28,8 @@ export const user = pgTable(
 		banReason: text("ban_reason"),
 		gender: userGender().notNull(),
 		phone: jsonb().$type<Phone>().notNull().unique(),
-		banExpires: timestamp("ban_expires", { mode: "date" }),
-		createdAt: timestamp("created_at", { mode: "date" })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: timestamp("updated_at", { mode: "date" })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdateFn(() => new Date()),
+		banExpires: timestamp("ban_expires"),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("user_email_idx").on(t.email),
@@ -56,21 +50,11 @@ export const account = pgTable(
 		accessToken: text("access_token"),
 		refreshToken: text("refresh_token"),
 		idToken: text("id_token"),
-		accessTokenExpiresAt: timestamp("access_token_expires_at", {
-			mode: "date",
-		}),
-		refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
-			mode: "date",
-		}),
+		accessTokenExpiresAt: timestamp("access_token_expires_at"),
+		refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
 		scope: text("scope"),
 		password: text("password"),
-		createdAt: timestamp("created_at", { mode: "date" })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: timestamp("updated_at", { mode: "date" })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdateFn(() => new Date()),
+		...DateModifier,
 	},
 	(t) => [
 		index("account_user_id_idx").on(t.userId),
@@ -84,9 +68,8 @@ export const verification = pgTable(
 		id: text("id").primaryKey(),
 		identifier: text("identifier").notNull().unique(),
 		value: text("value").notNull(),
-		expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
-		createdAt: timestamp("created_at", { mode: "date" }),
-		updatedAt: timestamp("updated_at", { mode: "date" }),
+		expiresAt: timestamp("expires_at").notNull(),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("verification_identifier_idx").on(t.identifier),

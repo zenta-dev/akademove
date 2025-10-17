@@ -3,16 +3,16 @@ import { relations } from "drizzle-orm";
 import {
 	boolean,
 	decimal,
+	index,
 	integer,
 	jsonb,
 	pgTable,
 	text,
-	timestamp,
-	uuid,
-	index,
 	uniqueIndex,
+	uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier, nowFn, timestamp } from "./common";
 import { order } from "./order";
 
 export const coupon = pgTable(
@@ -40,7 +40,7 @@ export const coupon = pgTable(
 		createdById: text("created_by_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("coupon_code_idx").on(t.code),
@@ -76,7 +76,7 @@ export const couponUsage = pgTable(
 			scale: 2,
 			mode: "number",
 		}).notNull(),
-		usedAt: timestamp("used_at").notNull().defaultNow(),
+		usedAt: timestamp("used_at").notNull().$defaultFn(nowFn),
 	},
 	(t) => [
 		index("coupon_usage_order_idx").on(t.orderId),

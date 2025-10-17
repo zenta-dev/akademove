@@ -127,6 +127,13 @@
       "when": 1760667622365,
       "tag": "0017_update-coupon-indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1760668825491,
+      "tag": "0018_generalize-date-modifier",
+      "breakpoints": true
     }
   ]
 }

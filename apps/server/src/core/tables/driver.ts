@@ -4,17 +4,17 @@ import { relations } from "drizzle-orm";
 import {
 	boolean,
 	decimal,
+	index,
 	jsonb,
 	numeric,
 	pgEnum,
 	pgTable,
 	text,
-	timestamp,
-	uuid,
 	uniqueIndex,
-	index,
+	uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier, timestamp } from "./common";
 
 export const driverStatus = pgEnum("driver_status", CONSTANTS.DRIVER_STATUSES);
 
@@ -41,7 +41,7 @@ export const driver = pgTable(
 		studentCard: text("student_card").notNull(),
 		driverLicense: text("driver_license").notNull(),
 		vehicleCertificate: text("vehicle_certificate").notNull(),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		uniqueIndex("driver_user_id_idx").on(t.userId),

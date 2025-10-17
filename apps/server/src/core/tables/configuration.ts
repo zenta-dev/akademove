@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
-import { jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { jsonb, pgTable, text, varchar } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier } from "./common";
 
 export const configuration = pgTable("configurations", {
 	key: varchar({ length: 255 }).primaryKey(),
@@ -10,7 +11,7 @@ export const configuration = pgTable("configurations", {
 	updatedById: text()
 		.notNull()
 		.references(() => user.id, { onDelete: "no action" }),
-	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	...DateModifier,
 });
 
 ///

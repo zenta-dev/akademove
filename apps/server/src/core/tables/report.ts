@@ -1,14 +1,8 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import {
-	pgEnum,
-	pgTable,
-	text,
-	timestamp,
-	uuid,
-	index,
-} from "drizzle-orm/pg-core";
+import { index, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { nowFn, timestamp } from "./common";
 import { order } from "./order";
 
 export const reportCategory = pgEnum(
@@ -43,7 +37,7 @@ export const report = pgTable(
 			onDelete: "set null",
 		}),
 		resolution: text(),
-		reportedAt: timestamp("reported_at").notNull().defaultNow(),
+		reportedAt: timestamp("reported_at").notNull().$defaultFn(nowFn),
 		resolvedAt: timestamp("resolved_at"),
 	},
 	(t) => [

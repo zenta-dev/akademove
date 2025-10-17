@@ -3,13 +3,14 @@ import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
+	index,
 	jsonb,
 	pgEnum,
 	pgTable,
 	timestamp,
 	uuid,
-	index,
 } from "drizzle-orm/pg-core";
+import { DateModifier } from "./common";
 import { driver } from "./driver";
 
 export const dayOfWeek = pgEnum("day_of_week", CONSTANTS.DAY_OF_WEEK);
@@ -27,8 +28,7 @@ export const schedule = pgTable(
 		isRecurring: boolean("is_recurring").notNull().default(true),
 		specificDate: timestamp("specific_date"),
 		isActive: boolean("is_active").notNull().default(true),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
-		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		index("schedule_driver_id_idx").on(t.driverId),

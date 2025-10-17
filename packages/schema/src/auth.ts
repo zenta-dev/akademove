@@ -1,7 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema, PhoneSchema } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
 import { InsertDriverSchema } from "./driver.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { InsertMerchantSchema } from "./merchant.ts";

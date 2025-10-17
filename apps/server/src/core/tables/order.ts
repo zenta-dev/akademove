@@ -3,15 +3,15 @@ import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	decimal,
+	index,
 	jsonb,
 	pgEnum,
 	pgTable,
 	text,
-	timestamp,
 	uuid,
-	index,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
+import { DateModifier, nowFn, timestamp } from "./common";
 import { driver } from "./driver";
 import { merchant } from "./merchant";
 
@@ -60,11 +60,10 @@ export const order = pgTable(
 			mode: "number",
 		}).notNull(),
 		note: jsonb().$type<OrderNote>(),
-		requestedAt: timestamp("requested_at").notNull().defaultNow(),
+		requestedAt: timestamp("requested_at").notNull().$defaultFn(nowFn),
 		acceptedAt: timestamp("accepted_at"),
 		arrivedAt: timestamp("arrived_at"),
-		createdAt: timestamp("created_at").notNull().defaultNow(),
-		updatedAt: timestamp("updated_at").notNull().defaultNow(),
+		...DateModifier,
 	},
 	(t) => [
 		index("order_user_id_idx").on(t.userId),
