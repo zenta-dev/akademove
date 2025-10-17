@@ -578,7 +578,7 @@ class AuthApi {
     required String password,
     required String confirmPassword,
     required MultipartFile photo,
-    required String detailStudentId,
+    required num detailStudentId,
     required String detailLicensePlate,
     required MultipartFile detailStudentCard,
     required MultipartFile detailDriverLicense,
@@ -691,7 +691,8 @@ class AuthApi {
   /// * [detailType]
   /// * [detailName]
   /// * [detailEmail]
-  /// * [detailPhone]
+  /// * [detailPhoneCountryCode]
+  /// * [detailPhoneNumber]
   /// * [detailAddress]
   /// * [detailLocationLat]
   /// * [detailLocationLng]
@@ -719,7 +720,8 @@ class AuthApi {
     required String detailType,
     required String detailName,
     required String detailEmail,
-    required String detailPhone,
+    required String detailPhoneCountryCode,
+    required num detailPhoneNumber,
     required String detailAddress,
     required num detailLocationLat,
     required num detailLocationLng,
@@ -763,7 +765,8 @@ class AuthApi {
         r'detail_type': detailType,
         r'detail_name': detailName,
         r'detail_email': detailEmail,
-        r'detail_phone': detailPhone,
+        r'detail_phone_countryCode': detailPhoneCountryCode,
+        r'detail_phone_number': detailPhoneNumber,
         r'detail_address': detailAddress,
         r'detail_location_lat': detailLocationLat,
         r'detail_location_lng': detailLocationLng,

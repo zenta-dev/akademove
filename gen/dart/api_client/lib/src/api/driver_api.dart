@@ -302,7 +302,7 @@ class DriverApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverGet200Response>> driverUpdate({
     required String id,
-    String? studentId,
+    num? studentId,
     String? licensePlate,
     MultipartFile? studentCard,
     MultipartFile? driverLicense,

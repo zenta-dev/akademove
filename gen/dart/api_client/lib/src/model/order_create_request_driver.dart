@@ -59,7 +59,7 @@ class OrderCreateRequestDriver {
   final String? userId;
 
   @JsonKey(name: r'studentId', required: false, includeIfNull: false)
-  final String? studentId;
+  final num? studentId;
 
   @JsonKey(name: r'licensePlate', required: false, includeIfNull: false)
   final String? licensePlate;

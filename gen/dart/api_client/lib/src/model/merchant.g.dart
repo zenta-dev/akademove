@@ -17,7 +17,7 @@ abstract class _$MerchantCWProxy {
 
   Merchant email(String email);
 
-  Merchant phone(String phone);
+  Merchant phone(Phone phone);
 
   Merchant address(String address);
 
@@ -47,7 +47,7 @@ abstract class _$MerchantCWProxy {
     MerchantTypeEnum type,
     String name,
     String email,
-    String phone,
+    Phone phone,
     String address,
     Location? location,
     bool isActive,
@@ -81,7 +81,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant email(String email) => this(email: email);
 
   @override
-  Merchant phone(String phone) => this(phone: phone);
+  Merchant phone(Phone phone) => this(phone: phone);
 
   @override
   Merchant address(String address) => this(address: address);
@@ -154,7 +154,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as String,
+          : phone as Phone,
       address: address == const $CopyWithPlaceholder()
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
@@ -230,7 +230,10 @@ Merchant _$MerchantFromJson(
     ),
     name: $checkedConvert('name', (v) => v as String),
     email: $checkedConvert('email', (v) => v as String),
-    phone: $checkedConvert('phone', (v) => v as String),
+    phone: $checkedConvert(
+      'phone',
+      (v) => Phone.fromJson(v as Map<String, dynamic>),
+    ),
     address: $checkedConvert('address', (v) => v as String),
     location: $checkedConvert(
       'location',
@@ -255,7 +258,7 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'type': _$MerchantTypeEnumEnumMap[instance.type]!,
   'name': instance.name,
   'email': instance.email,
-  'phone': instance.phone,
+  'phone': instance.phone.toJson(),
   'address': instance.address,
   'location': ?instance.location?.toJson(),
   'isActive': instance.isActive,

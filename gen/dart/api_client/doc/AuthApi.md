@@ -276,7 +276,7 @@ final num phoneNumber = 8.14; // num |
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
-final String detailStudentId = detailStudentId_example; // String | 
+final num detailStudentId = 8.14; // num | 
 final String detailLicensePlate = detailLicensePlate_example; // String | 
 final MultipartFile detailStudentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile detailDriverLicense = BINARY_DATA_HERE; // MultipartFile | 
@@ -304,7 +304,7 @@ Name | Type | Description  | Notes
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | 
- **detailStudentId** | **String**|  | 
+ **detailStudentId** | **num**|  | 
  **detailLicensePlate** | **String**|  | 
  **detailStudentCard** | **MultipartFile**|  | 
  **detailDriverLicense** | **MultipartFile**|  | 
@@ -328,7 +328,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpMerchant**
-> AuthSignUpUser201Response authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
+> AuthSignUpUser201Response authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
 
 
 
@@ -347,7 +347,8 @@ final String confirmPassword = confirmPassword_example; // String |
 final String detailType = detailType_example; // String | 
 final String detailName = detailName_example; // String | 
 final String detailEmail = detailEmail_example; // String | 
-final String detailPhone = detailPhone_example; // String | 
+final String detailPhoneCountryCode = detailPhoneCountryCode_example; // String | 
+final num detailPhoneNumber = 8.14; // num | 
 final String detailAddress = detailAddress_example; // String | 
 final num detailLocationLat = 8.14; // num | 
 final num detailLocationLng = 8.14; // num | 
@@ -357,7 +358,7 @@ final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile detailDocument = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument);
+    final response = api.authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpMerchant: $e\n');
@@ -378,7 +379,8 @@ Name | Type | Description  | Notes
  **detailType** | **String**|  | 
  **detailName** | **String**|  | 
  **detailEmail** | **String**|  | 
- **detailPhone** | **String**|  | 
+ **detailPhoneCountryCode** | **String**|  | 
+ **detailPhoneNumber** | **num**|  | 
  **detailAddress** | **String**|  | 
  **detailLocationLat** | **num**|  | 
  **detailLocationLng** | **num**|  | 

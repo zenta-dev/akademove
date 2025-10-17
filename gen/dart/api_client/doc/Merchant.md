@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **type** | **String** |  | 
 **name** | **String** |  | 
 **email** | **String** |  | 
-**phone** | **String** |  | 
+**phone** | [**Phone**](Phone.md) |  | 
 **address** | **String** |  | 
 **location** | [**Location**](Location.md) |  | [optional] 
 **isActive** | **bool** |  | 

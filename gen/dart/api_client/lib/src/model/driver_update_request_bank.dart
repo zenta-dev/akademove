@@ -47,12 +47,20 @@ class DriverUpdateRequestBank {
 }
 
 enum DriverUpdateRequestBankProviderEnum {
-  @JsonValue(r'bca')
-  bca(r'bca'),
-  @JsonValue(r'bni')
-  bni(r'bni'),
-  @JsonValue(r'mandiri')
-  mandiri(r'mandiri');
+  @JsonValue(r'BCA')
+  BCA(r'BCA'),
+  @JsonValue(r'BNI')
+  BNI(r'BNI'),
+  @JsonValue(r'BRI')
+  BRI(r'BRI'),
+  @JsonValue(r'Mandiri')
+  mandiri(r'Mandiri'),
+  @JsonValue(r'Permata')
+  permata(r'Permata'),
+  @JsonValue(r'CIMB')
+  CIMB(r'CIMB'),
+  @JsonValue(r'Danamon')
+  danamon(r'Danamon');
 
   const DriverUpdateRequestBankProviderEnum(this.value);
 

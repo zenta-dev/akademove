@@ -878,6 +878,8 @@ class MerchantApi {
   ///
   /// Parameters:
   /// * [id]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [locationLat]
   /// * [locationLng]
   /// * [bankProvider]
@@ -885,7 +887,6 @@ class MerchantApi {
   /// * [type]
   /// * [name]
   /// * [email]
-  /// * [phone]
   /// * [address]
   /// * [document]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -899,6 +900,8 @@ class MerchantApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantGetMine200ResponseBody>> merchantUpdate({
     required String id,
+    required String phoneCountryCode,
+    required num phoneNumber,
     required num locationLat,
     required num locationLng,
     required String bankProvider,
@@ -906,7 +909,6 @@ class MerchantApi {
     String? type,
     String? name,
     String? email,
-    String? phone,
     String? address,
     MultipartFile? document,
     CancelToken? cancelToken,
@@ -942,7 +944,8 @@ class MerchantApi {
         if (type != null) r'type': type,
         if (name != null) r'name': name,
         if (email != null) r'email': email,
-        if (phone != null) r'phone': phone,
+        r'phone_countryCode': phoneCountryCode,
+        r'phone_number': phoneNumber,
         if (address != null) r'address': address,
         r'location_lat': locationLat,
         r'location_lng': locationLng,

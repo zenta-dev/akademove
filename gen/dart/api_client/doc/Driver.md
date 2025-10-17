@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **userId** | **String** |  | 
-**studentId** | **String** |  | 
+**studentId** | **num** |  | 
 **licensePlate** | **String** |  | 
 **status** | **String** |  | 
 **rating** | **num** |  | 

@@ -97,7 +97,11 @@ Map<String, dynamic> _$DriverUpdateRequestBankToJson(
 };
 
 const _$DriverUpdateRequestBankProviderEnumEnumMap = {
-  DriverUpdateRequestBankProviderEnum.bca: 'bca',
-  DriverUpdateRequestBankProviderEnum.bni: 'bni',
-  DriverUpdateRequestBankProviderEnum.mandiri: 'mandiri',
+  DriverUpdateRequestBankProviderEnum.BCA: 'BCA',
+  DriverUpdateRequestBankProviderEnum.BNI: 'BNI',
+  DriverUpdateRequestBankProviderEnum.BRI: 'BRI',
+  DriverUpdateRequestBankProviderEnum.mandiri: 'Mandiri',
+  DriverUpdateRequestBankProviderEnum.permata: 'Permata',
+  DriverUpdateRequestBankProviderEnum.CIMB: 'CIMB',
+  DriverUpdateRequestBankProviderEnum.danamon: 'Danamon',
 };

@@ -59,7 +59,7 @@ class Driver {
   final String userId;
 
   @JsonKey(name: r'studentId', required: true, includeIfNull: false)
-  final String studentId;
+  final num studentId;
 
   @JsonKey(name: r'licensePlate', required: true, includeIfNull: false)
   final String licensePlate;

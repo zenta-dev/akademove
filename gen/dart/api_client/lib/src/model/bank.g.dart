@@ -85,7 +85,11 @@ Map<String, dynamic> _$BankToJson(Bank instance) => <String, dynamic>{
 };
 
 const _$BankProviderEnumEnumMap = {
-  BankProviderEnum.bca: 'bca',
-  BankProviderEnum.bni: 'bni',
-  BankProviderEnum.mandiri: 'mandiri',
+  BankProviderEnum.BCA: 'BCA',
+  BankProviderEnum.BNI: 'BNI',
+  BankProviderEnum.BRI: 'BRI',
+  BankProviderEnum.mandiri: 'Mandiri',
+  BankProviderEnum.permata: 'Permata',
+  BankProviderEnum.CIMB: 'CIMB',
+  BankProviderEnum.danamon: 'Danamon',
 };

@@ -11,7 +11,7 @@ abstract class _$DriverCWProxy {
 
   Driver userId(String userId);
 
-  Driver studentId(String studentId);
+  Driver studentId(num studentId);
 
   Driver licensePlate(String licensePlate);
 
@@ -46,7 +46,7 @@ abstract class _$DriverCWProxy {
   Driver call({
     String id,
     String userId,
-    String studentId,
+    num studentId,
     String licensePlate,
     DriverStatusEnum status,
     num rating,
@@ -75,7 +75,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver userId(String userId) => this(userId: userId);
 
   @override
-  Driver studentId(String studentId) => this(studentId: studentId);
+  Driver studentId(num studentId) => this(studentId: studentId);
 
   @override
   Driver licensePlate(String licensePlate) => this(licensePlate: licensePlate);
@@ -153,7 +153,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       studentId: studentId == const $CopyWithPlaceholder()
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
-          : studentId as String,
+          : studentId as num,
       licensePlate: licensePlate == const $CopyWithPlaceholder()
           ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
@@ -238,7 +238,7 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
       final val = Driver(
         id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
-        studentId: $checkedConvert('studentId', (v) => v as String),
+        studentId: $checkedConvert('studentId', (v) => v as num),
         licensePlate: $checkedConvert('licensePlate', (v) => v as String),
         status: $checkedConvert(
           'status',

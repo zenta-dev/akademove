@@ -11,7 +11,7 @@ abstract class _$OrderCreateRequestDriverCWProxy {
 
   OrderCreateRequestDriver userId(String? userId);
 
-  OrderCreateRequestDriver studentId(String? studentId);
+  OrderCreateRequestDriver studentId(num? studentId);
 
   OrderCreateRequestDriver licensePlate(String? licensePlate);
 
@@ -46,7 +46,7 @@ abstract class _$OrderCreateRequestDriverCWProxy {
   OrderCreateRequestDriver call({
     String? id,
     String? userId,
-    String? studentId,
+    num? studentId,
     String? licensePlate,
     OrderCreateRequestDriverStatusEnum? status,
     num? rating,
@@ -76,7 +76,7 @@ class _$OrderCreateRequestDriverCWProxyImpl
   OrderCreateRequestDriver userId(String? userId) => this(userId: userId);
 
   @override
-  OrderCreateRequestDriver studentId(String? studentId) =>
+  OrderCreateRequestDriver studentId(num? studentId) =>
       this(studentId: studentId);
 
   @override
@@ -160,7 +160,7 @@ class _$OrderCreateRequestDriverCWProxyImpl
       studentId: studentId == const $CopyWithPlaceholder()
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
-          : studentId as String?,
+          : studentId as num?,
       licensePlate: licensePlate == const $CopyWithPlaceholder()
           ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
@@ -230,7 +230,7 @@ OrderCreateRequestDriver _$OrderCreateRequestDriverFromJson(
   final val = OrderCreateRequestDriver(
     id: $checkedConvert('id', (v) => v as String?),
     userId: $checkedConvert('userId', (v) => v as String?),
-    studentId: $checkedConvert('studentId', (v) => v as String?),
+    studentId: $checkedConvert('studentId', (v) => v as num?),
     licensePlate: $checkedConvert('licensePlate', (v) => v as String?),
     status: $checkedConvert(
       'status',

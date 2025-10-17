@@ -5,6 +5,7 @@
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/bank.dart';
+import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -65,7 +66,7 @@ class Merchant {
   final String email;
 
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
-  final String phone;
+  final Phone phone;
 
   @JsonKey(name: r'address', required: true, includeIfNull: false)
   final String address;

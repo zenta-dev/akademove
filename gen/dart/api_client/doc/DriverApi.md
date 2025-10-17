@@ -159,7 +159,7 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
 final String id = id_example; // String | 
-final String studentId = studentId_example; // String | 
+final num studentId = 8.14; // num | 
 final String licensePlate = licensePlate_example; // String | 
 final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
@@ -179,7 +179,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **studentId** | **String**|  | [optional] 
+ **studentId** | **num**|  | [optional] 
  **licensePlate** | **String**|  | [optional] 
  **studentCard** | **MultipartFile**|  | [optional] 
  **driverLicense** | **MultipartFile**|  | [optional] 

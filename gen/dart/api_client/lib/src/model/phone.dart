@@ -22,8 +22,6 @@ class Phone {
   @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
   final PhoneCountryCodeEnum countryCode;
 
-  // minimum: 10
-  // maximum: 15
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
 

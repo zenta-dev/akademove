@@ -17,7 +17,7 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
 
   OrderCreateRequestMerchant email(String? email);
 
-  OrderCreateRequestMerchant phone(String? phone);
+  OrderCreateRequestMerchant phone(Phone? phone);
 
   OrderCreateRequestMerchant address(String? address);
 
@@ -47,7 +47,7 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
     OrderCreateRequestMerchantTypeEnum? type,
     String? name,
     String? email,
-    String? phone,
+    Phone? phone,
     String? address,
     Location? location,
     bool? isActive,
@@ -83,7 +83,7 @@ class _$OrderCreateRequestMerchantCWProxyImpl
   OrderCreateRequestMerchant email(String? email) => this(email: email);
 
   @override
-  OrderCreateRequestMerchant phone(String? phone) => this(phone: phone);
+  OrderCreateRequestMerchant phone(Phone? phone) => this(phone: phone);
 
   @override
   OrderCreateRequestMerchant address(String? address) => this(address: address);
@@ -161,7 +161,7 @@ class _$OrderCreateRequestMerchantCWProxyImpl
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as String?,
+          : phone as Phone?,
       address: address == const $CopyWithPlaceholder()
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
@@ -222,7 +222,10 @@ OrderCreateRequestMerchant _$OrderCreateRequestMerchantFromJson(
     ),
     name: $checkedConvert('name', (v) => v as String?),
     email: $checkedConvert('email', (v) => v as String?),
-    phone: $checkedConvert('phone', (v) => v as String?),
+    phone: $checkedConvert(
+      'phone',
+      (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
+    ),
     address: $checkedConvert('address', (v) => v as String?),
     location: $checkedConvert(
       'location',
@@ -255,7 +258,7 @@ Map<String, dynamic> _$OrderCreateRequestMerchantToJson(
   'type': ?_$OrderCreateRequestMerchantTypeEnumEnumMap[instance.type],
   'name': ?instance.name,
   'email': ?instance.email,
-  'phone': ?instance.phone,
+  'phone': ?instance.phone?.toJson(),
   'address': ?instance.address,
   'location': ?instance.location?.toJson(),
   'isActive': ?instance.isActive,
