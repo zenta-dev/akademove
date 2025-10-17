@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import * as z from "zod";
 import {
 	BankSchema,
@@ -15,8 +16,10 @@ export const MerchantSchema = z
 		id: z.uuid(),
 		userId: z.string(),
 		type: MerchantTypeSchema,
-		name: z.string(),
-		email: z.email(),
+		name: z.string().min(1, m.required_placeholder({ field: m.name() })),
+		email: z.email(
+			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
+		),
 		phone: PhoneSchema,
 		address: z.string(),
 		location: LocationSchema.optional(),

@@ -23,9 +23,9 @@ export const SessionSchema = z
 	});
 
 export const SignInSchema = z.object({
-	email: z.email(
-		m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
-	),
+	email: z
+		.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
+		.max(255),
 	password: z
 		.string()
 		.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
@@ -33,19 +33,24 @@ export const SignInSchema = z.object({
 
 export const SignUpSchema = z
 	.object({
-		name: z.string().min(1, m.required_placeholder({ field: m.name() })),
-		email: z.email(
-			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
-		),
+		name: z
+			.string()
+			.min(1, m.required_placeholder({ field: m.name() }))
+			.max(256),
+		email: z
+			.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
+			.max(256),
 		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 		gender: UserGenderSchema,
 		phone: PhoneSchema,
 		password: z
 			.string()
-			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
+			.min(8, m.min_placeholder({ field: m.password(), min: 8 }))
+			.max(256),
 		confirmPassword: z
 			.string()
-			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 })),
+			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 }))
+			.max(256),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		path: ["confirmPassword"],
@@ -55,7 +60,9 @@ export const FlatSignUpSchema = flattenZodObject(SignUpSchema, "");
 
 export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 	{
-		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]),
+		photo: z
+			.file(m.required_placeholder({ field: m.photo() }))
+			.mime(["image/png", "image/jpg", "image/jpeg"]),
 		detail: InsertDriverSchema,
 	},
 );

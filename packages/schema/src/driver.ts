@@ -10,7 +10,7 @@ export const DriverSchema = z
 		id: z.uuid(),
 		userId: z.string(),
 		studentId: z.coerce.number().min(10).max(20),
-		licensePlate: z.string().min(6),
+		licensePlate: z.string().min(6).max(32),
 		status: DriverStatusSchema,
 		rating: z.number(),
 		isOnline: z.boolean(),

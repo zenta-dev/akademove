@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema, DayOfWeekSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
@@ -23,8 +24,14 @@ const CouponRulesSchema = z.object({
 export const CouponSchema = z
 	.object({
 		id: z.uuid(),
-		name: z.string(),
-		code: z.string(),
+		name: z
+			.string()
+			.min(1, m.required_placeholder({ field: m.coupon() }))
+			.max(256),
+		code: z
+			.string()
+			.min(1, m.required_placeholder({ field: m.code() }))
+			.max(256),
 		rules: CouponRulesSchema,
 		discountAmount: z.number().optional(),
 		discountPercentage: z.number().optional(),

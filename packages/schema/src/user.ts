@@ -16,10 +16,13 @@ export const UserGenderSchema = z.enum(CONSTANTS.USER_GENDERS).meta({
 export const UserSchema = z
 	.object({
 		id: z.string(),
-		name: z.string().min(1, m.required_placeholder({ field: m.name() })),
-		email: z.email(
-			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
-		),
+		name: z
+			.string()
+			.min(1, m.required_placeholder({ field: m.name() }))
+			.max(256),
+		email: z
+			.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
+			.max(256),
 		emailVerified: z.boolean(),
 		image: z.url().optional(),
 		role: UserRoleSchema,
