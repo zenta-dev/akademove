@@ -35,11 +35,12 @@ export const AuthHandler = os.router({
 		} as const;
 	}),
 	signUpUser: os.signUpUser.handler(async ({ context, input: { body } }) => {
+		const unflatten = unflattenData(body);
 		return await context.svc.db.transaction(async (tx) => {
 			try {
 				const opts = { tx };
 				const result = await context.repo.auth.signUp(
-					{ ...body, role: "user" },
+					{ ...unflatten, role: "user" },
 					opts,
 				);
 

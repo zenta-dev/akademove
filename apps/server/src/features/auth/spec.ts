@@ -2,13 +2,13 @@ import { oc } from "@orpc/contract";
 import {
 	FlatSignUpDriverSchema,
 	FlatSignUpMerchantSchema,
+	FlatSignUpSchema,
 	ForgotPasswordSchema,
 	GetSessionResponseSchema,
 	ResetPasswordSchema,
 	SignInResponseSchema,
 	SignInSchema,
 	SignUpResponseSchema,
-	SignUpSchema,
 } from "@repo/schema/auth";
 import * as z from "zod/v4";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
@@ -39,10 +39,10 @@ export const AuthSpec = {
 			outputStructure: "detailed",
 			spec: (spec) => ({
 				...spec,
-				...toOAPIRequestBody(SignUpSchema),
+				...toOAPIRequestBody(FlatSignUpSchema),
 			}),
 		})
-		.input(z.object({ body: SignUpSchema }))
+		.input(z.object({ body: FlatSignUpSchema }))
 		.output(
 			z.union([
 				createSuccesSchema(SignUpResponseSchema, "Sign Up Successfully", {

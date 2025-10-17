@@ -1,13 +1,14 @@
+import type { Phone } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
+	jsonb,
 	pgEnum,
 	pgTable,
 	text,
 	timestamp,
-	varchar,
 } from "drizzle-orm/pg-core";
 
 export const userGender = pgEnum("user_gender", CONSTANTS.USER_GENDERS);
@@ -22,7 +23,7 @@ export const user = pgTable("users", {
 	banned: boolean().notNull().default(false),
 	banReason: text("ban_reason"),
 	gender: userGender().notNull(),
-	phone: varchar({ length: 15 }).notNull().unique(),
+	phone: jsonb().$type<Phone>().notNull().unique(),
 	banExpires: timestamp("ban_expires", { mode: "date" }),
 	createdAt: timestamp("created_at", { mode: "date" })
 		.notNull()
@@ -31,27 +32,6 @@ export const user = pgTable("users", {
 		.notNull()
 		.$defaultFn(() => new Date())
 		.$onUpdateFn(() => new Date()),
-});
-
-export const session = pgTable("sessions", {
-	id: text("id").primaryKey(),
-	expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
-	token: text("token").notNull().unique(),
-	createdAt: timestamp("created_at", { mode: "date" })
-		.notNull()
-		.$defaultFn(() => new Date()),
-	updatedAt: timestamp("updated_at", { mode: "date" })
-		.notNull()
-		.$defaultFn(() => new Date())
-		.$onUpdateFn(() => new Date()),
-	ipAddress: text("ip_address"),
-	userAgent: text("user_agent"),
-	impersonatedBy: text("impersonated_by").references(() => user.id, {
-		onDelete: "set null",
-	}),
-	userId: text("user_id")
-		.notNull()
-		.references(() => user.id, { onDelete: "cascade" }),
 });
 
 export const account = pgTable("accounts", {
@@ -88,13 +68,6 @@ export const verification = pgTable("verifications", {
 	updatedAt: timestamp("updated_at", { mode: "date" }),
 });
 
-export const jwks = pgTable("jwks", {
-	id: text("id").primaryKey(),
-	publicKey: text("public_key").notNull(),
-	privateKey: text("private_key").notNull(),
-	createdAt: timestamp("created_at", { mode: "date" }).notNull(),
-});
-
 ///
 /// --- Relations --- ///
 ///
@@ -109,12 +82,5 @@ export const accountRelations = relations(account, ({ one }) => ({
 		references: [user.id],
 	}),
 }));
-
-// export const sessionRelations = relations(session, ({ one }) => ({
-// 	user: one(user, {
-// 		fields: [session.userId],
-// 		references: [user.id],
-// 	}),
-// }));
 
 export type UserDatabase = typeof user.$inferSelect;
