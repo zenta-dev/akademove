@@ -47,6 +47,7 @@ import 'package:api_client/src/model/order_create_request_note.dart';
 import 'package:api_client/src/model/order_create_request_user.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
 import 'package:api_client/src/model/order_update_request.dart';
+import 'package:api_client/src/model/phone.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_create_request.dart';
@@ -253,6 +254,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderUpdateRequest':
       return OrderUpdateRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'Phone':
+      return Phone.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReportCreate200Response':

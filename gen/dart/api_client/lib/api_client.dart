@@ -68,6 +68,7 @@ export 'package:api_client/src/model/order_create_request_note.dart';
 export 'package:api_client/src/model/order_create_request_user.dart';
 export 'package:api_client/src/model/order_list200_response.dart';
 export 'package:api_client/src/model/order_update_request.dart';
+export 'package:api_client/src/model/phone.dart';
 export 'package:api_client/src/model/report.dart';
 export 'package:api_client/src/model/report_create200_response.dart';
 export 'package:api_client/src/model/report_create_request.dart';

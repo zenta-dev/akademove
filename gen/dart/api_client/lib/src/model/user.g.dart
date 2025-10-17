@@ -27,7 +27,7 @@ abstract class _$UserCWProxy {
 
   User gender(UserGenderEnum gender);
 
-  User phone(String phone);
+  User phone(Phone phone);
 
   User createdAt(DateTime createdAt);
 
@@ -50,7 +50,7 @@ abstract class _$UserCWProxy {
     String? banReason,
     DateTime? banExpires,
     UserGenderEnum gender,
-    String phone,
+    Phone phone,
     DateTime createdAt,
     DateTime updatedAt,
   });
@@ -93,7 +93,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User gender(UserGenderEnum gender) => this(gender: gender);
 
   @override
-  User phone(String phone) => this(phone: phone);
+  User phone(Phone phone) => this(phone: phone);
 
   @override
   User createdAt(DateTime createdAt) => this(createdAt: createdAt);
@@ -167,7 +167,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as String,
+          : phone as Phone,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -225,7 +225,10 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
       'gender',
       (v) => $enumDecode(_$UserGenderEnumEnumMap, v),
     ),
-    phone: $checkedConvert('phone', (v) => v as String),
+    phone: $checkedConvert(
+      'phone',
+      (v) => Phone.fromJson(v as Map<String, dynamic>),
+    ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );
@@ -243,7 +246,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'banReason': ?instance.banReason,
   'banExpires': ?instance.banExpires?.toIso8601String(),
   'gender': _$UserGenderEnumEnumMap[instance.gender]!,
-  'phone': instance.phone,
+  'phone': instance.phone.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
 };

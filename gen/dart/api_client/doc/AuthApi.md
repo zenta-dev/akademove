@@ -259,7 +259,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpDriver**
-> AuthSignUpUser201Response authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber)
+> AuthSignUpUser201Response authSignUpDriver(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber)
 
 
 
@@ -271,7 +271,8 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String gender = gender_example; // String | 
-final String phone = phone_example; // String | 
+final String phoneCountryCode = phoneCountryCode_example; // String | 
+final num phoneNumber = 8.14; // num | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
@@ -284,7 +285,7 @@ final String detailBankProvider = detailBankProvider_example; // String |
 final num detailBankNumber = 8.14; // num | 
 
 try {
-    final response = api.authSignUpDriver(name, email, gender, phone, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber);
+    final response = api.authSignUpDriver(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, photo, detailStudentId, detailLicensePlate, detailStudentCard, detailDriverLicense, detailVehicleCertificate, detailBankProvider, detailBankNumber);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpDriver: $e\n');
@@ -298,7 +299,8 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **gender** | **String**|  | 
- **phone** | **String**|  | 
+ **phoneCountryCode** | **String**|  | 
+ **phoneNumber** | **num**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | 
@@ -326,7 +328,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpMerchant**
-> AuthSignUpUser201Response authSignUpMerchant(name, email, gender, phone, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
+> AuthSignUpUser201Response authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument)
 
 
 
@@ -338,7 +340,8 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String gender = gender_example; // String | 
-final String phone = phone_example; // String | 
+final String phoneCountryCode = phoneCountryCode_example; // String | 
+final num phoneNumber = 8.14; // num | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final String detailType = detailType_example; // String | 
@@ -354,7 +357,7 @@ final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile detailDocument = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.authSignUpMerchant(name, email, gender, phone, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument);
+    final response = api.authSignUpMerchant(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, detailType, detailName, detailEmail, detailPhone, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, detailDocument);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpMerchant: $e\n');
@@ -368,7 +371,8 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **gender** | **String**|  | 
- **phone** | **String**|  | 
+ **phoneCountryCode** | **String**|  | 
+ **phoneNumber** | **num**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **detailType** | **String**|  | 
@@ -399,7 +403,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpUser**
-> AuthSignUpUser201Response authSignUpUser(name, email, gender, phone, password, confirmPassword, photo)
+> AuthSignUpUser201Response authSignUpUser(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, photo)
 
 
 
@@ -411,13 +415,14 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String gender = gender_example; // String | 
-final String phone = phone_example; // String | 
+final String phoneCountryCode = phoneCountryCode_example; // String | 
+final num phoneNumber = 8.14; // num | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.authSignUpUser(name, email, gender, phone, password, confirmPassword, photo);
+    final response = api.authSignUpUser(name, email, gender, phoneCountryCode, phoneNumber, password, confirmPassword, photo);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpUser: $e\n');
@@ -431,7 +436,8 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **gender** | **String**|  | 
- **phone** | **String**|  | 
+ **phoneCountryCode** | **String**|  | 
+ **phoneNumber** | **num**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | [optional] 

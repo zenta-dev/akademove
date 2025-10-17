@@ -1,0 +1,60 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'phone.g.dart';
+
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class Phone {
+  /// Returns a new [Phone] instance.
+  Phone({required this.countryCode, required this.number});
+
+  @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
+  final PhoneCountryCodeEnum countryCode;
+
+  // minimum: 10
+  // maximum: 15
+  @JsonKey(name: r'number', required: true, includeIfNull: false)
+  final num number;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Phone &&
+          other.countryCode == countryCode &&
+          other.number == number;
+
+  @override
+  int get hashCode => countryCode.hashCode + number.hashCode;
+
+  factory Phone.fromJson(Map<String, dynamic> json) => _$PhoneFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PhoneToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+}
+
+enum PhoneCountryCodeEnum {
+  @JsonValue(r'ID')
+  ID(r'ID');
+
+  const PhoneCountryCodeEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}

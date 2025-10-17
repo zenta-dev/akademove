@@ -175,6 +175,7 @@ Class | Method | HTTP request | Description
  - [OrderCreateRequestUser](doc/OrderCreateRequestUser.md)
  - [OrderList200Response](doc/OrderList200Response.md)
  - [OrderUpdateRequest](doc/OrderUpdateRequest.md)
+ - [Phone](doc/Phone.md)
  - [Report](doc/Report.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
  - [ReportCreateRequest](doc/ReportCreateRequest.md)

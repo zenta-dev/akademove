@@ -57,6 +57,7 @@ doc/OrderCreateRequestNote.md
 doc/OrderCreateRequestUser.md
 doc/OrderList200Response.md
 doc/OrderUpdateRequest.md
+doc/Phone.md
 doc/Report.md
 doc/ReportApi.md
 doc/ReportCreate200Response.md
@@ -153,6 +154,7 @@ lib/src/model/order_create_request_note.dart
 lib/src/model/order_create_request_user.dart
 lib/src/model/order_list200_response.dart
 lib/src/model/order_update_request.dart
+lib/src/model/phone.dart
 lib/src/model/report.dart
 lib/src/model/report_create200_response.dart
 lib/src/model/report_create_request.dart

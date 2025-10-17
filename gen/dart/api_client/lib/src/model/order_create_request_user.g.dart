@@ -27,7 +27,7 @@ abstract class _$OrderCreateRequestUserCWProxy {
 
   OrderCreateRequestUser gender(OrderCreateRequestUserGenderEnum? gender);
 
-  OrderCreateRequestUser phone(String? phone);
+  OrderCreateRequestUser phone(Phone? phone);
 
   OrderCreateRequestUser createdAt(DateTime? createdAt);
 
@@ -50,7 +50,7 @@ abstract class _$OrderCreateRequestUserCWProxy {
     String? banReason,
     DateTime? banExpires,
     OrderCreateRequestUserGenderEnum? gender,
-    String? phone,
+    Phone? phone,
     DateTime? createdAt,
     DateTime? updatedAt,
   });
@@ -99,7 +99,7 @@ class _$OrderCreateRequestUserCWProxyImpl
       this(gender: gender);
 
   @override
-  OrderCreateRequestUser phone(String? phone) => this(phone: phone);
+  OrderCreateRequestUser phone(Phone? phone) => this(phone: phone);
 
   @override
   OrderCreateRequestUser createdAt(DateTime? createdAt) =>
@@ -175,7 +175,7 @@ class _$OrderCreateRequestUserCWProxyImpl
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as String?,
+          : phone as Phone?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -222,7 +222,10 @@ OrderCreateRequestUser _$OrderCreateRequestUserFromJson(
       'gender',
       (v) => $enumDecodeNullable(_$OrderCreateRequestUserGenderEnumEnumMap, v),
     ),
-    phone: $checkedConvert('phone', (v) => v as String?),
+    phone: $checkedConvert(
+      'phone',
+      (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
+    ),
     createdAt: $checkedConvert(
       'createdAt',
       (v) => v == null ? null : DateTime.parse(v as String),
@@ -248,7 +251,7 @@ Map<String, dynamic> _$OrderCreateRequestUserToJson(
   'banReason': ?instance.banReason,
   'banExpires': ?instance.banExpires?.toIso8601String(),
   'gender': ?_$OrderCreateRequestUserGenderEnumEnumMap[instance.gender],
-  'phone': ?instance.phone,
+  'phone': ?instance.phone?.toJson(),
   'createdAt': ?instance.createdAt?.toIso8601String(),
   'updatedAt': ?instance.updatedAt?.toIso8601String(),
 };

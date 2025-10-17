@@ -15,7 +15,7 @@ abstract class _$UserCreateRequestCWProxy {
 
   UserCreateRequest gender(UserCreateRequestGenderEnum gender);
 
-  UserCreateRequest phone(String phone);
+  UserCreateRequest phone(Phone phone);
 
   UserCreateRequest password(String password);
 
@@ -32,7 +32,7 @@ abstract class _$UserCreateRequestCWProxy {
     String email,
     UserCreateRequestRoleEnum role,
     UserCreateRequestGenderEnum gender,
-    String phone,
+    Phone phone,
     String password,
     String confirmPassword,
   });
@@ -58,7 +58,7 @@ class _$UserCreateRequestCWProxyImpl implements _$UserCreateRequestCWProxy {
       this(gender: gender);
 
   @override
-  UserCreateRequest phone(String phone) => this(phone: phone);
+  UserCreateRequest phone(Phone phone) => this(phone: phone);
 
   @override
   UserCreateRequest password(String password) => this(password: password);
@@ -103,7 +103,7 @@ class _$UserCreateRequestCWProxyImpl implements _$UserCreateRequestCWProxy {
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as String,
+          : phone as Phone,
       password: password == const $CopyWithPlaceholder()
           ? _value.password
           // ignore: cast_nullable_to_non_nullable
@@ -152,7 +152,10 @@ UserCreateRequest _$UserCreateRequestFromJson(Map<String, dynamic> json) =>
           'gender',
           (v) => $enumDecode(_$UserCreateRequestGenderEnumEnumMap, v),
         ),
-        phone: $checkedConvert('phone', (v) => v as String),
+        phone: $checkedConvert(
+          'phone',
+          (v) => Phone.fromJson(v as Map<String, dynamic>),
+        ),
         password: $checkedConvert('password', (v) => v as String),
         confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
       );
@@ -165,7 +168,7 @@ Map<String, dynamic> _$UserCreateRequestToJson(UserCreateRequest instance) =>
       'email': instance.email,
       'role': _$UserCreateRequestRoleEnumEnumMap[instance.role]!,
       'gender': _$UserCreateRequestGenderEnumEnumMap[instance.gender]!,
-      'phone': instance.phone,
+      'phone': instance.phone.toJson(),
       'password': instance.password,
       'confirmPassword': instance.confirmPassword,
     };

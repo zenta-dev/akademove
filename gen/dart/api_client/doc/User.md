@@ -18,7 +18,7 @@ Name | Type | Description | Notes
 **banReason** | **String** |  | [optional] 
 **banExpires** | [**DateTime**](DateTime.md) |  | [optional] 
 **gender** | **String** |  | 
-**phone** | **String** |  | 
+**phone** | [**Phone**](Phone.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 

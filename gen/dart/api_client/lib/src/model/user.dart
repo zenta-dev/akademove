@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -76,7 +77,7 @@ class User {
   final UserGenderEnum gender;
 
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
-  final String phone;
+  final Phone phone;
 
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;

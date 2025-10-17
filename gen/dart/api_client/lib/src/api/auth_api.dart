@@ -548,7 +548,8 @@ class AuthApi {
   /// * [name]
   /// * [email]
   /// * [gender]
-  /// * [phone]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [password]
   /// * [confirmPassword]
   /// * [photo]
@@ -572,7 +573,8 @@ class AuthApi {
     required String name,
     required String email,
     required String gender,
-    required String phone,
+    required String phoneCountryCode,
+    required num phoneNumber,
     required String password,
     required String confirmPassword,
     required MultipartFile photo,
@@ -611,7 +613,8 @@ class AuthApi {
         r'name': name,
         r'email': email,
         r'gender': gender,
-        r'phone': phone,
+        r'phone_countryCode': phoneCountryCode,
+        r'phone_number': phoneNumber,
         r'password': password,
         r'confirmPassword': confirmPassword,
         r'photo': photo,
@@ -681,7 +684,8 @@ class AuthApi {
   /// * [name]
   /// * [email]
   /// * [gender]
-  /// * [phone]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [password]
   /// * [confirmPassword]
   /// * [detailType]
@@ -708,7 +712,8 @@ class AuthApi {
     required String name,
     required String email,
     required String gender,
-    required String phone,
+    required String phoneCountryCode,
+    required num phoneNumber,
     required String password,
     required String confirmPassword,
     required String detailType,
@@ -751,7 +756,8 @@ class AuthApi {
         r'email': email,
         if (photo != null) r'photo': photo,
         r'gender': gender,
-        r'phone': phone,
+        r'phone_countryCode': phoneCountryCode,
+        r'phone_number': phoneNumber,
         r'password': password,
         r'confirmPassword': confirmPassword,
         r'detail_type': detailType,
@@ -823,7 +829,8 @@ class AuthApi {
   /// * [name]
   /// * [email]
   /// * [gender]
-  /// * [phone]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [password]
   /// * [confirmPassword]
   /// * [photo]
@@ -840,7 +847,8 @@ class AuthApi {
     required String name,
     required String email,
     required String gender,
-    required String phone,
+    required String phoneCountryCode,
+    required num phoneNumber,
     required String password,
     required String confirmPassword,
     MultipartFile? photo,
@@ -873,7 +881,8 @@ class AuthApi {
         r'email': email,
         if (photo != null) r'photo': photo,
         r'gender': gender,
-        r'phone': phone,
+        r'phone_countryCode': phoneCountryCode,
+        r'phone_number': phoneNumber,
         r'password': password,
         r'confirmPassword': confirmPassword,
       });
