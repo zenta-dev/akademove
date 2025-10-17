@@ -45,13 +45,15 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<UserGenderEnum> _genderKey = SelectKey(
     UserGenderEnum.male,
   );
-  static const FormKey<String> _phoneKey = TextFieldKey('phone');
+  static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(
     'confirm_password',
   );
 
   UserGenderEnum _selectedGender = UserGenderEnum.male;
+  PhoneCountryCodeEnum _selectedCountryCode = PhoneCountryCodeEnum.ID;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignUpCubit, SignUpState>(
@@ -85,12 +87,12 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             if (state.isLoading) return;
             final name = _nameKey[values];
             final email = _emailKey[values];
-            final phone = _phoneKey[values];
+            final phoneNumber = _phoneNumberKey[values];
             final password = _passwordKey[values];
             final confirmPassword = _confirmPasswordKey[values];
             if (name == null ||
                 email == null ||
-                phone == null ||
+                phoneNumber == null ||
                 password == null ||
                 confirmPassword == null) {
               return;
@@ -99,7 +101,10 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             context.read<SignUpCubit>().signUpUser(
               name: name,
               email: email,
-              phone: phone,
+              phone: Phone(
+                countryCode: _selectedCountryCode,
+                number: int.parse(phoneNumber),
+              ),
               gender: _selectedGender,
               password: password,
               confirmPassword: confirmPassword,
@@ -181,7 +186,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 ),
               ),
               FormField(
-                key: _phoneKey,
+                key: _phoneNumberKey,
                 label: const Text('Phone'),
                 validator: const LengthValidator(min: 10),
                 showErrors: const {
@@ -193,9 +198,16 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     maxWidth: 216 * context.theme.scaling,
                     flagWidth: 22.w,
                   ),
-                  child: const PhoneInput(
+                  child: PhoneInput(
                     initialCountry: Country.indonesia,
-                    countries: [Country.indonesia],
+                    countries: const [Country.indonesia],
+                    onChanged: (value) {
+                      switch (value.country) {
+                        case Country.indonesia:
+                          _selectedCountryCode = PhoneCountryCodeEnum.ID;
+                        default:
+                      }
+                    },
                   ),
                 ),
               ),

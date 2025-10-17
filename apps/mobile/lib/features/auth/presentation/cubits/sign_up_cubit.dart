@@ -17,7 +17,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   Future<void> signUpUser({
     required String name,
     required String email,
-    required String phone,
+    required Phone phone,
     required UserGenderEnum gender,
     required String password,
     required String confirmPassword,
@@ -47,7 +47,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
   Future<void> signUpDriver({
     required String name,
     required String email,
-    required String phone,
+    required Phone phone,
     required UserGenderEnum gender,
     required String password,
     required String confirmPassword,

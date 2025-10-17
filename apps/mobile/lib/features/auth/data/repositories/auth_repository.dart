@@ -1,9 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/base.dart';
-import 'package:akademove/core/errors.dart';
-import 'package:akademove/core/helpers.dart';
 import 'package:akademove/core/response.dart';
-import 'package:akademove/core/services/kv_service.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 
@@ -39,7 +35,7 @@ class AuthRepository extends BaseRepository {
   Future<BaseResponse<User>> signUpUser({
     required String name,
     required String email,
-    required String phone,
+    required Phone phone,
     required UserGenderEnum gender,
     required String password,
     required String confirmPassword,
@@ -50,7 +46,8 @@ class AuthRepository extends BaseRepository {
         name: name,
         email: email,
         gender: gender.value,
-        phone: phone,
+        phoneCountryCode: phone.countryCode.value,
+        phoneNumber: phone.number,
         password: password,
         confirmPassword: confirmPassword,
         photo: photo,
@@ -70,7 +67,7 @@ class AuthRepository extends BaseRepository {
   Future<BaseResponse<User>> signUpDriver({
     required String name,
     required String email,
-    required String phone,
+    required Phone phone,
     required UserGenderEnum gender,
     required String password,
     required String confirmPassword,
@@ -88,7 +85,8 @@ class AuthRepository extends BaseRepository {
         name: name,
         email: email,
         gender: gender.value,
-        phone: phone,
+        phoneCountryCode: phone.countryCode.value,
+        phoneNumber: phone.number,
         password: password,
         confirmPassword: confirmPassword,
         photo: photo,
