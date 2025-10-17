@@ -33,7 +33,7 @@ void _setupService() {
     ..registerSingletonAsync<KeyValueService>(
       () async => SharedPrefKeyValueService().setup(),
     )
-    ..registerSingleton<ImageService>(ImagePickerService());
+    ..registerSingleton<ImageService>(ImagePickerService()..setup());
 }
 
 void _setupRepository() {
