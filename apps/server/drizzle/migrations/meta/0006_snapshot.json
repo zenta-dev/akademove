@@ -1,6 +1,6 @@
 {
-  "id": "19168f7d-9cdf-4f92-857a-57f6d00f5805",
-  "prevId": "105d10fd-e75b-4ff2-b55f-4cbcbce415fb",
+  "id": "0b0d2de8-8ebd-4efe-88b0-ac67147696de",
+  "prevId": "a3464dec-f6b0-4eb6-9003-81e46b2e997e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -318,6 +318,205 @@
           "tableTo": "users",
           "columnsFrom": [
             "updatedById"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.coupons": {
+      "name": "coupons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rules": {
+          "name": "rules",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discount_amount": {
+          "name": "discount_amount",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "discount_percentage": {
+          "name": "discount_percentage",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "usage_limit": {
+          "name": "usage_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "used_count": {
+          "name": "used_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_start": {
+          "name": "period_start",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period_end": {
+          "name": "period_end",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_by_id": {
+          "name": "created_by_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "coupons_created_by_id_users_id_fk": {
+          "name": "coupons_created_by_id_users_id_fk",
+          "tableFrom": "coupons",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.coupon_usages": {
+      "name": "coupon_usages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "coupon_id": {
+          "name": "coupon_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discount_applied": {
+          "name": "discount_applied",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "used_at": {
+          "name": "used_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "coupon_usages_coupon_id_coupons_id_fk": {
+          "name": "coupon_usages_coupon_id_coupons_id_fk",
+          "tableFrom": "coupon_usages",
+          "tableTo": "coupons",
+          "columnsFrom": [
+            "coupon_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "coupon_usages_order_id_orders_id_fk": {
+          "name": "coupon_usages_order_id_orders_id_fk",
+          "tableFrom": "coupon_usages",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "coupon_usages_user_id_users_id_fk": {
+          "name": "coupon_usages_user_id_users_id_fk",
+          "tableFrom": "coupon_usages",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -848,8 +1047,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.reports": {
-      "name": "reports",
+    "public.schedules": {
+      "name": "schedules",
       "schema": "",
       "columns": {
         "id": {
@@ -859,189 +1058,50 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "order_id": {
-          "name": "order_id",
+        "driver_id": {
+          "name": "driver_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
-        },
-        "reporter_id": {
-          "name": "reporter_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true
         },
-        "target_user_id": {
-          "name": "target_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "report_category",
+        "dayOfWeek": {
+          "name": "dayOfWeek",
+          "type": "day_of_week",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'other'"
+          "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "text",
+        "start_time": {
+          "name": "start_time",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
-        "evidence_url": {
-          "name": "evidence_url",
-          "type": "text",
+        "end_time": {
+          "name": "end_time",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "report_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'pending'"
-        },
-        "handled_by_id": {
-          "name": "handled_by_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "resolution": {
-          "name": "resolution",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reported_at": {
-          "name": "reported_at",
-          "type": "timestamp",
+        "is_recurring": {
+          "name": "is_recurring",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "now()"
+          "default": true
         },
-        "resolved_at": {
-          "name": "resolved_at",
+        "specific_date": {
+          "name": "specific_date",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reports_order_id_orders_id_fk": {
-          "name": "reports_order_id_orders_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "orders",
-          "columnsFrom": [
-            "order_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
         },
-        "reports_reporter_id_users_id_fk": {
-          "name": "reports_reporter_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "reporter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reports_target_user_id_users_id_fk": {
-          "name": "reports_target_user_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "target_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reports_handled_by_id_users_id_fk": {
-          "name": "reports_handled_by_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "handled_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.reviews": {
-      "name": "reviews",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "order_id": {
-          "name": "order_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "from_user_id": {
-          "name": "from_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "to_user_id": {
-          "name": "to_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "review_category",
-          "typeSchema": "public",
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "'other'"
-        },
-        "score": {
-          "name": "score",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "comment": {
-          "name": "comment",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "''"
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -1049,47 +1109,28 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "reviews_order_id_orders_id_fk": {
-          "name": "reviews_order_id_orders_id_fk",
-          "tableFrom": "reviews",
-          "tableTo": "orders",
+        "schedules_driver_id_drivers_id_fk": {
+          "name": "schedules_driver_id_drivers_id_fk",
+          "tableFrom": "schedules",
+          "tableTo": "drivers",
           "columnsFrom": [
-            "order_id"
+            "driver_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reviews_from_user_id_users_id_fk": {
-          "name": "reviews_from_user_id_users_id_fk",
-          "tableFrom": "reviews",
-          "tableTo": "users",
-          "columnsFrom": [
-            "from_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reviews_to_user_id_users_id_fk": {
-          "name": "reviews_to_user_id_users_id_fk",
-          "tableFrom": "reviews",
-          "tableTo": "users",
-          "columnsFrom": [
-            "to_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1153,33 +1194,17 @@
         "food"
       ]
     },
-    "public.report_category": {
-      "name": "report_category",
+    "public.day_of_week": {
+      "name": "day_of_week",
       "schema": "public",
       "values": [
-        "behavior",
-        "safety",
-        "fraud",
-        "other"
-      ]
-    },
-    "public.report_status": {
-      "name": "report_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "investigating",
-        "resolved",
-        "dismissed"
-      ]
-    },
-    "public.review_category": {
-      "name": "review_category",
-      "schema": "public",
-      "values": [
-        "cleanliness",
-        "courtesy",
-        "other"
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
       ]
     }
   },

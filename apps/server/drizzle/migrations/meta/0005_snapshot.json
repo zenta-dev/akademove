@@ -1,6 +1,6 @@
 {
-  "id": "105d10fd-e75b-4ff2-b55f-4cbcbce415fb",
-  "prevId": "8b7e8dd1-48d4-477c-913e-82fa0c99e7ba",
+  "id": "a3464dec-f6b0-4eb6-9003-81e46b2e997e",
+  "prevId": "4ad7c35b-5407-4bd6-bdf1-39c9c0bc4ebd",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -848,8 +848,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.reports": {
-      "name": "reports",
+    "public.schedules": {
+      "name": "schedules",
       "schema": "",
       "columns": {
         "id": {
@@ -859,130 +859,79 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "order_id": {
-          "name": "order_id",
+        "driver_id": {
+          "name": "driver_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
-        },
-        "reporter_id": {
-          "name": "reporter_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true
         },
-        "target_user_id": {
-          "name": "target_user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "category": {
-          "name": "category",
-          "type": "report_category",
+        "dayOfWeek": {
+          "name": "dayOfWeek",
+          "type": "day_of_week",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'other'"
+          "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "text",
+        "start_time": {
+          "name": "start_time",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
-        "evidence_url": {
-          "name": "evidence_url",
-          "type": "text",
+        "end_time": {
+          "name": "end_time",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "report_status",
-          "typeSchema": "public",
+        "is_recurring": {
+          "name": "is_recurring",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "default": "'pending'"
+          "default": true
         },
-        "handled_by_id": {
-          "name": "handled_by_id",
-          "type": "text",
+        "specific_date": {
+          "name": "specific_date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
-        "resolution": {
-          "name": "resolution",
-          "type": "text",
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": true
         },
-        "reported_at": {
-          "name": "reported_at",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
-        "resolved_at": {
-          "name": "resolved_at",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "reports_order_id_orders_id_fk": {
-          "name": "reports_order_id_orders_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "orders",
+        "schedules_driver_id_drivers_id_fk": {
+          "name": "schedules_driver_id_drivers_id_fk",
+          "tableFrom": "schedules",
+          "tableTo": "drivers",
           "columnsFrom": [
-            "order_id"
+            "driver_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "reports_reporter_id_users_id_fk": {
-          "name": "reports_reporter_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "reporter_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reports_target_user_id_users_id_fk": {
-          "name": "reports_target_user_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "target_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reports_handled_by_id_users_id_fk": {
-          "name": "reports_handled_by_id_users_id_fk",
-          "tableFrom": "reports",
-          "tableTo": "users",
-          "columnsFrom": [
-            "handled_by_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1046,24 +995,17 @@
         "food"
       ]
     },
-    "public.report_category": {
-      "name": "report_category",
+    "public.day_of_week": {
+      "name": "day_of_week",
       "schema": "public",
       "values": [
-        "behavior",
-        "safety",
-        "fraud",
-        "other"
-      ]
-    },
-    "public.report_status": {
-      "name": "report_status",
-      "schema": "public",
-      "values": [
-        "pending",
-        "investigating",
-        "resolved",
-        "dismissed"
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
       ]
     }
   },

@@ -5,64 +5,64 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1760657827830,
-      "tag": "0000_clean_silk_fever",
+      "when": 1760665625963,
+      "tag": "0000_create-auth-table",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1760657849796,
-      "tag": "0001_crazy_talisman",
+      "when": 1760665640133,
+      "tag": "0001_create-configuration-table",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1760657859796,
-      "tag": "0002_greedy_dazzler",
+      "when": 1760665683480,
+      "tag": "0002_create-driver-table",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "7",
-      "when": 1760657877072,
-      "tag": "0003_past_weapon_omega",
+      "when": 1760665697869,
+      "tag": "0003_create-merchant-table",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "7",
-      "when": 1760657888673,
-      "tag": "0004_bitter_fallen_one",
+      "when": 1760665711634,
+      "tag": "0004_create-schedule-table",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "7",
-      "when": 1760657901575,
-      "tag": "0005_conscious_scarlet_witch",
+      "when": 1760665727849,
+      "tag": "0005_create-order-table",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "7",
-      "when": 1760657908451,
-      "tag": "0006_steep_virginia_dare",
+      "when": 1760665744371,
+      "tag": "0006_create-coupon-table",
       "breakpoints": true
     },
     {
       "idx": 7,
       "version": "7",
-      "when": 1760657915123,
-      "tag": "0007_tiny_famine",
+      "when": 1760665757620,
+      "tag": "0007_create-report-table",
       "breakpoints": true
     },
     {
       "idx": 8,
       "version": "7",
-      "when": 1760657922309,
-      "tag": "0008_friendly_nightcrawler",
+      "when": 1760665767214,
+      "tag": "0008_create-review-table",
       "breakpoints": true
     }
   ]
