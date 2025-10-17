@@ -1,5 +1,10 @@
 import * as z from "zod";
-import { BankSchema, DateSchema, LocationSchema } from "./common.ts";
+import {
+	BankSchema,
+	DateSchema,
+	LocationSchema,
+	PhoneSchema,
+} from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 
@@ -11,8 +16,8 @@ export const MerchantSchema = z
 		userId: z.string(),
 		type: MerchantTypeSchema,
 		name: z.string(),
-		email: z.string(),
-		phone: z.string(),
+		email: z.email(),
+		phone: PhoneSchema,
 		address: z.string(),
 		location: LocationSchema.optional(),
 		isActive: z.boolean(),
