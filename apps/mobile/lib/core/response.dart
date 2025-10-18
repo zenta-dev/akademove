@@ -29,12 +29,8 @@ class FailedResponse extends BaseResponse<Null> {
     final msg = (json['message'] ?? '') as String;
 
     final errorCode = (codeStr is String)
-        ? ErrorCode.fromString(codeStr)
-        : null;
-
-    if (errorCode == null) {
-      throw ArgumentError('Invalid error code: $codeStr');
-    }
+        ? ErrorCode.fromString(codeStr) ?? ErrorCode.UNKNOWN
+        : ErrorCode.UNKNOWN;
 
     return FailedResponse(code: errorCode, message: msg, data: null);
   }
