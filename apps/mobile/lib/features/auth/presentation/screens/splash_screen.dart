@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      child: BlocListener<SplashCubit, SplashState>(
+      child: BlocListener<AuthCubit, SplashState>(
         listener: (context, state) {
           if (state.isFailure) {
             context.goNamed(Routes.authSignIn.name);
