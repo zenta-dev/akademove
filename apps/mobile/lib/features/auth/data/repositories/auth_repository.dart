@@ -110,14 +110,68 @@ class AuthRepository extends BaseRepository {
     });
   }
 
-  Future<bool> signOut() async {
+  Future<BaseResponse<User>> signUpMerchant({
+    required String ownerName,
+    required String ownerEmail,
+    required Phone ownerPhone,
+    required String ownerPassword,
+    required String ownerConfirmPassword,
+
+    required String outletName,
+    required String outletEmail,
+    required Phone outletPhone,
+    required Location outletLocation,
+    required String outletAddress,
+
+    required BankProviderEnum bankProvider,
+    required int bankNumber,
+
+    required MultipartFile? photo,
+    required MultipartFile? document,
+  }) async {
     return guard(() async {
-      await Future.wait([
-        apiClient.getAuthApi().authSignOut(),
-        localKV.remove(KeyValueKeys.token),
-      ]);
+      final result = await apiClient.getAuthApi().authSignUpMerchant(
+        name: ownerName.trim(),
+        email: ownerEmail.trim(),
+        phoneCountryCode: ownerPhone.countryCode.value,
+        phoneNumber: ownerPhone.number,
+        password: ownerPassword.trim(),
+        confirmPassword: ownerConfirmPassword.trim(),
+        detailName: outletName.trim(),
+        detailEmail: outletEmail.trim(),
+        detailPhoneCountryCode: outletPhone.countryCode.value,
+        detailPhoneNumber: outletPhone.number,
+        detailAddress: outletAddress.trim(),
+        detailLocationLat: outletLocation.lat,
+        detailLocationLng: outletLocation.lng,
+        detailBankProvider: bankProvider.value,
+        detailBankNumber: bankNumber,
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'An error occured',
+            code: ErrorCode.INTERNAL_SERVER_ERROR,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data.user);
+    });
+  }
+
+  Future<BaseResponse<bool>> signOut() async {
+    return guard(() async {
+      final result = await apiClient.getAuthApi().authSignOut();
+      await localKV.remove(KeyValueKeys.token);
       apiClient.setBearerAuth('bearer_auth', '');
-      return true;
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'An error occured',
+            code: ErrorCode.INTERNAL_SERVER_ERROR,
+          ));
+      return SuccessResponse(message: data.message, data: true);
     });
   }
 

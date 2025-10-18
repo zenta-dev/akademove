@@ -87,4 +87,56 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       emit(SignUpState.failure(e));
     }
   }
+
+  Future<void> signUpMerchant({
+    required String ownerName,
+    required String ownerEmail,
+    required Phone ownerPhone,
+    required String ownerPassword,
+    required String ownerConfirmPassword,
+
+    required String outletName,
+    required String outletEmail,
+    required Phone outletPhone,
+    required Location outletLocation,
+    required String outletAddress,
+
+    required BankProviderEnum bankProvider,
+    required int bankNumber,
+
+    required String? photoPath,
+    required String? documentPath,
+  }) async {
+    try {
+      emit(SignUpState.loading());
+      final photo = photoPath != null
+          ? await MultipartFile.fromFile(photoPath)
+          : null;
+
+      final document = documentPath != null
+          ? await MultipartFile.fromFile(documentPath)
+          : null;
+
+      final res = await _authRepository.signUpMerchant(
+        ownerName: ownerName,
+        ownerEmail: ownerEmail,
+        ownerPhone: ownerPhone,
+        ownerPassword: ownerPassword,
+        ownerConfirmPassword: ownerConfirmPassword,
+        outletName: outletName,
+        outletEmail: outletEmail,
+        outletPhone: outletPhone,
+        outletLocation: outletLocation,
+        outletAddress: outletAddress,
+        bankProvider: bankProvider,
+        bankNumber: bankNumber,
+        photo: photo,
+        document: document,
+      );
+      emit(SignUpState.success(res.data, message: res.message));
+    } on BaseError catch (e, st) {
+      logger.e('[SignUpCubit] - Error: ${e.message}', error: e, stackTrace: st);
+      emit(SignUpState.failure(e));
+    }
+  }
 }

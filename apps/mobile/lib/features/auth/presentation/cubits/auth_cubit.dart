@@ -7,11 +7,23 @@ class AuthCubit extends BaseCubit<SplashState> {
 
   @override
   Future<void> init() async {
-    emit(SplashState.loading());
     try {
+      emit(SplashState.loading());
       final res = await authRepository.authenticate();
       emit(SplashState.success(res.data, message: res.message));
-    } on BaseError catch (e) {
+    } on BaseError catch (e, st) {
+      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
+      emit(SplashState.failure(e));
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      emit(SplashState.loading());
+      final res = await authRepository.signOut();
+      emit(SplashState.success(null, message: res.message));
+    } on BaseError catch (e, st) {
+      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(SplashState.failure(e));
     }
   }
