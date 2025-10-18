@@ -53,10 +53,10 @@ export const AuthHandler = os.router({
 					},
 				} as const;
 			} catch (error) {
+				console.error(error);
 				if (error instanceof BaseError) {
 					throw error;
 				}
-				console.error(error);
 				throw new RepositoryError("An error occured", {
 					code: "INTERNAL_SERVER_ERROR",
 				});
@@ -86,10 +86,10 @@ export const AuthHandler = os.router({
 						},
 					} as const;
 				} catch (error) {
+					console.error(error);
 					if (error instanceof BaseError) {
 						throw error;
 					}
-					console.error(error);
 					throw new RepositoryError("An error occured", {
 						code: "INTERNAL_SERVER_ERROR",
 					});
@@ -124,10 +124,10 @@ export const AuthHandler = os.router({
 						},
 					} as const;
 				} catch (error) {
+					console.error(error);
 					if (error instanceof BaseError) {
 						throw error;
 					}
-					console.error(error);
 					throw new RepositoryError("An error occured", {
 						code: "INTERNAL_SERVER_ERROR",
 					});
