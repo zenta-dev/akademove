@@ -51,7 +51,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, num locationLat, num locationLng, { String type, String name, String email, String phone, String address, MultipartFile document }) async
+    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, num phoneNumber, num locationLat, num locationLng, String bankProvider, num bankNumber, { String name, String email, String address, MultipartFile document }) async
     test('test merchantUpdate', () async {
       // TODO
     });

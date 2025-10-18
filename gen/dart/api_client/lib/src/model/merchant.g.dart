@@ -11,8 +11,6 @@ abstract class _$MerchantCWProxy {
 
   Merchant userId(String userId);
 
-  Merchant type(MerchantTypeEnum type);
-
   Merchant name(String name);
 
   Merchant email(String email);
@@ -44,7 +42,6 @@ abstract class _$MerchantCWProxy {
   Merchant call({
     String id,
     String userId,
-    MerchantTypeEnum type,
     String name,
     String email,
     Phone phone,
@@ -70,9 +67,6 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
 
   @override
   Merchant userId(String userId) => this(userId: userId);
-
-  @override
-  Merchant type(MerchantTypeEnum type) => this(type: type);
 
   @override
   Merchant name(String name) => this(name: name);
@@ -117,7 +111,6 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
-    Object? type = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? email = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
@@ -139,10 +132,6 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      type: type == const $CopyWithPlaceholder()
-          ? _value.type
-          // ignore: cast_nullable_to_non_nullable
-          : type as MerchantTypeEnum,
       name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
@@ -209,7 +198,6 @@ Merchant _$MerchantFromJson(
     requiredKeys: const [
       'id',
       'userId',
-      'type',
       'name',
       'email',
       'phone',
@@ -224,10 +212,6 @@ Merchant _$MerchantFromJson(
   final val = Merchant(
     id: $checkedConvert('id', (v) => v as String),
     userId: $checkedConvert('userId', (v) => v as String),
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$MerchantTypeEnumEnumMap, v),
-    ),
     name: $checkedConvert('name', (v) => v as String),
     email: $checkedConvert('email', (v) => v as String),
     phone: $checkedConvert(
@@ -255,7 +239,6 @@ Merchant _$MerchantFromJson(
 Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'id': instance.id,
   'userId': instance.userId,
-  'type': _$MerchantTypeEnumEnumMap[instance.type]!,
   'name': instance.name,
   'email': instance.email,
   'phone': instance.phone.toJson(),
@@ -267,9 +250,4 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'bank': instance.bank.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
-};
-
-const _$MerchantTypeEnumEnumMap = {
-  MerchantTypeEnum.merchant: 'merchant',
-  MerchantTypeEnum.tenant: 'tenant',
 };

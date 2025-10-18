@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverUpdate(String id, { String studentId, String licenseNumber, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate }) async
+    //Future<DriverGet200Response> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, DriverUpdateRequestBank bank }) async
     test('test driverUpdate', () async {
       // TODO
     });

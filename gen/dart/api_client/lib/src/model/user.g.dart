@@ -25,7 +25,7 @@ abstract class _$UserCWProxy {
 
   User banExpires(DateTime? banExpires);
 
-  User gender(UserGenderEnum gender);
+  User gender(UserGenderEnum? gender);
 
   User phone(Phone phone);
 
@@ -49,7 +49,7 @@ abstract class _$UserCWProxy {
     bool banned,
     String? banReason,
     DateTime? banExpires,
-    UserGenderEnum gender,
+    UserGenderEnum? gender,
     Phone phone,
     DateTime createdAt,
     DateTime updatedAt,
@@ -90,7 +90,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User banExpires(DateTime? banExpires) => this(banExpires: banExpires);
 
   @override
-  User gender(UserGenderEnum gender) => this(gender: gender);
+  User gender(UserGenderEnum? gender) => this(gender: gender);
 
   @override
   User phone(Phone phone) => this(phone: phone);
@@ -163,7 +163,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
       gender: gender == const $CopyWithPlaceholder()
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
-          : gender as UserGenderEnum,
+          : gender as UserGenderEnum?,
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
@@ -202,7 +202,6 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
       'emailVerified',
       'role',
       'banned',
-      'gender',
       'phone',
       'createdAt',
       'updatedAt',
@@ -223,7 +222,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     ),
     gender: $checkedConvert(
       'gender',
-      (v) => $enumDecode(_$UserGenderEnumEnumMap, v),
+      (v) => $enumDecodeNullable(_$UserGenderEnumEnumMap, v),
     ),
     phone: $checkedConvert(
       'phone',
@@ -245,7 +244,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'banned': instance.banned,
   'banReason': ?instance.banReason,
   'banExpires': ?instance.banExpires?.toIso8601String(),
-  'gender': _$UserGenderEnumEnumMap[instance.gender]!,
+  'gender': ?_$UserGenderEnumEnumMap[instance.gender],
   'phone': instance.phone.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),

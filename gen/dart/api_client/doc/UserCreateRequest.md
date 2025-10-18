@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **name** | **String** |  | 
 **email** | **String** |  | 
 **role** | **String** |  | 
-**gender** | **String** |  | 
+**gender** | **String** |  | [optional] 
 **phone** | [**Phone**](Phone.md) |  | 
 **password** | **String** |  | 
 **confirmPassword** | **String** |  | 

@@ -36,17 +36,17 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser200Response> authSignUpDriver(String name, String email, String gender, String phone, String password, String confirmPassword, MultipartFile photo, String detailStudentId, String detailLicenseNumber, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate) async
+    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String gender, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, String detailBankProvider, num detailBankNumber) async
     test('test authSignUpDriver', () async {
       // TODO
     });
 
-    //Future<AuthSignUpUser200Response> authSignUpMerchant(String name, String email, String gender, String phone, String password, String confirmPassword, String detailType, String detailName, String detailEmail, String detailPhone, String detailAddress, num detailLocationLat, num detailLocationLng, String detailBankProvider, String detailBankNumber, { MultipartFile photo, MultipartFile detailDocument }) async
+    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationLat, num detailLocationLng, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument }) async
     test('test authSignUpMerchant', () async {
       // TODO
     });
 
-    //Future<AuthSignUpUser200Response> authSignUpUser(String name, String email, String gender, String phone, String password, String confirmPassword, { MultipartFile photo }) async
+    //Future<AuthSignUpUser201Response> authSignUpUser(String name, String email, String gender, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, { MultipartFile photo }) async
     test('test authSignUpUser', () async {
       // TODO
     });

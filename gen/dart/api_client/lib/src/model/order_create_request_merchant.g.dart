@@ -11,8 +11,6 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
 
   OrderCreateRequestMerchant userId(String? userId);
 
-  OrderCreateRequestMerchant type(OrderCreateRequestMerchantTypeEnum? type);
-
   OrderCreateRequestMerchant name(String? name);
 
   OrderCreateRequestMerchant email(String? email);
@@ -44,7 +42,6 @@ abstract class _$OrderCreateRequestMerchantCWProxy {
   OrderCreateRequestMerchant call({
     String? id,
     String? userId,
-    OrderCreateRequestMerchantTypeEnum? type,
     String? name,
     String? email,
     Phone? phone,
@@ -71,10 +68,6 @@ class _$OrderCreateRequestMerchantCWProxyImpl
 
   @override
   OrderCreateRequestMerchant userId(String? userId) => this(userId: userId);
-
-  @override
-  OrderCreateRequestMerchant type(OrderCreateRequestMerchantTypeEnum? type) =>
-      this(type: type);
 
   @override
   OrderCreateRequestMerchant name(String? name) => this(name: name);
@@ -124,7 +117,6 @@ class _$OrderCreateRequestMerchantCWProxyImpl
   OrderCreateRequestMerchant call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
-    Object? type = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? email = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
@@ -146,10 +138,6 @@ class _$OrderCreateRequestMerchantCWProxyImpl
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String?,
-      type: type == const $CopyWithPlaceholder()
-          ? _value.type
-          // ignore: cast_nullable_to_non_nullable
-          : type as OrderCreateRequestMerchantTypeEnum?,
       name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
@@ -215,11 +203,6 @@ OrderCreateRequestMerchant _$OrderCreateRequestMerchantFromJson(
   final val = OrderCreateRequestMerchant(
     id: $checkedConvert('id', (v) => v as String?),
     userId: $checkedConvert('userId', (v) => v as String?),
-    type: $checkedConvert(
-      'type',
-      (v) =>
-          $enumDecodeNullable(_$OrderCreateRequestMerchantTypeEnumEnumMap, v),
-    ),
     name: $checkedConvert('name', (v) => v as String?),
     email: $checkedConvert('email', (v) => v as String?),
     phone: $checkedConvert(
@@ -255,7 +238,6 @@ Map<String, dynamic> _$OrderCreateRequestMerchantToJson(
 ) => <String, dynamic>{
   'id': ?instance.id,
   'userId': ?instance.userId,
-  'type': ?_$OrderCreateRequestMerchantTypeEnumEnumMap[instance.type],
   'name': ?instance.name,
   'email': ?instance.email,
   'phone': ?instance.phone?.toJson(),
@@ -267,9 +249,4 @@ Map<String, dynamic> _$OrderCreateRequestMerchantToJson(
   'bank': ?instance.bank?.toJson(),
   'createdAt': ?instance.createdAt?.toIso8601String(),
   'updatedAt': ?instance.updatedAt?.toIso8601String(),
-};
-
-const _$OrderCreateRequestMerchantTypeEnumEnumMap = {
-  OrderCreateRequestMerchantTypeEnum.merchant: 'merchant',
-  OrderCreateRequestMerchantTypeEnum.tenant: 'tenant',
 };

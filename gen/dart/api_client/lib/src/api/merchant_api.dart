@@ -884,7 +884,6 @@ class MerchantApi {
   /// * [locationLng]
   /// * [bankProvider]
   /// * [bankNumber]
-  /// * [type]
   /// * [name]
   /// * [email]
   /// * [address]
@@ -906,7 +905,6 @@ class MerchantApi {
     required num locationLng,
     required String bankProvider,
     required num bankNumber,
-    String? type,
     String? name,
     String? email,
     String? address,
@@ -941,7 +939,6 @@ class MerchantApi {
 
     try {
       _bodyData = FormData.fromMap(<String, dynamic>{
-        if (type != null) r'type': type,
         if (name != null) r'name': name,
         if (email != null) r'email': email,
         r'phone_countryCode': phoneCountryCode,

@@ -435,7 +435,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantUpdate**
-> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationLat, locationLng, bankProvider, bankNumber, type, name, email, address, document)
+> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationLat, locationLng, bankProvider, bankNumber, name, email, address, document)
 
 
 
@@ -451,14 +451,13 @@ final num locationLat = 8.14; // num |
 final num locationLng = 8.14; // num | 
 final String bankProvider = bankProvider_example; // String | 
 final num bankNumber = 8.14; // num | 
-final String type = type_example; // String | 
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String address = address_example; // String | 
 final MultipartFile document = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationLat, locationLng, bankProvider, bankNumber, type, name, email, address, document);
+    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationLat, locationLng, bankProvider, bankNumber, name, email, address, document);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantUpdate: $e\n');
@@ -476,7 +475,6 @@ Name | Type | Description  | Notes
  **locationLng** | **num**|  | 
  **bankProvider** | **String**|  | 
  **bankNumber** | **num**|  | 
- **type** | **String**|  | [optional] 
  **name** | **String**|  | [optional] 
  **email** | **String**|  | [optional] 
  **address** | **String**|  | [optional] 

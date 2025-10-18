@@ -37,7 +37,7 @@ class User {
 
     this.banExpires,
 
-    required this.gender,
+    this.gender,
 
     required this.phone,
 
@@ -73,8 +73,8 @@ class User {
   @JsonKey(name: r'banExpires', required: false, includeIfNull: false)
   final DateTime? banExpires;
 
-  @JsonKey(name: r'gender', required: true, includeIfNull: false)
-  final UserGenderEnum gender;
+  @JsonKey(name: r'gender', required: false, includeIfNull: false)
+  final UserGenderEnum? gender;
 
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final Phone phone;

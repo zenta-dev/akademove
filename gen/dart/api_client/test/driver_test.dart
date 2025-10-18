@@ -17,13 +17,13 @@ void main() {
       // TODO
     });
 
-    // String studentId
+    // num studentId
     test('to test the property `studentId`', () async {
       // TODO
     });
 
-    // String licenseNumber
-    test('to test the property `licenseNumber`', () async {
+    // String licensePlate
+    test('to test the property `licensePlate`', () async {
       // TODO
     });
 
@@ -69,6 +69,11 @@ void main() {
 
     // String vehicleCertificate
     test('to test the property `vehicleCertificate`', () async {
+      // TODO
+    });
+
+    // Bank bank
+    test('to test the property `bank`', () async {
       // TODO
     });
 

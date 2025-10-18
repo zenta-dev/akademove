@@ -547,7 +547,6 @@ class AuthApi {
   /// Parameters:
   /// * [name]
   /// * [email]
-  /// * [gender]
   /// * [phoneCountryCode]
   /// * [phoneNumber]
   /// * [password]
@@ -560,6 +559,7 @@ class AuthApi {
   /// * [detailVehicleCertificate]
   /// * [detailBankProvider]
   /// * [detailBankNumber]
+  /// * [gender]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -572,7 +572,6 @@ class AuthApi {
   Future<Response<AuthSignUpUser201Response>> authSignUpDriver({
     required String name,
     required String email,
-    required String gender,
     required String phoneCountryCode,
     required num phoneNumber,
     required String password,
@@ -585,6 +584,7 @@ class AuthApi {
     required MultipartFile detailVehicleCertificate,
     required String detailBankProvider,
     required num detailBankNumber,
+    String? gender,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -612,7 +612,7 @@ class AuthApi {
       _bodyData = FormData.fromMap(<String, dynamic>{
         r'name': name,
         r'email': email,
-        r'gender': gender,
+        if (gender != null) r'gender': gender,
         r'phone_countryCode': phoneCountryCode,
         r'phone_number': phoneNumber,
         r'password': password,
@@ -683,12 +683,10 @@ class AuthApi {
   /// Parameters:
   /// * [name]
   /// * [email]
-  /// * [gender]
   /// * [phoneCountryCode]
   /// * [phoneNumber]
   /// * [password]
   /// * [confirmPassword]
-  /// * [detailType]
   /// * [detailName]
   /// * [detailEmail]
   /// * [detailPhoneCountryCode]
@@ -699,6 +697,7 @@ class AuthApi {
   /// * [detailBankProvider]
   /// * [detailBankNumber]
   /// * [photo]
+  /// * [gender]
   /// * [detailDocument]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -712,12 +711,10 @@ class AuthApi {
   Future<Response<AuthSignUpUser201Response>> authSignUpMerchant({
     required String name,
     required String email,
-    required String gender,
     required String phoneCountryCode,
     required num phoneNumber,
     required String password,
     required String confirmPassword,
-    required String detailType,
     required String detailName,
     required String detailEmail,
     required String detailPhoneCountryCode,
@@ -728,6 +725,7 @@ class AuthApi {
     required String detailBankProvider,
     required num detailBankNumber,
     MultipartFile? photo,
+    String? gender,
     MultipartFile? detailDocument,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -757,12 +755,11 @@ class AuthApi {
         r'name': name,
         r'email': email,
         if (photo != null) r'photo': photo,
-        r'gender': gender,
+        if (gender != null) r'gender': gender,
         r'phone_countryCode': phoneCountryCode,
         r'phone_number': phoneNumber,
         r'password': password,
         r'confirmPassword': confirmPassword,
-        r'detail_type': detailType,
         r'detail_name': detailName,
         r'detail_email': detailEmail,
         r'detail_phone_countryCode': detailPhoneCountryCode,
@@ -831,12 +828,12 @@ class AuthApi {
   /// Parameters:
   /// * [name]
   /// * [email]
-  /// * [gender]
   /// * [phoneCountryCode]
   /// * [phoneNumber]
   /// * [password]
   /// * [confirmPassword]
   /// * [photo]
+  /// * [gender]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -849,12 +846,12 @@ class AuthApi {
   Future<Response<AuthSignUpUser201Response>> authSignUpUser({
     required String name,
     required String email,
-    required String gender,
     required String phoneCountryCode,
     required num phoneNumber,
     required String password,
     required String confirmPassword,
     MultipartFile? photo,
+    String? gender,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -883,7 +880,7 @@ class AuthApi {
         r'name': name,
         r'email': email,
         if (photo != null) r'photo': photo,
-        r'gender': gender,
+        if (gender != null) r'gender': gender,
         r'phone_countryCode': phoneCountryCode,
         r'phone_number': phoneNumber,
         r'password': password,

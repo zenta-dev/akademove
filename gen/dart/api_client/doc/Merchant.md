@@ -10,7 +10,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
 **userId** | **String** |  | 
-**type** | **String** |  | 
 **name** | **String** |  | 
 **email** | **String** |  | 
 **phone** | [**Phone**](Phone.md) |  | 

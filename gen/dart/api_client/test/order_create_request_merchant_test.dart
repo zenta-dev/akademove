@@ -18,11 +18,6 @@ void main() {
       // TODO
     });
 
-    // String type
-    test('to test the property `type`', () async {
-      // TODO
-    });
-
     // String name
     test('to test the property `name`', () async {
       // TODO
@@ -33,7 +28,7 @@ void main() {
       // TODO
     });
 
-    // String phone
+    // Phone phone
     test('to test the property `phone`', () async {
       // TODO
     });
@@ -60,6 +55,11 @@ void main() {
 
     // String document
     test('to test the property `document`', () async {
+      // TODO
+    });
+
+    // Bank bank
+    test('to test the property `bank`', () async {
       // TODO
     });
 

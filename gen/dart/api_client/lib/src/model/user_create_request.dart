@@ -25,7 +25,7 @@ class UserCreateRequest {
 
     required this.role,
 
-    required this.gender,
+    this.gender,
 
     required this.phone,
 
@@ -43,8 +43,8 @@ class UserCreateRequest {
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final UserCreateRequestRoleEnum role;
 
-  @JsonKey(name: r'gender', required: true, includeIfNull: false)
-  final UserCreateRequestGenderEnum gender;
+  @JsonKey(name: r'gender', required: false, includeIfNull: false)
+  final UserCreateRequestGenderEnum? gender;
 
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final Phone phone;

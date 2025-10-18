@@ -25,8 +25,6 @@ class OrderCreateRequestMerchant {
 
     this.userId,
 
-    this.type,
-
     this.name,
 
     this.email,
@@ -55,9 +53,6 @@ class OrderCreateRequestMerchant {
 
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
-
-  @JsonKey(name: r'type', required: false, includeIfNull: false)
-  final OrderCreateRequestMerchantTypeEnum? type;
 
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
@@ -98,7 +93,6 @@ class OrderCreateRequestMerchant {
       other is OrderCreateRequestMerchant &&
           other.id == id &&
           other.userId == userId &&
-          other.type == type &&
           other.name == name &&
           other.email == email &&
           other.phone == phone &&
@@ -115,7 +109,6 @@ class OrderCreateRequestMerchant {
   int get hashCode =>
       id.hashCode +
       userId.hashCode +
-      type.hashCode +
       name.hashCode +
       email.hashCode +
       phone.hashCode +
@@ -137,18 +130,4 @@ class OrderCreateRequestMerchant {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum OrderCreateRequestMerchantTypeEnum {
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'tenant')
-  tenant(r'tenant');
-
-  const OrderCreateRequestMerchantTypeEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

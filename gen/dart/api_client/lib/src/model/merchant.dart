@@ -25,8 +25,6 @@ class Merchant {
 
     required this.userId,
 
-    required this.type,
-
     required this.name,
 
     required this.email,
@@ -55,9 +53,6 @@ class Merchant {
 
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
-  @JsonKey(name: r'type', required: true, includeIfNull: false)
-  final MerchantTypeEnum type;
 
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
@@ -98,7 +93,6 @@ class Merchant {
       other is Merchant &&
           other.id == id &&
           other.userId == userId &&
-          other.type == type &&
           other.name == name &&
           other.email == email &&
           other.phone == phone &&
@@ -115,7 +109,6 @@ class Merchant {
   int get hashCode =>
       id.hashCode +
       userId.hashCode +
-      type.hashCode +
       name.hashCode +
       email.hashCode +
       phone.hashCode +
@@ -137,18 +130,4 @@ class Merchant {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum MerchantTypeEnum {
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'tenant')
-  tenant(r'tenant');
-
-  const MerchantTypeEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }
