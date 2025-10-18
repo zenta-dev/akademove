@@ -6,7 +6,6 @@ import {
 	LocationSchema,
 	PhoneSchema,
 } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 
 // export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);

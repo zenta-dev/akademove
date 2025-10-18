@@ -4,7 +4,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/locator.dart';
 import 'package:flutter/material.dart'
     as material
-    show showModalBottomSheet, ListTile;
+    show ListTile, showModalBottomSheet;
 import 'package:image_picker/image_picker.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 

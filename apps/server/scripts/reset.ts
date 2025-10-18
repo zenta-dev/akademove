@@ -1,7 +1,7 @@
 import * as readline from "node:readline";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { account, jwks, session, user, verification } from "@/core/tables/auth";
+import { account, user, verification } from "@/core/tables/auth";
 import { configuration } from "@/core/tables/configuration";
 import { coupon, couponUsage } from "@/core/tables/coupon";
 import { driver } from "@/core/tables/driver";
@@ -44,10 +44,8 @@ const db = drizzle({ client });
 
 export const tables = {
 	user,
-	session,
 	account,
 	verification,
-	jwks,
 	configuration,
 	couponUsage,
 	coupon,

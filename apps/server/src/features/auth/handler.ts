@@ -3,8 +3,8 @@ import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
 	nullToUndefined,
-	trimObjectValues,
 	type Permissions,
+	trimObjectValues,
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import type { ORPCContext } from "@/core/interface";
