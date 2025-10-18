@@ -26,7 +26,7 @@ export const user = pgTable(
 		role: text().notNull().$type<UserRole>().default("user"),
 		banned: boolean().notNull().default(false),
 		banReason: text("ban_reason"),
-		gender: userGender().notNull(),
+		gender: userGender(),
 		phone: jsonb().$type<Phone>().notNull().unique(),
 		banExpires: timestamp("ban_expires"),
 		...DateModifier,

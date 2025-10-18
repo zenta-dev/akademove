@@ -41,7 +41,7 @@ export const SignUpSchema = z
 			.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
 			.max(256),
 		photo: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
-		gender: UserGenderSchema,
+		gender: UserGenderSchema.optional(),
 		phone: PhoneSchema,
 		password: z
 			.string()
@@ -69,6 +69,7 @@ export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
 export const FlatSignUpDriverSchema = flattenZodObject(SignUpDriverSchema, "");
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
+	gender: UserGenderSchema.optional(),
 	detail: InsertMerchantSchema,
 });
 

@@ -29,7 +29,7 @@ export const UserSchema = z
 		banned: z.boolean(),
 		banReason: z.string().optional(),
 		banExpires: DateSchema.optional(),
-		gender: UserGenderSchema,
+		gender: UserGenderSchema.optional(),
 		phone: PhoneSchema,
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
