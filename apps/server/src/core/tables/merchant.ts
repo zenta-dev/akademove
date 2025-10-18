@@ -17,7 +17,7 @@ import {
 import { user } from "./auth";
 import { DateModifier } from "./common";
 
-export const merchantType = pgEnum("merchant_type", CONSTANTS.MERCHANT_TYPES);
+// export const merchantType = pgEnum("merchant_type", CONSTANTS.MERCHANT_TYPES);
 
 export const merchant = pgTable(
 	"merchants",
@@ -27,7 +27,7 @@ export const merchant = pgTable(
 			.notNull()
 			.unique()
 			.references(() => user.id, { onDelete: "cascade" }),
-		type: merchantType().notNull(),
+		// type: merchantType().notNull(),
 		name: text().notNull(),
 		email: text().notNull().unique(),
 		phone: jsonb().$type<Phone>().notNull().unique(),
@@ -45,10 +45,10 @@ export const merchant = pgTable(
 		uniqueIndex("merchant_user_id_idx").on(t.userId),
 		uniqueIndex("merchant_email_idx").on(t.email),
 		uniqueIndex("merchant_phone_idx").on(t.phone),
-		index("merchant_type_idx").on(t.type),
+		// index("merchant_type_idx").on(t.type),
 		index("merchant_is_active_idx").on(t.isActive),
 		index("merchant_rating_idx").on(t.rating),
-		index("merchant_type_active_idx").on(t.type, t.isActive),
+		// index("merchant_type_active_idx").on(t.type, t.isActive),
 		index("merchant_created_at_idx").on(t.createdAt),
 	],
 );

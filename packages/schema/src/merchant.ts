@@ -9,13 +9,13 @@ import {
 import { CONSTANTS } from "./constants.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 
-export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
+// export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
 
 export const MerchantSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		type: MerchantTypeSchema,
+		// type: MerchantTypeSchema,
 		name: z.string().min(1, m.required_placeholder({ field: m.name() })),
 		email: z.email(
 			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
@@ -78,7 +78,7 @@ export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
 
 export const FlatUpdateMerchantSchema = flattenZodObject(UpdateMerchantSchema);
 
-export type MerchantType = z.infer<typeof MerchantTypeSchema>;
+// export type MerchantType = z.infer<typeof MerchantTypeSchema>;
 export type Merchant = z.infer<typeof MerchantSchema>;
 export type MerchantMenu = z.infer<typeof MerchantMenuSchema>;
 export type InsertMerchant = z.infer<typeof InsertMerchantSchema>;
