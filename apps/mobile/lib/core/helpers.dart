@@ -1,4 +1,5 @@
 import 'package:api_client/api_client.dart';
+import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 void noop() {}
@@ -50,4 +51,8 @@ extension IntExt on int {
       updatedAt: now,
     );
   }
+}
+
+extension DateTimeExt on DateTime {
+  String get orderFormat => DateFormat('d MMM, HH:mm').format(this);
 }
