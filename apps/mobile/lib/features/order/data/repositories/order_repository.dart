@@ -36,6 +36,12 @@ class OrderRepository extends BaseRepository {
           res.data ??
           (throw const RepositoryError(
             'Orders not found',
+            code: ErrorCode.NOT_FOUND,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
             code: ErrorCode.UNKNOWN,
           ));
 
