@@ -20,12 +20,15 @@ enum Routes {
   ///
   /// Driver Routes
   ///
-  driverHome('/driver/home')
+  driverHome('/driver/home'),
+
   ///
   /// Merchant Routes
   ///
-  ,
-  merchantHome('/merchant/home');
+  merchantHome('/merchant/home'),
+  merchantOrder('/merchant/order'),
+  merchantMenu('/merchant/menu'),
+  merchantProfile('/merchant/profile');
 
   const Routes(this.path);
   final String path;
@@ -106,13 +109,53 @@ final router = GoRouter(
         ),
       ],
     ),
-    ShellRoute(
-      builder: (context, state, child) => child,
-      routes: [
-        GoRoute(
-          name: Routes.merchantHome.name,
-          path: Routes.merchantHome.path,
-          builder: (context, state) => const MerchantHomeScreen(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => sl<MerchantCubit>()..init()),
+          BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
+        ],
+        child: MerchantBottomNavbar(shell: navigationShell),
+      ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.merchantHome.name,
+              path: Routes.merchantHome.path,
+              builder: (context, state) => const MerchantHomeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.merchantOrder.name,
+              path: Routes.merchantOrder.path,
+              builder: (context, state) => BlocProvider.value(
+                value: BlocProvider.of<MerchantOrderCubit>(context)..init(),
+                child: const MerchantOrderScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.merchantMenu.name,
+              path: Routes.merchantMenu.path,
+              builder: (context, state) => const MerchantMenuScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.merchantProfile.name,
+              path: Routes.merchantProfile.path,
+              builder: (context, state) => const MerchantProfileScreen(),
+            ),
+          ],
         ),
       ],
     ),
