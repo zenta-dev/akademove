@@ -99,7 +99,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderList**
-> OrderList200Response orderList(cursor, limit, page, query, sortBy, order)
+> OrderList200Response orderList(cursor, limit, page, query, sortBy, order, statuses)
 
 
 
@@ -114,9 +114,10 @@ final Object page = ; // Object |
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
 final String order = order_example; // String | 
+final Object statuses = ; // Object | 
 
 try {
-    final response = api.orderList(cursor, limit, page, query, sortBy, order);
+    final response = api.orderList(cursor, limit, page, query, sortBy, order, statuses);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderList: $e\n');
@@ -133,6 +134,7 @@ Name | Type | Description  | Notes
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
  **order** | **String**|  | [optional] [default to 'desc']
+ **statuses** | [**Object**](.md)|  | [optional] 
 
 ### Return type
 

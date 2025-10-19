@@ -97,6 +97,16 @@ void main() {
       // TODO
     });
 
+    // num itemCount
+    test('to test the property `itemCount`', () async {
+      // TODO
+    });
+
+    // List<OrderCreateRequestItemsInner> items
+    test('to test the property `items`', () async {
+      // TODO
+    });
+
     // OrderCreateRequestUser user
     test('to test the property `user`', () async {
       // TODO

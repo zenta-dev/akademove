@@ -3,11 +3,11 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
+import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'merchant_get_mine200_response.g.dart';
+part 'driver_get_mine200_response.g.dart';
 
 
 @CopyWith()
@@ -17,9 +17,9 @@ part 'merchant_get_mine200_response.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class MerchantGetMine200Response {
-  /// Returns a new [MerchantGetMine200Response] instance.
-  MerchantGetMine200Response({
+class DriverGetMine200Response {
+  /// Returns a new [DriverGetMine200Response] instance.
+  DriverGetMine200Response({
 
     required  this.status,
 
@@ -46,14 +46,14 @@ class MerchantGetMine200Response {
   )
 
 
-  final MerchantGetMine200ResponseBody body;
+  final DriverGetMine200ResponseBody body;
 
 
 
 
 
     @override
-    bool operator ==(Object other) => identical(this, other) || other is MerchantGetMine200Response &&
+    bool operator ==(Object other) => identical(this, other) || other is DriverGetMine200Response &&
       other.status == status &&
       other.body == body;
 
@@ -62,9 +62,9 @@ class MerchantGetMine200Response {
         (status == null ? 0 : status.hashCode) +
         body.hashCode;
 
-  factory MerchantGetMine200Response.fromJson(Map<String, dynamic> json) => _$MerchantGetMine200ResponseFromJson(json);
+  factory DriverGetMine200Response.fromJson(Map<String, dynamic> json) => _$DriverGetMine200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantGetMine200ResponseToJson(this);
+  Map<String, dynamic> toJson() => _$DriverGetMine200ResponseToJson(this);
 
   @override
   String toString() {

@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'user.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,105 +20,223 @@ part 'user.g.dart';
 class User {
   /// Returns a new [User] instance.
   User({
-    required this.id,
 
-    required this.name,
+    required  this.id,
 
-    required this.email,
+    required  this.name,
 
-    required this.emailVerified,
+    required  this.email,
 
-    this.image,
+    required  this.emailVerified,
 
-    required this.role,
+     this.image,
 
-    required this.banned,
+    required  this.role,
 
-    this.banReason,
+    required  this.banned,
 
-    this.banExpires,
+     this.banReason,
 
-    this.gender,
+     this.banExpires,
 
-    required this.phone,
+     this.gender,
 
-    required this.createdAt,
+    required  this.phone,
 
-    required this.updatedAt,
+    required  this.createdAt,
+
+    required  this.updatedAt,
   });
 
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String id;
 
-  @JsonKey(name: r'name', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String name;
 
-  @JsonKey(name: r'email', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'email',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String email;
 
-  @JsonKey(name: r'emailVerified', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'emailVerified',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final bool emailVerified;
 
-  @JsonKey(name: r'image', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'image',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final String? image;
 
-  @JsonKey(name: r'role', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'role',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final UserRoleEnum role;
 
-  @JsonKey(name: r'banned', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'banned',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final bool banned;
 
-  @JsonKey(name: r'banReason', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'banReason',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final String? banReason;
 
-  @JsonKey(name: r'banExpires', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'banExpires',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final DateTime? banExpires;
 
-  @JsonKey(name: r'gender', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'gender',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final UserGenderEnum? gender;
 
-  @JsonKey(name: r'phone', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'phone',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final Phone phone;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'createdAt',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime createdAt;
 
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'updatedAt',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime updatedAt;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is User &&
-          other.id == id &&
-          other.name == name &&
-          other.email == email &&
-          other.emailVerified == emailVerified &&
-          other.image == image &&
-          other.role == role &&
-          other.banned == banned &&
-          other.banReason == banReason &&
-          other.banExpires == banExpires &&
-          other.gender == gender &&
-          other.phone == phone &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
 
-  @override
-  int get hashCode =>
-      id.hashCode +
-      name.hashCode +
-      email.hashCode +
-      emailVerified.hashCode +
-      image.hashCode +
-      role.hashCode +
-      banned.hashCode +
-      banReason.hashCode +
-      banExpires.hashCode +
-      gender.hashCode +
-      phone.hashCode +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is User &&
+      other.id == id &&
+      other.name == name &&
+      other.email == email &&
+      other.emailVerified == emailVerified &&
+      other.image == image &&
+      other.role == role &&
+      other.banned == banned &&
+      other.banReason == banReason &&
+      other.banExpires == banExpires &&
+      other.gender == gender &&
+      other.phone == phone &&
+      other.createdAt == createdAt &&
+      other.updatedAt == updatedAt;
+
+    @override
+    int get hashCode =>
+        id.hashCode +
+        name.hashCode +
+        email.hashCode +
+        emailVerified.hashCode +
+        image.hashCode +
+        role.hashCode +
+        banned.hashCode +
+        banReason.hashCode +
+        banExpires.hashCode +
+        gender.hashCode +
+        phone.hashCode +
+        createdAt.hashCode +
+        updatedAt.hashCode;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
@@ -127,38 +246,44 @@ class User {
   String toString() {
     return toJson().toString();
   }
+
 }
+
 
 enum UserRoleEnum {
-  @JsonValue(r'admin')
-  admin(r'admin'),
-  @JsonValue(r'operator')
-  operator_(r'operator'),
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'driver')
-  driver(r'driver'),
-  @JsonValue(r'user')
-  user(r'user');
+@JsonValue(r'admin')
+admin(r'admin'),
+@JsonValue(r'operator')
+operator_(r'operator'),
+@JsonValue(r'merchant')
+merchant(r'merchant'),
+@JsonValue(r'driver')
+driver(r'driver'),
+@JsonValue(r'user')
+user(r'user');
 
-  const UserRoleEnum(this.value);
+const UserRoleEnum(this.value);
 
-  final String value;
+final String value;
 
-  @override
-  String toString() => value;
+@override
+String toString() => value;
 }
+
+
 
 enum UserGenderEnum {
-  @JsonValue(r'male')
-  male(r'male'),
-  @JsonValue(r'female')
-  female(r'female');
+@JsonValue(r'male')
+male(r'male'),
+@JsonValue(r'female')
+female(r'female');
 
-  const UserGenderEnum(this.value);
+const UserGenderEnum(this.value);
 
-  final String value;
+final String value;
 
-  @override
-  String toString() => value;
+@override
+String toString() => value;
 }
+
+

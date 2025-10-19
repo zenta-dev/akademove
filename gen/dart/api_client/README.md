@@ -84,6 +84,7 @@ Class | Method | HTTP request | Description
 [*CouponApi*](doc/CouponApi.md) | [**couponRemove**](doc/CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponUpdate**](doc/CouponApi.md#couponupdate) | **PUT** /coupons/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
 [*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
@@ -154,7 +155,8 @@ Class | Method | HTTP request | Description
  - [CouponList200Response](doc/CouponList200Response.md)
  - [CouponUpdateRequest](doc/CouponUpdateRequest.md)
  - [Driver](doc/Driver.md)
- - [DriverGet200Response](doc/DriverGet200Response.md)
+ - [DriverGetMine200Response](doc/DriverGetMine200Response.md)
+ - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverRemove200Response](doc/DriverRemove200Response.md)
  - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)

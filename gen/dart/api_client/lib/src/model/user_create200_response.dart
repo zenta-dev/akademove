@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'user_create200_response.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,35 +20,65 @@ part 'user_create200_response.g.dart';
 class UserCreate200Response {
   /// Returns a new [UserCreate200Response] instance.
   UserCreate200Response({
-    required this.message,
 
-    required this.data,
+    required  this.message,
 
-    this.totalPages,
+    required  this.data,
+
+     this.totalPages,
   });
 
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'message',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'data',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final User data;
 
-  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'totalPages',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? totalPages;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserCreate200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.totalPages == totalPages;
 
-  @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  factory UserCreate200Response.fromJson(Map<String, dynamic> json) =>
-      _$UserCreate200ResponseFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is UserCreate200Response &&
+      other.message == message &&
+      other.data == data &&
+      other.totalPages == totalPages;
+
+    @override
+    int get hashCode =>
+        message.hashCode +
+        data.hashCode +
+        totalPages.hashCode;
+
+  factory UserCreate200Response.fromJson(Map<String, dynamic> json) => _$UserCreate200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserCreate200ResponseToJson(this);
 
@@ -55,4 +86,6 @@ class UserCreate200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

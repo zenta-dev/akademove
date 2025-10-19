@@ -6,8 +6,13 @@ void main() {
   final instance = ApiClient().getDriverApi();
 
   group(DriverApi, () {
-    //Future<DriverGet200Response> driverGet(String id) async
+    //Future<DriverGetMine200ResponseBody> driverGet(String id) async
     test('test driverGet', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200Response> driverGetMine() async
+    test('test driverGetMine', () async {
       // TODO
     });
 
@@ -21,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverGet200Response> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, DriverUpdateRequestBank bank }) async
+    //Future<DriverGetMine200ResponseBody> driverUpdate(String id, { num studentId, String licensePlate, MultipartFile studentCard, MultipartFile driverLicense, MultipartFile vehicleCertificate, DriverUpdateRequestBank bank }) async
     test('test driverUpdate', () async {
       // TODO
     });

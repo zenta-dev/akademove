@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon_list200_response.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,35 +20,65 @@ part 'coupon_list200_response.g.dart';
 class CouponList200Response {
   /// Returns a new [CouponList200Response] instance.
   CouponList200Response({
-    required this.message,
 
-    required this.data,
+    required  this.message,
 
-    this.totalPages,
+    required  this.data,
+
+     this.totalPages,
   });
 
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'message',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'data',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final List<Coupon> data;
 
-  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'totalPages',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? totalPages;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CouponList200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.totalPages == totalPages;
 
-  @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  factory CouponList200Response.fromJson(Map<String, dynamic> json) =>
-      _$CouponList200ResponseFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is CouponList200Response &&
+      other.message == message &&
+      other.data == data &&
+      other.totalPages == totalPages;
+
+    @override
+    int get hashCode =>
+        message.hashCode +
+        data.hashCode +
+        totalPages.hashCode;
+
+  factory CouponList200Response.fromJson(Map<String, dynamic> json) => _$CouponList200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponList200ResponseToJson(this);
 
@@ -55,4 +86,6 @@ class CouponList200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

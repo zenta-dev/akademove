@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'auth_has_permission200_response.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,35 +19,65 @@ part 'auth_has_permission200_response.g.dart';
 class AuthHasPermission200Response {
   /// Returns a new [AuthHasPermission200Response] instance.
   AuthHasPermission200Response({
-    required this.message,
 
-    required this.data,
+    required  this.message,
 
-    this.totalPages,
+    required  this.data,
+
+     this.totalPages,
   });
 
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'message',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'data',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final bool data;
 
-  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'totalPages',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? totalPages;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthHasPermission200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.totalPages == totalPages;
 
-  @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  factory AuthHasPermission200Response.fromJson(Map<String, dynamic> json) =>
-      _$AuthHasPermission200ResponseFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is AuthHasPermission200Response &&
+      other.message == message &&
+      other.data == data &&
+      other.totalPages == totalPages;
+
+    @override
+    int get hashCode =>
+        message.hashCode +
+        data.hashCode +
+        totalPages.hashCode;
+
+  factory AuthHasPermission200Response.fromJson(Map<String, dynamic> json) => _$AuthHasPermission200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthHasPermission200ResponseToJson(this);
 
@@ -54,4 +85,6 @@ class AuthHasPermission200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

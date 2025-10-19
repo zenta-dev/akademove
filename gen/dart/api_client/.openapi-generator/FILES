@@ -34,7 +34,8 @@ doc/CouponList200Response.md
 doc/CouponUpdateRequest.md
 doc/Driver.md
 doc/DriverApi.md
-doc/DriverGet200Response.md
+doc/DriverGetMine200Response.md
+doc/DriverGetMine200ResponseBody.md
 doc/DriverList200Response.md
 doc/DriverRemove200Response.md
 doc/DriverUpdateRequestBank.md
@@ -135,7 +136,8 @@ lib/src/model/coupon_create_request_rules_user.dart
 lib/src/model/coupon_list200_response.dart
 lib/src/model/coupon_update_request.dart
 lib/src/model/driver.dart
-lib/src/model/driver_get200_response.dart
+lib/src/model/driver_get_mine200_response.dart
+lib/src/model/driver_get_mine200_response_body.dart
 lib/src/model/driver_list200_response.dart
 lib/src/model/driver_remove200_response.dart
 lib/src/model/driver_update_request_bank.dart

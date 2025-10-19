@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/configuration_api.dart';
 export 'package:api_client/src/api/coupon_api.dart';
@@ -47,7 +48,8 @@ export 'package:api_client/src/model/coupon_create_request_rules_user.dart';
 export 'package:api_client/src/model/coupon_list200_response.dart';
 export 'package:api_client/src/model/coupon_update_request.dart';
 export 'package:api_client/src/model/driver.dart';
-export 'package:api_client/src/model/driver_get200_response.dart';
+export 'package:api_client/src/model/driver_get_mine200_response.dart';
+export 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 export 'package:api_client/src/model/driver_list200_response.dart';
 export 'package:api_client/src/model/driver_remove200_response.dart';
 export 'package:api_client/src/model/driver_update_request_bank.dart';
@@ -96,3 +98,4 @@ export 'package:api_client/src/model/user_create200_response.dart';
 export 'package:api_client/src/model/user_create_request.dart';
 export 'package:api_client/src/model/user_list200_response.dart';
 export 'package:api_client/src/model/user_update_request.dart';
+

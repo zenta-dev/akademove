@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'auth_sign_in_request.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -17,26 +18,50 @@ part 'auth_sign_in_request.g.dart';
 )
 class AuthSignInRequest {
   /// Returns a new [AuthSignInRequest] instance.
-  AuthSignInRequest({required this.email, required this.password});
+  AuthSignInRequest({
 
-  @JsonKey(name: r'email', required: true, includeIfNull: false)
+    required  this.email,
+
+    required  this.password,
+  });
+
+  @JsonKey(
+    
+    name: r'email',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String email;
 
-  @JsonKey(name: r'password', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'password',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String password;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthSignInRequest &&
-          other.email == email &&
-          other.password == password;
 
-  @override
-  int get hashCode => email.hashCode + password.hashCode;
 
-  factory AuthSignInRequest.fromJson(Map<String, dynamic> json) =>
-      _$AuthSignInRequestFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is AuthSignInRequest &&
+      other.email == email &&
+      other.password == password;
+
+    @override
+    int get hashCode =>
+        email.hashCode +
+        password.hashCode;
+
+  factory AuthSignInRequest.fromJson(Map<String, dynamic> json) => _$AuthSignInRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthSignInRequestToJson(this);
 
@@ -44,4 +69,6 @@ class AuthSignInRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

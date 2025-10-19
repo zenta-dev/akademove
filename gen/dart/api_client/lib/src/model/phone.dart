@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'phone.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -17,23 +18,48 @@ part 'phone.g.dart';
 )
 class Phone {
   /// Returns a new [Phone] instance.
-  Phone({required this.countryCode, required this.number});
+  Phone({
 
-  @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
+    required  this.countryCode,
+
+    required  this.number,
+  });
+
+  @JsonKey(
+    
+    name: r'countryCode',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final PhoneCountryCodeEnum countryCode;
 
-  @JsonKey(name: r'number', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'number',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num number;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Phone &&
-          other.countryCode == countryCode &&
-          other.number == number;
 
-  @override
-  int get hashCode => countryCode.hashCode + number.hashCode;
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is Phone &&
+      other.countryCode == countryCode &&
+      other.number == number;
+
+    @override
+    int get hashCode =>
+        countryCode.hashCode +
+        number.hashCode;
 
   factory Phone.fromJson(Map<String, dynamic> json) => _$PhoneFromJson(json);
 
@@ -43,16 +69,20 @@ class Phone {
   String toString() {
     return toJson().toString();
   }
+
 }
+
 
 enum PhoneCountryCodeEnum {
-  @JsonValue(r'ID')
-  ID(r'ID');
+@JsonValue(r'ID')
+ID(r'ID');
 
-  const PhoneCountryCodeEnum(this.value);
+const PhoneCountryCodeEnum(this.value);
 
-  final String value;
+final String value;
 
-  @override
-  String toString() => value;
+@override
+String toString() => value;
 }
+
+

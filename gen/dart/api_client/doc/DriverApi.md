@@ -10,13 +10,14 @@ All URIs are relative to *http://localhost:3000/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**driverGet**](DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[**driverGetMine**](DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
 [**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
 
 # **driverGet**
-> DriverGet200Response driverGet(id)
+> DriverGetMine200ResponseBody driverGet(id)
 
 
 
@@ -43,7 +44,44 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverGetMine**
+> DriverGetMine200Response driverGetMine()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+
+try {
+    final response = api.driverGetMine();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverGetMine: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**DriverGetMine200Response**](DriverGetMine200Response.md)
 
 ### Authorization
 
@@ -149,7 +187,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGet200Response driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank)
+> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank)
 
 
 
@@ -188,7 +226,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverGet200Response**](DriverGet200Response.md)
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 

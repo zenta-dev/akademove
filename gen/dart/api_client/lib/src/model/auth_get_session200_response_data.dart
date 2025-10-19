@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'auth_get_session200_response_data.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,26 +19,50 @@ part 'auth_get_session200_response_data.g.dart';
 )
 class AuthGetSession200ResponseData {
   /// Returns a new [AuthGetSession200ResponseData] instance.
-  AuthGetSession200ResponseData({this.token, required this.user});
+  AuthGetSession200ResponseData({
 
-  @JsonKey(name: r'token', required: false, includeIfNull: false)
+     this.token,
+
+    required  this.user,
+  });
+
+  @JsonKey(
+    
+    name: r'token',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final String? token;
 
-  @JsonKey(name: r'user', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'user',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final User user;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthGetSession200ResponseData &&
-          other.token == token &&
-          other.user == user;
 
-  @override
-  int get hashCode => token.hashCode + user.hashCode;
 
-  factory AuthGetSession200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$AuthGetSession200ResponseDataFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is AuthGetSession200ResponseData &&
+      other.token == token &&
+      other.user == user;
+
+    @override
+    int get hashCode =>
+        token.hashCode +
+        user.hashCode;
+
+  factory AuthGetSession200ResponseData.fromJson(Map<String, dynamic> json) => _$AuthGetSession200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthGetSession200ResponseDataToJson(this);
 
@@ -45,4 +70,6 @@ class AuthGetSession200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

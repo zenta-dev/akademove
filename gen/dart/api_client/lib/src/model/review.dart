@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'review.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,40 +19,95 @@ part 'review.g.dart';
 class Review {
   /// Returns a new [Review] instance.
   Review({
-    required this.id,
 
-    required this.orderId,
+    required  this.id,
 
-    required this.fromUserId,
+    required  this.orderId,
 
-    required this.toUserId,
+    required  this.fromUserId,
 
-    required this.category,
+    required  this.toUserId,
 
-    required this.score,
+    required  this.category,
 
-    this.comment = '',
+    required  this.score,
 
-    required this.createdAt,
+     this.comment = '',
+
+    required  this.createdAt,
   });
 
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String id;
 
-  @JsonKey(name: r'orderId', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'orderId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String orderId;
 
-  @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'fromUserId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String fromUserId;
 
-  @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'toUserId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String toUserId;
 
-  @JsonKey(name: r'category', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'category',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final ReviewCategoryEnum category;
 
-  @JsonKey(name: r'score', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'score',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num score;
+
+
 
   @JsonKey(
     defaultValue: '',
@@ -59,34 +115,47 @@ class Review {
     required: false,
     includeIfNull: false,
   )
+
+
   final String? comment;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'createdAt',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime createdAt;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Review &&
-          other.id == id &&
-          other.orderId == orderId &&
-          other.fromUserId == fromUserId &&
-          other.toUserId == toUserId &&
-          other.category == category &&
-          other.score == score &&
-          other.comment == comment &&
-          other.createdAt == createdAt;
 
-  @override
-  int get hashCode =>
-      id.hashCode +
-      orderId.hashCode +
-      fromUserId.hashCode +
-      toUserId.hashCode +
-      category.hashCode +
-      score.hashCode +
-      comment.hashCode +
-      createdAt.hashCode;
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is Review &&
+      other.id == id &&
+      other.orderId == orderId &&
+      other.fromUserId == fromUserId &&
+      other.toUserId == toUserId &&
+      other.category == category &&
+      other.score == score &&
+      other.comment == comment &&
+      other.createdAt == createdAt;
+
+    @override
+    int get hashCode =>
+        id.hashCode +
+        orderId.hashCode +
+        fromUserId.hashCode +
+        toUserId.hashCode +
+        category.hashCode +
+        score.hashCode +
+        comment.hashCode +
+        createdAt.hashCode;
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 
@@ -96,20 +165,24 @@ class Review {
   String toString() {
     return toJson().toString();
   }
+
 }
+
 
 enum ReviewCategoryEnum {
-  @JsonValue(r'cleanliness')
-  cleanliness(r'cleanliness'),
-  @JsonValue(r'courtesy')
-  courtesy(r'courtesy'),
-  @JsonValue(r'other')
-  other(r'other');
+@JsonValue(r'cleanliness')
+cleanliness(r'cleanliness'),
+@JsonValue(r'courtesy')
+courtesy(r'courtesy'),
+@JsonValue(r'other')
+other(r'other');
 
-  const ReviewCategoryEnum(this.value);
+const ReviewCategoryEnum(this.value);
 
-  final String value;
+final String value;
 
-  @override
-  String toString() => value;
+@override
+String toString() => value;
 }
+
+

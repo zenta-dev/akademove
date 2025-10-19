@@ -14,15 +14,16 @@ import 'package:api_client/src/model/configuration_list200_response.dart';
 import 'package:api_client/src/model/configuration_update_request.dart';
 
 class ConfigurationApi {
+
   final Dio _dio;
 
   const ConfigurationApi(this._dio);
 
   /// configurationGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [key]
+  /// * [key] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -32,7 +33,7 @@ class ConfigurationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ConfigurationGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ConfigurationGet200Response>> configurationGet({
+  Future<Response<ConfigurationGet200Response>> configurationGet({ 
     required String key,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -41,18 +42,19 @@ class ConfigurationApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/configurations/{key}'.replaceAll(
-      '{'
-      r'key'
-      '}',
-      key.toString(),
-    );
+    final _path = r'/configurations/{key}'.replaceAll('{' r'key' '}', key.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -70,13 +72,8 @@ class ConfigurationApi {
     ConfigurationGet200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              ConfigurationGet200Response,
-              ConfigurationGet200Response
-            >(rawData, 'ConfigurationGet200Response', growable: true);
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ConfigurationGet200Response, ConfigurationGet200Response>(rawData, 'ConfigurationGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -100,15 +97,15 @@ class ConfigurationApi {
   }
 
   /// configurationList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -118,7 +115,7 @@ class ConfigurationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ConfigurationList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ConfigurationList200Response>> configurationList({
+  Future<Response<ConfigurationList200Response>> configurationList({ 
     String? cursor,
     Object? limit,
     Object? page,
@@ -135,10 +132,16 @@ class ConfigurationApi {
     final _path = r'/configurations';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -166,13 +169,8 @@ class ConfigurationApi {
     ConfigurationList200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              ConfigurationList200Response,
-              ConfigurationList200Response
-            >(rawData, 'ConfigurationList200Response', growable: true);
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ConfigurationList200Response, ConfigurationList200Response>(rawData, 'ConfigurationList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -196,11 +194,11 @@ class ConfigurationApi {
   }
 
   /// configurationUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [key]
-  /// * [configurationUpdateRequest]
+  /// * [key] 
+  /// * [configurationUpdateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -210,7 +208,7 @@ class ConfigurationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ConfigurationGet200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ConfigurationGet200Response>> configurationUpdate({
+  Future<Response<ConfigurationGet200Response>> configurationUpdate({ 
     required String key,
     required ConfigurationUpdateRequest configurationUpdateRequest,
     CancelToken? cancelToken,
@@ -220,18 +218,19 @@ class ConfigurationApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/configurations/{key}'.replaceAll(
-      '{'
-      r'key'
-      '}',
-      key.toString(),
-    );
+    final _path = r'/configurations/{key}'.replaceAll('{' r'key' '}', key.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -242,10 +241,13 @@ class ConfigurationApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(configurationUpdateRequest);
-    } catch (error, stackTrace) {
+  _bodyData=jsonEncode(configurationUpdateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -264,13 +266,8 @@ class ConfigurationApi {
     ConfigurationGet200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              ConfigurationGet200Response,
-              ConfigurationGet200Response
-            >(rawData, 'ConfigurationGet200Response', growable: true);
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ConfigurationGet200Response, ConfigurationGet200Response>(rawData, 'ConfigurationGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -292,4 +289,5 @@ class ConfigurationApi {
       extra: _response.extra,
     );
   }
+
 }

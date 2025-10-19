@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<OrderList200Response> orderList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<OrderList200Response> orderList({ String cursor, Object limit, Object page, String query, String sortBy, String order, List<String> statuses }) async
     test('test orderList', () async {
       // TODO
     });

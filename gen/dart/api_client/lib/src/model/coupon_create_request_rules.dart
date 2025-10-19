@@ -11,6 +11,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon_create_request_rules.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -20,30 +21,66 @@ part 'coupon_create_request_rules.g.dart';
 )
 class CouponCreateRequestRules {
   /// Returns a new [CouponCreateRequestRules] instance.
-  CouponCreateRequestRules({this.general, this.user, this.time});
+  CouponCreateRequestRules({
 
-  @JsonKey(name: r'general', required: false, includeIfNull: false)
+     this.general,
+
+     this.user,
+
+     this.time,
+  });
+
+  @JsonKey(
+    
+    name: r'general',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final CouponCreateRequestRulesGeneral? general;
 
-  @JsonKey(name: r'user', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'user',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final CouponCreateRequestRulesUser? user;
 
-  @JsonKey(name: r'time', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'time',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final CouponCreateRequestRulesTime? time;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CouponCreateRequestRules &&
-          other.general == general &&
-          other.user == user &&
-          other.time == time;
 
-  @override
-  int get hashCode => general.hashCode + user.hashCode + time.hashCode;
 
-  factory CouponCreateRequestRules.fromJson(Map<String, dynamic> json) =>
-      _$CouponCreateRequestRulesFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is CouponCreateRequestRules &&
+      other.general == general &&
+      other.user == user &&
+      other.time == time;
+
+    @override
+    int get hashCode =>
+        general.hashCode +
+        user.hashCode +
+        time.hashCode;
+
+  factory CouponCreateRequestRules.fromJson(Map<String, dynamic> json) => _$CouponCreateRequestRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponCreateRequestRulesToJson(this);
 
@@ -51,4 +88,6 @@ class CouponCreateRequestRules {
   String toString() {
     return toJson().toString();
   }
+
 }
+

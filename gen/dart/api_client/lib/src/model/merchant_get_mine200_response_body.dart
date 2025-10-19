@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'merchant_get_mine200_response_body.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,35 +20,65 @@ part 'merchant_get_mine200_response_body.g.dart';
 class MerchantGetMine200ResponseBody {
   /// Returns a new [MerchantGetMine200ResponseBody] instance.
   MerchantGetMine200ResponseBody({
-    required this.message,
 
-    required this.data,
+    required  this.message,
 
-    this.totalPages,
+    required  this.data,
+
+     this.totalPages,
   });
 
-  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'message',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'data',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final Merchant data;
 
-  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'totalPages',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? totalPages;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantGetMine200ResponseBody &&
-          other.message == message &&
-          other.data == data &&
-          other.totalPages == totalPages;
 
-  @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  factory MerchantGetMine200ResponseBody.fromJson(Map<String, dynamic> json) =>
-      _$MerchantGetMine200ResponseBodyFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is MerchantGetMine200ResponseBody &&
+      other.message == message &&
+      other.data == data &&
+      other.totalPages == totalPages;
+
+    @override
+    int get hashCode =>
+        message.hashCode +
+        data.hashCode +
+        totalPages.hashCode;
+
+  factory MerchantGetMine200ResponseBody.fromJson(Map<String, dynamic> json) => _$MerchantGetMine200ResponseBodyFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantGetMine200ResponseBodyToJson(this);
 
@@ -55,4 +86,6 @@ class MerchantGetMine200ResponseBody {
   String toString() {
     return toJson().toString();
   }
+
 }
+

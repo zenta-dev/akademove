@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'update_user_password_request.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,29 +19,49 @@ part 'update_user_password_request.g.dart';
 class UpdateUserPasswordRequest {
   /// Returns a new [UpdateUserPasswordRequest] instance.
   UpdateUserPasswordRequest({
-    required this.password,
 
-    required this.confirmPassword,
+    required  this.password,
+
+    required  this.confirmPassword,
   });
 
-  @JsonKey(name: r'password', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'password',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String password;
 
-  @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'confirmPassword',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String confirmPassword;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UpdateUserPasswordRequest &&
-          other.password == password &&
-          other.confirmPassword == confirmPassword;
 
-  @override
-  int get hashCode => password.hashCode + confirmPassword.hashCode;
 
-  factory UpdateUserPasswordRequest.fromJson(Map<String, dynamic> json) =>
-      _$UpdateUserPasswordRequestFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is UpdateUserPasswordRequest &&
+      other.password == password &&
+      other.confirmPassword == confirmPassword;
+
+    @override
+    int get hashCode =>
+        password.hashCode +
+        confirmPassword.hashCode;
+
+  factory UpdateUserPasswordRequest.fromJson(Map<String, dynamic> json) => _$UpdateUserPasswordRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateUserPasswordRequestToJson(this);
 
@@ -48,4 +69,6 @@ class UpdateUserPasswordRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

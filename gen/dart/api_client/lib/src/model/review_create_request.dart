@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'review_create_request.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,33 +19,79 @@ part 'review_create_request.g.dart';
 class ReviewCreateRequest {
   /// Returns a new [ReviewCreateRequest] instance.
   ReviewCreateRequest({
-    required this.orderId,
 
-    required this.fromUserId,
+    required  this.orderId,
 
-    required this.toUserId,
+    required  this.fromUserId,
 
-    required this.category,
+    required  this.toUserId,
 
-    required this.score,
+    required  this.category,
 
-    this.comment = '',
+    required  this.score,
+
+     this.comment = '',
   });
 
-  @JsonKey(name: r'orderId', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'orderId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String orderId;
 
-  @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'fromUserId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String fromUserId;
 
-  @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'toUserId',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String toUserId;
 
-  @JsonKey(name: r'category', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'category',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final ReviewCreateRequestCategoryEnum category;
 
-  @JsonKey(name: r'score', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'score',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num score;
+
+
 
   @JsonKey(
     defaultValue: '',
@@ -52,30 +99,33 @@ class ReviewCreateRequest {
     required: false,
     includeIfNull: false,
   )
+
+
   final String? comment;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ReviewCreateRequest &&
-          other.orderId == orderId &&
-          other.fromUserId == fromUserId &&
-          other.toUserId == toUserId &&
-          other.category == category &&
-          other.score == score &&
-          other.comment == comment;
 
-  @override
-  int get hashCode =>
-      orderId.hashCode +
-      fromUserId.hashCode +
-      toUserId.hashCode +
-      category.hashCode +
-      score.hashCode +
-      comment.hashCode;
 
-  factory ReviewCreateRequest.fromJson(Map<String, dynamic> json) =>
-      _$ReviewCreateRequestFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is ReviewCreateRequest &&
+      other.orderId == orderId &&
+      other.fromUserId == fromUserId &&
+      other.toUserId == toUserId &&
+      other.category == category &&
+      other.score == score &&
+      other.comment == comment;
+
+    @override
+    int get hashCode =>
+        orderId.hashCode +
+        fromUserId.hashCode +
+        toUserId.hashCode +
+        category.hashCode +
+        score.hashCode +
+        comment.hashCode;
+
+  factory ReviewCreateRequest.fromJson(Map<String, dynamic> json) => _$ReviewCreateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReviewCreateRequestToJson(this);
 
@@ -83,20 +133,24 @@ class ReviewCreateRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+
 
 enum ReviewCreateRequestCategoryEnum {
-  @JsonValue(r'cleanliness')
-  cleanliness(r'cleanliness'),
-  @JsonValue(r'courtesy')
-  courtesy(r'courtesy'),
-  @JsonValue(r'other')
-  other(r'other');
+@JsonValue(r'cleanliness')
+cleanliness(r'cleanliness'),
+@JsonValue(r'courtesy')
+courtesy(r'courtesy'),
+@JsonValue(r'other')
+other(r'other');
 
-  const ReviewCreateRequestCategoryEnum(this.value);
+const ReviewCreateRequestCategoryEnum(this.value);
 
-  final String value;
+final String value;
 
-  @override
-  String toString() => value;
+@override
+String toString() => value;
 }
+
+

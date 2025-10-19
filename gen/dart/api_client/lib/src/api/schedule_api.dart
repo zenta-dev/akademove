@@ -16,15 +16,16 @@ import 'package:api_client/src/model/schedule_list200_response.dart';
 import 'package:api_client/src/model/schedule_update_request.dart';
 
 class ScheduleApi {
+
   final Dio _dio;
 
   const ScheduleApi(this._dio);
 
   /// scheduleCreate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [scheduleCreateRequest]
+  /// * [scheduleCreateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,7 +35,7 @@ class ScheduleApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ScheduleCreate200Response>> scheduleCreate({
+  Future<Response<ScheduleCreate200Response>> scheduleCreate({ 
     required ScheduleCreateRequest scheduleCreateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -46,10 +47,16 @@ class ScheduleApi {
     final _path = r'/schedules';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -60,10 +67,13 @@ class ScheduleApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(scheduleCreateRequest);
-    } catch (error, stackTrace) {
+  _bodyData=jsonEncode(scheduleCreateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -82,14 +92,8 @@ class ScheduleApi {
     ScheduleCreate200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(
-              rawData,
-              'ScheduleCreate200Response',
-              growable: true,
-            );
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(rawData, 'ScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -113,10 +117,10 @@ class ScheduleApi {
   }
 
   /// scheduleGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -126,7 +130,7 @@ class ScheduleApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ScheduleCreate200Response>> scheduleGet({
+  Future<Response<ScheduleCreate200Response>> scheduleGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -135,18 +139,19 @@ class ScheduleApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/schedules/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -164,14 +169,8 @@ class ScheduleApi {
     ScheduleCreate200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(
-              rawData,
-              'ScheduleCreate200Response',
-              growable: true,
-            );
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(rawData, 'ScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -195,15 +194,15 @@ class ScheduleApi {
   }
 
   /// scheduleList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -213,7 +212,7 @@ class ScheduleApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ScheduleList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ScheduleList200Response>> scheduleList({
+  Future<Response<ScheduleList200Response>> scheduleList({ 
     String? cursor,
     Object? limit,
     Object? page,
@@ -230,10 +229,16 @@ class ScheduleApi {
     final _path = r'/schedules';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -261,14 +266,8 @@ class ScheduleApi {
     ScheduleList200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ScheduleList200Response, ScheduleList200Response>(
-              rawData,
-              'ScheduleList200Response',
-              growable: true,
-            );
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ScheduleList200Response, ScheduleList200Response>(rawData, 'ScheduleList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -292,10 +291,10 @@ class ScheduleApi {
   }
 
   /// scheduleRemove
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -305,7 +304,7 @@ class ScheduleApi {
   ///
   /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> scheduleRemove({
+  Future<Response<DriverRemove200Response>> scheduleRemove({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -314,18 +313,19 @@ class ScheduleApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/schedules/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -343,14 +343,8 @@ class ScheduleApi {
     DriverRemove200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<DriverRemove200Response, DriverRemove200Response>(
-              rawData,
-              'DriverRemove200Response',
-              growable: true,
-            );
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<DriverRemove200Response, DriverRemove200Response>(rawData, 'DriverRemove200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -374,11 +368,11 @@ class ScheduleApi {
   }
 
   /// scheduleUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [scheduleUpdateRequest]
+  /// * [id] 
+  /// * [scheduleUpdateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -388,7 +382,7 @@ class ScheduleApi {
   ///
   /// Returns a [Future] containing a [Response] with a [ScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<ScheduleCreate200Response>> scheduleUpdate({
+  Future<Response<ScheduleCreate200Response>> scheduleUpdate({ 
     required String id,
     required ScheduleUpdateRequest scheduleUpdateRequest,
     CancelToken? cancelToken,
@@ -398,18 +392,19 @@ class ScheduleApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/schedules/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -420,10 +415,13 @@ class ScheduleApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(scheduleUpdateRequest);
-    } catch (error, stackTrace) {
+  _bodyData=jsonEncode(scheduleUpdateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -442,14 +440,8 @@ class ScheduleApi {
     ScheduleCreate200Response? _responseData;
 
     try {
-      final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(
-              rawData,
-              'ScheduleCreate200Response',
-              growable: true,
-            );
+final rawData = _response.data;
+_responseData = rawData == null ? null : deserialize<ScheduleCreate200Response, ScheduleCreate200Response>(rawData, 'ScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -471,4 +463,5 @@ class ScheduleApi {
       extra: _response.extra,
     );
   }
+
 }

@@ -3,11 +3,11 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/order.dart';
+import 'package:api_client/src/model/driver.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'order_create200_response.g.dart';
+part 'driver_get_mine200_response_body.g.dart';
 
 
 @CopyWith()
@@ -17,9 +17,9 @@ part 'order_create200_response.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class OrderCreate200Response {
-  /// Returns a new [OrderCreate200Response] instance.
-  OrderCreate200Response({
+class DriverGetMine200ResponseBody {
+  /// Returns a new [DriverGetMine200ResponseBody] instance.
+  DriverGetMine200ResponseBody({
 
     required  this.message,
 
@@ -48,7 +48,7 @@ class OrderCreate200Response {
   )
 
 
-  final Order data;
+  final Driver data;
 
 
 
@@ -67,7 +67,7 @@ class OrderCreate200Response {
 
 
     @override
-    bool operator ==(Object other) => identical(this, other) || other is OrderCreate200Response &&
+    bool operator ==(Object other) => identical(this, other) || other is DriverGetMine200ResponseBody &&
       other.message == message &&
       other.data == data &&
       other.totalPages == totalPages;
@@ -78,9 +78,9 @@ class OrderCreate200Response {
         data.hashCode +
         totalPages.hashCode;
 
-  factory OrderCreate200Response.fromJson(Map<String, dynamic> json) => _$OrderCreate200ResponseFromJson(json);
+  factory DriverGetMine200ResponseBody.fromJson(Map<String, dynamic> json) => _$DriverGetMine200ResponseBodyFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderCreate200ResponseToJson(this);
+  Map<String, dynamic> toJson() => _$DriverGetMine200ResponseBodyToJson(this);
 
   @override
   String toString() {

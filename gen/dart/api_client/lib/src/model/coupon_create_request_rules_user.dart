@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon_create_request_rules_user.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -17,21 +18,34 @@ part 'coupon_create_request_rules_user.g.dart';
 )
 class CouponCreateRequestRulesUser {
   /// Returns a new [CouponCreateRequestRulesUser] instance.
-  CouponCreateRequestRulesUser({this.newUserOnly});
+  CouponCreateRequestRulesUser({
 
-  @JsonKey(name: r'newUserOnly', required: false, includeIfNull: false)
+     this.newUserOnly,
+  });
+
+  @JsonKey(
+    
+    name: r'newUserOnly',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final bool? newUserOnly;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CouponCreateRequestRulesUser && other.newUserOnly == newUserOnly;
 
-  @override
-  int get hashCode => newUserOnly.hashCode;
 
-  factory CouponCreateRequestRulesUser.fromJson(Map<String, dynamic> json) =>
-      _$CouponCreateRequestRulesUserFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is CouponCreateRequestRulesUser &&
+      other.newUserOnly == newUserOnly;
+
+    @override
+    int get hashCode =>
+        newUserOnly.hashCode;
+
+  factory CouponCreateRequestRulesUser.fromJson(Map<String, dynamic> json) => _$CouponCreateRequestRulesUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponCreateRequestRulesUserToJson(this);
 
@@ -39,4 +53,6 @@ class CouponCreateRequestRulesUser {
   String toString() {
     return toJson().toString();
   }
+
 }
+

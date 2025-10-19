@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'auth_forgot_password_request.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -17,21 +18,34 @@ part 'auth_forgot_password_request.g.dart';
 )
 class AuthForgotPasswordRequest {
   /// Returns a new [AuthForgotPasswordRequest] instance.
-  AuthForgotPasswordRequest({required this.email});
+  AuthForgotPasswordRequest({
 
-  @JsonKey(name: r'email', required: true, includeIfNull: false)
+    required  this.email,
+  });
+
+  @JsonKey(
+    
+    name: r'email',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String email;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is AuthForgotPasswordRequest && other.email == email;
 
-  @override
-  int get hashCode => email.hashCode;
 
-  factory AuthForgotPasswordRequest.fromJson(Map<String, dynamic> json) =>
-      _$AuthForgotPasswordRequestFromJson(json);
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is AuthForgotPasswordRequest &&
+      other.email == email;
+
+    @override
+    int get hashCode =>
+        email.hashCode;
+
+  factory AuthForgotPasswordRequest.fromJson(Map<String, dynamic> json) => _$AuthForgotPasswordRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthForgotPasswordRequestToJson(this);
 
@@ -39,4 +53,6 @@ class AuthForgotPasswordRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

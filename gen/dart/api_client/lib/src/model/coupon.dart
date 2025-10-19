@@ -9,6 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'coupon.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,105 +20,223 @@ part 'coupon.g.dart';
 class Coupon {
   /// Returns a new [Coupon] instance.
   Coupon({
-    required this.id,
 
-    required this.name,
+    required  this.id,
 
-    required this.code,
+    required  this.name,
 
-    required this.rules,
+    required  this.code,
 
-    this.discountAmount,
+    required  this.rules,
 
-    this.discountPercentage,
+     this.discountAmount,
 
-    required this.usageLimit,
+     this.discountPercentage,
 
-    required this.usedCount,
+    required  this.usageLimit,
 
-    required this.periodStart,
+    required  this.usedCount,
 
-    required this.periodEnd,
+    required  this.periodStart,
 
-    required this.isActive,
+    required  this.periodEnd,
 
-    required this.createdById,
+    required  this.isActive,
 
-    required this.createdAt,
+    required  this.createdById,
+
+    required  this.createdAt,
   });
 
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  @JsonKey(
+    
+    name: r'id',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String id;
 
-  @JsonKey(name: r'name', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'name',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String name;
 
-  @JsonKey(name: r'code', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'code',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String code;
 
-  @JsonKey(name: r'rules', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'rules',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final CouponCreateRequestRules rules;
 
-  @JsonKey(name: r'discountAmount', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'discountAmount',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? discountAmount;
 
-  @JsonKey(name: r'discountPercentage', required: false, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'discountPercentage',
+    required: false,
+    includeIfNull: false,
+  )
+
+
   final num? discountPercentage;
 
-  @JsonKey(name: r'usageLimit', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'usageLimit',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num usageLimit;
 
-  @JsonKey(name: r'usedCount', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'usedCount',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num usedCount;
 
-  @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'periodStart',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime periodStart;
 
-  @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'periodEnd',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime periodEnd;
 
-  @JsonKey(name: r'isActive', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'isActive',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final bool isActive;
 
-  @JsonKey(name: r'createdById', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'createdById',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final String createdById;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'createdAt',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final DateTime createdAt;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Coupon &&
-          other.id == id &&
-          other.name == name &&
-          other.code == code &&
-          other.rules == rules &&
-          other.discountAmount == discountAmount &&
-          other.discountPercentage == discountPercentage &&
-          other.usageLimit == usageLimit &&
-          other.usedCount == usedCount &&
-          other.periodStart == periodStart &&
-          other.periodEnd == periodEnd &&
-          other.isActive == isActive &&
-          other.createdById == createdById &&
-          other.createdAt == createdAt;
 
-  @override
-  int get hashCode =>
-      id.hashCode +
-      name.hashCode +
-      code.hashCode +
-      rules.hashCode +
-      discountAmount.hashCode +
-      discountPercentage.hashCode +
-      usageLimit.hashCode +
-      usedCount.hashCode +
-      periodStart.hashCode +
-      periodEnd.hashCode +
-      isActive.hashCode +
-      createdById.hashCode +
-      createdAt.hashCode;
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is Coupon &&
+      other.id == id &&
+      other.name == name &&
+      other.code == code &&
+      other.rules == rules &&
+      other.discountAmount == discountAmount &&
+      other.discountPercentage == discountPercentage &&
+      other.usageLimit == usageLimit &&
+      other.usedCount == usedCount &&
+      other.periodStart == periodStart &&
+      other.periodEnd == periodEnd &&
+      other.isActive == isActive &&
+      other.createdById == createdById &&
+      other.createdAt == createdAt;
+
+    @override
+    int get hashCode =>
+        id.hashCode +
+        name.hashCode +
+        code.hashCode +
+        rules.hashCode +
+        discountAmount.hashCode +
+        discountPercentage.hashCode +
+        usageLimit.hashCode +
+        usedCount.hashCode +
+        periodStart.hashCode +
+        periodEnd.hashCode +
+        isActive.hashCode +
+        createdById.hashCode +
+        createdAt.hashCode;
 
   factory Coupon.fromJson(Map<String, dynamic> json) => _$CouponFromJson(json);
 
@@ -127,4 +246,6 @@ class Coupon {
   String toString() {
     return toJson().toString();
   }
+
 }
+

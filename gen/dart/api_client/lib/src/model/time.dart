@@ -8,6 +8,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'time.g.dart';
 
+
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -17,20 +18,48 @@ part 'time.g.dart';
 )
 class Time {
   /// Returns a new [Time] instance.
-  Time({required this.h, required this.m});
+  Time({
 
-  @JsonKey(name: r'h', required: true, includeIfNull: false)
+    required  this.h,
+
+    required  this.m,
+  });
+
+  @JsonKey(
+    
+    name: r'h',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num h;
 
-  @JsonKey(name: r'm', required: true, includeIfNull: false)
+
+
+  @JsonKey(
+    
+    name: r'm',
+    required: true,
+    includeIfNull: false,
+  )
+
+
   final num m;
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Time && other.h == h && other.m == m;
 
-  @override
-  int get hashCode => h.hashCode + m.hashCode;
+
+
+
+    @override
+    bool operator ==(Object other) => identical(this, other) || other is Time &&
+      other.h == h &&
+      other.m == m;
+
+    @override
+    int get hashCode =>
+        h.hashCode +
+        m.hashCode;
 
   factory Time.fromJson(Map<String, dynamic> json) => _$TimeFromJson(json);
 
@@ -40,4 +69,6 @@ class Time {
   String toString() {
     return toJson().toString();
   }
+
 }
+
