@@ -42,6 +42,22 @@ class OrderRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
+  Future<BaseResponse<Order>> get(String id) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderGet(id: id);
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Order not found',
+            code: ErrorCode.NOT_FOUND,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
             code: ErrorCode.UNKNOWN,
           ));
 
