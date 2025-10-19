@@ -58,10 +58,21 @@ class OrderRepository extends BaseRepository {
     });
   }
 
+  Future<BaseResponse<Order>> create(InsertOrderRequest request) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderCreate(
+        insertOrderRequest: request,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to create order',
             code: ErrorCode.UNKNOWN,
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
 }
