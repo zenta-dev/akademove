@@ -134,7 +134,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
       },
       behavior: HitTestBehavior.translucent,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.h),
+        padding: EdgeInsets.only(bottom: 8.h, top: 16.h),
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(

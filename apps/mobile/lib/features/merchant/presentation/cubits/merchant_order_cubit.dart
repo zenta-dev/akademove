@@ -11,27 +11,18 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   Future<void> getMine({required List<OrderStatusEnum> statuses}) async {
     try {
-      logger.d('Statuses $statuses');
       emit(state.toLoading());
-      await delay(const Duration(seconds: 4));
-      final dummy = List.generate(
-        5,
-        (int i) => Order(
-          id: 'id-$i',
-          userId: 'userId-$i',
-          type: OrderTypeEnum.food,
-          status: OrderStatusEnum.requested,
-          pickupLocation: Location(lat: 0, lng: 0),
-          dropoffLocation: Location(lat: 0, lng: 0),
-          distanceKm: 1,
-          basePrice: 2000 * i,
-          totalPrice: 5000 * i,
-          requestedAt: DateTime(2020),
-          createdAt: DateTime(2020),
-          updatedAt: DateTime(2020),
-        ),
+
+      final res = await _orderRepository.list(
+        ListOrderQuery(statuses: statuses),
       );
-      emit(state.toSuccess(list: dummy));
+
+      final mergedList = {
+        for (final item in state.list) item.id: item,
+        for (final item in res.data) item.id: item,
+      }.values.toList();
+
+      emit(state.toSuccess(list: mergedList, message: res.message));
     } on BaseError catch (e, st) {
       logger.e(
         '[MerchantOrderCubit] - Error: ${e.message}',
