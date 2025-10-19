@@ -1,4 +1,5 @@
 import { implement } from "@orpc/server";
+import { RepositoryError } from "@/core/error";
 import type { ORPCContext } from "@/core/interface";
 import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
 import { OrderSpec } from "./spec";
@@ -9,15 +10,59 @@ export const OrderHandler = os.router({
 	list: os.list
 		.use(hasPermission({ order: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.order.list(query);
+			try {
+				const id = context.user.id;
+				const role = context.user.role;
 
-			return {
-				status: 200,
-				body: {
-					message: "Successfully retrieved orders data",
-					data: result,
-				},
-			};
+				if (role === "merchant") {
+					const mine = await context.repo.merchant.main.getByUserId(id);
+					const result = await context.repo.order.list({
+						...query,
+						id: mine.id,
+						role: role,
+					});
+					return {
+						status: 200,
+						body: {
+							message: "Successfully retrieved orders data",
+							data: result,
+						},
+					};
+				}
+				if (role === "driver") {
+					const mine = await context.repo.merchant.main.getByUserId(id);
+					const result = await context.repo.order.list({
+						...query,
+						id: mine.id,
+						role: role,
+					});
+					return {
+						status: 200,
+						body: {
+							message: "Successfully retrieved orders data",
+							data: result,
+						},
+					};
+				}
+				const result = await context.repo.order.list({
+					...query,
+					id,
+					role,
+				});
+				return {
+					status: 200,
+					body: {
+						message: "Successfully retrieved orders data",
+						data: result,
+					},
+				};
+			} catch (error) {
+				console.error(error);
+				if (error instanceof RepositoryError) throw error;
+				throw new RepositoryError("An error occured", {
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
 		}),
 	get: os.get
 		.use(hasPermission({ order: ["get"] }))

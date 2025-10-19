@@ -50,7 +50,7 @@ const roles: Record<UserRole, PermissionMap> = {
 	merchant: {
 		merchant: ["get", "update"],
 		merchantMenu: ["list", "get", "create", "update", "delete"],
-		order: ["get", "update"],
+		order: ["list", "get", "update"],
 		review: ["get"],
 		report: ["get"],
 	},

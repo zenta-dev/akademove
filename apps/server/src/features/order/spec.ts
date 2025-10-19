@@ -2,11 +2,28 @@ import { oc } from "@orpc/contract";
 import {
 	InsertOrderSchema,
 	OrderSchema,
+	OrderStatusSchema,
 	UpdateOrderSchema,
 } from "@repo/schema/order";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import {
+	CursorPaginationQuerySchema,
+	OffsetPaginationQuerySchema,
+} from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+
+const UnifiedPaginationQuerySchema = z
+	.object({
+		...CursorPaginationQuerySchema.shape,
+		...OffsetPaginationQuerySchema.shape,
+		query: z.string().optional(),
+		sortBy: z.string().optional(),
+		order: z.enum(["asc", "desc"]).optional().default("desc"),
+		statuses: z.array(OrderStatusSchema).optional(),
+	})
+	.refine((data) => !(data.cursor && data.page), {
+		message: "Cannot use both cursor and page at the same time.",
+	});
 
 export const OrderSpec = {
 	list: oc
@@ -17,7 +34,11 @@ export const OrderSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(
+			z.object({
+				query: UnifiedPaginationQuerySchema,
+			}),
+		)
 		.output(
 			createSuccesSchema(
 				z.array(OrderSchema),

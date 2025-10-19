@@ -1,12 +1,16 @@
 import type { Driver } from "@repo/schema/driver";
 import type { Merchant } from "@repo/schema/merchant";
-import type { InsertOrder, Order, UpdateOrder } from "@repo/schema/order";
-import type { User } from "@repo/schema/user";
-import { eq } from "drizzle-orm";
+import type {
+	InsertOrder,
+	Order,
+	OrderStatus,
+	UpdateOrder,
+} from "@repo/schema/order";
+import type { User, UserRole } from "@repo/schema/user";
+import { eq, type SQL } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
-import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { OrderDatabase } from "@/core/tables/order";
@@ -71,13 +75,41 @@ export const createOrderRepository = (
 		}
 	}
 
-	async function list(opts?: GetAllOptions): Promise<Order[]> {
+	async function list(
+		opts?: GetAllOptions & {
+			statuses?: OrderStatus[];
+			id: string;
+			role: UserRole;
+		},
+	): Promise<Order[]> {
 		try {
 			let stmt = db.query.order.findMany({
 				with: {
 					user: { columns: { name: true } },
 					driver: { columns: {}, with: { user: { columns: { name: true } } } },
 					merchant: { columns: { name: true } },
+				},
+				where: (f, op) => {
+					const filters: SQL[] = [];
+					const statuses = opts?.statuses ?? [];
+					if (statuses.length > 0) {
+						filters.push(op.inArray(f.status, statuses));
+					}
+					if (opts?.id && opts.role) {
+						switch (opts.role) {
+							case "user":
+								filters.push(op.eq(f.userId, opts.id));
+								break;
+							case "driver":
+								filters.push(op.eq(f.driverId, opts.id));
+								break;
+							case "merchant":
+								filters.push(op.eq(f.merchantId, opts.id));
+								break;
+						}
+					}
+
+					return filters.length > 0 ? op.and(...filters) : undefined;
 				},
 			});
 			if (opts) {
@@ -92,7 +124,28 @@ export const createOrderRepository = (
 							},
 							merchant: { columns: { name: true } },
 						},
-						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
+						where: (f, op) => {
+							const filters: SQL[] = [op.gt(f.updatedAt, new Date(cursor))];
+							const statuses = opts?.statuses ?? [];
+							if (statuses.length > 0) {
+								filters.push(op.inArray(f.status, statuses));
+							}
+							if (opts?.id && opts.role) {
+								switch (opts.role) {
+									case "user":
+										filters.push(op.eq(f.userId, opts.id));
+										break;
+									case "driver":
+										filters.push(op.eq(f.driverId, opts.id));
+										break;
+									case "merchant":
+										filters.push(op.eq(f.merchantId, opts.id));
+										break;
+								}
+							}
+
+							return filters.length > 0 ? op.and(...filters) : undefined;
+						},
 						limit: limit + 1,
 					});
 				}
@@ -110,13 +163,35 @@ export const createOrderRepository = (
 						},
 						offset,
 						limit,
+						where: (f, op) => {
+							const filters: SQL[] = [];
+							const statuses = opts?.statuses ?? [];
+							if (statuses.length > 0) {
+								filters.push(op.inArray(f.status, statuses));
+							}
+							if (opts?.id && opts.role) {
+								switch (opts.role) {
+									case "user":
+										filters.push(op.eq(f.userId, opts.id));
+										break;
+									case "driver":
+										filters.push(op.eq(f.driverId, opts.id));
+										break;
+									case "merchant":
+										filters.push(op.eq(f.merchantId, opts.id));
+										break;
+								}
+							}
+
+							return filters.length > 0 ? op.and(...filters) : undefined;
+						},
 					});
 				}
 			}
 			const result = await stmt;
 			return result.map(_composeEntity);
 		} catch (error) {
-			log.error(error);
+			console.error(error);
 			if (error instanceof RepositoryError) throw error;
 
 			throw new RepositoryError("Failed to listing orders");
@@ -138,7 +213,7 @@ export const createOrderRepository = (
 
 			return result;
 		} catch (error) {
-			log.error(error);
+			console.error(error);
 			if (error instanceof RepositoryError) throw error;
 
 			throw new RepositoryError(`Failed to get order by id "${id}"`);
@@ -163,7 +238,7 @@ export const createOrderRepository = (
 
 			return result;
 		} catch (error) {
-			log.error(error);
+			console.error(error);
 			if (error instanceof RepositoryError) throw error;
 
 			throw new RepositoryError("Failed to create order");
@@ -220,7 +295,7 @@ export const createOrderRepository = (
 				} catch {}
 			}
 		} catch (error) {
-			log.error(error);
+			console.error(error);
 			if (error instanceof RepositoryError) throw error;
 
 			throw new RepositoryError(`Failed to delete order with id "${id}"`);
