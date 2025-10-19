@@ -1,5 +1,4 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/response.dart';
 import 'package:dio/dio.dart';
 
 abstract class BaseRepository {
@@ -32,9 +31,4 @@ abstract class BaseRepository {
       );
     }
   }
-}
-
-abstract class BaseService {
-  void setup();
-  void teardown();
 }

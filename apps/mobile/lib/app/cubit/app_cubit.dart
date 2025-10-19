@@ -1,5 +1,5 @@
 import 'package:akademove/app/_export.dart';
-import 'package:akademove/core/state.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class AppCubit extends BaseCubit<AppState> {

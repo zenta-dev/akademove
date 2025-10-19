@@ -1,5 +1,4 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/response.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantRepository extends BaseRepository {

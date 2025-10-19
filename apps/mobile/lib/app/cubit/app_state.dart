@@ -1,5 +1,4 @@
-import 'package:akademove/core/errors.dart';
-import 'package:akademove/core/state.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
