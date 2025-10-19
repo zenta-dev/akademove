@@ -8,7 +8,13 @@ Future<void> delay(Duration duration) async {
 
 extension BuildContextExt on BuildContext {
   ThemeData get theme => Theme.of(this);
+  ColorScheme get colorScheme => theme.colorScheme;
+  Typography get typography => theme.typography;
+
   bool get isDarkMode => theme.brightness == Brightness.dark;
+
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
+  Size get mediaQuerySize => mediaQuery.size;
 
   Widget buildToast({
     required String title,
