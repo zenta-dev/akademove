@@ -26,7 +26,11 @@ export const driver = pgTable(
 			.notNull()
 			.unique()
 			.references(() => user.id, { onDelete: "cascade" }),
-		studentId: numeric("student_id", { precision: 20, scale: 0 })
+		studentId: numeric("student_id", {
+			precision: 20,
+			scale: 0,
+			mode: "number",
+		})
 			.notNull()
 			.unique(),
 		licensePlate: text("license_plate").notNull().unique(),

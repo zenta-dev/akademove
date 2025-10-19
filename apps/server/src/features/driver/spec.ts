@@ -6,6 +6,15 @@ import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const DriverSpec = {
+	getMine: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "GET",
+			path: "/mine",
+		})
+		.output(
+			createSuccesSchema(DriverSchema, "Successfully retrieved my driver data"),
+		),
 	list: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],

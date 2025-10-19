@@ -162,6 +162,25 @@ export class DriverRepository {
 		}
 	}
 
+	async getByUserId(userId: string): Promise<Driver> {
+		try {
+			const result = await this.#db.query.driver.findFirst({
+				with: { user: { columns: { name: true } } },
+				where: (f, op) => op.eq(f.userId, userId),
+			});
+
+			if (!result) throw new RepositoryError("Failed to get merchant from DB");
+
+			return await this.composeEntity(result);
+		} catch (error) {
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+			throw new RepositoryError(
+				`Failed to get merchant by user id "${userId}"`,
+			);
+		}
+	}
+
 	async create(
 		item: InsertDriver & { userId: string },
 		opts?: { tx?: DatabaseTransaction },

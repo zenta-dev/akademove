@@ -6,6 +6,16 @@ import { DriverSpec } from "./spec";
 const os = implement(DriverSpec).$context<ORPCContext>().use(authMiddleware);
 
 export const DriverHandler = os.router({
+	getMine: os.getMine
+		.use(hasPermission({ merchant: ["get"] }))
+		.handler(async ({ context }) => {
+			const result = await context.repo.driver.getByUserId(context.user.id);
+
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved merchant data", data: result },
+			};
+		}),
 	list: os.list
 		.use(hasPermission({ driver: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
