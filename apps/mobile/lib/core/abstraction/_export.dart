@@ -1,3 +1,4 @@
+export 'query.dart';
 export 'repository.dart';
 export 'response.dart';
 export 'service.dart';
