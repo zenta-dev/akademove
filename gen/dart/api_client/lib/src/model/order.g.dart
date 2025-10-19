@@ -43,6 +43,10 @@ abstract class _$OrderCWProxy {
 
   Order updatedAt(DateTime updatedAt);
 
+  Order itemCount(num? itemCount);
+
+  Order items(List<OrderCreateRequestItemsInner>? items);
+
   Order user(OrderCreateRequestUser? user);
 
   Order driver(OrderCreateRequestDriver? driver);
@@ -74,6 +78,8 @@ abstract class _$OrderCWProxy {
     DateTime? arrivedAt,
     DateTime createdAt,
     DateTime updatedAt,
+    num? itemCount,
+    List<OrderCreateRequestItemsInner>? items,
     OrderCreateRequestUser? user,
     OrderCreateRequestDriver? driver,
     OrderCreateRequestMerchant? merchant,
@@ -143,6 +149,12 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
 
   @override
+  Order itemCount(num? itemCount) => this(itemCount: itemCount);
+
+  @override
+  Order items(List<OrderCreateRequestItemsInner>? items) => this(items: items);
+
+  @override
   Order user(OrderCreateRequestUser? user) => this(user: user);
 
   @override
@@ -178,6 +190,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? arrivedAt = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
+    Object? itemCount = const $CopyWithPlaceholder(),
+    Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
@@ -255,6 +269,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
+      itemCount: itemCount == const $CopyWithPlaceholder()
+          ? _value.itemCount
+          // ignore: cast_nullable_to_non_nullable
+          : itemCount as num?,
+      items: items == const $CopyWithPlaceholder()
+          ? _value.items
+          // ignore: cast_nullable_to_non_nullable
+          : items as List<OrderCreateRequestItemsInner>?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -346,6 +368,17 @@ Order _$OrderFromJson(
     ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    itemCount: $checkedConvert('itemCount', (v) => v as num?),
+    items: $checkedConvert(
+      'items',
+      (v) => (v as List<dynamic>?)
+          ?.map(
+            (e) => OrderCreateRequestItemsInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
     user: $checkedConvert(
       'user',
       (v) => v == null
@@ -387,6 +420,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'arrivedAt': ?instance.arrivedAt?.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
+  'itemCount': ?instance.itemCount,
+  'items': ?instance.items?.map((e) => e.toJson()).toList(),
   'user': ?instance.user?.toJson(),
   'driver': ?instance.driver?.toJson(),
   'merchant': ?instance.merchant?.toJson(),

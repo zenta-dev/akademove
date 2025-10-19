@@ -63,6 +63,8 @@ export 'package:api_client/src/model/order.dart';
 export 'package:api_client/src/model/order_create200_response.dart';
 export 'package:api_client/src/model/order_create_request.dart';
 export 'package:api_client/src/model/order_create_request_driver.dart';
+export 'package:api_client/src/model/order_create_request_items_inner.dart';
+export 'package:api_client/src/model/order_create_request_items_inner_item.dart';
 export 'package:api_client/src/model/order_create_request_merchant.dart';
 export 'package:api_client/src/model/order_create_request_note.dart';
 export 'package:api_client/src/model/order_create_request_user.dart';

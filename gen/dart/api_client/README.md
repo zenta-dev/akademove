@@ -170,6 +170,8 @@ Class | Method | HTTP request | Description
  - [OrderCreate200Response](doc/OrderCreate200Response.md)
  - [OrderCreateRequest](doc/OrderCreateRequest.md)
  - [OrderCreateRequestDriver](doc/OrderCreateRequestDriver.md)
+ - [OrderCreateRequestItemsInner](doc/OrderCreateRequestItemsInner.md)
+ - [OrderCreateRequestItemsInnerItem](doc/OrderCreateRequestItemsInnerItem.md)
  - [OrderCreateRequestMerchant](doc/OrderCreateRequestMerchant.md)
  - [OrderCreateRequestNote](doc/OrderCreateRequestNote.md)
  - [OrderCreateRequestUser](doc/OrderCreateRequestUser.md)

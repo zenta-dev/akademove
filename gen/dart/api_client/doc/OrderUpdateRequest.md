@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | [optional] 
 **note** | [**OrderCreateRequestNote**](OrderCreateRequestNote.md) |  | [optional] 
+**itemCount** | **num** |  | [optional] 
+**items** | [**List&lt;OrderCreateRequestItemsInner&gt;**](OrderCreateRequestItemsInner.md) |  | [optional] 
 **user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
 **driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
 **merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 

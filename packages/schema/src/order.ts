@@ -2,7 +2,7 @@ import * as z from "zod";
 import { DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { DriverSchema } from "./driver.ts";
-import { MerchantSchema } from "./merchant.ts";
+import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
 import { UserSchema } from "./user.ts";
 
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
@@ -11,6 +11,13 @@ export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
 export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),
 	dropoff: z.string().optional(),
+});
+
+export const OrderItemSchema = z.object({
+	id: z.string(),
+	itemId: z.string(),
+	total: z.number(),
+	item: MerchantMenuSchema.partial(),
 });
 
 export const OrderSchema = z
@@ -33,6 +40,8 @@ export const OrderSchema = z
 		arrivedAt: DateSchema.optional(),
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
+		itemCount: z.number().optional(),
+		items: z.array(OrderItemSchema).optional(),
 
 		// relations
 		user: UserSchema.partial().optional(),

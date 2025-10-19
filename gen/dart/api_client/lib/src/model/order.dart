@@ -8,6 +8,7 @@ import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/order_create_request_user.dart';
 import 'package:api_client/src/model/order_create_request_merchant.dart';
 import 'package:api_client/src/model/order_create_request_driver.dart';
+import 'package:api_client/src/model/order_create_request_items_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -58,6 +59,10 @@ class Order {
     required this.createdAt,
 
     required this.updatedAt,
+
+    this.itemCount,
+
+    this.items,
 
     this.user,
 
@@ -120,6 +125,12 @@ class Order {
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
 
+  @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
+  final num? itemCount;
+
+  @JsonKey(name: r'items', required: false, includeIfNull: false)
+  final List<OrderCreateRequestItemsInner>? items;
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final OrderCreateRequestUser? user;
 
@@ -151,6 +162,8 @@ class Order {
           other.arrivedAt == arrivedAt &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
+          other.itemCount == itemCount &&
+          other.items == items &&
           other.user == user &&
           other.driver == driver &&
           other.merchant == merchant;
@@ -175,6 +188,8 @@ class Order {
       arrivedAt.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode +
+      itemCount.hashCode +
+      items.hashCode +
       user.hashCode +
       driver.hashCode +
       merchant.hashCode;

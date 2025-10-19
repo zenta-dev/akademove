@@ -52,6 +52,8 @@ doc/OrderApi.md
 doc/OrderCreate200Response.md
 doc/OrderCreateRequest.md
 doc/OrderCreateRequestDriver.md
+doc/OrderCreateRequestItemsInner.md
+doc/OrderCreateRequestItemsInnerItem.md
 doc/OrderCreateRequestMerchant.md
 doc/OrderCreateRequestNote.md
 doc/OrderCreateRequestUser.md
@@ -149,6 +151,8 @@ lib/src/model/order.dart
 lib/src/model/order_create200_response.dart
 lib/src/model/order_create_request.dart
 lib/src/model/order_create_request_driver.dart
+lib/src/model/order_create_request_items_inner.dart
+lib/src/model/order_create_request_items_inner_item.dart
 lib/src/model/order_create_request_merchant.dart
 lib/src/model/order_create_request_note.dart
 lib/src/model/order_create_request_user.dart

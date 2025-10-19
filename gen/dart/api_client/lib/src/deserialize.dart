@@ -42,6 +42,8 @@ import 'package:api_client/src/model/order.dart';
 import 'package:api_client/src/model/order_create200_response.dart';
 import 'package:api_client/src/model/order_create_request.dart';
 import 'package:api_client/src/model/order_create_request_driver.dart';
+import 'package:api_client/src/model/order_create_request_items_inner.dart';
+import 'package:api_client/src/model/order_create_request_items_inner_item.dart';
 import 'package:api_client/src/model/order_create_request_merchant.dart';
 import 'package:api_client/src/model/order_create_request_note.dart';
 import 'package:api_client/src/model/order_create_request_user.dart';
@@ -238,6 +240,16 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'OrderCreateRequestDriver':
       return OrderCreateRequestDriver.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderCreateRequestItemsInner':
+      return OrderCreateRequestItemsInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'OrderCreateRequestItemsInnerItem':
+      return OrderCreateRequestItemsInnerItem.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'OrderCreateRequestMerchant':
       return OrderCreateRequestMerchant.fromJson(value as Map<String, dynamic>)

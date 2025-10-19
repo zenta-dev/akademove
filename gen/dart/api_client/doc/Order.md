@@ -26,6 +26,8 @@ Name | Type | Description | Notes
 **arrivedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
+**itemCount** | **num** |  | [optional] 
+**items** | [**List&lt;OrderCreateRequestItemsInner&gt;**](OrderCreateRequestItemsInner.md) |  | [optional] 
 **user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
 **driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
 **merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 

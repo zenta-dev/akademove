@@ -8,6 +8,7 @@ import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/order_create_request_user.dart';
 import 'package:api_client/src/model/order_create_request_merchant.dart';
 import 'package:api_client/src/model/order_create_request_driver.dart';
+import 'package:api_client/src/model/order_create_request_items_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -46,6 +47,10 @@ class OrderCreateRequest {
     required this.totalPrice,
 
     this.note,
+
+    this.itemCount,
+
+    this.items,
 
     this.user,
 
@@ -90,6 +95,12 @@ class OrderCreateRequest {
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final OrderCreateRequestNote? note;
 
+  @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
+  final num? itemCount;
+
+  @JsonKey(name: r'items', required: false, includeIfNull: false)
+  final List<OrderCreateRequestItemsInner>? items;
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final OrderCreateRequestUser? user;
 
@@ -115,6 +126,8 @@ class OrderCreateRequest {
           other.tip == tip &&
           other.totalPrice == totalPrice &&
           other.note == note &&
+          other.itemCount == itemCount &&
+          other.items == items &&
           other.user == user &&
           other.driver == driver &&
           other.merchant == merchant;
@@ -133,6 +146,8 @@ class OrderCreateRequest {
       tip.hashCode +
       totalPrice.hashCode +
       note.hashCode +
+      itemCount.hashCode +
+      items.hashCode +
       user.hashCode +
       driver.hashCode +
       merchant.hashCode;

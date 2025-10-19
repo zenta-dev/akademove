@@ -31,6 +31,10 @@ abstract class _$OrderCreateRequestCWProxy {
 
   OrderCreateRequest note(OrderCreateRequestNote? note);
 
+  OrderCreateRequest itemCount(num? itemCount);
+
+  OrderCreateRequest items(List<OrderCreateRequestItemsInner>? items);
+
   OrderCreateRequest user(OrderCreateRequestUser? user);
 
   OrderCreateRequest driver(OrderCreateRequestDriver? driver);
@@ -56,6 +60,8 @@ abstract class _$OrderCreateRequestCWProxy {
     num? tip,
     num totalPrice,
     OrderCreateRequestNote? note,
+    num? itemCount,
+    List<OrderCreateRequestItemsInner>? items,
     OrderCreateRequestUser? user,
     OrderCreateRequestDriver? driver,
     OrderCreateRequestMerchant? merchant,
@@ -109,6 +115,13 @@ class _$OrderCreateRequestCWProxyImpl implements _$OrderCreateRequestCWProxy {
   OrderCreateRequest note(OrderCreateRequestNote? note) => this(note: note);
 
   @override
+  OrderCreateRequest itemCount(num? itemCount) => this(itemCount: itemCount);
+
+  @override
+  OrderCreateRequest items(List<OrderCreateRequestItemsInner>? items) =>
+      this(items: items);
+
+  @override
   OrderCreateRequest user(OrderCreateRequestUser? user) => this(user: user);
 
   @override
@@ -139,6 +152,8 @@ class _$OrderCreateRequestCWProxyImpl implements _$OrderCreateRequestCWProxy {
     Object? tip = const $CopyWithPlaceholder(),
     Object? totalPrice = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
+    Object? itemCount = const $CopyWithPlaceholder(),
+    Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
@@ -192,6 +207,14 @@ class _$OrderCreateRequestCWProxyImpl implements _$OrderCreateRequestCWProxy {
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
           : note as OrderCreateRequestNote?,
+      itemCount: itemCount == const $CopyWithPlaceholder()
+          ? _value.itemCount
+          // ignore: cast_nullable_to_non_nullable
+          : itemCount as num?,
+      items: items == const $CopyWithPlaceholder()
+          ? _value.items
+          // ignore: cast_nullable_to_non_nullable
+          : items as List<OrderCreateRequestItemsInner>?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -264,6 +287,17 @@ OrderCreateRequest _$OrderCreateRequestFromJson(Map<String, dynamic> json) =>
               ? null
               : OrderCreateRequestNote.fromJson(v as Map<String, dynamic>),
         ),
+        itemCount: $checkedConvert('itemCount', (v) => v as num?),
+        items: $checkedConvert(
+          'items',
+          (v) => (v as List<dynamic>?)
+              ?.map(
+                (e) => OrderCreateRequestItemsInner.fromJson(
+                  e as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        ),
         user: $checkedConvert(
           'user',
           (v) => v == null
@@ -300,6 +334,8 @@ Map<String, dynamic> _$OrderCreateRequestToJson(OrderCreateRequest instance) =>
       'tip': ?instance.tip,
       'totalPrice': instance.totalPrice,
       'note': ?instance.note?.toJson(),
+      'itemCount': ?instance.itemCount,
+      'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'user': ?instance.user?.toJson(),
       'driver': ?instance.driver?.toJson(),
       'merchant': ?instance.merchant?.toJson(),
