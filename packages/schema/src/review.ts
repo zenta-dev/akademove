@@ -2,7 +2,9 @@ import * as z from "zod";
 import { DateSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
-export const ReviewCategorySchema = z.enum(CONSTANTS.REVIEW_CATEGORIES);
+export const ReviewCategorySchema = z
+	.enum(CONSTANTS.REVIEW_CATEGORIES)
+	.meta({ title: "ReviewCategory" });
 
 export const ReviewSchema = z
 	.object({
@@ -15,20 +17,19 @@ export const ReviewSchema = z
 		comment: z.string().default(""),
 		createdAt: DateSchema,
 	})
-	.meta({
-		title: "Review",
-		ref: "Review",
-	});
+	.meta({ title: "Review" });
 
 export const InsertReviewSchema = ReviewSchema.omit({
 	id: true,
 	createdAt: true,
-});
+}).meta({ title: "InsertReviewRequest" });
 
 export const UpdateReviewSchema = ReviewSchema.omit({
 	id: true,
 	createdAt: true,
-}).partial();
+})
+	.partial()
+	.meta({ title: "UpdateReviewRequest" });
 
 export type ReviewCategory = z.infer<typeof ReviewCategorySchema>;
 export type Review = z.infer<typeof ReviewSchema>;

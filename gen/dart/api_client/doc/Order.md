@@ -20,17 +20,17 @@ Name | Type | Description | Notes
 **basePrice** | **num** |  | 
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | 
-**note** | [**OrderCreateRequestNote**](OrderCreateRequestNote.md) |  | [optional] 
+**note** | [**OrderNote**](OrderNote.md) |  | [optional] 
 **requestedAt** | [**DateTime**](DateTime.md) |  | 
 **acceptedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **arrivedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 **itemCount** | **num** |  | [optional] 
-**items** | [**List&lt;OrderCreateRequestItemsInner&gt;**](OrderCreateRequestItemsInner.md) |  | [optional] 
-**user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
-**driver** | [**OrderCreateRequestDriver**](OrderCreateRequestDriver.md) |  | [optional] 
-**merchant** | [**OrderCreateRequestMerchant**](OrderCreateRequestMerchant.md) |  | [optional] 
+**items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
+**user** | [**InsertOrderRequestUser**](InsertOrderRequestUser.md) |  | [optional] 
+**driver** | [**InsertOrderRequestDriver**](InsertOrderRequestDriver.md) |  | [optional] 
+**merchant** | [**InsertOrderRequestMerchant**](InsertOrderRequestMerchant.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

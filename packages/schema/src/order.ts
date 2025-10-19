@@ -5,20 +5,28 @@ import { DriverSchema } from "./driver.ts";
 import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
 import { UserSchema } from "./user.ts";
 
-export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
-export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
-
-export const OrderNoteSchema = z.object({
-	pickup: z.string().optional(),
-	dropoff: z.string().optional(),
+export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES).meta({
+	title: "OrderStatus",
+});
+export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES).meta({
+	title: "OrderType",
 });
 
-export const OrderItemSchema = z.object({
-	id: z.string(),
-	itemId: z.string(),
-	total: z.number(),
-	item: MerchantMenuSchema.partial(),
-});
+export const OrderNoteSchema = z
+	.object({
+		pickup: z.string().optional(),
+		dropoff: z.string().optional(),
+	})
+	.meta({ title: "OrderNote" });
+
+export const OrderItemSchema = z
+	.object({
+		id: z.string(),
+		itemId: z.string(),
+		total: z.number(),
+		item: MerchantMenuSchema.partial(),
+	})
+	.meta({ title: "OrderItem" });
 
 export const OrderSchema = z
 	.object({
@@ -48,10 +56,7 @@ export const OrderSchema = z
 		driver: DriverSchema.partial().optional(),
 		merchant: MerchantSchema.partial().optional(),
 	})
-	.meta({
-		title: "Order",
-		ref: "Order",
-	});
+	.meta({ title: "Order" });
 
 export const InsertOrderSchema = OrderSchema.omit({
 	id: true,
@@ -60,7 +65,7 @@ export const InsertOrderSchema = OrderSchema.omit({
 	arrivedAt: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).meta({ title: "InsertOrderRequest" });
 
 export const UpdateOrderSchema = OrderSchema.omit({
 	id: true,
@@ -73,7 +78,9 @@ export const UpdateOrderSchema = OrderSchema.omit({
 	arrivedAt: true,
 	createdAt: true,
 	updatedAt: true,
-}).partial();
+})
+	.partial()
+	.meta({ title: "UpdateOrderRequest" });
 
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export type OrderType = z.infer<typeof OrderTypeSchema>;

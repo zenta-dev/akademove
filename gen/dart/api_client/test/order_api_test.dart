@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getOrderApi();
 
   group(OrderApi, () {
-    //Future<OrderCreate200Response> orderCreate(OrderCreateRequest orderCreateRequest) async
+    //Future<OrderCreate200Response> orderCreate(InsertOrderRequest insertOrderRequest) async
     test('test orderCreate', () async {
       // TODO
     });
@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<OrderList200Response> orderList({ String cursor, Object limit, Object page, String query, String sortBy, String order, List<String> statuses }) async
+    //Future<OrderList200Response> orderList({ String cursor, Object limit, Object page, String query, String sortBy, String order, Object statuses }) async
     test('test orderList', () async {
       // TODO
     });
@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<OrderCreate200Response> orderUpdate(String id, OrderUpdateRequest orderUpdateRequest) async
+    //Future<OrderCreate200Response> orderUpdate(String id, UpdateOrderRequest updateOrderRequest) async
     test('test orderUpdate', () async {
       // TODO
     });

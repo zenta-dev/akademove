@@ -9,7 +9,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'schedule.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -20,87 +19,41 @@ part 'schedule.g.dart';
 class Schedule {
   /// Returns a new [Schedule] instance.
   Schedule({
+    required this.id,
 
-    required  this.id,
+    required this.driverId,
 
-    required  this.driverId,
+    required this.dayOfWeek,
 
-    required  this.dayOfWeek,
+    required this.startTime,
 
-    required  this.startTime,
+    required this.endTime,
 
-    required  this.endTime,
+    this.isRecurring = true,
 
-     this.isRecurring = true,
+    this.specificDate,
 
-     this.specificDate,
+    this.isActive = true,
 
-     this.isActive = true,
+    required this.createdAt,
 
-    required  this.createdAt,
-
-    required  this.updatedAt,
+    required this.updatedAt,
   });
 
-  @JsonKey(
-    
-    name: r'id',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
-
-
-  @JsonKey(
-    
-    name: r'driverId',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
 
-
-
-  @JsonKey(
-    
-    name: r'dayOfWeek',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'dayOfWeek', required: true, includeIfNull: false)
   final ScheduleDayOfWeekEnum dayOfWeek;
 
-
-
-  @JsonKey(
-    
-    name: r'startTime',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'startTime', required: true, includeIfNull: false)
   final Time startTime;
 
-
-
-  @JsonKey(
-    
-    name: r'endTime',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'endTime', required: true, includeIfNull: false)
   final Time endTime;
-
-
 
   @JsonKey(
     defaultValue: true,
@@ -108,23 +61,10 @@ class Schedule {
     required: false,
     includeIfNull: false,
   )
-
-
   final bool? isRecurring;
 
-
-
-  @JsonKey(
-    
-    name: r'specificDate',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'specificDate', required: false, includeIfNull: false)
   final DateTime? specificDate;
-
-
 
   @JsonKey(
     defaultValue: true,
@@ -132,65 +72,44 @@ class Schedule {
     required: false,
     includeIfNull: false,
   )
-
-
   final bool? isActive;
 
-
-
-  @JsonKey(
-    
-    name: r'createdAt',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
 
-
-
-  @JsonKey(
-    
-    name: r'updatedAt',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Schedule &&
+          other.id == id &&
+          other.driverId == driverId &&
+          other.dayOfWeek == dayOfWeek &&
+          other.startTime == startTime &&
+          other.endTime == endTime &&
+          other.isRecurring == isRecurring &&
+          other.specificDate == specificDate &&
+          other.isActive == isActive &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
+  @override
+  int get hashCode =>
+      id.hashCode +
+      driverId.hashCode +
+      dayOfWeek.hashCode +
+      startTime.hashCode +
+      endTime.hashCode +
+      isRecurring.hashCode +
+      specificDate.hashCode +
+      isActive.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is Schedule &&
-      other.id == id &&
-      other.driverId == driverId &&
-      other.dayOfWeek == dayOfWeek &&
-      other.startTime == startTime &&
-      other.endTime == endTime &&
-      other.isRecurring == isRecurring &&
-      other.specificDate == specificDate &&
-      other.isActive == isActive &&
-      other.createdAt == createdAt &&
-      other.updatedAt == updatedAt;
-
-    @override
-    int get hashCode =>
-        id.hashCode +
-        driverId.hashCode +
-        dayOfWeek.hashCode +
-        startTime.hashCode +
-        endTime.hashCode +
-        isRecurring.hashCode +
-        specificDate.hashCode +
-        isActive.hashCode +
-        createdAt.hashCode +
-        updatedAt.hashCode;
-
-  factory Schedule.fromJson(Map<String, dynamic> json) => _$ScheduleFromJson(json);
+  factory Schedule.fromJson(Map<String, dynamic> json) =>
+      _$ScheduleFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScheduleToJson(this);
 
@@ -198,32 +117,28 @@ class Schedule {
   String toString() {
     return toJson().toString();
   }
-
 }
-
 
 enum ScheduleDayOfWeekEnum {
-@JsonValue(r'sunday')
-sunday(r'sunday'),
-@JsonValue(r'monday')
-monday(r'monday'),
-@JsonValue(r'tuesday')
-tuesday(r'tuesday'),
-@JsonValue(r'wednesday')
-wednesday(r'wednesday'),
-@JsonValue(r'thursday')
-thursday(r'thursday'),
-@JsonValue(r'friday')
-friday(r'friday'),
-@JsonValue(r'saturday')
-saturday(r'saturday');
+  @JsonValue(r'sunday')
+  sunday(r'sunday'),
+  @JsonValue(r'monday')
+  monday(r'monday'),
+  @JsonValue(r'tuesday')
+  tuesday(r'tuesday'),
+  @JsonValue(r'wednesday')
+  wednesday(r'wednesday'),
+  @JsonValue(r'thursday')
+  thursday(r'thursday'),
+  @JsonValue(r'friday')
+  friday(r'friday'),
+  @JsonValue(r'saturday')
+  saturday(r'saturday');
 
-const ScheduleDayOfWeekEnum(this.value);
+  const ScheduleDayOfWeekEnum(this.value);
 
-final String value;
+  final String value;
 
-@override
-String toString() => value;
+  @override
+  String toString() => value;
 }
-
-

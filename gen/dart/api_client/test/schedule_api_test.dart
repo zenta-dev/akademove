@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getScheduleApi();
 
   group(ScheduleApi, () {
-    //Future<ScheduleCreate200Response> scheduleCreate(ScheduleCreateRequest scheduleCreateRequest) async
+    //Future<ScheduleCreate200Response> scheduleCreate(InsertScheduleRequest insertScheduleRequest) async
     test('test scheduleCreate', () async {
       // TODO
     });
@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<ScheduleCreate200Response> scheduleUpdate(String id, ScheduleUpdateRequest scheduleUpdateRequest) async
+    //Future<ScheduleCreate200Response> scheduleUpdate(String id, UpdateScheduleRequest updateScheduleRequest) async
     test('test scheduleUpdate', () async {
       // TODO
     });

@@ -3,7 +3,9 @@ import { BankSchema, DateSchema, LocationSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { UserSchema } from "./user.ts";
 
-export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
+export const DriverStatusSchema = z
+	.enum(CONSTANTS.DRIVER_STATUSES)
+	.meta({ title: "DriverStatus" });
 
 export const DriverSchema = z
 	.object({
@@ -25,10 +27,7 @@ export const DriverSchema = z
 		// relations
 		user: UserSchema.partial().optional(),
 	})
-	.meta({
-		title: "Driver",
-		ref: "Driver",
-	});
+	.meta({ title: "Driver" });
 
 export const DriverDocumentSchema = z.object({
 	studentCard: z
@@ -49,11 +48,15 @@ export const InsertDriverSchema = DriverSchema.pick({
 	driverLicense: true,
 	vehicleCertificate: true,
 	bank: true,
-}).extend({
-	...DriverDocumentSchema.shape,
-});
+})
+	.extend({
+		...DriverDocumentSchema.shape,
+	})
+	.meta({ title: "InsertDriverRequest" });
 
-export const UpdateDriverSchema = InsertDriverSchema.partial();
+export const UpdateDriverSchema = InsertDriverSchema.partial().meta({
+	title: "UpdateDriverRequest",
+});
 
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 export type Driver = z.infer<typeof DriverSchema>;

@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    // CouponCreateRequestRules rules
+    // CouponRules rules
     test('to test the property `rules`', () async {
       // TODO
     });

@@ -35,7 +35,7 @@ abstract class _$DriverCWProxy {
 
   Driver bank(Bank bank);
 
-  Driver user(OrderCreateRequestUser? user);
+  Driver user(InsertOrderRequestUser? user);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -58,7 +58,7 @@ abstract class _$DriverCWProxy {
     String driverLicense,
     String vehicleCertificate,
     Bank bank,
-    OrderCreateRequestUser? user,
+    InsertOrderRequestUser? user,
   });
 }
 
@@ -115,7 +115,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver bank(Bank bank) => this(bank: bank);
 
   @override
-  Driver user(OrderCreateRequestUser? user) => this(user: user);
+  Driver user(InsertOrderRequestUser? user) => this(user: user);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -201,7 +201,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderCreateRequestUser?,
+          : user as InsertOrderRequestUser?,
     );
   }
 }
@@ -273,7 +273,7 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'user',
           (v) => v == null
               ? null
-              : OrderCreateRequestUser.fromJson(v as Map<String, dynamic>),
+              : InsertOrderRequestUser.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;

@@ -8,13 +8,10 @@ import {
 } from "./common.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 
-// export const MerchantTypeSchema = z.enum(CONSTANTS.MERCHANT_TYPES);
-
 export const MerchantSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		// type: MerchantTypeSchema,
 		name: z.string().min(1, m.required_placeholder({ field: m.name() })),
 		email: z.email(
 			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
@@ -29,21 +26,20 @@ export const MerchantSchema = z
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
-	.meta({
-		title: "Merchant",
-		ref: "Merchant",
-	});
-export const MerchantMenuSchema = z.object({
-	id: z.uuid(),
-	merchantId: z.uuid(),
-	name: z.string(),
-	image: z.url().optional(),
-	category: z.string().optional(),
-	price: z.coerce.number<number>().nonnegative(),
-	stock: z.coerce.number<number>().int().nonnegative(),
-	createdAt: DateSchema,
-	updatedAt: DateSchema,
-});
+	.meta({ title: "Merchant" });
+export const MerchantMenuSchema = z
+	.object({
+		id: z.uuid(),
+		merchantId: z.uuid(),
+		name: z.string(),
+		image: z.url().optional(),
+		category: z.string().optional(),
+		price: z.coerce.number<number>().nonnegative(),
+		stock: z.coerce.number<number>().int().nonnegative(),
+		createdAt: DateSchema,
+		updatedAt: DateSchema,
+	})
+	.meta({ title: "MerchantMenu" });
 
 export const InsertMerchantSchema = MerchantSchema.omit({
 	id: true,
@@ -53,29 +49,41 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	document: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
-	document: z
-		.file()
-		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
-		.optional(),
-});
+})
+	.extend({
+		document: z
+			.file()
+			.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
+			.optional(),
+	})
+	.meta({ title: "InsertMerchantRequest" });
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	id: true,
 	image: true,
 	merchantId: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
-	image: z
-		.file()
-		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
-		.optional(),
+})
+	.extend({
+		image: z
+			.file()
+			.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
+			.optional(),
+	})
+	.meta({ title: "UpdateMerchantMenuRequest" });
+
+export const UpdateMerchantSchema = InsertMerchantSchema.partial().meta({
+	title: "UpdateMerchantRequest",
 });
+export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial().meta(
+	{ title: "UpdateMerchantMenuRequest" },
+);
 
-export const UpdateMerchantSchema = InsertMerchantSchema.partial();
-export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
-
-export const FlatUpdateMerchantSchema = flattenZodObject(UpdateMerchantSchema);
+export const FlatUpdateMerchantSchema = flattenZodObject(
+	UpdateMerchantSchema,
+).meta({
+	title: "FlatUpdateMerchantRequest",
+});
 
 // export type MerchantType = z.infer<typeof MerchantTypeSchema>;
 export type Merchant = z.infer<typeof MerchantSchema>;

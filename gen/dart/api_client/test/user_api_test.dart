@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getUserApi();
 
   group(UserApi, () {
-    //Future<UserCreate200Response> userCreate(UserCreateRequest userCreateRequest) async
+    //Future<UserCreate200Response> userCreate(InsertUserRequest insertUserRequest) async
     test('test userCreate', () async {
       // TODO
     });

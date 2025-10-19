@@ -11,10 +11,10 @@ class AuthRepository extends BaseRepository {
   final ApiClient apiClient;
   final KeyValueService localKV;
 
-  Future<BaseResponse<User>> signIn(AuthSignInRequest request) async {
+  Future<BaseResponse<User>> signIn(SignInRequest request) async {
     return guard(() async {
       final result = await apiClient.getAuthApi().authSignIn(
-        authSignInRequest: request,
+        signInRequest: request,
       );
 
       final data =

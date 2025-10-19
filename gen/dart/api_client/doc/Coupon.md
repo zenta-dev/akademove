@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  | 
 **name** | **String** |  | 
 **code** | **String** |  | 
-**rules** | [**CouponCreateRequestRules**](CouponCreateRequestRules.md) |  | 
+**rules** | [**CouponRules**](CouponRules.md) |  | 
 **discountAmount** | **num** |  | [optional] 
 **discountPercentage** | **num** |  | [optional] 
 **usageLimit** | **num** |  | 

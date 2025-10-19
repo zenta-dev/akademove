@@ -77,7 +77,7 @@ void main() {
       // TODO
     });
 
-    // OrderCreateRequestUser user
+    // InsertOrderRequestUser user
     test('to test the property `user`', () async {
       // TODO
     });

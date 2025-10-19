@@ -14,22 +14,19 @@ export const ConfigurationSchema = z
 		updatedById: z.string(),
 		updatedAt: DateSchema,
 	})
-	.meta({
-		title: "Configuration",
-		ref: "Configuration",
-	});
+	.meta({ title: "Configuration" });
 
 export const InsertConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
 	updatedById: true,
 	updatedAt: true,
-});
+}).meta({ title: "InsertConfigurationRequest" });
 
 export const UpdateConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
 	updatedById: true,
 	updatedAt: true,
-}).partial();
+}).meta({ title: "UpdateConfigurationRequest" });
 
 export type Configuration = z.infer<typeof ConfigurationSchema>;
 export type InsertConfiguration = z.infer<typeof InsertConfigurationSchema>;

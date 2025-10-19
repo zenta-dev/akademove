@@ -2,9 +2,13 @@ import * as z from "zod";
 import { DateSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
-export const ReportCategorySchema = z.enum(CONSTANTS.REPORT_CATEGORIES);
+export const ReportCategorySchema = z
+	.enum(CONSTANTS.REPORT_CATEGORIES)
+	.meta({ title: "ReportCategory" });
 
-export const ReportStatusSchema = z.enum(CONSTANTS.REPORT_STATUS);
+export const ReportStatusSchema = z
+	.enum(CONSTANTS.REPORT_STATUS)
+	.meta({ title: "ReportStatus" });
 
 export const ReportSchema = z
 	.object({
@@ -21,22 +25,21 @@ export const ReportSchema = z
 		reportedAt: DateSchema,
 		resolvedAt: DateSchema.optional(),
 	})
-	.meta({
-		title: "Report",
-		ref: "Report",
-	});
+	.meta({ title: "Report" });
 
 export const InsertReportSchema = ReportSchema.omit({
 	id: true,
 	reportedAt: true,
 	resolvedAt: true,
-});
+}).meta({ title: "InsertReportRequest" });
 
 export const UpdateReportSchema = ReportSchema.omit({
 	id: true,
 	reportedAt: true,
 	resolvedAt: true,
-}).partial();
+})
+	.partial()
+	.meta({ title: "UpdateReportRequest" });
 
 export type ReportCategory = z.infer<typeof ReportCategorySchema>;
 export type ReportStatus = z.infer<typeof ReportStatusSchema>;

@@ -10,22 +10,21 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/driver_remove200_response.dart';
+import 'package:api_client/src/model/insert_order_request.dart';
 import 'package:api_client/src/model/order_create200_response.dart';
-import 'package:api_client/src/model/order_create_request.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
-import 'package:api_client/src/model/order_update_request.dart';
+import 'package:api_client/src/model/update_order_request.dart';
 
 class OrderApi {
-
   final Dio _dio;
 
   const OrderApi(this._dio);
 
   /// orderCreate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [orderCreateRequest] 
+  /// * [insertOrderRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,8 +34,8 @@ class OrderApi {
   ///
   /// Returns a [Future] containing a [Response] with a [OrderCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<OrderCreate200Response>> orderCreate({ 
-    required OrderCreateRequest orderCreateRequest,
+  Future<Response<OrderCreate200Response>> orderCreate({
+    required InsertOrderRequest insertOrderRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -47,16 +46,10 @@ class OrderApi {
     final _path = r'/orders';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -67,13 +60,10 @@ class OrderApi {
     dynamic _bodyData;
 
     try {
-  _bodyData=jsonEncode(orderCreateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(insertOrderRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -92,8 +82,14 @@ class OrderApi {
     OrderCreate200Response? _responseData;
 
     try {
-final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<OrderCreate200Response, OrderCreate200Response>(rawData, 'OrderCreate200Response', growable: true);
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<OrderCreate200Response, OrderCreate200Response>(
+              rawData,
+              'OrderCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -117,10 +113,10 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
   }
 
   /// orderGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -130,7 +126,7 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
   ///
   /// Returns a [Future] containing a [Response] with a [OrderCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<OrderCreate200Response>> orderGet({ 
+  Future<Response<OrderCreate200Response>> orderGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -139,19 +135,18 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/orders/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/orders/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -169,8 +164,14 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
     OrderCreate200Response? _responseData;
 
     try {
-final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<OrderCreate200Response, OrderCreate200Response>(rawData, 'OrderCreate200Response', growable: true);
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<OrderCreate200Response, OrderCreate200Response>(
+              rawData,
+              'OrderCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -194,16 +195,16 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
   }
 
   /// orderList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [statuses] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [statuses]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -213,7 +214,7 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
   ///
   /// Returns a [Future] containing a [Response] with a [OrderList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<OrderList200Response>> orderList({ 
+  Future<Response<OrderList200Response>> orderList({
     String? cursor,
     Object? limit,
     Object? page,
@@ -231,16 +232,10 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
     final _path = r'/orders';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -269,8 +264,14 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
     OrderList200Response? _responseData;
 
     try {
-final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<OrderList200Response, OrderList200Response>(rawData, 'OrderList200Response', growable: true);
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<OrderList200Response, OrderList200Response>(
+              rawData,
+              'OrderList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -294,10 +295,10 @@ _responseData = rawData == null ? null : deserialize<OrderList200Response, Order
   }
 
   /// orderRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -307,7 +308,7 @@ _responseData = rawData == null ? null : deserialize<OrderList200Response, Order
   ///
   /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> orderRemove({ 
+  Future<Response<DriverRemove200Response>> orderRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -316,19 +317,18 @@ _responseData = rawData == null ? null : deserialize<OrderList200Response, Order
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/orders/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/orders/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -346,8 +346,14 @@ _responseData = rawData == null ? null : deserialize<OrderList200Response, Order
     DriverRemove200Response? _responseData;
 
     try {
-final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<DriverRemove200Response, DriverRemove200Response>(rawData, 'DriverRemove200Response', growable: true);
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<DriverRemove200Response, DriverRemove200Response>(
+              rawData,
+              'DriverRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -371,11 +377,11 @@ _responseData = rawData == null ? null : deserialize<DriverRemove200Response, Dr
   }
 
   /// orderUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [orderUpdateRequest] 
+  /// * [id]
+  /// * [updateOrderRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -385,9 +391,9 @@ _responseData = rawData == null ? null : deserialize<DriverRemove200Response, Dr
   ///
   /// Returns a [Future] containing a [Response] with a [OrderCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<OrderCreate200Response>> orderUpdate({ 
+  Future<Response<OrderCreate200Response>> orderUpdate({
     required String id,
-    required OrderUpdateRequest orderUpdateRequest,
+    required UpdateOrderRequest updateOrderRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -395,19 +401,18 @@ _responseData = rawData == null ? null : deserialize<DriverRemove200Response, Dr
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/orders/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/orders/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -418,13 +423,10 @@ _responseData = rawData == null ? null : deserialize<DriverRemove200Response, Dr
     dynamic _bodyData;
 
     try {
-  _bodyData=jsonEncode(orderUpdateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(updateOrderRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -443,8 +445,14 @@ _responseData = rawData == null ? null : deserialize<DriverRemove200Response, Dr
     OrderCreate200Response? _responseData;
 
     try {
-final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<OrderCreate200Response, OrderCreate200Response>(rawData, 'OrderCreate200Response', growable: true);
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<OrderCreate200Response, OrderCreate200Response>(
+              rawData,
+              'OrderCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -466,5 +474,4 @@ _responseData = rawData == null ? null : deserialize<OrderCreate200Response, Ord
       extra: _response.extra,
     );
   }
-
 }

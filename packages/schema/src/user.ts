@@ -3,15 +3,13 @@ import * as z from "zod";
 import { DateSchema, PhoneSchema } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
-export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES).meta({
-	title: "UserRole",
-	ref: "UserRole",
-});
+export const UserRoleSchema = z
+	.enum(CONSTANTS.USER_ROLES)
+	.meta({ title: "UserRole" });
 
-export const UserGenderSchema = z.enum(CONSTANTS.USER_GENDERS).meta({
-	title: "UserGender",
-	ref: "UserGender",
-});
+export const UserGenderSchema = z
+	.enum(CONSTANTS.USER_GENDERS)
+	.meta({ title: "UserGender" });
 
 export const UserSchema = z
 	.object({
@@ -34,10 +32,7 @@ export const UserSchema = z
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
-	.meta({
-		title: "User",
-		ref: "User",
-	});
+	.meta({ title: "User" });
 
 export const InsertUserSchema = UserSchema.omit({
 	id: true,
@@ -60,7 +55,8 @@ export const InsertUserSchema = UserSchema.omit({
 	.refine((data) => data.password === data.confirmPassword, {
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
-	});
+	})
+	.meta({ title: "InsertUserRequest" });
 
 export const UpdateUserRoleSchema = UserSchema.pick({ role: true }).meta({
 	title: "UpdateUserRoleRequest",

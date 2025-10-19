@@ -7,40 +7,28 @@ export const LocationSchema = z
 		lat: z.coerce.number(),
 		lng: z.coerce.number(),
 	})
-	.meta({
-		title: "Location",
-		ref: "Location",
-	});
+	.meta({ title: "Location" });
 
 export const TimeSchema = z
 	.object({
 		h: z.number(),
 		m: z.number(),
 	})
-	.meta({
-		title: "Time",
-		ref: "Time",
-	});
+	.meta({ title: "Time" });
 
 export const BankSchema = z
 	.object({
 		provider: z.enum(CONSTANTS.BANK_PROVIDERS),
 		number: z.coerce.number(),
 	})
-	.meta({
-		title: "Bank",
-		ref: "Bank",
-	});
+	.meta({ title: "Bank" });
 
 export const PhoneSchema = z
 	.object({
 		countryCode: z.enum(["ID"]),
 		number: z.coerce.number(),
 	})
-	.meta({
-		title: "Phone",
-		ref: "Phone",
-	});
+	.meta({ title: "Phone" });
 export const DateSchema = z.coerce.date();
 
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
@@ -49,11 +37,11 @@ export const EmptySchema = z.null();
 
 export const UUIDParamSchema = z
 	.object({ id: z.uuid() })
-	.meta({ ref: "UUIDParam" });
+	.meta({ title: "UUIDParam" });
 
 export const StringParamSchema = z
 	.object({ id: z.string() })
-	.meta({ ref: "UUIDParam" });
+	.meta({ title: "UUIDParam" });
 
 export const GetQuerySchema = z
 	.object({
@@ -61,17 +49,14 @@ export const GetQuerySchema = z
 			return v === "true" || v === true;
 		}, z.boolean().default(false)),
 	})
-	.meta({ ref: "GetQuery" });
+	.meta({ title: "GetQuery" });
 
 export const FailedResponseSchema = z
 	.object({
 		message: z.string(),
 		code: z.string(),
 	})
-	.meta({
-		title: "FailedResponse",
-		ref: "FailedResponse",
-	});
+	.meta({ title: "FailedResponse" });
 
 export const createSuccessResponseSchema = <T>(schema: T) =>
 	z.object({

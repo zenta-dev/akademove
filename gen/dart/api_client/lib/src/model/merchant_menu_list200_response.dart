@@ -9,7 +9,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'merchant_menu_list200_response.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -20,65 +19,35 @@ part 'merchant_menu_list200_response.g.dart';
 class MerchantMenuList200Response {
   /// Returns a new [MerchantMenuList200Response] instance.
   MerchantMenuList200Response({
+    required this.message,
 
-    required  this.message,
+    required this.data,
 
-    required  this.data,
-
-     this.totalPages,
+    this.totalPages,
   });
 
-  @JsonKey(
-    
-    name: r'message',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-
-
-  @JsonKey(
-    
-    name: r'data',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
   final List<MerchantMenu> data;
 
-
-
-  @JsonKey(
-    
-    name: r'totalPages',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantMenuList200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
+  @override
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is MerchantMenuList200Response &&
-      other.message == message &&
-      other.data == data &&
-      other.totalPages == totalPages;
-
-    @override
-    int get hashCode =>
-        message.hashCode +
-        data.hashCode +
-        totalPages.hashCode;
-
-  factory MerchantMenuList200Response.fromJson(Map<String, dynamic> json) => _$MerchantMenuList200ResponseFromJson(json);
+  factory MerchantMenuList200Response.fromJson(Map<String, dynamic> json) =>
+      _$MerchantMenuList200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantMenuList200ResponseToJson(this);
 
@@ -86,6 +55,4 @@ class MerchantMenuList200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

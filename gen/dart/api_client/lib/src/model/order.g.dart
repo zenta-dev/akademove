@@ -31,7 +31,7 @@ abstract class _$OrderCWProxy {
 
   Order totalPrice(num totalPrice);
 
-  Order note(OrderCreateRequestNote? note);
+  Order note(OrderNote? note);
 
   Order requestedAt(DateTime requestedAt);
 
@@ -45,13 +45,13 @@ abstract class _$OrderCWProxy {
 
   Order itemCount(num? itemCount);
 
-  Order items(List<OrderCreateRequestItemsInner>? items);
+  Order items(List<OrderItem>? items);
 
-  Order user(OrderCreateRequestUser? user);
+  Order user(InsertOrderRequestUser? user);
 
-  Order driver(OrderCreateRequestDriver? driver);
+  Order driver(InsertOrderRequestDriver? driver);
 
-  Order merchant(OrderCreateRequestMerchant? merchant);
+  Order merchant(InsertOrderRequestMerchant? merchant);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -72,17 +72,17 @@ abstract class _$OrderCWProxy {
     num basePrice,
     num? tip,
     num totalPrice,
-    OrderCreateRequestNote? note,
+    OrderNote? note,
     DateTime requestedAt,
     DateTime? acceptedAt,
     DateTime? arrivedAt,
     DateTime createdAt,
     DateTime updatedAt,
     num? itemCount,
-    List<OrderCreateRequestItemsInner>? items,
-    OrderCreateRequestUser? user,
-    OrderCreateRequestDriver? driver,
-    OrderCreateRequestMerchant? merchant,
+    List<OrderItem>? items,
+    InsertOrderRequestUser? user,
+    InsertOrderRequestDriver? driver,
+    InsertOrderRequestMerchant? merchant,
   });
 }
 
@@ -131,7 +131,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order totalPrice(num totalPrice) => this(totalPrice: totalPrice);
 
   @override
-  Order note(OrderCreateRequestNote? note) => this(note: note);
+  Order note(OrderNote? note) => this(note: note);
 
   @override
   Order requestedAt(DateTime requestedAt) => this(requestedAt: requestedAt);
@@ -152,16 +152,16 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order itemCount(num? itemCount) => this(itemCount: itemCount);
 
   @override
-  Order items(List<OrderCreateRequestItemsInner>? items) => this(items: items);
+  Order items(List<OrderItem>? items) => this(items: items);
 
   @override
-  Order user(OrderCreateRequestUser? user) => this(user: user);
+  Order user(InsertOrderRequestUser? user) => this(user: user);
 
   @override
-  Order driver(OrderCreateRequestDriver? driver) => this(driver: driver);
+  Order driver(InsertOrderRequestDriver? driver) => this(driver: driver);
 
   @override
-  Order merchant(OrderCreateRequestMerchant? merchant) =>
+  Order merchant(InsertOrderRequestMerchant? merchant) =>
       this(merchant: merchant);
 
   @override
@@ -248,7 +248,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
-          : note as OrderCreateRequestNote?,
+          : note as OrderNote?,
       requestedAt: requestedAt == const $CopyWithPlaceholder()
           ? _value.requestedAt
           // ignore: cast_nullable_to_non_nullable
@@ -276,19 +276,19 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       items: items == const $CopyWithPlaceholder()
           ? _value.items
           // ignore: cast_nullable_to_non_nullable
-          : items as List<OrderCreateRequestItemsInner>?,
+          : items as List<OrderItem>?,
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderCreateRequestUser?,
+          : user as InsertOrderRequestUser?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
-          : driver as OrderCreateRequestDriver?,
+          : driver as InsertOrderRequestDriver?,
       merchant: merchant == const $CopyWithPlaceholder()
           ? _value.merchant
           // ignore: cast_nullable_to_non_nullable
-          : merchant as OrderCreateRequestMerchant?,
+          : merchant as InsertOrderRequestMerchant?,
     );
   }
 }
@@ -350,9 +350,7 @@ Order _$OrderFromJson(
     totalPrice: $checkedConvert('totalPrice', (v) => v as num),
     note: $checkedConvert(
       'note',
-      (v) => v == null
-          ? null
-          : OrderCreateRequestNote.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
     ),
     requestedAt: $checkedConvert(
       'requestedAt',
@@ -372,30 +370,26 @@ Order _$OrderFromJson(
     items: $checkedConvert(
       'items',
       (v) => (v as List<dynamic>?)
-          ?.map(
-            (e) => OrderCreateRequestItemsInner.fromJson(
-              e as Map<String, dynamic>,
-            ),
-          )
+          ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
     user: $checkedConvert(
       'user',
       (v) => v == null
           ? null
-          : OrderCreateRequestUser.fromJson(v as Map<String, dynamic>),
+          : InsertOrderRequestUser.fromJson(v as Map<String, dynamic>),
     ),
     driver: $checkedConvert(
       'driver',
       (v) => v == null
           ? null
-          : OrderCreateRequestDriver.fromJson(v as Map<String, dynamic>),
+          : InsertOrderRequestDriver.fromJson(v as Map<String, dynamic>),
     ),
     merchant: $checkedConvert(
       'merchant',
       (v) => v == null
           ? null
-          : OrderCreateRequestMerchant.fromJson(v as Map<String, dynamic>),
+          : InsertOrderRequestMerchant.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;

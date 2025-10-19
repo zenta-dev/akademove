@@ -8,7 +8,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'driver_remove200_response.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,65 +18,38 @@ part 'driver_remove200_response.g.dart';
 class DriverRemove200Response {
   /// Returns a new [DriverRemove200Response] instance.
   DriverRemove200Response({
+    required this.message,
 
-    required  this.message,
+    required this.data,
 
-    required  this.data,
-
-     this.totalPages,
+    this.totalPages,
   });
 
-  @JsonKey(
-    
-    name: r'message',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-
-
-  @JsonKey(
-    
-    name: r'data',
-    required: true,
-    includeIfNull: true,
-  )
-
-
+  @JsonKey(name: r'data', required: true, includeIfNull: true)
   final Object? data;
 
-
-
-  @JsonKey(
-    
-    name: r'totalPages',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverRemove200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
+  @override
+  int get hashCode =>
+      message.hashCode +
+      (data == null ? 0 : data.hashCode) +
+      totalPages.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is DriverRemove200Response &&
-      other.message == message &&
-      other.data == data &&
-      other.totalPages == totalPages;
-
-    @override
-    int get hashCode =>
-        message.hashCode +
-        (data == null ? 0 : data.hashCode) +
-        totalPages.hashCode;
-
-  factory DriverRemove200Response.fromJson(Map<String, dynamic> json) => _$DriverRemove200ResponseFromJson(json);
+  factory DriverRemove200Response.fromJson(Map<String, dynamic> json) =>
+      _$DriverRemove200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverRemove200ResponseToJson(this);
 
@@ -85,6 +57,4 @@ class DriverRemove200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

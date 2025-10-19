@@ -14,23 +14,22 @@ export const ScheduleSchema = z
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
 	})
-	.meta({
-		title: "Schedule",
-		ref: "Schedule",
-	});
+	.meta({ title: "Schedule" });
 
 export const InsertScheduleSchema = ScheduleSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-});
+}).meta({ title: "InsertScheduleRequest" });
 
 export const UpdateScheduleSchema = ScheduleSchema.omit({
 	id: true,
 	driverId: true,
 	createdAt: true,
 	updatedAt: true,
-}).partial();
+})
+	.partial()
+	.meta({ title: "UpdateScheduleRequest" });
 
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
 export type Schedule = z.infer<typeof ScheduleSchema>;

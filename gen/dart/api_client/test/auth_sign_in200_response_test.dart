@@ -12,7 +12,7 @@ void main() {
       // TODO
     });
 
-    // AuthSignIn200ResponseData data
+    // SignInResBody data
     test('to test the property `data`', () async {
       // TODO
     });

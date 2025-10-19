@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **reportCreate**
-> ReportCreate200Response reportCreate(reportCreateRequest)
+> ReportCreate200Response reportCreate(insertReportRequest)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final ReportCreateRequest reportCreateRequest = ; // ReportCreateRequest | 
+final InsertReportRequest insertReportRequest = ; // InsertReportRequest | 
 
 try {
-    final response = api.reportCreate(reportCreateRequest);
+    final response = api.reportCreate(insertReportRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReportApi->reportCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **reportCreateRequest** | [**ReportCreateRequest**](ReportCreateRequest.md)|  | 
+ **insertReportRequest** | [**InsertReportRequest**](InsertReportRequest.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reportUpdate**
-> ReportCreate200Response reportUpdate(id, reportUpdateRequest)
+> ReportCreate200Response reportUpdate(id, updateReportRequest)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
 final String id = id_example; // String | 
-final ReportUpdateRequest reportUpdateRequest = ; // ReportUpdateRequest | 
+final UpdateReportRequest updateReportRequest = ; // UpdateReportRequest | 
 
 try {
-    final response = api.reportUpdate(id, reportUpdateRequest);
+    final response = api.reportUpdate(id, updateReportRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReportApi->reportUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **reportUpdateRequest** | [**ReportUpdateRequest**](ReportUpdateRequest.md)|  | 
+ **updateReportRequest** | [**UpdateReportRequest**](UpdateReportRequest.md)|  | 
 
 ### Return type
 

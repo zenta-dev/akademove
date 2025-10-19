@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 **driverLicense** | **String** |  | 
 **vehicleCertificate** | **String** |  | 
 **bank** | [**Bank**](Bank.md) |  | 
-**user** | [**OrderCreateRequestUser**](OrderCreateRequestUser.md) |  | [optional] 
+**user** | [**InsertOrderRequestUser**](InsertOrderRequestUser.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

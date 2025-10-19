@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **orderCreate**
-> OrderCreate200Response orderCreate(orderCreateRequest)
+> OrderCreate200Response orderCreate(insertOrderRequest)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final OrderCreateRequest orderCreateRequest = ; // OrderCreateRequest | 
+final InsertOrderRequest insertOrderRequest = ; // InsertOrderRequest | 
 
 try {
-    final response = api.orderCreate(orderCreateRequest);
+    final response = api.orderCreate(insertOrderRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **orderCreateRequest** | [**OrderCreateRequest**](OrderCreateRequest.md)|  | 
+ **insertOrderRequest** | [**InsertOrderRequest**](InsertOrderRequest.md)|  | 
 
 ### Return type
 
@@ -193,7 +193,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderUpdate**
-> OrderCreate200Response orderUpdate(id, orderUpdateRequest)
+> OrderCreate200Response orderUpdate(id, updateOrderRequest)
 
 
 
@@ -203,10 +203,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = id_example; // String | 
-final OrderUpdateRequest orderUpdateRequest = ; // OrderUpdateRequest | 
+final UpdateOrderRequest updateOrderRequest = ; // UpdateOrderRequest | 
 
 try {
-    final response = api.orderUpdate(id, orderUpdateRequest);
+    final response = api.orderUpdate(id, updateOrderRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderUpdate: $e\n');
@@ -218,7 +218,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **orderUpdateRequest** | [**OrderUpdateRequest**](OrderUpdateRequest.md)|  | 
+ **updateOrderRequest** | [**UpdateOrderRequest**](UpdateOrderRequest.md)|  | 
 
 ### Return type
 

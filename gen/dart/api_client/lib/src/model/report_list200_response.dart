@@ -9,7 +9,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'report_list200_response.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -20,65 +19,35 @@ part 'report_list200_response.g.dart';
 class ReportList200Response {
   /// Returns a new [ReportList200Response] instance.
   ReportList200Response({
+    required this.message,
 
-    required  this.message,
+    required this.data,
 
-    required  this.data,
-
-     this.totalPages,
+    this.totalPages,
   });
 
-  @JsonKey(
-    
-    name: r'message',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-
-
-  @JsonKey(
-    
-    name: r'data',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
   final List<Report> data;
 
-
-
-  @JsonKey(
-    
-    name: r'totalPages',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReportList200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
+  @override
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is ReportList200Response &&
-      other.message == message &&
-      other.data == data &&
-      other.totalPages == totalPages;
-
-    @override
-    int get hashCode =>
-        message.hashCode +
-        data.hashCode +
-        totalPages.hashCode;
-
-  factory ReportList200Response.fromJson(Map<String, dynamic> json) => _$ReportList200ResponseFromJson(json);
+  factory ReportList200Response.fromJson(Map<String, dynamic> json) =>
+      _$ReportList200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReportList200ResponseToJson(this);
 
@@ -86,6 +55,4 @@ class ReportList200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

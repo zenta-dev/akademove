@@ -107,7 +107,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **configurationUpdate**
-> ConfigurationGet200Response configurationUpdate(key, configurationUpdateRequest)
+> ConfigurationGet200Response configurationUpdate(key, updateConfigurationRequest)
 
 
 
@@ -117,10 +117,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getConfigurationApi();
 final String key = key_example; // String | 
-final ConfigurationUpdateRequest configurationUpdateRequest = ; // ConfigurationUpdateRequest | 
+final UpdateConfigurationRequest updateConfigurationRequest = ; // UpdateConfigurationRequest | 
 
 try {
-    final response = api.configurationUpdate(key, configurationUpdateRequest);
+    final response = api.configurationUpdate(key, updateConfigurationRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ConfigurationApi->configurationUpdate: $e\n');
@@ -132,7 +132,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **key** | **String**|  | 
- **configurationUpdateRequest** | [**ConfigurationUpdateRequest**](ConfigurationUpdateRequest.md)|  | 
+ **updateConfigurationRequest** | [**UpdateConfigurationRequest**](UpdateConfigurationRequest.md)|  | 
 
 ### Return type
 

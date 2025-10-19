@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **scheduleCreate**
-> ScheduleCreate200Response scheduleCreate(scheduleCreateRequest)
+> ScheduleCreate200Response scheduleCreate(insertScheduleRequest)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
-final ScheduleCreateRequest scheduleCreateRequest = ; // ScheduleCreateRequest | 
+final InsertScheduleRequest insertScheduleRequest = ; // InsertScheduleRequest | 
 
 try {
-    final response = api.scheduleCreate(scheduleCreateRequest);
+    final response = api.scheduleCreate(insertScheduleRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ScheduleApi->scheduleCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **scheduleCreateRequest** | [**ScheduleCreateRequest**](ScheduleCreateRequest.md)|  | 
+ **insertScheduleRequest** | [**InsertScheduleRequest**](InsertScheduleRequest.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **scheduleUpdate**
-> ScheduleCreate200Response scheduleUpdate(id, scheduleUpdateRequest)
+> ScheduleCreate200Response scheduleUpdate(id, updateScheduleRequest)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getScheduleApi();
 final String id = id_example; // String | 
-final ScheduleUpdateRequest scheduleUpdateRequest = ; // ScheduleUpdateRequest | 
+final UpdateScheduleRequest updateScheduleRequest = ; // UpdateScheduleRequest | 
 
 try {
-    final response = api.scheduleUpdate(id, scheduleUpdateRequest);
+    final response = api.scheduleUpdate(id, updateScheduleRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ScheduleApi->scheduleUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **scheduleUpdateRequest** | [**ScheduleUpdateRequest**](ScheduleUpdateRequest.md)|  | 
+ **updateScheduleRequest** | [**UpdateScheduleRequest**](UpdateScheduleRequest.md)|  | 
 
 ### Return type
 

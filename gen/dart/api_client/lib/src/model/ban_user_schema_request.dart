@@ -8,7 +8,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'ban_user_schema_request.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -18,50 +17,26 @@ part 'ban_user_schema_request.g.dart';
 )
 class BanUserSchemaRequest {
   /// Returns a new [BanUserSchemaRequest] instance.
-  BanUserSchemaRequest({
+  BanUserSchemaRequest({required this.banReason, this.banExpiresIn});
 
-    required  this.banReason,
-
-     this.banExpiresIn,
-  });
-
-  @JsonKey(
-    
-    name: r'banReason',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'banReason', required: true, includeIfNull: false)
   final String banReason;
 
-
-
-  @JsonKey(
-    
-    name: r'banExpiresIn',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'banExpiresIn', required: false, includeIfNull: false)
   final num? banExpiresIn;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BanUserSchemaRequest &&
+          other.banReason == banReason &&
+          other.banExpiresIn == banExpiresIn;
 
+  @override
+  int get hashCode => banReason.hashCode + banExpiresIn.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is BanUserSchemaRequest &&
-      other.banReason == banReason &&
-      other.banExpiresIn == banExpiresIn;
-
-    @override
-    int get hashCode =>
-        banReason.hashCode +
-        banExpiresIn.hashCode;
-
-  factory BanUserSchemaRequest.fromJson(Map<String, dynamic> json) => _$BanUserSchemaRequestFromJson(json);
+  factory BanUserSchemaRequest.fromJson(Map<String, dynamic> json) =>
+      _$BanUserSchemaRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BanUserSchemaRequestToJson(this);
 
@@ -69,6 +44,4 @@ class BanUserSchemaRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

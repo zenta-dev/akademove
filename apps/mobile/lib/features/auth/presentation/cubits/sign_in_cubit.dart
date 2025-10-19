@@ -13,7 +13,7 @@ class SignInCubit extends BaseCubit<SignInState> {
     try {
       emit(SignInState.loading());
       final res = await _authRepository.signIn(
-        AuthSignInRequest(email: email, password: password),
+        SignInRequest(email: email, password: password),
       );
       emit(SignInState.success(res.data, message: res.message));
     } on BaseError catch (e, st) {

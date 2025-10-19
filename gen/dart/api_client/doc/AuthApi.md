@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 
 # **authForgotPassword**
-> AuthSignOut200Response authForgotPassword(authForgotPasswordRequest)
+> AuthSignOut200Response authForgotPassword(forgotPasswordRequest)
 
 
 
@@ -30,10 +30,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final AuthForgotPasswordRequest authForgotPasswordRequest = ; // AuthForgotPasswordRequest | 
+final ForgotPasswordRequest forgotPasswordRequest = ; // ForgotPasswordRequest | 
 
 try {
-    final response = api.authForgotPassword(authForgotPasswordRequest);
+    final response = api.authForgotPassword(forgotPasswordRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authForgotPassword: $e\n');
@@ -44,7 +44,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authForgotPasswordRequest** | [**AuthForgotPasswordRequest**](AuthForgotPasswordRequest.md)|  | 
+ **forgotPasswordRequest** | [**ForgotPasswordRequest**](ForgotPasswordRequest.md)|  | 
 
 ### Return type
 
@@ -140,7 +140,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authResetPassword**
-> AuthSignOut200Response authResetPassword(authResetPasswordRequest)
+> AuthSignOut200Response authResetPassword(resetPasswordRequest)
 
 
 
@@ -149,10 +149,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final AuthResetPasswordRequest authResetPasswordRequest = ; // AuthResetPasswordRequest | 
+final ResetPasswordRequest resetPasswordRequest = ; // ResetPasswordRequest | 
 
 try {
-    final response = api.authResetPassword(authResetPasswordRequest);
+    final response = api.authResetPassword(resetPasswordRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authResetPassword: $e\n');
@@ -163,7 +163,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authResetPasswordRequest** | [**AuthResetPasswordRequest**](AuthResetPasswordRequest.md)|  | 
+ **resetPasswordRequest** | [**ResetPasswordRequest**](ResetPasswordRequest.md)|  | 
 
 ### Return type
 
@@ -181,7 +181,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignIn**
-> AuthSignIn200Response authSignIn(authSignInRequest)
+> AuthSignIn200Response authSignIn(signInRequest)
 
 
 
@@ -190,10 +190,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final AuthSignInRequest authSignInRequest = ; // AuthSignInRequest | 
+final SignInRequest signInRequest = ; // SignInRequest | 
 
 try {
-    final response = api.authSignIn(authSignInRequest);
+    final response = api.authSignIn(signInRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignIn: $e\n');
@@ -204,7 +204,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authSignInRequest** | [**AuthSignInRequest**](AuthSignInRequest.md)|  | 
+ **signInRequest** | [**SignInRequest**](SignInRequest.md)|  | 
 
 ### Return type
 

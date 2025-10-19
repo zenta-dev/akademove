@@ -8,7 +8,6 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'auth_sign_out200_response.g.dart';
 
-
 @CopyWith()
 @JsonSerializable(
   checked: true,
@@ -19,65 +18,38 @@ part 'auth_sign_out200_response.g.dart';
 class AuthSignOut200Response {
   /// Returns a new [AuthSignOut200Response] instance.
   AuthSignOut200Response({
+    required this.message,
 
-    required  this.message,
+    required this.data,
 
-    required  this.data,
-
-     this.totalPages,
+    this.totalPages,
   });
 
-  @JsonKey(
-    
-    name: r'message',
-    required: true,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-
-
-  @JsonKey(
-    
-    name: r'data',
-    required: true,
-    includeIfNull: true,
-  )
-
-
+  @JsonKey(name: r'data', required: true, includeIfNull: true)
   final Object? data;
 
-
-
-  @JsonKey(
-    
-    name: r'totalPages',
-    required: false,
-    includeIfNull: false,
-  )
-
-
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AuthSignOut200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
 
+  @override
+  int get hashCode =>
+      message.hashCode +
+      (data == null ? 0 : data.hashCode) +
+      totalPages.hashCode;
 
-
-
-    @override
-    bool operator ==(Object other) => identical(this, other) || other is AuthSignOut200Response &&
-      other.message == message &&
-      other.data == data &&
-      other.totalPages == totalPages;
-
-    @override
-    int get hashCode =>
-        message.hashCode +
-        (data == null ? 0 : data.hashCode) +
-        totalPages.hashCode;
-
-  factory AuthSignOut200Response.fromJson(Map<String, dynamic> json) => _$AuthSignOut200ResponseFromJson(json);
+  factory AuthSignOut200Response.fromJson(Map<String, dynamic> json) =>
+      _$AuthSignOut200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthSignOut200ResponseToJson(this);
 
@@ -85,6 +57,4 @@ class AuthSignOut200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

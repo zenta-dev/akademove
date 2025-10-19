@@ -67,7 +67,7 @@ void main() {
       // TODO
     });
 
-    // OrderCreateRequestNote note
+    // OrderNote note
     test('to test the property `note`', () async {
       // TODO
     });
@@ -102,22 +102,22 @@ void main() {
       // TODO
     });
 
-    // List<OrderCreateRequestItemsInner> items
+    // List<OrderItem> items
     test('to test the property `items`', () async {
       // TODO
     });
 
-    // OrderCreateRequestUser user
+    // InsertOrderRequestUser user
     test('to test the property `user`', () async {
       // TODO
     });
 
-    // OrderCreateRequestDriver driver
+    // InsertOrderRequestDriver driver
     test('to test the property `driver`', () async {
       // TODO
     });
 
-    // OrderCreateRequestMerchant merchant
+    // InsertOrderRequestMerchant merchant
     test('to test the property `merchant`', () async {
       // TODO
     });

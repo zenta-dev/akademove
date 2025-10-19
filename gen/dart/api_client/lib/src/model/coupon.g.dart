@@ -13,7 +13,7 @@ abstract class _$CouponCWProxy {
 
   Coupon code(String code);
 
-  Coupon rules(CouponCreateRequestRules rules);
+  Coupon rules(CouponRules rules);
 
   Coupon discountAmount(num? discountAmount);
 
@@ -43,7 +43,7 @@ abstract class _$CouponCWProxy {
     String id,
     String name,
     String code,
-    CouponCreateRequestRules rules,
+    CouponRules rules,
     num? discountAmount,
     num? discountPercentage,
     num usageLimit,
@@ -72,7 +72,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
   Coupon code(String code) => this(code: code);
 
   @override
-  Coupon rules(CouponCreateRequestRules rules) => this(rules: rules);
+  Coupon rules(CouponRules rules) => this(rules: rules);
 
   @override
   Coupon discountAmount(num? discountAmount) =>
@@ -141,7 +141,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
       rules: rules == const $CopyWithPlaceholder()
           ? _value.rules
           // ignore: cast_nullable_to_non_nullable
-          : rules as CouponCreateRequestRules,
+          : rules as CouponRules,
       discountAmount: discountAmount == const $CopyWithPlaceholder()
           ? _value.discountAmount
           // ignore: cast_nullable_to_non_nullable
@@ -217,7 +217,7 @@ Coupon _$CouponFromJson(
     code: $checkedConvert('code', (v) => v as String),
     rules: $checkedConvert(
       'rules',
-      (v) => CouponCreateRequestRules.fromJson(v as Map<String, dynamic>),
+      (v) => CouponRules.fromJson(v as Map<String, dynamic>),
     ),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
     discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),

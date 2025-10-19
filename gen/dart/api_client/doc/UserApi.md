@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **userCreate**
-> UserCreate200Response userCreate(userCreateRequest)
+> UserCreate200Response userCreate(insertUserRequest)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final UserCreateRequest userCreateRequest = ; // UserCreateRequest | 
+final InsertUserRequest insertUserRequest = ; // InsertUserRequest | 
 
 try {
-    final response = api.userCreate(userCreateRequest);
+    final response = api.userCreate(insertUserRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling UserApi->userCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **userCreateRequest** | [**UserCreateRequest**](UserCreateRequest.md)|  | 
+ **insertUserRequest** | [**InsertUserRequest**](InsertUserRequest.md)|  | 
 
 ### Return type
 

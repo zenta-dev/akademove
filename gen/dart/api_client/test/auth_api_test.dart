@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getAuthApi();
 
   group(AuthApi, () {
-    //Future<AuthSignOut200Response> authForgotPassword(AuthForgotPasswordRequest authForgotPasswordRequest) async
+    //Future<AuthSignOut200Response> authForgotPassword(ForgotPasswordRequest forgotPasswordRequest) async
     test('test authForgotPassword', () async {
       // TODO
     });
@@ -21,12 +21,12 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> authResetPassword(AuthResetPasswordRequest authResetPasswordRequest) async
+    //Future<AuthSignOut200Response> authResetPassword(ResetPasswordRequest resetPasswordRequest) async
     test('test authResetPassword', () async {
       // TODO
     });
 
-    //Future<AuthSignIn200Response> authSignIn(AuthSignInRequest authSignInRequest) async
+    //Future<AuthSignIn200Response> authSignIn(SignInRequest signInRequest) async
     test('test authSignIn', () async {
       // TODO
     });
