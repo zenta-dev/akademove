@@ -160,6 +160,35 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
     );
   }
 
+  Widget _buildFail({
+    required String message,
+    required List<OrderStatusEnum> statuses,
+  }) => Container(
+    width: double.infinity,
+    padding: EdgeInsets.only(top: 16.dg),
+    child: Alert.destructive(
+      title: Text(
+        'Oops...',
+        style: context.typography.small.copyWith(
+          fontSize: 16.sp,
+        ),
+      ),
+      content: Text(
+        'No orders found',
+        style: context.typography.small.copyWith(
+          fontSize: 14.sp,
+        ),
+      ),
+      leading: const Icon(LucideIcons.info),
+      trailing: IconButton.ghost(
+        icon: const Icon(LucideIcons.refreshCcw),
+        onPressed: () => context.read<MerchantOrderCubit>().getMine(
+          statuses: statuses,
+        ),
+      ),
+    ),
+  );
+
   Widget _buildTab({required List<OrderStatusEnum> statuses}) {
     return BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
       builder: (context, state) {
@@ -170,7 +199,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                 .toList();
 
             if (filtered.isEmpty) {
-              return const Center(child: Text('No orders found'));
+              return _buildFail(message: 'No orders found', statuses: statuses);
             }
 
             return ListView.separated(
@@ -191,12 +220,9 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
               ),
             );
           },
-          failure: (error, message) => Center(
-            child: Alert.destructive(
-              title: const Text('Failed to load data'),
-              content: Text(message ?? 'An unexpected error occurred'),
-              leading: const Icon(LucideIcons.info),
-            ),
+          failure: (error, message) => _buildFail(
+            message: message ?? 'An unexpected error occurred',
+            statuses: statuses,
           ),
           loading: () => ListView.separated(
             itemCount: 5,
