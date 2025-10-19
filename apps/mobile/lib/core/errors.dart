@@ -100,3 +100,11 @@ final class ServiceError extends BaseError {
   String toString() =>
       'ServiceError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
+
+final class UnknownError extends BaseError {
+  const UnknownError(super.message, {super.code});
+
+  @override
+  String toString() =>
+      'UnknownError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
+}
