@@ -13,14 +13,13 @@ abstract class BaseRepository {
       var failed = const FailedResponse(
         code: ErrorCode.INTERNAL_SERVER_ERROR,
         message: 'An error occured',
-        data: null,
       );
 
       if (data is Map<String, dynamic>) {
         failed = FailedResponse.fromJson(data);
       }
       throw RepositoryError(failed.message, code: failed.code);
-    } on RepositoryError {
+    } on BaseError {
       rethrow;
       // ignore: avoid_catches_without_on_clauses wildcard
     } catch (e, stack) {
