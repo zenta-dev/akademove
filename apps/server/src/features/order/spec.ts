@@ -96,14 +96,14 @@ export const OrderSpec = {
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order updated successfully")),
-	remove: oc
-		.route({
-			tags: [FEATURE_TAGS.ORDER],
-			method: "DELETE",
-			path: "/{id}",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
-		.output(createSuccesSchema(z.null(), "Order deleted successfully")),
+	// remove: oc
+	// 	.route({
+	// 		tags: [FEATURE_TAGS.ORDER],
+	// 		method: "DELETE",
+	// 		path: "/{id}",
+	// 		inputStructure: "detailed",
+	// 		outputStructure: "detailed",
+	// 	})
+	// 	.input(z.object({ params: z.object({ id: z.string() }) }))
+	// 	.output(createSuccesSchema(z.null(), "Order deleted successfully")),
 };

@@ -40,9 +40,9 @@ sealed class BaseResponse<T> {
   }
 
   R maybeWhen<R>({
+    required R Function() orElse,
     R Function(T data, String message)? success,
     R Function(ErrorCode code, String message)? failed,
-    required R Function() orElse,
   }) {
     return switch (this) {
       SuccessResponse(:final data, :final message) =>

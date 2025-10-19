@@ -21,11 +21,6 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> orderRemove(String id) async
-    test('test orderRemove', () async {
-      // TODO
-    });
-
     //Future<OrderCreate200Response> orderUpdate(String id, UpdateOrderRequest updateOrderRequest) async
     test('test orderUpdate', () async {
       // TODO

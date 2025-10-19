@@ -101,7 +101,6 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderCreate**](doc/OrderApi.md#ordercreate) | **POST** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
-[*OrderApi*](doc/OrderApi.md) | [**orderRemove**](doc/OrderApi.md#orderremove) | **DELETE** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 

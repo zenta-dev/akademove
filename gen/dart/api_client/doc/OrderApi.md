@@ -12,7 +12,6 @@ Method | HTTP request | Description
 [**orderCreate**](OrderApi.md#ordercreate) | **POST** /orders | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
-[**orderRemove**](OrderApi.md#orderremove) | **DELETE** /orders/{id} | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 
 
@@ -139,47 +138,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**OrderList200Response**](OrderList200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **orderRemove**
-> DriverRemove200Response orderRemove(id)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getOrderApi();
-final String id = id_example; // String | 
-
-try {
-    final response = api.orderRemove(id);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling OrderApi->orderRemove: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
-
-### Return type
-
-[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 

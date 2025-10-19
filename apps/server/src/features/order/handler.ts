@@ -97,14 +97,14 @@ export const OrderHandler = os.router({
 				body: { message: "Order updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
-		.use(hasPermission({ order: ["update"] }))
-		.handler(async ({ context, input: { params } }) => {
-			await context.repo.order.remove(params.id);
+	// remove: os.remove
+	// 	.use(hasPermission({ order: ["update"] }))
+	// 	.handler(async ({ context, input: { params } }) => {
+	// 		await context.repo.order.remove(params.id);
 
-			return {
-				status: 200,
-				body: { message: "Order deleted successfully", data: null },
-			};
-		}),
+	// 		return {
+	// 			status: 200,
+	// 			body: { message: "Order deleted successfully", data: null },
+	// 		};
+	// 	}),
 });
