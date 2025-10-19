@@ -17,7 +17,7 @@ void setupLocator() {
 void _setupService() {
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://10.157.72.105:3000/api',
+      baseUrl: 'http://10.177.19.105:3000/api',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(minutes: 3),
     ),
@@ -37,12 +37,23 @@ void _setupService() {
 }
 
 void _setupRepository() {
-  sl.registerLazySingleton(
-    () => AuthRepository(
-      apiClient: sl<ApiClient>(),
-      localKV: sl<KeyValueService>(),
-    ),
-  );
+  sl
+    ..registerLazySingleton(
+      () => AuthRepository(
+        apiClient: sl<ApiClient>(),
+        localKV: sl<KeyValueService>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => MerchantRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => OrderRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    );
 }
 
 void _setupCubit() {
@@ -50,5 +61,7 @@ void _setupCubit() {
     ..registerFactory(AppCubit.new)
     ..registerFactory(() => AuthCubit(sl<AuthRepository>()))
     ..registerFactory(() => SignInCubit(sl<AuthRepository>()))
-    ..registerFactory(() => SignUpCubit(sl<AuthRepository>()));
+    ..registerFactory(() => SignUpCubit(sl<AuthRepository>()))
+    ..registerFactory(() => MerchantCubit(sl<MerchantRepository>()))
+    ..registerFactory(() => MerchantOrderCubit(sl<OrderRepository>()));
 }
