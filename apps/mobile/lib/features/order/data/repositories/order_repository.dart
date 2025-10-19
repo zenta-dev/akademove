@@ -75,4 +75,21 @@ class OrderRepository extends BaseRepository {
     });
   }
 
+  Future<BaseResponse<Order>> update(String id, UpdateOrderRequest request) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderUpdate(
+        id: id,
+        updateOrderRequest: request,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to update order',
+            code: ErrorCode.UNKNOWN,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }
