@@ -82,29 +82,18 @@ sealed class BaseError implements Exception {
 
   @override
   String toString() =>
-      'BaseError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
+      // ignore: no_runtimetype_tostring still lazt
+      '$runtimeType(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
 
 final class RepositoryError extends BaseError {
   const RepositoryError(super.message, {super.code});
-
-  @override
-  String toString() =>
-      'RepositoryError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
 
 final class ServiceError extends BaseError {
   const ServiceError(super.message, {super.code});
-
-  @override
-  String toString() =>
-      'ServiceError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
 
 final class UnknownError extends BaseError {
   const UnknownError(super.message, {super.code});
-
-  @override
-  String toString() =>
-      'UnknownError(code: ${code?.name ?? "UNKNOWN"}, message: $message)';
 }
