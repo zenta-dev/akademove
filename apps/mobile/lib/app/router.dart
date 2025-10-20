@@ -34,8 +34,6 @@ enum Routes {
 
   const Routes(this.path);
   final String path;
-
-  String get fullName => 'auth_$name';
 }
 
 final router = GoRouter(
