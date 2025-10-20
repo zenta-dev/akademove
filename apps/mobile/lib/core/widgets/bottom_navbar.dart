@@ -1,24 +1,29 @@
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart' hide TabItem;
 
-class MerchantBottomNavbar extends StatefulWidget {
-  const MerchantBottomNavbar({required this.shell, super.key});
-  final StatefulNavigationShell shell;
+class BottomNavBarItem {
+  const BottomNavBarItem({required this.label, required this.icon});
 
-  @override
-  State<MerchantBottomNavbar> createState() => _MerchantBottomNavbarState();
+  final String label;
+  final IconData icon;
 }
 
-class _MerchantBottomNavbarState extends State<MerchantBottomNavbar> {
-  static const _tabs = [
-    _TabItem(label: 'Home', icon: LucideIcons.house),
-    _TabItem(label: 'Order', icon: LucideIcons.book),
-    _TabItem(label: 'Menu', icon: LucideIcons.listOrdered),
-    _TabItem(label: 'Profile', icon: BootstrapIcons.person),
-  ];
+class BottomNavbar extends StatefulWidget {
+  const BottomNavbar({
+    required this.shell,
+    required this.tabs,
+    super.key,
+  });
+  final StatefulNavigationShell shell;
+  final List<BottomNavBarItem> tabs;
 
+  @override
+  State<BottomNavbar> createState() => _BottomNavbarState();
+}
+
+class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = widget.shell.currentIndex;
@@ -35,9 +40,14 @@ class _MerchantBottomNavbarState extends State<MerchantBottomNavbar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
-                _tabs.length,
+                widget.tabs.length,
                 (i) => Expanded(
-                  child: _buildButton(context, i, _tabs[i], currentIndex == i),
+                  child: _buildButton(
+                    context,
+                    i,
+                    widget.tabs[i],
+                    currentIndex == i,
+                  ),
                 ),
               ),
             ),
@@ -51,7 +61,7 @@ class _MerchantBottomNavbarState extends State<MerchantBottomNavbar> {
   Widget _buildButton(
     BuildContext context,
     int index,
-    _TabItem tab,
+    BottomNavBarItem tab,
     bool selected,
   ) {
     return GestureDetector(
@@ -115,11 +125,4 @@ class _MerchantBottomNavbarState extends State<MerchantBottomNavbar> {
       widget.shell.goBranch(index);
     }
   }
-}
-
-class _TabItem {
-  const _TabItem({required this.label, required this.icon});
-
-  final String label;
-  final IconData icon;
 }

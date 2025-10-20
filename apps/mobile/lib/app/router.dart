@@ -1,7 +1,9 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
 
 enum Routes {
   authSplash('/auth'),
@@ -37,7 +39,7 @@ enum Routes {
 }
 
 final router = GoRouter(
-  initialLocation: Routes.authSplash.path,
+  initialLocation: Routes.userHome.path,
   routes: [
     ShellRoute(
       builder: (context, state, child) => child,
@@ -115,7 +117,15 @@ final router = GoRouter(
           BlocProvider(create: (_) => sl<MerchantCubit>()..init()),
           BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
         ],
-        child: MerchantBottomNavbar(shell: navigationShell),
+        child: BottomNavbar(
+          shell: navigationShell,
+          tabs: const [
+            BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+            BottomNavBarItem(label: 'Order', icon: LucideIcons.book),
+            BottomNavBarItem(label: 'Menu', icon: LucideIcons.listOrdered),
+            BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+          ],
+        ),
       ),
       branches: [
         StatefulShellBranch(
