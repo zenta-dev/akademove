@@ -6,18 +6,14 @@ import type {
 import { getFileExtension } from "@repo/shared";
 import { count, eq, gt, ilike } from "drizzle-orm";
 import { v7 } from "uuid";
-import {
-	CACHE_PREFIXES,
-	CACHE_TTLS,
-	type StorageBucket,
-} from "@/core/constants";
+import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
-import { log } from "@/utils";
+import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { MerchantMenuSortBySchema } from "./merchant-menu-spec";
 
 interface CountCache {
@@ -33,11 +29,11 @@ interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
 }
 
+const bucket = "merchant-menu";
 export class MerchantMenuRepository {
 	readonly #db: DatabaseService;
 	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
-	readonly #bucket: StorageBucket = "merchant-menu";
 
 	constructor(
 		db: DatabaseService,
@@ -53,12 +49,13 @@ export class MerchantMenuRepository {
 		return `${CACHE_PREFIXES.MERCHANT_MENU}${id}`;
 	}
 
-	private async composeEntity(
+	static async composeEntity(
 		item: MerchantMenuDatabase,
+		storage: StorageService,
 	): Promise<MerchantMenuWithImage> {
 		const image = item.image
-			? this.#storage.getPublicUrl({
-					bucket: this.#bucket,
+			? storage.getPublicUrl({
+					bucket,
 					key: item.image,
 				})
 			: undefined;
@@ -67,6 +64,7 @@ export class MerchantMenuRepository {
 			...item,
 			category: item.category ?? undefined,
 			imageId: item.image ?? undefined,
+			price: toNumberSafe(item.price),
 			image,
 		};
 	}
@@ -86,7 +84,9 @@ export class MerchantMenuRepository {
 			const result = await this.#db.query.merchantMenu.findFirst({
 				where: eq(tables.merchantMenu.id, id),
 			});
-			return result ? await this.composeEntity(result) : null;
+			return result
+				? await MerchantMenuRepository.composeEntity(result, this.#storage)
+				: null;
 		} catch (error) {
 			log.error({ id, error }, "Failed to get from DB");
 			return null;
@@ -172,7 +172,9 @@ export class MerchantMenuRepository {
 				});
 
 				const rows = await Promise.all(
-					result.map((r) => this.composeEntity(r)),
+					result.map((r) =>
+						MerchantMenuRepository.composeEntity(r, this.#storage),
+					),
 				);
 				return { rows };
 			}
@@ -197,7 +199,9 @@ export class MerchantMenuRepository {
 				});
 
 				const rows = await Promise.all(
-					result.map((r) => this.composeEntity(r)),
+					result.map((r) =>
+						MerchantMenuRepository.composeEntity(r, this.#storage),
+					),
 				);
 
 				const totalCount = query
@@ -210,7 +214,11 @@ export class MerchantMenuRepository {
 			}
 
 			const result = await this.#db.query.merchantMenu.findMany();
-			const rows = await Promise.all(result.map((r) => this.composeEntity(r)));
+			const rows = await Promise.all(
+				result.map((r) =>
+					MerchantMenuRepository.composeEntity(r, this.#storage),
+				),
+			);
 			return { rows };
 		} catch (error) {
 			log.error({ error }, "Failed to list merchant menus");
@@ -255,12 +263,17 @@ export class MerchantMenuRepository {
 			const [operation] = await Promise.all([
 				this.#db
 					.insert(tables.merchantMenu)
-					.values({ ...item, id, image: imageKey })
+					.values({
+						...item,
+						id,
+						image: imageKey,
+						price: toStringNumberSafe(item.price),
+					})
 					.returning()
 					.then((r) => r[0]),
 				imageFile && imageKey
 					? this.#storage.upload({
-							bucket: this.#bucket,
+							bucket,
 							key: imageKey,
 							file: imageFile,
 							isPublic: true,
@@ -272,7 +285,10 @@ export class MerchantMenuRepository {
 				throw new RepositoryError("Failed to insert merchant menu into DB");
 			}
 
-			const result = await this.composeEntity(operation);
+			const result = await MerchantMenuRepository.composeEntity(
+				operation,
+				this.#storage,
+			);
 			const currentCount = await this.getTotalRow();
 
 			await Promise.all([
@@ -306,7 +322,7 @@ export class MerchantMenuRepository {
 				: undefined;
 			const uploadPromise = imageFile
 				? this.#storage.upload({
-						bucket: this.#bucket,
+						bucket,
 						key: key ?? `MM-${id}.${getFileExtension(imageFile)}`,
 						file: imageFile,
 						isPublic: true,
@@ -318,6 +334,7 @@ export class MerchantMenuRepository {
 					.update(tables.merchantMenu)
 					.set({
 						...item,
+						price: item.price ? toStringNumberSafe(item.price) : undefined,
 						image: existing.imageId ?? key,
 						createdAt: new Date(existing.createdAt),
 						updatedAt: new Date(),
@@ -332,7 +349,10 @@ export class MerchantMenuRepository {
 				throw new RepositoryError("Failed to update merchant menu in DB");
 			}
 
-			const result = await this.composeEntity(operation);
+			const result = await MerchantMenuRepository.composeEntity(
+				operation,
+				this.#storage,
+			);
 			await this.setCache(id, result);
 			return result;
 		} catch (error) {
@@ -362,7 +382,7 @@ export class MerchantMenuRepository {
 					.returning({ id: tables.merchantMenu.id }),
 				existing.imageId
 					? this.#storage.delete({
-							bucket: this.#bucket,
+							bucket,
 							key: existing.imageId,
 						})
 					: Promise.resolve(),

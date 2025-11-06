@@ -25,6 +25,14 @@ export const PaymentSchema = z
 	})
 	.meta({ title: "Payment" });
 
+export const InsertPaymentSchema = PaymentSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+}).meta({
+	title: "InsertPayment",
+});
+
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
 	provider: true,
@@ -57,6 +65,7 @@ export const WebhookRequestSchema = z
 export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 export type Payment = z.infer<typeof PaymentSchema>;
+export type InsertPayment = z.infer<typeof InsertPaymentSchema>;
 export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 export type PayRequest = z.infer<typeof PayRequestSchema>;
 export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
@@ -65,6 +74,7 @@ export const PaymentSchemaRegistries = {
 	PaymentProvider: { schema: PaymentProviderSchema, strategy: "output" },
 	PaymentMethod: { schema: PaymentMethodSchema, strategy: "output" },
 	Payment: { schema: PaymentSchema, strategy: "output" },
+	InsertPayment: { schema: InsertPaymentSchema, strategy: "input" },
 	TopUpRequest: { schema: TopUpRequestSchema, strategy: "input" },
 	PayRequest: { schema: PayRequestSchema, strategy: "input" },
 	TransferRequest: { schema: TransferRequestSchema, strategy: "input" },

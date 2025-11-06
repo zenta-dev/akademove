@@ -41,8 +41,9 @@ export class DriverRepository {
 		return `${CACHE_PREFIXES.DRIVER}${id}`;
 	}
 
-	private async composeEntity(
+	static async composeEntity(
 		item: DriverDatabase & { user: Partial<User> },
+		storage: StorageService,
 	): Promise<
 		Driver & {
 			studentCardId: string;
@@ -50,17 +51,18 @@ export class DriverRepository {
 			vehicleCertificateId: string;
 		}
 	> {
+		const bucket = "driver";
 		const [studentCard, driverLicense, vehicleCertificate] = await Promise.all([
-			this.#storage.getPresignedUrl({
-				bucket: this.#bucket,
+			storage.getPresignedUrl({
+				bucket: bucket,
 				key: item.studentCard,
 			}),
-			this.#storage.getPresignedUrl({
-				bucket: this.#bucket,
+			storage.getPresignedUrl({
+				bucket: bucket,
 				key: item.driverLicense,
 			}),
-			this.#storage.getPresignedUrl({
-				bucket: this.#bucket,
+			storage.getPresignedUrl({
+				bucket: bucket,
 				key: item.vehicleCertificate,
 			}),
 		]);
@@ -99,7 +101,9 @@ export class DriverRepository {
 			where: (f, op) => op.eq(f.id, id),
 		});
 
-		return result ? await this.composeEntity(result) : undefined;
+		return result
+			? await DriverRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
 	private async setCache(id: string, data: Driver | undefined) {
@@ -136,7 +140,9 @@ export class DriverRepository {
 			}
 
 			const result = await stmt;
-			return await Promise.all(result.map((r) => this.composeEntity(r)));
+			return await Promise.all(
+				result.map((r) => DriverRepository.composeEntity(r, this.#storage)),
+			);
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -180,7 +186,10 @@ export class DriverRepository {
 
 			return await Promise.all(
 				result.map((r) =>
-					this.composeEntity({ ...r.driver, user: { name: r.userName } }),
+					DriverRepository.composeEntity(
+						{ ...r.driver, user: { name: r.userName } },
+						this.#storage,
+					),
 				),
 			);
 		} catch (error) {
@@ -218,7 +227,7 @@ export class DriverRepository {
 
 			if (!result) throw new RepositoryError("Failed to get merchant from DB");
 
-			return await this.composeEntity(result);
+			return await DriverRepository.composeEntity(result, this.#storage);
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -305,7 +314,10 @@ export class DriverRepository {
 				}),
 			]);
 
-			const result = await this.composeEntity({ ...operation, user });
+			const result = await DriverRepository.composeEntity(
+				{ ...operation, user },
+				this.#storage,
+			);
 			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
@@ -365,7 +377,10 @@ export class DriverRepository {
 				...uploads,
 			]);
 
-			const result = await this.composeEntity({ ...operation, user });
+			const result = await DriverRepository.composeEntity(
+				{ ...operation, user },
+				this.#storage,
+			);
 			await this.setCache(id, result);
 			return result;
 		} catch (error) {

@@ -1,12 +1,13 @@
 import type { Coupon, InsertCoupon, UpdateCoupon } from "@repo/schema/coupon";
 import { eq } from "drizzle-orm";
+import { v7 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
-import { log } from "@/utils";
+import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class CouponRepository {
 	#db: DatabaseService;
@@ -21,10 +22,12 @@ export class CouponRepository {
 		return `${CACHE_PREFIXES.COUPON}${id}`;
 	}
 
-	#composeEntity(item: CouponDatabase): Coupon {
+	static composeEntity(item: CouponDatabase): Coupon {
 		return {
 			...item,
-			discountAmount: item.discountAmount ?? undefined,
+			discountAmount: item.discountAmount
+				? toNumberSafe(item.discountAmount)
+				: undefined,
 			discountPercentage: item.discountPercentage ?? undefined,
 		};
 	}
@@ -41,7 +44,7 @@ export class CouponRepository {
 		const result = await this.#db.query.coupon.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? CouponRepository.composeEntity(result) : undefined;
 	}
 
 	async #setCache(id: string, data: Coupon | undefined): Promise<void> {
@@ -80,7 +83,7 @@ export class CouponRepository {
 			}
 
 			const result = await stmt;
-			return result.map((item) => this.#composeEntity(item));
+			return result.map((item) => CouponRepository.composeEntity(item));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -113,7 +116,11 @@ export class CouponRepository {
 				.insert(tables.coupon)
 				.values({
 					...item,
+					id: v7(),
 					usedCount: 0,
+					discountAmount: item.discountAmount
+						? toStringNumberSafe(item.discountAmount)
+						: undefined,
 					periodStart: new Date(item.periodStart),
 					periodEnd: new Date(item.periodEnd),
 					createdById: item.userId,
@@ -121,7 +128,7 @@ export class CouponRepository {
 				})
 				.returning();
 
-			const result = this.#composeEntity(operation);
+			const result = CouponRepository.composeEntity(operation);
 			await this.#setCache(result.id, result);
 			return result;
 		} catch (error) {
@@ -140,8 +147,10 @@ export class CouponRepository {
 			const [operation] = await this.#db
 				.update(tables.coupon)
 				.set({
-					...existing,
 					...item,
+					discountAmount: item.discountAmount
+						? toStringNumberSafe(item.discountAmount)
+						: undefined,
 					periodStart: new Date(item.periodStart ?? existing.periodStart),
 					periodEnd: new Date(item.periodEnd ?? existing.periodEnd),
 					createdAt: new Date(existing.createdAt),
@@ -149,7 +158,7 @@ export class CouponRepository {
 				.where(eq(tables.coupon.id, id))
 				.returning();
 
-			const result = this.#composeEntity(operation);
+			const result = CouponRepository.composeEntity(operation);
 			await this.#setCache(id, result);
 			return result;
 		} catch (error) {

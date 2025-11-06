@@ -40,6 +40,7 @@ import type { PaymentService } from "@/core/services/payment";
 import type { OrderDatabase } from "@/core/tables/order";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
+import { PaymentRepository } from "../payment/payment-repository";
 import type { WalletRepository } from "../wallet/wallet-repository";
 
 export class OrderRepository {
@@ -64,7 +65,7 @@ export class OrderRepository {
 		return `${CACHE_PREFIXES.ORDER}${id}`;
 	}
 
-	#composeEntity(
+	static composeEntity(
 		item: OrderDatabase & {
 			user: Partial<User> | null;
 			driver: Partial<Driver> | null;
@@ -108,7 +109,7 @@ export class OrderRepository {
 			},
 			where: (f, op) => op.eq(f.id, params.id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? OrderRepository.composeEntity(result) : undefined;
 	}
 
 	async #setCache(id: string, data: Order | undefined) {
@@ -236,7 +237,7 @@ export class OrderRepository {
 			}
 
 			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			return result.map((r) => OrderRepository.composeEntity(r));
 		} catch (error) {
 			log.error({ detail: error }, "Failed to list order");
 			if (error instanceof RepositoryError) throw error;
@@ -469,7 +470,7 @@ export class OrderRepository {
 			});
 			if (!order) throw new RepositoryError("Failed to place order");
 
-			const payment = this.#wallet.composePayment(paymentResult);
+			const payment = PaymentRepository.composePayment(paymentResult);
 			await this.#setCache(order.id, order);
 
 			return { order, payment };

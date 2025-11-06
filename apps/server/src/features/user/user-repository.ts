@@ -3,31 +3,50 @@ import { eq } from "drizzle-orm";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
+import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import { log } from "@/utils";
 
+const BUCKET = "user";
+
 export class UserRepository {
 	#db: DatabaseService;
+	#storage: StorageService;
 
-	constructor(db: DatabaseService) {
+	constructor(db: DatabaseService, storage: StorageService) {
 		this.#db = db;
+		this.#storage = storage;
 	}
 
-	#composeEntity(_item: UserDatabase): User {
-		throw new Error("UNIMPLEMETED");
-		// return {
-		// 	...item,
-		// 	image: item.image ?? undefined,
-		// 	banReason: item.banReason ?? undefined,
-		// 	banExpires: item.banExpires ?? undefined,
-		// };
+	static async composeEntity(
+		user: UserDatabase,
+		storage: StorageService,
+		options?: { expiresIn?: number },
+	): Promise<User> {
+		let image: string | undefined;
+		if (user.image) {
+			image = await storage.getPresignedUrl({
+				bucket: BUCKET,
+				key: user.image,
+				expiresIn: options?.expiresIn,
+			});
+		}
+		return {
+			...user,
+			image,
+			banReason: user.banReason ?? undefined,
+			banExpires: user.banExpires ?? undefined,
+			gender: user.gender ?? undefined,
+		};
 	}
 
 	async #getFromDB(id: string): Promise<User | undefined> {
 		const result = await this.#db.query.user.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result
+			? UserRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
 	async list(requesterId: string, opts?: GetAllOptions): Promise<User[]> {
@@ -55,7 +74,11 @@ export class UserRepository {
 			}
 
 			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			const promises = result.map((r) =>
+				UserRepository.composeEntity(r, this.#storage),
+			);
+
+			return Promise.all(promises);
 		} catch (error) {
 			log.error(error);
 			throw new RepositoryError("Failed to list users");
@@ -78,7 +101,7 @@ export class UserRepository {
 		// try {
 		// 	const { user } = await this.#auth.api.createUser({ body: item });
 
-		// 	const result = this.#composeEntity({
+		// 	const result = UserRepository.composeEntity({,this.#storage
 		// 		...user,
 		// 		role: (user.role ?? "user") as UserRole,
 		// 		image: user.image ?? null,
@@ -114,7 +137,7 @@ export class UserRepository {
 		// 			body: { userId: id, role: item.role },
 		// 			headers,
 		// 		});
-		// 		result = this.#composeEntity({
+		// 		result = UserRepository.composeEntity({,this.#storage
 		// 			...user,
 		// 			role: (user.role ?? "user") as UserRole,
 		// 			image: user.image ?? null,

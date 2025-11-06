@@ -18,10 +18,10 @@ import { v7 } from "uuid";
 import { RepositoryError } from "@/core/error";
 import { type DatabaseTransaction, tables } from "@/core/services/db";
 import type { PaymentService } from "@/core/services/payment";
-import type { PaymentDatabase } from "@/core/tables/payment";
-import type { TransactionDatabase } from "@/core/tables/transaction";
 import type { WalletDatabase } from "@/core/tables/wallet";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { PaymentRepository } from "../payment/payment-repository";
+import { TransactionRepository } from "../transaction/transaction-repository";
 
 interface WalletBasePayload {
 	tx: DatabaseTransaction;
@@ -50,34 +50,8 @@ export class WalletRepository {
 		this.#payment = payment;
 	}
 
-	#composeWallet(item: WalletDatabase): Wallet {
+	composeEntity(item: WalletDatabase): Wallet {
 		return { ...item, balance: toNumberSafe(item.balance) };
-	}
-
-	#composeWalletTransaction(item: TransactionDatabase): Transaction {
-		return {
-			...item,
-			amount: toNumberSafe(item.amount),
-			balanceBefore: item.balanceBefore
-				? toNumberSafe(item.balanceBefore)
-				: undefined,
-			balanceAfter: item.balanceAfter
-				? toNumberSafe(item.balanceAfter)
-				: undefined,
-			description: item.description ? item.description : undefined,
-			referenceId: item.referenceId ? item.referenceId : undefined,
-		};
-	}
-
-	composePayment(item: PaymentDatabase): Payment {
-		return {
-			...item,
-			amount: toNumberSafe(item.amount),
-			transactionId: item.transactionId ? item.transactionId : undefined,
-			externalId: item.externalId ? item.externalId : undefined,
-			paymentUrl: item.paymentUrl ? item.paymentUrl : undefined,
-			expiresAt: item.expiresAt ? item.expiresAt : undefined,
-		};
 	}
 
 	async ensureWallet(payload: WalletGetPayload): Promise<Wallet> {
@@ -91,7 +65,7 @@ export class WalletRepository {
 					.values({ id: v7(), userId: payload.userId })
 					.returning();
 			}
-			return this.#composeWallet(wallet);
+			return this.composeEntity(wallet);
 		} catch (error) {
 			log.error({ error }, "Failed to ensure wallet");
 			if (error instanceof RepositoryError) throw error;
@@ -130,7 +104,7 @@ export class WalletRepository {
 				}),
 			);
 			if (!res.data) return [];
-			return res.data.transactions.map(this.#composeWalletTransaction);
+			return res.data.transactions.map(TransactionRepository.composeEntity);
 		} catch (error) {
 			log.error({ error }, "Failed to get transactions");
 			if (error instanceof RepositoryError) throw error;
@@ -300,7 +274,7 @@ export class WalletRepository {
 				})
 				.returning();
 
-			return this.composePayment(payment);
+			return PaymentRepository.composePayment(payment);
 		} catch (error) {
 			log.error({ error }, "Failed to get wallet");
 			if (error instanceof RepositoryError) throw error;
@@ -380,7 +354,7 @@ export class WalletRepository {
 				})
 				.returning();
 
-			return this.composePayment(payment);
+			return PaymentRepository.composePayment(payment);
 		} catch (error) {
 			log.error({ error }, "Failed to get wallet");
 			if (error instanceof RepositoryError) throw error;
@@ -500,8 +474,8 @@ export class WalletRepository {
 					to: "client",
 					payload: {
 						status: "success",
-						wallet: this.#composeWallet(newWallet),
-						transaction: this.#composeWalletTransaction(newTransaction),
+						wallet: this.composeEntity(newWallet),
+						transaction: TransactionRepository.composeEntity(newTransaction),
 					},
 				});
 			}

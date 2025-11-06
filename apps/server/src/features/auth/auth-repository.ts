@@ -20,10 +20,12 @@ import {
 } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
-import type { UserDatabase } from "@/core/tables/auth";
 import { log } from "@/utils";
 import type { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
+import { UserRepository } from "../user/user-repository";
+
+const BUCKET = "user";
 
 export class AuthRepository {
 	readonly #db: DatabaseService;
@@ -45,20 +47,6 @@ export class AuthRepository {
 		this.#storage = storage;
 		this.#jwt = jwt;
 		this.#pw = new PasswordManager();
-	}
-
-	private async composeUser(
-		user: UserDatabase,
-		options?: { expiresIn?: number },
-	) {
-		if (user.image) {
-			user.image = await this.#storage.getPresignedUrl({
-				bucket: "user",
-				key: user.image,
-				expiresIn: options?.expiresIn,
-			});
-		}
-		return user;
 	}
 
 	private composeKey(id: string) {
@@ -109,7 +97,9 @@ export class AuthRepository {
 			log.debug(omittedUser, `${this.signIn.name} success`);
 			return {
 				token,
-				user: await this.composeUser(omittedUser, { expiresIn: 604800 }),
+				user: await UserRepository.composeEntity(omittedUser, this.#storage, {
+					expiresIn: 604800,
+				}),
 			};
 		} catch (error) {
 			log.error(error, `${this.signIn.name} failed`);
@@ -191,7 +181,7 @@ export class AuthRepository {
 			if (photoKey && params.photo) {
 				promises.push(
 					this.#storage.upload({
-						bucket: "user",
+						bucket: BUCKET,
 						key: photoKey,
 						file: params.photo,
 					}),
@@ -200,7 +190,7 @@ export class AuthRepository {
 
 			await Promise.all(promises);
 
-			return { user: await this.composeUser(user) };
+			return { user: await UserRepository.composeEntity(user, this.#storage) };
 		} catch (error) {
 			log.error(error, `${this.signUp.name} failed`);
 			if (error instanceof BaseError) throw error;
@@ -288,7 +278,7 @@ export class AuthRepository {
 			}
 
 			return {
-				user: await this.composeUser(user),
+				user: await UserRepository.composeEntity(user, this.#storage),
 				token: newToken,
 				payload,
 			};

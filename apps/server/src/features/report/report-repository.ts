@@ -1,5 +1,6 @@
 import type { InsertReport, Report, UpdateReport } from "@repo/schema/report";
 import { eq } from "drizzle-orm";
+import { v7 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
@@ -21,7 +22,7 @@ export class ReportRepository {
 		return `${CACHE_PREFIXES.REPORT}${id}`;
 	}
 
-	#composeEntity(item: ReportDatabase): Report {
+	static composeEntity(item: ReportDatabase): Report {
 		return {
 			...item,
 			orderId: item.orderId ?? undefined,
@@ -44,7 +45,7 @@ export class ReportRepository {
 		const result = await this.#db.query.report.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? ReportRepository.composeEntity(result) : undefined;
 	}
 
 	async #setCache(id: string, data: Report | undefined): Promise<void> {
@@ -82,7 +83,7 @@ export class ReportRepository {
 			}
 
 			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			return result.map((r) => ReportRepository.composeEntity(r));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -113,10 +114,10 @@ export class ReportRepository {
 		try {
 			const [operation] = await this.#db
 				.insert(tables.report)
-				.values(item)
+				.values({ ...item, id: v7() })
 				.returning();
 
-			const result = this.#composeEntity(operation);
+			const result = ReportRepository.composeEntity(operation);
 			await this.#setCache(result.id, result);
 
 			return result;
@@ -149,7 +150,7 @@ export class ReportRepository {
 				.where(eq(tables.report.id, id))
 				.returning();
 
-			const result = this.#composeEntity(operation);
+			const result = ReportRepository.composeEntity(operation);
 			await this.#setCache(id, result);
 
 			return result;

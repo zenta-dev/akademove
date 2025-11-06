@@ -9,9 +9,11 @@ import type { DriverRepository } from "@/features/driver/driver-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
+import type { PaymentRepository } from "@/features/payment/payment-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
 import type { DriverScheduleRepository } from "@/features/schedule/schedule-repository";
+import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserRepository } from "@/features/user/user-repository";
 import type { WalletRepository } from "@/features/wallet/wallet-repository";
 import type { JwtManager } from "@/utils/jwt";
@@ -55,11 +57,13 @@ export interface RepositoryContext {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
 	};
+	payment: PaymentRepository;
 	order: OrderRepository;
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
 	schedule: DriverScheduleRepository;
+	transaction: TransactionRepository;
 	user: UserRepository;
 	wallet: WalletRepository;
 }

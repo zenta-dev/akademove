@@ -1,8 +1,6 @@
 export * from "./order/order-ws";
 export * from "./wallet/wallet-ws";
 
-import { env } from "cloudflare:workers";
-import { upgradeDurableIteratorRequest } from "@orpc/experimental-durable-iterator/durable-object";
 import type { Hono } from "hono";
 import type { HonoContext } from "@/core/interface";
 import {
@@ -71,10 +69,4 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 			const req = withQueryParams(c.req.raw, { userId });
 
 			return await stub.fetch(req);
-		})
-		.get("/ws/pg", async (c) => {
-			return upgradeDurableIteratorRequest(c.req.raw, {
-				signingKey: "key",
-				namespace: env.PLAYGROUND_ROOM,
-			});
 		});

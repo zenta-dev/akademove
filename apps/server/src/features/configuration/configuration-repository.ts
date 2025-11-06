@@ -24,7 +24,7 @@ export class ConfigurationRepository {
 		return `${CACHE_PREFIXES.CONFIGURATION}${key}`;
 	}
 
-	#composeEntity(item: ConfigurationDatabase): Configuration {
+	static composeEntity(item: ConfigurationDatabase): Configuration {
 		return {
 			...item,
 			description: item?.description ?? undefined,
@@ -43,7 +43,7 @@ export class ConfigurationRepository {
 		const result = await this.#db.query.configuration.findFirst({
 			where: (f, op) => op.eq(f.key, key),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? ConfigurationRepository.composeEntity(result) : undefined;
 	}
 
 	async #setCache(key: string, data: Configuration | undefined) {
@@ -82,7 +82,7 @@ export class ConfigurationRepository {
 			}
 
 			const result = await stmt;
-			return result.map((item) => this.#composeEntity(item));
+			return result.map((item) => ConfigurationRepository.composeEntity(item));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -137,7 +137,7 @@ export class ConfigurationRepository {
 				safeAsync(this.#kv.delete(key)),
 			]);
 
-			const result = this.#composeEntity(operation);
+			const result = ConfigurationRepository.composeEntity(operation);
 			await safeAsync(
 				Promise.all([
 					this.#setCache(key, result),

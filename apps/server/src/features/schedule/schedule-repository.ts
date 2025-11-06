@@ -4,6 +4,7 @@ import type {
 	UpdateDriverSchedule,
 } from "@repo/schema/driver";
 import { eq } from "drizzle-orm";
+import { v7 } from "uuid";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
@@ -117,6 +118,7 @@ export class DriverScheduleRepository {
 				.insert(tables.driverSchedule)
 				.values({
 					...item,
+					id: v7(),
 					specificDate: item.specificDate ? new Date(item.specificDate) : null,
 				})
 				.returning();

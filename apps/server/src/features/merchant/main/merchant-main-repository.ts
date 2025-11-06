@@ -6,11 +6,7 @@ import type {
 import { getFileExtension } from "@repo/shared";
 import { eq, sql } from "drizzle-orm";
 import { v7 } from "uuid";
-import {
-	CACHE_PREFIXES,
-	CACHE_TTLS,
-	type StorageBucket,
-} from "@/core/constants";
+import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
 import {
@@ -23,12 +19,13 @@ import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 import { log } from "@/utils";
 
+const PRIV_BUCKET = "merchant-priv";
+const PUB_BUCKET = "merchant";
+
 export class MerchantMainRepository {
 	readonly #db: DatabaseService;
 	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
-	readonly #privBucket: StorageBucket = "merchant-priv";
-	readonly #pubBucket: StorageBucket = "merchant";
 
 	constructor(
 		db: DatabaseService,
@@ -44,18 +41,19 @@ export class MerchantMainRepository {
 		return `${CACHE_PREFIXES.MERCHANT}${id}`;
 	}
 
-	private async composeEntity(
+	static async composeEntity(
 		item: MerchantDatabase,
+		storage: StorageService,
 	): Promise<Merchant & { documentId?: string; imageId?: string }> {
 		const document = item.document
-			? await this.#storage.getPresignedUrl({
-					bucket: this.#privBucket,
+			? await storage.getPresignedUrl({
+					bucket: PRIV_BUCKET,
 					key: item.document,
 				})
 			: undefined;
 		const image = item.image
-			? this.#storage.getPublicUrl({
-					bucket: this.#pubBucket,
+			? storage.getPublicUrl({
+					bucket: PUB_BUCKET,
 					key: item.image,
 				})
 			: undefined;
@@ -87,7 +85,9 @@ export class MerchantMainRepository {
 		const result = await this.#db.query.merchant.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? await this.composeEntity(result) : undefined;
+		return result
+			? await MerchantMainRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
 	private async setCache(
@@ -124,7 +124,11 @@ export class MerchantMainRepository {
 			}
 
 			const result = await stmt;
-			return await Promise.all(result.map((r) => this.composeEntity(r)));
+			return await Promise.all(
+				result.map((r) =>
+					MerchantMainRepository.composeEntity(r, this.#storage),
+				),
+			);
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -159,7 +163,7 @@ export class MerchantMainRepository {
 
 			if (!result) throw new RepositoryError("Failed to get merchant from DB");
 
-			return await this.composeEntity(result);
+			return await MerchantMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -253,7 +257,11 @@ export class MerchantMainRepository {
 				.map((r) => merchantMap.get(r.merchant_id))
 				.filter(Boolean);
 
-			return await Promise.all(ordered.map((m) => this.composeEntity(m!)));
+			return await Promise.all(
+				ordered.map((m) =>
+					MerchantMainRepository.composeEntity(m!, this.#storage),
+				),
+			);
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
@@ -285,21 +293,24 @@ export class MerchantMainRepository {
 					.then((r) => r[0]),
 				doc && docKey
 					? this.#storage.upload({
-							bucket: this.#privBucket,
+							bucket: PRIV_BUCKET,
 							key: docKey,
 							file: doc,
 						})
 					: Promise.resolve(),
 				image && imageKey
 					? this.#storage.upload({
-							bucket: this.#pubBucket,
+							bucket: PUB_BUCKET,
 							key: imageKey,
 							file: image,
 						})
 					: Promise.resolve(),
 			]);
 
-			const result = await this.composeEntity(operation);
+			const result = await MerchantMainRepository.composeEntity(
+				operation,
+				this.#storage,
+			);
 			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
@@ -335,21 +346,24 @@ export class MerchantMainRepository {
 					.then((r) => r[0]),
 				doc && docKey
 					? this.#storage.upload({
-							bucket: this.#privBucket,
+							bucket: PRIV_BUCKET,
 							key: docKey,
 							file: doc,
 						})
 					: Promise.resolve(),
 				image && imageKey
 					? this.#storage.upload({
-							bucket: this.#pubBucket,
+							bucket: PUB_BUCKET,
 							key: imageKey,
 							file: image,
 						})
 					: Promise.resolve(),
 			]);
 
-			const result = await this.composeEntity(operation);
+			const result = await MerchantMainRepository.composeEntity(
+				operation,
+				this.#storage,
+			);
 			await this.setCache(id, result);
 			return result;
 		} catch (error) {
@@ -371,13 +385,13 @@ export class MerchantMainRepository {
 					.returning({ id: tables.merchant.id }),
 				find.documentId
 					? this.#storage.delete({
-							bucket: this.#privBucket,
+							bucket: PRIV_BUCKET,
 							key: find.documentId,
 						})
 					: Promise.resolve(),
 				find.imageId
 					? this.#storage.delete({
-							bucket: this.#pubBucket,
+							bucket: PUB_BUCKET,
 							key: find.imageId,
 						})
 					: Promise.resolve(),
