@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { ConfigurationSpec } from "./configuration-spec";
 
-const os = implement(ConfigurationSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(ConfigurationSpec);
 
-export const ConfigurationHandler = os.router({
-	list: os.list
+export const ConfigurationHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ configurations: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.configuration.list(query);
@@ -25,7 +17,7 @@ export const ConfigurationHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ configurations: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.configuration.get(params.key);
@@ -37,7 +29,7 @@ export const ConfigurationHandler = os.router({
 				},
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ configurations: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.configuration.update(params.key, body);

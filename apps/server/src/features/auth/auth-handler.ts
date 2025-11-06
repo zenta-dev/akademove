@@ -1,4 +1,3 @@
-import { implement } from "@orpc/server";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
@@ -7,18 +6,14 @@ import {
 	trimObjectValues,
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
-import type { ORPCContext } from "@/core/interface";
-import {
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { isDev } from "@/utils";
 import { AuthSpec } from "./auth-spec";
 
-const os = implement(AuthSpec).$context<ORPCContext>();
+const { pub, priv } = createORPCRouter(AuthSpec);
 
-export const AuthHandler = os.router({
-	signIn: os.signIn.handler(async ({ context, input: { body } }) => {
+export const AuthHandler = pub.router({
+	signIn: pub.signIn.handler(async ({ context, input: { body } }) => {
 		const result = await context.repo.auth.signIn({
 			...body,
 		});
@@ -40,7 +35,7 @@ export const AuthHandler = os.router({
 			},
 		} as const;
 	}),
-	signUpUser: os.signUpUser.handler(async ({ context, input: { body } }) => {
+	signUpUser: pub.signUpUser.handler(async ({ context, input: { body } }) => {
 		const unflatten = trimObjectValues(unflattenData(body));
 		return await context.svc.db.transaction(async (tx) => {
 			try {
@@ -68,7 +63,7 @@ export const AuthHandler = os.router({
 			}
 		});
 	}),
-	signUpDriver: os.signUpDriver.handler(
+	signUpDriver: pub.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
 			const unflatten = trimObjectValues(unflattenData(body));
 			return await context.svc.db.transaction(async (tx) => {
@@ -102,7 +97,7 @@ export const AuthHandler = os.router({
 			});
 		},
 	),
-	signUpMerchant: os.signUpMerchant.handler(
+	signUpMerchant: pub.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
 			const unflatten = trimObjectValues(unflattenData(body));
 
@@ -140,7 +135,7 @@ export const AuthHandler = os.router({
 			});
 		},
 	),
-	signOut: os.signOut.use(orpcAuthMiddleware).handler(async ({ context }) => {
+	signOut: priv.signOut.handler(async ({ context }) => {
 		context.resHeaders?.set(
 			"Set-Cookie",
 			composeAuthCookieValue({
@@ -166,37 +161,35 @@ export const AuthHandler = os.router({
 			},
 		} as const;
 	}),
-	getSession: os.getSession
-		.use(orpcAuthMiddleware)
-		.handler(async ({ context }) => {
-			if (!context.token) {
-				throw new AuthError("Invalid authentication token.", {
-					code: "BAD_REQUEST",
-				});
-			}
+	getSession: priv.getSession.handler(async ({ context }) => {
+		if (!context.token) {
+			throw new AuthError("Invalid authentication token.", {
+				code: "BAD_REQUEST",
+			});
+		}
 
-			const result = await context.repo.auth.getSession(context.token);
+		const result = await context.repo.auth.getSession(context.token);
 
-			if (result.token) {
-				context.resHeaders?.set(
-					"Set-Cookie",
-					composeAuthCookieValue({
-						token: result.token,
-						isDev,
-						maxAge: 7 * 24 * 60 * 60,
-					}),
-				);
-			}
+		if (result.token) {
+			context.resHeaders?.set(
+				"Set-Cookie",
+				composeAuthCookieValue({
+					token: result.token,
+					isDev,
+					maxAge: 7 * 24 * 60 * 60,
+				}),
+			);
+		}
 
-			return {
-				status: 200,
-				body: {
-					message: "Session retrieved successfully.",
-					data: nullToUndefined(result),
-				},
-			} as const;
-		}),
-	forgotPassword: os.forgotPassword.handler(
+		return {
+			status: 200,
+			body: {
+				message: "Session retrieved successfully.",
+				data: nullToUndefined(result),
+			},
+		} as const;
+	}),
+	forgotPassword: pub.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
 			await context.repo.auth.forgotPassword(body);
 
@@ -209,7 +202,7 @@ export const AuthHandler = os.router({
 			};
 		},
 	),
-	resetPassword: os.resetPassword.handler(
+	resetPassword: pub.resetPassword.handler(
 		async ({ context, input: { body } }) => {
 			await context.repo.auth.resetPassword(body);
 
@@ -222,10 +215,8 @@ export const AuthHandler = os.router({
 			} as const;
 		},
 	),
-	hasPermission: os.hasPermission
-		.use(orpcAuthMiddleware)
-		.use(orpcRequireAuthMiddleware)
-		.handler(async ({ context, input: { body } }) => {
+	hasPermission: priv.hasPermission.handler(
+		async ({ context, input: { body } }) => {
 			const ok = context.svc.rbac.hasPermission({
 				role: context.user.role,
 				permissions: body.permissions as Permissions,
@@ -238,24 +229,22 @@ export const AuthHandler = os.router({
 					data: ok,
 				},
 			} as const;
-		}),
-	exchangeToken: os
-		.use(orpcAuthMiddleware)
-		.use(orpcRequireAuthMiddleware)
-		.exchangeToken.handler(async ({ context }) => {
-			if (!context.user) {
-				throw new AuthError("Invalid session");
-			}
-			const token = await context.manager.jwt.signForWebSocket({
-				id: context.user.id,
-				role: context.user.role,
-			});
-			return {
-				status: 200,
-				body: {
-					message: "Successfully retrieved users data",
-					data: token,
-				},
-			};
-		}),
+		},
+	),
+	exchangeToken: priv.exchangeToken.handler(async ({ context }) => {
+		if (!context.user) {
+			throw new AuthError("Invalid session");
+		}
+		const token = await context.manager.jwt.signForWebSocket({
+			id: context.user.id,
+			role: context.user.role,
+		});
+		return {
+			status: 200,
+			body: {
+				message: "Successfully retrieved users data",
+				data: token,
+			},
+		};
+	}),
 });

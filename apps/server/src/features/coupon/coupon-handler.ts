@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { CouponSpec } from "./coupon-spec";
 
-const os = implement(CouponSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(CouponSpec);
 
-export const CouponHandler = os.router({
-	list: os.list
+export const CouponHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ coupon: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.coupon.list(query);
@@ -26,7 +18,7 @@ export const CouponHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ coupon: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.coupon.get(params.id);
@@ -36,7 +28,7 @@ export const CouponHandler = os.router({
 				body: { message: "Successfully retrieved coupon data", data: result },
 			};
 		}),
-	create: os.create
+	create: priv.create
 		.use(hasPermission({ coupon: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const result = await context.repo.coupon.create({
@@ -49,7 +41,7 @@ export const CouponHandler = os.router({
 				body: { message: "Coupon created successfully", data: result },
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.coupon.update(params.id, body);
@@ -59,7 +51,7 @@ export const CouponHandler = os.router({
 				body: { message: "Coupon updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.coupon.remove(params.id);

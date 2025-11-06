@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { OrderSpec } from "./order-spec";
 
-const os = implement(OrderSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(OrderSpec);
 
-export const OrderHandler = os.router({
-	list: os.list
+export const OrderHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ order: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			return await context.svc.db.transaction(async (tx) => {
@@ -73,7 +65,7 @@ export const OrderHandler = os.router({
 				};
 			});
 		}),
-	estimate: os.estimate.handler(async ({ context, input: { query } }) => {
+	estimate: priv.estimate.handler(async ({ context, input: { query } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			const res = await context.repo.order.estimate({
 				...query,
@@ -93,7 +85,7 @@ export const OrderHandler = os.router({
 			};
 		});
 	}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ order: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			return await context.svc.db.transaction(async (tx) => {
@@ -105,7 +97,7 @@ export const OrderHandler = os.router({
 				};
 			});
 		}),
-	placeOrder: os.placeOrder
+	placeOrder: priv.placeOrder
 		.use(hasPermission({ order: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
@@ -121,7 +113,7 @@ export const OrderHandler = os.router({
 				};
 			});
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ order: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {

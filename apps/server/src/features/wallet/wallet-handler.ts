@@ -1,13 +1,7 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { WalletSpec } from "./wallet-spec";
 
-const pub = implement(WalletSpec).$context<ORPCContext>();
-const priv = pub.use(orpcAuthMiddleware).use(orpcRequireAuthMiddleware);
+const { pub, priv } = createORPCRouter(WalletSpec);
 
 export const WalletHandler = pub.router({
 	get: priv.get.handler(async ({ context }) => {

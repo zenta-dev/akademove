@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMenuSpec } from "./merchant-menu-spec";
 
-const os = implement(MerchantMenuSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(MerchantMenuSpec);
 
-export const MerchantMenuHandler = os.router({
-	list: os.list
+export const MerchantMenuHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ merchantMenu: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.merchant.menu.list(query);
@@ -26,7 +18,7 @@ export const MerchantMenuHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ merchantMenu: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.merchant.menu.get(params.id);
@@ -39,7 +31,7 @@ export const MerchantMenuHandler = os.router({
 				},
 			};
 		}),
-	create: os.create
+	create: priv.create
 		.use(hasPermission({ merchantMenu: ["create"] }))
 		.handler(async ({ context, input: { body, params } }) => {
 			const result = await context.repo.merchant.menu.create({
@@ -52,7 +44,7 @@ export const MerchantMenuHandler = os.router({
 				body: { message: "MerchantMenu created successfully", data: result },
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ merchantMenu: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.merchant.menu.update(params.id, {
@@ -65,7 +57,7 @@ export const MerchantMenuHandler = os.router({
 				body: { message: "MerchantMenu updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ merchantMenu: ["delete"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.menu.remove(params.id);

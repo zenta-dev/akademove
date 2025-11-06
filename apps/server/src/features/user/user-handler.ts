@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { UserSpec } from "./user-spec";
 
-const os = implement(UserSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(UserSpec);
 
-export const UserHandler = os.router({
-	list: os.list
+export const UserHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ user: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.user.list(context.user.id, query);
@@ -26,7 +18,7 @@ export const UserHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ user: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.user.get(params.id);
@@ -36,7 +28,7 @@ export const UserHandler = os.router({
 				body: { message: "Successfully retrieved user data", data: result },
 			};
 		}),
-	create: os.create
+	create: priv.create
 		.use(hasPermission({ user: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const result = await context.repo.user.create(body);
@@ -46,7 +38,7 @@ export const UserHandler = os.router({
 				body: { message: "User created successfully", data: result },
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ user: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.user.update(
@@ -60,7 +52,7 @@ export const UserHandler = os.router({
 				body: { message: "User updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ user: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.user.remove(params.id);

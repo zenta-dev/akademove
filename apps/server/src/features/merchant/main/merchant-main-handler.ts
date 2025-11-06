@@ -1,20 +1,12 @@
-import { implement } from "@orpc/server";
 import { unflattenData } from "@repo/schema/flatten.helper";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMainSpec } from "./merchant-main-spec";
 
-const os = implement(MerchantMainSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(MerchantMainSpec);
 
-export const MerchantMainHandler = os.router({
-	getMine: os.getMine
+export const MerchantMainHandler = priv.router({
+	getMine: priv.getMine
 		.use(hasPermission({ merchant: ["get"] }))
 		.handler(async ({ context }) => {
 			const result = await context.repo.merchant.main.getByUserId(
@@ -26,7 +18,7 @@ export const MerchantMainHandler = os.router({
 				body: { message: "Successfully retrieved merchant data", data: result },
 			};
 		}),
-	list: os.list
+	list: priv.list
 		.use(hasPermission({ merchant: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.merchant.main.list(query);
@@ -39,7 +31,7 @@ export const MerchantMainHandler = os.router({
 				},
 			};
 		}),
-	populars: os.populars
+	populars: priv.populars
 		.use(hasPermission({ merchant: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			console.log("POPULARS MERCHANT => ", query);
@@ -54,7 +46,7 @@ export const MerchantMainHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ merchant: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			console.log("GET MERCHANT => ", params);
@@ -68,7 +60,7 @@ export const MerchantMainHandler = os.router({
 				},
 			};
 		}),
-	// create: os.create
+	// create: priv.create
 	// 	.use(hasPermission({ merchant: ["create"] }))
 	// 	.handler(async ({ context, input: { body } }) => {
 	// 		const result = await context.repo.merchant.main.create({
@@ -81,7 +73,7 @@ export const MerchantMainHandler = os.router({
 	// 			body: { message: "Merchant created successfully", data: result },
 	// 		};
 	// 	}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ merchant: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const unflatten = unflattenData(body);
@@ -96,7 +88,7 @@ export const MerchantMainHandler = os.router({
 				body: { message: "Merchant updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ merchant: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.main.remove(params.id);

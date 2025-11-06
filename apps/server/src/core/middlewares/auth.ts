@@ -9,6 +9,8 @@ import type { HonoContext, ORPCContext } from "../interface";
 const base = os.$context<ORPCContext>();
 export const honoAuthMiddleware = createMiddleware<HonoContext>(
 	async (c, next) => {
+		if (c.var.session) return next();
+
 		const token = getAuthToken({ request: c.req.raw, isDev });
 		if (!token) return next();
 		const res = await safeAsync(c.var.repo.auth.getSession(token));

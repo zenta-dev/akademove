@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { DriverScheduleSpec } from "./schedule-spec";
 
-const os = implement(DriverScheduleSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(DriverScheduleSpec);
 
-export const DriverScheduleHandler = os.router({
-	list: os.list
+export const DriverScheduleHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ schedule: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.schedule.list(query);
@@ -26,7 +18,7 @@ export const DriverScheduleHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ schedule: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.schedule.get(params.id);
@@ -36,7 +28,7 @@ export const DriverScheduleHandler = os.router({
 				body: { message: "Successfully retrieved schedule data", data: result },
 			};
 		}),
-	create: os.create
+	create: priv.create
 		.use(hasPermission({ schedule: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const result = await context.repo.schedule.create({
@@ -49,7 +41,7 @@ export const DriverScheduleHandler = os.router({
 				body: { message: "Schedule created successfully", data: result },
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ schedule: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.schedule.update(params.id, body);
@@ -59,7 +51,7 @@ export const DriverScheduleHandler = os.router({
 				body: { message: "Schedule updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ schedule: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.schedule.remove(params.id);

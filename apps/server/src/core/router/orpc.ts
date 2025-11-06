@@ -1,8 +1,15 @@
 import { env } from "cloudflare:workers";
+import type { AnyContractRouter } from "@orpc/contract";
 import { DurableIteratorHandlerPlugin } from "@orpc/experimental-durable-iterator";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
-import { ORPCError, ValidationError } from "@orpc/server";
+import {
+	type Context,
+	type Implementer,
+	implement,
+	ORPCError,
+	ValidationError,
+} from "@orpc/server";
 import { RPCHandler as FetchRPCHandler } from "@orpc/server/fetch";
 import {
 	BatchHandlerPlugin,
@@ -17,10 +24,14 @@ import { AllSchemaRegistries } from "@repo/schema";
 import type { Hono } from "hono";
 import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError, UnknownError } from "@/core/error";
-import type { HonoContext, ORPCContext } from "@/core/interface";
+import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
 import { RBACService } from "@/core/services/rbac";
 import { FetchServerRouter } from "@/features";
 import { log } from "@/utils";
+import {
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "../middlewares/auth";
 
 const _sharedInterceptor: Interceptor<
 	// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from orpc
@@ -158,3 +169,26 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 
 	return { app };
 };
+
+export function createORPCRouter<
+	TRouter extends AnyContractRouter,
+	TContext extends Context = Record<never, never>,
+>(spec: TRouter) {
+	const pub = implement<TRouter, TContext>(spec).$context<ORPCContext>();
+
+	type AuthedContext = Omit<ORPCContext, "user" | "token"> & {
+		user: UserInContext;
+		token: string;
+	};
+
+	const priv = pub
+		// @ts-expect-error it should fine as long as spec is supplied
+		.use(orpcAuthMiddleware)
+		.use(orpcRequireAuthMiddleware) as unknown as Implementer<
+		TRouter,
+		ORPCContext,
+		AuthedContext
+	>;
+
+	return { pub, priv };
+}

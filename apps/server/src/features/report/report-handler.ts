@@ -1,19 +1,11 @@
-import { implement } from "@orpc/server";
-import type { ORPCContext } from "@/core/interface";
-import {
-	hasPermission,
-	orpcAuthMiddleware,
-	orpcRequireAuthMiddleware,
-} from "@/core/middlewares/auth";
+import { hasPermission } from "@/core/middlewares/auth";
+import { createORPCRouter } from "@/core/router/orpc";
 import { ReportSpec } from "./report-spec";
 
-const os = implement(ReportSpec)
-	.$context<ORPCContext>()
-	.use(orpcAuthMiddleware)
-	.use(orpcRequireAuthMiddleware);
+const { priv } = createORPCRouter(ReportSpec);
 
-export const ReportHandler = os.router({
-	list: os.list
+export const ReportHandler = priv.router({
+	list: priv.list
 		.use(hasPermission({ report: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.report.list(query);
@@ -26,7 +18,7 @@ export const ReportHandler = os.router({
 				},
 			};
 		}),
-	get: os.get
+	get: priv.get
 		.use(hasPermission({ report: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.report.get(params.id);
@@ -36,7 +28,7 @@ export const ReportHandler = os.router({
 				body: { message: "Successfully retrieved report data", data: result },
 			};
 		}),
-	create: os.create
+	create: priv.create
 		.use(hasPermission({ report: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const result = await context.repo.report.create({
@@ -49,7 +41,7 @@ export const ReportHandler = os.router({
 				body: { message: "Report created successfully", data: result },
 			};
 		}),
-	update: os.update
+	update: priv.update
 		.use(hasPermission({ report: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const result = await context.repo.report.update(params.id, body);
@@ -59,7 +51,7 @@ export const ReportHandler = os.router({
 				body: { message: "Report updated successfully", data: result },
 			};
 		}),
-	remove: os.remove
+	remove: priv.remove
 		.use(hasPermission({ report: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.report.remove(params.id);
