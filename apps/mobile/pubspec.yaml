@@ -12,6 +12,8 @@ dependencies:
   api_client: 
     path: ../../gen/dart/api_client
   bloc: ^9.0.0
+  cached_network_image: ^3.4.1
+  const_date_time: ^1.2.1
   dart_mappable: ^4.6.1
   dio: ^5.9.0
   flutter:
@@ -21,6 +23,8 @@ dependencies:
     sdk: flutter
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.2.1
+  flutter_timezone: ^5.0.1
+  gal: ^2.3.2
   geocoding: ^4.0.0
   geolocator: ^14.0.2
   get_it: ^8.2.0
@@ -29,8 +33,13 @@ dependencies:
   image_picker: ^1.2.0
   intl: ^0.20.2
   logger: ^2.6.2
-  shadcn_flutter: ^0.0.44
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
+  qr_flutter: ^4.1.0
+  shadcn_flutter: ^0.0.45
   shared_preferences: ^2.5.3
+  timezone: ^0.10.1
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   bloc_test: ^10.0.0
