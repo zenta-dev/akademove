@@ -12,11 +12,25 @@ class ListOrderQuery extends UnifiedQuery {
     super.orderBy,
   });
 
-  final List<OrderStatusEnum> statuses;
+  final List<OrderStatus> statuses;
+}
+
+class EstimateOrderQuery {
+  const EstimateOrderQuery({
+    required this.type,
+    required this.pickupLocation,
+    required this.dropoffLocation,
+  });
+
+  final OrderType type;
+  final Coordinate pickupLocation;
+  final Coordinate dropoffLocation;
 }
 
 class OrderRepository extends BaseRepository {
-  OrderRepository({required ApiClient apiClient}) : _apiClient = apiClient;
+  OrderRepository({
+    required ApiClient apiClient,
+  }) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 
@@ -36,7 +50,28 @@ class OrderRepository extends BaseRepository {
           res.data ??
           (throw const RepositoryError(
             'Orders not found',
-            code: ErrorCode.NOT_FOUND,
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  Future<BaseResponse<OrderSummary>> estimate(EstimateOrderQuery query) {
+    return guard(() async {
+      final res = await _apiClient.getOrderApi().orderEstimate(
+        type: query.type,
+        pickupLocationX: query.pickupLocation.x,
+        pickupLocationY: query.pickupLocation.y,
+        dropoffLocationX: query.dropoffLocation.x,
+        dropoffLocationY: query.dropoffLocation.y,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Cant estimate order',
+            code: ErrorCode.notFound,
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
@@ -51,42 +86,42 @@ class OrderRepository extends BaseRepository {
           res.data ??
           (throw const RepositoryError(
             'Order not found',
-            code: ErrorCode.NOT_FOUND,
+            code: ErrorCode.notFound,
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
-  Future<BaseResponse<Order>> create(InsertOrderRequest request) {
+  Future<BaseResponse<Order>> placeOrder(PlaceOrder req) {
     return guard(() async {
-      final res = await _apiClient.getOrderApi().orderCreate(
-        insertOrderRequest: request,
+      final res = await _apiClient.getOrderApi().orderPlaceOrder(
+        placeOrder: req,
       );
 
       final data =
           res.data ??
           (throw const RepositoryError(
-            'Failed to create order',
-            code: ErrorCode.UNKNOWN,
+            'Cant estimate order',
+            code: ErrorCode.notFound,
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
-  Future<BaseResponse<Order>> update(String id, UpdateOrderRequest request) {
+  Future<BaseResponse<Order>> update(String id, UpdateOrder request) {
     return guard(() async {
       final res = await _apiClient.getOrderApi().orderUpdate(
         id: id,
-        updateOrderRequest: request,
+        updateOrder: request,
       );
 
       final data =
           res.data ??
           (throw const RepositoryError(
             'Failed to update order',
-            code: ErrorCode.UNKNOWN,
+            code: ErrorCode.unknown,
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
