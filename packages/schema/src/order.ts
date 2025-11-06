@@ -4,7 +4,11 @@ import { CONSTANTS } from "./constants.ts";
 import { DriverSchema } from "./driver.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
-import { PaymentMethodSchema, PaymentProviderSchema } from "./payment.ts";
+import {
+	PaymentMethodSchema,
+	PaymentProviderSchema,
+	PaymentSchema,
+} from "./payment.ts";
 import { CoordinateSchema } from "./position.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
@@ -102,6 +106,13 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	})
 	.meta({ title: "PlaceOrder" });
 
+export const PlaceOrderResponseSchema = z
+	.object({
+		order: OrderSchema,
+		payment: PaymentSchema,
+	})
+	.meta({ title: "PlaceOrderResponse" });
+
 export const UpdateOrderSchema = OrderSchema.omit({
 	id: true,
 	userId: true,
@@ -132,6 +143,7 @@ export type OrderNote = z.infer<typeof OrderNoteSchema>;
 export type Order = z.infer<typeof OrderSchema>;
 export type OrderSummary = z.infer<typeof OrderSummarySchema>;
 export type PlaceOrder = z.infer<typeof PlaceOrderSchema>;
+export type PlaceOrderResponse = z.infer<typeof PlaceOrderResponseSchema>;
 export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
 export type EstimateOrder = z.infer<typeof EstimateOrderSchema>;
 
@@ -143,6 +155,7 @@ export const OrderSchemaRegistries = {
 	Order: { schema: OrderSchema, strategy: "output" },
 	OrderSummary: { schema: OrderSummarySchema, strategy: "output" },
 	PlaceOrder: { schema: PlaceOrderSchema, strategy: "input" },
+	PlaceOrderResponse: { schema: PlaceOrderResponseSchema, strategy: "input" },
 	UpdateOrder: { schema: UpdateOrderSchema, strategy: "input" },
 	EstimateOrder: { schema: EstimateOrderSchema, strategy: "input" },
 } satisfies SchemaRegistries;
