@@ -1,17 +1,15 @@
-import type { Location } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
+import { geometry, jsonb, numeric, text, uuid } from "drizzle-orm/pg-core";
+import { user, userGender } from "./auth";
 import {
-	decimal,
+	DateModifier,
 	index,
-	jsonb,
+	nowFn,
 	pgEnum,
 	pgTable,
-	text,
-	uuid,
-} from "drizzle-orm/pg-core";
-import { user } from "./auth";
-import { DateModifier, nowFn, timestamp } from "./common";
+	timestamp,
+} from "./common";
 import { driver } from "./driver";
 import { merchant } from "./merchant";
 
@@ -25,7 +23,7 @@ export interface OrderNote {
 export const order = pgTable(
 	"orders",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		userId: text("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
@@ -37,48 +35,46 @@ export const order = pgTable(
 		}),
 		type: orderType().notNull(),
 		status: orderStatus().notNull().default("requested"),
-		pickupLocation: jsonb("pickup_location").$type<Location>().notNull(),
-		dropoffLocation: jsonb("dropoff_location").$type<Location>().notNull(),
-		distanceKm: decimal("distance_km", {
+		pickupLocation: geometry("pickup_location", {
+			type: "point",
+			mode: "xy",
+			srid: 4326,
+		}).notNull(),
+		dropoffLocation: geometry("dropoff_location", {
+			type: "point",
+			mode: "xy",
+			srid: 4326,
+		}).notNull(),
+		distanceKm: numeric("distance_km", {
 			precision: 10,
 			scale: 2,
 			mode: "number",
 		}).notNull(),
-		basePrice: decimal("base_price", {
-			precision: 10,
+		basePrice: numeric("base_price", {
+			precision: 18,
 			scale: 2,
-			mode: "number",
 		}).notNull(),
-		tip: decimal({
-			precision: 10,
+		tip: numeric({
+			precision: 18,
 			scale: 2,
-			mode: "number",
 		}),
-		totalPrice: decimal("total_price", {
-			precision: 10,
+		totalPrice: numeric("total_price", {
+			precision: 18,
 			scale: 2,
-			mode: "number",
 		}).notNull(),
 		note: jsonb().$type<OrderNote>(),
 		requestedAt: timestamp("requested_at").notNull().$defaultFn(nowFn),
 		acceptedAt: timestamp("accepted_at"),
 		arrivedAt: timestamp("arrived_at"),
+		cancelReason: text(),
 		...DateModifier,
+
+		gender: userGender(),
 	},
 	(t) => [
 		index("order_user_id_idx").on(t.userId),
 		index("order_driver_id_idx").on(t.driverId),
 		index("order_merchant_id_idx").on(t.merchantId),
-		index("order_type_idx").on(t.type),
-		index("order_status_idx").on(t.status),
-		index("order_status_driver_idx").on(t.status, t.driverId),
-		index("order_user_status_idx").on(t.userId, t.status),
-		index("order_driver_status_idx").on(t.driverId, t.status),
-		index("order_merchant_status_idx").on(t.merchantId, t.status),
-		index("order_type_status_idx").on(t.type, t.status),
-		index("order_requested_at_idx").on(t.requestedAt),
-		index("order_created_at_idx").on(t.createdAt),
-		index("order_status_requested_at_idx").on(t.status, t.requestedAt),
 	],
 );
 
