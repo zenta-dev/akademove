@@ -7,7 +7,9 @@ import { MERCHANT_COLUMNS } from "./columns";
 
 export const MerchantTable = () => {
 	const merchants = useQuery(
-		orpcQuery.merchant.list.queryOptions({ input: { query: {} } }),
+		orpcQuery.merchant.list.queryOptions({
+			input: { query: { page: 1, limit: 10 } },
+		}),
 	);
 	const [visibility, setVisibility] = useState<VisibilityState>({});
 

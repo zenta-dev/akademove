@@ -1,29 +1,12 @@
 import { m } from "@repo/i18n";
-import type { Merchant, MerchantType } from "@repo/schema/merchant";
+import type { Merchant } from "@repo/schema/merchant";
 import type { ColumnDef } from "@tanstack/react-table";
 import { cva } from "class-variance-authority";
-import {
-	ArrowUpDown,
-	BadgeCheckIcon,
-	BadgeXIcon,
-	HomeIcon,
-	Star,
-	StoreIcon,
-} from "lucide-react";
+import { ArrowUpDown, BadgeCheckIcon, BadgeXIcon, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
-export const TYPE_ICONS: Record<
-	MerchantType,
-	{
-		name: string;
-		icon: React.ElementType;
-	}
-> = {
-	merchant: { name: m.merchant(), icon: StoreIcon },
-	tenant: { name: m.tenant(), icon: HomeIcon },
-};
 export const merchantTypeVariants = cva("", {
 	variants: {
 		intent: {
@@ -68,35 +51,6 @@ export const MERCHANT_COLUMNS = [
 					{m.address()}
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
-			);
-		},
-	},
-	{
-		id: "type",
-		accessorKey: "type",
-		enableHiding: false,
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="has-[>svg]:p-0"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					{m.type()}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => {
-			const value = String(row.getValue("type")) as MerchantType;
-
-			const status = TYPE_ICONS[value];
-
-			return (
-				<Badge className={merchantTypeVariants({ intent: value })}>
-					<status.icon className="mr-1 h-4 w-4" />
-					{status.name}
-				</Badge>
 			);
 		},
 	},
