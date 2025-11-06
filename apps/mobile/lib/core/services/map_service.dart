@@ -3,58 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 
-enum DistanceUnit { m, km }
-
-class Distance {
-  const Distance({required this.value, required this.unit});
-  final double value;
-  final DistanceUnit unit;
-
-  @override
-  String toString() {
-    if (value >= 1000 && unit == DistanceUnit.m) {
-      final inKm = value ~/ 1000;
-      return '${inKm.toStringAsFixed(0)} ${unit.name}';
-    }
-    return '${value.toStringAsFixed(0)} ${unit.name}';
-  }
-}
-
-class Place {
-  Place({
-    required this.name,
-    required this.vicinity,
-    required this.lat,
-    required this.lng,
-    required this.icon,
-  });
-
-  factory Place.fromGooglePlace(Map<String, dynamic> json) {
-    final geometry = json['geometry']?['location'];
-    return Place(
-      name: json['name'] as String? ?? '',
-      vicinity:
-          (json['vicinity'] as String?) ??
-          (json['formatted_address'] as String?) ??
-          '',
-      lat: (geometry?['lat'] as num?)?.toDouble() ?? 0.0,
-      lng: (geometry?['lng'] as num?)?.toDouble() ?? 0.0,
-      icon: json['icon'] as String? ?? '',
-    );
-  }
-
-  final String name;
-  final String vicinity;
-  final double lat;
-  final double lng;
-  final String icon;
-  Distance? distance;
-
-  Coordinate toCoordinate() {
-    return Coordinate(x: lng, y: lat);
-  }
-}
-
 abstract class MapService extends BaseService {
   Future<PageTokenPaginationResult<List<Place>>> nearbyLocation(
     Coordinate coordinate, {
@@ -156,11 +104,14 @@ class IMapService implements MapService {
             lat2: place.lat,
             lng2: place.lng,
           );
-          place.distance = Distance(
-            value: distanceMeters,
-            unit: DistanceUnit.m,
+          results.add(
+            place.copyWith(
+              distance: Distance(
+                value: distanceMeters,
+                unit: DistanceUnit.m,
+              ),
+            ),
           );
-          results.add(place);
         }
       }
 
@@ -225,7 +176,7 @@ class IMapService implements MapService {
         for (final json in resultsList.whereType<Map<String, dynamic>>()) {
           if (results.length >= limit) break;
 
-          final place = Place.fromGooglePlace(json);
+          var place = Place.fromGooglePlace(json);
           if (coordinate != null) {
             final distanceMeters = haversineDistance(
               lat1: coordinate.y.toDouble(),
@@ -233,9 +184,11 @@ class IMapService implements MapService {
               lat2: place.lat,
               lng2: place.lng,
             );
-            place.distance = Distance(
-              value: distanceMeters,
-              unit: DistanceUnit.m,
+            place = place.copyWith(
+              distance: Distance(
+                value: distanceMeters,
+                unit: DistanceUnit.m,
+              ),
             );
           }
           results.add(place);

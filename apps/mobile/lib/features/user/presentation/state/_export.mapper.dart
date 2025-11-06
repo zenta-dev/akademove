@@ -169,6 +169,7 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
   static UserRideStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserRideStateMapper._());
+      PlaceMapper.ensureInitialized();
     }
     return _instance!;
   }

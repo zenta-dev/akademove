@@ -7,3 +7,4 @@ export 'interceptors/_export.dart';
 export 'logger.dart';
 export 'services/_export.dart';
 export 'widgets/_export.dart';
+export 'models/_export.dart';
