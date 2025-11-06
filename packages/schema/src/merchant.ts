@@ -3,10 +3,11 @@ import * as z from "zod";
 import {
 	BankSchema,
 	DateSchema,
-	LocationSchema,
 	PhoneSchema,
+	type SchemaRegistries,
 } from "./common.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
+import { CoordinateSchema } from "./position.ts";
 
 export const MerchantSchema = z
 	.object({
@@ -18,10 +19,12 @@ export const MerchantSchema = z
 		),
 		phone: PhoneSchema,
 		address: z.string(),
-		location: LocationSchema.optional(),
+		location: CoordinateSchema.optional(),
 		isActive: z.boolean(),
 		rating: z.number(),
 		document: z.url().optional(),
+		image: z.url().optional(),
+		categories: z.array(z.string()),
 		bank: BankSchema,
 		createdAt: DateSchema,
 		updatedAt: DateSchema,
@@ -47,6 +50,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	rating: true,
 	isActive: true,
 	document: true,
+	image: true,
 	createdAt: true,
 	updatedAt: true,
 })
@@ -55,6 +59,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 			.file()
 			.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
 			.optional(),
+		image: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 	})
 	.meta({ title: "InsertMerchantRequest" });
 export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
@@ -65,10 +70,7 @@ export const InsertMerchantMenuSchema = MerchantMenuSchema.omit({
 	updatedAt: true,
 })
 	.extend({
-		image: z
-			.file()
-			.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
-			.optional(),
+		image: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
 	})
 	.meta({ title: "UpdateMerchantMenuRequest" });
 
@@ -93,3 +95,8 @@ export type InsertMerchantMenu = z.infer<typeof InsertMerchantMenuSchema>;
 export type UpdateMerchant = z.infer<typeof UpdateMerchantSchema>;
 export type UpdateMerchantMenu = z.infer<typeof UpdateMerchantMenuSchema>;
 export type FlatUpdateMerchant = z.infer<typeof FlatUpdateMerchantSchema>;
+
+export const MerchantSchemaRegistries = {
+	Merchant: { schema: MerchantSchema, strategy: "output" },
+	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
+} satisfies SchemaRegistries;
