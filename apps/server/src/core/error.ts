@@ -87,3 +87,5 @@ export const MiddlewareError = createErrorClass("MiddlewareError");
 export const UnknownError = createErrorClass("UnknownError");
 export const SessionError = createErrorClass("SessionError");
 export const AuthError = createErrorClass("AuthError");
+export const MapError = createErrorClass("MapError");
+export const PaymentError = createErrorClass("PaymentError");
