@@ -169,6 +169,7 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
   static UserRideStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = UserRideStateMapper._());
+      PageTokenPaginationResultMapper.ensureInitialized();
       PlaceMapper.ensureInitialized();
     }
     return _instance!;
@@ -305,6 +306,20 @@ abstract class UserRideStateCopyWith<$R, $In extends UserRideState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, Driver, ObjectCopyWith<$R, Driver, Driver>>
   get nearbyDrivers;
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get nearbyPlaces;
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get searchPlaces;
   $R call({
     List<Driver>? nearbyDrivers,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
@@ -333,6 +348,24 @@ class _UserRideStateCopyWithImpl<$R, $Out>
     (v, t) => ObjectCopyWith(v, $identity, t),
     (v) => call(nearbyDrivers: v),
   );
+  @override
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get nearbyPlaces =>
+      $value.nearbyPlaces.copyWith.$chain((v) => call(nearbyPlaces: v));
+  @override
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get searchPlaces =>
+      $value.searchPlaces.copyWith.$chain((v) => call(searchPlaces: v));
   @override
   $R call({
     List<Driver>? nearbyDrivers,

@@ -5,3 +5,4 @@ part '_export.mapper.dart';
 
 part 'place.dart';
 part 'distance.dart';
+part 'pagination.dart';

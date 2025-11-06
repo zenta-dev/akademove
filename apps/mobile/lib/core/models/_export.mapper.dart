@@ -277,3 +277,167 @@ class _DistanceCopyWithImpl<$R, $Out>
   ) => _DistanceCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
+class PageTokenPaginationResultMapper
+    extends ClassMapperBase<PageTokenPaginationResult> {
+  PageTokenPaginationResultMapper._();
+
+  static PageTokenPaginationResultMapper? _instance;
+  static PageTokenPaginationResultMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(
+        _instance = PageTokenPaginationResultMapper._(),
+      );
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'PageTokenPaginationResult';
+  @override
+  Function get typeFactory =>
+      <T>(f) => f<PageTokenPaginationResult<T>>();
+
+  static dynamic _$data(PageTokenPaginationResult v) => v.data;
+  static dynamic _arg$data<T>(f) => f<T>();
+  static const Field<PageTokenPaginationResult, dynamic> _f$data = Field(
+    'data',
+    _$data,
+    arg: _arg$data,
+  );
+  static String? _$token(PageTokenPaginationResult v) => v.token;
+  static const Field<PageTokenPaginationResult, String> _f$token = Field(
+    'token',
+    _$token,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<PageTokenPaginationResult> fields = const {
+    #data: _f$data,
+    #token: _f$token,
+  };
+
+  static PageTokenPaginationResult<T> _instantiate<T>(DecodingData data) {
+    return PageTokenPaginationResult(
+      data: data.dec(_f$data),
+      token: data.dec(_f$token),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static PageTokenPaginationResult<T> fromMap<T>(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<PageTokenPaginationResult<T>>(map);
+  }
+
+  static PageTokenPaginationResult<T> fromJson<T>(String json) {
+    return ensureInitialized().decodeJson<PageTokenPaginationResult<T>>(json);
+  }
+}
+
+mixin PageTokenPaginationResultMappable<T> {
+  String toJson() {
+    return PageTokenPaginationResultMapper.ensureInitialized()
+        .encodeJson<PageTokenPaginationResult<T>>(
+          this as PageTokenPaginationResult<T>,
+        );
+  }
+
+  Map<String, dynamic> toMap() {
+    return PageTokenPaginationResultMapper.ensureInitialized()
+        .encodeMap<PageTokenPaginationResult<T>>(
+          this as PageTokenPaginationResult<T>,
+        );
+  }
+
+  PageTokenPaginationResultCopyWith<
+    PageTokenPaginationResult<T>,
+    PageTokenPaginationResult<T>,
+    PageTokenPaginationResult<T>,
+    T
+  >
+  get copyWith =>
+      _PageTokenPaginationResultCopyWithImpl<
+        PageTokenPaginationResult<T>,
+        PageTokenPaginationResult<T>,
+        T
+      >(this as PageTokenPaginationResult<T>, $identity, $identity);
+  @override
+  String toString() {
+    return PageTokenPaginationResultMapper.ensureInitialized().stringifyValue(
+      this as PageTokenPaginationResult<T>,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return PageTokenPaginationResultMapper.ensureInitialized().equalsValue(
+      this as PageTokenPaginationResult<T>,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return PageTokenPaginationResultMapper.ensureInitialized().hashValue(
+      this as PageTokenPaginationResult<T>,
+    );
+  }
+}
+
+extension PageTokenPaginationResultValueCopy<$R, $Out, T>
+    on ObjectCopyWith<$R, PageTokenPaginationResult<T>, $Out> {
+  PageTokenPaginationResultCopyWith<$R, PageTokenPaginationResult<T>, $Out, T>
+  get $asPageTokenPaginationResult => $base.as(
+    (v, t, t2) => _PageTokenPaginationResultCopyWithImpl<$R, $Out, T>(v, t, t2),
+  );
+}
+
+abstract class PageTokenPaginationResultCopyWith<
+  $R,
+  $In extends PageTokenPaginationResult<T>,
+  $Out,
+  T
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({T? data, String? token});
+  PageTokenPaginationResultCopyWith<$R2, $In, $Out2, T> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _PageTokenPaginationResultCopyWithImpl<$R, $Out, T>
+    extends ClassCopyWithBase<$R, PageTokenPaginationResult<T>, $Out>
+    implements
+        PageTokenPaginationResultCopyWith<
+          $R,
+          PageTokenPaginationResult<T>,
+          $Out,
+          T
+        > {
+  _PageTokenPaginationResultCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<PageTokenPaginationResult> $mapper =
+      PageTokenPaginationResultMapper.ensureInitialized();
+  @override
+  $R call({Object? data = $none, Object? token = $none}) => $apply(
+    FieldCopyWithData({
+      if (data != $none) #data: data,
+      if (token != $none) #token: token,
+    }),
+  );
+  @override
+  PageTokenPaginationResult<T> $make(CopyWithData data) =>
+      PageTokenPaginationResult(
+        data: data.get(#data, or: $value.data),
+        token: data.get(#token, or: $value.token),
+      );
+
+  @override
+  PageTokenPaginationResultCopyWith<$R2, PageTokenPaginationResult<T>, $Out2, T>
+  $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+      _PageTokenPaginationResultCopyWithImpl<$R2, $Out2, T>($value, $cast, t);
+}
+

@@ -1,4 +1,4 @@
-import 'package:akademove/core/helpers.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
