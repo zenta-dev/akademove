@@ -1,6 +1,10 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema, DayOfWeekSchema } from "./common.ts";
+import {
+	DateSchema,
+	DayOfWeekSchema,
+	type SchemaRegistries,
+} from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 const GeneralRulesSchema = z
@@ -74,3 +78,10 @@ export type CouponRules = z.infer<typeof CouponRulesSchema>;
 export type Coupon = z.infer<typeof CouponSchema>;
 export type InsertCoupon = z.infer<typeof InsertCouponSchema>;
 export type UpdateCoupon = z.infer<typeof UpdateCouponSchema>;
+
+export const CouponSchemaRegistries = {
+	CouponRules: { schema: CouponRulesSchema, strategy: "output" },
+	Coupon: { schema: CouponSchema, strategy: "output" },
+	InsertCoupon: { schema: InsertCouponSchema, strategy: "input" },
+	UpdateCoupon: { schema: UpdateCouponSchema, strategy: "input" },
+} satisfies SchemaRegistries;
