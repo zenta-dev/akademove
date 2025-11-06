@@ -1,5 +1,6 @@
 import alchemy from "alchemy";
 import {
+	DurableObjectNamespace,
 	Hyperdrive,
 	KVNamespace,
 	TanStackStart,
@@ -17,7 +18,7 @@ const isDev =
 config({ path: isDev ? ".env" : ".env.prod" });
 
 const APP_NAME = "akademove";
-const app = await alchemy(APP_NAME);
+const app = await alchemy(APP_NAME, { noTrack: true });
 const zoneId = alchemy.env.ZONE_ID;
 
 const [mainDB, mainKV] = await Promise.all([
@@ -29,6 +30,24 @@ const [mainDB, mainKV] = await Promise.all([
 		title: `${APP_NAME}-main-kv`,
 	}),
 ]);
+
+const ORDER_ROOM = DurableObjectNamespace("order-rooms", {
+	className: "OrderRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
+const WALLET_ROOM = DurableObjectNamespace("wallet-rooms", {
+	className: "WalletRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
+
+const LISTING_ROOM = DurableObjectNamespace("listing-rooms", {
+	className: "ListingRoom",
+	environment: alchemy.env.NODE_ENV,
+	sqlite: true,
+});
 
 export const [server, web] = await Promise.all([
 	Worker(`${APP_NAME}-server`, {
@@ -49,9 +68,16 @@ export const [server, web] = await Promise.all([
 			S3_ACCESS_KEY_ID: alchemy.secret.env.S3_ACCESS_KEY_ID,
 			S3_SECRET_ACCESS_KEY: alchemy.secret.env.S3_SECRET_ACCESS_KEY,
 			S3_PUBLIC_URL: alchemy.env.S3_PUBLIC_URL,
-			LOG_SOURCE_TOKEN: alchemy.secret.env.RESEND_API_KEY,
+			LOG_SOURCE_TOKEN: alchemy.secret.env.LOG_SOURCE_TOKEN,
 			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
+			GOOGLE_MAPS_API_KEY: alchemy.secret.env.GOOGLE_MAPS_API_KEY,
 			RESEND_API_KEY: alchemy.secret.env.RESEND_API_KEY,
+			MIDTRANS_IS_PRODUCTION: alchemy.secret.env.MIDTRANS_IS_PRODUCTION,
+			MIDTRANS_SERVER_KEY: alchemy.secret.env.MIDTRANS_SERVER_KEY,
+			MIDTRANS_CLIENT_KEY: alchemy.secret.env.MIDTRANS_CLIENT_KEY,
+			ORDER_ROOM,
+			WALLET_ROOM,
+			LISTING_ROOM,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
 		},
@@ -65,11 +91,11 @@ export const [server, web] = await Promise.all([
 		cwd: "apps/web",
 		bundle: { minify: !isDev, sourcemap: isDev },
 		bindings: {
-			VITE_NODE_ENV: alchemy.env.NODE_ENV,
+			NODE_ENV: alchemy.env.NODE_ENV,
 			VITE_WEB_URL: alchemy.env.WEB_URL,
 			VITE_SERVER_URL: alchemy.env.SERVER_URL,
 			VITE_GOOGLE_MAPS_API_KEY: alchemy.env.GOOGLE_MAPS_API_KEY,
-			LOG_SOURCE_TOKEN: alchemy.secret.env.RESEND_API_KEY,
+			LOG_SOURCE_TOKEN: alchemy.secret.env.LOG_SOURCE_TOKEN,
 			LOG_ENDPOINT: alchemy.secret.env.LOG_ENDPOINT,
 		},
 		dev: {
