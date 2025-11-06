@@ -8,11 +8,11 @@ export const FEATURE_TAGS = Object.freeze({
 	MERCHANT: "Merchant",
 	MERCHANT_MENU: "MerchantMenu",
 	ORDER: "Order",
-	SCHEDULE: "Schedule",
 	COUPON: "Coupon",
 	REPORT: "Report",
 	REVIEW: "Review",
 	USER: "User",
+	WALLET: "Wallet",
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
@@ -27,22 +27,28 @@ export const CACHE_PREFIXES = Object.freeze({
 	MERCHANT: `${FEATURE_TAGS.MERCHANT.toLowerCase()}:`,
 	MERCHANT_MENU: `${FEATURE_TAGS.MERCHANT_MENU.toLowerCase()}:`,
 	ORDER: `${FEATURE_TAGS.ORDER.toLowerCase()}:`,
-	SCHEDULE: `${FEATURE_TAGS.SCHEDULE.toLowerCase()}:`,
 	COUPON: `${FEATURE_TAGS.COUPON.toLowerCase()}:`,
 	REPORT: `${FEATURE_TAGS.REPORT.toLowerCase()}:`,
 	REVIEW: `${FEATURE_TAGS.REVIEW.toLowerCase()}:`,
 	USER: `${FEATURE_TAGS.USER.toLowerCase()}:`,
+	WALLET: `${FEATURE_TAGS.WALLET.toLowerCase()}:`,
 } as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
 export const STORAGE_BUCKETS = [
 	"driver",
 	"merchant",
+	"merchant-priv",
 	"user",
 	"merchant-menu",
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 
+export const CONFIGURATION_KEYS = {
+	RIDE_SERVICE_PRICING: "ride-service-pricing",
+	DELIVERY_SERVICE_PRICING: "delivery-service-pricing",
+	FOOD_SERVICE_PRICING: "food-service-pricing",
+} as const;
 export const createSuccesSchema = <
 	TSchema,
 	TDesc extends string,
