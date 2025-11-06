@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema, PhoneSchema } from "./common.ts";
+import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const UserRoleSchema = z
@@ -98,3 +98,15 @@ export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
 export type BanUser = z.infer<typeof BanUserSchema>;
 export type UnbanUser = z.infer<typeof UnbanUserSchema>;
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
+
+export const UserSchemaRegistries = {
+	UserRole: { schema: UserRoleSchema, strategy: "output" },
+	UserGender: { schema: UserGenderSchema, strategy: "output" },
+	User: { schema: UserSchema, strategy: "output" },
+	InsertUser: { schema: InsertUserSchema, strategy: "input" },
+	UpdateUserRole: { schema: UpdateUserRoleSchema, strategy: "input" },
+	UpdateUserPassword: { schema: UpdateUserPasswordSchema, strategy: "input" },
+	BanUser: { schema: BanUserSchema, strategy: "input" },
+	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
+	UpdateUser: { schema: UpdateUserSchema, strategy: "input" },
+} satisfies SchemaRegistries;
