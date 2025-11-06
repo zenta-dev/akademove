@@ -7,6 +7,7 @@ import {
 	honoAuthMiddleware,
 	honoRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
+import { honoWebsocketHeader } from "@/core/middlewares/header";
 import { withQueryParams } from "@/utils";
 import type { OrderRoom } from "./order/order-ws";
 import type { WalletRoom } from "./wallet/wallet-ws";
@@ -15,14 +16,8 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 	app
 		.use(honoAuthMiddleware)
 		.use(honoRequireAuthMiddleware)
+		.use(honoWebsocketHeader)
 		.get("/ws/order-track/:id", async (c) => {
-			const upgradeHeader = c.req.header("Upgrade");
-			if (upgradeHeader !== "websocket") {
-				return new Response("Durable Object expected Upgrade: websocket", {
-					status: 426,
-				});
-			}
-
 			const { id } = c.req.param();
 			const stub: DurableObjectStub<OrderRoom> = c.env.ORDER_ROOM.getByName(id);
 
@@ -34,13 +29,6 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 			return await stub.fetch(req);
 		})
 		.get("/ws/wallet/:id", async (c) => {
-			const upgradeHeader = c.req.header("Upgrade");
-			if (upgradeHeader !== "websocket") {
-				return new Response("Durable Object expected Upgrade: websocket", {
-					status: 426,
-				});
-			}
-
 			const { id } = c.req.param();
 			const stub: DurableObjectStub<WalletRoom> =
 				c.env.WALLET_ROOM.getByName(id);
@@ -52,14 +40,8 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 
 			return await stub.fetch(req);
 		})
+		.get("/ws/transaction/:id", async (c) => {})
 		.get("/ws/driver-pool", async (c) => {
-			const upgradeHeader = c.req.header("Upgrade");
-			if (upgradeHeader !== "websocket") {
-				return new Response("Durable Object expected Upgrade: websocket", {
-					status: 426,
-				});
-			}
-
 			const stub: DurableObjectStub<WalletRoom> =
 				c.env.WALLET_ROOM.getByName("driver-pool");
 
