@@ -1,9 +1,16 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { DriverSpec } from "./spec";
 
-const os = implement(DriverSpec).$context<ORPCContext>().use(authMiddleware);
+const os = implement(DriverSpec)
+	.$context<ORPCContext>()
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const DriverHandler = os.router({
 	getMine: os.getMine
@@ -26,6 +33,15 @@ export const DriverHandler = os.router({
 				body: { message: "Successfully retrieved drivers data", data: result },
 			};
 		}),
+	nearby: os.nearby
+		.use(hasPermission({ driver: ["list"] }))
+		.handler(async ({ context, input: { query } }) => {
+			const result = await context.repo.driver.nearby(query);
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved drivers data", data: result },
+			};
+		}),
 	get: os.get
 		.use(hasPermission({ driver: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
@@ -36,19 +52,6 @@ export const DriverHandler = os.router({
 				body: { message: "Successfully retrieved driver data", data: result },
 			};
 		}),
-	// create: os.create
-	// 	.use(hasPermission({ driver: ["create"] }))
-	// 	.handler(async ({ context, input: { body } }) => {
-	// 		const result = await context.repo.driver.create({
-	// 			...body,
-	// 			userId: context.user.id,
-	// 		});
-
-	// 		return {
-	// 			status: 200,
-	// 			body: { message: "Driver created successfully", data: result },
-	// 		};
-	// 	}),
 	update: os.update
 		.use(hasPermission({ driver: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {

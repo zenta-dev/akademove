@@ -1,7 +1,7 @@
 import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
 import type { User } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
-import { eq } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import {
 	CACHE_PREFIXES,
@@ -10,7 +10,6 @@ import {
 } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
-import { log } from "@/core/logger";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -19,6 +18,8 @@ import {
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
+import { log } from "@/utils";
+import type { NearbyQuery } from "./spec";
 
 export class DriverRepository {
 	readonly #db: DatabaseService;
@@ -118,13 +119,13 @@ export class DriverRepository {
 
 			if (opts) {
 				const { cursor, page, limit } = opts;
-				if (cursor) {
+				if (cursor && limit) {
 					stmt = this.#db.query.driver.findMany({
 						with: { user: { columns: { name: true } } },
 						where: (f, op) => op.gt(f.lastLocationUpdate, new Date(cursor)),
 						limit: limit + 1,
 					});
-				} else if (page) {
+				} else if (page && limit) {
 					const offset = (page - 1) * limit;
 					stmt = this.#db.query.driver.findMany({
 						with: { user: { columns: { name: true } } },
@@ -140,6 +141,52 @@ export class DriverRepository {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
 			throw new RepositoryError("Failed to list drivers");
+		}
+	}
+
+	async nearby(query: NearbyQuery): Promise<Driver[]> {
+		try {
+			const { x, y, limit = 20, radiusKm = 10, gender } = query;
+
+			const point = sql`ST_SetSRID(ST_MakePoint(${x}, ${y}), 4326)::geography`;
+			const distance = sql<number>`ST_Distance(${tables.driver.currentLocation}::geography, ${point})`;
+
+			const conditions = [
+				eq(tables.driver.isOnline, true),
+				isNotNull(tables.driver.currentLocation),
+				sql`ST_DWithin(
+		${tables.driver.currentLocation}::geography,
+		${point},
+		${radiusKm * 1000}
+	)`,
+			];
+
+			// Only apply gender filter if provided
+			if (gender) {
+				conditions.push(eq(tables.user.gender, gender));
+			}
+
+			const result = await this.#db
+				.select({
+					driver: tables.driver,
+					userName: tables.user.name,
+					distance: distance.as("distance_meters"),
+				})
+				.from(tables.driver)
+				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
+				.where(and(...conditions))
+				.orderBy(distance)
+				.limit(limit);
+
+			return await Promise.all(
+				result.map((r) =>
+					this.composeEntity({ ...r.driver, user: { name: r.userName } }),
+				),
+			);
+		} catch (error) {
+			log.error(error);
+			if (error instanceof RepositoryError) throw error;
+			throw new RepositoryError("Failed to list nearby drivers");
 		}
 	}
 

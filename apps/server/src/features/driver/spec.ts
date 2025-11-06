@@ -1,9 +1,20 @@
 import { oc } from "@orpc/contract";
 import { DriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { CoordinateSchema } from "@repo/schema/position";
+import { UserGenderSchema } from "@repo/schema/user";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { toOAPIRequestBody } from "@/utils/oapi";
+
+export const NearbyQuerySchema = z.object({
+	...CoordinateSchema.shape,
+	radiusKm: z.coerce.number(),
+	limit: z.coerce.number(),
+	gender: UserGenderSchema.optional(),
+});
+
+export type NearbyQuery = z.infer<typeof NearbyQuerySchema>;
 
 export const DriverSpec = {
 	getMine: oc
@@ -30,6 +41,25 @@ export const DriverSpec = {
 				"Successfully retrieved drivers data",
 			),
 		),
+	nearby: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "GET",
+			path: "/nearby",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				query: NearbyQuerySchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.array(DriverSchema),
+				"Successfully retrieved drivers data",
+			),
+		),
 	get: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],
@@ -42,16 +72,6 @@ export const DriverSpec = {
 		.output(
 			createSuccesSchema(DriverSchema, "Successfully retrieved driver data"),
 		),
-	// create: oc
-	// 	.route({
-	// 		tags: [FEATURE_TAGS.DRIVER],
-	// 		method: "POST",
-	// 		path: "/",
-	// 		inputStructure: "detailed",
-	// 		outputStructure: "detailed",
-	// 	})
-	// 	.input(z.object({ body: InsertDriverSchema }))
-	// 	.output(createSuccesSchema(DriverSchema, "Driver created successfully")),
 	update: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],
