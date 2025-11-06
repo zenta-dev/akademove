@@ -26,8 +26,8 @@ const dummyOrder = Order(
   userId: dummyUUIDString,
   type: OrderType.delivery,
   status: OrderStatus.requested,
-  pickupLocation: Constants.defaultCoordinate,
-  dropoffLocation: Constants.defaultCoordinate,
+  pickupLocation: MapConstants.defaultCoordinate,
+  dropoffLocation: MapConstants.defaultCoordinate,
   distanceKm: 2,
   basePrice: 1000,
   totalPrice: 2000,
@@ -47,7 +47,7 @@ const dummyMerchant = Merchant(
   rating: 3,
   bank: Bank(provider: BankProviderEnum.BCA, number: 12345),
   categories: ['Drink', 'Coffe', 'Desert', 'Food'],
-  image: '${Constants.randomImageUrl}/seed/512/512',
+  image: '${UrlConstants.randomImageUrl}/seed/512/512',
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
 );
@@ -57,5 +57,5 @@ const dummyPlace = Place(
   vicinity: 'St. Boulvard No.80',
   lat: 0,
   lng: 0,
-  icon: '${Constants.randomImageUrl}/seed/24/24',
+  icon: '${UrlConstants.randomImageUrl}/seed/24/24',
 );

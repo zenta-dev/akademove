@@ -28,7 +28,7 @@ class IMapService implements MapService {
 
   @override
   Future<MapService> setup() async {
-    _apiKey = Constants.gMapsApiKey;
+    _apiKey = MapConstants.apiKey;
 
     if (_apiKey.isEmpty) {
       throw const ServiceError(

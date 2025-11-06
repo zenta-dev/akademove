@@ -98,8 +98,8 @@ class _MapWrapperWidgetState extends State<MapWrapperWidget>
   Widget build(BuildContext context) {
     super.build(context);
     return GoogleMap(
-      initialCameraPosition: Constants.defaultCameraPosition,
-      style: context.isDarkMode ? Constants.mapsDarkStyle : null,
+      initialCameraPosition: MapConstants.defaultCameraPosition,
+      style: context.isDarkMode ? MapConstants.darkStyle : null,
       onMapCreated: widget.onMapCreated,
       gestureRecognizers: widget.gestureRecognizers,
       webGestureHandling: widget.webGestureHandling,

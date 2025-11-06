@@ -60,7 +60,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   void _setupMatchingWebsocket(PlaceOrderResponse order) {
     const key = 'driver-pool';
-    _webSocketService.connect(key, '${Constants.wsBaseUrl}/$key');
+    _webSocketService.connect(key, '${UrlConstants.wsBaseUrl}/$key');
 
     _webSocketService.stream(key)?.listen((msg) {
       final parse = (msg as String).parseJson();

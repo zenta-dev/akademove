@@ -15,7 +15,9 @@ class UserAvatarWidget extends StatelessWidget {
       size: 24.sp,
       initials: Avatar.getInitials(name),
       provider: image != null
-          ? CachedNetworkImageProvider(image ?? Constants.placeholderImageUrl)
+          ? CachedNetworkImageProvider(
+              image ?? UrlConstants.placeholderImageUrl,
+            )
           : null,
     );
   }

@@ -108,7 +108,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     _walletId = walletId;
     _webSocketService.connect(
       walletId,
-      '${Constants.wsBaseUrl}/wallet/$walletId',
+      '${UrlConstants.wsBaseUrl}/wallet/$walletId',
       onMessage: (msg) {
         final parse = (msg as String).parseJson();
         if (parse is Map<String, dynamic>) {

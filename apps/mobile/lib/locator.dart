@@ -19,8 +19,7 @@ void _setupService() {
       ApiClient(
         dio: Dio(
           BaseOptions(
-            baseUrl:
-                '${Constants.apiProtocol}${Constants.apiDomain}${Constants.apiPort}/api',
+            baseUrl: UrlConstants.apiBaseUrl,
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(minutes: 3),
           ),

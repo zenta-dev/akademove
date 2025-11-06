@@ -21,7 +21,7 @@ class ConfigurationCubit extends BaseCubit<ConfigurationState> {
         (i) => BannerConfiguration(
           title: 'title-$i',
           description: '',
-          imageUrl: '${Constants.randomImageUrl}/seed/$this/512/512',
+          imageUrl: '${UrlConstants.randomImageUrl}/seed/$this/512/512',
         ),
       );
 

@@ -67,7 +67,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Set<Marker> _markers = {};
 
   BankProviderEnum? _selectedBankProvider;
-  Coordinate _outletLocation = Constants.defaultCoordinate;
+  Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
   CountryCode _selectedOutletCountryCode = CountryCode.ID;

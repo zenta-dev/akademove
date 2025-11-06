@@ -1,6 +1,5 @@
 import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/constants/dummy.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
@@ -96,7 +95,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               builder: (context, state) {
                 return IconButton(
                   icon: UserAvatarWidget(
-                    name: state.data?.name ?? Constants.appName,
+                    name: state.data?.name ?? AppConstants.name,
                     image: state.data?.image,
                   ),
                   variance: ButtonVariance.ghost,
@@ -326,7 +325,7 @@ class _MerchantCardWidget extends StatelessWidget {
         children: [
           if (merchant.image != null) ...[
             CachedNetworkImage(
-              imageUrl: merchant.image ?? Constants.placeholderImageUrl,
+              imageUrl: merchant.image ?? UrlConstants.placeholderImageUrl,
               width: 135.w,
               height: 100.h,
               imageBuilder: (context, imageProvider) {
