@@ -141,7 +141,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             builder: (context, state) {
               if (state.isLoading) {
                 return ListPlacesWidget(
-                  places: List.generate(5, (i) => i.dummyPlace),
+                  places: List.generate(5, (_) => dummyPlace),
                   hasMore: false,
                   isLoading: true,
                 ).asSkeleton();

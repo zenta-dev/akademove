@@ -1,4 +1,4 @@
-import 'package:akademove/core/constants.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:const_date_time/const_date_time.dart';
 
@@ -50,4 +50,12 @@ const dummyMerchant = Merchant(
   image: '${Constants.randomImageUrl}/seed/512/512',
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
+);
+
+const dummyPlace = Place(
+  name: 'Zenta Dev',
+  vicinity: 'St. Boulvard No.80',
+  lat: 0,
+  lng: 0,
+  icon: '${Constants.randomImageUrl}/seed/24/24',
 );

@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
-import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -125,18 +124,6 @@ extension ToastExt on BuildContext {
       );
     },
   );
-}
-
-extension IntExt on int {
-  Place get dummyPlace {
-    return Place(
-      name: 'Zenta Dev',
-      vicinity: 'St. Boulvard No.80',
-      lat: 0,
-      lng: 0,
-      icon: '${Constants.randomImageUrl}/seed/$this/24/24',
-    );
-  }
 }
 
 extension DateTimeExt on DateTime {
