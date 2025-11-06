@@ -1,7 +1,7 @@
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 abstract class AppTheme {
-  static ThemeData light = ThemeData().copyWith(
+  static ThemeData light = const ThemeData().copyWith(
     colorScheme: () => const ColorScheme(
       brightness: Brightness.dark,
       background: Color(0xfffdfcf8),
@@ -40,7 +40,7 @@ abstract class AppTheme {
     scaling: () => 0.9,
     radius: () => 0.65,
   );
-  static ThemeData dark = ThemeData.dark().copyWith(
+  static ThemeData dark = const ThemeData.dark().copyWith(
     colorScheme: () => const ColorScheme(
       brightness: Brightness.dark,
       background: Color(0xff040d0e),

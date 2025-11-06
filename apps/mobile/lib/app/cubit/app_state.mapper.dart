@@ -181,17 +181,25 @@ class InternalAppStateMapper extends ClassMapperBase<InternalAppState> {
     opt: true,
     def: const Locale('en'),
   );
+  static TimezoneInfo? _$timeZone(InternalAppState v) => v.timeZone;
+  static const Field<InternalAppState, TimezoneInfo> _f$timeZone = Field(
+    'timeZone',
+    _$timeZone,
+    opt: true,
+  );
 
   @override
   final MappableFields<InternalAppState> fields = const {
     #themeMode: _f$themeMode,
     #locale: _f$locale,
+    #timeZone: _f$timeZone,
   };
 
   static InternalAppState _instantiate(DecodingData data) {
     return InternalAppState(
       themeMode: data.dec(_f$themeMode),
       locale: data.dec(_f$locale),
+      timeZone: data.dec(_f$timeZone),
     );
   }
 
@@ -257,7 +265,7 @@ extension InternalAppStateValueCopy<$R, $Out>
 
 abstract class InternalAppStateCopyWith<$R, $In extends InternalAppState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({ThemeMode? themeMode, Locale? locale});
+  $R call({ThemeMode? themeMode, Locale? locale, TimezoneInfo? timeZone});
   InternalAppStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   );
@@ -272,16 +280,19 @@ class _InternalAppStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<InternalAppState> $mapper =
       InternalAppStateMapper.ensureInitialized();
   @override
-  $R call({ThemeMode? themeMode, Locale? locale}) => $apply(
-    FieldCopyWithData({
-      if (themeMode != null) #themeMode: themeMode,
-      if (locale != null) #locale: locale,
-    }),
-  );
+  $R call({ThemeMode? themeMode, Locale? locale, Object? timeZone = $none}) =>
+      $apply(
+        FieldCopyWithData({
+          if (themeMode != null) #themeMode: themeMode,
+          if (locale != null) #locale: locale,
+          if (timeZone != $none) #timeZone: timeZone,
+        }),
+      );
   @override
   InternalAppState $make(CopyWithData data) => InternalAppState(
     themeMode: data.get(#themeMode, or: $value.themeMode),
     locale: data.get(#locale, or: $value.locale),
+    timeZone: data.get(#timeZone, or: $value.timeZone),
   );
 
   @override

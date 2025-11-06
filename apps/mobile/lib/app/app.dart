@@ -7,6 +7,7 @@ import 'package:akademove/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -17,12 +18,26 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => sl<AppCubit>()..init()),
         BlocProvider(create: (_) => sl<AuthCubit>()..init()),
+        BlocProvider(create: (_) => sl<ConfigurationCubit>()),
       ],
       child: ScreenUtilInit(
-        // designSize: const Size(360, 800),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (_, _) => BlocBuilder<AppCubit, AppState>(
+        builder: (_, __) => BlocConsumer<AppCubit, AppState>(
+          listener: (context, state) {
+            final identifier = state.data?.timeZone?.identifier;
+
+            if (identifier != null) {
+              try {
+                final location = tz.getLocation(identifier);
+                tz.setLocalLocation(location);
+              } catch (_) {
+                tz.setLocalLocation(tz.getLocation('UTC'));
+              }
+            } else {
+              tz.setLocalLocation(tz.getLocation('UTC'));
+            }
+          },
           builder: (context, state) => ShadcnApp.router(
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
@@ -31,16 +46,6 @@ class App extends StatelessWidget {
             routerConfig: router,
             locale: state.data?.locale,
             themeMode: state.data?.themeMode ?? ThemeMode.system,
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(0.9.sp),
-                  alwaysUse24HourFormat: true,
-                ),
-                child:
-                    child ?? const Center(child: CircularProgressIndicator()),
-              );
-            },
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter_timezone/timezone_info.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 part 'app_state.mapper.dart';
@@ -76,8 +77,10 @@ class InternalAppState with InternalAppStateMappable {
   const InternalAppState({
     this.themeMode = ThemeMode.system,
     this.locale = const Locale('en'),
+    this.timeZone,
   });
 
   final ThemeMode themeMode;
   final Locale locale;
+  final TimezoneInfo? timeZone;
 }
