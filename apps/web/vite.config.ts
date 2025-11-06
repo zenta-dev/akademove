@@ -129,11 +129,11 @@ export default defineConfig({
 							return hashString("pino");
 						}
 						if (id.includes("react-medium-image-zoom")) {
-							return hashString("rmiz");
+							return hashString("pmiz");
 						}
-						if (id.includes("react-phone-number-input")) {
-							return hashString("rpni");
-						}
+						// if (id.includes("react-phone-number-input")) {
+						// 	return hashString("rpni");
+						// }
 					}
 				},
 			},
