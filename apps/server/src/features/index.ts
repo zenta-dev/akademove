@@ -1,7 +1,6 @@
 import { oc } from "@orpc/contract";
 import { implement, type RouterClient } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { clientMiddleware } from "@/core/middlewares/client";
 import { AuthHandler } from "./auth/handler";
 import { AuthSpec } from "./auth/spec";
 import { ConfigurationHandler } from "./configuration/handler";
@@ -18,12 +17,14 @@ import { ReportHandler } from "./report/handler";
 import { ReportSpec } from "./report/spec";
 import { ReviewHandler } from "./review/handler";
 import { ReviewSpec } from "./review/spec";
-import { ScheduleHandler } from "./schedule/handler";
-import { ScheduleSpec } from "./schedule/spec";
+import { DriverScheduleHandler } from "./schedule/handler";
+import { DriverScheduleSpec } from "./schedule/spec";
 import { UserHandler } from "./user/handler";
 import { UserSpec } from "./user/spec";
+import { WalletHandler } from "./wallet/handler";
+import { WalletSpec } from "./wallet/spec";
 
-export const ServerSpec = oc.router({
+export const FetchServerSpec = oc.router({
 	auth: oc.prefix("/auth").router(AuthSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
@@ -32,12 +33,13 @@ export const ServerSpec = oc.router({
 	coupon: oc.prefix("/coupons").router(CouponSpec),
 	report: oc.prefix("/reports").router(ReportSpec),
 	review: oc.prefix("/reviews").router(ReviewSpec),
-	schedule: oc.prefix("/schedules").router(ScheduleSpec),
+	driverSchedule: oc.prefix("/driver/schedules").router(DriverScheduleSpec),
 	user: oc.prefix("/users").router(UserSpec),
+	wallet: oc.prefix("/wallets").router(WalletSpec),
 });
 
-const os = implement(ServerSpec).$context<ORPCContext>().use(clientMiddleware);
-export const ServerRouter = os.router({
+const os = implement(FetchServerSpec).$context<ORPCContext>();
+export const FetchServerRouter = os.router({
 	auth: AuthHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
@@ -46,8 +48,9 @@ export const ServerRouter = os.router({
 	coupon: CouponHandler,
 	report: ReportHandler,
 	review: ReviewHandler,
-	schedule: ScheduleHandler,
+	driverSchedule: DriverScheduleHandler,
 	user: UserHandler,
+	wallet: WalletHandler,
 });
 
-export type ServerSpecClient = RouterClient<typeof ServerRouter>;
+export type ServerSpecClient = RouterClient<typeof FetchServerRouter>;
