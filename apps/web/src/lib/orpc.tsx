@@ -1,5 +1,6 @@
 import { type ClientContext, createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
+import { BatchLinkPlugin } from "@orpc/client/plugins";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { RefreshCwIcon } from "lucide-react";
@@ -36,6 +37,16 @@ interface MyContext extends ClientContext {
 
 export const link = new RPCLink<MyContext>({
 	url: `${import.meta.env.VITE_SERVER_URL}/rpc`,
+	plugins: [
+		new BatchLinkPlugin({
+			groups: [
+				{
+					condition: () => true,
+					context: {},
+				},
+			],
+		}),
+	],
 	method: ({ context }, path) => {
 		if (path.includes("hasPermission")) return "POST";
 		if (context?.cache) {
