@@ -13,6 +13,7 @@
 		"db:migrate": "bun with-env drizzle-kit migrate",
 		"db:seed": "bun with-env bun scripts/seed.ts",
 		"db:reset": "bun with-env bun scripts/reset.ts",
+		"db:drop": "bun with-env bun scripts/drop.ts",
 		"dev": "alchemy dev",
 		"deploy": "alchemy deploy",
 		"destroy": "alchemy destroy",
