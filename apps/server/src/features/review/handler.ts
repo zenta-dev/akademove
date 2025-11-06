@@ -1,9 +1,16 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { ReviewSpec } from "./spec";
 
-const os = implement(ReviewSpec).$context<ORPCContext>().use(authMiddleware);
+const os = implement(ReviewSpec)
+	.$context<ORPCContext>()
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const ReviewHandler = os.router({
 	list: os.list
