@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**authExchangeToken**](AuthApi.md#authexchangetoken) | **GET** /auth/exchange-token | 
 [**authForgotPassword**](AuthApi.md#authforgotpassword) | **POST** /auth/forgot-password | 
 [**authGetSession**](AuthApi.md#authgetsession) | **GET** /auth/session | 
 [**authHasPermission**](AuthApi.md#authhaspermission) | **POST** /auth/has-permission | 
@@ -19,6 +20,43 @@ Method | HTTP request | Description
 [**authSignUpMerchant**](AuthApi.md#authsignupmerchant) | **POST** /auth/sign-up/merchant | 
 [**authSignUpUser**](AuthApi.md#authsignupuser) | **POST** /auth/sign-up/user | 
 
+
+# **authExchangeToken**
+> AuthExchangeToken200Response authExchangeToken()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAuthApi();
+
+try {
+    final response = api.authExchangeToken();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AuthApi->authExchangeToken: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**AuthExchangeToken200Response**](AuthExchangeToken200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authForgotPassword**
 > AuthSignOut200Response authForgotPassword(forgotPasswordRequest)
@@ -140,7 +178,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authResetPassword**
-> AuthSignOut200Response authResetPassword(resetPasswordRequest)
+> AuthSignOut200Response authResetPassword(resetPassword)
 
 
 
@@ -149,10 +187,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final ResetPasswordRequest resetPasswordRequest = ; // ResetPasswordRequest | 
+final ResetPassword resetPassword = ; // ResetPassword | 
 
 try {
-    final response = api.authResetPassword(resetPasswordRequest);
+    final response = api.authResetPassword(resetPassword);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authResetPassword: $e\n');
@@ -163,7 +201,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **resetPasswordRequest** | [**ResetPasswordRequest**](ResetPasswordRequest.md)|  | 
+ **resetPassword** | [**ResetPassword**](ResetPassword.md)|  | 
 
 ### Return type
 
@@ -328,7 +366,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpMerchant**
-> AuthSignUpUser201Response authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, gender, detailDocument)
+> AuthSignUpUser201Response authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategories, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage)
 
 
 
@@ -348,16 +386,18 @@ final String detailEmail = detailEmail_example; // String |
 final String detailPhoneCountryCode = detailPhoneCountryCode_example; // String | 
 final num detailPhoneNumber = 8.14; // num | 
 final String detailAddress = detailAddress_example; // String | 
-final num detailLocationLat = 8.14; // num | 
-final num detailLocationLng = 8.14; // num | 
+final num detailLocationX = 8.14; // num | Longitude (X-axis, East-West)
+final num detailLocationY = 8.14; // num | Latitude (Y-axis, North-South)
+final List<String> detailCategories = ; // List<String> | 
 final String detailBankProvider = detailBankProvider_example; // String | 
 final num detailBankNumber = 8.14; // num | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 final String gender = gender_example; // String | 
 final MultipartFile detailDocument = BINARY_DATA_HERE; // MultipartFile | 
+final MultipartFile detailImage = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationLat, detailLocationLng, detailBankProvider, detailBankNumber, photo, gender, detailDocument);
+    final response = api.authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategories, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpMerchant: $e\n');
@@ -379,13 +419,15 @@ Name | Type | Description  | Notes
  **detailPhoneCountryCode** | **String**|  | 
  **detailPhoneNumber** | **num**|  | 
  **detailAddress** | **String**|  | 
- **detailLocationLat** | **num**|  | 
- **detailLocationLng** | **num**|  | 
+ **detailLocationX** | **num**| Longitude (X-axis, East-West) | 
+ **detailLocationY** | **num**| Latitude (Y-axis, North-South) | 
+ **detailCategories** | [**List&lt;String&gt;**](String.md)|  | 
  **detailBankProvider** | **String**|  | 
  **detailBankNumber** | **num**|  | 
  **photo** | **MultipartFile**|  | [optional] 
  **gender** | **String**|  | [optional] 
  **detailDocument** | **MultipartFile**|  | [optional] 
+ **detailImage** | **MultipartFile**|  | [optional] 
 
 ### Return type
 

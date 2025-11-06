@@ -9,7 +9,7 @@ part of 'auth_sign_up_user201_response.dart';
 abstract class _$AuthSignUpUser201ResponseCWProxy {
   AuthSignUpUser201Response message(String message);
 
-  AuthSignUpUser201Response data(SignUpResBody data);
+  AuthSignUpUser201Response data(SignUpResponse data);
 
   AuthSignUpUser201Response totalPages(num? totalPages);
 
@@ -21,7 +21,7 @@ abstract class _$AuthSignUpUser201ResponseCWProxy {
   /// ````
   AuthSignUpUser201Response call({
     String message,
-    SignUpResBody data,
+    SignUpResponse data,
     num? totalPages,
   });
 }
@@ -37,7 +37,7 @@ class _$AuthSignUpUser201ResponseCWProxyImpl
   AuthSignUpUser201Response message(String message) => this(message: message);
 
   @override
-  AuthSignUpUser201Response data(SignUpResBody data) => this(data: data);
+  AuthSignUpUser201Response data(SignUpResponse data) => this(data: data);
 
   @override
   AuthSignUpUser201Response totalPages(num? totalPages) =>
@@ -63,7 +63,7 @@ class _$AuthSignUpUser201ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as SignUpResBody,
+          : data as SignUpResponse,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -91,7 +91,7 @@ AuthSignUpUser201Response _$AuthSignUpUser201ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => SignUpResBody.fromJson(v as Map<String, dynamic>),
+      (v) => SignUpResponse.fromJson(v as Map<String, dynamic>),
     ),
     totalPages: $checkedConvert('totalPages', (v) => v as num?),
   );

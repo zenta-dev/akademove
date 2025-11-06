@@ -18,11 +18,9 @@ part 'merchant_get_mine200_response_body.g.dart';
 )
 class MerchantGetMine200ResponseBody {
   /// Returns a new [MerchantGetMine200ResponseBody] instance.
-  MerchantGetMine200ResponseBody({
+  const MerchantGetMine200ResponseBody({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

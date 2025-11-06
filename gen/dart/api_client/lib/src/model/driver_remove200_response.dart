@@ -17,11 +17,9 @@ part 'driver_remove200_response.g.dart';
 )
 class DriverRemove200Response {
   /// Returns a new [DriverRemove200Response] instance.
-  DriverRemove200Response({
+  const DriverRemove200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

@@ -17,31 +17,19 @@ part 'statements.g.dart';
 )
 class Statements {
   /// Returns a new [Statements] instance.
-  Statements({
+  const Statements({
     this.driver,
-
     this.merchant,
-
     this.merchantMenu,
-
     this.order,
-
     this.schedule,
-
     this.coupon,
-
     this.report,
-
     this.review,
-
     this.user,
-
     this.session,
-
     this.pricing,
-
     this.bookings,
-
     this.configurations,
   });
 

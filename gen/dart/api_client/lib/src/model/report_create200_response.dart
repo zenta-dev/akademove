@@ -18,11 +18,9 @@ part 'report_create200_response.g.dart';
 )
 class ReportCreate200Response {
   /// Returns a new [ReportCreate200Response] instance.
-  ReportCreate200Response({
+  const ReportCreate200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

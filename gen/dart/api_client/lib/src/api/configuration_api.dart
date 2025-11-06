@@ -11,7 +11,7 @@ import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
-import 'package:api_client/src/model/update_configuration_request.dart';
+import 'package:api_client/src/model/update_configuration.dart';
 
 class ConfigurationApi {
   final Dio _dio;
@@ -200,7 +200,7 @@ class ConfigurationApi {
   ///
   /// Parameters:
   /// * [key]
-  /// * [updateConfigurationRequest]
+  /// * [updateConfiguration]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -212,7 +212,7 @@ class ConfigurationApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<ConfigurationGet200Response>> configurationUpdate({
     required String key,
-    required UpdateConfigurationRequest updateConfigurationRequest,
+    required UpdateConfiguration updateConfiguration,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -242,7 +242,7 @@ class ConfigurationApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateConfigurationRequest);
+      _bodyData = jsonEncode(updateConfiguration);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

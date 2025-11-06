@@ -3,6 +3,8 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/user_gender.dart';
+import 'package:api_client/src/model/user_role.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -18,31 +20,19 @@ part 'user.g.dart';
 )
 class User {
   /// Returns a new [User] instance.
-  User({
+  const User({
     required this.id,
-
     required this.name,
-
     required this.email,
-
     required this.emailVerified,
-
     this.image,
-
     required this.role,
-
     required this.banned,
-
     this.banReason,
-
     this.banExpires,
-
     this.gender,
-
     required this.phone,
-
     required this.createdAt,
-
     required this.updatedAt,
   });
 
@@ -62,7 +52,7 @@ class User {
   final String? image;
 
   @JsonKey(name: r'role', required: true, includeIfNull: false)
-  final UserRoleEnum role;
+  final UserRole role;
 
   @JsonKey(name: r'banned', required: true, includeIfNull: false)
   final bool banned;
@@ -74,7 +64,7 @@ class User {
   final DateTime? banExpires;
 
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
-  final UserGenderEnum? gender;
+  final UserGender? gender;
 
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final Phone phone;
@@ -127,38 +117,4 @@ class User {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum UserRoleEnum {
-  @JsonValue(r'admin')
-  admin(r'admin'),
-  @JsonValue(r'operator')
-  operator_(r'operator'),
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'driver')
-  driver(r'driver'),
-  @JsonValue(r'user')
-  user(r'user');
-
-  const UserRoleEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
-}
-
-enum UserGenderEnum {
-  @JsonValue(r'male')
-  male(r'male'),
-  @JsonValue(r'female')
-  female(r'female');
-
-  const UserGenderEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

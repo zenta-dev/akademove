@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/auth_exchange_token200_response.dart';
 import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_permission200_response.dart';
 import 'package:api_client/src/model/auth_has_permission_request.dart';
@@ -16,13 +17,87 @@ import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/forgot_password_request.dart';
-import 'package:api_client/src/model/reset_password_request.dart';
+import 'package:api_client/src/model/reset_password.dart';
 import 'package:api_client/src/model/sign_in_request.dart';
 
 class AuthApi {
   final Dio _dio;
 
   const AuthApi(this._dio);
+
+  /// authExchangeToken
+  ///
+  ///
+  /// Parameters:
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [AuthExchangeToken200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<AuthExchangeToken200Response>> authExchangeToken({
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/auth/exchange-token';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    AuthExchangeToken200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              AuthExchangeToken200Response,
+              AuthExchangeToken200Response
+            >(rawData, 'AuthExchangeToken200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<AuthExchangeToken200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
 
   /// authForgotPassword
   ///
@@ -286,7 +361,7 @@ class AuthApi {
   ///
   ///
   /// Parameters:
-  /// * [resetPasswordRequest]
+  /// * [resetPassword]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -297,7 +372,7 @@ class AuthApi {
   /// Returns a [Future] containing a [Response] with a [AuthSignOut200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AuthSignOut200Response>> authResetPassword({
-    required ResetPasswordRequest resetPasswordRequest,
+    required ResetPassword resetPassword,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -322,7 +397,7 @@ class AuthApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(resetPasswordRequest);
+      _bodyData = jsonEncode(resetPassword);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -692,13 +767,15 @@ class AuthApi {
   /// * [detailPhoneCountryCode]
   /// * [detailPhoneNumber]
   /// * [detailAddress]
-  /// * [detailLocationLat]
-  /// * [detailLocationLng]
+  /// * [detailLocationX] - Longitude (X-axis, East-West)
+  /// * [detailLocationY] - Latitude (Y-axis, North-South)
+  /// * [detailCategories]
   /// * [detailBankProvider]
   /// * [detailBankNumber]
   /// * [photo]
   /// * [gender]
   /// * [detailDocument]
+  /// * [detailImage]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -720,13 +797,15 @@ class AuthApi {
     required String detailPhoneCountryCode,
     required num detailPhoneNumber,
     required String detailAddress,
-    required num detailLocationLat,
-    required num detailLocationLng,
+    required num detailLocationX,
+    required num detailLocationY,
+    required List<String> detailCategories,
     required String detailBankProvider,
     required num detailBankNumber,
     MultipartFile? photo,
     String? gender,
     MultipartFile? detailDocument,
+    MultipartFile? detailImage,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -765,11 +844,13 @@ class AuthApi {
         r'detail_phone_countryCode': detailPhoneCountryCode,
         r'detail_phone_number': detailPhoneNumber,
         r'detail_address': detailAddress,
-        r'detail_location_lat': detailLocationLat,
-        r'detail_location_lng': detailLocationLng,
+        r'detail_location_x': detailLocationX,
+        r'detail_location_y': detailLocationY,
+        r'detail_categories': detailCategories,
         r'detail_bank_provider': detailBankProvider,
         r'detail_bank_number': detailBankNumber,
         if (detailDocument != null) r'detail_document': detailDocument,
+        if (detailImage != null) r'detail_image': detailImage,
       });
     } catch (error, stackTrace) {
       throw DioException(

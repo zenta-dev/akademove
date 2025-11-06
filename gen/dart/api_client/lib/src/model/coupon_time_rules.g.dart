@@ -7,9 +7,7 @@ part of 'coupon_time_rules.dart';
 // **************************************************************************
 
 abstract class _$CouponTimeRulesCWProxy {
-  CouponTimeRules allowedDays(
-    List<CouponTimeRulesAllowedDaysEnum>? allowedDays,
-  );
+  CouponTimeRules allowedDays(List<DayOfWeek>? allowedDays);
 
   CouponTimeRules allowedHours(List<int>? allowedHours);
 
@@ -19,10 +17,7 @@ abstract class _$CouponTimeRulesCWProxy {
   /// ```dart
   /// CouponTimeRules(...).copyWith(id: 12, name: "My name")
   /// ````
-  CouponTimeRules call({
-    List<CouponTimeRulesAllowedDaysEnum>? allowedDays,
-    List<int>? allowedHours,
-  });
+  CouponTimeRules call({List<DayOfWeek>? allowedDays, List<int>? allowedHours});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponTimeRules.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponTimeRules.copyWith.fieldName(...)`
@@ -32,9 +27,8 @@ class _$CouponTimeRulesCWProxyImpl implements _$CouponTimeRulesCWProxy {
   final CouponTimeRules _value;
 
   @override
-  CouponTimeRules allowedDays(
-    List<CouponTimeRulesAllowedDaysEnum>? allowedDays,
-  ) => this(allowedDays: allowedDays);
+  CouponTimeRules allowedDays(List<DayOfWeek>? allowedDays) =>
+      this(allowedDays: allowedDays);
 
   @override
   CouponTimeRules allowedHours(List<int>? allowedHours) =>
@@ -55,7 +49,7 @@ class _$CouponTimeRulesCWProxyImpl implements _$CouponTimeRulesCWProxy {
       allowedDays: allowedDays == const $CopyWithPlaceholder()
           ? _value.allowedDays
           // ignore: cast_nullable_to_non_nullable
-          : allowedDays as List<CouponTimeRulesAllowedDaysEnum>?,
+          : allowedDays as List<DayOfWeek>?,
       allowedHours: allowedHours == const $CopyWithPlaceholder()
           ? _value.allowedHours
           // ignore: cast_nullable_to_non_nullable
@@ -80,9 +74,7 @@ CouponTimeRules _$CouponTimeRulesFromJson(Map<String, dynamic> json) =>
         allowedDays: $checkedConvert(
           'allowedDays',
           (v) => (v as List<dynamic>?)
-              ?.map(
-                (e) => $enumDecode(_$CouponTimeRulesAllowedDaysEnumEnumMap, e),
-              )
+              ?.map((e) => $enumDecode(_$DayOfWeekEnumMap, e))
               .toList(),
         ),
         allowedHours: $checkedConvert(
@@ -96,17 +88,17 @@ CouponTimeRules _$CouponTimeRulesFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CouponTimeRulesToJson(CouponTimeRules instance) =>
     <String, dynamic>{
       'allowedDays': ?instance.allowedDays
-          ?.map((e) => _$CouponTimeRulesAllowedDaysEnumEnumMap[e]!)
+          ?.map((e) => _$DayOfWeekEnumMap[e]!)
           .toList(),
       'allowedHours': ?instance.allowedHours,
     };
 
-const _$CouponTimeRulesAllowedDaysEnumEnumMap = {
-  CouponTimeRulesAllowedDaysEnum.sunday: 'sunday',
-  CouponTimeRulesAllowedDaysEnum.monday: 'monday',
-  CouponTimeRulesAllowedDaysEnum.tuesday: 'tuesday',
-  CouponTimeRulesAllowedDaysEnum.wednesday: 'wednesday',
-  CouponTimeRulesAllowedDaysEnum.thursday: 'thursday',
-  CouponTimeRulesAllowedDaysEnum.friday: 'friday',
-  CouponTimeRulesAllowedDaysEnum.saturday: 'saturday',
+const _$DayOfWeekEnumMap = {
+  DayOfWeek.sunday: 'sunday',
+  DayOfWeek.monday: 'monday',
+  DayOfWeek.tuesday: 'tuesday',
+  DayOfWeek.wednesday: 'wednesday',
+  DayOfWeek.thursday: 'thursday',
+  DayOfWeek.friday: 'friday',
+  DayOfWeek.saturday: 'saturday',
 };

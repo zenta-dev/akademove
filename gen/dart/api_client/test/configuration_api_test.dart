@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<ConfigurationGet200Response> configurationUpdate(String key, UpdateConfigurationRequest updateConfigurationRequest) async
+    //Future<ConfigurationGet200Response> configurationUpdate(String key, UpdateConfiguration updateConfiguration) async
     test('test configurationUpdate', () async {
       // TODO
     });

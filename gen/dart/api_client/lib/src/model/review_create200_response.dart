@@ -18,11 +18,9 @@ part 'review_create200_response.g.dart';
 )
 class ReviewCreate200Response {
   /// Returns a new [ReviewCreate200Response] instance.
-  ReviewCreate200Response({
+  const ReviewCreate200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

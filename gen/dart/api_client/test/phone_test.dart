@@ -7,7 +7,7 @@ void main() {
   // TODO add properties to the entity
 
   group(Phone, () {
-    // String countryCode
+    // CountryCode countryCode
     test('to test the property `countryCode`', () async {
       // TODO
     });

@@ -12,8 +12,8 @@ import 'package:dio/dio.dart';
 import 'package:api_client/src/model/coupon_create200_response.dart';
 import 'package:api_client/src/model/coupon_list200_response.dart';
 import 'package:api_client/src/model/driver_remove200_response.dart';
-import 'package:api_client/src/model/insert_coupon_request.dart';
-import 'package:api_client/src/model/update_coupon_request.dart';
+import 'package:api_client/src/model/insert_coupon.dart';
+import 'package:api_client/src/model/update_coupon.dart';
 
 class CouponApi {
   final Dio _dio;
@@ -24,7 +24,7 @@ class CouponApi {
   ///
   ///
   /// Parameters:
-  /// * [insertCouponRequest]
+  /// * [insertCoupon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,7 +35,7 @@ class CouponApi {
   /// Returns a [Future] containing a [Response] with a [CouponCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<CouponCreate200Response>> couponCreate({
-    required InsertCouponRequest insertCouponRequest,
+    required InsertCoupon insertCoupon,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,7 +60,7 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertCouponRequest);
+      _bodyData = jsonEncode(insertCoupon);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -378,7 +378,7 @@ class CouponApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [updateCouponRequest]
+  /// * [updateCoupon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -390,7 +390,7 @@ class CouponApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<CouponCreate200Response>> couponUpdate({
     required String id,
-    required UpdateCouponRequest updateCouponRequest,
+    required UpdateCoupon updateCoupon,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -420,7 +420,7 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateCouponRequest);
+      _bodyData = jsonEncode(updateCoupon);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

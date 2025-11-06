@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    // String status
+    // DriverStatus status
     test('to test the property `status`', () async {
       // TODO
     });
@@ -42,7 +42,7 @@ void main() {
       // TODO
     });
 
-    // Location currentLocation
+    // Coordinate currentLocation
     test('to test the property `currentLocation`', () async {
       // TODO
     });
@@ -77,8 +77,14 @@ void main() {
       // TODO
     });
 
-    // InsertOrderRequestUser user
+    // OrderPlaceOrder200ResponseDataUser user
     test('to test the property `user`', () async {
+      // TODO
+    });
+
+    // Each user has different result since it calculated value
+    // num distance
+    test('to test the property `distance`', () async {
       // TODO
     });
   });

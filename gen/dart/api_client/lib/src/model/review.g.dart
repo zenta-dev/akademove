@@ -15,7 +15,7 @@ abstract class _$ReviewCWProxy {
 
   Review toUserId(String toUserId);
 
-  Review category(ReviewCategoryEnum category);
+  Review category(ReviewCategory category);
 
   Review score(num score);
 
@@ -34,7 +34,7 @@ abstract class _$ReviewCWProxy {
     String orderId,
     String fromUserId,
     String toUserId,
-    ReviewCategoryEnum category,
+    ReviewCategory category,
     num score,
     String? comment,
     DateTime createdAt,
@@ -60,7 +60,7 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
   Review toUserId(String toUserId) => this(toUserId: toUserId);
 
   @override
-  Review category(ReviewCategoryEnum category) => this(category: category);
+  Review category(ReviewCategory category) => this(category: category);
 
   @override
   Review score(num score) => this(score: score);
@@ -108,7 +108,7 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
       category: category == const $CopyWithPlaceholder()
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as ReviewCategoryEnum,
+          : category as ReviewCategory,
       score: score == const $CopyWithPlaceholder()
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
@@ -156,7 +156,7 @@ Review _$ReviewFromJson(Map<String, dynamic> json) =>
         toUserId: $checkedConvert('toUserId', (v) => v as String),
         category: $checkedConvert(
           'category',
-          (v) => $enumDecode(_$ReviewCategoryEnumEnumMap, v),
+          (v) => $enumDecode(_$ReviewCategoryEnumMap, v),
         ),
         score: $checkedConvert('score', (v) => v as num),
         comment: $checkedConvert('comment', (v) => v as String? ?? ''),
@@ -173,14 +173,14 @@ Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
   'orderId': instance.orderId,
   'fromUserId': instance.fromUserId,
   'toUserId': instance.toUserId,
-  'category': _$ReviewCategoryEnumEnumMap[instance.category]!,
+  'category': _$ReviewCategoryEnumMap[instance.category]!,
   'score': instance.score,
   'comment': ?instance.comment,
   'createdAt': instance.createdAt.toIso8601String(),
 };
 
-const _$ReviewCategoryEnumEnumMap = {
-  ReviewCategoryEnum.cleanliness: 'cleanliness',
-  ReviewCategoryEnum.courtesy: 'courtesy',
-  ReviewCategoryEnum.other: 'other',
+const _$ReviewCategoryEnumMap = {
+  ReviewCategory.cleanliness: 'cleanliness',
+  ReviewCategory.courtesy: 'courtesy',
+  ReviewCategory.other: 'other',
 };

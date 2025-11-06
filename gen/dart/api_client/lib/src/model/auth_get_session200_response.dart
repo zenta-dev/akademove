@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/auth_get_session200_response_data.dart';
+import 'package:api_client/src/model/get_session_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -18,11 +18,9 @@ part 'auth_get_session200_response.g.dart';
 )
 class AuthGetSession200Response {
   /// Returns a new [AuthGetSession200Response] instance.
-  AuthGetSession200Response({
+  const AuthGetSession200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 
@@ -30,7 +28,7 @@ class AuthGetSession200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: true)
-  final AuthGetSession200ResponseData? data;
+  final GetSessionResponse? data;
 
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;

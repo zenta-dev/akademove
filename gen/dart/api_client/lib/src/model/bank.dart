@@ -17,7 +17,7 @@ part 'bank.g.dart';
 )
 class Bank {
   /// Returns a new [Bank] instance.
-  Bank({required this.provider, required this.number});
+  const Bank({required this.provider, required this.number});
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final BankProviderEnum provider;

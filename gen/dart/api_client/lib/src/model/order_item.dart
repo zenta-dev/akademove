@@ -18,21 +18,7 @@ part 'order_item.g.dart';
 )
 class OrderItem {
   /// Returns a new [OrderItem] instance.
-  OrderItem({
-    required this.id,
-
-    required this.itemId,
-
-    required this.total,
-
-    required this.item,
-  });
-
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
-
-  @JsonKey(name: r'itemId', required: true, includeIfNull: false)
-  final String itemId;
+  const OrderItem({required this.total, required this.item});
 
   @JsonKey(name: r'total', required: true, includeIfNull: false)
   final num total;
@@ -43,15 +29,10 @@ class OrderItem {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderItem &&
-          other.id == id &&
-          other.itemId == itemId &&
-          other.total == total &&
-          other.item == item;
+      other is OrderItem && other.total == total && other.item == item;
 
   @override
-  int get hashCode =>
-      id.hashCode + itemId.hashCode + total.hashCode + item.hashCode;
+  int get hashCode => total.hashCode + item.hashCode;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) =>
       _$OrderItemFromJson(json);

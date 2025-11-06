@@ -49,13 +49,12 @@ import 'package:api_client/api_client.dart';
 
 
 final api = ApiClient().getAuthApi();
-final ForgotPasswordRequest forgotPasswordRequest = ; // ForgotPasswordRequest | 
 
 try {
-    final response = await api.authForgotPassword(forgotPasswordRequest);
+    final response = await api.authExchangeToken();
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling AuthApi->authForgotPassword: $e\n");
+    print("Exception when calling AuthApi->authExchangeToken: $e\n");
 }
 
 ```
@@ -66,6 +65,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AuthApi*](doc/AuthApi.md) | [**authExchangeToken**](doc/AuthApi.md#authexchangetoken) | **GET** /auth/exchange-token | 
 [*AuthApi*](doc/AuthApi.md) | [**authForgotPassword**](doc/AuthApi.md#authforgotpassword) | **POST** /auth/forgot-password | 
 [*AuthApi*](doc/AuthApi.md) | [**authGetSession**](doc/AuthApi.md#authgetsession) | **GET** /auth/session | 
 [*AuthApi*](doc/AuthApi.md) | [**authHasPermission**](doc/AuthApi.md#authhaspermission) | **POST** /auth/has-permission | 
@@ -86,7 +86,13 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
+[*DriverApi*](doc/DriverApi.md) | [**driverNearby**](doc/DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleCreate**](doc/DriverApi.md#driverschedulecreate) | **POST** /driver/schedules | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleGet**](doc/DriverApi.md#driverscheduleget) | **GET** /driver/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleList**](doc/DriverApi.md#driverschedulelist) | **GET** /driver/schedules | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /driver/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /driver/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
@@ -96,11 +102,13 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuRemove**](doc/MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuUpdate**](doc/MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
-[*OrderApi*](doc/OrderApi.md) | [**orderCreate**](doc/OrderApi.md#ordercreate) | **POST** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderPlaceOrder**](doc/OrderApi.md#orderplaceorder) | **POST** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 
@@ -112,32 +120,37 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewList**](doc/ReviewApi.md#reviewlist) | **GET** /reviews | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewRemove**](doc/ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleCreate**](doc/ScheduleApi.md#schedulecreate) | **POST** /schedules | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleGet**](doc/ScheduleApi.md#scheduleget) | **GET** /schedules/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleList**](doc/ScheduleApi.md#schedulelist) | **GET** /schedules | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleRemove**](doc/ScheduleApi.md#scheduleremove) | **DELETE** /schedules/{id} | 
-[*ScheduleApi*](doc/ScheduleApi.md) | [**scheduleUpdate**](doc/ScheduleApi.md#scheduleupdate) | **PUT** /schedules/{id} | 
 [*UserApi*](doc/UserApi.md) | [**userCreate**](doc/UserApi.md#usercreate) | **POST** /users | 
 [*UserApi*](doc/UserApi.md) | [**userGet**](doc/UserApi.md#userget) | **GET** /users/{id} | 
 [*UserApi*](doc/UserApi.md) | [**userList**](doc/UserApi.md#userlist) | **GET** /users | 
 [*UserApi*](doc/UserApi.md) | [**userRemove**](doc/UserApi.md#userremove) | **DELETE** /users/{id} | 
 [*UserApi*](doc/UserApi.md) | [**userUpdate**](doc/UserApi.md#userupdate) | **PUT** /users/{id} | 
+[*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
+[*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
+[*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
+[*WalletApi*](doc/WalletApi.md) | [**walletTopUp**](doc/WalletApi.md#wallettopup) | **POST** /wallets/topup | 
+[*WalletApi*](doc/WalletApi.md) | [**walletTransactions**](doc/WalletApi.md#wallettransactions) | **GET** /wallets/transactions | 
+[*WalletApi*](doc/WalletApi.md) | [**walletTransfer**](doc/WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
+[*WalletApi*](doc/WalletApi.md) | [**walletWebhookMidtrans**](doc/WalletApi.md#walletwebhookmidtrans) | **POST** /wallets/webhook/midtrans | 
 
 
 ## Documentation For Models
 
+ - [AuthExchangeToken200Response](doc/AuthExchangeToken200Response.md)
  - [AuthGetSession200Response](doc/AuthGetSession200Response.md)
- - [AuthGetSession200ResponseData](doc/AuthGetSession200ResponseData.md)
  - [AuthHasPermission200Response](doc/AuthHasPermission200Response.md)
  - [AuthHasPermissionRequest](doc/AuthHasPermissionRequest.md)
  - [AuthSignIn200Response](doc/AuthSignIn200Response.md)
  - [AuthSignOut200Response](doc/AuthSignOut200Response.md)
  - [AuthSignUpUser201Response](doc/AuthSignUpUser201Response.md)
- - [BanUserSchemaRequest](doc/BanUserSchemaRequest.md)
+ - [BanUser](doc/BanUser.md)
  - [Bank](doc/Bank.md)
+ - [BannerConfiguration](doc/BannerConfiguration.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
+ - [Coordinate](doc/Coordinate.md)
+ - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
  - [CouponCreate200Response](doc/CouponCreate200Response.md)
  - [CouponGeneralRules](doc/CouponGeneralRules.md)
@@ -145,65 +158,111 @@ Class | Method | HTTP request | Description
  - [CouponRules](doc/CouponRules.md)
  - [CouponTimeRules](doc/CouponTimeRules.md)
  - [CouponUserRules](doc/CouponUserRules.md)
+ - [Currency](doc/Currency.md)
+ - [DayOfWeek](doc/DayOfWeek.md)
+ - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
  - [Driver](doc/Driver.md)
  - [DriverGetMine200Response](doc/DriverGetMine200Response.md)
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverRemove200Response](doc/DriverRemove200Response.md)
+ - [DriverSchedule](doc/DriverSchedule.md)
+ - [DriverScheduleCreate200Response](doc/DriverScheduleCreate200Response.md)
+ - [DriverScheduleList200Response](doc/DriverScheduleList200Response.md)
+ - [DriverStatus](doc/DriverStatus.md)
  - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)
+ - [DriverUpdateRequestCurrentLocation](doc/DriverUpdateRequestCurrentLocation.md)
+ - [EstimateOrder](doc/EstimateOrder.md)
+ - [FoodPricingConfiguration](doc/FoodPricingConfiguration.md)
  - [ForgotPasswordRequest](doc/ForgotPasswordRequest.md)
- - [InsertCouponRequest](doc/InsertCouponRequest.md)
- - [InsertOrderRequest](doc/InsertOrderRequest.md)
- - [InsertOrderRequestDriver](doc/InsertOrderRequestDriver.md)
- - [InsertOrderRequestMerchant](doc/InsertOrderRequestMerchant.md)
- - [InsertOrderRequestUser](doc/InsertOrderRequestUser.md)
- - [InsertReportRequest](doc/InsertReportRequest.md)
- - [InsertReviewRequest](doc/InsertReviewRequest.md)
- - [InsertScheduleRequest](doc/InsertScheduleRequest.md)
- - [InsertUserRequest](doc/InsertUserRequest.md)
+ - [GetSessionResponse](doc/GetSessionResponse.md)
+ - [InsertConfiguration](doc/InsertConfiguration.md)
+ - [InsertCoupon](doc/InsertCoupon.md)
+ - [InsertDriverScheduleRequest](doc/InsertDriverScheduleRequest.md)
+ - [InsertReport](doc/InsertReport.md)
+ - [InsertReview](doc/InsertReview.md)
+ - [InsertUser](doc/InsertUser.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
- - [MerchantList200Response](doc/MerchantList200Response.md)
  - [MerchantMenu](doc/MerchantMenu.md)
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
+ - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [Order](doc/Order.md)
- - [OrderCreate200Response](doc/OrderCreate200Response.md)
+ - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
+ - [OrderGet200Response](doc/OrderGet200Response.md)
  - [OrderItem](doc/OrderItem.md)
  - [OrderItemItem](doc/OrderItemItem.md)
  - [OrderList200Response](doc/OrderList200Response.md)
  - [OrderNote](doc/OrderNote.md)
+ - [OrderPlaceOrder200Response](doc/OrderPlaceOrder200Response.md)
+ - [OrderPlaceOrder200ResponseData](doc/OrderPlaceOrder200ResponseData.md)
+ - [OrderPlaceOrder200ResponseDataDriver](doc/OrderPlaceOrder200ResponseDataDriver.md)
+ - [OrderPlaceOrder200ResponseDataMerchant](doc/OrderPlaceOrder200ResponseDataMerchant.md)
+ - [OrderPlaceOrder200ResponseDataUser](doc/OrderPlaceOrder200ResponseDataUser.md)
+ - [OrderStatus](doc/OrderStatus.md)
+ - [OrderSummary](doc/OrderSummary.md)
+ - [OrderSummaryBreakdown](doc/OrderSummaryBreakdown.md)
+ - [OrderType](doc/OrderType.md)
+ - [PayRequest](doc/PayRequest.md)
+ - [Payment](doc/Payment.md)
+ - [PaymentMethod](doc/PaymentMethod.md)
+ - [PaymentProvider](doc/PaymentProvider.md)
  - [Phone](doc/Phone.md)
+ - [PlaceOrder](doc/PlaceOrder.md)
+ - [PlaceOrderPayment](doc/PlaceOrderPayment.md)
  - [Report](doc/Report.md)
+ - [ReportCategory](doc/ReportCategory.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
  - [ReportList200Response](doc/ReportList200Response.md)
- - [ResetPasswordRequest](doc/ResetPasswordRequest.md)
+ - [ReportStatus](doc/ReportStatus.md)
+ - [ResetPassword](doc/ResetPassword.md)
  - [Review](doc/Review.md)
+ - [ReviewCategory](doc/ReviewCategory.md)
  - [ReviewCreate200Response](doc/ReviewCreate200Response.md)
  - [ReviewList200Response](doc/ReviewList200Response.md)
- - [Schedule](doc/Schedule.md)
- - [ScheduleCreate200Response](doc/ScheduleCreate200Response.md)
- - [ScheduleList200Response](doc/ScheduleList200Response.md)
+ - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
+ - [Session](doc/Session.md)
  - [SignInRequest](doc/SignInRequest.md)
- - [SignInResBody](doc/SignInResBody.md)
- - [SignUpResBody](doc/SignUpResBody.md)
+ - [SignInResponse](doc/SignInResponse.md)
+ - [SignUpResponse](doc/SignUpResponse.md)
  - [Statements](doc/Statements.md)
  - [Time](doc/Time.md)
- - [UnbanUserSchemaRequest](doc/UnbanUserSchemaRequest.md)
- - [UpdateConfigurationRequest](doc/UpdateConfigurationRequest.md)
- - [UpdateCouponRequest](doc/UpdateCouponRequest.md)
- - [UpdateOrderRequest](doc/UpdateOrderRequest.md)
- - [UpdateReportRequest](doc/UpdateReportRequest.md)
- - [UpdateReviewRequest](doc/UpdateReviewRequest.md)
- - [UpdateScheduleRequest](doc/UpdateScheduleRequest.md)
- - [UpdateUserPasswordRequest](doc/UpdateUserPasswordRequest.md)
- - [UpdateUserRoleRequest](doc/UpdateUserRoleRequest.md)
+ - [TopUpRequest](doc/TopUpRequest.md)
+ - [Transaction](doc/Transaction.md)
+ - [TransactionStatus](doc/TransactionStatus.md)
+ - [TransactionType](doc/TransactionType.md)
+ - [TransferRequest](doc/TransferRequest.md)
+ - [UnbanUser](doc/UnbanUser.md)
+ - [UpdateConfiguration](doc/UpdateConfiguration.md)
+ - [UpdateCoupon](doc/UpdateCoupon.md)
+ - [UpdateDriverScheduleRequest](doc/UpdateDriverScheduleRequest.md)
+ - [UpdateOrder](doc/UpdateOrder.md)
+ - [UpdateReport](doc/UpdateReport.md)
+ - [UpdateReview](doc/UpdateReview.md)
+ - [UpdateUser](doc/UpdateUser.md)
+ - [UpdateUserPassword](doc/UpdateUserPassword.md)
+ - [UpdateUserRole](doc/UpdateUserRole.md)
  - [User](doc/User.md)
  - [UserCreate200Response](doc/UserCreate200Response.md)
+ - [UserGender](doc/UserGender.md)
  - [UserList200Response](doc/UserList200Response.md)
- - [UserUpdateRequest](doc/UserUpdateRequest.md)
+ - [UserRole](doc/UserRole.md)
+ - [WSEnvelope](doc/WSEnvelope.md)
+ - [WSEnvelopeSender](doc/WSEnvelopeSender.md)
+ - [WSEnvelopeType](doc/WSEnvelopeType.md)
+ - [WSPlaceOrderEnvelope](doc/WSPlaceOrderEnvelope.md)
+ - [WSTopUpEnvelope](doc/WSTopUpEnvelope.md)
+ - [WSTopUpEnvelopePayload](doc/WSTopUpEnvelopePayload.md)
+ - [Wallet](doc/Wallet.md)
+ - [WalletGet200Response](doc/WalletGet200Response.md)
+ - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)
+ - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
+ - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
+ - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
+ - [WalletTransactions200Response](doc/WalletTransactions200Response.md)
 
 
 ## Documentation For Authorization

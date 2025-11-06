@@ -13,11 +13,11 @@ Name | Type | Description | Notes
 **email** | **String** |  | 
 **emailVerified** | **bool** |  | 
 **image** | **String** |  | [optional] 
-**role** | **String** |  | 
+**role** | [**UserRole**](UserRole.md) |  | 
 **banned** | **bool** |  | 
 **banReason** | **String** |  | [optional] 
 **banExpires** | [**DateTime**](DateTime.md) |  | [optional] 
-**gender** | **String** |  | [optional] 
+**gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **phone** | [**Phone**](Phone.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 

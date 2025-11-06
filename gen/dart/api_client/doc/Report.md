@@ -12,10 +12,10 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | [optional] 
 **reporterId** | **String** |  | 
 **targetUserId** | **String** |  | 
-**category** | **String** |  | 
+**category** | [**ReportCategory**](ReportCategory.md) |  | 
 **description** | **String** |  | 
 **evidenceUrl** | **String** |  | [optional] 
-**status** | **String** |  | 
+**status** | [**ReportStatus**](ReportStatus.md) |  | 
 **handledById** | **String** |  | [optional] 
 **resolution** | **String** |  | [optional] 
 **reportedAt** | [**DateTime**](DateTime.md) |  | 

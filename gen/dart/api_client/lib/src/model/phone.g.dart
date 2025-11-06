@@ -7,7 +7,7 @@ part of 'phone.dart';
 // **************************************************************************
 
 abstract class _$PhoneCWProxy {
-  Phone countryCode(PhoneCountryCodeEnum countryCode);
+  Phone countryCode(CountryCode countryCode);
 
   Phone number(num number);
 
@@ -17,7 +17,7 @@ abstract class _$PhoneCWProxy {
   /// ```dart
   /// Phone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Phone call({PhoneCountryCodeEnum countryCode, num number});
+  Phone call({CountryCode countryCode, num number});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPhone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPhone.copyWith.fieldName(...)`
@@ -27,8 +27,7 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
   final Phone _value;
 
   @override
-  Phone countryCode(PhoneCountryCodeEnum countryCode) =>
-      this(countryCode: countryCode);
+  Phone countryCode(CountryCode countryCode) => this(countryCode: countryCode);
 
   @override
   Phone number(num number) => this(number: number);
@@ -48,7 +47,7 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
       countryCode: countryCode == const $CopyWithPlaceholder()
           ? _value.countryCode
           // ignore: cast_nullable_to_non_nullable
-          : countryCode as PhoneCountryCodeEnum,
+          : countryCode as CountryCode,
       number: number == const $CopyWithPlaceholder()
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
@@ -73,7 +72,7 @@ Phone _$PhoneFromJson(Map<String, dynamic> json) =>
       final val = Phone(
         countryCode: $checkedConvert(
           'countryCode',
-          (v) => $enumDecode(_$PhoneCountryCodeEnumEnumMap, v),
+          (v) => $enumDecode(_$CountryCodeEnumMap, v),
         ),
         number: $checkedConvert('number', (v) => v as num),
       );
@@ -81,8 +80,8 @@ Phone _$PhoneFromJson(Map<String, dynamic> json) =>
     });
 
 Map<String, dynamic> _$PhoneToJson(Phone instance) => <String, dynamic>{
-  'countryCode': _$PhoneCountryCodeEnumEnumMap[instance.countryCode]!,
+  'countryCode': _$CountryCodeEnumMap[instance.countryCode]!,
   'number': instance.number,
 };
 
-const _$PhoneCountryCodeEnumEnumMap = {PhoneCountryCodeEnum.ID: 'ID'};
+const _$CountryCodeEnumMap = {CountryCode.ID: 'ID'};

@@ -9,7 +9,7 @@ part of 'auth_sign_in200_response.dart';
 abstract class _$AuthSignIn200ResponseCWProxy {
   AuthSignIn200Response message(String message);
 
-  AuthSignIn200Response data(SignInResBody data);
+  AuthSignIn200Response data(SignInResponse data);
 
   AuthSignIn200Response totalPages(num? totalPages);
 
@@ -21,7 +21,7 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   /// ````
   AuthSignIn200Response call({
     String message,
-    SignInResBody data,
+    SignInResponse data,
     num? totalPages,
   });
 }
@@ -37,7 +37,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
   AuthSignIn200Response message(String message) => this(message: message);
 
   @override
-  AuthSignIn200Response data(SignInResBody data) => this(data: data);
+  AuthSignIn200Response data(SignInResponse data) => this(data: data);
 
   @override
   AuthSignIn200Response totalPages(num? totalPages) =>
@@ -63,7 +63,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as SignInResBody,
+          : data as SignInResponse,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -91,7 +91,7 @@ AuthSignIn200Response _$AuthSignIn200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => SignInResBody.fromJson(v as Map<String, dynamic>),
+      (v) => SignInResponse.fromJson(v as Map<String, dynamic>),
     ),
     totalPages: $checkedConvert('totalPages', (v) => v as num?),
   );

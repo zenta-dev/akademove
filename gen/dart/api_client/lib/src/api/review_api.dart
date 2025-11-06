@@ -10,10 +10,10 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/driver_remove200_response.dart';
-import 'package:api_client/src/model/insert_review_request.dart';
+import 'package:api_client/src/model/insert_review.dart';
 import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
-import 'package:api_client/src/model/update_review_request.dart';
+import 'package:api_client/src/model/update_review.dart';
 
 class ReviewApi {
   final Dio _dio;
@@ -24,7 +24,7 @@ class ReviewApi {
   ///
   ///
   /// Parameters:
-  /// * [insertReviewRequest]
+  /// * [insertReview]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,7 +35,7 @@ class ReviewApi {
   /// Returns a [Future] containing a [Response] with a [ReviewCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<ReviewCreate200Response>> reviewCreate({
-    required InsertReviewRequest insertReviewRequest,
+    required InsertReview insertReview,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,7 +60,7 @@ class ReviewApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertReviewRequest);
+      _bodyData = jsonEncode(insertReview);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -378,7 +378,7 @@ class ReviewApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [updateReviewRequest]
+  /// * [updateReview]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -390,7 +390,7 @@ class ReviewApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<ReviewCreate200Response>> reviewUpdate({
     required String id,
-    required UpdateReviewRequest updateReviewRequest,
+    required UpdateReview updateReview,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -420,7 +420,7 @@ class ReviewApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateReviewRequest);
+      _bodyData = jsonEncode(updateReview);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

@@ -8,8 +8,6 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** |  | 
-**itemId** | **String** |  | 
 **total** | **num** |  | 
 **item** | [**OrderItemItem**](OrderItemItem.md) |  | 
 

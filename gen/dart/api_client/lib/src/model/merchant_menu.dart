@@ -17,23 +17,15 @@ part 'merchant_menu.g.dart';
 )
 class MerchantMenu {
   /// Returns a new [MerchantMenu] instance.
-  MerchantMenu({
+  const MerchantMenu({
     required this.id,
-
     required this.merchantId,
-
     required this.name,
-
     this.image,
-
     this.category,
-
     required this.price,
-
     required this.stock,
-
     required this.createdAt,
-
     required this.updatedAt,
   });
 

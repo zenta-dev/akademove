@@ -12,17 +12,18 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **studentId** | **num** |  | 
 **licensePlate** | **String** |  | 
-**status** | **String** |  | 
+**status** | [**DriverStatus**](DriverStatus.md) |  | 
 **rating** | **num** |  | 
 **isOnline** | **bool** |  | 
-**currentLocation** | [**Location**](Location.md) |  | [optional] 
+**currentLocation** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **lastLocationUpdate** | [**DateTime**](DateTime.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **studentCard** | **String** |  | 
 **driverLicense** | **String** |  | 
 **vehicleCertificate** | **String** |  | 
 **bank** | [**Bank**](Bank.md) |  | 
-**user** | [**InsertOrderRequestUser**](InsertOrderRequestUser.md) |  | [optional] 
+**user** | [**OrderPlaceOrder200ResponseDataUser**](OrderPlaceOrder200ResponseDataUser.md) |  | [optional] 
+**distance** | **num** | Each user has different result since it calculated value | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

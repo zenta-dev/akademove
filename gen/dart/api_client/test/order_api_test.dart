@@ -6,12 +6,12 @@ void main() {
   final instance = ApiClient().getOrderApi();
 
   group(OrderApi, () {
-    //Future<OrderCreate200Response> orderCreate(InsertOrderRequest insertOrderRequest) async
-    test('test orderCreate', () async {
+    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, List<OrderItem> items, UserGender gender, List<num> discountIds, num weight }) async
+    test('test orderEstimate', () async {
       // TODO
     });
 
-    //Future<OrderCreate200Response> orderGet(String id) async
+    //Future<OrderGet200Response> orderGet(String id) async
     test('test orderGet', () async {
       // TODO
     });
@@ -21,7 +21,12 @@ void main() {
       // TODO
     });
 
-    //Future<OrderCreate200Response> orderUpdate(String id, UpdateOrderRequest updateOrderRequest) async
+    //Future<OrderPlaceOrder200Response> orderPlaceOrder(PlaceOrder placeOrder) async
+    test('test orderPlaceOrder', () async {
+      // TODO
+    });
+
+    //Future<OrderGet200Response> orderUpdate(String id, UpdateOrder updateOrder) async
     test('test orderUpdate', () async {
       // TODO
     });

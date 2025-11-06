@@ -18,11 +18,9 @@ part 'driver_get_mine200_response_body.g.dart';
 )
 class DriverGetMine200ResponseBody {
   /// Returns a new [DriverGetMine200ResponseBody] instance.
-  DriverGetMine200ResponseBody({
+  const DriverGetMine200ResponseBody({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

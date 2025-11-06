@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/country_code.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -17,10 +18,10 @@ part 'phone.g.dart';
 )
 class Phone {
   /// Returns a new [Phone] instance.
-  Phone({required this.countryCode, required this.number});
+  const Phone({required this.countryCode, required this.number});
 
   @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
-  final PhoneCountryCodeEnum countryCode;
+  final CountryCode countryCode;
 
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
@@ -43,16 +44,4 @@ class Phone {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum PhoneCountryCodeEnum {
-  @JsonValue(r'ID')
-  ID(r'ID');
-
-  const PhoneCountryCodeEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

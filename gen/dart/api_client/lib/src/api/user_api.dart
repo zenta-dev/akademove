@@ -10,10 +10,10 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/driver_remove200_response.dart';
-import 'package:api_client/src/model/insert_user_request.dart';
+import 'package:api_client/src/model/insert_user.dart';
+import 'package:api_client/src/model/update_user.dart';
 import 'package:api_client/src/model/user_create200_response.dart';
 import 'package:api_client/src/model/user_list200_response.dart';
-import 'package:api_client/src/model/user_update_request.dart';
 
 class UserApi {
   final Dio _dio;
@@ -24,7 +24,7 @@ class UserApi {
   ///
   ///
   /// Parameters:
-  /// * [insertUserRequest]
+  /// * [insertUser]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,7 +35,7 @@ class UserApi {
   /// Returns a [Future] containing a [Response] with a [UserCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<UserCreate200Response>> userCreate({
-    required InsertUserRequest insertUserRequest,
+    required InsertUser insertUser,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,7 +60,7 @@ class UserApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertUserRequest);
+      _bodyData = jsonEncode(insertUser);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -378,7 +378,7 @@ class UserApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [userUpdateRequest]
+  /// * [updateUser]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -390,7 +390,7 @@ class UserApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<UserCreate200Response>> userUpdate({
     required String id,
-    required UserUpdateRequest userUpdateRequest,
+    required UpdateUser updateUser,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -420,7 +420,7 @@ class UserApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(userUpdateRequest);
+      _bodyData = jsonEncode(updateUser);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

@@ -17,7 +17,11 @@ part 'coupon_general_rules.g.dart';
 )
 class CouponGeneralRules {
   /// Returns a new [CouponGeneralRules] instance.
-  CouponGeneralRules({this.type, this.minOrderAmount, this.maxDiscountAmount});
+  const CouponGeneralRules({
+    this.type,
+    this.minOrderAmount,
+    this.maxDiscountAmount,
+  });
 
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final CouponGeneralRulesTypeEnum? type;

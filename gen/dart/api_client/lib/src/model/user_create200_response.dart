@@ -18,11 +18,9 @@ part 'user_create200_response.g.dart';
 )
 class UserCreate200Response {
   /// Returns a new [UserCreate200Response] instance.
-  UserCreate200Response({
+  const UserCreate200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/sign_in_res_body.dart';
+import 'package:api_client/src/model/sign_in_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -18,11 +18,9 @@ part 'auth_sign_in200_response.g.dart';
 )
 class AuthSignIn200Response {
   /// Returns a new [AuthSignIn200Response] instance.
-  AuthSignIn200Response({
+  const AuthSignIn200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 
@@ -30,7 +28,7 @@ class AuthSignIn200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final SignInResBody data;
+  final SignInResponse data;
 
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;

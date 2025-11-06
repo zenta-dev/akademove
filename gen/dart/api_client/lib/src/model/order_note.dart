@@ -17,7 +17,7 @@ part 'order_note.g.dart';
 )
 class OrderNote {
   /// Returns a new [OrderNote] instance.
-  OrderNote({this.pickup, this.dropoff});
+  const OrderNote({this.pickup, this.dropoff});
 
   @JsonKey(name: r'pickup', required: false, includeIfNull: false)
   final String? pickup;

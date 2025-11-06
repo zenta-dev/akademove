@@ -18,7 +18,7 @@ part 'auth_has_permission_request.g.dart';
 )
 class AuthHasPermissionRequest {
   /// Returns a new [AuthHasPermissionRequest] instance.
-  AuthHasPermissionRequest({required this.permissions});
+  const AuthHasPermissionRequest({required this.permissions});
 
   @JsonKey(name: r'permissions', required: true, includeIfNull: false)
   final Statements permissions;

@@ -7,16 +7,6 @@ void main() {
   // TODO add properties to the entity
 
   group(OrderItem, () {
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
-    });
-
-    // String itemId
-    test('to test the property `itemId`', () async {
-      // TODO
-    });
-
     // num total
     test('to test the property `total`', () async {
       // TODO

@@ -17,11 +17,9 @@ part 'auth_sign_out200_response.g.dart';
 )
 class AuthSignOut200Response {
   /// Returns a new [AuthSignOut200Response] instance.
-  AuthSignOut200Response({
+  const AuthSignOut200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

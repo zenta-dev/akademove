@@ -17,7 +17,7 @@ part 'sign_in_request.g.dart';
 )
 class SignInRequest {
   /// Returns a new [SignInRequest] instance.
-  SignInRequest({required this.email, required this.password});
+  const SignInRequest({required this.email, required this.password});
 
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;

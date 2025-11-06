@@ -9,7 +9,7 @@ part of 'auth_get_session200_response.dart';
 abstract class _$AuthGetSession200ResponseCWProxy {
   AuthGetSession200Response message(String message);
 
-  AuthGetSession200Response data(AuthGetSession200ResponseData? data);
+  AuthGetSession200Response data(GetSessionResponse? data);
 
   AuthGetSession200Response totalPages(num? totalPages);
 
@@ -21,7 +21,7 @@ abstract class _$AuthGetSession200ResponseCWProxy {
   /// ````
   AuthGetSession200Response call({
     String message,
-    AuthGetSession200ResponseData? data,
+    GetSessionResponse? data,
     num? totalPages,
   });
 }
@@ -37,8 +37,7 @@ class _$AuthGetSession200ResponseCWProxyImpl
   AuthGetSession200Response message(String message) => this(message: message);
 
   @override
-  AuthGetSession200Response data(AuthGetSession200ResponseData? data) =>
-      this(data: data);
+  AuthGetSession200Response data(GetSessionResponse? data) => this(data: data);
 
   @override
   AuthGetSession200Response totalPages(num? totalPages) =>
@@ -64,7 +63,7 @@ class _$AuthGetSession200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as AuthGetSession200ResponseData?,
+          : data as GetSessionResponse?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -94,7 +93,7 @@ AuthGetSession200Response _$AuthGetSession200ResponseFromJson(
       'data',
       (v) => v == null
           ? null
-          : AuthGetSession200ResponseData.fromJson(v as Map<String, dynamic>),
+          : GetSessionResponse.fromJson(v as Map<String, dynamic>),
     ),
     totalPages: $checkedConvert('totalPages', (v) => v as num?),
   );

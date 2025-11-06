@@ -17,7 +17,7 @@ part 'time.g.dart';
 )
 class Time {
   /// Returns a new [Time] instance.
-  Time({required this.h, required this.m});
+  const Time({required this.h, required this.m});
 
   @JsonKey(name: r'h', required: true, includeIfNull: false)
   final num h;

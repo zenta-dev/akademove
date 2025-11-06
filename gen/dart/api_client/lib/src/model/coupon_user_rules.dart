@@ -17,7 +17,7 @@ part 'coupon_user_rules.g.dart';
 )
 class CouponUserRules {
   /// Returns a new [CouponUserRules] instance.
-  CouponUserRules({this.newUserOnly});
+  const CouponUserRules({this.newUserOnly});
 
   @JsonKey(name: r'newUserOnly', required: false, includeIfNull: false)
   final bool? newUserOnly;

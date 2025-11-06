@@ -9,14 +9,15 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**orderCreate**](OrderApi.md#ordercreate) | **POST** /orders | 
+[**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
+[**orderPlaceOrder**](OrderApi.md#orderplaceorder) | **POST** /orders | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 
 
-# **orderCreate**
-> OrderCreate200Response orderCreate(insertOrderRequest)
+# **orderEstimate**
+> OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, items, gender, discountIds, weight)
 
 
 
@@ -25,13 +26,23 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
-final InsertOrderRequest insertOrderRequest = ; // InsertOrderRequest | 
+final num dropoffLocationX = 8.14; // num | 
+final num dropoffLocationY = 8.14; // num | 
+final num pickupLocationX = 8.14; // num | 
+final num pickupLocationY = 8.14; // num | 
+final OrderType type = ; // OrderType | 
+final String notePickup = notePickup_example; // String | 
+final String noteDropoff = noteDropoff_example; // String | 
+final List<OrderItem> items = ; // List<OrderItem> | 
+final UserGender gender = ; // UserGender | 
+final List<num> discountIds = ; // List<num> | 
+final num weight = 8.14; // num | 
 
 try {
-    final response = api.orderCreate(insertOrderRequest);
+    final response = api.orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, items, gender, discountIds, weight);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling OrderApi->orderCreate: $e\n');
+    print('Exception when calling OrderApi->orderEstimate: $e\n');
 }
 ```
 
@@ -39,11 +50,21 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertOrderRequest** | [**InsertOrderRequest**](InsertOrderRequest.md)|  | 
+ **dropoffLocationX** | **num**|  | 
+ **dropoffLocationY** | **num**|  | 
+ **pickupLocationX** | **num**|  | 
+ **pickupLocationY** | **num**|  | 
+ **type** | [**OrderType**](.md)|  | 
+ **notePickup** | **String**|  | [optional] 
+ **noteDropoff** | **String**|  | [optional] 
+ **items** | [**List&lt;OrderItem&gt;**](OrderItem.md)|  | [optional] 
+ **gender** | [**UserGender**](.md)|  | [optional] 
+ **discountIds** | [**List&lt;num&gt;**](num.md)|  | [optional] 
+ **weight** | **num**|  | [optional] 
 
 ### Return type
 
-[**OrderCreate200Response**](OrderCreate200Response.md)
+[**OrderEstimate200Response**](OrderEstimate200Response.md)
 
 ### Authorization
 
@@ -51,13 +72,13 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderGet**
-> OrderCreate200Response orderGet(id)
+> OrderGet200Response orderGet(id)
 
 
 
@@ -84,7 +105,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OrderCreate200Response**](OrderCreate200Response.md)
+[**OrderGet200Response**](OrderGet200Response.md)
 
 ### Authorization
 
@@ -150,8 +171,49 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **orderPlaceOrder**
+> OrderPlaceOrder200Response orderPlaceOrder(placeOrder)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final PlaceOrder placeOrder = ; // PlaceOrder | 
+
+try {
+    final response = api.orderPlaceOrder(placeOrder);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderPlaceOrder: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **placeOrder** | [**PlaceOrder**](PlaceOrder.md)|  | 
+
+### Return type
+
+[**OrderPlaceOrder200Response**](OrderPlaceOrder200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **orderUpdate**
-> OrderCreate200Response orderUpdate(id, updateOrderRequest)
+> OrderGet200Response orderUpdate(id, updateOrder)
 
 
 
@@ -161,10 +223,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getOrderApi();
 final String id = id_example; // String | 
-final UpdateOrderRequest updateOrderRequest = ; // UpdateOrderRequest | 
+final UpdateOrder updateOrder = ; // UpdateOrder | 
 
 try {
-    final response = api.orderUpdate(id, updateOrderRequest);
+    final response = api.orderUpdate(id, updateOrder);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderUpdate: $e\n');
@@ -176,11 +238,11 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateOrderRequest** | [**UpdateOrderRequest**](UpdateOrderRequest.md)|  | 
+ **updateOrder** | [**UpdateOrder**](UpdateOrder.md)|  | 
 
 ### Return type
 
-[**OrderCreate200Response**](OrderCreate200Response.md)
+[**OrderGet200Response**](OrderGet200Response.md)
 
 ### Authorization
 

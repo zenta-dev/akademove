@@ -7,7 +7,7 @@ void main() {
   // TODO add properties to the entity
 
   group(CouponTimeRules, () {
-    // List<String> allowedDays
+    // List<DayOfWeek> allowedDays
     test('to test the property `allowedDays`', () async {
       // TODO
     });

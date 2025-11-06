@@ -12,10 +12,10 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **merchantId** | **String** |  | [optional] 
-**type** | **String** |  | 
-**status** | **String** |  | 
-**pickupLocation** | [**Location**](Location.md) |  | 
-**dropoffLocation** | [**Location**](Location.md) |  | 
+**type** | [**OrderType**](OrderType.md) |  | 
+**status** | [**OrderStatus**](OrderStatus.md) |  | 
+**pickupLocation** | [**Coordinate**](Coordinate.md) |  | 
+**dropoffLocation** | [**Coordinate**](Coordinate.md) |  | 
 **distanceKm** | **num** |  | 
 **basePrice** | **num** |  | 
 **tip** | **num** |  | [optional] 
@@ -24,13 +24,15 @@ Name | Type | Description | Notes
 **requestedAt** | [**DateTime**](DateTime.md) |  | 
 **acceptedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **arrivedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**cancelReason** | **String** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
+**gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **itemCount** | **num** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
-**user** | [**InsertOrderRequestUser**](InsertOrderRequestUser.md) |  | [optional] 
-**driver** | [**InsertOrderRequestDriver**](InsertOrderRequestDriver.md) |  | [optional] 
-**merchant** | [**InsertOrderRequestMerchant**](InsertOrderRequestMerchant.md) |  | [optional] 
+**user** | [**OrderPlaceOrder200ResponseDataUser**](OrderPlaceOrder200ResponseDataUser.md) |  | [optional] 
+**driver** | [**OrderPlaceOrder200ResponseDataDriver**](OrderPlaceOrder200ResponseDataDriver.md) |  | [optional] 
+**merchant** | [**OrderPlaceOrder200ResponseDataMerchant**](OrderPlaceOrder200ResponseDataMerchant.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

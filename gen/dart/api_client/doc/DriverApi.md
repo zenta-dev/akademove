@@ -12,7 +12,13 @@ Method | HTTP request | Description
 [**driverGet**](DriverApi.md#driverget) | **GET** /drivers/{id} | 
 [**driverGetMine**](DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
+[**driverNearby**](DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
+[**driverScheduleCreate**](DriverApi.md#driverschedulecreate) | **POST** /driver/schedules | 
+[**driverScheduleGet**](DriverApi.md#driverscheduleget) | **GET** /driver/schedules/{id} | 
+[**driverScheduleList**](DriverApi.md#driverschedulelist) | **GET** /driver/schedules | 
+[**driverScheduleRemove**](DriverApi.md#driverscheduleremove) | **DELETE** /driver/schedules/{id} | 
+[**driverScheduleUpdate**](DriverApi.md#driverscheduleupdate) | **PUT** /driver/schedules/{id} | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
 
@@ -145,6 +151,55 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **driverNearby**
+> DriverList200Response driverNearby(x, y, radiusKm, limit, gender)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final num x = 8.14; // num | 
+final num y = 8.14; // num | 
+final num radiusKm = 8.14; // num | 
+final num limit = 8.14; // num | 
+final UserGender gender = ; // UserGender | 
+
+try {
+    final response = api.driverNearby(x, y, radiusKm, limit, gender);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverNearby: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **x** | **num**|  | 
+ **y** | **num**|  | 
+ **radiusKm** | **num**|  | 
+ **limit** | **num**|  | 
+ **gender** | [**UserGender**](.md)|  | [optional] 
+
+### Return type
+
+[**DriverList200Response**](DriverList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **driverRemove**
 > DriverRemove200Response driverRemove(id)
 
@@ -186,8 +241,225 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **driverScheduleCreate**
+> DriverScheduleCreate200Response driverScheduleCreate(insertDriverScheduleRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final InsertDriverScheduleRequest insertDriverScheduleRequest = ; // InsertDriverScheduleRequest | 
+
+try {
+    final response = api.driverScheduleCreate(insertDriverScheduleRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverScheduleCreate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **insertDriverScheduleRequest** | [**InsertDriverScheduleRequest**](InsertDriverScheduleRequest.md)|  | 
+
+### Return type
+
+[**DriverScheduleCreate200Response**](DriverScheduleCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverScheduleGet**
+> DriverScheduleCreate200Response driverScheduleGet(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.driverScheduleGet(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverScheduleGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**DriverScheduleCreate200Response**](DriverScheduleCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverScheduleList**
+> DriverScheduleList200Response driverScheduleList(cursor, limit, page, query, sortBy, order)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final String order = order_example; // String | 
+
+try {
+    final response = api.driverScheduleList(cursor, limit, page, query, sortBy, order);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverScheduleList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | **String**|  | [optional] [default to 'desc']
+
+### Return type
+
+[**DriverScheduleList200Response**](DriverScheduleList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverScheduleRemove**
+> DriverRemove200Response driverScheduleRemove(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.driverScheduleRemove(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverScheduleRemove: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**DriverRemove200Response**](DriverRemove200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverScheduleUpdate**
+> DriverScheduleCreate200Response driverScheduleUpdate(id, updateDriverScheduleRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+final UpdateDriverScheduleRequest updateDriverScheduleRequest = ; // UpdateDriverScheduleRequest | 
+
+try {
+    final response = api.driverScheduleUpdate(id, updateDriverScheduleRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverScheduleUpdate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **updateDriverScheduleRequest** | [**UpdateDriverScheduleRequest**](UpdateDriverScheduleRequest.md)|  | 
+
+### Return type
+
+[**DriverScheduleCreate200Response**](DriverScheduleCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **driverUpdate**
-> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank)
+> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, currentLocation)
 
 
 
@@ -203,9 +475,10 @@ final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
 final DriverUpdateRequestBank bank = ; // DriverUpdateRequestBank | 
+final DriverUpdateRequestCurrentLocation currentLocation = ; // DriverUpdateRequestCurrentLocation | 
 
 try {
-    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank);
+    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, currentLocation);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -223,6 +496,7 @@ Name | Type | Description  | Notes
  **driverLicense** | **MultipartFile**|  | [optional] 
  **vehicleCertificate** | **MultipartFile**|  | [optional] 
  **bank** | [**DriverUpdateRequestBank**](DriverUpdateRequestBank.md)|  | [optional] 
+ **currentLocation** | [**DriverUpdateRequestCurrentLocation**](DriverUpdateRequestCurrentLocation.md)|  | [optional] 
 
 ### Return type
 

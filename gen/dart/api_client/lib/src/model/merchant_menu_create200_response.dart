@@ -18,11 +18,9 @@ part 'merchant_menu_create200_response.g.dart';
 )
 class MerchantMenuCreate200Response {
   /// Returns a new [MerchantMenuCreate200Response] instance.
-  MerchantMenuCreate200Response({
+  const MerchantMenuCreate200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

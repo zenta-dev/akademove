@@ -10,10 +10,10 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/driver_remove200_response.dart';
-import 'package:api_client/src/model/insert_report_request.dart';
+import 'package:api_client/src/model/insert_report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
-import 'package:api_client/src/model/update_report_request.dart';
+import 'package:api_client/src/model/update_report.dart';
 
 class ReportApi {
   final Dio _dio;
@@ -24,7 +24,7 @@ class ReportApi {
   ///
   ///
   /// Parameters:
-  /// * [insertReportRequest]
+  /// * [insertReport]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -35,7 +35,7 @@ class ReportApi {
   /// Returns a [Future] containing a [Response] with a [ReportCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<ReportCreate200Response>> reportCreate({
-    required InsertReportRequest insertReportRequest,
+    required InsertReport insertReport,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -60,7 +60,7 @@ class ReportApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertReportRequest);
+      _bodyData = jsonEncode(insertReport);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -378,7 +378,7 @@ class ReportApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [updateReportRequest]
+  /// * [updateReport]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -390,7 +390,7 @@ class ReportApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<ReportCreate200Response>> reportUpdate({
     required String id,
-    required UpdateReportRequest updateReportRequest,
+    required UpdateReport updateReport,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -420,7 +420,7 @@ class ReportApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateReportRequest);
+      _bodyData = jsonEncode(updateReport);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

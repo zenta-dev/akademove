@@ -27,22 +27,22 @@ void main() {
       // TODO
     });
 
-    // String type
+    // OrderType type
     test('to test the property `type`', () async {
       // TODO
     });
 
-    // String status
+    // OrderStatus status
     test('to test the property `status`', () async {
       // TODO
     });
 
-    // Location pickupLocation
+    // Coordinate pickupLocation
     test('to test the property `pickupLocation`', () async {
       // TODO
     });
 
-    // Location dropoffLocation
+    // Coordinate dropoffLocation
     test('to test the property `dropoffLocation`', () async {
       // TODO
     });
@@ -87,6 +87,11 @@ void main() {
       // TODO
     });
 
+    // String cancelReason
+    test('to test the property `cancelReason`', () async {
+      // TODO
+    });
+
     // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO
@@ -94,6 +99,11 @@ void main() {
 
     // DateTime updatedAt
     test('to test the property `updatedAt`', () async {
+      // TODO
+    });
+
+    // UserGender gender
+    test('to test the property `gender`', () async {
       // TODO
     });
 
@@ -107,17 +117,17 @@ void main() {
       // TODO
     });
 
-    // InsertOrderRequestUser user
+    // OrderPlaceOrder200ResponseDataUser user
     test('to test the property `user`', () async {
       // TODO
     });
 
-    // InsertOrderRequestDriver driver
+    // OrderPlaceOrder200ResponseDataDriver driver
     test('to test the property `driver`', () async {
       // TODO
     });
 
-    // InsertOrderRequestMerchant merchant
+    // OrderPlaceOrder200ResponseDataMerchant merchant
     test('to test the property `merchant`', () async {
       // TODO
     });

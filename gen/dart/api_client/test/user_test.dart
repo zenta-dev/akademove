@@ -32,7 +32,7 @@ void main() {
       // TODO
     });
 
-    // String role
+    // UserRole role
     test('to test the property `role`', () async {
       // TODO
     });
@@ -52,7 +52,7 @@ void main() {
       // TODO
     });
 
-    // String gender
+    // UserGender gender
     test('to test the property `gender`', () async {
       // TODO
     });

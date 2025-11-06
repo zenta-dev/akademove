@@ -15,13 +15,13 @@ abstract class _$OrderCWProxy {
 
   Order merchantId(String? merchantId);
 
-  Order type(OrderTypeEnum type);
+  Order type(OrderType type);
 
-  Order status(OrderStatusEnum status);
+  Order status(OrderStatus status);
 
-  Order pickupLocation(Location pickupLocation);
+  Order pickupLocation(Coordinate pickupLocation);
 
-  Order dropoffLocation(Location dropoffLocation);
+  Order dropoffLocation(Coordinate dropoffLocation);
 
   Order distanceKm(num distanceKm);
 
@@ -39,19 +39,23 @@ abstract class _$OrderCWProxy {
 
   Order arrivedAt(DateTime? arrivedAt);
 
+  Order cancelReason(String? cancelReason);
+
   Order createdAt(DateTime createdAt);
 
   Order updatedAt(DateTime updatedAt);
+
+  Order gender(UserGender? gender);
 
   Order itemCount(num? itemCount);
 
   Order items(List<OrderItem>? items);
 
-  Order user(InsertOrderRequestUser? user);
+  Order user(OrderPlaceOrder200ResponseDataUser? user);
 
-  Order driver(InsertOrderRequestDriver? driver);
+  Order driver(OrderPlaceOrder200ResponseDataDriver? driver);
 
-  Order merchant(InsertOrderRequestMerchant? merchant);
+  Order merchant(OrderPlaceOrder200ResponseDataMerchant? merchant);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -64,10 +68,10 @@ abstract class _$OrderCWProxy {
     String userId,
     String? driverId,
     String? merchantId,
-    OrderTypeEnum type,
-    OrderStatusEnum status,
-    Location pickupLocation,
-    Location dropoffLocation,
+    OrderType type,
+    OrderStatus status,
+    Coordinate pickupLocation,
+    Coordinate dropoffLocation,
     num distanceKm,
     num basePrice,
     num? tip,
@@ -76,13 +80,15 @@ abstract class _$OrderCWProxy {
     DateTime requestedAt,
     DateTime? acceptedAt,
     DateTime? arrivedAt,
+    String? cancelReason,
     DateTime createdAt,
     DateTime updatedAt,
+    UserGender? gender,
     num? itemCount,
     List<OrderItem>? items,
-    InsertOrderRequestUser? user,
-    InsertOrderRequestDriver? driver,
-    InsertOrderRequestMerchant? merchant,
+    OrderPlaceOrder200ResponseDataUser? user,
+    OrderPlaceOrder200ResponseDataDriver? driver,
+    OrderPlaceOrder200ResponseDataMerchant? merchant,
   });
 }
 
@@ -105,17 +111,17 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order merchantId(String? merchantId) => this(merchantId: merchantId);
 
   @override
-  Order type(OrderTypeEnum type) => this(type: type);
+  Order type(OrderType type) => this(type: type);
 
   @override
-  Order status(OrderStatusEnum status) => this(status: status);
+  Order status(OrderStatus status) => this(status: status);
 
   @override
-  Order pickupLocation(Location pickupLocation) =>
+  Order pickupLocation(Coordinate pickupLocation) =>
       this(pickupLocation: pickupLocation);
 
   @override
-  Order dropoffLocation(Location dropoffLocation) =>
+  Order dropoffLocation(Coordinate dropoffLocation) =>
       this(dropoffLocation: dropoffLocation);
 
   @override
@@ -143,10 +149,16 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order arrivedAt(DateTime? arrivedAt) => this(arrivedAt: arrivedAt);
 
   @override
+  Order cancelReason(String? cancelReason) => this(cancelReason: cancelReason);
+
+  @override
   Order createdAt(DateTime createdAt) => this(createdAt: createdAt);
 
   @override
   Order updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
+  Order gender(UserGender? gender) => this(gender: gender);
 
   @override
   Order itemCount(num? itemCount) => this(itemCount: itemCount);
@@ -155,13 +167,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order items(List<OrderItem>? items) => this(items: items);
 
   @override
-  Order user(InsertOrderRequestUser? user) => this(user: user);
+  Order user(OrderPlaceOrder200ResponseDataUser? user) => this(user: user);
 
   @override
-  Order driver(InsertOrderRequestDriver? driver) => this(driver: driver);
+  Order driver(OrderPlaceOrder200ResponseDataDriver? driver) =>
+      this(driver: driver);
 
   @override
-  Order merchant(InsertOrderRequestMerchant? merchant) =>
+  Order merchant(OrderPlaceOrder200ResponseDataMerchant? merchant) =>
       this(merchant: merchant);
 
   @override
@@ -188,8 +201,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? requestedAt = const $CopyWithPlaceholder(),
     Object? acceptedAt = const $CopyWithPlaceholder(),
     Object? arrivedAt = const $CopyWithPlaceholder(),
+    Object? cancelReason = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
+    Object? gender = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -216,19 +231,19 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
-          : type as OrderTypeEnum,
+          : type as OrderType,
       status: status == const $CopyWithPlaceholder()
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
-          : status as OrderStatusEnum,
+          : status as OrderStatus,
       pickupLocation: pickupLocation == const $CopyWithPlaceholder()
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
-          : pickupLocation as Location,
+          : pickupLocation as Coordinate,
       dropoffLocation: dropoffLocation == const $CopyWithPlaceholder()
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
-          : dropoffLocation as Location,
+          : dropoffLocation as Coordinate,
       distanceKm: distanceKm == const $CopyWithPlaceholder()
           ? _value.distanceKm
           // ignore: cast_nullable_to_non_nullable
@@ -261,6 +276,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.arrivedAt
           // ignore: cast_nullable_to_non_nullable
           : arrivedAt as DateTime?,
+      cancelReason: cancelReason == const $CopyWithPlaceholder()
+          ? _value.cancelReason
+          // ignore: cast_nullable_to_non_nullable
+          : cancelReason as String?,
       createdAt: createdAt == const $CopyWithPlaceholder()
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -269,6 +288,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
+      gender: gender == const $CopyWithPlaceholder()
+          ? _value.gender
+          // ignore: cast_nullable_to_non_nullable
+          : gender as UserGender?,
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
@@ -280,15 +303,15 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as InsertOrderRequestUser?,
+          : user as OrderPlaceOrder200ResponseDataUser?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
-          : driver as InsertOrderRequestDriver?,
+          : driver as OrderPlaceOrder200ResponseDataDriver?,
       merchant: merchant == const $CopyWithPlaceholder()
           ? _value.merchant
           // ignore: cast_nullable_to_non_nullable
-          : merchant as InsertOrderRequestMerchant?,
+          : merchant as OrderPlaceOrder200ResponseDataMerchant?,
     );
   }
 }
@@ -328,21 +351,18 @@ Order _$OrderFromJson(
     userId: $checkedConvert('userId', (v) => v as String),
     driverId: $checkedConvert('driverId', (v) => v as String?),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$OrderTypeEnumEnumMap, v),
-    ),
+    type: $checkedConvert('type', (v) => $enumDecode(_$OrderTypeEnumMap, v)),
     status: $checkedConvert(
       'status',
-      (v) => $enumDecode(_$OrderStatusEnumEnumMap, v),
+      (v) => $enumDecode(_$OrderStatusEnumMap, v),
     ),
     pickupLocation: $checkedConvert(
       'pickupLocation',
-      (v) => Location.fromJson(v as Map<String, dynamic>),
+      (v) => Coordinate.fromJson(v as Map<String, dynamic>),
     ),
     dropoffLocation: $checkedConvert(
       'dropoffLocation',
-      (v) => Location.fromJson(v as Map<String, dynamic>),
+      (v) => Coordinate.fromJson(v as Map<String, dynamic>),
     ),
     distanceKm: $checkedConvert('distanceKm', (v) => v as num),
     basePrice: $checkedConvert('basePrice', (v) => v as num),
@@ -364,8 +384,13 @@ Order _$OrderFromJson(
       'arrivedAt',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
+    cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    gender: $checkedConvert(
+      'gender',
+      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+    ),
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
       'items',
@@ -377,19 +402,25 @@ Order _$OrderFromJson(
       'user',
       (v) => v == null
           ? null
-          : InsertOrderRequestUser.fromJson(v as Map<String, dynamic>),
+          : OrderPlaceOrder200ResponseDataUser.fromJson(
+              v as Map<String, dynamic>,
+            ),
     ),
     driver: $checkedConvert(
       'driver',
       (v) => v == null
           ? null
-          : InsertOrderRequestDriver.fromJson(v as Map<String, dynamic>),
+          : OrderPlaceOrder200ResponseDataDriver.fromJson(
+              v as Map<String, dynamic>,
+            ),
     ),
     merchant: $checkedConvert(
       'merchant',
       (v) => v == null
           ? null
-          : InsertOrderRequestMerchant.fromJson(v as Map<String, dynamic>),
+          : OrderPlaceOrder200ResponseDataMerchant.fromJson(
+              v as Map<String, dynamic>,
+            ),
     ),
   );
   return val;
@@ -400,8 +431,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'userId': instance.userId,
   'driverId': ?instance.driverId,
   'merchantId': ?instance.merchantId,
-  'type': _$OrderTypeEnumEnumMap[instance.type]!,
-  'status': _$OrderStatusEnumEnumMap[instance.status]!,
+  'type': _$OrderTypeEnumMap[instance.type]!,
+  'status': _$OrderStatusEnumMap[instance.status]!,
   'pickupLocation': instance.pickupLocation.toJson(),
   'dropoffLocation': instance.dropoffLocation.toJson(),
   'distanceKm': instance.distanceKm,
@@ -412,8 +443,10 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'requestedAt': instance.requestedAt.toIso8601String(),
   'acceptedAt': ?instance.acceptedAt?.toIso8601String(),
   'arrivedAt': ?instance.arrivedAt?.toIso8601String(),
+  'cancelReason': ?instance.cancelReason,
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
+  'gender': ?_$UserGenderEnumMap[instance.gender],
   'itemCount': ?instance.itemCount,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),
   'user': ?instance.user?.toJson(),
@@ -421,20 +454,25 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'merchant': ?instance.merchant?.toJson(),
 };
 
-const _$OrderTypeEnumEnumMap = {
-  OrderTypeEnum.ride: 'ride',
-  OrderTypeEnum.delivery: 'delivery',
-  OrderTypeEnum.food: 'food',
+const _$OrderTypeEnumMap = {
+  OrderType.ride: 'ride',
+  OrderType.delivery: 'delivery',
+  OrderType.food: 'food',
 };
 
-const _$OrderStatusEnumEnumMap = {
-  OrderStatusEnum.requested: 'requested',
-  OrderStatusEnum.matching: 'matching',
-  OrderStatusEnum.accepted: 'accepted',
-  OrderStatusEnum.arriving: 'arriving',
-  OrderStatusEnum.inTrip: 'in_trip',
-  OrderStatusEnum.completed: 'completed',
-  OrderStatusEnum.cancelledByUser: 'cancelled_by_user',
-  OrderStatusEnum.cancelledByDriver: 'cancelled_by_driver',
-  OrderStatusEnum.cancelledBySystem: 'cancelled_by_system',
+const _$OrderStatusEnumMap = {
+  OrderStatus.requested: 'requested',
+  OrderStatus.matching: 'matching',
+  OrderStatus.accepted: 'accepted',
+  OrderStatus.arriving: 'arriving',
+  OrderStatus.inTrip: 'in_trip',
+  OrderStatus.completed: 'completed',
+  OrderStatus.cancelledByUser: 'cancelled_by_user',
+  OrderStatus.cancelledByDriver: 'cancelled_by_driver',
+  OrderStatus.cancelledBySystem: 'cancelled_by_system',
+};
+
+const _$UserGenderEnumMap = {
+  UserGender.male: 'male',
+  UserGender.female: 'female',
 };

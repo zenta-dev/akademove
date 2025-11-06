@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getReportApi();
 
   group(ReportApi, () {
-    //Future<ReportCreate200Response> reportCreate(InsertReportRequest insertReportRequest) async
+    //Future<ReportCreate200Response> reportCreate(InsertReport insertReport) async
     test('test reportCreate', () async {
       // TODO
     });
@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<ReportCreate200Response> reportUpdate(String id, UpdateReportRequest updateReportRequest) async
+    //Future<ReportCreate200Response> reportUpdate(String id, UpdateReport updateReport) async
     test('test reportUpdate', () async {
       // TODO
     });

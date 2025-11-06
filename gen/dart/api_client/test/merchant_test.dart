@@ -37,7 +37,7 @@ void main() {
       // TODO
     });
 
-    // Location location
+    // Coordinate location
     test('to test the property `location`', () async {
       // TODO
     });
@@ -54,6 +54,16 @@ void main() {
 
     // String document
     test('to test the property `document`', () async {
+      // TODO
+    });
+
+    // String image
+    test('to test the property `image`', () async {
+      // TODO
+    });
+
+    // List<String> categories
+    test('to test the property `categories`', () async {
       // TODO
     });
 

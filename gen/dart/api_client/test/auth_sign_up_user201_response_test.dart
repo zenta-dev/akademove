@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // SignUpResBody data
+    // SignUpResponse data
     test('to test the property `data`', () async {
       // TODO
     });

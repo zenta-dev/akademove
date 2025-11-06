@@ -17,17 +17,12 @@ part 'configuration.g.dart';
 )
 class Configuration {
   /// Returns a new [Configuration] instance.
-  Configuration({
+  const Configuration({
     required this.key,
-
     required this.name,
-
     this.value,
-
     this.description,
-
     required this.updatedById,
-
     required this.updatedAt,
   });
 

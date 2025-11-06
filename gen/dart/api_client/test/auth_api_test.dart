@@ -6,6 +6,11 @@ void main() {
   final instance = ApiClient().getAuthApi();
 
   group(AuthApi, () {
+    //Future<AuthExchangeToken200Response> authExchangeToken() async
+    test('test authExchangeToken', () async {
+      // TODO
+    });
+
     //Future<AuthSignOut200Response> authForgotPassword(ForgotPasswordRequest forgotPasswordRequest) async
     test('test authForgotPassword', () async {
       // TODO
@@ -21,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> authResetPassword(ResetPasswordRequest resetPasswordRequest) async
+    //Future<AuthSignOut200Response> authResetPassword(ResetPassword resetPassword) async
     test('test authResetPassword', () async {
       // TODO
     });
@@ -41,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationLat, num detailLocationLng, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument }) async
+    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, List<String> detailCategories, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
     test('test authSignUpMerchant', () async {
       // TODO
     });

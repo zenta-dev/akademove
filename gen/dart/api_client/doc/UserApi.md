@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **userCreate**
-> UserCreate200Response userCreate(insertUserRequest)
+> UserCreate200Response userCreate(insertUser)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final InsertUserRequest insertUserRequest = ; // InsertUserRequest | 
+final InsertUser insertUser = ; // InsertUser | 
 
 try {
-    final response = api.userCreate(insertUserRequest);
+    final response = api.userCreate(insertUser);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling UserApi->userCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertUserRequest** | [**InsertUserRequest**](InsertUserRequest.md)|  | 
+ **insertUser** | [**InsertUser**](InsertUser.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userUpdate**
-> UserCreate200Response userUpdate(id, userUpdateRequest)
+> UserCreate200Response userUpdate(id, updateUser)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
 final String id = id_example; // String | 
-final UserUpdateRequest userUpdateRequest = ; // UserUpdateRequest | 
+final UpdateUser updateUser = ; // UpdateUser | 
 
 try {
-    final response = api.userUpdate(id, userUpdateRequest);
+    final response = api.userUpdate(id, updateUser);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling UserApi->userUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **userUpdateRequest** | [**UserUpdateRequest**](UserUpdateRequest.md)|  | 
+ **updateUser** | [**UpdateUser**](UpdateUser.md)|  | 
 
 ### Return type
 

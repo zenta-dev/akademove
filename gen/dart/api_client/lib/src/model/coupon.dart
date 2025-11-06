@@ -18,31 +18,19 @@ part 'coupon.g.dart';
 )
 class Coupon {
   /// Returns a new [Coupon] instance.
-  Coupon({
+  const Coupon({
     required this.id,
-
     required this.name,
-
     required this.code,
-
     required this.rules,
-
     this.discountAmount,
-
     this.discountPercentage,
-
     required this.usageLimit,
-
     required this.usedCount,
-
     required this.periodStart,
-
     required this.periodEnd,
-
     required this.isActive,
-
     required this.createdById,
-
     required this.createdAt,
   });
 

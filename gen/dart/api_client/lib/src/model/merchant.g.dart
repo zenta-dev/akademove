@@ -19,13 +19,17 @@ abstract class _$MerchantCWProxy {
 
   Merchant address(String address);
 
-  Merchant location(Location? location);
+  Merchant location(Coordinate? location);
 
   Merchant isActive(bool isActive);
 
   Merchant rating(num rating);
 
   Merchant document(String? document);
+
+  Merchant image(String? image);
+
+  Merchant categories(List<String> categories);
 
   Merchant bank(Bank bank);
 
@@ -46,10 +50,12 @@ abstract class _$MerchantCWProxy {
     String email,
     Phone phone,
     String address,
-    Location? location,
+    Coordinate? location,
     bool isActive,
     num rating,
     String? document,
+    String? image,
+    List<String> categories,
     Bank bank,
     DateTime createdAt,
     DateTime updatedAt,
@@ -81,7 +87,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant address(String address) => this(address: address);
 
   @override
-  Merchant location(Location? location) => this(location: location);
+  Merchant location(Coordinate? location) => this(location: location);
 
   @override
   Merchant isActive(bool isActive) => this(isActive: isActive);
@@ -91,6 +97,12 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
 
   @override
   Merchant document(String? document) => this(document: document);
+
+  @override
+  Merchant image(String? image) => this(image: image);
+
+  @override
+  Merchant categories(List<String> categories) => this(categories: categories);
 
   @override
   Merchant bank(Bank bank) => this(bank: bank);
@@ -119,6 +131,8 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
     Object? isActive = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
+    Object? image = const $CopyWithPlaceholder(),
+    Object? categories = const $CopyWithPlaceholder(),
     Object? bank = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
@@ -151,7 +165,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
       location: location == const $CopyWithPlaceholder()
           ? _value.location
           // ignore: cast_nullable_to_non_nullable
-          : location as Location?,
+          : location as Coordinate?,
       isActive: isActive == const $CopyWithPlaceholder()
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
@@ -164,6 +178,14 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.document
           // ignore: cast_nullable_to_non_nullable
           : document as String?,
+      image: image == const $CopyWithPlaceholder()
+          ? _value.image
+          // ignore: cast_nullable_to_non_nullable
+          : image as String?,
+      categories: categories == const $CopyWithPlaceholder()
+          ? _value.categories
+          // ignore: cast_nullable_to_non_nullable
+          : categories as List<String>,
       bank: bank == const $CopyWithPlaceholder()
           ? _value.bank
           // ignore: cast_nullable_to_non_nullable
@@ -204,6 +226,7 @@ Merchant _$MerchantFromJson(
       'address',
       'isActive',
       'rating',
+      'categories',
       'bank',
       'createdAt',
       'updatedAt',
@@ -221,11 +244,16 @@ Merchant _$MerchantFromJson(
     address: $checkedConvert('address', (v) => v as String),
     location: $checkedConvert(
       'location',
-      (v) => v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
     ),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     rating: $checkedConvert('rating', (v) => v as num),
     document: $checkedConvert('document', (v) => v as String?),
+    image: $checkedConvert('image', (v) => v as String?),
+    categories: $checkedConvert(
+      'categories',
+      (v) => (v as List<dynamic>).map((e) => e as String).toList(),
+    ),
     bank: $checkedConvert(
       'bank',
       (v) => Bank.fromJson(v as Map<String, dynamic>),
@@ -247,6 +275,8 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'isActive': instance.isActive,
   'rating': instance.rating,
   'document': ?instance.document,
+  'image': ?instance.image,
+  'categories': instance.categories,
   'bank': instance.bank.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),

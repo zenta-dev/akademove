@@ -17,11 +17,9 @@ part 'auth_has_permission200_response.g.dart';
 )
 class AuthHasPermission200Response {
   /// Returns a new [AuthHasPermission200Response] instance.
-  AuthHasPermission200Response({
+  const AuthHasPermission200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

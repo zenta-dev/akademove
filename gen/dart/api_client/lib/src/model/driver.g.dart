@@ -15,13 +15,13 @@ abstract class _$DriverCWProxy {
 
   Driver licensePlate(String licensePlate);
 
-  Driver status(DriverStatusEnum status);
+  Driver status(DriverStatus status);
 
   Driver rating(num rating);
 
   Driver isOnline(bool isOnline);
 
-  Driver currentLocation(Location? currentLocation);
+  Driver currentLocation(Coordinate? currentLocation);
 
   Driver lastLocationUpdate(DateTime? lastLocationUpdate);
 
@@ -35,7 +35,9 @@ abstract class _$DriverCWProxy {
 
   Driver bank(Bank bank);
 
-  Driver user(InsertOrderRequestUser? user);
+  Driver user(OrderPlaceOrder200ResponseDataUser? user);
+
+  Driver distance(num? distance);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -48,17 +50,18 @@ abstract class _$DriverCWProxy {
     String userId,
     num studentId,
     String licensePlate,
-    DriverStatusEnum status,
+    DriverStatus status,
     num rating,
     bool isOnline,
-    Location? currentLocation,
+    Coordinate? currentLocation,
     DateTime? lastLocationUpdate,
     DateTime createdAt,
     String studentCard,
     String driverLicense,
     String vehicleCertificate,
     Bank bank,
-    InsertOrderRequestUser? user,
+    OrderPlaceOrder200ResponseDataUser? user,
+    num? distance,
   });
 }
 
@@ -81,7 +84,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver licensePlate(String licensePlate) => this(licensePlate: licensePlate);
 
   @override
-  Driver status(DriverStatusEnum status) => this(status: status);
+  Driver status(DriverStatus status) => this(status: status);
 
   @override
   Driver rating(num rating) => this(rating: rating);
@@ -90,7 +93,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver isOnline(bool isOnline) => this(isOnline: isOnline);
 
   @override
-  Driver currentLocation(Location? currentLocation) =>
+  Driver currentLocation(Coordinate? currentLocation) =>
       this(currentLocation: currentLocation);
 
   @override
@@ -115,7 +118,10 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver bank(Bank bank) => this(bank: bank);
 
   @override
-  Driver user(InsertOrderRequestUser? user) => this(user: user);
+  Driver user(OrderPlaceOrder200ResponseDataUser? user) => this(user: user);
+
+  @override
+  Driver distance(num? distance) => this(distance: distance);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -140,6 +146,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? vehicleCertificate = const $CopyWithPlaceholder(),
     Object? bank = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
+    Object? distance = const $CopyWithPlaceholder(),
   }) {
     return Driver(
       id: id == const $CopyWithPlaceholder()
@@ -161,7 +168,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       status: status == const $CopyWithPlaceholder()
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
-          : status as DriverStatusEnum,
+          : status as DriverStatus,
       rating: rating == const $CopyWithPlaceholder()
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
@@ -173,7 +180,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       currentLocation: currentLocation == const $CopyWithPlaceholder()
           ? _value.currentLocation
           // ignore: cast_nullable_to_non_nullable
-          : currentLocation as Location?,
+          : currentLocation as Coordinate?,
       lastLocationUpdate: lastLocationUpdate == const $CopyWithPlaceholder()
           ? _value.lastLocationUpdate
           // ignore: cast_nullable_to_non_nullable
@@ -201,7 +208,11 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as InsertOrderRequestUser?,
+          : user as OrderPlaceOrder200ResponseDataUser?,
+      distance: distance == const $CopyWithPlaceholder()
+          ? _value.distance
+          // ignore: cast_nullable_to_non_nullable
+          : distance as num?,
     );
   }
 }
@@ -242,14 +253,14 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
         licensePlate: $checkedConvert('licensePlate', (v) => v as String),
         status: $checkedConvert(
           'status',
-          (v) => $enumDecode(_$DriverStatusEnumEnumMap, v),
+          (v) => $enumDecode(_$DriverStatusEnumMap, v),
         ),
         rating: $checkedConvert('rating', (v) => v as num),
         isOnline: $checkedConvert('isOnline', (v) => v as bool),
         currentLocation: $checkedConvert(
           'currentLocation',
           (v) =>
-              v == null ? null : Location.fromJson(v as Map<String, dynamic>),
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
         ),
         lastLocationUpdate: $checkedConvert(
           'lastLocationUpdate',
@@ -273,8 +284,11 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'user',
           (v) => v == null
               ? null
-              : InsertOrderRequestUser.fromJson(v as Map<String, dynamic>),
+              : OrderPlaceOrder200ResponseDataUser.fromJson(
+                  v as Map<String, dynamic>,
+                ),
         ),
+        distance: $checkedConvert('distance', (v) => v as num?),
       );
       return val;
     });
@@ -284,7 +298,7 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'userId': instance.userId,
   'studentId': instance.studentId,
   'licensePlate': instance.licensePlate,
-  'status': _$DriverStatusEnumEnumMap[instance.status]!,
+  'status': _$DriverStatusEnumMap[instance.status]!,
   'rating': instance.rating,
   'isOnline': instance.isOnline,
   'currentLocation': ?instance.currentLocation?.toJson(),
@@ -295,13 +309,14 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'vehicleCertificate': instance.vehicleCertificate,
   'bank': instance.bank.toJson(),
   'user': ?instance.user?.toJson(),
+  'distance': ?instance.distance,
 };
 
-const _$DriverStatusEnumEnumMap = {
-  DriverStatusEnum.pending: 'pending',
-  DriverStatusEnum.approved: 'approved',
-  DriverStatusEnum.rejected: 'rejected',
-  DriverStatusEnum.active: 'active',
-  DriverStatusEnum.inactive: 'inactive',
-  DriverStatusEnum.suspended: 'suspended',
+const _$DriverStatusEnumMap = {
+  DriverStatus.pending: 'pending',
+  DriverStatus.approved: 'approved',
+  DriverStatus.rejected: 'rejected',
+  DriverStatus.active: 'active',
+  DriverStatus.inactive: 'inactive',
+  DriverStatus.suspended: 'suspended',
 };

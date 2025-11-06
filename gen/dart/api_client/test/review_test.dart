@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    // String category
+    // ReviewCategory category
     test('to test the property `category`', () async {
       // TODO
     });

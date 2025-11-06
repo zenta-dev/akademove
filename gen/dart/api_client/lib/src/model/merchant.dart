@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -20,31 +20,21 @@ part 'merchant.g.dart';
 )
 class Merchant {
   /// Returns a new [Merchant] instance.
-  Merchant({
+  const Merchant({
     required this.id,
-
     required this.userId,
-
     required this.name,
-
     required this.email,
-
     required this.phone,
-
     required this.address,
-
     this.location,
-
     required this.isActive,
-
     required this.rating,
-
     this.document,
-
+    this.image,
+    required this.categories,
     required this.bank,
-
     required this.createdAt,
-
     required this.updatedAt,
   });
 
@@ -67,7 +57,7 @@ class Merchant {
   final String address;
 
   @JsonKey(name: r'location', required: false, includeIfNull: false)
-  final Location? location;
+  final Coordinate? location;
 
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
@@ -77,6 +67,12 @@ class Merchant {
 
   @JsonKey(name: r'document', required: false, includeIfNull: false)
   final String? document;
+
+  @JsonKey(name: r'image', required: false, includeIfNull: false)
+  final String? image;
+
+  @JsonKey(name: r'categories', required: true, includeIfNull: false)
+  final List<String> categories;
 
   @JsonKey(name: r'bank', required: true, includeIfNull: false)
   final Bank bank;
@@ -101,6 +97,8 @@ class Merchant {
           other.isActive == isActive &&
           other.rating == rating &&
           other.document == document &&
+          other.image == image &&
+          other.categories == categories &&
           other.bank == bank &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt;
@@ -117,6 +115,8 @@ class Merchant {
       isActive.hashCode +
       rating.hashCode +
       document.hashCode +
+      image.hashCode +
+      categories.hashCode +
       bank.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode;

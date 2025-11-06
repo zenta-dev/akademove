@@ -18,11 +18,9 @@ part 'user_list200_response.g.dart';
 )
 class UserList200Response {
   /// Returns a new [UserList200Response] instance.
-  UserList200Response({
+  const UserList200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

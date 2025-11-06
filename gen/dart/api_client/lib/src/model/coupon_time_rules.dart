@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/day_of_week.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -17,10 +18,10 @@ part 'coupon_time_rules.g.dart';
 )
 class CouponTimeRules {
   /// Returns a new [CouponTimeRules] instance.
-  CouponTimeRules({this.allowedDays, this.allowedHours});
+  const CouponTimeRules({this.allowedDays, this.allowedHours});
 
   @JsonKey(name: r'allowedDays', required: false, includeIfNull: false)
-  final List<CouponTimeRulesAllowedDaysEnum>? allowedDays;
+  final List<DayOfWeek>? allowedDays;
 
   @JsonKey(name: r'allowedHours', required: false, includeIfNull: false)
   final List<int>? allowedHours;
@@ -44,28 +45,4 @@ class CouponTimeRules {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum CouponTimeRulesAllowedDaysEnum {
-  @JsonValue(r'sunday')
-  sunday(r'sunday'),
-  @JsonValue(r'monday')
-  monday(r'monday'),
-  @JsonValue(r'tuesday')
-  tuesday(r'tuesday'),
-  @JsonValue(r'wednesday')
-  wednesday(r'wednesday'),
-  @JsonValue(r'thursday')
-  thursday(r'thursday'),
-  @JsonValue(r'friday')
-  friday(r'friday'),
-  @JsonValue(r'saturday')
-  saturday(r'saturday');
-
-  const CouponTimeRulesAllowedDaysEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

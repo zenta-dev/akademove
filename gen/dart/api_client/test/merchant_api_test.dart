@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantList200Response> merchantList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
     test('test merchantList', () async {
       // TODO
     });
@@ -46,12 +46,17 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantPopulars200Response> merchantPopulars({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    test('test merchantPopulars', () async {
+      // TODO
+    });
+
     //Future<DriverRemove200Response> merchantRemove(String id) async
     test('test merchantRemove', () async {
       // TODO
     });
 
-    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, num phoneNumber, num locationLat, num locationLng, String bankProvider, num bankNumber, { String name, String email, String address, MultipartFile document }) async
+    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, num phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, List<String> categories, MultipartFile document, MultipartFile image }) async
     test('test merchantUpdate', () async {
       // TODO
     });

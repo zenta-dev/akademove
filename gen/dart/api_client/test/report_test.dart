@@ -27,7 +27,7 @@ void main() {
       // TODO
     });
 
-    // String category
+    // ReportCategory category
     test('to test the property `category`', () async {
       // TODO
     });
@@ -42,7 +42,7 @@ void main() {
       // TODO
     });
 
-    // String status
+    // ReportStatus status
     test('to test the property `status`', () async {
       // TODO
     });

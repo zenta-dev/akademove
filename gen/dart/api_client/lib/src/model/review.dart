@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/review_category.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -17,21 +18,14 @@ part 'review.g.dart';
 )
 class Review {
   /// Returns a new [Review] instance.
-  Review({
+  const Review({
     required this.id,
-
     required this.orderId,
-
     required this.fromUserId,
-
     required this.toUserId,
-
     required this.category,
-
     required this.score,
-
     this.comment = '',
-
     required this.createdAt,
   });
 
@@ -48,7 +42,7 @@ class Review {
   final String toUserId;
 
   @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final ReviewCategoryEnum category;
+  final ReviewCategory category;
 
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
@@ -96,20 +90,4 @@ class Review {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum ReviewCategoryEnum {
-  @JsonValue(r'cleanliness')
-  cleanliness(r'cleanliness'),
-  @JsonValue(r'courtesy')
-  courtesy(r'courtesy'),
-  @JsonValue(r'other')
-  other(r'other');
-
-  const ReviewCategoryEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

@@ -14,10 +14,12 @@ Name | Type | Description | Notes
 **email** | **String** |  | 
 **phone** | [**Phone**](Phone.md) |  | 
 **address** | **String** |  | 
-**location** | [**Location**](Location.md) |  | [optional] 
+**location** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **isActive** | **bool** |  | 
 **rating** | **num** |  | 
 **document** | **String** |  | [optional] 
+**image** | **String** |  | [optional] 
+**categories** | **List&lt;String&gt;** |  | 
 **bank** | [**Bank**](Bank.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 

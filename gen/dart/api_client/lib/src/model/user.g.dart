@@ -17,7 +17,7 @@ abstract class _$UserCWProxy {
 
   User image(String? image);
 
-  User role(UserRoleEnum role);
+  User role(UserRole role);
 
   User banned(bool banned);
 
@@ -25,7 +25,7 @@ abstract class _$UserCWProxy {
 
   User banExpires(DateTime? banExpires);
 
-  User gender(UserGenderEnum? gender);
+  User gender(UserGender? gender);
 
   User phone(Phone phone);
 
@@ -45,11 +45,11 @@ abstract class _$UserCWProxy {
     String email,
     bool emailVerified,
     String? image,
-    UserRoleEnum role,
+    UserRole role,
     bool banned,
     String? banReason,
     DateTime? banExpires,
-    UserGenderEnum? gender,
+    UserGender? gender,
     Phone phone,
     DateTime createdAt,
     DateTime updatedAt,
@@ -78,7 +78,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User image(String? image) => this(image: image);
 
   @override
-  User role(UserRoleEnum role) => this(role: role);
+  User role(UserRole role) => this(role: role);
 
   @override
   User banned(bool banned) => this(banned: banned);
@@ -90,7 +90,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User banExpires(DateTime? banExpires) => this(banExpires: banExpires);
 
   @override
-  User gender(UserGenderEnum? gender) => this(gender: gender);
+  User gender(UserGender? gender) => this(gender: gender);
 
   @override
   User phone(Phone phone) => this(phone: phone);
@@ -147,7 +147,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
       role: role == const $CopyWithPlaceholder()
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
-          : role as UserRoleEnum,
+          : role as UserRole,
       banned: banned == const $CopyWithPlaceholder()
           ? _value.banned
           // ignore: cast_nullable_to_non_nullable
@@ -163,7 +163,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
       gender: gender == const $CopyWithPlaceholder()
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
-          : gender as UserGenderEnum?,
+          : gender as UserGender?,
       phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
@@ -213,7 +213,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     email: $checkedConvert('email', (v) => v as String),
     emailVerified: $checkedConvert('emailVerified', (v) => v as bool),
     image: $checkedConvert('image', (v) => v as String?),
-    role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumEnumMap, v)),
+    role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
     banned: $checkedConvert('banned', (v) => v as bool),
     banReason: $checkedConvert('banReason', (v) => v as String?),
     banExpires: $checkedConvert(
@@ -222,7 +222,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     ),
     gender: $checkedConvert(
       'gender',
-      (v) => $enumDecodeNullable(_$UserGenderEnumEnumMap, v),
+      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
     ),
     phone: $checkedConvert(
       'phone',
@@ -240,25 +240,25 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'email': instance.email,
   'emailVerified': instance.emailVerified,
   'image': ?instance.image,
-  'role': _$UserRoleEnumEnumMap[instance.role]!,
+  'role': _$UserRoleEnumMap[instance.role]!,
   'banned': instance.banned,
   'banReason': ?instance.banReason,
   'banExpires': ?instance.banExpires?.toIso8601String(),
-  'gender': ?_$UserGenderEnumEnumMap[instance.gender],
+  'gender': ?_$UserGenderEnumMap[instance.gender],
   'phone': instance.phone.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
 };
 
-const _$UserRoleEnumEnumMap = {
-  UserRoleEnum.admin: 'admin',
-  UserRoleEnum.operator_: 'operator',
-  UserRoleEnum.merchant: 'merchant',
-  UserRoleEnum.driver: 'driver',
-  UserRoleEnum.user: 'user',
+const _$UserRoleEnumMap = {
+  UserRole.admin: 'admin',
+  UserRole.operator_: 'operator',
+  UserRole.merchant: 'merchant',
+  UserRole.driver: 'driver',
+  UserRole.user: 'user',
 };
 
-const _$UserGenderEnumEnumMap = {
-  UserGenderEnum.male: 'male',
-  UserGenderEnum.female: 'female',
+const _$UserGenderEnumMap = {
+  UserGender.male: 'male',
+  UserGender.female: 'female',
 };

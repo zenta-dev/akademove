@@ -3,6 +3,8 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/report_status.dart';
+import 'package:api_client/src/model/report_category.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -17,29 +19,18 @@ part 'report.g.dart';
 )
 class Report {
   /// Returns a new [Report] instance.
-  Report({
+  const Report({
     required this.id,
-
     this.orderId,
-
     required this.reporterId,
-
     required this.targetUserId,
-
     required this.category,
-
     required this.description,
-
     this.evidenceUrl,
-
     required this.status,
-
     this.handledById,
-
     this.resolution,
-
     required this.reportedAt,
-
     this.resolvedAt,
   });
 
@@ -56,7 +47,7 @@ class Report {
   final String targetUserId;
 
   @JsonKey(name: r'category', required: true, includeIfNull: false)
-  final ReportCategoryEnum category;
+  final ReportCategory category;
 
   @JsonKey(name: r'description', required: true, includeIfNull: false)
   final String description;
@@ -65,7 +56,7 @@ class Report {
   final String? evidenceUrl;
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
-  final ReportStatusEnum status;
+  final ReportStatus status;
 
   @JsonKey(name: r'handledById', required: false, includeIfNull: false)
   final String? handledById;
@@ -119,40 +110,4 @@ class Report {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum ReportCategoryEnum {
-  @JsonValue(r'behavior')
-  behavior(r'behavior'),
-  @JsonValue(r'safety')
-  safety(r'safety'),
-  @JsonValue(r'fraud')
-  fraud(r'fraud'),
-  @JsonValue(r'other')
-  other(r'other');
-
-  const ReportCategoryEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
-}
-
-enum ReportStatusEnum {
-  @JsonValue(r'pending')
-  pending(r'pending'),
-  @JsonValue(r'investigating')
-  investigating(r'investigating'),
-  @JsonValue(r'resolved')
-  resolved(r'resolved'),
-  @JsonValue(r'dismissed')
-  dismissed(r'dismissed');
-
-  const ReportStatusEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

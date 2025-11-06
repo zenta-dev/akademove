@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **reviewCreate**
-> ReviewCreate200Response reviewCreate(insertReviewRequest)
+> ReviewCreate200Response reviewCreate(insertReview)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReviewApi();
-final InsertReviewRequest insertReviewRequest = ; // InsertReviewRequest | 
+final InsertReview insertReview = ; // InsertReview | 
 
 try {
-    final response = api.reviewCreate(insertReviewRequest);
+    final response = api.reviewCreate(insertReview);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReviewApi->reviewCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertReviewRequest** | [**InsertReviewRequest**](InsertReviewRequest.md)|  | 
+ **insertReview** | [**InsertReview**](InsertReview.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reviewUpdate**
-> ReviewCreate200Response reviewUpdate(id, updateReviewRequest)
+> ReviewCreate200Response reviewUpdate(id, updateReview)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getReviewApi();
 final String id = id_example; // String | 
-final UpdateReviewRequest updateReviewRequest = ; // UpdateReviewRequest | 
+final UpdateReview updateReview = ; // UpdateReview | 
 
 try {
-    final response = api.reviewUpdate(id, updateReviewRequest);
+    final response = api.reviewUpdate(id, updateReview);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReviewApi->reviewUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateReviewRequest** | [**UpdateReviewRequest**](UpdateReviewRequest.md)|  | 
+ **updateReview** | [**UpdateReview**](UpdateReview.md)|  | 
 
 ### Return type
 

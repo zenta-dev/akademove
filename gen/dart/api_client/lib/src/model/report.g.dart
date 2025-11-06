@@ -15,13 +15,13 @@ abstract class _$ReportCWProxy {
 
   Report targetUserId(String targetUserId);
 
-  Report category(ReportCategoryEnum category);
+  Report category(ReportCategory category);
 
   Report description(String description);
 
   Report evidenceUrl(String? evidenceUrl);
 
-  Report status(ReportStatusEnum status);
+  Report status(ReportStatus status);
 
   Report handledById(String? handledById);
 
@@ -42,10 +42,10 @@ abstract class _$ReportCWProxy {
     String? orderId,
     String reporterId,
     String targetUserId,
-    ReportCategoryEnum category,
+    ReportCategory category,
     String description,
     String? evidenceUrl,
-    ReportStatusEnum status,
+    ReportStatus status,
     String? handledById,
     String? resolution,
     DateTime reportedAt,
@@ -72,7 +72,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
   Report targetUserId(String targetUserId) => this(targetUserId: targetUserId);
 
   @override
-  Report category(ReportCategoryEnum category) => this(category: category);
+  Report category(ReportCategory category) => this(category: category);
 
   @override
   Report description(String description) => this(description: description);
@@ -81,7 +81,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
   Report evidenceUrl(String? evidenceUrl) => this(evidenceUrl: evidenceUrl);
 
   @override
-  Report status(ReportStatusEnum status) => this(status: status);
+  Report status(ReportStatus status) => this(status: status);
 
   @override
   Report handledById(String? handledById) => this(handledById: handledById);
@@ -136,7 +136,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
       category: category == const $CopyWithPlaceholder()
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
-          : category as ReportCategoryEnum,
+          : category as ReportCategory,
       description: description == const $CopyWithPlaceholder()
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
@@ -148,7 +148,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
       status: status == const $CopyWithPlaceholder()
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
-          : status as ReportStatusEnum,
+          : status as ReportStatus,
       handledById: handledById == const $CopyWithPlaceholder()
           ? _value.handledById
           // ignore: cast_nullable_to_non_nullable
@@ -200,13 +200,13 @@ Report _$ReportFromJson(Map<String, dynamic> json) =>
         targetUserId: $checkedConvert('targetUserId', (v) => v as String),
         category: $checkedConvert(
           'category',
-          (v) => $enumDecode(_$ReportCategoryEnumEnumMap, v),
+          (v) => $enumDecode(_$ReportCategoryEnumMap, v),
         ),
         description: $checkedConvert('description', (v) => v as String),
         evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
         status: $checkedConvert(
           'status',
-          (v) => $enumDecode(_$ReportStatusEnumEnumMap, v),
+          (v) => $enumDecode(_$ReportStatusEnumMap, v),
         ),
         handledById: $checkedConvert('handledById', (v) => v as String?),
         resolution: $checkedConvert('resolution', (v) => v as String?),
@@ -227,26 +227,26 @@ Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
   'orderId': ?instance.orderId,
   'reporterId': instance.reporterId,
   'targetUserId': instance.targetUserId,
-  'category': _$ReportCategoryEnumEnumMap[instance.category]!,
+  'category': _$ReportCategoryEnumMap[instance.category]!,
   'description': instance.description,
   'evidenceUrl': ?instance.evidenceUrl,
-  'status': _$ReportStatusEnumEnumMap[instance.status]!,
+  'status': _$ReportStatusEnumMap[instance.status]!,
   'handledById': ?instance.handledById,
   'resolution': ?instance.resolution,
   'reportedAt': instance.reportedAt.toIso8601String(),
   'resolvedAt': ?instance.resolvedAt?.toIso8601String(),
 };
 
-const _$ReportCategoryEnumEnumMap = {
-  ReportCategoryEnum.behavior: 'behavior',
-  ReportCategoryEnum.safety: 'safety',
-  ReportCategoryEnum.fraud: 'fraud',
-  ReportCategoryEnum.other: 'other',
+const _$ReportCategoryEnumMap = {
+  ReportCategory.behavior: 'behavior',
+  ReportCategory.safety: 'safety',
+  ReportCategory.fraud: 'fraud',
+  ReportCategory.other: 'other',
 };
 
-const _$ReportStatusEnumEnumMap = {
-  ReportStatusEnum.pending: 'pending',
-  ReportStatusEnum.investigating: 'investigating',
-  ReportStatusEnum.resolved: 'resolved',
-  ReportStatusEnum.dismissed: 'dismissed',
+const _$ReportStatusEnumMap = {
+  ReportStatus.pending: 'pending',
+  ReportStatus.investigating: 'investigating',
+  ReportStatus.resolved: 'resolved',
+  ReportStatus.dismissed: 'dismissed',
 };

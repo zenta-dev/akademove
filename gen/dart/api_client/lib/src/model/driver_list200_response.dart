@@ -18,11 +18,9 @@ part 'driver_list200_response.g.dart';
 )
 class DriverList200Response {
   /// Returns a new [DriverList200Response] instance.
-  DriverList200Response({
+  const DriverList200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

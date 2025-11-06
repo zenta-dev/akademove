@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **reportCreate**
-> ReportCreate200Response reportCreate(insertReportRequest)
+> ReportCreate200Response reportCreate(insertReport)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
-final InsertReportRequest insertReportRequest = ; // InsertReportRequest | 
+final InsertReport insertReport = ; // InsertReport | 
 
 try {
-    final response = api.reportCreate(insertReportRequest);
+    final response = api.reportCreate(insertReport);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReportApi->reportCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertReportRequest** | [**InsertReportRequest**](InsertReportRequest.md)|  | 
+ **insertReport** | [**InsertReport**](InsertReport.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reportUpdate**
-> ReportCreate200Response reportUpdate(id, updateReportRequest)
+> ReportCreate200Response reportUpdate(id, updateReport)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getReportApi();
 final String id = id_example; // String | 
-final UpdateReportRequest updateReportRequest = ; // UpdateReportRequest | 
+final UpdateReport updateReport = ; // UpdateReport | 
 
 try {
-    final response = api.reportUpdate(id, updateReportRequest);
+    final response = api.reportUpdate(id, updateReport);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling ReportApi->reportUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateReportRequest** | [**UpdateReportRequest**](UpdateReportRequest.md)|  | 
+ **updateReport** | [**UpdateReport**](UpdateReport.md)|  | 
 
 ### Return type
 

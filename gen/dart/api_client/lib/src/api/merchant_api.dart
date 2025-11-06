@@ -12,9 +12,9 @@ import 'package:dio/dio.dart';
 import 'package:api_client/src/model/driver_remove200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
-import 'package:api_client/src/model/merchant_list200_response.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
+import 'package:api_client/src/model/merchant_populars200_response.dart';
 
 class MerchantApi {
   final Dio _dio;
@@ -194,9 +194,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [MerchantList200Response] as data
+  /// Returns a [Future] containing a [Response] with a [MerchantPopulars200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<MerchantList200Response>> merchantList({
+  Future<Response<MerchantPopulars200Response>> merchantList({
     String? cursor,
     Object? limit,
     Object? page,
@@ -241,17 +241,16 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    MerchantList200Response? _responseData;
+    MerchantPopulars200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantList200Response, MerchantList200Response>(
-              rawData,
-              'MerchantList200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantPopulars200Response,
+              MerchantPopulars200Response
+            >(rawData, 'MerchantPopulars200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -262,7 +261,7 @@ class MerchantApi {
       );
     }
 
-    return Response<MerchantList200Response>(
+    return Response<MerchantPopulars200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -791,6 +790,102 @@ class MerchantApi {
     );
   }
 
+  /// merchantPopulars
+  ///
+  ///
+  /// Parameters:
+  /// * [cursor]
+  /// * [limit]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [MerchantPopulars200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<MerchantPopulars200Response>> merchantPopulars({
+    String? cursor,
+    Object? limit,
+    Object? page,
+    String? query,
+    String? sortBy,
+    String? order = 'desc',
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/merchants/populars';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (cursor != null) r'cursor': cursor,
+      if (limit != null) r'limit': limit,
+      if (page != null) r'page': page,
+      if (query != null) r'query': query,
+      if (sortBy != null) r'sortBy': sortBy,
+      if (order != null) r'order': order,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    MerchantPopulars200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              MerchantPopulars200Response,
+              MerchantPopulars200Response
+            >(rawData, 'MerchantPopulars200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<MerchantPopulars200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
   /// merchantRemove
   ///
   ///
@@ -880,14 +975,16 @@ class MerchantApi {
   /// * [id]
   /// * [phoneCountryCode]
   /// * [phoneNumber]
-  /// * [locationLat]
-  /// * [locationLng]
+  /// * [locationX] - Longitude (X-axis, East-West)
+  /// * [locationY] - Latitude (Y-axis, North-South)
   /// * [bankProvider]
   /// * [bankNumber]
   /// * [name]
   /// * [email]
   /// * [address]
+  /// * [categories]
   /// * [document]
+  /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -901,14 +998,16 @@ class MerchantApi {
     required String id,
     required String phoneCountryCode,
     required num phoneNumber,
-    required num locationLat,
-    required num locationLng,
+    required num locationX,
+    required num locationY,
     required String bankProvider,
     required num bankNumber,
     String? name,
     String? email,
     String? address,
+    List<String>? categories,
     MultipartFile? document,
+    MultipartFile? image,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -944,11 +1043,13 @@ class MerchantApi {
         r'phone_countryCode': phoneCountryCode,
         r'phone_number': phoneNumber,
         if (address != null) r'address': address,
-        r'location_lat': locationLat,
-        r'location_lng': locationLng,
+        r'location_x': locationX,
+        r'location_y': locationY,
+        if (categories != null) r'categories': categories,
         r'bank_provider': bankProvider,
         r'bank_number': bankNumber,
         if (document != null) r'document': document,
+        if (image != null) r'image': image,
       });
     } catch (error, stackTrace) {
       throw DioException(

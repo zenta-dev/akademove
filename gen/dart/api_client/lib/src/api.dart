@@ -15,8 +15,8 @@ import 'package:api_client/src/api/merchant_api.dart';
 import 'package:api_client/src/api/order_api.dart';
 import 'package:api_client/src/api/report_api.dart';
 import 'package:api_client/src/api/review_api.dart';
-import 'package:api_client/src/api/schedule_api.dart';
 import 'package:api_client/src/api/user_api.dart';
+import 'package:api_client/src/api/wallet_api.dart';
 
 class ApiClient {
   static const String basePath = r'http://localhost:3000/api';
@@ -135,15 +135,15 @@ class ApiClient {
     return ReviewApi(dio);
   }
 
-  /// Get ScheduleApi instance, base route and serializer can be overridden by a given but be careful,
-  /// by doing that all interceptors will not be executed
-  ScheduleApi getScheduleApi() {
-    return ScheduleApi(dio);
-  }
-
   /// Get UserApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   UserApi getUserApi() {
     return UserApi(dio);
+  }
+
+  /// Get WalletApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  WalletApi getWalletApi() {
+    return WalletApi(dio);
   }
 }

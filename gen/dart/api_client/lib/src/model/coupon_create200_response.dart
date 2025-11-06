@@ -18,11 +18,9 @@ part 'coupon_create200_response.g.dart';
 )
 class CouponCreate200Response {
   /// Returns a new [CouponCreate200Response] instance.
-  CouponCreate200Response({
+  const CouponCreate200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **orderId** | **String** |  | 
 **fromUserId** | **String** |  | 
 **toUserId** | **String** |  | 
-**category** | **String** |  | 
+**category** | [**ReviewCategory**](ReviewCategory.md) |  | 
 **score** | **num** |  | 
 **comment** | **String** |  | [optional] [default to '']
 **createdAt** | [**DateTime**](DateTime.md) |  | 

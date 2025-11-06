@@ -3,9 +3,10 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/location.dart';
+import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/bank.dart';
-import 'package:api_client/src/model/insert_order_request_user.dart';
+import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
+import 'package:api_client/src/model/driver_status.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -20,36 +21,23 @@ part 'driver.g.dart';
 )
 class Driver {
   /// Returns a new [Driver] instance.
-  Driver({
+  const Driver({
     required this.id,
-
     required this.userId,
-
     required this.studentId,
-
     required this.licensePlate,
-
     required this.status,
-
     required this.rating,
-
     required this.isOnline,
-
     this.currentLocation,
-
     this.lastLocationUpdate,
-
     required this.createdAt,
-
     required this.studentCard,
-
     required this.driverLicense,
-
     required this.vehicleCertificate,
-
     required this.bank,
-
     this.user,
+    this.distance,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
@@ -65,7 +53,7 @@ class Driver {
   final String licensePlate;
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
-  final DriverStatusEnum status;
+  final DriverStatus status;
 
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
@@ -74,7 +62,7 @@ class Driver {
   final bool isOnline;
 
   @JsonKey(name: r'currentLocation', required: false, includeIfNull: false)
-  final Location? currentLocation;
+  final Coordinate? currentLocation;
 
   @JsonKey(name: r'lastLocationUpdate', required: false, includeIfNull: false)
   final DateTime? lastLocationUpdate;
@@ -95,7 +83,11 @@ class Driver {
   final Bank bank;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
-  final InsertOrderRequestUser? user;
+  final OrderPlaceOrder200ResponseDataUser? user;
+
+  /// Each user has different result since it calculated value
+  @JsonKey(name: r'distance', required: false, includeIfNull: false)
+  final num? distance;
 
   @override
   bool operator ==(Object other) =>
@@ -115,7 +107,8 @@ class Driver {
           other.driverLicense == driverLicense &&
           other.vehicleCertificate == vehicleCertificate &&
           other.bank == bank &&
-          other.user == user;
+          other.user == user &&
+          other.distance == distance;
 
   @override
   int get hashCode =>
@@ -133,7 +126,8 @@ class Driver {
       driverLicense.hashCode +
       vehicleCertificate.hashCode +
       bank.hashCode +
-      user.hashCode;
+      user.hashCode +
+      distance.hashCode;
 
   factory Driver.fromJson(Map<String, dynamic> json) => _$DriverFromJson(json);
 
@@ -143,26 +137,4 @@ class Driver {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum DriverStatusEnum {
-  @JsonValue(r'pending')
-  pending(r'pending'),
-  @JsonValue(r'approved')
-  approved(r'approved'),
-  @JsonValue(r'rejected')
-  rejected(r'rejected'),
-  @JsonValue(r'active')
-  active(r'active'),
-  @JsonValue(r'inactive')
-  inactive(r'inactive'),
-  @JsonValue(r'suspended')
-  suspended(r'suspended');
-
-  const DriverStatusEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

@@ -7,10 +7,6 @@ part of 'order_item.dart';
 // **************************************************************************
 
 abstract class _$OrderItemCWProxy {
-  OrderItem id(String id);
-
-  OrderItem itemId(String itemId);
-
   OrderItem total(num total);
 
   OrderItem item(OrderItemItem item);
@@ -21,7 +17,7 @@ abstract class _$OrderItemCWProxy {
   /// ```dart
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderItem call({String id, String itemId, num total, OrderItemItem item});
+  OrderItem call({num total, OrderItemItem item});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderItem.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderItem.copyWith.fieldName(...)`
@@ -29,12 +25,6 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   const _$OrderItemCWProxyImpl(this._value);
 
   final OrderItem _value;
-
-  @override
-  OrderItem id(String id) => this(id: id);
-
-  @override
-  OrderItem itemId(String itemId) => this(itemId: itemId);
 
   @override
   OrderItem total(num total) => this(total: total);
@@ -50,20 +40,10 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ````
   OrderItem call({
-    Object? id = const $CopyWithPlaceholder(),
-    Object? itemId = const $CopyWithPlaceholder(),
     Object? total = const $CopyWithPlaceholder(),
     Object? item = const $CopyWithPlaceholder(),
   }) {
     return OrderItem(
-      id: id == const $CopyWithPlaceholder()
-          ? _value.id
-          // ignore: cast_nullable_to_non_nullable
-          : id as String,
-      itemId: itemId == const $CopyWithPlaceholder()
-          ? _value.itemId
-          // ignore: cast_nullable_to_non_nullable
-          : itemId as String,
       total: total == const $CopyWithPlaceholder()
           ? _value.total
           // ignore: cast_nullable_to_non_nullable
@@ -88,10 +68,8 @@ extension $OrderItemCopyWith on OrderItem {
 
 OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
     $checkedCreate('OrderItem', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['id', 'itemId', 'total', 'item']);
+      $checkKeys(json, requiredKeys: const ['total', 'item']);
       final val = OrderItem(
-        id: $checkedConvert('id', (v) => v as String),
-        itemId: $checkedConvert('itemId', (v) => v as String),
         total: $checkedConvert('total', (v) => v as num),
         item: $checkedConvert(
           'item',
@@ -102,8 +80,6 @@ OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
     });
 
 Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
-  'id': instance.id,
-  'itemId': instance.itemId,
   'total': instance.total,
   'item': instance.item.toJson(),
 };

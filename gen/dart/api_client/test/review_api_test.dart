@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getReviewApi();
 
   group(ReviewApi, () {
-    //Future<ReviewCreate200Response> reviewCreate(InsertReviewRequest insertReviewRequest) async
+    //Future<ReviewCreate200Response> reviewCreate(InsertReview insertReview) async
     test('test reviewCreate', () async {
       // TODO
     });
@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<ReviewCreate200Response> reviewUpdate(String id, UpdateReviewRequest updateReviewRequest) async
+    //Future<ReviewCreate200Response> reviewUpdate(String id, UpdateReview updateReview) async
     test('test reviewUpdate', () async {
       // TODO
     });

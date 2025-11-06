@@ -17,23 +17,15 @@ part 'order_item_item.g.dart';
 )
 class OrderItemItem {
   /// Returns a new [OrderItemItem] instance.
-  OrderItemItem({
+  const OrderItemItem({
     this.id,
-
     this.merchantId,
-
     this.name,
-
     this.image,
-
     this.category,
-
     this.price,
-
     this.stock,
-
     this.createdAt,
-
     this.updatedAt,
   });
 

@@ -1,0 +1,206 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:api_client/src/model/order_status.dart';
+import 'package:api_client/src/model/order_type.dart';
+import 'package:api_client/src/model/order_place_order200_response_data_driver.dart';
+import 'package:api_client/src/model/coordinate.dart';
+import 'package:api_client/src/model/order_note.dart';
+import 'package:api_client/src/model/user_gender.dart';
+import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
+import 'package:api_client/src/model/payment.dart';
+import 'package:api_client/src/model/order_item.dart';
+import 'package:api_client/src/model/order_place_order200_response_data_merchant.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'order_place_order200_response_data.g.dart';
+
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class OrderPlaceOrder200ResponseData {
+  /// Returns a new [OrderPlaceOrder200ResponseData] instance.
+  const OrderPlaceOrder200ResponseData({
+    required this.id,
+    required this.userId,
+    this.driverId,
+    this.merchantId,
+    required this.type,
+    required this.status,
+    required this.pickupLocation,
+    required this.dropoffLocation,
+    required this.distanceKm,
+    required this.basePrice,
+    this.tip,
+    required this.totalPrice,
+    this.note,
+    required this.requestedAt,
+    this.acceptedAt,
+    this.arrivedAt,
+    this.cancelReason,
+    required this.createdAt,
+    required this.updatedAt,
+    this.gender,
+    this.itemCount,
+    this.items,
+    this.user,
+    this.driver,
+    this.merchant,
+    required this.payment,
+  });
+
+  @JsonKey(name: r'id', required: true, includeIfNull: false)
+  final String id;
+
+  @JsonKey(name: r'userId', required: true, includeIfNull: false)
+  final String userId;
+
+  @JsonKey(name: r'driverId', required: false, includeIfNull: false)
+  final String? driverId;
+
+  @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
+  final String? merchantId;
+
+  @JsonKey(name: r'type', required: true, includeIfNull: false)
+  final OrderType type;
+
+  @JsonKey(name: r'status', required: true, includeIfNull: false)
+  final OrderStatus status;
+
+  @JsonKey(name: r'pickupLocation', required: true, includeIfNull: false)
+  final Coordinate pickupLocation;
+
+  @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
+  final Coordinate dropoffLocation;
+
+  @JsonKey(name: r'distanceKm', required: true, includeIfNull: false)
+  final num distanceKm;
+
+  @JsonKey(name: r'basePrice', required: true, includeIfNull: false)
+  final num basePrice;
+
+  @JsonKey(name: r'tip', required: false, includeIfNull: false)
+  final num? tip;
+
+  @JsonKey(name: r'totalPrice', required: true, includeIfNull: false)
+  final num totalPrice;
+
+  @JsonKey(name: r'note', required: false, includeIfNull: false)
+  final OrderNote? note;
+
+  @JsonKey(name: r'requestedAt', required: true, includeIfNull: false)
+  final DateTime requestedAt;
+
+  @JsonKey(name: r'acceptedAt', required: false, includeIfNull: false)
+  final DateTime? acceptedAt;
+
+  @JsonKey(name: r'arrivedAt', required: false, includeIfNull: false)
+  final DateTime? arrivedAt;
+
+  @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
+  final String? cancelReason;
+
+  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
+  final DateTime createdAt;
+
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
+
+  @JsonKey(name: r'gender', required: false, includeIfNull: false)
+  final UserGender? gender;
+
+  @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
+  final num? itemCount;
+
+  @JsonKey(name: r'items', required: false, includeIfNull: false)
+  final List<OrderItem>? items;
+
+  @JsonKey(name: r'user', required: false, includeIfNull: false)
+  final OrderPlaceOrder200ResponseDataUser? user;
+
+  @JsonKey(name: r'driver', required: false, includeIfNull: false)
+  final OrderPlaceOrder200ResponseDataDriver? driver;
+
+  @JsonKey(name: r'merchant', required: false, includeIfNull: false)
+  final OrderPlaceOrder200ResponseDataMerchant? merchant;
+
+  @JsonKey(name: r'payment', required: true, includeIfNull: false)
+  final Payment payment;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderPlaceOrder200ResponseData &&
+          other.id == id &&
+          other.userId == userId &&
+          other.driverId == driverId &&
+          other.merchantId == merchantId &&
+          other.type == type &&
+          other.status == status &&
+          other.pickupLocation == pickupLocation &&
+          other.dropoffLocation == dropoffLocation &&
+          other.distanceKm == distanceKm &&
+          other.basePrice == basePrice &&
+          other.tip == tip &&
+          other.totalPrice == totalPrice &&
+          other.note == note &&
+          other.requestedAt == requestedAt &&
+          other.acceptedAt == acceptedAt &&
+          other.arrivedAt == arrivedAt &&
+          other.cancelReason == cancelReason &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.gender == gender &&
+          other.itemCount == itemCount &&
+          other.items == items &&
+          other.user == user &&
+          other.driver == driver &&
+          other.merchant == merchant &&
+          other.payment == payment;
+
+  @override
+  int get hashCode =>
+      id.hashCode +
+      userId.hashCode +
+      driverId.hashCode +
+      merchantId.hashCode +
+      type.hashCode +
+      status.hashCode +
+      pickupLocation.hashCode +
+      dropoffLocation.hashCode +
+      distanceKm.hashCode +
+      basePrice.hashCode +
+      tip.hashCode +
+      totalPrice.hashCode +
+      note.hashCode +
+      requestedAt.hashCode +
+      acceptedAt.hashCode +
+      arrivedAt.hashCode +
+      cancelReason.hashCode +
+      createdAt.hashCode +
+      updatedAt.hashCode +
+      gender.hashCode +
+      itemCount.hashCode +
+      items.hashCode +
+      user.hashCode +
+      driver.hashCode +
+      merchant.hashCode +
+      payment.hashCode;
+
+  factory OrderPlaceOrder200ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$OrderPlaceOrder200ResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OrderPlaceOrder200ResponseDataToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+}

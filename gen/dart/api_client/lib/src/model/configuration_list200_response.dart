@@ -18,11 +18,9 @@ part 'configuration_list200_response.g.dart';
 )
 class ConfigurationList200Response {
   /// Returns a new [ConfigurationList200Response] instance.
-  ConfigurationList200Response({
+  const ConfigurationList200Response({
     required this.message,
-
     required this.data,
-
     this.totalPages,
   });
 

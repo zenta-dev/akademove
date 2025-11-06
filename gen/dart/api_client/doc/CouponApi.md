@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **couponCreate**
-> CouponCreate200Response couponCreate(insertCouponRequest)
+> CouponCreate200Response couponCreate(insertCoupon)
 
 
 
@@ -26,10 +26,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getCouponApi();
-final InsertCouponRequest insertCouponRequest = ; // InsertCouponRequest | 
+final InsertCoupon insertCoupon = ; // InsertCoupon | 
 
 try {
-    final response = api.couponCreate(insertCouponRequest);
+    final response = api.couponCreate(insertCoupon);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling CouponApi->couponCreate: $e\n');
@@ -40,7 +40,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertCouponRequest** | [**InsertCouponRequest**](InsertCouponRequest.md)|  | 
+ **insertCoupon** | [**InsertCoupon**](InsertCoupon.md)|  | 
 
 ### Return type
 
@@ -191,7 +191,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **couponUpdate**
-> CouponCreate200Response couponUpdate(id, updateCouponRequest)
+> CouponCreate200Response couponUpdate(id, updateCoupon)
 
 
 
@@ -201,10 +201,10 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getCouponApi();
 final String id = id_example; // String | 
-final UpdateCouponRequest updateCouponRequest = ; // UpdateCouponRequest | 
+final UpdateCoupon updateCoupon = ; // UpdateCoupon | 
 
 try {
-    final response = api.couponUpdate(id, updateCouponRequest);
+    final response = api.couponUpdate(id, updateCoupon);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling CouponApi->couponUpdate: $e\n');
@@ -216,7 +216,7 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **updateCouponRequest** | [**UpdateCouponRequest**](UpdateCouponRequest.md)|  | 
+ **updateCoupon** | [**UpdateCoupon**](UpdateCoupon.md)|  | 
 
 ### Return type
 

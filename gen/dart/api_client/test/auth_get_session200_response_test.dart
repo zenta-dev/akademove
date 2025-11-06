@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // AuthGetSession200ResponseData data
+    // GetSessionResponse data
     test('to test the property `data`', () async {
       // TODO
     });
