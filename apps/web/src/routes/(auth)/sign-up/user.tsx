@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ORPCError } from "@orpc/client";
 import { localizeHref, m } from "@repo/i18n";
-import { type SignUp, SignUpSchema } from "@repo/schema/auth";
+import { type FlatSignUp, FlatSignUpSchema } from "@repo/schema/auth";
+import type { CountryCode } from "@repo/schema/common";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +10,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { parsePhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
 import { PasswordToggle } from "@/components/toggle/password-toggle";
@@ -29,6 +31,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import {
 	Select,
 	SelectContent,
@@ -55,17 +58,6 @@ function RouteComponent() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const router = useRouter();
-	const form = useForm({
-		resolver: zodResolver(SignUpSchema),
-		defaultValues: {
-			name: "",
-			email: "",
-			gender: "male" as UserGender,
-			phone: "",
-			password: "",
-			confirmPassword: "",
-		},
-	});
 
 	const mutation = useMutation(
 		orpcQuery.auth.signUpUser.mutationOptions({
@@ -96,7 +88,7 @@ function RouteComponent() {
 					}
 
 					if (fields.includes("phone")) {
-						form.setError("phone", { message: error.message });
+						form.setError("phone_number", { message: error.message });
 						scrollToField("phone");
 					}
 				}
@@ -104,8 +96,22 @@ function RouteComponent() {
 		}),
 	);
 
+	const form = useForm({
+		disabled: mutation.isPending,
+		resolver: zodResolver(FlatSignUpSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			gender: "male" as UserGender,
+			phone_countryCode: "ID",
+			phone_number: 0,
+			password: "",
+			confirmPassword: "",
+		},
+	});
+
 	const onSubmit = useCallback(
-		async (values: SignUp) => {
+		async (values: FlatSignUp) => {
 			await mutation.mutateAsync({ body: values });
 		},
 		[mutation.mutateAsync],
@@ -194,7 +200,6 @@ function RouteComponent() {
 										<Input
 											placeholder="John Doe"
 											autoComplete="name"
-											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -212,7 +217,6 @@ function RouteComponent() {
 										<Input
 											placeholder="johndoe@gmail.com"
 											autoComplete="email"
-											disabled={mutation.isPending}
 											{...field}
 										/>
 									</FormControl>
@@ -222,16 +226,37 @@ function RouteComponent() {
 						/>
 						<FormField
 							control={form.control}
-							name="phone"
+							name="phone_number"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>{m.phone()}</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="+6281222333444"
-											autoComplete="tel"
-											disabled={mutation.isPending}
-											{...field}
+										<PhoneInput
+											countries={["ID"]}
+											defaultCountry={"ID"}
+											name={field.name}
+											disabled={field.disabled}
+											onCountryChange={(val) => {
+												if (val)
+													form.setValue(
+														"phone_countryCode",
+														val as CountryCode,
+													);
+											}}
+											onChange={(val) => {
+												const parse = parsePhoneNumber(val);
+												if (parse) {
+													form.setValue(
+														"phone_number",
+														Number(parse.nationalNumber),
+													);
+													if (parse.country)
+														form.setValue(
+															"phone_countryCode",
+															parse.country as CountryCode,
+														);
+												}
+											}}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -274,7 +299,6 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showPassword ? "text" : "password"}
-												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
@@ -300,7 +324,6 @@ function RouteComponent() {
 												placeholder="••••••••"
 												autoComplete="current-password"
 												type={showConfirmPassword ? "text" : "password"}
-												disabled={mutation.isPending}
 												{...field}
 											/>
 											<PasswordToggle
@@ -315,11 +338,7 @@ function RouteComponent() {
 							)}
 						/>
 
-						<Button
-							type="submit"
-							className="w-full"
-							disabled={mutation.isPending}
-						>
+						<Button type="submit" className="w-full">
 							{mutation.isPending ? <Submitting /> : m.sign_up()}
 						</Button>
 					</form>

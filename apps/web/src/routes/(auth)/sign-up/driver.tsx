@@ -5,6 +5,7 @@ import {
 	type FlatSignUpDriver,
 	FlatSignUpDriverSchema,
 } from "@repo/schema/auth";
+import type { CountryCode } from "@repo/schema/common";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
+import { parsePhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
 import { PasswordToggle } from "@/components/toggle/password-toggle";
@@ -32,6 +34,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import {
 	Select,
 	SelectContent,
@@ -68,22 +71,6 @@ function RouteComponent() {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const router = useRouter();
-	const form = useForm({
-		resolver: zodResolver(FlatSignUpDriverSchema),
-		defaultValues: {
-			name: "",
-			email: "",
-			gender: "male" as UserGender,
-			phone: "",
-			password: "",
-			confirmPassword: "",
-			detail_studentId: "",
-			detail_licenseNumber: "",
-			detail_studentCard: undefined,
-			detail_driverLicense: undefined,
-			detail_vehicleCertificate: undefined,
-		},
-	});
 
 	const mutation = useMutation(
 		orpcQuery.auth.signUpDriver.mutationOptions({
@@ -114,13 +101,32 @@ function RouteComponent() {
 					}
 
 					if (fields.includes("phone")) {
-						form.setError("phone", { message: error.message });
+						form.setError("phone_number", { message: error.message });
 						scrollToField("phone");
 					}
 				}
 			},
 		}),
 	);
+
+	const form = useForm({
+		disabled: mutation.isPending,
+		resolver: zodResolver(FlatSignUpDriverSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			gender: "male" as UserGender,
+			phone_countryCode: "ID",
+			phone_number: 0,
+			password: "",
+			confirmPassword: "",
+			detail_studentId: 0,
+			detail_licensePlate: "",
+			detail_studentCard: undefined,
+			detail_driverLicense: undefined,
+			detail_vehicleCertificate: undefined,
+		},
+	});
 
 	const onSubmit = useCallback(
 		async (values: FlatSignUpDriver) => {
@@ -243,18 +249,40 @@ function RouteComponent() {
 									</FormItem>
 								)}
 							/>
+
 							<FormField
 								control={form.control}
-								name="phone"
+								name="phone_number"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.phone()}</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="+6281222333444"
-												autoComplete="tel"
-												disabled={mutation.isPending}
-												{...field}
+											<PhoneInput
+												countries={["ID"]}
+												defaultCountry={"ID"}
+												name={field.name}
+												disabled={field.disabled}
+												onCountryChange={(val) => {
+													if (val)
+														form.setValue(
+															"phone_countryCode",
+															val as CountryCode,
+														);
+												}}
+												onChange={(val) => {
+													const parse = parsePhoneNumber(val);
+													if (parse) {
+														form.setValue(
+															"phone_number",
+															Number(parse.nationalNumber),
+														);
+														if (parse.country)
+															form.setValue(
+																"phone_countryCode",
+																parse.country as CountryCode,
+															);
+													}
+												}}
 											/>
 										</FormControl>
 										<FormMessage />
@@ -349,7 +377,11 @@ function RouteComponent() {
 									<FormItem>
 										<FormLabel>Student ID</FormLabel>
 										<FormControl>
-											<Input disabled={mutation.isPending} {...field} />
+											<Input
+												disabled={mutation.isPending}
+												type="number"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -357,7 +389,7 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail_licenseNumber"
+								name="detail_licensePlate"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>License Number</FormLabel>
