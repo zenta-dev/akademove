@@ -2,7 +2,6 @@ export 'abstraction/_export.dart';
 export 'constants/_export.dart';
 export 'errors.dart';
 export 'interceptors/_export.dart';
-export 'logger.dart';
 export 'models/_export.dart';
 export 'services/_export.dart';
 export 'utils/_export.dart';

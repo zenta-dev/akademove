@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:akademove/core/logger.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:dio/dio.dart';
 
 class LoggerInterceptor extends Interceptor {
