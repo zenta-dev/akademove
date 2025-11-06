@@ -276,7 +276,7 @@ const DashOperatorCouponsNewRoute = DashOperatorCouponsNewRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/dash/admin': typeof DashAdminRouteRouteWithChildren
   '/dash/driver': typeof DashDriverRouteRouteWithChildren
   '/dash/merchant': typeof DashMerchantRouteRouteWithChildren
@@ -321,7 +321,7 @@ export interface FileRoutesByFullPath {
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof authRouteRouteWithChildren
+  '/': typeof IndexRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
@@ -555,8 +555,8 @@ declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/(auth)': {
       id: '/(auth)'
-      path: '/'
-      fullPath: '/'
+      path: ''
+      fullPath: ''
       preLoaderRoute: typeof authRouteRouteImport
       parentRoute: typeof rootRouteImport
     }

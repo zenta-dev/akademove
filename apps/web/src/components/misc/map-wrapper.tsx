@@ -1,4 +1,4 @@
-import type { Location } from "@repo/schema/common";
+import type { Location } from "@repo/schema/position";
 import {
 	APIProvider,
 	Map as MapView,
