@@ -1,8 +1,10 @@
+import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserRideSummaryScreen extends StatefulWidget {
@@ -107,22 +109,24 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                             return;
                           }
 
-                          final orderCubit =  context.read<UserOrderCubit>();
-                await           orderCubit.placeOrder(
+                          final orderCubit = context.read<UserOrderCubit>();
+                          await orderCubit.placeOrder(
                             pickup,
                             dropoff,
                             OrderType.ride,
+                            method,
                           );
 
-if(mounted&& context.mounted){
-  final order = orderCubit.state.placeOrderResult;
-  if(order==null){
-    context.showMyToast('Failed to place order',type: ToastType.error);
-    return;
-  }
-
-  if(order)
-}
+                          if (mounted && context.mounted) {
+                            final order = orderCubit.state.placeOrderResult;
+                            if (order == null) {
+                              context.showMyToast(
+                                'Failed to place order',
+                                type: ToastType.error,
+                              );
+                              return;
+                            }
+                          }
                         }
                       : null,
                   child: state.isLoading
