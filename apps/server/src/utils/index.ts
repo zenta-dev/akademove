@@ -60,3 +60,13 @@ export function toNumberSafe(value: string | number | Decimal): number {
 export function toStringNumberSafe(value: number | Decimal): string {
 	return new Decimal(value).toFixed(2);
 }
+export function withQueryParams(
+	req: Request,
+	params: Record<string, string>,
+): Request {
+	const url = new URL(req.url);
+	for (const [key, value] of Object.entries(params)) {
+		url.searchParams.set(key, value);
+	}
+	return new Request(url.toString(), req);
+}
