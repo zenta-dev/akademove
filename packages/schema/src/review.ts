@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { DateSchema } from "./common.ts";
+import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const ReviewCategorySchema = z
@@ -35,3 +35,10 @@ export type ReviewCategory = z.infer<typeof ReviewCategorySchema>;
 export type Review = z.infer<typeof ReviewSchema>;
 export type InsertReview = z.infer<typeof InsertReviewSchema>;
 export type UpdateReview = z.infer<typeof UpdateReviewSchema>;
+
+export const ReviewSchemaRegistries = {
+	ReviewCategory: { schema: ReviewCategorySchema, strategy: "output" },
+	Review: { schema: ReviewSchema, strategy: "output" },
+	InsertReview: { schema: InsertReviewSchema, strategy: "input" },
+	UpdateReview: { schema: UpdateReviewSchema, strategy: "input" },
+} satisfies SchemaRegistries;
