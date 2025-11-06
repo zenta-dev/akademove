@@ -1,9 +1,16 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { UserSpec } from "./spec";
 
-const os = implement(UserSpec).$context<ORPCContext>().use(authMiddleware);
+const os = implement(UserSpec)
+	.$context<ORPCContext>()
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const UserHandler = os.router({
 	list: os.list
