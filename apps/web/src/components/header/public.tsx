@@ -1,5 +1,7 @@
+import { Link } from "@tanstack/react-router";
 import { UserDropdwon } from "@/components/header/user-dropdown";
 import { cn } from "@/utils/cn";
+import { BrandLogo } from "../misc/brand";
 
 export const PublicHeader = ({
 	className,
@@ -14,11 +16,12 @@ export const PublicHeader = ({
 			{...props}
 		>
 			<div className="flex h-(--header-height) w-full items-center justify-between px-2">
-				<div className="flex h-(--header-height) items-center gap-[7px]">
+				<Link to="/" className="flex h-(--header-height) items-center gap-4">
+					<BrandLogo />
 					<h1 className="font-semibold text-xl">
 						<span className="hidden md:inline">AkadeMove</span>
 					</h1>
-				</div>
+				</Link>
 				<div className="flex items-center gap-2">
 					<UserDropdwon />
 				</div>
