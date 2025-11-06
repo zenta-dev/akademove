@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { DateSchema } from "./common.ts";
+import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 
 export const ReportCategorySchema = z
@@ -46,3 +46,11 @@ export type ReportStatus = z.infer<typeof ReportStatusSchema>;
 export type Report = z.infer<typeof ReportSchema>;
 export type InsertReport = z.infer<typeof InsertReportSchema>;
 export type UpdateReport = z.infer<typeof UpdateReportSchema>;
+
+export const ReportSchemaRegistries = {
+	ReportCategory: { schema: ReportCategorySchema, strategy: "output" },
+	ReportStatus: { schema: ReportStatusSchema, strategy: "output" },
+	Report: { schema: ReportSchema, strategy: "output" },
+	InsertReport: { schema: InsertReportSchema, strategy: "input" },
+	UpdateReport: { schema: UpdateReportSchema, strategy: "input" },
+} satisfies SchemaRegistries;
