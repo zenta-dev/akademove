@@ -1,6 +1,5 @@
 import { env } from "cloudflare:workers";
 import type { AnyContractRouter } from "@orpc/contract";
-import { DurableIteratorHandlerPlugin } from "@orpc/experimental-durable-iterator";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import {
@@ -79,7 +78,12 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 
 		const corsPlugin = new CORSPlugin({
 			origin: TRUSTED_ORIGINS,
-			allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
+			allowHeaders: [
+				"Content-Type",
+				"Authorization",
+				"X-Client-Agent",
+				"x-orpc-batch",
+			],
 			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
 			exposeHeaders: ["Content-Length"],
 			maxAge: 600,
@@ -104,7 +108,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 					corsPlugin,
 					responseHeadersPlugin,
 					new BatchHandlerPlugin(),
-					new DurableIteratorHandlerPlugin(),
+					// new DurableIteratorHandlerPlugin(),
 				],
 				interceptors: [_sharedInterceptor],
 			});

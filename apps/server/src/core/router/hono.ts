@@ -25,7 +25,12 @@ export const setupHonoRouter = () => {
 		const corsMiddlewareHandler = cors({
 			origin: TRUSTED_ORIGINS,
 			allowMethods: ["GET", "POST", "PUT", "OPTIONS"],
-			allowHeaders: ["Content-Type", "Authorization", "X-Client-Agent"],
+			allowHeaders: [
+				"Content-Type",
+				"Authorization",
+				"X-Client-Agent",
+				"x-orpc-batch",
+			],
 			credentials: true,
 		});
 		return corsMiddlewareHandler(c, next);

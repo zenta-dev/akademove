@@ -39,6 +39,7 @@ export const link = new RPCLink<MyContext>({
 	url: `${import.meta.env.VITE_SERVER_URL}/rpc`,
 	plugins: [
 		new BatchLinkPlugin({
+			mode: "buffered",
 			groups: [
 				{
 					condition: () => true,
