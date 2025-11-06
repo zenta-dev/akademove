@@ -1,77 +1,47 @@
-// ignore_for_file: constant_identifier_names im just lazy to rewrite
 enum ErrorCode {
-  BAD_REQUEST,
-  UNAUTHORIZED,
-  FORBIDDEN,
-  NOT_FOUND,
-  METHOD_NOT_SUPPORTED,
-  NOT_ACCEPTABLE,
-  TIMEOUT,
-  CONFLICT,
-  PRECONDITION_FAILED,
-  PAYLOAD_TOO_LARGE,
-  UNSUPPORTED_MEDIA_TYPE,
-  UNPROCESSABLE_CONTENT,
-  TOO_MANY_REQUESTS,
-  CLIENT_CLOSED_REQUEST,
-  INTERNAL_SERVER_ERROR,
-  NOT_IMPLEMENTED,
-  BAD_GATEWAY,
-  SERVICE_UNAVAILABLE,
-  GATEWAY_TIMEOUT,
-  UNKNOWN,
-  INVALID_TYPE;
+  badRequest(400),
+  unathorized(401),
+  forbidden(403),
+  notFound(404),
+  methodNotSupported(405),
+  notAcceptable(406),
+  timeout(408),
+  conflict(409),
+  preconditionFailed(412),
+  payloadTooLarge(413),
+  unsupportedMediaType(415),
+  unprocessableContent(422),
+  tooManyRequests(429),
+  clientClosedRequest(499),
+  internalServerError(500),
+  notImplemented(501),
+  badGateway(502),
+  serviceUnavailable(503),
+  gatewayTimeout(504),
+  unknown(null),
+  invalidType(null);
 
-  const ErrorCode();
+  const ErrorCode(this.code);
+  final int? code;
 
-  static ErrorCode? fromString(String str) {
-    switch (str) {
-      case 'BAD_REQUEST':
-        return ErrorCode.BAD_REQUEST;
-      case 'UNAUTHORIZED':
-        return ErrorCode.UNAUTHORIZED;
-      case 'FORBIDDEN':
-        return ErrorCode.FORBIDDEN;
-      case 'NOT_FOUND':
-        return ErrorCode.NOT_FOUND;
-      case 'METHOD_NOT_SUPPORTED':
-        return ErrorCode.METHOD_NOT_SUPPORTED;
-      case 'NOT_ACCEPTABLE':
-        return ErrorCode.NOT_ACCEPTABLE;
-      case 'TIMEOUT':
-        return ErrorCode.TIMEOUT;
-      case 'CONFLICT':
-        return ErrorCode.CONFLICT;
-      case 'PRECONDITION_FAILED':
-        return ErrorCode.PRECONDITION_FAILED;
-      case 'PAYLOAD_TOO_LARGE':
-        return ErrorCode.PAYLOAD_TOO_LARGE;
-      case 'UNSUPPORTED_MEDIA_TYPE':
-        return ErrorCode.UNSUPPORTED_MEDIA_TYPE;
-      case 'UNPROCESSABLE_CONTENT':
-        return ErrorCode.UNPROCESSABLE_CONTENT;
-      case 'TOO_MANY_REQUESTS':
-        return ErrorCode.TOO_MANY_REQUESTS;
-      case 'CLIENT_CLOSED_REQUEST':
-        return ErrorCode.CLIENT_CLOSED_REQUEST;
-      case 'INTERNAL_SERVER_ERROR':
-        return ErrorCode.INTERNAL_SERVER_ERROR;
-      case 'NOT_IMPLEMENTED':
-        return ErrorCode.NOT_IMPLEMENTED;
-      case 'BAD_GATEWAY':
-        return ErrorCode.BAD_GATEWAY;
-      case 'SERVICE_UNAVAILABLE':
-        return ErrorCode.SERVICE_UNAVAILABLE;
-      case 'GATEWAY_TIMEOUT':
-        return ErrorCode.GATEWAY_TIMEOUT;
-      case 'UNKNOWN':
-        return ErrorCode.UNKNOWN;
-      case 'INVALID_TYPE':
-        return ErrorCode.INVALID_TYPE;
-      default:
-        return null;
-    }
-  }
+  static final Map<String, ErrorCode> _byName = {
+    for (final e in ErrorCode.values) e.name: e,
+  };
+
+  static final Map<int, ErrorCode> _byCode = {
+    for (final e in ErrorCode.values)
+      if (e.code != null) e.code!: e,
+  };
+
+  static ErrorCode? fromString(String? str) => _byName[str?.toUpperCase()];
+
+  static ErrorCode? fromInt(int? code) => _byCode[code];
+
+  static ErrorCode fromIntOrUnknown(int? code) =>
+      _byCode[code] ?? ErrorCode.unknown;
+
+  static ErrorCode fromStringOrUnknown(String? str) =>
+      _byName[str?.toUpperCase()] ?? ErrorCode.unknown;
 }
 
 sealed class BaseError implements Exception {
