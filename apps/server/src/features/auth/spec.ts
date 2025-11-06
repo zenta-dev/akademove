@@ -166,4 +166,13 @@ export const AuthSpec = {
 			}),
 		)
 		.output(z.union([createSuccesSchema(z.boolean(), "User has permission")])),
+	exchangeToken: oc
+		.route({
+			tags: [FEATURE_TAGS.AUTH],
+			method: "GET",
+			path: "/exchange-token",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.output(createSuccesSchema(z.string(), "Exchange token success")),
 };

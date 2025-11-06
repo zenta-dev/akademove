@@ -8,7 +8,10 @@ import {
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware } from "@/core/middlewares/auth";
+import {
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { isDev } from "@/utils";
 import { AuthSpec } from "./spec";
 
@@ -16,7 +19,9 @@ const os = implement(AuthSpec).$context<ORPCContext>();
 
 export const AuthHandler = os.router({
 	signIn: os.signIn.handler(async ({ context, input: { body } }) => {
-		const result = await context.repo.auth.signIn(body);
+		const result = await context.repo.auth.signIn({
+			...body,
+		});
 
 		context.resHeaders?.set(
 			"Set-Cookie",
@@ -135,7 +140,7 @@ export const AuthHandler = os.router({
 			});
 		},
 	),
-	signOut: os.signOut.use(authMiddleware).handler(async ({ context }) => {
+	signOut: os.signOut.use(orpcAuthMiddleware).handler(async ({ context }) => {
 		context.resHeaders?.set(
 			"Set-Cookie",
 			composeAuthCookieValue({
@@ -161,34 +166,36 @@ export const AuthHandler = os.router({
 			},
 		} as const;
 	}),
-	getSession: os.getSession.use(authMiddleware).handler(async ({ context }) => {
-		if (!context.token) {
-			throw new AuthError("Invalid authentication token.", {
-				code: "BAD_REQUEST",
-			});
-		}
+	getSession: os.getSession
+		.use(orpcAuthMiddleware)
+		.handler(async ({ context }) => {
+			if (!context.token) {
+				throw new AuthError("Invalid authentication token.", {
+					code: "BAD_REQUEST",
+				});
+			}
 
-		const result = await context.repo.auth.getSession(context.token);
+			const result = await context.repo.auth.getSession(context.token);
 
-		if (result.token) {
-			context.resHeaders?.set(
-				"Set-Cookie",
-				composeAuthCookieValue({
-					token: result.token,
-					isDev,
-					maxAge: 7 * 24 * 60 * 60,
-				}),
-			);
-		}
+			if (result.token) {
+				context.resHeaders?.set(
+					"Set-Cookie",
+					composeAuthCookieValue({
+						token: result.token,
+						isDev,
+						maxAge: 7 * 24 * 60 * 60,
+					}),
+				);
+			}
 
-		return {
-			status: 200,
-			body: {
-				message: "Session retrieved successfully.",
-				data: nullToUndefined(result),
-			},
-		} as const;
-	}),
+			return {
+				status: 200,
+				body: {
+					message: "Session retrieved successfully.",
+					data: nullToUndefined(result),
+				},
+			} as const;
+		}),
 	forgotPassword: os.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
 			await context.repo.auth.forgotPassword(body);
@@ -216,7 +223,8 @@ export const AuthHandler = os.router({
 		},
 	),
 	hasPermission: os.hasPermission
-		.use(authMiddleware)
+		.use(orpcAuthMiddleware)
+		.use(orpcRequireAuthMiddleware)
 		.handler(async ({ context, input: { body } }) => {
 			const ok = context.svc.rbac.hasPermission({
 				role: context.user.role,
@@ -230,5 +238,24 @@ export const AuthHandler = os.router({
 					data: ok,
 				},
 			} as const;
+		}),
+	exchangeToken: os
+		.use(orpcAuthMiddleware)
+		.use(orpcRequireAuthMiddleware)
+		.exchangeToken.handler(async ({ context }) => {
+			if (!context.user) {
+				throw new AuthError("Invalid session");
+			}
+			const token = await context.manager.jwt.signForWebSocket({
+				id: context.user.id,
+				role: context.user.role,
+			});
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved users data",
+					data: token,
+				},
+			};
 		}),
 });

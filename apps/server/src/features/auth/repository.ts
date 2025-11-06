@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { randomBytes } from "node:crypto";
 import type {
 	ForgotPassword,
@@ -10,10 +9,10 @@ import type {
 } from "@repo/schema/auth";
 import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
-import { getFileExtension } from "@repo/shared";
+import { getFileExtension, omit } from "@repo/shared";
+import { v7 } from "uuid";
 import { FEATURE_TAGS } from "@/core/constants";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
-import { log } from "@/core/logger";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -22,7 +21,8 @@ import {
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
-import { JwtManager } from "@/utils/jwt";
+import { log } from "@/utils";
+import type { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 
 export class AuthRepository {
@@ -38,11 +38,12 @@ export class AuthRepository {
 		db: DatabaseService,
 		kv: KeyValueService,
 		storage: StorageService,
+		jwt: JwtManager,
 	) {
 		this.#db = db;
 		this.#kv = kv;
 		this.#storage = storage;
-		this.#jwt = new JwtManager({ secret: env.AUTH_SECRET });
+		this.#jwt = jwt;
 		this.#pw = new PasswordManager();
 	}
 
@@ -95,21 +96,20 @@ export class AuthRepository {
 				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
 			}
 
-			// biome-ignore lint/correctness/noUnusedVariables: to exclude accounts to result
-			const { accounts, ...userData } = user;
+			const omittedUser = omit(user, ["accounts"]);
 			const [token, _] = await Promise.all([
 				this.#jwt.sign({
-					id: userData.id,
-					role: userData.role,
+					id: omittedUser.id,
+					role: omittedUser.role,
 					expiration: this.#JWT_EXPIRY,
 					clientAgent: params.clientAgent,
 				}),
-				this.#kv.put(this.composeKey(user.id), user),
+				this.#kv.put(this.composeKey(user.id), omittedUser),
 			]);
-			log.debug(userData, `${this.signIn.name} success`);
+			log.debug(omittedUser, `${this.signIn.name} success`);
 			return {
 				token,
-				user: await this.composeUser(userData, { expiresIn: 604800 }),
+				user: await this.composeUser(omittedUser, { expiresIn: 604800 }),
 			};
 		} catch (error) {
 			log.error(error, `${this.signIn.name} failed`);
@@ -180,6 +180,11 @@ export class AuthRepository {
 					userId: user.id,
 					providerId: "credentials",
 					password: hashedPassword,
+				}),
+				(opts?.tx ?? this.#db).insert(tables.wallet).values({
+					id: v7(),
+					userId: user.id,
+					balance: "0",
 				}),
 			];
 
