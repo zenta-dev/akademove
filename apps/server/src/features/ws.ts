@@ -1,5 +1,5 @@
 export * from "./order/order-ws";
-export * from "./wallet/ws";
+export * from "./wallet/wallet-ws";
 
 import { env } from "cloudflare:workers";
 import { upgradeDurableIteratorRequest } from "@orpc/experimental-durable-iterator/durable-object";
@@ -11,7 +11,7 @@ import {
 } from "@/core/middlewares/auth";
 import { withQueryParams } from "@/utils";
 import type { OrderRoom } from "./order/order-ws";
-import type { WalletRoom } from "./wallet/ws";
+import type { WalletRoom } from "./wallet/wallet-ws";
 
 export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 	app

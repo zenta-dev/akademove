@@ -1,7 +1,7 @@
 // This file infers types for the cloudflare:workers environment from your Alchemy Worker.
 // @see https://alchemy.run/concepts/bindings/#type-safe-bindings
 
-import type { WalletRoom } from "@/features/wallet/ws";
+import type { WalletRoom } from "@/features/wallet/wallet-ws";
 import type { ServerEnv } from "../../alchemy.run";
 import type { ListingRoom, OrderRoom } from "@/features/order/order-ws";
 import type { PlaygroundRoom } from "./src";
