@@ -20,8 +20,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/brand.svg
   SvgGenImage get brand => const SvgGenImage('assets/icons/brand.svg');
 
+  /// File path: assets/icons/female.svg
+  SvgGenImage get female => const SvgGenImage('assets/icons/female.svg');
+
+  /// File path: assets/icons/male.svg
+  SvgGenImage get male => const SvgGenImage('assets/icons/male.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [brand];
+  List<SvgGenImage> get values => [brand, female, male];
 }
 
 class $AssetsImagesGen {
@@ -39,8 +45,15 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/hero
   $AssetsImagesHeroGen get hero => const $AssetsImagesHeroGen();
 
+  /// File path: assets/images/motorcycle_above.png
+  AssetGenImage get motorcycleAbove =>
+      const AssetGenImage('assets/images/motorcycle_above.png');
+
+  /// File path: assets/images/no-image.svg
+  SvgGenImage get noImage => const SvgGenImage('assets/images/no-image.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [brand];
+  List<dynamic> get values => [brand, motorcycleAbove, noImage];
 }
 
 class $AssetsImagesBgGen {
