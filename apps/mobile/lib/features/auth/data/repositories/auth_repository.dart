@@ -4,16 +4,20 @@ import 'package:dio/dio.dart';
 
 class AuthRepository extends BaseRepository {
   const AuthRepository({
-    required this.apiClient,
-    required this.localKV,
-  });
+    required ApiClient apiClient,
+    required KeyValueService localKV,
+    required WebSocketService ws,
+  }) : _apiClient = apiClient,
+       _localKV = localKV,
+       _ws = ws;
 
-  final ApiClient apiClient;
-  final KeyValueService localKV;
+  final ApiClient _apiClient;
+  final KeyValueService _localKV;
+  final WebSocketService _ws;
 
   Future<BaseResponse<User>> signIn(SignInRequest request) async {
     return guard(() async {
-      final result = await apiClient.getAuthApi().authSignIn(
+      final result = await _apiClient.getAuthApi().authSignIn(
         signInRequest: request,
       );
 
@@ -21,11 +25,13 @@ class AuthRepository extends BaseRepository {
           result.data ??
           (throw const RepositoryError(
             'User not found',
-            code: ErrorCode.UNKNOWN,
+            code: ErrorCode.unknown,
           ));
 
-      apiClient.setBearerAuth('bearer_auth', data.data.token);
-      await localKV.set(KeyValueKeys.token, data.data.token);
+      _apiClient.setBearerAuth('bearer_auth', data.data.token);
+      _ws.sessionToken = data.data.token;
+      _ws.userId = data.data.user.id;
+      await _localKV.set(KeyValueKeys.token, data.data.token);
 
       return SuccessResponse(message: data.message, data: data.data.user);
     });
@@ -35,13 +41,13 @@ class AuthRepository extends BaseRepository {
     required String name,
     required String email,
     required Phone phone,
-    required UserGenderEnum gender,
+    required UserGender gender,
     required String password,
     required String confirmPassword,
     required MultipartFile? photo,
   }) async {
     return guard(() async {
-      final result = await apiClient.getAuthApi().authSignUpUser(
+      final result = await _apiClient.getAuthApi().authSignUpUser(
         name: name.trim(),
         email: email.trim(),
         gender: gender.value.trim(),
@@ -56,7 +62,7 @@ class AuthRepository extends BaseRepository {
           result.data ??
           (throw const RepositoryError(
             'An error occured',
-            code: ErrorCode.INTERNAL_SERVER_ERROR,
+            code: ErrorCode.internalServerError,
           ));
 
       return SuccessResponse(message: data.message, data: data.data.user);
@@ -67,7 +73,7 @@ class AuthRepository extends BaseRepository {
     required String name,
     required String email,
     required Phone phone,
-    required UserGenderEnum gender,
+    required UserGender gender,
     required String password,
     required String confirmPassword,
     required MultipartFile photo,
@@ -80,7 +86,7 @@ class AuthRepository extends BaseRepository {
     required int bankNumber,
   }) async {
     return guard(() async {
-      final result = await apiClient.getAuthApi().authSignUpDriver(
+      final result = await _apiClient.getAuthApi().authSignUpDriver(
         name: name.trim(),
         email: email.trim(),
         gender: gender.value,
@@ -102,7 +108,7 @@ class AuthRepository extends BaseRepository {
           result.data ??
           (throw const RepositoryError(
             'An error occured',
-            code: ErrorCode.INTERNAL_SERVER_ERROR,
+            code: ErrorCode.internalServerError,
           ));
 
       return SuccessResponse(message: data.message, data: data.data.user);
@@ -119,7 +125,7 @@ class AuthRepository extends BaseRepository {
     required String outletName,
     required String outletEmail,
     required Phone outletPhone,
-    required Location outletLocation,
+    required Coordinate outletLocation,
     required String outletAddress,
 
     required BankProviderEnum bankProvider,
@@ -129,7 +135,7 @@ class AuthRepository extends BaseRepository {
     required MultipartFile? document,
   }) async {
     return guard(() async {
-      final result = await apiClient.getAuthApi().authSignUpMerchant(
+      final result = await _apiClient.getAuthApi().authSignUpMerchant(
         name: ownerName.trim(),
         email: ownerEmail.trim(),
         phoneCountryCode: ownerPhone.countryCode.value,
@@ -141,17 +147,18 @@ class AuthRepository extends BaseRepository {
         detailPhoneCountryCode: outletPhone.countryCode.value,
         detailPhoneNumber: outletPhone.number,
         detailAddress: outletAddress.trim(),
-        detailLocationLat: outletLocation.lat,
-        detailLocationLng: outletLocation.lng,
+        detailLocationX: outletLocation.x,
+        detailLocationY: outletLocation.y,
         detailBankProvider: bankProvider.value,
         detailBankNumber: bankNumber,
+        detailCategories: [], // TODO; implement this
       );
 
       final data =
           result.data ??
           (throw const RepositoryError(
             'An error occured',
-            code: ErrorCode.INTERNAL_SERVER_ERROR,
+            code: ErrorCode.internalServerError,
           ));
 
       return SuccessResponse(message: data.message, data: data.data.user);
@@ -160,15 +167,15 @@ class AuthRepository extends BaseRepository {
 
   Future<BaseResponse<bool>> signOut() async {
     return guard(() async {
-      final result = await apiClient.getAuthApi().authSignOut();
-      await localKV.remove(KeyValueKeys.token);
-      apiClient.setBearerAuth('bearer_auth', '');
+      final result = await _apiClient.getAuthApi().authSignOut();
+      await _localKV.remove(KeyValueKeys.token);
+      _apiClient.setBearerAuth('bearer_auth', '');
 
       final data =
           result.data ??
           (throw const RepositoryError(
             'An error occured',
-            code: ErrorCode.INTERNAL_SERVER_ERROR,
+            code: ErrorCode.internalServerError,
           ));
       return SuccessResponse(message: data.message, data: true);
     });
@@ -176,39 +183,44 @@ class AuthRepository extends BaseRepository {
 
   Future<BaseResponse<User>> authenticate() async {
     return guard(() async {
-      final localToken = await localKV.get<String>(KeyValueKeys.token);
+      final localToken = await _localKV.get<String>(KeyValueKeys.token);
       if (localToken == null) {
         await delay(const Duration(seconds: 1));
         throw const RepositoryError(
           'Session expired',
-          code: ErrorCode.BAD_REQUEST,
+          code: ErrorCode.badRequest,
         );
       }
-      apiClient.setBearerAuth('bearer_auth', localToken);
-      final result = await apiClient.getAuthApi().authGetSession();
+      _apiClient.setBearerAuth('bearer_auth', localToken);
+      _ws.sessionToken = localToken;
+      final result = await _apiClient.getAuthApi().authGetSession();
 
       final data =
           result.data ??
           (throw const RepositoryError(
             'User not found',
-            code: ErrorCode.UNKNOWN,
+            code: ErrorCode.unknown,
           ));
 
       final remoteToken = data.data?.token;
       if (remoteToken != null) {
-        await localKV.set(KeyValueKeys.token, remoteToken);
-        apiClient.setBearerAuth('bearer_auth', remoteToken);
+        await _localKV.set(KeyValueKeys.token, remoteToken);
+        _apiClient.setBearerAuth('bearer_auth', remoteToken);
+        _ws.sessionToken = remoteToken;
       }
 
       final remoteUser = data.data?.user;
       if (remoteUser == null) {
-        await localKV.remove(KeyValueKeys.token);
-        apiClient.setBearerAuth('bearer_auth', '');
+        await _localKV.remove(KeyValueKeys.token);
+        _apiClient.setBearerAuth('bearer_auth', '');
+
         throw const RepositoryError(
           'Session expired',
-          code: ErrorCode.UNAUTHORIZED,
+          code: ErrorCode.unathorized,
         );
       }
+
+      _ws.userId = data.data?.user.id;
 
       return SuccessResponse(message: data.message, data: remoteUser);
     });

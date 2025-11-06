@@ -1,33 +1,38 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
-class AuthCubit extends BaseCubit<SplashState> {
-  AuthCubit(this.authRepository) : super(SplashState.initial());
-  final AuthRepository authRepository;
+class AuthCubit extends BaseCubit<AuthState> {
+  AuthCubit({
+    required AuthRepository authRepository,
+  }) : _authRepository = authRepository,
+       super(AuthState.initial());
+  final AuthRepository _authRepository;
 
-  @override
   Future<void> init() async {
+    await authenticate();
+  }
+
+  Future<void> authenticate() async {
     try {
-      emit(SplashState.loading());
-      final res = await authRepository.authenticate();
-      emit(SplashState.success(res.data, message: res.message));
+      emit(AuthState.loading());
+      final res = await _authRepository.authenticate();
+      emit(AuthState.success(res.data, message: res.message));
     } on BaseError catch (e, st) {
       logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(SplashState.failure(e));
+      emit(AuthState.failure(e));
     }
   }
 
   Future<void> signOut() async {
     try {
-      emit(SplashState.loading());
-      final res = await authRepository.signOut();
-      emit(SplashState.success(null, message: res.message));
+      emit(AuthState.loading());
+      final res = await _authRepository.signOut();
+      emit(AuthState.success(null, message: res.message));
     } on BaseError catch (e, st) {
       logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(SplashState.failure(e));
+      emit(AuthState.failure(e));
     }
   }
 
-  @override
-  void reset() => emit(SplashState.initial());
+  void reset() => emit(AuthState.initial());
 }

@@ -21,7 +21,7 @@ class _FormKeys {
   static const FormKey<String> step1StudentId = TextFieldKey(
     'step-1-student_id',
   );
-  static const step1Gender = SelectKey<UserGenderEnum>('step-1-gender');
+  static const step1Gender = SelectKey<UserGender>('step-1-gender');
   static const FormKey<String> step1PhoneNumber = TextFieldKey(
     'step-1-phone-number',
   );
@@ -52,9 +52,9 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   late final FormController _formController;
   late final StepperController _stepController;
 
-  UserGenderEnum? _selectedGender;
+  UserGender _selectedGender = UserGender.male;
   BankProviderEnum? _selectedBankProvider;
-  PhoneCountryCodeEnum _selectedCountryCode = PhoneCountryCodeEnum.ID;
+  CountryCode _selectedCountryCode = CountryCode.ID;
 
   final Map<Step2Docs, File?> _step2Docs = {
     for (var doc in Step2Docs.values) doc: null,
@@ -182,7 +182,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         countryCode: _selectedCountryCode,
         number: int.parse(formData['phoneNumber']!),
       ),
-      gender: _selectedGender!,
+      gender: _selectedGender,
       password: formData['password']!,
       confirmPassword: formData['confirmPassword']!,
       photoPath: _step2Docs[Step2Docs.photo]!.path,
@@ -212,7 +212,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         phoneNumber == null ||
         password == null ||
         confirmPassword == null ||
-        _selectedGender == null ||
         _step2Docs.values.any((v) => v == null) ||
         licensePlate == null ||
         _step3Docs.values.any((v) => v == null) ||
@@ -304,6 +303,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
             placeholder: 'john@gmail.com',
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
+            keyboardType: TextInputType.emailAddress,
             enabled: !state.isLoading,
           ),
           _buildTextField(
@@ -591,14 +591,18 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   }
 
   Widget _buildGenderSelect(SignUpState state) {
-    return _buildEnumSelect<UserGenderEnum>(
+    return _buildEnumSelect<UserGender>(
       key: _FormKeys.step1Gender,
       label: 'Gender',
       placeholder: 'Pick your gender',
       value: _selectedGender,
-      items: UserGenderEnum.values,
+      items: UserGender.values,
       enabled: !state.isLoading,
-      onChanged: (value) => setState(() => _selectedGender = value),
+      onChanged: (value) => setState(() {
+        if (value != null) {
+          _selectedGender = value;
+        }
+      }),
     );
   }
 
@@ -676,7 +680,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           onChanged: (value) {
             switch (value.country) {
               case Country.indonesia:
-                _selectedCountryCode = PhoneCountryCodeEnum.ID;
+                _selectedCountryCode = CountryCode.ID;
               default:
             }
           },

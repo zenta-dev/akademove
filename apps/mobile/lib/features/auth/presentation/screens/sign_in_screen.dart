@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -67,6 +68,24 @@ class _SignInFormView extends StatefulWidget {
 class _SignInFormViewState extends State<_SignInFormView> {
   final FormKey<String> _emailKey = const TextFieldKey('email');
   final FormKey<String> _passwordKey = const TextFieldKey('password');
+  late FocusNode _emailFn;
+  late FocusNode _passwordFn;
+
+  final _emailValidator = const EmailValidator();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFn = FocusNode();
+    _passwordFn = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _emailFn.dispose();
+    _passwordFn.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,18 +111,14 @@ class _SignInFormViewState extends State<_SignInFormView> {
             location: ToastLocation.topCenter,
           );
           switch (state.data?.role) {
-            case UserRoleEnum.user:
+            case UserRole.user:
               context.pushReplacementNamed(Routes.userHome.name);
-            case UserRoleEnum.merchant:
+            case UserRole.merchant:
               context.pushReplacementNamed(Routes.merchantHome.name);
-            case UserRoleEnum.driver:
+            case UserRole.driver:
               context.pushReplacementNamed(Routes.driverHome.name);
-            case UserRoleEnum.admin:
-              // TODO: Handle this case.
-              throw UnimplementedError();
-            case UserRoleEnum.operator_:
-              // TODO: Handle this case.
-              throw UnimplementedError();
+            case UserRole.admin:
+            case UserRole.operator_:
             case null:
               // TODO: Handle this case.
               throw UnimplementedError();
@@ -130,14 +145,25 @@ class _SignInFormViewState extends State<_SignInFormView> {
                   FormField(
                     key: _emailKey,
                     label: const Text('Email'),
-                    validator: const EmailValidator(),
+                    validator: _emailValidator,
                     showErrors: const {
                       FormValidationMode.changed,
                       FormValidationMode.submitted,
                     },
-                    child: const TextField(
-                      placeholder: Text('john@gmail.com'),
-                      features: [
+                    child: TextField(
+                      focusNode: _emailFn,
+                      placeholder: const Text('john@gmail.com'),
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (value) {
+                        final err = _emailValidator.validate(
+                          context,
+                          value,
+                          FormValidationMode.submitted,
+                        );
+                        if (err == null) _passwordFn.requestFocus();
+                      },
+                      features: const [
                         InputFeature.leading(Icon(LucideIcons.mail)),
                       ],
                     ),
@@ -167,9 +193,11 @@ class _SignInFormViewState extends State<_SignInFormView> {
                       FormValidationMode.changed,
                       FormValidationMode.submitted,
                     },
-                    child: const TextField(
-                      placeholder: Text('********'),
-                      features: [
+                    child: TextField(
+                      focusNode: _passwordFn,
+                      placeholder: const Text('********'),
+                      textInputAction: TextInputAction.done,
+                      features: const [
                         InputFeature.leading(Icon(LucideIcons.key)),
                         InputFeature.passwordToggle(),
                       ],

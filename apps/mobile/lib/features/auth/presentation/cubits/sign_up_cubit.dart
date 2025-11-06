@@ -4,7 +4,10 @@ import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 
 class SignUpCubit extends BaseCubit<SignUpState> {
-  SignUpCubit(this._authRepository) : super(SignUpState.initial());
+  SignUpCubit({
+    required AuthRepository authRepository,
+  }) : _authRepository = authRepository,
+       super(SignUpState.initial());
 
   final AuthRepository _authRepository;
 
@@ -18,7 +21,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String name,
     required String email,
     required Phone phone,
-    required UserGenderEnum gender,
+    required UserGender gender,
     required String password,
     required String confirmPassword,
     required String? photoPath,
@@ -48,7 +51,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String name,
     required String email,
     required Phone phone,
-    required UserGenderEnum gender,
+    required UserGender gender,
     required String password,
     required String confirmPassword,
     required String photoPath,
@@ -98,7 +101,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String outletName,
     required String outletEmail,
     required Phone outletPhone,
-    required Location outletLocation,
+    required Coordinate outletLocation,
     required String outletAddress,
 
     required BankProviderEnum bankProvider,

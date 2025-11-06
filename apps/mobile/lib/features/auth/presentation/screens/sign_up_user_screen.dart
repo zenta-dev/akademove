@@ -42,8 +42,8 @@ class _SignUpUserFormView extends StatefulWidget {
 class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _nameKey = TextFieldKey('name');
   static const FormKey<String> _emailKey = TextFieldKey('email');
-  static const FormKey<UserGenderEnum> _genderKey = SelectKey(
-    UserGenderEnum.male,
+  static const FormKey<UserGender> _genderKey = SelectKey(
+    UserGender.male,
   );
   static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
@@ -51,8 +51,8 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
     'confirm_password',
   );
 
-  UserGenderEnum _selectedGender = UserGenderEnum.male;
-  PhoneCountryCodeEnum _selectedCountryCode = PhoneCountryCodeEnum.ID;
+  UserGender _selectedGender = UserGender.male;
+  CountryCode _selectedCountryCode = CountryCode.ID;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +143,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 child: TextField(
                   placeholder: const Text('john@gmail.com'),
                   enabled: !state.isLoading,
+                  keyboardType: TextInputType.emailAddress,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.mail)),
                   ],
@@ -157,7 +158,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: SizedBox(
                   width: double.infinity,
-                  child: Select<UserGenderEnum>(
+                  child: Select<UserGender>(
                     enabled: !state.isLoading,
                     itemBuilder: (context, item) {
                       return Text(item.name);
@@ -170,9 +171,9 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                         });
                       }
                     },
-                    popup: SelectPopup<UserGenderEnum>(
+                    popup: SelectPopup<UserGender>(
                       items: SelectItemList(
-                        children: UserGenderEnum.values
+                        children: UserGender.values
                             .map(
                               (e) => SelectItemButton(
                                 value: e,
@@ -195,7 +196,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 },
                 child: ComponentTheme(
                   data: PhoneInputTheme(
-                    maxWidth: 216 * context.theme.scaling,
+                    maxWidth: 212 * context.theme.scaling,
                     flagWidth: 22.w,
                   ),
                   child: PhoneInput(
@@ -204,7 +205,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     onChanged: (value) {
                       switch (value.country) {
                         case Country.indonesia:
-                          _selectedCountryCode = PhoneCountryCodeEnum.ID;
+                          _selectedCountryCode = CountryCode.ID;
                         default:
                       }
                     },
@@ -231,7 +232,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               FormField(
                 key: _confirmPasswordKey,
                 label: const Text('Confirm Password'),
-                validator: const CompareWith<String>.equal(_passwordKey),
+                // validator: const CompareWith<String>.equal(_passwordKey),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,

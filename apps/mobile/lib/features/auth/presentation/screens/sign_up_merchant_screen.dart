@@ -67,10 +67,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Set<Marker> _markers = {};
 
   BankProviderEnum? _selectedBankProvider;
-  Location _outletLocation = Location(lat: -6.2088, lng: 106.8456);
+  Coordinate _outletLocation = Constants.defaultCoordinate;
   String _outletAddress = '';
-  PhoneCountryCodeEnum _selectedOwnerCountryCode = PhoneCountryCodeEnum.ID;
-  PhoneCountryCodeEnum _selectedOutletCountryCode = PhoneCountryCodeEnum.ID;
+  CountryCode _selectedOwnerCountryCode = CountryCode.ID;
+  CountryCode _selectedOutletCountryCode = CountryCode.ID;
   bool _isLocationLoaded = false;
   bool _isDraggingMarker = false;
 
@@ -130,9 +130,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       final position = await _determinePosition();
       if (!mounted) return;
 
-      final location = Location(
-        lat: position.latitude,
-        lng: position.longitude,
+      final location = Coordinate(
+        x: position.longitude,
+        y: position.latitude,
       );
       _updateLocationAndMarker(location);
 
@@ -281,12 +281,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     return result ?? false;
   }
 
-  void _updateLocationAndMarker(Location location) {
+  void _updateLocationAndMarker(Coordinate location) {
     _outletLocation = location;
     _markers = {
       Marker(
         markerId: const MarkerId('outletLocation'),
-        position: LatLng(location.lat.toDouble(), location.lng.toDouble()),
+        position: LatLng(location.y.toDouble(), location.x.toDouble()),
         infoWindow: const InfoWindow(
           title: 'Outlet Location',
           snippet: 'Drag to adjust position',
@@ -299,9 +299,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           }
         },
         onDrag: (position) {
-          _outletLocation = Location(
-            lat: position.latitude,
-            lng: position.longitude,
+          _outletLocation = Coordinate(
+            x: position.longitude,
+            y: position.latitude,
           );
         },
         onDragEnd: _onMarkerDragEnd,
@@ -315,9 +315,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Future<void> _onMarkerDragEnd(LatLng newPosition) async {
     if (mounted) {
       setState(() {
-        _outletLocation = Location(
-          lat: newPosition.latitude,
-          lng: newPosition.longitude,
+        _outletLocation = Coordinate(
+          x: newPosition.longitude,
+          y: newPosition.latitude,
         );
         _isDraggingMarker = false;
       });
@@ -403,7 +403,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   }
 
   Future<void> _moveToLocation(double latitude, double longitude) async {
-    final newLocation = Location(lat: latitude, lng: longitude);
+    final newLocation = Coordinate(x: longitude, y: latitude);
 
     setState(() {
       _updateLocationAndMarker(newLocation);
@@ -763,6 +763,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             placeholder: 'john@gmail.com',
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
+            keyboardType: TextInputType.emailAddress,
             enabled: !state.isLoading,
           ),
           _buildPhoneField(
@@ -771,7 +772,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             _FormKeys.step1OwnerPhoneNumber,
             (val) {
               if (val.country == Country.indonesia) {
-                _selectedOwnerCountryCode = PhoneCountryCodeEnum.ID;
+                _selectedOwnerCountryCode = CountryCode.ID;
               }
             },
           ),
@@ -848,7 +849,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             _FormKeys.step2OutletPhoneNumber,
             (val) {
               if (val.country == Country.indonesia) {
-                _selectedOutletCountryCode = PhoneCountryCodeEnum.ID;
+                _selectedOutletCountryCode = CountryCode.ID;
               }
             },
           ),
@@ -1057,8 +1058,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                           child: GoogleMap(
                             initialCameraPosition: CameraPosition(
                               target: LatLng(
-                                _outletLocation.lat.toDouble(),
-                                _outletLocation.lng.toDouble(),
+                                _outletLocation.y.toDouble(),
+                                _outletLocation.x.toDouble(),
                               ),
                               zoom: 16,
                             ),
@@ -1073,8 +1074,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                                     _mapController!.animateCamera(
                                       CameraUpdate.newLatLngZoom(
                                         LatLng(
-                                          _outletLocation.lat.toDouble(),
-                                          _outletLocation.lng.toDouble(),
+                                          _outletLocation.y.toDouble(),
+                                          _outletLocation.x.toDouble(),
                                         ),
                                         16,
                                       ),
@@ -1086,9 +1087,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                             onTap: (position) {
                               setState(() {
                                 _updateLocationAndMarker(
-                                  Location(
-                                    lat: position.latitude,
-                                    lng: position.longitude,
+                                  Coordinate(
+                                    x: position.longitude,
+                                    y: position.latitude,
                                   ),
                                 );
                               });

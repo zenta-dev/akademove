@@ -1,4 +1,5 @@
 import 'package:akademove/app/router.dart';
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
@@ -13,23 +14,23 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      child: BlocListener<AuthCubit, SplashState>(
+      child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.isFailure) {
             context.goNamed(Routes.authSignIn.name);
           }
           if (state.isSuccess) {
             switch (state.data?.role) {
-              case UserRoleEnum.user:
+              case UserRole.user:
                 context.pushReplacementNamed(Routes.userHome.name);
-              case UserRoleEnum.merchant:
+              case UserRole.merchant:
                 context.pushReplacementNamed(Routes.merchantHome.name);
-              case UserRoleEnum.driver:
+              case UserRole.driver:
                 context.pushReplacementNamed(Routes.driverHome.name);
-              case UserRoleEnum.admin:
+              case UserRole.admin:
                 // TODO: Handle this case.
                 throw UnimplementedError();
-              case UserRoleEnum.operator_:
+              case UserRole.operator_:
                 // TODO: Handle this case.
                 throw UnimplementedError();
               case null:
@@ -39,7 +40,23 @@ class SplashScreen extends StatelessWidget {
           }
         },
         child: Center(
-          child: Assets.images.brand.svg(width: 200.h, height: 200.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Assets.images.brand.svg(width: 200.h, height: 200.h),
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return SizedBox(
+                      width: context.mediaQuerySize.width / 4,
+                      child: const LinearProgressIndicator(),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
