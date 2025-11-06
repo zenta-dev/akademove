@@ -1,9 +1,16 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { CouponSpec } from "./spec";
 
-const os = implement(CouponSpec).$context<ORPCContext>().use(authMiddleware);
+const os = implement(CouponSpec)
+	.$context<ORPCContext>()
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const CouponHandler = os.router({
 	list: os.list
