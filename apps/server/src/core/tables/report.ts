@@ -1,8 +1,15 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import { index, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { nowFn, timestamp } from "./common";
+import {
+	createAuditLogTable,
+	index,
+	nowFn,
+	pgEnum,
+	pgTable,
+	timestamp,
+} from "./common";
 import { order } from "./order";
 
 export const reportCategory = pgEnum(
@@ -15,7 +22,7 @@ export const reportStatus = pgEnum("report_status", CONSTANTS.REPORT_STATUS);
 export const report = pgTable(
 	"reports",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		orderId: uuid("order_id").references(() => order.id, {
 			onDelete: "set null",
 		}),
@@ -56,6 +63,7 @@ export const report = pgTable(
 	],
 );
 
+export const reportAuditLog = createAuditLogTable("report");
 ///
 /// --- Relations --- ///
 ///
