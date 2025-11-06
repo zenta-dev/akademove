@@ -1,6 +1,6 @@
 import * as z from "zod";
 import type { SchemaRegistries } from "./common.ts";
-import { OrderSchema } from "./order.ts";
+import { PlaceOrderResponseSchema } from "./order.ts";
 import { TransactionSchema, TransactionStatusSchema } from "./transaction.ts";
 import { WalletSchema } from "./wallet.ts";
 
@@ -40,7 +40,9 @@ export const WSTopUpEnvelopeSchema = createWSEnvelopeSchema(
 		transaction: TransactionSchema,
 	}),
 );
-export const WSPlaceOrderEnvelopeSchema = createWSEnvelopeSchema(OrderSchema);
+export const WSPlaceOrderEnvelopeSchema = createWSEnvelopeSchema(
+	PlaceOrderResponseSchema,
+);
 // export const WSTokenSchema = z.object({
 // 	chn: z.string().describe("Channel name"),
 // 	tags: z.array(z.string()).optional().readonly().describe("Tags"),
