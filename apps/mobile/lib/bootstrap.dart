@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/locator.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
+import 'package:flutter/services.dart'
+    show DeviceOrientation, SystemChannels, SystemChrome;
 import 'package:flutter/widgets.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -59,10 +61,14 @@ ${details.stack}
 
   setupLocator();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
+  await Future.wait([
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]),
+    SystemChannels.textInput.invokeMethod('TextInput.hide'),
   ]);
+  tz.initializeTimeZones();
 
   runApp(await builder());
 }
