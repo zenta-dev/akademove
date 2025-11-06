@@ -21,6 +21,21 @@ export const MerchantMainSpec = {
 				"Successfully retrieved my merchant data",
 			),
 		),
+	populars: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/populars",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(MerchantSchema),
+				"Successfully retrieved merchants data",
+			),
+		),
 	list: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],

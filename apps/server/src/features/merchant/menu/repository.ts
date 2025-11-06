@@ -13,11 +13,11 @@ import {
 } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
-import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
+import { log } from "@/utils";
 import { MerchantMenuSortBySchema } from "./spec";
 
 interface CountCache {

@@ -1,11 +1,16 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { MerchantMenuSpec } from "./spec";
 
 const os = implement(MerchantMenuSpec)
 	.$context<ORPCContext>()
-	.use(authMiddleware);
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const MerchantMenuHandler = os.router({
 	list: os.list

@@ -1,12 +1,17 @@
 import { implement } from "@orpc/server";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
 import { MerchantMainSpec } from "./spec";
 
 const os = implement(MerchantMainSpec)
 	.$context<ORPCContext>()
-	.use(authMiddleware);
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
 export const MerchantMainHandler = os.router({
 	getMine: os.getMine
@@ -34,14 +39,33 @@ export const MerchantMainHandler = os.router({
 				},
 			};
 		}),
+	populars: os.populars
+		.use(hasPermission({ merchant: ["list"] }))
+		.handler(async ({ context, input: { query } }) => {
+			console.log("POPULARS MERCHANT => ", query);
+			const result =
+				await context.repo.merchant.main.getPopularMerchants(query);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved merchants data",
+					data: result,
+				},
+			};
+		}),
 	get: os.get
 		.use(hasPermission({ merchant: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
+			console.log("GET MERCHANT => ", params);
 			const result = await context.repo.merchant.main.get(params.id);
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved merchant data", data: result },
+				body: {
+					message: "Successfully retrieved merchant data",
+					data: result,
+				},
 			};
 		}),
 	// create: os.create
