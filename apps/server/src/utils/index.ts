@@ -53,3 +53,10 @@ export function safeSync<T>(fn: () => T): Result<T> {
 		return Result.err<T>(error);
 	}
 }
+export function toNumberSafe(value: string | number | Decimal): number {
+	return new Decimal(value).toDecimalPlaces(2).toNumber();
+}
+
+export function toStringNumberSafe(value: number | Decimal): string {
+	return new Decimal(value).toFixed(2);
+}
