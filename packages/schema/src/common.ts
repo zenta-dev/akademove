@@ -1,3 +1,4 @@
+import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { ZodObject, ZodRawShape } from "zod";
 import * as z from "zod";
 import { CONSTANTS } from "./constants.ts";
@@ -16,10 +17,11 @@ export const BankSchema = z
 	})
 	.meta({ title: "Bank" });
 
+export const CountryCodeSchema = z.enum(["ID"]);
 export const PhoneSchema = z
 	.object({
-		countryCode: z.enum(["ID"]),
-		number: z.coerce.number(),
+		countryCode: CountryCodeSchema,
+		number: z.coerce.number<number>(),
 	})
 	.meta({ title: "Phone" });
 export const DateSchema = z.coerce.date();
@@ -27,6 +29,11 @@ export const DateSchema = z.coerce.date();
 export const DayOfWeekSchema = z.enum(CONSTANTS.DAY_OF_WEEK);
 
 export const EmptySchema = z.null();
+
+// export const MoneyAmountSchema = z.object({
+// 	currency: z.string(),
+// 	amount: z.coerce.number(),
+// });
 
 export const UUIDParamSchema = z
 	.object({ id: z.uuid() })
@@ -51,6 +58,14 @@ export const FailedResponseSchema = z
 	})
 	.meta({ title: "FailedResponse" });
 
+export const CommonSchemaRegistries = {
+	Time: { schema: TimeSchema, strategy: "output" },
+	Bank: { schema: BankSchema, strategy: "output" },
+	CountryCode: { schema: CountryCodeSchema, strategy: "output" },
+	Phone: { schema: PhoneSchema, strategy: "output" },
+	DayOfWeek: { schema: DayOfWeekSchema, strategy: "output" },
+} satisfies SchemaRegistries;
+
 export const createSuccessResponseSchema = <T>(schema: T) =>
 	z.object({
 		message: z.string(),
@@ -62,8 +77,8 @@ export const listifySchema = <T extends z.core.SomeType>(schema: T) =>
 
 export const ClientAgentSchema = z.enum(["unknown", "mobile", "web"]);
 
-export type Location = z.infer<typeof LocationSchema>;
 export type Time = z.infer<typeof TimeSchema>;
+export type CountryCode = z.infer<typeof CountryCodeSchema>;
 export type Bank = z.infer<typeof BankSchema>;
 export type Phone = z.infer<typeof PhoneSchema>;
 export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
@@ -92,3 +107,9 @@ export function prefixSchemaKeys<T extends ZodObject, Prefix extends string>(
 		PrefixKeys<T["shape"], Prefix>
 	>;
 }
+export type SchemaRegistries = {
+	[key: string]: {
+		strategy?: "input" | "output";
+		schema: StandardSchemaV1<any, any>;
+	};
+};
