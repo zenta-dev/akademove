@@ -50,3 +50,44 @@ export function trimObjectValues<T extends Record<string, unknown>>(obj: T): T {
 
 	return obj;
 }
+export function omit<T extends object, K extends readonly (keyof T)[]>(
+	obj: T,
+	keys: K,
+): Omit<T, K[number]>;
+
+export function omit<T extends object, K extends keyof T>(
+	obj: T,
+	...keys: K[]
+): Omit<T, K>;
+
+export function omit<T extends object>(
+	obj: T,
+	keysOrFirst?: readonly (keyof T)[] | keyof T,
+	...rest: (keyof T)[]
+): Omit<T, keyof typeof keySet> {
+	const keys: readonly (keyof T)[] = Array.isArray(keysOrFirst)
+		? keysOrFirst
+		: keysOrFirst === undefined
+			? []
+			: [keysOrFirst, ...rest];
+
+	const keySet = new Set<PropertyKey>(keys as readonly PropertyKey[]);
+
+	const result = {} as Record<PropertyKey, unknown>;
+
+	const allKeys: readonly PropertyKey[] = [
+		...Object.getOwnPropertyNames(obj),
+		...Object.getOwnPropertySymbols(obj),
+	];
+
+	for (const key of allKeys) {
+		if (!keySet.has(key)) {
+			const desc = Object.getOwnPropertyDescriptor(obj, key);
+			if (desc) {
+				Object.defineProperty(result, key, desc);
+			}
+		}
+	}
+
+	return result as unknown as Omit<T, keyof typeof keySet>;
+}
