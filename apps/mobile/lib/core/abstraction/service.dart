@@ -1,4 +1,4 @@
 abstract class BaseService {
-  void setup();
+  Future<void> setup();
   void teardown();
 }

@@ -11,7 +11,7 @@ abstract class BaseRepository {
       final data = e.response?.data;
 
       var failed = const FailedResponse(
-        code: ErrorCode.INTERNAL_SERVER_ERROR,
+        code: ErrorCode.internalServerError,
         message: 'An error occured',
       );
 
@@ -26,7 +26,7 @@ abstract class BaseRepository {
       logger.e('Repository Error', error: e, stackTrace: stack);
       throw const RepositoryError(
         'Internal server error',
-        code: ErrorCode.UNKNOWN,
+        code: ErrorCode.unknown,
       );
     }
   }

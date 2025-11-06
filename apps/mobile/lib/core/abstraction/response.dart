@@ -87,8 +87,8 @@ final class FailedResponse extends BaseResponse<void> {
     final msg = json['message'] as String? ?? '';
 
     final errorCode = switch (codeStr) {
-      final String code => ErrorCode.fromString(code) ?? ErrorCode.UNKNOWN,
-      _ => ErrorCode.UNKNOWN,
+      final String code => ErrorCode.fromString(code) ?? ErrorCode.unknown,
+      _ => ErrorCode.unknown,
     };
 
     return FailedResponse(code: errorCode, message: msg);
