@@ -77,7 +77,7 @@ class UserWalletScreen extends StatelessWidget {
                     builder: (context, state) {
                       return WalletListTransactionWidget(
                         transactions: state.isLoading
-                            ? List.generate(10, (_) => dummyWalletTransaction)
+                            ? List.generate(10, (_) => dummyTransaction)
                             : state.myTransactions,
                       ).asSkeleton(enabled: state.isLoading);
                     },
@@ -204,7 +204,7 @@ class WalletMonthlySummaryCardWidget extends StatelessWidget {
 
 class WalletListTransactionWidget extends StatelessWidget {
   const WalletListTransactionWidget({required this.transactions, super.key});
-  final List<WalletTransaction> transactions;
+  final List<Transaction> transactions;
 
   @override
   Widget build(BuildContext context) {
@@ -264,15 +264,15 @@ class WalletListTransactionWidget extends StatelessWidget {
     };
   }
 
-  IconData _determineTransactionIcon(WalletTransactionType type) {
+  IconData _determineTransactionIcon(TransactionType type) {
     switch (type) {
-      case WalletTransactionType.topup:
-      case WalletTransactionType.refund:
+      case TransactionType.topup:
+      case TransactionType.refund:
         return LucideIcons.arrowDown;
-      case WalletTransactionType.payment:
-      case WalletTransactionType.withdraw:
+      case TransactionType.payment:
+      case TransactionType.withdraw:
         return LucideIcons.arrowUp;
-      case WalletTransactionType.adjustment:
+      case TransactionType.adjustment:
         return LucideIcons.circle;
     }
   }
@@ -289,18 +289,18 @@ class WalletListTransactionWidget extends StatelessWidget {
   }
 
   String _determinePlusMinus(
-    WalletTransactionType type,
+    TransactionType type,
     TransactionStatus status,
   ) {
     if (status == TransactionStatus.success) {
       switch (type) {
-        case WalletTransactionType.topup:
-        case WalletTransactionType.refund:
+        case TransactionType.topup:
+        case TransactionType.refund:
           return '+';
-        case WalletTransactionType.payment:
-        case WalletTransactionType.withdraw:
+        case TransactionType.payment:
+        case TransactionType.withdraw:
           return '-';
-        case WalletTransactionType.adjustment:
+        case TransactionType.adjustment:
           return '';
       }
     } else {

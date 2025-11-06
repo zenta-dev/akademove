@@ -15,7 +15,7 @@ class UserWalletState extends BaseState2 with UserWalletStateMappable {
   });
 
   final Wallet? myWallet;
-  final List<WalletTransaction> myTransactions;
+  final List<Transaction> myTransactions;
   final WalletMonthlySummaryResponse? thisMonthSummary;
 
   @override
@@ -35,7 +35,7 @@ class UserWalletState extends BaseState2 with UserWalletStateMappable {
   @override
   UserWalletState toSuccess({
     Wallet? myWallet,
-    List<WalletTransaction>? myTransactions,
+    List<Transaction>? myTransactions,
     WalletMonthlySummaryResponse? thisMonthSummary,
     String? message,
   }) => copyWith(
@@ -70,7 +70,7 @@ class UserWalletTopUpState extends BaseState2
   });
 
   final Payment? paymentResult;
-  final WalletTransaction? transactionResult;
+  final Transaction? transactionResult;
 
   @override
   UserWalletTopUpState toInitial() => copyWith(
@@ -89,7 +89,7 @@ class UserWalletTopUpState extends BaseState2
   @override
   UserWalletTopUpState toSuccess({
     Payment? paymentResult,
-    WalletTransaction? transactionResult,
+    Transaction? transactionResult,
     String? message,
   }) => copyWith(
     state: CubitState.success,

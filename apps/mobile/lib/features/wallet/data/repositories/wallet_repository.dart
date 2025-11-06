@@ -40,7 +40,7 @@ class WalletRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<List<WalletTransaction>>> getTransactions() {
+  Future<BaseResponse<List<Transaction>>> getTransactions() {
     return guard(() async {
       final res = await _apiClient.getWalletApi().walletTransactions();
 

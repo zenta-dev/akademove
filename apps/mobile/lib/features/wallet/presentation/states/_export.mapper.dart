@@ -27,15 +27,10 @@ class UserWalletStateMapper extends ClassMapperBase<UserWalletState> {
     _$myWallet,
     opt: true,
   );
-  static List<WalletTransaction> _$myTransactions(UserWalletState v) =>
+  static List<Transaction> _$myTransactions(UserWalletState v) =>
       v.myTransactions;
-  static const Field<UserWalletState, List<WalletTransaction>>
-  _f$myTransactions = Field(
-    'myTransactions',
-    _$myTransactions,
-    opt: true,
-    def: const [],
-  );
+  static const Field<UserWalletState, List<Transaction>> _f$myTransactions =
+      Field('myTransactions', _$myTransactions, opt: true, def: const []);
   static WalletMonthlySummaryResponse? _$thisMonthSummary(UserWalletState v) =>
       v.thisMonthSummary;
   static const Field<UserWalletState, WalletMonthlySummaryResponse>
@@ -128,15 +123,11 @@ extension UserWalletStateValueCopy<$R, $Out>
 
 abstract class UserWalletStateCopyWith<$R, $In extends UserWalletState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  ListCopyWith<
-    $R,
-    WalletTransaction,
-    ObjectCopyWith<$R, WalletTransaction, WalletTransaction>
-  >
+  ListCopyWith<$R, Transaction, ObjectCopyWith<$R, Transaction, Transaction>>
   get myTransactions;
   $R call({
     Wallet? myWallet,
-    List<WalletTransaction>? myTransactions,
+    List<Transaction>? myTransactions,
     WalletMonthlySummaryResponse? thisMonthSummary,
     CubitState? state,
     String? message,
@@ -156,11 +147,7 @@ class _UserWalletStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UserWalletState> $mapper =
       UserWalletStateMapper.ensureInitialized();
   @override
-  ListCopyWith<
-    $R,
-    WalletTransaction,
-    ObjectCopyWith<$R, WalletTransaction, WalletTransaction>
-  >
+  ListCopyWith<$R, Transaction, ObjectCopyWith<$R, Transaction, Transaction>>
   get myTransactions => ListCopyWith(
     $value.myTransactions,
     (v, t) => ObjectCopyWith(v, $identity, t),
@@ -169,7 +156,7 @@ class _UserWalletStateCopyWithImpl<$R, $Out>
   @override
   $R call({
     Object? myWallet = $none,
-    List<WalletTransaction>? myTransactions,
+    List<Transaction>? myTransactions,
     Object? thisMonthSummary = $none,
     CubitState? state,
     Object? message = $none,
@@ -220,14 +207,10 @@ class UserWalletTopUpStateMapper extends ClassMapperBase<UserWalletTopUpState> {
     _$paymentResult,
     opt: true,
   );
-  static WalletTransaction? _$transactionResult(UserWalletTopUpState v) =>
+  static Transaction? _$transactionResult(UserWalletTopUpState v) =>
       v.transactionResult;
-  static const Field<UserWalletTopUpState, WalletTransaction>
-  _f$transactionResult = Field(
-    'transactionResult',
-    _$transactionResult,
-    opt: true,
-  );
+  static const Field<UserWalletTopUpState, Transaction> _f$transactionResult =
+      Field('transactionResult', _$transactionResult, opt: true);
   static CubitState _$state(UserWalletTopUpState v) => v.state;
   static const Field<UserWalletTopUpState, CubitState> _f$state = Field(
     'state',
@@ -321,7 +304,7 @@ abstract class UserWalletTopUpStateCopyWith<
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({
     Payment? paymentResult,
-    WalletTransaction? transactionResult,
+    Transaction? transactionResult,
     CubitState? state,
     String? message,
     BaseError? error,
