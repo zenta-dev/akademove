@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema, PhoneSchema } from "./common.ts";
+import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { InsertDriverSchema } from "./driver.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { InsertMerchantSchema } from "./merchant.ts";
@@ -141,3 +141,11 @@ export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 export type SignInResponse = z.infer<typeof SignInResponseSchema>;
 export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
 export type GetSessionResponse = z.infer<typeof GetSessionResponseSchema>;
+
+export const AuthSchemaRegistries = {
+	Session: { schema: SessionSchema, strategy: "output" },
+	ResetPassword: { schema: ResetPasswordSchema, strategy: "input" },
+	SignInResponse: { schema: SignInResponseSchema, strategy: "output" },
+	SignUpResponse: { schema: SignUpResponseSchema, strategy: "output" },
+	GetSessionResponse: { schema: GetSessionResponseSchema, strategy: "output" },
+} satisfies SchemaRegistries;
