@@ -18,12 +18,12 @@ export const DriverSchema = z
 	.object({
 		id: z.uuid(),
 		userId: z.string(),
-		studentId: z.coerce.number(),
+		studentId: z.coerce.number<number>(),
 		licensePlate: z.string().min(6).max(32),
 		status: DriverStatusSchema,
 		rating: z.number(),
 		isOnline: z.boolean(),
-		currentLocation: LocationSchema.optional(),
+		currentLocation: CoordinateSchema.optional(),
 		lastLocationUpdate: DateSchema.optional(),
 		createdAt: DateSchema,
 
@@ -33,6 +33,12 @@ export const DriverSchema = z
 		bank: BankSchema,
 		// relations
 		user: UserSchema.partial().optional(),
+
+		// scoped
+		distance: z
+			.number()
+			.optional()
+			.describe("Each user has different result since it calculated value"),
 	})
 	.meta({ title: "Driver" });
 
@@ -61,9 +67,13 @@ export const InsertDriverSchema = DriverSchema.pick({
 	})
 	.meta({ title: "InsertDriverRequest" });
 
-export const UpdateDriverSchema = InsertDriverSchema.partial().meta({
-	title: "UpdateDriverRequest",
-});
+export const UpdateDriverSchema = InsertDriverSchema.extend({
+	currentLocation: CoordinateSchema.optional(),
+})
+	.partial()
+	.meta({
+		title: "UpdateDriverRequest",
+	});
 
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 export type Driver = z.infer<typeof DriverSchema>;
