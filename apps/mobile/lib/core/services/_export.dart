@@ -1,2 +1,5 @@
 export 'image_service.dart';
 export 'kv_service.dart';
+export 'location_service.dart';
+export 'map_service.dart';
+export 'websocket_service.dart';

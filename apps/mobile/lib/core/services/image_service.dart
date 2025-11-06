@@ -15,7 +15,7 @@ class ImagePickerService implements ImageService {
   late final ImagePicker _picker;
 
   @override
-  void setup() {}
+  Future<void> setup() async {}
 
   @override
   void teardown() {}
@@ -33,7 +33,7 @@ class ImagePickerService implements ImageService {
       if (result == null) {
         throw const ServiceError(
           'No image selected',
-          code: ErrorCode.NOT_FOUND,
+          code: ErrorCode.notFound,
         );
       }
 
@@ -45,7 +45,7 @@ class ImagePickerService implements ImageService {
       logger.e('ImagePickerService Error', error: e, stackTrace: stack);
       throw const ServiceError(
         'An unexpected error occurred while picking the image',
-        code: ErrorCode.UNKNOWN,
+        code: ErrorCode.unknown,
       );
     }
   }

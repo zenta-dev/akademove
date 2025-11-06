@@ -37,7 +37,7 @@ class SharedPrefKeyValueService implements KeyValueService {
     throw ServiceError(
       // ignore: lines_longer_than_80_chars
       'Type mismatch for key "${key.name}". Expected $T but got ${value.runtimeType}.',
-      code: ErrorCode.INVALID_TYPE,
+      code: ErrorCode.invalidType,
     );
   }
 
@@ -51,14 +51,14 @@ class SharedPrefKeyValueService implements KeyValueService {
       final List<String> v => await _prefs.setStringList(key.name, v),
       _ => throw ServiceError(
         'Unsupported type ${value.runtimeType} for key "${key.name}".',
-        code: ErrorCode.INVALID_TYPE,
+        code: ErrorCode.invalidType,
       ),
     };
 
     if (success == false) {
       throw const ServiceError(
         'Failed to write value to SharedPreferences',
-        code: ErrorCode.UNKNOWN,
+        code: ErrorCode.unknown,
       );
     }
   }
