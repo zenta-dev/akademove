@@ -1,9 +1,11 @@
 import { env } from "cloudflare:workers";
+import { DurableIteratorHandlerPlugin } from "@orpc/experimental-durable-iterator";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { ORPCError, ValidationError } from "@orpc/server";
-import { RPCHandler } from "@orpc/server/fetch";
+import { RPCHandler as FetchRPCHandler } from "@orpc/server/fetch";
 import {
+	BatchHandlerPlugin,
 	CORSPlugin,
 	ResponseHeadersPlugin,
 	StrictGetMethodPlugin,
@@ -11,30 +13,26 @@ import {
 import type { StandardHandleResult } from "@orpc/server/standard";
 import type { Interceptor } from "@orpc/shared";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
-import { LocationSchema, TimeSchema } from "@repo/schema/common";
-import { ConfigurationSchema } from "@repo/schema/configuration";
-import { CouponSchema } from "@repo/schema/coupon";
-import { DriverSchema } from "@repo/schema/driver";
-import { MerchantMenuSchema, MerchantSchema } from "@repo/schema/merchant";
-import { OrderSchema } from "@repo/schema/order";
-import { ReportSchema } from "@repo/schema/report";
-import { ReviewSchema } from "@repo/schema/review";
-import { ScheduleSchema } from "@repo/schema/schedule";
-import { UserSchema } from "@repo/schema/user";
+import { AllSchemaRegistries } from "@repo/schema";
 import type { Hono } from "hono";
 import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext } from "@/core/interface";
 import { RBACService } from "@/core/services/rbac";
-import { ServerRouter } from "@/features";
+import { FetchServerRouter } from "@/features";
+import { log } from "@/utils";
 
-const errorInterceptor: Interceptor<
+const _sharedInterceptor: Interceptor<
 	// biome-ignore lint/suspicious/noExplicitAny: i dunno how refer from orpc
 	any,
 	Promise<StandardHandleResult>
 > = async (opts) => {
 	try {
-		return await opts.next();
+		const path = opts.request.url.pathname;
+		log.debug({ path }, "Incoming Request");
+		const res = await opts.next();
+		log.debug("Outcoming response");
+		return res;
 	} catch (error) {
 		console.error("ORPC Error Interceptor:", error);
 
@@ -79,19 +77,25 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 
 		const responseHeadersPlugin = new ResponseHeadersPlugin();
 
-		const { svc, repo, user } = c.var;
+		const { svc, repo, manager, clientAgent } = c.var;
 		const context: ORPCContext = {
 			req: c.req.raw,
 			svc,
 			repo,
-			user,
-			clientAgent: "unknown",
+			manager,
+			clientAgent,
+			user: c.var.session?.user,
 		};
 
 		if (isRPC) {
-			const handler = new RPCHandler(ServerRouter, {
-				plugins: [corsPlugin, responseHeadersPlugin],
-				interceptors: [errorInterceptor],
+			const handler = new FetchRPCHandler(FetchServerRouter, {
+				plugins: [
+					corsPlugin,
+					responseHeadersPlugin,
+					new BatchHandlerPlugin(),
+					new DurableIteratorHandlerPlugin(),
+				],
+				interceptors: [_sharedInterceptor],
 			});
 			const result = await handler.handle(c.req.raw, {
 				prefix: "/rpc",
@@ -106,7 +110,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		if (isAPI) {
 			const converter = new ZodToJsonSchemaConverter();
 
-			const handler = new OpenAPIHandler(ServerRouter, {
+			const handler = new OpenAPIHandler(FetchServerRouter, {
 				plugins: [
 					corsPlugin,
 					responseHeadersPlugin,
@@ -115,24 +119,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 						schemaConverters: [converter],
 						specGenerateOptions: {
 							commonSchemas: {
-								Configuration: {
-									schema: ConfigurationSchema,
-									strategy: "output",
-								},
-								Driver: { schema: DriverSchema, strategy: "output" },
-								Merchant: { schema: MerchantSchema, strategy: "output" },
-								MerchantMenu: {
-									schema: MerchantMenuSchema,
-									strategy: "output",
-								},
-								Order: { schema: OrderSchema, strategy: "output" },
-								Report: { schema: ReportSchema, strategy: "output" },
-								Coupon: { schema: CouponSchema, strategy: "output" },
-								Review: { schema: ReviewSchema, strategy: "output" },
-								Schedule: { schema: ScheduleSchema, strategy: "output" },
-								User: { schema: UserSchema, strategy: "output" },
-								Location: { schema: LocationSchema, strategy: "output" },
-								Time: { schema: TimeSchema, strategy: "output" },
+								...AllSchemaRegistries,
 								Statements: { schema: RBACService.schema, strategy: "input" },
 							},
 							info: {
@@ -154,7 +141,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 						},
 					}),
 				],
-				interceptors: [errorInterceptor],
+				interceptors: [_sharedInterceptor],
 			});
 			const result = await handler.handle(c.req.raw, {
 				prefix: "/api",
@@ -169,5 +156,5 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 		return await next();
 	});
 
-	return app;
+	return { app };
 };
