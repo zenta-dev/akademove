@@ -2,16 +2,15 @@ import type { Phone } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
+import { boolean, jsonb, text } from "drizzle-orm/pg-core";
 import {
-	boolean,
+	DateModifier,
 	index,
-	jsonb,
 	pgEnum,
 	pgTable,
-	text,
+	timestamp,
 	uniqueIndex,
-} from "drizzle-orm/pg-core";
-import { DateModifier, timestamp } from "./common";
+} from "./common";
 
 export const userGender = pgEnum("user_gender", CONSTANTS.USER_GENDERS);
 
@@ -34,7 +33,6 @@ export const user = pgTable(
 	(t) => [
 		uniqueIndex("user_email_idx").on(t.email),
 		uniqueIndex("user_phone_idx").on(t.phone),
-		index("user_role_idx").on(t.role),
 	],
 );
 
