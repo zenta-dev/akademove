@@ -1,6 +1,5 @@
 import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/interceptors/logger_interceptor.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
@@ -15,25 +14,34 @@ void setupLocator() {
 }
 
 void _setupService() {
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://10.177.19.105:3000/api',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(minutes: 3),
-    ),
-  );
-  final interceptors = [
-    BearerAuthInterceptor(),
-    LoggerInterceptor(),
-  ];
   sl
     ..registerSingleton(
-      ApiClient(dio: dio, interceptors: interceptors),
+      ApiClient(
+        dio: Dio(
+          BaseOptions(
+            baseUrl:
+                '${Constants.apiProtocol}${Constants.apiDomain}${Constants.apiPort}/api',
+            connectTimeout: const Duration(seconds: 10),
+            receiveTimeout: const Duration(minutes: 3),
+          ),
+        ),
+        interceptors: [
+          BearerAuthInterceptor(),
+          LoggerInterceptor(),
+        ],
+      ),
     )
-    ..registerSingletonAsync<KeyValueService>(
-      () async => SharedPrefKeyValueService().setup(),
+    ..registerSingletonAsync<KeyValueService>(SharedPrefKeyValueService().setup)
+    ..registerSingleton<ImageService>(ImagePickerService()..setup())
+    ..registerSingleton<LocationService>(ILocationService()..setup())
+    ..registerSingletonAsync<MapService>(
+      IMapService().setup,
+      dispose: (param) => param.teardown(),
     )
-    ..registerSingleton<ImageService>(ImagePickerService()..setup());
+    ..registerLazySingleton(
+      WebSocketService.new,
+      dispose: (param) => param.dispose(),
+    );
 }
 
 void _setupRepository() {
@@ -42,6 +50,7 @@ void _setupRepository() {
       () => AuthRepository(
         apiClient: sl<ApiClient>(),
         localKV: sl<KeyValueService>(),
+        ws: sl<WebSocketService>(),
       ),
     )
     ..registerLazySingleton(
@@ -50,7 +59,22 @@ void _setupRepository() {
       ),
     )
     ..registerLazySingleton(
+      () => DriverRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => ConfigurationRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
       () => OrderRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => WalletRepository(
         apiClient: sl<ApiClient>(),
       ),
     );
@@ -59,9 +83,63 @@ void _setupRepository() {
 void _setupCubit() {
   sl
     ..registerFactory(AppCubit.new)
-    ..registerFactory(() => AuthCubit(sl<AuthRepository>()))
-    ..registerFactory(() => SignInCubit(sl<AuthRepository>()))
-    ..registerFactory(() => SignUpCubit(sl<AuthRepository>()))
-    ..registerFactory(() => MerchantCubit(sl<MerchantRepository>()))
-    ..registerFactory(() => MerchantOrderCubit(sl<OrderRepository>()));
+    ..registerFactory(
+      () => AuthCubit(
+        authRepository: sl<AuthRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => SignInCubit(
+        authRepository: sl<AuthRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => SignUpCubit(
+        authRepository: sl<AuthRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => MerchantCubit(
+        merchantRepository: sl<MerchantRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => MerchantOrderCubit(
+        orderRepository: sl<OrderRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserHomeCubit(
+        merchantRepository: sl<MerchantRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserRideCubit(
+        driverRepository: sl<DriverRepository>(),
+        mapService: sl<MapService>(),
+        locationService: sl<LocationService>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserWalletCubit(
+        walletRepository: sl<WalletRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserWalletTopUpCubit(
+        walletRepository: sl<WalletRepository>(),
+        webSocketService: sl<WebSocketService>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserOrderCubit(
+        orderRepository: sl<OrderRepository>(),
+        webSocketService: sl<WebSocketService>(),
+      ),
+    )
+    ..registerFactory(
+      () => ConfigurationCubit(
+        configurationRepository: sl<ConfigurationRepository>(),
+      ),
+    );
 }
