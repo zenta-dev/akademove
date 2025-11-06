@@ -1,6 +1,13 @@
 import * as z from "zod";
-import { BankSchema, DateSchema, LocationSchema } from "./common.ts";
+import {
+	BankSchema,
+	DateSchema,
+	DayOfWeekSchema,
+	type SchemaRegistries,
+	TimeSchema,
+} from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { CoordinateSchema } from "./position.ts";
 import { UserSchema } from "./user.ts";
 
 export const DriverStatusSchema = z
@@ -62,3 +69,44 @@ export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 export type Driver = z.infer<typeof DriverSchema>;
 export type InsertDriver = z.infer<typeof InsertDriverSchema>;
 export type UpdateDriver = z.infer<typeof UpdateDriverSchema>;
+
+export const DriverScheduleSchema = z
+	.object({
+		id: z.uuid(),
+		driverId: z.uuid(),
+		dayOfWeek: DayOfWeekSchema,
+		startTime: TimeSchema,
+		endTime: TimeSchema,
+		isRecurring: z.boolean().default(true),
+		specificDate: DateSchema.optional(),
+		isActive: z.boolean().default(true),
+		createdAt: DateSchema,
+		updatedAt: DateSchema,
+	})
+	.meta({ title: "DriverSchedule" });
+
+export const InsertDriverScheduleSchema = DriverScheduleSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+}).meta({ title: "InsertDriverScheduleRequest" });
+
+export const UpdateDriverScheduleSchema = DriverScheduleSchema.omit({
+	id: true,
+	driverId: true,
+	createdAt: true,
+	updatedAt: true,
+})
+	.partial()
+	.meta({ title: "UpdateDriverScheduleRequest" });
+
+export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
+export type DriverSchedule = z.infer<typeof DriverScheduleSchema>;
+export type InsertDriverSchedule = z.infer<typeof InsertDriverScheduleSchema>;
+export type UpdateDriverSchedule = z.infer<typeof UpdateDriverScheduleSchema>;
+
+export const DriverSchemaRegistries = {
+	DriverStatus: { schema: DriverStatusSchema, strategy: "output" },
+	Driver: { schema: DriverSchema, strategy: "output" },
+	DriverSchedule: { schema: DriverScheduleSchema, strategy: "output" },
+} satisfies SchemaRegistries;
