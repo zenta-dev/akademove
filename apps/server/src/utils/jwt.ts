@@ -3,7 +3,7 @@ import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import { type JWTPayload, jwtVerify, SignJWT } from "jose";
 import { AuthError, BaseError } from "@/core/error";
-import { log } from "@/core/logger";
+import { log } from "@/utils";
 
 export interface CustomPayload {
 	id: string;
@@ -52,9 +52,35 @@ export class JwtManager {
 			.setProtectedHeader({ alg: "HS256" })
 			.setIssuer(this.issuer)
 			.setAudience(
-				clientAgent ? `${clientAgent}.${this.audience}` : this.audience,
+				clientAgent ? `${clientAgent}${this.audience}` : this.audience,
 			)
 			.setExpirationTime(expiration ?? this.expiration)
+			.setIssuedAt()
+			.sign(this.secretKey);
+	}
+
+	async signForWebSocket({
+		id,
+		role,
+		clientAgent,
+		ttlSeconds = 180, // 3 minutes default
+	}: {
+		id: string;
+		role: UserRole;
+		clientAgent?: ClientAgent;
+		ttlSeconds?: number;
+	}): Promise<string> {
+		return new SignJWT({
+			sub: id,
+			role,
+			ws: true,
+		})
+			.setProtectedHeader({ alg: "HS256" })
+			.setIssuer(this.issuer)
+			.setAudience(
+				clientAgent ? `${clientAgent}.${this.audience}` : this.audience,
+			)
+			.setExpirationTime(`${ttlSeconds}s`)
 			.setIssuedAt()
 			.sign(this.secretKey);
 	}
