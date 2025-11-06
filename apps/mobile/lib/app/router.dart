@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
+import 'package:api_client/api_client.dart' show TopUpRequestMethodEnum;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
@@ -18,11 +19,29 @@ enum Routes {
   /// User Routes
   ///
   userHome('/user/home'),
+  userRide('/user/home/ride'),
+  userRidePickup('/user/home/ride/pickup'),
+  userRideDropoff('/user/home/ride/dropoff'),
+  userRideSummary('/user/home/ride/summary'),
+  userDriverNearMe('/user/home/driver/near-me'),
+  userDelivery('/user/home/delivery'),
+  userMart('/user/home/mart'),
+  userWallet('/user/home/wallet'),
+  userWalletTopUp('/user/home/wallet/topup'),
+  userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
+  userWalletTopUpQRIS('/user/home/wallet/topup/qris'),
+  userVoucher('/user/home/voucher'),
+
+  userHistory('/user/history'),
+  userProfile('/user/profile'),
 
   ///
   /// Driver Routes
   ///
   driverHome('/driver/home'),
+  driverKRS('/driver/krs'),
+  driverHistory('/driver/history'),
+  driverProfile('/driver/profile'),
 
   ///
   /// Merchant Routes
@@ -37,7 +56,7 @@ enum Routes {
 }
 
 final router = GoRouter(
-  initialLocation: Routes.userHome.path,
+  initialLocation: Routes.authSplash.path,
   routes: [
     ShellRoute(
       builder: (context, state, child) => child,
@@ -89,23 +108,195 @@ final router = GoRouter(
         ),
       ],
     ),
-    ShellRoute(
-      builder: (context, state, child) => child,
-      routes: [
-        GoRoute(
-          name: Routes.userHome.name,
-          path: Routes.userHome.path,
-          builder: (context, state) => const UserHomeScreen(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(
+            value: BlocProvider.of<ConfigurationCubit>(context)..getBanner(),
+          ),
+          BlocProvider(
+            create: (_) => sl<UserHomeCubit>()..getPopulars(),
+          ),
+          BlocProvider(
+            create: (_) => sl<UserRideCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => sl<UserWalletCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => sl<UserWalletTopUpCubit>(),
+          ),
+          BlocProvider(
+            create: (_) => sl<UserOrderCubit>(),
+          ),
+        ],
+        child: BottomNavbar(
+          shell: navigationShell,
+          tabs: const [
+            BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+            BottomNavBarItem(label: 'History', icon: LucideIcons.history),
+            BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+          ],
+        ),
+      ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.userHome.name,
+              path: Routes.userHome.path,
+              builder: (context, state) => const UserHomeScreen(),
+            ),
+            //
+            GoRoute(
+              name: Routes.userRide.name,
+              path: Routes.userRide.path,
+              builder: (context, state) => BlocProvider.value(
+                value: BlocProvider.of<UserRideCubit>(context)..getMyLocation(),
+                child: const UserRideScreen(),
+              ),
+            ),
+            GoRoute(
+              name: Routes.userDriverNearMe.name,
+              path: Routes.userDriverNearMe.path,
+              builder: (context, state) => const UserNearbyDriverScreen(),
+            ),
+            GoRoute(
+              name: Routes.userRidePickup.name,
+              path: Routes.userRidePickup.path,
+              builder: (context, state) => const UserRidePickupScreen(),
+            ),
+            GoRoute(
+              name: Routes.userRideDropoff.name,
+              path: Routes.userRideDropoff.path,
+              builder: (context, state) => const UserRideDropoffScreen(),
+            ),
+            GoRoute(
+              name: Routes.userRideSummary.name,
+              path: Routes.userRideSummary.path,
+              builder: (context, state) => const UserRideSummaryScreen(),
+            ),
+
+            //
+            GoRoute(
+              name: Routes.userDelivery.name,
+              path: Routes.userDelivery.path,
+              builder: (context, state) => const UserDeliveryScreen(),
+            ),
+            GoRoute(
+              name: Routes.userMart.name,
+              path: Routes.userMart.path,
+              builder: (context, state) => const UserMartScreen(),
+            ),
+            GoRoute(
+              name: Routes.userWallet.name,
+              path: Routes.userWallet.path,
+              builder: (context, state) => BlocProvider.value(
+                value: BlocProvider.of<UserWalletCubit>(context)..init(),
+                child: const UserWalletScreen(),
+              ),
+            ),
+            GoRoute(
+              name: Routes.userWalletTopUp.name,
+              path: Routes.userWalletTopUp.path,
+              builder: (context, state) => const UserWalletTopUpScreen(),
+            ),
+            GoRoute(
+              name: Routes.userWalletTopUpInsertAmount.name,
+              path: Routes.userWalletTopUpInsertAmount.path,
+              builder: (context, state) {
+                var method = TopUpRequestMethodEnum.QRIS;
+
+                switch (state.uri.queryParameters['method']) {
+                  case 'QRIS':
+                    method = TopUpRequestMethodEnum.QRIS;
+                  case 'VA':
+                    method = TopUpRequestMethodEnum.VA;
+                  case 'BANK_TRANSFER':
+                    method = TopUpRequestMethodEnum.BANK_TRANSFER;
+                }
+
+                return UserWalletTopUpInsertAmountScreen(method: method);
+              },
+            ),
+            GoRoute(
+              name: Routes.userWalletTopUpQRIS.name,
+              path: Routes.userWalletTopUpQRIS.path,
+              builder: (context, state) => const UserWalletTopUpQRISScreen(),
+            ),
+            GoRoute(
+              name: Routes.userVoucher.name,
+              path: Routes.userVoucher.path,
+              builder: (context, state) => const UserVoucherScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.userHistory.name,
+              path: Routes.userHistory.path,
+              builder: (context, state) => const UserHistoryScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.userProfile.name,
+              path: Routes.userProfile.path,
+              builder: (context, state) => const UserProfileScreen(),
+            ),
+          ],
         ),
       ],
     ),
-    ShellRoute(
-      builder: (context, state, child) => child,
-      routes: [
-        GoRoute(
-          name: Routes.driverHome.name,
-          path: Routes.driverHome.path,
-          builder: (context, state) => const DriverHomeScreen(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => BottomNavbar(
+        shell: navigationShell,
+        tabs: const [
+          BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+          BottomNavBarItem(label: 'KRS', icon: LucideIcons.book),
+          BottomNavBarItem(label: 'History', icon: LucideIcons.history),
+          BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+        ],
+      ),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.driverHome.name,
+              path: Routes.driverHome.path,
+              builder: (context, state) => const DriverHomeScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.driverKRS.name,
+              path: Routes.driverKRS.path,
+              builder: (context, state) => const DriverKrsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.driverHistory.name,
+              path: Routes.driverHistory.path,
+              builder: (context, state) => const DriverHistoryScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: Routes.driverProfile.name,
+              path: Routes.driverProfile.path,
+              builder: (context, state) => const DriverProfileScreen(),
+            ),
+          ],
         ),
       ],
     ),
