@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { ReportSpec } from "./spec";
+import { ReportSpec } from "./report-spec";
 
 const os = implement(ReportSpec)
 	.$context<ORPCContext>()

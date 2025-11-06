@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { DriverScheduleSpec } from "./spec";
+import { DriverScheduleSpec } from "./schedule-spec";
 
 const os = implement(DriverScheduleSpec)
 	.$context<ORPCContext>()

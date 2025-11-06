@@ -1,4 +1,4 @@
-export * from "./order/ws";
+export * from "./order/order-ws";
 export * from "./wallet/ws";
 
 import { env } from "cloudflare:workers";
@@ -10,7 +10,7 @@ import {
 	honoRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
 import { withQueryParams } from "@/utils";
-import type { OrderRoom } from "./order/ws";
+import type { OrderRoom } from "./order/order-ws";
 import type { WalletRoom } from "./wallet/ws";
 
 export const setupWebsocketRouter = (app: Hono<HonoContext>) =>

@@ -19,7 +19,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { log } from "@/utils";
-import type { NearbyQuery } from "./spec";
+import type { NearbyQuery } from "./driver-spec";
 
 export class DriverRepository {
 	readonly #db: DatabaseService;

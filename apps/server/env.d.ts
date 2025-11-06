@@ -3,7 +3,7 @@
 
 import type { WalletRoom } from "@/features/wallet/ws";
 import type { ServerEnv } from "../../alchemy.run";
-import type { ListingRoom, OrderRoom } from "@/features/order/ws";
+import type { ListingRoom, OrderRoom } from "@/features/order/order-ws";
 import type { PlaygroundRoom } from "./src";
 
 export interface CloudflareEnv extends ServerEnv {

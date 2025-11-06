@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { CouponSpec } from "./spec";
+import { CouponSpec } from "./coupon-spec";
 
 const os = implement(CouponSpec)
 	.$context<ORPCContext>()

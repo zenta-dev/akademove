@@ -13,7 +13,7 @@ import {
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
 import { isDev } from "@/utils";
-import { AuthSpec } from "./spec";
+import { AuthSpec } from "./auth-spec";
 
 const os = implement(AuthSpec).$context<ORPCContext>();
 

@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { ReviewSpec } from "./spec";
+import { ReviewSpec } from "./review-spec";
 
 const os = implement(ReviewSpec)
 	.$context<ORPCContext>()

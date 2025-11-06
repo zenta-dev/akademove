@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { UserSpec } from "./spec";
+import { UserSpec } from "./user-spec";
 
 const os = implement(UserSpec)
 	.$context<ORPCContext>()

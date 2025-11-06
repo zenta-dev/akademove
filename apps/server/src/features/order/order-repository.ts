@@ -40,7 +40,7 @@ import type { PaymentService } from "@/core/services/payment";
 import type { OrderDatabase } from "@/core/tables/order";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
-import type { WalletRepository } from "../wallet/repository";
+import type { WalletRepository } from "../wallet/wallet-repository";
 
 export class OrderRepository {
 	#kv: KeyValueService;

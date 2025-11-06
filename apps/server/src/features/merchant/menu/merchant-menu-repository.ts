@@ -18,7 +18,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import { log } from "@/utils";
-import { MerchantMenuSortBySchema } from "./spec";
+import { MerchantMenuSortBySchema } from "./merchant-menu-spec";
 
 interface CountCache {
 	total: number;

@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { MerchantMenuSpec } from "./spec";
+import { MerchantMenuSpec } from "./merchant-menu-spec";
 
 const os = implement(MerchantMenuSpec)
 	.$context<ORPCContext>()

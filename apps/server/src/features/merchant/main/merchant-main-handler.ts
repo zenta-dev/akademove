@@ -6,7 +6,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { MerchantMainSpec } from "./spec";
+import { MerchantMainSpec } from "./merchant-main-spec";
 
 const os = implement(MerchantMainSpec)
 	.$context<ORPCContext>()

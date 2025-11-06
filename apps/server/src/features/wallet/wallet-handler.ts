@@ -4,7 +4,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { WalletSpec } from "./spec";
+import { WalletSpec } from "./wallet-spec";
 
 const pub = implement(WalletSpec).$context<ORPCContext>();
 const priv = pub.use(orpcAuthMiddleware).use(orpcRequireAuthMiddleware);

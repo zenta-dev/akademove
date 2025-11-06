@@ -1,6 +1,6 @@
 import { oc } from "@orpc/contract";
-import { MerchantMainSpec } from "./main/spec";
-import { MerchantMenuSpec } from "./menu/spec";
+import { MerchantMainSpec } from "./main/merchant-main-spec";
+import { MerchantMenuSpec } from "./menu/merchant-menu-spec";
 
 export const MerchantSpec = oc.router({
 	...MerchantMainSpec,

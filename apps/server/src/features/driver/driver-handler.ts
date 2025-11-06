@@ -5,7 +5,7 @@ import {
 	orpcAuthMiddleware,
 	orpcRequireAuthMiddleware,
 } from "@/core/middlewares/auth";
-import { DriverSpec } from "./spec";
+import { DriverSpec } from "./driver-spec";
 
 const os = implement(DriverSpec)
 	.$context<ORPCContext>()
