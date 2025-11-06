@@ -1,16 +1,8 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import {
-	index,
-	integer,
-	pgEnum,
-	pgTable,
-	text,
-	uniqueIndex,
-	uuid,
-} from "drizzle-orm/pg-core";
+import { integer, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { DateModifier } from "./common";
+import { DateModifier, index, pgEnum, pgTable, uniqueIndex } from "./common";
 import { order } from "./order";
 
 export const reviewCategory = pgEnum(
@@ -21,7 +13,7 @@ export const reviewCategory = pgEnum(
 export const review = pgTable(
 	"reviews",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		orderId: uuid("order_id")
 			.notNull()
 			.references(() => order.id, { onDelete: "no action" }),
