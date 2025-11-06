@@ -13,7 +13,7 @@ abstract class _$WSPlaceOrderEnvelopeCWProxy {
 
   WSPlaceOrderEnvelope to(WSEnvelopeSender to);
 
-  WSPlaceOrderEnvelope payload(Order payload);
+  WSPlaceOrderEnvelope payload(PlaceOrderResponse payload);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPlaceOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -25,7 +25,7 @@ abstract class _$WSPlaceOrderEnvelopeCWProxy {
     WSEnvelopeType type,
     WSEnvelopeSender from,
     WSEnvelopeSender to,
-    Order payload,
+    PlaceOrderResponse payload,
   });
 }
 
@@ -46,7 +46,8 @@ class _$WSPlaceOrderEnvelopeCWProxyImpl
   WSPlaceOrderEnvelope to(WSEnvelopeSender to) => this(to: to);
 
   @override
-  WSPlaceOrderEnvelope payload(Order payload) => this(payload: payload);
+  WSPlaceOrderEnvelope payload(PlaceOrderResponse payload) =>
+      this(payload: payload);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPlaceOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -77,7 +78,7 @@ class _$WSPlaceOrderEnvelopeCWProxyImpl
       payload: payload == const $CopyWithPlaceholder()
           ? _value.payload
           // ignore: cast_nullable_to_non_nullable
-          : payload as Order,
+          : payload as PlaceOrderResponse,
     );
   }
 }
@@ -109,7 +110,7 @@ WSPlaceOrderEnvelope _$WSPlaceOrderEnvelopeFromJson(
     to: $checkedConvert('to', (v) => $enumDecode(_$WSEnvelopeSenderEnumMap, v)),
     payload: $checkedConvert(
       'payload',
-      (v) => Order.fromJson(v as Map<String, dynamic>),
+      (v) => PlaceOrderResponse.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;

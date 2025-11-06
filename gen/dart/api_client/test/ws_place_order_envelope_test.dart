@@ -22,7 +22,7 @@ void main() {
       // TODO
     });
 
-    // Order payload
+    // PlaceOrderResponse payload
     test('to test the property `payload`', () async {
       // TODO
     });

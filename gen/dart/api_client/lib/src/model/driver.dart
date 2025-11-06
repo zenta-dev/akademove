@@ -5,7 +5,7 @@
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/bank.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
+import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_status.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -83,7 +83,7 @@ class Driver {
   final Bank bank;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
-  final OrderPlaceOrder200ResponseDataUser? user;
+  final DriverUser? user;
 
   /// Each user has different result since it calculated value
   @JsonKey(name: r'distance', required: false, includeIfNull: false)

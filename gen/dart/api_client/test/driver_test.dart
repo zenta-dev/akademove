@@ -77,7 +77,7 @@ void main() {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseDataUser user
+    // DriverUser user
     test('to test the property `user`', () async {
       // TODO
     });

@@ -67,17 +67,17 @@ void main() {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseDataUser user
+    // DriverUser user
     test('to test the property `user`', () async {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseDataDriver driver
+    // OrderDriver driver
     test('to test the property `driver`', () async {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseDataMerchant merchant
+    // OrderMerchant merchant
     test('to test the property `merchant`', () async {
       // TODO
     });

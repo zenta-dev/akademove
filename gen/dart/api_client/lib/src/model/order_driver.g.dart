@@ -1,59 +1,51 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_place_order200_response_data_driver.dart';
+part of 'order_driver.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$OrderPlaceOrder200ResponseDataDriverCWProxy {
-  OrderPlaceOrder200ResponseDataDriver id(String? id);
+abstract class _$OrderDriverCWProxy {
+  OrderDriver id(String? id);
 
-  OrderPlaceOrder200ResponseDataDriver userId(String? userId);
+  OrderDriver userId(String? userId);
 
-  OrderPlaceOrder200ResponseDataDriver studentId(num? studentId);
+  OrderDriver studentId(num? studentId);
 
-  OrderPlaceOrder200ResponseDataDriver licensePlate(String? licensePlate);
+  OrderDriver licensePlate(String? licensePlate);
 
-  OrderPlaceOrder200ResponseDataDriver status(DriverStatus? status);
+  OrderDriver status(DriverStatus? status);
 
-  OrderPlaceOrder200ResponseDataDriver rating(num? rating);
+  OrderDriver rating(num? rating);
 
-  OrderPlaceOrder200ResponseDataDriver isOnline(bool? isOnline);
+  OrderDriver isOnline(bool? isOnline);
 
-  OrderPlaceOrder200ResponseDataDriver currentLocation(
-    Coordinate? currentLocation,
-  );
+  OrderDriver currentLocation(Coordinate? currentLocation);
 
-  OrderPlaceOrder200ResponseDataDriver lastLocationUpdate(
-    DateTime? lastLocationUpdate,
-  );
+  OrderDriver lastLocationUpdate(DateTime? lastLocationUpdate);
 
-  OrderPlaceOrder200ResponseDataDriver createdAt(DateTime? createdAt);
+  OrderDriver createdAt(DateTime? createdAt);
 
-  OrderPlaceOrder200ResponseDataDriver studentCard(String? studentCard);
+  OrderDriver studentCard(String? studentCard);
 
-  OrderPlaceOrder200ResponseDataDriver driverLicense(String? driverLicense);
+  OrderDriver driverLicense(String? driverLicense);
 
-  OrderPlaceOrder200ResponseDataDriver vehicleCertificate(
-    String? vehicleCertificate,
-  );
+  OrderDriver vehicleCertificate(String? vehicleCertificate);
 
-  OrderPlaceOrder200ResponseDataDriver bank(Bank? bank);
+  OrderDriver bank(Bank? bank);
 
-  OrderPlaceOrder200ResponseDataDriver user(
-    OrderPlaceOrder200ResponseDataUser? user,
-  );
+  OrderDriver user(DriverUser? user);
 
-  OrderPlaceOrder200ResponseDataDriver distance(num? distance);
+  OrderDriver distance(num? distance);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderPlaceOrder200ResponseDataDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// OrderPlaceOrder200ResponseDataDriver(...).copyWith(id: 12, name: "My name")
+  /// OrderDriver(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderPlaceOrder200ResponseDataDriver call({
+  OrderDriver call({
     String? id,
     String? userId,
     num? studentId,
@@ -68,92 +60,79 @@ abstract class _$OrderPlaceOrder200ResponseDataDriverCWProxy {
     String? driverLicense,
     String? vehicleCertificate,
     Bank? bank,
-    OrderPlaceOrder200ResponseDataUser? user,
+    DriverUser? user,
     num? distance,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderPlaceOrder200ResponseDataDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderPlaceOrder200ResponseDataDriver.copyWith.fieldName(...)`
-class _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl
-    implements _$OrderPlaceOrder200ResponseDataDriverCWProxy {
-  const _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl(this._value);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderDriver.copyWith.fieldName(...)`
+class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
+  const _$OrderDriverCWProxyImpl(this._value);
 
-  final OrderPlaceOrder200ResponseDataDriver _value;
-
-  @override
-  OrderPlaceOrder200ResponseDataDriver id(String? id) => this(id: id);
+  final OrderDriver _value;
 
   @override
-  OrderPlaceOrder200ResponseDataDriver userId(String? userId) =>
-      this(userId: userId);
+  OrderDriver id(String? id) => this(id: id);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver studentId(num? studentId) =>
-      this(studentId: studentId);
+  OrderDriver userId(String? userId) => this(userId: userId);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver licensePlate(String? licensePlate) =>
+  OrderDriver studentId(num? studentId) => this(studentId: studentId);
+
+  @override
+  OrderDriver licensePlate(String? licensePlate) =>
       this(licensePlate: licensePlate);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver status(DriverStatus? status) =>
-      this(status: status);
+  OrderDriver status(DriverStatus? status) => this(status: status);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver rating(num? rating) =>
-      this(rating: rating);
+  OrderDriver rating(num? rating) => this(rating: rating);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver isOnline(bool? isOnline) =>
-      this(isOnline: isOnline);
+  OrderDriver isOnline(bool? isOnline) => this(isOnline: isOnline);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver currentLocation(
-    Coordinate? currentLocation,
-  ) => this(currentLocation: currentLocation);
+  OrderDriver currentLocation(Coordinate? currentLocation) =>
+      this(currentLocation: currentLocation);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver lastLocationUpdate(
-    DateTime? lastLocationUpdate,
-  ) => this(lastLocationUpdate: lastLocationUpdate);
+  OrderDriver lastLocationUpdate(DateTime? lastLocationUpdate) =>
+      this(lastLocationUpdate: lastLocationUpdate);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver createdAt(DateTime? createdAt) =>
-      this(createdAt: createdAt);
+  OrderDriver createdAt(DateTime? createdAt) => this(createdAt: createdAt);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver studentCard(String? studentCard) =>
+  OrderDriver studentCard(String? studentCard) =>
       this(studentCard: studentCard);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver driverLicense(String? driverLicense) =>
+  OrderDriver driverLicense(String? driverLicense) =>
       this(driverLicense: driverLicense);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver vehicleCertificate(
-    String? vehicleCertificate,
-  ) => this(vehicleCertificate: vehicleCertificate);
+  OrderDriver vehicleCertificate(String? vehicleCertificate) =>
+      this(vehicleCertificate: vehicleCertificate);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver bank(Bank? bank) => this(bank: bank);
+  OrderDriver bank(Bank? bank) => this(bank: bank);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver user(
-    OrderPlaceOrder200ResponseDataUser? user,
-  ) => this(user: user);
+  OrderDriver user(DriverUser? user) => this(user: user);
 
   @override
-  OrderPlaceOrder200ResponseDataDriver distance(num? distance) =>
-      this(distance: distance);
+  OrderDriver distance(num? distance) => this(distance: distance);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderPlaceOrder200ResponseDataDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// OrderPlaceOrder200ResponseDataDriver(...).copyWith(id: 12, name: "My name")
+  /// OrderDriver(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderPlaceOrder200ResponseDataDriver call({
+  OrderDriver call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
     Object? studentId = const $CopyWithPlaceholder(),
@@ -171,7 +150,7 @@ class _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl
     Object? user = const $CopyWithPlaceholder(),
     Object? distance = const $CopyWithPlaceholder(),
   }) {
-    return OrderPlaceOrder200ResponseDataDriver(
+    return OrderDriver(
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -231,7 +210,7 @@ class _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderPlaceOrder200ResponseDataUser?,
+          : user as DriverUser?,
       distance: distance == const $CopyWithPlaceholder()
           ? _value.distance
           // ignore: cast_nullable_to_non_nullable
@@ -240,24 +219,19 @@ class _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl
   }
 }
 
-extension $OrderPlaceOrder200ResponseDataDriverCopyWith
-    on OrderPlaceOrder200ResponseDataDriver {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderPlaceOrder200ResponseDataDriver.copyWith(...)` or like so:`instanceOfOrderPlaceOrder200ResponseDataDriver.copyWith.fieldName(...)`.
+extension $OrderDriverCopyWith on OrderDriver {
+  /// Returns a callable class that can be used as follows: `instanceOfOrderDriver.copyWith(...)` or like so:`instanceOfOrderDriver.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderPlaceOrder200ResponseDataDriverCWProxy get copyWith =>
-      _$OrderPlaceOrder200ResponseDataDriverCWProxyImpl(this);
+  _$OrderDriverCWProxy get copyWith => _$OrderDriverCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderPlaceOrder200ResponseDataDriver
-_$OrderPlaceOrder200ResponseDataDriverFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderPlaceOrder200ResponseDataDriver', json, (
-      $checkedConvert,
-    ) {
-      final val = OrderPlaceOrder200ResponseDataDriver(
+OrderDriver _$OrderDriverFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderDriver', json, ($checkedConvert) {
+      final val = OrderDriver(
         id: $checkedConvert('id', (v) => v as String?),
         userId: $checkedConvert('userId', (v) => v as String?),
         studentId: $checkedConvert('studentId', (v) => v as num?),
@@ -293,37 +267,33 @@ _$OrderPlaceOrder200ResponseDataDriverFromJson(Map<String, dynamic> json) =>
         ),
         user: $checkedConvert(
           'user',
-          (v) => v == null
-              ? null
-              : OrderPlaceOrder200ResponseDataUser.fromJson(
-                  v as Map<String, dynamic>,
-                ),
+          (v) =>
+              v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
         ),
         distance: $checkedConvert('distance', (v) => v as num?),
       );
       return val;
     });
 
-Map<String, dynamic> _$OrderPlaceOrder200ResponseDataDriverToJson(
-  OrderPlaceOrder200ResponseDataDriver instance,
-) => <String, dynamic>{
-  'id': ?instance.id,
-  'userId': ?instance.userId,
-  'studentId': ?instance.studentId,
-  'licensePlate': ?instance.licensePlate,
-  'status': ?_$DriverStatusEnumMap[instance.status],
-  'rating': ?instance.rating,
-  'isOnline': ?instance.isOnline,
-  'currentLocation': ?instance.currentLocation?.toJson(),
-  'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'studentCard': ?instance.studentCard,
-  'driverLicense': ?instance.driverLicense,
-  'vehicleCertificate': ?instance.vehicleCertificate,
-  'bank': ?instance.bank?.toJson(),
-  'user': ?instance.user?.toJson(),
-  'distance': ?instance.distance,
-};
+Map<String, dynamic> _$OrderDriverToJson(OrderDriver instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'userId': ?instance.userId,
+      'studentId': ?instance.studentId,
+      'licensePlate': ?instance.licensePlate,
+      'status': ?_$DriverStatusEnumMap[instance.status],
+      'rating': ?instance.rating,
+      'isOnline': ?instance.isOnline,
+      'currentLocation': ?instance.currentLocation?.toJson(),
+      'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'studentCard': ?instance.studentCard,
+      'driverLicense': ?instance.driverLicense,
+      'vehicleCertificate': ?instance.vehicleCertificate,
+      'bank': ?instance.bank?.toJson(),
+      'user': ?instance.user?.toJson(),
+      'distance': ?instance.distance,
+    };
 
 const _$DriverStatusEnumMap = {
   DriverStatus.pending: 'pending',

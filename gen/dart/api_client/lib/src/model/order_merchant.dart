@@ -9,7 +9,7 @@ import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'order_place_order200_response_data_merchant.g.dart';
+part 'order_merchant.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,9 +18,9 @@ part 'order_place_order200_response_data_merchant.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class OrderPlaceOrder200ResponseDataMerchant {
-  /// Returns a new [OrderPlaceOrder200ResponseDataMerchant] instance.
-  const OrderPlaceOrder200ResponseDataMerchant({
+class OrderMerchant {
+  /// Returns a new [OrderMerchant] instance.
+  const OrderMerchant({
     this.id,
     this.userId,
     this.name,
@@ -86,7 +86,7 @@ class OrderPlaceOrder200ResponseDataMerchant {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderPlaceOrder200ResponseDataMerchant &&
+      other is OrderMerchant &&
           other.id == id &&
           other.userId == userId &&
           other.name == name &&
@@ -121,12 +121,10 @@ class OrderPlaceOrder200ResponseDataMerchant {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderPlaceOrder200ResponseDataMerchant.fromJson(
-    Map<String, dynamic> json,
-  ) => _$OrderPlaceOrder200ResponseDataMerchantFromJson(json);
+  factory OrderMerchant.fromJson(Map<String, dynamic> json) =>
+      _$OrderMerchantFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$OrderPlaceOrder200ResponseDataMerchantToJson(this);
+  Map<String, dynamic> toJson() => _$OrderMerchantToJson(this);
 
   @override
   String toString() {

@@ -5,12 +5,12 @@
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/bank.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
+import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_status.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'order_place_order200_response_data_driver.g.dart';
+part 'order_driver.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -19,9 +19,9 @@ part 'order_place_order200_response_data_driver.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class OrderPlaceOrder200ResponseDataDriver {
-  /// Returns a new [OrderPlaceOrder200ResponseDataDriver] instance.
-  const OrderPlaceOrder200ResponseDataDriver({
+class OrderDriver {
+  /// Returns a new [OrderDriver] instance.
+  const OrderDriver({
     this.id,
     this.userId,
     this.studentId,
@@ -83,7 +83,7 @@ class OrderPlaceOrder200ResponseDataDriver {
   final Bank? bank;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
-  final OrderPlaceOrder200ResponseDataUser? user;
+  final DriverUser? user;
 
   /// Each user has different result since it calculated value
   @JsonKey(name: r'distance', required: false, includeIfNull: false)
@@ -92,7 +92,7 @@ class OrderPlaceOrder200ResponseDataDriver {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderPlaceOrder200ResponseDataDriver &&
+      other is OrderDriver &&
           other.id == id &&
           other.userId == userId &&
           other.studentId == studentId &&
@@ -129,12 +129,10 @@ class OrderPlaceOrder200ResponseDataDriver {
       user.hashCode +
       distance.hashCode;
 
-  factory OrderPlaceOrder200ResponseDataDriver.fromJson(
-    Map<String, dynamic> json,
-  ) => _$OrderPlaceOrder200ResponseDataDriverFromJson(json);
+  factory OrderDriver.fromJson(Map<String, dynamic> json) =>
+      _$OrderDriverFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$OrderPlaceOrder200ResponseDataDriverToJson(this);
+  Map<String, dynamic> toJson() => _$OrderDriverToJson(this);
 
   @override
   String toString() {

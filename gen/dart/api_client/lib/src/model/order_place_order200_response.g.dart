@@ -9,7 +9,7 @@ part of 'order_place_order200_response.dart';
 abstract class _$OrderPlaceOrder200ResponseCWProxy {
   OrderPlaceOrder200Response message(String message);
 
-  OrderPlaceOrder200Response data(OrderPlaceOrder200ResponseData data);
+  OrderPlaceOrder200Response data(PlaceOrderResponse data);
 
   OrderPlaceOrder200Response totalPages(num? totalPages);
 
@@ -21,7 +21,7 @@ abstract class _$OrderPlaceOrder200ResponseCWProxy {
   /// ````
   OrderPlaceOrder200Response call({
     String message,
-    OrderPlaceOrder200ResponseData data,
+    PlaceOrderResponse data,
     num? totalPages,
   });
 }
@@ -37,8 +37,7 @@ class _$OrderPlaceOrder200ResponseCWProxyImpl
   OrderPlaceOrder200Response message(String message) => this(message: message);
 
   @override
-  OrderPlaceOrder200Response data(OrderPlaceOrder200ResponseData data) =>
-      this(data: data);
+  OrderPlaceOrder200Response data(PlaceOrderResponse data) => this(data: data);
 
   @override
   OrderPlaceOrder200Response totalPages(num? totalPages) =>
@@ -64,7 +63,7 @@ class _$OrderPlaceOrder200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as OrderPlaceOrder200ResponseData,
+          : data as PlaceOrderResponse,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -92,7 +91,7 @@ OrderPlaceOrder200Response _$OrderPlaceOrder200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => OrderPlaceOrder200ResponseData.fromJson(v as Map<String, dynamic>),
+      (v) => PlaceOrderResponse.fromJson(v as Map<String, dynamic>),
     ),
     totalPages: $checkedConvert('totalPages', (v) => v as num?),
   );

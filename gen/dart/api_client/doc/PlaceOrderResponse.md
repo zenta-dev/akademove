@@ -1,4 +1,4 @@
-# api_client.model.WSPlaceOrderEnvelope
+# api_client.model.PlaceOrderResponse
 
 ## Load the model package
 ```dart
@@ -8,10 +8,8 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | [**WSEnvelopeType**](WSEnvelopeType.md) |  | 
-**from** | [**WSEnvelopeSender**](WSEnvelopeSender.md) |  | 
-**to** | [**WSEnvelopeSender**](WSEnvelopeSender.md) |  | 
-**payload** | [**PlaceOrderResponse**](PlaceOrderResponse.md) |  | 
+**order** | [**Order**](Order.md) |  | 
+**payment** | [**Payment**](Payment.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

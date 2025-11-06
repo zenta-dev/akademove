@@ -1,49 +1,49 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'order_place_order200_response_data_merchant.dart';
+part of 'order_merchant.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$OrderPlaceOrder200ResponseDataMerchantCWProxy {
-  OrderPlaceOrder200ResponseDataMerchant id(String? id);
+abstract class _$OrderMerchantCWProxy {
+  OrderMerchant id(String? id);
 
-  OrderPlaceOrder200ResponseDataMerchant userId(String? userId);
+  OrderMerchant userId(String? userId);
 
-  OrderPlaceOrder200ResponseDataMerchant name(String? name);
+  OrderMerchant name(String? name);
 
-  OrderPlaceOrder200ResponseDataMerchant email(String? email);
+  OrderMerchant email(String? email);
 
-  OrderPlaceOrder200ResponseDataMerchant phone(Phone? phone);
+  OrderMerchant phone(Phone? phone);
 
-  OrderPlaceOrder200ResponseDataMerchant address(String? address);
+  OrderMerchant address(String? address);
 
-  OrderPlaceOrder200ResponseDataMerchant location(Coordinate? location);
+  OrderMerchant location(Coordinate? location);
 
-  OrderPlaceOrder200ResponseDataMerchant isActive(bool? isActive);
+  OrderMerchant isActive(bool? isActive);
 
-  OrderPlaceOrder200ResponseDataMerchant rating(num? rating);
+  OrderMerchant rating(num? rating);
 
-  OrderPlaceOrder200ResponseDataMerchant document(String? document);
+  OrderMerchant document(String? document);
 
-  OrderPlaceOrder200ResponseDataMerchant image(String? image);
+  OrderMerchant image(String? image);
 
-  OrderPlaceOrder200ResponseDataMerchant categories(List<String>? categories);
+  OrderMerchant categories(List<String>? categories);
 
-  OrderPlaceOrder200ResponseDataMerchant bank(Bank? bank);
+  OrderMerchant bank(Bank? bank);
 
-  OrderPlaceOrder200ResponseDataMerchant createdAt(DateTime? createdAt);
+  OrderMerchant createdAt(DateTime? createdAt);
 
-  OrderPlaceOrder200ResponseDataMerchant updatedAt(DateTime? updatedAt);
+  OrderMerchant updatedAt(DateTime? updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderPlaceOrder200ResponseDataMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// OrderPlaceOrder200ResponseDataMerchant(...).copyWith(id: 12, name: "My name")
+  /// OrderMerchant(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderPlaceOrder200ResponseDataMerchant call({
+  OrderMerchant call({
     String? id,
     String? userId,
     String? name,
@@ -62,78 +62,66 @@ abstract class _$OrderPlaceOrder200ResponseDataMerchantCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderPlaceOrder200ResponseDataMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderPlaceOrder200ResponseDataMerchant.copyWith.fieldName(...)`
-class _$OrderPlaceOrder200ResponseDataMerchantCWProxyImpl
-    implements _$OrderPlaceOrder200ResponseDataMerchantCWProxy {
-  const _$OrderPlaceOrder200ResponseDataMerchantCWProxyImpl(this._value);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderMerchant.copyWith.fieldName(...)`
+class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
+  const _$OrderMerchantCWProxyImpl(this._value);
 
-  final OrderPlaceOrder200ResponseDataMerchant _value;
-
-  @override
-  OrderPlaceOrder200ResponseDataMerchant id(String? id) => this(id: id);
+  final OrderMerchant _value;
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant userId(String? userId) =>
-      this(userId: userId);
+  OrderMerchant id(String? id) => this(id: id);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant name(String? name) => this(name: name);
+  OrderMerchant userId(String? userId) => this(userId: userId);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant email(String? email) =>
-      this(email: email);
+  OrderMerchant name(String? name) => this(name: name);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant phone(Phone? phone) =>
-      this(phone: phone);
+  OrderMerchant email(String? email) => this(email: email);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant address(String? address) =>
-      this(address: address);
+  OrderMerchant phone(Phone? phone) => this(phone: phone);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant location(Coordinate? location) =>
-      this(location: location);
+  OrderMerchant address(String? address) => this(address: address);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant isActive(bool? isActive) =>
-      this(isActive: isActive);
+  OrderMerchant location(Coordinate? location) => this(location: location);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant rating(num? rating) =>
-      this(rating: rating);
+  OrderMerchant isActive(bool? isActive) => this(isActive: isActive);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant document(String? document) =>
-      this(document: document);
+  OrderMerchant rating(num? rating) => this(rating: rating);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant image(String? image) =>
-      this(image: image);
+  OrderMerchant document(String? document) => this(document: document);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant categories(List<String>? categories) =>
+  OrderMerchant image(String? image) => this(image: image);
+
+  @override
+  OrderMerchant categories(List<String>? categories) =>
       this(categories: categories);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant bank(Bank? bank) => this(bank: bank);
+  OrderMerchant bank(Bank? bank) => this(bank: bank);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant createdAt(DateTime? createdAt) =>
-      this(createdAt: createdAt);
+  OrderMerchant createdAt(DateTime? createdAt) => this(createdAt: createdAt);
 
   @override
-  OrderPlaceOrder200ResponseDataMerchant updatedAt(DateTime? updatedAt) =>
-      this(updatedAt: updatedAt);
+  OrderMerchant updatedAt(DateTime? updatedAt) => this(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderPlaceOrder200ResponseDataMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// OrderPlaceOrder200ResponseDataMerchant(...).copyWith(id: 12, name: "My name")
+  /// OrderMerchant(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderPlaceOrder200ResponseDataMerchant call({
+  OrderMerchant call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -150,7 +138,7 @@ class _$OrderPlaceOrder200ResponseDataMerchantCWProxyImpl
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
-    return OrderPlaceOrder200ResponseDataMerchant(
+    return OrderMerchant(
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -215,24 +203,19 @@ class _$OrderPlaceOrder200ResponseDataMerchantCWProxyImpl
   }
 }
 
-extension $OrderPlaceOrder200ResponseDataMerchantCopyWith
-    on OrderPlaceOrder200ResponseDataMerchant {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderPlaceOrder200ResponseDataMerchant.copyWith(...)` or like so:`instanceOfOrderPlaceOrder200ResponseDataMerchant.copyWith.fieldName(...)`.
+extension $OrderMerchantCopyWith on OrderMerchant {
+  /// Returns a callable class that can be used as follows: `instanceOfOrderMerchant.copyWith(...)` or like so:`instanceOfOrderMerchant.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderPlaceOrder200ResponseDataMerchantCWProxy get copyWith =>
-      _$OrderPlaceOrder200ResponseDataMerchantCWProxyImpl(this);
+  _$OrderMerchantCWProxy get copyWith => _$OrderMerchantCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderPlaceOrder200ResponseDataMerchant
-_$OrderPlaceOrder200ResponseDataMerchantFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderPlaceOrder200ResponseDataMerchant', json, (
-      $checkedConvert,
-    ) {
-      final val = OrderPlaceOrder200ResponseDataMerchant(
+OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderMerchant', json, ($checkedConvert) {
+      final val = OrderMerchant(
         id: $checkedConvert('id', (v) => v as String?),
         userId: $checkedConvert('userId', (v) => v as String?),
         name: $checkedConvert('name', (v) => v as String?),
@@ -271,22 +254,21 @@ _$OrderPlaceOrder200ResponseDataMerchantFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$OrderPlaceOrder200ResponseDataMerchantToJson(
-  OrderPlaceOrder200ResponseDataMerchant instance,
-) => <String, dynamic>{
-  'id': ?instance.id,
-  'userId': ?instance.userId,
-  'name': ?instance.name,
-  'email': ?instance.email,
-  'phone': ?instance.phone?.toJson(),
-  'address': ?instance.address,
-  'location': ?instance.location?.toJson(),
-  'isActive': ?instance.isActive,
-  'rating': ?instance.rating,
-  'document': ?instance.document,
-  'image': ?instance.image,
-  'categories': ?instance.categories,
-  'bank': ?instance.bank?.toJson(),
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'updatedAt': ?instance.updatedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'userId': ?instance.userId,
+      'name': ?instance.name,
+      'email': ?instance.email,
+      'phone': ?instance.phone?.toJson(),
+      'address': ?instance.address,
+      'location': ?instance.location?.toJson(),
+      'isActive': ?instance.isActive,
+      'rating': ?instance.rating,
+      'document': ?instance.document,
+      'image': ?instance.image,
+      'categories': ?instance.categories,
+      'bank': ?instance.bank?.toJson(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'updatedAt': ?instance.updatedAt?.toIso8601String(),
+    };

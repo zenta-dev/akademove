@@ -31,11 +31,11 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder items(List<OrderItem>? items);
 
-  UpdateOrder user(OrderPlaceOrder200ResponseDataUser? user);
+  UpdateOrder user(DriverUser? user);
 
-  UpdateOrder driver(OrderPlaceOrder200ResponseDataDriver? driver);
+  UpdateOrder driver(OrderDriver? driver);
 
-  UpdateOrder merchant(OrderPlaceOrder200ResponseDataMerchant? merchant);
+  UpdateOrder merchant(OrderMerchant? merchant);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -56,9 +56,9 @@ abstract class _$UpdateOrderCWProxy {
     UserGender? gender,
     num? itemCount,
     List<OrderItem>? items,
-    OrderPlaceOrder200ResponseDataUser? user,
-    OrderPlaceOrder200ResponseDataDriver? driver,
-    OrderPlaceOrder200ResponseDataMerchant? merchant,
+    DriverUser? user,
+    OrderDriver? driver,
+    OrderMerchant? merchant,
   });
 }
 
@@ -106,16 +106,13 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   UpdateOrder items(List<OrderItem>? items) => this(items: items);
 
   @override
-  UpdateOrder user(OrderPlaceOrder200ResponseDataUser? user) =>
-      this(user: user);
+  UpdateOrder user(DriverUser? user) => this(user: user);
 
   @override
-  UpdateOrder driver(OrderPlaceOrder200ResponseDataDriver? driver) =>
-      this(driver: driver);
+  UpdateOrder driver(OrderDriver? driver) => this(driver: driver);
 
   @override
-  UpdateOrder merchant(OrderPlaceOrder200ResponseDataMerchant? merchant) =>
-      this(merchant: merchant);
+  UpdateOrder merchant(OrderMerchant? merchant) => this(merchant: merchant);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -193,15 +190,15 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderPlaceOrder200ResponseDataUser?,
+          : user as DriverUser?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
-          : driver as OrderPlaceOrder200ResponseDataDriver?,
+          : driver as OrderDriver?,
       merchant: merchant == const $CopyWithPlaceholder()
           ? _value.merchant
           // ignore: cast_nullable_to_non_nullable
-          : merchant as OrderPlaceOrder200ResponseDataMerchant?,
+          : merchant as OrderMerchant?,
     );
   }
 }
@@ -216,66 +213,55 @@ extension $UpdateOrderCopyWith on UpdateOrder {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UpdateOrder _$UpdateOrderFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UpdateOrder', json, ($checkedConvert) {
-      final val = UpdateOrder(
-        driverId: $checkedConvert('driverId', (v) => v as String?),
-        merchantId: $checkedConvert('merchantId', (v) => v as String?),
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecodeNullable(_$OrderTypeEnumMap, v),
-        ),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecodeNullable(_$OrderStatusEnumMap, v),
-        ),
-        distanceKm: $checkedConvert('distanceKm', (v) => v as num?),
-        tip: $checkedConvert('tip', (v) => v as num?),
-        totalPrice: $checkedConvert('totalPrice', (v) => v as num?),
-        note: $checkedConvert(
-          'note',
-          (v) =>
-              v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
-        ),
-        cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
-        gender: $checkedConvert(
-          'gender',
-          (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
-        ),
-        itemCount: $checkedConvert('itemCount', (v) => v as num?),
-        items: $checkedConvert(
-          'items',
-          (v) => (v as List<dynamic>?)
-              ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        ),
-        user: $checkedConvert(
-          'user',
-          (v) => v == null
-              ? null
-              : OrderPlaceOrder200ResponseDataUser.fromJson(
-                  v as Map<String, dynamic>,
-                ),
-        ),
-        driver: $checkedConvert(
-          'driver',
-          (v) => v == null
-              ? null
-              : OrderPlaceOrder200ResponseDataDriver.fromJson(
-                  v as Map<String, dynamic>,
-                ),
-        ),
-        merchant: $checkedConvert(
-          'merchant',
-          (v) => v == null
-              ? null
-              : OrderPlaceOrder200ResponseDataMerchant.fromJson(
-                  v as Map<String, dynamic>,
-                ),
-        ),
-      );
-      return val;
-    });
+UpdateOrder _$UpdateOrderFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UpdateOrder', json, ($checkedConvert) {
+  final val = UpdateOrder(
+    driverId: $checkedConvert('driverId', (v) => v as String?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecodeNullable(_$OrderTypeEnumMap, v),
+    ),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecodeNullable(_$OrderStatusEnumMap, v),
+    ),
+    distanceKm: $checkedConvert('distanceKm', (v) => v as num?),
+    tip: $checkedConvert('tip', (v) => v as num?),
+    totalPrice: $checkedConvert('totalPrice', (v) => v as num?),
+    note: $checkedConvert(
+      'note',
+      (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
+    ),
+    cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
+    gender: $checkedConvert(
+      'gender',
+      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+    ),
+    itemCount: $checkedConvert('itemCount', (v) => v as num?),
+    items: $checkedConvert(
+      'items',
+      (v) => (v as List<dynamic>?)
+          ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
+    ),
+    driver: $checkedConvert(
+      'driver',
+      (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>),
+    ),
+    merchant: $checkedConvert(
+      'merchant',
+      (v) =>
+          v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
     <String, dynamic>{

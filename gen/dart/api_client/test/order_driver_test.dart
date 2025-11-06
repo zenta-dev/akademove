@@ -1,13 +1,12 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for OrderPlaceOrder200ResponseDataDriver
+// tests for OrderDriver
 void main() {
-  final OrderPlaceOrder200ResponseDataDriver?
-  instance = /* OrderPlaceOrder200ResponseDataDriver(...) */ null;
+  final OrderDriver? instance = /* OrderDriver(...) */ null;
   // TODO add properties to the entity
 
-  group(OrderPlaceOrder200ResponseDataDriver, () {
+  group(OrderDriver, () {
     // String id
     test('to test the property `id`', () async {
       // TODO
@@ -78,7 +77,7 @@ void main() {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseDataUser user
+    // DriverUser user
     test('to test the property `user`', () async {
       // TODO
     });

@@ -3,15 +3,15 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/order_merchant.dart';
 import 'package:api_client/src/model/order_status.dart';
 import 'package:api_client/src/model/order_type.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_driver.dart';
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/order_note.dart';
 import 'package:api_client/src/model/user_gender.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
+import 'package:api_client/src/model/driver_user.dart';
+import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_item.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_merchant.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -121,13 +121,13 @@ class Order {
   final List<OrderItem>? items;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
-  final OrderPlaceOrder200ResponseDataUser? user;
+  final DriverUser? user;
 
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
-  final OrderPlaceOrder200ResponseDataDriver? driver;
+  final OrderDriver? driver;
 
   @JsonKey(name: r'merchant', required: false, includeIfNull: false)
-  final OrderPlaceOrder200ResponseDataMerchant? merchant;
+  final OrderMerchant? merchant;
 
   @override
   bool operator ==(Object other) =>

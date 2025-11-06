@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/order_place_order200_response_data.dart';
+import 'package:api_client/src/model/place_order_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -28,7 +28,7 @@ class OrderPlaceOrder200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final OrderPlaceOrder200ResponseData data;
+  final PlaceOrderResponse data;
 
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final num? totalPages;

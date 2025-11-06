@@ -35,7 +35,7 @@ abstract class _$DriverCWProxy {
 
   Driver bank(Bank bank);
 
-  Driver user(OrderPlaceOrder200ResponseDataUser? user);
+  Driver user(DriverUser? user);
 
   Driver distance(num? distance);
 
@@ -60,7 +60,7 @@ abstract class _$DriverCWProxy {
     String driverLicense,
     String vehicleCertificate,
     Bank bank,
-    OrderPlaceOrder200ResponseDataUser? user,
+    DriverUser? user,
     num? distance,
   });
 }
@@ -118,7 +118,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver bank(Bank bank) => this(bank: bank);
 
   @override
-  Driver user(OrderPlaceOrder200ResponseDataUser? user) => this(user: user);
+  Driver user(DriverUser? user) => this(user: user);
 
   @override
   Driver distance(num? distance) => this(distance: distance);
@@ -208,7 +208,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderPlaceOrder200ResponseDataUser?,
+          : user as DriverUser?,
       distance: distance == const $CopyWithPlaceholder()
           ? _value.distance
           // ignore: cast_nullable_to_non_nullable
@@ -282,11 +282,8 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
         ),
         user: $checkedConvert(
           'user',
-          (v) => v == null
-              ? null
-              : OrderPlaceOrder200ResponseDataUser.fromJson(
-                  v as Map<String, dynamic>,
-                ),
+          (v) =>
+              v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
         ),
         distance: $checkedConvert('distance', (v) => v as num?),
       );

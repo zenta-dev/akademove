@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 **driverLicense** | **String** |  | 
 **vehicleCertificate** | **String** |  | 
 **bank** | [**Bank**](Bank.md) |  | 
-**user** | [**OrderPlaceOrder200ResponseDataUser**](OrderPlaceOrder200ResponseDataUser.md) |  | [optional] 
+**user** | [**DriverUser**](DriverUser.md) |  | [optional] 
 **distance** | **num** | Each user has different result since it calculated value | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

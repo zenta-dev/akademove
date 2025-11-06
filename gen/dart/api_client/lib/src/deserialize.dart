@@ -30,6 +30,7 @@ import 'package:api_client/src/model/driver_schedule_create200_response.dart';
 import 'package:api_client/src/model/driver_schedule_list200_response.dart';
 import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/driver_update_request_current_location.dart';
+import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/estimate_order.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:api_client/src/model/forgot_password_request.dart';
@@ -49,17 +50,15 @@ import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
 import 'package:api_client/src/model/order.dart';
+import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
 import 'package:api_client/src/model/order_get200_response.dart';
 import 'package:api_client/src/model/order_item.dart';
 import 'package:api_client/src/model/order_item_item.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
+import 'package:api_client/src/model/order_merchant.dart';
 import 'package:api_client/src/model/order_note.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
-import 'package:api_client/src/model/order_place_order200_response_data.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_driver.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_merchant.dart';
-import 'package:api_client/src/model/order_place_order200_response_data_user.dart';
 import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
 import 'package:api_client/src/model/pay_request.dart';
@@ -67,6 +66,7 @@ import 'package:api_client/src/model/payment.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
+import 'package:api_client/src/model/place_order_response.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
@@ -241,6 +241,8 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'DriverUser':
+      return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'EstimateOrder':
       return EstimateOrder.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -294,6 +296,8 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Order':
       return Order.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'OrderDriver':
+      return OrderDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderEstimate200Response':
       return OrderEstimate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -308,30 +312,13 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderList200Response':
       return OrderList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'OrderMerchant':
+      return OrderMerchant.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'OrderNote':
       return OrderNote.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderPlaceOrder200Response':
       return OrderPlaceOrder200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'OrderPlaceOrder200ResponseData':
-      return OrderPlaceOrder200ResponseData.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'OrderPlaceOrder200ResponseDataDriver':
-      return OrderPlaceOrder200ResponseDataDriver.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'OrderPlaceOrder200ResponseDataMerchant':
-      return OrderPlaceOrder200ResponseDataMerchant.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'OrderPlaceOrder200ResponseDataUser':
-      return OrderPlaceOrder200ResponseDataUser.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     case 'OrderStatus':
     case 'OrderSummary':
@@ -352,6 +339,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return PlaceOrder.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'PlaceOrderPayment':
       return PlaceOrderPayment.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'PlaceOrderResponse':
+      return PlaceOrderResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;

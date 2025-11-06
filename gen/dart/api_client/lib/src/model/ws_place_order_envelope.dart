@@ -3,9 +3,9 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/place_order_response.dart';
 import 'package:api_client/src/model/ws_envelope_type.dart';
 import 'package:api_client/src/model/ws_envelope_sender.dart';
-import 'package:api_client/src/model/order.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -37,7 +37,7 @@ class WSPlaceOrderEnvelope {
   final WSEnvelopeSender to;
 
   @JsonKey(name: r'payload', required: true, includeIfNull: false)
-  final Order payload;
+  final PlaceOrderResponse payload;
 
   @override
   bool operator ==(Object other) =>

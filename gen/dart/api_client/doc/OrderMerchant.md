@@ -1,4 +1,4 @@
-# api_client.model.OrderPlaceOrder200ResponseDataUser
+# api_client.model.OrderMerchant
 
 ## Load the model package
 ```dart
@@ -9,16 +9,18 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | [optional] 
+**userId** | **String** |  | [optional] 
 **name** | **String** |  | [optional] 
 **email** | **String** |  | [optional] 
-**emailVerified** | **bool** |  | [optional] 
-**image** | **String** |  | [optional] 
-**role** | [**UserRole**](UserRole.md) |  | [optional] 
-**banned** | **bool** |  | [optional] 
-**banReason** | **String** |  | [optional] 
-**banExpires** | [**DateTime**](DateTime.md) |  | [optional] 
-**gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **phone** | [**Phone**](Phone.md) |  | [optional] 
+**address** | **String** |  | [optional] 
+**location** | [**Coordinate**](Coordinate.md) |  | [optional] 
+**isActive** | **bool** |  | [optional] 
+**rating** | **num** |  | [optional] 
+**document** | **String** |  | [optional] 
+**image** | **String** |  | [optional] 
+**categories** | **List&lt;String&gt;** |  | [optional] 
+**bank** | [**Bank**](Bank.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 

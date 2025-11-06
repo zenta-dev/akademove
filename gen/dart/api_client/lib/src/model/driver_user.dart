@@ -9,7 +9,7 @@ import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'order_place_order200_response_data_user.g.dart';
+part 'driver_user.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,9 +18,9 @@ part 'order_place_order200_response_data_user.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class OrderPlaceOrder200ResponseDataUser {
-  /// Returns a new [OrderPlaceOrder200ResponseDataUser] instance.
-  const OrderPlaceOrder200ResponseDataUser({
+class DriverUser {
+  /// Returns a new [DriverUser] instance.
+  const DriverUser({
     this.id,
     this.name,
     this.email,
@@ -78,7 +78,7 @@ class OrderPlaceOrder200ResponseDataUser {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderPlaceOrder200ResponseDataUser &&
+      other is DriverUser &&
           other.id == id &&
           other.name == name &&
           other.email == email &&
@@ -109,12 +109,10 @@ class OrderPlaceOrder200ResponseDataUser {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderPlaceOrder200ResponseDataUser.fromJson(
-    Map<String, dynamic> json,
-  ) => _$OrderPlaceOrder200ResponseDataUserFromJson(json);
+  factory DriverUser.fromJson(Map<String, dynamic> json) =>
+      _$DriverUserFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$OrderPlaceOrder200ResponseDataUserToJson(this);
+  Map<String, dynamic> toJson() => _$DriverUserToJson(this);
 
   @override
   String toString() {

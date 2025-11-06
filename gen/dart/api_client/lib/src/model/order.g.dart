@@ -51,11 +51,11 @@ abstract class _$OrderCWProxy {
 
   Order items(List<OrderItem>? items);
 
-  Order user(OrderPlaceOrder200ResponseDataUser? user);
+  Order user(DriverUser? user);
 
-  Order driver(OrderPlaceOrder200ResponseDataDriver? driver);
+  Order driver(OrderDriver? driver);
 
-  Order merchant(OrderPlaceOrder200ResponseDataMerchant? merchant);
+  Order merchant(OrderMerchant? merchant);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -86,9 +86,9 @@ abstract class _$OrderCWProxy {
     UserGender? gender,
     num? itemCount,
     List<OrderItem>? items,
-    OrderPlaceOrder200ResponseDataUser? user,
-    OrderPlaceOrder200ResponseDataDriver? driver,
-    OrderPlaceOrder200ResponseDataMerchant? merchant,
+    DriverUser? user,
+    OrderDriver? driver,
+    OrderMerchant? merchant,
   });
 }
 
@@ -167,15 +167,13 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order items(List<OrderItem>? items) => this(items: items);
 
   @override
-  Order user(OrderPlaceOrder200ResponseDataUser? user) => this(user: user);
+  Order user(DriverUser? user) => this(user: user);
 
   @override
-  Order driver(OrderPlaceOrder200ResponseDataDriver? driver) =>
-      this(driver: driver);
+  Order driver(OrderDriver? driver) => this(driver: driver);
 
   @override
-  Order merchant(OrderPlaceOrder200ResponseDataMerchant? merchant) =>
-      this(merchant: merchant);
+  Order merchant(OrderMerchant? merchant) => this(merchant: merchant);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -303,15 +301,15 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
       user: user == const $CopyWithPlaceholder()
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
-          : user as OrderPlaceOrder200ResponseDataUser?,
+          : user as DriverUser?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
-          : driver as OrderPlaceOrder200ResponseDataDriver?,
+          : driver as OrderDriver?,
       merchant: merchant == const $CopyWithPlaceholder()
           ? _value.merchant
           // ignore: cast_nullable_to_non_nullable
-          : merchant as OrderPlaceOrder200ResponseDataMerchant?,
+          : merchant as OrderMerchant?,
     );
   }
 }
@@ -400,27 +398,16 @@ Order _$OrderFromJson(
     ),
     user: $checkedConvert(
       'user',
-      (v) => v == null
-          ? null
-          : OrderPlaceOrder200ResponseDataUser.fromJson(
-              v as Map<String, dynamic>,
-            ),
+      (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
     ),
     driver: $checkedConvert(
       'driver',
-      (v) => v == null
-          ? null
-          : OrderPlaceOrder200ResponseDataDriver.fromJson(
-              v as Map<String, dynamic>,
-            ),
+      (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>),
     ),
     merchant: $checkedConvert(
       'merchant',
-      (v) => v == null
-          ? null
-          : OrderPlaceOrder200ResponseDataMerchant.fromJson(
-              v as Map<String, dynamic>,
-            ),
+      (v) =>
+          v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;

@@ -1,13 +1,12 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for OrderPlaceOrder200ResponseDataMerchant
+// tests for OrderMerchant
 void main() {
-  final OrderPlaceOrder200ResponseDataMerchant?
-  instance = /* OrderPlaceOrder200ResponseDataMerchant(...) */ null;
+  final OrderMerchant? instance = /* OrderMerchant(...) */ null;
   // TODO add properties to the entity
 
-  group(OrderPlaceOrder200ResponseDataMerchant, () {
+  group(OrderMerchant, () {
     // String id
     test('to test the property `id`', () async {
       // TODO

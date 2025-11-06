@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // OrderPlaceOrder200ResponseData data
+    // PlaceOrderResponse data
     test('to test the property `data`', () async {
       // TODO
     });
