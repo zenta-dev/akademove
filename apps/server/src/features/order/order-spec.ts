@@ -4,6 +4,7 @@ import {
 	OrderSchema,
 	OrderStatusSchema,
 	OrderSummarySchema,
+	PlaceOrderResponseSchema,
 	PlaceOrderSchema,
 	UpdateOrderSchema,
 } from "@repo/schema/order";
@@ -11,7 +12,6 @@ import {
 	CursorPaginationQuerySchema,
 	OffsetPaginationQuerySchema,
 } from "@repo/schema/pagination";
-import { PaymentSchema } from "@repo/schema/payment";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
@@ -105,9 +105,7 @@ export const OrderSpec = {
 		)
 		.output(
 			createSuccesSchema(
-				OrderSchema.extend({
-					payment: PaymentSchema,
-				}),
+				PlaceOrderResponseSchema,
 				"Order created successfully",
 			),
 		),

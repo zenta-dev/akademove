@@ -14,9 +14,9 @@ import type {
 	OrderSummary,
 	OrderType,
 	PlaceOrder,
+	PlaceOrderResponse,
 	UpdateOrder,
 } from "@repo/schema/order";
-import type { Payment } from "@repo/schema/payment";
 import type { User, UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
 import { eq, type SQL } from "drizzle-orm";
@@ -367,7 +367,7 @@ export class OrderRepository {
 
 	async placeOrder(
 		params: PlaceOrder & WithUserId & WithTx,
-	): Promise<Order & { payment: Payment }> {
+	): Promise<PlaceOrderResponse> {
 		try {
 			const [estimate, user, wallet] = await Promise.all([
 				this.estimate(params),
@@ -472,7 +472,7 @@ export class OrderRepository {
 			const payment = this.#wallet.composePayment(paymentResult);
 			await this.#setCache(order.id, order);
 
-			return { ...order, payment };
+			return { order, payment };
 		} catch (error) {
 			log.error({ detail: error }, "Failed to place order");
 			if (error instanceof RepositoryError) throw error;

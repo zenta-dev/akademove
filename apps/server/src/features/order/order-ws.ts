@@ -12,6 +12,7 @@ import type {
 	ServiceContext,
 	WebsocketAttachment,
 } from "@/core/interface";
+import type { DatabaseTransaction } from "@/core/services/db";
 
 export class OrderRoom extends BaseDurableObject {
 	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
@@ -73,7 +74,9 @@ export class ListingRoom extends BaseDurableObject {
 
 		const raw = JSON.parse(message.toString());
 		if (raw.type === "order:request") {
-			await this.#handleOrderRequst(ws, raw);
+			await this.#svc.db.transaction(
+				async (tx) => await this.#handleOrderRequst(ws, raw, tx),
+			);
 		} else {
 			const parse = await WSEnvelopeSchema.safeParseAsync(raw);
 			if (parse.data) {
@@ -86,19 +89,27 @@ export class ListingRoom extends BaseDurableObject {
 		}
 	}
 
-	async #handleOrderRequst(ws: WebSocket, raw: string) {
+	async #handleOrderRequst(
+		ws: WebSocket,
+		raw: string,
+		tx: DatabaseTransaction,
+	) {
 		const parse = await WSPlaceOrderEnvelopeSchema.safeParseAsync(raw);
-		const order = parse.data?.payload;
-		if (!order) return;
-		const updateOrder = await this.#repo.order.update(order.id, {
-			...order,
-			status: "matching",
+		const payload = parse.data?.payload;
+		if (!payload) return;
+		const updateOrder = await this.#repo.order.update({
+			id: payload.order.id,
+			item: {
+				...payload.order,
+				status: "matching",
+			},
+			tx,
 		});
 		const data: WSPlaceOrderEnvelope = {
 			type: "order:matching",
 			from: "server",
 			to: "client",
-			payload: updateOrder,
+			payload: { ...payload, order: updateOrder },
 		};
 		const msg = JSON.stringify(data);
 		ws.send(msg);
@@ -127,16 +138,20 @@ export class ListingRoom extends BaseDurableObject {
 
 		if (nearbyDrivers.length === 0) {
 			console.warn("No nearby driver found — cancelling order.");
-			const cancelledOrder = await this.#repo.order.update(order.id, {
-				...order,
-				status: "cancelled_by_system",
-				cancelReason: "No driver around you",
+			const cancelledOrder = await this.#repo.order.update({
+				id: payload.order.id,
+				item: {
+					...payload.order,
+					status: "cancelled_by_system",
+					cancelReason: "No driver around you",
+				},
+				tx,
 			});
 			const data: WSPlaceOrderEnvelope = {
 				type: "order:cancelled",
 				from: "server",
 				to: "client",
-				payload: cancelledOrder,
+				payload: { ...payload, order: cancelledOrder },
 			};
 			ws.send(JSON.stringify(data));
 			ws.close(1000, "No driver around you");
