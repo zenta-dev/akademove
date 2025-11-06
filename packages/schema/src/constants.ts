@@ -51,3 +51,27 @@ export const AUTH_CONSTANTS = Object.freeze({
 	SESSION_DATA: "AkadeMove-AMSD",
 	SESSION_DONT_REMEMBER: "AkadeMove-AMDR",
 } as const);
+
+export const TRANSACTION_TYPE = [
+	"topup",
+	"withdraw",
+	"payment",
+	"refund",
+	"adjustment",
+] as const;
+export const TRANSACTION_STATUS = [
+	"pending",
+	"success",
+	"failed",
+	"cancelled",
+	"expired",
+	"refunded",
+] as const;
+export const CURRENCY = ["IDR"] as const;
+export const PAYMENT_PROVIDER = ["MIDTRANS", "MANUAL"] as const;
+export const PAYMENT_METHOD = [
+	"QRIS",
+	"VA",
+	"BANK_TRANSFER",
+	"WALLET",
+] as const;
