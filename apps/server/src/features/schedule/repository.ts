@@ -1,143 +1,148 @@
 import type {
-	InsertSchedule,
-	Schedule,
-	UpdateSchedule,
-} from "@repo/schema/schedule";
+	DriverSchedule,
+	InsertDriverSchedule,
+	UpdateDriverSchedule,
+} from "@repo/schema/driver";
 import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
-import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { ScheduleDatabase } from "@/core/tables/schedule";
+import type { DriverScheduleDatabase } from "@/core/tables/driver";
+import { log } from "@/utils";
 
-export const createScheduleRepository = (
-	db: DatabaseService,
-	kv: KeyValueService,
-) => {
-	function _composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.SCHEDULE}${id}`;
+export class DriverScheduleRepository {
+	#db: DatabaseService;
+	#kv: KeyValueService;
+
+	constructor(db: DatabaseService, kv: KeyValueService) {
+		this.#db = db;
+		this.#kv = kv;
 	}
 
-	function _composeEntity(item: ScheduleDatabase): Schedule {
+	#composeCacheKey(id: string): string {
+		return `${CACHE_PREFIXES.DRIVER}${id}`;
+	}
+
+	#composeEntity(item: DriverScheduleDatabase): DriverSchedule {
 		return {
 			...item,
 			specificDate: item.specificDate ?? undefined,
 		};
 	}
 
-	async function _getFromKV(id: string): Promise<Schedule | undefined> {
+	async #getFromKV(id: string): Promise<DriverSchedule | undefined> {
 		try {
-			return await kv.get(_composeCacheKey(id));
+			return await this.#kv.get(this.#composeCacheKey(id));
 		} catch {
 			return undefined;
 		}
 	}
 
-	async function _getFromDB(id: string): Promise<Schedule | undefined> {
-		const result = await db.query.schedule.findFirst({
+	async #getFromDB(id: string): Promise<DriverSchedule | undefined> {
+		const result = await this.#db.query.driverSchedule.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		if (result) return _composeEntity(result);
-		return undefined;
+		return result ? this.#composeEntity(result) : undefined;
 	}
 
-	async function _setCache(id: string, data: Schedule | undefined) {
-		if (data) {
-			try {
-				await kv.put(_composeCacheKey(id), data, {
-					expirationTtl: CACHE_TTLS["24h"],
-				});
-			} catch {}
+	async #setCache(id: string, data: DriverSchedule | undefined): Promise<void> {
+		if (!data) return;
+		try {
+			await this.#kv.put(this.#composeCacheKey(id), data, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
+		} catch {
+			// ignore cache write failures
 		}
 	}
 
-	async function list(opts?: GetAllOptions): Promise<Schedule[]> {
+	async list(opts?: GetAllOptions): Promise<DriverSchedule[]> {
 		try {
-			let stmt = db.query.schedule.findMany();
+			let stmt = this.#db.query.driverSchedule.findMany();
+
 			if (opts) {
 				const { cursor, page, limit } = opts;
+
 				if (cursor) {
-					stmt = db.query.schedule.findMany({
+					stmt = this.#db.query.driverSchedule.findMany({
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
 				}
+
 				if (page) {
-					const pageNum = page;
-					const offset = (pageNum - 1) * limit;
-					stmt = db.query.schedule.findMany({
+					const offset = (page - 1) * limit;
+					stmt = this.#db.query.driverSchedule.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
+
 			const result = await stmt;
-			return result.map(_composeEntity);
+			return result.map((r) => this.#composeEntity(r));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
-			throw new RepositoryError("Failed to listing schedules");
+			throw new RepositoryError("Failed to list schedules");
 		}
 	}
 
-	async function get(id: string, opts?: GetOptions) {
+	async get(id: string, opts?: GetOptions): Promise<DriverSchedule> {
 		try {
 			if (opts?.fromCache) {
-				const cached = await _getFromKV(id);
+				const cached = await this.#getFromKV(id);
 				if (cached) return cached;
 			}
 
-			const result = await _getFromDB(id);
+			const result = await this.#getFromDB(id);
+			if (!result) throw new RepositoryError("Failed to get schedule from db");
 
-			if (!result) throw new RepositoryError("Failed get schedule from db");
-
-			await _setCache(id, result);
-
+			await this.#setCache(id, result);
 			return result;
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to get schedule by id "${id}"`);
 		}
 	}
 
-	async function create(
-		item: InsertSchedule & { userId: string },
-	): Promise<Schedule> {
+	async create(
+		item: InsertDriverSchedule & { userId: string },
+	): Promise<DriverSchedule> {
 		try {
-			const [operation] = await db
-				.insert(tables.schedule)
+			const [operation] = await this.#db
+				.insert(tables.driverSchedule)
 				.values({
 					...item,
 					specificDate: item.specificDate ? new Date(item.specificDate) : null,
 				})
 				.returning();
 
-			const result = _composeEntity(operation);
-			await _setCache(result.id, result);
+			const result = this.#composeEntity(operation);
+			await this.#setCache(result.id, result);
 
 			return result;
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError("Failed to create schedule");
 		}
 	}
 
-	async function update(id: string, item: UpdateSchedule): Promise<Schedule> {
+	async update(
+		id: string,
+		item: UpdateDriverSchedule,
+	): Promise<DriverSchedule> {
 		try {
-			const existing = await _getFromDB(id);
-			if (!existing) {
+			const existing = await this.#getFromDB(id);
+			if (!existing)
 				throw new RepositoryError(`Schedule with id "${id}" not found`);
-			}
 
-			const [operation] = await db
-				.update(tables.schedule)
+			const [operation] = await this.#db
+				.update(tables.driverSchedule)
 				.set({
 					...existing,
 					...item,
@@ -149,13 +154,11 @@ export const createScheduleRepository = (
 					createdAt: new Date(existing.createdAt),
 					updatedAt: new Date(),
 				})
-				.where(eq(tables.schedule.id, id))
+				.where(eq(tables.driverSchedule.id, id))
 				.returning();
 
-			const result = _composeEntity(operation);
-
-			await _setCache(id, result);
-
+			const result = this.#composeEntity(operation);
+			await this.#setCache(id, result);
 			return result;
 		} catch (error) {
 			if (error instanceof RepositoryError) throw error;
@@ -163,27 +166,24 @@ export const createScheduleRepository = (
 		}
 	}
 
-	async function remove(id: string): Promise<void> {
+	async remove(id: string): Promise<void> {
 		try {
-			const result = await db
-				.delete(tables.schedule)
-				.where(eq(tables.schedule.id, id))
-				.returning({ id: tables.schedule.id });
+			const result = await this.#db
+				.delete(tables.driverSchedule)
+				.where(eq(tables.driverSchedule.id, id))
+				.returning({ id: tables.driverSchedule.id });
 
 			if (result.length > 0) {
 				try {
-					await kv.delete(_composeCacheKey(id));
-				} catch {}
+					await this.#kv.delete(this.#composeCacheKey(id));
+				} catch {
+					// ignore cache delete failures
+				}
 			}
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to delete schedule with id "${id}"`);
 		}
 	}
-
-	return { list, get, create, update, remove };
-};
-
-export type ScheduleRepository = ReturnType<typeof createScheduleRepository>;
+}

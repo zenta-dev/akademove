@@ -1,11 +1,18 @@
 import { implement } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
-import { authMiddleware, hasPermission } from "@/core/middlewares/auth";
-import { ScheduleSpec } from "./spec";
+import {
+	hasPermission,
+	orpcAuthMiddleware,
+	orpcRequireAuthMiddleware,
+} from "@/core/middlewares/auth";
+import { DriverScheduleSpec } from "./spec";
 
-const os = implement(ScheduleSpec).$context<ORPCContext>().use(authMiddleware);
+const os = implement(DriverScheduleSpec)
+	.$context<ORPCContext>()
+	.use(orpcAuthMiddleware)
+	.use(orpcRequireAuthMiddleware);
 
-export const ScheduleHandler = os.router({
+export const DriverScheduleHandler = os.router({
 	list: os.list
 		.use(hasPermission({ schedule: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
