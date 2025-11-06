@@ -22,14 +22,15 @@ export function cookieParser(str: string) {
 }
 
 export function getAuthToken({
-	headers,
+	request,
 	isDev,
 }: {
-	headers: Headers;
+	request: Request;
 	isDev?: boolean;
 }) {
-	const authHeader = headers.get("authorization");
-	const cookieHeader = headers.get("cookie");
+	const authHeader = request.headers.get("authorization");
+	const cookieHeader = request.headers.get("cookie");
+	const queryParams = new URL(request.url).searchParams;
 
 	const bearerToken = authHeader?.startsWith("Bearer ")
 		? authHeader.split(" ")[1]
@@ -40,7 +41,8 @@ export function getAuthToken({
 		const cookies = cookieParser(cookieHeader);
 		cookieToken = cookies[getAuthTokenName(isDev)];
 	}
-	return bearerToken ?? cookieToken;
+	const queryToken = queryParams.get("session-token");
+	return bearerToken ?? cookieToken ?? queryToken;
 }
 
 export function composeAuthCookieValue({
