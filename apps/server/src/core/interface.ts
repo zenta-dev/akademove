@@ -2,21 +2,24 @@ import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
 import type { ClientAgent } from "@repo/schema/common";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
-import type { Env } from "hono";
 import type { AuthRepository } from "@/features/auth/repository";
 import type { ConfigurationRepository } from "@/features/configuration/repository";
 import type { CouponRepository } from "@/features/coupon/repository";
 import type { DriverRepository } from "@/features/driver/repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/repository";
-import type { OrderRepository } from "@/features/order/repository";
+import type { OrderRepository } from "@/features/order/order_repository";
 import type { ReportRepository } from "@/features/report/repository";
 import type { ReviewRepository } from "@/features/review/repository";
-import type { ScheduleRepository } from "@/features/schedule/repository";
+import type { DriverScheduleRepository } from "@/features/schedule/repository";
 import type { UserRepository } from "@/features/user/repository";
-import type { DatabaseService } from "./services/db";
+import type { WalletRepository } from "@/features/wallet/wallet_repository";
+import type { JwtManager } from "@/utils/jwt";
+import type { DatabaseService, DatabaseTransaction } from "./services/db";
 import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
+import type { MapService } from "./services/map";
+import type { PaymentService } from "./services/payment";
 import type { RBACService } from "./services/rbac";
 import type { StorageService } from "./services/storage";
 
@@ -40,6 +43,8 @@ export interface ServiceContext {
 	mail: MailService;
 	storage: StorageService;
 	rbac: RBACService;
+	map: MapService;
+	payment: PaymentService;
 }
 
 export interface RepositoryContext {
@@ -54,8 +59,9 @@ export interface RepositoryContext {
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
-	schedule: ScheduleRepository;
+	schedule: DriverScheduleRepository;
 	user: UserRepository;
+	wallet: WalletRepository;
 }
 
 export interface UserInContext {
@@ -64,11 +70,20 @@ export interface UserInContext {
 	banned: boolean;
 }
 
+export interface ManagerContext {
+	jwt: JwtManager;
+}
+
 export interface HonoContext {
 	Variables: {
 		svc: ServiceContext;
-		user: UserInContext;
 		repo: RepositoryContext;
+		manager: ManagerContext;
+		session?: {
+			user: UserInContext;
+			token: string;
+		};
+		clientAgent: ClientAgent;
 	};
 	Bindings: Env;
 }
@@ -77,7 +92,15 @@ export interface ORPCContext extends ResponseHeadersPluginContext {
 	req: Request;
 	svc: ServiceContext;
 	repo: RepositoryContext;
-	user: UserInContext;
+	manager: ManagerContext;
+	user?: UserInContext;
 	clientAgent: ClientAgent;
 	token?: string;
 }
+
+export type WithTx = { tx: DatabaseTransaction };
+export type WithUserId = { userId: string };
+export type WebsocketAttachment = {
+	id: string;
+	[key: string]: string;
+};
