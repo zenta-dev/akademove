@@ -1,14 +1,17 @@
 import { oc } from "@orpc/contract";
 import {
-	InsertOrderSchema,
+	FlatEstimateOrderSchema,
 	OrderSchema,
 	OrderStatusSchema,
+	OrderSummarySchema,
+	PlaceOrderSchema,
 	UpdateOrderSchema,
 } from "@repo/schema/order";
 import {
 	CursorPaginationQuerySchema,
 	OffsetPaginationQuerySchema,
 } from "@repo/schema/pagination";
+import { PaymentSchema } from "@repo/schema/payment";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
@@ -59,6 +62,22 @@ export const OrderSpec = {
 				"Successfully retrieved orders data",
 			),
 		),
+	estimate: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "GET",
+			path: "/estimate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				query: FlatEstimateOrderSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(OrderSummarySchema, "Successfully estimate order"),
+		),
 	get: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],
@@ -71,7 +90,7 @@ export const OrderSpec = {
 		.output(
 			createSuccesSchema(OrderSchema, "Successfully retrieved order data"),
 		),
-	create: oc
+	placeOrder: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],
 			method: "POST",
@@ -79,8 +98,19 @@ export const OrderSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ body: InsertOrderSchema }))
-		.output(createSuccesSchema(OrderSchema, "Order created successfully")),
+		.input(
+			z.object({
+				body: PlaceOrderSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				OrderSchema.extend({
+					payment: PaymentSchema,
+				}),
+				"Order created successfully",
+			),
+		),
 	update: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],
@@ -96,14 +126,4 @@ export const OrderSpec = {
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order updated successfully")),
-	// remove: oc
-	// 	.route({
-	// 		tags: [FEATURE_TAGS.ORDER],
-	// 		method: "DELETE",
-	// 		path: "/{id}",
-	// 		inputStructure: "detailed",
-	// 		outputStructure: "detailed",
-	// 	})
-	// 	.input(z.object({ params: z.object({ id: z.string() }) }))
-	// 	.output(createSuccesSchema(z.null(), "Order deleted successfully")),
 };
