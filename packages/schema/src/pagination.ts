@@ -4,16 +4,18 @@ const MAX_LIMIT = 100;
 
 export const OffsetPaginationQuerySchema = z
 	.object({
-		page: z.preprocess((v) => {
-			if (v === undefined || v === null || v === "") return 1;
-			const n = Number(v);
-			return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-		}, z.number().int().min(1).default(1)),
+		page: z
+			.preprocess((v) => {
+				if (v === undefined || v === null || v === "") return 1;
+				const n = Number(v);
+				return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
+			}, z.number().int().min(1).optional().default(1))
+			.optional(),
 		limit: z.preprocess((v) => {
 			if (v === undefined || v === null || v === "") return 10;
 			const n = Number(v);
 			return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-		}, z.number().int().min(1).max(MAX_LIMIT).default(10)),
+		}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
 	})
 	.meta({ title: "OffsetPaginationQuery" });
 
@@ -24,7 +26,7 @@ export const CursorPaginationQuerySchema = z
 			if (v === undefined || v === null || v === "") return 10;
 			const n = Number(v);
 			return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-		}, z.number().int().min(1).max(MAX_LIMIT).default(10)),
+		}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
 	})
 	.meta({ title: "CursorPaginationQuery" });
 
