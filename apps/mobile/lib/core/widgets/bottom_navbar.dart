@@ -24,36 +24,53 @@ class BottomNavbar extends StatefulWidget {
 }
 
 class _BottomNavbarState extends State<BottomNavbar> {
+  bool get _shouldShowBottomNav {
+    final state = GoRouterState.of(context);
+
+    final location = state.uri.path;
+
+    final cleanPath = location.replaceAll(RegExp(r'/+$'), '');
+
+    final depth = cleanPath
+        .split('/')
+        .where((segment) => segment.isNotEmpty)
+        .length;
+
+    return depth < 3;
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentIndex = widget.shell.currentIndex;
 
     return Scaffold(
-      footers: [
-        SizedBox(
-          height: 60.h,
-          width: double.infinity,
-          child: Card(
-            borderRadius: BorderRadius.circular(0),
-            padding: EdgeInsets.zero,
-            borderWidth: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                widget.tabs.length,
-                (i) => Expanded(
-                  child: _buildButton(
-                    context,
-                    i,
-                    widget.tabs[i],
-                    currentIndex == i,
+      footers: _shouldShowBottomNav
+          ? [
+              SizedBox(
+                height: 60.h,
+                width: double.infinity,
+                child: Card(
+                  borderRadius: BorderRadius.circular(0),
+                  padding: EdgeInsets.zero,
+                  borderWidth: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(
+                      widget.tabs.length,
+                      (i) => Expanded(
+                        child: _buildButton(
+                          context,
+                          i,
+                          widget.tabs[i],
+                          currentIndex == i,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ],
+            ]
+          : [],
       child: widget.shell,
     );
   }
