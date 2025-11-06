@@ -2,13 +2,6 @@ import type { ZodObject, ZodRawShape } from "zod";
 import * as z from "zod";
 import { CONSTANTS } from "./constants.ts";
 
-export const LocationSchema = z
-	.object({
-		lat: z.coerce.number(),
-		lng: z.coerce.number(),
-	})
-	.meta({ title: "Location" });
-
 export const TimeSchema = z
 	.object({
 		h: z.number(),
