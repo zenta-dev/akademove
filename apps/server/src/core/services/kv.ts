@@ -1,14 +1,10 @@
-import type { KVNamespace } from "@cloudflare/workers-types";
 import { KeyValueError } from "@/core/error";
 
 interface PutOptions {
 	expirationTtl?: number;
 }
 export interface KeyValueService {
-	get<T>(
-		key: string,
-		options?: { fallback?: () => Promise<T> },
-	): Promise<T | undefined>;
+	get<T>(key: string, options?: { fallback?: () => Promise<T> }): Promise<T>;
 	put<T>(key: string, value: T, options?: PutOptions): Promise<void>;
 	delete(key: string): Promise<void>;
 }
@@ -23,14 +19,20 @@ export class CloudflareKVService implements KeyValueService {
 	async get<T>(
 		key: string,
 		options?: { fallback?: () => Promise<T> },
-	): Promise<T | undefined> {
+	): Promise<T> {
 		try {
 			const value = await this.namespace.get(key);
 			if (!value) {
-				return undefined;
+				if (options?.fallback) {
+					return await options.fallback();
+				}
+				throw new KeyValueError(`Value for key ${key} not found`, {
+					code: "NOT_FOUND",
+				});
 			}
 			return JSON.parse(value) as T;
-		} catch (_error) {
+		} catch (error) {
+			console.error(`[CloudflareKVService] Error => ${error}`);
 			if (options?.fallback) {
 				try {
 					return await options.fallback();
@@ -42,14 +44,23 @@ export class CloudflareKVService implements KeyValueService {
 						},
 					);
 				}
+			} else {
+				throw new KeyValueError(`Failed to get value for key "${key}"`);
 			}
-			throw new KeyValueError(`Failed to get value for key "${key}"`);
 		}
 	}
 
 	async put<T>(key: string, value: T, options?: PutOptions): Promise<void> {
 		try {
-			await this.namespace.put(key, JSON.stringify(value), options);
+			let str = "{}";
+			if (typeof value === "object" || Array.isArray(value)) {
+				str = JSON.stringify(value);
+			} else {
+				throw new KeyValueError(
+					"Unsupported data type, make sure use JSON or array",
+				);
+			}
+			await this.namespace.put(key, str, options);
 		} catch (_error) {
 			throw new KeyValueError(`Failed to put value for key "${key}"`);
 		}

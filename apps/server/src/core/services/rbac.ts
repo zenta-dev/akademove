@@ -8,7 +8,7 @@
 import { createStatementSchema } from "@repo/schema/rbac";
 import type { UserRole } from "@repo/schema/user";
 import { type PermissionMap, type Permissions, statement } from "@repo/shared";
-import { log } from "@/core/logger";
+import { log } from "@/utils";
 import { AuthError, BaseError } from "../error";
 
 const roles: Record<UserRole, PermissionMap> = {
@@ -56,17 +56,18 @@ const roles: Record<UserRole, PermissionMap> = {
 	},
 	driver: {
 		driver: ["get", "update"],
-		schedule: ["get", "create", "update", "delete"],
+		schedule: ["list", "get", "create", "update", "delete"],
 		order: ["get", "update"],
 		review: ["get"],
 		report: ["get"],
 	},
 	user: {
 		user: ["get", "update"],
-		order: ["get", "create", "update", "cancel"],
-		review: ["get", "create", "update"],
-		merchant: ["get"],
-		coupon: ["get"],
+		driver: ["list", "get"],
+		order: ["list", "get", "create", "update", "cancel"],
+		review: ["list", "get", "create", "update"],
+		merchant: ["list", "get"],
+		coupon: ["list", "get"],
 		bookings: ["get", "create", "update", "delete"],
 	},
 } as const;

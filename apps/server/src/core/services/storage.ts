@@ -8,7 +8,7 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { log } from "@/core/logger";
+import { log } from "@/utils";
 import type { StorageBucket } from "../constants";
 import { StorageError } from "../error";
 

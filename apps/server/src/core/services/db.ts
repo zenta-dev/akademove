@@ -7,9 +7,11 @@ import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
 import * as order from "@/core/tables/order";
+import * as payment from "@/core/tables/payment";
 import * as report from "@/core/tables/report";
 import * as review from "@/core/tables/review";
-import * as schedule from "@/core/tables/schedule";
+import * as transaction from "@/core/tables/transaction";
+import * as wallet from "@/core/tables/wallet";
 import { isDev } from "@/utils";
 
 export const tables = {
@@ -20,8 +22,10 @@ export const tables = {
 	...coupon,
 	...report,
 	...review,
-	...schedule,
 	...configuration,
+	...wallet,
+	...payment,
+	...transaction,
 };
 
 export const getDatabase = () => {
