@@ -16,5 +16,8 @@
 	"dependencies": {
 		"@repo/i18n": "workspace:*",
 		"zod": "^4.1.11"
+	},
+	"devDependencies": {
+		"@standard-schema/spec": "^1.0.0"
 	}
 }
