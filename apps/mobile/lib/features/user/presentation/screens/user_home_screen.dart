@@ -1,5 +1,6 @@
 import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/core/constants/dummy.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
@@ -214,11 +215,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               scrollDirection: Axis.horizontal,
               itemCount: 5,
               separatorBuilder: (context, index) => Gap(16.w),
-              itemBuilder: (_, i) => LimitedBox(
+              itemBuilder: (_, _) => LimitedBox(
                 maxWidth: 111.w,
-                child: _MerchantCardWidget(
-                  merchant: i.dummyMerchant,
-                ),
+                child: const _MerchantCardWidget(merchant: dummyMerchant),
               ).asSkeleton(),
             ),
           );

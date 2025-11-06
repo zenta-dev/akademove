@@ -1,3 +1,4 @@
+import 'package:akademove/core/constants.dart';
 import 'package:api_client/api_client.dart';
 import 'package:const_date_time/const_date_time.dart';
 
@@ -11,11 +12,42 @@ const dummyWalletSummary = WalletMonthlySummaryResponse(
   net: 0,
 );
 
-const dummyWalletTransaction = WalletTransaction(
+const dummyTransaction = Transaction(
   id: dummyUUIDString,
   walletId: dummyUUIDString,
-  type: WalletTransactionType.adjustment,
+  type: TransactionType.adjustment,
   amount: 0,
   status: TransactionStatus.pending,
   createdAt: dummyConstDateTime,
+);
+
+const dummyOrder = Order(
+  id: dummyUUIDString,
+  userId: dummyUUIDString,
+  type: OrderType.delivery,
+  status: OrderStatus.requested,
+  pickupLocation: Constants.defaultCoordinate,
+  dropoffLocation: Constants.defaultCoordinate,
+  distanceKm: 2,
+  basePrice: 1000,
+  totalPrice: 2000,
+  requestedAt: dummyConstDateTime,
+  createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
+);
+
+const dummyMerchant = Merchant(
+  id: dummyUUIDString,
+  userId: dummyUUIDString,
+  name: 'Bakso Solo',
+  email: 'bakso@gmail.com',
+  phone: Phone(countryCode: CountryCode.ID, number: 123456),
+  address: 'St. Somewhere',
+  isActive: true,
+  rating: 3,
+  bank: Bank(provider: BankProviderEnum.BCA, number: 12345),
+  categories: ['Drink', 'Coffe', 'Desert', 'Food'],
+  image: '${Constants.randomImageUrl}/seed/512/512',
+  createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
 );

@@ -128,43 +128,6 @@ extension ToastExt on BuildContext {
 }
 
 extension IntExt on int {
-  Order get dummyOrder {
-    final now = DateTime.now();
-    return Order(
-      id: 'id-$this',
-      userId: 'userId-$this',
-      type: OrderType.delivery,
-      status: OrderStatus.requested,
-      pickupLocation: Constants.defaultCoordinate,
-      dropoffLocation: Constants.defaultCoordinate,
-      distanceKm: 2,
-      basePrice: 1000,
-      totalPrice: 2000,
-      requestedAt: now,
-      createdAt: now,
-      updatedAt: now,
-    );
-  }
-
-  Merchant get dummyMerchant {
-    final now = DateTime.now();
-    return Merchant(
-      id: 'id-$this',
-      userId: 'userId-$this',
-      name: 'Bakso Solo $this',
-      email: 'bakso-$this@gmail.com',
-      phone: const Phone(countryCode: CountryCode.ID, number: 123456),
-      address: 'St. Somewhere',
-      isActive: true,
-      rating: 1 * this,
-      bank: const Bank(provider: BankProviderEnum.BCA, number: 12345),
-      categories: ['Drink', 'Coffe', 'Desert', 'Food'],
-      image: '${Constants.randomImageUrl}/seed/$this/512/512',
-      createdAt: now,
-      updatedAt: now,
-    );
-  }
-
   Place get dummyPlace {
     return Place(
       name: 'Zenta Dev',
