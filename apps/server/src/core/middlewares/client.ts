@@ -1,16 +1,13 @@
-import { os } from "@orpc/server";
 import { ClientAgentSchema } from "@repo/schema/common";
-import type { ORPCContext } from "../interface";
+import { createMiddleware } from "hono/factory";
+import type { HonoContext } from "../interface";
 
-export const clientMiddleware = os
-	.$context<ORPCContext>()
-	.middleware(async ({ context, next }) => {
+export const honoClientAgentMiddleware = createMiddleware<HonoContext>(
+	async (c, next) => {
 		const agent = await ClientAgentSchema.safeParseAsync(
-			context.req.headers.get("X-Client-Agent"),
+			c.req.raw.headers.get("X-Client-Agent"),
 		);
-		return await next({
-			context: {
-				clientAgent: agent.data ?? "unknown",
-			},
-		});
-	});
+		c.set("clientAgent", agent.data ?? "unknown");
+		return await next();
+	},
+);
