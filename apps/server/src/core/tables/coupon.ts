@@ -2,32 +2,36 @@ import type { CouponRules } from "@repo/schema/coupon";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
-	decimal,
-	index,
 	integer,
 	jsonb,
-	pgTable,
+	numeric,
 	text,
-	uniqueIndex,
 	uuid,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { DateModifier, nowFn, timestamp } from "./common";
+import {
+	createAuditLogTable,
+	DateModifier,
+	index,
+	nowFn,
+	pgTable,
+	timestamp,
+	uniqueIndex,
+} from "./common";
 import { order } from "./order";
 
 export const coupon = pgTable(
 	"coupons",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		name: text().notNull(),
 		code: text().notNull(),
 		rules: jsonb().$type<CouponRules>().notNull(),
-		discountAmount: decimal("discount_amount", {
-			precision: 12,
+		discountAmount: numeric("discount_amount", {
+			precision: 18,
 			scale: 2,
-			mode: "number",
 		}),
-		discountPercentage: decimal("discount_percentage", {
+		discountPercentage: numeric("discount_percentage", {
 			precision: 5,
 			scale: 2,
 			mode: "number",
@@ -58,10 +62,12 @@ export const coupon = pgTable(
 	],
 );
 
+export const couponAuditLog = createAuditLogTable("coupon");
+
 export const couponUsage = pgTable(
 	"coupon_usages",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		couponId: uuid("coupon_id")
 			.notNull()
 			.references(() => coupon.id, { onDelete: "cascade" }),
@@ -71,10 +77,9 @@ export const couponUsage = pgTable(
 		userId: text("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
-		discountApplied: decimal("discount_applied", {
-			precision: 10,
+		discountApplied: numeric("discount_applied", {
+			precision: 18,
 			scale: 2,
-			mode: "number",
 		}).notNull(),
 		usedAt: timestamp("used_at").notNull().$defaultFn(nowFn),
 	},
