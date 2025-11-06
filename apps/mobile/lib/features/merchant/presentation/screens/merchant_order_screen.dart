@@ -27,23 +27,23 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
       case 0:
         cubit.getMine(
           statuses: const [
-            OrderStatusEnum.requested,
-            OrderStatusEnum.accepted,
-            OrderStatusEnum.inTrip,
+            OrderStatus.requested,
+            OrderStatus.accepted,
+            OrderStatus.inTrip,
           ],
         );
       case 1:
         cubit.getMine(
           statuses: const [
-            OrderStatusEnum.completed,
+            OrderStatus.completed,
           ],
         );
       case 2:
         cubit.getMine(
           statuses: const [
-            OrderStatusEnum.cancelledBySystem,
-            OrderStatusEnum.cancelledByUser,
-            OrderStatusEnum.cancelledByDriver,
+            OrderStatus.cancelledBySystem,
+            OrderStatus.cancelledByUser,
+            OrderStatus.cancelledByDriver,
           ],
         );
     }
@@ -71,21 +71,21 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                 children: [
                   _buildTab(
                     statuses: const [
-                      OrderStatusEnum.requested,
-                      OrderStatusEnum.accepted,
-                      OrderStatusEnum.inTrip,
+                      OrderStatus.requested,
+                      OrderStatus.accepted,
+                      OrderStatus.inTrip,
                     ],
                   ),
                   _buildTab(
                     statuses: const [
-                      OrderStatusEnum.completed,
+                      OrderStatus.completed,
                     ],
                   ),
                   _buildTab(
                     statuses: const [
-                      OrderStatusEnum.cancelledBySystem,
-                      OrderStatusEnum.cancelledByUser,
-                      OrderStatusEnum.cancelledByDriver,
+                      OrderStatus.cancelledBySystem,
+                      OrderStatus.cancelledByUser,
+                      OrderStatus.cancelledByDriver,
                     ],
                   ),
                 ],
@@ -162,7 +162,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
 
   Widget _buildFail({
     required String message,
-    required List<OrderStatusEnum> statuses,
+    required List<OrderStatus> statuses,
   }) => Container(
     width: double.infinity,
     padding: EdgeInsets.only(top: 16.dg),
@@ -174,7 +174,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
         ),
       ),
       content: Text(
-        'No orders found',
+        message,
         style: context.typography.small.copyWith(
           fontSize: 14.sp,
         ),
@@ -189,7 +189,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
     ),
   );
 
-  Widget _buildTab({required List<OrderStatusEnum> statuses}) {
+  Widget _buildTab({required List<OrderStatus> statuses}) {
     return BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
       builder: (context, state) {
         return state.whenOr(
@@ -224,14 +224,13 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
             message: message ?? 'An unexpected error occurred',
             statuses: statuses,
           ),
-          loading: () => ListView.separated(
+          orElse: () => ListView.separated(
             itemCount: 5,
             separatorBuilder: (_, __) => Gap(16.h),
             itemBuilder: (_, i) => MerchantOrderCardWidget(
               order: i.dummyOrder,
             ).asSkeleton(),
           ),
-          orElse: () => const Text('data'),
         );
       },
     );

@@ -2,19 +2,20 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
 class MerchantCubit extends BaseCubit<MerchantState> {
-  MerchantCubit(this._merchantRepository) : super(const MerchantState());
+  MerchantCubit({
+    required MerchantRepository merchantRepository,
+  }) : _merchantRepository = merchantRepository,
+       super(MerchantState());
   final MerchantRepository _merchantRepository;
 
   @override
-  Future<void> init() async {
-    await getMine();
-  }
+  Future<void> init() async {}
 
   Future<void> getMine() async {
     try {
       emit(state.toLoading());
       final res = await _merchantRepository.getMine();
-      emit(state.toSuccess(selected: res.data, message: res.message));
+      emit(state.toSuccess(mine: res.data, message: res.message));
     } on BaseError catch (e, st) {
       logger.e(
         '[MerchantCubit] - Error: ${e.message}',
@@ -26,5 +27,5 @@ class MerchantCubit extends BaseCubit<MerchantState> {
   }
 
   @override
-  void reset() => emit(const MerchantState());
+  void reset() => emit(MerchantState());
 }

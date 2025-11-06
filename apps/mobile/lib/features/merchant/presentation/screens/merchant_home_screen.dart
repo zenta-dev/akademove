@@ -31,7 +31,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       BlocBuilder<MerchantCubit, MerchantState>(
                         builder: (context, state) {
                           return Text(
-                            'Hello, ${state.selected?.name ?? "Folks"}',
+                            'Hello, ${state.mine?.name ?? "Folks"}',
                             style: context.typography.h1.copyWith(
                               fontSize: 20.sp,
                             ),

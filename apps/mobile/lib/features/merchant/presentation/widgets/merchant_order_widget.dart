@@ -72,7 +72,7 @@ class MerchantOrderCardWidget extends StatelessWidget {
                   fontSize: 14.sp,
                 ),
               ),
-              if (onAccept != null && order.status == OrderStatusEnum.requested)
+              if (onAccept != null && order.status == OrderStatus.requested)
                 ...[],
               SizedBox(
                 width: double.infinity,

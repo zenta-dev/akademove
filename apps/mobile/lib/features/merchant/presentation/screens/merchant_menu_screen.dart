@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class MerchantMenuScreen extends StatelessWidget {
   const MerchantMenuScreen({super.key});

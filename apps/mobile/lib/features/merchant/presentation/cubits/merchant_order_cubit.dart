@@ -3,13 +3,16 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
-  MerchantOrderCubit(this._orderRepository) : super(const MerchantOrderState());
+  MerchantOrderCubit({
+    required OrderRepository orderRepository,
+  }) : _orderRepository = orderRepository,
+       super(const MerchantOrderState());
   final OrderRepository _orderRepository;
 
   @override
   Future<void> init() async {}
 
-  Future<void> getMine({required List<OrderStatusEnum> statuses}) async {
+  Future<void> getMine({required List<OrderStatus> statuses}) async {
     try {
       emit(state.toLoading());
 
