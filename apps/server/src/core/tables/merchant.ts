@@ -1,42 +1,39 @@
-import type { Bank, Location, Phone } from "@repo/schema/common";
+import type { Bank, Phone } from "@repo/schema/common";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
-	decimal,
-	index,
+	geometry,
 	integer,
 	jsonb,
-	pgTable,
+	numeric,
 	text,
-	uniqueIndex,
 	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { DateModifier } from "./common";
-
-// export const merchantType = pgEnum("merchant_type", CONSTANTS.MERCHANT_TYPES);
+import { DateModifier, index, pgTable, uniqueIndex } from "./common";
 
 export const merchant = pgTable(
 	"merchants",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		userId: text("user_id")
 			.notNull()
 			.unique()
 			.references(() => user.id, { onDelete: "cascade" }),
-		// type: merchantType().notNull(),
 		name: text().notNull(),
 		email: text().notNull().unique(),
 		phone: jsonb().$type<Phone>().notNull().unique(),
 		address: text().notNull(),
-		location: jsonb().$type<Location>(),
+		location: geometry("location", { type: "point", mode: "xy", srid: 4326 }),
 		bank: jsonb().$type<Bank>().notNull(),
+		categories: text().array(),
 		isActive: boolean("is_active").notNull().default(true),
-		rating: decimal({ precision: 2, scale: 1, mode: "number" })
+		rating: numeric({ precision: 2, scale: 1, mode: "number" })
 			.notNull()
-			.default(0),
+			.default(0.0),
 		document: text(),
+		image: text(),
 		...DateModifier,
 	},
 	(t) => [
@@ -48,22 +45,22 @@ export const merchant = pgTable(
 		index("merchant_rating_idx").on(t.rating),
 		// index("merchant_type_active_idx").on(t.type, t.isActive),
 		index("merchant_created_at_idx").on(t.createdAt),
+		index("merchant_location_idx").using("gist", t.location),
 	],
 );
 
 export const merchantMenu = pgTable(
 	"merchant_menus",
 	{
-		id: uuid().primaryKey().defaultRandom(),
+		id: uuid().primaryKey(),
 		merchantId: uuid()
 			.notNull()
 			.references(() => merchant.id, { onDelete: "cascade" }),
 		name: varchar({ length: 255 }).notNull(),
 		category: varchar({ length: 255 }),
-		price: decimal("base_price", {
+		price: numeric("base_price", {
 			precision: 10,
 			scale: 2,
-			mode: "number",
 		}).notNull(),
 		stock: integer().notNull(),
 		image: text(),
