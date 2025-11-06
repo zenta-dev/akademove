@@ -1,24 +1,22 @@
-import { scryptSync } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import * as readline from "node:readline";
 import { faker } from "@faker-js/faker";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { InsertMerchant } from "@repo/schema/merchant";
 import type { InsertUser } from "@repo/schema/user";
-import { authPermission } from "@repo/shared";
-import { BetterAuthError, betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin } from "better-auth/plugins";
-import { and, eq, inArray } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "@/core/tables/auth";
+import { v7 } from "uuid";
 import {
-	type ConfigurationDatabase,
 	configuration,
+	configurationAuditLog,
 } from "@/core/tables/configuration";
 import { driver } from "@/core/tables/driver";
 import { merchant } from "@/core/tables/merchant";
 import { order } from "@/core/tables/order";
+import { PasswordManager } from "@/utils/password";
+import { tables } from "./tables";
 
 async function confirmExecution() {
 	if (process.env.NODE_ENV === "production") {
@@ -46,121 +44,100 @@ async function confirmExecution() {
 		process.exit(0);
 	}
 }
-await confirmExecution();
 
 const client = postgres(process.env.DATABASE_URL || "");
 const db = drizzle({ client });
-const auth = betterAuth({
-	database: drizzleAdapter(db, {
-		provider: "pg",
-		schema: schema,
-	}),
-	emailAndPassword: {
-		enabled: true,
-		password: {
-			hash: async (password) => {
-				const salt = crypto.getRandomValues(new Uint8Array(16));
-				const saltHex = Array.from(salt)
-					.map((b) => b.toString(16).padStart(2, "0"))
-					.join("");
 
-				const key = scryptSync(password.normalize("NFKC"), saltHex, 64, {
-					N: 16384,
-					r: 16,
-					p: 1,
-					maxmem: 128 * 16384 * 16 * 2,
-				});
+function generateId(): string {
+	return randomBytes(32).toString("hex");
+}
 
-				const keyHex = Array.from(key)
-					.map((b) => b.toString(16).padStart(2, "0"))
-					.join("");
-				return `${saltHex}:${keyHex}`;
-			},
-			verify: async ({ hash, password }) => {
-				const [saltHex, keyHex] = hash.split(":");
-				if (!saltHex || !keyHex) {
-					throw new BetterAuthError("Invalid password hash");
-				}
-				const targetKey = scryptSync(password.normalize("NFKC"), saltHex, 64, {
-					N: 16384,
-					r: 16,
-					p: 1,
-					maxmem: 128 * 16384 * 16 * 2,
-				});
+async function seedUser() {
+	const pw = new PasswordManager();
 
-				const targetKeyHex = Array.from(targetKey)
-					.map((b) => b.toString(16).padStart(2, "0"))
-					.join("");
-				return targetKeyHex === keyHex;
-			},
-		},
-	},
-	plugins: [admin(authPermission)],
-});
-
-export async function seedUser() {
 	const FIXED_USERS: Omit<InsertUser, "confirmPassword">[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
 			role: "admin",
 			password: "Ch@ngEThi5",
+			phone: { countryCode: "ID", number: 8573230851 },
 		},
 		{
 			name: "Test Operator 1",
 			email: "test-operator-1@akademove.com",
 			role: "operator",
 			password: "Ch@ngEThi5",
+			phone: { countryCode: "ID", number: 8573230852 },
 		},
 		{
 			name: "Test Merchant 1",
 			email: "test-merchant-1@akademove.com",
 			role: "merchant",
 			password: "Ch@ngEThi5",
+			phone: { countryCode: "ID", number: 8573230853 },
 		},
 		{
 			name: "Test Driver 1",
 			email: "test-driver-1@akademove.com",
 			role: "driver",
 			password: "Ch@ngEThi5",
+			phone: { countryCode: "ID", number: 8573230854 },
+			gender: "male",
 		},
 		{
 			name: "Test User 1",
 			email: "test-user-1@akademove.com",
 			role: "user",
 			password: "Ch@ngEThi5",
+			phone: { countryCode: "ID", number: 8573230855 },
+			gender: "male",
 		},
 	];
 
-	const RANDOM_USERS: Omit<InsertUser, "confirmPassword">[] = Array.from({
-		length: 50,
-	}).map(() => {
-		const role = faker.helpers.arrayElement(["user", "driver", "merchant"]);
-		return {
-			name: faker.person.fullName(),
-			email: faker.internet.email().toLowerCase(),
-			role,
-			password: "Ch@ngEThi5",
-		};
-	});
+	const RANDOM_USERS = Array.from({ length: 500 }).map(
+		() =>
+			({
+				name: faker.person.fullName(),
+				email: faker.internet.email().toLowerCase(),
+				role: faker.helpers.arrayElement(["user", "driver", "merchant"]),
+				password: "Ch@ngEThi5",
+				phone: {
+					countryCode: "ID",
+					number: Number(
+						faker.phone.number({ style: "human" }).replace(/\D/g, ""),
+					),
+				},
+				gender: faker.helpers.arrayElement(["male", "female"]),
+			}) as const,
+	);
 
-	const USERS = [...FIXED_USERS, ...RANDOM_USERS];
+	const USERS = [
+		...new Map(
+			[...FIXED_USERS, ...RANDOM_USERS].map((u) => [u.email, u]),
+		).values(),
+	];
 
 	console.log("🔍 Checking existing users...");
 
 	const existing = await db
-		.select({ email: schema.user.email })
-		.from(schema.user)
+		.select({ email: tables.user.email, phone: tables.user.phone })
+		.from(tables.user)
 		.where(
 			inArray(
-				schema.user.email,
+				tables.user.email,
 				USERS.map((u) => u.email),
 			),
 		);
 
 	const existingEmails = new Set(existing.map((u) => u.email));
+	const existingPhones = new Set(existing.map((u) => JSON.stringify(u.phone)));
 
-	const missingUsers = USERS.filter((u) => !existingEmails.has(u.email));
+	const missingUsers = USERS.filter(
+		(u) =>
+			!existingEmails.has(u.email) &&
+			!existingPhones.has(JSON.stringify(u.phone)),
+	);
 
 	if (missingUsers.length === 0) {
 		console.log("✅ All users already exist.");
@@ -170,186 +147,358 @@ export async function seedUser() {
 	console.log(`🌱 Seeding ${missingUsers.length} new users...`);
 
 	try {
-		await Promise.all(
-			missingUsers.map((user) => auth.api.createUser({ body: user })),
-		);
+		const hashedPassword = pw.hash("Ch@ngEThi5");
+
+		// Batch insert users and accounts
+		const userInsertData = missingUsers.map((user) => ({
+			...user,
+			id: generateId(),
+		}));
+
+		const insertedUsers = await db
+			.insert(tables.user)
+			.values(userInsertData)
+			.returning({ id: tables.user.id });
+
+		const accountInsertData = insertedUsers.map((user) => ({
+			id: generateId(),
+			accountId: generateId(),
+			userId: user.id,
+			providerId: "credentials",
+			password: hashedPassword,
+		}));
+		const walletInsertData = insertedUsers.map((user) => ({
+			id: v7(),
+			userId: user.id,
+			balance: "0",
+		}));
+
+		await Promise.all([
+			db.insert(tables.account).values(accountInsertData),
+			db.insert(tables.wallet).values(walletInsertData),
+		]);
+
 		console.log("✅ User seeding complete.");
 	} catch (err) {
 		console.error("❌ Failed to seed users:", err);
+		throw err;
 	}
 }
 
-async function seedConfigurations() {
-	console.log("Seeding Configurations");
+export async function seedConfigurations() {
+	console.log("🔧 Seeding Configurations...");
 
-	const [admin] = await db
-		.select()
-		.from(schema.user)
-		.where(and(eq(schema.user.email, "test-admin-1@akademove.com")));
-
-	const _CONFIGS: ConfigurationDatabase[] = [
-		{
-			key: "ride-service-pricing",
-			name: "Ride Pricing",
-			value: {
-				price_per_km: 5000,
-				commission: 7,
-			},
-			description: "Current base price per km",
-			updatedById: admin.id,
-			updatedAt: new Date(),
-		},
-		{
-			key: "delivery-service-pricing",
-			name: "Delivery Pricing",
-			value: {
-				price_per_km: 4500,
-				commission: 5,
-			},
-			description: "Current base price per km",
-			updatedById: admin.id,
-			updatedAt: new Date(),
-		},
-		{
-			key: "food-service-pricing",
-			name: "Food Pricing",
-			value: {
-				price_per_km: 4000,
-				commission: 3,
-			},
-			description: "Current base price per km",
-			updatedById: admin.id,
-			updatedAt: new Date(),
-		},
-	];
-	for (const conf of _CONFIGS) {
-		console.log("FIND CONFIG WITH KEY ", conf.key);
-		const find = await db
+	// Use a transaction for consistency
+	await db.transaction(async (tx) => {
+		const [admin] = await tx
 			.select()
-			.from(configuration)
-			.where(eq(configuration.key, conf.key));
-		if (find.length > 0) {
-			continue;
+			.from(tables.user)
+			.where(eq(tables.user.email, "test-admin-1@akademove.com"))
+			.limit(1);
+
+		if (!admin) {
+			console.warn("⚠️ Admin user not found. Skipping configurations.");
+			return;
 		}
-		await db.insert(configuration).values(conf).returning();
-	}
+
+		const now = new Date();
+
+		const CONFIGS = [
+			{
+				key: "ride-service-pricing",
+				name: "Ride Pricing",
+				value: {
+					baseFare: 5_000,
+					perKmRate: 2_500,
+					minimumFare: 10_000,
+					platformFeeRate: 0.02,
+					taxRate: 0.11,
+				},
+				description: "Ride service pricing structure",
+				updatedById: admin.id,
+				createdAt: now,
+				updatedAt: now,
+			},
+			{
+				key: "delivery-service-pricing",
+				name: "Delivery Pricing",
+				value: {
+					baseFare: 8_000,
+					perKmRate: 3_000,
+					minimumFare: 12_000,
+					perKg: 2_000,
+					platformFeeRate: 0.02,
+					taxRate: 0.11,
+				},
+				description: "Delivery pricing per km/kg",
+				updatedById: admin.id,
+				createdAt: now,
+				updatedAt: now,
+			},
+			{
+				key: "food-service-pricing",
+				name: "Food Pricing",
+				value: {
+					baseFare: 8_000,
+					perKmRate: 2_500,
+					minimumFare: 10_000,
+					platformFeeRate: 0.02,
+					taxRate: 0.11,
+				},
+				description: "Food delivery pricing",
+				updatedById: admin.id,
+				createdAt: now,
+				updatedAt: now,
+			},
+		];
+
+		await tx
+			.insert(configuration)
+			.values(CONFIGS)
+			.onConflictDoUpdate({
+				target: configuration.key,
+				set: {
+					name: sql`excluded.name`,
+					value: sql`excluded.value`,
+					description: sql`excluded.description`,
+					updatedById: sql`excluded.updated_by_id`,
+					updatedAt: sql`excluded.updated_at`,
+				},
+			});
+
+		const existingConfigs = await tx
+			.select({
+				key: configuration.key,
+				value: configuration.value,
+			})
+			.from(configuration)
+			.where(
+				sql`${configuration.key} IN (${sql.join(
+					CONFIGS.map((c) => sql`${c.key}`),
+					sql`, `,
+				)})`,
+			);
+
+		const existingMap = Object.fromEntries(
+			existingConfigs.map((c) => [c.key, c.value]),
+		);
+
+		const auditLogs = CONFIGS.map((conf) => {
+			const previousValue = existingMap[conf.key];
+			const operation = previousValue ? "UPDATE" : "INSERT";
+			return {
+				tableName: "configurations",
+				recordId: conf.key,
+				operation,
+				oldData: previousValue ?? null,
+				newData: conf.value,
+				updatedById: admin.id,
+				updatedAt: now,
+			} as const;
+		});
+
+		await tx.insert(configurationAuditLog).values(auditLogs);
+
+		console.log("✅ Configurations seeded/updated successfully.");
+	});
 }
 
 async function seedMerchants() {
-	console.log("Seeding Merchants");
+	console.log("🏪 Seeding Merchants...");
+
 	const users = await db
 		.select()
-		.from(schema.user)
-		.where(eq(schema.user.role, "user"));
+		.from(tables.user)
+		.where(eq(tables.user.role, "merchant"));
 
 	if (users.length === 0) {
-		console.warn("No users with role 'user' found.");
+		console.warn("⚠️ No users with role 'merchant' found.");
 		return;
 	}
 
-	const merchants = Array.from({ length: 50 }).map(() => {
-		const randomUser = users[Math.floor(Math.random() * users.length)];
+	// Check existing merchants to avoid duplicates
+	const existingMerchants = await db
+		.select({ userId: merchant.userId })
+		.from(merchant);
+
+	const existingUserIds = new Set(existingMerchants.map((m) => m.userId));
+	const availableUsers = users.filter((u) => !existingUserIds.has(u.id));
+
+	if (availableUsers.length === 0) {
+		console.log("✅ All merchant users already have merchants.");
+		return;
+	}
+
+	const merchantsToCreate = Math.min(50, availableUsers.length);
+	const merchants = Array.from({ length: merchantsToCreate }).map((_, i) => {
+		const user = availableUsers[i];
+		const bankProvider = faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS);
+
 		return {
-			userId: randomUser.id,
+			id: v7(),
+			userId: user.id,
 			name: faker.company.name(),
-			type: Math.random() < 0.5 ? "merchant" : "tenant",
+			email: user.email,
+			phone: user.phone,
+			categories: Array.from({
+				length: faker.number.int({ min: 1, max: 6 }),
+			}).map(() => faker.food.ethnicCategory()),
 			address: faker.location.streetAddress(),
 			location: {
-				lat: faker.location.latitude(),
-				lng: faker.location.longitude(),
+				y: faker.location.latitude(),
+				x: faker.location.longitude(),
 			},
-			isActive: Math.random() < 0.5,
-		} satisfies InsertMerchant & { userId: string };
+			bank: {
+				provider: bankProvider,
+				number: faker.number.int({ min: 1_000_000, max: 9_999_999 }),
+			},
+		} satisfies InsertMerchant & { userId: string; id: string };
 	});
 
 	await db.insert(merchant).values(merchants);
-	console.log(`Inserted ${merchants.length} merchants.`);
+	console.log(`✅ Inserted ${merchants.length} merchants.`);
+}
+
+const BASE_LAT = -6.2221877;
+const BASE_LNG = 106.8724405;
+const OFFSET_METERS = 5000;
+
+function randomOffsetLatLng(
+	baseLat: number,
+	baseLng: number,
+	radiusMeters: number,
+) {
+	const radiusDeg = radiusMeters / 111000;
+	const u = Math.random();
+	const v = Math.random();
+	const w = radiusDeg * Math.sqrt(u);
+	const t = 2 * Math.PI * v;
+	const dy = w * Math.sin(t);
+	const dx = w * Math.cos(t);
+	const newLat = baseLat + dy;
+	const newLng = baseLng + dx / Math.cos(baseLat * (Math.PI / 180));
+	return { lat: newLat, lng: newLng };
 }
 
 async function seedDrivers() {
-	console.log("Seeding Drivers");
+	console.log("🚗 Seeding Drivers near location...");
+
 	const users = await db
 		.select()
-		.from(schema.user)
-		.where(eq(schema.user.role, "user"));
+		.from(tables.user)
+		.where(eq(tables.user.role, "driver"));
 
 	if (users.length === 0) {
-		console.warn("No users with role 'user' found.");
+		console.warn("⚠️ No users with role 'driver' found.");
 		return;
 	}
-	const drivers = Array.from({ length: 50 }).map(() => {
-		const randomUser = users[Math.floor(Math.random() * users.length)];
+
+	// Check existing drivers to avoid duplicates
+	const existingDrivers = await db
+		.select({ userId: driver.userId })
+		.from(driver);
+
+	const existingUserIds = new Set(existingDrivers.map((d) => d.userId));
+	const availableUsers = users.filter((u) => !existingUserIds.has(u.id));
+
+	if (availableUsers.length === 0) {
+		console.log("✅ All driver users already have driver profiles.");
+		return;
+	}
+
+	const drivers = availableUsers.map((user) => {
+		const bankProvider = faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS);
+		const { lat, lng } = randomOffsetLatLng(BASE_LAT, BASE_LNG, OFFSET_METERS);
+
 		return {
-			userId: randomUser.id,
-			studentId: faker.string.alphanumeric(10),
-			licenseNumber: faker.string.alphanumeric(8),
+			id: v7(),
+			userId: user.id,
+			studentId: faker.number.int({ min: 2_000_000, max: 9_999_999 }),
+			licensePlate: faker.string.alphanumeric(8).toUpperCase(),
 			status: faker.helpers.arrayElement(CONSTANTS.DRIVER_STATUSES),
 			rating: Number.parseFloat(
-				faker.number.float({ min: 1, max: 5 }).toFixed(1),
+				faker.number.float({ min: 3.5, max: 5 }).toFixed(1),
 			),
 			isOnline: faker.datatype.boolean(),
-			currentLocation: faker.datatype.boolean()
-				? {
-						lat: faker.location.latitude(),
-						lng: faker.location.longitude(),
-					}
-				: null,
-			lastLocationUpdate: faker.datatype.boolean()
-				? faker.date.recent({ days: 10 })
-				: null,
+			currentLocation: sql`ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326)`,
+			lastLocationUpdate: faker.date.recent({ days: 10 }),
+			bank: {
+				provider: bankProvider,
+				number: faker.number.int({ min: 1_000_000, max: 9_999_999 }),
+			},
+			studentCard: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
+			driverLicense: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
+			vehicleCertificate: "DL-0199ef0c-7758-7508-b906-4a706df54709.jpg",
 			createdAt: new Date(),
+			updatedAt: new Date(),
 		};
 	});
 
 	await db.insert(driver).values(drivers);
-	console.log(`Inserted ${drivers.length} drivers.`);
+	console.log(
+		`✅ Inserted ${drivers.length} drivers near (${BASE_LAT}, ${BASE_LNG}).`,
+	);
 }
 
 async function seedOrders() {
-	console.log("Seeding Orders...");
+	console.log("📦 Seeding Orders...");
 
 	const users = await db
-		.select()
-		.from(schema.user)
-		.where(eq(schema.user.role, "user"));
-	if (users.length === 0) {
-		console.warn("⚠️ No users with role 'user' found. Skipping order seeding.");
+		.select({ id: tables.user.id })
+		.from(tables.user)
+		.where(eq(tables.user.role, "user"));
+
+	const drivers = await db.select({ id: driver.id }).from(driver);
+	const merchants = await db.select({ id: merchant.id }).from(merchant);
+
+	if (!users.length) {
+		console.warn("⚠️ No user accounts found.");
 		return;
 	}
 
-	const drivers = await db.select().from(driver);
-	const merchants = await db.select().from(merchant);
-
-	const maybePick = (arr: { id: string }[]) =>
+	const maybePick = <T extends { id: string }>(arr: T[]) =>
 		arr.length > 0 && faker.datatype.boolean()
-			? arr[Math.floor(Math.random() * arr.length)].id
+			? faker.helpers.arrayElement(arr).id
 			: null;
 
 	const orders = Array.from({ length: 50 }).map(() => {
-		const randomUser = faker.helpers.arrayElement(users);
-		const distanceKm = faker.number.float({ min: 1, max: 50 });
+		const u = faker.helpers.arrayElement(users);
+		const distanceKm = Number(
+			faker.number.float({ min: 1, max: 50 }).toFixed(2),
+		);
+		const baseFare = faker.number.int({
+			min: 5000,
+			max: 15000,
+			multipleOf: 500,
+		});
+		const perKmRate = faker.number.int({
+			min: 2000,
+			max: 5000,
+			multipleOf: 100,
+		});
+		const totalPrice = baseFare + Math.round(distanceKm * perKmRate);
 
-		const baseFare = faker.number.int({ min: 500, max: 5000, multipleOf: 100 });
-		const perKmRate = faker.number.int({ min: 200, max: 1000, multipleOf: 50 });
-		const totalPrice = baseFare + distanceKm * perKmRate;
+		const pickup = {
+			x: Number(faker.location.longitude({ min: 106.7, max: 106.9 })),
+			y: Number(faker.location.latitude({ min: -6.3, max: -6.1 })),
+		};
+		const dropoff = {
+			x: Number(faker.location.longitude({ min: 106.7, max: 106.9 })),
+			y: Number(faker.location.latitude({ min: -6.3, max: -6.1 })),
+		};
 
 		return {
-			userId: randomUser.id,
+			id: v7(),
+			userId: u.id,
 			driverId: maybePick(drivers),
 			merchantId: maybePick(merchants),
 			type: faker.helpers.arrayElement(CONSTANTS.ORDER_TYPES),
 			status: faker.helpers.arrayElement(CONSTANTS.ORDER_STATUSES),
-			pickupLocation: {
-				lat: faker.location.latitude(),
-				lng: faker.location.longitude(),
-			},
-			dropoffLocation: {
-				lat: faker.location.latitude(),
-				lng: faker.location.longitude(),
-			},
+			pickupLocation: sql`ST_SetSRID(ST_MakePoint(${pickup.x}, ${pickup.y}), 4326)`,
+			dropoffLocation: sql`ST_SetSRID(ST_MakePoint(${dropoff.x}, ${dropoff.y}), 4326)`,
 			distanceKm,
-			basePrice: baseFare,
-			totalPrice: Math.round(totalPrice),
+			basePrice: `${baseFare}`,
+			totalPrice: `${totalPrice}`,
 			createdAt: faker.date.recent({ days: 30 }),
 		};
 	});
@@ -358,8 +507,24 @@ async function seedOrders() {
 	console.log(`✅ Inserted ${orders.length} orders.`);
 }
 
-await seedUser();
-await Promise.all([seedConfigurations(), seedMerchants(), seedDrivers()]);
-await seedOrders();
-console.log("✅ Database seeded with test data.");
-process.exit();
+async function main() {
+	try {
+		await confirmExecution();
+
+		console.log("\n🌱 Starting database seeding...\n");
+
+		await seedUser();
+		await Promise.all([seedConfigurations(), seedMerchants(), seedDrivers()]);
+		await seedOrders();
+
+		console.log("\n✅ Database seeded successfully with test data.");
+	} catch (error) {
+		console.error("\n❌ Seeding failed:", error);
+		process.exit(1);
+	} finally {
+		await client.end();
+		process.exit(0);
+	}
+}
+
+main();

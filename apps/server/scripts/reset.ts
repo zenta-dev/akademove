@@ -1,15 +1,8 @@
 import * as readline from "node:readline";
+import { PgTable } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { account, user, verification } from "@/core/tables/auth";
-import { configuration } from "@/core/tables/configuration";
-import { coupon, couponUsage } from "@/core/tables/coupon";
-import { driver } from "@/core/tables/driver";
-import { merchant, merchantMenu } from "@/core/tables/merchant";
-import { order } from "@/core/tables/order";
-import { report } from "@/core/tables/report";
-import { review } from "@/core/tables/review";
-import { schedule } from "@/core/tables/schedule";
+import { tables } from "./tables";
 
 async function confirmExecution() {
 	if (process.env.NODE_ENV === "production") {
@@ -42,26 +35,10 @@ await confirmExecution();
 const client = postgres(process.env.DATABASE_URL || "");
 const db = drizzle({ client });
 
-export const tables = {
-	user,
-	account,
-	verification,
-	configuration,
-	couponUsage,
-	coupon,
-	driver,
-	merchantMenu,
-	merchant,
-	order,
-	report,
-	review,
-	schedule,
-};
-
 async function main() {
 	const promises = [];
 	for (const [_, table] of Object.entries(tables)) {
-		promises.push(db.delete(table));
+		if (table instanceof PgTable) promises.push(db.delete(table));
 	}
 	await Promise.all(promises);
 	process.exit();
