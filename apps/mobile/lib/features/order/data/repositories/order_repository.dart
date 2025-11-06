@@ -93,7 +93,7 @@ class OrderRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<Order>> placeOrder(PlaceOrder req) {
+  Future<BaseResponse<PlaceOrderResponse>> placeOrder(PlaceOrder req) {
     return guard(() async {
       final res = await _apiClient.getOrderApi().orderPlaceOrder(
         placeOrder: req,

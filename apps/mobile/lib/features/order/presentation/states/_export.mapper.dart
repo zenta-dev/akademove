@@ -25,12 +25,10 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
       v.estimateOrder;
   static const Field<UserOrderState, EstimateOrderResult> _f$estimateOrder =
       Field('estimateOrder', _$estimateOrder, opt: true);
-  static Order? _$placeOrderResult(UserOrderState v) => v.placeOrderResult;
-  static const Field<UserOrderState, Order> _f$placeOrderResult = Field(
-    'placeOrderResult',
-    _$placeOrderResult,
-    opt: true,
-  );
+  static PlaceOrderResponse? _$placeOrderResult(UserOrderState v) =>
+      v.placeOrderResult;
+  static const Field<UserOrderState, PlaceOrderResponse> _f$placeOrderResult =
+      Field('placeOrderResult', _$placeOrderResult, opt: true);
   static CubitState _$state(UserOrderState v) => v.state;
   static const Field<UserOrderState, CubitState> _f$state = Field(
     'state',
@@ -114,7 +112,7 @@ abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   $R call({
     EstimateOrderResult? estimateOrder,
-    Order? placeOrderResult,
+    PlaceOrderResponse? placeOrderResult,
     CubitState? state,
     String? message,
     BaseError? error,

@@ -58,7 +58,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  void _setupMatchingWebsocket(Order order) {
+  void _setupMatchingWebsocket(PlaceOrderResponse order) {
     const key = 'driver-pool';
     _webSocketService.connect(key, '${Constants.wsBaseUrl}/$key');
 
@@ -88,7 +88,8 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   Future<void> placeOrder(
     Place pickup,
     Place dropoff,
-    OrderType type, {
+    OrderType type,
+    PaymentMethod method, {
     UserGender? gender,
   }) async {
     try {
@@ -102,10 +103,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           pickupLocation: pickup.toCoordinate(),
           dropoffLocation: dropoff.toCoordinate(),
           gender: gender,
+          payment: PlaceOrderPayment(
+            method: method,
+            provider: PaymentProvider.MIDTRANS,
+          ),
         ),
       );
 
-      _orderId = res.data.id;
+      _orderId = res.data.order.id;
       emit(state.toSuccess(placeOrderResult: res.data));
       _setupMatchingWebsocket(res.data);
       state.unAssignOperation(methodName);

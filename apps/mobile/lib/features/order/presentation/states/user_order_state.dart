@@ -14,7 +14,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   });
 
   final EstimateOrderResult? estimateOrder;
-  final Order? placeOrderResult;
+  final PlaceOrderResponse? placeOrderResult;
 
   @override
   UserOrderState toInitial() => copyWith(
@@ -33,7 +33,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   @override
   UserOrderState toSuccess({
     EstimateOrderResult? estimateOrder,
-    Order? placeOrderResult,
+    PlaceOrderResponse? placeOrderResult,
     String? message,
   }) => copyWith(
     state: CubitState.success,
