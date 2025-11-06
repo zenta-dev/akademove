@@ -6,95 +6,102 @@ import { eq } from "drizzle-orm";
 import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { GetAllOptions, GetOptions } from "@/core/interface";
-import { log } from "@/core/logger";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ConfigurationDatabase } from "@/core/tables/configuration";
+import { log, safeAsync } from "@/utils";
 
-export const createConfigurationRepository = (
-	db: DatabaseService,
-	kv: KeyValueService,
-) => {
-	function _composeCacheKey(key: string): string {
+export class ConfigurationRepository {
+	#db: DatabaseService;
+	#kv: KeyValueService;
+
+	constructor(db: DatabaseService, kv: KeyValueService) {
+		this.#db = db;
+		this.#kv = kv;
+	}
+
+	#composeCacheKey(key: string): string {
 		return `${CACHE_PREFIXES.CONFIGURATION}${key}`;
 	}
 
-	function _composeEntity(item: ConfigurationDatabase): Configuration {
+	#composeEntity(item: ConfigurationDatabase): Configuration {
 		return {
 			...item,
 			description: item?.description ?? undefined,
 		};
 	}
 
-	async function _getFromKV(key: string): Promise<Configuration | undefined> {
+	async #getFromKV(key: string): Promise<Configuration | undefined> {
 		try {
-			return await kv.get(_composeCacheKey(key));
+			return await this.#kv.get(this.#composeCacheKey(key));
 		} catch {
 			return undefined;
 		}
 	}
 
-	async function _getFromDB(key: string): Promise<Configuration | undefined> {
-		const result = await db.query.configuration.findFirst({
+	async #getFromDB(key: string): Promise<Configuration | undefined> {
+		const result = await this.#db.query.configuration.findFirst({
 			where: (f, op) => op.eq(f.key, key),
 		});
-		if (result) return _composeEntity(result);
-		return undefined;
+		return result ? this.#composeEntity(result) : undefined;
 	}
 
-	async function _setCache(key: string, data: Configuration | undefined) {
-		if (data) {
-			try {
-				await kv.put(_composeCacheKey(key), data, {
-					expirationTtl: CACHE_TTLS["24h"],
-				});
-			} catch {}
+	async #setCache(key: string, data: Configuration | undefined) {
+		if (!data) return;
+		try {
+			await this.#kv.put(this.#composeCacheKey(key), data, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
+		} catch {
+			// ignore cache errors
 		}
 	}
 
-	async function list(opts?: GetAllOptions): Promise<Configuration[]> {
+	async list(opts?: GetAllOptions): Promise<Configuration[]> {
 		try {
-			let stmt = db.query.configuration.findMany();
+			let stmt = this.#db.query.configuration.findMany();
+
 			if (opts) {
 				const { cursor, page, limit } = opts;
+
 				if (cursor) {
-					stmt = db.query.configuration.findMany({
+					stmt = this.#db.query.configuration.findMany({
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
 				}
+
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = db.query.configuration.findMany({
+					stmt = this.#db.query.configuration.findMany({
 						offset,
 						limit,
 					});
 				}
 			}
+
 			const result = await stmt;
-			return result.map(_composeEntity);
+			return result.map((item) => this.#composeEntity(item));
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
-			throw new RepositoryError("Failed to listing configurations");
+			throw new RepositoryError("Failed to list configurations");
 		}
 	}
 
-	async function get(key: string, opts?: GetOptions) {
+	async get(key: string, opts?: GetOptions): Promise<Configuration> {
 		try {
 			if (opts?.fromCache) {
-				const cached = await _getFromKV(key);
+				const cached = await this.#getFromKV(key);
 				if (cached) return cached;
 			}
 
-			const result = await _getFromDB(key);
-
+			const result = await this.#getFromDB(key);
 			if (!result)
-				throw new RepositoryError("Failed get configuration from db");
+				throw new RepositoryError("Failed to get configuration from db");
 
-			await _setCache(key, {
+			await this.#setCache(key, {
 				...result,
 				description: result?.description ?? undefined,
 			});
@@ -103,34 +110,47 @@ export const createConfigurationRepository = (
 		} catch (error) {
 			log.error(error);
 			if (error instanceof RepositoryError) throw error;
-
 			throw new RepositoryError(`Failed to get configuration by key "${key}"`);
 		}
 	}
 
-	async function update(
+	async update(
 		key: string,
 		item: UpdateConfiguration,
+		userId?: string,
 	): Promise<Configuration> {
 		try {
-			const existing = await _getFromDB(key);
-			if (!existing) {
+			const existing = await this.#getFromDB(key);
+			if (!existing)
 				throw new RepositoryError(`Configuration with key "${key}" not found`);
-			}
 
-			const [operation] = await db
-				.update(tables.configuration)
-				.set({
-					...existing,
-					...item,
-					updatedAt: new Date(),
-				})
-				.where(eq(tables.configuration.key, key))
-				.returning();
+			const [[operation]] = await Promise.all([
+				this.#db
+					.update(tables.configuration)
+					.set({
+						...existing,
+						...item,
+						updatedAt: new Date(),
+					})
+					.where(eq(tables.configuration.key, key))
+					.returning(),
+				safeAsync(this.#kv.delete(key)),
+			]);
 
-			const result = _composeEntity(operation);
-
-			await _setCache(key, result);
+			const result = this.#composeEntity(operation);
+			await safeAsync(
+				Promise.all([
+					this.#setCache(key, result),
+					this.#db.insert(tables.configurationAuditLog).values({
+						tableName: "configurations",
+						recordId: key,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: userId,
+					}),
+				]),
+			);
 
 			return result;
 		} catch (error) {
@@ -140,11 +160,4 @@ export const createConfigurationRepository = (
 			);
 		}
 	}
-
-	return { list, get, update };
-};
-
-export type ConfigurationRepositoryFactory =
-	typeof createConfigurationRepository;
-export type ConfigurationRepository =
-	ReturnType<ConfigurationRepositoryFactory>;
+}
