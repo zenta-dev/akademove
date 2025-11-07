@@ -6,7 +6,7 @@ import type { PartialWithTx } from "./interface";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
 
 export class BaseDurableObject extends DurableObject {
-	protected sessions: Map<WebSocket, WebsocketAttachment>;
+	protected sessions: Map<string, WebSocket>; // key = userId
 
 	constructor(ctx: DurableObjectState, env: Env) {
 		super(ctx, env);
@@ -14,7 +14,9 @@ export class BaseDurableObject extends DurableObject {
 
 		ctx.getWebSockets().forEach((ws) => {
 			const attachment = ws.deserializeAttachment?.();
-			if (attachment) this.sessions.set(ws, { ...attachment });
+			if (attachment?.id) {
+				this.sessions.set(attachment.id, ws);
+			}
 		});
 
 		ctx.setWebSocketAutoResponse?.(
@@ -25,10 +27,7 @@ export class BaseDurableObject extends DurableObject {
 	async fetch(request: Request): Promise<Response> {
 		const url = new URL(request.url);
 		const userId = url.searchParams.get("userId");
-
-		if (!userId) {
-			return new Response("User ID is required", { status: 401 });
-		}
+		if (!userId) return new Response("User ID is required", { status: 401 });
 
 		const pair = new WebSocketPair();
 		const [client, server] = Object.values(pair);
@@ -36,7 +35,7 @@ export class BaseDurableObject extends DurableObject {
 		this.ctx.acceptWebSocket(server);
 		server.serializeAttachment?.({ id: userId });
 
-		this.sessions.set(server, { id: userId });
+		this.sessions.set(userId, server);
 
 		return new Response(null, {
 			status: 101,
@@ -44,9 +43,61 @@ export class BaseDurableObject extends DurableObject {
 		});
 	}
 
-	findById(id: string): WebSocket | undefined {
-		for (const [k, v] of this.sessions.entries()) {
-			if (v.id === id) return k;
+	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
+		const userId = this.findUserIdBySocket(ws);
+		log.debug(
+			{ message, json: JSON.parse(message.toString()) },
+			`[${this.className}] | Received message from ${userId}`,
+		);
+	}
+
+	async webSocketClose(
+		ws: WebSocket,
+		code: number,
+		reason: string,
+		wasClean: boolean,
+	) {
+		const userId = this.findUserIdBySocket(ws);
+		if (userId) this.sessions.delete(userId);
+
+		log.debug(
+			{ code, reason, wasClean },
+			`[${this.className}] | Someone with id -> ${userId} left room`,
+		);
+
+		safeSync(() => ws.close(code, "Durable Object is closing WebSocket"));
+	}
+
+	protected get className(): string {
+		return this.constructor.name;
+	}
+
+	protected findUserIdBySocket(ws: WebSocket): string | undefined {
+		for (const [id, socket] of this.sessions.entries()) {
+			if (socket === ws) return id;
+		}
+	}
+
+	protected findById(id: string): WebSocket | undefined {
+		return this.sessions.get(id);
+	}
+
+	protected findByIds(ids: string[]): WebSocket[] {
+		return ids
+			.map((id) => this.sessions.get(id))
+			.filter((ws): ws is WebSocket => !!ws);
+	}
+
+	protected excludeSession(ws: WebSocket): Map<string, WebSocket> {
+		const filtered = new Map(this.sessions);
+		const userId = this.findUserIdBySocket(ws);
+		if (userId) filtered.delete(userId);
+		return filtered;
+	}
+
+	protected broadcast(message: unknown) {
+		const encoded = JSON.stringify(message);
+		for (const ws of this.sessions.values()) {
 			ws.send(encoded);
 		}
 	}
