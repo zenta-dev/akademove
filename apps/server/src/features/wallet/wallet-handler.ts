@@ -5,54 +5,36 @@ const { pub, priv } = createORPCRouter(WalletSpec);
 
 export const WalletHandler = pub.router({
 	get: priv.get.handler(async ({ context }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.wallet.get({
-				userId: context.user.id,
-				tx,
-			});
+		const res = await context.repo.wallet.getByUserId(context.user.id);
 
-			return {
-				status: 200,
-				body: { message: "Get wallet success", data: res },
-			};
-		});
+		return {
+			status: 200,
+			body: { message: "Get wallet success", data: res },
+		};
 	}),
 	getMonthlySummary: priv.getMonthlySummary.handler(
 		async ({ context, input: { query } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				const res = await context.repo.wallet.getMonthlySummary({
-					...query,
-					userId: context.user.id,
-					tx,
-				});
-
-				return {
-					status: 200,
-					body: { message: "Get monthly summary success", data: res },
-				};
-			});
-		},
-	),
-	transactions: priv.transactions.handler(async ({ context }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.wallet.getTransactions({
+			const res = await context.repo.wallet.getMonthlySummary({
+				...query,
 				userId: context.user.id,
-				tx,
 			});
 
 			return {
 				status: 200,
-				body: { message: "Get wallet success", data: res },
+				body: { message: "Get monthly summary success", data: res },
 			};
-		});
-	}),
+		},
+	),
 	topUp: priv.topUp.handler(async ({ context, input: { body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.wallet.topUp({
-				...body,
-				userId: context.user.id,
-				tx,
-			});
+			const res = await context.repo.payment.charge(
+				{
+					...body,
+					type: "topup",
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
 			return {
 				status: 200,
@@ -62,11 +44,13 @@ export const WalletHandler = pub.router({
 	}),
 	pay: priv.pay.handler(async ({ context, input: { body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.wallet.pay({
-				...body,
-				userId: context.user.id,
-				tx,
-			});
+			const res = await context.repo.wallet.pay(
+				{
+					...body,
+					userId: context.user.id,
+				},
+				{ tx },
+			);
 
 			return {
 				status: 200,
@@ -74,22 +58,7 @@ export const WalletHandler = pub.router({
 			};
 		});
 	}),
-	transfer: priv.transfer.handler(async ({ context, input: { body } }) => {
+	transfer: priv.transfer.handler(async () => {
 		throw new Error("Unimplemented");
 	}),
-	webhookMidtrans: pub.webhookMidtrans.handler(
-		async ({ context, input: { body } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				await context.repo.wallet.handleWebhookMidtrans({
-					body,
-					tx,
-				});
-
-				return {
-					status: 200,
-					body: { message: "Get wallet success", data: null },
-				};
-			});
-		},
-	),
 });
