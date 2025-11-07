@@ -1,5 +1,5 @@
 export * from "./order/order-ws";
-export * from "./wallet/wallet-ws";
+export * from "./payment/payment-ws";
 
 import type { Hono } from "hono";
 import type { HonoContext } from "@/core/interface";
@@ -9,15 +9,15 @@ import {
 } from "@/core/middlewares/auth";
 import { honoWebsocketHeader } from "@/core/middlewares/header";
 import { withQueryParams } from "@/utils";
-import type { OrderRoom } from "./order/order-ws";
-import type { WalletRoom } from "./wallet/wallet-ws";
+import type { ListingRoom, OrderRoom } from "./order/order-ws";
+import type { PaymentRoom } from "./payment/payment-ws";
 
 export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 	app
 		.use(honoAuthMiddleware)
 		.use(honoRequireAuthMiddleware)
 		.use(honoWebsocketHeader)
-		.get("/ws/order-track/:id", async (c) => {
+		.get("/ws/order/:id", async (c) => {
 			const { id } = c.req.param();
 			const stub: DurableObjectStub<OrderRoom> = c.env.ORDER_ROOM.getByName(id);
 
@@ -28,10 +28,10 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 
 			return await stub.fetch(req);
 		})
-		.get("/ws/wallet/:id", async (c) => {
+		.get("/ws/payment/:id", async (c) => {
 			const { id } = c.req.param();
-			const stub: DurableObjectStub<WalletRoom> =
-				c.env.WALLET_ROOM.getByName(id);
+			const stub: DurableObjectStub<PaymentRoom> =
+				c.env.PAYMENT_ROOM.getByName(id);
 
 			const userId = c.var.session?.user.id ?? c.req.query()["user-id"];
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
@@ -40,10 +40,9 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 
 			return await stub.fetch(req);
 		})
-		.get("/ws/transaction/:id", async (c) => {})
 		.get("/ws/driver-pool", async (c) => {
-			const stub: DurableObjectStub<WalletRoom> =
-				c.env.WALLET_ROOM.getByName("driver-pool");
+			const stub: DurableObjectStub<ListingRoom> =
+				c.env.LISTING_ROOM.getByName("driver-pool");
 
 			const userId = c.var.session?.user.id ?? c.req.query()["user-id"];
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
