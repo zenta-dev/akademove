@@ -47,7 +47,10 @@ enum Routes {
   /// Merchant Routes
   ///
   merchantHome('/merchant/home'),
+  merchantSalesReportDetail('/merchant/sales/report/detail'),
+  merchantCommissionReportDetail('/merchant/commission/report/detail'),
   merchantOrder('/merchant/order'),
+  merchantOrderDetail('/merchant/order/detail'),
   merchantMenu('/merchant/menu'),
   merchantProfile('/merchant/profile');
 
@@ -324,6 +327,18 @@ final router = GoRouter(
               path: Routes.merchantHome.path,
               builder: (context, state) => const MerchantHomeScreen(),
             ),
+            GoRoute(
+              name: Routes.merchantSalesReportDetail.name,
+              path: Routes.merchantSalesReportDetail.path,
+              builder: (context, state) =>
+                  const MerchantSalesReportDetailScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantCommissionReportDetail.name,
+              path: Routes.merchantCommissionReportDetail.path,
+              builder: (context, state) =>
+                  const MerchantCommissionReportDetailScreen(),
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -335,6 +350,11 @@ final router = GoRouter(
                 value: BlocProvider.of<MerchantOrderCubit>(context)..init(),
                 child: const MerchantOrderScreen(),
               ),
+            ),
+            GoRoute(
+              name: Routes.merchantOrderDetail.name,
+              path: Routes.merchantOrderDetail.path,
+              builder: (context, state) => const MerchantOrderDetailScreen(),
             ),
           ],
         ),
