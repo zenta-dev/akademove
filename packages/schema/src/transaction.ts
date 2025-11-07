@@ -18,17 +18,32 @@ export const TransactionSchema = z
 		referenceId: z.string().optional(),
 		metadata: z.any().optional(),
 		createdAt: DateSchema,
+		updatedAt: DateSchema,
 	})
 	.meta({
 		title: "WalletTransaction",
 	});
 
-export type Transaction = z.infer<typeof TransactionSchema>;
+export const InsertTransactionSchema = TransactionSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+}).meta({ title: "InsertTransaction" });
+
+export const UpdateTransactionSchema = InsertTransactionSchema.partial().meta({
+	title: "UpdateTransaction",
+});
+
 export type TransactionType = z.infer<typeof TransactionTypeSchema>;
 export type TransactionStatus = z.infer<typeof TransactionStatusSchema>;
+export type Transaction = z.infer<typeof TransactionSchema>;
+export type InsertTransaction = z.infer<typeof InsertTransactionSchema>;
+export type UpdateTransaction = z.infer<typeof UpdateTransactionSchema>;
 
 export const TransactionSchemaRegistries = {
 	TransactionType: { schema: TransactionTypeSchema, strategy: "output" },
 	TransactionStatus: { schema: TransactionStatusSchema, strategy: "output" },
 	Transaction: { schema: TransactionSchema, strategy: "output" },
+	InsertTransaction: { schema: InsertTransactionSchema, strategy: "input" },
+	UpdateTransaction: { schema: UpdateTransactionSchema, strategy: "input" },
 } satisfies SchemaRegistries;
