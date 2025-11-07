@@ -30,15 +30,16 @@ export const WalletHandler = pub.router({
 			const res = await context.repo.payment.charge(
 				{
 					...body,
-					type: "topup",
+					transactionType: "topup",
 					userId: context.user.id,
+					orderType: "top-up",
 				},
 				{ tx },
 			);
 
 			return {
 				status: 200,
-				body: { message: "Get wallet success", data: res },
+				body: { message: "Get wallet success", data: res.payment },
 			};
 		});
 	}),

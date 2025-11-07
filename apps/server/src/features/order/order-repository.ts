@@ -1,4 +1,3 @@
-import type { ChargeResponse } from "@erhahahaa/midtrans-client-typescript";
 import {
 	type ConfigurationValue,
 	DeliveryPricingConfigurationSchema,
@@ -29,32 +28,26 @@ import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
-import type { PaymentService } from "@/core/services/payment";
 import type { OrderDatabase } from "@/core/tables/order";
 import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
-import { PaymentRepository } from "../payment/payment-repository";
-import { TransactionRepository } from "../transaction/transaction-repository";
-import type { WalletRepository } from "../wallet/wallet-repository";
+import type { PaymentRepository } from "../payment/payment-repository";
 
 export class OrderRepository extends BaseRepository {
 	readonly #db: DatabaseService;
 	readonly #map: MapService;
-	readonly #payment: PaymentService;
-	readonly #wallet: WalletRepository;
+	readonly #paymentRepo: PaymentRepository;
 
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
 		map: MapService,
-		payment: PaymentService,
-		wallet: WalletRepository,
+		paymentRepo: PaymentRepository,
 	) {
 		super(FEATURE_TAGS.ORDER, kv);
 		this.#db = db;
 		this.#map = map;
-		this.#payment = payment;
-		this.#wallet = wallet;
+		this.#paymentRepo = paymentRepo;
 	}
 
 	static composeEntity(
@@ -329,13 +322,12 @@ export class OrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<PlaceOrderResponse> {
 		try {
-			const [estimate, user, wallet] = await Promise.all([
+			const [estimate, user] = await Promise.all([
 				this.estimate(params, opts),
 				opts.tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, params.userId),
 				}),
-				this.#wallet.getByUserId(params.userId, opts),
 			]);
 
 			if (!user) {
@@ -344,95 +336,44 @@ export class OrderRepository extends BaseRepository {
 				});
 			}
 
-			const EXPIRY_MINUTES = 15;
-			const expiresAt = new Date(Date.now() + EXPIRY_MINUTES * 60 * 1000);
-
 			const safeTotalCost = toStringNumberSafe(estimate.totalCost);
 
-			const [[createOrder], [createTransaction]] = await Promise.all([
-				opts.tx
-					.insert(tables.order)
-					.values({
-						id: v7(),
-						userId: params.userId,
-						type: params.type,
-						note: params.note,
-						pickupLocation: params.pickupLocation,
-						dropoffLocation: params.dropoffLocation,
-						distanceKm: estimate.distanceKm,
-						basePrice: toStringNumberSafe(estimate.config.baseFare),
-						totalPrice: safeTotalCost,
-						requestedAt: new Date(),
-						createdAt: new Date(),
-						updatedAt: new Date(),
-					})
-					.returning({ id: tables.order.id }),
-				opts.tx
-					.insert(tables.transaction)
-					.values({
-						id: v7(),
-						walletId: wallet.id,
-						type: "payment",
-						amount: safeTotalCost,
-						status: "pending",
-						description: `Top-up ${params.payment.method}`,
-					})
-					.returning(),
-			]);
-
-			const paymentResponse = (await this.#payment.charge({
-				externalId: createOrder.id,
-				amount: estimate.totalCost,
-				customer: {
-					...user,
-					phone: `${user?.phone.countryCode}-${user?.phone.number}`,
-				},
-				expiry: { duration: EXPIRY_MINUTES, unit: "minute" },
-				method: params.payment.method,
-				metadata: { type: `${params.type.toUpperCase()}-HAILING` },
-			})) as ChargeResponse;
-
-			const actions = paymentResponse.actions as
-				| {
-						name: string;
-						method: string;
-						url: string;
-				  }[]
-				| undefined;
-			const action = actions?.find((val) => val.name === "generate-qr-code");
-
-			const [paymentResult] = await opts.tx
-				.insert(tables.payment)
+			const [createOrder] = await opts.tx
+				.insert(tables.order)
 				.values({
 					id: v7(),
-					transactionId: createTransaction.id,
-					provider: params.payment.provider,
-					method: params.payment.method,
-					amount: safeTotalCost,
-					status: "pending",
-					externalId: createOrder.id,
-					expiresAt,
-					response: paymentResponse,
-					paymentUrl: action?.url,
-					payload: {
-						method: params.payment.method,
-						amount: estimate.totalCost,
-						userId: params.userId,
-						provider: params.payment.provider,
-					},
+					userId: params.userId,
+					type: params.type,
+					note: params.note,
+					pickupLocation: params.pickupLocation,
+					dropoffLocation: params.dropoffLocation,
+					distanceKm: estimate.distanceKm,
+					basePrice: toStringNumberSafe(estimate.config.baseFare),
+					totalPrice: safeTotalCost,
+					requestedAt: new Date(),
+					createdAt: new Date(),
+					updatedAt: new Date(),
 				})
-				.returning();
+				.returning({ id: tables.order.id });
+
+			const { transaction, payment } = await this.#paymentRepo.charge(
+				{
+					transactionType: "payment",
+					amount: estimate.totalCost,
+					method: params.payment.method,
+					provider: params.payment.provider,
+					userId: params.userId,
+					orderType: params.type,
+				},
+				opts,
+			);
 
 			const order = await this.#getFromDB(createOrder.id, opts);
 			if (!order) throw new RepositoryError("Failed to place order");
-
-			const payment = PaymentRepository.composeEntity(paymentResult);
 			await this.setCache(order.id, order, {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			const transaction =
-				TransactionRepository.composeEntity(createTransaction);
 			const result = { order, payment, transaction };
 
 			return result;
