@@ -57,7 +57,9 @@ export const UpdateConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
 	updatedById: true,
 	updatedAt: true,
-}).meta({ title: "UpdateConfigurationRequest" });
+})
+	.partial()
+	.meta({ title: "UpdateConfigurationRequest" });
 
 export type BasePricingConfiguration = z.infer<
 	typeof _BasePricingConfigurationSchema
