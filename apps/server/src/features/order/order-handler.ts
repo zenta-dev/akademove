@@ -15,12 +15,12 @@ export const OrderHandler = priv.router({
 				if (role === "merchant") {
 					const mine = await context.repo.merchant.main.getByUserId(id);
 					const result = await context.repo.order.list(
-						{ tx },
 						{
 							...query,
 							id: mine.id,
 							role: role,
 						},
+						{ tx },
 					);
 					return {
 						status: 200,
@@ -33,12 +33,12 @@ export const OrderHandler = priv.router({
 				if (role === "driver") {
 					const mine = await context.repo.merchant.main.getByUserId(id);
 					const result = await context.repo.order.list(
-						{ tx },
 						{
 							...query,
 							id: mine.id,
 							role: role,
 						},
+						{ tx },
 					);
 					return {
 						status: 200,
@@ -49,12 +49,12 @@ export const OrderHandler = priv.router({
 					};
 				}
 				const result = await context.repo.order.list(
-					{ tx },
 					{
 						...query,
 						id,
 						role,
 					},
+					{ tx },
 				);
 				return {
 					status: 200,
@@ -67,61 +67,61 @@ export const OrderHandler = priv.router({
 		}),
 	estimate: priv.estimate.handler(async ({ context, input: { query } }) => {
 		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.order.estimate({
-				...query,
-				pickupLocation: {
-					x: query.pickupLocation_x,
-					y: query.pickupLocation_y,
+			const res = await context.repo.order.estimate(
+				{
+					...query,
+					pickupLocation: {
+						x: query.pickupLocation_x,
+						y: query.pickupLocation_y,
+					},
+					dropoffLocation: {
+						x: query.dropoffLocation_x,
+						y: query.dropoffLocation_y,
+					},
 				},
-				dropoffLocation: {
-					x: query.dropoffLocation_x,
-					y: query.dropoffLocation_y,
-				},
-				tx,
-			});
+				{ tx },
+			);
 			return {
 				status: 200,
 				body: { message: "Successfully estimate pricing", data: res },
-			};
+			} as const;
 		});
 	}),
 	get: priv.get
 		.use(hasPermission({ order: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.order.get({ ...params, tx });
+			const result = await context.repo.order.get(params.id);
 
-				return {
-					status: 200,
-					body: { message: "Successfully retrieved order data", data: result },
-				};
-			});
+			return {
+				status: 200,
+				body: { message: "Successfully retrieved order data", data: result },
+			};
 		}),
 	placeOrder: priv.placeOrder
 		.use(hasPermission({ order: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.order.placeOrder({
-					...body,
-					userId: context.user.id,
-					tx,
-				});
+				const result = await context.repo.order.placeOrder(
+					{
+						...body,
+						userId: context.user.id,
+					},
+					{
+						tx,
+					},
+				);
 
 				return {
 					status: 200,
 					body: { message: "Successfully place order", data: result },
-				};
+				} as const;
 			});
 		}),
 	update: priv.update
 		.use(hasPermission({ order: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.order.update({
-					id: params.id,
-					item: body,
-					tx,
-				});
+				const result = await context.repo.order.update(params.id, body, { tx });
 
 				return {
 					status: 200,

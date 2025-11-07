@@ -1,16 +1,14 @@
 // This file infers types for the cloudflare:workers environment from your Alchemy Worker.
 // @see https://alchemy.run/concepts/bindings/#type-safe-bindings
 
-import type { WalletRoom } from "@/features/wallet/wallet-ws";
 import type { ServerEnv } from "../../alchemy.run";
-import type { ListingRoom, OrderRoom } from "@/features/order/order-ws";
-import type { PlaygroundRoom } from "./src";
+import type { PaymentRoom, ListingRoom, OrderRoom } from "./src";
 
 export interface CloudflareEnv extends ServerEnv {
 	ORDER_ROOM: DurableObjectNamespace<OrderRoom>;
-	WALLET_ROOM: DurableObjectNamespace<WalletRoom>;
+	// WALLET_ROOM: DurableObjectNamespace<WalletRoom>;
 	LISTING_ROOM: DurableObjectNamespace<ListingRoom>;
-	PLAYGROUND_ROOM: DurableObjectNamespace<PlaygroundRoom>;
+	PAYMENT_ROOM: DurableObjectNamespace<PaymentRoom>;
 }
 
 declare global {

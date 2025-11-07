@@ -32,7 +32,10 @@ export const ConfigurationHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ configurations: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.configuration.update(params.key, body);
+			const result = await context.repo.configuration.update(params.key, {
+				...body,
+				userId: context.user.id,
+			});
 			return {
 				status: 200,
 				body: { message: "Configuration updated successfully", data: result },

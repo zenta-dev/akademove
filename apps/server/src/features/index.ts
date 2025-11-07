@@ -13,12 +13,16 @@ import { MerchantHandler } from "./merchant/merchant-handler";
 import { MerchantSpec } from "./merchant/merchant-spec";
 import { OrderHandler } from "./order/order-handler";
 import { OrderSpec } from "./order/order-spec";
+import { PaymentHandler } from "./payment/payment-handler";
+import { PaymentSpec } from "./payment/payment-spec";
 import { ReportHandler } from "./report/report-handler";
 import { ReportSpec } from "./report/report-spec";
 import { ReviewHandler } from "./review/review-handler";
 import { ReviewSpec } from "./review/review-spec";
 import { DriverScheduleHandler } from "./schedule/schedule-handler";
 import { DriverScheduleSpec } from "./schedule/schedule-spec";
+import { TransactionHandler } from "./transaction/transaction-handler";
+import { TransactionSpec } from "./transaction/transaction-spec";
 import { UserHandler } from "./user/user-handler";
 import { UserSpec } from "./user/user-spec";
 import { WalletHandler } from "./wallet/wallet-handler";
@@ -28,12 +32,14 @@ export const FetchServerSpec = oc.router({
 	auth: oc.prefix("/auth").router(AuthSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
+	driverSchedule: oc.prefix("/driver/schedules").router(DriverScheduleSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
 	order: oc.prefix("/orders").router(OrderSpec),
+	payment: oc.prefix("/payments").router(PaymentSpec),
 	coupon: oc.prefix("/coupons").router(CouponSpec),
 	report: oc.prefix("/reports").router(ReportSpec),
 	review: oc.prefix("/reviews").router(ReviewSpec),
-	driverSchedule: oc.prefix("/driver/schedules").router(DriverScheduleSpec),
+	transaction: oc.prefix("/transactions").router(TransactionSpec),
 	user: oc.prefix("/users").router(UserSpec),
 	wallet: oc.prefix("/wallets").router(WalletSpec),
 });
@@ -43,12 +49,14 @@ export const FetchServerRouter = os.router({
 	auth: AuthHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
+	driverSchedule: DriverScheduleHandler,
 	merchant: MerchantHandler,
 	order: OrderHandler,
+	payment: PaymentHandler,
 	coupon: CouponHandler,
 	report: ReportHandler,
 	review: ReviewHandler,
-	driverSchedule: DriverScheduleHandler,
+	transaction: TransactionHandler,
 	user: UserHandler,
 	wallet: WalletHandler,
 });
