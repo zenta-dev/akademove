@@ -5,8 +5,9 @@ import { RepositoryError } from "./error";
 import type { PartialWithTx } from "./interface";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
 
+type UserId = string;
 export class BaseDurableObject extends DurableObject {
-	protected sessions: Map<string, WebSocket>; // key = userId
+	protected sessions: Map<UserId, WebSocket>; // key = userId
 
 	constructor(ctx: DurableObjectState, env: Env) {
 		super(ctx, env);
