@@ -1,6 +1,5 @@
 import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
 import type { ClientAgent } from "@repo/schema/common";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
@@ -24,20 +23,6 @@ import type { MapService } from "./services/map";
 import type { PaymentService } from "./services/payment";
 import type { RBACService } from "./services/rbac";
 import type { StorageService } from "./services/storage";
-
-export interface GetOptions {
-	fromCache?: boolean;
-}
-export interface GetAllOptions extends GetOptions, UnifiedPaginationQuery {}
-
-export abstract class BaseRepository<T> {
-	// Database specifix
-	abstract getAll(opts?: GetAllOptions, ...args: unknown[]): Promise<T[]>;
-	abstract getById(id: string, opts?: GetOptions): Promise<T | undefined>;
-	abstract create(item: unknown): Promise<T>;
-	abstract update(id: string, item: unknown, ...args: unknown[]): Promise<T>;
-	abstract delete(id: string): Promise<void>;
-}
 
 export interface ServiceContext {
 	db: DatabaseService;
@@ -104,6 +89,7 @@ export interface ORPCContext extends ResponseHeadersPluginContext {
 
 export type WithTx = { tx: DatabaseTransaction };
 export type WithUserId = { userId: string };
+export type PartialWithTx = Partial<WithTx>;
 export type WebsocketAttachment = {
 	id: string;
 	[key: string]: string;
