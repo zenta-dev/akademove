@@ -1,7 +1,9 @@
+import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class MerchantHomeScreen extends StatelessWidget {
@@ -161,7 +163,9 @@ class MerchantHomeScreen extends StatelessWidget {
                       padding: (context, states, value) =>
                           EdgeInsetsGeometry.zero,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pushNamed(Routes.merchantSalesReportDetail.name);
+                    },
                     child: Card(
                       child: Column(
                         spacing: 4.h,
@@ -207,7 +211,11 @@ class MerchantHomeScreen extends StatelessWidget {
                       padding: (context, states, value) =>
                           EdgeInsetsGeometry.zero,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pushNamed(
+                        Routes.merchantCommissionReportDetail.name,
+                      );
+                    },
                     child: Card(
                       child: Column(
                         spacing: 4.h,
