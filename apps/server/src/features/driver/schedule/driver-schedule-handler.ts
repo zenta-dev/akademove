@@ -1,6 +1,6 @@
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
-import { DriverScheduleSpec } from "./schedule-spec";
+import { DriverScheduleSpec } from "./driver-schedule-spec";
 
 const { priv } = createORPCRouter(DriverScheduleSpec);
 

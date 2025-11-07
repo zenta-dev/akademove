@@ -15,9 +15,9 @@ import {
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
-import type { NearbyQuery } from "./driver-spec";
+import type { NearbyQuery } from "./driver-main-spec";
 
-export class DriverRepository extends BaseRepository {
+export class DriverMainRepository extends BaseRepository {
 	readonly #db: DatabaseService;
 	readonly #storage: StorageService;
 	readonly #bucket: StorageBucket = "driver";
@@ -85,7 +85,7 @@ export class DriverRepository extends BaseRepository {
 		});
 
 		return result
-			? await DriverRepository.composeEntity(result, this.#storage)
+			? await DriverMainRepository.composeEntity(result, this.#storage)
 			: undefined;
 	}
 
@@ -115,7 +115,7 @@ export class DriverRepository extends BaseRepository {
 
 			const result = await stmt;
 			return await Promise.all(
-				result.map((r) => DriverRepository.composeEntity(r, this.#storage)),
+				result.map((r) => DriverMainRepository.composeEntity(r, this.#storage)),
 			);
 		} catch (error) {
 			throw this.handleError(error, "list");
@@ -155,7 +155,7 @@ export class DriverRepository extends BaseRepository {
 
 			return await Promise.all(
 				result.map((r) =>
-					DriverRepository.composeEntity(
+					DriverMainRepository.composeEntity(
 						{ ...r.driver, user: { name: r.userName } },
 						this.#storage,
 					),
@@ -190,7 +190,7 @@ export class DriverRepository extends BaseRepository {
 
 			if (!result) throw new RepositoryError("Failed to get merchant from DB");
 
-			return await DriverRepository.composeEntity(result, this.#storage);
+			return await DriverMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {
 			throw this.handleError(error, "get by user id");
 		}
@@ -273,7 +273,7 @@ export class DriverRepository extends BaseRepository {
 				}),
 			]);
 
-			const result = await DriverRepository.composeEntity(
+			const result = await DriverMainRepository.composeEntity(
 				{ ...operation, user },
 				this.#storage,
 			);
@@ -335,7 +335,7 @@ export class DriverRepository extends BaseRepository {
 				...uploads,
 			]);
 
-			const result = await DriverRepository.composeEntity(
+			const result = await DriverMainRepository.composeEntity(
 				{ ...operation, user },
 				this.#storage,
 			);

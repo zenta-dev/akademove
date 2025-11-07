@@ -19,8 +19,6 @@ import { ReportHandler } from "./report/report-handler";
 import { ReportSpec } from "./report/report-spec";
 import { ReviewHandler } from "./review/review-handler";
 import { ReviewSpec } from "./review/review-spec";
-import { DriverScheduleHandler } from "./schedule/schedule-handler";
-import { DriverScheduleSpec } from "./schedule/schedule-spec";
 import { TransactionHandler } from "./transaction/transaction-handler";
 import { TransactionSpec } from "./transaction/transaction-spec";
 import { UserHandler } from "./user/user-handler";
@@ -32,7 +30,6 @@ export const FetchServerSpec = oc.router({
 	auth: oc.prefix("/auth").router(AuthSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
-	driverSchedule: oc.prefix("/driver/schedules").router(DriverScheduleSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
 	order: oc.prefix("/orders").router(OrderSpec),
 	payment: oc.prefix("/payments").router(PaymentSpec),
@@ -49,7 +46,6 @@ export const FetchServerRouter = os.router({
 	auth: AuthHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
-	driverSchedule: DriverScheduleHandler,
 	merchant: MerchantHandler,
 	order: OrderHandler,
 	payment: PaymentHandler,
