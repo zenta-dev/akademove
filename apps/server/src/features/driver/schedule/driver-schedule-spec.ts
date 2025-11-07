@@ -17,7 +17,12 @@ export const DriverScheduleSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(
+			z.object({
+				params: z.object({ driverId: z.string() }),
+				query: UnifiedPaginationQuerySchema,
+			}),
+		)
 		.output(
 			createSuccesSchema(
 				z.array(DriverScheduleSchema),
@@ -32,7 +37,11 @@ export const DriverScheduleSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ driverId: z.string(), id: z.string() }),
+			}),
+		)
 		.output(
 			createSuccesSchema(
 				DriverScheduleSchema,
@@ -47,7 +56,12 @@ export const DriverScheduleSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ body: InsertDriverScheduleSchema }))
+		.input(
+			z.object({
+				params: z.object({ driverId: z.string() }),
+				body: InsertDriverScheduleSchema,
+			}),
+		)
 		.output(
 			createSuccesSchema(DriverScheduleSchema, "Schedule created successfully"),
 		),
@@ -61,7 +75,7 @@ export const DriverScheduleSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string() }),
+				params: z.object({ driverId: z.string(), id: z.string() }),
 				body: UpdateDriverScheduleSchema,
 			}),
 		)
@@ -76,6 +90,10 @@ export const DriverScheduleSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.input(
+			z.object({
+				params: z.object({ driverId: z.string(), id: z.string() }),
+			}),
+		)
 		.output(createSuccesSchema(z.null(), "Schedule deleted successfully")),
 };
