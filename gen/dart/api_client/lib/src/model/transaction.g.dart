@@ -29,6 +29,8 @@ abstract class _$TransactionCWProxy {
 
   Transaction createdAt(DateTime createdAt);
 
+  Transaction updatedAt(DateTime updatedAt);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Transaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -47,6 +49,7 @@ abstract class _$TransactionCWProxy {
     String? referenceId,
     Object? metadata,
     DateTime createdAt,
+    DateTime updatedAt,
   });
 }
 
@@ -94,6 +97,9 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
   Transaction createdAt(DateTime createdAt) => this(createdAt: createdAt);
 
   @override
+  Transaction updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+
+  @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Transaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -112,6 +118,7 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
     Object? referenceId = const $CopyWithPlaceholder(),
     Object? metadata = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
+    Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Transaction(
       id: id == const $CopyWithPlaceholder()
@@ -158,6 +165,10 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
+      updatedAt: updatedAt == const $CopyWithPlaceholder()
+          ? _value.updatedAt
+          // ignore: cast_nullable_to_non_nullable
+          : updatedAt as DateTime,
     );
   }
 }
@@ -172,43 +183,43 @@ extension $TransactionCopyWith on Transaction {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Transaction _$TransactionFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Transaction', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'walletId',
-          'type',
-          'amount',
-          'status',
-          'createdAt',
-        ],
-      );
-      final val = Transaction(
-        id: $checkedConvert('id', (v) => v as String),
-        walletId: $checkedConvert('walletId', (v) => v as String),
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecode(_$TransactionTypeEnumMap, v),
-        ),
-        amount: $checkedConvert('amount', (v) => v as num),
-        balanceBefore: $checkedConvert('balanceBefore', (v) => v as num?),
-        balanceAfter: $checkedConvert('balanceAfter', (v) => v as num?),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecode(_$TransactionStatusEnumMap, v),
-        ),
-        description: $checkedConvert('description', (v) => v as String?),
-        referenceId: $checkedConvert('referenceId', (v) => v as String?),
-        metadata: $checkedConvert('metadata', (v) => v),
-        createdAt: $checkedConvert(
-          'createdAt',
-          (v) => DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    });
+Transaction _$TransactionFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Transaction', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'walletId',
+      'type',
+      'amount',
+      'status',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
+  final val = Transaction(
+    id: $checkedConvert('id', (v) => v as String),
+    walletId: $checkedConvert('walletId', (v) => v as String),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecode(_$TransactionTypeEnumMap, v),
+    ),
+    amount: $checkedConvert('amount', (v) => v as num),
+    balanceBefore: $checkedConvert('balanceBefore', (v) => v as num?),
+    balanceAfter: $checkedConvert('balanceAfter', (v) => v as num?),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecode(_$TransactionStatusEnumMap, v),
+    ),
+    description: $checkedConvert('description', (v) => v as String?),
+    referenceId: $checkedConvert('referenceId', (v) => v as String?),
+    metadata: $checkedConvert('metadata', (v) => v),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     <String, dynamic>{
@@ -223,6 +234,7 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'referenceId': ?instance.referenceId,
       'metadata': ?instance.metadata,
       'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };
 
 const _$TransactionTypeEnumMap = {

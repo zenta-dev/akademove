@@ -1,66 +1,67 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ws_envelope.dart';
+part of 'ws_order_envelope.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$WSEnvelopeCWProxy {
-  WSEnvelope type(WSEnvelopeType type);
+abstract class _$WSOrderEnvelopeCWProxy {
+  WSOrderEnvelope type(WSEnvelopeType type);
 
-  WSEnvelope from(WSEnvelopeSender from);
+  WSOrderEnvelope from(WSEnvelopeSender from);
 
-  WSEnvelope to(WSEnvelopeSender to);
+  WSOrderEnvelope to(WSEnvelopeSender to);
 
-  WSEnvelope payload(Object? payload);
+  WSOrderEnvelope payload(WSOrderEnvelopePayload payload);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// WSEnvelope(...).copyWith(id: 12, name: "My name")
+  /// WSOrderEnvelope(...).copyWith(id: 12, name: "My name")
   /// ````
-  WSEnvelope call({
+  WSOrderEnvelope call({
     WSEnvelopeType type,
     WSEnvelopeSender from,
     WSEnvelopeSender to,
-    Object? payload,
+    WSOrderEnvelopePayload payload,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSEnvelope.copyWith.fieldName(...)`
-class _$WSEnvelopeCWProxyImpl implements _$WSEnvelopeCWProxy {
-  const _$WSEnvelopeCWProxyImpl(this._value);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSOrderEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSOrderEnvelope.copyWith.fieldName(...)`
+class _$WSOrderEnvelopeCWProxyImpl implements _$WSOrderEnvelopeCWProxy {
+  const _$WSOrderEnvelopeCWProxyImpl(this._value);
 
-  final WSEnvelope _value;
-
-  @override
-  WSEnvelope type(WSEnvelopeType type) => this(type: type);
+  final WSOrderEnvelope _value;
 
   @override
-  WSEnvelope from(WSEnvelopeSender from) => this(from: from);
+  WSOrderEnvelope type(WSEnvelopeType type) => this(type: type);
 
   @override
-  WSEnvelope to(WSEnvelopeSender to) => this(to: to);
+  WSOrderEnvelope from(WSEnvelopeSender from) => this(from: from);
 
   @override
-  WSEnvelope payload(Object? payload) => this(payload: payload);
+  WSOrderEnvelope to(WSEnvelopeSender to) => this(to: to);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  WSOrderEnvelope payload(WSOrderEnvelopePayload payload) =>
+      this(payload: payload);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// WSEnvelope(...).copyWith(id: 12, name: "My name")
+  /// WSOrderEnvelope(...).copyWith(id: 12, name: "My name")
   /// ````
-  WSEnvelope call({
+  WSOrderEnvelope call({
     Object? type = const $CopyWithPlaceholder(),
     Object? from = const $CopyWithPlaceholder(),
     Object? to = const $CopyWithPlaceholder(),
     Object? payload = const $CopyWithPlaceholder(),
   }) {
-    return WSEnvelope(
+    return WSOrderEnvelope(
       type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
@@ -76,25 +77,25 @@ class _$WSEnvelopeCWProxyImpl implements _$WSEnvelopeCWProxy {
       payload: payload == const $CopyWithPlaceholder()
           ? _value.payload
           // ignore: cast_nullable_to_non_nullable
-          : payload as Object?,
+          : payload as WSOrderEnvelopePayload,
     );
   }
 }
 
-extension $WSEnvelopeCopyWith on WSEnvelope {
-  /// Returns a callable class that can be used as follows: `instanceOfWSEnvelope.copyWith(...)` or like so:`instanceOfWSEnvelope.copyWith.fieldName(...)`.
+extension $WSOrderEnvelopeCopyWith on WSOrderEnvelope {
+  /// Returns a callable class that can be used as follows: `instanceOfWSOrderEnvelope.copyWith(...)` or like so:`instanceOfWSOrderEnvelope.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$WSEnvelopeCWProxy get copyWith => _$WSEnvelopeCWProxyImpl(this);
+  _$WSOrderEnvelopeCWProxy get copyWith => _$WSOrderEnvelopeCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WSEnvelope _$WSEnvelopeFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('WSEnvelope', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['type', 'from', 'to']);
-      final val = WSEnvelope(
+WSOrderEnvelope _$WSOrderEnvelopeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WSOrderEnvelope', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['type', 'from', 'to', 'payload']);
+      final val = WSOrderEnvelope(
         type: $checkedConvert(
           'type',
           (v) => $enumDecode(_$WSEnvelopeTypeEnumMap, v),
@@ -107,17 +108,20 @@ WSEnvelope _$WSEnvelopeFromJson(Map<String, dynamic> json) =>
           'to',
           (v) => $enumDecode(_$WSEnvelopeSenderEnumMap, v),
         ),
-        payload: $checkedConvert('payload', (v) => v),
+        payload: $checkedConvert(
+          'payload',
+          (v) => WSOrderEnvelopePayload.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$WSEnvelopeToJson(WSEnvelope instance) =>
+Map<String, dynamic> _$WSOrderEnvelopeToJson(WSOrderEnvelope instance) =>
     <String, dynamic>{
       'type': _$WSEnvelopeTypeEnumMap[instance.type]!,
       'from': _$WSEnvelopeSenderEnumMap[instance.from]!,
       'to': _$WSEnvelopeSenderEnumMap[instance.to]!,
-      'payload': ?instance.payload,
+      'payload': instance.payload.toJson(),
     };
 
 const _$WSEnvelopeTypeEnumMap = {

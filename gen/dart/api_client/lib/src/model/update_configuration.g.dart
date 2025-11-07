@@ -7,7 +7,7 @@ part of 'update_configuration.dart';
 // **************************************************************************
 
 abstract class _$UpdateConfigurationCWProxy {
-  UpdateConfiguration name(String name);
+  UpdateConfiguration name(String? name);
 
   UpdateConfiguration value(Object? value);
 
@@ -19,7 +19,7 @@ abstract class _$UpdateConfigurationCWProxy {
   /// ```dart
   /// UpdateConfiguration(...).copyWith(id: 12, name: "My name")
   /// ````
-  UpdateConfiguration call({String name, Object? value, String? description});
+  UpdateConfiguration call({String? name, Object? value, String? description});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateConfiguration.copyWith.fieldName(...)`
@@ -29,7 +29,7 @@ class _$UpdateConfigurationCWProxyImpl implements _$UpdateConfigurationCWProxy {
   final UpdateConfiguration _value;
 
   @override
-  UpdateConfiguration name(String name) => this(name: name);
+  UpdateConfiguration name(String? name) => this(name: name);
 
   @override
   UpdateConfiguration value(Object? value) => this(value: value);
@@ -54,7 +54,7 @@ class _$UpdateConfigurationCWProxyImpl implements _$UpdateConfigurationCWProxy {
       name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String,
+          : name as String?,
       value: value == const $CopyWithPlaceholder()
           ? _value.value
           // ignore: cast_nullable_to_non_nullable
@@ -80,9 +80,8 @@ extension $UpdateConfigurationCopyWith on UpdateConfiguration {
 
 UpdateConfiguration _$UpdateConfigurationFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateConfiguration', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['name']);
       final val = UpdateConfiguration(
-        name: $checkedConvert('name', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String?),
         value: $checkedConvert('value', (v) => v),
         description: $checkedConvert('description', (v) => v as String?),
       );
@@ -92,7 +91,7 @@ UpdateConfiguration _$UpdateConfigurationFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UpdateConfigurationToJson(
   UpdateConfiguration instance,
 ) => <String, dynamic>{
-  'name': instance.name,
+  'name': ?instance.name,
   'value': ?instance.value,
   'description': ?instance.description,
 };

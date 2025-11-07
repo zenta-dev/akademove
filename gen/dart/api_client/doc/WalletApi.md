@@ -13,9 +13,7 @@ Method | HTTP request | Description
 [**walletGetMonthlySummary**](WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [**walletPay**](WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [**walletTopUp**](WalletApi.md#wallettopup) | **POST** /wallets/topup | 
-[**walletTransactions**](WalletApi.md#wallettransactions) | **GET** /wallets/transactions | 
 [**walletTransfer**](WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
-[**walletWebhookMidtrans**](WalletApi.md#walletwebhookmidtrans) | **POST** /wallets/webhook/midtrans | 
 
 
 # **walletGet**
@@ -180,43 +178,6 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **walletTransactions**
-> WalletTransactions200Response walletTransactions()
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getWalletApi();
-
-try {
-    final response = api.walletTransactions();
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling WalletApi->walletTransactions: $e\n');
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**WalletTransactions200Response**](WalletTransactions200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **walletTransfer**
 > WalletTopUp200Response walletTransfer(transferRequest)
 
@@ -246,47 +207,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**WalletTopUp200Response**](WalletTopUp200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **walletWebhookMidtrans**
-> DriverRemove200Response walletWebhookMidtrans(body)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getWalletApi();
-final Object body = Object; // Object | 
-
-try {
-    final response = api.walletWebhookMidtrans(body);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling WalletApi->walletWebhookMidtrans: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | 
-
-### Return type
-
-[**DriverRemove200Response**](DriverRemove200Response.md)
 
 ### Authorization
 

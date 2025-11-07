@@ -1,18 +1,13 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for WSTopUpEnvelopePayload
+// tests for WSPaymentEnvelopePayload
 void main() {
-  final WSTopUpEnvelopePayload? instance = /* WSTopUpEnvelopePayload(...) */
+  final WSPaymentEnvelopePayload? instance = /* WSPaymentEnvelopePayload(...) */
       null;
   // TODO add properties to the entity
 
-  group(WSTopUpEnvelopePayload, () {
-    // TransactionStatus status
-    test('to test the property `status`', () async {
-      // TODO
-    });
-
+  group(WSPaymentEnvelopePayload, () {
     // Wallet wallet
     test('to test the property `wallet`', () async {
       // TODO
@@ -20,6 +15,11 @@ void main() {
 
     // Transaction transaction
     test('to test the property `transaction`', () async {
+      // TODO
+    });
+
+    // Payment payment
+    test('to test the property `payment`', () async {
       // TODO
     });
   });

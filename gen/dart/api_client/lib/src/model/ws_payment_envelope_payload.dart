@@ -3,13 +3,13 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/transaction_status.dart';
 import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/payment.dart';
 import 'package:api_client/src/model/wallet.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'ws_top_up_envelope_payload.g.dart';
+part 'ws_payment_envelope_payload.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,16 +18,13 @@ part 'ws_top_up_envelope_payload.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class WSTopUpEnvelopePayload {
-  /// Returns a new [WSTopUpEnvelopePayload] instance.
-  const WSTopUpEnvelopePayload({
-    required this.status,
+class WSPaymentEnvelopePayload {
+  /// Returns a new [WSPaymentEnvelopePayload] instance.
+  const WSPaymentEnvelopePayload({
     required this.wallet,
     required this.transaction,
+    required this.payment,
   });
-
-  @JsonKey(name: r'status', required: true, includeIfNull: false)
-  final TransactionStatus status;
 
   @JsonKey(name: r'wallet', required: true, includeIfNull: false)
   final Wallet wallet;
@@ -35,21 +32,24 @@ class WSTopUpEnvelopePayload {
   @JsonKey(name: r'transaction', required: true, includeIfNull: false)
   final Transaction transaction;
 
+  @JsonKey(name: r'payment', required: true, includeIfNull: false)
+  final Payment payment;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WSTopUpEnvelopePayload &&
-          other.status == status &&
+      other is WSPaymentEnvelopePayload &&
           other.wallet == wallet &&
-          other.transaction == transaction;
+          other.transaction == transaction &&
+          other.payment == payment;
 
   @override
-  int get hashCode => status.hashCode + wallet.hashCode + transaction.hashCode;
+  int get hashCode => wallet.hashCode + transaction.hashCode + payment.hashCode;
 
-  factory WSTopUpEnvelopePayload.fromJson(Map<String, dynamic> json) =>
-      _$WSTopUpEnvelopePayloadFromJson(json);
+  factory WSPaymentEnvelopePayload.fromJson(Map<String, dynamic> json) =>
+      _$WSPaymentEnvelopePayloadFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WSTopUpEnvelopePayloadToJson(this);
+  Map<String, dynamic> toJson() => _$WSPaymentEnvelopePayloadToJson(this);
 
   @override
   String toString() {

@@ -13,8 +13,10 @@ import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
 import 'package:api_client/src/api/order_api.dart';
+import 'package:api_client/src/api/payment_api.dart';
 import 'package:api_client/src/api/report_api.dart';
 import 'package:api_client/src/api/review_api.dart';
+import 'package:api_client/src/api/transaction_api.dart';
 import 'package:api_client/src/api/user_api.dart';
 import 'package:api_client/src/api/wallet_api.dart';
 
@@ -123,6 +125,12 @@ class ApiClient {
     return OrderApi(dio);
   }
 
+  /// Get PaymentApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  PaymentApi getPaymentApi() {
+    return PaymentApi(dio);
+  }
+
   /// Get ReportApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   ReportApi getReportApi() {
@@ -133,6 +141,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   ReviewApi getReviewApi() {
     return ReviewApi(dio);
+  }
+
+  /// Get TransactionApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  TransactionApi getTransactionApi() {
+    return TransactionApi(dio);
   }
 
   /// Get UserApi instance, base route and serializer can be overridden by a given but be careful,

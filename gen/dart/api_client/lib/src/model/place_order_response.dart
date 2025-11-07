@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/order.dart';
 import 'package:api_client/src/model/payment.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -19,7 +20,11 @@ part 'place_order_response.g.dart';
 )
 class PlaceOrderResponse {
   /// Returns a new [PlaceOrderResponse] instance.
-  const PlaceOrderResponse({required this.order, required this.payment});
+  const PlaceOrderResponse({
+    required this.order,
+    required this.payment,
+    required this.transaction,
+  });
 
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
@@ -27,15 +32,19 @@ class PlaceOrderResponse {
   @JsonKey(name: r'payment', required: true, includeIfNull: false)
   final Payment payment;
 
+  @JsonKey(name: r'transaction', required: true, includeIfNull: false)
+  final Transaction transaction;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PlaceOrderResponse &&
           other.order == order &&
-          other.payment == payment;
+          other.payment == payment &&
+          other.transaction == transaction;
 
   @override
-  int get hashCode => order.hashCode + payment.hashCode;
+  int get hashCode => order.hashCode + payment.hashCode + transaction.hashCode;
 
   factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) =>
       _$PlaceOrderResponseFromJson(json);

@@ -110,6 +110,7 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderPlaceOrder**](doc/OrderApi.md#orderplaceorder) | **POST** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 
 [*ReportApi*](doc/ReportApi.md) | [**reportList**](doc/ReportApi.md#reportlist) | **GET** /reports | 
@@ -120,6 +121,8 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewList**](doc/ReviewApi.md#reviewlist) | **GET** /reviews | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewRemove**](doc/ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
+[*TransactionApi*](doc/TransactionApi.md) | [**transactionGet**](doc/TransactionApi.md#transactionget) | **GET** /transactions/{id} | 
+[*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
 [*UserApi*](doc/UserApi.md) | [**userCreate**](doc/UserApi.md#usercreate) | **POST** /users | 
 [*UserApi*](doc/UserApi.md) | [**userGet**](doc/UserApi.md#userget) | **GET** /users/{id} | 
 [*UserApi*](doc/UserApi.md) | [**userList**](doc/UserApi.md#userlist) | **GET** /users | 
@@ -129,9 +132,7 @@ Class | Method | HTTP request | Description
 [*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTopUp**](doc/WalletApi.md#wallettopup) | **POST** /wallets/topup | 
-[*WalletApi*](doc/WalletApi.md) | [**walletTransactions**](doc/WalletApi.md#wallettransactions) | **GET** /wallets/transactions | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTransfer**](doc/WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
-[*WalletApi*](doc/WalletApi.md) | [**walletWebhookMidtrans**](doc/WalletApi.md#walletwebhookmidtrans) | **POST** /wallets/webhook/midtrans | 
 
 
 ## Documentation For Models
@@ -180,8 +181,10 @@ Class | Method | HTTP request | Description
  - [InsertConfiguration](doc/InsertConfiguration.md)
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertDriverScheduleRequest](doc/InsertDriverScheduleRequest.md)
+ - [InsertPayment](doc/InsertPayment.md)
  - [InsertReport](doc/InsertReport.md)
  - [InsertReview](doc/InsertReview.md)
+ - [InsertTransaction](doc/InsertTransaction.md)
  - [InsertUser](doc/InsertUser.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
@@ -232,6 +235,8 @@ Class | Method | HTTP request | Description
  - [Time](doc/Time.md)
  - [TopUpRequest](doc/TopUpRequest.md)
  - [Transaction](doc/Transaction.md)
+ - [TransactionGet200Response](doc/TransactionGet200Response.md)
+ - [TransactionList200Response](doc/TransactionList200Response.md)
  - [TransactionStatus](doc/TransactionStatus.md)
  - [TransactionType](doc/TransactionType.md)
  - [TransferRequest](doc/TransferRequest.md)
@@ -240,11 +245,14 @@ Class | Method | HTTP request | Description
  - [UpdateCoupon](doc/UpdateCoupon.md)
  - [UpdateDriverScheduleRequest](doc/UpdateDriverScheduleRequest.md)
  - [UpdateOrder](doc/UpdateOrder.md)
+ - [UpdatePayment](doc/UpdatePayment.md)
  - [UpdateReport](doc/UpdateReport.md)
  - [UpdateReview](doc/UpdateReview.md)
+ - [UpdateTransaction](doc/UpdateTransaction.md)
  - [UpdateUser](doc/UpdateUser.md)
  - [UpdateUserPassword](doc/UpdateUserPassword.md)
  - [UpdateUserRole](doc/UpdateUserRole.md)
+ - [UpdateWallet](doc/UpdateWallet.md)
  - [User](doc/User.md)
  - [UserCreate200Response](doc/UserCreate200Response.md)
  - [UserGender](doc/UserGender.md)
@@ -253,16 +261,17 @@ Class | Method | HTTP request | Description
  - [WSEnvelope](doc/WSEnvelope.md)
  - [WSEnvelopeSender](doc/WSEnvelopeSender.md)
  - [WSEnvelopeType](doc/WSEnvelopeType.md)
+ - [WSOrderEnvelope](doc/WSOrderEnvelope.md)
+ - [WSOrderEnvelopePayload](doc/WSOrderEnvelopePayload.md)
+ - [WSPaymentEnvelope](doc/WSPaymentEnvelope.md)
+ - [WSPaymentEnvelopePayload](doc/WSPaymentEnvelopePayload.md)
  - [WSPlaceOrderEnvelope](doc/WSPlaceOrderEnvelope.md)
- - [WSTopUpEnvelope](doc/WSTopUpEnvelope.md)
- - [WSTopUpEnvelopePayload](doc/WSTopUpEnvelopePayload.md)
  - [Wallet](doc/Wallet.md)
  - [WalletGet200Response](doc/WalletGet200Response.md)
  - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
  - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
- - [WalletTransactions200Response](doc/WalletTransactions200Response.md)
 
 
 ## Documentation For Authorization

@@ -1,67 +1,67 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ws_top_up_envelope.dart';
+part of 'ws_payment_envelope.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$WSTopUpEnvelopeCWProxy {
-  WSTopUpEnvelope type(WSEnvelopeType type);
+abstract class _$WSPaymentEnvelopeCWProxy {
+  WSPaymentEnvelope type(WSEnvelopeType type);
 
-  WSTopUpEnvelope from(WSEnvelopeSender from);
+  WSPaymentEnvelope from(WSEnvelopeSender from);
 
-  WSTopUpEnvelope to(WSEnvelopeSender to);
+  WSPaymentEnvelope to(WSEnvelopeSender to);
 
-  WSTopUpEnvelope payload(WSTopUpEnvelopePayload payload);
+  WSPaymentEnvelope payload(WSPaymentEnvelopePayload payload);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSTopUpEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPaymentEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// WSTopUpEnvelope(...).copyWith(id: 12, name: "My name")
+  /// WSPaymentEnvelope(...).copyWith(id: 12, name: "My name")
   /// ````
-  WSTopUpEnvelope call({
+  WSPaymentEnvelope call({
     WSEnvelopeType type,
     WSEnvelopeSender from,
     WSEnvelopeSender to,
-    WSTopUpEnvelopePayload payload,
+    WSPaymentEnvelopePayload payload,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSTopUpEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSTopUpEnvelope.copyWith.fieldName(...)`
-class _$WSTopUpEnvelopeCWProxyImpl implements _$WSTopUpEnvelopeCWProxy {
-  const _$WSTopUpEnvelopeCWProxyImpl(this._value);
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSPaymentEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSPaymentEnvelope.copyWith.fieldName(...)`
+class _$WSPaymentEnvelopeCWProxyImpl implements _$WSPaymentEnvelopeCWProxy {
+  const _$WSPaymentEnvelopeCWProxyImpl(this._value);
 
-  final WSTopUpEnvelope _value;
-
-  @override
-  WSTopUpEnvelope type(WSEnvelopeType type) => this(type: type);
+  final WSPaymentEnvelope _value;
 
   @override
-  WSTopUpEnvelope from(WSEnvelopeSender from) => this(from: from);
+  WSPaymentEnvelope type(WSEnvelopeType type) => this(type: type);
 
   @override
-  WSTopUpEnvelope to(WSEnvelopeSender to) => this(to: to);
+  WSPaymentEnvelope from(WSEnvelopeSender from) => this(from: from);
 
   @override
-  WSTopUpEnvelope payload(WSTopUpEnvelopePayload payload) =>
+  WSPaymentEnvelope to(WSEnvelopeSender to) => this(to: to);
+
+  @override
+  WSPaymentEnvelope payload(WSPaymentEnvelopePayload payload) =>
       this(payload: payload);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSTopUpEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPaymentEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// WSTopUpEnvelope(...).copyWith(id: 12, name: "My name")
+  /// WSPaymentEnvelope(...).copyWith(id: 12, name: "My name")
   /// ````
-  WSTopUpEnvelope call({
+  WSPaymentEnvelope call({
     Object? type = const $CopyWithPlaceholder(),
     Object? from = const $CopyWithPlaceholder(),
     Object? to = const $CopyWithPlaceholder(),
     Object? payload = const $CopyWithPlaceholder(),
   }) {
-    return WSTopUpEnvelope(
+    return WSPaymentEnvelope(
       type: type == const $CopyWithPlaceholder()
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
@@ -77,25 +77,26 @@ class _$WSTopUpEnvelopeCWProxyImpl implements _$WSTopUpEnvelopeCWProxy {
       payload: payload == const $CopyWithPlaceholder()
           ? _value.payload
           // ignore: cast_nullable_to_non_nullable
-          : payload as WSTopUpEnvelopePayload,
+          : payload as WSPaymentEnvelopePayload,
     );
   }
 }
 
-extension $WSTopUpEnvelopeCopyWith on WSTopUpEnvelope {
-  /// Returns a callable class that can be used as follows: `instanceOfWSTopUpEnvelope.copyWith(...)` or like so:`instanceOfWSTopUpEnvelope.copyWith.fieldName(...)`.
+extension $WSPaymentEnvelopeCopyWith on WSPaymentEnvelope {
+  /// Returns a callable class that can be used as follows: `instanceOfWSPaymentEnvelope.copyWith(...)` or like so:`instanceOfWSPaymentEnvelope.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$WSTopUpEnvelopeCWProxy get copyWith => _$WSTopUpEnvelopeCWProxyImpl(this);
+  _$WSPaymentEnvelopeCWProxy get copyWith =>
+      _$WSPaymentEnvelopeCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WSTopUpEnvelope _$WSTopUpEnvelopeFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('WSTopUpEnvelope', json, ($checkedConvert) {
+WSPaymentEnvelope _$WSPaymentEnvelopeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WSPaymentEnvelope', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['type', 'from', 'to', 'payload']);
-      final val = WSTopUpEnvelope(
+      final val = WSPaymentEnvelope(
         type: $checkedConvert(
           'type',
           (v) => $enumDecode(_$WSEnvelopeTypeEnumMap, v),
@@ -110,13 +111,13 @@ WSTopUpEnvelope _$WSTopUpEnvelopeFromJson(Map<String, dynamic> json) =>
         ),
         payload: $checkedConvert(
           'payload',
-          (v) => WSTopUpEnvelopePayload.fromJson(v as Map<String, dynamic>),
+          (v) => WSPaymentEnvelopePayload.fromJson(v as Map<String, dynamic>),
         ),
       );
       return val;
     });
 
-Map<String, dynamic> _$WSTopUpEnvelopeToJson(WSTopUpEnvelope instance) =>
+Map<String, dynamic> _$WSPaymentEnvelopeToJson(WSPaymentEnvelope instance) =>
     <String, dynamic>{
       'type': _$WSEnvelopeTypeEnumMap[instance.type]!,
       'from': _$WSEnvelopeSenderEnumMap[instance.from]!,
@@ -130,8 +131,10 @@ const _$WSEnvelopeTypeEnumMap = {
   WSEnvelopeType.orderColonCancelled: 'order:cancelled',
   WSEnvelopeType.orderColonAccepted: 'order:accepted',
   WSEnvelopeType.driverColonLocationUpdate: 'driver:location_update',
-  WSEnvelopeType.driverColonAssigned: 'driver:assigned',
   WSEnvelopeType.walletColonTopUpSuccess: 'wallet:top_up_success',
+  WSEnvelopeType.walletColonTopUpFailed: 'wallet:top_up_failed',
+  WSEnvelopeType.paymentColonSuccess: 'payment:success',
+  WSEnvelopeType.paymentColonFailed: 'payment:failed',
 };
 
 const _$WSEnvelopeSenderEnumMap = {

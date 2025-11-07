@@ -1,4 +1,4 @@
-# api_client.model.WSTopUpEnvelope
+# api_client.model.TransactionGet200Response
 
 ## Load the model package
 ```dart
@@ -8,10 +8,9 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | [**WSEnvelopeType**](WSEnvelopeType.md) |  | 
-**from** | [**WSEnvelopeSender**](WSEnvelopeSender.md) |  | 
-**to** | [**WSEnvelopeSender**](WSEnvelopeSender.md) |  | 
-**payload** | [**WSTopUpEnvelopePayload**](WSTopUpEnvelopePayload.md) |  | 
+**message** | **String** |  | 
+**data** | [**Transaction**](Transaction.md) |  | 
+**totalPages** | **num** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

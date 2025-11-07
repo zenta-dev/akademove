@@ -38,8 +38,10 @@ import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
 import 'package:api_client/src/model/insert_driver_schedule_request.dart';
+import 'package:api_client/src/model/insert_payment.dart';
 import 'package:api_client/src/model/insert_report.dart';
 import 'package:api_client/src/model/insert_review.dart';
+import 'package:api_client/src/model/insert_transaction.dart';
 import 'package:api_client/src/model/insert_user.dart';
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/merchant.dart';
@@ -83,31 +85,37 @@ import 'package:api_client/src/model/statements.dart';
 import 'package:api_client/src/model/time.dart';
 import 'package:api_client/src/model/top_up_request.dart';
 import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/transaction_get200_response.dart';
+import 'package:api_client/src/model/transaction_list200_response.dart';
 import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_coupon.dart';
 import 'package:api_client/src/model/update_driver_schedule_request.dart';
 import 'package:api_client/src/model/update_order.dart';
+import 'package:api_client/src/model/update_payment.dart';
 import 'package:api_client/src/model/update_report.dart';
 import 'package:api_client/src/model/update_review.dart';
+import 'package:api_client/src/model/update_transaction.dart';
 import 'package:api_client/src/model/update_user.dart';
 import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/update_user_role.dart';
+import 'package:api_client/src/model/update_wallet.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/user_create200_response.dart';
 import 'package:api_client/src/model/user_list200_response.dart';
 import 'package:api_client/src/model/ws_envelope.dart';
+import 'package:api_client/src/model/ws_order_envelope.dart';
+import 'package:api_client/src/model/ws_order_envelope_payload.dart';
+import 'package:api_client/src/model/ws_payment_envelope.dart';
+import 'package:api_client/src/model/ws_payment_envelope_payload.dart';
 import 'package:api_client/src/model/ws_place_order_envelope.dart';
-import 'package:api_client/src/model/ws_top_up_envelope.dart';
-import 'package:api_client/src/model/ws_top_up_envelope_payload.dart';
 import 'package:api_client/src/model/wallet.dart';
 import 'package:api_client/src/model/wallet_get200_response.dart';
 import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 import 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 import 'package:api_client/src/model/wallet_top_up200_response.dart';
-import 'package:api_client/src/model/wallet_transactions200_response.dart';
 
 final _regList = RegExp(r'^List<(.*)>$');
 final _regSet = RegExp(r'^Set<(.*)>$');
@@ -263,10 +271,16 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'InsertDriverScheduleRequest':
       return InsertDriverScheduleRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'InsertPayment':
+      return InsertPayment.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertReport':
       return InsertReport.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'InsertReview':
       return InsertReview.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'InsertTransaction':
+      return InsertTransaction.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertUser':
       return InsertUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Location':
@@ -387,6 +401,12 @@ ReturnType deserialize<ReturnType, BaseType>(
       return TopUpRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Transaction':
       return Transaction.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'TransactionGet200Response':
+      return TransactionGet200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'TransactionList200Response':
+      return TransactionList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'TransactionStatus':
     case 'TransactionType':
     case 'TransferRequest':
@@ -404,10 +424,16 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateOrder':
       return UpdateOrder.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdatePayment':
+      return UpdatePayment.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateReport':
       return UpdateReport.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdateReview':
       return UpdateReview.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdateTransaction':
+      return UpdateTransaction.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateUser':
       return UpdateUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdateUserPassword':
@@ -416,6 +442,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateUserRole':
       return UpdateUserRole.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'UpdateWallet':
+      return UpdateWallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'User':
       return User.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UserCreate200Response':
@@ -430,14 +458,20 @@ ReturnType deserialize<ReturnType, BaseType>(
       return WSEnvelope.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'WSEnvelopeSender':
     case 'WSEnvelopeType':
+    case 'WSOrderEnvelope':
+      return WSOrderEnvelope.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'WSOrderEnvelopePayload':
+      return WSOrderEnvelopePayload.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'WSPaymentEnvelope':
+      return WSPaymentEnvelope.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'WSPaymentEnvelopePayload':
+      return WSPaymentEnvelopePayload.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'WSPlaceOrderEnvelope':
       return WSPlaceOrderEnvelope.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSTopUpEnvelope':
-      return WSTopUpEnvelope.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSTopUpEnvelopePayload':
-      return WSTopUpEnvelopePayload.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -459,11 +493,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'WalletTopUp200Response':
       return WalletTopUp200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WalletTransactions200Response':
-      return WalletTransactions200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     default:
       RegExpMatch? match;

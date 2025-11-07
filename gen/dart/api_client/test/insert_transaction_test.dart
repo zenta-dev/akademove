@@ -1,17 +1,12 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for Transaction
+// tests for InsertTransaction
 void main() {
-  final Transaction? instance = /* Transaction(...) */ null;
+  final InsertTransaction? instance = /* InsertTransaction(...) */ null;
   // TODO add properties to the entity
 
-  group(Transaction, () {
-    // String id
-    test('to test the property `id`', () async {
-      // TODO
-    });
-
+  group(InsertTransaction, () {
     // String walletId
     test('to test the property `walletId`', () async {
       // TODO
@@ -54,16 +49,6 @@ void main() {
 
     // Object metadata
     test('to test the property `metadata`', () async {
-      // TODO
-    });
-
-    // DateTime createdAt
-    test('to test the property `createdAt`', () async {
-      // TODO
-    });
-
-    // DateTime updatedAt
-    test('to test the property `updatedAt`', () async {
       // TODO
     });
   });

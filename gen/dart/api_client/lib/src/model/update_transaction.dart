@@ -8,7 +8,7 @@ import 'package:api_client/src/model/transaction_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'transaction.g.dart';
+part 'update_transaction.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -17,34 +17,28 @@ part 'transaction.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class Transaction {
-  /// Returns a new [Transaction] instance.
-  const Transaction({
-    required this.id,
-    required this.walletId,
-    required this.type,
-    required this.amount,
+class UpdateTransaction {
+  /// Returns a new [UpdateTransaction] instance.
+  const UpdateTransaction({
+    this.walletId,
+    this.type,
+    this.amount,
     this.balanceBefore,
     this.balanceAfter,
-    required this.status,
+    this.status,
     this.description,
     this.referenceId,
     this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'walletId', required: false, includeIfNull: false)
+  final String? walletId;
 
-  @JsonKey(name: r'walletId', required: true, includeIfNull: false)
-  final String walletId;
+  @JsonKey(name: r'type', required: false, includeIfNull: false)
+  final TransactionType? type;
 
-  @JsonKey(name: r'type', required: true, includeIfNull: false)
-  final TransactionType type;
-
-  @JsonKey(name: r'amount', required: true, includeIfNull: false)
-  final num amount;
+  @JsonKey(name: r'amount', required: false, includeIfNull: false)
+  final num? amount;
 
   @JsonKey(name: r'balanceBefore', required: false, includeIfNull: false)
   final num? balanceBefore;
@@ -52,8 +46,8 @@ class Transaction {
   @JsonKey(name: r'balanceAfter', required: false, includeIfNull: false)
   final num? balanceAfter;
 
-  @JsonKey(name: r'status', required: true, includeIfNull: false)
-  final TransactionStatus status;
+  @JsonKey(name: r'status', required: false, includeIfNull: false)
+  final TransactionStatus? status;
 
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
@@ -64,17 +58,10 @@ class Transaction {
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
-
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Transaction &&
-          other.id == id &&
+      other is UpdateTransaction &&
           other.walletId == walletId &&
           other.type == type &&
           other.amount == amount &&
@@ -83,13 +70,10 @@ class Transaction {
           other.status == status &&
           other.description == description &&
           other.referenceId == referenceId &&
-          other.metadata == metadata &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.metadata == metadata;
 
   @override
   int get hashCode =>
-      id.hashCode +
       walletId.hashCode +
       type.hashCode +
       amount.hashCode +
@@ -98,14 +82,12 @@ class Transaction {
       status.hashCode +
       description.hashCode +
       referenceId.hashCode +
-      (metadata == null ? 0 : metadata.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (metadata == null ? 0 : metadata.hashCode);
 
-  factory Transaction.fromJson(Map<String, dynamic> json) =>
-      _$TransactionFromJson(json);
+  factory UpdateTransaction.fromJson(Map<String, dynamic> json) =>
+      _$UpdateTransactionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateTransactionToJson(this);
 
   @override
   String toString() {

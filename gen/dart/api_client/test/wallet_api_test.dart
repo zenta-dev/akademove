@@ -26,18 +26,8 @@ void main() {
       // TODO
     });
 
-    //Future<WalletTransactions200Response> walletTransactions() async
-    test('test walletTransactions', () async {
-      // TODO
-    });
-
     //Future<WalletTopUp200Response> walletTransfer(TransferRequest transferRequest) async
     test('test walletTransfer', () async {
-      // TODO
-    });
-
-    //Future<DriverRemove200Response> walletWebhookMidtrans(Object body) async
-    test('test walletWebhookMidtrans', () async {
       // TODO
     });
   });

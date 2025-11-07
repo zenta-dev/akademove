@@ -1,4 +1,4 @@
-# api_client.model.Payment
+# api_client.model.UpdatePayment
 
 ## Load the model package
 ```dart
@@ -8,20 +8,17 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** |  | 
-**transactionId** | **String** |  | 
-**provider** | [**PaymentProvider**](PaymentProvider.md) |  | 
-**method** | [**PaymentMethod**](PaymentMethod.md) |  | 
-**amount** | **num** |  | 
-**status** | [**TransactionStatus**](TransactionStatus.md) |  | 
+**transactionId** | **String** |  | [optional] 
+**provider** | [**PaymentProvider**](PaymentProvider.md) |  | [optional] 
+**method** | [**PaymentMethod**](PaymentMethod.md) |  | [optional] 
+**amount** | **num** |  | [optional] 
+**status** | [**TransactionStatus**](TransactionStatus.md) |  | [optional] 
 **externalId** | **String** |  | [optional] 
 **paymentUrl** | **String** |  | [optional] 
 **metadata** | **Object** |  | [optional] 
 **expiresAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **payload** | **Object** |  | [optional] 
 **response** | **Object** |  | [optional] 
-**createdAt** | [**DateTime**](DateTime.md) |  | 
-**updatedAt** | [**DateTime**](DateTime.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

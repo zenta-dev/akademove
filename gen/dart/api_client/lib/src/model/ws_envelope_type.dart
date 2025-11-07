@@ -16,10 +16,14 @@ enum WSEnvelopeType {
   orderColonAccepted(r'order:accepted'),
   @JsonValue(r'driver:location_update')
   driverColonLocationUpdate(r'driver:location_update'),
-  @JsonValue(r'driver:assigned')
-  driverColonAssigned(r'driver:assigned'),
   @JsonValue(r'wallet:top_up_success')
-  walletColonTopUpSuccess(r'wallet:top_up_success');
+  walletColonTopUpSuccess(r'wallet:top_up_success'),
+  @JsonValue(r'wallet:top_up_failed')
+  walletColonTopUpFailed(r'wallet:top_up_failed'),
+  @JsonValue(r'payment:success')
+  paymentColonSuccess(r'payment:success'),
+  @JsonValue(r'payment:failed')
+  paymentColonFailed(r'payment:failed');
 
   const WSEnvelopeType(this.value);
 

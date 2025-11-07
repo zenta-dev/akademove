@@ -9,7 +9,7 @@ import 'package:api_client/src/model/payment_method.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'payment.g.dart';
+part 'update_payment.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,42 +18,36 @@ part 'payment.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class Payment {
-  /// Returns a new [Payment] instance.
-  const Payment({
-    required this.id,
-    required this.transactionId,
-    required this.provider,
-    required this.method,
-    required this.amount,
-    required this.status,
+class UpdatePayment {
+  /// Returns a new [UpdatePayment] instance.
+  const UpdatePayment({
+    this.transactionId,
+    this.provider,
+    this.method,
+    this.amount,
+    this.status,
     this.externalId,
     this.paymentUrl,
     this.metadata,
     this.expiresAt,
     this.payload,
     this.response,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
+  @JsonKey(name: r'transactionId', required: false, includeIfNull: false)
+  final String? transactionId;
 
-  @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
-  final String transactionId;
+  @JsonKey(name: r'provider', required: false, includeIfNull: false)
+  final PaymentProvider? provider;
 
-  @JsonKey(name: r'provider', required: true, includeIfNull: false)
-  final PaymentProvider provider;
+  @JsonKey(name: r'method', required: false, includeIfNull: false)
+  final PaymentMethod? method;
 
-  @JsonKey(name: r'method', required: true, includeIfNull: false)
-  final PaymentMethod method;
+  @JsonKey(name: r'amount', required: false, includeIfNull: false)
+  final num? amount;
 
-  @JsonKey(name: r'amount', required: true, includeIfNull: false)
-  final num amount;
-
-  @JsonKey(name: r'status', required: true, includeIfNull: false)
-  final TransactionStatus status;
+  @JsonKey(name: r'status', required: false, includeIfNull: false)
+  final TransactionStatus? status;
 
   @JsonKey(name: r'externalId', required: false, includeIfNull: false)
   final String? externalId;
@@ -73,17 +67,10 @@ class Payment {
   @JsonKey(name: r'response', required: false, includeIfNull: false)
   final Object? response;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
-
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Payment &&
-          other.id == id &&
+      other is UpdatePayment &&
           other.transactionId == transactionId &&
           other.provider == provider &&
           other.method == method &&
@@ -94,13 +81,10 @@ class Payment {
           other.metadata == metadata &&
           other.expiresAt == expiresAt &&
           other.payload == payload &&
-          other.response == response &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.response == response;
 
   @override
   int get hashCode =>
-      id.hashCode +
       transactionId.hashCode +
       provider.hashCode +
       method.hashCode +
@@ -111,14 +95,12 @@ class Payment {
       (metadata == null ? 0 : metadata.hashCode) +
       expiresAt.hashCode +
       (payload == null ? 0 : payload.hashCode) +
-      (response == null ? 0 : response.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (response == null ? 0 : response.hashCode);
 
-  factory Payment.fromJson(Map<String, dynamic> json) =>
-      _$PaymentFromJson(json);
+  factory UpdatePayment.fromJson(Map<String, dynamic> json) =>
+      _$UpdatePaymentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PaymentToJson(this);
+  Map<String, dynamic> toJson() => _$UpdatePaymentToJson(this);
 
   @override
   String toString() {

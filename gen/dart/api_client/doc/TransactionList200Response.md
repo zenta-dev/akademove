@@ -1,4 +1,4 @@
-# api_client.model.WalletTransactions200Response
+# api_client.model.TransactionList200Response
 
 ## Load the model package
 ```dart

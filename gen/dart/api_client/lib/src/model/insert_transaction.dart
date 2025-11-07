@@ -8,7 +8,7 @@ import 'package:api_client/src/model/transaction_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'transaction.g.dart';
+part 'insert_transaction.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -17,10 +17,9 @@ part 'transaction.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class Transaction {
-  /// Returns a new [Transaction] instance.
-  const Transaction({
-    required this.id,
+class InsertTransaction {
+  /// Returns a new [InsertTransaction] instance.
+  const InsertTransaction({
     required this.walletId,
     required this.type,
     required this.amount,
@@ -30,12 +29,7 @@ class Transaction {
     this.description,
     this.referenceId,
     this.metadata,
-    required this.createdAt,
-    required this.updatedAt,
   });
-
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
 
   @JsonKey(name: r'walletId', required: true, includeIfNull: false)
   final String walletId;
@@ -64,17 +58,10 @@ class Transaction {
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
-
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Transaction &&
-          other.id == id &&
+      other is InsertTransaction &&
           other.walletId == walletId &&
           other.type == type &&
           other.amount == amount &&
@@ -83,13 +70,10 @@ class Transaction {
           other.status == status &&
           other.description == description &&
           other.referenceId == referenceId &&
-          other.metadata == metadata &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.metadata == metadata;
 
   @override
   int get hashCode =>
-      id.hashCode +
       walletId.hashCode +
       type.hashCode +
       amount.hashCode +
@@ -98,14 +82,12 @@ class Transaction {
       status.hashCode +
       description.hashCode +
       referenceId.hashCode +
-      (metadata == null ? 0 : metadata.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (metadata == null ? 0 : metadata.hashCode);
 
-  factory Transaction.fromJson(Map<String, dynamic> json) =>
-      _$TransactionFromJson(json);
+  factory InsertTransaction.fromJson(Map<String, dynamic> json) =>
+      _$InsertTransactionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TransactionToJson(this);
+  Map<String, dynamic> toJson() => _$InsertTransactionToJson(this);
 
   @override
   String toString() {

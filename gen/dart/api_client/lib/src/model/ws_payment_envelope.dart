@@ -4,12 +4,12 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/ws_envelope_type.dart';
-import 'package:api_client/src/model/ws_top_up_envelope_payload.dart';
 import 'package:api_client/src/model/ws_envelope_sender.dart';
+import 'package:api_client/src/model/ws_payment_envelope_payload.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'ws_top_up_envelope.g.dart';
+part 'ws_payment_envelope.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,9 +18,9 @@ part 'ws_top_up_envelope.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class WSTopUpEnvelope {
-  /// Returns a new [WSTopUpEnvelope] instance.
-  const WSTopUpEnvelope({
+class WSPaymentEnvelope {
+  /// Returns a new [WSPaymentEnvelope] instance.
+  const WSPaymentEnvelope({
     required this.type,
     required this.from,
     required this.to,
@@ -37,12 +37,12 @@ class WSTopUpEnvelope {
   final WSEnvelopeSender to;
 
   @JsonKey(name: r'payload', required: true, includeIfNull: false)
-  final WSTopUpEnvelopePayload payload;
+  final WSPaymentEnvelopePayload payload;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is WSTopUpEnvelope &&
+      other is WSPaymentEnvelope &&
           other.type == type &&
           other.from == from &&
           other.to == to &&
@@ -52,10 +52,10 @@ class WSTopUpEnvelope {
   int get hashCode =>
       type.hashCode + from.hashCode + to.hashCode + payload.hashCode;
 
-  factory WSTopUpEnvelope.fromJson(Map<String, dynamic> json) =>
-      _$WSTopUpEnvelopeFromJson(json);
+  factory WSPaymentEnvelope.fromJson(Map<String, dynamic> json) =>
+      _$WSPaymentEnvelopeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WSTopUpEnvelopeToJson(this);
+  Map<String, dynamic> toJson() => _$WSPaymentEnvelopeToJson(this);
 
   @override
   String toString() {

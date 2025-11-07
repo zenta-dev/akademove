@@ -9,7 +9,7 @@ import 'package:api_client/src/model/payment_method.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'payment.g.dart';
+part 'insert_payment.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -18,10 +18,9 @@ part 'payment.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class Payment {
-  /// Returns a new [Payment] instance.
-  const Payment({
-    required this.id,
+class InsertPayment {
+  /// Returns a new [InsertPayment] instance.
+  const InsertPayment({
     required this.transactionId,
     required this.provider,
     required this.method,
@@ -33,12 +32,7 @@ class Payment {
     this.expiresAt,
     this.payload,
     this.response,
-    required this.createdAt,
-    required this.updatedAt,
   });
-
-  @JsonKey(name: r'id', required: true, includeIfNull: false)
-  final String id;
 
   @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
   final String transactionId;
@@ -73,17 +67,10 @@ class Payment {
   @JsonKey(name: r'response', required: false, includeIfNull: false)
   final Object? response;
 
-  @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
-  final DateTime createdAt;
-
-  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
-  final DateTime updatedAt;
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Payment &&
-          other.id == id &&
+      other is InsertPayment &&
           other.transactionId == transactionId &&
           other.provider == provider &&
           other.method == method &&
@@ -94,13 +81,10 @@ class Payment {
           other.metadata == metadata &&
           other.expiresAt == expiresAt &&
           other.payload == payload &&
-          other.response == response &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.response == response;
 
   @override
   int get hashCode =>
-      id.hashCode +
       transactionId.hashCode +
       provider.hashCode +
       method.hashCode +
@@ -111,14 +95,12 @@ class Payment {
       (metadata == null ? 0 : metadata.hashCode) +
       expiresAt.hashCode +
       (payload == null ? 0 : payload.hashCode) +
-      (response == null ? 0 : response.hashCode) +
-      createdAt.hashCode +
-      updatedAt.hashCode;
+      (response == null ? 0 : response.hashCode);
 
-  factory Payment.fromJson(Map<String, dynamic> json) =>
-      _$PaymentFromJson(json);
+  factory InsertPayment.fromJson(Map<String, dynamic> json) =>
+      _$InsertPaymentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PaymentToJson(this);
+  Map<String, dynamic> toJson() => _$InsertPaymentToJson(this);
 
   @override
   String toString() {
