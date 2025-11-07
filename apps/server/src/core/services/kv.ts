@@ -1,11 +1,12 @@
 import { KeyValueError } from "@/core/error";
+import type { PromiseFn } from "@/utils";
 
-interface PutOptions {
+export interface PutCacheOptions {
 	expirationTtl?: number;
 }
 export interface KeyValueService {
-	get<T>(key: string, options?: { fallback?: () => Promise<T> }): Promise<T>;
-	put<T>(key: string, value: T, options?: PutOptions): Promise<void>;
+	get<T>(key: string, options?: { fallback?: PromiseFn<T> }): Promise<T>;
+	put<T>(key: string, value: T, options?: PutCacheOptions): Promise<void>;
 	delete(key: string): Promise<void>;
 }
 
@@ -50,7 +51,11 @@ export class CloudflareKVService implements KeyValueService {
 		}
 	}
 
-	async put<T>(key: string, value: T, options?: PutOptions): Promise<void> {
+	async put<T>(
+		key: string,
+		value: T,
+		options?: PutCacheOptions,
+	): Promise<void> {
 		try {
 			let str = "{}";
 			if (typeof value === "object" || Array.isArray(value)) {
