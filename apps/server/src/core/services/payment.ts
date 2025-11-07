@@ -1,4 +1,5 @@
 import {
+	type BankTransfer,
 	type ChargeParameter,
 	type ChargeResponse,
 	CoreApi,
@@ -86,7 +87,7 @@ export class MidtransPaymentService implements PaymentService {
 			if ((method === "BANK_TRANSFER" || method === "VA") && bank) {
 				chargePayload.payment_type = "bank_transfer";
 				chargePayload.bank_transfer = {
-					bank: bank as any,
+					bank: bank as BankTransfer["bank"],
 					va_number: payload.va_number,
 				};
 			}
