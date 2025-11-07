@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import type { ChargeResponse } from "@erhahahaa/midtrans-client-typescript";
+import type { OrderType } from "@repo/schema/order";
 import type {
 	InsertPayment,
 	Payment,
@@ -8,7 +9,8 @@ import type {
 	UpdatePayment,
 	WebhookRequest,
 } from "@repo/schema/payment";
-import type { TransactionType } from "@repo/schema/transaction";
+import type { Transaction, TransactionType } from "@repo/schema/transaction";
+import type { Wallet } from "@repo/schema/wallet";
 import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
@@ -29,7 +31,8 @@ import type { TransactionRepository } from "../transaction/transaction-repositor
 import { WalletRepository } from "../wallet/wallet-repository";
 
 interface ChargePayload extends WithUserId {
-	type: Extract<TransactionType, "topup" | "payment">;
+	transactionType: Extract<TransactionType, "topup" | "payment">;
+	orderType: OrderType | "top-up";
 	provider: PaymentProvider;
 	amount: number;
 	method: PaymentMethod;
@@ -141,12 +144,16 @@ export class PaymentRepository extends BaseRepository {
 		}
 	}
 
-	async charge(params: ChargePayload, opts: WithTx): Promise<Payment> {
+	async charge(
+		params: ChargePayload,
+		opts: WithTx,
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
 		try {
-			const { provider, method, amount, userId } = params;
+			const { provider, method, amount, userId, orderType, transactionType } =
+				params;
 			const { tx } = opts;
 			const [wallet, user] = await Promise.all([
-				this.#wallet.getByUserId(params.userId, opts),
+				this.#wallet.getByUserId(userId, opts),
 				tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, userId),
@@ -158,23 +165,22 @@ export class PaymentRepository extends BaseRepository {
 				});
 			}
 
-			let type = "UNKNOWN";
 			let desc: string | undefined;
 
-			switch (params.type) {
-				case "topup":
-					type = "TOP-UP";
+			switch (orderType) {
+				case "top-up":
 					desc = `Top-up ${method}`;
 					break;
-				case "payment":
-					type = "PAYMENT";
+				case "ride":
+				case "food":
+				case "delivery":
 					desc = "Payment";
 					break;
 			}
 
 			const transaction = await this.#transaction.insert({
 				walletId: wallet.id,
-				type: params.type,
+				type: transactionType,
 				amount,
 				status: "pending",
 				description: desc,
@@ -192,7 +198,7 @@ export class PaymentRepository extends BaseRepository {
 				},
 				expiry: { duration: PAYMENT_EXPIRY_MINUTE, unit: "minute" },
 				method,
-				metadata: { type },
+				metadata: { type: orderType },
 			})) as ChargeResponse;
 
 			const actions = paymentResponse.actions as
@@ -219,10 +225,10 @@ export class PaymentRepository extends BaseRepository {
 				expiresAt,
 				response: paymentResponse,
 				paymentUrl: action?.url,
-				payload: { method, amount, userId, provider },
+				payload: { method, amount, userId, provider, type: orderType },
 			});
 
-			return payment;
+			return { payment, transaction, wallet };
 		} catch (error) {
 			throw this.handleError(error, "top-up");
 		}
@@ -252,12 +258,12 @@ export class PaymentRepository extends BaseRepository {
 			}
 
 			if (status === "settlement" || status === "success") {
-				const type = body.metadata.type;
-				if (type === "TOP-UP") {
-					await this.#handleTopUpSuccess({ tx, payment, transactionId });
+				const type = body.metadata.type as ChargePayload["orderType"];
+				if (type === "top-up") {
+					await this.#handleTopUpPaymentSuccess({ tx, payment, transactionId });
 				}
-				if (type === "RIDE-HAILING") {
-					await this.#handleOrderSuccess({ tx, payment, transactionId });
+				if (type === "ride" || type === "food" || type === "delivery") {
+					await this.#handleOrderPaymentSuccess({ tx, payment, transactionId });
 				}
 			}
 		} catch (error) {
@@ -327,7 +333,7 @@ export class PaymentRepository extends BaseRepository {
 		});
 	}
 
-	async #handleOrderSuccess(
+	async #handleOrderPaymentSuccess(
 		params: {
 			payment: PaymentDatabase;
 			transactionId: string;
@@ -373,7 +379,7 @@ export class PaymentRepository extends BaseRepository {
 		});
 	}
 
-	async #handleTopUpSuccess(
+	async #handleTopUpPaymentSuccess(
 		params: {
 			payment: PaymentDatabase;
 			transactionId: string;
