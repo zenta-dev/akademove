@@ -110,6 +110,6 @@ export function prefixSchemaKeys<T extends ZodObject, Prefix extends string>(
 export type SchemaRegistries = {
 	[key: string]: {
 		strategy?: "input" | "output";
-		schema: StandardSchemaV1<any, any>;
+		schema: StandardSchemaV1<unknown, unknown>;
 	};
 };
