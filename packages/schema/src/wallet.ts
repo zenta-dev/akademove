@@ -16,6 +16,14 @@ export const WalletSchema = z
 	})
 	.meta({ title: "Wallet" });
 
+export const UpdateWalletSchema = WalletSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+})
+	.partial()
+	.meta({ title: "UpdateWallet" });
+
 export const WalletMonthlySummaryQuerySchema = z
 	.object({
 		year: z.coerce.number(),
@@ -34,6 +42,7 @@ export const WalletMonthlySummaryResponseSchema = z
 
 export type WalletCurrency = z.infer<typeof CurrencySchema>;
 export type Wallet = z.infer<typeof WalletSchema>;
+export type UpdateWallet = z.infer<typeof UpdateWalletSchema>;
 export type WalletMonthlySummaryRequest = z.infer<
 	typeof WalletMonthlySummaryQuerySchema
 >;
@@ -44,6 +53,7 @@ export type WalletMonthlySummaryResponse = z.infer<
 export const WalletSchemaRegistries = {
 	Currency: { schema: CurrencySchema, strategy: "output" },
 	Wallet: { schema: WalletSchema, strategy: "output" },
+	UpdateWallet: { schema: UpdateWalletSchema, strategy: "input" },
 	WalletMonthlySummaryResponse: {
 		schema: WalletMonthlySummaryResponseSchema,
 		strategy: "output",
