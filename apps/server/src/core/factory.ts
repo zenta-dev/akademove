@@ -68,7 +68,8 @@ export function getRepositories(
 	svc: ServiceContext,
 	manager: ManagerContext,
 ): RepositoryContext {
-	const wallet = new WalletRepository(svc.payment);
+	const transaction = new TransactionRepository(svc.db, svc.kv);
+	const wallet = new WalletRepository(svc.db, svc.kv);
 	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
@@ -77,15 +78,21 @@ export function getRepositories(
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
 		},
-		order: new OrderRepository(svc.kv, svc.map, svc.payment, wallet),
-		payment: new PaymentRepository(svc.db),
+		order: new OrderRepository(svc.db, svc.kv, svc.map, svc.payment, wallet),
+		payment: new PaymentRepository(
+			svc.db,
+			svc.kv,
+			svc.payment,
+			transaction,
+			wallet,
+		),
 		coupon: new CouponRepository(svc.db, svc.kv),
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
 		schedule: new DriverScheduleRepository(svc.db, svc.kv),
 		wallet,
-		user: new UserRepository(svc.db, svc.storage),
-		transaction: new TransactionRepository(svc.db),
+		user: new UserRepository(svc.db, svc.kv, svc.storage),
+		transaction,
 	};
 
 	return repo;
