@@ -108,12 +108,18 @@ interface RouteMatrixResponse {
 // ---------------------------------------------------------------------------
 
 export class GoogleMapService implements MapService {
-	readonly #apiKey: string;
 	readonly #timeout = 10000;
+	readonly #headers: Record<string, string>;
+
+	static readonly #EARTH_RADIUS = 6371000;
+	static readonly #DEG_TO_RAD = Math.PI / 180;
 
 	constructor(apiKey: string) {
 		if (!apiKey) throw new MapError("Google Maps API key is required");
-		this.#apiKey = apiKey;
+		this.#headers = {
+			"Content-Type": "application/json",
+			"X-Goog-Api-Key": apiKey,
+		};
 	}
 
 	// ---------------------------------------------------------------------------
@@ -150,19 +156,20 @@ export class GoogleMapService implements MapService {
 			body,
 		);
 
-		const places = (data.places || []).map((item) => ({
-			id: item.id,
-			name: item.displayName?.text || "",
-			address: item.formattedAddress,
-			lat: item.location.latitude,
-			lng: item.location.longitude,
-			types: item.types,
-			rating: item.rating,
-			distance: this.#haversine(coordinate, {
-				x: item.location.longitude,
-				y: item.location.latitude,
-			}),
-		}));
+		const places =
+			data.places?.map((item) => ({
+				id: item.id,
+				name: item.displayName?.text ?? "",
+				address: item.formattedAddress,
+				lat: item.location.latitude,
+				lng: item.location.longitude,
+				types: item.types,
+				rating: item.rating,
+				distance: this.#haversine(coordinate, {
+					x: item.location.longitude,
+					y: item.location.latitude,
+				}),
+			})) ?? [];
 
 		return { data: places, token: data.nextPageToken };
 	}
@@ -203,26 +210,26 @@ export class GoogleMapService implements MapService {
 			body,
 		);
 
-		const places = (data.places || []).map((item) => {
-			const place: Place = {
-				id: item.id,
-				name: item.displayName?.text || "",
-				address: item.formattedAddress,
-				lat: item.location.latitude,
-				lng: item.location.longitude,
-				types: item.types,
-				rating: item.rating,
-			};
+		const places =
+			data.places?.map((item) => {
+				const place: Place = {
+					id: item.id,
+					name: item.displayName?.text ?? "",
+					address: item.formattedAddress,
+					lat: item.location.latitude,
+					lng: item.location.longitude,
+					types: item.types,
+					rating: item.rating,
+					distance: coordinate
+						? this.#haversine(coordinate, {
+								x: item.location.longitude,
+								y: item.location.latitude,
+							})
+						: undefined,
+				};
 
-			if (coordinate) {
-				place.distance = this.#haversine(coordinate, {
-					x: place.lng,
-					y: place.lat,
-				});
-			}
-
-			return place;
-		});
+				return place;
+			}) ?? [];
 
 		return { data: places, token: data.nextPageToken };
 	}
@@ -261,16 +268,16 @@ export class GoogleMapService implements MapService {
 				},
 			],
 			travelMode: "TWO_WHEELER",
-			routingPreference: "TRAFFIC_AWARE_OPTIMAL",
 		};
 
 		const data = await this.#fetchRoutes<RouteMatrixResponse>(
 			"https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix",
 			body,
-			"routes.distanceMeters,routes.duration",
+			"originIndex,destinationIndex,duration,distanceMeters,status",
 		);
 
 		const element = data.routeMatrix?.[0];
+
 		if (
 			element?.distanceMeters &&
 			element.duration &&
@@ -278,11 +285,11 @@ export class GoogleMapService implements MapService {
 		) {
 			return {
 				distanceMeters: element.distanceMeters,
-				durationSeconds: this.#parseDuration(element.duration),
+				durationSeconds:
+					Number.parseInt(element.duration.slice(0, -1), 10) || 0,
 			};
 		}
 
-		// Fallback to straight-line distance
 		return {
 			distanceMeters: this.#haversine(origin, destination),
 			durationSeconds: 0,
@@ -342,7 +349,7 @@ export class GoogleMapService implements MapService {
 		body: Record<string, unknown>,
 	): Promise<T> {
 		return this.#post<T>(url, body, {
-			"X-Goog-Api-Key": this.#apiKey,
+			...this.#headers,
 			"X-Goog-FieldMask": "*",
 		});
 	}
@@ -353,7 +360,7 @@ export class GoogleMapService implements MapService {
 		fieldMask: string,
 	): Promise<T> {
 		return this.#post<T>(url, body, {
-			"X-Goog-Api-Key": this.#apiKey,
+			...this.#headers,
 			"X-Goog-FieldMask": fieldMask,
 		});
 	}
@@ -369,10 +376,7 @@ export class GoogleMapService implements MapService {
 		try {
 			const response = await fetch(url, {
 				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					...headers,
-				},
+				headers,
 				body: JSON.stringify(body),
 				signal: controller.signal,
 			});
@@ -388,8 +392,8 @@ export class GoogleMapService implements MapService {
 
 			return await response.json();
 		} catch (error) {
+			log.error({ detail: error }, "[MapService] $post method");
 			if (error instanceof MapError) throw error;
-			log.error(`[MapService] ${error}`);
 			throw new MapError(`Failed to fetch: ${error}`);
 		} finally {
 			clearTimeout(timeoutId);
@@ -400,29 +404,35 @@ export class GoogleMapService implements MapService {
 	// Private Utility Methods
 	// ---------------------------------------------------------------------------
 
-	#parseDuration(duration: string): number {
-		// Parse duration string like "123s" to seconds
-		return Number.parseInt(duration.replace("s", ""), 10) || 0;
-	}
-
 	#haversine(from: Coordinate, to: Coordinate): number {
-		const R = 6371000;
-		const toRad = (d: number) => (d * Math.PI) / 180;
-		const dLat = toRad(to.y - from.y);
-		const dLon = toRad(to.x - from.x);
+		const dLat = (to.y - from.y) * GoogleMapService.#DEG_TO_RAD;
+		const dLon = (to.x - from.x) * GoogleMapService.#DEG_TO_RAD;
+		const fromLatRad = from.y * GoogleMapService.#DEG_TO_RAD;
+		const toLatRad = to.y * GoogleMapService.#DEG_TO_RAD;
+
+		const sinDLat = Math.sin(dLat / 2);
+		const sinDLon = Math.sin(dLon / 2);
+
 		const a =
-			Math.sin(dLat / 2) ** 2 +
-			Math.cos(toRad(from.y)) * Math.cos(toRad(to.y)) * Math.sin(dLon / 2) ** 2;
-		return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			sinDLat * sinDLat +
+			Math.cos(fromLatRad) * Math.cos(toLatRad) * sinDLon * sinDLon;
+
+		return (
+			GoogleMapService.#EARTH_RADIUS *
+			2 *
+			Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+		);
 	}
 
 	#decodePolyline(encoded: string): Coordinate[] {
 		const coords: Coordinate[] = [];
+		const len = encoded.length;
 		let index = 0;
 		let lat = 0;
 		let lng = 0;
 
-		while (index < encoded.length) {
+		while (index < len) {
+			// Decode latitude
 			let shift = 0;
 			let result = 0;
 			let byte: number;
@@ -435,6 +445,7 @@ export class GoogleMapService implements MapService {
 
 			lat += result & 1 ? ~(result >> 1) : result >> 1;
 
+			// Decode longitude
 			shift = 0;
 			result = 0;
 
@@ -446,7 +457,7 @@ export class GoogleMapService implements MapService {
 
 			lng += result & 1 ? ~(result >> 1) : result >> 1;
 
-			coords.push({ x: lng / 1e5, y: lat / 1e5 });
+			coords.push({ x: lng * 1e-5, y: lat * 1e-5 });
 		}
 
 		return coords;
