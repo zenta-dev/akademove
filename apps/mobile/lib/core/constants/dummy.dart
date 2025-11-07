@@ -4,6 +4,7 @@ import 'package:const_date_time/const_date_time.dart';
 
 const dummyConstDateTime = ConstDateTime(2025, 12, 12);
 const dummyUUIDString = '00000000-0000-0000-0000-000000000000';
+const dummyAmount = 50_000;
 
 const dummyWalletSummary = WalletMonthlySummaryResponse(
   month: '2025-12',
@@ -19,6 +20,7 @@ const dummyTransaction = Transaction(
   amount: 0,
   status: TransactionStatus.pending,
   createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
 );
 
 const dummyOrder = Order(
@@ -36,6 +38,22 @@ const dummyOrder = Order(
   updatedAt: dummyConstDateTime,
 );
 
+const dummyPayment = Payment(
+  id: dummyUUIDString,
+  transactionId: dummyUUIDString,
+  provider: PaymentProvider.MANUAL,
+  method: PaymentMethod.QRIS,
+  amount: dummyAmount,
+  status: TransactionStatus.pending,
+  createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
+);
+
+const dummyPlaceOrderResponse = PlaceOrderResponse(
+  order: dummyOrder,
+  payment: dummyPayment,
+  transaction: dummyTransaction,
+);
 const dummyMerchant = Merchant(
   id: dummyUUIDString,
   userId: dummyUUIDString,
