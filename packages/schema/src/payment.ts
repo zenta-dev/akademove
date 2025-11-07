@@ -9,7 +9,7 @@ export const PaymentMethodSchema = z.enum(PAYMENT_METHOD);
 export const PaymentSchema = z
 	.object({
 		id: z.uuid(),
-		transactionId: z.uuid().optional(),
+		transactionId: z.uuid(),
 		provider: PaymentProviderSchema,
 		method: PaymentMethodSchema,
 		amount: z.number(),
@@ -32,6 +32,16 @@ export const InsertPaymentSchema = PaymentSchema.omit({
 }).meta({
 	title: "InsertPayment",
 });
+
+export const UpdatePaymentSchema = PaymentSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+})
+	.partial()
+	.meta({
+		title: "UpdatePayment",
+	});
 
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
@@ -66,6 +76,7 @@ export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 export type Payment = z.infer<typeof PaymentSchema>;
 export type InsertPayment = z.infer<typeof InsertPaymentSchema>;
+export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
 export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 export type PayRequest = z.infer<typeof PayRequestSchema>;
 export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
@@ -75,6 +86,7 @@ export const PaymentSchemaRegistries = {
 	PaymentMethod: { schema: PaymentMethodSchema, strategy: "output" },
 	Payment: { schema: PaymentSchema, strategy: "output" },
 	InsertPayment: { schema: InsertPaymentSchema, strategy: "input" },
+	UpdatePayment: { schema: UpdatePaymentSchema, strategy: "input" },
 	TopUpRequest: { schema: TopUpRequestSchema, strategy: "input" },
 	PayRequest: { schema: PayRequestSchema, strategy: "input" },
 	TransferRequest: { schema: TransferRequestSchema, strategy: "input" },
