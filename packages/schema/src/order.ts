@@ -10,6 +10,7 @@ import {
 	PaymentSchema,
 } from "./payment.ts";
 import { CoordinateSchema } from "./position.ts";
+import { TransactionSchema } from "./transaction.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES).meta({
@@ -110,6 +111,7 @@ export const PlaceOrderResponseSchema = z
 	.object({
 		order: OrderSchema,
 		payment: PaymentSchema,
+		transaction: TransactionSchema,
 	})
 	.meta({ title: "PlaceOrderResponse" });
 
