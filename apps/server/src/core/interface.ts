@@ -4,14 +4,14 @@ import type { UserRole } from "@repo/schema/user";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
-import type { DriverRepository } from "@/features/driver/driver-repository";
+import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
+import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
 import type { PaymentRepository } from "@/features/payment/payment-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
-import type { DriverScheduleRepository } from "@/features/schedule/schedule-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserRepository } from "@/features/user/user-repository";
 import type { WalletRepository } from "@/features/wallet/wallet-repository";
@@ -37,7 +37,7 @@ export interface ServiceContext {
 export interface RepositoryContext {
 	auth: AuthRepository;
 	configuration: ConfigurationRepository;
-	driver: DriverRepository;
+	driver: DriverMainRepository;
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
