@@ -39,6 +39,7 @@ class App extends StatelessWidget {
             }
           },
           builder: (context, state) => ShadcnApp.router(
+            debugShowCheckedModeBanner: false,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
