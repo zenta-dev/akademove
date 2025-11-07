@@ -1,4 +1,9 @@
-import { extractLocaleFromRequest, getLocale } from "@repo/i18n";
+import {
+	extractLocaleFromRequest,
+	getLocale,
+	type Locale,
+	setLocale,
+} from "@repo/i18n";
 import { cookieParser, type Permissions } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
@@ -99,5 +104,11 @@ export const getThemeCookie = createServerFn({ method: "GET" }).handler(
 export const getLocaleIsomorphic = createIsomorphicFn()
 	.client(getLocale)
 	.server(() => {
-		return extractLocaleFromRequest(getRequest());
+		const req = getRequest();
+		const cookie = cookieParser(req.headers.get("cookie") ?? "");
+
+		const locale = cookie.locale as Locale | undefined;
+		if (locale) setLocale(locale, { reload: false });
+
+		return locale ?? extractLocaleFromRequest(req);
 	});
