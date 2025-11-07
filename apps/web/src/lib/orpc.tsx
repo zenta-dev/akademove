@@ -9,27 +9,34 @@ import { Button } from "@/components/ui/button";
 import { log } from "@/utils/logger";
 import type { ServerSpecClient } from "../../../server/src/features/index";
 
-export const queryClient = new QueryClient({
-	defaultOptions: { queries: { staleTime: 60 * 1000 } },
-	queryCache: new QueryCache({
-		onError: (error) => {
-			if (error.message.toLowerCase().includes("session")) return;
-			if (error.message.toLowerCase().includes("token")) return;
-			toast.error(`Error: ${error.message}`, {
-				action: {
-					label: (
-						<Button variant="ghost" size="icon">
-							<RefreshCwIcon />
-						</Button>
-					),
-					onClick: () => {
-						queryClient.invalidateQueries();
+export let queryClient: QueryClient;
+
+export function createQueryClient() {
+	if (queryClient) return queryClient;
+	const client = new QueryClient({
+		defaultOptions: { queries: { staleTime: 60 * 1000 } },
+		queryCache: new QueryCache({
+			onError: (error) => {
+				if (error.message.toLowerCase().includes("session")) return;
+				if (error.message.toLowerCase().includes("token")) return;
+				toast.error(`Error: ${error.message}`, {
+					action: {
+						label: (
+							<Button variant="ghost" size="icon">
+								<RefreshCwIcon />
+							</Button>
+						),
+						onClick: () => {
+							queryClient.invalidateQueries();
+						},
 					},
-				},
-			});
-		},
-	}),
-});
+				});
+			},
+		}),
+	});
+	queryClient = client;
+	return queryClient;
+}
 
 interface MyContext extends ClientContext {
 	headers?: Headers;
