@@ -3,12 +3,13 @@ import type {
 	MerchantMenu,
 	UpdateMerchantMenu,
 } from "@repo/schema/merchant";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
 import { count, eq, gt, ilike } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
@@ -29,10 +30,10 @@ interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
 }
 
-const bucket = "merchant-menu";
-export class MerchantMenuRepository {
+const BUCKET = "merchant-menu";
+
+export class MerchantMenuRepository extends BaseRepository {
 	readonly #db: DatabaseService;
-	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
 
 	constructor(
@@ -40,13 +41,9 @@ export class MerchantMenuRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
+		super(FEATURE_TAGS.MERCHANT_MENU, kv);
 		this.#db = db;
-		this.#kv = kv;
 		this.#storage = storage;
-	}
-
-	private composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.MERCHANT_MENU}${id}`;
 	}
 
 	static async composeEntity(
@@ -55,7 +52,7 @@ export class MerchantMenuRepository {
 	): Promise<MerchantMenuWithImage> {
 		const image = item.image
 			? storage.getPublicUrl({
-					bucket,
+					bucket: BUCKET,
 					key: item.image,
 				})
 			: undefined;
@@ -69,17 +66,7 @@ export class MerchantMenuRepository {
 		};
 	}
 
-	private async getFromKV(id: string): Promise<MerchantMenu | null> {
-		try {
-			const cached = await this.#kv.get<MerchantMenu>(this.composeCacheKey(id));
-			return cached ?? null;
-		} catch (error) {
-			log.error({ id, error }, "Failed to get from KV cache");
-			return null;
-		}
-	}
-
-	private async getFromDB(id: string): Promise<MerchantMenuWithImage | null> {
+	async #getFromDB(id: string): Promise<MerchantMenuWithImage | null> {
 		try {
 			const result = await this.#db.query.merchantMenu.findFirst({
 				where: eq(tables.merchantMenu.id, id),
@@ -93,54 +80,38 @@ export class MerchantMenuRepository {
 		}
 	}
 
-	private async setCache(id: string, data: MerchantMenu): Promise<void> {
+	async #setTotalRowCache(total: number): Promise<void> {
 		try {
-			await this.#kv.put(this.composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch (error) {
-			log.error({ id, error }, "Failed to set cache");
-		}
-	}
-
-	private async setTotalRowCache(total: number): Promise<void> {
-		try {
-			await this.#kv.put<CountCache>(
-				this.composeCacheKey("count"),
+			await this.setCache<CountCache>(
+				"count",
 				{ total },
-				{
-					expirationTtl: CACHE_TTLS["24h"],
-				},
+				{ expirationTtl: CACHE_TTLS["24h"] },
 			);
 		} catch (error) {
 			log.error({ error }, "Failed to set total row cache");
 		}
 	}
 
-	private async getTotalRow(): Promise<number> {
+	async #getTotalRow(): Promise<number> {
 		try {
-			const kvResult = await this.#kv.get<CountCache>(
-				this.composeCacheKey("count"),
-			);
+			const fallback = async () => {
+				const [dbResult] = await this.#db
+					.select({ count: count(tables.merchantMenu.id) })
+					.from(tables.merchantMenu);
+				const total = dbResult.count;
+				await this.#setTotalRowCache(total);
+				return { total };
+			};
+			const res = await this.getCache<CountCache>("count", { fallback });
 
-			if (kvResult?.total !== undefined) {
-				return kvResult.total;
-			}
-
-			const [dbResult] = await this.#db
-				.select({ count: count(tables.merchantMenu.id) })
-				.from(tables.merchantMenu);
-
-			const total = dbResult?.count ?? 0;
-			await this.setTotalRowCache(total);
-			return total;
+			return res.total;
 		} catch (error) {
 			log.error({ error }, "Failed to get total row count");
 			return 0;
 		}
 	}
 
-	private async getQueryCount(query: string): Promise<number> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
 			const [dbResult] = await this.#db
 				.select({ count: count(tables.merchantMenu.id) })
@@ -154,16 +125,16 @@ export class MerchantMenuRepository {
 		}
 	}
 
-	async list(opts?: GetAllOptions): Promise<ListResult> {
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult> {
 		try {
 			const {
 				cursor,
 				page,
 				limit = 10,
-				query,
+				query: search,
 				sortBy,
 				order = "asc",
-			} = opts ?? {};
+			} = query ?? {};
 
 			if (cursor) {
 				const result = await this.#db.query.merchantMenu.findMany({
@@ -185,8 +156,8 @@ export class MerchantMenuRepository {
 				const result = await this.#db.query.merchantMenu.findMany({
 					offset,
 					limit,
-					where: query
-						? ilike(tables.merchantMenu.name, `%${query}%`)
+					where: search
+						? ilike(tables.merchantMenu.name, `%${search}%`)
 						: undefined,
 					orderBy: (f, op) => {
 						if (sortBy) {
@@ -204,9 +175,9 @@ export class MerchantMenuRepository {
 					),
 				);
 
-				const totalCount = query
-					? await this.getQueryCount(query)
-					: await this.getTotalRow();
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.#getTotalRow();
 
 				const totalPages = Math.ceil(totalCount / limit);
 
@@ -227,26 +198,18 @@ export class MerchantMenuRepository {
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<MerchantMenu> {
+	async get(id: string): Promise<MerchantMenu> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.getFromDB(id);
-			if (!result) {
-				throw new RepositoryError(`Merchant menu with id "${id}" not found`, {
-					code: "NOT_FOUND",
-				});
-			}
-
-			await this.setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get menu from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error({ id, error }, "Failed to get merchant menu");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get merchant menu by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -273,7 +236,7 @@ export class MerchantMenuRepository {
 					.then((r) => r[0]),
 				imageFile && imageKey
 					? this.#storage.upload({
-							bucket,
+							bucket: BUCKET,
 							key: imageKey,
 							file: imageFile,
 							isPublic: true,
@@ -289,11 +252,11 @@ export class MerchantMenuRepository {
 				operation,
 				this.#storage,
 			);
-			const currentCount = await this.getTotalRow();
+			const currentCount = await this.#getTotalRow();
 
 			await Promise.all([
-				this.setCache(result.id, result),
-				this.setTotalRowCache(currentCount + 1),
+				this.setCache(result.id, result, { expirationTtl: CACHE_TTLS["24h"] }),
+				this.#setTotalRowCache(currentCount + 1),
 			]);
 
 			return result;
@@ -309,7 +272,7 @@ export class MerchantMenuRepository {
 		item: UpdateMerchantMenu & { merchantId: string },
 	): Promise<MerchantMenu> {
 		try {
-			const existing = await this.getFromDB(id);
+			const existing = await this.#getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Merchant menu with id "${id}" not found`, {
 					code: "NOT_FOUND",
@@ -322,7 +285,7 @@ export class MerchantMenuRepository {
 				: undefined;
 			const uploadPromise = imageFile
 				? this.#storage.upload({
-						bucket,
+						bucket: BUCKET,
 						key: key ?? `MM-${id}.${getFileExtension(imageFile)}`,
 						file: imageFile,
 						isPublic: true,
@@ -353,7 +316,7 @@ export class MerchantMenuRepository {
 				operation,
 				this.#storage,
 			);
-			await this.setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
 			log.error({ id, error }, "Failed to update merchant menu");
@@ -366,14 +329,14 @@ export class MerchantMenuRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const existing = await this.getFromDB(id);
+			const existing = await this.#getFromDB(id);
 			if (!existing) {
 				throw new RepositoryError(`Merchant menu with id "${id}" not found`, {
 					code: "NOT_FOUND",
 				});
 			}
 
-			const currentCount = await this.getTotalRow();
+			const currentCount = await this.#getTotalRow();
 
 			const [result] = await Promise.all([
 				this.#db
@@ -382,7 +345,7 @@ export class MerchantMenuRepository {
 					.returning({ id: tables.merchantMenu.id }),
 				existing.imageId
 					? this.#storage.delete({
-							bucket,
+							bucket: BUCKET,
 							key: existing.imageId,
 						})
 					: Promise.resolve(),
@@ -390,8 +353,8 @@ export class MerchantMenuRepository {
 
 			if (result.length > 0) {
 				await Promise.all([
-					this.#kv.delete(this.composeCacheKey(id)),
-					this.setTotalRowCache(Math.max(0, currentCount - 1)),
+					this.deleteCache(id),
+					this.#setTotalRowCache(Math.max(0, currentCount - 1)),
 				]);
 			}
 		} catch (error) {

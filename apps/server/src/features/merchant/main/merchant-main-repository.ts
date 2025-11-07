@@ -3,28 +3,24 @@ import type {
 	Merchant,
 	UpdateMerchant,
 } from "@repo/schema/merchant";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
 import { eq, sql } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
-import {
-	type DatabaseService,
-	type DatabaseTransaction,
-	tables,
-} from "@/core/services/db";
+import type { WithTx } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
-import { log } from "@/utils";
 
 const PRIV_BUCKET = "merchant-priv";
 const PUB_BUCKET = "merchant";
 
-export class MerchantMainRepository {
+export class MerchantMainRepository extends BaseRepository {
 	readonly #db: DatabaseService;
-	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
 
 	constructor(
@@ -32,13 +28,9 @@ export class MerchantMainRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
+		super(FEATURE_TAGS.MERCHANT, kv);
 		this.#db = db;
-		this.#kv = kv;
 		this.#storage = storage;
-	}
-
-	private composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.MERCHANT}${id}`;
 	}
 
 	static async composeEntity(
@@ -69,15 +61,7 @@ export class MerchantMainRepository {
 		};
 	}
 
-	private async getFromKV(id: string): Promise<Merchant | undefined> {
-		try {
-			return await this.#kv.get(this.composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
-	private async getFromDB(
+	async #getFromDB(
 		id: string,
 	): Promise<
 		(Merchant & { documentId?: string; imageId?: string }) | undefined
@@ -90,24 +74,12 @@ export class MerchantMainRepository {
 			: undefined;
 	}
 
-	private async setCache(
-		id: string,
-		data: Merchant | undefined,
-	): Promise<void> {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {}
-	}
-
-	async list(opts?: GetAllOptions): Promise<Merchant[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<Merchant[]> {
 		try {
 			let stmt = this.#db.query.merchant.findMany();
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 
 				if (cursor && limit) {
 					stmt = this.#db.query.merchant.findMany({
@@ -130,28 +102,22 @@ export class MerchantMainRepository {
 				),
 			);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list merchants");
+			throw this.handleError(error, "list");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Merchant> {
+	async get(id: string): Promise<Merchant> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get merchant from DB");
-
-			await this.setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get merchant from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get merchant by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -165,15 +131,13 @@ export class MerchantMainRepository {
 
 			return await MerchantMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to get merchant by user id "${userId}"`,
-			);
+			throw this.handleError(error, "get by user id");
 		}
 	}
 
-	async getPopularMerchants(opts?: GetAllOptions): Promise<Merchant[]> {
+	async getPopularMerchants(
+		opts?: UnifiedPaginationQuery,
+	): Promise<Merchant[]> {
 		try {
 			const limit = opts?.limit ?? 20;
 			let paginationClause = sql``;
@@ -255,23 +219,21 @@ export class MerchantMainRepository {
 			const merchantMap = new Map(merchants.map((m) => [m.id, m]));
 			const ordered = rows
 				.map((r) => merchantMap.get(r.merchant_id))
-				.filter(Boolean);
+				.filter((m): m is MerchantDatabase => m !== undefined && m !== null);
 
 			return await Promise.all(
 				ordered.map((m) =>
-					MerchantMainRepository.composeEntity(m!, this.#storage),
+					MerchantMainRepository.composeEntity(m, this.#storage),
 				),
 			);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to get popular merchants");
+			throw this.handleError(error, "get popular merchants");
 		}
 	}
 
 	async create(
 		item: InsertMerchant & { userId: string },
-		opts?: { tx?: DatabaseTransaction },
+		opts?: Partial<WithTx>,
 	): Promise<Merchant> {
 		try {
 			const id = v7();
@@ -311,18 +273,18 @@ export class MerchantMainRepository {
 				operation,
 				this.#storage,
 			);
-			await this.setCache(result.id, result);
+			await this.setCache(result.id, result, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create merchant");
+			throw this.handleError(error, "create");
 		}
 	}
 
 	async update(id: string, item: UpdateMerchant): Promise<Merchant> {
 		try {
-			const existing = await this.getFromDB(id);
+			const existing = await this.#getFromDB(id);
 			if (!existing)
 				throw new RepositoryError(`Merchant with id "${id}" not found`);
 
@@ -364,17 +326,16 @@ export class MerchantMainRepository {
 				operation,
 				this.#storage,
 			);
-			await this.setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update merchant with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
 	async remove(id: string): Promise<void> {
 		try {
-			const find = await this.getFromDB(id);
+			const find = await this.#getFromDB(id);
 			if (!find)
 				throw new RepositoryError("Merchant not found", { code: "NOT_FOUND" });
 
@@ -398,14 +359,10 @@ export class MerchantMainRepository {
 			]);
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.composeCacheKey(id));
-				} catch {}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete merchant with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

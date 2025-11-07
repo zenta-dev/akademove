@@ -1,25 +1,20 @@
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { InsertReport, Report, UpdateReport } from "@repo/schema/report";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
-import { log } from "@/utils";
 
-export class ReportRepository {
+export class ReportRepository extends BaseRepository {
 	#db: DatabaseService;
-	#kv: KeyValueService;
 
 	constructor(db: DatabaseService, kv: KeyValueService) {
+		super(FEATURE_TAGS.REPORT, kv);
 		this.#db = db;
-		this.#kv = kv;
-	}
-
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.REPORT}${id}`;
 	}
 
 	static composeEntity(item: ReportDatabase): Report {
@@ -33,14 +28,6 @@ export class ReportRepository {
 		};
 	}
 
-	async #getFromKV(id: string): Promise<Report | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
 	async #getFromDB(id: string): Promise<Report | undefined> {
 		const result = await this.#db.query.report.findFirst({
 			where: (f, op) => op.eq(f.id, id),
@@ -48,23 +35,12 @@ export class ReportRepository {
 		return result ? ReportRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: Report | undefined): Promise<void> {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			// ignore cache failures
-		}
-	}
-
-	async list(opts?: GetAllOptions): Promise<Report[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<Report[]> {
 		try {
 			let stmt = this.#db.query.report.findMany();
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 
 				if (cursor) {
 					stmt = this.#db.query.report.findMany({
@@ -85,28 +61,22 @@ export class ReportRepository {
 			const result = await stmt;
 			return result.map((r) => ReportRepository.composeEntity(r));
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list reports");
+			throw this.handleError(error, "list");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Report> {
+	async get(id: string): Promise<Report> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get report from db");
-
-			await this.#setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get report by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -118,13 +88,11 @@ export class ReportRepository {
 				.returning();
 
 			const result = ReportRepository.composeEntity(operation);
-			await this.#setCache(result.id, result);
+			await this.setCache(result.id, result);
 
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create report");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -137,7 +105,6 @@ export class ReportRepository {
 			const [operation] = await this.#db
 				.update(tables.report)
 				.set({
-					...existing,
 					...item,
 					reportedAt: new Date(existing.reportedAt),
 					resolvedAt:
@@ -151,12 +118,11 @@ export class ReportRepository {
 				.returning();
 
 			const result = ReportRepository.composeEntity(operation);
-			await this.#setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update report with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
@@ -168,16 +134,10 @@ export class ReportRepository {
 				.returning({ id: tables.report.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(id));
-				} catch {
-					// ignore cache deletion errors
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete report with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

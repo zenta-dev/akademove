@@ -3,68 +3,44 @@ import type {
 	InsertDriverSchedule,
 	UpdateDriverSchedule,
 } from "@repo/schema/driver";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverScheduleDatabase } from "@/core/tables/driver";
-import { log } from "@/utils";
 
-export class DriverScheduleRepository {
+export class DriverScheduleRepository extends BaseRepository {
 	#db: DatabaseService;
-	#kv: KeyValueService;
 
 	constructor(db: DatabaseService, kv: KeyValueService) {
+		super(FEATURE_TAGS.DRIVER_SCHEDULE, kv);
 		this.#db = db;
-		this.#kv = kv;
 	}
 
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.DRIVER}${id}`;
-	}
-
-	#composeEntity(item: DriverScheduleDatabase): DriverSchedule {
+	static composeEntity(item: DriverScheduleDatabase): DriverSchedule {
 		return {
 			...item,
 			specificDate: item.specificDate ?? undefined,
 		};
 	}
 
-	async #getFromKV(id: string): Promise<DriverSchedule | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
 	async #getFromDB(id: string): Promise<DriverSchedule | undefined> {
 		const result = await this.#db.query.driverSchedule.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? DriverScheduleRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: DriverSchedule | undefined): Promise<void> {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			// ignore cache write failures
-		}
-	}
-
-	async list(opts?: GetAllOptions): Promise<DriverSchedule[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<DriverSchedule[]> {
 		try {
 			let stmt = this.#db.query.driverSchedule.findMany();
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 
 				if (cursor) {
 					stmt = this.#db.query.driverSchedule.findMany({
@@ -83,30 +59,25 @@ export class DriverScheduleRepository {
 			}
 
 			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			return result.map((r) => DriverScheduleRepository.composeEntity(r));
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list schedules");
+			throw this.handleError(error, "list");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<DriverSchedule> {
+	async get(id: string): Promise<DriverSchedule> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get schedule from db");
-
-			await this.#setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res)
+					throw new RepositoryError("Failed to get driver schedule from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get schedule by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -123,14 +94,14 @@ export class DriverScheduleRepository {
 				})
 				.returning();
 
-			const result = this.#composeEntity(operation);
-			await this.#setCache(result.id, result);
+			const result = DriverScheduleRepository.composeEntity(operation);
+			await this.setCache(result.id, result, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
 
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create schedule");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -159,12 +130,11 @@ export class DriverScheduleRepository {
 				.where(eq(tables.driverSchedule.id, id))
 				.returning();
 
-			const result = this.#composeEntity(operation);
-			await this.#setCache(id, result);
+			const result = DriverScheduleRepository.composeEntity(operation);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update schedule with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
@@ -176,16 +146,10 @@ export class DriverScheduleRepository {
 				.returning({ id: tables.driverSchedule.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(id));
-				} catch {
-					// ignore cache delete failures
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete schedule with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

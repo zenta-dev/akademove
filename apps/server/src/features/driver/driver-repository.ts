@@ -1,15 +1,12 @@
 import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { v7 } from "uuid";
-import {
-	CACHE_PREFIXES,
-	CACHE_TTLS,
-	type StorageBucket,
-} from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS, type StorageBucket } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -18,12 +15,10 @@ import {
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
-import { log } from "@/utils";
 import type { NearbyQuery } from "./driver-spec";
 
-export class DriverRepository {
+export class DriverRepository extends BaseRepository {
 	readonly #db: DatabaseService;
-	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
 	readonly #bucket: StorageBucket = "driver";
 
@@ -32,13 +27,9 @@ export class DriverRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
+		super(FEATURE_TAGS.DRIVER, kv);
 		this.#db = db;
-		this.#kv = kv;
 		this.#storage = storage;
-	}
-
-	private composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.DRIVER}${id}`;
 	}
 
 	static async composeEntity(
@@ -80,15 +71,7 @@ export class DriverRepository {
 		};
 	}
 
-	private async getFromKV(id: string): Promise<Driver | undefined> {
-		try {
-			return await this.#kv.get(this.composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
-	private async getFromDB(id: string): Promise<
+	async #getFromDB(id: string): Promise<
 		| (Driver & {
 				studentCardId: string;
 				driverLicenseId: string;
@@ -106,23 +89,14 @@ export class DriverRepository {
 			: undefined;
 	}
 
-	private async setCache(id: string, data: Driver | undefined) {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {}
-	}
-
-	async list(opts?: GetAllOptions): Promise<Driver[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<Driver[]> {
 		try {
 			let stmt = this.#db.query.driver.findMany({
 				with: { user: { columns: { name: true } } },
 			});
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 				if (cursor && limit) {
 					stmt = this.#db.query.driver.findMany({
 						with: { user: { columns: { name: true } } },
@@ -144,9 +118,7 @@ export class DriverRepository {
 				result.map((r) => DriverRepository.composeEntity(r, this.#storage)),
 			);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list drivers");
+			throw this.handleError(error, "list");
 		}
 	}
 
@@ -167,10 +139,7 @@ export class DriverRepository {
 	)`,
 			];
 
-			// Only apply gender filter if provided
-			if (gender) {
-				conditions.push(eq(tables.user.gender, gender));
-			}
+			if (gender) conditions.push(eq(tables.user.gender, gender));
 
 			const result = await this.#db
 				.select({
@@ -193,28 +162,22 @@ export class DriverRepository {
 				),
 			);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list nearby drivers");
+			throw this.handleError(error, "nearby");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Driver> {
+	async get(id: string): Promise<Driver> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get driver from DB");
-
-			await this.setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get driver by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -229,11 +192,7 @@ export class DriverRepository {
 
 			return await DriverRepository.composeEntity(result, this.#storage);
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to get merchant by user id "${userId}"`,
-			);
+			throw this.handleError(error, "get by user id");
 		}
 	}
 
@@ -318,18 +277,18 @@ export class DriverRepository {
 				{ ...operation, user },
 				this.#storage,
 			);
-			await this.setCache(result.id, result);
+			await this.setCache(result.id, result, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create driver");
+			throw this.handleError(error, "create");
 		}
 	}
 
 	async update(id: string, item: UpdateDriver): Promise<Driver> {
 		try {
-			const existing = await this.getFromDB(id);
+			const existing = await this.#getFromDB(id);
 			if (!existing)
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 
@@ -364,7 +323,6 @@ export class DriverRepository {
 				this.#db
 					.update(tables.driver)
 					.set({
-						...existing,
 						...item,
 						studentCard: existing.studentCardId,
 						driverLicense: existing.driverLicenseId,
@@ -381,17 +339,16 @@ export class DriverRepository {
 				{ ...operation, user },
 				this.#storage,
 			);
-			await this.setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update driver with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
 	async remove(id: string): Promise<void> {
 		try {
-			const find = await this.getFromDB(id);
+			const find = await this.#getFromDB(id);
 			if (!find)
 				throw new RepositoryError("Driver not found", { code: "NOT_FOUND" });
 
@@ -412,14 +369,10 @@ export class DriverRepository {
 			]);
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.composeCacheKey(id));
-				} catch {}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete driver with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

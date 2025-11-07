@@ -1,25 +1,21 @@
 import type { Coupon, InsertCoupon, UpdateCoupon } from "@repo/schema/coupon";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
 
-export class CouponRepository {
-	#db: DatabaseService;
-	#kv: KeyValueService;
+export class CouponRepository extends BaseRepository {
+	readonly #db: DatabaseService;
 
 	constructor(db: DatabaseService, kv: KeyValueService) {
+		super(FEATURE_TAGS.COUPON, kv);
 		this.#db = db;
-		this.#kv = kv;
-	}
-
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.COUPON}${id}`;
 	}
 
 	static composeEntity(item: CouponDatabase): Coupon {
@@ -32,14 +28,6 @@ export class CouponRepository {
 		};
 	}
 
-	async #getFromKV(id: string): Promise<Coupon | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
 	async #getFromDB(id: string): Promise<Coupon | undefined> {
 		const result = await this.#db.query.coupon.findFirst({
 			where: (f, op) => op.eq(f.id, id),
@@ -47,23 +35,12 @@ export class CouponRepository {
 		return result ? CouponRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: Coupon | undefined): Promise<void> {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			// ignore cache write failures
-		}
-	}
-
-	async list(opts?: GetAllOptions): Promise<Coupon[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<Coupon[]> {
 		try {
 			let stmt = this.#db.query.coupon.findMany();
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 
 				if (cursor) {
 					stmt = this.#db.query.coupon.findMany({
@@ -85,28 +62,23 @@ export class CouponRepository {
 			const result = await stmt;
 			return result.map((item) => CouponRepository.composeEntity(item));
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list coupons");
+			throw this.handleError(error, "list");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Coupon> {
+	async get(id: string): Promise<Coupon> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(id);
-				if (cached) return cached;
-			}
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get coupon from db");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
 
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get coupon from db");
-
-			await this.#setCache(id, result);
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get coupon by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -129,12 +101,10 @@ export class CouponRepository {
 				.returning();
 
 			const result = CouponRepository.composeEntity(operation);
-			await this.#setCache(result.id, result);
+			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create coupon");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -159,11 +129,10 @@ export class CouponRepository {
 				.returning();
 
 			const result = CouponRepository.composeEntity(operation);
-			await this.#setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update coupon with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
@@ -175,16 +144,10 @@ export class CouponRepository {
 				.returning({ id: tables.coupon.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(id));
-				} catch {
-					// ignore cache delete failures
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete coupon with id "${id}"`);
+			throw this.handleError(error, "delete");
 		}
 	}
 }

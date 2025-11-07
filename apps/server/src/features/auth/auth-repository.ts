@@ -11,8 +11,9 @@ import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import { getFileExtension, omit } from "@repo/shared";
 import { v7 } from "uuid";
+import { BaseRepository } from "@/core/base";
 import { FEATURE_TAGS } from "@/core/constants";
-import { AuthError, BaseError, RepositoryError } from "@/core/error";
+import { AuthError, RepositoryError } from "@/core/error";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -20,16 +21,14 @@ import {
 } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
-import { log } from "@/utils";
 import type { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 import { UserRepository } from "../user/user-repository";
 
 const BUCKET = "user";
 
-export class AuthRepository {
+export class AuthRepository extends BaseRepository {
 	readonly #db: DatabaseService;
-	readonly #kv: KeyValueService;
 	readonly #storage: StorageService;
 	readonly #jwt: JwtManager;
 	readonly #pw: PasswordManager;
@@ -42,24 +41,18 @@ export class AuthRepository {
 		storage: StorageService,
 		jwt: JwtManager,
 	) {
+		super(FEATURE_TAGS.USER, kv);
 		this.#db = db;
-		this.#kv = kv;
 		this.#storage = storage;
 		this.#jwt = jwt;
 		this.#pw = new PasswordManager();
 	}
 
-	private composeKey(id: string) {
-		return `${FEATURE_TAGS.AUTH}:${FEATURE_TAGS.USER}:${id}`;
-	}
-
-	private generateId(): string {
+	#generateId(): string {
 		return randomBytes(32).toString("hex");
 	}
 
 	async signIn(params: SignIn & { clientAgent?: ClientAgent }) {
-		log.debug(params, `${this.signIn.name} body`);
-
 		try {
 			const user = await this.#db.query.user.findFirst({
 				with: {
@@ -84,29 +77,27 @@ export class AuthRepository {
 				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
 			}
 
-			const omittedUser = omit(user, ["accounts"]);
+			const composedUser = await UserRepository.composeEntity(
+				omit(user, ["accounts"]),
+				this.#storage,
+				{ expiresIn: 604800 },
+			);
+
 			const [token, _] = await Promise.all([
 				this.#jwt.sign({
-					id: omittedUser.id,
-					role: omittedUser.role,
+					id: composedUser.id,
+					role: composedUser.role,
 					expiration: this.#JWT_EXPIRY,
 					clientAgent: params.clientAgent,
 				}),
-				this.#kv.put(this.composeKey(user.id), omittedUser),
+				this.setCache(composedUser.id, composedUser),
 			]);
-			log.debug(omittedUser, `${this.signIn.name} success`);
 			return {
 				token,
-				user: await UserRepository.composeEntity(omittedUser, this.#storage, {
-					expiresIn: 604800,
-				}),
+				user: composedUser,
 			};
 		} catch (error) {
-			log.error(error, `${this.signIn.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("An error occured", {
-				code: "INTERNAL_SERVER_ERROR",
-			});
+			throw this.handleError(error, "sign in");
 		}
 	}
 
@@ -114,8 +105,6 @@ export class AuthRepository {
 		params: SignUp & { role?: UserRole },
 		opts?: { tx?: DatabaseTransaction },
 	) {
-		log.debug(params, `${this.signUp.name} body`);
-
 		try {
 			const existingUser = await (opts?.tx ?? this.#db).query.user.findFirst({
 				columns: { email: true, phone: true },
@@ -145,7 +134,7 @@ export class AuthRepository {
 			}
 
 			const hashedPassword = this.#pw.hash(params.password);
-			const userId = this.generateId();
+			const userId = this.#generateId();
 
 			let photoKey: string | undefined;
 			if (params.photo) {
@@ -165,8 +154,8 @@ export class AuthRepository {
 
 			const promises: Promise<unknown>[] = [
 				(opts?.tx ?? this.#db).insert(tables.account).values({
-					id: this.generateId(),
-					accountId: this.generateId(),
+					id: this.#generateId(),
+					accountId: this.#generateId(),
 					userId: user.id,
 					providerId: "credentials",
 					password: hashedPassword,
@@ -192,11 +181,7 @@ export class AuthRepository {
 
 			return { user: await UserRepository.composeEntity(user, this.#storage) };
 		} catch (error) {
-			log.error(error, `${this.signUp.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("An error occured", {
-				code: "INTERNAL_SERVER_ERROR",
-			});
+			throw this.handleError(error, "sign up");
 		}
 	}
 
@@ -208,11 +193,7 @@ export class AuthRepository {
 			const { user } = await this.signUp({ ...params, role: "driver" }, opts);
 			return { user };
 		} catch (error) {
-			log.error(error, `${this.signUpDriver.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("An error occured", {
-				code: "INTERNAL_SERVER_ERROR",
-			});
+			throw this.handleError(error, "sign up driver");
 		}
 	}
 
@@ -224,49 +205,39 @@ export class AuthRepository {
 			const { user } = await this.signUp({ ...params, role: "merchant" }, opts);
 			return { user };
 		} catch (error) {
-			log.error(error, `${this.signUpMerchant.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("An error occured", {
-				code: "INTERNAL_SERVER_ERROR",
-			});
+			throw this.handleError(error, "sign up merchant");
 		}
 	}
 
 	async signOut(token: string) {
-		log.debug(`${this.signOut.name} | JWT => ${token.substring(0, 20)}...`);
-
 		try {
 			const payload = await this.#jwt.verify(token);
-			await this.#kv.delete(this.composeKey(payload.id));
-			log.debug(`${this.signOut.name} success`);
+			await this.deleteCache(payload.id);
 			return true;
 		} catch (error) {
-			log.error(error, `${this.signOut.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("Invalid or expired token", {
-				code: "UNAUTHORIZED",
-			});
+			throw this.handleError(error, "sign out");
 		}
 	}
 
 	async getSession(token: string) {
-		log.debug(
-			{ jwt: `${token.substring(0, 20)}...` },
-			`${this.getSession.name} | JWT => `,
-		);
-
 		try {
 			const payload = await this.#jwt.verify(token);
-			const user = await this.#kv.get(this.composeKey(payload.id), {
-				fallback: async () =>
-					await this.#db.query.user.findFirst({
-						where: (f, op) => op.eq(f.id, payload.id),
-					}),
-			});
 
-			if (!user) {
-				throw new AuthError("User not found", { code: "UNAUTHORIZED" });
-			}
+			const fallback = async () => {
+				const res = await this.#db.query.user.findFirst({
+					where: (f, op) => op.eq(f.id, payload.id),
+				});
+				if (!res) {
+					throw new AuthError("User not found", { code: "UNAUTHORIZED" });
+				}
+				const user = await UserRepository.composeEntity(res, this.#storage, {
+					expiresIn: 604800,
+				});
+				await this.setCache(user.id, user);
+				return user;
+			};
+
+			const user = await this.getCache(payload.id, { fallback });
 
 			let newToken: string | undefined;
 			if (payload.shouldRotate) {
@@ -278,16 +249,12 @@ export class AuthRepository {
 			}
 
 			return {
-				user: await UserRepository.composeEntity(user, this.#storage),
+				user,
 				token: newToken,
 				payload,
 			};
 		} catch (error) {
-			log.error(error, `${this.getSession.name} failed`);
-			if (error instanceof BaseError) throw error;
-			throw new AuthError("Invalid or expired token", {
-				code: "UNAUTHORIZED",
-			});
+			throw this.handleError(error, "get session");
 		}
 	}
 

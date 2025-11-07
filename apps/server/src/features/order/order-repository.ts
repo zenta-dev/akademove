@@ -17,52 +17,44 @@ import type {
 	PlaceOrderResponse,
 	UpdateOrder,
 } from "@repo/schema/order";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
 import { eq, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
-import {
-	CACHE_PREFIXES,
-	CACHE_TTLS,
-	CONFIGURATION_KEYS,
-} from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, CONFIGURATION_KEYS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type {
-	GetAllOptions,
-	GetOptions,
-	WithTx,
-	WithUserId,
-} from "@/core/interface";
-import { tables } from "@/core/services/db";
+import type { WithTx, WithUserId } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
 import type { PaymentService } from "@/core/services/payment";
 import type { OrderDatabase } from "@/core/tables/order";
-import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
 import { PaymentRepository } from "../payment/payment-repository";
+import { TransactionRepository } from "../transaction/transaction-repository";
 import type { WalletRepository } from "../wallet/wallet-repository";
 
-export class OrderRepository {
-	#kv: KeyValueService;
-	#map: MapService;
-	#payment: PaymentService;
-	#wallet: WalletRepository;
+export class OrderRepository extends BaseRepository {
+	readonly #db: DatabaseService;
+	readonly #map: MapService;
+	readonly #payment: PaymentService;
+	readonly #wallet: WalletRepository;
 
 	constructor(
+		db: DatabaseService,
 		kv: KeyValueService,
 		map: MapService,
 		payment: PaymentService,
 		wallet: WalletRepository,
 	) {
-		this.#kv = kv;
+		super(FEATURE_TAGS.ORDER, kv);
+		this.#db = db;
 		this.#map = map;
 		this.#payment = payment;
 		this.#wallet = wallet;
-	}
-
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.ORDER}${id}`;
 	}
 
 	static composeEntity(
@@ -90,49 +82,28 @@ export class OrderRepository {
 		};
 	}
 
-	async #getFromKV(id: string): Promise<Order | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
-	async #getFromDB(
-		params: { id: string } & WithTx,
-	): Promise<Order | undefined> {
-		const result = await params.tx.query.order.findFirst({
+	async #getFromDB(id: string, opts?: WithTx): Promise<Order | undefined> {
+		const result = await (opts?.tx ?? this.#db).query.order.findFirst({
 			with: {
 				user: { columns: { name: true } },
 				driver: { columns: {}, with: { user: { columns: { name: true } } } },
 				merchant: { columns: { name: true } },
 			},
-			where: (f, op) => op.eq(f.id, params.id),
+			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? OrderRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: Order | undefined) {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			/* ignore cache errors */
-		}
-	}
-
 	async list(
-		params: WithTx,
-		opts?: GetAllOptions & {
+		query?: UnifiedPaginationQuery & {
 			statuses?: OrderStatus[];
 			id: string;
 			role: UserRole;
 		},
+		opts?: WithTx,
 	): Promise<Order[]> {
 		try {
-			let stmt = params.tx.query.order.findMany({
+			let stmt = (opts?.tx ?? this.#db).query.order.findMany({
 				with: {
 					user: { columns: { name: true } },
 					driver: { columns: {}, with: { user: { columns: { name: true } } } },
@@ -140,20 +111,20 @@ export class OrderRepository {
 				},
 				where: (f, op) => {
 					const filters: SQL[] = [];
-					const statuses = opts?.statuses ?? [];
+					const statuses = query?.statuses ?? [];
 
 					if (statuses.length > 0) filters.push(op.inArray(f.status, statuses));
 
-					if (opts?.id && opts.role) {
-						switch (opts.role) {
+					if (query?.id && query.role) {
+						switch (query.role) {
 							case "user":
-								filters.push(op.eq(f.userId, opts.id));
+								filters.push(op.eq(f.userId, query.id));
 								break;
 							case "driver":
-								filters.push(op.eq(f.driverId, opts.id));
+								filters.push(op.eq(f.driverId, query.id));
 								break;
 							case "merchant":
-								filters.push(op.eq(f.merchantId, opts.id));
+								filters.push(op.eq(f.merchantId, query.id));
 								break;
 						}
 					}
@@ -162,10 +133,10 @@ export class OrderRepository {
 				},
 			});
 
-			if (opts) {
-				const { cursor, page, limit = 10 } = opts;
+			if (query) {
+				const { cursor, page, limit = 10 } = query;
 				if (cursor) {
-					stmt = params.tx.query.order.findMany({
+					stmt = (opts?.tx ?? this.#db).query.order.findMany({
 						with: {
 							user: { columns: { name: true } },
 							driver: {
@@ -176,19 +147,19 @@ export class OrderRepository {
 						},
 						where: (f, op) => {
 							const filters: SQL[] = [op.gt(f.updatedAt, new Date(cursor))];
-							const statuses = opts?.statuses ?? [];
+							const statuses = query?.statuses ?? [];
 							if (statuses.length > 0)
 								filters.push(op.inArray(f.status, statuses));
-							if (opts?.id && opts.role) {
-								switch (opts.role) {
+							if (query?.id && query.role) {
+								switch (query.role) {
 									case "user":
-										filters.push(op.eq(f.userId, opts.id));
+										filters.push(op.eq(f.userId, query.id));
 										break;
 									case "driver":
-										filters.push(op.eq(f.driverId, opts.id));
+										filters.push(op.eq(f.driverId, query.id));
 										break;
 									case "merchant":
-										filters.push(op.eq(f.merchantId, opts.id));
+										filters.push(op.eq(f.merchantId, query.id));
 										break;
 								}
 							}
@@ -201,7 +172,7 @@ export class OrderRepository {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = params.tx.query.order.findMany({
+					stmt = (opts?.tx ?? this.#db).query.order.findMany({
 						with: {
 							user: { columns: { name: true } },
 							driver: {
@@ -214,19 +185,19 @@ export class OrderRepository {
 						limit,
 						where: (f, op) => {
 							const filters: SQL[] = [];
-							const statuses = opts?.statuses ?? [];
+							const statuses = query?.statuses ?? [];
 							if (statuses.length > 0)
 								filters.push(op.inArray(f.status, statuses));
-							if (opts?.id && opts.role) {
-								switch (opts.role) {
+							if (query?.id && query.role) {
+								switch (query.role) {
 									case "user":
-										filters.push(op.eq(f.userId, opts.id));
+										filters.push(op.eq(f.userId, query.id));
 										break;
 									case "driver":
-										filters.push(op.eq(f.driverId, opts.id));
+										filters.push(op.eq(f.driverId, query.id));
 										break;
 									case "merchant":
-										filters.push(op.eq(f.merchantId, opts.id));
+										filters.push(op.eq(f.merchantId, query.id));
 										break;
 								}
 							}
@@ -239,14 +210,13 @@ export class OrderRepository {
 			const result = await stmt;
 			return result.map((r) => OrderRepository.composeEntity(r));
 		} catch (error) {
-			log.error({ detail: error }, "Failed to list order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list orders");
+			throw this.handleError(error, "list");
 		}
 	}
 
 	async #getPricingConfiguration(
-		params: { type: OrderType } & WithTx,
+		params: { type: OrderType },
+		opts: WithTx,
 	): Promise<ConfigurationValue | undefined> {
 		let key = "";
 		switch (params.type) {
@@ -263,34 +233,31 @@ export class OrderRepository {
 				throw new RepositoryError("Invalid order type");
 		}
 
-		const res = await safeAsync(
-			this.#kv.get(key, {
-				fallback: async () => {
-					const res = await params.tx.query.configuration.findFirst({
-						where: (f, op) => op.eq(f.key, key),
-					});
-					const value = res?.value;
-					if (value) {
-						await safeAsync(
-							this.#kv.put(key, value, {
-								expirationTtl: CACHE_TTLS["24h"],
-							}),
-						);
-					}
-					return value;
-				},
-			}),
-		);
+		const fallback = async () => {
+			const res = await opts.tx.query.configuration.findFirst({
+				where: (f, op) => op.eq(f.key, key),
+			});
+			const value = res?.value;
+			if (value) {
+				this.setCache(key, value, {
+					expirationTtl: CACHE_TTLS["24h"],
+				});
+			}
+			return value;
+		};
+
+		const res = await safeAsync(this.getCache(key, { fallback }));
 
 		return res.data;
 	}
 
 	async estimate(
-		params: EstimateOrder & WithTx,
+		params: EstimateOrder,
+		opts: WithTx,
 	): Promise<OrderSummary & { config: ConfigurationValue }> {
 		try {
 			const [pricingConfig, { distanceMeters }] = await Promise.all([
-				this.#getPricingConfiguration({ ...params }),
+				this.#getPricingConfiguration({ type: params.type }, { tx: opts.tx }),
 				this.#map.getRouteDistance(
 					params.pickupLocation,
 					params.dropoffLocation,
@@ -338,45 +305,37 @@ export class OrderRepository {
 
 			return { ...pricing, config: pricingConfig };
 		} catch (error) {
-			log.error({ detail: error }, "Failed to estimate order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to estimate price");
+			throw this.handleError(error, "estimate");
 		}
 	}
 
-	async get(
-		params: { id: string } & WithTx,
-		opts?: GetOptions,
-	): Promise<Order> {
+	async get(id: string, opts?: WithTx): Promise<Order> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(params.id);
-				if (cached) return cached;
-			}
-
-			const result = await this.#getFromDB(params);
-			if (!result) throw new RepositoryError("Failed to get order from db");
-
-			await this.#setCache(params.id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id, opts);
+				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["1h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error({ detail: error }, "Failed to get order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get order by id "${params.id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
 	async placeOrder(
-		params: PlaceOrder & WithUserId & WithTx,
+		params: PlaceOrder & WithUserId,
+		opts: WithTx,
 	): Promise<PlaceOrderResponse> {
 		try {
 			const [estimate, user, wallet] = await Promise.all([
-				this.estimate(params),
-				params.tx.query.user.findFirst({
+				this.estimate(params, opts),
+				opts.tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, params.userId),
 				}),
-				this.#wallet.ensureWallet({ ...params }),
+				this.#wallet.getByUserId(params.userId, opts),
 			]);
 
 			if (!user) {
@@ -390,8 +349,8 @@ export class OrderRepository {
 
 			const safeTotalCost = toStringNumberSafe(estimate.totalCost);
 
-			const [[createOrder], [transaction]] = await Promise.all([
-				params.tx
+			const [[createOrder], [createTransaction]] = await Promise.all([
+				opts.tx
 					.insert(tables.order)
 					.values({
 						id: v7(),
@@ -408,7 +367,7 @@ export class OrderRepository {
 						updatedAt: new Date(),
 					})
 					.returning({ id: tables.order.id }),
-				params.tx
+				opts.tx
 					.insert(tables.transaction)
 					.values({
 						id: v7(),
@@ -430,7 +389,7 @@ export class OrderRepository {
 				},
 				expiry: { duration: EXPIRY_MINUTES, unit: "minute" },
 				method: params.payment.method,
-				metadata: { type: "RIDE-HAILING" },
+				metadata: { type: `${params.type.toUpperCase()}-HAILING` },
 			})) as ChargeResponse;
 
 			const actions = paymentResponse.actions as
@@ -442,16 +401,16 @@ export class OrderRepository {
 				| undefined;
 			const action = actions?.find((val) => val.name === "generate-qr-code");
 
-			const [paymentResult] = await params.tx
+			const [paymentResult] = await opts.tx
 				.insert(tables.payment)
 				.values({
 					id: v7(),
-					transactionId: transaction.id,
+					transactionId: createTransaction.id,
 					provider: params.payment.provider,
 					method: params.payment.method,
 					amount: safeTotalCost,
 					status: "pending",
-					externalId: transaction.id,
+					externalId: createOrder.id,
 					expiresAt,
 					response: paymentResponse,
 					paymentUrl: action?.url,
@@ -464,44 +423,41 @@ export class OrderRepository {
 				})
 				.returning();
 
-			const order = await this.#getFromDB({
-				id: createOrder.id,
-				tx: params.tx,
-			});
+			const order = await this.#getFromDB(createOrder.id, opts);
 			if (!order) throw new RepositoryError("Failed to place order");
 
-			const payment = PaymentRepository.composePayment(paymentResult);
-			await this.#setCache(order.id, order);
+			const payment = PaymentRepository.composeEntity(paymentResult);
+			await this.setCache(order.id, order, {
+				expirationTtl: CACHE_TTLS["1h"],
+			});
 
-			return { order, payment };
+			const transaction =
+				TransactionRepository.composeEntity(createTransaction);
+			const result = { order, payment, transaction };
+
+			return result;
 		} catch (error) {
-			log.error({ detail: error }, "Failed to place order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to place order");
+			throw this.handleError(error, "place");
 		}
 	}
 
-	async update(
-		params: { id: string; item: UpdateOrder } & WithTx,
-	): Promise<Order> {
+	async update(id: string, item: UpdateOrder, opts: WithTx): Promise<Order> {
 		try {
-			const existing = await this.#getFromDB(params);
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
-				throw new RepositoryError(`Order with id "${params.id}" not found`);
+				throw new RepositoryError(`Order with id "${id}" not found`);
 
-			const [operation] = await params.tx
+			const [operation] = await opts.tx
 				.update(tables.order)
 				.set({
-					...params.item,
+					...item,
 					basePrice: existing.basePrice
 						? toStringNumberSafe(existing.basePrice)
 						: undefined,
 					totalPrice: existing.totalPrice
 						? toStringNumberSafe(existing.totalPrice)
 						: undefined,
-					tip: params.item.tip
-						? toStringNumberSafe(params.item.tip)
-						: undefined,
+					tip: item.tip ? toStringNumberSafe(item.tip) : undefined,
 					acceptedAt: existing.acceptedAt
 						? new Date(existing.acceptedAt)
 						: null,
@@ -509,43 +465,33 @@ export class OrderRepository {
 					createdAt: new Date(existing.createdAt),
 					updatedAt: new Date(),
 				})
-				.where(eq(tables.order.id, params.id))
+				.where(eq(tables.order.id, id))
 				.returning({ id: tables.order.id });
 
-			const result = await this.#getFromDB({ id: operation.id, tx: params.tx });
+			const result = await this.#getFromDB(operation.id, opts);
 			if (!result) throw new RepositoryError("Failed to update order");
 
-			await this.#setCache(params.id, result);
+			await this.setCache(id, result, {
+				expirationTtl: CACHE_TTLS["1h"],
+			});
 			return result;
 		} catch (error) {
-			log.error({ detail: error }, "Failed to update order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to update order with id "${params.id}"`,
-			);
+			throw this.handleError(error, "update");
 		}
 	}
 
-	async remove(params: { id: string } & WithTx): Promise<void> {
+	async remove(id: string, opts: WithTx): Promise<void> {
 		try {
-			const result = await params.tx
+			const result = await opts.tx
 				.delete(tables.order)
-				.where(eq(tables.order.id, params.id))
+				.where(eq(tables.order.id, id))
 				.returning({ id: tables.order.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(params.id));
-				} catch {
-					/* ignore cache errors */
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error({ detail: error }, "Failed to remove order");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to delete order with id "${params.id}"`,
-			);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

@@ -1,19 +1,28 @@
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { InsertUser, UpdateUser, User } from "@repo/schema/user";
-import { eq } from "drizzle-orm";
+import { eq, gt, ne, type SQL } from "drizzle-orm";
+import { BaseRepository } from "@/core/base";
+import { FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions } from "@/core/interface";
+import type { PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import { log } from "@/utils";
 
 const BUCKET = "user";
 
-export class UserRepository {
+export class UserRepository extends BaseRepository {
 	#db: DatabaseService;
 	#storage: StorageService;
 
-	constructor(db: DatabaseService, storage: StorageService) {
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
+		super(FEATURE_TAGS.USER, kv);
 		this.#db = db;
 		this.#storage = storage;
 	}
@@ -49,20 +58,25 @@ export class UserRepository {
 			: undefined;
 	}
 
-	async list(requesterId: string, opts?: GetAllOptions): Promise<User[]> {
+	async list(
+		query?: UnifiedPaginationQuery & { requesterId: string },
+	): Promise<User[]> {
 		try {
 			let stmt = this.#db.query.user.findMany();
 
-			if (opts) {
-				const { cursor, page, limit = 10 } = opts;
+			if (query) {
+				const { cursor, page, limit = 10 } = query;
+				const clauses: SQL[] = [];
+				if (cursor) {
+					clauses.push(gt(tables.user.createdAt, new Date(cursor)));
+				}
+				if (query.requesterId) {
+					clauses.push(ne(tables.user.id, query.requesterId));
+				}
 
 				if (cursor) {
 					stmt = this.#db.query.user.findMany({
-						where: (f, op) =>
-							op.and(
-								op.gt(f.createdAt, new Date(cursor)),
-								op.ne(f.id, requesterId),
-							),
+						where: (_f, op) => op.and(...clauses),
 						limit: limit + 1,
 					});
 				}
@@ -87,12 +101,16 @@ export class UserRepository {
 
 	async get(id: string): Promise<User> {
 		try {
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError(`User with id "${id}" not found`);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				await this.setCache(id, res);
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			throw new RepositoryError(`Failed to get user by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -121,7 +139,8 @@ export class UserRepository {
 	async update(
 		_id: string,
 		_item: UpdateUser,
-		_headers: Headers,
+		_opts: PartialWithTx,
+		_header: Headers,
 	): Promise<User> {
 		throw new Error("UNIMPLEMETED");
 		// try {
@@ -185,10 +204,14 @@ export class UserRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			await this.#db
+			const result = await this.#db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
 				.returning({ id: tables.user.id });
+
+			if (result.length > 0) {
+				await this.deleteCache(id);
+			}
 		} catch (error) {
 			log.error(error);
 			throw new RepositoryError(`Failed to delete user with id "${id}"`);

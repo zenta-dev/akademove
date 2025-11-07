@@ -1,37 +1,24 @@
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { InsertReview, Review, UpdateReview } from "@repo/schema/review";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
-import { log } from "@/utils";
 
-export class ReviewRepository {
+export class ReviewRepository extends BaseRepository {
 	#db: DatabaseService;
-	#kv: KeyValueService;
 
 	constructor(db: DatabaseService, kv: KeyValueService) {
+		super(FEATURE_TAGS.REVIEW, kv);
 		this.#db = db;
-		this.#kv = kv;
-	}
-
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.REVIEW}${id}`;
 	}
 
 	static composeEntity(item: ReviewDatabase): Review {
 		return item;
-	}
-
-	async #getFromKV(id: string): Promise<Review | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
 	}
 
 	async #getFromDB(id: string): Promise<Review | undefined> {
@@ -41,23 +28,12 @@ export class ReviewRepository {
 		return result ? ReviewRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: Review | undefined): Promise<void> {
-		if (!data) return;
-		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			// ignore cache write failures
-		}
-	}
-
-	async list(opts?: GetAllOptions): Promise<Review[]> {
+	async list(query?: UnifiedPaginationQuery): Promise<Review[]> {
 		try {
 			let stmt = this.#db.query.review.findMany();
 
-			if (opts) {
-				const { cursor, page, limit } = opts;
+			if (query) {
+				const { cursor, page, limit } = query;
 
 				if (cursor) {
 					stmt = this.#db.query.review.findMany({
@@ -78,28 +54,22 @@ export class ReviewRepository {
 			const result = await stmt;
 			return result.map((r) => ReviewRepository.composeEntity(r));
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list reviews");
+			throw this.handleError(error, "list");
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Review> {
+	async get(id: string): Promise<Review> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(id);
-				if (cached) return cached;
-			}
-
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get review from db");
-
-			await this.#setCache(id, result);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get review from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get review by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -111,12 +81,12 @@ export class ReviewRepository {
 				.returning();
 
 			const result = ReviewRepository.composeEntity(operation);
-			await this.#setCache(result.id, result);
+			await this.setCache(result.id, result, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create review");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -129,7 +99,6 @@ export class ReviewRepository {
 			const [operation] = await this.#db
 				.update(tables.review)
 				.set({
-					...existing,
 					...item,
 					createdAt: new Date(existing.createdAt),
 				})
@@ -137,11 +106,10 @@ export class ReviewRepository {
 				.returning();
 
 			const result = ReviewRepository.composeEntity(operation);
-			await this.#setCache(id, result);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update review with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
@@ -153,16 +121,10 @@ export class ReviewRepository {
 				.returning({ id: tables.review.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(id));
-				} catch {
-					// ignore cache delete failures
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete review with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }
