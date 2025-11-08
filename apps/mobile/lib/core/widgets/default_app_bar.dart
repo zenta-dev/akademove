@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DefaultAppBar extends StatelessWidget {
-  const DefaultAppBar({required this.title, super.key});
+  const DefaultAppBar({required this.title, this.subtitle, super.key});
   final String title;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,12 @@ class DefaultAppBar extends StatelessWidget {
         title,
         style: context.typography.h4.copyWith(fontSize: 18.sp),
       ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle ?? "",
+              style: context.typography.h4.copyWith(fontSize: 14.sp),
+            )
+          : null,
       leading: [
         if (context.canPop()) ...[
           IconButton(
