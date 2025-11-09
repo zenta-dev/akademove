@@ -29,7 +29,7 @@ export const setupHonoRouter = () => {
 				"Content-Type",
 				"Authorization",
 				"X-Client-Agent",
-				"x-orpc-batch",
+				"X-Orpc-Batch",
 			],
 			credentials: true,
 		});
