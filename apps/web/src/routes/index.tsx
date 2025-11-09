@@ -1,21 +1,11 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: <explanation> */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
-	motion,
-	useInView,
-	useScroll,
-	useSpring,
-	useTransform,
-} from "framer-motion";
-import {
-	BadgeCent,
 	BadgeCentIcon,
-	Blocks,
 	BlocksIcon,
 	type LucideIcon,
-	Phone,
 	PhoneIcon,
-	Verified,
 	VerifiedIcon,
 } from "lucide-react";
 import type React from "react";
@@ -32,7 +22,6 @@ import hero1 from "@/assets/landing/hero-1.png";
 import mobileShowcaseUrl from "@/assets/landing/mobile-showcase.png";
 import { SignUpDialog } from "@/components/dialogs/sign-up-dialog";
 import { LandingFooter } from "@/components/footer/landing-footer";
-import { PublicFooter } from "@/components/footer/public";
 import { PublicHeader } from "@/components/header/public";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";

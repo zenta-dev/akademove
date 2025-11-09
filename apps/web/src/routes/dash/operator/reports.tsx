@@ -6,7 +6,6 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/operator/reports")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.REPORTS }] }),
-
 	beforeLoad: async () => {
 		const ok = await hasAccess({
 			report: ["create", "get", "export"],
