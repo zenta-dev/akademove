@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/popover";
 import { BetterAuthClientError } from "@/lib/error";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { Separator } from "../ui/separator";
 
 export const BanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -131,8 +132,10 @@ export const BanUserDialog = ({ userId }: { userId: string }) => {
 							)}
 						/>
 
-						<div>
-							<Label>{m.ban_reason()}</Label>
+						<Separator className="my-2" />
+
+						<div className="flex flex-col gap-2">
+							<Label>{m.ban_until()}</Label>
 							<div className="flex gap-4">
 								<div className="flex flex-col gap-3">
 									<Label htmlFor={`date-picker-${userId}`}>Date</Label>
