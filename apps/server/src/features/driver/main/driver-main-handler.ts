@@ -8,7 +8,9 @@ export const DriverMainHandler = priv.router({
 	getMine: priv.getMine
 		.use(hasPermission({ merchant: ["get"] }))
 		.handler(async ({ context }) => {
-			const result = await context.repo.driver.getByUserId(context.user.id);
+			const result = await context.repo.driver.main.getByUserId(
+				context.user.id,
+			);
 
 			return {
 				status: 200,
@@ -18,7 +20,7 @@ export const DriverMainHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ driver: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const { rows, totalPages } = await context.repo.driver.list(query);
+			const { rows, totalPages } = await context.repo.driver.main.list(query);
 
 			return {
 				status: 200,
@@ -32,7 +34,7 @@ export const DriverMainHandler = priv.router({
 	nearby: priv.nearby
 		.use(hasPermission({ driver: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.driver.nearby(query);
+			const result = await context.repo.driver.main.nearby(query);
 			return {
 				status: 200,
 				body: { message: "Successfully retrieved drivers data", data: result },
@@ -41,7 +43,7 @@ export const DriverMainHandler = priv.router({
 	get: priv.get
 		.use(hasPermission({ driver: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
-			const result = await context.repo.driver.get(params.id);
+			const result = await context.repo.driver.main.get(params.id);
 
 			return {
 				status: 200,
@@ -51,7 +53,7 @@ export const DriverMainHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ driver: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.driver.update(params.id, body);
+			const result = await context.repo.driver.main.update(params.id, body);
 
 			return {
 				status: 200,
@@ -61,7 +63,7 @@ export const DriverMainHandler = priv.router({
 	remove: priv.remove
 		.use(hasPermission({ driver: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
-			await context.repo.driver.remove(params.id);
+			await context.repo.driver.main.remove(params.id);
 
 			return {
 				status: 200,

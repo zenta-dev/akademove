@@ -80,7 +80,10 @@ export function getRepositories(
 	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
-		driver: new DriverMainRepository(svc.db, svc.kv, svc.storage),
+		driver: {
+			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
+			schedule: new DriverScheduleRepository(svc.db, svc.kv),
+		},
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
@@ -90,7 +93,6 @@ export function getRepositories(
 		coupon: new CouponRepository(svc.db, svc.kv),
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
-		schedule: new DriverScheduleRepository(svc.db, svc.kv),
 		wallet,
 		user: new UserRepository(svc.db, svc.kv, svc.storage),
 		transaction,

@@ -37,7 +37,10 @@ export interface ServiceContext {
 export interface RepositoryContext {
 	auth: AuthRepository;
 	configuration: ConfigurationRepository;
-	driver: DriverMainRepository;
+	driver: {
+		main: DriverMainRepository;
+		schedule: DriverScheduleRepository;
+	};
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
@@ -47,7 +50,6 @@ export interface RepositoryContext {
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
-	schedule: DriverScheduleRepository;
 	transaction: TransactionRepository;
 	user: UserRepository;
 	wallet: WalletRepository;
