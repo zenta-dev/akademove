@@ -2,11 +2,21 @@ import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
-import { and, eq, isNotNull, sql } from "drizzle-orm";
+import {
+	and,
+	count,
+	eq,
+	gt,
+	ilike,
+	isNotNull,
+	type SQL,
+	sql,
+} from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS, type StorageBucket } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
+import type { ListResult } from "@/core/interface";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -14,8 +24,11 @@ import {
 } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
+import type { UserDatabase } from "@/core/tables/auth";
 import type { DriverDatabase } from "@/core/tables/driver";
-import type { NearbyQuery } from "./driver-main-spec";
+import { UserRepository } from "@/features/user/user-repository";
+import { log } from "@/utils";
+import { DriverSortBySchema, type NearbyQuery } from "./driver-main-spec";
 
 const BUCKET = "driver";
 
@@ -32,7 +45,7 @@ export class DriverMainRepository extends BaseRepository {
 	}
 
 	static async composeEntity(
-		item: DriverDatabase & { user: Partial<User> },
+		item: DriverDatabase & { user: UserDatabase },
 		storage: StorageService,
 	): Promise<
 		Driver & {
@@ -41,24 +54,26 @@ export class DriverMainRepository extends BaseRepository {
 			vehicleCertificateId: string;
 		}
 	> {
-		const bucket = "driver";
-		const [studentCard, driverLicense, vehicleCertificate] = await Promise.all([
-			storage.getPresignedUrl({
-				bucket: bucket,
-				key: item.studentCard,
-			}),
-			storage.getPresignedUrl({
-				bucket: bucket,
-				key: item.driverLicense,
-			}),
-			storage.getPresignedUrl({
-				bucket: bucket,
-				key: item.vehicleCertificate,
-			}),
-		]);
+		const [studentCard, driverLicense, vehicleCertificate, user] =
+			await Promise.all([
+				storage.getPresignedUrl({
+					bucket: BUCKET,
+					key: item.studentCard,
+				}),
+				storage.getPresignedUrl({
+					bucket: BUCKET,
+					key: item.driverLicense,
+				}),
+				storage.getPresignedUrl({
+					bucket: BUCKET,
+					key: item.vehicleCertificate,
+				}),
+				UserRepository.composeEntity(item.user, storage),
+			]);
 
 		return {
 			...item,
+			user,
 			currentLocation: item.currentLocation ?? undefined,
 			lastLocationUpdate: item.lastLocationUpdate ?? undefined,
 			studentCardId: item.studentCard,
@@ -78,8 +93,8 @@ export class DriverMainRepository extends BaseRepository {
 		  })
 		| undefined
 	> {
-		const result = await this.#db.query.driver.findFirst({
-			with: { user: { columns: { name: true } } },
+		const result = await this.db.query.driver.findFirst({
+			with: { user: true },
 			where: (f, op) => op.eq(f.id, id),
 		});
 
@@ -88,34 +103,110 @@ export class DriverMainRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<Driver[]> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			let stmt = this.#db.query.driver.findMany({
-				with: { user: { columns: { name: true } } },
-			});
+			const [dbResult] = await this.db
+				.select({ count: count(tables.user.id) })
+				.from(tables.user)
+				.where(ilike(tables.user.name, `%${query}%`));
 
-			if (query) {
-				const { cursor, page, limit } = query;
-				if (cursor && limit) {
-					stmt = this.#db.query.driver.findMany({
-						with: { user: { columns: { name: true } } },
-						where: (f, op) => op.gt(f.lastLocationUpdate, new Date(cursor)),
-						limit: limit + 1,
-					});
-				} else if (page && limit) {
-					const offset = (page - 1) * limit;
-					stmt = this.#db.query.driver.findMany({
-						with: { user: { columns: { name: true } } },
-						offset,
-						limit,
-					});
-				}
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
+
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Driver>> {
+		try {
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+			} = query ?? {};
+
+			const clauses: SQL[] = [];
+
+			if (cursor) {
+				clauses.push(gt(tables.driver.updatedAt, new Date(cursor)));
+
+				const result = await this.db.query.driver.findMany({
+					with: { user: true },
+					where: (_f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = DriverSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					limit: limit + 1,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) =>
+						DriverMainRepository.composeEntity(r, this.#storage),
+					),
+				);
+				return { rows };
 			}
 
-			const result = await stmt;
-			return await Promise.all(
+			if (page !== undefined) {
+				const offset = (page - 1) * limit;
+
+				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
+
+				const result = await this.db.query.driver.findMany({
+					with: { user: true },
+					where: (_f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = DriverSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					offset,
+					limit,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) =>
+						DriverMainRepository.composeEntity(r, this.#storage),
+					),
+				);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const result = await this.db.query.driver.findMany({
+				with: { user: true },
+				where: (_f, op) => op.and(...clauses),
+				orderBy: (f, op) => {
+					if (sortBy) {
+						const parsed = DriverSortBySchema.safeParse(sortBy);
+						const field = parsed.success ? f[parsed.data] : f.id;
+						return op[order](field);
+					}
+					return op[order](f.id);
+				},
+				limit,
+			});
+			const rows = await Promise.all(
 				result.map((r) => DriverMainRepository.composeEntity(r, this.#storage)),
 			);
+			return { rows };
 		} catch (error) {
 			throw this.handleError(error, "list");
 		}
@@ -140,10 +231,10 @@ export class DriverMainRepository extends BaseRepository {
 
 			if (gender) conditions.push(eq(tables.user.gender, gender));
 
-			const result = await this.#db
+			const result = await this.db
 				.select({
 					driver: tables.driver,
-					userName: tables.user.name,
+					user: tables.user,
 					distance: distance.as("distance_meters"),
 				})
 				.from(tables.driver)
@@ -155,7 +246,7 @@ export class DriverMainRepository extends BaseRepository {
 			return await Promise.all(
 				result.map((r) =>
 					DriverMainRepository.composeEntity(
-						{ ...r.driver, user: { name: r.userName } },
+						{ ...r.driver, user: r.user },
 						this.#storage,
 					),
 				),
@@ -182,8 +273,8 @@ export class DriverMainRepository extends BaseRepository {
 
 	async getByUserId(userId: string): Promise<Driver> {
 		try {
-			const result = await this.#db.query.driver.findFirst({
-				with: { user: { columns: { name: true } } },
+			const result = await this.db.query.driver.findFirst({
+				with: { user: true },
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
@@ -201,11 +292,10 @@ export class DriverMainRepository extends BaseRepository {
 	): Promise<Driver> {
 		try {
 			const [user, existingDriver] = await Promise.all([
-				(opts?.tx ?? this.#db).query.user.findFirst({
-					columns: { name: true },
+				(opts?.tx ?? this.db).query.user.findFirst({
 					where: (f, op) => op.eq(f.id, item.userId),
 				}),
-				(opts?.tx ?? this.#db).query.driver.findFirst({
+				(opts?.tx ?? this.db).query.driver.findFirst({
 					columns: { studentId: true, licensePlate: true },
 					where: (f, op) =>
 						op.or(
@@ -250,23 +340,23 @@ export class DriverMainRepository extends BaseRepository {
 			};
 
 			const [operation] = await Promise.all([
-				(opts?.tx ?? this.#db)
+				(opts?.tx ?? this.db)
 					.insert(tables.driver)
 					.values({ ...item, id, ...fileKeys })
 					.returning()
 					.then((r) => r[0]),
 				this.#storage.upload({
-					bucket: this.#bucket,
+					bucket: BUCKET,
 					key: fileKeys.studentCard,
 					file: item.studentCard,
 				}),
 				this.#storage.upload({
-					bucket: this.#bucket,
+					bucket: BUCKET,
 					key: fileKeys.driverLicense,
 					file: item.driverLicense,
 				}),
 				this.#storage.upload({
-					bucket: this.#bucket,
+					bucket: BUCKET,
 					key: fileKeys.vehicleCertificate,
 					file: item.vehicleCertificate,
 				}),
@@ -291,8 +381,7 @@ export class DriverMainRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 
-			const user = await this.#db.query.user.findFirst({
-				columns: { name: true },
+			const user = await this.db.query.user.findFirst({
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
 			if (!user) throw new RepositoryError("User not found");
@@ -300,26 +389,26 @@ export class DriverMainRepository extends BaseRepository {
 			const uploads = [
 				item.studentCard &&
 					this.#storage.upload({
-						bucket: this.#bucket,
+						bucket: BUCKET,
 						key: `SC-${id}.${getFileExtension(item.studentCard)}`,
 						file: item.studentCard,
 					}),
 				item.driverLicense &&
 					this.#storage.upload({
-						bucket: this.#bucket,
+						bucket: BUCKET,
 						key: `DL-${id}.${getFileExtension(item.driverLicense)}`,
 						file: item.driverLicense,
 					}),
 				item.vehicleCertificate &&
 					this.#storage.upload({
-						bucket: this.#bucket,
+						bucket: BUCKET,
 						key: `VC-${id}.${getFileExtension(item.vehicleCertificate)}`,
 						file: item.vehicleCertificate,
 					}),
 			].filter(Boolean);
 
 			const [operation] = await Promise.all([
-				this.#db
+				this.db
 					.update(tables.driver)
 					.set({
 						...item,
@@ -352,17 +441,17 @@ export class DriverMainRepository extends BaseRepository {
 				throw new RepositoryError("Driver not found", { code: "NOT_FOUND" });
 
 			const [result] = await Promise.all([
-				this.#db
+				this.db
 					.delete(tables.driver)
 					.where(eq(tables.driver.id, id))
 					.returning({ id: tables.driver.id }),
-				this.#storage.delete({ bucket: this.#bucket, key: find.studentCardId }),
+				this.#storage.delete({ bucket: BUCKET, key: find.studentCardId }),
 				this.#storage.delete({
-					bucket: this.#bucket,
+					bucket: BUCKET,
 					key: find.driverLicenseId,
 				}),
 				this.#storage.delete({
-					bucket: this.#bucket,
+					bucket: BUCKET,
 					key: find.vehicleCertificateId,
 				}),
 			]);

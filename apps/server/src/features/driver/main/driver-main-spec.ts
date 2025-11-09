@@ -16,6 +16,8 @@ export const NearbyQuerySchema = z.object({
 
 export type NearbyQuery = z.infer<typeof NearbyQuerySchema>;
 
+export const DriverSortBySchema = z.enum(["id"]);
+
 export const DriverMainSpec = {
 	getMine: oc
 		.route({

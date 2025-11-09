@@ -18,11 +18,15 @@ export const DriverMainHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ driver: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.driver.list(query);
+			const { rows, totalPages } = await context.repo.driver.list(query);
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved drivers data", data: result },
+				body: {
+					message: "Successfully retrieved drivers data",
+					data: rows,
+					totalPages,
+				},
 			};
 		}),
 	nearby: priv.nearby
