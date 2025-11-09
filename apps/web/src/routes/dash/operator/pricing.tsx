@@ -89,7 +89,7 @@ export const Route = createFileRoute("/dash/operator/pricing")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.PRICING }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
-			pricing: ["get", "update"],
+			configurations: ["get", "update"],
 		});
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
