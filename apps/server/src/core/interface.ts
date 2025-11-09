@@ -94,3 +94,11 @@ export type WebsocketAttachment = {
 	id: string;
 	[key: string]: string;
 };
+export type ListResult<T> = {
+	rows: T[];
+	totalPages?: number;
+};
+
+export interface CountCache {
+	total: number;
+}

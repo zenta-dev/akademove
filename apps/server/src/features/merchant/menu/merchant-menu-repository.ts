@@ -10,21 +10,13 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
+import type { CountCache, ListResult } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { MerchantMenuSortBySchema } from "./merchant-menu-spec";
-
-interface CountCache {
-	total: number;
-}
-
-interface ListResult {
-	rows: MerchantMenu[];
-	totalPages?: number;
-}
 
 interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
@@ -125,7 +117,9 @@ export class MerchantMenuRepository extends BaseRepository {
 		}
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<ListResult> {
+	async list(
+		query?: UnifiedPaginationQuery,
+	): Promise<ListResult<MerchantMenu>> {
 		try {
 			const {
 				cursor,
