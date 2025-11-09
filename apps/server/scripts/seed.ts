@@ -340,9 +340,9 @@ async function seedMerchants() {
 			name: faker.company.name(),
 			email: user.email,
 			phone: user.phone,
-			categories: Array.from({
-				length: faker.number.int({ min: 1, max: 6 }),
-			}).map(() => faker.food.ethnicCategory()),
+			// categories: Array.from({
+			// 	length: faker.number.int({ min: 1, max: 6 }),
+			// }).map(() => faker.food.ethnicCategory()),
 			address: faker.location.streetAddress(),
 			location: {
 				y: faker.location.latitude(),
