@@ -21,13 +21,14 @@ export const MerchantMainHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ merchant: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.merchant.main.list(query);
+			const { rows, totalPages } = await context.repo.merchant.main.list(query);
 
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved merchants data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

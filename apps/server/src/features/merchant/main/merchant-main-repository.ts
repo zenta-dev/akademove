@@ -5,16 +5,18 @@ import type {
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { WithTx } from "@/core/interface";
+import type { ListResult, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
+import { log } from "@/utils";
+import { MerchantMainSortBySchema } from "./merchant-main-spec";
 
 const PRIV_BUCKET = "merchant-priv";
 const PUB_BUCKET = "merchant";
@@ -72,33 +74,109 @@ export class MerchantMainRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<Merchant[]> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			let stmt = this.db.query.merchant.findMany();
+			const [dbResult] = await this.db
+				.select({ count: count(tables.driver.id) })
+				.from(tables.driver)
+				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
+				.where(ilike(tables.user.name, `%${query}%`));
 
-			if (query) {
-				const { cursor, page, limit } = query;
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
 
-				if (cursor && limit) {
-					stmt = this.db.query.merchant.findMany({
-						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
-						limit: limit + 1,
-					});
-				} else if (page && limit) {
-					const offset = (page - 1) * limit;
-					stmt = this.db.query.merchant.findMany({
-						offset,
-						limit,
-					});
-				}
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Merchant>> {
+		try {
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+			} = query ?? {};
+
+			const clauses: SQL[] = [];
+			if (cursor) {
+				clauses.push(gt(tables.merchant.updatedAt, new Date(cursor)));
+
+				const result = await this.db.query.merchant.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = MerchantMainSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					limit: limit + 1,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) =>
+						MerchantMainRepository.composeEntity(r, this.#storage),
+					),
+				);
+				return { rows };
 			}
 
-			const result = await stmt;
-			return await Promise.all(
+			if (page !== undefined) {
+				const offset = (page - 1) * limit;
+
+				if (search) clauses.push(ilike(tables.merchant.name, `%${search}%`));
+
+				const result = await this.db.query.merchant.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = MerchantMainSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					offset,
+					limit,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) =>
+						MerchantMainRepository.composeEntity(r, this.#storage),
+					),
+				);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const result = await this.db.query.merchant.findMany({
+				where: (_f, op) => op.and(...clauses),
+				orderBy: (f, op) => {
+					if (sortBy) {
+						const parsed = MerchantMainSortBySchema.safeParse(sortBy);
+						const field = parsed.success ? f[parsed.data] : f.id;
+						return op[order](field);
+					}
+					return op[order](f.id);
+				},
+				limit,
+			});
+			const rows = await Promise.all(
 				result.map((r) =>
 					MerchantMainRepository.composeEntity(r, this.#storage),
 				),
 			);
+			return { rows };
 		} catch (error) {
 			throw this.handleError(error, "list");
 		}

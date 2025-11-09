@@ -8,6 +8,8 @@ import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { toOAPIRequestBody } from "@/utils/oapi";
 
+export const MerchantMainSortBySchema = z.enum(["name", "id"]);
+
 export const MerchantMainSpec = {
 	getMine: oc
 		.route({
