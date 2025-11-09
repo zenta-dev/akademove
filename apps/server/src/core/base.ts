@@ -100,10 +100,15 @@ export class BaseDurableObject extends DurableObject {
 		return filtered;
 	}
 
-	protected broadcast(message: unknown) {
-		const encoded = JSON.stringify(message);
+	protected broadcast(object: unknown, opts?: { excludes?: WebSocket[] }) {
+		const encoded = JSON.stringify(object);
+		if (this.sessions.size === 0) return;
+
+		const excludeSet = opts?.excludes?.length ? new Set(opts.excludes) : null;
+
 		for (const ws of this.sessions.values()) {
-			ws.send(encoded);
+			if (excludeSet?.has(ws)) continue;
+			if (ws.readyState === ws.OPEN) ws.send(encoded);
 		}
 	}
 }
