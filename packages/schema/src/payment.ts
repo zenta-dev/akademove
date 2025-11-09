@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { PAYMENT_METHOD, PAYMENT_PROVIDER } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { TransactionStatusSchema } from "./transaction.ts";
 
 export const PaymentProviderSchema = z.enum(PAYMENT_PROVIDER);
@@ -24,6 +25,8 @@ export const PaymentSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "Payment" });
+
+export const PaymentKeySchema = extractSchemaKeysAsEnum(PaymentSchema);
 
 export const InsertPaymentSchema = PaymentSchema.omit({
 	id: true,
@@ -91,4 +94,5 @@ export const PaymentSchemaRegistries = {
 	PayRequest: { schema: PayRequestSchema, strategy: "input" },
 	TransferRequest: { schema: TransferRequestSchema, strategy: "input" },
 	WebhookRequest: { schema: WebhookRequestSchema, strategy: "input" },
+	PaymentKey: { schema: PaymentKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

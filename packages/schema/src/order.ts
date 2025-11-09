@@ -2,6 +2,7 @@ import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { DriverSchema } from "./driver.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
 import {
@@ -68,6 +69,8 @@ export const OrderSchema = z
 		merchant: MerchantSchema.partial().optional(),
 	})
 	.meta({ title: "Order" });
+
+export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema);
 
 export const OrderSummarySchema = z
 	.object({
@@ -160,4 +163,5 @@ export const OrderSchemaRegistries = {
 	PlaceOrderResponse: { schema: PlaceOrderResponseSchema, strategy: "input" },
 	UpdateOrder: { schema: UpdateOrderSchema, strategy: "input" },
 	EstimateOrder: { schema: EstimateOrderSchema, strategy: "input" },
+	OrderKey: { schema: OrderKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

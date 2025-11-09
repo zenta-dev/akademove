@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const ReportCategorySchema = z
 	.enum(CONSTANTS.REPORT_CATEGORIES)
@@ -26,6 +27,8 @@ export const ReportSchema = z
 		resolvedAt: DateSchema.optional(),
 	})
 	.meta({ title: "Report" });
+
+export const ReportKeySchema = extractSchemaKeysAsEnum(ReportSchema);
 
 export const InsertReportSchema = ReportSchema.omit({
 	id: true,
@@ -53,4 +56,5 @@ export const ReportSchemaRegistries = {
 	Report: { schema: ReportSchema, strategy: "output" },
 	InsertReport: { schema: InsertReportSchema, strategy: "input" },
 	UpdateReport: { schema: UpdateReportSchema, strategy: "input" },
+	ReportKey: { schema: ReportKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

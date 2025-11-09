@@ -7,6 +7,7 @@ import {
 	TimeSchema,
 } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { CoordinateSchema } from "./position.ts";
 import { UserSchema } from "./user.ts";
 
@@ -41,6 +42,8 @@ export const DriverSchema = z
 			.describe("Each user has different result since it calculated value"),
 	})
 	.meta({ title: "Driver" });
+
+export const DriverKeySchema = extractSchemaKeysAsEnum(DriverSchema);
 
 export const DriverDocumentSchema = z.object({
 	studentCard: z
@@ -95,6 +98,9 @@ export const DriverScheduleSchema = z
 	})
 	.meta({ title: "DriverSchedule" });
 
+export const DriverScheduleKeySchema =
+	extractSchemaKeysAsEnum(DriverScheduleSchema);
+
 export const InsertDriverScheduleSchema = DriverScheduleSchema.omit({
 	id: true,
 	createdAt: true,
@@ -119,4 +125,6 @@ export const DriverSchemaRegistries = {
 	DriverStatus: { schema: DriverStatusSchema, strategy: "output" },
 	Driver: { schema: DriverSchema, strategy: "output" },
 	DriverSchedule: { schema: DriverScheduleSchema, strategy: "output" },
+	DriverKey: { schema: DriverKeySchema, strategy: "input" },
+	DriverScheduleKey: { schema: DriverScheduleKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

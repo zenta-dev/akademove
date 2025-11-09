@@ -6,6 +6,7 @@ import {
 	PhoneSchema,
 	type SchemaRegistries,
 } from "./common.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { CoordinateSchema } from "./position.ts";
 
@@ -30,6 +31,9 @@ export const MerchantSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "Merchant" });
+
+export const MerchantKeySchema = extractSchemaKeysAsEnum(MerchantSchema);
+
 export const MerchantMenuSchema = z
 	.object({
 		id: z.uuid(),
@@ -44,6 +48,9 @@ export const MerchantMenuSchema = z
 	})
 	.meta({ title: "MerchantMenu" });
 
+export const MerchantMenuKeySchema =
+	extractSchemaKeysAsEnum(MerchantMenuSchema);
+
 export const InsertMerchantSchema = MerchantSchema.omit({
 	id: true,
 	userId: true,
@@ -51,6 +58,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	isActive: true,
 	document: true,
 	image: true,
+	categories: true,
 	createdAt: true,
 	updatedAt: true,
 })
@@ -99,4 +107,6 @@ export type FlatUpdateMerchant = z.infer<typeof FlatUpdateMerchantSchema>;
 export const MerchantSchemaRegistries = {
 	Merchant: { schema: MerchantSchema, strategy: "output" },
 	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
+	MerchantKey: { schema: MerchantKeySchema, strategy: "input" },
+	MerchantMenuKey: { schema: MerchantMenuKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

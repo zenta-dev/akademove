@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const TransactionTypeSchema = z.enum(TRANSACTION_TYPE);
 export const TransactionStatusSchema = z.enum(TRANSACTION_STATUS);
@@ -24,6 +25,8 @@ export const TransactionSchema = z
 		title: "WalletTransaction",
 	});
 
+export const TransactionKeySchema = extractSchemaKeysAsEnum(TransactionSchema);
+
 export const InsertTransactionSchema = TransactionSchema.omit({
 	id: true,
 	createdAt: true,
@@ -46,4 +49,5 @@ export const TransactionSchemaRegistries = {
 	Transaction: { schema: TransactionSchema, strategy: "output" },
 	InsertTransaction: { schema: InsertTransactionSchema, strategy: "input" },
 	UpdateTransaction: { schema: UpdateTransactionSchema, strategy: "input" },
+	TransactionKey: { schema: TransactionKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

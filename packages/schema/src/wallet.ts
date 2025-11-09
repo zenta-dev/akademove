@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CURRENCY } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const CurrencySchema = z.enum(CURRENCY);
 
@@ -15,6 +16,8 @@ export const WalletSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "Wallet" });
+
+export const WalletKeySchema = extractSchemaKeysAsEnum(WalletSchema);
 
 export const UpdateWalletSchema = WalletSchema.omit({
 	id: true,
@@ -62,4 +65,5 @@ export const WalletSchemaRegistries = {
 		schema: WalletMonthlySummaryQuerySchema,
 		strategy: "input",
 	},
+	WalletKey: { schema: WalletKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

@@ -47,9 +47,6 @@ export const WSPaymentEnvelopeSchema = createWSEnvelopeSchema(
 		payment: PaymentSchema,
 	}),
 );
-export const WSTransactionEnvelopeSchema =
-	createWSEnvelopeSchema(TransactionSchema);
-
 export const WSOrderEnvelopeSchema = createWSEnvelopeSchema(
 	z.object({
 		driverUpdateLocation: CoordinateSchema.optional(),
@@ -60,7 +57,6 @@ export type WSEnvelope = z.infer<typeof WSEnvelopeSchema>;
 export type WSOrderEnvelope = z.infer<typeof WSOrderEnvelopeSchema>;
 export type WSPaymentEnvelope = z.infer<typeof WSPaymentEnvelopeSchema>;
 export type WSPlaceOrderEnvelope = z.infer<typeof WSPlaceOrderEnvelopeSchema>;
-export type WSTransactionEnvelope = z.infer<typeof WSTransactionEnvelopeSchema>;
 
 export const WebsocketSchemaRegistries = {
 	WSEnvelopeSender: { schema: WSEnvelopeSenderSchema, strategy: "output" },

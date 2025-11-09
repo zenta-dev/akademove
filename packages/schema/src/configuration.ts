@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 const _BasePricingConfigurationSchema = z.object({
 	baseFare: z.number().positive(),
@@ -46,6 +47,9 @@ export const ConfigurationSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "Configuration" });
+
+export const ConfigurationKeySchema =
+	extractSchemaKeysAsEnum(ConfigurationSchema);
 
 export const InsertConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
@@ -101,4 +105,5 @@ export const ConfigurationSchemaRegistries = {
 	},
 	InsertConfiguration: { schema: InsertConfigurationSchema, strategy: "input" },
 	UpdateConfiguration: { schema: UpdateConfigurationSchema, strategy: "input" },
+	ConfigurationKey: { schema: ConfigurationKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;
