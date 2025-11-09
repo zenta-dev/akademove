@@ -1,5 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
+import {
+	type DeliveryPricingConfiguration,
+	type FoodPricingConfiguration,
+	type PricingConfiguration,
+	PricingConfigurationSchema,
+	type RidePricingConfiguration,
+} from "@repo/schema/configuration";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
@@ -7,10 +14,6 @@ import { BikeIcon, PackageIcon, PizzaIcon, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
-import {
-	type UpdatePricing,
-	UpdatePricingSchema,
-} from "@/components/schema/pricing";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -46,6 +49,20 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-blue-500/10",
 			},
 		},
+		defaultValues: {
+			baseFare: 0,
+			perKmRate: 0,
+			minimumFare: 0,
+			platformFeeRate: 0,
+			taxRate: 0,
+		} satisfies RidePricingConfiguration,
+		fields: [
+			"baseFare",
+			"perKmRate",
+			"minimumFare",
+			"platformFeeRate",
+			"taxRate",
+		] as const,
 	},
 	{
 		key: "delivery-service-pricing",
@@ -63,6 +80,22 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-green-500/10",
 			},
 		},
+		defaultValues: {
+			baseFare: 0,
+			perKmRate: 0,
+			minimumFare: 0,
+			platformFeeRate: 0,
+			taxRate: 0,
+			perKgRate: 0,
+		} satisfies DeliveryPricingConfiguration,
+		fields: [
+			"baseFare",
+			"perKmRate",
+			"minimumFare",
+			"platformFeeRate",
+			"taxRate",
+			"perKgRate",
+		] as const,
 	},
 	{
 		key: "food-service-pricing",
@@ -80,6 +113,20 @@ export const CONFIGURATIONS = [
 				bgColor: "data-[state=active]:bg-yellow-500/10",
 			},
 		},
+		defaultValues: {
+			baseFare: 0,
+			perKmRate: 0,
+			minimumFare: 0,
+			platformFeeRate: 0,
+			taxRate: 0,
+		} satisfies FoodPricingConfiguration,
+		fields: [
+			"baseFare",
+			"perKmRate",
+			"minimumFare",
+			"platformFeeRate",
+			"taxRate",
+		] as const,
 	},
 ];
 
@@ -137,12 +184,21 @@ function RouteComponent() {
 		</>
 	);
 }
-const DEFAULT_VALUES: UpdatePricing = {
-	price_per_km: 5000,
-	commission: 5,
-};
 
 const EXAMPLE_KM = 5;
+const EXAMPLE_KG = 2;
+
+function getFieldLabel(fieldName: string) {
+	const labels: Record<string, () => string> = {
+		baseFare: () => m.base_fare?.() || "Base Fare",
+		perKmRate: () => m.per_km_rate?.() || "Price per KM",
+		minimumFare: () => m.minimum_fare?.() || "Minimum Fare",
+		platformFeeRate: () => m.platform_fee_rate?.() || "Platform Fee Rate (%)",
+		taxRate: () => m.tax_rate?.() || "Tax Rate (%)",
+		perKgRate: () => m.per_kg_rate?.() || "Price per KG",
+	};
+	return labels[fieldName]?.() || fieldName;
+}
 
 export function ConfigurationItem({
 	key,
@@ -150,6 +206,8 @@ export function ConfigurationItem({
 	icon: CustomIcon,
 	textColor,
 	bgColor,
+	defaultValues,
+	fields,
 }: Configuration) {
 	const pricing = useQuery(
 		orpcQuery.configuration.get.queryOptions({
@@ -157,15 +215,19 @@ export function ConfigurationItem({
 		}),
 	);
 
-	const form = useForm<UpdatePricing>({
-		resolver: zodResolver(UpdatePricingSchema),
-		defaultValues: DEFAULT_VALUES,
+	const form = useForm({
+		resolver: zodResolver(PricingConfigurationSchema),
+		defaultValues: defaultValues,
 		values: pricing.data
 			? {
-					price_per_km: pricing.data.body.data.value.price_per_km,
-					commission: pricing.data.body.data.value.commission,
+					baseFare: pricing.data.body.data.value.baseFare,
+					perKmRate: pricing.data.body.data.value.perKmRate,
+					minimumFare: pricing.data.body.data.value.minimumFare,
+					platformFeeRate: pricing.data.body.data.value.platformFeeRate,
+					taxRate: pricing.data.body.data.value.taxRate,
+					perKgRate: pricing.data.body.data.value.perKgRate,
 				}
-			: DEFAULT_VALUES,
+			: defaultValues,
 	});
 
 	const mutation = useMutation(
@@ -196,16 +258,27 @@ export function ConfigurationItem({
 		}),
 	);
 
-	const onSubmit = (values: UpdatePricing) =>
+	const onSubmit = (values: PricingConfiguration) =>
 		mutation.mutateAsync({ params: { key }, body: { value: values } });
 
-	const pricePerKm = form.watch("price_per_km") || 0;
-	const commissionPercent = form.watch("commission") || 0;
+	const formValues = form.watch();
+	const baseFare = Number(formValues.baseFare) || 0;
+	const perKmRate = Number(formValues.perKmRate) || 0;
+	const minimumFare = Number(formValues.minimumFare) || 0;
+	const platformFeeRate = Number(formValues.platformFeeRate) || 0;
+	const taxRate = Number(formValues.taxRate) || 0;
+	const perKgRate =
+		"perKgRate" in formValues ? Number(formValues.perKgRate) || 0 : 0;
 
-	const totalPrice = pricePerKm * EXAMPLE_KM;
-	const commissionRate =
-		commissionPercent > 1 ? commissionPercent / 100 : commissionPercent;
-	const driverReceives = totalPrice * (1 - commissionRate);
+	let subtotal = baseFare + perKmRate * EXAMPLE_KM;
+	if (key === "delivery-service-pricing") {
+		subtotal += perKgRate * EXAMPLE_KG;
+	}
+
+	const platformFee = subtotal * (platformFeeRate / 100);
+	const tax = subtotal * (taxRate / 100);
+	const totalPrice = Math.max(subtotal + platformFee + tax, minimumFare);
+	const driverReceives = subtotal - platformFee;
 
 	return (
 		<TabsContent key={key} value={key}>
@@ -233,32 +306,30 @@ export function ConfigurationItem({
 						</Button>
 					</div>
 					<Card>
-						<CardContent>
-							<div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-								{(["price_per_km", "commission"] as const).map((fieldName) => (
+						<CardContent className="pt-6">
+							<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+								{fields.map((fieldName) => (
 									<FormField
 										key={fieldName}
 										control={form.control}
 										name={fieldName}
 										render={({ field }) => (
 											<FormItem className="w-full">
-												<FormLabel>
-													{fieldName === "price_per_km"
-														? m.price_per_km()
-														: m.commission()}
-												</FormLabel>
+												<FormLabel>{getFieldLabel(fieldName)}</FormLabel>
 												<FormControl>
 													{pricing.isPending ? (
 														<Skeleton className="h-9 w-full" />
 													) : (
 														<Input
-															{...field}
 															type="number"
+															step="0.01"
 															disabled={mutation.isPending}
 															onChange={(e) =>
 																field.onChange(Number(e.target.value))
 															}
-															value={field.value}
+															value={Number(field.value) || 0}
+															onBlur={field.onBlur}
+															name={field.name}
 														/>
 													)}
 												</FormControl>
@@ -269,19 +340,56 @@ export function ConfigurationItem({
 								))}
 							</div>
 							{pricing.isPending ? (
-								<Skeleton className="mt-4 h-20 w-full rounded-sm" />
+								<Skeleton className="mt-4 h-32 w-full rounded-sm" />
 							) : (
-								<div className="mt-4 flex flex-col gap-2 rounded-sm bg-muted-foreground/5 p-2 text-gray-700 dark:text-gray-400">
-									<p className="text-xs">Sample Fare ({EXAMPLE_KM} KM):</p>
-									<p className="font-medium text-foreground text-md">
-										Rp {totalPrice.toLocaleString("id-ID")}
+								<div className="mt-4 flex flex-col gap-2 rounded-sm bg-muted-foreground/5 p-4 text-gray-700 dark:text-gray-400">
+									<p className="font-semibold text-xs uppercase">
+										Sample Fare Calculation ({EXAMPLE_KM} KM
+										{key === "delivery-service-pricing" && `, ${EXAMPLE_KG} KG`}
+										)
 									</p>
-									<p className="font-medium text-foreground text-sm">
-										<span className="text-gray-700 text-xs dark:text-gray-400">
-											{m.driver_receives()} :
-										</span>
-										<span> Rp {driverReceives.toLocaleString("id-ID")}</span>
-									</p>
+									<div className="space-y-1 text-sm">
+										<div className="flex justify-between">
+											<span>Base Fare:</span>
+											<span>Rp {baseFare.toLocaleString("id-ID")}</span>
+										</div>
+										<div className="flex justify-between">
+											<span>Distance ({EXAMPLE_KM} KM):</span>
+											<span>
+												Rp {(perKmRate * EXAMPLE_KM).toLocaleString("id-ID")}
+											</span>
+										</div>
+										{key === "delivery-service-pricing" && (
+											<div className="flex justify-between">
+												<span>Weight ({EXAMPLE_KG} KG):</span>
+												<span>
+													Rp {(perKgRate * EXAMPLE_KG).toLocaleString("id-ID")}
+												</span>
+											</div>
+										)}
+										<div className="flex justify-between border-t pt-1">
+											<span className="font-medium">Subtotal:</span>
+											<span className="font-medium">
+												Rp {subtotal.toLocaleString("id-ID")}
+											</span>
+										</div>
+										<div className="flex justify-between text-xs">
+											<span>Platform Fee ({platformFeeRate}%):</span>
+											<span>Rp {platformFee.toLocaleString("id-ID")}</span>
+										</div>
+										<div className="flex justify-between text-xs">
+											<span>Tax ({taxRate}%):</span>
+											<span>Rp {tax.toLocaleString("id-ID")}</span>
+										</div>
+										<div className="flex justify-between border-t pt-1 font-medium text-foreground">
+											<span>Total Price:</span>
+											<span>Rp {totalPrice.toLocaleString("id-ID")}</span>
+										</div>
+										<div className="mt-2 flex justify-between border-t pt-2 font-medium text-foreground">
+											<span>{m.driver_receives()}:</span>
+											<span>Rp {driverReceives.toLocaleString("id-ID")}</span>
+										</div>
+									</div>
 								</div>
 							)}
 						</CardContent>

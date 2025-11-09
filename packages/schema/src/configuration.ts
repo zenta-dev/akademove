@@ -4,11 +4,11 @@ import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 const _BasePricingConfigurationSchema = z.object({
-	baseFare: z.number().positive(),
-	perKmRate: z.number().positive(),
-	minimumFare: z.number().positive(),
-	platformFeeRate: z.number().positive(),
-	taxRate: z.number().positive(),
+	baseFare: z.coerce.number().positive(),
+	perKmRate: z.coerce.number().positive(),
+	minimumFare: z.coerce.number().positive(),
+	platformFeeRate: z.coerce.number().positive(),
+	taxRate: z.coerce.number().positive(),
 });
 
 export const RidePricingConfigurationSchema = _BasePricingConfigurationSchema
@@ -18,13 +18,19 @@ export const RidePricingConfigurationSchema = _BasePricingConfigurationSchema
 export const DeliveryPricingConfigurationSchema =
 	_BasePricingConfigurationSchema
 		.extend({
-			perKgRate: z.number().positive(),
+			perKgRate: z.coerce.number().positive(),
 		})
 		.meta({ title: "DeliveryPricingConfiguration" });
 
 export const FoodPricingConfigurationSchema = _BasePricingConfigurationSchema
 	.extend({})
 	.meta({ title: "FoodPricingConfiguration" });
+
+export const PricingConfigurationSchema = z.union([
+	RidePricingConfigurationSchema,
+	DeliveryPricingConfigurationSchema,
+	FoodPricingConfigurationSchema,
+]);
 
 export const BannerConfigurationSchema = z
 	.object({
@@ -77,6 +83,7 @@ export type DeliveryPricingConfiguration = z.infer<
 export type FoodPricingConfiguration = z.infer<
 	typeof FoodPricingConfigurationSchema
 >;
+export type PricingConfiguration = z.infer<typeof PricingConfigurationSchema>;
 export type Banner = z.infer<typeof BannerConfigurationSchema>;
 export type ConfigurationValue =
 	| RidePricingConfiguration
@@ -97,6 +104,10 @@ export const ConfigurationSchemaRegistries = {
 	},
 	FoodPricingConfiguration: {
 		schema: FoodPricingConfigurationSchema,
+		strategy: "output",
+	},
+	PricingConfiguration: {
+		schema: PricingConfigurationSchema,
 		strategy: "output",
 	},
 	BannerConfiguration: {
