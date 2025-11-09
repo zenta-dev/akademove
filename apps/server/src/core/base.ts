@@ -1,8 +1,12 @@
 import { DurableObject } from "cloudflare:workers";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
+import { count } from "drizzle-orm";
+import type { PgColumn } from "drizzle-orm/pg-core";
 import { log, type PromiseFn, safeSync } from "@/utils";
+import { CACHE_TTLS } from "./constants";
 import { RepositoryError } from "./error";
-import type { PartialWithTx } from "./interface";
+import type { CountCache, PartialWithTx } from "./interface";
+import { type DatabaseService, tables } from "./services/db";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
 
 type UserId = string;
@@ -104,13 +108,23 @@ export class BaseDurableObject extends DurableObject {
 	}
 }
 
+type DatabaseTable = keyof DatabaseService["query"];
 export abstract class BaseRepository {
 	readonly #entity: string;
+	readonly #table: DatabaseTable;
 	readonly #kv: KeyValueService;
+	protected readonly db: DatabaseService;
 
-	constructor(entity: string, kv: KeyValueService) {
+	constructor(
+		entity: string,
+		table: DatabaseTable,
+		kv: KeyValueService,
+		database: DatabaseService,
+	) {
 		this.#entity = entity;
+		this.#table = table;
 		this.#kv = kv;
+		this.db = database;
 	}
 
 	#composeCacheKey(key: string): string {
@@ -138,6 +152,52 @@ export abstract class BaseRepository {
 		try {
 			await this.#kv.delete(this.#composeCacheKey(key));
 		} catch {}
+	}
+
+	async #setTotalRowCache(total: number): Promise<void> {
+		try {
+			await this.setCache<CountCache>(
+				`${this.#entity}-${this.#table}:count`,
+				{ total },
+				{ expirationTtl: CACHE_TTLS["24h"] },
+			);
+		} catch (error) {
+			log.error({ error }, "Failed to set total row cache");
+		}
+	}
+
+	protected async getTotalRow(): Promise<number> {
+		try {
+			let tableToCount: PgColumn | undefined;
+
+			const table = tables[this.#table];
+
+			if ("id" in table) {
+				tableToCount = table.id;
+			} else if ("key" in table) {
+				tableToCount = table.key;
+			}
+
+			const fallback = async () => {
+				const [dbResult] = await this.db
+					.select({
+						count: count(tableToCount),
+					})
+					.from(table);
+				const total = dbResult.count;
+				await this.#setTotalRowCache(total);
+				return { total };
+			};
+			const res = await this.getCache<CountCache>(
+				`${this.#entity}-${this.#table}:count`,
+				{ fallback },
+			);
+
+			return res.total;
+		} catch (error) {
+			log.error({ error }, "Failed to get total row count");
+			return 0;
+		}
 	}
 
 	protected handleError(error: unknown, action: string) {
