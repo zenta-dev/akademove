@@ -23,7 +23,7 @@ import { useMyMerchant } from "@/providers/merchant";
 export const Route = createFileRoute("/dash/merchant/menu")({
 	validateSearch: (values) => {
 		const search = UnifiedPaginationQuerySchema.parse(values);
-		if (!values.limit) return { ...search, limit: 7 };
+		if (!values.limit) return { ...search, page: 1, limit: 7 };
 		return search;
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.MENU }] }),
