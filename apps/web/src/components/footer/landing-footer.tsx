@@ -24,9 +24,9 @@ export function LandingFooter({ className }: { className?: string }) {
 		],
 		company: [
 			{ label: "Tentang Kami", href: "/about" },
-			{ label: "Karir", href: "/careers" },
-			{ label: "Blog", href: "/blog" },
-			{ label: "Press Kit", href: "/press" },
+			// { label: "Karir", href: "/careers" },
+			// { label: "Blog", href: "/blog" },
+			// { label: "Press Kit", href: "/press" },
 		],
 		support: [
 			{ label: "FAQ", href: "/faq" },

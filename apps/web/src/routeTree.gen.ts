@@ -11,6 +11,18 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as supportStatusRouteImport } from './routes/(support)/status'
+import { Route as supportHelpRouteImport } from './routes/(support)/help'
+import { Route as supportFaqRouteImport } from './routes/(support)/faq'
+import { Route as supportContactRouteImport } from './routes/(support)/contact'
+import { Route as productTransportRouteImport } from './routes/(product)/transport'
+import { Route as productGoodsRouteImport } from './routes/(product)/goods'
+import { Route as productFoodRouteImport } from './routes/(product)/food'
+import { Route as productDriverRouteImport } from './routes/(product)/driver'
+import { Route as legalTermsRouteImport } from './routes/(legal)/terms'
+import { Route as legalPrivacyRouteImport } from './routes/(legal)/privacy'
+import { Route as legalCookiesRouteImport } from './routes/(legal)/cookies'
+import { Route as companyAboutRouteImport } from './routes/(company)/about'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
@@ -61,6 +73,66 @@ const authRouteRoute = authRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const supportStatusRoute = supportStatusRouteImport.update({
+  id: '/(support)/status',
+  path: '/status',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const supportHelpRoute = supportHelpRouteImport.update({
+  id: '/(support)/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const supportFaqRoute = supportFaqRouteImport.update({
+  id: '/(support)/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const supportContactRoute = supportContactRouteImport.update({
+  id: '/(support)/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productTransportRoute = productTransportRouteImport.update({
+  id: '/(product)/transport',
+  path: '/transport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productGoodsRoute = productGoodsRouteImport.update({
+  id: '/(product)/goods',
+  path: '/goods',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productFoodRoute = productFoodRouteImport.update({
+  id: '/(product)/food',
+  path: '/food',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productDriverRoute = productDriverRouteImport.update({
+  id: '/(product)/driver',
+  path: '/driver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const legalTermsRoute = legalTermsRouteImport.update({
+  id: '/(legal)/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const legalPrivacyRoute = legalPrivacyRouteImport.update({
+  id: '/(legal)/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const legalCookiesRoute = legalCookiesRouteImport.update({
+  id: '/(legal)/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const companyAboutRoute = companyAboutRouteImport.update({
+  id: '/(company)/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authSignInRoute = authSignInRouteImport.update({
@@ -285,6 +357,18 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
+  '/about': typeof companyAboutRoute
+  '/cookies': typeof legalCookiesRoute
+  '/privacy': typeof legalPrivacyRoute
+  '/terms': typeof legalTermsRoute
+  '/driver': typeof productDriverRoute
+  '/food': typeof productFoodRoute
+  '/goods': typeof productGoodsRoute
+  '/transport': typeof productTransportRoute
+  '/contact': typeof supportContactRoute
+  '/faq': typeof supportFaqRoute
+  '/help': typeof supportHelpRoute
+  '/status': typeof supportStatusRoute
   '/sign-up/driver': typeof authSignUpDriverRoute
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
@@ -325,6 +409,18 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
+  '/about': typeof companyAboutRoute
+  '/cookies': typeof legalCookiesRoute
+  '/privacy': typeof legalPrivacyRoute
+  '/terms': typeof legalTermsRoute
+  '/driver': typeof productDriverRoute
+  '/food': typeof productFoodRoute
+  '/goods': typeof productGoodsRoute
+  '/transport': typeof productTransportRoute
+  '/contact': typeof supportContactRoute
+  '/faq': typeof supportFaqRoute
+  '/help': typeof supportHelpRoute
+  '/status': typeof supportStatusRoute
   '/sign-up/driver': typeof authSignUpDriverRoute
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
@@ -372,6 +468,18 @@ export interface FileRoutesById {
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
+  '/(company)/about': typeof companyAboutRoute
+  '/(legal)/cookies': typeof legalCookiesRoute
+  '/(legal)/privacy': typeof legalPrivacyRoute
+  '/(legal)/terms': typeof legalTermsRoute
+  '/(product)/driver': typeof productDriverRoute
+  '/(product)/food': typeof productFoodRoute
+  '/(product)/goods': typeof productGoodsRoute
+  '/(product)/transport': typeof productTransportRoute
+  '/(support)/contact': typeof supportContactRoute
+  '/(support)/faq': typeof supportFaqRoute
+  '/(support)/help': typeof supportHelpRoute
+  '/(support)/status': typeof supportStatusRoute
   '/(auth)/sign-up/driver': typeof authSignUpDriverRoute
   '/(auth)/sign-up/merchant': typeof authSignUpMerchantRoute
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
@@ -419,6 +527,18 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
+    | '/about'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
+    | '/driver'
+    | '/food'
+    | '/goods'
+    | '/transport'
+    | '/contact'
+    | '/faq'
+    | '/help'
+    | '/status'
     | '/sign-up/driver'
     | '/sign-up/merchant'
     | '/sign-up/user'
@@ -459,6 +579,18 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/sign-in'
+    | '/about'
+    | '/cookies'
+    | '/privacy'
+    | '/terms'
+    | '/driver'
+    | '/food'
+    | '/goods'
+    | '/transport'
+    | '/contact'
+    | '/faq'
+    | '/help'
+    | '/status'
     | '/sign-up/driver'
     | '/sign-up/merchant'
     | '/sign-up/user'
@@ -505,6 +637,18 @@ export interface FileRouteTypes {
     | '/(auth)/forgot-password'
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
+    | '/(company)/about'
+    | '/(legal)/cookies'
+    | '/(legal)/privacy'
+    | '/(legal)/terms'
+    | '/(product)/driver'
+    | '/(product)/food'
+    | '/(product)/goods'
+    | '/(product)/transport'
+    | '/(support)/contact'
+    | '/(support)/faq'
+    | '/(support)/help'
+    | '/(support)/status'
     | '/(auth)/sign-up/driver'
     | '/(auth)/sign-up/merchant'
     | '/(auth)/sign-up/user'
@@ -549,6 +693,18 @@ export interface RootRouteChildren {
   DashMerchantRouteRoute: typeof DashMerchantRouteRouteWithChildren
   DashOperatorRouteRoute: typeof DashOperatorRouteRouteWithChildren
   DashUserRouteRoute: typeof DashUserRouteRouteWithChildren
+  companyAboutRoute: typeof companyAboutRoute
+  legalCookiesRoute: typeof legalCookiesRoute
+  legalPrivacyRoute: typeof legalPrivacyRoute
+  legalTermsRoute: typeof legalTermsRoute
+  productDriverRoute: typeof productDriverRoute
+  productFoodRoute: typeof productFoodRoute
+  productGoodsRoute: typeof productGoodsRoute
+  productTransportRoute: typeof productTransportRoute
+  supportContactRoute: typeof supportContactRoute
+  supportFaqRoute: typeof supportFaqRoute
+  supportHelpRoute: typeof supportHelpRoute
+  supportStatusRoute: typeof supportStatusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -565,6 +721,90 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(support)/status': {
+      id: '/(support)/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof supportStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(support)/help': {
+      id: '/(support)/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof supportHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(support)/faq': {
+      id: '/(support)/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof supportFaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(support)/contact': {
+      id: '/(support)/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof supportContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(product)/transport': {
+      id: '/(product)/transport'
+      path: '/transport'
+      fullPath: '/transport'
+      preLoaderRoute: typeof productTransportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(product)/goods': {
+      id: '/(product)/goods'
+      path: '/goods'
+      fullPath: '/goods'
+      preLoaderRoute: typeof productGoodsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(product)/food': {
+      id: '/(product)/food'
+      path: '/food'
+      fullPath: '/food'
+      preLoaderRoute: typeof productFoodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(product)/driver': {
+      id: '/(product)/driver'
+      path: '/driver'
+      fullPath: '/driver'
+      preLoaderRoute: typeof productDriverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(legal)/terms': {
+      id: '/(legal)/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof legalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(legal)/privacy': {
+      id: '/(legal)/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof legalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(legal)/cookies': {
+      id: '/(legal)/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof legalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(company)/about': {
+      id: '/(company)/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof companyAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/sign-in': {
@@ -1004,6 +1244,18 @@ const rootRouteChildren: RootRouteChildren = {
   DashMerchantRouteRoute: DashMerchantRouteRouteWithChildren,
   DashOperatorRouteRoute: DashOperatorRouteRouteWithChildren,
   DashUserRouteRoute: DashUserRouteRouteWithChildren,
+  companyAboutRoute: companyAboutRoute,
+  legalCookiesRoute: legalCookiesRoute,
+  legalPrivacyRoute: legalPrivacyRoute,
+  legalTermsRoute: legalTermsRoute,
+  productDriverRoute: productDriverRoute,
+  productFoodRoute: productFoodRoute,
+  productGoodsRoute: productGoodsRoute,
+  productTransportRoute: productTransportRoute,
+  supportContactRoute: supportContactRoute,
+  supportFaqRoute: supportFaqRoute,
+  supportHelpRoute: supportHelpRoute,
+  supportStatusRoute: supportStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
