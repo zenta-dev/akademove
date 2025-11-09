@@ -34,7 +34,6 @@ import { PricingCalculator } from "@/utils/pricing";
 import type { PaymentRepository } from "../payment/payment-repository";
 
 export class OrderRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #map: MapService;
 	readonly #paymentRepo: PaymentRepository;
 
@@ -44,8 +43,7 @@ export class OrderRepository extends BaseRepository {
 		map: MapService,
 		paymentRepo: PaymentRepository,
 	) {
-		super(FEATURE_TAGS.ORDER, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.ORDER, "order", kv, db);
 		this.#map = map;
 		this.#paymentRepo = paymentRepo;
 	}
@@ -76,7 +74,7 @@ export class OrderRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string, opts?: WithTx): Promise<Order | undefined> {
-		const result = await (opts?.tx ?? this.#db).query.order.findFirst({
+		const result = await (opts?.tx ?? this.db).query.order.findFirst({
 			with: {
 				user: { columns: { name: true } },
 				driver: { columns: {}, with: { user: { columns: { name: true } } } },
@@ -96,7 +94,7 @@ export class OrderRepository extends BaseRepository {
 		opts?: WithTx,
 	): Promise<Order[]> {
 		try {
-			let stmt = (opts?.tx ?? this.#db).query.order.findMany({
+			let stmt = (opts?.tx ?? this.db).query.order.findMany({
 				with: {
 					user: { columns: { name: true } },
 					driver: { columns: {}, with: { user: { columns: { name: true } } } },
@@ -129,7 +127,7 @@ export class OrderRepository extends BaseRepository {
 			if (query) {
 				const { cursor, page, limit = 10 } = query;
 				if (cursor) {
-					stmt = (opts?.tx ?? this.#db).query.order.findMany({
+					stmt = (opts?.tx ?? this.db).query.order.findMany({
 						with: {
 							user: { columns: { name: true } },
 							driver: {
@@ -165,7 +163,7 @@ export class OrderRepository extends BaseRepository {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = (opts?.tx ?? this.#db).query.order.findMany({
+					stmt = (opts?.tx ?? this.db).query.order.findMany({
 						with: {
 							user: { columns: { name: true } },
 							driver: {

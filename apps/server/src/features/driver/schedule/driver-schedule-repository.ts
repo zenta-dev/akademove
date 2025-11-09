@@ -14,11 +14,8 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { DriverScheduleDatabase } from "@/core/tables/driver";
 
 export class DriverScheduleRepository extends BaseRepository {
-	#db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.DRIVER_SCHEDULE, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.DRIVER_SCHEDULE, "driverSchedule", kv, db);
 	}
 
 	static composeEntity(item: DriverScheduleDatabase): DriverSchedule {
@@ -29,7 +26,7 @@ export class DriverScheduleRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string): Promise<DriverSchedule | undefined> {
-		const result = await this.#db.query.driverSchedule.findFirst({
+		const result = await this.db.query.driverSchedule.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? DriverScheduleRepository.composeEntity(result) : undefined;
@@ -37,13 +34,13 @@ export class DriverScheduleRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<DriverSchedule[]> {
 		try {
-			let stmt = this.#db.query.driverSchedule.findMany();
+			let stmt = this.db.query.driverSchedule.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor) {
-					stmt = this.#db.query.driverSchedule.findMany({
+					stmt = this.db.query.driverSchedule.findMany({
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -51,7 +48,7 @@ export class DriverScheduleRepository extends BaseRepository {
 
 				if (page) {
 					const offset = (page - 1) * limit;
-					stmt = this.#db.query.driverSchedule.findMany({
+					stmt = this.db.query.driverSchedule.findMany({
 						offset,
 						limit,
 					});
@@ -85,7 +82,7 @@ export class DriverScheduleRepository extends BaseRepository {
 		item: InsertDriverSchedule & { userId: string },
 	): Promise<DriverSchedule> {
 		try {
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.insert(tables.driverSchedule)
 				.values({
 					...item,
@@ -114,7 +111,7 @@ export class DriverScheduleRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Schedule with id "${id}" not found`);
 
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.update(tables.driverSchedule)
 				.set({
 					...existing,
@@ -140,7 +137,7 @@ export class DriverScheduleRepository extends BaseRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.driverSchedule)
 				.where(eq(tables.driverSchedule.id, id))
 				.returning({ id: tables.driverSchedule.id });

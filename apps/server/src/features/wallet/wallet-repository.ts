@@ -25,11 +25,8 @@ interface WalletGetMonthlyPayload
 interface PayPayload extends PayRequest, WithUserId {}
 
 export class WalletRepository extends BaseRepository {
-	#db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.WALLET, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.WALLET, "wallet", kv, db);
 	}
 
 	static composeEntity(item: WalletDatabase): Wallet {
@@ -38,11 +35,11 @@ export class WalletRepository extends BaseRepository {
 
 	async #ensureWallet(userId: string, opts?: WithTx): Promise<Wallet> {
 		try {
-			let wallet = await (opts?.tx ?? this.#db).query.wallet.findFirst({
+			let wallet = await (opts?.tx ?? this.db).query.wallet.findFirst({
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 			if (!wallet) {
-				[wallet] = await (opts?.tx ?? this.#db)
+				[wallet] = await (opts?.tx ?? this.db)
 					.insert(tables.wallet)
 					.values({ id: v7(), userId })
 					.returning();
@@ -67,7 +64,7 @@ export class WalletRepository extends BaseRepository {
 	): Promise<WalletMonthlySummaryResponse> {
 		try {
 			const { year, month } = params;
-			const tx = opts?.tx ?? this.#db;
+			const tx = opts?.tx ?? this.db;
 			const wallet = await this.#ensureWallet(params.userId);
 
 			const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
@@ -212,7 +209,7 @@ export class WalletRepository extends BaseRepository {
 		opts?: Partial<WithTx>,
 	): Promise<Wallet> {
 		try {
-			const [wallet] = await (opts?.tx ?? this.#db)
+			const [wallet] = await (opts?.tx ?? this.db)
 				.update(tables.wallet)
 				.set({
 					...params,

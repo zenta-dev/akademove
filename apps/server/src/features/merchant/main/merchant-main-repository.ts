@@ -20,7 +20,6 @@ const PRIV_BUCKET = "merchant-priv";
 const PUB_BUCKET = "merchant";
 
 export class MerchantMainRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #storage: StorageService;
 
 	constructor(
@@ -28,8 +27,7 @@ export class MerchantMainRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.MERCHANT, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.MERCHANT, "merchant", kv, db);
 		this.#storage = storage;
 	}
 
@@ -66,7 +64,7 @@ export class MerchantMainRepository extends BaseRepository {
 	): Promise<
 		(Merchant & { documentId?: string; imageId?: string }) | undefined
 	> {
-		const result = await this.#db.query.merchant.findFirst({
+		const result = await this.db.query.merchant.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
@@ -76,19 +74,19 @@ export class MerchantMainRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<Merchant[]> {
 		try {
-			let stmt = this.#db.query.merchant.findMany();
+			let stmt = this.db.query.merchant.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor && limit) {
-					stmt = this.#db.query.merchant.findMany({
+					stmt = this.db.query.merchant.findMany({
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
 				} else if (page && limit) {
 					const offset = (page - 1) * limit;
-					stmt = this.#db.query.merchant.findMany({
+					stmt = this.db.query.merchant.findMany({
 						offset,
 						limit,
 					});
@@ -123,7 +121,7 @@ export class MerchantMainRepository extends BaseRepository {
 
 	async getByUserId(userId: string): Promise<Merchant> {
 		try {
-			const result = await this.#db.query.merchant.findFirst({
+			const result = await this.db.query.merchant.findFirst({
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
@@ -151,7 +149,7 @@ export class MerchantMainRepository extends BaseRepository {
 				paginationClause = sql`LIMIT ${limit}`;
 			}
 
-			const rows = await this.#db.execute<{
+			const rows = await this.db.execute<{
 				merchant_id: string;
 				popularity_score: number;
 			}>(sql`
@@ -212,7 +210,7 @@ export class MerchantMainRepository extends BaseRepository {
 
 			const merchantIds = rows.map((r) => r.merchant_id);
 
-			const merchants = await this.#db.query.merchant.findMany({
+			const merchants = await this.db.query.merchant.findMany({
 				where: (f, op) => op.inArray(f.id, merchantIds),
 			});
 
@@ -243,7 +241,7 @@ export class MerchantMainRepository extends BaseRepository {
 			const imageKey = image ? `M-${id}.${getFileExtension(image)}` : undefined;
 
 			const [operation] = await Promise.all([
-				(opts?.tx ?? this.#db)
+				(opts?.tx ?? this.db)
 					.insert(tables.merchant)
 					.values({
 						...item,
@@ -294,7 +292,7 @@ export class MerchantMainRepository extends BaseRepository {
 			const imageKey = image ? `M-${id}.${getFileExtension(image)}` : undefined;
 
 			const [operation] = await Promise.all([
-				this.#db
+				this.db
 					.update(tables.merchant)
 					.set({
 						...existing,
@@ -340,7 +338,7 @@ export class MerchantMainRepository extends BaseRepository {
 				throw new RepositoryError("Merchant not found", { code: "NOT_FOUND" });
 
 			const [result] = await Promise.all([
-				this.#db
+				this.db
 					.delete(tables.merchant)
 					.where(eq(tables.merchant.id, id))
 					.returning({ id: tables.merchant.id }),

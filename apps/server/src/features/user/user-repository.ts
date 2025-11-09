@@ -1,6 +1,6 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { InsertUser, UpdateUser, User } from "@repo/schema/user";
-import { count, eq, ilike, ne, type SQL } from "drizzle-orm";
+import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -15,7 +15,6 @@ import { UserSortBySchema } from "./user-spec";
 const BUCKET = "user";
 
 export class UserRepository extends BaseRepository {
-	#db: DatabaseService;
 	#storage: StorageService;
 
 	constructor(
@@ -23,8 +22,7 @@ export class UserRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.USER, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.USER, "user", kv, db);
 		this.#storage = storage;
 	}
 
@@ -51,7 +49,7 @@ export class UserRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string): Promise<User | undefined> {
-		const result = await this.#db.query.user.findFirst({
+		const result = await this.db.query.user.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
@@ -59,40 +57,9 @@ export class UserRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async #setTotalRowCache(total: number): Promise<void> {
-		try {
-			await this.setCache<CountCache>(
-				"count",
-				{ total },
-				{ expirationTtl: CACHE_TTLS["24h"] },
-			);
-		} catch (error) {
-			log.error({ error }, "Failed to set total row cache");
-		}
-	}
-
-	async #getTotalRow(): Promise<number> {
-		try {
-			const fallback = async () => {
-				const [dbResult] = await this.#db
-					.select({ count: count(tables.user.id) })
-					.from(tables.user);
-				const total = dbResult.count;
-				await this.#setTotalRowCache(total);
-				return { total };
-			};
-			const res = await this.getCache<CountCache>("count", { fallback });
-
-			return res.total;
-		} catch (error) {
-			log.error({ error }, "Failed to get total row count");
-			return 0;
-		}
-	}
-
 	async #getQueryCount(query: string): Promise<number> {
 		try {
-			const [dbResult] = await this.#db
+			const [dbResult] = await this.db
 				.select({ count: count(tables.user.id) })
 				.from(tables.user)
 				.where(ilike(tables.user.name, `%${query}%`));
@@ -122,9 +89,9 @@ export class UserRepository extends BaseRepository {
 			if (requesterId) clauses.push(ne(tables.user.id, requesterId));
 
 			if (cursor) {
-				clauses.push(eq(tables.user.updatedAt, new Date(cursor)));
+				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
 
-				const result = await this.#db.query.user.findMany({
+				const result = await this.db.query.user.findMany({
 					where: (_f, op) => op.and(...clauses),
 					orderBy: (f, op) => {
 						if (sortBy) {
@@ -148,7 +115,7 @@ export class UserRepository extends BaseRepository {
 
 				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
-				const result = await this.#db.query.user.findMany({
+				const result = await this.db.query.user.findMany({
 					where: (_f, op) => op.and(...clauses),
 					orderBy: (f, op) => {
 						if (sortBy) {
@@ -168,14 +135,14 @@ export class UserRepository extends BaseRepository {
 
 				const totalCount = search
 					? await this.#getQueryCount(search)
-					: await this.#getTotalRow();
+					: await this.getTotalRow();
 
 				const totalPages = Math.ceil(totalCount / limit);
 
 				return { rows, totalPages };
 			}
 
-			const result = await this.#db.query.user.findMany({
+			const result = await this.db.query.user.findMany({
 				where: (_f, op) => op.and(...clauses),
 				orderBy: (f, op) => {
 					if (sortBy) {
@@ -301,7 +268,7 @@ export class UserRepository extends BaseRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
 				.returning({ id: tables.user.id });

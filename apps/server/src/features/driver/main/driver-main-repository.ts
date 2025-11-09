@@ -17,18 +17,17 @@ import type { StorageService } from "@/core/services/storage";
 import type { DriverDatabase } from "@/core/tables/driver";
 import type { NearbyQuery } from "./driver-main-spec";
 
+const BUCKET = "driver";
+
 export class DriverMainRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #storage: StorageService;
-	readonly #bucket: StorageBucket = "driver";
 
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.DRIVER, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.DRIVER, "driver", kv, db);
 		this.#storage = storage;
 	}
 

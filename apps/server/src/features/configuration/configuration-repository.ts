@@ -14,11 +14,8 @@ import type { ConfigurationDatabase } from "@/core/tables/configuration";
 import { safeAsync } from "@/utils";
 
 export class ConfigurationRepository extends BaseRepository {
-	readonly #db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.CONFIGURATION, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.CONFIGURATION, "configuration", kv, db);
 	}
 
 	static composeEntity(item: ConfigurationDatabase): Configuration {
@@ -29,7 +26,7 @@ export class ConfigurationRepository extends BaseRepository {
 	}
 
 	async #getFromDB(key: string): Promise<Configuration | undefined> {
-		const result = await this.#db.query.configuration.findFirst({
+		const result = await this.db.query.configuration.findFirst({
 			where: (f, op) => op.eq(f.key, key),
 		});
 		return result ? ConfigurationRepository.composeEntity(result) : undefined;
@@ -37,13 +34,13 @@ export class ConfigurationRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<Configuration[]> {
 		try {
-			let stmt = this.#db.query.configuration.findMany();
+			let stmt = this.db.query.configuration.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor) {
-					stmt = this.#db.query.configuration.findMany({
+					stmt = this.db.query.configuration.findMany({
 						where: (f, op) => op.gt(f.updatedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -52,7 +49,7 @@ export class ConfigurationRepository extends BaseRepository {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.#db.query.configuration.findMany({
+					stmt = this.db.query.configuration.findMany({
 						offset,
 						limit,
 					});
@@ -92,7 +89,7 @@ export class ConfigurationRepository extends BaseRepository {
 				throw new RepositoryError(`Configuration with key "${key}" not found`);
 
 			const [[operation]] = await Promise.all([
-				this.#db
+				this.db
 					.update(tables.configuration)
 					.set({
 						...item,
@@ -108,7 +105,7 @@ export class ConfigurationRepository extends BaseRepository {
 			await safeAsync(
 				Promise.all([
 					this.setCache(key, result, { expirationTtl: CACHE_TTLS["24h"] }),
-					this.#db.insert(tables.configurationAuditLog).values({
+					this.db.insert(tables.configurationAuditLog).values({
 						tableName: "configurations",
 						recordId: key,
 						operation: "UPDATE",

@@ -16,11 +16,8 @@ import type { TransactionDatabase } from "@/core/tables/transaction";
 import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class TransactionRepository extends BaseRepository {
-	#db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.TRANSACTION, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.TRANSACTION, "transaction", kv, db);
 	}
 
 	static composeEntity(item: TransactionDatabase): Transaction {
@@ -44,7 +41,7 @@ export class TransactionRepository extends BaseRepository {
 	): Promise<Transaction> {
 		try {
 			const fallback = async () => {
-				const res = await (opts?.tx ?? this.#db).query.wallet.findFirst({
+				const res = await (opts?.tx ?? this.db).query.wallet.findFirst({
 					columns: {},
 					with: {
 						transactions: {
@@ -79,7 +76,7 @@ export class TransactionRepository extends BaseRepository {
 	async get(id: string, opts?: PartialWithTx): Promise<Transaction> {
 		try {
 			const fallback = async () => {
-				const res = await (opts?.tx ?? this.#db).query.transaction.findFirst({
+				const res = await (opts?.tx ?? this.db).query.transaction.findFirst({
 					where: (f, op) => op.eq(f.id, id),
 				});
 				if (!res) {
@@ -106,7 +103,7 @@ export class TransactionRepository extends BaseRepository {
 	): Promise<Transaction[]> {
 		if (!query?.userId) return [];
 		const res = await safeAsync(
-			(opts?.tx ?? this.#db).query.wallet.findFirst({
+			(opts?.tx ?? this.db).query.wallet.findFirst({
 				columns: {},
 				with: { transactions: true },
 				where: (f, op) => op.eq(f.userId, query?.userId),
@@ -118,7 +115,7 @@ export class TransactionRepository extends BaseRepository {
 
 	async insert(params: InsertTransaction, opts?: WithTx): Promise<Transaction> {
 		try {
-			const [operation] = await (opts?.tx ?? this.#db)
+			const [operation] = await (opts?.tx ?? this.db)
 				.insert(tables.transaction)
 				.values({
 					...params,
@@ -153,7 +150,7 @@ export class TransactionRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<Transaction> {
 		try {
-			const [operation] = await (opts?.tx ?? this.#db)
+			const [operation] = await (opts?.tx ?? this.db)
 				.update(tables.transaction)
 				.set({
 					...params,

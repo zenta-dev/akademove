@@ -25,7 +25,6 @@ interface MerchantMenuWithImage extends MerchantMenu {
 const BUCKET = "merchant-menu";
 
 export class MerchantMenuRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #storage: StorageService;
 
 	constructor(
@@ -33,8 +32,7 @@ export class MerchantMenuRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.MERCHANT_MENU, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.MERCHANT_MENU, "merchantMenu", kv, db);
 		this.#storage = storage;
 	}
 
@@ -60,7 +58,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 	async #getFromDB(id: string): Promise<MerchantMenuWithImage | null> {
 		try {
-			const result = await this.#db.query.merchantMenu.findFirst({
+			const result = await this.db.query.merchantMenu.findFirst({
 				where: eq(tables.merchantMenu.id, id),
 			});
 			return result
@@ -87,7 +85,7 @@ export class MerchantMenuRepository extends BaseRepository {
 	async #getTotalRow(): Promise<number> {
 		try {
 			const fallback = async () => {
-				const [dbResult] = await this.#db
+				const [dbResult] = await this.db
 					.select({ count: count(tables.merchantMenu.id) })
 					.from(tables.merchantMenu);
 				const total = dbResult.count;
@@ -105,7 +103,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 	async #getQueryCount(query: string): Promise<number> {
 		try {
-			const [dbResult] = await this.#db
+			const [dbResult] = await this.db
 				.select({ count: count(tables.merchantMenu.id) })
 				.from(tables.merchantMenu)
 				.where(ilike(tables.merchantMenu.name, `%${query}%`));
@@ -131,7 +129,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			} = query ?? {};
 
 			if (cursor) {
-				const result = await this.#db.query.merchantMenu.findMany({
+				const result = await this.db.query.merchantMenu.findMany({
 					where: gt(tables.merchantMenu.updatedAt, new Date(cursor)),
 					limit: limit + 1,
 				});
@@ -147,7 +145,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			if (page !== undefined) {
 				const offset = (page - 1) * limit;
 
-				const result = await this.#db.query.merchantMenu.findMany({
+				const result = await this.db.query.merchantMenu.findMany({
 					offset,
 					limit,
 					where: search
@@ -178,7 +176,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				return { rows, totalPages };
 			}
 
-			const result = await this.#db.query.merchantMenu.findMany();
+			const result = await this.db.query.merchantMenu.findMany();
 			const rows = await Promise.all(
 				result.map((r) =>
 					MerchantMenuRepository.composeEntity(r, this.#storage),
@@ -218,7 +216,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				: undefined;
 
 			const [operation] = await Promise.all([
-				this.#db
+				this.db
 					.insert(tables.merchantMenu)
 					.values({
 						...item,
@@ -287,7 +285,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				: Promise.resolve();
 
 			const [operation] = await Promise.all([
-				this.#db
+				this.db
 					.update(tables.merchantMenu)
 					.set({
 						...item,
@@ -333,7 +331,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			const currentCount = await this.#getTotalRow();
 
 			const [result] = await Promise.all([
-				this.#db
+				this.db
 					.delete(tables.merchantMenu)
 					.where(eq(tables.merchantMenu.id, id))
 					.returning({ id: tables.merchantMenu.id }),

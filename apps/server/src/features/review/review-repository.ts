@@ -10,11 +10,8 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
 
 export class ReviewRepository extends BaseRepository {
-	#db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.REVIEW, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.REVIEW, "review", kv, db);
 	}
 
 	static composeEntity(item: ReviewDatabase): Review {
@@ -22,7 +19,7 @@ export class ReviewRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string): Promise<Review | undefined> {
-		const result = await this.#db.query.review.findFirst({
+		const result = await this.db.query.review.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? ReviewRepository.composeEntity(result) : undefined;
@@ -30,13 +27,13 @@ export class ReviewRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<Review[]> {
 		try {
-			let stmt = this.#db.query.review.findMany();
+			let stmt = this.db.query.review.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor) {
-					stmt = this.#db.query.review.findMany({
+					stmt = this.db.query.review.findMany({
 						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -44,7 +41,7 @@ export class ReviewRepository extends BaseRepository {
 
 				if (page) {
 					const offset = (page - 1) * limit;
-					stmt = this.#db.query.review.findMany({
+					stmt = this.db.query.review.findMany({
 						offset,
 						limit,
 					});
@@ -75,7 +72,7 @@ export class ReviewRepository extends BaseRepository {
 
 	async create(item: InsertReview & { userId: string }): Promise<Review> {
 		try {
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.insert(tables.review)
 				.values({ ...item, id: v7() })
 				.returning();
@@ -96,7 +93,7 @@ export class ReviewRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Review with id "${id}" not found`);
 
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.update(tables.review)
 				.set({
 					...item,
@@ -115,7 +112,7 @@ export class ReviewRepository extends BaseRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.review)
 				.where(eq(tables.review.id, id))
 				.returning({ id: tables.review.id });

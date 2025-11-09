@@ -42,7 +42,6 @@ interface HandleWebhookPayload extends WithTx {
 	body: WebhookRequest;
 }
 export class PaymentRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #paymentSvc: PaymentService;
 	readonly #transaction: TransactionRepository;
 	readonly #wallet: WalletRepository;
@@ -54,8 +53,7 @@ export class PaymentRepository extends BaseRepository {
 		transaction: TransactionRepository,
 		wallet: WalletRepository,
 	) {
-		super(FEATURE_TAGS.PAYMENT, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.PAYMENT, "payment", kv, db);
 		this.#paymentSvc = paymentSvc;
 		this.#transaction = transaction;
 		this.#wallet = wallet;
@@ -75,7 +73,7 @@ export class PaymentRepository extends BaseRepository {
 		id: string,
 		opts?: Partial<WithTx>,
 	): Promise<Payment | undefined> {
-		const result = await (opts?.tx ?? this.#db).query.payment.findFirst({
+		const result = await (opts?.tx ?? this.db).query.payment.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? PaymentRepository.composeEntity(result) : undefined;
@@ -102,7 +100,7 @@ export class PaymentRepository extends BaseRepository {
 	): Promise<Payment> {
 		try {
 			const now = new Date();
-			const [res] = await (opts?.tx ?? this.#db)
+			const [res] = await (opts?.tx ?? this.db)
 				.insert(tables.payment)
 				.values({
 					...param,
@@ -129,7 +127,7 @@ export class PaymentRepository extends BaseRepository {
 		opts?: Partial<WithTx>,
 	): Promise<Payment> {
 		try {
-			const [payment] = await (opts?.tx ?? this.#db)
+			const [payment] = await (opts?.tx ?? this.db)
 				.update(tables.payment)
 				.set({
 					...params,
@@ -319,18 +317,22 @@ export class PaymentRepository extends BaseRepository {
 			payment: PaymentRepository.composeEntity(updatedPayment),
 		};
 
-		stub.broadcast({
-			type: "wallet:top_up_failed",
-			from: "server",
-			to: "client",
-			payload,
-		});
-		stub.broadcast({
-			type: "payment:failed",
-			from: "server",
-			to: "client",
-			payload,
-		});
+		if (transaction.type === "topup") {
+			stub.broadcast({
+				type: "wallet:top_up_failed",
+				from: "server",
+				to: "client",
+				payload,
+			});
+		}
+		if (transaction.type === "payment") {
+			stub.broadcast({
+				type: "payment:failed",
+				from: "server",
+				to: "client",
+				payload,
+			});
+		}
 	}
 
 	async #handleOrderPaymentSuccess(

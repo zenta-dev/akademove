@@ -28,7 +28,6 @@ import { UserRepository } from "../user/user-repository";
 const BUCKET = "user";
 
 export class AuthRepository extends BaseRepository {
-	readonly #db: DatabaseService;
 	readonly #storage: StorageService;
 	readonly #jwt: JwtManager;
 	readonly #pw: PasswordManager;
@@ -41,8 +40,7 @@ export class AuthRepository extends BaseRepository {
 		storage: StorageService,
 		jwt: JwtManager,
 	) {
-		super(FEATURE_TAGS.USER, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.USER, "user", kv, db);
 		this.#storage = storage;
 		this.#jwt = jwt;
 		this.#pw = new PasswordManager();
@@ -54,7 +52,7 @@ export class AuthRepository extends BaseRepository {
 
 	async signIn(params: SignIn & { clientAgent?: ClientAgent }) {
 		try {
-			const user = await this.#db.query.user.findFirst({
+			const user = await this.db.query.user.findFirst({
 				with: {
 					accounts: {
 						columns: { password: true },
@@ -106,7 +104,7 @@ export class AuthRepository extends BaseRepository {
 		opts?: { tx?: DatabaseTransaction },
 	) {
 		try {
-			const existingUser = await (opts?.tx ?? this.#db).query.user.findFirst({
+			const existingUser = await (opts?.tx ?? this.db).query.user.findFirst({
 				columns: { email: true, phone: true },
 				where: (f, op) =>
 					op.or(op.eq(f.email, params.email), op.eq(f.phone, params.phone)),
@@ -142,7 +140,7 @@ export class AuthRepository extends BaseRepository {
 				photoKey = `PP-${userId}.${extension}`;
 			}
 
-			const [user] = await (opts?.tx ?? this.#db)
+			const [user] = await (opts?.tx ?? this.db)
 				.insert(tables.user)
 				.values({
 					...params,
@@ -153,14 +151,14 @@ export class AuthRepository extends BaseRepository {
 				.returning();
 
 			const promises: Promise<unknown>[] = [
-				(opts?.tx ?? this.#db).insert(tables.account).values({
+				(opts?.tx ?? this.db).insert(tables.account).values({
 					id: this.#generateId(),
 					accountId: this.#generateId(),
 					userId: user.id,
 					providerId: "credentials",
 					password: hashedPassword,
 				}),
-				(opts?.tx ?? this.#db).insert(tables.wallet).values({
+				(opts?.tx ?? this.db).insert(tables.wallet).values({
 					id: v7(),
 					userId: user.id,
 					balance: "0",
@@ -224,7 +222,7 @@ export class AuthRepository extends BaseRepository {
 			const payload = await this.#jwt.verify(token);
 
 			const fallback = async () => {
-				const res = await this.#db.query.user.findFirst({
+				const res = await this.db.query.user.findFirst({
 					where: (f, op) => op.eq(f.id, payload.id),
 				});
 				if (!res) {

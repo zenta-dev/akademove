@@ -10,11 +10,8 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
 
 export class ReportRepository extends BaseRepository {
-	#db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.REPORT, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.REPORT, "report", kv, db);
 	}
 
 	static composeEntity(item: ReportDatabase): Report {
@@ -29,7 +26,7 @@ export class ReportRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string): Promise<Report | undefined> {
-		const result = await this.#db.query.report.findFirst({
+		const result = await this.db.query.report.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? ReportRepository.composeEntity(result) : undefined;
@@ -37,13 +34,13 @@ export class ReportRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<Report[]> {
 		try {
-			let stmt = this.#db.query.report.findMany();
+			let stmt = this.db.query.report.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor) {
-					stmt = this.#db.query.report.findMany({
+					stmt = this.db.query.report.findMany({
 						where: (f, op) => op.gt(f.reportedAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -51,7 +48,7 @@ export class ReportRepository extends BaseRepository {
 
 				if (page) {
 					const offset = (page - 1) * limit;
-					stmt = this.#db.query.report.findMany({
+					stmt = this.db.query.report.findMany({
 						offset,
 						limit,
 					});
@@ -82,7 +79,7 @@ export class ReportRepository extends BaseRepository {
 
 	async create(item: InsertReport & { userId: string }): Promise<Report> {
 		try {
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.insert(tables.report)
 				.values({ ...item, id: v7() })
 				.returning();
@@ -102,7 +99,7 @@ export class ReportRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Report with id "${id}" not found`);
 
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.update(tables.report)
 				.set({
 					...item,
@@ -128,7 +125,7 @@ export class ReportRepository extends BaseRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.report)
 				.where(eq(tables.report.id, id))
 				.returning({ id: tables.report.id });

@@ -11,11 +11,8 @@ import type { CouponDatabase } from "@/core/tables/coupon";
 import { toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class CouponRepository extends BaseRepository {
-	readonly #db: DatabaseService;
-
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.COUPON, kv);
-		this.#db = db;
+		super(FEATURE_TAGS.COUPON, "coupon", kv, db);
 	}
 
 	static composeEntity(item: CouponDatabase): Coupon {
@@ -29,7 +26,7 @@ export class CouponRepository extends BaseRepository {
 	}
 
 	async #getFromDB(id: string): Promise<Coupon | undefined> {
-		const result = await this.#db.query.coupon.findFirst({
+		const result = await this.db.query.coupon.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result ? CouponRepository.composeEntity(result) : undefined;
@@ -37,13 +34,13 @@ export class CouponRepository extends BaseRepository {
 
 	async list(query?: UnifiedPaginationQuery): Promise<Coupon[]> {
 		try {
-			let stmt = this.#db.query.coupon.findMany();
+			let stmt = this.db.query.coupon.findMany();
 
 			if (query) {
 				const { cursor, page, limit } = query;
 
 				if (cursor) {
-					stmt = this.#db.query.coupon.findMany({
+					stmt = this.db.query.coupon.findMany({
 						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
 						limit: limit + 1,
 					});
@@ -52,7 +49,7 @@ export class CouponRepository extends BaseRepository {
 				if (page) {
 					const pageNum = page;
 					const offset = (pageNum - 1) * limit;
-					stmt = this.#db.query.coupon.findMany({
+					stmt = this.db.query.coupon.findMany({
 						offset,
 						limit,
 					});
@@ -84,7 +81,7 @@ export class CouponRepository extends BaseRepository {
 
 	async create(item: InsertCoupon & { userId: string }): Promise<Coupon> {
 		try {
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.insert(tables.coupon)
 				.values({
 					...item,
@@ -114,7 +111,7 @@ export class CouponRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Coupon with id "${id}" not found`);
 
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.update(tables.coupon)
 				.set({
 					...item,
@@ -138,7 +135,7 @@ export class CouponRepository extends BaseRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.coupon)
 				.where(eq(tables.coupon.id, id))
 				.returning({ id: tables.coupon.id });
