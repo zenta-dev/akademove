@@ -43,7 +43,10 @@ export const DriverSchema = z
 	})
 	.meta({ title: "Driver" });
 
-export const DriverKeySchema = extractSchemaKeysAsEnum(DriverSchema);
+export const DriverKeySchema = extractSchemaKeysAsEnum(DriverSchema).exclude([
+	"user",
+	"distance",
+]);
 
 export const DriverDocumentSchema = z.object({
 	studentCard: z
@@ -86,6 +89,7 @@ export type UpdateDriver = z.infer<typeof UpdateDriverSchema>;
 export const DriverScheduleSchema = z
 	.object({
 		id: z.uuid(),
+		name: z.string(),
 		driverId: z.uuid(),
 		dayOfWeek: DayOfWeekSchema,
 		startTime: TimeSchema,

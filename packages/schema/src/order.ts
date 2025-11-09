@@ -70,7 +70,13 @@ export const OrderSchema = z
 	})
 	.meta({ title: "Order" });
 
-export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema);
+export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
+	"items",
+	"itemCount",
+	"user",
+	"driver",
+	"merchant",
+]);
 
 export const OrderSummarySchema = z
 	.object({

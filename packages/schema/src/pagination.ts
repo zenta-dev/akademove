@@ -1,5 +1,4 @@
 import * as z from "zod";
-import type { SchemaRegistries } from "./common.ts";
 import { ConfigurationKeySchema } from "./configuration.ts";
 import { CouponKeySchema } from "./coupon.ts";
 import { DriverKeySchema, DriverScheduleKeySchema } from "./driver.ts";
