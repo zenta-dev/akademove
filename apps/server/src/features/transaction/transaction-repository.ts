@@ -1,19 +1,25 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import type {
-	InsertTransaction,
-	Transaction,
-	UpdateTransaction,
+import {
+	type InsertTransaction,
+	type Transaction,
+	TransactionKeySchema,
+	type UpdateTransaction,
 } from "@repo/schema/transaction";
-import { eq } from "drizzle-orm";
+import { eq, gt, inArray, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { PartialWithTx, WithTx } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	PartialWithTx,
+	WithTx,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { TransactionDatabase } from "@/core/tables/transaction";
-import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class TransactionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -100,17 +106,87 @@ export class TransactionRepository extends BaseRepository {
 	async list(
 		query?: UnifiedPaginationQuery & { userId: string },
 		opts?: WithTx,
-	): Promise<Transaction[]> {
-		if (!query?.userId) return [];
-		const res = await safeAsync(
-			(opts?.tx ?? this.db).query.wallet.findFirst({
-				columns: {},
-				with: { transactions: true },
-				where: (f, op) => op.eq(f.userId, query?.userId),
-			}),
-		);
-		if (!res.data) return [];
-		return res.data.transactions.map(TransactionRepository.composeEntity);
+	): Promise<ListResult<Transaction>> {
+		const result = { rows: [] };
+		try {
+			const {
+				cursor,
+				page,
+				limit = 10,
+				sortBy,
+				order = "asc",
+				userId,
+			} = query ?? {};
+			if (!userId) return result;
+
+			const tx = opts?.tx ?? this.db;
+
+			const orderBy = (
+				f: typeof tables.transaction._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = TransactionKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
+			const clauses: SQL[] = [
+				inArray(
+					tables.transaction.walletId,
+					tx
+						.select({ id: tables.wallet.id })
+						.from(tables.wallet)
+						.where(eq(tables.wallet.userId, userId)),
+				),
+			];
+
+			if (cursor) {
+				clauses.push(gt(tables.review.createdAt, new Date(cursor)));
+
+				const res = await this.db.query.transaction.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					limit: limit + 1,
+				});
+
+				const rows = res.map(TransactionRepository.composeEntity);
+
+				return { rows };
+			}
+
+			if (page) {
+				const offset = (page - 1) * limit;
+
+				const result = await tx.query.transaction.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
+					offset,
+					limit,
+				});
+
+				const rows = result.map(TransactionRepository.composeEntity);
+
+				const totalCount = await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const res = await tx.query.transaction.findMany({
+				orderBy,
+				limit,
+			});
+
+			const rows = res.map(TransactionRepository.composeEntity);
+			return { rows };
+		} catch (error) {
+			this.handleError(error, "list");
+			return result;
+		}
 	}
 
 	async insert(params: InsertTransaction, opts?: WithTx): Promise<Transaction> {

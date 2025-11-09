@@ -70,7 +70,7 @@ export const AuthHandler = pub.router({
 				try {
 					const opts = { tx };
 					const result = await context.repo.auth.signUpDriver(unflatten, opts);
-					await context.repo.driver.create(
+					await context.repo.driver.main.create(
 						{
 							...unflatten.detail,
 							userId: result.user.id,

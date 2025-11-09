@@ -6,15 +6,16 @@ import {
 } from "@repo/schema/configuration";
 import type { Driver } from "@repo/schema/driver";
 import type { Merchant } from "@repo/schema/merchant";
-import type {
-	EstimateOrder,
-	Order,
-	OrderStatus,
-	OrderSummary,
-	OrderType,
-	PlaceOrder,
-	PlaceOrderResponse,
-	UpdateOrder,
+import {
+	type EstimateOrder,
+	type Order,
+	OrderKeySchema,
+	type OrderStatus,
+	type OrderSummary,
+	type OrderType,
+	type PlaceOrder,
+	type PlaceOrderResponse,
+	type UpdateOrder,
 } from "@repo/schema/order";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
@@ -24,7 +25,12 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, WithTx, WithUserId } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	WithTx,
+	WithUserId,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
@@ -32,7 +38,6 @@ import type { OrderDatabase } from "@/core/tables/order";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
 import type { PaymentRepository } from "../payment/payment-repository";
-import { OrderSortBySchema } from "./order-spec";
 
 export class OrderRepository extends BaseRepository {
 	readonly #map: MapService;
@@ -139,6 +144,7 @@ export class OrderRepository extends BaseRepository {
 		opts?: WithTx,
 	): Promise<ListResult<Order>> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			const {
 				cursor,
 				page,
@@ -151,7 +157,26 @@ export class OrderRepository extends BaseRepository {
 				role,
 			} = query ?? {};
 
-			const tx = opts?.tx ?? this.db;
+			const orderBy = (
+				f: typeof tables.order._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = OrderKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
+			const withx = {
+				user: { columns: { name: true } },
+				driver: {
+					columns: {},
+					with: { user: { columns: { name: true } } },
+				},
+				merchant: { columns: { name: true } },
+			} as const;
 
 			const clauses: SQL[] = [];
 
@@ -205,23 +230,9 @@ export class OrderRepository extends BaseRepository {
 				clauses.push(gt(tables.order.updatedAt, new Date(cursor)));
 
 				const res = await tx.query.order.findMany({
-					with: {
-						user: { columns: { name: true } },
-						driver: {
-							columns: {},
-							with: { user: { columns: { name: true } } },
-						},
-						merchant: { columns: { name: true } },
-					},
-					where: (f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = OrderSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					with: withx,
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
 					limit: limit + 1,
 				});
 
@@ -229,27 +240,13 @@ export class OrderRepository extends BaseRepository {
 				return { rows };
 			}
 
-			if (page !== undefined) {
+			if (page) {
 				const offset = (page - 1) * limit;
 
 				const result = await tx.query.order.findMany({
-					with: {
-						user: { columns: { name: true } },
-						driver: {
-							columns: {},
-							with: { user: { columns: { name: true } } },
-						},
-						merchant: { columns: { name: true } },
-					},
+					with: withx,
 					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = OrderSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					orderBy,
 					offset,
 					limit,
 				});
@@ -266,30 +263,16 @@ export class OrderRepository extends BaseRepository {
 			}
 
 			const res = await tx.query.order.findMany({
-				with: {
-					user: { columns: { name: true } },
-					driver: {
-						columns: {},
-						with: { user: { columns: { name: true } } },
-					},
-					merchant: { columns: { name: true } },
-				},
-				where: (f, op) => op.and(...clauses),
-				orderBy: (f, op) => {
-					if (sortBy) {
-						const parsed = OrderSortBySchema.safeParse(sortBy);
-						const field = parsed.success ? f[parsed.data] : f.id;
-						return op[order](field);
-					}
-					return op[order](f.id);
-				},
-				limit: limit + 1,
+				with: withx,
+				orderBy,
+				limit,
 			});
 
 			const rows = res.map(OrderRepository.composeEntity);
 			return { rows };
 		} catch (error) {
-			throw this.handleError(error, "list");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 	async #getPricingConfiguration(

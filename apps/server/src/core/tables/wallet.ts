@@ -17,6 +17,7 @@ export const wallet = pgTable("wallets", {
 	isActive: boolean("is_active").default(true).notNull(),
 	...DateModifier,
 });
+export type WalletTable = typeof wallet;
 
 export const walletRelations = relations(wallet, ({ one, many }) => ({
 	user: one(user, {

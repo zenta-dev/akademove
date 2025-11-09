@@ -61,8 +61,10 @@ export const coupon = pgTable(
 		index("coupon_created_at_idx").on(t.createdAt),
 	],
 );
+export type CouponTable = typeof coupon;
 
 export const couponAuditLog = createAuditLogTable("coupon");
+export type CouponAuditLogTable = typeof couponAuditLog;
 
 export const couponUsage = pgTable(
 	"coupon_usages",
@@ -92,6 +94,7 @@ export const couponUsage = pgTable(
 		index("coupon_usage_user_used_at_idx").on(t.userId, t.usedAt),
 	],
 );
+export type CouponUsageTable = typeof couponUsage;
 
 ///
 /// --- Relations --- ///

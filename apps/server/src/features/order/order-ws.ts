@@ -65,7 +65,7 @@ export class OrderRoom extends BaseDurableObject {
 
 			const driverId = this.findUserIdBySocket(ws);
 			if (!driverId) return;
-			await this.#repo.driver.update(driverId, {
+			await this.#repo.driver.main.update(driverId, {
 				currentLocation: driverUpdateLocation,
 			});
 		}
@@ -132,7 +132,7 @@ export class OrderRoom extends BaseDurableObject {
 		const searchDelayMs = 3000; // delay between searches (3 seconds)
 
 		while (nearbyDrivers.length === 0 && radiusKm <= maxRadiusKm) {
-			nearbyDrivers = await this.#repo.driver.nearby({
+			nearbyDrivers = await this.#repo.driver.main.nearby({
 				x: updateOrder.pickupLocation.x,
 				y: updateOrder.pickupLocation.y,
 				radiusKm,

@@ -1,6 +1,7 @@
 import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
 import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
+import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
@@ -104,3 +105,9 @@ export type ListResult<T> = {
 export interface CountCache {
 	total: number;
 }
+
+export type OrderByOperation = {
+	sql: typeof sql;
+	asc: typeof asc;
+	desc: typeof desc;
+};

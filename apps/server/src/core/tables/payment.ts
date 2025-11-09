@@ -30,6 +30,7 @@ export const payment = pgTable(
 	},
 	(t) => [index("payment_external_id_idx").on(t.externalId)],
 );
+export type PaymentTable = typeof payment;
 
 export type PaymentDatabase = typeof payment.$inferSelect;
 

@@ -9,8 +9,6 @@ import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { toOAPIRequestBody } from "@/utils/oapi";
 
-export const MerchantMenuSortBySchema = z.enum(["id", "name"]);
-
 export const MerchantMenuSpec = {
 	list: oc
 		.route({

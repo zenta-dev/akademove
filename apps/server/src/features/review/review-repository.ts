@@ -1,13 +1,20 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import type { InsertReview, Review, UpdateReview } from "@repo/schema/review";
-import { eq } from "drizzle-orm";
+import {
+	type InsertReview,
+	type Review,
+	ReviewKeySchema,
+	type UpdateReview,
+} from "@repo/schema/review";
+import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
+import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
+import { log } from "@/utils";
 
 export class ReviewRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -25,33 +32,94 @@ export class ReviewRepository extends BaseRepository {
 		return result ? ReviewRepository.composeEntity(result) : undefined;
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<Review[]> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			let stmt = this.db.query.review.findMany();
+			const [dbResult] = await this.db
+				.select({ count: count(tables.review.id) })
+				.from(tables.review)
+				.where(ilike(tables.review.comment, `%${query}%`));
 
-			if (query) {
-				const { cursor, page, limit } = query;
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
 
-				if (cursor) {
-					stmt = this.db.query.review.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
-						limit: limit + 1,
-					});
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Review>> {
+		try {
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+			} = query ?? {};
+
+			const orderBy = (
+				f: typeof tables.review._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = ReviewKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
 				}
+				return op[order](f.id);
+			};
 
-				if (page) {
-					const offset = (page - 1) * limit;
-					stmt = this.db.query.review.findMany({
-						offset,
-						limit,
-					});
-				}
+			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.review.comment, `%${query}%`));
+
+			if (cursor) {
+				clauses.push(gt(tables.review.createdAt, new Date(cursor)));
+
+				const res = await this.db.query.review.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					limit: limit + 1,
+				});
+
+				const rows = res.map(ReviewRepository.composeEntity);
+
+				return { rows };
 			}
 
-			const result = await stmt;
-			return result.map((r) => ReviewRepository.composeEntity(r));
+			if (page) {
+				const offset = (page - 1) * limit;
+
+				const res = await this.db.query.review.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					offset,
+					limit,
+				});
+
+				const rows = res.map(ReviewRepository.composeEntity);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const res = await this.db.query.review.findMany({
+				where: (_, op) => op.and(...clauses),
+				orderBy,
+				limit: limit,
+			});
+
+			const rows = res.map(ReviewRepository.composeEntity);
+
+			return { rows };
 		} catch (error) {
-			throw this.handleError(error, "list");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 

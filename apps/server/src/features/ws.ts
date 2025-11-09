@@ -17,17 +17,6 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 		.use(honoAuthMiddleware)
 		.use(honoRequireAuthMiddleware)
 		.use(honoWebsocketHeader)
-		.get("/ws/order/:id", async (c) => {
-			const { id } = c.req.param();
-			const stub: DurableObjectStub<OrderRoom> = c.env.ORDER_ROOM.getByName(id);
-
-			const userId = c.var.session?.user.id;
-			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
-
-			const req = withQueryParams(c.req.raw, { userId });
-
-			return await stub.fetch(req);
-		})
 		.get("/ws/payment/:id", async (c) => {
 			const { id } = c.req.param();
 			const stub: DurableObjectStub<PaymentRoom> =
@@ -43,6 +32,17 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 		.get("/ws/driver-pool", async (c) => {
 			const stub: DurableObjectStub<OrderRoom> =
 				c.env.ORDER_ROOM.getByName("driver-pool");
+
+			const userId = c.var.session?.user.id;
+			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
+
+			const req = withQueryParams(c.req.raw, { userId });
+
+			return await stub.fetch(req);
+		})
+		.get("/ws/order/:id", async (c) => {
+			const { id } = c.req.param();
+			const stub: DurableObjectStub<OrderRoom> = c.env.ORDER_ROOM.getByName(id);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);

@@ -8,13 +8,14 @@ export const ReportHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ report: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.report.list(query);
+			const { rows, totalPages } = await context.repo.report.list(query);
 
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved reports data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

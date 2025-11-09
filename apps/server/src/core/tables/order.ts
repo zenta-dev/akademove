@@ -77,6 +77,7 @@ export const order = pgTable(
 		index("order_merchant_id_idx").on(t.merchantId),
 	],
 );
+export type OrderTable = typeof order;
 
 ///
 /// --- Relations --- ///

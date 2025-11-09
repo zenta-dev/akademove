@@ -1,22 +1,26 @@
-import type {
-	InsertMerchantMenu,
-	MerchantMenu,
-	UpdateMerchantMenu,
+import {
+	type InsertMerchantMenu,
+	type MerchantMenu,
+	MerchantMenuKeySchema,
+	type UpdateMerchantMenu,
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
-import { count, eq, gt, ilike } from "drizzle-orm";
+import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { CountCache, ListResult } from "@/core/interface";
+import type {
+	CountCache,
+	ListResult,
+	OrderByOperation,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
-import { MerchantMenuSortBySchema } from "./merchant-menu-spec";
 
 interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
@@ -128,9 +132,28 @@ export class MerchantMenuRepository extends BaseRepository {
 				order = "asc",
 			} = query ?? {};
 
+			const orderBy = (
+				f: typeof tables.merchantMenu._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = MerchantMenuKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
+			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.merchantMenu.name, `%${search}%`));
+
 			if (cursor) {
+				clauses.push(gt(tables.merchantMenu.updatedAt, new Date(cursor)));
+
 				const result = await this.db.query.merchantMenu.findMany({
-					where: gt(tables.merchantMenu.updatedAt, new Date(cursor)),
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
 					limit: limit + 1,
 				});
 
@@ -142,23 +165,14 @@ export class MerchantMenuRepository extends BaseRepository {
 				return { rows };
 			}
 
-			if (page !== undefined) {
+			if (page) {
 				const offset = (page - 1) * limit;
 
 				const result = await this.db.query.merchantMenu.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
 					offset,
 					limit,
-					where: search
-						? ilike(tables.merchantMenu.name, `%${search}%`)
-						: undefined,
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = MerchantMenuSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
 				});
 
 				const rows = await Promise.all(
@@ -184,9 +198,8 @@ export class MerchantMenuRepository extends BaseRepository {
 			);
 			return { rows };
 		} catch (error) {
-			log.error({ error }, "Failed to list merchant menus");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list merchant menus");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 
@@ -253,9 +266,7 @@ export class MerchantMenuRepository extends BaseRepository {
 
 			return result;
 		} catch (error) {
-			log.error({ error }, "Failed to create merchant menu");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create merchant menu");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -311,11 +322,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			log.error({ id, error }, "Failed to update merchant menu");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to update merchant menu with id "${id}"`,
-			);
+			throw this.handleError(error, "update");
 		}
 	}
 
@@ -350,11 +357,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				]);
 			}
 		} catch (error) {
-			log.error({ id, error }, "Failed to delete merchant menu");
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(
-				`Failed to delete merchant menu with id "${id}"`,
-			);
+			throw this.handleError(error, "delete");
 		}
 	}
 }

@@ -1,14 +1,20 @@
-import type { Coupon, InsertCoupon, UpdateCoupon } from "@repo/schema/coupon";
+import {
+	type Coupon,
+	CouponKeySchema,
+	type InsertCoupon,
+	type UpdateCoupon,
+} from "@repo/schema/coupon";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { eq } from "drizzle-orm";
+import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
+import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
-import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class CouponRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -32,34 +38,94 @@ export class CouponRepository extends BaseRepository {
 		return result ? CouponRepository.composeEntity(result) : undefined;
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<Coupon[]> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			let stmt = this.db.query.coupon.findMany();
+			const [dbResult] = await this.db
+				.select({ count: count(tables.coupon.id) })
+				.from(tables.coupon)
+				.where(ilike(tables.coupon.name, `%${query}%`));
 
-			if (query) {
-				const { cursor, page, limit } = query;
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
 
-				if (cursor) {
-					stmt = this.db.query.coupon.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
-						limit: limit + 1,
-					});
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Coupon>> {
+		try {
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+			} = query ?? {};
+
+			const orderBy = (
+				f: typeof tables.coupon._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = CouponKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
 				}
+				return op[order](f.id);
+			};
 
-				if (page) {
-					const pageNum = page;
-					const offset = (pageNum - 1) * limit;
-					stmt = this.db.query.coupon.findMany({
-						offset,
-						limit,
-					});
-				}
+			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.coupon.name, `%${query}%`));
+
+			if (cursor) {
+				clauses.push(gt(tables.coupon.createdAt, new Date(cursor)));
+
+				const res = await this.db.query.coupon.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					limit: limit + 1,
+				});
+
+				const rows = res.map(CouponRepository.composeEntity);
+
+				return { rows };
 			}
 
-			const result = await stmt;
-			return result.map((item) => CouponRepository.composeEntity(item));
+			if (page) {
+				const offset = (page - 1) * limit;
+
+				const res = await this.db.query.coupon.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					offset,
+					limit,
+				});
+
+				const rows = res.map(CouponRepository.composeEntity);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const res = await this.db.query.coupon.findMany({
+				where: (_, op) => op.and(...clauses),
+				orderBy,
+				limit: limit,
+			});
+
+			const rows = res.map(CouponRepository.composeEntity);
+
+			return { rows };
 		} catch (error) {
-			throw this.handleError(error, "list");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 

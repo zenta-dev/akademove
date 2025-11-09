@@ -1,7 +1,8 @@
-import type {
-	InsertMerchant,
-	Merchant,
-	UpdateMerchant,
+import {
+	type InsertMerchant,
+	type Merchant,
+	MerchantKeySchema,
+	type UpdateMerchant,
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
@@ -10,13 +11,12 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, WithTx } from "@/core/interface";
+import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 import { log } from "@/utils";
-import { MerchantMainSortBySchema } from "./merchant-main-spec";
 
 const PRIV_BUCKET = "merchant-priv";
 const PUB_BUCKET = "merchant";
@@ -77,9 +77,9 @@ export class MerchantMainRepository extends BaseRepository {
 	async #getQueryCount(query: string): Promise<number> {
 		try {
 			const [dbResult] = await this.db
-				.select({ count: count(tables.driver.id) })
-				.from(tables.driver)
-				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
+				.select({ count: count(tables.merchant.id) })
+				.from(tables.merchant)
+				.innerJoin(tables.user, eq(tables.merchant.userId, tables.user.id))
 				.where(ilike(tables.user.name, `%${query}%`));
 
 			return dbResult?.count ?? 0;
@@ -100,20 +100,28 @@ export class MerchantMainRepository extends BaseRepository {
 				order = "asc",
 			} = query ?? {};
 
+			const orderBy = (
+				f: typeof tables.merchant._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = MerchantKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
 			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.merchant.name, `%${search}%`));
+
 			if (cursor) {
 				clauses.push(gt(tables.merchant.updatedAt, new Date(cursor)));
 
 				const result = await this.db.query.merchant.findMany({
 					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = MerchantMainSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					orderBy,
 					limit: limit + 1,
 				});
 
@@ -125,21 +133,12 @@ export class MerchantMainRepository extends BaseRepository {
 				return { rows };
 			}
 
-			if (page !== undefined) {
+			if (page) {
 				const offset = (page - 1) * limit;
-
-				if (search) clauses.push(ilike(tables.merchant.name, `%${search}%`));
 
 				const result = await this.db.query.merchant.findMany({
 					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = MerchantMainSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					orderBy,
 					offset,
 					limit,
 				});
@@ -161,14 +160,7 @@ export class MerchantMainRepository extends BaseRepository {
 
 			const result = await this.db.query.merchant.findMany({
 				where: (_f, op) => op.and(...clauses),
-				orderBy: (f, op) => {
-					if (sortBy) {
-						const parsed = MerchantMainSortBySchema.safeParse(sortBy);
-						const field = parsed.success ? f[parsed.data] : f.id;
-						return op[order](field);
-					}
-					return op[order](f.id);
-				},
+				orderBy,
 				limit,
 			});
 			const rows = await Promise.all(
@@ -178,7 +170,8 @@ export class MerchantMainRepository extends BaseRepository {
 			);
 			return { rows };
 		} catch (error) {
-			throw this.handleError(error, "list");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 

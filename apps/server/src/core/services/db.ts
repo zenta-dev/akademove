@@ -41,3 +41,24 @@ export type DatabaseService = ReturnType<typeof getDatabase>;
 export type DatabaseTransaction = Parameters<
 	Parameters<DatabaseService["transaction"]>["0"]
 >["0"];
+export type DatabaseName = keyof DatabaseService["query"];
+export type DatabaseTables =
+	| auth.UserTable
+	| auth.AccountTable
+	| auth.VerificationTable
+	| configuration.ConfigurationTable
+	| configuration.ConfigurationAuditLogTable
+	| coupon.CouponTable
+	| coupon.CouponAuditLogTable
+	| coupon.CouponUsageTable
+	| driver.DriverTable
+	| driver.DriverScheduleTable
+	| merchant.MerchantTable
+	| merchant.MerchantMenuTable
+	| order.OrderTable
+	| payment.PaymentTable
+	| report.ReportTable
+	| report.ReportAuditLogTable
+	| review.ReviewTable
+	| transaction.TransactionTable
+	| wallet.WalletTable;

@@ -8,13 +8,15 @@ export const DriverScheduleHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ schedule: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.driver.schedule.list(query);
+			const { rows, totalPages } =
+				await context.repo.driver.schedule.list(query);
 
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved schedules data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

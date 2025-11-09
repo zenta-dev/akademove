@@ -1,16 +1,24 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import type { InsertUser, UpdateUser, User } from "@repo/schema/user";
+import {
+	type InsertUser,
+	type UpdateUser,
+	type User,
+	UserKeySchema,
+} from "@repo/schema/user";
 import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { CountCache, ListResult, PartialWithTx } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import { log } from "@/utils";
-import { UserSortBySchema } from "./user-spec";
 
 const BUCKET = "user";
 
@@ -75,6 +83,18 @@ export class UserRepository extends BaseRepository {
 		query?: UnifiedPaginationQuery & { requesterId: string },
 	): Promise<ListResult<User>> {
 		try {
+			const orderBy = (
+				f: typeof tables.user._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = UserKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
 			const {
 				cursor,
 				page,
@@ -93,14 +113,7 @@ export class UserRepository extends BaseRepository {
 
 				const result = await this.db.query.user.findMany({
 					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = UserSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					orderBy,
 					limit: limit + 1,
 				});
 
@@ -110,21 +123,14 @@ export class UserRepository extends BaseRepository {
 				return { rows };
 			}
 
-			if (page !== undefined) {
+			if (page) {
 				const offset = (page - 1) * limit;
 
 				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
 				const result = await this.db.query.user.findMany({
 					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = UserSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					orderBy,
 					offset,
 					limit,
 				});
@@ -144,14 +150,7 @@ export class UserRepository extends BaseRepository {
 
 			const result = await this.db.query.user.findMany({
 				where: (_f, op) => op.and(...clauses),
-				orderBy: (f, op) => {
-					if (sortBy) {
-						const parsed = UserSortBySchema.safeParse(sortBy);
-						const field = parsed.success ? f[parsed.data] : f.id;
-						return op[order](field);
-					}
-					return op[order](f.id);
-				},
+				orderBy,
 				limit,
 			});
 			const rows = await Promise.all(

@@ -6,7 +6,7 @@ import { log, type PromiseFn, safeSync } from "@/utils";
 import { CACHE_TTLS } from "./constants";
 import { RepositoryError } from "./error";
 import type { CountCache, PartialWithTx } from "./interface";
-import { type DatabaseService, tables } from "./services/db";
+import { type DatabaseName, type DatabaseService, tables } from "./services/db";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
 
 type UserId = string;
@@ -113,21 +113,20 @@ export class BaseDurableObject extends DurableObject {
 	}
 }
 
-type DatabaseTable = keyof DatabaseService["query"];
 export abstract class BaseRepository {
 	readonly #entity: string;
-	readonly #table: DatabaseTable;
+	readonly #tableName: DatabaseName;
 	readonly #kv: KeyValueService;
 	protected readonly db: DatabaseService;
 
 	constructor(
 		entity: string,
-		table: DatabaseTable,
+		table: DatabaseName,
 		kv: KeyValueService,
 		database: DatabaseService,
 	) {
 		this.#entity = entity;
-		this.#table = table;
+		this.#tableName = table;
 		this.#kv = kv;
 		this.db = database;
 	}
@@ -162,7 +161,7 @@ export abstract class BaseRepository {
 	async #setTotalRowCache(total: number): Promise<void> {
 		try {
 			await this.setCache<CountCache>(
-				`${this.#entity}-${this.#table}:count`,
+				`${this.#entity}-${this.#tableName}:count`,
 				{ total },
 				{ expirationTtl: CACHE_TTLS["24h"] },
 			);
@@ -175,7 +174,7 @@ export abstract class BaseRepository {
 		try {
 			let tableToCount: PgColumn | undefined;
 
-			const table = tables[this.#table];
+			const table = tables[this.#tableName];
 
 			if ("id" in table) {
 				tableToCount = table.id;
@@ -194,7 +193,7 @@ export abstract class BaseRepository {
 				return { total };
 			};
 			const res = await this.getCache<CountCache>(
-				`${this.#entity}-${this.#table}:count`,
+				`${this.#entity}-${this.#tableName}:count`,
 				{ fallback },
 			);
 

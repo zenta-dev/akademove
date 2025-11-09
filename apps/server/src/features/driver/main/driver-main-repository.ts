@@ -1,6 +1,10 @@
-import type { Driver, InsertDriver, UpdateDriver } from "@repo/schema/driver";
+import {
+	type Driver,
+	DriverKeySchema,
+	type InsertDriver,
+	type UpdateDriver,
+} from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import type { User } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
 import {
 	and,
@@ -14,9 +18,9 @@ import {
 } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS, type StorageBucket } from "@/core/constants";
+import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult } from "@/core/interface";
+import type { ListResult, OrderByOperation } from "@/core/interface";
 import {
 	type DatabaseService,
 	type DatabaseTransaction,
@@ -28,7 +32,7 @@ import type { UserDatabase } from "@/core/tables/auth";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { UserRepository } from "@/features/user/user-repository";
 import { log } from "@/utils";
-import { DriverSortBySchema, type NearbyQuery } from "./driver-main-spec";
+import type { NearbyQuery } from "./driver-main-spec";
 
 const BUCKET = "driver";
 
@@ -106,8 +110,9 @@ export class DriverMainRepository extends BaseRepository {
 	async #getQueryCount(query: string): Promise<number> {
 		try {
 			const [dbResult] = await this.db
-				.select({ count: count(tables.user.id) })
-				.from(tables.user)
+				.select({ count: count(tables.driver.id) })
+				.from(tables.driver)
+				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
 				.where(ilike(tables.user.name, `%${query}%`));
 
 			return dbResult?.count ?? 0;
@@ -128,22 +133,29 @@ export class DriverMainRepository extends BaseRepository {
 				order = "asc",
 			} = query ?? {};
 
+			const orderBy = (
+				f: typeof tables.driver._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = DriverKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
 			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
 			if (cursor) {
 				clauses.push(gt(tables.driver.updatedAt, new Date(cursor)));
 
 				const result = await this.db.query.driver.findMany({
 					with: { user: true },
-					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = DriverSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					where: (_, op) => op.and(...clauses),
+					orderBy,
 					limit: limit + 1,
 				});
 
@@ -155,22 +167,13 @@ export class DriverMainRepository extends BaseRepository {
 				return { rows };
 			}
 
-			if (page !== undefined) {
+			if (page) {
 				const offset = (page - 1) * limit;
-
-				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
 				const result = await this.db.query.driver.findMany({
 					with: { user: true },
-					where: (_f, op) => op.and(...clauses),
-					orderBy: (f, op) => {
-						if (sortBy) {
-							const parsed = DriverSortBySchema.safeParse(sortBy);
-							const field = parsed.success ? f[parsed.data] : f.id;
-							return op[order](field);
-						}
-						return op[order](f.id);
-					},
+					where: (_, op) => op.and(...clauses),
+					orderBy,
 					offset,
 					limit,
 				});
@@ -192,15 +195,8 @@ export class DriverMainRepository extends BaseRepository {
 
 			const result = await this.db.query.driver.findMany({
 				with: { user: true },
-				where: (_f, op) => op.and(...clauses),
-				orderBy: (f, op) => {
-					if (sortBy) {
-						const parsed = DriverSortBySchema.safeParse(sortBy);
-						const field = parsed.success ? f[parsed.data] : f.id;
-						return op[order](field);
-					}
-					return op[order](f.id);
-				},
+				where: (_, op) => op.and(...clauses),
+				orderBy,
 				limit,
 			});
 			const rows = await Promise.all(
@@ -208,7 +204,8 @@ export class DriverMainRepository extends BaseRepository {
 			);
 			return { rows };
 		} catch (error) {
-			throw this.handleError(error, "list");
+			this.handleError(error, "list");
+			return { rows: [] };
 		}
 	}
 
