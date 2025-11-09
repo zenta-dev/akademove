@@ -14,11 +14,11 @@ Method | HTTP request | Description
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
 [**driverNearby**](DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [**driverRemove**](DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
-[**driverScheduleCreate**](DriverApi.md#driverschedulecreate) | **POST** /driver/schedules | 
-[**driverScheduleGet**](DriverApi.md#driverscheduleget) | **GET** /driver/schedules/{id} | 
-[**driverScheduleList**](DriverApi.md#driverschedulelist) | **GET** /driver/schedules | 
-[**driverScheduleRemove**](DriverApi.md#driverscheduleremove) | **DELETE** /driver/schedules/{id} | 
-[**driverScheduleUpdate**](DriverApi.md#driverscheduleupdate) | **PUT** /driver/schedules/{id} | 
+[**driverScheduleCreate**](DriverApi.md#driverschedulecreate) | **POST** /drivers/{driverId}/schedules | 
+[**driverScheduleGet**](DriverApi.md#driverscheduleget) | **GET** /drivers/{driverId}/schedules/{id} | 
+[**driverScheduleList**](DriverApi.md#driverschedulelist) | **GET** /drivers/{driverId}/schedules | 
+[**driverScheduleRemove**](DriverApi.md#driverscheduleremove) | **DELETE** /drivers/{driverId}/schedules/{id} | 
+[**driverScheduleUpdate**](DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
 
@@ -242,7 +242,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleCreate**
-> DriverScheduleCreate200Response driverScheduleCreate(insertDriverScheduleRequest)
+> DriverScheduleCreate200Response driverScheduleCreate(driverId, insertDriverScheduleRequest)
 
 
 
@@ -251,10 +251,11 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
 final InsertDriverScheduleRequest insertDriverScheduleRequest = ; // InsertDriverScheduleRequest | 
 
 try {
-    final response = api.driverScheduleCreate(insertDriverScheduleRequest);
+    final response = api.driverScheduleCreate(driverId, insertDriverScheduleRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverScheduleCreate: $e\n');
@@ -265,6 +266,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
  **insertDriverScheduleRequest** | [**InsertDriverScheduleRequest**](InsertDriverScheduleRequest.md)|  | 
 
 ### Return type
@@ -283,7 +285,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleGet**
-> DriverScheduleCreate200Response driverScheduleGet(id)
+> DriverScheduleCreate200Response driverScheduleGet(driverId, id)
 
 
 
@@ -292,10 +294,11 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
 final String id = id_example; // String | 
 
 try {
-    final response = api.driverScheduleGet(id);
+    final response = api.driverScheduleGet(driverId, id);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverScheduleGet: $e\n');
@@ -306,6 +309,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
  **id** | **String**|  | 
 
 ### Return type
@@ -324,7 +328,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleList**
-> DriverScheduleList200Response driverScheduleList(cursor, limit, page, query, sortBy, order)
+> DriverScheduleList200Response driverScheduleList(driverId, cursor, limit, page, query, sortBy, order)
 
 
 
@@ -333,6 +337,7 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
 final Object page = ; // Object | 
@@ -341,7 +346,7 @@ final String sortBy = sortBy_example; // String |
 final String order = order_example; // String | 
 
 try {
-    final response = api.driverScheduleList(cursor, limit, page, query, sortBy, order);
+    final response = api.driverScheduleList(driverId, cursor, limit, page, query, sortBy, order);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverScheduleList: $e\n');
@@ -352,6 +357,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
@@ -375,7 +381,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleRemove**
-> DriverRemove200Response driverScheduleRemove(id)
+> DriverRemove200Response driverScheduleRemove(driverId, id)
 
 
 
@@ -384,10 +390,11 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
 final String id = id_example; // String | 
 
 try {
-    final response = api.driverScheduleRemove(id);
+    final response = api.driverScheduleRemove(driverId, id);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverScheduleRemove: $e\n');
@@ -398,6 +405,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
  **id** | **String**|  | 
 
 ### Return type
@@ -416,7 +424,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleUpdate**
-> DriverScheduleCreate200Response driverScheduleUpdate(id, updateDriverScheduleRequest)
+> DriverScheduleCreate200Response driverScheduleUpdate(driverId, id, updateDriverScheduleRequest)
 
 
 
@@ -425,11 +433,12 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
 final String id = id_example; // String | 
 final UpdateDriverScheduleRequest updateDriverScheduleRequest = ; // UpdateDriverScheduleRequest | 
 
 try {
-    final response = api.driverScheduleUpdate(id, updateDriverScheduleRequest);
+    final response = api.driverScheduleUpdate(driverId, id, updateDriverScheduleRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverScheduleUpdate: $e\n');
@@ -440,6 +449,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
  **id** | **String**|  | 
  **updateDriverScheduleRequest** | [**UpdateDriverScheduleRequest**](UpdateDriverScheduleRequest.md)|  | 
 

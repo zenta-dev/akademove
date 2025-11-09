@@ -982,7 +982,6 @@ class MerchantApi {
   /// * [name]
   /// * [email]
   /// * [address]
-  /// * [categories]
   /// * [document]
   /// * [image]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -1005,7 +1004,6 @@ class MerchantApi {
     String? name,
     String? email,
     String? address,
-    List<String>? categories,
     MultipartFile? document,
     MultipartFile? image,
     CancelToken? cancelToken,
@@ -1045,7 +1043,6 @@ class MerchantApi {
         if (address != null) r'address': address,
         r'location_x': locationX,
         r'location_y': locationY,
-        if (categories != null) r'categories': categories,
         r'bank_provider': bankProvider,
         r'bank_number': bankNumber,
         if (document != null) r'document': document,

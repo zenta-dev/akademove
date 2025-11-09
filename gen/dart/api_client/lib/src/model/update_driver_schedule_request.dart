@@ -20,6 +20,7 @@ part 'update_driver_schedule_request.g.dart';
 class UpdateDriverScheduleRequest {
   /// Returns a new [UpdateDriverScheduleRequest] instance.
   const UpdateDriverScheduleRequest({
+    this.name,
     this.dayOfWeek,
     this.startTime,
     this.endTime,
@@ -27,6 +28,9 @@ class UpdateDriverScheduleRequest {
     this.specificDate,
     this.isActive = true,
   });
+
+  @JsonKey(name: r'name', required: false, includeIfNull: false)
+  final String? name;
 
   @JsonKey(name: r'dayOfWeek', required: false, includeIfNull: false)
   final DayOfWeek? dayOfWeek;
@@ -60,6 +64,7 @@ class UpdateDriverScheduleRequest {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UpdateDriverScheduleRequest &&
+          other.name == name &&
           other.dayOfWeek == dayOfWeek &&
           other.startTime == startTime &&
           other.endTime == endTime &&
@@ -69,6 +74,7 @@ class UpdateDriverScheduleRequest {
 
   @override
   int get hashCode =>
+      name.hashCode +
       dayOfWeek.hashCode +
       startTime.hashCode +
       endTime.hashCode +

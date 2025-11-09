@@ -769,7 +769,6 @@ class AuthApi {
   /// * [detailAddress]
   /// * [detailLocationX] - Longitude (X-axis, East-West)
   /// * [detailLocationY] - Latitude (Y-axis, North-South)
-  /// * [detailCategories]
   /// * [detailBankProvider]
   /// * [detailBankNumber]
   /// * [photo]
@@ -799,7 +798,6 @@ class AuthApi {
     required String detailAddress,
     required num detailLocationX,
     required num detailLocationY,
-    required List<String> detailCategories,
     required String detailBankProvider,
     required num detailBankNumber,
     MultipartFile? photo,
@@ -846,7 +844,6 @@ class AuthApi {
         r'detail_address': detailAddress,
         r'detail_location_x': detailLocationX,
         r'detail_location_y': detailLocationY,
-        r'detail_categories': detailCategories,
         r'detail_bank_provider': detailBankProvider,
         r'detail_bank_number': detailBankNumber,
         if (detailDocument != null) r'detail_document': detailDocument,

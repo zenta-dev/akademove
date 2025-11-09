@@ -8,6 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**name** | **String** |  | [optional] 
 **dayOfWeek** | [**DayOfWeek**](DayOfWeek.md) |  | [optional] 
 **startTime** | [**Time**](Time.md) |  | [optional] 
 **endTime** | [**Time**](Time.md) |  | [optional] 

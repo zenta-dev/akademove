@@ -7,6 +7,8 @@ part of 'update_driver_schedule_request.dart';
 // **************************************************************************
 
 abstract class _$UpdateDriverScheduleRequestCWProxy {
+  UpdateDriverScheduleRequest name(String? name);
+
   UpdateDriverScheduleRequest dayOfWeek(DayOfWeek? dayOfWeek);
 
   UpdateDriverScheduleRequest startTime(Time? startTime);
@@ -26,6 +28,7 @@ abstract class _$UpdateDriverScheduleRequestCWProxy {
   /// UpdateDriverScheduleRequest(...).copyWith(id: 12, name: "My name")
   /// ````
   UpdateDriverScheduleRequest call({
+    String? name,
     DayOfWeek? dayOfWeek,
     Time? startTime,
     Time? endTime,
@@ -41,6 +44,9 @@ class _$UpdateDriverScheduleRequestCWProxyImpl
   const _$UpdateDriverScheduleRequestCWProxyImpl(this._value);
 
   final UpdateDriverScheduleRequest _value;
+
+  @override
+  UpdateDriverScheduleRequest name(String? name) => this(name: name);
 
   @override
   UpdateDriverScheduleRequest dayOfWeek(DayOfWeek? dayOfWeek) =>
@@ -73,6 +79,7 @@ class _$UpdateDriverScheduleRequestCWProxyImpl
   /// UpdateDriverScheduleRequest(...).copyWith(id: 12, name: "My name")
   /// ````
   UpdateDriverScheduleRequest call({
+    Object? name = const $CopyWithPlaceholder(),
     Object? dayOfWeek = const $CopyWithPlaceholder(),
     Object? startTime = const $CopyWithPlaceholder(),
     Object? endTime = const $CopyWithPlaceholder(),
@@ -81,6 +88,10 @@ class _$UpdateDriverScheduleRequestCWProxyImpl
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
     return UpdateDriverScheduleRequest(
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String?,
       dayOfWeek: dayOfWeek == const $CopyWithPlaceholder()
           ? _value.dayOfWeek
           // ignore: cast_nullable_to_non_nullable
@@ -124,6 +135,7 @@ UpdateDriverScheduleRequest _$UpdateDriverScheduleRequestFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('UpdateDriverScheduleRequest', json, ($checkedConvert) {
   final val = UpdateDriverScheduleRequest(
+    name: $checkedConvert('name', (v) => v as String?),
     dayOfWeek: $checkedConvert(
       'dayOfWeek',
       (v) => $enumDecodeNullable(_$DayOfWeekEnumMap, v),
@@ -149,6 +161,7 @@ UpdateDriverScheduleRequest _$UpdateDriverScheduleRequestFromJson(
 Map<String, dynamic> _$UpdateDriverScheduleRequestToJson(
   UpdateDriverScheduleRequest instance,
 ) => <String, dynamic>{
+  'name': ?instance.name,
   'dayOfWeek': ?_$DayOfWeekEnumMap[instance.dayOfWeek],
   'startTime': ?instance.startTime?.toJson(),
   'endTime': ?instance.endTime?.toJson(),

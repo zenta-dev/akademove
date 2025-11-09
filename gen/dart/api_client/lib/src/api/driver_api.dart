@@ -459,6 +459,7 @@ class DriverApi {
   ///
   ///
   /// Parameters:
+  /// * [driverId]
   /// * [insertDriverScheduleRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -470,6 +471,7 @@ class DriverApi {
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverScheduleCreate200Response>> driverScheduleCreate({
+    required String driverId,
     required InsertDriverScheduleRequest insertDriverScheduleRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -478,7 +480,12 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver/schedules';
+    final _path = r'/drivers/{driverId}/schedules'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{...?headers},
@@ -550,6 +557,7 @@ class DriverApi {
   ///
   ///
   /// Parameters:
+  /// * [driverId]
   /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -561,6 +569,7 @@ class DriverApi {
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverScheduleCreate200Response>> driverScheduleGet({
+    required String driverId,
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -569,12 +578,19 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{...?headers},
@@ -631,6 +647,7 @@ class DriverApi {
   ///
   ///
   /// Parameters:
+  /// * [driverId]
   /// * [cursor]
   /// * [limit]
   /// * [page]
@@ -647,6 +664,7 @@ class DriverApi {
   /// Returns a [Future] containing a [Response] with a [DriverScheduleList200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverScheduleList200Response>> driverScheduleList({
+    required String driverId,
     String? cursor,
     Object? limit,
     Object? page,
@@ -660,7 +678,12 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver/schedules';
+    final _path = r'/drivers/{driverId}/schedules'.replaceAll(
+      '{'
+      r'driverId'
+      '}',
+      driverId.toString(),
+    );
     final _options = Options(
       method: r'GET',
       headers: <String, dynamic>{...?headers},
@@ -727,6 +750,7 @@ class DriverApi {
   ///
   ///
   /// Parameters:
+  /// * [driverId]
   /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -738,6 +762,7 @@ class DriverApi {
   /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverRemove200Response>> driverScheduleRemove({
+    required String driverId,
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -746,12 +771,19 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'DELETE',
       headers: <String, dynamic>{...?headers},
@@ -809,6 +841,7 @@ class DriverApi {
   ///
   ///
   /// Parameters:
+  /// * [driverId]
   /// * [id]
   /// * [updateDriverScheduleRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -821,6 +854,7 @@ class DriverApi {
   /// Returns a [Future] containing a [Response] with a [DriverScheduleCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverScheduleCreate200Response>> driverScheduleUpdate({
+    required String driverId,
     required String id,
     required UpdateDriverScheduleRequest updateDriverScheduleRequest,
     CancelToken? cancelToken,
@@ -830,12 +864,19 @@ class DriverApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/driver/schedules/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/drivers/{driverId}/schedules/{id}'
+        .replaceAll(
+          '{'
+          r'driverId'
+          '}',
+          driverId.toString(),
+        )
+        .replaceAll(
+          '{'
+          r'id'
+          '}',
+          id.toString(),
+        );
     final _options = Options(
       method: r'PUT',
       headers: <String, dynamic>{...?headers},

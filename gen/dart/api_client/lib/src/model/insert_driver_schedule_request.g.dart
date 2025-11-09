@@ -7,6 +7,8 @@ part of 'insert_driver_schedule_request.dart';
 // **************************************************************************
 
 abstract class _$InsertDriverScheduleRequestCWProxy {
+  InsertDriverScheduleRequest name(String name);
+
   InsertDriverScheduleRequest driverId(String driverId);
 
   InsertDriverScheduleRequest dayOfWeek(DayOfWeek dayOfWeek);
@@ -28,6 +30,7 @@ abstract class _$InsertDriverScheduleRequestCWProxy {
   /// InsertDriverScheduleRequest(...).copyWith(id: 12, name: "My name")
   /// ````
   InsertDriverScheduleRequest call({
+    String name,
     String driverId,
     DayOfWeek dayOfWeek,
     Time startTime,
@@ -44,6 +47,9 @@ class _$InsertDriverScheduleRequestCWProxyImpl
   const _$InsertDriverScheduleRequestCWProxyImpl(this._value);
 
   final InsertDriverScheduleRequest _value;
+
+  @override
+  InsertDriverScheduleRequest name(String name) => this(name: name);
 
   @override
   InsertDriverScheduleRequest driverId(String driverId) =>
@@ -80,6 +86,7 @@ class _$InsertDriverScheduleRequestCWProxyImpl
   /// InsertDriverScheduleRequest(...).copyWith(id: 12, name: "My name")
   /// ````
   InsertDriverScheduleRequest call({
+    Object? name = const $CopyWithPlaceholder(),
     Object? driverId = const $CopyWithPlaceholder(),
     Object? dayOfWeek = const $CopyWithPlaceholder(),
     Object? startTime = const $CopyWithPlaceholder(),
@@ -89,6 +96,10 @@ class _$InsertDriverScheduleRequestCWProxyImpl
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
     return InsertDriverScheduleRequest(
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
       driverId: driverId == const $CopyWithPlaceholder()
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
@@ -137,9 +148,16 @@ InsertDriverScheduleRequest _$InsertDriverScheduleRequestFromJson(
 ) => $checkedCreate('InsertDriverScheduleRequest', json, ($checkedConvert) {
   $checkKeys(
     json,
-    requiredKeys: const ['driverId', 'dayOfWeek', 'startTime', 'endTime'],
+    requiredKeys: const [
+      'name',
+      'driverId',
+      'dayOfWeek',
+      'startTime',
+      'endTime',
+    ],
   );
   final val = InsertDriverScheduleRequest(
+    name: $checkedConvert('name', (v) => v as String),
     driverId: $checkedConvert('driverId', (v) => v as String),
     dayOfWeek: $checkedConvert(
       'dayOfWeek',
@@ -166,6 +184,7 @@ InsertDriverScheduleRequest _$InsertDriverScheduleRequestFromJson(
 Map<String, dynamic> _$InsertDriverScheduleRequestToJson(
   InsertDriverScheduleRequest instance,
 ) => <String, dynamic>{
+  'name': instance.name,
   'driverId': instance.driverId,
   'dayOfWeek': _$DayOfWeekEnumMap[instance.dayOfWeek]!,
   'startTime': instance.startTime.toJson(),

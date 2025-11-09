@@ -21,6 +21,7 @@ class DriverSchedule {
   /// Returns a new [DriverSchedule] instance.
   const DriverSchedule({
     required this.id,
+    required this.name,
     required this.driverId,
     required this.dayOfWeek,
     required this.startTime,
@@ -34,6 +35,9 @@ class DriverSchedule {
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
+
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
@@ -77,6 +81,7 @@ class DriverSchedule {
       identical(this, other) ||
       other is DriverSchedule &&
           other.id == id &&
+          other.name == name &&
           other.driverId == driverId &&
           other.dayOfWeek == dayOfWeek &&
           other.startTime == startTime &&
@@ -90,6 +95,7 @@ class DriverSchedule {
   @override
   int get hashCode =>
       id.hashCode +
+      name.hashCode +
       driverId.hashCode +
       dayOfWeek.hashCode +
       startTime.hashCode +

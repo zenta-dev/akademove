@@ -88,11 +88,11 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
 [*DriverApi*](doc/DriverApi.md) | [**driverNearby**](doc/DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
 [*DriverApi*](doc/DriverApi.md) | [**driverRemove**](doc/DriverApi.md#driverremove) | **DELETE** /drivers/{id} | 
-[*DriverApi*](doc/DriverApi.md) | [**driverScheduleCreate**](doc/DriverApi.md#driverschedulecreate) | **POST** /driver/schedules | 
-[*DriverApi*](doc/DriverApi.md) | [**driverScheduleGet**](doc/DriverApi.md#driverscheduleget) | **GET** /driver/schedules/{id} | 
-[*DriverApi*](doc/DriverApi.md) | [**driverScheduleList**](doc/DriverApi.md#driverschedulelist) | **GET** /driver/schedules | 
-[*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /driver/schedules/{id} | 
-[*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /driver/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleCreate**](doc/DriverApi.md#driverschedulecreate) | **POST** /drivers/{driverId}/schedules | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleGet**](doc/DriverApi.md#driverscheduleget) | **GET** /drivers/{driverId}/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleList**](doc/DriverApi.md#driverschedulelist) | **GET** /drivers/{driverId}/schedules | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /drivers/{driverId}/schedules/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
@@ -149,12 +149,14 @@ Class | Method | HTTP request | Description
  - [BannerConfiguration](doc/BannerConfiguration.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
+ - [ConfigurationKey](doc/ConfigurationKey.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
  - [Coordinate](doc/Coordinate.md)
  - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
  - [CouponCreate200Response](doc/CouponCreate200Response.md)
  - [CouponGeneralRules](doc/CouponGeneralRules.md)
+ - [CouponKey](doc/CouponKey.md)
  - [CouponList200Response](doc/CouponList200Response.md)
  - [CouponRules](doc/CouponRules.md)
  - [CouponTimeRules](doc/CouponTimeRules.md)
@@ -165,10 +167,12 @@ Class | Method | HTTP request | Description
  - [Driver](doc/Driver.md)
  - [DriverGetMine200Response](doc/DriverGetMine200Response.md)
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
+ - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverRemove200Response](doc/DriverRemove200Response.md)
  - [DriverSchedule](doc/DriverSchedule.md)
  - [DriverScheduleCreate200Response](doc/DriverScheduleCreate200Response.md)
+ - [DriverScheduleKey](doc/DriverScheduleKey.md)
  - [DriverScheduleList200Response](doc/DriverScheduleList200Response.md)
  - [DriverStatus](doc/DriverStatus.md)
  - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)
@@ -190,8 +194,10 @@ Class | Method | HTTP request | Description
  - [Merchant](doc/Merchant.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
+ - [MerchantKey](doc/MerchantKey.md)
  - [MerchantMenu](doc/MerchantMenu.md)
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
+ - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [Order](doc/Order.md)
@@ -200,6 +206,7 @@ Class | Method | HTTP request | Description
  - [OrderGet200Response](doc/OrderGet200Response.md)
  - [OrderItem](doc/OrderItem.md)
  - [OrderItemItem](doc/OrderItemItem.md)
+ - [OrderKey](doc/OrderKey.md)
  - [OrderList200Response](doc/OrderList200Response.md)
  - [OrderMerchant](doc/OrderMerchant.md)
  - [OrderNote](doc/OrderNote.md)
@@ -210,21 +217,25 @@ Class | Method | HTTP request | Description
  - [OrderType](doc/OrderType.md)
  - [PayRequest](doc/PayRequest.md)
  - [Payment](doc/Payment.md)
+ - [PaymentKey](doc/PaymentKey.md)
  - [PaymentMethod](doc/PaymentMethod.md)
  - [PaymentProvider](doc/PaymentProvider.md)
  - [Phone](doc/Phone.md)
  - [PlaceOrder](doc/PlaceOrder.md)
  - [PlaceOrderPayment](doc/PlaceOrderPayment.md)
  - [PlaceOrderResponse](doc/PlaceOrderResponse.md)
+ - [PricingConfiguration](doc/PricingConfiguration.md)
  - [Report](doc/Report.md)
  - [ReportCategory](doc/ReportCategory.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
+ - [ReportKey](doc/ReportKey.md)
  - [ReportList200Response](doc/ReportList200Response.md)
  - [ReportStatus](doc/ReportStatus.md)
  - [ResetPassword](doc/ResetPassword.md)
  - [Review](doc/Review.md)
  - [ReviewCategory](doc/ReviewCategory.md)
  - [ReviewCreate200Response](doc/ReviewCreate200Response.md)
+ - [ReviewKeySchema](doc/ReviewKeySchema.md)
  - [ReviewList200Response](doc/ReviewList200Response.md)
  - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
  - [Session](doc/Session.md)
@@ -236,6 +247,7 @@ Class | Method | HTTP request | Description
  - [TopUpRequest](doc/TopUpRequest.md)
  - [Transaction](doc/Transaction.md)
  - [TransactionGet200Response](doc/TransactionGet200Response.md)
+ - [TransactionKey](doc/TransactionKey.md)
  - [TransactionList200Response](doc/TransactionList200Response.md)
  - [TransactionStatus](doc/TransactionStatus.md)
  - [TransactionType](doc/TransactionType.md)
@@ -256,6 +268,7 @@ Class | Method | HTTP request | Description
  - [User](doc/User.md)
  - [UserCreate200Response](doc/UserCreate200Response.md)
  - [UserGender](doc/UserGender.md)
+ - [UserKey](doc/UserKey.md)
  - [UserList200Response](doc/UserList200Response.md)
  - [UserRole](doc/UserRole.md)
  - [WSEnvelope](doc/WSEnvelope.md)
@@ -269,6 +282,7 @@ Class | Method | HTTP request | Description
  - [Wallet](doc/Wallet.md)
  - [WalletGet200Response](doc/WalletGet200Response.md)
  - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)
+ - [WalletKey](doc/WalletKey.md)
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
  - [WalletTopUp200Response](doc/WalletTopUp200Response.md)

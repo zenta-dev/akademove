@@ -69,6 +69,7 @@ import 'package:api_client/src/model/phone.dart';
 import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
 import 'package:api_client/src/model/place_order_response.dart';
+import 'package:api_client/src/model/pricing_configuration.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
@@ -177,6 +178,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'ConfigurationGet200Response':
       return ConfigurationGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ConfigurationKey':
     case 'ConfigurationList200Response':
       return ConfigurationList200Response.fromJson(
             value as Map<String, dynamic>,
@@ -193,6 +195,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'CouponGeneralRules':
       return CouponGeneralRules.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'CouponKey':
     case 'CouponList200Response':
       return CouponList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -221,6 +224,7 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'DriverKey':
     case 'DriverList200Response':
       return DriverList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -235,6 +239,7 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'DriverScheduleKey':
     case 'DriverScheduleList200Response':
       return DriverScheduleList200Response.fromJson(
             value as Map<String, dynamic>,
@@ -295,6 +300,7 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'MerchantKey':
     case 'MerchantMenu':
       return MerchantMenu.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'MerchantMenuCreate200Response':
@@ -302,6 +308,7 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'MerchantMenuKey':
     case 'MerchantMenuList200Response':
       return MerchantMenuList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -323,6 +330,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'OrderItemItem':
       return OrderItemItem.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'OrderKey':
     case 'OrderList200Response':
       return OrderList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -345,6 +353,7 @@ ReturnType deserialize<ReturnType, BaseType>(
       return PayRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Payment':
       return Payment.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'PaymentKey':
     case 'PaymentMethod':
     case 'PaymentProvider':
     case 'Phone':
@@ -357,12 +366,16 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'PlaceOrderResponse':
       return PlaceOrderResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'PricingConfiguration':
+      return PricingConfiguration.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReportCategory':
     case 'ReportCreate200Response':
       return ReportCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ReportKey':
     case 'ReportList200Response':
       return ReportList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -376,6 +389,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'ReviewCreate200Response':
       return ReviewCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ReviewKeySchema':
     case 'ReviewList200Response':
       return ReviewList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -404,6 +418,7 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'TransactionGet200Response':
       return TransactionGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'TransactionKey':
     case 'TransactionList200Response':
       return TransactionList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -450,6 +465,7 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UserCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UserGender':
+    case 'UserKey':
     case 'UserList200Response':
       return UserList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -483,6 +499,7 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'WalletKey':
     case 'WalletMonthlySummaryQuery':
       return WalletMonthlySummaryQuery.fromJson(value as Map<String, dynamic>)
           as ReturnType;
