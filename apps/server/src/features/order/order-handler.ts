@@ -8,62 +8,39 @@ export const OrderHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ order: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				const id = context.user.id;
-				const role = context.user.role;
+			let id: string | undefined;
+			const role = context.user.role;
 
-				if (role === "merchant") {
-					const mine = await context.repo.merchant.main.getByUserId(id);
-					const result = await context.repo.order.list(
-						{
-							...query,
-							id: mine.id,
-							role: role,
-						},
-						{ tx },
-					);
-					return {
-						status: 200,
-						body: {
-							message: "Successfully retrieved orders data",
-							data: result,
-						},
-					};
-				}
-				if (role === "driver") {
-					const mine = await context.repo.merchant.main.getByUserId(id);
-					const result = await context.repo.order.list(
-						{
-							...query,
-							id: mine.id,
-							role: role,
-						},
-						{ tx },
-					);
-					return {
-						status: 200,
-						body: {
-							message: "Successfully retrieved orders data",
-							data: result,
-						},
-					};
-				}
-				const result = await context.repo.order.list(
-					{
-						...query,
-						id,
-						role,
-					},
-					{ tx },
+			if (role === "merchant") {
+				const mine = await context.repo.merchant.main.getByUserId(
+					context.user.id,
 				);
-				return {
-					status: 200,
-					body: {
-						message: "Successfully retrieved orders data",
-						data: result,
-					},
-				};
+				id = mine.id;
+			}
+			if (role === "driver") {
+				const mine = await context.repo.driver.main.getByUserId(
+					context.user.id,
+				);
+				id = mine.id;
+			}
+
+			if (role === "user") {
+				id = context.user.id;
+			}
+
+			const { rows, totalPages } = await context.repo.order.list({
+				...query,
+				id,
+				role,
 			});
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved orders data",
+					data: rows,
+					totalPages,
+				},
+			};
 		}),
 	estimate: priv.estimate.handler(async ({ context, input: { query } }) => {
 		return await context.svc.db.transaction(async (tx) => {

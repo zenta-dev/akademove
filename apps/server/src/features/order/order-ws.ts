@@ -72,7 +72,7 @@ export class OrderRoom extends BaseDurableObject {
 	}
 
 	async #handleOrderAccepted(
-		_ws: WebSocket,
+		ws: WebSocket,
 		raw: unknown,
 		tx: DatabaseTransaction,
 	) {
@@ -80,7 +80,25 @@ export class OrderRoom extends BaseDurableObject {
 		const payload = parse.data?.payload;
 		if (!payload) return;
 
-		const _getOrder = await this.#repo.order.get(payload.order.id, { tx });
+		const driverId = this.findUserIdBySocket(ws);
+		const userId = payload.order.userId;
+		const orderId = payload.order.id;
+
+		const opts = { tx };
+		payload.order = await this.#repo.order.update(
+			payload.order.id,
+			{ status: "accepted", driverId },
+			opts,
+		);
+
+		const userWs = this.findById(userId);
+		const msg = JSON.stringify(payload);
+		userWs?.send(msg);
+
+		const orderDriverRoom = this.#broadcasted.get(orderId) ?? [];
+		for (const ws of orderDriverRoom) {
+			ws.send(msg);
+		}
 	}
 
 	async #handleOrderRequst(

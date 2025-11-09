@@ -19,19 +19,20 @@ import type {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
-import { eq, type SQL } from "drizzle-orm";
+import { count, eq, gt, ilike, inArray, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS, FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { WithTx, WithUserId } from "@/core/interface";
+import type { ListResult, WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
 import type { OrderDatabase } from "@/core/tables/order";
-import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
 import type { PaymentRepository } from "../payment/payment-repository";
+import { OrderSortBySchema } from "./order-spec";
 
 export class OrderRepository extends BaseRepository {
 	readonly #map: MapService;
@@ -85,126 +86,212 @@ export class OrderRepository extends BaseRepository {
 		return result ? OrderRepository.composeEntity(result) : undefined;
 	}
 
+	async #getQueryCount(query: string, opts?: WithTx): Promise<number> {
+		try {
+			const tx = opts?.tx ?? this.db;
+
+			const [dbResult] = await tx
+				.select({ count: count(tables.order.id) })
+				.from(tables.order)
+				.where(
+					or(
+						inArray(
+							tables.order.userId,
+							tx
+								.select({ id: tables.user.id })
+								.from(tables.user)
+								.where(ilike(tables.user.name, `%${query}%`)),
+						),
+						inArray(
+							tables.order.merchantId,
+							tx
+								.select({ id: tables.merchant.id })
+								.from(tables.merchant)
+								.where(ilike(tables.merchant.name, `%${query}%`)),
+						),
+						inArray(
+							tables.order.driverId,
+							tx
+								.select({ id: tables.driver.id })
+								.from(tables.driver)
+								.innerJoin(
+									tables.user,
+									eq(tables.driver.userId, tables.user.id),
+								)
+								.where(ilike(tables.user.name, `%${query}%`)),
+						),
+					),
+				);
+
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
+
 	async list(
 		query?: UnifiedPaginationQuery & {
 			statuses?: OrderStatus[];
-			id: string;
+			id?: string;
 			role: UserRole;
 		},
 		opts?: WithTx,
-	): Promise<Order[]> {
+	): Promise<ListResult<Order>> {
 		try {
-			let stmt = (opts?.tx ?? this.db).query.order.findMany({
-				with: {
-					user: { columns: { name: true } },
-					driver: { columns: {}, with: { user: { columns: { name: true } } } },
-					merchant: { columns: { name: true } },
-				},
-				where: (f, op) => {
-					const filters: SQL[] = [];
-					const statuses = query?.statuses ?? [];
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+				statuses = [],
+				id,
+				role,
+			} = query ?? {};
 
-					if (statuses.length > 0) filters.push(op.inArray(f.status, statuses));
+			const tx = opts?.tx ?? this.db;
 
-					if (query?.id && query.role) {
-						switch (query.role) {
-							case "user":
-								filters.push(op.eq(f.userId, query.id));
-								break;
-							case "driver":
-								filters.push(op.eq(f.driverId, query.id));
-								break;
-							case "merchant":
-								filters.push(op.eq(f.merchantId, query.id));
-								break;
-						}
-					}
+			const clauses: SQL[] = [];
 
-					return filters.length > 0 ? op.and(...filters) : undefined;
-				},
-			});
+			if (statuses.length > 0) {
+				clauses.push(inArray(tables.order.status, statuses));
+			}
 
-			if (query) {
-				const { cursor, page, limit = 10 } = query;
-				if (cursor) {
-					stmt = (opts?.tx ?? this.db).query.order.findMany({
-						with: {
-							user: { columns: { name: true } },
-							driver: {
-								columns: {},
-								with: { user: { columns: { name: true } } },
-							},
-							merchant: { columns: { name: true } },
-						},
-						where: (f, op) => {
-							const filters: SQL[] = [op.gt(f.updatedAt, new Date(cursor))];
-							const statuses = query?.statuses ?? [];
-							if (statuses.length > 0)
-								filters.push(op.inArray(f.status, statuses));
-							if (query?.id && query.role) {
-								switch (query.role) {
-									case "user":
-										filters.push(op.eq(f.userId, query.id));
-										break;
-									case "driver":
-										filters.push(op.eq(f.driverId, query.id));
-										break;
-									case "merchant":
-										filters.push(op.eq(f.merchantId, query.id));
-										break;
-								}
-							}
-
-							return filters.length > 0 ? op.and(...filters) : undefined;
-						},
-						limit: limit + 1,
-					});
-				}
-				if (page) {
-					const pageNum = page;
-					const offset = (pageNum - 1) * limit;
-					stmt = (opts?.tx ?? this.db).query.order.findMany({
-						with: {
-							user: { columns: { name: true } },
-							driver: {
-								columns: {},
-								with: { user: { columns: { name: true } } },
-							},
-							merchant: { columns: { name: true } },
-						},
-						offset,
-						limit,
-						where: (f, op) => {
-							const filters: SQL[] = [];
-							const statuses = query?.statuses ?? [];
-							if (statuses.length > 0)
-								filters.push(op.inArray(f.status, statuses));
-							if (query?.id && query.role) {
-								switch (query.role) {
-									case "user":
-										filters.push(op.eq(f.userId, query.id));
-										break;
-									case "driver":
-										filters.push(op.eq(f.driverId, query.id));
-										break;
-									case "merchant":
-										filters.push(op.eq(f.merchantId, query.id));
-										break;
-								}
-							}
-							return filters.length > 0 ? op.and(...filters) : undefined;
-						},
-					});
+			if (id && role) {
+				switch (role) {
+					case "user":
+						clauses.push(eq(tables.order.userId, id));
+						break;
+					case "driver":
+						clauses.push(eq(tables.order.driverId, id));
+						break;
+					case "merchant":
+						clauses.push(eq(tables.order.merchantId, id));
+						break;
 				}
 			}
 
-			const result = await stmt;
-			return result.map((r) => OrderRepository.composeEntity(r));
+			if (search) {
+				const join = or(
+					inArray(
+						tables.order.userId,
+						tx
+							.select({ id: tables.user.id })
+							.from(tables.user)
+							.where(ilike(tables.user.name, `%${search}%`)),
+					),
+					inArray(
+						tables.order.merchantId,
+						tx
+							.select({ id: tables.merchant.id })
+							.from(tables.merchant)
+							.where(ilike(tables.merchant.name, `%${search}%`)),
+					),
+					inArray(
+						tables.order.driverId,
+						tx
+							.select({ id: tables.driver.id })
+							.from(tables.driver)
+							.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
+							.where(ilike(tables.user.name, `%${search}%`)),
+					),
+				);
+				if (join) clauses.push(join);
+			}
+
+			if (cursor) {
+				clauses.push(gt(tables.order.updatedAt, new Date(cursor)));
+
+				const res = await tx.query.order.findMany({
+					with: {
+						user: { columns: { name: true } },
+						driver: {
+							columns: {},
+							with: { user: { columns: { name: true } } },
+						},
+						merchant: { columns: { name: true } },
+					},
+					where: (f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = OrderSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					limit: limit + 1,
+				});
+
+				const rows = res.map(OrderRepository.composeEntity);
+				return { rows };
+			}
+
+			if (page !== undefined) {
+				const offset = (page - 1) * limit;
+
+				const result = await tx.query.order.findMany({
+					with: {
+						user: { columns: { name: true } },
+						driver: {
+							columns: {},
+							with: { user: { columns: { name: true } } },
+						},
+						merchant: { columns: { name: true } },
+					},
+					where: (_f, op) => op.and(...clauses),
+					orderBy: (f, op) => {
+						if (sortBy) {
+							const parsed = OrderSortBySchema.safeParse(sortBy);
+							const field = parsed.success ? f[parsed.data] : f.id;
+							return op[order](field);
+						}
+						return op[order](f.id);
+					},
+					offset,
+					limit,
+				});
+
+				const rows = result.map(OrderRepository.composeEntity);
+
+				const totalCount = search
+					? await this.#getQueryCount(search, opts)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const res = await tx.query.order.findMany({
+				with: {
+					user: { columns: { name: true } },
+					driver: {
+						columns: {},
+						with: { user: { columns: { name: true } } },
+					},
+					merchant: { columns: { name: true } },
+				},
+				where: (f, op) => op.and(...clauses),
+				orderBy: (f, op) => {
+					if (sortBy) {
+						const parsed = OrderSortBySchema.safeParse(sortBy);
+						const field = parsed.success ? f[parsed.data] : f.id;
+						return op[order](field);
+					}
+					return op[order](f.id);
+				},
+				limit: limit + 1,
+			});
+
+			const rows = res.map(OrderRepository.composeEntity);
+			return { rows };
 		} catch (error) {
 			throw this.handleError(error, "list");
 		}
 	}
-
 	async #getPricingConfiguration(
 		params: { type: OrderType },
 		opts: WithTx,
