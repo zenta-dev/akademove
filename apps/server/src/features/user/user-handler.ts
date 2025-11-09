@@ -8,7 +8,7 @@ export const UserHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ user: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.user.list({
+			const { rows, totalPages } = await context.repo.user.list({
 				...query,
 				requesterId: context.user.id,
 			});
@@ -17,7 +17,8 @@ export const UserHandler = priv.router({
 				status: 200,
 				body: {
 					message: "Successfully retrieved users data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

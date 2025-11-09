@@ -8,6 +8,8 @@ import {
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
+export const UserSortBySchema = z.enum(["name", "email", "updatedAt"]);
+
 export const UserSpec = {
 	list: oc
 		.route({
