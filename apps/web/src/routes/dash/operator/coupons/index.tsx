@@ -1,4 +1,5 @@
 import { m } from "@repo/i18n";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
 	createFileRoute,
 	Link,
@@ -13,6 +14,11 @@ import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/operator/coupons/")({
+	validateSearch: (values) => {
+		const search = UnifiedPaginationQuerySchema.parse(values);
+		if (!values.limit) return { ...search, page: 1, limit: 15 };
+		return search;
+	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.COUPONS }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
@@ -29,9 +35,10 @@ export const Route = createFileRoute("/dash/operator/coupons/")({
 
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
+	const search = Route.useSearch();
 	const navigate = useNavigate();
-	if (!allowed) navigate({ to: "/" });
 
+	if (!allowed) navigate({ to: "/" });
 	return (
 		<>
 			<div className="flex items-center justify-between">
@@ -46,7 +53,7 @@ function RouteComponent() {
 			</div>
 			<Card className="p-0">
 				<CardContent className="p-0">
-					<CouponTable />
+					<CouponTable search={search} to="/dash/operator/coupons" />
 				</CardContent>
 			</Card>
 		</>
