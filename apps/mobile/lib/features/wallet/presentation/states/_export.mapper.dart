@@ -211,6 +211,12 @@ class UserWalletTopUpStateMapper extends ClassMapperBase<UserWalletTopUpState> {
       v.transactionResult;
   static const Field<UserWalletTopUpState, Transaction> _f$transactionResult =
       Field('transactionResult', _$transactionResult, opt: true);
+  static Wallet? _$walletResult(UserWalletTopUpState v) => v.walletResult;
+  static const Field<UserWalletTopUpState, Wallet> _f$walletResult = Field(
+    'walletResult',
+    _$walletResult,
+    opt: true,
+  );
   static CubitState _$state(UserWalletTopUpState v) => v.state;
   static const Field<UserWalletTopUpState, CubitState> _f$state = Field(
     'state',
@@ -235,6 +241,7 @@ class UserWalletTopUpStateMapper extends ClassMapperBase<UserWalletTopUpState> {
   final MappableFields<UserWalletTopUpState> fields = const {
     #paymentResult: _f$paymentResult,
     #transactionResult: _f$transactionResult,
+    #walletResult: _f$walletResult,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -244,6 +251,7 @@ class UserWalletTopUpStateMapper extends ClassMapperBase<UserWalletTopUpState> {
     return UserWalletTopUpState(
       paymentResult: data.dec(_f$paymentResult),
       transactionResult: data.dec(_f$transactionResult),
+      walletResult: data.dec(_f$walletResult),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -305,6 +313,7 @@ abstract class UserWalletTopUpStateCopyWith<
   $R call({
     Payment? paymentResult,
     Transaction? transactionResult,
+    Wallet? walletResult,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -326,6 +335,7 @@ class _UserWalletTopUpStateCopyWithImpl<$R, $Out>
   $R call({
     Object? paymentResult = $none,
     Object? transactionResult = $none,
+    Object? walletResult = $none,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
@@ -333,6 +343,7 @@ class _UserWalletTopUpStateCopyWithImpl<$R, $Out>
     FieldCopyWithData({
       if (paymentResult != $none) #paymentResult: paymentResult,
       if (transactionResult != $none) #transactionResult: transactionResult,
+      if (walletResult != $none) #walletResult: walletResult,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -345,6 +356,7 @@ class _UserWalletTopUpStateCopyWithImpl<$R, $Out>
       #transactionResult,
       or: $value.transactionResult,
     ),
+    walletResult: data.get(#walletResult, or: $value.walletResult),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),

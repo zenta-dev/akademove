@@ -64,6 +64,7 @@ class UserWalletTopUpState extends BaseState2
   UserWalletTopUpState({
     this.paymentResult,
     this.transactionResult,
+    this.walletResult,
     super.state,
     super.message,
     super.error,
@@ -71,6 +72,7 @@ class UserWalletTopUpState extends BaseState2
 
   final Payment? paymentResult;
   final Transaction? transactionResult;
+  final Wallet? walletResult;
 
   @override
   UserWalletTopUpState toInitial() => copyWith(
@@ -90,11 +92,13 @@ class UserWalletTopUpState extends BaseState2
   UserWalletTopUpState toSuccess({
     Payment? paymentResult,
     Transaction? transactionResult,
+    Wallet? walletResult,
     String? message,
   }) => copyWith(
     state: CubitState.success,
     paymentResult: paymentResult ?? this.paymentResult,
     transactionResult: transactionResult ?? this.transactionResult,
+    walletResult: walletResult ?? this.walletResult,
     message: message,
     error: null,
   );
