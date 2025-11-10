@@ -54,8 +54,9 @@ export const ConfigurationSchema = z
 	})
 	.meta({ title: "Configuration" });
 
-export const ConfigurationKeySchema =
-	extractSchemaKeysAsEnum(ConfigurationSchema);
+export const ConfigurationKeySchema = extractSchemaKeysAsEnum(
+	ConfigurationSchema,
+).exclude(["value"]);
 
 export const InsertConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
