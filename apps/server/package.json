@@ -23,6 +23,7 @@
 		"@aws-sdk/client-s3": "^3.922.0",
 		"@aws-sdk/s3-request-presigner": "^3.922.0",
 		"@erhahahaa/midtrans-client-typescript": "^1.0.5",
+		"@msgpack/msgpack": "^3.1.2",
 		"@orpc/contract": "^1.10.3",
 		"@orpc/experimental-durable-iterator": "^1.10.3",
 		"@orpc/openapi": "^1.10.3",
