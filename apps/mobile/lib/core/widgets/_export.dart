@@ -4,6 +4,7 @@ export 'default_text.dart';
 export 'image_picker.dart';
 export 'map_wrapper_widget.dart';
 export 'my_scaffold.dart';
+export 'qris_payment_widget.dart';
 export 'sign_out_button_widget.dart';
 export 'submiting.dart';
 export 'svg_tiled_background.dart';

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/dash/operator/")({
 			report: ["create", "get", "export"],
 			review: ["get"],
 			user: ["get", "update"],
-			pricing: ["get", "update", "delete"],
+			configurations: ["get", "update"],
 		});
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };

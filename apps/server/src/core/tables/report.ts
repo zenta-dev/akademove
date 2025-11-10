@@ -62,8 +62,11 @@ export const report = pgTable(
 		index("report_status_reported_at_idx").on(t.status, t.reportedAt),
 	],
 );
+export type ReportTable = typeof report;
 
 export const reportAuditLog = createAuditLogTable("report");
+export type ReportAuditLogTable = typeof reportAuditLog;
+
 ///
 /// --- Relations --- ///
 ///

@@ -2,6 +2,7 @@ import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const UserRoleSchema = z
 	.enum(CONSTANTS.USER_ROLES)
@@ -33,6 +34,8 @@ export const UserSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "User" });
+
+export const UserKeySchema = extractSchemaKeysAsEnum(UserSchema);
 
 export const InsertUserSchema = UserSchema.omit({
 	id: true,
@@ -109,4 +112,5 @@ export const UserSchemaRegistries = {
 	BanUser: { schema: BanUserSchema, strategy: "input" },
 	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
 	UpdateUser: { schema: UpdateUserSchema, strategy: "input" },
+	UserKey: { schema: UserKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

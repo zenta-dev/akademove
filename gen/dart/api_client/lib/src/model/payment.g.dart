@@ -9,7 +9,7 @@ part of 'payment.dart';
 abstract class _$PaymentCWProxy {
   Payment id(String id);
 
-  Payment transactionId(String? transactionId);
+  Payment transactionId(String transactionId);
 
   Payment provider(PaymentProvider provider);
 
@@ -43,7 +43,7 @@ abstract class _$PaymentCWProxy {
   /// ````
   Payment call({
     String id,
-    String? transactionId,
+    String transactionId,
     PaymentProvider provider,
     PaymentMethod method,
     num amount,
@@ -69,7 +69,7 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
   Payment id(String id) => this(id: id);
 
   @override
-  Payment transactionId(String? transactionId) =>
+  Payment transactionId(String transactionId) =>
       this(transactionId: transactionId);
 
   @override
@@ -139,7 +139,7 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
       transactionId: transactionId == const $CopyWithPlaceholder()
           ? _value.transactionId
           // ignore: cast_nullable_to_non_nullable
-          : transactionId as String?,
+          : transactionId as String,
       provider: provider == const $CopyWithPlaceholder()
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
@@ -209,6 +209,7 @@ Payment _$PaymentFromJson(
     json,
     requiredKeys: const [
       'id',
+      'transactionId',
       'provider',
       'method',
       'amount',
@@ -219,7 +220,7 @@ Payment _$PaymentFromJson(
   );
   final val = Payment(
     id: $checkedConvert('id', (v) => v as String),
-    transactionId: $checkedConvert('transactionId', (v) => v as String?),
+    transactionId: $checkedConvert('transactionId', (v) => v as String),
     provider: $checkedConvert(
       'provider',
       (v) => $enumDecode(_$PaymentProviderEnumMap, v),
@@ -250,7 +251,7 @@ Payment _$PaymentFromJson(
 
 Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
   'id': instance.id,
-  'transactionId': ?instance.transactionId,
+  'transactionId': instance.transactionId,
   'provider': _$PaymentProviderEnumMap[instance.provider]!,
   'method': _$PaymentMethodEnumMap[instance.method]!,
   'amount': instance.amount,

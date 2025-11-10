@@ -1,121 +1,157 @@
-import type { InsertReview, Review, UpdateReview } from "@repo/schema/review";
-import { eq } from "drizzle-orm";
-import { CACHE_PREFIXES, CACHE_TTLS } from "@/core/constants";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
+import {
+	type InsertReview,
+	type Review,
+	ReviewKeySchema,
+	type UpdateReview,
+} from "@repo/schema/review";
+import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { v7 } from "uuid";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions, GetOptions } from "@/core/interface";
+import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
 import { log } from "@/utils";
 
-export class ReviewRepository {
-	#db: DatabaseService;
-	#kv: KeyValueService;
-
+export class ReviewRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		this.#db = db;
-		this.#kv = kv;
+		super("review", kv, db);
 	}
 
-	#composeCacheKey(id: string): string {
-		return `${CACHE_PREFIXES.REVIEW}${id}`;
-	}
-
-	#composeEntity(item: ReviewDatabase): Review {
+	static composeEntity(item: ReviewDatabase): Review {
 		return item;
 	}
 
-	async #getFromKV(id: string): Promise<Review | undefined> {
-		try {
-			return await this.#kv.get(this.#composeCacheKey(id));
-		} catch {
-			return undefined;
-		}
-	}
-
 	async #getFromDB(id: string): Promise<Review | undefined> {
-		const result = await this.#db.query.review.findFirst({
+		const result = await this.db.query.review.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result ? ReviewRepository.composeEntity(result) : undefined;
 	}
 
-	async #setCache(id: string, data: Review | undefined): Promise<void> {
-		if (!data) return;
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			await this.#kv.put(this.#composeCacheKey(id), data, {
-				expirationTtl: CACHE_TTLS["24h"],
-			});
-		} catch {
-			// ignore cache write failures
-		}
-	}
+			const [dbResult] = await this.db
+				.select({ count: count(tables.review.id) })
+				.from(tables.review)
+				.where(ilike(tables.review.comment, `%${query}%`));
 
-	async list(opts?: GetAllOptions): Promise<Review[]> {
-		try {
-			let stmt = this.#db.query.review.findMany();
-
-			if (opts) {
-				const { cursor, page, limit } = opts;
-
-				if (cursor) {
-					stmt = this.#db.query.review.findMany({
-						where: (f, op) => op.gt(f.createdAt, new Date(cursor)),
-						limit: limit + 1,
-					});
-				}
-
-				if (page) {
-					const offset = (page - 1) * limit;
-					stmt = this.#db.query.review.findMany({
-						offset,
-						limit,
-					});
-				}
-			}
-
-			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to list reviews");
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
 		}
 	}
 
-	async get(id: string, opts?: GetOptions): Promise<Review> {
+	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Review>> {
 		try {
-			if (opts?.fromCache) {
-				const cached = await this.#getFromKV(id);
-				if (cached) return cached;
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+			} = query ?? {};
+
+			const orderBy = (
+				f: typeof tables.review._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = ReviewKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
+				}
+				return op[order](f.id);
+			};
+
+			const clauses: SQL[] = [];
+
+			if (search) clauses.push(ilike(tables.review.comment, `%${query}%`));
+
+			if (cursor) {
+				clauses.push(gt(tables.review.createdAt, new Date(cursor)));
+
+				const res = await this.db.query.review.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					limit: limit + 1,
+				});
+
+				const rows = res.map(ReviewRepository.composeEntity);
+
+				return { rows };
 			}
 
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError("Failed to get review from db");
+			if (page) {
+				const offset = (page - 1) * limit;
 
-			await this.#setCache(id, result);
+				const res = await this.db.query.review.findMany({
+					where: (_, op) => op.and(...clauses),
+					orderBy,
+					offset,
+					limit,
+				});
+
+				const rows = res.map(ReviewRepository.composeEntity);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const res = await this.db.query.review.findMany({
+				where: (_, op) => op.and(...clauses),
+				orderBy,
+				limit: limit,
+			});
+
+			const rows = res.map(ReviewRepository.composeEntity);
+
+			return { rows };
+		} catch (error) {
+			this.handleError(error, "list");
+			return { rows: [] };
+		}
+	}
+
+	async get(id: string): Promise<Review> {
+		try {
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get review from DB");
+				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to get review by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
 	async create(item: InsertReview & { userId: string }): Promise<Review> {
 		try {
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.insert(tables.review)
-				.values(item)
+				.values({ ...item, id: v7() })
 				.returning();
 
-			const result = this.#composeEntity(operation);
-			await this.#setCache(result.id, result);
+			const result = ReviewRepository.composeEntity(operation);
+			await this.setCache(result.id, result, {
+				expirationTtl: CACHE_TTLS["24h"],
+			});
 			return result;
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to create review");
+			throw this.handleError(error, "create");
 		}
 	}
 
@@ -125,43 +161,35 @@ export class ReviewRepository {
 			if (!existing)
 				throw new RepositoryError(`Review with id "${id}" not found`);
 
-			const [operation] = await this.#db
+			const [operation] = await this.db
 				.update(tables.review)
 				.set({
-					...existing,
 					...item,
 					createdAt: new Date(existing.createdAt),
 				})
 				.where(eq(tables.review.id, id))
 				.returning();
 
-			const result = this.#composeEntity(operation);
-			await this.#setCache(id, result);
+			const result = ReviewRepository.composeEntity(operation);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to update review with id "${id}"`);
+			throw this.handleError(error, "update");
 		}
 	}
 
 	async remove(id: string): Promise<void> {
 		try {
-			const result = await this.#db
+			const result = await this.db
 				.delete(tables.review)
 				.where(eq(tables.review.id, id))
 				.returning({ id: tables.review.id });
 
 			if (result.length > 0) {
-				try {
-					await this.#kv.delete(this.#composeCacheKey(id));
-				} catch {
-					// ignore cache delete failures
-				}
+				await this.deleteCache(id);
 			}
 		} catch (error) {
-			log.error(error);
-			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError(`Failed to delete review with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

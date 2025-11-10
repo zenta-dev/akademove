@@ -1,4 +1,16 @@
 import * as z from "zod";
+import { ConfigurationKeySchema } from "./configuration.ts";
+import { CouponKeySchema } from "./coupon.ts";
+import { DriverKeySchema, DriverScheduleKeySchema } from "./driver.ts";
+import { mergeEnums } from "./enum.helper.ts";
+import { MerchantKeySchema, MerchantMenuKeySchema } from "./merchant.ts";
+import { OrderKeySchema } from "./order.ts";
+import { PaymentKeySchema } from "./payment.ts";
+import { ReportKeySchema } from "./report.ts";
+import { ReviewKeySchema } from "./review.ts";
+import { TransactionKeySchema } from "./transaction.ts";
+import { UserKeySchema } from "./user.ts";
+import { WalletKeySchema } from "./wallet.ts";
 
 const MAX_LIMIT = 100;
 
@@ -30,12 +42,27 @@ export const CursorPaginationQuerySchema = z
 	})
 	.meta({ title: "CursorPaginationQuery" });
 
+export const SortBySchema = mergeEnums(
+	ConfigurationKeySchema,
+	CouponKeySchema,
+	DriverKeySchema,
+	DriverScheduleKeySchema,
+	MerchantKeySchema,
+	MerchantMenuKeySchema,
+	OrderKeySchema,
+	PaymentKeySchema,
+	ReportKeySchema,
+	ReviewKeySchema,
+	TransactionKeySchema,
+	UserKeySchema,
+	WalletKeySchema,
+);
 export const UnifiedPaginationQuerySchema = z
 	.object({
 		...CursorPaginationQuerySchema.shape,
 		...OffsetPaginationQuerySchema.shape,
 		query: z.string().optional(),
-		sortBy: z.string().optional(),
+		sortBy: SortBySchema.optional(),
 		order: z.enum(["asc", "desc"]).optional().default("desc"),
 	})
 	.refine((data) => !(data.cursor && data.page), {
@@ -48,3 +75,5 @@ export type CursorPaginationQuery = z.infer<typeof CursorPaginationQuerySchema>;
 export type UnifiedPaginationQuery = z.infer<
 	typeof UnifiedPaginationQuerySchema
 >;
+
+export const PaginationSchemaRegistries = {};

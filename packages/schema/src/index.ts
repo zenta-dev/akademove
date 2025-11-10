@@ -5,6 +5,7 @@ import { CouponSchemaRegistries } from "./coupon.ts";
 import { DriverSchemaRegistries } from "./driver.ts";
 import { MerchantSchemaRegistries } from "./merchant.ts";
 import { OrderSchemaRegistries } from "./order.ts";
+import { PaginationSchemaRegistries } from "./pagination.ts";
 import { PaymentSchemaRegistries } from "./payment.ts";
 import { PositionSchemaRegistries } from "./position.ts";
 import { ReportSchemaRegistries } from "./report.ts";
@@ -30,4 +31,5 @@ export const AllSchemaRegistries = {
 	...WalletSchemaRegistries,
 	...WebsocketSchemaRegistries,
 	...TransactionSchemaRegistries,
+	...PaginationSchemaRegistries,
 } satisfies SchemaRegistries;

@@ -2,6 +2,7 @@ import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { DriverSchema } from "./driver.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
 import {
@@ -10,6 +11,7 @@ import {
 	PaymentSchema,
 } from "./payment.ts";
 import { CoordinateSchema } from "./position.ts";
+import { TransactionSchema } from "./transaction.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES).meta({
@@ -68,6 +70,14 @@ export const OrderSchema = z
 	})
 	.meta({ title: "Order" });
 
+export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
+	"items",
+	"itemCount",
+	"user",
+	"driver",
+	"merchant",
+]);
+
 export const OrderSummarySchema = z
 	.object({
 		distanceKm: z.coerce.number(),
@@ -110,6 +120,7 @@ export const PlaceOrderResponseSchema = z
 	.object({
 		order: OrderSchema,
 		payment: PaymentSchema,
+		transaction: TransactionSchema,
 	})
 	.meta({ title: "PlaceOrderResponse" });
 
@@ -158,4 +169,5 @@ export const OrderSchemaRegistries = {
 	PlaceOrderResponse: { schema: PlaceOrderResponseSchema, strategy: "input" },
 	UpdateOrder: { schema: UpdateOrderSchema, strategy: "input" },
 	EstimateOrder: { schema: EstimateOrderSchema, strategy: "input" },
+	OrderKey: { schema: OrderKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

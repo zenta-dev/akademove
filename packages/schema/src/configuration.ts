@@ -1,13 +1,14 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 const _BasePricingConfigurationSchema = z.object({
-	baseFare: z.number().positive(),
-	perKmRate: z.number().positive(),
-	minimumFare: z.number().positive(),
-	platformFeeRate: z.number().positive(),
-	taxRate: z.number().positive(),
+	baseFare: z.coerce.number().positive(),
+	perKmRate: z.coerce.number().positive(),
+	minimumFare: z.coerce.number().positive(),
+	platformFeeRate: z.coerce.number().positive(),
+	taxRate: z.coerce.number().positive(),
 });
 
 export const RidePricingConfigurationSchema = _BasePricingConfigurationSchema
@@ -17,13 +18,19 @@ export const RidePricingConfigurationSchema = _BasePricingConfigurationSchema
 export const DeliveryPricingConfigurationSchema =
 	_BasePricingConfigurationSchema
 		.extend({
-			perKgRate: z.number().positive(),
+			perKgRate: z.coerce.number().positive(),
 		})
 		.meta({ title: "DeliveryPricingConfiguration" });
 
 export const FoodPricingConfigurationSchema = _BasePricingConfigurationSchema
 	.extend({})
 	.meta({ title: "FoodPricingConfiguration" });
+
+export const PricingConfigurationSchema = z.union([
+	RidePricingConfigurationSchema,
+	DeliveryPricingConfigurationSchema,
+	FoodPricingConfigurationSchema,
+]);
 
 export const BannerConfigurationSchema = z
 	.object({
@@ -47,6 +54,9 @@ export const ConfigurationSchema = z
 	})
 	.meta({ title: "Configuration" });
 
+export const ConfigurationKeySchema =
+	extractSchemaKeysAsEnum(ConfigurationSchema);
+
 export const InsertConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
 	updatedById: true,
@@ -57,7 +67,9 @@ export const UpdateConfigurationSchema = ConfigurationSchema.omit({
 	key: true,
 	updatedById: true,
 	updatedAt: true,
-}).meta({ title: "UpdateConfigurationRequest" });
+})
+	.partial()
+	.meta({ title: "UpdateConfigurationRequest" });
 
 export type BasePricingConfiguration = z.infer<
 	typeof _BasePricingConfigurationSchema
@@ -71,6 +83,7 @@ export type DeliveryPricingConfiguration = z.infer<
 export type FoodPricingConfiguration = z.infer<
 	typeof FoodPricingConfigurationSchema
 >;
+export type PricingConfiguration = z.infer<typeof PricingConfigurationSchema>;
 export type Banner = z.infer<typeof BannerConfigurationSchema>;
 export type ConfigurationValue =
 	| RidePricingConfiguration
@@ -93,10 +106,15 @@ export const ConfigurationSchemaRegistries = {
 		schema: FoodPricingConfigurationSchema,
 		strategy: "output",
 	},
+	PricingConfiguration: {
+		schema: PricingConfigurationSchema,
+		strategy: "output",
+	},
 	BannerConfiguration: {
 		schema: BannerConfigurationSchema,
 		strategy: "output",
 	},
 	InsertConfiguration: { schema: InsertConfigurationSchema, strategy: "input" },
 	UpdateConfiguration: { schema: UpdateConfigurationSchema, strategy: "input" },
+	ConfigurationKey: { schema: ConfigurationKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

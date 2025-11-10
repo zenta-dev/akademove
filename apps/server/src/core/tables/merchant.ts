@@ -48,6 +48,7 @@ export const merchant = pgTable(
 		index("merchant_location_idx").using("gist", t.location),
 	],
 );
+export type MerchantTable = typeof merchant;
 
 export const merchantMenu = pgTable(
 	"merchant_menus",
@@ -75,6 +76,7 @@ export const merchantMenu = pgTable(
 		index("merchant_menu_created_at_idx").on(t.createdAt),
 	],
 );
+export type MerchantMenuTable = typeof merchantMenu;
 
 ///
 /// --- Relations --- ///

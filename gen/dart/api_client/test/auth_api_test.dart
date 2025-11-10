@@ -46,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, List<String> detailCategories, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
+    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
     test('test authSignUpMerchant', () async {
       // TODO
     });

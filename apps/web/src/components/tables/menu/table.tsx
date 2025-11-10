@@ -1,32 +1,20 @@
 import { m } from "@repo/i18n";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import type { VisibilityState } from "@tanstack/react-table";
-import {
-	ChevronFirstIcon,
-	ChevronLastIcon,
-	ChevronLeft,
-	ChevronRight,
-} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { DataTable } from "@/components/tables/data-table";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
 import { orpcQuery } from "@/lib/orpc";
-import type { FileRouteTypes } from "@/routeTree.gen";
+import { DefaultPagination } from "../default-pagination";
+import type { TableProps } from "../type";
 import { MERCHANT_MENU_COLUMNS } from "./columns";
 
-export const MerchantMenuTable = ({
-	merchantId,
-	search,
-	to,
-}: {
+interface Props extends TableProps {
 	merchantId: string;
-	search: UnifiedPaginationQuery;
-	to: FileRouteTypes["to"];
-}) => {
+}
+
+export const MerchantMenuTable = ({ merchantId, search, to }: Props) => {
 	const [filter, setFilter] = useState<string | undefined>(search.query);
 	const debouncedFilter = useDebounce(filter ?? search.query, 500);
 
@@ -73,58 +61,12 @@ export const MerchantMenuTable = ({
 					<Skeleton className="h-8 w-9.5" />
 				</div>
 			) : (
-				<div className="flex items-center justify-end space-x-2">
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search?.page === 1}
-						asChild
-					>
-						<Link to={to} search={composeSearch(1)}>
-							<ChevronFirstIcon />
-							<span className="sr-only">{m.first_page()}</span>
-						</Link>
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search?.page === 1}
-						asChild
-					>
-						<Link to={to} search={composeSearch((search?.page ?? 1) - 1)}>
-							<ChevronLeft />
-							<span className="sr-only">{m.previous()}</span>
-						</Link>
-					</Button>
-					<span className="text-muted-foreground text-sm">
-						{m.pagination_desc({
-							page: search?.page ?? 1,
-							totalPages: totalPages ?? 0,
-						})}
-					</span>
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search?.page === totalPages}
-						asChild
-					>
-						<Link to={to} search={composeSearch((search?.page ?? 0) + 1)}>
-							<ChevronRight />
-							<span className="sr-only">{m.next()}</span>
-						</Link>
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search?.page === totalPages}
-						asChild
-					>
-						<Link to={to} search={composeSearch(totalPages ?? 1)}>
-							<ChevronLastIcon />
-							<span className="sr-only">{m.last_page()}</span>
-						</Link>
-					</Button>
-				</div>
+				<DefaultPagination
+					search={search}
+					to={to}
+					composeSearch={composeSearch}
+					totalPages={totalPages}
+				/>
 			)}
 		</DataTable>
 	);

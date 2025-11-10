@@ -12,13 +12,15 @@ import { S3StorageService } from "@/core/services/storage";
 import { AuthRepository } from "@/features/auth/auth-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { CouponRepository } from "@/features/coupon/coupon-repository";
-import { DriverRepository } from "@/features/driver/driver-repository";
+import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
+import { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import { OrderRepository } from "@/features/order/order-repository";
+import { PaymentRepository } from "@/features/payment/payment-repository";
 import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
-import { DriverScheduleRepository } from "@/features/schedule/schedule-repository";
+import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserRepository } from "@/features/user/user-repository";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
@@ -66,21 +68,34 @@ export function getRepositories(
 	svc: ServiceContext,
 	manager: ManagerContext,
 ): RepositoryContext {
-	const repo = {
+	const transaction = new TransactionRepository(svc.db, svc.kv);
+	const wallet = new WalletRepository(svc.db, svc.kv);
+	const payment = new PaymentRepository(
+		svc.db,
+		svc.kv,
+		svc.payment,
+		transaction,
+		wallet,
+	);
+	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
-		driver: new DriverRepository(svc.db, svc.kv, svc.storage),
+		driver: {
+			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
+			schedule: new DriverScheduleRepository(svc.db, svc.kv),
+		},
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
 		},
-		order: new OrderRepository(svc.db, svc.kv, svc.map),
+		order: new OrderRepository(svc.db, svc.kv, svc.map, payment),
+		payment,
 		coupon: new CouponRepository(svc.db, svc.kv),
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
-		schedule: new DriverScheduleRepository(svc.db, svc.kv),
-		user: new UserRepository(svc.db),
-		wallet: new WalletRepository(svc.payment),
+		wallet,
+		user: new UserRepository(svc.db, svc.kv, svc.storage),
+		transaction,
 	};
 
 	return repo;

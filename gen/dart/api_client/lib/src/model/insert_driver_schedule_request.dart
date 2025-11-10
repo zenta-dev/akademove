@@ -20,6 +20,7 @@ part 'insert_driver_schedule_request.g.dart';
 class InsertDriverScheduleRequest {
   /// Returns a new [InsertDriverScheduleRequest] instance.
   const InsertDriverScheduleRequest({
+    required this.name,
     required this.driverId,
     required this.dayOfWeek,
     required this.startTime,
@@ -28,6 +29,9 @@ class InsertDriverScheduleRequest {
     this.specificDate,
     this.isActive = true,
   });
+
+  @JsonKey(name: r'name', required: true, includeIfNull: false)
+  final String name;
 
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
@@ -64,6 +68,7 @@ class InsertDriverScheduleRequest {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is InsertDriverScheduleRequest &&
+          other.name == name &&
           other.driverId == driverId &&
           other.dayOfWeek == dayOfWeek &&
           other.startTime == startTime &&
@@ -74,6 +79,7 @@ class InsertDriverScheduleRequest {
 
   @override
   int get hashCode =>
+      name.hashCode +
       driverId.hashCode +
       dayOfWeek.hashCode +
       startTime.hashCode +

@@ -9,6 +9,8 @@ part of 'driver_schedule.dart';
 abstract class _$DriverScheduleCWProxy {
   DriverSchedule id(String id);
 
+  DriverSchedule name(String name);
+
   DriverSchedule driverId(String driverId);
 
   DriverSchedule dayOfWeek(DayOfWeek dayOfWeek);
@@ -35,6 +37,7 @@ abstract class _$DriverScheduleCWProxy {
   /// ````
   DriverSchedule call({
     String id,
+    String name,
     String driverId,
     DayOfWeek dayOfWeek,
     Time startTime,
@@ -55,6 +58,9 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
 
   @override
   DriverSchedule id(String id) => this(id: id);
+
+  @override
+  DriverSchedule name(String name) => this(name: name);
 
   @override
   DriverSchedule driverId(String driverId) => this(driverId: driverId);
@@ -94,6 +100,7 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
   /// ````
   DriverSchedule call({
     Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
     Object? driverId = const $CopyWithPlaceholder(),
     Object? dayOfWeek = const $CopyWithPlaceholder(),
     Object? startTime = const $CopyWithPlaceholder(),
@@ -109,6 +116,10 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
+      name: name == const $CopyWithPlaceholder()
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
       driverId: driverId == const $CopyWithPlaceholder()
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
@@ -166,6 +177,7 @@ DriverSchedule _$DriverScheduleFromJson(
     json,
     requiredKeys: const [
       'id',
+      'name',
       'driverId',
       'dayOfWeek',
       'startTime',
@@ -176,6 +188,7 @@ DriverSchedule _$DriverScheduleFromJson(
   );
   final val = DriverSchedule(
     id: $checkedConvert('id', (v) => v as String),
+    name: $checkedConvert('name', (v) => v as String),
     driverId: $checkedConvert('driverId', (v) => v as String),
     dayOfWeek: $checkedConvert(
       'dayOfWeek',
@@ -204,6 +217,7 @@ DriverSchedule _$DriverScheduleFromJson(
 Map<String, dynamic> _$DriverScheduleToJson(DriverSchedule instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'driverId': instance.driverId,
       'dayOfWeek': _$DayOfWeekEnumMap[instance.dayOfWeek]!,
       'startTime': instance.startTime.toJson(),

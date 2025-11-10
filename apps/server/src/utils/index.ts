@@ -35,13 +35,15 @@ class Result<T> {
 		return !this.success;
 	}
 }
+export type PromiseFn<T> = () => Promise<T>;
+type PromiseLike<T> = Promise<T> | PromiseFn<T>;
 
-export async function safeAsync<T>(fn: Promise<T>): Promise<Result<T>> {
+export async function safeAsync<T>(fn: PromiseLike<T>): Promise<Result<T>> {
 	try {
-		const data = await fn;
+		const data = await (typeof fn === "function" ? fn() : fn);
 		return Result.ok(data);
 	} catch (error) {
-		return Result.err<T>(error);
+		return Result.err(error);
 	}
 }
 

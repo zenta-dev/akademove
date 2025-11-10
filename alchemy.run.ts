@@ -37,14 +37,8 @@ const ORDER_ROOM = DurableObjectNamespace("order-rooms", {
 	sqlite: true,
 });
 
-const WALLET_ROOM = DurableObjectNamespace("wallet-rooms", {
-	className: "WalletRoom",
-	environment: alchemy.env.NODE_ENV,
-	sqlite: true,
-});
-
-const LISTING_ROOM = DurableObjectNamespace("listing-rooms", {
-	className: "ListingRoom",
+const PAYMENT_ROOM = DurableObjectNamespace("payment-rooms", {
+	className: "PaymentRoom",
 	environment: alchemy.env.NODE_ENV,
 	sqlite: true,
 });
@@ -76,8 +70,7 @@ export const [server, web] = await Promise.all([
 			MIDTRANS_SERVER_KEY: alchemy.secret.env.MIDTRANS_SERVER_KEY,
 			MIDTRANS_CLIENT_KEY: alchemy.secret.env.MIDTRANS_CLIENT_KEY,
 			ORDER_ROOM,
-			WALLET_ROOM,
-			LISTING_ROOM,
+			PAYMENT_ROOM,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
 		},

@@ -16,6 +16,14 @@ function hashString(str: string): string {
 	return hash;
 }
 
+const prerender = {
+	enabled: true,
+	crawlLinks: true,
+	retryCount: 2,
+	retryDelay: 1000,
+	autoSubfolderIndex: true,
+};
+
 export default defineConfig({
 	define: {
 		"globalThis.Cloudflare.compatibilityFlags": {
@@ -26,29 +34,21 @@ export default defineConfig({
 		tsconfigPaths(),
 		tailwindcss(),
 		tanstackStart({
-			prerender: {
-				enabled: true,
-				crawlLinks: true,
-				retryCount: 2,
-				retryDelay: 1000,
-				autoSubfolderIndex: true,
-				concurrency: 14,
-			},
 			pages: [
-				{ path: "/" },
-				{ path: "/sign-in" },
-				{ path: "/sign-up/driver" },
-				{ path: "/sign-up/merchant" },
-				{ path: "/sign-up/user" },
-				{ path: "/reset-password" },
-				{ path: "/forgot-password" },
-				{ path: "/id" },
-				{ path: "/id/sign-in" },
-				{ path: "/id/sign-up/driver" },
-				{ path: "/id/sign-up/merchant" },
-				{ path: "/id/sign-up/user" },
-				{ path: "/id/reset-password" },
-				{ path: "/id/forgot-password" },
+				{ path: "/", prerender },
+				{ path: "/sign-in", prerender },
+				{ path: "/sign-up/driver", prerender },
+				{ path: "/sign-up/merchant", prerender },
+				{ path: "/sign-up/user", prerender },
+				{ path: "/reset-password", prerender },
+				{ path: "/forgot-password", prerender },
+				{ path: "/id", prerender },
+				{ path: "/id/sign-in", prerender },
+				{ path: "/id/sign-up/driver", prerender },
+				{ path: "/id/sign-up/merchant", prerender },
+				{ path: "/id/sign-up/user", prerender },
+				{ path: "/id/reset-password", prerender },
+				{ path: "/id/forgot-password", prerender },
 			],
 			sitemap: {
 				enabled: true,

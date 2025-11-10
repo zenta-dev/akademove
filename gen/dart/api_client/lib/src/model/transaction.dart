@@ -31,6 +31,7 @@ class Transaction {
     this.referenceId,
     this.metadata,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
@@ -66,6 +67,9 @@ class Transaction {
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
 
+  @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
+  final DateTime updatedAt;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -80,7 +84,8 @@ class Transaction {
           other.description == description &&
           other.referenceId == referenceId &&
           other.metadata == metadata &&
-          other.createdAt == createdAt;
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -94,7 +99,8 @@ class Transaction {
       description.hashCode +
       referenceId.hashCode +
       (metadata == null ? 0 : metadata.hashCode) +
-      createdAt.hashCode;
+      createdAt.hashCode +
+      updatedAt.hashCode;
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>
       _$TransactionFromJson(json);

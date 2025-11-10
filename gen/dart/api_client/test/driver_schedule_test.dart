@@ -12,6 +12,11 @@ void main() {
       // TODO
     });
 
+    // String name
+    test('to test the property `name`', () async {
+      // TODO
+    });
+
     // String driverId
     test('to test the property `driverId`', () async {
       // TODO

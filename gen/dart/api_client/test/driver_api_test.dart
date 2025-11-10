@@ -31,27 +31,27 @@ void main() {
       // TODO
     });
 
-    //Future<DriverScheduleCreate200Response> driverScheduleCreate(InsertDriverScheduleRequest insertDriverScheduleRequest) async
+    //Future<DriverScheduleCreate200Response> driverScheduleCreate(String driverId, InsertDriverScheduleRequest insertDriverScheduleRequest) async
     test('test driverScheduleCreate', () async {
       // TODO
     });
 
-    //Future<DriverScheduleCreate200Response> driverScheduleGet(String id) async
+    //Future<DriverScheduleCreate200Response> driverScheduleGet(String driverId, String id) async
     test('test driverScheduleGet', () async {
       // TODO
     });
 
-    //Future<DriverScheduleList200Response> driverScheduleList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<DriverScheduleList200Response> driverScheduleList(String driverId, { String cursor, Object limit, Object page, String query, String sortBy, String order }) async
     test('test driverScheduleList', () async {
       // TODO
     });
 
-    //Future<DriverRemove200Response> driverScheduleRemove(String id) async
+    //Future<DriverRemove200Response> driverScheduleRemove(String driverId, String id) async
     test('test driverScheduleRemove', () async {
       // TODO
     });
 
-    //Future<DriverScheduleCreate200Response> driverScheduleUpdate(String id, UpdateDriverScheduleRequest updateDriverScheduleRequest) async
+    //Future<DriverScheduleCreate200Response> driverScheduleUpdate(String driverId, String id, UpdateDriverScheduleRequest updateDriverScheduleRequest) async
     test('test driverScheduleUpdate', () async {
       // TODO
     });

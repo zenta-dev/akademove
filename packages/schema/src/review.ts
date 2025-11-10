@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const ReviewCategorySchema = z
 	.enum(CONSTANTS.REVIEW_CATEGORIES)
@@ -18,6 +19,8 @@ export const ReviewSchema = z
 		createdAt: DateSchema,
 	})
 	.meta({ title: "Review" });
+
+export const ReviewKeySchema = extractSchemaKeysAsEnum(ReviewSchema);
 
 export const InsertReviewSchema = ReviewSchema.omit({
 	id: true,
@@ -41,4 +44,5 @@ export const ReviewSchemaRegistries = {
 	Review: { schema: ReviewSchema, strategy: "output" },
 	InsertReview: { schema: InsertReviewSchema, strategy: "input" },
 	UpdateReview: { schema: UpdateReviewSchema, strategy: "input" },
+	ReviewKeySchema: { schema: ReviewKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

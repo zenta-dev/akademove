@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { CURRENCY } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const CurrencySchema = z.enum(CURRENCY);
 
@@ -15,6 +16,16 @@ export const WalletSchema = z
 		updatedAt: DateSchema,
 	})
 	.meta({ title: "Wallet" });
+
+export const WalletKeySchema = extractSchemaKeysAsEnum(WalletSchema);
+
+export const UpdateWalletSchema = WalletSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+})
+	.partial()
+	.meta({ title: "UpdateWallet" });
 
 export const WalletMonthlySummaryQuerySchema = z
 	.object({
@@ -34,6 +45,7 @@ export const WalletMonthlySummaryResponseSchema = z
 
 export type WalletCurrency = z.infer<typeof CurrencySchema>;
 export type Wallet = z.infer<typeof WalletSchema>;
+export type UpdateWallet = z.infer<typeof UpdateWalletSchema>;
 export type WalletMonthlySummaryRequest = z.infer<
 	typeof WalletMonthlySummaryQuerySchema
 >;
@@ -44,6 +56,7 @@ export type WalletMonthlySummaryResponse = z.infer<
 export const WalletSchemaRegistries = {
 	Currency: { schema: CurrencySchema, strategy: "output" },
 	Wallet: { schema: WalletSchema, strategy: "output" },
+	UpdateWallet: { schema: UpdateWalletSchema, strategy: "input" },
 	WalletMonthlySummaryResponse: {
 		schema: WalletMonthlySummaryResponseSchema,
 		strategy: "output",
@@ -52,4 +65,5 @@ export const WalletSchemaRegistries = {
 		schema: WalletMonthlySummaryQuerySchema,
 		strategy: "input",
 	},
+	WalletKey: { schema: WalletKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

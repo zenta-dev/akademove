@@ -53,6 +53,7 @@ export const driver = pgTable(
 			.where(sql`is_online = true`),
 	],
 );
+export type DriverTable = typeof driver;
 
 ///
 /// --- Relations --- ///
@@ -71,6 +72,7 @@ export const driverSchedule = pgTable(
 	"driver_schedules",
 	{
 		id: uuid().primaryKey(),
+		name: text().notNull(),
 		driverId: uuid("driver_id")
 			.notNull()
 			.references(() => driver.id, { onDelete: "cascade" }),
@@ -99,6 +101,8 @@ export const driverSchedule = pgTable(
 		index("schedule_created_at_idx").on(t.createdAt),
 	],
 );
+export type DriverScheduleTable = typeof driverSchedule;
+
 ///
 /// --- Relations --- ///
 ///

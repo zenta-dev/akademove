@@ -14,8 +14,10 @@ export const configuration = pgTable("configurations", {
 		.references(() => user.id, { onDelete: "no action" }),
 	...DateModifier,
 });
+export type ConfigurationTable = typeof configuration;
 
 export const configurationAuditLog = createAuditLogTable("configurations");
+export type ConfigurationAuditLogTable = typeof configurationAuditLog;
 
 ///
 /// --- Relations --- ///

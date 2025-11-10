@@ -131,8 +131,10 @@ const _$WSEnvelopeTypeEnumMap = {
   WSEnvelopeType.orderColonCancelled: 'order:cancelled',
   WSEnvelopeType.orderColonAccepted: 'order:accepted',
   WSEnvelopeType.driverColonLocationUpdate: 'driver:location_update',
-  WSEnvelopeType.driverColonAssigned: 'driver:assigned',
   WSEnvelopeType.walletColonTopUpSuccess: 'wallet:top_up_success',
+  WSEnvelopeType.walletColonTopUpFailed: 'wallet:top_up_failed',
+  WSEnvelopeType.paymentColonSuccess: 'payment:success',
+  WSEnvelopeType.paymentColonFailed: 'payment:failed',
 };
 
 const _$WSEnvelopeSenderEnumMap = {

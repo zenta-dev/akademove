@@ -8,6 +8,11 @@ void main() {
   // TODO add properties to the entity
 
   group(InsertDriverScheduleRequest, () {
+    // String name
+    test('to test the property `name`', () async {
+      // TODO
+    });
+
     // String driverId
     test('to test the property `driverId`', () async {
       // TODO

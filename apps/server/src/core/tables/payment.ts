@@ -1,4 +1,5 @@
 import { PAYMENT_METHOD, PAYMENT_PROVIDER } from "@repo/schema/constants";
+import { relations } from "drizzle-orm";
 import { jsonb, numeric, text, uuid, varchar } from "drizzle-orm/pg-core";
 import { DateModifier, index, pgEnum, pgTable, timestamp } from "./common";
 import { transaction, transactionStatusEnum } from "./transaction";
@@ -10,9 +11,11 @@ export const payment = pgTable(
 	"payments",
 	{
 		id: uuid().primaryKey(),
-		transactionId: uuid("transaction_id").references(() => transaction.id, {
-			onDelete: "cascade",
-		}),
+		transactionId: uuid("transaction_id")
+			.notNull()
+			.references(() => transaction.id, {
+				onDelete: "cascade",
+			}),
 		provider: paymentProviderEnum().notNull(),
 		method: paymentMethodEnum().notNull(),
 		amount: numeric("amount", { precision: 18, scale: 2 }).notNull(),
@@ -27,5 +30,16 @@ export const payment = pgTable(
 	},
 	(t) => [index("payment_external_id_idx").on(t.externalId)],
 );
+export type PaymentTable = typeof payment;
 
 export type PaymentDatabase = typeof payment.$inferSelect;
+
+///
+/// --- Relations --- ///
+///
+export const paymentRelations = relations(payment, ({ one }) => ({
+	transaction: one(transaction, {
+		fields: [payment.transactionId],
+		references: [transaction.id],
+	}),
+}));

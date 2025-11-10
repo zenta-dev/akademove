@@ -8,13 +8,14 @@ export const ReviewHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ review: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.review.list(query);
+			const { rows, totalPages } = await context.repo.review.list(query);
 
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved reviews data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

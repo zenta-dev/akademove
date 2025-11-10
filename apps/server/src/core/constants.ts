@@ -5,12 +5,15 @@ export const FEATURE_TAGS = Object.freeze({
 	AUTH: "Auth",
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
+	DRIVER_SCHEDULE: "DriverSchedule",
 	MERCHANT: "Merchant",
 	MERCHANT_MENU: "MerchantMenu",
 	ORDER: "Order",
+	PAYMENT: "Payment",
 	COUPON: "Coupon",
 	REPORT: "Report",
 	REVIEW: "Review",
+	TRANSACTION: "Transaction",
 	USER: "User",
 	WALLET: "Wallet",
 } as const);
@@ -20,19 +23,6 @@ export const CACHE_TTLS = Object.freeze({
 	"24h": 24 * 3600,
 } as const);
 
-export const CACHE_PREFIXES = Object.freeze({
-	AUTH: `${FEATURE_TAGS.AUTH.toLowerCase()}:`,
-	CONFIGURATION: `${FEATURE_TAGS.CONFIGURATION.toLowerCase()}:`,
-	DRIVER: `${FEATURE_TAGS.DRIVER.toLowerCase()}:`,
-	MERCHANT: `${FEATURE_TAGS.MERCHANT.toLowerCase()}:`,
-	MERCHANT_MENU: `${FEATURE_TAGS.MERCHANT_MENU.toLowerCase()}:`,
-	ORDER: `${FEATURE_TAGS.ORDER.toLowerCase()}:`,
-	COUPON: `${FEATURE_TAGS.COUPON.toLowerCase()}:`,
-	REPORT: `${FEATURE_TAGS.REPORT.toLowerCase()}:`,
-	REVIEW: `${FEATURE_TAGS.REVIEW.toLowerCase()}:`,
-	USER: `${FEATURE_TAGS.USER.toLowerCase()}:`,
-	WALLET: `${FEATURE_TAGS.WALLET.toLowerCase()}:`,
-} as const);
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
 export const STORAGE_BUCKETS = [
@@ -66,3 +56,5 @@ export const createSuccesSchema = <
 			totalPages: z.number().optional(),
 		}),
 	});
+
+export const PAYMENT_EXPIRY_MINUTE = 15;

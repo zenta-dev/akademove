@@ -1,13 +1,10 @@
 import { oc } from "@orpc/contract";
-import { EmptySchema } from "@repo/schema/common";
 import {
 	PaymentSchema,
 	PayRequestSchema,
 	TopUpRequestSchema,
 	TransferRequestSchema,
-	WebhookRequestSchema,
 } from "@repo/schema/payment";
-import { TransactionSchema } from "@repo/schema/transaction";
 import {
 	WalletMonthlySummaryQuerySchema,
 	WalletMonthlySummaryResponseSchema,
@@ -41,21 +38,6 @@ export const WalletSpec = {
 		.output(
 			createSuccesSchema(
 				WalletMonthlySummaryResponseSchema,
-				"Successfully retrieved users data",
-			),
-		),
-	transactions: oc
-		.route({
-			tags: [FEATURE_TAGS.WALLET],
-			method: "GET",
-			path: "/transactions",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(z.object())
-		.output(
-			createSuccesSchema(
-				z.array(TransactionSchema),
 				"Successfully retrieved users data",
 			),
 		),
@@ -106,21 +88,5 @@ export const WalletSpec = {
 		)
 		.output(
 			createSuccesSchema(PaymentSchema, "Successfully retrieved users data"),
-		),
-	webhookMidtrans: oc
-		.route({
-			tags: [FEATURE_TAGS.WALLET],
-			method: "POST",
-			path: "/webhook/midtrans",
-			inputStructure: "detailed",
-			outputStructure: "detailed",
-		})
-		.input(
-			z.object({
-				body: WebhookRequestSchema,
-			}),
-		)
-		.output(
-			createSuccesSchema(EmptySchema, "Successfully retrieved users data"),
 		),
 };

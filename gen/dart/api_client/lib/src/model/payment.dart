@@ -22,7 +22,7 @@ class Payment {
   /// Returns a new [Payment] instance.
   const Payment({
     required this.id,
-    this.transactionId,
+    required this.transactionId,
     required this.provider,
     required this.method,
     required this.amount,
@@ -40,8 +40,8 @@ class Payment {
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
-  @JsonKey(name: r'transactionId', required: false, includeIfNull: false)
-  final String? transactionId;
+  @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
+  final String transactionId;
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final PaymentProvider provider;

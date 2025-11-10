@@ -82,7 +82,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 				"Content-Type",
 				"Authorization",
 				"X-Client-Agent",
-				"x-orpc-batch",
+				"X-Orpc-Batch",
 			],
 			allowMethods: ["POST", "GET", "PUT", "OPTIONS"],
 			exposeHeaders: ["Content-Length"],

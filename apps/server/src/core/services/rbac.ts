@@ -32,7 +32,6 @@ const roles: Record<UserRole, PermissionMap> = {
 			"ban",
 		],
 		session: ["list", "revoke", "delete"],
-		pricing: ["get", "update", "delete"],
 		bookings: ["list", "get", "create", "update", "delete"],
 		configurations: ["list", "get", "update"],
 	},
@@ -45,7 +44,7 @@ const roles: Record<UserRole, PermissionMap> = {
 		report: ["list", "get", "create", "export"],
 		review: ["list", "get"],
 		user: ["list", "get", "update"],
-		pricing: ["get", "update", "delete"],
+		configurations: ["list", "get", "update"],
 	},
 	merchant: {
 		merchant: ["get", "update"],

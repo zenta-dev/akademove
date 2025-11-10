@@ -6,6 +6,7 @@ import {
 	type SchemaRegistries,
 } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 const GeneralRulesSchema = z
 	.object({
@@ -57,6 +58,8 @@ export const CouponSchema = z
 	})
 	.meta({ title: "Coupon" });
 
+export const CouponKeySchema = extractSchemaKeysAsEnum(CouponSchema);
+
 export const InsertCouponSchema = CouponSchema.omit({
 	id: true,
 	usedCount: true,
@@ -84,4 +87,5 @@ export const CouponSchemaRegistries = {
 	Coupon: { schema: CouponSchema, strategy: "output" },
 	InsertCoupon: { schema: InsertCouponSchema, strategy: "input" },
 	UpdateCoupon: { schema: UpdateCouponSchema, strategy: "input" },
+	CouponKey: { schema: CouponKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

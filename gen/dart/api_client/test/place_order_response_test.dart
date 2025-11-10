@@ -16,5 +16,10 @@ void main() {
     test('to test the property `payment`', () async {
       // TODO
     });
+
+    // Transaction transaction
+    test('to test the property `transaction`', () async {
+      // TODO
+    });
   });
 }

@@ -1,17 +1,19 @@
 import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
 import type { ClientAgent } from "@repo/schema/common";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
+import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
-import type { DriverRepository } from "@/features/driver/driver-repository";
+import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
+import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
+import type { PaymentRepository } from "@/features/payment/payment-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
-import type { DriverScheduleRepository } from "@/features/schedule/schedule-repository";
+import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserRepository } from "@/features/user/user-repository";
 import type { WalletRepository } from "@/features/wallet/wallet-repository";
 import type { JwtManager } from "@/utils/jwt";
@@ -22,20 +24,6 @@ import type { MapService } from "./services/map";
 import type { PaymentService } from "./services/payment";
 import type { RBACService } from "./services/rbac";
 import type { StorageService } from "./services/storage";
-
-export interface GetOptions {
-	fromCache?: boolean;
-}
-export interface GetAllOptions extends GetOptions, UnifiedPaginationQuery {}
-
-export abstract class BaseRepository<T> {
-	// Database specifix
-	abstract getAll(opts?: GetAllOptions, ...args: unknown[]): Promise<T[]>;
-	abstract getById(id: string, opts?: GetOptions): Promise<T | undefined>;
-	abstract create(item: unknown): Promise<T>;
-	abstract update(id: string, item: unknown, ...args: unknown[]): Promise<T>;
-	abstract delete(id: string): Promise<void>;
-}
 
 export interface ServiceContext {
 	db: DatabaseService;
@@ -50,16 +38,20 @@ export interface ServiceContext {
 export interface RepositoryContext {
 	auth: AuthRepository;
 	configuration: ConfigurationRepository;
-	driver: DriverRepository;
+	driver: {
+		main: DriverMainRepository;
+		schedule: DriverScheduleRepository;
+	};
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
 	};
+	payment: PaymentRepository;
 	order: OrderRepository;
 	coupon: CouponRepository;
 	report: ReportRepository;
 	review: ReviewRepository;
-	schedule: DriverScheduleRepository;
+	transaction: TransactionRepository;
 	user: UserRepository;
 	wallet: WalletRepository;
 }
@@ -100,7 +92,22 @@ export interface ORPCContext extends ResponseHeadersPluginContext {
 
 export type WithTx = { tx: DatabaseTransaction };
 export type WithUserId = { userId: string };
+export type PartialWithTx = Partial<WithTx>;
 export type WebsocketAttachment = {
 	id: string;
 	[key: string]: string;
+};
+export type ListResult<T> = {
+	rows: T[];
+	totalPages?: number;
+};
+
+export interface CountCache {
+	total: number;
+}
+
+export type OrderByOperation = {
+	sql: typeof sql;
+	asc: typeof asc;
+	desc: typeof desc;
 };

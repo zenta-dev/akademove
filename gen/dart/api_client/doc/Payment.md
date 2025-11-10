@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**transactionId** | **String** |  | [optional] 
+**transactionId** | **String** |  | 
 **provider** | [**PaymentProvider**](PaymentProvider.md) |  | 
 **method** | [**PaymentMethod**](PaymentMethod.md) |  | 
 **amount** | **num** |  | 

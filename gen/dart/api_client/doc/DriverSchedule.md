@@ -9,6 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
+**name** | **String** |  | 
 **driverId** | **String** |  | 
 **dayOfWeek** | [**DayOfWeek**](DayOfWeek.md) |  | 
 **startTime** | [**Time**](Time.md) |  | 

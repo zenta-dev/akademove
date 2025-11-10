@@ -1,75 +1,178 @@
-import type { InsertUser, UpdateUser, User } from "@repo/schema/user";
-import { eq } from "drizzle-orm";
+import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
+import {
+	type InsertUser,
+	type UpdateUser,
+	type User,
+	UserKeySchema,
+} from "@repo/schema/user";
+import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
+import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
-import type { GetAllOptions } from "@/core/interface";
+import type {
+	ListResult,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import { log } from "@/utils";
 
-export class UserRepository {
-	#db: DatabaseService;
+const BUCKET = "user";
 
-	constructor(db: DatabaseService) {
-		this.#db = db;
+export class UserRepository extends BaseRepository {
+	#storage: StorageService;
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
+		super("user", kv, db);
+		this.#storage = storage;
 	}
 
-	#composeEntity(_item: UserDatabase): User {
-		throw new Error("UNIMPLEMETED");
-		// return {
-		// 	...item,
-		// 	image: item.image ?? undefined,
-		// 	banReason: item.banReason ?? undefined,
-		// 	banExpires: item.banExpires ?? undefined,
-		// };
+	static async composeEntity(
+		user: UserDatabase,
+		storage: StorageService,
+		options?: { expiresIn?: number },
+	): Promise<User> {
+		let image: string | undefined;
+		if (user.image) {
+			image = await storage.getPresignedUrl({
+				bucket: BUCKET,
+				key: user.image,
+				expiresIn: options?.expiresIn,
+			});
+		}
+		return {
+			...user,
+			image,
+			banReason: user.banReason ?? undefined,
+			banExpires: user.banExpires ?? undefined,
+			gender: user.gender ?? undefined,
+		};
 	}
 
 	async #getFromDB(id: string): Promise<User | undefined> {
-		const result = await this.#db.query.user.findFirst({
+		const result = await this.db.query.user.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
-		return result ? this.#composeEntity(result) : undefined;
+		return result
+			? UserRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
-	async list(requesterId: string, opts?: GetAllOptions): Promise<User[]> {
+	async #getQueryCount(query: string): Promise<number> {
 		try {
-			let stmt = this.#db.query.user.findMany();
+			const [dbResult] = await this.db
+				.select({ count: count(tables.user.id) })
+				.from(tables.user)
+				.where(ilike(tables.user.name, `%${query}%`));
 
-			if (opts) {
-				const { cursor, page, limit = 10 } = opts;
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ query, error }, "Failed to get query count");
+			return 0;
+		}
+	}
 
-				if (cursor) {
-					stmt = this.#db.query.user.findMany({
-						where: (f, op) =>
-							op.and(
-								op.gt(f.createdAt, new Date(cursor)),
-								op.ne(f.id, requesterId),
-							),
-						limit: limit + 1,
-					});
+	async list(
+		query?: UnifiedPaginationQuery & { requesterId: string },
+	): Promise<ListResult<User>> {
+		try {
+			const orderBy = (
+				f: typeof tables.user._.columns,
+				op: OrderByOperation,
+			) => {
+				if (sortBy) {
+					const parsed = UserKeySchema.safeParse(sortBy);
+					const field = parsed.success ? f[parsed.data] : f.id;
+					return op[order](field);
 				}
+				return op[order](f.id);
+			};
 
-				if (page) {
-					const offset = (page - 1) * limit;
-					stmt = this.#db.query.user.findMany({ offset, limit });
-				}
+			const {
+				cursor,
+				page,
+				limit = 10,
+				query: search,
+				sortBy,
+				order = "asc",
+				requesterId,
+			} = query ?? {};
+
+			const clauses: SQL[] = [];
+			if (requesterId) clauses.push(ne(tables.user.id, requesterId));
+
+			if (cursor) {
+				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
+
+				const result = await this.db.query.user.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
+					limit: limit + 1,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+				);
+				return { rows };
 			}
 
-			const result = await stmt;
-			return result.map((r) => this.#composeEntity(r));
+			if (page) {
+				const offset = (page - 1) * limit;
+
+				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
+
+				const result = await this.db.query.user.findMany({
+					where: (_f, op) => op.and(...clauses),
+					orderBy,
+					offset,
+					limit,
+				});
+
+				const rows = await Promise.all(
+					result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+				);
+
+				const totalCount = search
+					? await this.#getQueryCount(search)
+					: await this.getTotalRow();
+
+				const totalPages = Math.ceil(totalCount / limit);
+
+				return { rows, totalPages };
+			}
+
+			const result = await this.db.query.user.findMany({
+				where: (_f, op) => op.and(...clauses),
+				orderBy,
+				limit,
+			});
+			const rows = await Promise.all(
+				result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+			);
+			return { rows };
 		} catch (error) {
-			log.error(error);
-			throw new RepositoryError("Failed to list users");
+			throw this.handleError(error, "list");
 		}
 	}
 
 	async get(id: string): Promise<User> {
 		try {
-			const result = await this.#getFromDB(id);
-			if (!result) throw new RepositoryError(`User with id "${id}" not found`);
+			const fallback = async () => {
+				const res = await this.#getFromDB(id);
+				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				await this.setCache(id, res);
+				return res;
+			};
+			const result = await this.getCache(id, { fallback });
 			return result;
 		} catch (error) {
-			log.error(error);
-			throw new RepositoryError(`Failed to get user by id "${id}"`);
+			throw this.handleError(error, "get by id");
 		}
 	}
 
@@ -78,7 +181,7 @@ export class UserRepository {
 		// try {
 		// 	const { user } = await this.#auth.api.createUser({ body: item });
 
-		// 	const result = this.#composeEntity({
+		// 	const result = UserRepository.composeEntity({,this.#storage
 		// 		...user,
 		// 		role: (user.role ?? "user") as UserRole,
 		// 		image: user.image ?? null,
@@ -98,7 +201,8 @@ export class UserRepository {
 	async update(
 		_id: string,
 		_item: UpdateUser,
-		_headers: Headers,
+		_opts: PartialWithTx,
+		_header: Headers,
 	): Promise<User> {
 		throw new Error("UNIMPLEMETED");
 		// try {
@@ -114,7 +218,7 @@ export class UserRepository {
 		// 			body: { userId: id, role: item.role },
 		// 			headers,
 		// 		});
-		// 		result = this.#composeEntity({
+		// 		result = UserRepository.composeEntity({,this.#storage
 		// 			...user,
 		// 			role: (user.role ?? "user") as UserRole,
 		// 			image: user.image ?? null,
@@ -162,13 +266,16 @@ export class UserRepository {
 
 	async remove(id: string): Promise<void> {
 		try {
-			await this.#db
+			const result = await this.db
 				.delete(tables.user)
 				.where(eq(tables.user.id, id))
 				.returning({ id: tables.user.id });
+
+			if (result.length > 0) {
+				await this.deleteCache(id);
+			}
 		} catch (error) {
-			log.error(error);
-			throw new RepositoryError(`Failed to delete user with id "${id}"`);
+			throw this.handleError(error, "remove");
 		}
 	}
 }

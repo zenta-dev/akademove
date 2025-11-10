@@ -8,13 +8,13 @@ export const CouponHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ coupon: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.coupon.list(query);
-			console.log("COUPONS", result);
+			const { rows, totalPages } = await context.repo.coupon.list(query);
 			return {
 				status: 200,
 				body: {
 					message: "Successfully retrieved coupons data",
-					data: result,
+					data: rows,
+					totalPages,
 				},
 			};
 		}),

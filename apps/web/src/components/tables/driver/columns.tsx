@@ -84,8 +84,8 @@ export const DRIVER_COLUMNS = [
 		},
 	},
 	{
-		id: "licenseNumber",
-		accessorKey: "licenseNumber",
+		id: "licensePlate",
+		accessorKey: "licensePlate",
 		enableHiding: false,
 		header: ({ column }) => {
 			return (
@@ -94,7 +94,7 @@ export const DRIVER_COLUMNS = [
 					className="has-[>svg]:p-0"
 					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 				>
-					{m.license_number()}
+					{m.license_plate()}
 					<ArrowUpDown className="ml-2 h-4 w-4" />
 				</Button>
 			);
