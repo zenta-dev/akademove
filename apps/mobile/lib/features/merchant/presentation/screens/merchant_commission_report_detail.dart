@@ -274,7 +274,6 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-        // Sticky bottom buttons
         Positioned(
           bottom: 0,
           left: 16,
