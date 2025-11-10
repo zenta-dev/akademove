@@ -148,7 +148,9 @@ export abstract class BaseRepository {
 		opts?: PutCacheOptions,
 	): Promise<void> {
 		try {
-			await this.#kv.put(this.#composeCacheKey(key), data, opts);
+			await this.#kv.put(this.#composeCacheKey(key), data, {
+				expirationTtl: opts?.expirationTtl ?? CACHE_TTLS["7d"],
+			});
 		} catch {}
 	}
 
@@ -161,7 +163,7 @@ export abstract class BaseRepository {
 	async #setTotalRowCache(total: number): Promise<void> {
 		try {
 			await this.setCache<CountCache>(
-				`${this.#entity}-${this.#tableName}:count`,
+				"count",
 				{ total },
 				{ expirationTtl: CACHE_TTLS["24h"] },
 			);
@@ -192,10 +194,7 @@ export abstract class BaseRepository {
 				await this.#setTotalRowCache(total);
 				return { total };
 			};
-			const res = await this.getCache<CountCache>(
-				`${this.#entity}-${this.#tableName}:count`,
-				{ fallback },
-			);
+			const res = await this.getCache<CountCache>("count", { fallback });
 
 			return res.total;
 		} catch (error) {
