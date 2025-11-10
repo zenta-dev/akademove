@@ -22,7 +22,10 @@ ${_stringify(options.data)}
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     logger.d('''
 ✅ RESPONSE
 [${response.requestOptions.method}] ${response.requestOptions.uri}
