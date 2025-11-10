@@ -8,12 +8,14 @@ class PickLocationParameters {
     this.controller,
     this.onPresesed,
     this.onChanged,
+    this.text,
   });
 
   final bool? enabled;
   final TextEditingController? controller;
   final void Function()? onPresesed;
   final ValueChanged<String>? onChanged;
+  final String? text;
 
   bool get disabled {
     if (enabled == null) return true;
@@ -77,13 +79,18 @@ class PickLocationCardWidget extends StatelessWidget {
     PickLocationParameters? param,
     bool isPickup,
   ) {
+    // If text is provided directly (display mode), create a temporary controller
+    final effectiveController = param?.text != null
+        ? TextEditingController(text: param!.text)
+        : param?.controller;
+
     return Button(
       style: const ButtonStyle.ghost(
         density: ButtonDensity.compact,
       ),
       onPressed: param?.onPresesed,
       child: TextField(
-        controller: param?.controller,
+        controller: effectiveController,
         readOnly:
             param?.disabled ??
             (param?.onPresesed != null && param?.onChanged != null),
