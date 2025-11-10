@@ -21,7 +21,7 @@ void _setupService() {
           BaseOptions(
             baseUrl: UrlConstants.apiBaseUrl,
             connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(minutes: 3),
+            receiveTimeout: const Duration(seconds: 30),
           ),
         ),
         interceptors: [
@@ -69,6 +69,11 @@ void _setupRepository() {
     )
     ..registerLazySingleton(
       () => OrderRepository(
+        apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => TransactionRepository(
         apiClient: sl<ApiClient>(),
       ),
     )
@@ -122,6 +127,7 @@ void _setupCubit() {
     ..registerFactory(
       () => UserWalletCubit(
         walletRepository: sl<WalletRepository>(),
+        transactionRepository: sl<TransactionRepository>(),
       ),
     )
     ..registerFactory(
