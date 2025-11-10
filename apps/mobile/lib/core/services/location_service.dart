@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 abstract class LocationService extends BaseService {
   Future<bool> enable();
   Future<bool> requestPermission();
-  Future<api.Coordinate?> getMyLocation();
+  Future<api.Coordinate?> getMyLocation({LocationAccuracy? accuracy});
   Future<Placemark?> getPlacemark(double lat, double lng);
 
   bool get isEnabled;
@@ -94,13 +94,28 @@ class ILocationService implements LocationService {
   }
 
   @override
-  Future<api.Coordinate?> getMyLocation() async {
+  Future<api.Coordinate?> getMyLocation({
+    LocationAccuracy? accuracy,
+    bool forceRefresh = false,
+  }) async {
     try {
       if (!await requestPermission()) return null;
       if (!await _ensureServiceEnabled()) return null;
 
+      if (!forceRefresh) {
+        final lastPosition = await Geolocator.getLastKnownPosition();
+        if (lastPosition != null) {
+          return _currentCoordinate = api.Coordinate(
+            y: lastPosition.latitude,
+            x: lastPosition.longitude,
+          );
+        }
+      }
+
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(),
+        locationSettings: LocationSettings(
+          accuracy: accuracy ?? LocationAccuracy.bestForNavigation,
+        ),
       );
 
       return _currentCoordinate = api.Coordinate(
