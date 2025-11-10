@@ -1407,7 +1407,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       },
       child: ComponentTheme(
         data: PhoneInputTheme(
-          maxWidth: 216 * context.theme.scaling,
+          maxWidth: 212 * context.theme.scaling,
           flagWidth: 22.w,
         ),
         child: PhoneInput(
