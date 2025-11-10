@@ -118,68 +118,70 @@ class _UserWalletTopUpInsertAmountScreenState
               ),
             ],
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Button.primary(
-              onPressed: amount <= 0
-                  ? null
-                  : () {
-                      final parsed = int.tryParse(
-                        amountController.text,
-                        radix: 10,
-                      );
-                      setState(() {
-                        if (parsed != null) {
-                          amount = parsed;
-                        } else {
-                          amount = 0;
-                        }
-                      });
-                      if (parsed == null) {
-                        showToast(
-                          context: context,
-                          builder: (context, overlay) => context.buildToast(
-                            title: 'Invalid amount',
-                            message: 'Top up amount atleast Rp 10,000',
-                          ),
-                        );
-                        return;
-                      }
-                      // if (amount < 10_000) {
-                      //   showToast(
-                      //     context: context,
-                      //     builder: (context, overlay) => context.buildToast(
-                      //       title: 'Invalid amount',
-                      //       message: "Top up amount atleast Rp 10,000",
-                      //     ),
-                      //   );
-                      //   return;
-                      // }
-                      final walletCubit = context.read<UserWalletCubit>().state;
-                      final walletId = walletCubit.myWallet?.id;
-                      if (walletId == null) {
-                        context.showMyToast(
-                          'Invalid wallet id, restart the app',
-                        );
-                        return;
-                      }
+          BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
+            builder: (context, state) {
+              return SizedBox(
+                width: double.infinity,
+                child: Button.primary(
+                  enabled: !state.isLoading,
+                  onPressed: amount <= 0 || state.isLoading
+                      ? null
+                      : () async {
+                          final parsed = int.tryParse(
+                            amountController.text,
+                            radix: 10,
+                          );
+                          setState(() {
+                            if (parsed != null) {
+                              amount = parsed;
+                            } else {
+                              amount = 0;
+                            }
+                          });
+                          if (parsed == null) {
+                            showToast(
+                              context: context,
+                              builder: (context, overlay) => context.buildToast(
+                                title: 'Invalid amount',
+                                message: 'Top up amount atleast Rp 10,000',
+                              ),
+                            );
+                            return;
+                          }
+                          if (amount < 10_000) {
+                            showToast(
+                              context: context,
+                              builder: (context, overlay) => context.buildToast(
+                                title: 'Invalid amount',
+                                message: 'Top up amount atleast Rp 10,000',
+                              ),
+                            );
+                            return;
+                          }
 
-                      context.read<UserWalletTopUpCubit>()
-                        ..topUp(
-                          parsed,
-                          widget.method,
-                        )
-                        ..setupWebsocket(walletId: walletId);
+                          context.read<UserWalletTopUpCubit>().reset();
+                          await context.read<UserWalletTopUpCubit>().topUp(
+                            parsed,
+                            widget.method,
+                          );
 
-                      switch (widget.method) {
-                        case TopUpRequestMethodEnum.QRIS:
-                          context.pushNamed(Routes.userWalletTopUpQRIS.name);
-                        default:
-                          break;
-                      }
-                    },
-              child: const DefaultText('Next'),
-            ),
+                          if (mounted && context.mounted) {
+                            switch (widget.method) {
+                              case TopUpRequestMethodEnum.QRIS:
+                                await context.pushNamed(
+                                  Routes.userWalletTopUpQRIS.name,
+                                );
+                              default:
+                                break;
+                            }
+                          }
+                        },
+                  child: state.isLoading
+                      ? const Submiting()
+                      : const DefaultText('Next'),
+                ),
+              );
+            },
           ),
         ],
       ),
