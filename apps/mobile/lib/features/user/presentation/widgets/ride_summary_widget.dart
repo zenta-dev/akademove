@@ -29,7 +29,7 @@ class RideSummaryWidget extends StatelessWidget {
           const Divider(),
           _buildRow(
             'Total cost',
-            context.formatCurrency(summary?.platformFee ?? 0),
+            context.formatCurrency(summary?.totalCost ?? 0),
           ),
         ],
       ),
