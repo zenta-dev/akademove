@@ -134,13 +134,13 @@ class _UserRideScreenState extends State<UserRideScreen> {
               ],
             ),
           ),
-          BlocBuilder<UserRideCubit, UserRideState>(
+          BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
               return SizedBox(
                 width: double.infinity,
                 child: Button.primary(
-                  onPressed:
-                      (pickup != null && dropoff != null && state.isSuccess)
+                  enabled: !state.isLoading,
+                  onPressed: (pickup != null && dropoff != null)
                       ? () async {
                           if (pickup == null || dropoff == null) return;
                           await context.read<UserOrderCubit>().estimate(

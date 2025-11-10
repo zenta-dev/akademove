@@ -1,8 +1,10 @@
+import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserRideSummaryScreen extends StatefulWidget {
@@ -13,23 +15,16 @@ class UserRideSummaryScreen extends StatefulWidget {
 }
 
 class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
-  late TextEditingController pickupController;
-  late TextEditingController dropoffController;
-
   PaymentMethod method = PaymentMethod.QRIS;
   UserGender? gender;
 
   @override
   void initState() {
     super.initState();
-    pickupController = TextEditingController();
-    dropoffController = TextEditingController();
   }
 
   @override
   void dispose() {
-    pickupController.dispose();
-    dropoffController.dispose();
     super.dispose();
   }
 
@@ -41,24 +36,16 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
         children: [
-          BlocConsumer<UserOrderCubit, UserOrderState>(
-            listener: (context, state) {
-              final estimateOrder = state.estimateOrder;
-              if (state.isSuccess && estimateOrder != null) {
-                pickupController.text = estimateOrder.pickup.vicinity;
-                dropoffController.text = estimateOrder.dropoff.vicinity;
-                setState(() {});
-              }
-            },
+          BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
               return PickLocationCardWidget(
                 pickup: PickLocationParameters(
                   enabled: false,
-                  controller: pickupController,
+                  text: state.estimateOrder?.pickup.vicinity,
                 ),
                 dropoff: PickLocationParameters(
                   enabled: false,
-                  controller: dropoffController,
+                  text: state.estimateOrder?.dropoff.vicinity,
                 ),
               ).asSkeleton(enabled: state.isLoading);
             },
@@ -95,6 +82,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                 width: double.infinity,
                 child: Button(
                   style: const ButtonStyle.primary(),
+                  enabled: !state.isLoading,
                   onPressed: state.isSuccess
                       ? () async {
                           final pickup = state.estimateOrder?.pickup;
@@ -123,6 +111,11 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                                 type: ToastType.error,
                               );
                               return;
+                            }
+                            if (order.payment.method == PaymentMethod.QRIS) {
+                              await context.pushNamed(
+                                Routes.userRidePayQRIS.name,
+                              );
                             }
                           }
                         }
