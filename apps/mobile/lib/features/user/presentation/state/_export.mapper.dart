@@ -217,6 +217,10 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
     _$placemark,
     opt: true,
   );
+  static GoogleMapController? _$mapController(UserRideState v) =>
+      v.mapController;
+  static const Field<UserRideState, GoogleMapController> _f$mapController =
+      Field('mapController', _$mapController, opt: true);
   static CubitState _$state(UserRideState v) => v.state;
   static const Field<UserRideState, CubitState> _f$state = Field(
     'state',
@@ -244,6 +248,7 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
     #searchPlaces: _f$searchPlaces,
     #coordinate: _f$coordinate,
     #placemark: _f$placemark,
+    #mapController: _f$mapController,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -256,6 +261,7 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
       searchPlaces: data.dec(_f$searchPlaces),
       coordinate: data.dec(_f$coordinate),
       placemark: data.dec(_f$placemark),
+      mapController: data.dec(_f$mapController),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -326,6 +332,7 @@ abstract class UserRideStateCopyWith<$R, $In extends UserRideState, $Out>
     PageTokenPaginationResult<List<Place>>? searchPlaces,
     Coordinate? coordinate,
     Placemark? placemark,
+    GoogleMapController? mapController,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -373,6 +380,7 @@ class _UserRideStateCopyWithImpl<$R, $Out>
     PageTokenPaginationResult<List<Place>>? searchPlaces,
     Object? coordinate = $none,
     Object? placemark = $none,
+    Object? mapController = $none,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
@@ -383,6 +391,7 @@ class _UserRideStateCopyWithImpl<$R, $Out>
       if (searchPlaces != null) #searchPlaces: searchPlaces,
       if (coordinate != $none) #coordinate: coordinate,
       if (placemark != $none) #placemark: placemark,
+      if (mapController != $none) #mapController: mapController,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -395,6 +404,7 @@ class _UserRideStateCopyWithImpl<$R, $Out>
     searchPlaces: data.get(#searchPlaces, or: $value.searchPlaces),
     coordinate: data.get(#coordinate, or: $value.coordinate),
     placemark: data.get(#placemark, or: $value.placemark),
+    mapController: data.get(#mapController, or: $value.mapController),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),

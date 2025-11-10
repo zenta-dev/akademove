@@ -23,6 +23,7 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
     this.searchPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
     this.coordinate,
     this.placemark,
+    this.mapController,
     super.state,
     super.message,
     super.error,
@@ -33,6 +34,7 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
   final PageTokenPaginationResult<List<Place>> searchPlaces;
   final Coordinate? coordinate;
   final Placemark? placemark;
+  final GoogleMapController? mapController;
 
   @override
   UserRideState toInitial() => copyWith(
@@ -73,4 +75,7 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
     error: error,
     message: message,
   );
+
+  UserRideState setMapController(GoogleMapController con) =>
+      copyWith(mapController: con);
 }
