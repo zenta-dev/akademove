@@ -11,7 +11,7 @@ abstract class _$AuthSignIn200ResponseCWProxy {
 
   AuthSignIn200Response data(SignInResponse data);
 
-  AuthSignIn200Response totalPages(num? totalPages);
+  AuthSignIn200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthSignIn200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   AuthSignIn200Response call({
     String message,
     SignInResponse data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
   AuthSignIn200Response data(SignInResponse data) => this(data: data);
 
   @override
-  AuthSignIn200Response totalPages(num? totalPages) =>
+  AuthSignIn200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -93,7 +93,7 @@ AuthSignIn200Response _$AuthSignIn200ResponseFromJson(
       'data',
       (v) => SignInResponse.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

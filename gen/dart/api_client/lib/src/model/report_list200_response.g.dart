@@ -11,7 +11,7 @@ abstract class _$ReportList200ResponseCWProxy {
 
   ReportList200Response data(List<Report> data);
 
-  ReportList200Response totalPages(num? totalPages);
+  ReportList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReportList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$ReportList200ResponseCWProxy {
   ReportList200Response call({
     String message,
     List<Report> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$ReportList200ResponseCWProxyImpl
   ReportList200Response data(List<Report> data) => this(data: data);
 
   @override
-  ReportList200Response totalPages(num? totalPages) =>
+  ReportList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$ReportList200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ ReportList200Response _$ReportList200ResponseFromJson(
           .map((e) => Report.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

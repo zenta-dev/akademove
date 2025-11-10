@@ -11,7 +11,7 @@ abstract class _$DriverGetMine200ResponseBodyCWProxy {
 
   DriverGetMine200ResponseBody data(Driver data);
 
-  DriverGetMine200ResponseBody totalPages(num? totalPages);
+  DriverGetMine200ResponseBody totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$DriverGetMine200ResponseBodyCWProxy {
   DriverGetMine200ResponseBody call({
     String message,
     Driver data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
   DriverGetMine200ResponseBody data(Driver data) => this(data: data);
 
   @override
-  DriverGetMine200ResponseBody totalPages(num? totalPages) =>
+  DriverGetMine200ResponseBody totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ DriverGetMine200ResponseBody _$DriverGetMine200ResponseBodyFromJson(
       'data',
       (v) => Driver.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

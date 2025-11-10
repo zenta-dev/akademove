@@ -11,7 +11,7 @@ abstract class _$TransactionGet200ResponseCWProxy {
 
   TransactionGet200Response data(Transaction data);
 
-  TransactionGet200Response totalPages(num? totalPages);
+  TransactionGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TransactionGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$TransactionGet200ResponseCWProxy {
   TransactionGet200Response call({
     String message,
     Transaction data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$TransactionGet200ResponseCWProxyImpl
   TransactionGet200Response data(Transaction data) => this(data: data);
 
   @override
-  TransactionGet200Response totalPages(num? totalPages) =>
+  TransactionGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$TransactionGet200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -93,7 +93,7 @@ TransactionGet200Response _$TransactionGet200ResponseFromJson(
       'data',
       (v) => Transaction.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

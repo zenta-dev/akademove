@@ -11,7 +11,7 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
 
   AuthExchangeToken200Response data(String data);
 
-  AuthExchangeToken200Response totalPages(num? totalPages);
+  AuthExchangeToken200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthExchangeToken200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
   AuthExchangeToken200Response call({
     String message,
     String data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
   AuthExchangeToken200Response data(String data) => this(data: data);
 
   @override
-  AuthExchangeToken200Response totalPages(num? totalPages) =>
+  AuthExchangeToken200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -92,7 +92,7 @@ AuthExchangeToken200Response _$AuthExchangeToken200ResponseFromJson(
   final val = AuthExchangeToken200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v as String),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

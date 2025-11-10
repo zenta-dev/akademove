@@ -11,7 +11,7 @@ abstract class _$AuthGetSession200ResponseCWProxy {
 
   AuthGetSession200Response data(GetSessionResponse? data);
 
-  AuthGetSession200Response totalPages(num? totalPages);
+  AuthGetSession200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthGetSession200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$AuthGetSession200ResponseCWProxy {
   AuthGetSession200Response call({
     String message,
     GetSessionResponse? data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$AuthGetSession200ResponseCWProxyImpl
   AuthGetSession200Response data(GetSessionResponse? data) => this(data: data);
 
   @override
-  AuthGetSession200Response totalPages(num? totalPages) =>
+  AuthGetSession200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$AuthGetSession200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ AuthGetSession200Response _$AuthGetSession200ResponseFromJson(
           ? null
           : GetSessionResponse.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

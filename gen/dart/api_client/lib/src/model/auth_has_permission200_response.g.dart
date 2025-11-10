@@ -11,7 +11,7 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
 
   AuthHasPermission200Response data(bool data);
 
-  AuthHasPermission200Response totalPages(num? totalPages);
+  AuthHasPermission200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermission200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
   AuthHasPermission200Response call({
     String message,
     bool data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$AuthHasPermission200ResponseCWProxyImpl
   AuthHasPermission200Response data(bool data) => this(data: data);
 
   @override
-  AuthHasPermission200Response totalPages(num? totalPages) =>
+  AuthHasPermission200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$AuthHasPermission200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -92,7 +92,7 @@ AuthHasPermission200Response _$AuthHasPermission200ResponseFromJson(
   final val = AuthHasPermission200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v as bool),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

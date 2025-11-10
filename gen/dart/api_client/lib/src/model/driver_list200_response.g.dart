@@ -11,7 +11,7 @@ abstract class _$DriverList200ResponseCWProxy {
 
   DriverList200Response data(List<Driver> data);
 
-  DriverList200Response totalPages(num? totalPages);
+  DriverList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$DriverList200ResponseCWProxy {
   DriverList200Response call({
     String message,
     List<Driver> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$DriverList200ResponseCWProxyImpl
   DriverList200Response data(List<Driver> data) => this(data: data);
 
   @override
-  DriverList200Response totalPages(num? totalPages) =>
+  DriverList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$DriverList200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ DriverList200Response _$DriverList200ResponseFromJson(
           .map((e) => Driver.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

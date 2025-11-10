@@ -11,7 +11,7 @@ abstract class _$WalletGet200ResponseCWProxy {
 
   WalletGet200Response data(Wallet data);
 
-  WalletGet200Response totalPages(num? totalPages);
+  WalletGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$WalletGet200ResponseCWProxy {
   /// ```dart
   /// WalletGet200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  WalletGet200Response call({String message, Wallet data, num? totalPages});
+  WalletGet200Response call({String message, Wallet data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWalletGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWalletGet200Response.copyWith.fieldName(...)`
@@ -36,7 +36,7 @@ class _$WalletGet200ResponseCWProxyImpl
   WalletGet200Response data(Wallet data) => this(data: data);
 
   @override
-  WalletGet200Response totalPages(num? totalPages) =>
+  WalletGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -63,7 +63,7 @@ class _$WalletGet200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -89,7 +89,7 @@ WalletGet200Response _$WalletGet200ResponseFromJson(
       'data',
       (v) => Wallet.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

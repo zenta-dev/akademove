@@ -11,7 +11,7 @@ abstract class _$AuthSignOut200ResponseCWProxy {
 
   AuthSignOut200Response data(Object? data);
 
-  AuthSignOut200Response totalPages(num? totalPages);
+  AuthSignOut200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthSignOut200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$AuthSignOut200ResponseCWProxy {
   /// ```dart
   /// AuthSignOut200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  AuthSignOut200Response call({String message, Object? data, num? totalPages});
+  AuthSignOut200Response call({String message, Object? data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAuthSignOut200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAuthSignOut200Response.copyWith.fieldName(...)`
@@ -36,7 +36,7 @@ class _$AuthSignOut200ResponseCWProxyImpl
   AuthSignOut200Response data(Object? data) => this(data: data);
 
   @override
-  AuthSignOut200Response totalPages(num? totalPages) =>
+  AuthSignOut200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -63,7 +63,7 @@ class _$AuthSignOut200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -86,7 +86,7 @@ AuthSignOut200Response _$AuthSignOut200ResponseFromJson(
   final val = AuthSignOut200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

@@ -11,7 +11,7 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
 
   MerchantMenuCreate200Response data(MerchantMenu data);
 
-  MerchantMenuCreate200Response totalPages(num? totalPages);
+  MerchantMenuCreate200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenuCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
   MerchantMenuCreate200Response call({
     String message,
     MerchantMenu data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
   MerchantMenuCreate200Response data(MerchantMenu data) => this(data: data);
 
   @override
-  MerchantMenuCreate200Response totalPages(num? totalPages) =>
+  MerchantMenuCreate200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ MerchantMenuCreate200Response _$MerchantMenuCreate200ResponseFromJson(
       'data',
       (v) => MerchantMenu.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

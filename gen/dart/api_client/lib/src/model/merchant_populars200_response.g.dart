@@ -11,7 +11,7 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
 
   MerchantPopulars200Response data(List<Merchant> data);
 
-  MerchantPopulars200Response totalPages(num? totalPages);
+  MerchantPopulars200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantPopulars200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
   MerchantPopulars200Response call({
     String message,
     List<Merchant> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$MerchantPopulars200ResponseCWProxyImpl
   MerchantPopulars200Response data(List<Merchant> data) => this(data: data);
 
   @override
-  MerchantPopulars200Response totalPages(num? totalPages) =>
+  MerchantPopulars200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$MerchantPopulars200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ MerchantPopulars200Response _$MerchantPopulars200ResponseFromJson(
           .map((e) => Merchant.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

@@ -11,7 +11,7 @@ abstract class _$OrderGet200ResponseCWProxy {
 
   OrderGet200Response data(Order data);
 
-  OrderGet200Response totalPages(num? totalPages);
+  OrderGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$OrderGet200ResponseCWProxy {
   /// ```dart
   /// OrderGet200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderGet200Response call({String message, Order data, num? totalPages});
+  OrderGet200Response call({String message, Order data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderGet200Response.copyWith.fieldName(...)`
@@ -35,7 +35,7 @@ class _$OrderGet200ResponseCWProxyImpl implements _$OrderGet200ResponseCWProxy {
   OrderGet200Response data(Order data) => this(data: data);
 
   @override
-  OrderGet200Response totalPages(num? totalPages) =>
+  OrderGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -62,7 +62,7 @@ class _$OrderGet200ResponseCWProxyImpl implements _$OrderGet200ResponseCWProxy {
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -87,7 +87,7 @@ OrderGet200Response _$OrderGet200ResponseFromJson(Map<String, dynamic> json) =>
           'data',
           (v) => Order.fromJson(v as Map<String, dynamic>),
         ),
-        totalPages: $checkedConvert('totalPages', (v) => v as num?),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
     });

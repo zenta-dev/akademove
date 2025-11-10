@@ -11,7 +11,7 @@ abstract class _$UserList200ResponseCWProxy {
 
   UserList200Response data(List<User> data);
 
-  UserList200Response totalPages(num? totalPages);
+  UserList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$UserList200ResponseCWProxy {
   /// ```dart
   /// UserList200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  UserList200Response call({String message, List<User> data, num? totalPages});
+  UserList200Response call({String message, List<User> data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserList200Response.copyWith.fieldName(...)`
@@ -35,7 +35,7 @@ class _$UserList200ResponseCWProxyImpl implements _$UserList200ResponseCWProxy {
   UserList200Response data(List<User> data) => this(data: data);
 
   @override
-  UserList200Response totalPages(num? totalPages) =>
+  UserList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -62,7 +62,7 @@ class _$UserList200ResponseCWProxyImpl implements _$UserList200ResponseCWProxy {
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -89,7 +89,7 @@ UserList200Response _$UserList200ResponseFromJson(Map<String, dynamic> json) =>
               .map((e) => User.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
-        totalPages: $checkedConvert('totalPages', (v) => v as num?),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
     });

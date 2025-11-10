@@ -11,7 +11,7 @@ abstract class _$ConfigurationList200ResponseCWProxy {
 
   ConfigurationList200Response data(List<Configuration> data);
 
-  ConfigurationList200Response totalPages(num? totalPages);
+  ConfigurationList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$ConfigurationList200ResponseCWProxy {
   ConfigurationList200Response call({
     String message,
     List<Configuration> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -42,7 +42,7 @@ class _$ConfigurationList200ResponseCWProxyImpl
       this(data: data);
 
   @override
-  ConfigurationList200Response totalPages(num? totalPages) =>
+  ConfigurationList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -69,7 +69,7 @@ class _$ConfigurationList200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -98,7 +98,7 @@ ConfigurationList200Response _$ConfigurationList200ResponseFromJson(
           .map((e) => Configuration.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

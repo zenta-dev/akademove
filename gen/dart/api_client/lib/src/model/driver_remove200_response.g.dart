@@ -11,7 +11,7 @@ abstract class _$DriverRemove200ResponseCWProxy {
 
   DriverRemove200Response data(Object? data);
 
-  DriverRemove200Response totalPages(num? totalPages);
+  DriverRemove200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverRemove200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$DriverRemove200ResponseCWProxy {
   /// ```dart
   /// DriverRemove200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  DriverRemove200Response call({String message, Object? data, num? totalPages});
+  DriverRemove200Response call({String message, Object? data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverRemove200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverRemove200Response.copyWith.fieldName(...)`
@@ -36,7 +36,7 @@ class _$DriverRemove200ResponseCWProxyImpl
   DriverRemove200Response data(Object? data) => this(data: data);
 
   @override
-  DriverRemove200Response totalPages(num? totalPages) =>
+  DriverRemove200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -63,7 +63,7 @@ class _$DriverRemove200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -86,7 +86,7 @@ DriverRemove200Response _$DriverRemove200ResponseFromJson(
   final val = DriverRemove200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

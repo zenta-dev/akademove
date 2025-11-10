@@ -11,7 +11,7 @@ abstract class _$CouponList200ResponseCWProxy {
 
   CouponList200Response data(List<Coupon> data);
 
-  CouponList200Response totalPages(num? totalPages);
+  CouponList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$CouponList200ResponseCWProxy {
   CouponList200Response call({
     String message,
     List<Coupon> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$CouponList200ResponseCWProxyImpl
   CouponList200Response data(List<Coupon> data) => this(data: data);
 
   @override
-  CouponList200Response totalPages(num? totalPages) =>
+  CouponList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$CouponList200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ CouponList200Response _$CouponList200ResponseFromJson(
           .map((e) => Coupon.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

@@ -11,7 +11,7 @@ abstract class _$DriverScheduleCreate200ResponseCWProxy {
 
   DriverScheduleCreate200Response data(DriverSchedule data);
 
-  DriverScheduleCreate200Response totalPages(num? totalPages);
+  DriverScheduleCreate200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$DriverScheduleCreate200ResponseCWProxy {
   DriverScheduleCreate200Response call({
     String message,
     DriverSchedule data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$DriverScheduleCreate200ResponseCWProxyImpl
   DriverScheduleCreate200Response data(DriverSchedule data) => this(data: data);
 
   @override
-  DriverScheduleCreate200Response totalPages(num? totalPages) =>
+  DriverScheduleCreate200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$DriverScheduleCreate200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ DriverScheduleCreate200Response _$DriverScheduleCreate200ResponseFromJson(
       'data',
       (v) => DriverSchedule.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

@@ -11,7 +11,7 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
 
   MerchantGetMine200ResponseBody data(Merchant data);
 
-  MerchantGetMine200ResponseBody totalPages(num? totalPages);
+  MerchantGetMine200ResponseBody totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
   MerchantGetMine200ResponseBody call({
     String message,
     Merchant data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -41,7 +41,7 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
   MerchantGetMine200ResponseBody data(Merchant data) => this(data: data);
 
   @override
-  MerchantGetMine200ResponseBody totalPages(num? totalPages) =>
+  MerchantGetMine200ResponseBody totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -68,7 +68,7 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ MerchantGetMine200ResponseBody _$MerchantGetMine200ResponseBodyFromJson(
       'data',
       (v) => Merchant.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

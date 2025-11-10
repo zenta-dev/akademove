@@ -11,7 +11,7 @@ abstract class _$OrderList200ResponseCWProxy {
 
   OrderList200Response data(List<Order> data);
 
-  OrderList200Response totalPages(num? totalPages);
+  OrderList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,7 +22,7 @@ abstract class _$OrderList200ResponseCWProxy {
   OrderList200Response call({
     String message,
     List<Order> data,
-    num? totalPages,
+    int? totalPages,
   });
 }
 
@@ -40,7 +40,7 @@ class _$OrderList200ResponseCWProxyImpl
   OrderList200Response data(List<Order> data) => this(data: data);
 
   @override
-  OrderList200Response totalPages(num? totalPages) =>
+  OrderList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -67,7 +67,7 @@ class _$OrderList200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -95,7 +95,7 @@ OrderList200Response _$OrderList200ResponseFromJson(
           .map((e) => Order.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

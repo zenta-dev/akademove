@@ -11,7 +11,7 @@ abstract class _$CouponCreate200ResponseCWProxy {
 
   CouponCreate200Response data(Coupon data);
 
-  CouponCreate200Response totalPages(num? totalPages);
+  CouponCreate200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -19,7 +19,7 @@ abstract class _$CouponCreate200ResponseCWProxy {
   /// ```dart
   /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  CouponCreate200Response call({String message, Coupon data, num? totalPages});
+  CouponCreate200Response call({String message, Coupon data, int? totalPages});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreate200Response.copyWith.fieldName(...)`
@@ -36,7 +36,7 @@ class _$CouponCreate200ResponseCWProxyImpl
   CouponCreate200Response data(Coupon data) => this(data: data);
 
   @override
-  CouponCreate200Response totalPages(num? totalPages) =>
+  CouponCreate200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
   @override
@@ -63,7 +63,7 @@ class _$CouponCreate200ResponseCWProxyImpl
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
-          : totalPages as num?,
+          : totalPages as int?,
     );
   }
 }
@@ -89,7 +89,7 @@ CouponCreate200Response _$CouponCreate200ResponseFromJson(
       'data',
       (v) => Coupon.fromJson(v as Map<String, dynamic>),
     ),
-    totalPages: $checkedConvert('totalPages', (v) => v as num?),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
 });

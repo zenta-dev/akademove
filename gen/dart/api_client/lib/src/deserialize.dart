@@ -32,6 +32,7 @@ import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/driver_update_request_current_location.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/estimate_order.dart';
+import 'package:api_client/src/model/fcm_notification_log.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:api_client/src/model/forgot_password_request.dart';
 import 'package:api_client/src/model/get_session_response.dart';
@@ -105,6 +106,7 @@ import 'package:api_client/src/model/update_wallet.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/user_create200_response.dart';
 import 'package:api_client/src/model/user_list200_response.dart';
+import 'package:api_client/src/model/user_notification.dart';
 import 'package:api_client/src/model/ws_envelope.dart';
 import 'package:api_client/src/model/ws_order_envelope.dart';
 import 'package:api_client/src/model/ws_order_envelope_payload.dart';
@@ -258,6 +260,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'EstimateOrder':
       return EstimateOrder.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'FCMNotificationLog':
+      return FCMNotificationLog.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'FoodPricingConfiguration':
       return FoodPricingConfiguration.fromJson(value as Map<String, dynamic>)
@@ -468,6 +473,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UserKey':
     case 'UserList200Response':
       return UserList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UserNotification':
+      return UserNotification.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UserRole':
     case 'WSEnvelope':

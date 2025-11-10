@@ -10,8 +10,6 @@ enum ConfigurationKey {
   key(r'key'),
   @JsonValue(r'name')
   name(r'name'),
-  @JsonValue(r'value')
-  value(r'value'),
   @JsonValue(r'description')
   description(r'description'),
   @JsonValue(r'updatedById')

@@ -30,8 +30,10 @@ class OrderEstimate200Response {
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final OrderSummary data;
 
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
-  final num? totalPages;
+  final int? totalPages;
 
   @override
   bool operator ==(Object other) =>
