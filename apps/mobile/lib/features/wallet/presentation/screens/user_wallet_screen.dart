@@ -208,7 +208,6 @@ class WalletListTransactionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      shrinkWrap: true,
       padding: EdgeInsets.zero,
       itemCount: transactions.length,
       separatorBuilder: (context, index) => Padding(
