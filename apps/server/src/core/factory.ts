@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { sv } from "zod/locales";
 import type {
 	ManagerContext,
 	RepositoryContext,
@@ -14,6 +15,12 @@ import { ConfigurationRepository } from "@/features/configuration/configuration-
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import {
+	FCMNotificationLogRepository,
+	FCMTokenRepository,
+	FCMTopicSubscriptionRepository,
+	UserNotificationRepository,
+} from "@/features/fcm/fcm-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import { OrderRepository } from "@/features/order/order-repository";
@@ -24,6 +31,7 @@ import { TransactionRepository } from "@/features/transaction/transaction-reposi
 import { UserRepository } from "@/features/user/user-repository";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
+import { FirebaseAdminService } from "./services/firebase";
 import { GoogleMapService } from "./services/map";
 import { MidtransPaymentService } from "./services/payment";
 
@@ -50,6 +58,7 @@ export function getServices(): ServiceContext {
 			serverKey: env.MIDTRANS_SERVER_KEY,
 			clientKey: env.MIDTRANS_CLIENT_KEY,
 		}),
+		firebase: new FirebaseAdminService(env.FIREBASE_SERVICE_ACCOUNT),
 	};
 
 	return svc;
@@ -96,6 +105,12 @@ export function getRepositories(
 		wallet,
 		user: new UserRepository(svc.db, svc.kv, svc.storage),
 		transaction,
+		notification: {
+			fcmToken: new FCMTokenRepository(svc.db, svc.kv),
+			fcmTopicSubscription: new FCMTopicSubscriptionRepository(svc.db, svc.kv),
+			fcmNotificationLog: new FCMNotificationLogRepository(svc.db, svc.kv),
+			user: new UserNotificationRepository(svc.db, svc.kv),
+		},
 	};
 
 	return repo;
