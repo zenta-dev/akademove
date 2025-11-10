@@ -1,6 +1,8 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class UserRideCubit extends BaseCubit<UserRideState> {
   UserRideCubit({
@@ -15,6 +17,19 @@ class UserRideCubit extends BaseCubit<UserRideState> {
   final DriverRepository _driverRepository;
   final MapService _mapService;
   final LocationService _locationService;
+
+  Future<void> init() async {
+    await getMyLocation();
+  }
+
+  void reset() => emit(UserRideState());
+  void clearSearchPlaces() => emit(
+    state.toSuccess(searchPlaces: const PageTokenPaginationResult(data: [])),
+  );
+
+  void setMapController(GoogleMapController controller) {
+    emit(state.setMapController(controller));
+  }
 
   Future<void> getNearbyDrivers(GetDriverNearbyQuery req) async {
     try {
@@ -37,6 +52,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
         error: e,
         stackTrace: st,
       );
+      emit(state.toSuccess(nearbyDrivers: state.nearbyDrivers));
     }
   }
 
@@ -78,7 +94,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(state.toSuccess(nearbyPlaces: state.nearbyPlaces));
     }
   }
 
@@ -125,39 +141,50 @@ class UserRideCubit extends BaseCubit<UserRideState> {
         error: e,
         stackTrace: st,
       );
-      emit(state.toFailure(e));
+      emit(
+        state.toSuccess(searchPlaces: state.searchPlaces),
+      );
     }
   }
 
   Future<Coordinate?> getMyLocation() async {
     try {
-      final methodName = getMethodName();
-      state.checkAndAssignOperation(methodName);
-
       await _locationService.setup();
       await _locationService.enable();
-      final loc = await _locationService.getMyLocation();
+
+      final loc = await _locationService.getMyLocation(
+        accuracy: LocationAccuracy.best,
+      );
+      logger.f('''
+
+[UserRideCubit - getMyLocation]  LOC ==>> $loc
+
+''');
       if (loc != null) {
         final placemark = await _locationService.getPlacemark(
           loc.y.toDouble(),
           loc.x.toDouble(),
         );
+        logger.f('''
 
-        state.unAssignOperation(methodName);
+[UserRideCubit - getMyLocation]  PLACEMARK ==>> $placemark
+
+''');
         emit(state.toSuccess(coordinate: loc, placemark: placemark));
         return loc;
       }
 
-      state.unAssignOperation(methodName);
       emit(state.toSuccess(coordinate: loc));
       return loc;
     } catch (e) {
+      logger.f('''
+
+[UserRideCubit - getMyLocation]  ERROR ==>> $e
+
+''');
+
+      emit(state.toSuccess());
       return null;
     }
   }
-
-  void reset() => emit(UserRideState());
-  void clearSearchPlaces() => emit(
-    state.toSuccess(searchPlaces: const PageTokenPaginationResult(data: [])),
-  );
 }
