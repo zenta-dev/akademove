@@ -6,7 +6,6 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class AppCubit extends BaseCubit<AppState> {
   AppCubit() : super(AppState.initial());
 
-  @override
   Future<void> init() async {
     // should emit from local storage
     final currentTimeZone = await FlutterTimezone.getLocalTimezone();
@@ -18,6 +17,5 @@ class AppCubit extends BaseCubit<AppState> {
     );
   }
 
-  @override
   void reset() => emit(AppState.initial());
 }

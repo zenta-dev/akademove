@@ -51,8 +51,14 @@ enum Routes {
   merchantCommissionReportDetail('/merchant/commission/report/detail'),
   merchantOrder('/merchant/order'),
   merchantOrderDetail('/merchant/order/detail'),
+  merchantEditMenu('/merchant/edit/menu'),
   merchantMenu('/merchant/menu'),
-  merchantProfile('/merchant/profile');
+  merchantMenuDetail('/merchant/menu/detail'),
+  merchantProfile('/merchant/profile'),
+  merchantSetUpOutlet('/merchant/set/up/outlet'),
+  merchantEditProfile('/merchant/edit/profile'),
+  merchantChangePassword('/merchant/change/password'),
+  merchantPrivacyPolicies('/merchant/privacy/policies');
 
   const Routes(this.path);
   final String path;
@@ -365,6 +371,17 @@ final router = GoRouter(
               path: Routes.merchantMenu.path,
               builder: (context, state) => const MerchantMenuScreen(),
             ),
+            GoRoute(
+              name: Routes.merchantMenuDetail.name,
+              path: Routes.merchantMenuDetail.path,
+              builder: (context, state) => const MerchantMenuDetailScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantEditMenu.name,
+              path: Routes.merchantEditMenu.path,
+              builder: (context, state) => const MerchantEditMenuScreen(),
+            ),
+            
           ],
         ),
         StatefulShellBranch(
@@ -373,6 +390,26 @@ final router = GoRouter(
               name: Routes.merchantProfile.name,
               path: Routes.merchantProfile.path,
               builder: (context, state) => const MerchantProfileScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantSetUpOutlet.name,
+              path: Routes.merchantSetUpOutlet.path,
+              builder: (context, state) => const MerchantSetUpOutletScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantEditProfile.name,
+              path: Routes.merchantEditProfile.path,
+              builder: (context, state) => const MerchantEditProfileScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantChangePassword.name,
+              path: Routes.merchantChangePassword.path,
+              builder: (context, state) => const MerchantChangePasswordScreen(),
+            ),
+            GoRoute(
+              name: Routes.merchantPrivacyPolicies.name,
+              path: Routes.merchantPrivacyPolicies.path,
+              builder: (context, state) => MerchantPrivacyPoliciesScreen(),
             ),
           ],
         ),
