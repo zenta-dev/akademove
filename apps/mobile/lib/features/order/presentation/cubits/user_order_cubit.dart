@@ -13,6 +13,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
 
+  String? _paymentId;
   String? _orderId;
 
   Future<void> init() async {
@@ -20,8 +21,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
   }
 
   void reset() {
-    _orderId = null;
     emit(UserOrderState());
+  }
+
+  @override
+  Future<void> close() async {
+    await teardownWebsocket();
+    return super.close();
   }
 
   Future<void> estimate(Place pickup, Place dropoff) async {
@@ -58,33 +64,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
-  void _setupMatchingWebsocket(PlaceOrderResponse order) {
-    const key = 'driver-pool';
-    _webSocketService.connect(key, '${UrlConstants.wsBaseUrl}/$key');
-
-    _webSocketService.stream(key)?.listen((msg) {
-      final parse = (msg as String).parseJson();
-      if (parse is Map<String, dynamic>) {
-        final data = WSPlaceOrderEnvelope.fromJson(parse);
-        if (data.type == WSEnvelopeType.orderColonMatching &&
-            data.from == WSEnvelopeSender.server &&
-            data.to == WSEnvelopeSender.client) {
-          emit(state.toSuccess(placeOrderResult: data.payload));
-        }
-      }
-    });
-
-    _webSocketService.send(
-      key,
-      WSPlaceOrderEnvelope(
-        type: WSEnvelopeType.orderColonRequest,
-        from: WSEnvelopeSender.client,
-        to: WSEnvelopeSender.server,
-        payload: order,
-      ).toJson().toString(),
-    );
-  }
-
   Future<void> placeOrder(
     Place pickup,
     Place dropoff,
@@ -111,9 +90,10 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       );
 
       _orderId = res.data.order.id;
-      emit(state.toSuccess(placeOrderResult: res.data));
-      _setupMatchingWebsocket(res.data);
+      _paymentId = res.data.payment.id;
+      _setupPaymentWebsocket(paymentId: res.data.payment.id);
       state.unAssignOperation(methodName);
+      emit(state.toSuccess(placeOrderResult: res.data));
     } on BaseError catch (e, st) {
       logger.e(
         '[UserRideCubit] - Error: ${e.message}',
@@ -122,5 +102,136 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       );
       emit(state.toFailure(e));
     }
+  }
+
+  void _setupPaymentWebsocket({required String paymentId}) {
+    _paymentId = paymentId;
+    void handleMessage(Map<String, dynamic> json) {
+      final data = WSPaymentEnvelope.fromJson(json);
+
+      if (data.type == WSEnvelopeType.paymentColonSuccess) {
+        final placeOrderResult =
+            state.placeOrderResult ?? dummyPlaceOrderResponse;
+        emit(
+          state.toSuccess(
+            placeOrderResult: placeOrderResult.copyWith(
+              transaction: data.payload.transaction,
+              payment: data.payload.payment,
+            ),
+            wsPaymentEnvelope: data,
+          ),
+        );
+
+        _webSocketService.disconnect(paymentId);
+        _setupFindDriverWebsocket();
+      }
+      if (data.type == WSEnvelopeType.paymentColonFailed) {
+        final placeOrderResult =
+            state.placeOrderResult ?? dummyPlaceOrderResponse;
+        emit(
+          state.toSuccess(
+            placeOrderResult: placeOrderResult.copyWith(
+              transaction: data.payload.transaction,
+              payment: data.payload.payment,
+            ),
+            wsPaymentEnvelope: data,
+          ),
+        );
+        emit(state.toFailure(const UnknownError('Payment expired')));
+      }
+    }
+
+    _webSocketService.connect(
+      paymentId,
+      '${UrlConstants.wsBaseUrl}/payment/$paymentId',
+      onMessage: (msg) {
+        final json = (msg as String).parseJson();
+        if (json is Map<String, dynamic>) handleMessage(json);
+      },
+    );
+  }
+
+  void _setupFindDriverWebsocket() {
+    const driverPool = 'driver-pool';
+    void handleMessage(Map<String, dynamic> json) {
+      final data = WSPlaceOrderEnvelope.fromJson(json);
+
+      if (data.type == WSEnvelopeType.orderColonRequest ||
+          data.type == WSEnvelopeType.orderColonMatching) {
+        emit(
+          state.toSuccess(
+            placeOrderResult: data.payload,
+            wsPlaceOrderEnvelope: data,
+          ),
+        );
+      }
+      if (data.type == WSEnvelopeType.orderColonAccepted) {
+        emit(
+          state.toSuccess(
+            placeOrderResult: data.payload,
+            wsPlaceOrderEnvelope: data,
+          ),
+        );
+        _webSocketService.disconnect(driverPool);
+        _setupLiveOrderWebsocket(orderId: data.payload.order.id);
+      }
+      if (data.type == WSEnvelopeType.orderColonCancelled) {
+        emit(
+          state.toSuccess(
+            placeOrderResult: data.payload,
+            wsPlaceOrderEnvelope: data,
+          ),
+        );
+        emit(state.toFailure(const UnknownError('Payment expired')));
+      }
+    }
+
+    _webSocketService.connect(
+      driverPool,
+      '${UrlConstants.wsBaseUrl}/$driverPool',
+      onMessage: (msg) {
+        final json = (msg as String).parseJson();
+        if (json is Map<String, dynamic>) handleMessage(json);
+      },
+    );
+  }
+
+  void _setupLiveOrderWebsocket({required String orderId}) {
+    _orderId = orderId;
+    void handleMessage(Map<String, dynamic> json) {
+      final data = WSOrderEnvelope.fromJson(json);
+      if (data.type == WSEnvelopeType.driverColonLocationUpdate &&
+          data.from == WSEnvelopeSender.client &&
+          data.to == WSEnvelopeSender.client &&
+          data.payload.driverUpdateLocation != null) {
+        emit(
+          state.toSuccess(
+            driverCoordinate: data.payload.driverUpdateLocation,
+            wsOrderEnvelope: data,
+          ),
+        );
+      }
+    }
+
+    _webSocketService.connect(
+      orderId,
+      '${UrlConstants.wsBaseUrl}/order/$orderId',
+      onMessage: (msg) {
+        final json = (msg as String).parseJson();
+        if (json is Map<String, dynamic>) handleMessage(json);
+      },
+    );
+  }
+
+  Future<void> teardownWebsocket() async {
+    final futures = [_webSocketService.disconnect('driver-pool')];
+    if (_orderId != null) {
+      futures.add(_webSocketService.disconnect(_orderId ?? ''));
+    }
+    if (_paymentId != null) {
+      futures.add(_webSocketService.disconnect(_paymentId ?? ''));
+    }
+
+    await Future.wait(futures);
   }
 }
