@@ -267,13 +267,17 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                     );
                   },
                 ),
-                Text(
-                  'There are ${_markers.length} drivers around you',
-                  style: context.typography.small.copyWith(
-                    fontSize: 12.sp,
-                    color: context.colorScheme.mutedForeground,
-                  ),
-                ).asSkeleton(enabled: _markers.isEmpty),
+                BlocBuilder<UserRideCubit, UserRideState>(
+                  builder: (context, state) {
+                    return Text(
+                      'There are ${_markers.length} drivers around you',
+                      style: context.typography.small.copyWith(
+                        fontSize: 12.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
+                    ).asSkeleton(enabled: state.isLoading);
+                  },
+                ),
               ],
             ),
           ),
