@@ -10,15 +10,17 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide Banner, TabItem;
 
 class _Route extends BottomNavBarItem {
-  _Route({
+  const _Route({
     required super.label,
     required super.icon,
     required this.route,
     required this.color,
+    this.onPressed,
   });
 
   final Routes route;
   final Color color;
+  final VoidCallback? onPressed;
 }
 
 class UserHomeScreen extends StatefulWidget {
@@ -31,39 +33,6 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
-
-  static final routes = [
-    _Route(
-      label: 'Ride',
-      icon: LucideIcons.bike,
-      route: Routes.userRide,
-      color: Colors.blue,
-    ),
-    _Route(
-      label: 'Delivery',
-      icon: LucideIcons.package,
-      route: Routes.userDelivery,
-      color: Colors.green,
-    ),
-    _Route(
-      label: 'AMart',
-      icon: LucideIcons.store,
-      route: Routes.userMart,
-      color: Colors.pink,
-    ),
-    _Route(
-      label: 'E-Wallet',
-      icon: LucideIcons.wallet,
-      route: Routes.userWallet,
-      color: Colors.red,
-    ),
-    _Route(
-      label: 'My Voucher',
-      icon: LucideIcons.tag,
-      route: Routes.userVoucher,
-      color: Colors.yellow,
-    ),
-  ];
 
   @override
   void initState() {
@@ -226,6 +195,42 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   }
 
   Widget _buildNavigation(BuildContext context) {
+    final routes = [
+      _Route(
+        label: 'Ride',
+        icon: LucideIcons.bike,
+        route: Routes.userRide,
+        color: Colors.blue,
+        onPressed: () async {
+          await context.read<UserRideCubit>().init();
+        },
+      ),
+      const _Route(
+        label: 'Delivery',
+        icon: LucideIcons.package,
+        route: Routes.userDelivery,
+        color: Colors.green,
+      ),
+      const _Route(
+        label: 'AMart',
+        icon: LucideIcons.store,
+        route: Routes.userMart,
+        color: Colors.pink,
+      ),
+      const _Route(
+        label: 'E-Wallet',
+        icon: LucideIcons.wallet,
+        route: Routes.userWallet,
+        color: Colors.red,
+      ),
+      const _Route(
+        label: 'My Voucher',
+        icon: LucideIcons.tag,
+        route: Routes.userVoucher,
+        color: Colors.yellow,
+      ),
+    ];
+
     return Center(
       child: Wrap(
         alignment: WrapAlignment.center,
@@ -237,7 +242,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 style: const ButtonStyle.ghost(
                   density: ButtonDensity.icon,
                 ),
-                onPressed: () => context.pushNamed(e.route.name),
+                onPressed: () {
+                  e.onPressed?.call();
+                  context.pushNamed(e.route.name);
+                },
                 child: Column(
                   spacing: 4.h,
                   mainAxisAlignment: MainAxisAlignment.center,
