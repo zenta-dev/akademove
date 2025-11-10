@@ -15,11 +15,7 @@ import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import {
-	CACHE_TTLS,
-	FEATURE_TAGS,
-	PAYMENT_EXPIRY_MINUTE,
-} from "@/core/constants";
+import { CACHE_TTLS, PAYMENT_EXPIRY_MINUTE } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -53,7 +49,7 @@ export class PaymentRepository extends BaseRepository {
 		transaction: TransactionRepository,
 		wallet: WalletRepository,
 	) {
-		super(FEATURE_TAGS.PAYMENT, "payment", kv, db);
+		super("payment", kv, db);
 		this.#paymentSvc = paymentSvc;
 		this.#transaction = transaction;
 		this.#wallet = wallet;

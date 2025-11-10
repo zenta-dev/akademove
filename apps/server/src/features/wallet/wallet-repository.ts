@@ -9,7 +9,6 @@ import Decimal from "decimal.js";
 import { eq, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -26,7 +25,7 @@ interface PayPayload extends PayRequest, WithUserId {}
 
 export class WalletRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.WALLET, "wallet", kv, db);
+		super("wallet", kv, db);
 	}
 
 	static composeEntity(item: WalletDatabase): Wallet {

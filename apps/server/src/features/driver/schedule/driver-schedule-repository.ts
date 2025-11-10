@@ -8,7 +8,7 @@ import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -18,7 +18,7 @@ import { log } from "@/utils";
 
 export class DriverScheduleRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.DRIVER_SCHEDULE, "driverSchedule", kv, db);
+		super("driverSchedule", kv, db);
 	}
 
 	static composeEntity(item: DriverScheduleDatabase): DriverSchedule {

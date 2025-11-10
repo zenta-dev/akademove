@@ -23,7 +23,7 @@ import Decimal from "decimal.js";
 import { count, eq, gt, ilike, inArray, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, CONFIGURATION_KEYS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
@@ -49,7 +49,7 @@ export class OrderRepository extends BaseRepository {
 		map: MapService,
 		paymentRepo: PaymentRepository,
 	) {
-		super(FEATURE_TAGS.ORDER, "order", kv, db);
+		super("order", kv, db);
 		this.#map = map;
 		this.#paymentRepo = paymentRepo;
 	}

@@ -5,7 +5,7 @@ import type {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -15,7 +15,7 @@ import { safeAsync } from "@/utils";
 
 export class ConfigurationRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.CONFIGURATION, "configuration", kv, db);
+		super("configuration", kv, db);
 	}
 
 	static composeEntity(item: ConfigurationDatabase): Configuration {

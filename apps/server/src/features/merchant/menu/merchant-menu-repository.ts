@@ -9,7 +9,7 @@ import { getFileExtension } from "@repo/shared";
 import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
 	CountCache,
@@ -36,7 +36,7 @@ export class MerchantMenuRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.MERCHANT_MENU, "merchantMenu", kv, db);
+		super("merchantMenu", kv, db);
 		this.#storage = storage;
 	}
 

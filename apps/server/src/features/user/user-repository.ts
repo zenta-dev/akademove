@@ -7,7 +7,6 @@ import {
 } from "@repo/schema/user";
 import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
-import { FEATURE_TAGS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
@@ -30,7 +29,7 @@ export class UserRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.USER, "user", kv, db);
+		super("user", kv, db);
 		this.#storage = storage;
 	}
 

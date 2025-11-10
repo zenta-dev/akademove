@@ -8,7 +8,7 @@ import {
 import { eq, gt, inArray, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
@@ -23,7 +23,7 @@ import { toNumberSafe, toStringNumberSafe } from "@/utils";
 
 export class TransactionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
-		super(FEATURE_TAGS.TRANSACTION, "transaction", kv, db);
+		super("transaction", kv, db);
 	}
 
 	static composeEntity(item: TransactionDatabase): Transaction {

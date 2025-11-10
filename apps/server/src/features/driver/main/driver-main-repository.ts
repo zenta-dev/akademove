@@ -18,7 +18,7 @@ import {
 } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, FEATURE_TAGS } from "@/core/constants";
+import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { ListResult, OrderByOperation } from "@/core/interface";
 import {
@@ -44,7 +44,7 @@ export class DriverMainRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 	) {
-		super(FEATURE_TAGS.DRIVER, "driver", kv, db);
+		super("driver", kv, db);
 		this.#storage = storage;
 	}
 

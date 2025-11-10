@@ -12,7 +12,6 @@ import type { UserRole } from "@repo/schema/user";
 import { getFileExtension, omit } from "@repo/shared";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { FEATURE_TAGS } from "@/core/constants";
 import { AuthError, RepositoryError } from "@/core/error";
 import {
 	type DatabaseService,
@@ -40,7 +39,7 @@ export class AuthRepository extends BaseRepository {
 		storage: StorageService,
 		jwt: JwtManager,
 	) {
-		super(FEATURE_TAGS.USER, "user", kv, db);
+		super("user", kv, db);
 		this.#storage = storage;
 		this.#jwt = jwt;
 		this.#pw = new PasswordManager();

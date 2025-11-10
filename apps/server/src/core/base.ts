@@ -114,25 +114,22 @@ export class BaseDurableObject extends DurableObject {
 }
 
 export abstract class BaseRepository {
-	readonly #entity: string;
 	readonly #tableName: DatabaseName;
 	readonly #kv: KeyValueService;
 	protected readonly db: DatabaseService;
 
 	constructor(
-		entity: string,
 		table: DatabaseName,
 		kv: KeyValueService,
 		database: DatabaseService,
 	) {
-		this.#entity = entity;
 		this.#tableName = table;
 		this.#kv = kv;
 		this.db = database;
 	}
 
 	#composeCacheKey(key: string): string {
-		return `${this.#entity.toLowerCase()}:${key}`;
+		return `${this.#tableName.toLowerCase()}:${key}`;
 	}
 
 	protected async getCache<T>(
@@ -210,7 +207,7 @@ export abstract class BaseRepository {
 		);
 		if (error instanceof RepositoryError) return error;
 		return new RepositoryError(
-			`Failed to ${action} ${this.#entity.toLowerCase()}`,
+			`Failed to ${action} ${this.#tableName.toLowerCase()}`,
 		);
 	}
 
