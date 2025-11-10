@@ -9,7 +9,6 @@ class ConfigurationCubit extends BaseCubit<ConfigurationState> {
        super(const ConfigurationState());
   final ConfigurationRepository _configurationRepository;
 
-  @override
   Future<void> init() async {}
 
   Future<void> getBanner() async {
@@ -48,6 +47,5 @@ class ConfigurationCubit extends BaseCubit<ConfigurationState> {
     }
   }
 
-  @override
   void reset() => emit(const ConfigurationState());
 }

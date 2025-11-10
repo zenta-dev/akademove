@@ -8,7 +8,6 @@ class MerchantCubit extends BaseCubit<MerchantState> {
        super(MerchantState());
   final MerchantRepository _merchantRepository;
 
-  @override
   Future<void> init() async {}
 
   Future<void> getMine() async {
@@ -26,6 +25,5 @@ class MerchantCubit extends BaseCubit<MerchantState> {
     }
   }
 
-  @override
   void reset() => emit(MerchantState());
 }

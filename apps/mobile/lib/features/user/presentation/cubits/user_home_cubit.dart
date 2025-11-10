@@ -8,7 +8,6 @@ class UserHomeCubit extends BaseCubit<UserHomeState> {
        super(UserHomeState());
   final MerchantRepository _merchantRepository;
 
-  @override
   Future<void> init() async {}
 
   Future<void> getPopulars() async {
@@ -26,6 +25,5 @@ class UserHomeCubit extends BaseCubit<UserHomeState> {
     }
   }
 
-  @override
   void reset() => emit(UserHomeState());
 }

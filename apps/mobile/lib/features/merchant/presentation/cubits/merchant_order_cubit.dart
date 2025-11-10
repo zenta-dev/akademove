@@ -9,7 +9,6 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
        super(const MerchantOrderState());
   final OrderRepository _orderRepository;
 
-  @override
   Future<void> init() async {}
 
   Future<void> getMine({required List<OrderStatus> statuses}) async {
@@ -36,6 +35,5 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     }
   }
 
-  @override
   void reset() => emit(const MerchantOrderState());
 }

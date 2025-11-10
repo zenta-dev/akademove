@@ -9,7 +9,6 @@ class SignInCubit extends BaseCubit<SignInState> {
        super(SignInState.initial());
   final AuthRepository _authRepository;
 
-  @override
   Future<void> init() async {}
 
   Future<void> signIn(String email, String password) async {
@@ -25,6 +24,5 @@ class SignInCubit extends BaseCubit<SignInState> {
     }
   }
 
-  @override
   void reset() => emit(SignInState.initial());
 }

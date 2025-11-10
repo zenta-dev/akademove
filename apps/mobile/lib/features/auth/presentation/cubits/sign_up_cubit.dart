@@ -11,10 +11,8 @@ class SignUpCubit extends BaseCubit<SignUpState> {
 
   final AuthRepository _authRepository;
 
-  @override
   Future<void> init() async {}
 
-  @override
   void reset() => emit(SignUpState.initial());
 
   Future<void> signUpUser({
