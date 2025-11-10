@@ -59,7 +59,7 @@ extension ToastExt on BuildContext {
               ),
             )
           : null;
-      return SurfaceCard(
+      return Card(
         fillColor: type.color.withValues(),
         borderColor: type.color,
         child: Basic(
