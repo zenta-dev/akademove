@@ -9,6 +9,8 @@ import { CouponHandler } from "./coupon/coupon-handler";
 import { CouponSpec } from "./coupon/coupon-spec";
 import { DriverHandler } from "./driver/driver-handler";
 import { DriverSpec } from "./driver/driver-spec";
+import { FCMHandler } from "./fcm/fcm-handler";
+import { FCMSpec } from "./fcm/fcm-spec";
 import { MerchantHandler } from "./merchant/merchant-handler";
 import { MerchantSpec } from "./merchant/merchant-spec";
 import { OrderHandler } from "./order/order-handler";
@@ -39,6 +41,7 @@ export const FetchServerSpec = oc.router({
 	transaction: oc.prefix("/transactions").router(TransactionSpec),
 	user: oc.prefix("/users").router(UserSpec),
 	wallet: oc.prefix("/wallets").router(WalletSpec),
+	// fcm: oc.prefix("/fcm").router(FCMSpec),
 });
 
 const os = implement(FetchServerSpec).$context<ORPCContext>();
@@ -55,6 +58,7 @@ export const FetchServerRouter = os.router({
 	transaction: TransactionHandler,
 	user: UserHandler,
 	wallet: WalletHandler,
+	// fcm: FCMHandler,
 });
 
 export type ServerSpecClient = RouterClient<typeof FetchServerRouter>;
