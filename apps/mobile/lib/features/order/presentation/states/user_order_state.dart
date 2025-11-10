@@ -8,6 +8,10 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   UserOrderState({
     this.estimateOrder,
     this.placeOrderResult,
+    this.driverCoordinate,
+    this.wsPaymentEnvelope,
+    this.wsPlaceOrderEnvelope,
+    this.wsOrderEnvelope,
     super.state,
     super.message,
     super.error,
@@ -15,6 +19,11 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
 
   final EstimateOrderResult? estimateOrder;
   final PlaceOrderResponse? placeOrderResult;
+  final Coordinate? driverCoordinate;
+
+  final WSPaymentEnvelope? wsPaymentEnvelope;
+  final WSPlaceOrderEnvelope? wsPlaceOrderEnvelope;
+  final WSOrderEnvelope? wsOrderEnvelope;
 
   @override
   UserOrderState toInitial() => copyWith(
@@ -34,11 +43,19 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   UserOrderState toSuccess({
     EstimateOrderResult? estimateOrder,
     PlaceOrderResponse? placeOrderResult,
+    Coordinate? driverCoordinate,
+    WSPaymentEnvelope? wsPaymentEnvelope,
+    WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
+    WSOrderEnvelope? wsOrderEnvelope,
     String? message,
   }) => copyWith(
     state: CubitState.success,
     estimateOrder: estimateOrder ?? this.estimateOrder,
     placeOrderResult: placeOrderResult ?? this.placeOrderResult,
+    driverCoordinate: driverCoordinate ?? this.driverCoordinate,
+    wsPaymentEnvelope: wsPaymentEnvelope ?? this.wsPaymentEnvelope,
+    wsPlaceOrderEnvelope: wsPlaceOrderEnvelope ?? this.wsPlaceOrderEnvelope,
+    wsOrderEnvelope: wsOrderEnvelope ?? this.wsOrderEnvelope,
     message: message,
     error: null,
   );

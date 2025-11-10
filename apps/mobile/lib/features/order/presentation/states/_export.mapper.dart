@@ -29,6 +29,28 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
       v.placeOrderResult;
   static const Field<UserOrderState, PlaceOrderResponse> _f$placeOrderResult =
       Field('placeOrderResult', _$placeOrderResult, opt: true);
+  static Coordinate? _$driverCoordinate(UserOrderState v) => v.driverCoordinate;
+  static const Field<UserOrderState, Coordinate> _f$driverCoordinate = Field(
+    'driverCoordinate',
+    _$driverCoordinate,
+    opt: true,
+  );
+  static WSPaymentEnvelope? _$wsPaymentEnvelope(UserOrderState v) =>
+      v.wsPaymentEnvelope;
+  static const Field<UserOrderState, WSPaymentEnvelope> _f$wsPaymentEnvelope =
+      Field('wsPaymentEnvelope', _$wsPaymentEnvelope, opt: true);
+  static WSPlaceOrderEnvelope? _$wsPlaceOrderEnvelope(UserOrderState v) =>
+      v.wsPlaceOrderEnvelope;
+  static const Field<UserOrderState, WSPlaceOrderEnvelope>
+  _f$wsPlaceOrderEnvelope = Field(
+    'wsPlaceOrderEnvelope',
+    _$wsPlaceOrderEnvelope,
+    opt: true,
+  );
+  static WSOrderEnvelope? _$wsOrderEnvelope(UserOrderState v) =>
+      v.wsOrderEnvelope;
+  static const Field<UserOrderState, WSOrderEnvelope> _f$wsOrderEnvelope =
+      Field('wsOrderEnvelope', _$wsOrderEnvelope, opt: true);
   static CubitState _$state(UserOrderState v) => v.state;
   static const Field<UserOrderState, CubitState> _f$state = Field(
     'state',
@@ -53,6 +75,10 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
   final MappableFields<UserOrderState> fields = const {
     #estimateOrder: _f$estimateOrder,
     #placeOrderResult: _f$placeOrderResult,
+    #driverCoordinate: _f$driverCoordinate,
+    #wsPaymentEnvelope: _f$wsPaymentEnvelope,
+    #wsPlaceOrderEnvelope: _f$wsPlaceOrderEnvelope,
+    #wsOrderEnvelope: _f$wsOrderEnvelope,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -62,6 +88,10 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     return UserOrderState(
       estimateOrder: data.dec(_f$estimateOrder),
       placeOrderResult: data.dec(_f$placeOrderResult),
+      driverCoordinate: data.dec(_f$driverCoordinate),
+      wsPaymentEnvelope: data.dec(_f$wsPaymentEnvelope),
+      wsPlaceOrderEnvelope: data.dec(_f$wsPlaceOrderEnvelope),
+      wsOrderEnvelope: data.dec(_f$wsOrderEnvelope),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -113,6 +143,10 @@ abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
   $R call({
     EstimateOrderResult? estimateOrder,
     PlaceOrderResponse? placeOrderResult,
+    Coordinate? driverCoordinate,
+    WSPaymentEnvelope? wsPaymentEnvelope,
+    WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
+    WSOrderEnvelope? wsOrderEnvelope,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -134,6 +168,10 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
   $R call({
     Object? estimateOrder = $none,
     Object? placeOrderResult = $none,
+    Object? driverCoordinate = $none,
+    Object? wsPaymentEnvelope = $none,
+    Object? wsPlaceOrderEnvelope = $none,
+    Object? wsOrderEnvelope = $none,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
@@ -141,6 +179,11 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
     FieldCopyWithData({
       if (estimateOrder != $none) #estimateOrder: estimateOrder,
       if (placeOrderResult != $none) #placeOrderResult: placeOrderResult,
+      if (driverCoordinate != $none) #driverCoordinate: driverCoordinate,
+      if (wsPaymentEnvelope != $none) #wsPaymentEnvelope: wsPaymentEnvelope,
+      if (wsPlaceOrderEnvelope != $none)
+        #wsPlaceOrderEnvelope: wsPlaceOrderEnvelope,
+      if (wsOrderEnvelope != $none) #wsOrderEnvelope: wsOrderEnvelope,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -150,6 +193,16 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
   UserOrderState $make(CopyWithData data) => UserOrderState(
     estimateOrder: data.get(#estimateOrder, or: $value.estimateOrder),
     placeOrderResult: data.get(#placeOrderResult, or: $value.placeOrderResult),
+    driverCoordinate: data.get(#driverCoordinate, or: $value.driverCoordinate),
+    wsPaymentEnvelope: data.get(
+      #wsPaymentEnvelope,
+      or: $value.wsPaymentEnvelope,
+    ),
+    wsPlaceOrderEnvelope: data.get(
+      #wsPlaceOrderEnvelope,
+      or: $value.wsPlaceOrderEnvelope,
+    ),
+    wsOrderEnvelope: data.get(#wsOrderEnvelope, or: $value.wsOrderEnvelope),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),
