@@ -6,6 +6,7 @@ import * as configuration from "@/core/tables/configuration";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
 import * as merchant from "@/core/tables/merchant";
+import * as notification from "@/core/tables/notification";
 import * as order from "@/core/tables/order";
 import * as payment from "@/core/tables/payment";
 import * as report from "@/core/tables/report";
@@ -26,6 +27,7 @@ export const tables = {
 	...wallet,
 	...payment,
 	...transaction,
+	...notification,
 };
 
 export const getDatabase = () => {
@@ -42,23 +44,3 @@ export type DatabaseTransaction = Parameters<
 	Parameters<DatabaseService["transaction"]>["0"]
 >["0"];
 export type DatabaseName = keyof DatabaseService["query"];
-export type DatabaseTables =
-	| auth.UserTable
-	| auth.AccountTable
-	| auth.VerificationTable
-	| configuration.ConfigurationTable
-	| configuration.ConfigurationAuditLogTable
-	| coupon.CouponTable
-	| coupon.CouponAuditLogTable
-	| coupon.CouponUsageTable
-	| driver.DriverTable
-	| driver.DriverScheduleTable
-	| merchant.MerchantTable
-	| merchant.MerchantMenuTable
-	| order.OrderTable
-	| payment.PaymentTable
-	| report.ReportTable
-	| report.ReportAuditLogTable
-	| review.ReviewTable
-	| transaction.TransactionTable
-	| wallet.WalletTable;
