@@ -40,34 +40,6 @@ class WalletRepository extends BaseRepository {
     });
   }
 
-  Future<BaseResponse<List<Transaction>>> getTransactions() {
-    return guard(() async {
-      final res = await _apiClient.getWalletApi().walletTransactions();
-
-      final data =
-          res.data ??
-          (throw const RepositoryError(
-            'Transactions not found',
-            code: ErrorCode.notFound,
-          ));
-
-      return SuccessResponse(message: data.message, data: data.data);
-    });
-  }
-
-  Future<BaseResponse<Payment>> pay(PayRequest req) {
-    return guard(() async {
-      final res = await _apiClient.getWalletApi().walletPay(payRequest: req);
-      final data =
-          res.data ??
-          (throw const RepositoryError(
-            'Failed to pay',
-            code: ErrorCode.notFound,
-          ));
-      return SuccessResponse(message: data.message, data: data.data);
-    });
-  }
-
   Future<BaseResponse<Payment>> topUp(TopUpRequest req) {
     return guard(() async {
       final res = await _apiClient.getWalletApi().walletTopUp(
