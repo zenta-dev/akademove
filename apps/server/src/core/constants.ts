@@ -6,6 +6,7 @@ export const FEATURE_TAGS = Object.freeze({
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
 	DRIVER_SCHEDULE: "DriverSchedule",
+	FCM: "FirebaseCloudMessaging",
 	MERCHANT: "Merchant",
 	MERCHANT_MENU: "MerchantMenu",
 	ORDER: "Order",
@@ -21,6 +22,7 @@ export const FEATURE_TAGS = Object.freeze({
 export const CACHE_TTLS = Object.freeze({
 	"1h": 1 * 3600,
 	"24h": 24 * 3600,
+	"7d": 7 * 24 * 3600,
 } as const);
 
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
@@ -53,7 +55,7 @@ export const createSuccesSchema = <
 		body: z.object({
 			message: z.string(),
 			data: schema,
-			totalPages: z.number().optional(),
+			totalPages: z.int().optional(),
 		}),
 	});
 
