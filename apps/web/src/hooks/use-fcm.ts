@@ -1,0 +1,82 @@
+import { useMutation } from "@tanstack/react-query";
+import type { MessagePayload } from "firebase/messaging";
+import { useEffect, useState } from "react";
+import { firebaseClient } from "@/lib/firebase";
+import { orpcQuery } from "@/lib/orpc";
+
+export function useFCM() {
+	const [fcmToken, setFcmToken] = useState<string | null>(null);
+	const [notification, setNotification] = useState<MessagePayload | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+
+	const saveMutation = useMutation(orpcQuery.fcm.save.mutationOptions());
+	const subscribeMutation = useMutation(
+		orpcQuery.fcm.subscribeToTopic.mutationOptions(),
+	);
+	const unsubscribeMutation = useMutation(
+		orpcQuery.fcm.unsubscribeToTopic.mutationOptions(),
+	);
+
+	const client = firebaseClient;
+
+	useEffect(() => {
+		if (!client) return;
+
+		const initializeFCM = async () => {
+			setIsLoading(true);
+			setError(null);
+
+			try {
+				const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
+				const token = await client.requestPermissionAndGetToken(vapidKey);
+
+				if (token) {
+					setFcmToken(token);
+					await saveMutation.mutateAsync({ body: { token } });
+				}
+			} catch (err) {
+				setError(
+					err instanceof Error ? err.message : "Failed to initialize FCM",
+				);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		initializeFCM();
+
+		const unsubscribe = client.onMessage((payload) => {
+			setNotification(payload);
+		});
+
+		return () => unsubscribe();
+	}, [client, saveMutation.mutateAsync]);
+
+	const subscribeToTopic = async (topic: string) => {
+		if (!fcmToken) throw new Error("No FCM token or userId available");
+
+		return await subscribeMutation.mutateAsync({
+			body: { topic, token: fcmToken },
+		});
+	};
+
+	const unsubscribeFromTopic = async (topic: string) => {
+		if (!fcmToken) throw new Error("No FCM token or userId available");
+		return await unsubscribeMutation.mutateAsync({
+			body: { topic, token: fcmToken },
+		});
+	};
+
+	return {
+		fcmToken,
+		notification,
+		isLoading,
+		error,
+		isSupported: client?.isSupported() ?? false,
+		permissionStatus: client?.getPermissionStatus() ?? null,
+		subscribeToTopic,
+		unsubscribeFromTopic,
+		clearNotification: () => setNotification(null),
+	};
+}

@@ -11,6 +11,7 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NotificationDropdown } from "./notification-dropdown";
 
 export const DashboardHeader = ({ scope }: { scope: string }) => {
 	const sidebar = useSidebar();
@@ -44,6 +45,7 @@ export const DashboardHeader = ({ scope }: { scope: string }) => {
 				<div className="flex items-center gap-2">
 					<LangToggle />
 					<ThemeToggle />
+					<NotificationDropdown />
 					<UserDropdwon />
 				</div>
 			</div>
