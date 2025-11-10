@@ -91,3 +91,63 @@ export function omit<T extends object>(
 
 	return result as unknown as Omit<T, keyof typeof keySet>;
 }
+
+type NullToUndefined<T> =
+	// preserve null → undefined
+	T extends null
+		? undefined
+		: // preserve built-in objects
+			T extends Date
+			? Date
+			: T extends RegExp
+				? RegExp
+				: T extends Map<infer K, infer V>
+					? Map<NullToUndefined<K>, NullToUndefined<V>>
+					: T extends Set<infer U>
+						? Set<NullToUndefined<U>>
+						: // arrays
+							T extends (infer U)[]
+							? NullToUndefined<U>[]
+							: // plain objects
+								T extends object
+								? { [K in keyof T]: NullToUndefined<T[K]> }
+								: // primitives
+									T;
+
+export function nullsToUndefined<T>(obj: T): NullToUndefined<T> {
+	if (obj === null) return undefined as NullToUndefined<T>;
+	if (typeof obj !== "object") return obj as NullToUndefined<T>;
+
+	// preserve special instances
+	if (
+		obj instanceof Date ||
+		obj instanceof RegExp ||
+		obj instanceof Map ||
+		obj instanceof Set
+	) {
+		return obj as NullToUndefined<T>;
+	}
+
+	if (Array.isArray(obj)) {
+		const arr = obj as unknown[];
+		const len = arr.length;
+		const result = new Array(len);
+		for (let i = 0; i < len; i++) {
+			const value = arr[i];
+			result[i] = value === null ? undefined : nullsToUndefined(value);
+		}
+		return result as unknown as NullToUndefined<T>;
+	}
+
+	const record = obj as Record<string, unknown>;
+	const result: Record<string, unknown> = {};
+
+	for (const key in record) {
+		if (Object.hasOwn(record, key)) {
+			const value = record[key];
+			result[key] = value === null ? undefined : nullsToUndefined(value);
+		}
+	}
+
+	return result as unknown as NullToUndefined<T>;
+}
