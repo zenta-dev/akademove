@@ -23,6 +23,8 @@ enum Routes {
   userRidePickup('/user/home/ride/pickup'),
   userRideDropoff('/user/home/ride/dropoff'),
   userRideSummary('/user/home/ride/summary'),
+  userRidePayQRIS('/user/home/ride/pay/qris'),
+  userRidePayOnTrip('/user/home/ride/on-trip'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
   userMart('/user/home/mart'),
@@ -157,33 +159,48 @@ final router = GoRouter(
               builder: (context, state) => const UserHomeScreen(),
             ),
             //
-            GoRoute(
-              name: Routes.userRide.name,
-              path: Routes.userRide.path,
-              builder: (context, state) => BlocProvider.value(
+            ShellRoute(
+              builder: (context, state, child) => BlocProvider.value(
                 value: BlocProvider.of<UserRideCubit>(context)..getMyLocation(),
-                child: const UserRideScreen(),
+                child: RideMapShell(child: child),
               ),
-            ),
-            GoRoute(
-              name: Routes.userDriverNearMe.name,
-              path: Routes.userDriverNearMe.path,
-              builder: (context, state) => const UserNearbyDriverScreen(),
-            ),
-            GoRoute(
-              name: Routes.userRidePickup.name,
-              path: Routes.userRidePickup.path,
-              builder: (context, state) => const UserRidePickupScreen(),
-            ),
-            GoRoute(
-              name: Routes.userRideDropoff.name,
-              path: Routes.userRideDropoff.path,
-              builder: (context, state) => const UserRideDropoffScreen(),
-            ),
-            GoRoute(
-              name: Routes.userRideSummary.name,
-              path: Routes.userRideSummary.path,
-              builder: (context, state) => const UserRideSummaryScreen(),
+              routes: [
+                GoRoute(
+                  name: Routes.userRide.name,
+                  path: Routes.userRide.path,
+                  builder: (context, state) => const UserRideScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userDriverNearMe.name,
+                  path: Routes.userDriverNearMe.path,
+                  builder: (context, state) => const UserNearbyDriverScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userRidePickup.name,
+                  path: Routes.userRidePickup.path,
+                  builder: (context, state) => const UserRidePickupScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userRideDropoff.name,
+                  path: Routes.userRideDropoff.path,
+                  builder: (context, state) => const UserRideDropoffScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userRideSummary.name,
+                  path: Routes.userRideSummary.path,
+                  builder: (context, state) => const UserRideSummaryScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userRidePayQRIS.name,
+                  path: Routes.userRidePayQRIS.path,
+                  builder: (context, state) => const UserRidePayQrisScreen(),
+                ),
+                GoRoute(
+                  name: Routes.userRidePayOnTrip.name,
+                  path: Routes.userRidePayOnTrip.path,
+                  builder: (context, state) => const UserRideOnTripScreen(),
+                ),
+              ],
             ),
 
             //
