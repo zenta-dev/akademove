@@ -20,7 +20,6 @@ class WebSocketService {
   final Map<String, int> _reconnectAttempts = {};
 
   String? sessionToken;
-  String? userId;
 
   final int maxReconnectAttempts;
   final Duration initialReconnectDelay;
@@ -64,7 +63,6 @@ class WebSocketService {
 
       final existingParams = Map<String, String>.from(uri.queryParameters);
       if (sessionToken != null) existingParams['session-token'] = sessionToken!;
-      if (userId != null) existingParams['user-id'] = userId!;
 
       _logDebug(key, 'Query param -> $existingParams');
       uri = uri.replace(queryParameters: existingParams);

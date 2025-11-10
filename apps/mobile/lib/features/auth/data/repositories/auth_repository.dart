@@ -30,7 +30,6 @@ class AuthRepository extends BaseRepository {
 
       _apiClient.setBearerAuth('bearer_auth', data.data.token);
       _ws.sessionToken = data.data.token;
-      _ws.userId = data.data.user.id;
       await _localKV.set(KeyValueKeys.token, data.data.token);
 
       return SuccessResponse(message: data.message, data: data.data.user);
@@ -151,7 +150,6 @@ class AuthRepository extends BaseRepository {
         detailLocationY: outletLocation.y,
         detailBankProvider: bankProvider.value,
         detailBankNumber: bankNumber,
-        detailCategories: [], // TODO; implement this
       );
 
       final data =
@@ -219,8 +217,6 @@ class AuthRepository extends BaseRepository {
           code: ErrorCode.unathorized,
         );
       }
-
-      _ws.userId = data.data?.user.id;
 
       return SuccessResponse(message: data.message, data: remoteUser);
     });
