@@ -36,7 +36,7 @@ import type {
 	UserNotificationDatabase,
 } from "@/core/tables/notification";
 import { log } from "@/utils";
-import type { ListNotificationQuery } from "./fcm-spec";
+import type { ListNotificationQuery } from "./notification-spec";
 
 interface SendNotificationOptions extends NotificationPayload {
 	fromUserId: string;

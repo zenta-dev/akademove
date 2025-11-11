@@ -14,9 +14,9 @@ import { ConfigurationRepository } from "@/features/configuration/configuration-
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
-import { NotificationRepository } from "@/features/fcm/fcm-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import { NotificationRepository } from "@/features/notification/notification-repository";
 import { OrderRepository } from "@/features/order/order-repository";
 import { PaymentRepository } from "@/features/payment/payment-repository";
 import { ReportRepository } from "@/features/report/report-repository";

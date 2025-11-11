@@ -10,7 +10,7 @@ const ListNotificationQuerySchema = UnifiedPaginationQuerySchema.extend({
 
 export type ListNotificationQuery = z.infer<typeof ListNotificationQuerySchema>;
 
-export const FCMSpec = {
+export const NotificationSpec = {
 	list: oc
 		.route({
 			tags: [FEATURE_TAGS.FCM],

@@ -1,9 +1,9 @@
 import { createORPCRouter } from "@/core/router/orpc";
-import { FCMSpec } from "./fcm-spec";
+import { NotificationSpec } from "./notification-spec";
 
-const { priv } = createORPCRouter(FCMSpec);
+const { priv } = createORPCRouter(NotificationSpec);
 
-export const FCMHandler = priv.router({
+export const NotificationHandler = priv.router({
 	list: priv.list.handler(async ({ context, input: { query } }) => {
 		const { rows, totalPages } = await context.repo.notification.list({
 			...query,

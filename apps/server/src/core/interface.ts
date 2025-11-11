@@ -7,9 +7,9 @@ import type { ConfigurationRepository } from "@/features/configuration/configura
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
-import type { NotificationRepository } from "@/features/fcm/fcm-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import type { NotificationRepository } from "@/features/notification/notification-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
 import type { PaymentRepository } from "@/features/payment/payment-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
