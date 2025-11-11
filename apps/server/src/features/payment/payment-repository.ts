@@ -560,15 +560,26 @@ export class PaymentRepository extends BaseRepository {
 
 		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
 
-		stub.broadcast({
-			type: "wallet:top_up_success",
-			from: "server",
-			to: "client",
-			payload: {
-				wallet: WalletRepository.composeEntity(updatedWallet),
-				transaction: updatedTransaction,
-				payment: PaymentRepository.composeEntity(updatedPayment),
-			},
-		});
+		const userId = wallet.userId;
+		const tasks: Promise<unknown>[] = [
+			stub.broadcast({
+				type: "wallet:top_up_success",
+				from: "server",
+				to: "client",
+				payload: {
+					wallet: WalletRepository.composeEntity(updatedWallet),
+					transaction: updatedTransaction,
+					payment: PaymentRepository.composeEntity(updatedPayment),
+				},
+			}),
+			this.#notification.sendNotificationToUserId({
+				fromUserId: userId,
+				toUserId: userId,
+				title: "Top up success",
+				body: `Top up Rp ${toNumberSafe(transaction.amount)} success`,
+			}),
+		];
+
+		await Promise.allSettled(tasks);
 	}
 }
