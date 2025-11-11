@@ -30,7 +30,7 @@ export const OrderNoteSchema = z
 
 export const OrderItemSchema = z
 	.object({
-		total: z.number(),
+		quantity: z.number(),
 		item: MerchantMenuSchema.partial(),
 	})
 	.meta({ title: "OrderItem" });
