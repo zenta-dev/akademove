@@ -23,6 +23,7 @@ export const DriverSchema = z
 		licensePlate: z.string().min(6).max(32),
 		status: DriverStatusSchema,
 		rating: z.number(),
+		isTakingOrder: z.boolean(),
 		isOnline: z.boolean(),
 		currentLocation: CoordinateSchema.optional(),
 		lastLocationUpdate: DateSchema.optional(),
@@ -73,9 +74,19 @@ export const InsertDriverSchema = DriverSchema.pick({
 	})
 	.meta({ title: "InsertDriverRequest" });
 
-export const UpdateDriverSchema = InsertDriverSchema.extend({
-	currentLocation: CoordinateSchema.optional(),
+export const UpdateDriverSchema = DriverSchema.pick({
+	studentId: true,
+	licensePlate: true,
+	studentCard: true,
+	driverLicense: true,
+	vehicleCertificate: true,
+	bank: true,
+	isTakingOrder: true,
 })
+	.extend({
+		currentLocation: CoordinateSchema.optional(),
+		...DriverDocumentSchema.shape,
+	})
 	.partial()
 	.meta({
 		title: "UpdateDriverRequest",
