@@ -1,6 +1,14 @@
 import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
-import { geometry, jsonb, numeric, text, uuid } from "drizzle-orm/pg-core";
+import {
+	geometry,
+	integer,
+	jsonb,
+	numeric,
+	serial,
+	text,
+	uuid,
+} from "drizzle-orm/pg-core";
 import { user, userGender } from "./auth";
 import {
 	DateModifier,
@@ -11,7 +19,7 @@ import {
 	timestamp,
 } from "./common";
 import { driver } from "./driver";
-import { merchant } from "./merchant";
+import { merchant, merchantMenu } from "./merchant";
 
 export const orderStatus = pgEnum("order_status", CONSTANTS.ORDER_STATUSES);
 export const orderType = pgEnum("order_type", CONSTANTS.ORDER_TYPES);
@@ -79,10 +87,25 @@ export const order = pgTable(
 );
 export type OrderTable = typeof order;
 
+export const orderItem = pgTable("order_items", {
+	id: serial().primaryKey(),
+	orderId: uuid()
+		.notNull()
+		.references(() => order.id),
+	menuId: uuid()
+		.notNull()
+		.references(() => merchantMenu.id),
+	quantity: integer().notNull(),
+	unitPrice: numeric("unit_price", {
+		precision: 18,
+		scale: 2,
+	}).notNull(),
+});
+
 ///
 /// --- Relations --- ///
 ///
-export const orderRelations = relations(order, ({ one }) => ({
+export const orderRelations = relations(order, ({ one, many }) => ({
 	user: one(user, {
 		fields: [order.userId],
 		references: [user.id],
@@ -94,6 +117,14 @@ export const orderRelations = relations(order, ({ one }) => ({
 	merchant: one(merchant, {
 		fields: [order.merchantId],
 		references: [merchant.id],
+	}),
+	items: many(orderItem),
+}));
+
+export const orderItemRelations = relations(orderItem, ({ one }) => ({
+	order: one(order, {
+		fields: [orderItem.orderId],
+		references: [order.id],
 	}),
 }));
 
