@@ -29,6 +29,7 @@ export const driver = pgTable(
 		rating: numeric({ precision: 2, scale: 1, mode: "number" })
 			.notNull()
 			.default(0.0),
+		isTakingOrder: boolean("is_taking_order").notNull().default(false),
 		isOnline: boolean("is_online").notNull().default(false),
 		currentLocation: geometry("current_location", {
 			type: "point",
