@@ -40,7 +40,6 @@ import type { ListNotificationQuery } from "./notification-spec";
 
 interface SendNotificationOptions extends NotificationPayload {
 	fromUserId: string;
-	toUserId: string[];
 }
 
 export class NotificationRepository {
@@ -62,12 +61,79 @@ export class NotificationRepository {
 		this.#userNotification = new UserNotificationRepository(db, kv);
 	}
 
-	async sendNotification(opts: SendNotificationOptions): Promise<string[]> {
+	async sendNotificationToUserId(
+		opts: SendNotificationOptions & {
+			toUserId: string;
+		},
+	): Promise<string[]> {
 		const { toUserId, fromUserId } = opts;
 
 		try {
-			const userIds = Array.isArray(toUserId) ? toUserId : [toUserId];
-			const tokenResults = await this.#fcmToken.listByUserIds(userIds);
+			const tokenResults = await this.#fcmToken.listByUserId(toUserId);
+			if (!tokenResults.length) return [];
+
+			const messageIds = await Promise.all(
+				tokenResults.map((t) =>
+					this.#firebaseAdmin.sendNotification({ ...opts, token: t.token }),
+				),
+			);
+
+			const sentAt = new Date();
+
+			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
+				(messageId) => ({
+					...opts,
+					userId: fromUserId,
+					messageId,
+					status: "success",
+					sentAt,
+				}),
+			);
+
+			await Promise.all([
+				this.#fcmNotificationLog.createBatch(notificationLogs),
+				this.#userNotification.create({
+					...opts,
+					userId: toUserId,
+					isRead: false,
+				}),
+			]);
+
+			return messageIds;
+		} catch (error) {
+			log.error({ error }, "Failed to send notification by token");
+
+			const msg = error instanceof Error ? error.message : "Unknown error";
+
+			const failLog: InsertFCMNotificationLog = {
+				...opts,
+				userId: fromUserId,
+				status: "failed",
+				sentAt: new Date(),
+				error: msg,
+			};
+
+			await Promise.all([
+				this.#fcmNotificationLog.create(failLog),
+				this.#userNotification.create({
+					...opts,
+					userId: toUserId,
+					isRead: false,
+				}),
+			]);
+
+			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
+		}
+	}
+	async sendNotificationToUserIds(
+		opts: SendNotificationOptions & {
+			toUserIds: string[];
+		},
+	): Promise<string[]> {
+		const { toUserIds, fromUserId } = opts;
+
+		try {
+			const tokenResults = await this.#fcmToken.listByUserIds(toUserIds);
 			if (!tokenResults.length) return [];
 
 			const messageIds = await Promise.all(
@@ -89,7 +155,7 @@ export class NotificationRepository {
 			);
 
 			const userNotifications: InsertUserNotification[] = [];
-			for (const userId of userIds) {
+			for (const userId of toUserIds) {
 				for (const messageId of messageIds) {
 					userNotifications.push({ ...opts, userId, messageId, isRead: false });
 				}
@@ -105,7 +171,6 @@ export class NotificationRepository {
 			log.error({ error }, "Failed to send notification by token");
 
 			const msg = error instanceof Error ? error.message : "Unknown error";
-			const userIds = Array.isArray(toUserId) ? toUserId : [toUserId];
 
 			const failLog: InsertFCMNotificationLog = {
 				...opts,
@@ -115,7 +180,7 @@ export class NotificationRepository {
 				error: msg,
 			};
 
-			const failNotifications: InsertUserNotification[] = userIds.map(
+			const failNotifications: InsertUserNotification[] = toUserIds.map(
 				(userId) => ({
 					...opts,
 					userId,
