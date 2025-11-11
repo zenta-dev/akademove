@@ -1,8 +1,12 @@
 import { type App, cert, getApps, initializeApp } from "firebase-admin/app";
 import {
+	type AndroidConfig,
+	type ApnsConfig,
+	type FcmOptions,
 	getMessaging,
 	type Message,
 	type Messaging,
+	type WebpushConfig,
 } from "firebase-admin/messaging";
 import { log } from "@/utils";
 import { FirebaseError } from "../error";
@@ -11,6 +15,10 @@ export interface NotificationPayload {
 	title: string;
 	body: string;
 	data?: Record<string, string>;
+	android?: AndroidConfig;
+	webpush?: WebpushConfig;
+	apns?: ApnsConfig;
+	fcmOptions?: FcmOptions;
 }
 
 export interface SendNotificationOptions extends NotificationPayload {
@@ -44,6 +52,7 @@ export class FirebaseAdminService {
 
 	async sendNotification(options: SendNotificationOptions): Promise<string> {
 		const message: Message = {
+			...options,
 			token: options.token,
 			notification: {
 				title: options.title,
@@ -68,6 +77,7 @@ export class FirebaseAdminService {
 
 	async sendToTopic(options: SendToTopicOptions): Promise<string> {
 		const message: Message = {
+			...options,
 			topic: options.topic,
 			notification: {
 				title: options.title,
