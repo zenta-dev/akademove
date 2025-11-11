@@ -11,7 +11,7 @@ import {
 	UserNotificationKeySchema,
 } from "@repo/schema/notification";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { nullsToUndefined, omit } from "@repo/shared";
+import { nullsToUndefined } from "@repo/shared";
 import { and, count, eq, gt, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -20,10 +20,14 @@ import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
 	OrderByOperation,
-	PartialWithTx,
 	WithUserId,
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
+import type {
+	FirebaseAdminService,
+	NotificationPayload,
+	SendToTopicOptions,
+} from "@/core/services/firebase";
 import type { KeyValueService } from "@/core/services/kv";
 import type {
 	FCMNotificationLogDatabase,
@@ -31,8 +35,198 @@ import type {
 	FCMTopicSubscriptionDatabase,
 	UserNotificationDatabase,
 } from "@/core/tables/notification";
+import { log } from "@/utils";
+import type { ListNotificationQuery } from "./fcm-spec";
 
-export class FCMTokenRepository extends BaseRepository {
+interface SendNotificationOptions extends NotificationPayload {
+	fromUserId: string;
+	toUserId: string[];
+}
+
+export class NotificationRepository {
+	#firebaseAdmin: FirebaseAdminService;
+	#fcmToken: FCMTokenRepository;
+	#fcmTopic: FCMTopicSubscriptionRepository;
+	#fcmNotificationLog: FCMNotificationLogRepository;
+	#userNotification: UserNotificationRepository;
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		firebaseAdmin: FirebaseAdminService,
+	) {
+		this.#firebaseAdmin = firebaseAdmin;
+		this.#fcmToken = new FCMTokenRepository(db, kv);
+		this.#fcmTopic = new FCMTopicSubscriptionRepository(db, kv);
+		this.#fcmNotificationLog = new FCMNotificationLogRepository(db, kv);
+		this.#userNotification = new UserNotificationRepository(db, kv);
+	}
+
+	async sendNotification(opts: SendNotificationOptions): Promise<string[]> {
+		const { toUserId, fromUserId } = opts;
+
+		try {
+			const userIds = Array.isArray(toUserId) ? toUserId : [toUserId];
+			const tokenResults = await this.#fcmToken.listByUserIds(userIds);
+			if (!tokenResults.length) return [];
+
+			const messageIds = await Promise.all(
+				tokenResults.map((t) =>
+					this.#firebaseAdmin.sendNotification({ ...opts, token: t.token }),
+				),
+			);
+
+			const sentAt = new Date();
+
+			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
+				(messageId) => ({
+					...opts,
+					userId: fromUserId,
+					messageId,
+					status: "success",
+					sentAt,
+				}),
+			);
+
+			const userNotifications: InsertUserNotification[] = [];
+			for (const userId of userIds) {
+				for (const messageId of messageIds) {
+					userNotifications.push({ ...opts, userId, messageId, isRead: false });
+				}
+			}
+
+			await Promise.all([
+				this.#fcmNotificationLog.createBatch(notificationLogs),
+				this.#userNotification.createBatch(userNotifications),
+			]);
+
+			return messageIds;
+		} catch (error) {
+			log.error({ error }, "Failed to send notification by token");
+
+			const msg = error instanceof Error ? error.message : "Unknown error";
+			const userIds = Array.isArray(toUserId) ? toUserId : [toUserId];
+
+			const failLog: InsertFCMNotificationLog = {
+				...opts,
+				userId: fromUserId,
+				status: "failed",
+				sentAt: new Date(),
+				error: msg,
+			};
+
+			const failNotifications: InsertUserNotification[] = userIds.map(
+				(userId) => ({
+					...opts,
+					userId,
+					isRead: false,
+				}),
+			);
+
+			await Promise.all([
+				this.#fcmNotificationLog.create(failLog),
+				this.#userNotification.createBatch(failNotifications),
+			]);
+
+			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
+		}
+	}
+
+	async sendToTopic(opts: SendToTopicOptions & WithUserId): Promise<string> {
+		try {
+			const [messageId, topicUsers] = await Promise.all([
+				this.#firebaseAdmin.sendToTopic(opts),
+				this.#fcmTopic.listByTopic(opts.topic),
+			]);
+
+			if (!topicUsers.length) return messageId;
+
+			const userNotifications = topicUsers.map((t) => ({
+				...opts,
+				userId: t.userId,
+				messageId,
+				isRead: false,
+			}));
+
+			await Promise.all([
+				this.#fcmNotificationLog.create({
+					...opts,
+					status: "success",
+					sentAt: new Date(),
+				}),
+				this.#userNotification.createBatch(userNotifications),
+			]);
+
+			return messageId;
+		} catch (error) {
+			log.error({ error }, "Failed to send notification by topic");
+
+			const msg = error instanceof Error ? error.message : "Unknown error";
+
+			const topicUsers = await this.#fcmTopic.listByTopic(opts.topic);
+
+			const userNotifications = topicUsers.map((t) => ({
+				...opts,
+				userId: t.userId,
+				isRead: false,
+			}));
+
+			await Promise.all([
+				this.#fcmNotificationLog.create({
+					...opts,
+					status: "failed",
+					sentAt: new Date(),
+					error: msg,
+				}),
+				this.#userNotification.createBatch(userNotifications),
+			]);
+
+			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
+		}
+	}
+
+	async list(
+		query: ListNotificationQuery & WithUserId,
+	): Promise<ListResult<UserNotification>> {
+		return await this.#userNotification.list(query);
+	}
+
+	async subscribeToTopic(opts: {
+		token: string;
+		topic: string;
+		userId: string;
+	}) {
+		const [res] = await Promise.all([
+			this.#firebaseAdmin.subscribeToTopic(opts.token, opts.topic),
+			this.#fcmTopic.subscribe(opts),
+		]);
+
+		return res;
+	}
+
+	async unsubscribeFromTopic(opts: {
+		token: string;
+		topic: string;
+		userId: string;
+	}) {
+		const [res] = await Promise.all([
+			this.#firebaseAdmin.unsubscribeFromTopic(opts.token, opts.topic),
+			this.#fcmTopic.unsubscribe(opts),
+		]);
+
+		return res;
+	}
+
+	async saveToken(opts: { userId: string; token: string }) {
+		return await this.#fcmToken.saveToken(opts);
+	}
+
+	async removeByToken(opts: { token: string }) {
+		return await this.#fcmToken.removeByToken(opts);
+	}
+}
+
+class FCMTokenRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmToken", kv, db);
 	}
@@ -50,7 +244,7 @@ export class FCMTokenRepository extends BaseRepository {
 
 				if (res.length > 0) {
 					await this.setCache(userId, res, {
-						expirationTtl: CACHE_TTLS["24h"],
+						expirationTtl: CACHE_TTLS["1h"],
 					});
 				}
 
@@ -72,7 +266,55 @@ export class FCMTokenRepository extends BaseRepository {
 
 			return res.map(FCMTokenRepository.composeEntity);
 		} catch (error) {
-			throw this.handleError(error, "list by user id");
+			throw this.handleError(error, "list by user ids");
+		}
+	}
+
+	async saveToken(opts: { userId: string; token: string }) {
+		try {
+			const { userId, token } = opts;
+
+			const [res] = await this.db
+				.insert(tables.fcmToken)
+				.values({ userId, token })
+				.onConflictDoUpdate({
+					target: tables.fcmToken.token,
+					set: {
+						userId,
+						updatedAt: new Date(),
+					},
+				})
+				.returning();
+
+			return FCMTokenRepository.composeEntity(res);
+		} catch (error) {
+			throw this.handleError(error, "save token");
+		}
+	}
+
+	async getByToken(token: string): Promise<FCMToken> {
+		try {
+			const fallback = async () => {
+				const res = await this.db.query.fcmToken.findFirst({
+					where: (f, op) => op.eq(f.token, token),
+				});
+
+				if (res) {
+					await this.setCache(token, res, { expirationTtl: CACHE_TTLS["1h"] });
+				}
+
+				return res;
+			};
+
+			const res = await this.getCache(token, { fallback });
+
+			if (!res) {
+				throw new RepositoryError("Failed to find by token");
+			}
+
+			return FCMTokenRepository.composeEntity(res);
+		} catch (error) {
+			throw this.handleError(error, "get by token");
 		}
 	}
 
@@ -89,18 +331,18 @@ export class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async removeByToken(token: string): Promise<void> {
+	async removeByToken(opts: { token: string }): Promise<void> {
 		try {
 			await this.db
 				.delete(tables.fcmToken)
-				.where(eq(tables.fcmToken.token, token));
+				.where(eq(tables.fcmToken.token, opts.token));
 		} catch (error) {
 			throw this.handleError(error, "remove by token");
 		}
 	}
 }
 
-export class FCMTopicSubscriptionRepository extends BaseRepository {
+class FCMTopicSubscriptionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmTopicSubscription", kv, db);
 	}
@@ -111,15 +353,40 @@ export class FCMTopicSubscriptionRepository extends BaseRepository {
 		return item;
 	}
 
+	async listByTopic(topic: string): Promise<FCMTopicSubscription[]> {
+		try {
+			const fallback = async () => {
+				const res = await this.db.query.fcmTopicSubscription.findMany({
+					where: (f, op) => op.eq(f.topic, topic),
+				});
+
+				if (res) {
+					await this.setCache(topic, res, { expirationTtl: CACHE_TTLS["1h"] });
+				}
+
+				return res;
+			};
+
+			const res = await this.getCache(topic, { fallback });
+
+			return res.map(FCMTopicSubscriptionRepository.composeEntity);
+		} catch (error) {
+			throw this.handleError(error, "list by topic");
+		}
+	}
+
 	async subscribe(
 		item: InsertFCMTopicSubscription,
 	): Promise<FCMTopicSubscription> {
 		try {
-			const [res] = await this.db
-				.insert(tables.fcmTopicSubscription)
-				.values({ ...item, id: v7() })
-				.onConflictDoNothing()
-				.returning();
+			const [[res]] = await Promise.all([
+				this.db
+					.insert(tables.fcmTopicSubscription)
+					.values({ ...item, id: v7() })
+					.onConflictDoNothing()
+					.returning(),
+				this.deleteCache(item.topic),
+			]);
 
 			return FCMTopicSubscriptionRepository.composeEntity(res);
 		} catch (error) {
@@ -129,22 +396,25 @@ export class FCMTopicSubscriptionRepository extends BaseRepository {
 
 	async unsubscribe(item: InsertFCMTopicSubscription): Promise<void> {
 		try {
-			await this.db
-				.delete(tables.fcmTopicSubscription)
-				.where(
-					and(
-						eq(tables.fcmTopicSubscription.userId, item.userId),
-						eq(tables.fcmTopicSubscription.token, item.token),
-						eq(tables.fcmTopicSubscription.topic, item.topic),
+			await Promise.all([
+				this.db
+					.delete(tables.fcmTopicSubscription)
+					.where(
+						and(
+							eq(tables.fcmTopicSubscription.userId, item.userId),
+							eq(tables.fcmTopicSubscription.token, item.token),
+							eq(tables.fcmTopicSubscription.topic, item.topic),
+						),
 					),
-				);
+				this.deleteCache(item.topic),
+			]);
 		} catch (error) {
 			throw this.handleError(error, "unsubscribe");
 		}
 	}
 }
 
-export class FCMNotificationLogRepository extends BaseRepository {
+class FCMNotificationLogRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmNotificationLog", kv, db);
 	}
@@ -249,9 +519,25 @@ export class FCMNotificationLogRepository extends BaseRepository {
 			throw this.handleError(error, "create");
 		}
 	}
+
+	async createBatch(
+		item: InsertFCMNotificationLog[],
+	): Promise<FCMNotificationLog[]> {
+		try {
+			const values = item.map((e) => ({ ...e, id: v7() }));
+			const res = await this.db
+				.insert(tables.fcmNotificationLog)
+				.values(values)
+				.returning();
+
+			return res.map(FCMNotificationLogRepository.composeEntity);
+		} catch (error) {
+			throw this.handleError(error, "create");
+		}
+	}
 }
 
-export class UserNotificationRepository extends BaseRepository {
+class UserNotificationRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("userNotification", kv, db);
 	}
@@ -261,8 +547,7 @@ export class UserNotificationRepository extends BaseRepository {
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery &
-			WithUserId & { read: "all" | "unread" | "readed" },
+		query?: ListNotificationQuery & WithUserId,
 	): Promise<ListResult<UserNotification>> {
 		try {
 			const {
@@ -368,14 +653,13 @@ export class UserNotificationRepository extends BaseRepository {
 	}
 
 	async createBatch(
-		item: Omit<InsertUserNotification, "userId"> & { userIds: string[] },
+		items: InsertUserNotification[],
 	): Promise<UserNotification[]> {
 		try {
-			const omitted = omit(item, ["userIds"]);
 			const deletePromises: Promise<void>[] = [];
-			const values = item.userIds.map((userId) => {
-				deletePromises.push(this.deleteCache(`unread:${userId}`));
-				return { ...omitted, userId, id: v7() };
+			const values = items.map((item) => {
+				deletePromises.push(this.deleteCache(`unread:${item.userId}`));
+				return { ...item, id: v7() };
 			});
 
 			const [rows] = await Promise.all([

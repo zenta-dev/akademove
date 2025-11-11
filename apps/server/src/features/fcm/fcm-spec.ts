@@ -1,23 +1,31 @@
 import { oc } from "@orpc/contract";
+import { UserNotificationSchema } from "@repo/schema/notification";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
+const ListNotificationQuerySchema = UnifiedPaginationQuerySchema.extend({
+	read: z.enum(["all", "unread", "readed"]),
+});
+
+export type ListNotificationQuery = z.infer<typeof ListNotificationQuerySchema>;
+
 export const FCMSpec = {
-	// list: oc
-	// 	.route({
-	// 		tags: [FEATURE_TAGS.FCM],
-	// 		method: "GET",
-	// 		path: "/",
-	// 		inputStructure: "detailed",
-	// 		outputStructure: "detailed",
-	// 	})
-	// 	.input(z.object({ query: UnifiedPaginationQuerySchema }))
-	// 	.output(
-	// 		createSuccesSchema(
-	// 			z.array(FCMNotificationLogSchema),
-	// 			"List notification success",
-	// 		),
-	// 	),
+	list: oc
+		.route({
+			tags: [FEATURE_TAGS.FCM],
+			method: "GET",
+			path: "/",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ query: ListNotificationQuerySchema }))
+		.output(
+			createSuccesSchema(
+				z.array(UserNotificationSchema),
+				"List notification success",
+			),
+		),
 	subscribeToTopic: oc
 		.route({
 			tags: [FEATURE_TAGS.FCM],
@@ -60,11 +68,11 @@ export const FCMSpec = {
 				"Unsubscribe to topic success",
 			),
 		),
-	save: oc
+	saveToken: oc
 		.route({
 			tags: [FEATURE_TAGS.FCM],
 			method: "POST",
-			path: "/",
+			path: "/token",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
@@ -77,21 +85,21 @@ export const FCMSpec = {
 				"Save FCM token success",
 			),
 		),
-	remove: oc
+	removeToken: oc
 		.route({
 			tags: [FEATURE_TAGS.FCM],
 			method: "DELETE",
-			path: "/",
+			path: "/token/{token}",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ body: z.object({ token: z.string() }) }))
+		.input(z.object({ params: z.object({ token: z.string() }) }))
 		.output(
 			createSuccesSchema(
 				z.object({
 					ok: z.boolean(),
 				}),
-				"Save FCM token success",
+				"Delete FCM token success",
 			),
 		),
 };

@@ -5,7 +5,7 @@ import { DateModifier, nowFn, pgEnum, pgTable, timestamp } from "./common";
 export const fcmToken = pgTable(
 	"fcm_tokens",
 	{
-		id: uuid().primaryKey(),
+		id: uuid().defaultRandom().primaryKey(),
 		userId: text("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),

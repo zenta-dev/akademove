@@ -7,12 +7,7 @@ import type { ConfigurationRepository } from "@/features/configuration/configura
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
-import type {
-	FCMNotificationLogRepository,
-	FCMTokenRepository,
-	FCMTopicSubscriptionRepository,
-	UserNotificationRepository,
-} from "@/features/fcm/fcm-repository";
+import type { NotificationRepository } from "@/features/fcm/fcm-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
@@ -62,12 +57,7 @@ export interface RepositoryContext {
 	transaction: TransactionRepository;
 	user: UserRepository;
 	wallet: WalletRepository;
-	notification: {
-		fcmToken: FCMTokenRepository;
-		fcmTopicSubscription: FCMTopicSubscriptionRepository;
-		fcmNotificationLog: FCMNotificationLogRepository;
-		user: UserNotificationRepository;
-	};
+	notification: NotificationRepository;
 }
 
 export interface UserInContext {
