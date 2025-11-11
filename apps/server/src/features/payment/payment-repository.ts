@@ -303,12 +303,13 @@ export class PaymentRepository extends BaseRepository {
 			transactionId: string;
 		} & WithTx,
 	) {
-		const [[updatedPayment], transaction] = await Promise.all([
+		const [updatedPayment, transaction] = await Promise.all([
 			params.tx
 				.update(tables.payment)
 				.set({ status: "expired", updatedAt: new Date() })
 				.where(eq(tables.payment.id, params.payment.id))
-				.returning(),
+				.returning()
+				.then(([r]) => r),
 			params.tx.query.transaction.findFirst({
 				with: { wallet: true },
 				where: (f, op) => op.eq(f.id, params.transactionId),
@@ -335,22 +336,47 @@ export class PaymentRepository extends BaseRepository {
 			payment: PaymentRepository.composeEntity(updatedPayment),
 		};
 
+		const tasks: Promise<unknown>[] = [];
+
+		const userId = transaction.wallet.userId;
 		if (transaction.type === "topup") {
-			await stub.broadcast({
-				type: "wallet:top_up_failed",
-				from: "server",
-				to: "client",
-				payload,
-			});
+			tasks.push(
+				stub.broadcast({
+					type: "wallet:top_up_failed",
+					from: "server",
+					to: "client",
+					payload,
+				}),
+			);
+			tasks.push(
+				this.#notification.sendNotificationToUserId({
+					fromUserId: userId,
+					toUserId: userId,
+					title: "Top up failed",
+					body: `Top up with id ${transaction.id} failed`,
+				}),
+			);
 		}
 		if (transaction.type === "payment") {
-			await stub.broadcast({
-				type: "payment:failed",
-				from: "server",
-				to: "client",
-				payload,
-			});
+			tasks.push(
+				stub.broadcast({
+					type: "payment:failed",
+					from: "server",
+					to: "client",
+					payload,
+				}),
+			);
+			tasks.push(
+				this.#notification.sendNotificationToUserId({
+					fromUserId: userId,
+					toUserId: userId,
+					title: "Payment failed",
+					body: `Payment with id ${transaction.id} failed`,
+				}),
+			);
 		}
+
+		await Promise.allSettled(tasks);
 	}
 
 	async #handleOrderPaymentSuccess(
