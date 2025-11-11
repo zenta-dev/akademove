@@ -9,6 +9,7 @@ import type { CountCache, PartialWithTx } from "./interface";
 import { type DatabaseName, type DatabaseService, tables } from "./services/db";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
 
+export type BroadcastOptions = { excludes?: WebSocket[] };
 type UserId = string;
 export class BaseDurableObject extends DurableObject {
 	protected sessions: Map<UserId, WebSocket>; // key = userId
@@ -100,9 +101,10 @@ export class BaseDurableObject extends DurableObject {
 		return filtered;
 	}
 
-	protected broadcast(object: unknown, opts?: { excludes?: WebSocket[] }) {
-		const encoded = JSON.stringify(object);
+	protected broadcast(object: unknown, opts?: BroadcastOptions) {
 		if (this.sessions.size === 0) return;
+
+		const encoded = JSON.stringify(object);
 
 		const excludeSet = opts?.excludes?.length ? new Set(opts.excludes) : null;
 
