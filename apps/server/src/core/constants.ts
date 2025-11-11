@@ -60,3 +60,5 @@ export const createSuccesSchema = <
 	});
 
 export const PAYMENT_EXPIRY_MINUTE = 15;
+
+export const DRIVER_POOL_KEY = "driver-pool";

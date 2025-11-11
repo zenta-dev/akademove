@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import {
 	type ConfigurationValue,
 	DeliveryPricingConfigurationSchema,
@@ -77,6 +78,12 @@ export class OrderRepository extends BaseRepository {
 			cancelReason: item.cancelReason ?? undefined,
 			gender: item.gender ?? undefined,
 		};
+	}
+
+	static getRoomStubByName(name: string) {
+		const stubId = env.ORDER_ROOM.idFromName(name);
+		const stub = env.ORDER_ROOM.get(stubId);
+		return stub;
 	}
 
 	async #getFromDB(id: string, opts?: WithTx): Promise<Order | undefined> {
@@ -390,39 +397,81 @@ export class OrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<PlaceOrderResponse> {
 		try {
-			const [estimate, user] = await Promise.all([
+			const itemIds = params.items
+				?.map((el) => el.item?.id)
+				.filter((id): id is string => !!id);
+
+			const [estimate, user, menus] = await Promise.all([
 				this.estimate(params, opts),
 				opts.tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, params.userId),
 				}),
+				itemIds?.length
+					? opts.tx.query.merchantMenu.findMany({
+							with: {
+								merchant: {
+									columns: {},
+									with: { user: { columns: { id: true } } },
+								},
+							},
+							where: (f, op) => op.inArray(f.id, itemIds),
+						})
+					: Promise.resolve([]),
 			]);
 
-			if (!user) {
-				throw new RepositoryError(`User with id ${params.userId} not found`, {
+			if (!user)
+				throw new RepositoryError(`User ${params.userId} not found`, {
 					code: "NOT_FOUND",
 				});
-			}
+
+			if (menus.length && menus.length !== itemIds?.length)
+				throw new RepositoryError("Invalid products", {
+					code: "BAD_REQUEST",
+				});
+
+			const uniqueMerchantIds = new Set(menus.map((m) => m.merchantId));
+			if (uniqueMerchantIds.size > 1)
+				throw new RepositoryError("Can't order from different merchants", {
+					code: "BAD_REQUEST",
+				});
+
+			const merchantId = menus[0]?.merchantId;
+			const now = new Date();
 
 			const safeTotalCost = toStringNumberSafe(estimate.totalCost);
+			const baseFare = toStringNumberSafe(estimate.config.baseFare);
 
-			const [createOrder] = await opts.tx
+			const [orderRow] = await opts.tx
 				.insert(tables.order)
 				.values({
 					id: v7(),
 					userId: params.userId,
+					merchantId,
 					type: params.type,
 					note: params.note,
 					pickupLocation: params.pickupLocation,
 					dropoffLocation: params.dropoffLocation,
 					distanceKm: estimate.distanceKm,
-					basePrice: toStringNumberSafe(estimate.config.baseFare),
+					basePrice: baseFare,
 					totalPrice: safeTotalCost,
-					requestedAt: new Date(),
-					createdAt: new Date(),
-					updatedAt: new Date(),
+					requestedAt: now,
+					createdAt: now,
+					updatedAt: now,
 				})
 				.returning({ id: tables.order.id });
+
+			if (menus.length) {
+				const orderItems = menus.map((menu) => ({
+					orderId: orderRow.id,
+					menuId: menu.id,
+					quantity:
+						params.items?.find((i) => i.item.id === menu.id)?.quantity ?? 0,
+					unitPrice: menu.price,
+				}));
+
+				await opts.tx.insert(tables.orderItem).values(orderItems);
+			}
 
 			const { transaction, payment } = await this.#paymentRepo.charge(
 				{
@@ -432,21 +481,21 @@ export class OrderRepository extends BaseRepository {
 					provider: params.payment.provider,
 					userId: params.userId,
 					orderType: params.type,
+					metadata: { orderId: orderRow.id, customerId: params.userId },
 				},
 				opts,
 			);
 
-			const order = await this.#getFromDB(createOrder.id, opts);
-			if (!order) throw new RepositoryError("Failed to place order");
+			const order = await this.#getFromDB(orderRow.id, opts);
+			if (!order) throw new RepositoryError("Failed to retrieve placed order");
+
 			await this.setCache(order.id, order, {
 				expirationTtl: CACHE_TTLS["1h"],
 			});
 
-			const result = { order, payment, transaction };
-
-			return result;
-		} catch (error) {
-			throw this.handleError(error, "place");
+			return { order, payment, transaction };
+		} catch (err) {
+			throw this.handleError(err, "place");
 		}
 	}
 

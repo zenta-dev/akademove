@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import type { Driver } from "@repo/schema/driver";
 import {
 	type WSOrderEnvelope,
@@ -6,7 +7,7 @@ import {
 	WSPlaceOrderEnvelopeSchema,
 } from "@repo/schema/websocket";
 import Decimal from "decimal.js";
-import { BaseDurableObject } from "@/core/base";
+import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
@@ -23,6 +24,13 @@ export class OrderRoom extends BaseDurableObject {
 		this.#svc = getServices();
 		this.#repo = getRepositories(this.#svc, getManagers());
 		this.#broadcasted = new Map();
+	}
+
+	broadcast(
+		message: WSPlaceOrderEnvelope | WSOrderEnvelope,
+		opts?: BroadcastOptions,
+	): void {
+		super.broadcast(message, opts);
 	}
 
 	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
@@ -53,15 +61,16 @@ export class OrderRoom extends BaseDurableObject {
 		if (parse.data) {
 			const driverUpdateLocation = parse.data.payload.driverUpdateLocation;
 			if (!driverUpdateLocation) return;
-			this.excludeSession(ws).forEach((connectedWS, _) => {
-				const data: WSOrderEnvelope = {
+
+			this.broadcast(
+				{
 					type: "driver:location_update",
 					from: "client",
 					to: "client",
 					payload: { driverUpdateLocation },
-				};
-				connectedWS.send(JSON.stringify(data));
-			});
+				},
+				{ excludes: [ws] },
+			);
 
 			const driverId = this.findUserIdBySocket(ws);
 			if (!driverId) return;
@@ -80,25 +89,53 @@ export class OrderRoom extends BaseDurableObject {
 		const payload = parse.data?.payload;
 		if (!payload) return;
 
-		const driverId = this.findUserIdBySocket(ws);
 		const userId = payload.order.userId;
 		const orderId = payload.order.id;
 
+		const broadcastedDrivers = this.#broadcasted.get(orderId);
+
+		if (!broadcastedDrivers) return;
+
+		const driverId = this.findUserIdBySocket(ws);
+		if (!driverId) return;
+
 		const opts = { tx };
-		payload.order = await this.#repo.order.update(
-			payload.order.id,
-			{ status: "accepted", driverId },
-			opts,
-		);
+		const [updatedOrder] = await Promise.all([
+			this.#repo.order.update(orderId, { status: "accepted", driverId }, opts),
+			this.#repo.driver.main.update(driverId, { isTakingOrder: true }),
+		]);
+		payload.order = updatedOrder;
 
 		const userWs = this.findById(userId);
-		const msg = JSON.stringify(payload);
-		userWs?.send(msg);
+		const acceptedMsg = JSON.stringify({
+			type: "order:accepted",
+			from: "server",
+			to: "client",
+			payload,
+		});
 
-		const orderDriverRoom = this.#broadcasted.get(orderId) ?? [];
-		for (const ws of orderDriverRoom) {
-			ws.send(msg);
+		userWs?.send(acceptedMsg);
+
+		ws.send(acceptedMsg);
+
+		for (const driverWs of broadcastedDrivers) {
+			if (driverWs !== ws) {
+				try {
+					driverWs.send(
+						JSON.stringify({
+							type: "order:unavailable",
+							from: "server",
+							to: "client",
+							payload,
+						}),
+					);
+				} catch (err) {
+					console.warn("Failed to send unavailable notice:", err);
+				}
+			}
 		}
+
+		this.#broadcasted.delete(orderId);
 	}
 
 	async #handleOrderRequst(
@@ -151,19 +188,21 @@ export class OrderRoom extends BaseDurableObject {
 
 		if (nearbyDrivers.length === 0) {
 			console.warn("No nearby driver found — cancelling order.");
-			const cancelledOrder = await this.#repo.order.update(
-				payload.order.id,
-				{
-					...payload.order,
-					status: "cancelled_by_system",
-					cancelReason: "No driver around you",
-				},
-				opts,
-			);
-			const payment = await this.#svc.db.query.payment.findFirst({
-				with: { transaction: { with: { wallet: true } } },
-				where: (f, op) => op.eq(f.id, payload.payment.id),
-			});
+			const [cancelledOrder, payment] = await Promise.all([
+				this.#repo.order.update(
+					payload.order.id,
+					{
+						...payload.order,
+						status: "cancelled_by_system",
+						cancelReason: "No driver around you",
+					},
+					opts,
+				),
+				opts.tx.query.payment.findFirst({
+					with: { transaction: { with: { wallet: true } } },
+					where: (f, op) => op.eq(f.id, payload.payment.id),
+				}),
+			]);
 
 			const data: WSPlaceOrderEnvelope = {
 				type: "order:cancelled",
@@ -191,9 +230,7 @@ export class OrderRoom extends BaseDurableObject {
 					this.#repo.payment.update(payment.id, { status: "refunded" }, opts),
 					this.#repo.wallet.update(
 						wallet.id,
-						{
-							balance: toNumberSafe(safeNewBalance),
-						},
+						{ balance: toNumberSafe(safeNewBalance) },
 						opts,
 					),
 				]);
@@ -209,6 +246,7 @@ export class OrderRoom extends BaseDurableObject {
 			return;
 		}
 
+		const tasks: Promise<unknown>[] = [];
 		const driverIds = [];
 		for (const driver of nearbyDrivers) {
 			const driverWs = this.findById(driver.userId);
@@ -216,8 +254,32 @@ export class OrderRoom extends BaseDurableObject {
 				driverWs.send(msg);
 				driverIds.push(driver.id);
 			}
+			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${updateOrder.id}`;
+			tasks.push(
+				this.#repo.notification.sendNotificationToUserId({
+					fromUserId: updateOrder.userId,
+					toUserId: driver.id,
+					title: "New Order",
+					body: `Order ${updateOrder.type} with id #${updateOrder.id}`,
+					data: {
+						type: "NEW_ORDER",
+						orderId: updateOrder.id,
+						deeplink: "akademove://driver/order", // TODO: replace with actual android url
+					},
+					android: {
+						priority: "high",
+						notification: { clickAction: "DRIVER_OPEN_ORDER_DETAIL" },
+					},
+					apns: {
+						payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
+					},
+					webpush: { fcmOptions: { link: orderUrl } },
+				}),
+			);
 		}
 		const driversWs = this.findByIds(driverIds);
 		this.#broadcasted.set(updateOrder.id, driversWs);
+
+		await Promise.allSettled([tasks]);
 	}
 }

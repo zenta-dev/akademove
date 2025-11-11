@@ -15,7 +15,11 @@ import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, PAYMENT_EXPIRY_MINUTE } from "@/core/constants";
+import {
+	CACHE_TTLS,
+	DRIVER_POOL_KEY,
+	PAYMENT_EXPIRY_MINUTE,
+} from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -23,6 +27,8 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { PaymentService } from "@/core/services/payment";
 import type { PaymentDatabase } from "@/core/tables/payment";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import type { NotificationRepository } from "../notification/notification-repository";
+import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
 import { WalletRepository } from "../wallet/wallet-repository";
 
@@ -32,6 +38,7 @@ interface ChargePayload extends WithUserId {
 	provider: PaymentProvider;
 	amount: number;
 	method: PaymentMethod;
+	metadata?: Record<string, unknown>;
 }
 
 interface HandleWebhookPayload extends WithTx {
@@ -41,6 +48,7 @@ export class PaymentRepository extends BaseRepository {
 	readonly #paymentSvc: PaymentService;
 	readonly #transaction: TransactionRepository;
 	readonly #wallet: WalletRepository;
+	readonly #notification: NotificationRepository;
 
 	constructor(
 		db: DatabaseService,
@@ -48,11 +56,13 @@ export class PaymentRepository extends BaseRepository {
 		paymentSvc: PaymentService,
 		transaction: TransactionRepository,
 		wallet: WalletRepository,
+		notification: NotificationRepository,
 	) {
 		super("payment", kv, db);
 		this.#paymentSvc = paymentSvc;
 		this.#transaction = transaction;
 		this.#wallet = wallet;
+		this.#notification = notification;
 	}
 
 	static composeEntity(item: PaymentDatabase): Payment {
@@ -172,12 +182,15 @@ export class PaymentRepository extends BaseRepository {
 					break;
 			}
 
+			const metadata = { ...params.metadata, type: orderType, desc };
+
 			const transaction = await this.#transaction.insert({
 				walletId: wallet.id,
 				type: transactionType,
 				amount,
 				status: "pending",
 				description: desc,
+				metadata,
 			});
 
 			const expiresAt = new Date(
@@ -192,7 +205,7 @@ export class PaymentRepository extends BaseRepository {
 				},
 				expiry: { duration: PAYMENT_EXPIRY_MINUTE, unit: "minute" },
 				method,
-				metadata: { type: orderType },
+				metadata,
 			})) as ChargeResponse;
 
 			const actions = paymentResponse.actions as
@@ -219,7 +232,7 @@ export class PaymentRepository extends BaseRepository {
 				expiresAt,
 				response: paymentResponse,
 				paymentUrl: action?.url,
-				payload: { method, amount, userId, provider, type: orderType },
+				payload: { method, amount, userId, provider, metadata },
 			});
 
 			return { payment, transaction, wallet };
@@ -257,7 +270,16 @@ export class PaymentRepository extends BaseRepository {
 					await this.#handleTopUpPaymentSuccess({ tx, payment, transactionId });
 				}
 				if (type === "ride" || type === "food" || type === "delivery") {
-					await this.#handleOrderPaymentSuccess({ tx, payment, transactionId });
+					const orderId = body.metadata.orderId as string;
+					const customerId = body.metadata.customerId as string;
+					await this.#handleOrderPaymentSuccess({
+						tx,
+						orderId,
+						customerId,
+						payment,
+						transactionId,
+						type,
+					});
 				}
 			}
 		} catch (error) {
@@ -269,8 +291,8 @@ export class PaymentRepository extends BaseRepository {
 		}
 	}
 
-	static getRoomStubById(id: string) {
-		const stubId = env.PAYMENT_ROOM.idFromName(id);
+	static getRoomStubByName(name: string) {
+		const stubId = env.PAYMENT_ROOM.idFromName(name);
 		const stub = env.PAYMENT_ROOM.get(stubId);
 		return stub;
 	}
@@ -306,7 +328,7 @@ export class PaymentRepository extends BaseRepository {
 			{ tx: params.tx },
 		);
 
-		const stub = PaymentRepository.getRoomStubById(params.payment.id);
+		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
 		const payload = {
 			wallet: WalletRepository.composeEntity(transaction.wallet),
 			transaction: updatedTransaction,
@@ -314,7 +336,7 @@ export class PaymentRepository extends BaseRepository {
 		};
 
 		if (transaction.type === "topup") {
-			stub.broadcast({
+			await stub.broadcast({
 				type: "wallet:top_up_failed",
 				from: "server",
 				to: "client",
@@ -322,7 +344,7 @@ export class PaymentRepository extends BaseRepository {
 			});
 		}
 		if (transaction.type === "payment") {
-			stub.broadcast({
+			await stub.broadcast({
 				type: "payment:failed",
 				from: "server",
 				to: "client",
@@ -333,19 +355,36 @@ export class PaymentRepository extends BaseRepository {
 
 	async #handleOrderPaymentSuccess(
 		params: {
+			orderId: string;
+			customerId: string;
 			payment: PaymentDatabase;
 			transactionId: string;
+			type: OrderType;
 		} & WithTx,
 	) {
-		const [[updatedPayment], transaction] = await Promise.all([
-			params.tx
+		const { tx } = params;
+		const [updatedPayment, transaction, order] = await Promise.all([
+			tx
 				.update(tables.payment)
 				.set({ status: "success", updatedAt: new Date() })
 				.where(eq(tables.payment.id, params.payment.id))
-				.returning(),
-			params.tx.query.transaction.findFirst({
+				.returning()
+				.then(([p]) => p),
+			tx.query.transaction.findFirst({
 				with: { wallet: true },
 				where: (f, op) => op.eq(f.id, params.transactionId),
+			}),
+			tx.query.order.findFirst({
+				with: {
+					user: { columns: { name: true } },
+					driver: { columns: {}, with: { user: { columns: { name: true } } } },
+					merchant: {
+						columns: { name: true },
+						with: { user: { columns: { id: true } } },
+					},
+					items: { columns: { quantity: true } },
+				},
+				where: (f, op) => op.eq(f.id, params.orderId),
 			}),
 		]);
 
@@ -355,26 +394,90 @@ export class PaymentRepository extends BaseRepository {
 				{ code: "NOT_FOUND" },
 			);
 		}
-		const wallet = transaction.wallet;
+		if (!order) {
+			throw new RepositoryError(`Order with id ${params.orderId} not found`, {
+				code: "NOT_FOUND",
+			});
+		}
 
-		const updatedTransaction = await this.#transaction.update(
-			transaction.id,
-			{ status: "success" },
-			{ tx: params.tx },
-		);
+		const opts = { tx };
 
-		const stub = PaymentRepository.getRoomStubById(params.payment.id);
+		const [updatedTransaction] = await Promise.all([
+			this.#transaction.update(transaction.id, { status: "success" }, opts),
+			opts.tx
+				.update(tables.order)
+				.set({ status: "matching" })
+				.where(eq(tables.order.id, order.id)),
+		]);
 
-		stub.broadcast({
-			type: "payment:success",
-			from: "server",
-			to: "client",
-			payload: {
-				wallet: WalletRepository.composeEntity(wallet),
-				transaction: updatedTransaction,
-				payment: PaymentRepository.composeEntity(updatedPayment),
-			},
-		});
+		const paymentStub = PaymentRepository.getRoomStubByName(params.payment.id);
+		const orderStub = OrderRepository.getRoomStubByName(DRIVER_POOL_KEY);
+
+		const composedWallet = WalletRepository.composeEntity(transaction.wallet);
+		const composedPayment = PaymentRepository.composeEntity(updatedPayment);
+		const composedOrder = OrderRepository.composeEntity(order);
+
+		const tasks: Promise<unknown>[] = [
+			paymentStub.broadcast({
+				type: "payment:success",
+				from: "server",
+				to: "client",
+				payload: {
+					wallet: composedWallet,
+					transaction: updatedTransaction,
+					payment: composedPayment,
+				},
+			}),
+			orderStub.broadcast({
+				type: "order:matching",
+				from: "server",
+				to: "client",
+				payload: {
+					payment: composedPayment,
+					order: composedOrder,
+					transaction: updatedTransaction,
+				},
+			}),
+			this.#notification.sendNotificationToUserId({
+				fromUserId: params.customerId,
+				toUserId: composedOrder.userId,
+				title: "Payment success",
+				body: `Payment with id ${composedOrder.id} success.`,
+			}),
+		];
+
+		const merchantUserId = order.merchant?.user.id;
+		const merchantId = order.merchantId;
+		if (merchantId && merchantUserId) {
+			const itemCount = order.items.reduce((sum, i) => sum + i.quantity, 0);
+
+			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${order.id}`;
+
+			tasks.push(
+				this.#notification.sendNotificationToUserId({
+					fromUserId: params.customerId,
+					toUserId: merchantUserId,
+					title: "📦 New Order Received",
+					body: `You have a new order (#${order.id}) with ${itemCount} item${itemCount > 1 ? "s" : ""}. Tap to view details.`,
+					data: {
+						type: "NEW_ORDER",
+						orderId: order.id,
+						merchantId,
+						deeplink: "akademove://merchant/order", // TODO: replace with actual android url
+					},
+					android: {
+						priority: "high",
+						notification: { clickAction: "MERCHANT_OPEN_ORDER_DETAIL" },
+					},
+					apns: {
+						payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
+					},
+					webpush: { fcmOptions: { link: orderUrl } },
+				}),
+			);
+		}
+
+		await Promise.allSettled(tasks);
 	}
 
 	async #handleTopUpPaymentSuccess(
@@ -429,7 +532,7 @@ export class PaymentRepository extends BaseRepository {
 			),
 		]);
 
-		const stub = PaymentRepository.getRoomStubById(params.payment.id);
+		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
 
 		stub.broadcast({
 			type: "wallet:top_up_success",

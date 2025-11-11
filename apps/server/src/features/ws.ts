@@ -2,6 +2,7 @@ export * from "./order/order-ws";
 export * from "./payment/payment-ws";
 
 import type { Hono } from "hono";
+import { DRIVER_POOL_KEY } from "@/core/constants";
 import type { HonoContext } from "@/core/interface";
 import {
 	honoAuthMiddleware,
@@ -9,8 +10,8 @@ import {
 } from "@/core/middlewares/auth";
 import { honoWebsocketHeader } from "@/core/middlewares/header";
 import { withQueryParams } from "@/utils";
-import type { OrderRoom } from "./order/order-ws";
-import type { PaymentRoom } from "./payment/payment-ws";
+import { OrderRepository } from "./order/order-repository";
+import { PaymentRepository } from "./payment/payment-repository";
 
 export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 	app
@@ -19,8 +20,7 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 		.use(honoWebsocketHeader)
 		.get("/ws/payment/:id", async (c) => {
 			const { id } = c.req.param();
-			const stub: DurableObjectStub<PaymentRoom> =
-				c.env.PAYMENT_ROOM.getByName(id);
+			const stub = PaymentRepository.getRoomStubByName(id);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
@@ -30,8 +30,7 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 			return await stub.fetch(req);
 		})
 		.get("/ws/driver-pool", async (c) => {
-			const stub: DurableObjectStub<OrderRoom> =
-				c.env.ORDER_ROOM.getByName("driver-pool");
+			const stub = OrderRepository.getRoomStubByName(DRIVER_POOL_KEY);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);
@@ -42,7 +41,7 @@ export const setupWebsocketRouter = (app: Hono<HonoContext>) =>
 		})
 		.get("/ws/order/:id", async (c) => {
 			const { id } = c.req.param();
-			const stub: DurableObjectStub<OrderRoom> = c.env.ORDER_ROOM.getByName(id);
+			const stub = OrderRepository.getRoomStubByName(id);
 
 			const userId = c.var.session?.user.id;
 			if (!userId) return c.json({ message: "Unauthenticated" }, 401);

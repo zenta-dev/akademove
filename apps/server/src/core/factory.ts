@@ -73,12 +73,14 @@ export function getRepositories(
 ): RepositoryContext {
 	const transaction = new TransactionRepository(svc.db, svc.kv);
 	const wallet = new WalletRepository(svc.db, svc.kv);
+	const notification = new NotificationRepository(svc.db, svc.kv, svc.firebase);
 	const payment = new PaymentRepository(
 		svc.db,
 		svc.kv,
 		svc.payment,
 		transaction,
 		wallet,
+		notification,
 	);
 	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
@@ -99,7 +101,7 @@ export function getRepositories(
 		wallet,
 		user: new UserRepository(svc.db, svc.kv, svc.storage),
 		transaction,
-		notification: new NotificationRepository(svc.db, svc.kv, svc.firebase),
+		notification,
 	};
 
 	return repo;

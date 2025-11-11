@@ -20,12 +20,8 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
-import {
-	type DatabaseService,
-	type DatabaseTransaction,
-	tables,
-} from "@/core/services/db";
+import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
@@ -89,7 +85,10 @@ export class DriverMainRepository extends BaseRepository {
 		};
 	}
 
-	async #getFromDB(id: string): Promise<
+	async #getFromDB(
+		id: string,
+		opts?: WithTx,
+	): Promise<
 		| (Driver & {
 				studentCardId: string;
 				driverLicenseId: string;
@@ -97,7 +96,9 @@ export class DriverMainRepository extends BaseRepository {
 		  })
 		| undefined
 	> {
-		const result = await this.db.query.driver.findFirst({
+		const tx = opts?.tx ?? this.db;
+
+		const result = await tx.query.driver.findFirst({
 			with: { user: true },
 			where: (f, op) => op.eq(f.id, id),
 		});
@@ -285,7 +286,7 @@ export class DriverMainRepository extends BaseRepository {
 
 	async create(
 		item: InsertDriver & { userId: string },
-		opts?: { tx?: DatabaseTransaction },
+		opts?: WithTx,
 	): Promise<Driver> {
 		try {
 			const [user, existingDriver] = await Promise.all([
@@ -372,13 +373,15 @@ export class DriverMainRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateDriver): Promise<Driver> {
+	async update(id: string, item: UpdateDriver, opts?: WithTx): Promise<Driver> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 
-			const user = await this.db.query.user.findFirst({
+			const user = await tx.query.user.findFirst({
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
 			if (!user) throw new RepositoryError("User not found");
@@ -405,7 +408,7 @@ export class DriverMainRepository extends BaseRepository {
 			].filter(Boolean);
 
 			const [operation] = await Promise.all([
-				this.db
+				tx
 					.update(tables.driver)
 					.set({
 						...item,
