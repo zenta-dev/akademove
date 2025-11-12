@@ -219,6 +219,7 @@ export class DriverMainRepository extends BaseRepository {
 
 			const conditions = [
 				eq(tables.driver.isOnline, true),
+				eq(tables.driver.isTakingOrder, false),
 				isNotNull(tables.driver.currentLocation),
 				sql`ST_DWithin(
 		${tables.driver.currentLocation}::geography,
