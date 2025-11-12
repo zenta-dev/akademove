@@ -56,7 +56,7 @@ ${_stringify(err.response?.data)}
     super.onError(err, handler);
   }
 
-  String _prettyMap(Map? map) {
+  String _prettyMap(Map<dynamic, dynamic>? map) {
     if (map == null || map.isEmpty) return '{}';
     return map.entries.map((e) => '  ${e.key}: ${e.value}').join('\n');
   }

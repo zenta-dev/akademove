@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/firebase_options.dart';
 import 'package:akademove/locator.dart';
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart'
     show DeviceOrientation, SystemChannels, SystemChrome;
 import 'package:flutter/widgets.dart';
@@ -69,6 +71,10 @@ ${details.stack}
     SystemChannels.textInput.invokeMethod('TextInput.hide'),
   ]);
   tz.initializeTimeZones();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(await builder());
 }
