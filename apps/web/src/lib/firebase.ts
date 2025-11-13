@@ -17,10 +17,15 @@ export interface FirebaseConfig {
 }
 
 export class FirebaseClient {
+	private static instance: FirebaseClient;
+
 	private app: FirebaseApp;
 	private messaging: Messaging | null = null;
-	private static instance: FirebaseClient;
-	private messageListeners: Set<(payload: MessagePayload) => void> = new Set();
+
+	private swRegistration: ServiceWorkerRegistration | null = null;
+	private cachedToken: string | null = null;
+
+	private messageListeners = new Set<(payload: MessagePayload) => void>();
 
 	private constructor(config: FirebaseConfig) {
 		this.app = initializeApp(config);
@@ -40,7 +45,20 @@ export class FirebaseClient {
 	}
 
 	/**
-	 * Setup listener for foreground messages
+	 * Service worker registration caching
+	 */
+	private async getSwRegistration(): Promise<ServiceWorkerRegistration> {
+		if (this.swRegistration) return this.swRegistration;
+
+		this.swRegistration = await navigator.serviceWorker.register(
+			"/firebase-messaging-sw.js",
+		);
+
+		return this.swRegistration;
+	}
+
+	/**
+	 * Foreground message listener
 	 */
 	private setupMessageListener() {
 		if (!this.messaging) return;
@@ -53,7 +71,7 @@ export class FirebaseClient {
 	}
 
 	/**
-	 * Request notification permission and get FCM token
+	 * Request permission and fetch FCM token
 	 */
 	async requestPermissionAndGetToken(vapidKey: string): Promise<string | null> {
 		if (!this.messaging) return null;
@@ -61,99 +79,66 @@ export class FirebaseClient {
 		const permission = await Notification.requestPermission();
 		if (permission !== "granted") return null;
 
-		const registration = await navigator.serviceWorker.register(
-			"/firebase-messaging-sw.js",
-		);
-
-		try {
-			return await getToken(this.messaging, {
-				vapidKey,
-				serviceWorkerRegistration: registration,
-			});
-		} catch (err) {
-			console.error("FCM token error:", err);
-			return null;
-		}
+		return this.getToken(vapidKey);
 	}
 
 	/**
-	 * Get current FCM token without requesting permission
+	 * Get FCM token (cached)
 	 */
 	async getToken(vapidKey: string): Promise<string | null> {
 		if (!this.messaging) return null;
 
-		const registration = await navigator.serviceWorker.register(
-			"/firebase-messaging-sw.js",
-		);
+		// return cached token immediately
+		if (this.cachedToken) return this.cachedToken;
+
+		const registration = await this.getSwRegistration();
 
 		try {
-			return await getToken(this.messaging, {
+			const token = await getToken(this.messaging, {
 				vapidKey,
 				serviceWorkerRegistration: registration,
 			});
-		} catch (err) {
-			console.error("Token error:", err);
+
+			this.cachedToken = token;
+			return token;
+		} catch (error) {
+			console.error("Error getting token:", error);
 			return null;
 		}
 	}
 
 	/**
-	 * Add a listener for foreground messages
+	 * Foreground listeners
 	 */
 	onMessage(callback: (payload: MessagePayload) => void): () => void {
 		this.messageListeners.add(callback);
-
-		// Return unsubscribe function
-		return () => {
-			this.messageListeners.delete(callback);
-		};
+		return () => this.messageListeners.delete(callback);
 	}
 
-	/**
-	 * Remove a message listener
-	 */
 	offMessage(callback: (payload: MessagePayload) => void): void {
 		this.messageListeners.delete(callback);
 	}
 
-	/**
-	 * Clear all message listeners
-	 */
 	clearMessageListeners(): void {
 		this.messageListeners.clear();
 	}
 
-	/**
-	 * Check if notifications are supported
-	 */
 	isSupported(): boolean {
 		return typeof window !== "undefined" && "Notification" in window;
 	}
 
-	/**
-	 * Get current notification permission status
-	 */
 	getPermissionStatus(): NotificationPermission | null {
-		if (!this.isSupported()) return null;
-		return Notification.permission;
+		return this.isSupported() ? Notification.permission : null;
 	}
 
-	/**
-	 * Get the messaging instance
-	 */
 	getMessaging(): Messaging | null {
 		return this.messaging;
 	}
 
-	/**
-	 * Get the Firebase app instance
-	 */
 	getApp(): FirebaseApp {
 		return this.app;
 	}
 }
-
-// Initialize and export singleton
 
 export const firebaseClient =
 	typeof window !== "undefined"
