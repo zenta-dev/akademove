@@ -10,12 +10,14 @@ export function useFCM() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const saveMutation = useMutation(orpcQuery.fcm.save.mutationOptions());
+	const saveTokenMutation = useMutation(
+		orpcQuery.notification.saveToken.mutationOptions(),
+	);
 	const subscribeMutation = useMutation(
-		orpcQuery.fcm.subscribeToTopic.mutationOptions(),
+		orpcQuery.notification.subscribeToTopic.mutationOptions(),
 	);
 	const unsubscribeMutation = useMutation(
-		orpcQuery.fcm.unsubscribeToTopic.mutationOptions(),
+		orpcQuery.notification.unsubscribeToTopic.mutationOptions(),
 	);
 
 	const client = firebaseClient;
@@ -33,7 +35,7 @@ export function useFCM() {
 
 				if (token) {
 					setFcmToken(token);
-					await saveMutation.mutateAsync({ body: { token } });
+					await saveTokenMutation.mutateAsync({ body: { token } });
 				}
 			} catch (err) {
 				setError(
@@ -51,10 +53,10 @@ export function useFCM() {
 		});
 
 		return () => unsubscribe();
-	}, [client, saveMutation.mutateAsync]);
+	}, [client, saveTokenMutation.mutateAsync]);
 
 	const subscribeToTopic = async (topic: string) => {
-		if (!fcmToken) throw new Error("No FCM token or userId available");
+		if (!fcmToken) throw new Error("No FCM token available");
 
 		return await subscribeMutation.mutateAsync({
 			body: { topic, token: fcmToken },
@@ -62,7 +64,7 @@ export function useFCM() {
 	};
 
 	const unsubscribeFromTopic = async (topic: string) => {
-		if (!fcmToken) throw new Error("No FCM token or userId available");
+		if (!fcmToken) throw new Error("No FCM token available");
 		return await unsubscribeMutation.mutateAsync({
 			body: { topic, token: fcmToken },
 		});
