@@ -52,7 +52,10 @@ export class FirebaseAdminService {
 
 	async sendNotification(options: SendNotificationOptions): Promise<string> {
 		const message: Message = {
-			...options,
+			android: options.android,
+			webpush: options.webpush,
+			apns: options.apns,
+			fcmOptions: options.fcmOptions,
 			token: options.token,
 			notification: {
 				title: options.title,
@@ -77,7 +80,10 @@ export class FirebaseAdminService {
 
 	async sendToTopic(options: SendToTopicOptions): Promise<string> {
 		const message: Message = {
-			...options,
+			android: options.android,
+			webpush: options.webpush,
+			apns: options.apns,
+			fcmOptions: options.fcmOptions,
 			topic: options.topic,
 			notification: {
 				title: options.title,
