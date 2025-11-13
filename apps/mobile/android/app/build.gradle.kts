@@ -18,10 +18,11 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "dev.zenta.akademove"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -39,6 +40,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     signingConfigs {
@@ -66,13 +68,11 @@ android {
             manifestPlaceholders["appName"] = "Akademove"
         }
         create("staging") {
-            dimension = "default"
-            applicationIdSuffix = ".stg"
+            dimension = "default" 
             manifestPlaceholders["appName"] = "[STG] Akademove"
         }
         create("development") {
-            dimension = "default"
-            applicationIdSuffix = ".dev"
+            dimension = "default" 
             manifestPlaceholders["appName"] = "[DEV] Akademove"
         }
     }
@@ -98,4 +98,5 @@ flutter {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.20")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

@@ -40,6 +40,12 @@ void _setupService() {
     ..registerLazySingleton(
       WebSocketService.new,
       dispose: (param) => param.dispose(),
+    )
+    ..registerLazySingleton(
+      FirebaseService.new,
+    )
+    ..registerLazySingleton(
+      NotificationService.new,
     );
 }
 
@@ -80,6 +86,12 @@ void _setupRepository() {
     ..registerLazySingleton(
       () => WalletRepository(
         apiClient: sl<ApiClient>(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => NotificationRepository(
+        apiClient: sl<ApiClient>(),
+        firebaseService: sl<FirebaseService>(),
       ),
     );
 }
