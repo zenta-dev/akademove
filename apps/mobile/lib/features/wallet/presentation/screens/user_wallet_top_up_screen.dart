@@ -1,4 +1,4 @@
-import 'package:akademove/app/router.dart';
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

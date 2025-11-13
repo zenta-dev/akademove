@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:akademove/app/router.dart';
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';

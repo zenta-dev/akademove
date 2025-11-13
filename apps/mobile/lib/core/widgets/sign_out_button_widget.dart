@@ -1,4 +1,4 @@
-import 'package:akademove/app/router.dart';
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/presentation/_export.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

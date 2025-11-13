@@ -1,4 +1,4 @@
-import 'package:akademove/app/router.dart';
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:flutter/material.dart' show InkWell;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
