@@ -18,7 +18,7 @@ class DefaultAppBar extends StatelessWidget {
       ),
       subtitle: subtitle != null
           ? Text(
-              subtitle ?? "",
+              subtitle ?? '',
               style: context.typography.h4.copyWith(fontSize: 14.sp),
             )
           : null,

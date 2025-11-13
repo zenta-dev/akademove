@@ -398,7 +398,6 @@ final router = GoRouter(
               path: Routes.merchantEditMenu.path,
               builder: (context, state) => const MerchantEditMenuScreen(),
             ),
-            
           ],
         ),
         StatefulShellBranch(
@@ -426,7 +425,8 @@ final router = GoRouter(
             GoRoute(
               name: Routes.merchantPrivacyPolicies.name,
               path: Routes.merchantPrivacyPolicies.path,
-              builder: (context, state) => MerchantPrivacyPoliciesScreen(),
+              builder: (context, state) =>
+                  const MerchantPrivacyPoliciesScreen(),
             ),
           ],
         ),

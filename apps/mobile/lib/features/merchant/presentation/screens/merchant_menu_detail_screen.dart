@@ -11,7 +11,6 @@ class MerchantMenuDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       safeArea: true,
-      scrollable: true,
       headers: const [
         DefaultAppBar(title: 'Menu’s Detail'),
       ],

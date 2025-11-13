@@ -1,6 +1,5 @@
 import 'package:akademove/app/router.dart';
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/core/widgets/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -18,16 +17,15 @@ class MerchantProfileScreen extends StatelessWidget {
           Card(
             child: Row(
               spacing: 24.w,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     color: Colors.white,
                   ),
                   child: Image.asset(
-                    "assets/images/fore_logo.png",
+                    'assets/images/fore_logo.png',
                     width: 100.w,
                     height: 100.w,
                     fit: BoxFit.contain,

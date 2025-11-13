@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'akademove-7d5e2.firebasestorage.app',
     iosBundleId: 'dev.zenta.akademove',
   );
-
 }

@@ -1435,11 +1435,11 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                   _verifiedBankAccountNumber ?? '',
                 ),
                 _buildBankDetailRow(
-                  'Account Holder\'s Name',
+                  "Account Holder's Name",
                   _accountHolderName ?? '',
                 ),
                 _buildBankDetailRow(
-                  'Owner\'s Name',
+                  "Owner's Name",
                   _ownerBankName ?? '',
                 ),
               ],

@@ -178,8 +178,8 @@ class _MerchantPrivacyPoliciesScreenState
         Container(
           width: 16.w,
           height: 16.h,
-          decoration: BoxDecoration(
-            color: const Color(0xFFD0ECF1),
+          decoration: const BoxDecoration(
+            color: Color(0xFFD0ECF1),
             shape: BoxShape.circle,
           ),
           alignment: Alignment.center,
@@ -211,7 +211,6 @@ class _MerchantPrivacyPoliciesScreenState
               children: [
                 Card(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     spacing: 8.h,
                     children: [
                       Text(
@@ -248,7 +247,7 @@ class _MerchantPrivacyPoliciesScreenState
                       spacing: 8.h,
                       children: [
                         Button(
-                          style: ButtonStyle.ghost(
+                          style: const ButtonStyle.ghost(
                             density: ButtonDensity.compact,
                           ),
                           onPressed: () {

@@ -293,7 +293,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       title: const Text('Step 1'),
       contentBuilder: (context) => _buildStepContainer(
         content: [
-         _buildImagePicker(
+          _buildImagePicker(
             'Outlet Photo Profile',
             _Step1Docs.outletPhotoProfile,
             _step1Docs,
@@ -705,7 +705,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   String _formatEnumName(String enumName) {
     // Convert camelCase to Title Case with spaces
     final result = enumName.replaceAllMapped(
-      RegExp(r'([A-Z])'),
+      RegExp('([A-Z])'),
       (match) => ' ${match.group(0)}',
     );
     // Capitalize first letter and trim
