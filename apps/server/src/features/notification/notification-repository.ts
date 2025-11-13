@@ -90,13 +90,18 @@ export class NotificationRepository {
 				}),
 			);
 
-			await Promise.all([
-				this.#fcmNotificationLog.createBatch(notificationLogs),
-				this.#userNotification.create({
+			const userNotification: InsertUserNotification[] = messageIds.map(
+				(messageId) => ({
 					...opts,
+					messageId,
 					userId: toUserId,
 					isRead: false,
 				}),
+			);
+
+			await Promise.all([
+				this.#fcmNotificationLog.createBatch(notificationLogs),
+				this.#userNotification.createBatch(userNotification),
 			]);
 
 			return messageIds;
