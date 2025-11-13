@@ -6,6 +6,7 @@ class AuthCubit extends BaseCubit<AuthState> {
     required AuthRepository authRepository,
   }) : _authRepository = authRepository,
        super(AuthState.initial());
+
   final AuthRepository _authRepository;
 
   Future<void> init() async {

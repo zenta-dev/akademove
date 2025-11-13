@@ -1,4 +1,6 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
+import 'package:akademove/locator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide TabItem;
@@ -37,6 +39,28 @@ class _BottomNavbarState extends State<BottomNavbar> {
         .length;
 
     return depth < 3;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupNotification();
+  }
+
+  Future<void> setupNotification() async {
+    try {
+      final notifRepo = sl<NotificationRepository>();
+      final notifSvc = sl<NotificationService>();
+      await notifRepo.syncToken();
+      notifRepo.onMessage((msg) async {
+        final title = msg.notification?.title ?? 'Notification';
+        final body = msg.notification?.body ?? '';
+        final data = msg.data;
+
+        logger.f('📨 Foreground FCM: ${msg.toMap()}');
+        await notifSvc.show(title: title, body: body, data: data);
+      });
+    } catch (e) {}
   }
 
   @override

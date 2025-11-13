@@ -92,10 +92,10 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
   }
 
   Future<void> teardownWebsocket() async {
-    emit(state.toSuccess());
-    reset();
     if (_paymentId != null) {
       await _webSocketService.disconnect(_paymentId ?? '');
     }
+    emit(state.toSuccess());
+    reset();
   }
 }
