@@ -1,6 +1,7 @@
-// ignore_for_file: avoid_catches_without_on_clauses catch all
+// ignore_for_file: avoid_catches_without_on_clauses
 
 import 'dart:async';
+import 'dart:io';
 import 'package:akademove/core/_export.dart';
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -42,33 +43,25 @@ class WebSocketService {
       );
 
       _reconnectAttempts[key] = 0;
-
       _logInfo(key, 'Initializing connection to $url');
       _establishConnection(key);
     } catch (error, stackTrace) {
-      _logError(
-        key,
-        'Failed to connect',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      _logError(key, 'Failed to connect', error: error, stackTrace: stackTrace);
     }
   }
 
   void _establishConnection(String key) {
+    final config = _configs[key];
+    if (config == null) return;
+
     try {
-      final config = _configs[key];
-      if (config == null) return;
       var uri = Uri.parse(config.url);
-
       final existingParams = Map<String, String>.from(uri.queryParameters);
-      if (sessionToken != null) existingParams['session-token'] = sessionToken!;
 
-      _logDebug(key, 'Query param -> $existingParams');
+      if (sessionToken != null) existingParams['session-token'] = sessionToken!;
       uri = uri.replace(queryParameters: existingParams);
 
       _logInfo(key, 'Connecting → $uri');
-
       final channel = WebSocketChannel.connect(uri);
       _connections[key] = channel;
 
@@ -80,8 +73,7 @@ class WebSocketService {
           config.onMessage?.call(data);
         },
         onError: (Object? error, _) {
-          _logError(key, 'Stream error', error: error);
-          if (config.autoReconnect) _scheduleReconnect(key);
+          _handleStreamError(key, error);
         },
         onDone: () {
           _logInfo(key, 'Connection closed (done event)');
@@ -91,70 +83,90 @@ class WebSocketService {
         },
         cancelOnError: false,
       );
-      _subscriptions[key] = sub;
 
+      _subscriptions[key] = sub;
       _logInfo(key, 'Connected successfully');
+    } on SocketException catch (e, st) {
+      _logError(
+        key,
+        'SocketException → likely DNS or network failure (${e.osError?.message ?? e.message})',
+        error: e,
+        stackTrace: st,
+      );
+
+      if (e.osError?.errorCode == 7) {
+        _logError(key, 'Permanent DNS error — will not retry further.');
+        return;
+      }
+      _scheduleReconnect(key);
     } on WebSocketChannelException catch (e, st) {
       _logError(key, 'WebSocket connection failed', error: e, stackTrace: st);
       _scheduleReconnect(key);
     } catch (error, stackTrace) {
       _logError(
         key,
-        'Failed to establish connection',
+        'Unexpected failure establishing connection',
         error: error,
         stackTrace: stackTrace,
       );
+      _scheduleReconnect(key);
     }
   }
 
-  void _scheduleReconnect(String key) {
-    try {
-      final config = _configs[key];
-      if (config == null || !config.autoReconnect) return;
+  void _handleStreamError(String key, Object? error) {
+    _logError(key, 'Stream error', error: error);
 
-      final attempts = _reconnectAttempts[key] ?? 0;
-      if (attempts >= maxReconnectAttempts) {
-        _logError(
-          key,
-          'Max reconnect attempts ($maxReconnectAttempts) reached. Giving up.',
-        );
+    final config = _configs[key];
+    if (config == null || !config.autoReconnect) return;
+
+    if (error is SocketException) {
+      if (error.osError?.errorCode == 7) {
+        _logError(key, 'DNS lookup failed — stopping reconnect attempts.');
         return;
       }
+    }
 
-      _reconnectTimers[key]?.cancel();
+    _scheduleReconnect(key);
+  }
 
-      final delay = useExponentialBackoff
-          ? (initialReconnectDelay * (1 << attempts))
-          : initialReconnectDelay;
-      final boundedDelay = delay > maxReconnectDelay
-          ? maxReconnectDelay
-          : delay;
+  void _scheduleReconnect(String key) {
+    final config = _configs[key];
+    if (config == null || !config.autoReconnect) return;
 
-      _logInfo(
-        key,
-        'Reconnecting in ${boundedDelay.inSeconds}s '
-        '(attempt ${attempts + 1}/$maxReconnectAttempts)',
-      );
+    if (_reconnectTimers[key]?.isActive ?? false) return;
 
-      _reconnectTimers[key] = Timer(boundedDelay, () {
-        _reconnectAttempts[key] = attempts + 1;
-
-        _logDebug(key, 'Performing reconnect attempt ${attempts + 1}');
-        _connections[key]?.sink.close(status.goingAway).catchError((_) {});
-        _subscriptions[key]?.cancel().catchError((_) {});
-        _connections.remove(key);
-        _subscriptions.remove(key);
-
-        _establishConnection(key);
-      });
-    } catch (error, stackTrace) {
+    final attempts = _reconnectAttempts[key] ?? 0;
+    if (attempts >= maxReconnectAttempts) {
       _logError(
         key,
-        'Failed to schedule reconnect',
-        error: error,
-        stackTrace: stackTrace,
+        'Max reconnect attempts ($maxReconnectAttempts) reached. Giving up.',
       );
+      return;
     }
+
+    final delay = useExponentialBackoff
+        ? (initialReconnectDelay * (1 << attempts))
+        : initialReconnectDelay;
+    final boundedDelay = delay > maxReconnectDelay ? maxReconnectDelay : delay;
+
+    _logInfo(
+      key,
+      'Reconnecting in ${boundedDelay.inSeconds}s (attempt ${attempts + 1}/$maxReconnectAttempts)',
+    );
+
+    _reconnectTimers[key] = Timer(boundedDelay, () async {
+      _reconnectAttempts[key] = attempts + 1;
+
+      _logDebug(key, 'Performing reconnect attempt ${attempts + 1}');
+      try {
+        await _subscriptions[key]?.cancel();
+        await _connections[key]?.sink.close(status.goingAway);
+      } catch (_) {}
+
+      _subscriptions.remove(key);
+      _connections.remove(key);
+      _establishConnection(key);
+    });
   }
 
   void send(String key, String message) {
@@ -168,7 +180,7 @@ class WebSocketService {
     } catch (error, stackTrace) {
       _logError(
         key,
-        'Failed to send message ',
+        'Failed to send message',
         error: error,
         stackTrace: stackTrace,
       );
@@ -234,11 +246,9 @@ class WebSocketService {
     }
   }
 
-  Future<void> disconnectAll() => dispose();
-
-  // ───────────────────────────────────────────────
+  // ───────────────────────────────
   // Logging Helpers
-  // ───────────────────────────────────────────────
+  // ───────────────────────────────
   void _logInfo(String key, String msg) => logger.i('[WebSocket:$key] $msg');
   void _logDebug(String key, String msg) => logger.d('[WebSocket:$key] $msg');
   void _logError(
