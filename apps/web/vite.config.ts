@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { readFileSync, writeFileSync } from "node:fs";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
@@ -66,6 +67,9 @@ export default defineConfig({
 		target: "esnext",
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
+			input: {
+				"firebase-messaging-sw": "src/firebase-messaging-sw.ts",
+			},
 			output: {
 				manualChunks(id) {
 					if (id.includes("node_modules")) {

@@ -25,8 +25,7 @@ export class FirebaseClient {
 	private constructor(config: FirebaseConfig) {
 		this.app = initializeApp(config);
 
-		// Only initialize messaging in browser environment
-		if (typeof window !== "undefined") {
+		if (typeof window !== "undefined" && "serviceWorker" in navigator) {
 			this.messaging = getMessaging(this.app);
 			this.setupMessageListener();
 		}
@@ -34,9 +33,7 @@ export class FirebaseClient {
 
 	static getInstance(config?: FirebaseConfig): FirebaseClient {
 		if (!FirebaseClient.instance) {
-			if (!config) {
-				throw new Error("Firebase config required for first initialization");
-			}
+			if (!config) throw new Error("Firebase config required.");
 			FirebaseClient.instance = new FirebaseClient(config);
 		}
 		return FirebaseClient.instance;
@@ -59,22 +56,22 @@ export class FirebaseClient {
 	 * Request notification permission and get FCM token
 	 */
 	async requestPermissionAndGetToken(vapidKey: string): Promise<string | null> {
-		if (!this.messaging) {
-			console.warn("Messaging not available in this environment");
-			return null;
-		}
+		if (!this.messaging) return null;
+
+		const permission = await Notification.requestPermission();
+		if (permission !== "granted") return null;
+
+		const registration = await navigator.serviceWorker.register(
+			"/firebase-messaging-sw.js",
+		);
 
 		try {
-			const permission = await Notification.requestPermission();
-
-			if (permission === "granted") {
-				const token = await getToken(this.messaging, { vapidKey });
-				return token;
-			}
-			console.log("Notification permission denied");
-			return null;
-		} catch (error) {
-			console.error("Error getting FCM token:", error);
+			return await getToken(this.messaging, {
+				vapidKey,
+				serviceWorkerRegistration: registration,
+			});
+		} catch (err) {
+			console.error("FCM token error:", err);
 			return null;
 		}
 	}
@@ -85,10 +82,17 @@ export class FirebaseClient {
 	async getToken(vapidKey: string): Promise<string | null> {
 		if (!this.messaging) return null;
 
+		const registration = await navigator.serviceWorker.register(
+			"/firebase-messaging-sw.js",
+		);
+
 		try {
-			return await getToken(this.messaging, { vapidKey });
-		} catch (error) {
-			console.error("Error getting token:", error);
+			return await getToken(this.messaging, {
+				vapidKey,
+				serviceWorkerRegistration: registration,
+			});
+		} catch (err) {
+			console.error("Token error:", err);
 			return null;
 		}
 	}
