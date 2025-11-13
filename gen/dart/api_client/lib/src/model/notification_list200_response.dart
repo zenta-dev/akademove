@@ -1,0 +1,58 @@
+//
+// AUTO-GENERATED FILE, DO NOT MODIFY!
+//
+
+// ignore_for_file: unused_element
+import 'package:api_client/src/model/user_notification.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
+
+part 'notification_list200_response.g.dart';
+
+@CopyWith()
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
+class NotificationList200Response {
+  /// Returns a new [NotificationList200Response] instance.
+  const NotificationList200Response({
+    required this.message,
+    required this.data,
+    this.totalPages,
+  });
+
+  @JsonKey(name: r'message', required: true, includeIfNull: false)
+  final String message;
+
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final List<UserNotification> data;
+
+  // minimum: -9007199254740991
+  // maximum: 9007199254740991
+  @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
+  final int? totalPages;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotificationList200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.totalPages == totalPages;
+
+  @override
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
+
+  factory NotificationList200Response.fromJson(Map<String, dynamic> json) =>
+      _$NotificationList200ResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NotificationList200ResponseToJson(this);
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
+}

@@ -12,6 +12,7 @@ import 'package:api_client/src/api/configuration_api.dart';
 import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
+import 'package:api_client/src/api/notification_api.dart';
 import 'package:api_client/src/api/order_api.dart';
 import 'package:api_client/src/api/payment_api.dart';
 import 'package:api_client/src/api/report_api.dart';
@@ -117,6 +118,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   MerchantApi getMerchantApi() {
     return MerchantApi(dio);
+  }
+
+  /// Get NotificationApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  NotificationApi getNotificationApi() {
+    return NotificationApi(dio);
   }
 
   /// Get OrderApi instance, base route and serializer can be overridden by a given but be careful,

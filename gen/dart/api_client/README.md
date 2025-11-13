@@ -105,6 +105,11 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationList**](doc/NotificationApi.md#notificationlist) | **GET** /notifications | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationRemoveToken**](doc/NotificationApi.md#notificationremovetoken) | **DELETE** /notifications/token/{token} | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationSaveToken**](doc/NotificationApi.md#notificationsavetoken) | **POST** /notifications/token | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationSubscribeToTopic**](doc/NotificationApi.md#notificationsubscribetotopic) | **POST** /notifications/subscribe | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationUnsubscribeToTopic**](doc/NotificationApi.md#notificationunsubscribetotopic) | **POST** /notifications/unsubscribe | 
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
@@ -201,6 +206,13 @@ Class | Method | HTTP request | Description
  - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
+ - [NotificationList200Response](doc/NotificationList200Response.md)
+ - [NotificationSaveToken200Response](doc/NotificationSaveToken200Response.md)
+ - [NotificationSaveToken200ResponseData](doc/NotificationSaveToken200ResponseData.md)
+ - [NotificationSaveTokenRequest](doc/NotificationSaveTokenRequest.md)
+ - [NotificationSubscribeToTopic200Response](doc/NotificationSubscribeToTopic200Response.md)
+ - [NotificationSubscribeToTopic200ResponseData](doc/NotificationSubscribeToTopic200ResponseData.md)
+ - [NotificationSubscribeToTopicRequest](doc/NotificationSubscribeToTopicRequest.md)
  - [Order](doc/Order.md)
  - [OrderDriver](doc/OrderDriver.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)

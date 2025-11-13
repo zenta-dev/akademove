@@ -18,7 +18,7 @@ void main() {
       // TODO
     });
 
-    // num totalPages
+    // int totalPages
     test('to test the property `totalPages`', () async {
       // TODO
     });

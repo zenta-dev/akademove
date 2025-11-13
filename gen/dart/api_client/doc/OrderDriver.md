@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **licensePlate** | **String** |  | [optional] 
 **status** | [**DriverStatus**](DriverStatus.md) |  | [optional] 
 **rating** | **num** |  | [optional] 
+**isTakingOrder** | **bool** |  | [optional] 
 **isOnline** | **bool** |  | [optional] 
 **currentLocation** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **lastLocationUpdate** | [**DateTime**](DateTime.md) |  | [optional] 

@@ -469,7 +469,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverUpdate**
-> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, currentLocation)
+> DriverGetMine200ResponseBody driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, isTakingOrder, currentLocation)
 
 
 
@@ -485,10 +485,11 @@ final MultipartFile studentCard = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile driverLicense = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile vehicleCertificate = BINARY_DATA_HERE; // MultipartFile | 
 final DriverUpdateRequestBank bank = ; // DriverUpdateRequestBank | 
+final bool isTakingOrder = true; // bool | 
 final DriverUpdateRequestCurrentLocation currentLocation = ; // DriverUpdateRequestCurrentLocation | 
 
 try {
-    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, currentLocation);
+    final response = api.driverUpdate(id, studentId, licensePlate, studentCard, driverLicense, vehicleCertificate, bank, isTakingOrder, currentLocation);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverUpdate: $e\n');
@@ -506,6 +507,7 @@ Name | Type | Description  | Notes
  **driverLicense** | **MultipartFile**|  | [optional] 
  **vehicleCertificate** | **MultipartFile**|  | [optional] 
  **bank** | [**DriverUpdateRequestBank**](DriverUpdateRequestBank.md)|  | [optional] 
+ **isTakingOrder** | **bool**|  | [optional] 
  **currentLocation** | [**DriverUpdateRequestCurrentLocation**](DriverUpdateRequestCurrentLocation.md)|  | [optional] 
 
 ### Return type

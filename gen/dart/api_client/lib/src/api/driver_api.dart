@@ -955,6 +955,7 @@ class DriverApi {
   /// * [driverLicense]
   /// * [vehicleCertificate]
   /// * [bank]
+  /// * [isTakingOrder]
   /// * [currentLocation]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -973,6 +974,7 @@ class DriverApi {
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
     DriverUpdateRequestBank? bank,
+    bool? isTakingOrder,
     DriverUpdateRequestCurrentLocation? currentLocation,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -1011,6 +1013,7 @@ class DriverApi {
         if (vehicleCertificate != null)
           r'vehicleCertificate': vehicleCertificate,
         if (bank != null) r'bank': bank,
+        if (isTakingOrder != null) r'isTakingOrder': isTakingOrder,
         if (currentLocation != null) r'currentLocation': currentLocation,
       });
     } catch (error, stackTrace) {

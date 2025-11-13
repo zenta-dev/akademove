@@ -37,6 +37,11 @@ void main() {
       // TODO
     });
 
+    // bool isTakingOrder
+    test('to test the property `isTakingOrder`', () async {
+      // TODO
+    });
+
     // bool isOnline
     test('to test the property `isOnline`', () async {
       // TODO

@@ -7,8 +7,8 @@ void main() {
   // TODO add properties to the entity
 
   group(OrderItem, () {
-    // num total
-    test('to test the property `total`', () async {
+    // num quantity
+    test('to test the property `quantity`', () async {
       // TODO
     });
 

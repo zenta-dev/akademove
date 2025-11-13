@@ -19,6 +19,8 @@ abstract class _$DriverCWProxy {
 
   Driver rating(num rating);
 
+  Driver isTakingOrder(bool isTakingOrder);
+
   Driver isOnline(bool isOnline);
 
   Driver currentLocation(Coordinate? currentLocation);
@@ -52,6 +54,7 @@ abstract class _$DriverCWProxy {
     String licensePlate,
     DriverStatus status,
     num rating,
+    bool isTakingOrder,
     bool isOnline,
     Coordinate? currentLocation,
     DateTime? lastLocationUpdate,
@@ -88,6 +91,10 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
 
   @override
   Driver rating(num rating) => this(rating: rating);
+
+  @override
+  Driver isTakingOrder(bool isTakingOrder) =>
+      this(isTakingOrder: isTakingOrder);
 
   @override
   Driver isOnline(bool isOnline) => this(isOnline: isOnline);
@@ -137,6 +144,7 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? licensePlate = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
+    Object? isTakingOrder = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
     Object? currentLocation = const $CopyWithPlaceholder(),
     Object? lastLocationUpdate = const $CopyWithPlaceholder(),
@@ -173,6 +181,10 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
           : rating as num,
+      isTakingOrder: isTakingOrder == const $CopyWithPlaceholder()
+          ? _value.isTakingOrder
+          // ignore: cast_nullable_to_non_nullable
+          : isTakingOrder as bool,
       isOnline: isOnline == const $CopyWithPlaceholder()
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
@@ -238,6 +250,7 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'licensePlate',
           'status',
           'rating',
+          'isTakingOrder',
           'isOnline',
           'createdAt',
           'studentCard',
@@ -256,6 +269,7 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecode(_$DriverStatusEnumMap, v),
         ),
         rating: $checkedConvert('rating', (v) => v as num),
+        isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool),
         isOnline: $checkedConvert('isOnline', (v) => v as bool),
         currentLocation: $checkedConvert(
           'currentLocation',
@@ -297,6 +311,7 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'licensePlate': instance.licensePlate,
   'status': _$DriverStatusEnumMap[instance.status]!,
   'rating': instance.rating,
+  'isTakingOrder': instance.isTakingOrder,
   'isOnline': instance.isOnline,
   'currentLocation': ?instance.currentLocation?.toJson(),
   'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),

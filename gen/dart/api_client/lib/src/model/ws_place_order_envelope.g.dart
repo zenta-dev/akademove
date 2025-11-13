@@ -130,6 +130,8 @@ const _$WSEnvelopeTypeEnumMap = {
   WSEnvelopeType.orderColonMatching: 'order:matching',
   WSEnvelopeType.orderColonCancelled: 'order:cancelled',
   WSEnvelopeType.orderColonAccepted: 'order:accepted',
+  WSEnvelopeType.orderColonUnavailable: 'order:unavailable',
+  WSEnvelopeType.orderColonDone: 'order:done',
   WSEnvelopeType.driverColonLocationUpdate: 'driver:location_update',
   WSEnvelopeType.walletColonTopUpSuccess: 'wallet:top_up_success',
   WSEnvelopeType.walletColonTopUpFailed: 'wallet:top_up_failed',

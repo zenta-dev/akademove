@@ -28,6 +28,7 @@ class OrderDriver {
     this.licensePlate,
     this.status,
     this.rating,
+    this.isTakingOrder,
     this.isOnline,
     this.currentLocation,
     this.lastLocationUpdate,
@@ -57,6 +58,9 @@ class OrderDriver {
 
   @JsonKey(name: r'rating', required: false, includeIfNull: false)
   final num? rating;
+
+  @JsonKey(name: r'isTakingOrder', required: false, includeIfNull: false)
+  final bool? isTakingOrder;
 
   @JsonKey(name: r'isOnline', required: false, includeIfNull: false)
   final bool? isOnline;
@@ -99,6 +103,7 @@ class OrderDriver {
           other.licensePlate == licensePlate &&
           other.status == status &&
           other.rating == rating &&
+          other.isTakingOrder == isTakingOrder &&
           other.isOnline == isOnline &&
           other.currentLocation == currentLocation &&
           other.lastLocationUpdate == lastLocationUpdate &&
@@ -118,6 +123,7 @@ class OrderDriver {
       licensePlate.hashCode +
       status.hashCode +
       rating.hashCode +
+      isTakingOrder.hashCode +
       isOnline.hashCode +
       currentLocation.hashCode +
       lastLocationUpdate.hashCode +

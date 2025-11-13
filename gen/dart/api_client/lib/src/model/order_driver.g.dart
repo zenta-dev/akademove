@@ -19,6 +19,8 @@ abstract class _$OrderDriverCWProxy {
 
   OrderDriver rating(num? rating);
 
+  OrderDriver isTakingOrder(bool? isTakingOrder);
+
   OrderDriver isOnline(bool? isOnline);
 
   OrderDriver currentLocation(Coordinate? currentLocation);
@@ -52,6 +54,7 @@ abstract class _$OrderDriverCWProxy {
     String? licensePlate,
     DriverStatus? status,
     num? rating,
+    bool? isTakingOrder,
     bool? isOnline,
     Coordinate? currentLocation,
     DateTime? lastLocationUpdate,
@@ -89,6 +92,10 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
 
   @override
   OrderDriver rating(num? rating) => this(rating: rating);
+
+  @override
+  OrderDriver isTakingOrder(bool? isTakingOrder) =>
+      this(isTakingOrder: isTakingOrder);
 
   @override
   OrderDriver isOnline(bool? isOnline) => this(isOnline: isOnline);
@@ -139,6 +146,7 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
     Object? licensePlate = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
+    Object? isTakingOrder = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
     Object? currentLocation = const $CopyWithPlaceholder(),
     Object? lastLocationUpdate = const $CopyWithPlaceholder(),
@@ -175,6 +183,10 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
           : rating as num?,
+      isTakingOrder: isTakingOrder == const $CopyWithPlaceholder()
+          ? _value.isTakingOrder
+          // ignore: cast_nullable_to_non_nullable
+          : isTakingOrder as bool?,
       isOnline: isOnline == const $CopyWithPlaceholder()
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
@@ -241,6 +253,7 @@ OrderDriver _$OrderDriverFromJson(Map<String, dynamic> json) =>
           (v) => $enumDecodeNullable(_$DriverStatusEnumMap, v),
         ),
         rating: $checkedConvert('rating', (v) => v as num?),
+        isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool?),
         isOnline: $checkedConvert('isOnline', (v) => v as bool?),
         currentLocation: $checkedConvert(
           'currentLocation',
@@ -283,6 +296,7 @@ Map<String, dynamic> _$OrderDriverToJson(OrderDriver instance) =>
       'licensePlate': ?instance.licensePlate,
       'status': ?_$DriverStatusEnumMap[instance.status],
       'rating': ?instance.rating,
+      'isTakingOrder': ?instance.isTakingOrder,
       'isOnline': ?instance.isOnline,
       'currentLocation': ?instance.currentLocation?.toJson(),
       'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),

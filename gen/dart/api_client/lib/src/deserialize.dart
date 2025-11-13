@@ -52,6 +52,13 @@ import 'package:api_client/src/model/merchant_menu.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
+import 'package:api_client/src/model/notification_list200_response.dart';
+import 'package:api_client/src/model/notification_save_token200_response.dart';
+import 'package:api_client/src/model/notification_save_token200_response_data.dart';
+import 'package:api_client/src/model/notification_save_token_request.dart';
+import 'package:api_client/src/model/notification_subscribe_to_topic200_response.dart';
+import 'package:api_client/src/model/notification_subscribe_to_topic200_response_data.dart';
+import 'package:api_client/src/model/notification_subscribe_to_topic_request.dart';
 import 'package:api_client/src/model/order.dart';
 import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
@@ -319,6 +326,39 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'MerchantPopulars200Response':
       return MerchantPopulars200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'NotificationList200Response':
+      return NotificationList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'NotificationSaveToken200Response':
+      return NotificationSaveToken200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationSaveToken200ResponseData':
+      return NotificationSaveToken200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationSaveTokenRequest':
+      return NotificationSaveTokenRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationSubscribeToTopic200Response':
+      return NotificationSubscribeToTopic200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationSubscribeToTopic200ResponseData':
+      return NotificationSubscribeToTopic200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationSubscribeToTopicRequest':
+      return NotificationSubscribeToTopicRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'Order':
       return Order.fromJson(value as Map<String, dynamic>) as ReturnType;

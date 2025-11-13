@@ -14,6 +14,10 @@ enum WSEnvelopeType {
   orderColonCancelled(r'order:cancelled'),
   @JsonValue(r'order:accepted')
   orderColonAccepted(r'order:accepted'),
+  @JsonValue(r'order:unavailable')
+  orderColonUnavailable(r'order:unavailable'),
+  @JsonValue(r'order:done')
+  orderColonDone(r'order:done'),
   @JsonValue(r'driver:location_update')
   driverColonLocationUpdate(r'driver:location_update'),
   @JsonValue(r'wallet:top_up_success')

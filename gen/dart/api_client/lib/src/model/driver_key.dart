@@ -18,6 +18,8 @@ enum DriverKey {
   status(r'status'),
   @JsonValue(r'rating')
   rating(r'rating'),
+  @JsonValue(r'isTakingOrder')
+  isTakingOrder(r'isTakingOrder'),
   @JsonValue(r'isOnline')
   isOnline(r'isOnline'),
   @JsonValue(r'currentLocation')

@@ -7,7 +7,7 @@ part of 'order_item.dart';
 // **************************************************************************
 
 abstract class _$OrderItemCWProxy {
-  OrderItem total(num total);
+  OrderItem quantity(num quantity);
 
   OrderItem item(OrderItemItem item);
 
@@ -17,7 +17,7 @@ abstract class _$OrderItemCWProxy {
   /// ```dart
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderItem call({num total, OrderItemItem item});
+  OrderItem call({num quantity, OrderItemItem item});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderItem.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderItem.copyWith.fieldName(...)`
@@ -27,7 +27,7 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   final OrderItem _value;
 
   @override
-  OrderItem total(num total) => this(total: total);
+  OrderItem quantity(num quantity) => this(quantity: quantity);
 
   @override
   OrderItem item(OrderItemItem item) => this(item: item);
@@ -40,14 +40,14 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ````
   OrderItem call({
-    Object? total = const $CopyWithPlaceholder(),
+    Object? quantity = const $CopyWithPlaceholder(),
     Object? item = const $CopyWithPlaceholder(),
   }) {
     return OrderItem(
-      total: total == const $CopyWithPlaceholder()
-          ? _value.total
+      quantity: quantity == const $CopyWithPlaceholder()
+          ? _value.quantity
           // ignore: cast_nullable_to_non_nullable
-          : total as num,
+          : quantity as num,
       item: item == const $CopyWithPlaceholder()
           ? _value.item
           // ignore: cast_nullable_to_non_nullable
@@ -68,9 +68,9 @@ extension $OrderItemCopyWith on OrderItem {
 
 OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
     $checkedCreate('OrderItem', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['total', 'item']);
+      $checkKeys(json, requiredKeys: const ['quantity', 'item']);
       final val = OrderItem(
-        total: $checkedConvert('total', (v) => v as num),
+        quantity: $checkedConvert('quantity', (v) => v as num),
         item: $checkedConvert(
           'item',
           (v) => OrderItemItem.fromJson(v as Map<String, dynamic>),
@@ -80,6 +80,6 @@ OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
     });
 
 Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
-  'total': instance.total,
+  'quantity': instance.quantity,
   'item': instance.item.toJson(),
 };
