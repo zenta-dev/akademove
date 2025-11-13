@@ -67,9 +67,6 @@ export default defineConfig({
 		target: "esnext",
 		rollupOptions: {
 			external: ["node:async_hooks", "cloudflare:workers"],
-			input: {
-				"firebase-messaging-sw": "src/firebase-messaging-sw.ts",
-			},
 			output: {
 				manualChunks(id) {
 					if (id.includes("node_modules")) {
