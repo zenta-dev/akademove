@@ -4,7 +4,7 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-const ListNotificationQuerySchema = UnifiedPaginationQuerySchema.extend({
+const ListNotificationQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 	read: z.enum(["all", "unread", "readed"]),
 });
 
@@ -13,7 +13,7 @@ export type ListNotificationQuery = z.infer<typeof ListNotificationQuerySchema>;
 export const NotificationSpec = {
 	list: oc
 		.route({
-			tags: [FEATURE_TAGS.FCM],
+			tags: [FEATURE_TAGS.NOTIFICATION],
 			method: "GET",
 			path: "/",
 			inputStructure: "detailed",
@@ -28,7 +28,7 @@ export const NotificationSpec = {
 		),
 	subscribeToTopic: oc
 		.route({
-			tags: [FEATURE_TAGS.FCM],
+			tags: [FEATURE_TAGS.NOTIFICATION],
 			method: "POST",
 			path: "/subscribe",
 			inputStructure: "detailed",
@@ -42,14 +42,14 @@ export const NotificationSpec = {
 				z.object({
 					successCount: z.number(),
 					failureCount: z.number(),
-					errors: z.array(z.any()),
+					errors: z.any(),
 				}),
 				"Subscribe to topic success",
 			),
 		),
 	unsubscribeToTopic: oc
 		.route({
-			tags: [FEATURE_TAGS.FCM],
+			tags: [FEATURE_TAGS.NOTIFICATION],
 			method: "POST",
 			path: "/unsubscribe",
 			inputStructure: "detailed",
@@ -63,14 +63,14 @@ export const NotificationSpec = {
 				z.object({
 					successCount: z.number(),
 					failureCount: z.number(),
-					errors: z.array(z.any()),
+					errors: z.any(),
 				}),
 				"Unsubscribe to topic success",
 			),
 		),
 	saveToken: oc
 		.route({
-			tags: [FEATURE_TAGS.FCM],
+			tags: [FEATURE_TAGS.NOTIFICATION],
 			method: "POST",
 			path: "/token",
 			inputStructure: "detailed",
@@ -87,7 +87,7 @@ export const NotificationSpec = {
 		),
 	removeToken: oc
 		.route({
-			tags: [FEATURE_TAGS.FCM],
+			tags: [FEATURE_TAGS.NOTIFICATION],
 			method: "DELETE",
 			path: "/token/{token}",
 			inputStructure: "detailed",

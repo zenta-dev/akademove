@@ -6,7 +6,7 @@ export const FEATURE_TAGS = Object.freeze({
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
 	DRIVER_SCHEDULE: "DriverSchedule",
-	FCM: "FirebaseCloudMessaging",
+	NOTIFICATION: "Notification",
 	MERCHANT: "Merchant",
 	MERCHANT_MENU: "MerchantMenu",
 	ORDER: "Order",
