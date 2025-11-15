@@ -17,7 +17,6 @@ export const fcmToken = pgTable(
 		index("fcm_token_token_id_idx").on(t.token),
 	],
 );
-export type FCMTokenTable = typeof fcmToken;
 export type FCMTokenDatabase = typeof fcmToken.$inferSelect;
 
 export const fcmTopicSubscription = pgTable(
@@ -36,7 +35,6 @@ export const fcmTopicSubscription = pgTable(
 		index("fcm_topic_subscriptions_token_topic_idx").on(t.token, t.topic),
 	],
 );
-export type FCMTopicSubscriptionTable = typeof fcmTopicSubscription;
 export type FCMTopicSubscriptionDatabase =
 	typeof fcmTopicSubscription.$inferSelect;
 
@@ -64,7 +62,6 @@ export const fcmNotificationLog = pgTable(
 		index("fcm_notification_logs_sent_at_idx").on(t.sentAt),
 	],
 );
-export type FCMNotificationLogTable = typeof fcmNotificationLog;
 export type FCMNotificationLogDatabase = typeof fcmNotificationLog.$inferSelect;
 
 export const userNotification = pgTable(
@@ -88,5 +85,4 @@ export const userNotification = pgTable(
 		index("user_notifications_created_at_idx").on(t.createdAt),
 	],
 );
-export type UserNotificationTable = typeof userNotification;
 export type UserNotificationDatabase = typeof userNotification.$inferSelect;

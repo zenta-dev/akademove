@@ -54,7 +54,6 @@ export const driver = pgTable(
 			.where(sql`is_online = true`),
 	],
 );
-export type DriverTable = typeof driver;
 
 ///
 /// --- Relations --- ///
@@ -102,7 +101,6 @@ export const driverSchedule = pgTable(
 		index("schedule_created_at_idx").on(t.createdAt),
 	],
 );
-export type DriverScheduleTable = typeof driverSchedule;
 
 ///
 /// --- Relations --- ///

@@ -41,7 +41,6 @@ export const review = pgTable(
 		index("review_to_user_created_at_idx").on(t.toUserId, t.createdAt),
 	],
 );
-export type ReviewTable = typeof review;
 
 ///
 /// --- Relations --- ///

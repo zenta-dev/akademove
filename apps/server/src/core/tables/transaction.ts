@@ -30,7 +30,6 @@ export const transaction = pgTable(
 	},
 	(t) => [index("transaction_wallet_id_idx").on(t.walletId)],
 );
-export type TransactionTable = typeof transaction;
 
 export const transactionRelations = relations(transaction, ({ one }) => ({
 	wallet: one(wallet, {

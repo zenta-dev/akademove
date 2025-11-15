@@ -36,8 +36,6 @@ export const user = pgTable(
 	],
 );
 
-export type UserTable = typeof user;
-
 export const account = pgTable(
 	"accounts",
 	{
@@ -61,7 +59,6 @@ export const account = pgTable(
 		index("account_provider_idx").on(t.providerId, t.accountId),
 	],
 );
-export type AccountTable = typeof account;
 
 export const verification = pgTable(
 	"verifications",
@@ -77,8 +74,6 @@ export const verification = pgTable(
 		index("verification_expires_at_idx").on(t.expiresAt),
 	],
 );
-
-export type VerificationTable = typeof verification;
 
 ///
 /// --- Relations --- ///
