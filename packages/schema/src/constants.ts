@@ -75,3 +75,21 @@ export const PAYMENT_METHOD = [
 	"BANK_TRANSFER",
 	"WALLET",
 ] as const;
+
+export const BADGE_TYPES = [
+	"performance",
+	"volume",
+	"streak",
+	"milestone",
+	"special",
+] as const;
+
+export const BADGE_LEVELS = [
+	"bronze",
+	"silver",
+	"gold",
+	"platinum",
+	"diamond",
+] as const;
+
+export const BADGE_TARGET_ROLES = ["driver", "merchant", "user"] as const;

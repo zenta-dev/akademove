@@ -3,6 +3,7 @@ import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
+import type { BadgeRepository } from "@/features/badge/badge-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -40,6 +41,7 @@ export interface ServiceContext {
 
 export interface RepositoryContext {
 	auth: AuthRepository;
+	badge: BadgeRepository;
 	configuration: ConfigurationRepository;
 	driver: {
 		main: DriverMainRepository;

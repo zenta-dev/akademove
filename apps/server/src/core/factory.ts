@@ -10,6 +10,7 @@ import { ResendMailService } from "@/core/services/mail";
 import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
 import { AuthRepository } from "@/features/auth/auth-repository";
+import { BadgeRepository } from "@/features/badge/badge-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -84,6 +85,7 @@ export function getRepositories(
 	);
 	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
+		badge: new BadgeRepository(svc.db, svc.kv),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		driver: {
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),

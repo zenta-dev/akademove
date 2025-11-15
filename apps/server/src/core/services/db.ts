@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as auth from "@/core/tables/auth";
+import * as badge from "@/core/tables/badge";
 import * as configuration from "@/core/tables/configuration";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
@@ -17,17 +18,18 @@ import { isDev } from "@/utils";
 
 export const tables = {
 	...auth,
+	...badge,
+	...configuration,
+	...coupon,
 	...driver,
 	...merchant,
+	...notification,
 	...order,
-	...coupon,
+	...payment,
 	...report,
 	...review,
-	...configuration,
-	...wallet,
-	...payment,
 	...transaction,
-	...notification,
+	...wallet,
 };
 
 export const getDatabase = () => {

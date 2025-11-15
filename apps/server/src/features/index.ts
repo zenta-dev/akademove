@@ -3,6 +3,8 @@ import { implement, type RouterClient } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
 import { AuthHandler } from "./auth/auth-handler";
 import { AuthSpec } from "./auth/auth-spec";
+import { BadgeHandler } from "./badge/badge-handler";
+import { BadgeSpec } from "./badge/badge-spec";
 import { ConfigurationHandler } from "./configuration/configuration-handler";
 import { ConfigurationSpec } from "./configuration/configuration-spec";
 import { CouponHandler } from "./coupon/coupon-handler";
@@ -30,6 +32,7 @@ import { WalletSpec } from "./wallet/wallet-spec";
 
 export const FetchServerSpec = oc.router({
 	auth: oc.prefix("/auth").router(AuthSpec),
+	badge: oc.prefix("/badges").router(BadgeSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
@@ -47,6 +50,7 @@ export const FetchServerSpec = oc.router({
 const os = implement(FetchServerSpec).$context<ORPCContext>();
 export const FetchServerRouter = os.router({
 	auth: AuthHandler,
+	badge: BadgeHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
 	merchant: MerchantHandler,

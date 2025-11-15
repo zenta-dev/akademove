@@ -3,6 +3,7 @@ import * as z from "zod";
 
 export const FEATURE_TAGS = Object.freeze({
 	AUTH: "Auth",
+	BADGE: "Badge",
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
 	DRIVER_SCHEDULE: "DriverSchedule",
