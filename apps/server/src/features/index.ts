@@ -11,6 +11,8 @@ import { CouponHandler } from "./coupon/coupon-handler";
 import { CouponSpec } from "./coupon/coupon-spec";
 import { DriverHandler } from "./driver/driver-handler";
 import { DriverSpec } from "./driver/driver-spec";
+import { LeaderboardHandler } from "./leaderboard/leaderboard-handler";
+import { LeaderboardSpec } from "./leaderboard/leaderboard-spec";
 import { MerchantHandler } from "./merchant/merchant-handler";
 import { MerchantSpec } from "./merchant/merchant-spec";
 import { NotificationHandler } from "./notification/notification-handler";
@@ -35,6 +37,7 @@ export const FetchServerSpec = oc.router({
 	badge: oc.prefix("/badges").router(BadgeSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
+	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
 	order: oc.prefix("/orders").router(OrderSpec),
 	payment: oc.prefix("/payments").router(PaymentSpec),
@@ -53,6 +56,7 @@ export const FetchServerRouter = os.router({
 	badge: BadgeHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
+	leaderboard: LeaderboardHandler,
 	merchant: MerchantHandler,
 	order: OrderHandler,
 	payment: PaymentHandler,

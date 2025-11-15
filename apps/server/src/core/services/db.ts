@@ -6,6 +6,7 @@ import * as badge from "@/core/tables/badge";
 import * as configuration from "@/core/tables/configuration";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
+import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
 import * as notification from "@/core/tables/notification";
 import * as order from "@/core/tables/order";
@@ -22,6 +23,7 @@ export const tables = {
 	...configuration,
 	...coupon,
 	...driver,
+	...leaderboard,
 	...merchant,
 	...notification,
 	...order,

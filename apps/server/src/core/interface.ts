@@ -8,6 +8,7 @@ import type { ConfigurationRepository } from "@/features/configuration/configura
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
@@ -47,6 +48,7 @@ export interface RepositoryContext {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;
 	};
+	leaderboard: LeaderboardRepository;
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;

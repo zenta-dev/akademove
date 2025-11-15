@@ -93,3 +93,20 @@ export const BADGE_LEVELS = [
 ] as const;
 
 export const BADGE_TARGET_ROLES = ["driver", "merchant", "user"] as const;
+export const LEADERBOARD_PERIODS = [
+	"daily",
+	"weekly",
+	"monthly",
+	"quarterly",
+	"yearly",
+	"all-time",
+] as const;
+
+export const LEADERBOARD_CATEGORIES = [
+	"rating",
+	"volume",
+	"earnings",
+	"streak",
+	"on-time",
+	"completion-rate",
+] as const;
