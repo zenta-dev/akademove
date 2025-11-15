@@ -1,4 +1,5 @@
 import { os } from "@orpc/server";
+import type { UserRole } from "@repo/schema/user";
 import type { Permissions } from "@repo/shared";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
@@ -89,4 +90,15 @@ export const hasPermission = (permissions: Permissions) =>
 			throw new MiddlewareError("Unathorized access", { code: "UNAUTHORIZED" });
 		}
 		return await next();
+	});
+
+export const requireRoles = (...roles: UserRole[]) =>
+	base.middleware(async ({ context, next }) => {
+		const userRole = context.user?.role;
+
+		if (!userRole || !roles.includes(userRole)) {
+			throw new AuthError("Didn't have access", { code: "UNAUTHORIZED" });
+		}
+
+		return next();
 	});
