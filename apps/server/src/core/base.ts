@@ -203,6 +203,7 @@ export abstract class BaseRepository {
 	}
 
 	protected handleError(error: unknown, action: string) {
+		console.error(error, `[${this.constructor.name}] - ${action} failed`);
 		log.debug(
 			{ detail: error },
 			`[${this.constructor.name}] - ${action} failed`,
