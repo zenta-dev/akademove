@@ -198,276 +198,325 @@ class _MerchantPrivacyPoliciesScreenState
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      headers: const [
-        DefaultAppBar(title: 'Privacy Policies'),
-      ],
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 16.h,
-          children: [
-            Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                spacing: 8.h,
-                children: [
-                  Text(
-                    'AkadeMove Privacy Policy',
-                    style: context.typography.small.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    'October 2025',
-                    style: context.typography.small.copyWith(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'Welcome to AkadeMove, a platform designed to connect customers, student drivers, and merchants in a unified mobility and delivery ecosystem. Your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our mobile application, website, or any related services (collectively referred to as “AkadeMove”). By using AkadeMove, you agree to the collection and use of your data in accordance with this policy. Please read this document carefully to understand how we handle your personal information.',
-                    style: context.typography.small.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ...List.generate(details.length, (index) {
-              final detail = details[index];
-              final isOpen = _openIndex == index;
-
-              return Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 8.h,
-                  children: [
-                    Button(
-                      style: ButtonStyle.ghost(
-                        density: ButtonDensity.compact,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _openIndex = isOpen ? null : index;
-                        });
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            detail['title'] as String,
-                            style: context.typography.small.copyWith(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Icon(
-                            isOpen
-                                ? LucideIcons.chevronUp
-                                : LucideIcons.chevronDown,
-                            size: 16,
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isOpen) ...[
+    return Stack(
+      children: [
+        MyScaffold(
+          headers: const [
+            DefaultAppBar(title: 'Privacy Policies'),
+          ],
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                Card(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 8.h,
+                    children: [
                       Text(
-                        detail['content'] as String,
+                        'AkadeMove Privacy Policy',
+                        style: context.typography.small.copyWith(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'October 2025',
+                        style: context.typography.small.copyWith(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'Welcome to AkadeMove, a platform designed to connect customers, student drivers, and merchants in a unified mobility and delivery ecosystem. Your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you use our mobile application, website, or any related services (collectively referred to as “AkadeMove”). By using AkadeMove, you agree to the collection and use of your data in accordance with this policy. Please read this document carefully to understand how we handle your personal information.',
                         style: context.typography.small.copyWith(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.normal,
                         ),
                       ),
-                      if (detail['sections'] != null) ...[
-                        SizedBox(height: 8.h),
-                        ...List.generate(
-                          (detail['sections'] as List).length,
-                          (sectionIndex) {
-                            final section =
-                                (detail['sections'] as List)[sectionIndex]
-                                    as Map<String, dynamic>;
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 12.h),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                spacing: 4.h,
-                                children: [
-                                  Row(
+                    ],
+                  ),
+                ),
+                ...List.generate(details.length, (index) {
+                  final detail = details[index];
+                  final isOpen = _openIndex == index;
+
+                  return Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.h,
+                      children: [
+                        Button(
+                          style: ButtonStyle.ghost(
+                            density: ButtonDensity.compact,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _openIndex = isOpen ? null : index;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                detail['title'] as String,
+                                style: context.typography.small.copyWith(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(
+                                isOpen
+                                    ? LucideIcons.chevronUp
+                                    : LucideIcons.chevronDown,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (isOpen) ...[
+                          Text(
+                            detail['content'] as String,
+                            style: context.typography.small.copyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          if (detail['sections'] != null) ...[
+                            SizedBox(height: 8.h),
+                            ...List.generate(
+                              (detail['sections'] as List).length,
+                              (sectionIndex) {
+                                final section =
+                                    (detail['sections'] as List)[sectionIndex]
+                                        as Map<String, dynamic>;
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 12.h),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    spacing: 4.h,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildNumberContainer(
+                                            section['number'] as String,
+                                          ),
+                                          SizedBox(width: 8.w),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              spacing: 4.h,
+                                              children: [
+                                                Text(
+                                                  section['title'] as String,
+                                                  style: context
+                                                      .typography
+                                                      .small
+                                                      .copyWith(
+                                                        fontSize: 12.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+                                                if (section['description'] !=
+                                                    null)
+                                                  Text(
+                                                    section['description']
+                                                        as String,
+                                                    style: context
+                                                        .typography
+                                                        .small
+                                                        .copyWith(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                if (section['items'] !=
+                                                    null) ...[
+                                                  SizedBox(height: 4.h),
+                                                  ...List.generate(
+                                                    (section['items'] as List)
+                                                        .length,
+                                                    (itemIndex) {
+                                                      final itemText =
+                                                          (section['items']
+                                                                  as List)[itemIndex]
+                                                              as String;
+                                                      return Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                              left: 8.w,
+                                                              bottom: 2.h,
+                                                            ),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              '• ',
+                                                              style: context
+                                                                  .typography
+                                                                  .small
+                                                                  .copyWith(
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal,
+                                                                  ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Text(
+                                                                itemText,
+                                                                style: context
+                                                                    .typography
+                                                                    .small
+                                                                    .copyWith(
+                                                                      fontSize:
+                                                                          12.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                                if (section['footer'] !=
+                                                    null) ...[
+                                                  SizedBox(height: 4.h),
+                                                  Text(
+                                                    section['footer'] as String,
+                                                    style: context
+                                                        .typography
+                                                        .small
+                                                        .copyWith(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ],
+                                                if (section['additional'] !=
+                                                    null) ...[
+                                                  SizedBox(height: 4.h),
+                                                  Text(
+                                                    section['additional']
+                                                        as String,
+                                                    style: context
+                                                        .typography
+                                                        .small
+                                                        .copyWith(
+                                                          fontSize: 12.sp,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                        ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+
+                          if (detail['items'] != null) ...[
+                            SizedBox(height: 8.h),
+                            ...List.generate(
+                              (detail['items'] as List).length,
+                              (itemIndex) {
+                                final item =
+                                    (detail['items'] as List)[itemIndex]
+                                        as Map<String, dynamic>;
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 8.h),
+                                  child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       _buildNumberContainer(
-                                        section['number'] as String,
+                                        item['number'] as String,
                                       ),
                                       SizedBox(width: 8.w),
                                       Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          spacing: 4.h,
-                                          children: [
-                                            Text(
-                                              section['title'] as String,
-                                              style: context.typography.small
-                                                  .copyWith(
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                            ),
-                                            if (section['description'] != null)
-                                              Text(
-                                                section['description']
-                                                    as String,
-                                                style: context.typography.small
-                                                    .copyWith(
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
+                                        child: Text(
+                                          item['text'] as String,
+                                          style: context.typography.small
+                                              .copyWith(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.normal,
                                               ),
-                                            if (section['items'] != null) ...[
-                                              SizedBox(height: 4.h),
-                                              ...List.generate(
-                                                (section['items'] as List)
-                                                    .length,
-                                                (itemIndex) {
-                                                  final itemText =
-                                                      (section['items']
-                                                              as List)[itemIndex]
-                                                          as String;
-                                                  return Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: 8.w,
-                                                      bottom: 2.h,
-                                                    ),
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          '• ',
-                                                          style: context
-                                                              .typography
-                                                              .small
-                                                              .copyWith(
-                                                                fontSize: 12.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .normal,
-                                                              ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Text(
-                                                            itemText,
-                                                            style: context
-                                                                .typography
-                                                                .small
-                                                                .copyWith(
-                                                                  fontSize:
-                                                                      12.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                            if (section['footer'] != null) ...[
-                                              SizedBox(height: 4.h),
-                                              Text(
-                                                section['footer'] as String,
-                                                style: context.typography.small
-                                                    .copyWith(
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                              ),
-                                            ],
-                                            if (section['additional'] !=
-                                                null) ...[
-                                              SizedBox(height: 4.h),
-                                              Text(
-                                                section['additional'] as String,
-                                                style: context.typography.small
-                                                    .copyWith(
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                              ),
-                                            ],
-                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
+                                );
+                              },
+                            ),
+                          ],
+                          if (detail['footer'] != null) ...[
+                            SizedBox(height: 4.h),
+                            Text(
+                              detail['footer'] as String,
+                              style: context.typography.small.copyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.normal,
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          ],
+                        ],
                       ],
-
-                      if (detail['items'] != null) ...[
-                        SizedBox(height: 8.h),
-                        ...List.generate(
-                          (detail['items'] as List).length,
-                          (itemIndex) {
-                            final item =
-                                (detail['items'] as List)[itemIndex]
-                                    as Map<String, dynamic>;
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: 8.h),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildNumberContainer(
-                                    item['number'] as String,
-                                  ),
-                                  SizedBox(width: 8.w),
-                                  Expanded(
-                                    child: Text(
-                                      item['text'] as String,
-                                      style: context.typography.small.copyWith(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                      if (detail['footer'] != null) ...[
-                        SizedBox(height: 4.h),
-                        Text(
-                          detail['footer'] as String,
-                          style: context.typography.small.copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ],
-                ),
-              );
-            }),
-          ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
         ),
-      ),
+        Positioned(
+          bottom: 0,
+          left: 16,
+          right: 16,
+          child: SafeArea(
+            child: SizedBox(
+              width: double.infinity,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.card,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Button.primary(
+                  onPressed: () {},
+                  child: Text(
+                    'Accept all cookies',
+                    style: context.typography.small.copyWith(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
