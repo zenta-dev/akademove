@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { LEADERBOARD_CATEGORIES, LEADERBOARD_PERIODS } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
@@ -11,10 +12,10 @@ export const LeaderboardSchema = z.object({
 	period: z.enum(LEADERBOARD_PERIODS),
 	rank: z.number().int().min(1),
 	score: z.number().int().min(0),
-	periodStart: z.date(),
-	periodEnd: z.date(),
-	createdAt: z.date(),
-	updatedAt: z.date(),
+	periodStart: DateSchema,
+	periodEnd: DateSchema,
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
 });
 export type Leaderboard = z.infer<typeof LeaderboardSchema>;
 
@@ -24,9 +25,14 @@ export const InsertLeaderboardSchema = LeaderboardSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-	calculatedAt: true,
 });
 export type InsertLeaderboard = z.infer<typeof InsertLeaderboardSchema>;
 
 export const UpdateLeaderboardSchema = InsertLeaderboardSchema.partial();
 export type UpdateLeaderboard = z.infer<typeof UpdateLeaderboardSchema>;
+
+export const LeaderboardSchemaRegistries = {
+	Leaderboard: { schema: LeaderboardSchema, strategy: "output" },
+	InsertLeaderboard: { schema: InsertLeaderboardSchema, strategy: "input" },
+	UpdateLeaderboard: { schema: UpdateLeaderboardSchema, strategy: "input" },
+} satisfies SchemaRegistries;
