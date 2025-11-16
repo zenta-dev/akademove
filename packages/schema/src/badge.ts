@@ -74,6 +74,8 @@ export const UserBadgeSchema = z.object({
 });
 export type UserBadge = z.infer<typeof UserBadgeSchema>;
 
+export const UserBadgeKeySchema = extractSchemaKeysAsEnum(UserBadgeSchema);
+
 export const InsertUserBadgeSchema = UserBadgeSchema.omit({
 	id: true,
 	createdAt: true,
