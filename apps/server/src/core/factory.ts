@@ -11,6 +11,7 @@ import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
 import { AuthRepository } from "@/features/auth/auth-repository";
 import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
+import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -88,6 +89,7 @@ export function getRepositories(
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
 		badge: {
 			main: new BadgeRepository(svc.db, svc.kv),
+			user: new UserBadgeRepository(svc.db, svc.kv),
 		},
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		driver: {

@@ -4,6 +4,7 @@ import type { UserRole } from "@repo/schema/user";
 import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { BadgeRepository } from "@/features/badge/main/badge-main-repository";
+import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -44,6 +45,7 @@ export interface RepositoryContext {
 	auth: AuthRepository;
 	badge: {
 		main: BadgeRepository;
+		user: UserBadgeRepository;
 	};
 	configuration: ConfigurationRepository;
 	driver: {
