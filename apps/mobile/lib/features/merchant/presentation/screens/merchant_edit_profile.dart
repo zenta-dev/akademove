@@ -570,11 +570,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Simulate API call to verify bank account
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
-        // Simulate successful verification with masked data
         final maskedNumber =
             '********${accountNumber.substring(accountNumber.length >= 4 ? accountNumber.length - 4 : 0)}';
 
@@ -582,11 +580,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           _isBankAccountEditing = false;
           _isBankAccountVerified = true;
           _verifiedBankAccountNumber = maskedNumber;
-          // Update controller with masked number
           _bankAccountController.text = maskedNumber;
-          // Simulate getting account holder name (you can replace with actual API response)
-          _accountHolderName = 'J**n D*e'; // This should come from API
-          _ownerBankName = 'J**n D*e'; // This should come from API
+          _accountHolderName = 'J**n D*e';
+          _ownerBankName = 'J**n D*e';
           _isLoading = false;
         });
 
@@ -616,7 +612,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   }
 
   Future<void> _handleSaveChanges() async {
-    // Validate form
     final isValid = _formController.errors.isEmpty;
 
     if (!isValid) {
@@ -1306,13 +1301,10 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
       children: [
-        // Row untuk FormField dan icon button
         Row(
-          crossAxisAlignment: CrossAxisAlignment
-              .end, // ✅ Ubah menjadi end agar sejajar dengan bottom TextField
+          crossAxisAlignment: CrossAxisAlignment.end,
           spacing: 8.w,
           children: [
-            // TextField
             Expanded(
               child: FormField(
                 key: _FormKeys.bankAccount,
@@ -1345,8 +1337,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                 ),
               ),
             ),
-
-            // Icon button dengan padding bottom agar sejajar dengan TextField
             Padding(
               padding: EdgeInsets.only(bottom: 0.h), // ✅ Sesuaikan jika perlu
               child: GestureDetector(
