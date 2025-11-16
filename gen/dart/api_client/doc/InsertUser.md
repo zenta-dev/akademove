@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **role** | [**UserRole**](UserRole.md) |  | 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
 **phone** | [**Phone**](Phone.md) |  | 
+**badges** | [**List&lt;Badge&gt;**](Badge.md) |  | 
 **password** | **String** |  | 
 **confirmPassword** | **String** |  | 
 

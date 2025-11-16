@@ -201,7 +201,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverRemove**
-> DriverRemove200Response driverRemove(id)
+> BadgeRemove200Response driverRemove(id)
 
 
 
@@ -228,7 +228,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 
@@ -381,7 +381,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverScheduleRemove**
-> DriverRemove200Response driverScheduleRemove(driverId, id)
+> BadgeRemove200Response driverScheduleRemove(driverId, id)
 
 
 
@@ -410,7 +410,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 

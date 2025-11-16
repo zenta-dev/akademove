@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_client/src/model/driver_remove200_response.dart';
+import 'package:api_client/src/model/badge_remove200_response.dart';
 
 class PaymentApi {
   final Dio _dio;
@@ -28,9 +28,9 @@ class PaymentApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> paymentWebhookMidtrans({
+  Future<Response<BadgeRemove200Response>> paymentWebhookMidtrans({
     required Object body,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -75,15 +75,15 @@ class PaymentApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverRemove200Response? _responseData;
+    BadgeRemove200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverRemove200Response, DriverRemove200Response>(
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
               rawData,
-              'DriverRemove200Response',
+              'BadgeRemove200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -96,7 +96,7 @@ class PaymentApi {
       );
     }
 
-    return Response<DriverRemove200Response>(
+    return Response<BadgeRemove200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

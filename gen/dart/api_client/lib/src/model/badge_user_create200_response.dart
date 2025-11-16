@@ -3,10 +3,11 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/user_badge.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'driver_remove200_response.g.dart';
+part 'badge_user_create200_response.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -15,9 +16,9 @@ part 'driver_remove200_response.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class DriverRemove200Response {
-  /// Returns a new [DriverRemove200Response] instance.
-  const DriverRemove200Response({
+class BadgeUserCreate200Response {
+  /// Returns a new [BadgeUserCreate200Response] instance.
+  const BadgeUserCreate200Response({
     required this.message,
     required this.data,
     this.totalPages,
@@ -26,8 +27,8 @@ class DriverRemove200Response {
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
-  @JsonKey(name: r'data', required: true, includeIfNull: true)
-  final Object? data;
+  @JsonKey(name: r'data', required: true, includeIfNull: false)
+  final UserBadge data;
 
   // minimum: -9007199254740991
   // maximum: 9007199254740991
@@ -37,21 +38,18 @@ class DriverRemove200Response {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DriverRemove200Response &&
+      other is BadgeUserCreate200Response &&
           other.message == message &&
           other.data == data &&
           other.totalPages == totalPages;
 
   @override
-  int get hashCode =>
-      message.hashCode +
-      (data == null ? 0 : data.hashCode) +
-      totalPages.hashCode;
+  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
 
-  factory DriverRemove200Response.fromJson(Map<String, dynamic> json) =>
-      _$DriverRemove200ResponseFromJson(json);
+  factory BadgeUserCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$BadgeUserCreate200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverRemove200ResponseToJson(this);
+  Map<String, dynamic> toJson() => _$BadgeUserCreate200ResponseToJson(this);
 
   @override
   String toString() {

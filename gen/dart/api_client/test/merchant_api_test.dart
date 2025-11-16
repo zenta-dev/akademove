@@ -36,7 +36,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> merchantMenuRemove(String merchantId, String id) async
+    //Future<BadgeRemove200Response> merchantMenuRemove(String merchantId, String id) async
     test('test merchantMenuRemove', () async {
       // TODO
     });
@@ -51,7 +51,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> merchantRemove(String id) async
+    //Future<BadgeRemove200Response> merchantRemove(String id) async
     test('test merchantRemove', () async {
       // TODO
     });

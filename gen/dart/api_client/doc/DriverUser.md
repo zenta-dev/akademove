@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **phone** | [**Phone**](Phone.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **updatedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**badges** | [**List&lt;Badge&gt;**](Badge.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

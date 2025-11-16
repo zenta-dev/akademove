@@ -75,6 +75,16 @@ Class | Method | HTTP request | Description
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpDriver**](doc/AuthApi.md#authsignupdriver) | **POST** /auth/sign-up/driver | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpMerchant**](doc/AuthApi.md#authsignupmerchant) | **POST** /auth/sign-up/merchant | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpUser**](doc/AuthApi.md#authsignupuser) | **POST** /auth/sign-up/user | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeCreate**](doc/BadgeApi.md#badgecreate) | **POST** /badges | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeGet**](doc/BadgeApi.md#badgeget) | **GET** /badges/{id} | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeList**](doc/BadgeApi.md#badgelist) | **GET** /badges | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeRemove**](doc/BadgeApi.md#badgeremove) | **DELETE** /badges/{id} | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUpdate**](doc/BadgeApi.md#badgeupdate) | **PUT** /badges/{id} | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUserCreate**](doc/BadgeApi.md#badgeusercreate) | **POST** /badges/user | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUserGet**](doc/BadgeApi.md#badgeuserget) | **GET** /badges/user/{id} | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUserList**](doc/BadgeApi.md#badgeuserlist) | **GET** /badges/user | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUserRemove**](doc/BadgeApi.md#badgeuserremove) | **DELETE** /badges/user/{id} | 
+[*BadgeApi*](doc/BadgeApi.md) | [**badgeUserUpdate**](doc/BadgeApi.md#badgeuserupdate) | **PUT** /badges/user/{id} | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGet**](doc/ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationList**](doc/ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
@@ -94,6 +104,8 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
+[*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
+[*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -149,6 +161,21 @@ Class | Method | HTTP request | Description
  - [AuthSignIn200Response](doc/AuthSignIn200Response.md)
  - [AuthSignOut200Response](doc/AuthSignOut200Response.md)
  - [AuthSignUpUser201Response](doc/AuthSignUpUser201Response.md)
+ - [Badge](doc/Badge.md)
+ - [BadgeBenefits](doc/BadgeBenefits.md)
+ - [BadgeCreate200Response](doc/BadgeCreate200Response.md)
+ - [BadgeCreateRequest](doc/BadgeCreateRequest.md)
+ - [BadgeCreateRequestCriteria](doc/BadgeCreateRequestCriteria.md)
+ - [BadgeLevel](doc/BadgeLevel.md)
+ - [BadgeList200Response](doc/BadgeList200Response.md)
+ - [BadgeRemove200Response](doc/BadgeRemove200Response.md)
+ - [BadgeTargetRole](doc/BadgeTargetRole.md)
+ - [BadgeType](doc/BadgeType.md)
+ - [BadgeUpdateRequest](doc/BadgeUpdateRequest.md)
+ - [BadgeUserCreate200Response](doc/BadgeUserCreate200Response.md)
+ - [BadgeUserCreateRequest](doc/BadgeUserCreateRequest.md)
+ - [BadgeUserList200Response](doc/BadgeUserList200Response.md)
+ - [BadgeUserUpdateRequest](doc/BadgeUserUpdateRequest.md)
  - [BanUser](doc/BanUser.md)
  - [Bank](doc/Bank.md)
  - [BannerConfiguration](doc/BannerConfiguration.md)
@@ -174,7 +201,6 @@ Class | Method | HTTP request | Description
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
  - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
- - [DriverRemove200Response](doc/DriverRemove200Response.md)
  - [DriverSchedule](doc/DriverSchedule.md)
  - [DriverScheduleCreate200Response](doc/DriverScheduleCreate200Response.md)
  - [DriverScheduleKey](doc/DriverScheduleKey.md)
@@ -191,11 +217,15 @@ Class | Method | HTTP request | Description
  - [InsertConfiguration](doc/InsertConfiguration.md)
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertDriverScheduleRequest](doc/InsertDriverScheduleRequest.md)
+ - [InsertLeaderboard](doc/InsertLeaderboard.md)
  - [InsertPayment](doc/InsertPayment.md)
  - [InsertReport](doc/InsertReport.md)
  - [InsertReview](doc/InsertReview.md)
  - [InsertTransaction](doc/InsertTransaction.md)
  - [InsertUser](doc/InsertUser.md)
+ - [Leaderboard](doc/Leaderboard.md)
+ - [LeaderboardGet200Response](doc/LeaderboardGet200Response.md)
+ - [LeaderboardList200Response](doc/LeaderboardList200Response.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
@@ -269,6 +299,7 @@ Class | Method | HTTP request | Description
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
  - [UpdateCoupon](doc/UpdateCoupon.md)
  - [UpdateDriverScheduleRequest](doc/UpdateDriverScheduleRequest.md)
+ - [UpdateLeaderboard](doc/UpdateLeaderboard.md)
  - [UpdateOrder](doc/UpdateOrder.md)
  - [UpdatePayment](doc/UpdatePayment.md)
  - [UpdateReport](doc/UpdateReport.md)
@@ -279,6 +310,8 @@ Class | Method | HTTP request | Description
  - [UpdateUserRole](doc/UpdateUserRole.md)
  - [UpdateWallet](doc/UpdateWallet.md)
  - [User](doc/User.md)
+ - [UserBadge](doc/UserBadge.md)
+ - [UserBadgeMetadata](doc/UserBadgeMetadata.md)
  - [UserCreate200Response](doc/UserCreate200Response.md)
  - [UserGender](doc/UserGender.md)
  - [UserKey](doc/UserKey.md)

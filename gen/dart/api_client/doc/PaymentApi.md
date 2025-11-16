@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **paymentWebhookMidtrans**
-> DriverRemove200Response paymentWebhookMidtrans(body)
+> BadgeRemove200Response paymentWebhookMidtrans(body)
 
 
 
@@ -40,7 +40,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 

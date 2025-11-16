@@ -32,6 +32,11 @@ void main() {
       // TODO
     });
 
+    // List<Badge> badges
+    test('to test the property `badges`', () async {
+      // TODO
+    });
+
     // String password
     test('to test the property `password`', () async {
       // TODO

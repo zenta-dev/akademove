@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> reportRemove(String id) async
+    //Future<BadgeRemove200Response> reportRemove(String id) async
     test('test reportRemove', () async {
       // TODO
     });

@@ -1,0 +1,19 @@
+# api_client.model.BadgeCreateRequestCriteria
+
+## Load the model package
+```dart
+import 'package:api_client/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**minOrders** | **int** |  | [optional] 
+**minRating** | **num** |  | [optional] 
+**minOnTimeRate** | **num** |  | [optional] 
+**minStreak** | **int** |  | [optional] 
+**minEarnings** | **num** |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

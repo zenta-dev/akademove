@@ -150,7 +150,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reportRemove**
-> DriverRemove200Response reportRemove(id)
+> BadgeRemove200Response reportRemove(id)
 
 
 
@@ -177,7 +177,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 

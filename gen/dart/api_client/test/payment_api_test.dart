@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getPaymentApi();
 
   group(PaymentApi, () {
-    //Future<DriverRemove200Response> paymentWebhookMidtrans(Object body) async
+    //Future<BadgeRemove200Response> paymentWebhookMidtrans(Object body) async
     test('test paymentWebhookMidtrans', () async {
       // TODO
     });

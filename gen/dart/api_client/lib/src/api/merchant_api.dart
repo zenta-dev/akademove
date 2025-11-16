@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_client/src/model/driver_remove200_response.dart';
+import 'package:api_client/src/model/badge_remove200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
@@ -591,9 +591,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> merchantMenuRemove({
+  Future<Response<BadgeRemove200Response>> merchantMenuRemove({
     required String merchantId,
     required String id,
     CancelToken? cancelToken,
@@ -636,15 +636,15 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverRemove200Response? _responseData;
+    BadgeRemove200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverRemove200Response, DriverRemove200Response>(
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
               rawData,
-              'DriverRemove200Response',
+              'BadgeRemove200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -657,7 +657,7 @@ class MerchantApi {
       );
     }
 
-    return Response<DriverRemove200Response>(
+    return Response<BadgeRemove200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,
@@ -898,9 +898,9 @@ class MerchantApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [DriverRemove200Response] as data
+  /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<DriverRemove200Response>> merchantRemove({
+  Future<Response<BadgeRemove200Response>> merchantRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -935,15 +935,15 @@ class MerchantApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    DriverRemove200Response? _responseData;
+    BadgeRemove200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverRemove200Response, DriverRemove200Response>(
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
               rawData,
-              'DriverRemove200Response',
+              'BadgeRemove200Response',
               growable: true,
             );
     } catch (error, stackTrace) {
@@ -956,7 +956,7 @@ class MerchantApi {
       );
     }
 
-    return Response<DriverRemove200Response>(
+    return Response<BadgeRemove200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

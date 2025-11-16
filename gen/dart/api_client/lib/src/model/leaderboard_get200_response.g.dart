@@ -1,0 +1,107 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'leaderboard_get200_response.dart';
+
+// **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+abstract class _$LeaderboardGet200ResponseCWProxy {
+  LeaderboardGet200Response message(String message);
+
+  LeaderboardGet200Response data(Leaderboard data);
+
+  LeaderboardGet200Response totalPages(int? totalPages);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `LeaderboardGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// LeaderboardGet200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  LeaderboardGet200Response call({
+    String message,
+    Leaderboard data,
+    int? totalPages,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfLeaderboardGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`
+class _$LeaderboardGet200ResponseCWProxyImpl
+    implements _$LeaderboardGet200ResponseCWProxy {
+  const _$LeaderboardGet200ResponseCWProxyImpl(this._value);
+
+  final LeaderboardGet200Response _value;
+
+  @override
+  LeaderboardGet200Response message(String message) => this(message: message);
+
+  @override
+  LeaderboardGet200Response data(Leaderboard data) => this(data: data);
+
+  @override
+  LeaderboardGet200Response totalPages(int? totalPages) =>
+      this(totalPages: totalPages);
+
+  @override
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `LeaderboardGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// LeaderboardGet200Response(...).copyWith(id: 12, name: "My name")
+  /// ````
+  LeaderboardGet200Response call({
+    Object? message = const $CopyWithPlaceholder(),
+    Object? data = const $CopyWithPlaceholder(),
+    Object? totalPages = const $CopyWithPlaceholder(),
+  }) {
+    return LeaderboardGet200Response(
+      message: message == const $CopyWithPlaceholder()
+          ? _value.message
+          // ignore: cast_nullable_to_non_nullable
+          : message as String,
+      data: data == const $CopyWithPlaceholder()
+          ? _value.data
+          // ignore: cast_nullable_to_non_nullable
+          : data as Leaderboard,
+      totalPages: totalPages == const $CopyWithPlaceholder()
+          ? _value.totalPages
+          // ignore: cast_nullable_to_non_nullable
+          : totalPages as int?,
+    );
+  }
+}
+
+extension $LeaderboardGet200ResponseCopyWith on LeaderboardGet200Response {
+  /// Returns a callable class that can be used as follows: `instanceOfLeaderboardGet200Response.copyWith(...)` or like so:`instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$LeaderboardGet200ResponseCWProxy get copyWith =>
+      _$LeaderboardGet200ResponseCWProxyImpl(this);
+}
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+LeaderboardGet200Response _$LeaderboardGet200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('LeaderboardGet200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = LeaderboardGet200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Leaderboard.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
+
+Map<String, dynamic> _$LeaderboardGet200ResponseToJson(
+  LeaderboardGet200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'totalPages': ?instance.totalPages,
+};

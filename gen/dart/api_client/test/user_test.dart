@@ -71,5 +71,10 @@ void main() {
     test('to test the property `updatedAt`', () async {
       // TODO
     });
+
+    // List<Badge> badges
+    test('to test the property `badges`', () async {
+      // TODO
+    });
   });
 }

@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> driverRemove(String id) async
+    //Future<BadgeRemove200Response> driverRemove(String id) async
     test('test driverRemove', () async {
       // TODO
     });
@@ -46,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverRemove200Response> driverScheduleRemove(String driverId, String id) async
+    //Future<BadgeRemove200Response> driverScheduleRemove(String driverId, String id) async
     test('test driverScheduleRemove', () async {
       // TODO
     });

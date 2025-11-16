@@ -6,6 +6,7 @@
 import 'package:api_client/src/model/user_gender.dart';
 import 'package:api_client/src/model/user_role.dart';
 import 'package:api_client/src/model/phone.dart';
+import 'package:api_client/src/model/badge.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -26,6 +27,7 @@ class InsertUser {
     required this.role,
     this.gender,
     required this.phone,
+    required this.badges,
     required this.password,
     required this.confirmPassword,
   });
@@ -45,6 +47,9 @@ class InsertUser {
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final Phone phone;
 
+  @JsonKey(name: r'badges', required: true, includeIfNull: false)
+  final List<Badge> badges;
+
   @JsonKey(name: r'password', required: true, includeIfNull: false)
   final String password;
 
@@ -60,6 +65,7 @@ class InsertUser {
           other.role == role &&
           other.gender == gender &&
           other.phone == phone &&
+          other.badges == badges &&
           other.password == password &&
           other.confirmPassword == confirmPassword;
 
@@ -70,6 +76,7 @@ class InsertUser {
       role.hashCode +
       gender.hashCode +
       phone.hashCode +
+      badges.hashCode +
       password.hashCode +
       confirmPassword.hashCode;
 

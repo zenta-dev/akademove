@@ -5,6 +5,18 @@ import 'package:api_client/src/model/auth_has_permission_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
+import 'package:api_client/src/model/badge.dart';
+import 'package:api_client/src/model/badge_benefits.dart';
+import 'package:api_client/src/model/badge_create200_response.dart';
+import 'package:api_client/src/model/badge_create_request.dart';
+import 'package:api_client/src/model/badge_create_request_criteria.dart';
+import 'package:api_client/src/model/badge_list200_response.dart';
+import 'package:api_client/src/model/badge_remove200_response.dart';
+import 'package:api_client/src/model/badge_update_request.dart';
+import 'package:api_client/src/model/badge_user_create200_response.dart';
+import 'package:api_client/src/model/badge_user_create_request.dart';
+import 'package:api_client/src/model/badge_user_list200_response.dart';
+import 'package:api_client/src/model/badge_user_update_request.dart';
 import 'package:api_client/src/model/ban_user.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/banner_configuration.dart';
@@ -24,7 +36,6 @@ import 'package:api_client/src/model/driver.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
-import 'package:api_client/src/model/driver_remove200_response.dart';
 import 'package:api_client/src/model/driver_schedule.dart';
 import 'package:api_client/src/model/driver_schedule_create200_response.dart';
 import 'package:api_client/src/model/driver_schedule_list200_response.dart';
@@ -39,11 +50,15 @@ import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
 import 'package:api_client/src/model/insert_driver_schedule_request.dart';
+import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_payment.dart';
 import 'package:api_client/src/model/insert_report.dart';
 import 'package:api_client/src/model/insert_review.dart';
 import 'package:api_client/src/model/insert_transaction.dart';
 import 'package:api_client/src/model/insert_user.dart';
+import 'package:api_client/src/model/leaderboard.dart';
+import 'package:api_client/src/model/leaderboard_get200_response.dart';
+import 'package:api_client/src/model/leaderboard_list200_response.dart';
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/merchant.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
@@ -101,6 +116,7 @@ import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_coupon.dart';
 import 'package:api_client/src/model/update_driver_schedule_request.dart';
+import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_order.dart';
 import 'package:api_client/src/model/update_payment.dart';
 import 'package:api_client/src/model/update_report.dart';
@@ -111,6 +127,8 @@ import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/update_user_role.dart';
 import 'package:api_client/src/model/update_wallet.dart';
 import 'package:api_client/src/model/user.dart';
+import 'package:api_client/src/model/user_badge.dart';
+import 'package:api_client/src/model/user_badge_metadata.dart';
 import 'package:api_client/src/model/user_create200_response.dart';
 import 'package:api_client/src/model/user_list200_response.dart';
 import 'package:api_client/src/model/user_notification.dart';
@@ -173,6 +191,44 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'AuthSignUpUser201Response':
       return AuthSignUpUser201Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'Badge':
+      return Badge.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'BadgeBenefits':
+      return BadgeBenefits.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeCreate200Response':
+      return BadgeCreate200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeCreateRequest':
+      return BadgeCreateRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeCreateRequestCriteria':
+      return BadgeCreateRequestCriteria.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeLevel':
+    case 'BadgeList200Response':
+      return BadgeList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeRemove200Response':
+      return BadgeRemove200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeTargetRole':
+    case 'BadgeType':
+    case 'BadgeUpdateRequest':
+      return BadgeUpdateRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeUserCreate200Response':
+      return BadgeUserCreate200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeUserCreateRequest':
+      return BadgeUserCreateRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeUserList200Response':
+      return BadgeUserList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'BadgeUserUpdateRequest':
+      return BadgeUserUpdateRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'BanUser':
       return BanUser.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -237,9 +293,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'DriverList200Response':
       return DriverList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'DriverRemove200Response':
-      return DriverRemove200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'DriverSchedule':
       return DriverSchedule.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -288,6 +341,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'InsertDriverScheduleRequest':
       return InsertDriverScheduleRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'InsertLeaderboard':
+      return InsertLeaderboard.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertPayment':
       return InsertPayment.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -300,6 +356,14 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'InsertUser':
       return InsertUser.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'Leaderboard':
+      return Leaderboard.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'LeaderboardGet200Response':
+      return LeaderboardGet200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'LeaderboardList200Response':
+      return LeaderboardList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Location':
       return Location.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Merchant':
@@ -482,6 +546,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateDriverScheduleRequest':
       return UpdateDriverScheduleRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'UpdateLeaderboard':
+      return UpdateLeaderboard.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateOrder':
       return UpdateOrder.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdatePayment':
@@ -506,6 +573,11 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UpdateWallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'User':
       return User.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UserBadge':
+      return UserBadge.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UserBadgeMetadata':
+      return UserBadgeMetadata.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UserCreate200Response':
       return UserCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;

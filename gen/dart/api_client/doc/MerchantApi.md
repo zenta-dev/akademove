@@ -299,7 +299,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantMenuRemove**
-> DriverRemove200Response merchantMenuRemove(merchantId, id)
+> BadgeRemove200Response merchantMenuRemove(merchantId, id)
 
 
 
@@ -328,7 +328,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 
@@ -446,7 +446,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantRemove**
-> DriverRemove200Response merchantRemove(id)
+> BadgeRemove200Response merchantRemove(id)
 
 
 
@@ -473,7 +473,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**DriverRemove200Response**](DriverRemove200Response.md)
+[**BadgeRemove200Response**](BadgeRemove200Response.md)
 
 ### Authorization
 

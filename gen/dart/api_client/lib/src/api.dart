@@ -8,9 +8,11 @@ import 'package:api_client/src/auth/basic_auth.dart';
 import 'package:api_client/src/auth/bearer_auth.dart';
 import 'package:api_client/src/auth/oauth.dart';
 import 'package:api_client/src/api/auth_api.dart';
+import 'package:api_client/src/api/badge_api.dart';
 import 'package:api_client/src/api/configuration_api.dart';
 import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
+import 'package:api_client/src/api/leaderboard_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
 import 'package:api_client/src/api/notification_api.dart';
 import 'package:api_client/src/api/order_api.dart';
@@ -96,6 +98,12 @@ class ApiClient {
     return AuthApi(dio);
   }
 
+  /// Get BadgeApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  BadgeApi getBadgeApi() {
+    return BadgeApi(dio);
+  }
+
   /// Get ConfigurationApi instance, base route and serializer can be overridden by a given but be careful,
   /// by doing that all interceptors will not be executed
   ConfigurationApi getConfigurationApi() {
@@ -112,6 +120,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   DriverApi getDriverApi() {
     return DriverApi(dio);
+  }
+
+  /// Get LeaderboardApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  LeaderboardApi getLeaderboardApi() {
+    return LeaderboardApi(dio);
   }
 
   /// Get MerchantApi instance, base route and serializer can be overridden by a given but be careful,
