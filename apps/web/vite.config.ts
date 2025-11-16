@@ -1,5 +1,4 @@
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
