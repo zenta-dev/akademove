@@ -1,4 +1,8 @@
-import type { BadgeBenefits, BadgeCriteria } from "@repo/schema/badge";
+import type {
+	BadgeBenefits,
+	BadgeCriteria,
+	UserBadgeMetadata,
+} from "@repo/schema/badge";
 import {
 	BADGE_LEVELS,
 	BADGE_TARGET_ROLES,
@@ -69,7 +73,7 @@ export const userBadge = pgTable(
 			.notNull()
 			.references(() => badge.id, { onDelete: "cascade" }),
 		earnedAt: timestamp("earned_at").notNull().$defaultFn(nowFn),
-		metadata: jsonb(),
+		metadata: jsonb().$type<UserBadgeMetadata>(),
 		...DateModifier,
 	},
 	(t) => [
@@ -80,48 +84,6 @@ export const userBadge = pgTable(
 	],
 );
 export type UserBadgeDatabase = typeof userBadge.$inferSelect;
-
-export const userStats = pgTable(
-	"user_stats",
-	{
-		id: uuid().primaryKey(),
-		userId: text("user_id")
-			.notNull()
-			.unique()
-			.references(() => user.id, { onDelete: "cascade" }),
-
-		// Reputation
-		reputationScore: integer("reputation_score").notNull().default(0),
-
-		// Orders
-		totalOrders: integer("total_orders").notNull().default(0),
-		completedOrders: integer("completed_orders").notNull().default(0),
-
-		// Rating (stored as integer: 4.5 = 45)
-		averageRating: integer("average_rating").notNull().default(0),
-		totalRatings: integer("total_ratings").notNull().default(0),
-
-		// Streak (days)
-		currentStreak: integer("current_streak").notNull().default(0),
-		longestStreak: integer("longest_streak").notNull().default(0),
-
-		// Performance (percentage 0-100)
-		onTimeRate: integer("on_time_rate").notNull().default(0),
-		completionRate: integer("completion_rate").notNull().default(0),
-
-		// Priority boost from badges (100 = 1.0x, 150 = 1.5x)
-		priorityBoost: integer("priority_boost").notNull().default(100),
-
-		lastActiveDate: timestamp("last_active_date"),
-		...DateModifier,
-	},
-	(t) => [
-		uniqueIndex("user_stats_user_id_idx").on(t.userId),
-		index("user_stats_reputation_idx").on(t.reputationScore),
-		index("user_stats_rating_idx").on(t.averageRating),
-	],
-);
-export type UserStatsDatabase = typeof userStats.$inferSelect;
 
 export const badgeRelations = relations(badge, ({ many }) => ({
 	userBadges: many(userBadge),
@@ -135,12 +97,5 @@ export const userBadgeRelations = relations(userBadge, ({ one }) => ({
 	badge: one(badge, {
 		fields: [userBadge.badgeId],
 		references: [badge.id],
-	}),
-}));
-
-export const userStatsRelations = relations(userStats, ({ one }) => ({
-	user: one(user, {
-		fields: [userStats.userId],
-		references: [user.id],
 	}),
 }));
