@@ -94,40 +94,6 @@ export const UpdateUserBadgeSchema = UserBadgeSchema.omit({
 }).partial();
 export type UpdateUserBadge = z.infer<typeof UpdateUserBadgeSchema>;
 
-export const UserStatsSchema = z.object({
-	id: z.uuid(),
-	userId: z.string(),
-	reputationScore: z.number().int().min(0).max(1000).default(0),
-	totalOrders: z.number().int().min(0).default(0),
-	completedOrders: z.number().int().min(0).default(0),
-	averageRating: z.number().int().min(0).max(50).default(0), // 45 = 4.5
-	totalRatings: z.number().int().min(0).default(0),
-	currentStreak: z.number().int().min(0).default(0),
-	longestStreak: z.number().int().min(0).default(0),
-	onTimeRate: z.number().int().min(0).max(100).default(0),
-	completionRate: z.number().int().min(0).max(100).default(0),
-	priorityBoost: z.number().int().min(100).max(300).default(100),
-	lastActiveDate: DateSchema.optional(),
-	createdAt: DateSchema,
-	updatedAt: DateSchema,
-});
-export type UserStats = z.infer<typeof UserStatsSchema>;
-
-export const InsertUserStatsSchema = UserStatsSchema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-});
-export type InsertUserStats = z.infer<typeof InsertUserStatsSchema>;
-
-export const UpdateUserStatsSchema = UserStatsSchema.omit({
-	id: true,
-	userId: true,
-	createdAt: true,
-	updatedAt: true,
-}).partial();
-export type UpdateUserStats = z.infer<typeof UpdateUserStatsSchema>;
-
 export const BadgeSchemaRegistries = {
 	BadgeType: { schema: BadgeTypeSchema, strategy: "output" },
 	BadgeLevel: { schema: BadgeLevelSchema, strategy: "output" },
@@ -136,5 +102,4 @@ export const BadgeSchemaRegistries = {
 	Badge: { schema: BadgeSchema, strategy: "output" },
 	UserBadgeMetadata: { schema: UserBadgeMetadataSchema, strategy: "output" },
 	UserBadge: { schema: UserBadgeSchema, strategy: "output" },
-	UserStats: { schema: UserStatsSchema, strategy: "output" },
 } satisfies SchemaRegistries;
