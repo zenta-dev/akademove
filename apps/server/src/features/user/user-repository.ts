@@ -17,7 +17,9 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
+import type { BadgeDatabase } from "@/core/tables/badge";
 import { log } from "@/utils";
+import { BadgeRepository } from "../badge/main/badge-main-repository";
 
 const BUCKET = "user";
 
@@ -34,7 +36,9 @@ export class UserRepository extends BaseRepository {
 	}
 
 	static async composeEntity(
-		user: UserDatabase,
+		user: UserDatabase & {
+			userBadgePivots: { badge: BadgeDatabase }[];
+		},
 		storage: StorageService,
 		options?: { expiresIn?: number },
 	): Promise<User> {
@@ -52,11 +56,20 @@ export class UserRepository extends BaseRepository {
 			banReason: user.banReason ?? undefined,
 			banExpires: user.banExpires ?? undefined,
 			gender: user.gender ?? undefined,
+			badges: user.userBadgePivots.map((e) =>
+				BadgeRepository.composeEntity(e.badge),
+			),
 		};
 	}
 
 	async #getFromDB(id: string): Promise<User | undefined> {
 		const result = await this.db.query.user.findFirst({
+			with: {
+				userBadgePivots: {
+					columns: {},
+					with: { badge: true },
+				},
+			},
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
@@ -111,6 +124,12 @@ export class UserRepository extends BaseRepository {
 				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
 
 				const result = await this.db.query.user.findMany({
+					with: {
+						userBadgePivots: {
+							columns: {},
+							with: { badge: true },
+						},
+					},
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
@@ -128,6 +147,12 @@ export class UserRepository extends BaseRepository {
 				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
 				const result = await this.db.query.user.findMany({
+					with: {
+						userBadgePivots: {
+							columns: {},
+							with: { badge: true },
+						},
+					},
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
 					offset,
@@ -148,6 +173,12 @@ export class UserRepository extends BaseRepository {
 			}
 
 			const result = await this.db.query.user.findMany({
+				with: {
+					userBadgePivots: {
+						columns: {},
+						with: { badge: true },
+					},
+				},
 				where: (_f, op) => op.and(...clauses),
 				orderBy,
 				limit,

@@ -57,6 +57,10 @@ export class AuthRepository extends BaseRepository {
 						columns: { password: true },
 						where: (f, op) => op.eq(f.providerId, "credentials"),
 					},
+					userBadgePivots: {
+						columns: {},
+						with: { badge: true },
+					},
 				},
 				where: (f, op) => op.eq(f.email, params.email),
 			});
@@ -176,7 +180,12 @@ export class AuthRepository extends BaseRepository {
 
 			await Promise.all(promises);
 
-			return { user: await UserRepository.composeEntity(user, this.#storage) };
+			return {
+				user: await UserRepository.composeEntity(
+					{ ...user, userBadgePivots: [] },
+					this.#storage,
+				),
+			};
 		} catch (error) {
 			throw this.handleError(error, "sign up");
 		}
@@ -222,6 +231,12 @@ export class AuthRepository extends BaseRepository {
 
 			const fallback = async () => {
 				const res = await this.db.query.user.findFirst({
+					with: {
+						userBadgePivots: {
+							columns: {},
+							with: { badge: true },
+						},
+					},
 					where: (f, op) => op.eq(f.id, payload.id),
 				});
 				if (!res) {

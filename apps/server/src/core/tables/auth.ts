@@ -3,6 +3,7 @@ import { CONSTANTS } from "@repo/schema/constants";
 import type { UserRole } from "@repo/schema/user";
 import { relations } from "drizzle-orm";
 import { boolean, jsonb, text } from "drizzle-orm/pg-core";
+import { userBadge } from "./badge";
 import {
 	DateModifier,
 	index,
@@ -80,6 +81,7 @@ export const verification = pgTable(
 ///
 export const userRelations = relations(user, ({ many }) => ({
 	accounts: many(account),
+	userBadgePivots: many(userBadge),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
