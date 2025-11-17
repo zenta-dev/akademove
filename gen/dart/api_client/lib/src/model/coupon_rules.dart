@@ -3,9 +3,9 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/coupon_user_rules.dart';
-import 'package:api_client/src/model/coupon_general_rules.dart';
-import 'package:api_client/src/model/coupon_time_rules.dart';
+import 'package:api_client/src/model/time_rules.dart';
+import 'package:api_client/src/model/general_rules.dart';
+import 'package:api_client/src/model/user_rules.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -23,13 +23,13 @@ class CouponRules {
   const CouponRules({this.general, this.user, this.time});
 
   @JsonKey(name: r'general', required: false, includeIfNull: false)
-  final CouponGeneralRules? general;
+  final GeneralRules? general;
 
   @JsonKey(name: r'user', required: false, includeIfNull: false)
-  final CouponUserRules? user;
+  final UserRules? user;
 
   @JsonKey(name: r'time', required: false, includeIfNull: false)
-  final CouponTimeRules? time;
+  final TimeRules? time;
 
   @override
   bool operator ==(Object other) =>

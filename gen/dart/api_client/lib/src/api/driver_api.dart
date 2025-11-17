@@ -14,11 +14,11 @@ import 'package:api_client/src/model/driver_get_mine200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_schedule_create200_response.dart';
+import 'package:api_client/src/model/driver_schedule_create_request.dart';
 import 'package:api_client/src/model/driver_schedule_list200_response.dart';
+import 'package:api_client/src/model/driver_schedule_update_request.dart';
 import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/driver_update_request_current_location.dart';
-import 'package:api_client/src/model/insert_driver_schedule_request.dart';
-import 'package:api_client/src/model/update_driver_schedule_request.dart';
 import 'package:api_client/src/model/user_gender.dart';
 
 class DriverApi {
@@ -460,7 +460,7 @@ class DriverApi {
   ///
   /// Parameters:
   /// * [driverId]
-  /// * [insertDriverScheduleRequest]
+  /// * [driverScheduleCreateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -472,7 +472,7 @@ class DriverApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<DriverScheduleCreate200Response>> driverScheduleCreate({
     required String driverId,
-    required InsertDriverScheduleRequest insertDriverScheduleRequest,
+    required DriverScheduleCreateRequest driverScheduleCreateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -502,7 +502,7 @@ class DriverApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertDriverScheduleRequest);
+      _bodyData = jsonEncode(driverScheduleCreateRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -843,7 +843,7 @@ class DriverApi {
   /// Parameters:
   /// * [driverId]
   /// * [id]
-  /// * [updateDriverScheduleRequest]
+  /// * [driverScheduleUpdateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -856,7 +856,7 @@ class DriverApi {
   Future<Response<DriverScheduleCreate200Response>> driverScheduleUpdate({
     required String driverId,
     required String id,
-    required UpdateDriverScheduleRequest updateDriverScheduleRequest,
+    required DriverScheduleUpdateRequest driverScheduleUpdateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -893,7 +893,7 @@ class DriverApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateDriverScheduleRequest);
+      _bodyData = jsonEncode(driverScheduleUpdateRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

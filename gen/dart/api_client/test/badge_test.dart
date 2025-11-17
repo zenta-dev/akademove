@@ -47,7 +47,7 @@ void main() {
       // TODO
     });
 
-    // BadgeCreateRequestCriteria criteria
+    // BadgeCriteria criteria
     test('to test the property `criteria`', () async {
       // TODO
     });

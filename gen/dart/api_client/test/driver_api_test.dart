@@ -31,7 +31,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverScheduleCreate200Response> driverScheduleCreate(String driverId, InsertDriverScheduleRequest insertDriverScheduleRequest) async
+    //Future<DriverScheduleCreate200Response> driverScheduleCreate(String driverId, DriverScheduleCreateRequest driverScheduleCreateRequest) async
     test('test driverScheduleCreate', () async {
       // TODO
     });
@@ -51,7 +51,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverScheduleCreate200Response> driverScheduleUpdate(String driverId, String id, UpdateDriverScheduleRequest updateDriverScheduleRequest) async
+    //Future<DriverScheduleCreate200Response> driverScheduleUpdate(String driverId, String id, DriverScheduleUpdateRequest driverScheduleUpdateRequest) async
     test('test driverScheduleUpdate', () async {
       // TODO
     });

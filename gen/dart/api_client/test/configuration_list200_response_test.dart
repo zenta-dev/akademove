@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // List<Configuration> data
+    // List<ConfigurationList200ResponseDataInner> data
     test('to test the property `data`', () async {
       // TODO
     });

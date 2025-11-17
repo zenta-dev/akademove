@@ -48,13 +48,14 @@ Please follow the [installation procedure](#installation--usage) and then run th
 import 'package:api_client/api_client.dart';
 
 
-final api = ApiClient().getAuthApi();
+final api = ApiClient().getAdminApi();
+final InsertUser insertUser = ; // InsertUser | 
 
 try {
-    final response = await api.authExchangeToken();
+    final response = await api.userAdminCreate(insertUser);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling AuthApi->authExchangeToken: $e\n");
+    print("Exception when calling AdminApi->userAdminCreate: $e\n");
 }
 
 ```
@@ -65,6 +66,11 @@ All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AdminApi*](doc/AdminApi.md) | [**userAdminCreate**](doc/AdminApi.md#useradmincreate) | **POST** /users/admin | 
+[*AdminApi*](doc/AdminApi.md) | [**userAdminGet**](doc/AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**userAdminList**](doc/AdminApi.md#useradminlist) | **GET** /users/admin | 
+[*AdminApi*](doc/AdminApi.md) | [**userAdminRemove**](doc/AdminApi.md#useradminremove) | **DELETE** /users/admin/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**userAdminUpdate**](doc/AdminApi.md#useradminupdate) | **PUT** /users/admin/{id} | 
 [*AuthApi*](doc/AuthApi.md) | [**authExchangeToken**](doc/AuthApi.md#authexchangetoken) | **GET** /auth/exchange-token | 
 [*AuthApi*](doc/AuthApi.md) | [**authForgotPassword**](doc/AuthApi.md#authforgotpassword) | **POST** /auth/forgot-password | 
 [*AuthApi*](doc/AuthApi.md) | [**authGetSession**](doc/AuthApi.md#authgetsession) | **GET** /auth/session | 
@@ -140,11 +146,8 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionGet**](doc/TransactionApi.md#transactionget) | **GET** /transactions/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
-[*UserApi*](doc/UserApi.md) | [**userCreate**](doc/UserApi.md#usercreate) | **POST** /users | 
-[*UserApi*](doc/UserApi.md) | [**userGet**](doc/UserApi.md#userget) | **GET** /users/{id} | 
-[*UserApi*](doc/UserApi.md) | [**userList**](doc/UserApi.md#userlist) | **GET** /users | 
-[*UserApi*](doc/UserApi.md) | [**userRemove**](doc/UserApi.md#userremove) | **DELETE** /users/{id} | 
-[*UserApi*](doc/UserApi.md) | [**userUpdate**](doc/UserApi.md#userupdate) | **PUT** /users/{id} | 
+[*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
+[*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGetMonthlySummary**](doc/WalletApi.md#walletgetmonthlysummary) | **GET** /wallets/summary | 
 [*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
@@ -154,11 +157,14 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AdminUpdateUser](doc/AdminUpdateUser.md)
  - [AuthExchangeToken200Response](doc/AuthExchangeToken200Response.md)
+ - [AuthForgotPasswordRequest](doc/AuthForgotPasswordRequest.md)
  - [AuthGetSession200Response](doc/AuthGetSession200Response.md)
  - [AuthHasPermission200Response](doc/AuthHasPermission200Response.md)
  - [AuthHasPermissionRequest](doc/AuthHasPermissionRequest.md)
  - [AuthSignIn200Response](doc/AuthSignIn200Response.md)
+ - [AuthSignInRequest](doc/AuthSignInRequest.md)
  - [AuthSignOut200Response](doc/AuthSignOut200Response.md)
  - [AuthSignUpUser201Response](doc/AuthSignUpUser201Response.md)
  - [Badge](doc/Badge.md)
@@ -177,20 +183,17 @@ Class | Method | HTTP request | Description
  - [BanUser](doc/BanUser.md)
  - [Bank](doc/Bank.md)
  - [BannerConfiguration](doc/BannerConfiguration.md)
- - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
  - [ConfigurationKey](doc/ConfigurationKey.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
+ - [ConfigurationList200ResponseDataInner](doc/ConfigurationList200ResponseDataInner.md)
  - [Coordinate](doc/Coordinate.md)
  - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
  - [CouponCreate200Response](doc/CouponCreate200Response.md)
- - [CouponGeneralRules](doc/CouponGeneralRules.md)
  - [CouponKey](doc/CouponKey.md)
  - [CouponList200Response](doc/CouponList200Response.md)
  - [CouponRules](doc/CouponRules.md)
- - [CouponTimeRules](doc/CouponTimeRules.md)
- - [CouponUserRules](doc/CouponUserRules.md)
  - [Currency](doc/Currency.md)
  - [DayOfWeek](doc/DayOfWeek.md)
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
@@ -201,8 +204,10 @@ Class | Method | HTTP request | Description
  - [DriverList200Response](doc/DriverList200Response.md)
  - [DriverSchedule](doc/DriverSchedule.md)
  - [DriverScheduleCreate200Response](doc/DriverScheduleCreate200Response.md)
+ - [DriverScheduleCreateRequest](doc/DriverScheduleCreateRequest.md)
  - [DriverScheduleKey](doc/DriverScheduleKey.md)
  - [DriverScheduleList200Response](doc/DriverScheduleList200Response.md)
+ - [DriverScheduleUpdateRequest](doc/DriverScheduleUpdateRequest.md)
  - [DriverStatus](doc/DriverStatus.md)
  - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)
  - [DriverUpdateRequestCurrentLocation](doc/DriverUpdateRequestCurrentLocation.md)
@@ -210,11 +215,11 @@ Class | Method | HTTP request | Description
  - [EstimateOrder](doc/EstimateOrder.md)
  - [FCMNotificationLog](doc/FCMNotificationLog.md)
  - [FoodPricingConfiguration](doc/FoodPricingConfiguration.md)
- - [ForgotPasswordRequest](doc/ForgotPasswordRequest.md)
+ - [GeneralRuleType](doc/GeneralRuleType.md)
+ - [GeneralRules](doc/GeneralRules.md)
  - [GetSessionResponse](doc/GetSessionResponse.md)
  - [InsertConfiguration](doc/InsertConfiguration.md)
  - [InsertCoupon](doc/InsertCoupon.md)
- - [InsertDriverScheduleRequest](doc/InsertDriverScheduleRequest.md)
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
  - [InsertPayment](doc/InsertPayment.md)
  - [InsertReport](doc/InsertReport.md)
@@ -280,11 +285,11 @@ Class | Method | HTTP request | Description
  - [ReviewList200Response](doc/ReviewList200Response.md)
  - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
  - [Session](doc/Session.md)
- - [SignInRequest](doc/SignInRequest.md)
  - [SignInResponse](doc/SignInResponse.md)
  - [SignUpResponse](doc/SignUpResponse.md)
  - [Statements](doc/Statements.md)
  - [Time](doc/Time.md)
+ - [TimeRules](doc/TimeRules.md)
  - [TopUpRequest](doc/TopUpRequest.md)
  - [Transaction](doc/Transaction.md)
  - [TransactionGet200Response](doc/TransactionGet200Response.md)
@@ -296,26 +301,25 @@ Class | Method | HTTP request | Description
  - [UnbanUser](doc/UnbanUser.md)
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
  - [UpdateCoupon](doc/UpdateCoupon.md)
- - [UpdateDriverScheduleRequest](doc/UpdateDriverScheduleRequest.md)
  - [UpdateLeaderboard](doc/UpdateLeaderboard.md)
  - [UpdateOrder](doc/UpdateOrder.md)
  - [UpdatePayment](doc/UpdatePayment.md)
  - [UpdateReport](doc/UpdateReport.md)
  - [UpdateReview](doc/UpdateReview.md)
  - [UpdateTransaction](doc/UpdateTransaction.md)
- - [UpdateUser](doc/UpdateUser.md)
  - [UpdateUserPassword](doc/UpdateUserPassword.md)
  - [UpdateUserRole](doc/UpdateUserRole.md)
  - [UpdateWallet](doc/UpdateWallet.md)
  - [User](doc/User.md)
+ - [UserAdminCreate200Response](doc/UserAdminCreate200Response.md)
+ - [UserAdminList200Response](doc/UserAdminList200Response.md)
  - [UserBadge](doc/UserBadge.md)
  - [UserBadgeMetadata](doc/UserBadgeMetadata.md)
- - [UserCreate200Response](doc/UserCreate200Response.md)
  - [UserGender](doc/UserGender.md)
  - [UserKey](doc/UserKey.md)
- - [UserList200Response](doc/UserList200Response.md)
  - [UserNotification](doc/UserNotification.md)
  - [UserRole](doc/UserRole.md)
+ - [UserRules](doc/UserRules.md)
  - [WSEnvelope](doc/WSEnvelope.md)
  - [WSEnvelopeSender](doc/WSEnvelopeSender.md)
  - [WSEnvelopeType](doc/WSEnvelopeType.md)

@@ -3,7 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/configuration.dart';
+import 'package:api_client/src/model/configuration_list200_response_data_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -28,7 +28,7 @@ class ConfigurationList200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final List<Configuration> data;
+  final List<ConfigurationList200ResponseDataInner> data;
 
   // minimum: -9007199254740991
   // maximum: 9007199254740991

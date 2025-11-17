@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getBadgeApi();
 
   group(BadgeApi, () {
-    //Future<BadgeCreate200Response> badgeCreate(BadgeCreateRequest badgeCreateRequest) async
+    //Future<BadgeCreate200Response> badgeCreate(String code, String name, String description, String type, String level, String targetRole, bool isActive, int displayOrder, { int criteriaMinOrders, num criteriaMinRating, num criteriaMinOnTimeRate, int criteriaMinStreak, num criteriaMinEarnings, int benefitsPriorityBoost, num benefitsCommissionReduction, MultipartFile icon }) async
     test('test badgeCreate', () async {
       // TODO
     });
@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<BadgeCreate200Response> badgeUpdate(String id, BadgeUpdateRequest badgeUpdateRequest) async
+    //Future<BadgeCreate200Response> badgeUpdate(String id, { String code, String name, String description, String type, String level, String targetRole, int criteriaMinOrders, num criteriaMinRating, num criteriaMinOnTimeRate, int criteriaMinStreak, num criteriaMinEarnings, int benefitsPriorityBoost, num benefitsCommissionReduction, bool isActive, int displayOrder, MultipartFile icon }) async
     test('test badgeUpdate', () async {
       // TODO
     });

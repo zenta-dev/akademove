@@ -10,15 +10,15 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/auth_exchange_token200_response.dart';
+import 'package:api_client/src/model/auth_forgot_password_request.dart';
 import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_permission200_response.dart';
 import 'package:api_client/src/model/auth_has_permission_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
+import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
-import 'package:api_client/src/model/forgot_password_request.dart';
 import 'package:api_client/src/model/reset_password.dart';
-import 'package:api_client/src/model/sign_in_request.dart';
 
 class AuthApi {
   final Dio _dio;
@@ -103,7 +103,7 @@ class AuthApi {
   ///
   ///
   /// Parameters:
-  /// * [forgotPasswordRequest]
+  /// * [authForgotPasswordRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -114,7 +114,7 @@ class AuthApi {
   /// Returns a [Future] containing a [Response] with a [AuthSignOut200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AuthSignOut200Response>> authForgotPassword({
-    required ForgotPasswordRequest forgotPasswordRequest,
+    required AuthForgotPasswordRequest authForgotPasswordRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -139,7 +139,7 @@ class AuthApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(forgotPasswordRequest);
+      _bodyData = jsonEncode(authForgotPasswordRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -453,7 +453,7 @@ class AuthApi {
   ///
   ///
   /// Parameters:
-  /// * [signInRequest]
+  /// * [authSignInRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -464,7 +464,7 @@ class AuthApi {
   /// Returns a [Future] containing a [Response] with a [AuthSignIn200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AuthSignIn200Response>> authSignIn({
-    required SignInRequest signInRequest,
+    required AuthSignInRequest authSignInRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -489,7 +489,7 @@ class AuthApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(signInRequest);
+      _bodyData = jsonEncode(authSignInRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

@@ -59,7 +59,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authForgotPassword**
-> AuthSignOut200Response authForgotPassword(forgotPasswordRequest)
+> AuthSignOut200Response authForgotPassword(authForgotPasswordRequest)
 
 
 
@@ -68,10 +68,10 @@ This endpoint does not need any parameter.
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final ForgotPasswordRequest forgotPasswordRequest = ; // ForgotPasswordRequest | 
+final AuthForgotPasswordRequest authForgotPasswordRequest = ; // AuthForgotPasswordRequest | 
 
 try {
-    final response = api.authForgotPassword(forgotPasswordRequest);
+    final response = api.authForgotPassword(authForgotPasswordRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authForgotPassword: $e\n');
@@ -82,7 +82,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **forgotPasswordRequest** | [**ForgotPasswordRequest**](ForgotPasswordRequest.md)|  | 
+ **authForgotPasswordRequest** | [**AuthForgotPasswordRequest**](AuthForgotPasswordRequest.md)|  | 
 
 ### Return type
 
@@ -219,7 +219,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignIn**
-> AuthSignIn200Response authSignIn(signInRequest)
+> AuthSignIn200Response authSignIn(authSignInRequest)
 
 
 
@@ -228,10 +228,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final SignInRequest signInRequest = ; // SignInRequest | 
+final AuthSignInRequest authSignInRequest = ; // AuthSignInRequest | 
 
 try {
-    final response = api.authSignIn(signInRequest);
+    final response = api.authSignIn(authSignInRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignIn: $e\n');
@@ -242,7 +242,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **signInRequest** | [**SignInRequest**](SignInRequest.md)|  | 
+ **authSignInRequest** | [**AuthSignInRequest**](AuthSignInRequest.md)|  | 
 
 ### Return type
 

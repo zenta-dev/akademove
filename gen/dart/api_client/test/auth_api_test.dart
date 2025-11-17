@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignOut200Response> authForgotPassword(ForgotPasswordRequest forgotPasswordRequest) async
+    //Future<AuthSignOut200Response> authForgotPassword(AuthForgotPasswordRequest authForgotPasswordRequest) async
     test('test authForgotPassword', () async {
       // TODO
     });
@@ -31,7 +31,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignIn200Response> authSignIn(SignInRequest signInRequest) async
+    //Future<AuthSignIn200Response> authSignIn(AuthSignInRequest authSignInRequest) async
     test('test authSignIn', () async {
       // TODO
     });

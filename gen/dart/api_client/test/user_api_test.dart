@@ -6,28 +6,13 @@ void main() {
   final instance = ApiClient().getUserApi();
 
   group(UserApi, () {
-    //Future<UserCreate200Response> userCreate(InsertUser insertUser) async
-    test('test userCreate', () async {
+    //Future<AuthHasPermission200Response> userMeChangePassword(UpdateUserPassword updateUserPassword) async
+    test('test userMeChangePassword', () async {
       // TODO
     });
 
-    //Future<UserCreate200Response> userGet(String id) async
-    test('test userGet', () async {
-      // TODO
-    });
-
-    //Future<UserList200Response> userList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
-    test('test userList', () async {
-      // TODO
-    });
-
-    //Future<BadgeRemove200Response> userRemove(String id) async
-    test('test userRemove', () async {
-      // TODO
-    });
-
-    //Future<UserCreate200Response> userUpdate(String id, UpdateUser updateUser) async
-    test('test userUpdate', () async {
+    //Future<UserAdminCreate200Response> userMeUpdate(String phoneCountryCode, num phoneNumber, { String name, String email, MultipartFile photo }) async
+    test('test userMeUpdate', () async {
       // TODO
     });
   });

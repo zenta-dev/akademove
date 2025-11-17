@@ -1,8 +1,11 @@
+import 'package:api_client/src/model/admin_update_user.dart';
 import 'package:api_client/src/model/auth_exchange_token200_response.dart';
+import 'package:api_client/src/model/auth_forgot_password_request.dart';
 import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_permission200_response.dart';
 import 'package:api_client/src/model/auth_has_permission_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
+import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/badge.dart';
@@ -18,17 +21,14 @@ import 'package:api_client/src/model/badge_user_update_request.dart';
 import 'package:api_client/src/model/ban_user.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/banner_configuration.dart';
-import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
+import 'package:api_client/src/model/configuration_list200_response_data_inner.dart';
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/coupon.dart';
 import 'package:api_client/src/model/coupon_create200_response.dart';
-import 'package:api_client/src/model/coupon_general_rules.dart';
 import 'package:api_client/src/model/coupon_list200_response.dart';
 import 'package:api_client/src/model/coupon_rules.dart';
-import 'package:api_client/src/model/coupon_time_rules.dart';
-import 'package:api_client/src/model/coupon_user_rules.dart';
 import 'package:api_client/src/model/delivery_pricing_configuration.dart';
 import 'package:api_client/src/model/driver.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
@@ -36,18 +36,19 @@ import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
 import 'package:api_client/src/model/driver_schedule.dart';
 import 'package:api_client/src/model/driver_schedule_create200_response.dart';
+import 'package:api_client/src/model/driver_schedule_create_request.dart';
 import 'package:api_client/src/model/driver_schedule_list200_response.dart';
+import 'package:api_client/src/model/driver_schedule_update_request.dart';
 import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/driver_update_request_current_location.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/estimate_order.dart';
 import 'package:api_client/src/model/fcm_notification_log.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
-import 'package:api_client/src/model/forgot_password_request.dart';
+import 'package:api_client/src/model/general_rules.dart';
 import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
-import 'package:api_client/src/model/insert_driver_schedule_request.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_payment.dart';
 import 'package:api_client/src/model/insert_report.dart';
@@ -100,11 +101,11 @@ import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/ride_pricing_configuration.dart';
 import 'package:api_client/src/model/session.dart';
-import 'package:api_client/src/model/sign_in_request.dart';
 import 'package:api_client/src/model/sign_in_response.dart';
 import 'package:api_client/src/model/sign_up_response.dart';
 import 'package:api_client/src/model/statements.dart';
 import 'package:api_client/src/model/time.dart';
+import 'package:api_client/src/model/time_rules.dart';
 import 'package:api_client/src/model/top_up_request.dart';
 import 'package:api_client/src/model/transaction.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
@@ -113,23 +114,22 @@ import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_coupon.dart';
-import 'package:api_client/src/model/update_driver_schedule_request.dart';
 import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_order.dart';
 import 'package:api_client/src/model/update_payment.dart';
 import 'package:api_client/src/model/update_report.dart';
 import 'package:api_client/src/model/update_review.dart';
 import 'package:api_client/src/model/update_transaction.dart';
-import 'package:api_client/src/model/update_user.dart';
 import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/update_user_role.dart';
 import 'package:api_client/src/model/update_wallet.dart';
 import 'package:api_client/src/model/user.dart';
+import 'package:api_client/src/model/user_admin_create200_response.dart';
+import 'package:api_client/src/model/user_admin_list200_response.dart';
 import 'package:api_client/src/model/user_badge.dart';
 import 'package:api_client/src/model/user_badge_metadata.dart';
-import 'package:api_client/src/model/user_create200_response.dart';
-import 'package:api_client/src/model/user_list200_response.dart';
 import 'package:api_client/src/model/user_notification.dart';
+import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/ws_envelope.dart';
 import 'package:api_client/src/model/ws_order_envelope.dart';
 import 'package:api_client/src/model/ws_order_envelope_payload.dart';
@@ -165,10 +165,16 @@ ReturnType deserialize<ReturnType, BaseType>(
       return (valueString == 'true' || valueString == '1') as ReturnType;
     case 'double':
       return (value is double ? value : double.parse('$value')) as ReturnType;
+    case 'AdminUpdateUser':
+      return AdminUpdateUser.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'AuthExchangeToken200Response':
       return AuthExchangeToken200Response.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'AuthForgotPasswordRequest':
+      return AuthForgotPasswordRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'AuthGetSession200Response':
       return AuthGetSession200Response.fromJson(value as Map<String, dynamic>)
@@ -183,6 +189,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'AuthSignIn200Response':
       return AuthSignIn200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'AuthSignInRequest':
+      return AuthSignInRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'AuthSignOut200Response':
       return AuthSignOut200Response.fromJson(value as Map<String, dynamic>)
@@ -229,15 +238,17 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BannerConfiguration':
       return BannerConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'Configuration':
-      return Configuration.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'ConfigurationGet200Response':
       return ConfigurationGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ConfigurationKey':
     case 'ConfigurationList200Response':
       return ConfigurationList200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'ConfigurationList200ResponseDataInner':
+      return ConfigurationList200ResponseDataInner.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
@@ -249,21 +260,12 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'CouponCreate200Response':
       return CouponCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'CouponGeneralRules':
-      return CouponGeneralRules.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'CouponKey':
     case 'CouponList200Response':
       return CouponList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'CouponRules':
       return CouponRules.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'CouponTimeRules':
-      return CouponTimeRules.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'CouponUserRules':
-      return CouponUserRules.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'Currency':
     case 'DayOfWeek':
     case 'DeliveryPricingConfiguration':
@@ -293,11 +295,17 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
+    case 'DriverScheduleCreateRequest':
+      return DriverScheduleCreateRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'DriverScheduleKey':
     case 'DriverScheduleList200Response':
       return DriverScheduleList200Response.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'DriverScheduleUpdateRequest':
+      return DriverScheduleUpdateRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'DriverStatus':
     case 'DriverUpdateRequestBank':
@@ -319,9 +327,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'FoodPricingConfiguration':
       return FoodPricingConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'ForgotPasswordRequest':
-      return ForgotPasswordRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
+    case 'GeneralRuleType':
+    case 'GeneralRules':
+      return GeneralRules.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'GetSessionResponse':
       return GetSessionResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -330,9 +338,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'InsertCoupon':
       return InsertCoupon.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'InsertDriverScheduleRequest':
-      return InsertDriverScheduleRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'InsertLeaderboard':
       return InsertLeaderboard.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -499,9 +504,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Session':
       return Session.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'SignInRequest':
-      return SignInRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'SignInResponse':
       return SignInResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -512,6 +514,8 @@ ReturnType deserialize<ReturnType, BaseType>(
       return Statements.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Time':
       return Time.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'TimeRules':
+      return TimeRules.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'TopUpRequest':
       return TopUpRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Transaction':
@@ -535,9 +539,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateCoupon':
       return UpdateCoupon.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'UpdateDriverScheduleRequest':
-      return UpdateDriverScheduleRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'UpdateLeaderboard':
       return UpdateLeaderboard.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -553,8 +554,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateTransaction':
       return UpdateTransaction.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'UpdateUser':
-      return UpdateUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdateUserPassword':
       return UpdateUserPassword.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -565,23 +564,25 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UpdateWallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'User':
       return User.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UserAdminCreate200Response':
+      return UserAdminCreate200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'UserAdminList200Response':
+      return UserAdminList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UserBadge':
       return UserBadge.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UserBadgeMetadata':
       return UserBadgeMetadata.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'UserCreate200Response':
-      return UserCreate200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'UserGender':
     case 'UserKey':
-    case 'UserList200Response':
-      return UserList200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'UserNotification':
       return UserNotification.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'UserRole':
+    case 'UserRules':
+      return UserRules.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'WSEnvelope':
       return WSEnvelope.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'WSEnvelopeSender':

@@ -9,15 +9,12 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**userCreate**](UserApi.md#usercreate) | **POST** /users | 
-[**userGet**](UserApi.md#userget) | **GET** /users/{id} | 
-[**userList**](UserApi.md#userlist) | **GET** /users | 
-[**userRemove**](UserApi.md#userremove) | **DELETE** /users/{id} | 
-[**userUpdate**](UserApi.md#userupdate) | **PUT** /users/{id} | 
+[**userMeChangePassword**](UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
+[**userMeUpdate**](UserApi.md#usermeupdate) | **PUT** /users/me | 
 
 
-# **userCreate**
-> UserCreate200Response userCreate(insertUser)
+# **userMeChangePassword**
+> AuthHasPermission200Response userMeChangePassword(updateUserPassword)
 
 
 
@@ -26,13 +23,13 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final InsertUser insertUser = ; // InsertUser | 
+final UpdateUserPassword updateUserPassword = ; // UpdateUserPassword | 
 
 try {
-    final response = api.userCreate(insertUser);
+    final response = api.userMeChangePassword(updateUserPassword);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling UserApi->userCreate: $e\n');
+    print('Exception when calling UserApi->userMeChangePassword: $e\n');
 }
 ```
 
@@ -40,11 +37,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **insertUser** | [**InsertUser**](InsertUser.md)|  | 
+ **updateUserPassword** | [**UpdateUserPassword**](UpdateUserPassword.md)|  | 
 
 ### Return type
 
-[**UserCreate200Response**](UserCreate200Response.md)
+[**AuthHasPermission200Response**](AuthHasPermission200Response.md)
 
 ### Authorization
 
@@ -57,8 +54,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **userGet**
-> UserCreate200Response userGet(id)
+# **userMeUpdate**
+> UserAdminCreate200Response userMeUpdate(phoneCountryCode, phoneNumber, name, email, photo)
 
 
 
@@ -67,13 +64,17 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final String id = id_example; // String | 
+final String phoneCountryCode = phoneCountryCode_example; // String | 
+final num phoneNumber = 8.14; // num | 
+final String name = name_example; // String | 
+final String email = email_example; // String | 
+final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.userGet(id);
+    final response = api.userMeUpdate(phoneCountryCode, phoneNumber, name, email, photo);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling UserApi->userGet: $e\n');
+    print('Exception when calling UserApi->userMeUpdate: $e\n');
 }
 ```
 
@@ -81,11 +82,15 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
+ **phoneCountryCode** | **String**|  | 
+ **phoneNumber** | **num**|  | 
+ **name** | **String**|  | [optional] 
+ **email** | **String**|  | [optional] 
+ **photo** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
-[**UserCreate200Response**](UserCreate200Response.md)
+[**UserAdminCreate200Response**](UserAdminCreate200Response.md)
 
 ### Authorization
 
@@ -93,142 +98,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **userList**
-> UserList200Response userList(cursor, limit, page, query, sortBy, order)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getUserApi();
-final String cursor = cursor_example; // String | 
-final Object limit = ; // Object | 
-final Object page = ; // Object | 
-final String query = query_example; // String | 
-final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
-
-try {
-    final response = api.userList(cursor, limit, page, query, sortBy, order);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling UserApi->userList: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **cursor** | **String**|  | [optional] 
- **limit** | [**Object**](.md)|  | [optional] 
- **page** | [**Object**](.md)|  | [optional] 
- **query** | **String**|  | [optional] 
- **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
-
-### Return type
-
-[**UserList200Response**](UserList200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **userRemove**
-> BadgeRemove200Response userRemove(id)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getUserApi();
-final String id = id_example; // String | 
-
-try {
-    final response = api.userRemove(id);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling UserApi->userRemove: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
-
-### Return type
-
-[**BadgeRemove200Response**](BadgeRemove200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **userUpdate**
-> UserCreate200Response userUpdate(id, updateUser)
-
-
-
-### Example
-```dart
-import 'package:api_client/api.dart';
-
-final api = ApiClient().getUserApi();
-final String id = id_example; // String | 
-final UpdateUser updateUser = ; // UpdateUser | 
-
-try {
-    final response = api.userUpdate(id, updateUser);
-    print(response);
-} catch on DioException (e) {
-    print('Exception when calling UserApi->userUpdate: $e\n');
-}
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | **String**|  | 
- **updateUser** | [**UpdateUser**](UpdateUser.md)|  | 
-
-### Return type
-
-[**UserCreate200Response**](UserCreate200Response.md)
-
-### Authorization
-
-[bearer_auth](../README.md#bearer_auth)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
