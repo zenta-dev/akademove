@@ -14,6 +14,7 @@ const OrderEnvelopeTypes = [
 	"order:cancelled",
 	"order:accepted",
 	"order:unavailable",
+	"order:done",
 ] as const;
 const DriverEnvelopeTypes = ["driver:location_update"] as const;
 const WalletEnvelopeTypes = [
