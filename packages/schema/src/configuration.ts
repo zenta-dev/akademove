@@ -105,6 +105,7 @@ export const ConfigurationSchemaRegistries = {
 		schema: BannerConfigurationSchema,
 		strategy: "output",
 	},
+	Configuration: { schema: ConfigurationSchema, strategy: "output" },
 	InsertConfiguration: { schema: InsertConfigurationSchema, strategy: "input" },
 	UpdateConfiguration: { schema: UpdateConfigurationSchema, strategy: "input" },
 	ConfigurationKey: { schema: ConfigurationKeySchema, strategy: "input" },
