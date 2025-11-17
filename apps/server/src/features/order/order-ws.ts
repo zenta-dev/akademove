@@ -54,6 +54,11 @@ export class OrderRoom extends BaseDurableObject {
 				async (tx) => await this.#handleOrderAccepted(ws, raw, tx),
 			);
 		}
+		if (raw.type === "order:done") {
+			await this.#svc.db.transaction(
+				async (tx) => await this.#handleOrderDone(ws, raw, tx),
+			);
+		}
 	}
 
 	async #handleDriverUpdateLocation(ws: WebSocket, raw: unknown) {
@@ -78,6 +83,13 @@ export class OrderRoom extends BaseDurableObject {
 				currentLocation: driverUpdateLocation,
 			});
 		}
+	}
+	async #handleOrderDone(
+		ws: WebSocket,
+		_raw: unknown,
+		_tx: DatabaseTransaction,
+	) {
+		const _senderId = this.findUserIdBySocket(ws);
 	}
 
 	async #handleOrderAccepted(
