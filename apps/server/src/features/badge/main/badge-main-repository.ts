@@ -11,7 +11,7 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { BadgeDatabase } from "@/core/tables/badge";
@@ -26,8 +26,9 @@ export class BadgeRepository extends BaseRepository {
 		return nullsToUndefined(item);
 	}
 
-	async #getFromDB(id: string): Promise<Badge | undefined> {
-		const result = await this.db.query.badge.findFirst({
+	async #getFromDB(id: string, opts?: WithTx): Promise<Badge | undefined> {
+		const tx = opts?.tx ?? this.db;
+		const result = await tx.query.badge.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 
@@ -125,10 +126,10 @@ export class BadgeRepository extends BaseRepository {
 		}
 	}
 
-	async get(id: string): Promise<Badge> {
+	async get(id: string, opts?: WithTx): Promise<Badge> {
 		try {
 			const fallback = async () => {
-				const res = await this.#getFromDB(id);
+				const res = await this.#getFromDB(id, opts);
 				if (!res) throw new RepositoryError("Failed to get badge from db");
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
@@ -141,9 +142,30 @@ export class BadgeRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertBadge): Promise<Badge> {
+	async getByCode(code: string, opts?: WithTx): Promise<Badge> {
 		try {
-			const [operation] = await this.db
+			const fallback = async () => {
+				const tx = opts?.tx ?? this.db;
+				const result = await tx.query.badge.findFirst({
+					where: (f, op) => op.eq(f.code, code),
+				});
+				const res = result ? BadgeRepository.composeEntity(result) : undefined;
+				if (!res) throw new RepositoryError("Failed to get badge from db");
+				await this.setCache(code, res, { expirationTtl: CACHE_TTLS["24h"] });
+				return res;
+			};
+
+			const result = await this.getCache(code, { fallback });
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "get by code");
+		}
+	}
+
+	async create(item: InsertBadge, opts?: WithTx): Promise<Badge> {
+		try {
+			const tx = opts?.tx ?? this.db;
+			const [operation] = await tx
 				.insert(tables.badge)
 				.values({
 					...item,
@@ -160,19 +182,24 @@ export class BadgeRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateBadge): Promise<Badge> {
+	async update(id: string, item: UpdateBadge, opts?: WithTx): Promise<Badge> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`Badge with id "${id}" not found`);
 
-			const [operation] = await this.db
-				.update(tables.badge)
-				.set({
-					...item,
-				})
-				.where(eq(tables.badge.id, id))
-				.returning();
+			const tx = opts?.tx ?? this.db;
+			const [operation] = await Promise.all([
+				tx
+					.update(tables.badge)
+					.set({
+						...item,
+					})
+					.where(eq(tables.badge.id, id))
+					.returning()
+					.then(([r]) => r),
+				this.deleteCache(existing.code),
+			]);
 
 			const result = BadgeRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
@@ -187,11 +214,10 @@ export class BadgeRepository extends BaseRepository {
 			const result = await this.db
 				.delete(tables.badge)
 				.where(eq(tables.badge.id, id))
-				.returning({ id: tables.badge.id });
+				.returning({ id: tables.badge.id, code: tables.badge.code })
+				.then(([r]) => r);
 
-			if (result.length > 0) {
-				await this.deleteCache(id);
-			}
+			await Promise.all([this.deleteCache(id), this.deleteCache(result.code)]);
 		} catch (error) {
 			throw this.handleError(error, "delete");
 		}

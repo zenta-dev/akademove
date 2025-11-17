@@ -11,7 +11,7 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { UserBadgeDatabase } from "@/core/tables/badge";
@@ -25,8 +25,9 @@ export class UserBadgeRepository extends BaseRepository {
 		return nullsToUndefined(item);
 	}
 
-	async #getFromDB(id: string): Promise<UserBadge | undefined> {
-		const result = await this.db.query.userBadge.findFirst({
+	async #getFromDB(id: string, opts?: WithTx): Promise<UserBadge | undefined> {
+		const tx = opts?.tx ?? this.db;
+		const result = await tx.query.userBadge.findFirst({
 			where: (f, op) => op.eq(f.id, id),
 		});
 
@@ -115,9 +116,10 @@ export class UserBadgeRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertUserBadge): Promise<UserBadge> {
+	async create(item: InsertUserBadge, opts?: WithTx): Promise<UserBadge> {
 		try {
-			const [operation] = await this.db
+			const tx = opts?.tx ?? this.db;
+			const [operation] = await tx
 				.insert(tables.userBadge)
 				.values({
 					...item,
@@ -134,13 +136,18 @@ export class UserBadgeRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateUserBadge): Promise<UserBadge> {
+	async update(
+		id: string,
+		item: UpdateUserBadge,
+		opts?: WithTx,
+	): Promise<UserBadge> {
 		try {
-			const existing = await this.#getFromDB(id);
+			const tx = opts?.tx ?? this.db;
+			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`User badge with id "${id}" not found`);
 
-			const [operation] = await this.db
+			const [operation] = await tx
 				.update(tables.userBadge)
 				.set({
 					...item,

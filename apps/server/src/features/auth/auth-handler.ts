@@ -40,8 +40,16 @@ export const AuthHandler = pub.router({
 		return await context.svc.db.transaction(async (tx) => {
 			try {
 				const opts = { tx };
-				const result = await context.repo.auth.signUp(
-					{ ...unflatten, role: "user" },
+				const [result, newCustomerBadge] = await Promise.all([
+					context.repo.auth.signUp({ ...unflatten, role: "user" }, opts),
+					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
+				]);
+
+				await context.repo.badge.user.create(
+					{
+						userId: result.user.id,
+						badgeId: newCustomerBadge.id,
+					},
 					opts,
 				);
 
@@ -69,14 +77,26 @@ export const AuthHandler = pub.router({
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
-					const result = await context.repo.auth.signUpDriver(unflatten, opts);
-					await context.repo.driver.main.create(
-						{
-							...unflatten.detail,
-							userId: result.user.id,
-						},
-						opts,
-					);
+					const [result, newDriverBadge] = await Promise.all([
+						context.repo.auth.signUpDriver(unflatten, opts),
+						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
+					]);
+					await Promise.all([
+						context.repo.driver.main.create(
+							{
+								...unflatten.detail,
+								userId: result.user.id,
+							},
+							opts,
+						),
+						context.repo.badge.user.create(
+							{
+								userId: result.user.id,
+								badgeId: newDriverBadge.id,
+							},
+							opts,
+						),
+					]);
 
 					return {
 						status: 201,
@@ -104,17 +124,26 @@ export const AuthHandler = pub.router({
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
-					const result = await context.repo.auth.signUpMerchant(
-						unflatten,
-						opts,
-					);
-					await context.repo.merchant.main.create(
-						{
-							...unflatten.detail,
-							userId: result.user.id,
-						},
-						opts,
-					);
+					const [result, newCustomerBadge] = await Promise.all([
+						context.repo.auth.signUpMerchant(unflatten, opts),
+						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
+					]);
+					await Promise.all([
+						context.repo.merchant.main.create(
+							{
+								...unflatten.detail,
+								userId: result.user.id,
+							},
+							opts,
+						),
+						context.repo.badge.user.create(
+							{
+								userId: result.user.id,
+								badgeId: newCustomerBadge.id,
+							},
+							opts,
+						),
+					]);
 
 					return {
 						status: 201,
