@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DriverScheduleSpec } from "./driver-schedule-spec";
@@ -33,8 +34,9 @@ export const DriverScheduleHandler = priv.router({
 	create: priv.create
 		.use(hasPermission({ schedule: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.driver.schedule.create({
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 
@@ -46,7 +48,8 @@ export const DriverScheduleHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ schedule: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.driver.schedule.update(params.id, body);
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.schedule.update(params.id, data);
 
 			return {
 				status: 200,

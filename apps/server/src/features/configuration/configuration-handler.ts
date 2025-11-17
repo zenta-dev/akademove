@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ConfigurationSpec } from "./configuration-spec";
@@ -32,8 +33,9 @@ export const ConfigurationHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ configurations: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.configuration.update(params.key, {
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 			return {

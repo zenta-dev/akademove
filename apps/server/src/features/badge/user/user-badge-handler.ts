@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { UserBadgeSpec } from "./user-badge-spec";
 
@@ -27,8 +28,9 @@ export const UserBadgeHandler = priv.router({
 		};
 	}),
 	create: priv.create.handler(async ({ context, input: { body } }) => {
+		const data = trimObjectValues(body);
 		const result = await context.repo.badge.user.create({
-			...body,
+			...data,
 			userId: context.user.id,
 		});
 
@@ -38,7 +40,8 @@ export const UserBadgeHandler = priv.router({
 		};
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
-		const result = await context.repo.badge.user.update(params.id, body);
+		const data = trimObjectValues(body);
+		const result = await context.repo.badge.user.update(params.id, data);
 
 		return {
 			status: 200,

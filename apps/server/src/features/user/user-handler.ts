@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { UserSpec } from "./user-spec";
@@ -35,7 +36,8 @@ export const UserHandler = priv.router({
 	create: priv.create
 		.use(hasPermission({ user: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
-			const result = await context.repo.user.create(body);
+			const data = trimObjectValues(body);
+			const result = await context.repo.user.create(data);
 
 			return {
 				status: 200,
@@ -45,9 +47,10 @@ export const UserHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ user: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.user.update(
 				params.id,
-				body,
+				data,
 				{},
 				context.req.headers,
 			);

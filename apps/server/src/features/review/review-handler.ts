@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ReviewSpec } from "./review-spec";
@@ -32,8 +33,9 @@ export const ReviewHandler = priv.router({
 	create: priv.create
 		.use(hasPermission({ review: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.review.create({
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 
@@ -45,7 +47,8 @@ export const ReviewHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ review: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.review.update(params.id, body);
+			const data = trimObjectValues(body);
+			const result = await context.repo.review.update(params.id, data);
 
 			return {
 				status: 200,

@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { OrderSpec } from "./order-spec";
@@ -78,14 +79,10 @@ export const OrderHandler = priv.router({
 		.use(hasPermission({ order: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
 				const result = await context.repo.order.placeOrder(
-					{
-						...body,
-						userId: context.user.id,
-					},
-					{
-						tx,
-					},
+					{ ...data, userId: context.user.id },
+					{ tx },
 				);
 
 				return {
@@ -98,7 +95,8 @@ export const OrderHandler = priv.router({
 		.use(hasPermission({ order: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.order.update(params.id, body, { tx });
+				const data = trimObjectValues(body);
+				const result = await context.repo.order.update(params.id, data, { tx });
 
 				return {
 					status: 200,

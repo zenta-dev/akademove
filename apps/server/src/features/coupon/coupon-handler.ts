@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { CouponSpec } from "./coupon-spec";
@@ -31,8 +32,9 @@ export const CouponHandler = priv.router({
 	create: priv.create
 		.use(hasPermission({ coupon: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.coupon.create({
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 
@@ -44,7 +46,8 @@ export const CouponHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.coupon.update(params.id, body);
+			const data = trimObjectValues(body);
+			const result = await context.repo.coupon.update(params.id, data);
 
 			return {
 				status: 200,

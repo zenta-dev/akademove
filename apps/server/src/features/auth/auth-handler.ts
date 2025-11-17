@@ -14,9 +14,7 @@ const { pub, priv } = createORPCRouter(AuthSpec);
 
 export const AuthHandler = pub.router({
 	signIn: pub.signIn.handler(async ({ context, input: { body } }) => {
-		const result = await context.repo.auth.signIn({
-			...body,
-		});
+		const result = await context.repo.auth.signIn(trimObjectValues(body));
 
 		context.resHeaders?.set(
 			"Set-Cookie",
@@ -36,12 +34,12 @@ export const AuthHandler = pub.router({
 		} as const;
 	}),
 	signUpUser: pub.signUpUser.handler(async ({ context, input: { body } }) => {
-		const unflatten = trimObjectValues(unflattenData(body));
+		const data = trimObjectValues(unflattenData(body));
 		return await context.svc.db.transaction(async (tx) => {
 			try {
 				const opts = { tx };
 				const [result, newCustomerBadge] = await Promise.all([
-					context.repo.auth.signUp({ ...unflatten, role: "user" }, opts),
+					context.repo.auth.signUp({ ...data, role: "user" }, opts),
 					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
 
@@ -73,18 +71,18 @@ export const AuthHandler = pub.router({
 	}),
 	signUpDriver: pub.signUpDriver.handler(
 		async ({ context, input: { body } }) => {
-			const unflatten = trimObjectValues(unflattenData(body));
+			const data = trimObjectValues(unflattenData(body));
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
 					const [result, newDriverBadge] = await Promise.all([
-						context.repo.auth.signUpDriver(unflatten, opts),
+						context.repo.auth.signUpDriver(data, opts),
 						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
 					]);
 					await Promise.all([
 						context.repo.driver.main.create(
 							{
-								...unflatten.detail,
+								...data.detail,
 								userId: result.user.id,
 							},
 							opts,
@@ -119,19 +117,19 @@ export const AuthHandler = pub.router({
 	),
 	signUpMerchant: pub.signUpMerchant.handler(
 		async ({ context, input: { body } }) => {
-			const unflatten = trimObjectValues(unflattenData(body));
+			const data = trimObjectValues(unflattenData(body));
 
 			return await context.svc.db.transaction(async (tx) => {
 				try {
 					const opts = { tx };
 					const [result, newCustomerBadge] = await Promise.all([
-						context.repo.auth.signUpMerchant(unflatten, opts),
+						context.repo.auth.signUpMerchant(data, opts),
 						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
 					]);
 					await Promise.all([
 						context.repo.merchant.main.create(
 							{
-								...unflatten.detail,
+								...data.detail,
 								userId: result.user.id,
 							},
 							opts,
@@ -220,7 +218,7 @@ export const AuthHandler = pub.router({
 	}),
 	forgotPassword: pub.forgotPassword.handler(
 		async ({ context, input: { body } }) => {
-			await context.repo.auth.forgotPassword(body);
+			await context.repo.auth.forgotPassword(trimObjectValues(body));
 
 			return {
 				status: 202,
@@ -233,7 +231,7 @@ export const AuthHandler = pub.router({
 	),
 	resetPassword: pub.resetPassword.handler(
 		async ({ context, input: { body } }) => {
-			await context.repo.auth.resetPassword(body);
+			await context.repo.auth.resetPassword(trimObjectValues(body));
 
 			return {
 				status: 200,

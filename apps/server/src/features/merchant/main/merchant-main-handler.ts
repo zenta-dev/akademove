@@ -1,4 +1,5 @@
 import { unflattenData } from "@repo/schema/flatten.helper";
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMainSpec } from "./merchant-main-spec";
@@ -61,28 +62,11 @@ export const MerchantMainHandler = priv.router({
 				},
 			};
 		}),
-	// create: priv.create
-	// 	.use(hasPermission({ merchant: ["create"] }))
-	// 	.handler(async ({ context, input: { body } }) => {
-	// 		const result = await context.repo.merchant.main.create({
-	// 			...body,
-	// 			userId: context.user.id,
-	// 		});
-
-	// 		return {
-	// 			status: 200,
-	// 			body: { message: "Merchant created successfully", data: result },
-	// 		};
-	// 	}),
 	update: priv.update
 		.use(hasPermission({ merchant: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const unflatten = unflattenData(body);
-
-			const result = await context.repo.merchant.main.update(
-				params.id,
-				unflatten,
-			);
+			const data = trimObjectValues(unflattenData(body));
+			const result = await context.repo.merchant.main.update(params.id, data);
 
 			return {
 				status: 200,

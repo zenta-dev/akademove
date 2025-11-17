@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMenuSpec } from "./merchant-menu-spec";
@@ -34,8 +35,9 @@ export const MerchantMenuHandler = priv.router({
 	create: priv.create
 		.use(hasPermission({ merchantMenu: ["create"] }))
 		.handler(async ({ context, input: { body, params } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.merchant.menu.create({
-				...body,
+				...data,
 				...params,
 			});
 
@@ -47,8 +49,9 @@ export const MerchantMenuHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ merchantMenu: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
 			const result = await context.repo.merchant.menu.update(params.id, {
-				...body,
+				...data,
 				merchantId: params.merchantId,
 			});
 

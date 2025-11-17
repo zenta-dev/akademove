@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DriverMainSpec } from "./driver-main-spec";
@@ -53,7 +54,8 @@ export const DriverMainHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ driver: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.driver.main.update(params.id, body);
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.update(params.id, data);
 
 			return {
 				status: 200,

@@ -1,3 +1,4 @@
+import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { NotificationSpec } from "./notification-spec";
 
@@ -21,8 +22,9 @@ export const NotificationHandler = priv.router({
 	}),
 	subscribeToTopic: priv.subscribeToTopic.handler(
 		async ({ context, input: { body } }) => {
+			const data = trimObjectValues(body);
 			const res = await context.repo.notification.subscribeToTopic({
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 
@@ -37,8 +39,9 @@ export const NotificationHandler = priv.router({
 	),
 	unsubscribeToTopic: priv.unsubscribeToTopic.handler(
 		async ({ context, input: { body } }) => {
+			const data = trimObjectValues(body);
 			const res = await context.repo.notification.unsubscribeFromTopic({
-				...body,
+				...data,
 				userId: context.user.id,
 			});
 
@@ -52,8 +55,9 @@ export const NotificationHandler = priv.router({
 		},
 	),
 	saveToken: priv.saveToken.handler(async ({ context, input: { body } }) => {
+		const data = trimObjectValues(body);
 		await context.repo.notification.saveToken({
-			...body,
+			...data,
 			userId: context.user.id,
 		});
 
