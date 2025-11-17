@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:akademove/app/router.dart';
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
