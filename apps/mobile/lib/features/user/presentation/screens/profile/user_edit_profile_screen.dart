@@ -38,7 +38,6 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
   @override
   void initState() {
     super.initState();
-    setupPhoto();
 
     _nameFn = FocusNode();
     _emailFn = FocusNode();
@@ -49,17 +48,6 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     _nameFn.dispose();
     _emailFn.dispose();
     super.dispose();
-  }
-
-  Future<void> setupPhoto() async {
-    final authCubit = context.read<AuthCubit>();
-    final img = authCubit.state.data?.image;
-    if (img == null) return;
-    final file = await downloadImage(img);
-    logger.f('[DOWNLOAD IMAGE] file => $file');
-    _pickedPhoto = file;
-
-    if (mounted && context.mounted) setState(() {});
   }
 
   void _handleFormSubmit<T>(
@@ -121,11 +109,11 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                       children: [
                         const Text('Photo Profile').small(),
                         ImagePickerWidget(
-                          key: ValueKey(_pickedPhoto?.path),
                           enabled: !profileState.isLoading,
-                          initialImage: _pickedPhoto,
+                          previewUrl: authState.data?.image,
+                          value: _pickedPhoto,
                           size: Size(86.h, 86.h),
-                          onImagePicked: (file) =>
+                          onValueChanged: (file) =>
                               setState(() => _pickedPhoto = file),
                         ),
                       ],
