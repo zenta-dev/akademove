@@ -45,9 +45,11 @@ extension ToastExt on BuildContext {
     String? message, {
     ToastType type = ToastType.info,
     Widget? trailing,
+    Duration? showDuration,
   }) => showToast(
     context: this,
     location: ToastLocation.topCenter,
+    showDuration: showDuration ?? const Duration(seconds: 5),
     builder: (context, overlay) {
       final title = type.title(context);
       final subtitle = (type != ToastType.loading && message != null)
@@ -60,21 +62,26 @@ extension ToastExt on BuildContext {
             )
           : null;
       return Card(
-        fillColor: type.color.withValues(),
-        borderColor: type.color,
-        child: Basic(
-          leading: Icon(type.icon, color: type.color),
-          title: Text(
-            title,
-            style: context.typography.small.copyWith(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+        padding: EdgeInsets.zero,
+        borderWidth: 0,
+        child: SurfaceCard(
+          filled: true,
+          fillColor: type.color.withValues(alpha: 0.1),
+          borderColor: type.color,
+          child: Basic(
+            leading: Icon(type.icon, color: type.color),
+            title: Text(
+              title,
+              style: context.typography.small.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            subtitle: subtitle,
+            trailing: trailing,
+            trailingAlignment: Alignment.center,
+            leadingAlignment: Alignment.center,
           ),
-          subtitle: subtitle,
-          trailing: trailing,
-          trailingAlignment: Alignment.center,
-          leadingAlignment: Alignment.center,
         ),
       );
     },
