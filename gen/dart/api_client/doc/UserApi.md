@@ -55,7 +55,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userMeUpdate**
-> UserAdminCreate200Response userMeUpdate(phoneCountryCode, phoneNumber, name, email, photo)
+> UserAdminCreate200Response userMeUpdate(name, email, photo, phoneCountryCode, phoneNumber)
 
 
 
@@ -64,14 +64,14 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final String phoneCountryCode = phoneCountryCode_example; // String | 
-final num phoneNumber = 8.14; // num | 
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
+final String phoneCountryCode = phoneCountryCode_example; // String | 
+final int phoneNumber = 56; // int | 
 
 try {
-    final response = api.userMeUpdate(phoneCountryCode, phoneNumber, name, email, photo);
+    final response = api.userMeUpdate(name, email, photo, phoneCountryCode, phoneNumber);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling UserApi->userMeUpdate: $e\n');
@@ -82,11 +82,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **phoneCountryCode** | **String**|  | 
- **phoneNumber** | **num**|  | 
  **name** | **String**|  | [optional] 
  **email** | **String**|  | [optional] 
  **photo** | **MultipartFile**|  | [optional] 
+ **phoneCountryCode** | **String**|  | [optional] 
+ **phoneNumber** | **int**|  | [optional] 
 
 ### Return type
 

@@ -30,7 +30,7 @@ class NotificationSaveToken200Response {
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final NotificationSaveToken200ResponseData data;
 
-  // minimum: -9007199254740991
+  // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;

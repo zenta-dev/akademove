@@ -15,10 +15,10 @@ import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_permission200_response.dart';
 import 'package:api_client/src/model/auth_has_permission_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
-import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/reset_password.dart';
+import 'package:api_client/src/model/sign_in_request.dart';
 
 class AuthApi {
   final Dio _dio;
@@ -453,7 +453,7 @@ class AuthApi {
   ///
   ///
   /// Parameters:
-  /// * [authSignInRequest]
+  /// * [signInRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -464,7 +464,7 @@ class AuthApi {
   /// Returns a [Future] containing a [Response] with a [AuthSignIn200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<AuthSignIn200Response>> authSignIn({
-    required AuthSignInRequest authSignInRequest,
+    required SignInRequest signInRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -489,7 +489,7 @@ class AuthApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(authSignInRequest);
+      _bodyData = jsonEncode(signInRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -648,7 +648,7 @@ class AuthApi {
     required String name,
     required String email,
     required String phoneCountryCode,
-    required num phoneNumber,
+    required int phoneNumber,
     required String password,
     required String confirmPassword,
     required MultipartFile photo,
@@ -788,13 +788,13 @@ class AuthApi {
     required String name,
     required String email,
     required String phoneCountryCode,
-    required num phoneNumber,
+    required int phoneNumber,
     required String password,
     required String confirmPassword,
     required String detailName,
     required String detailEmail,
     required String detailPhoneCountryCode,
-    required num detailPhoneNumber,
+    required int detailPhoneNumber,
     required String detailAddress,
     required num detailLocationX,
     required num detailLocationY,
@@ -925,7 +925,7 @@ class AuthApi {
     required String name,
     required String email,
     required String phoneCountryCode,
-    required num phoneNumber,
+    required int phoneNumber,
     required String password,
     required String confirmPassword,
     MultipartFile? photo,

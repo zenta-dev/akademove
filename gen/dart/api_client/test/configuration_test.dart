@@ -1,13 +1,12 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for ConfigurationList200ResponseDataInner
+// tests for Configuration
 void main() {
-  final ConfigurationList200ResponseDataInner?
-  instance = /* ConfigurationList200ResponseDataInner(...) */ null;
+  final Configuration? instance = /* Configuration(...) */ null;
   // TODO add properties to the entity
 
-  group(ConfigurationList200ResponseDataInner, () {
+  group(Configuration, () {
     // String key
     test('to test the property `key`', () async {
       // TODO

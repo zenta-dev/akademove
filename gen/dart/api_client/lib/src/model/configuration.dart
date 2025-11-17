@@ -6,7 +6,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'configuration_list200_response_data_inner.g.dart';
+part 'configuration.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -15,9 +15,9 @@ part 'configuration_list200_response_data_inner.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class ConfigurationList200ResponseDataInner {
-  /// Returns a new [ConfigurationList200ResponseDataInner] instance.
-  const ConfigurationList200ResponseDataInner({
+class Configuration {
+  /// Returns a new [Configuration] instance.
+  const Configuration({
     required this.key,
     required this.name,
     this.value,
@@ -47,7 +47,7 @@ class ConfigurationList200ResponseDataInner {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ConfigurationList200ResponseDataInner &&
+      other is Configuration &&
           other.key == key &&
           other.name == name &&
           other.value == value &&
@@ -64,12 +64,10 @@ class ConfigurationList200ResponseDataInner {
       updatedById.hashCode +
       updatedAt.hashCode;
 
-  factory ConfigurationList200ResponseDataInner.fromJson(
-    Map<String, dynamic> json,
-  ) => _$ConfigurationList200ResponseDataInnerFromJson(json);
+  factory Configuration.fromJson(Map<String, dynamic> json) =>
+      _$ConfigurationFromJson(json);
 
-  Map<String, dynamic> toJson() =>
-      _$ConfigurationList200ResponseDataInnerToJson(this);
+  Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
 
   @override
   String toString() {

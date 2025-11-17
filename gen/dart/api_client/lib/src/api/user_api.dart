@@ -113,11 +113,11 @@ class UserApi {
   ///
   ///
   /// Parameters:
-  /// * [phoneCountryCode]
-  /// * [phoneNumber]
   /// * [name]
   /// * [email]
   /// * [photo]
+  /// * [phoneCountryCode]
+  /// * [phoneNumber]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -128,11 +128,11 @@ class UserApi {
   /// Returns a [Future] containing a [Response] with a [UserAdminCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<UserAdminCreate200Response>> userMeUpdate({
-    required String phoneCountryCode,
-    required num phoneNumber,
     String? name,
     String? email,
     MultipartFile? photo,
+    String? phoneCountryCode,
+    int? phoneNumber,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -160,9 +160,9 @@ class UserApi {
       _bodyData = FormData.fromMap(<String, dynamic>{
         if (name != null) r'name': name,
         if (email != null) r'email': email,
-        r'phone_countryCode': phoneCountryCode,
-        r'phone_number': phoneNumber,
         if (photo != null) r'photo': photo,
+        if (phoneCountryCode != null) r'phone_countryCode': phoneCountryCode,
+        if (phoneNumber != null) r'phone_number': phoneNumber,
       });
     } catch (error, stackTrace) {
       throw DioException(

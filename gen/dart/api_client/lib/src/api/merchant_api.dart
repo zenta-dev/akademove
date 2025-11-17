@@ -996,7 +996,7 @@ class MerchantApi {
   Future<Response<MerchantGetMine200ResponseBody>> merchantUpdate({
     required String id,
     required String phoneCountryCode,
-    required num phoneNumber,
+    required int phoneNumber,
     required num locationX,
     required num locationY,
     required String bankProvider,

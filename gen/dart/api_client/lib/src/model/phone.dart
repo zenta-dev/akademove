@@ -23,8 +23,10 @@ class Phone {
   @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
   final CountryCode countryCode;
 
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'number', required: true, includeIfNull: false)
-  final num number;
+  final int number;
 
   @override
   bool operator ==(Object other) =>

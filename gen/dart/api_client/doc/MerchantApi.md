@@ -498,7 +498,7 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getMerchantApi();
 final String id = id_example; // String | 
 final String phoneCountryCode = phoneCountryCode_example; // String | 
-final num phoneNumber = 8.14; // num | 
+final int phoneNumber = 56; // int | 
 final num locationX = 8.14; // num | Longitude (X-axis, East-West)
 final num locationY = 8.14; // num | Latitude (Y-axis, North-South)
 final String bankProvider = bankProvider_example; // String | 
@@ -523,7 +523,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
  **phoneCountryCode** | **String**|  | 
- **phoneNumber** | **num**|  | 
+ **phoneNumber** | **int**|  | 
  **locationX** | **num**| Longitude (X-axis, East-West) | 
  **locationY** | **num**| Latitude (Y-axis, North-South) | 
  **bankProvider** | **String**|  | 

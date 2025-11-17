@@ -219,7 +219,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignIn**
-> AuthSignIn200Response authSignIn(authSignInRequest)
+> AuthSignIn200Response authSignIn(signInRequest)
 
 
 
@@ -228,10 +228,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final AuthSignInRequest authSignInRequest = ; // AuthSignInRequest | 
+final SignInRequest signInRequest = ; // SignInRequest | 
 
 try {
-    final response = api.authSignIn(authSignInRequest);
+    final response = api.authSignIn(signInRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignIn: $e\n');
@@ -242,7 +242,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authSignInRequest** | [**AuthSignInRequest**](AuthSignInRequest.md)|  | 
+ **signInRequest** | [**SignInRequest**](SignInRequest.md)|  | 
 
 ### Return type
 
@@ -309,7 +309,7 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String phoneCountryCode = phoneCountryCode_example; // String | 
-final num phoneNumber = 8.14; // num | 
+final int phoneNumber = 56; // int | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
@@ -337,7 +337,7 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **phoneCountryCode** | **String**|  | 
- **phoneNumber** | **num**|  | 
+ **phoneNumber** | **int**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | 
@@ -378,13 +378,13 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String phoneCountryCode = phoneCountryCode_example; // String | 
-final num phoneNumber = 8.14; // num | 
+final int phoneNumber = 56; // int | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final String detailName = detailName_example; // String | 
 final String detailEmail = detailEmail_example; // String | 
 final String detailPhoneCountryCode = detailPhoneCountryCode_example; // String | 
-final num detailPhoneNumber = 8.14; // num | 
+final int detailPhoneNumber = 56; // int | 
 final String detailAddress = detailAddress_example; // String | 
 final num detailLocationX = 8.14; // num | Longitude (X-axis, East-West)
 final num detailLocationY = 8.14; // num | Latitude (Y-axis, North-South)
@@ -410,13 +410,13 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **phoneCountryCode** | **String**|  | 
- **phoneNumber** | **num**|  | 
+ **phoneNumber** | **int**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **detailName** | **String**|  | 
  **detailEmail** | **String**|  | 
  **detailPhoneCountryCode** | **String**|  | 
- **detailPhoneNumber** | **num**|  | 
+ **detailPhoneNumber** | **int**|  | 
  **detailAddress** | **String**|  | 
  **detailLocationX** | **num**| Longitude (X-axis, East-West) | 
  **detailLocationY** | **num**| Latitude (Y-axis, North-South) | 
@@ -455,7 +455,7 @@ final api = ApiClient().getAuthApi();
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String phoneCountryCode = phoneCountryCode_example; // String | 
-final num phoneNumber = 8.14; // num | 
+final int phoneNumber = 56; // int | 
 final String password = password_example; // String | 
 final String confirmPassword = confirmPassword_example; // String | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
@@ -476,7 +476,7 @@ Name | Type | Description  | Notes
  **name** | **String**|  | 
  **email** | **String**|  | 
  **phoneCountryCode** | **String**|  | 
- **phoneNumber** | **num**|  | 
+ **phoneNumber** | **int**|  | 
  **password** | **String**|  | 
  **confirmPassword** | **String**|  | 
  **photo** | **MultipartFile**|  | [optional] 

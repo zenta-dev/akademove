@@ -9,7 +9,7 @@ part of 'phone.dart';
 abstract class _$PhoneCWProxy {
   Phone countryCode(CountryCode countryCode);
 
-  Phone number(num number);
+  Phone number(int number);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Phone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -17,7 +17,7 @@ abstract class _$PhoneCWProxy {
   /// ```dart
   /// Phone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Phone call({CountryCode countryCode, num number});
+  Phone call({CountryCode countryCode, int number});
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPhone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPhone.copyWith.fieldName(...)`
@@ -30,7 +30,7 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
   Phone countryCode(CountryCode countryCode) => this(countryCode: countryCode);
 
   @override
-  Phone number(num number) => this(number: number);
+  Phone number(int number) => this(number: number);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Phone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -51,7 +51,7 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
       number: number == const $CopyWithPlaceholder()
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
-          : number as num,
+          : number as int,
     );
   }
 }
@@ -74,7 +74,7 @@ Phone _$PhoneFromJson(Map<String, dynamic> json) =>
           'countryCode',
           (v) => $enumDecode(_$CountryCodeEnumMap, v),
         ),
-        number: $checkedConvert('number', (v) => v as num),
+        number: $checkedConvert('number', (v) => (v as num).toInt()),
       );
       return val;
     });

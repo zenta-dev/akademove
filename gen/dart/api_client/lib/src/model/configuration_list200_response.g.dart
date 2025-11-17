@@ -9,9 +9,7 @@ part of 'configuration_list200_response.dart';
 abstract class _$ConfigurationList200ResponseCWProxy {
   ConfigurationList200Response message(String message);
 
-  ConfigurationList200Response data(
-    List<ConfigurationList200ResponseDataInner> data,
-  );
+  ConfigurationList200Response data(List<Configuration> data);
 
   ConfigurationList200Response totalPages(int? totalPages);
 
@@ -23,7 +21,7 @@ abstract class _$ConfigurationList200ResponseCWProxy {
   /// ````
   ConfigurationList200Response call({
     String message,
-    List<ConfigurationList200ResponseDataInner> data,
+    List<Configuration> data,
     int? totalPages,
   });
 }
@@ -40,9 +38,8 @@ class _$ConfigurationList200ResponseCWProxyImpl
       this(message: message);
 
   @override
-  ConfigurationList200Response data(
-    List<ConfigurationList200ResponseDataInner> data,
-  ) => this(data: data);
+  ConfigurationList200Response data(List<Configuration> data) =>
+      this(data: data);
 
   @override
   ConfigurationList200Response totalPages(int? totalPages) =>
@@ -68,7 +65,7 @@ class _$ConfigurationList200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as List<ConfigurationList200ResponseDataInner>,
+          : data as List<Configuration>,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -98,11 +95,7 @@ ConfigurationList200Response _$ConfigurationList200ResponseFromJson(
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)
-          .map(
-            (e) => ConfigurationList200ResponseDataInner.fromJson(
-              e as Map<String, dynamic>,
-            ),
-          )
+          .map((e) => Configuration.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),

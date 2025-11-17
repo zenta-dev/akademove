@@ -1,4 +1,4 @@
-# api_client.model.ConfigurationList200ResponseDataInner
+# api_client.model.Configuration
 
 ## Load the model package
 ```dart

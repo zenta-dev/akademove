@@ -5,7 +5,6 @@ import 'package:api_client/src/model/auth_get_session200_response.dart';
 import 'package:api_client/src/model/auth_has_permission200_response.dart';
 import 'package:api_client/src/model/auth_has_permission_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
-import 'package:api_client/src/model/auth_sign_in_request.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/badge.dart';
@@ -21,9 +20,9 @@ import 'package:api_client/src/model/badge_user_update_request.dart';
 import 'package:api_client/src/model/ban_user.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/banner_configuration.dart';
+import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
-import 'package:api_client/src/model/configuration_list200_response_data_inner.dart';
 import 'package:api_client/src/model/coordinate.dart';
 import 'package:api_client/src/model/coupon.dart';
 import 'package:api_client/src/model/coupon_create200_response.dart';
@@ -101,6 +100,7 @@ import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/ride_pricing_configuration.dart';
 import 'package:api_client/src/model/session.dart';
+import 'package:api_client/src/model/sign_in_request.dart';
 import 'package:api_client/src/model/sign_in_response.dart';
 import 'package:api_client/src/model/sign_up_response.dart';
 import 'package:api_client/src/model/statements.dart';
@@ -190,9 +190,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'AuthSignIn200Response':
       return AuthSignIn200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'AuthSignInRequest':
-      return AuthSignInRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'AuthSignOut200Response':
       return AuthSignOut200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -238,17 +235,15 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BannerConfiguration':
       return BannerConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'Configuration':
+      return Configuration.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'ConfigurationGet200Response':
       return ConfigurationGet200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'ConfigurationKey':
     case 'ConfigurationList200Response':
       return ConfigurationList200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'ConfigurationList200ResponseDataInner':
-      return ConfigurationList200ResponseDataInner.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
@@ -504,6 +499,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Session':
       return Session.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'SignInRequest':
+      return SignInRequest.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'SignInResponse':
       return SignInResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
