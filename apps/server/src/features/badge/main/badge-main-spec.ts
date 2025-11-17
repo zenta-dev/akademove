@@ -3,8 +3,6 @@ import {
 	BadgeSchema,
 	FlatInsertBadgeSchema,
 	FlatUpdateBadgeSchema,
-	InsertBadgeSchema,
-	UpdateBadgeSchema,
 } from "@repo/schema/badge";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";

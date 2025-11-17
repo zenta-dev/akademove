@@ -26,8 +26,10 @@ import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
+import { UserMeRepository } from "@/features/user/me/user-me-admin-repository";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
+import { PasswordManager } from "@/utils/password";
 import { FirebaseAdminService } from "./services/firebase";
 import { GoogleMapService } from "./services/map";
 import { MidtransPaymentService } from "./services/payment";
@@ -64,7 +66,10 @@ export function getServices(): ServiceContext {
 export function getManagers(): ManagerContext {
 	if (_manager) return _manager;
 
-	const manager = { jwt: new JwtManager({ secret: env.AUTH_SECRET }) };
+	const manager = {
+		jwt: new JwtManager({ secret: env.AUTH_SECRET }),
+		pw: new PasswordManager(),
+	};
 
 	_manager = manager;
 	return manager;
@@ -86,7 +91,13 @@ export function getRepositories(
 		notification,
 	);
 	const repo: RepositoryContext = {
-		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
+		auth: new AuthRepository(
+			svc.db,
+			svc.kv,
+			svc.storage,
+			manager.jwt,
+			manager.pw,
+		),
 		badge: {
 			main: new BadgeRepository(svc.db, svc.kv, svc.storage),
 			user: new UserBadgeRepository(svc.db, svc.kv),
@@ -107,7 +118,10 @@ export function getRepositories(
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
 		wallet,
-		user: { admin: new UserAdminRepository(svc.db, svc.kv, svc.storage) },
+		user: {
+			admin: new UserAdminRepository(svc.db, svc.kv, svc.storage),
+			me: new UserMeRepository(svc.db, svc.kv, svc.storage, manager.pw),
+		},
 		transaction,
 		notification,
 	};

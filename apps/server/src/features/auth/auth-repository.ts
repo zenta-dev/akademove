@@ -21,7 +21,7 @@ import {
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { JwtManager } from "@/utils/jwt";
-import { PasswordManager } from "@/utils/password";
+import type { PasswordManager } from "@/utils/password";
 import { UserAdminRepository } from "../user/admin/user-admin-repository";
 
 const BUCKET = "user";
@@ -38,11 +38,12 @@ export class AuthRepository extends BaseRepository {
 		kv: KeyValueService,
 		storage: StorageService,
 		jwt: JwtManager,
+		pw: PasswordManager,
 	) {
 		super("user", kv, db);
 		this.#storage = storage;
 		this.#jwt = jwt;
-		this.#pw = new PasswordManager();
+		this.#pw = pw;
 	}
 
 	#generateId(): string {
