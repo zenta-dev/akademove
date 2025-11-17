@@ -11,7 +11,7 @@ import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 export const UserAdminSpec = {
 	list: oc
 		.route({
-			tags: [FEATURE_TAGS.USER],
+			tags: [FEATURE_TAGS.ADMIN],
 			method: "GET",
 			path: "/",
 			inputStructure: "detailed",
@@ -26,7 +26,7 @@ export const UserAdminSpec = {
 		),
 	get: oc
 		.route({
-			tags: [FEATURE_TAGS.USER],
+			tags: [FEATURE_TAGS.ADMIN],
 			method: "GET",
 			path: "/{id}",
 			inputStructure: "detailed",
@@ -36,7 +36,7 @@ export const UserAdminSpec = {
 		.output(createSuccesSchema(UserSchema, "Successfully retrieved user data")),
 	create: oc
 		.route({
-			tags: [FEATURE_TAGS.USER],
+			tags: [FEATURE_TAGS.ADMIN],
 			method: "POST",
 			path: "/",
 			inputStructure: "detailed",
@@ -46,7 +46,7 @@ export const UserAdminSpec = {
 		.output(createSuccesSchema(UserSchema, "User created successfully")),
 	update: oc
 		.route({
-			tags: [FEATURE_TAGS.USER],
+			tags: [FEATURE_TAGS.ADMIN],
 			method: "PUT",
 			path: "/{id}",
 			inputStructure: "detailed",
@@ -61,7 +61,7 @@ export const UserAdminSpec = {
 		.output(createSuccesSchema(UserSchema, "User updated successfully")),
 	remove: oc
 		.route({
-			tags: [FEATURE_TAGS.USER],
+			tags: [FEATURE_TAGS.ADMIN],
 			method: "DELETE",
 			path: "/{id}",
 			inputStructure: "detailed",

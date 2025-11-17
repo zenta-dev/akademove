@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import * as z from "zod";
 
 export const FEATURE_TAGS = Object.freeze({
+	ADMIN: "Admin",
 	AUTH: "Auth",
 	BADGE: "Badge",
 	CONFIGURATION: "Configuration",
