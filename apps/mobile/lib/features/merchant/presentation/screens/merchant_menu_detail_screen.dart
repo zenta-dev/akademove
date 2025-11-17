@@ -54,7 +54,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: Button.destructive(
-                    onPressed: () {},
+                    onPressed: () => _showDeleteConfirmation(context),
                     child: Text(
                       'Delete menu',
                       style: context.typography.small.copyWith(
@@ -70,6 +70,31 @@ class MerchantMenuDetailScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Menu'),
+        content: const Text('Are you sure want to delete this menu?'),
+        actions: [
+          Button.ghost(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          Button.destructive(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _deleteMenu(context);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteMenu(BuildContext context) {}
 
   Widget _buildDetailRow(
     BuildContext context,
