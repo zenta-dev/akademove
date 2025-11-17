@@ -67,7 +67,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12.r),
                         child: Image.asset(
-                          "assets/images/item's_photo.png",
+                          'assets/images/item_photo.png',
                           width: 150.w,
                           height: 150.w,
                           fit: BoxFit.cover,

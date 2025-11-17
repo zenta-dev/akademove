@@ -42,8 +42,16 @@ class $AssetsImagesGen {
   /// Directory path: assets/images/character
   $AssetsImagesCharacterGen get character => const $AssetsImagesCharacterGen();
 
+  /// File path: assets/images/fore_logo.png
+  AssetGenImage get foreLogo =>
+      const AssetGenImage('assets/images/fore_logo.png');
+
   /// Directory path: assets/images/hero
   $AssetsImagesHeroGen get hero => const $AssetsImagesHeroGen();
+
+  /// File path: assets/images/item_photo.png
+  AssetGenImage get itemPhoto =>
+      const AssetGenImage('assets/images/item_photo.png');
 
   /// File path: assets/images/motorcycle_above.png
   AssetGenImage get motorcycleAbove =>
@@ -53,7 +61,13 @@ class $AssetsImagesGen {
   SvgGenImage get noImage => const SvgGenImage('assets/images/no-image.svg');
 
   /// List of all assets
-  List<dynamic> get values => [brand, motorcycleAbove, noImage];
+  List<dynamic> get values => [
+    brand,
+    foreLogo,
+    itemPhoto,
+    motorcycleAbove,
+    noImage,
+  ];
 }
 
 class $AssetsImagesBgGen {
