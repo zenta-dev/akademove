@@ -416,3 +416,173 @@ class _UserRideStateCopyWithImpl<$R, $Out>
   ) => _UserRideStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
+class UserProfileStateMapper extends ClassMapperBase<UserProfileState> {
+  UserProfileStateMapper._();
+
+  static UserProfileStateMapper? _instance;
+  static UserProfileStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UserProfileStateMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UserProfileState';
+
+  static User? _$updateProfileResult(UserProfileState v) =>
+      v.updateProfileResult;
+  static const Field<UserProfileState, User> _f$updateProfileResult = Field(
+    'updateProfileResult',
+    _$updateProfileResult,
+    opt: true,
+  );
+  static bool? _$updatePasswordResult(UserProfileState v) =>
+      v.updatePasswordResult;
+  static const Field<UserProfileState, bool> _f$updatePasswordResult = Field(
+    'updatePasswordResult',
+    _$updatePasswordResult,
+    opt: true,
+  );
+  static CubitState _$state(UserProfileState v) => v.state;
+  static const Field<UserProfileState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(UserProfileState v) => v.message;
+  static const Field<UserProfileState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(UserProfileState v) => v.error;
+  static const Field<UserProfileState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<UserProfileState> fields = const {
+    #updateProfileResult: _f$updateProfileResult,
+    #updatePasswordResult: _f$updatePasswordResult,
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+  };
+
+  static UserProfileState _instantiate(DecodingData data) {
+    return UserProfileState(
+      updateProfileResult: data.dec(_f$updateProfileResult),
+      updatePasswordResult: data.dec(_f$updatePasswordResult),
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin UserProfileStateMappable {
+  UserProfileStateCopyWith<UserProfileState, UserProfileState, UserProfileState>
+  get copyWith =>
+      _UserProfileStateCopyWithImpl<UserProfileState, UserProfileState>(
+        this as UserProfileState,
+        $identity,
+        $identity,
+      );
+  @override
+  String toString() {
+    return UserProfileStateMapper.ensureInitialized().stringifyValue(
+      this as UserProfileState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UserProfileStateMapper.ensureInitialized().equalsValue(
+      this as UserProfileState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return UserProfileStateMapper.ensureInitialized().hashValue(
+      this as UserProfileState,
+    );
+  }
+}
+
+extension UserProfileStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserProfileState, $Out> {
+  UserProfileStateCopyWith<$R, UserProfileState, $Out>
+  get $asUserProfileState =>
+      $base.as((v, t, t2) => _UserProfileStateCopyWithImpl<$R, $Out>(v, t, t2));
+}
+
+abstract class UserProfileStateCopyWith<$R, $In extends UserProfileState, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({
+    User? updateProfileResult,
+    bool? updatePasswordResult,
+    CubitState? state,
+    String? message,
+    BaseError? error,
+  });
+  UserProfileStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _UserProfileStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserProfileState, $Out>
+    implements UserProfileStateCopyWith<$R, UserProfileState, $Out> {
+  _UserProfileStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UserProfileState> $mapper =
+      UserProfileStateMapper.ensureInitialized();
+  @override
+  $R call({
+    Object? updateProfileResult = $none,
+    Object? updatePasswordResult = $none,
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (updateProfileResult != $none)
+        #updateProfileResult: updateProfileResult,
+      if (updatePasswordResult != $none)
+        #updatePasswordResult: updatePasswordResult,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+    }),
+  );
+  @override
+  UserProfileState $make(CopyWithData data) => UserProfileState(
+    updateProfileResult: data.get(
+      #updateProfileResult,
+      or: $value.updateProfileResult,
+    ),
+    updatePasswordResult: data.get(
+      #updatePasswordResult,
+      or: $value.updatePasswordResult,
+    ),
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+  );
+
+  @override
+  UserProfileStateCopyWith<$R2, UserProfileState, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _UserProfileStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+

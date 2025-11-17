@@ -1,7 +1,9 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserProfileScreen extends StatelessWidget {
@@ -27,7 +29,9 @@ class UserProfileScreen extends StatelessWidget {
                 (val) => EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed(Routes.userEditProfile.name);
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

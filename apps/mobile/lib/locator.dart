@@ -93,6 +93,11 @@ void _setupRepository() {
         apiClient: sl<ApiClient>(),
         firebaseService: sl<FirebaseService>(),
       ),
+    )
+    ..registerLazySingleton(
+      () => UserRepository(
+        apiClient: sl<ApiClient>(),
+      ),
     );
 }
 
@@ -152,6 +157,11 @@ void _setupCubit() {
       () => UserOrderCubit(
         orderRepository: sl<OrderRepository>(),
         webSocketService: sl<WebSocketService>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserProfileCubit(
+        userRepository: sl<UserRepository>(),
       ),
     )
     ..registerFactory(
