@@ -100,11 +100,6 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           path: Routes.merchantChangePassword.path,
           builder: (context, state) => const MerchantChangePasswordScreen(),
         ),
-        GoRoute(
-          name: Routes.merchantPrivacyPolicies.name,
-          path: Routes.merchantPrivacyPolicies.path,
-          builder: (context, state) => const MerchantPrivacyPoliciesScreen(),
-        ),
       ],
     ),
   ],

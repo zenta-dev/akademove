@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/features/shared/_export.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart' show TopUpRequestMethodEnum;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,7 +70,11 @@ enum Routes {
   merchantSetUpOutlet('/merchant/set/up/outlet'),
   merchantEditProfile('/merchant/edit/profile'),
   merchantChangePassword('/merchant/change/password'),
-  merchantPrivacyPolicies('/merchant/privacy/policies');
+
+  ///
+  /// Shared Routes
+  ///
+  privacyPolicies('/privacy-policies');
 
   const Routes(this.path);
   final String path;
@@ -82,5 +87,10 @@ final router = GoRouter(
     userRouter,
     driverRouter,
     merchantRouter,
+    GoRoute(
+      name: Routes.privacyPolicies.name,
+      path: Routes.privacyPolicies.path,
+      builder: (context, state) => const PrivacyPoliciesScreen(),
+    ),
   ],
 );

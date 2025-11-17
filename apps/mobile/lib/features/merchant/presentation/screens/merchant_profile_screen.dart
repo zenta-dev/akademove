@@ -106,7 +106,7 @@ class MerchantProfileScreen extends StatelessWidget {
             width: double.infinity,
             child: Button.card(
               onPressed: () =>
-                  context.pushNamed(Routes.merchantPrivacyPolicies.name),
+                  context.pushNamed(Routes.privacyPolicies.name),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

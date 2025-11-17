@@ -24,11 +24,18 @@ class UserProfileScreen extends StatelessWidget {
             },
           ),
           Button(
-            style: ButtonStyle.card(
-              density: ButtonDensity(
-                (val) => EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-              ),
-            ),
+            style:
+                ButtonStyle.card(
+                  density: ButtonDensity(
+                    (val) =>
+                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                  ),
+                ).copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                ),
             onPressed: () {
               context.pushNamed(Routes.userEditProfile.name);
             },
@@ -50,11 +57,18 @@ class UserProfileScreen extends StatelessWidget {
             ),
           ),
           Button(
-            style: ButtonStyle.card(
-              density: ButtonDensity(
-                (val) => EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
-              ),
-            ),
+            style:
+                ButtonStyle.card(
+                  density: ButtonDensity(
+                    (val) =>
+                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                  ),
+                ).copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                ),
             onPressed: () {
               context.pushNamed(Routes.userChangePassword.name);
             },
@@ -71,6 +85,34 @@ class UserProfileScreen extends StatelessWidget {
                 Icon(
                   LucideIcons.pencil,
                   size: 14.sp,
+                ),
+              ],
+            ),
+          ),
+          Button(
+            style:
+                ButtonStyle.card(
+                  density: ButtonDensity(
+                    (val) =>
+                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                  ),
+                ).copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                ),
+            onPressed: () {
+              context.pushNamed(Routes.privacyPolicies.name);
+            },
+            child: Row(
+              children: [
+                Text(
+                  'Privacy Policies',
+                  style: context.typography.small.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
