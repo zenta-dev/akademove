@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 **level** | [**BadgeLevel**](BadgeLevel.md) |  | 
 **targetRole** | [**BadgeTargetRole**](BadgeTargetRole.md) |  | 
 **icon** | **String** |  | [optional] 
-**criteria** | [**BadgeCreateRequestCriteria**](BadgeCreateRequestCriteria.md) |  | 
+**criteria** | [**BadgeCriteria**](BadgeCriteria.md) |  | 
 **benefits** | [**BadgeBenefits**](BadgeBenefits.md) |  | [optional] 
 **isActive** | **bool** |  | [optional] [default to true]
 **displayOrder** | **int** |  | [optional] [default to 0]

@@ -22,7 +22,7 @@ Method | HTTP request | Description
 
 
 # **badgeCreate**
-> BadgeCreate200Response badgeCreate(badgeCreateRequest)
+> BadgeCreate200Response badgeCreate(code, name, description, type, level, targetRole, isActive, displayOrder, criteriaMinOrders, criteriaMinRating, criteriaMinOnTimeRate, criteriaMinStreak, criteriaMinEarnings, benefitsPriorityBoost, benefitsCommissionReduction, icon)
 
 
 
@@ -31,10 +31,25 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getBadgeApi();
-final BadgeCreateRequest badgeCreateRequest = ; // BadgeCreateRequest | 
+final String code = code_example; // String | 
+final String name = name_example; // String | 
+final String description = description_example; // String | 
+final String type = type_example; // String | 
+final String level = level_example; // String | 
+final String targetRole = targetRole_example; // String | 
+final bool isActive = true; // bool | 
+final int displayOrder = 56; // int | 
+final int criteriaMinOrders = 56; // int | 
+final num criteriaMinRating = 8.14; // num | 
+final num criteriaMinOnTimeRate = 8.14; // num | 
+final int criteriaMinStreak = 56; // int | 
+final num criteriaMinEarnings = 8.14; // num | 
+final int benefitsPriorityBoost = 56; // int | 
+final num benefitsCommissionReduction = 8.14; // num | 
+final MultipartFile icon = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.badgeCreate(badgeCreateRequest);
+    final response = api.badgeCreate(code, name, description, type, level, targetRole, isActive, displayOrder, criteriaMinOrders, criteriaMinRating, criteriaMinOnTimeRate, criteriaMinStreak, criteriaMinEarnings, benefitsPriorityBoost, benefitsCommissionReduction, icon);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling BadgeApi->badgeCreate: $e\n');
@@ -45,7 +60,22 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **badgeCreateRequest** | [**BadgeCreateRequest**](BadgeCreateRequest.md)|  | 
+ **code** | **String**|  | 
+ **name** | **String**|  | 
+ **description** | **String**|  | 
+ **type** | **String**|  | 
+ **level** | **String**|  | 
+ **targetRole** | **String**|  | 
+ **isActive** | **bool**|  | [default to true]
+ **displayOrder** | **int**|  | [default to 0]
+ **criteriaMinOrders** | **int**|  | [optional] 
+ **criteriaMinRating** | **num**|  | [optional] 
+ **criteriaMinOnTimeRate** | **num**|  | [optional] 
+ **criteriaMinStreak** | **int**|  | [optional] 
+ **criteriaMinEarnings** | **num**|  | [optional] 
+ **benefitsPriorityBoost** | **int**|  | [optional] 
+ **benefitsCommissionReduction** | **num**|  | [optional] 
+ **icon** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
@@ -57,7 +87,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -196,7 +226,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **badgeUpdate**
-> BadgeCreate200Response badgeUpdate(id, badgeUpdateRequest)
+> BadgeCreate200Response badgeUpdate(id, code, name, description, type, level, targetRole, criteriaMinOrders, criteriaMinRating, criteriaMinOnTimeRate, criteriaMinStreak, criteriaMinEarnings, benefitsPriorityBoost, benefitsCommissionReduction, isActive, displayOrder, icon)
 
 
 
@@ -206,10 +236,25 @@ import 'package:api_client/api.dart';
 
 final api = ApiClient().getBadgeApi();
 final String id = id_example; // String | 
-final BadgeUpdateRequest badgeUpdateRequest = ; // BadgeUpdateRequest | 
+final String code = code_example; // String | 
+final String name = name_example; // String | 
+final String description = description_example; // String | 
+final String type = type_example; // String | 
+final String level = level_example; // String | 
+final String targetRole = targetRole_example; // String | 
+final int criteriaMinOrders = 56; // int | 
+final num criteriaMinRating = 8.14; // num | 
+final num criteriaMinOnTimeRate = 8.14; // num | 
+final int criteriaMinStreak = 56; // int | 
+final num criteriaMinEarnings = 8.14; // num | 
+final int benefitsPriorityBoost = 56; // int | 
+final num benefitsCommissionReduction = 8.14; // num | 
+final bool isActive = true; // bool | 
+final int displayOrder = 56; // int | 
+final MultipartFile icon = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.badgeUpdate(id, badgeUpdateRequest);
+    final response = api.badgeUpdate(id, code, name, description, type, level, targetRole, criteriaMinOrders, criteriaMinRating, criteriaMinOnTimeRate, criteriaMinStreak, criteriaMinEarnings, benefitsPriorityBoost, benefitsCommissionReduction, isActive, displayOrder, icon);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling BadgeApi->badgeUpdate: $e\n');
@@ -221,7 +266,22 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **id** | **String**|  | 
- **badgeUpdateRequest** | [**BadgeUpdateRequest**](BadgeUpdateRequest.md)|  | 
+ **code** | **String**|  | [optional] 
+ **name** | **String**|  | [optional] 
+ **description** | **String**|  | [optional] 
+ **type** | **String**|  | [optional] 
+ **level** | **String**|  | [optional] 
+ **targetRole** | **String**|  | [optional] 
+ **criteriaMinOrders** | **int**|  | [optional] 
+ **criteriaMinRating** | **num**|  | [optional] 
+ **criteriaMinOnTimeRate** | **num**|  | [optional] 
+ **criteriaMinStreak** | **int**|  | [optional] 
+ **criteriaMinEarnings** | **num**|  | [optional] 
+ **benefitsPriorityBoost** | **int**|  | [optional] 
+ **benefitsCommissionReduction** | **num**|  | [optional] 
+ **isActive** | **bool**|  | [optional] [default to true]
+ **displayOrder** | **int**|  | [optional] [default to 0]
+ **icon** | **MultipartFile**|  | [optional] 
 
 ### Return type
 
@@ -233,7 +293,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

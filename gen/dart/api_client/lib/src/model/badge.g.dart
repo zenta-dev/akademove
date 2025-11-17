@@ -23,7 +23,7 @@ abstract class _$BadgeCWProxy {
 
   Badge icon(String? icon);
 
-  Badge criteria(BadgeCreateRequestCriteria criteria);
+  Badge criteria(BadgeCriteria criteria);
 
   Badge benefits(BadgeBenefits? benefits);
 
@@ -50,7 +50,7 @@ abstract class _$BadgeCWProxy {
     BadgeLevel level,
     BadgeTargetRole targetRole,
     String? icon,
-    BadgeCreateRequestCriteria criteria,
+    BadgeCriteria criteria,
     BadgeBenefits? benefits,
     bool? isActive,
     int? displayOrder,
@@ -90,8 +90,7 @@ class _$BadgeCWProxyImpl implements _$BadgeCWProxy {
   Badge icon(String? icon) => this(icon: icon);
 
   @override
-  Badge criteria(BadgeCreateRequestCriteria criteria) =>
-      this(criteria: criteria);
+  Badge criteria(BadgeCriteria criteria) => this(criteria: criteria);
 
   @override
   Badge benefits(BadgeBenefits? benefits) => this(benefits: benefits);
@@ -167,7 +166,7 @@ class _$BadgeCWProxyImpl implements _$BadgeCWProxy {
       criteria: criteria == const $CopyWithPlaceholder()
           ? _value.criteria
           // ignore: cast_nullable_to_non_nullable
-          : criteria as BadgeCreateRequestCriteria,
+          : criteria as BadgeCriteria,
       benefits: benefits == const $CopyWithPlaceholder()
           ? _value.benefits
           // ignore: cast_nullable_to_non_nullable
@@ -234,7 +233,7 @@ Badge _$BadgeFromJson(
     icon: $checkedConvert('icon', (v) => v as String?),
     criteria: $checkedConvert(
       'criteria',
-      (v) => BadgeCreateRequestCriteria.fromJson(v as Map<String, dynamic>),
+      (v) => BadgeCriteria.fromJson(v as Map<String, dynamic>),
     ),
     benefits: $checkedConvert(
       'benefits',
@@ -270,6 +269,7 @@ Map<String, dynamic> _$BadgeToJson(Badge instance) => <String, dynamic>{
 };
 
 const _$BadgeTypeEnumMap = {
+  BadgeType.achievement: 'achievement',
   BadgeType.performance: 'performance',
   BadgeType.volume: 'volume',
   BadgeType.streak: 'streak',

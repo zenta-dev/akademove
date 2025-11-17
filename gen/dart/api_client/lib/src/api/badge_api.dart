@@ -10,10 +10,8 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/badge_create200_response.dart';
-import 'package:api_client/src/model/badge_create_request.dart';
 import 'package:api_client/src/model/badge_list200_response.dart';
 import 'package:api_client/src/model/badge_remove200_response.dart';
-import 'package:api_client/src/model/badge_update_request.dart';
 import 'package:api_client/src/model/badge_user_create200_response.dart';
 import 'package:api_client/src/model/badge_user_create_request.dart';
 import 'package:api_client/src/model/badge_user_list200_response.dart';
@@ -28,7 +26,22 @@ class BadgeApi {
   ///
   ///
   /// Parameters:
-  /// * [badgeCreateRequest]
+  /// * [code]
+  /// * [name]
+  /// * [description]
+  /// * [type]
+  /// * [level]
+  /// * [targetRole]
+  /// * [isActive]
+  /// * [displayOrder]
+  /// * [criteriaMinOrders]
+  /// * [criteriaMinRating]
+  /// * [criteriaMinOnTimeRate]
+  /// * [criteriaMinStreak]
+  /// * [criteriaMinEarnings]
+  /// * [benefitsPriorityBoost]
+  /// * [benefitsCommissionReduction]
+  /// * [icon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -39,7 +52,22 @@ class BadgeApi {
   /// Returns a [Future] containing a [Response] with a [BadgeCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<BadgeCreate200Response>> badgeCreate({
-    required BadgeCreateRequest badgeCreateRequest,
+    required String code,
+    required String name,
+    required String description,
+    required String type,
+    required String level,
+    required String targetRole,
+    required bool isActive,
+    required int displayOrder,
+    int? criteriaMinOrders,
+    num? criteriaMinRating,
+    num? criteriaMinOnTimeRate,
+    int? criteriaMinStreak,
+    num? criteriaMinEarnings,
+    int? benefitsPriorityBoost,
+    num? benefitsCommissionReduction,
+    MultipartFile? icon,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -57,14 +85,35 @@ class BadgeApi {
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(badgeCreateRequest);
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        r'code': code,
+        r'name': name,
+        r'description': description,
+        r'type': type,
+        r'level': level,
+        r'targetRole': targetRole,
+        if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
+        if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
+        r'isActive': isActive,
+        r'displayOrder': displayOrder,
+        if (icon != null) r'icon': icon,
+      });
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -382,7 +431,22 @@ class BadgeApi {
   ///
   /// Parameters:
   /// * [id]
-  /// * [badgeUpdateRequest]
+  /// * [code]
+  /// * [name]
+  /// * [description]
+  /// * [type]
+  /// * [level]
+  /// * [targetRole]
+  /// * [criteriaMinOrders]
+  /// * [criteriaMinRating]
+  /// * [criteriaMinOnTimeRate]
+  /// * [criteriaMinStreak]
+  /// * [criteriaMinEarnings]
+  /// * [benefitsPriorityBoost]
+  /// * [benefitsCommissionReduction]
+  /// * [isActive]
+  /// * [displayOrder]
+  /// * [icon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -394,7 +458,22 @@ class BadgeApi {
   /// Throws [DioException] if API call or serialization fails
   Future<Response<BadgeCreate200Response>> badgeUpdate({
     required String id,
-    required BadgeUpdateRequest badgeUpdateRequest,
+    String? code,
+    String? name,
+    String? description,
+    String? type,
+    String? level,
+    String? targetRole,
+    int? criteriaMinOrders,
+    num? criteriaMinRating,
+    num? criteriaMinOnTimeRate,
+    int? criteriaMinStreak,
+    num? criteriaMinEarnings,
+    int? benefitsPriorityBoost,
+    num? benefitsCommissionReduction,
+    bool? isActive,
+    int? displayOrder,
+    MultipartFile? icon,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -417,14 +496,35 @@ class BadgeApi {
         ],
         ...?extra,
       },
-      contentType: 'application/json',
+      contentType: 'multipart/form-data',
       validateStatus: validateStatus,
     );
 
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(badgeUpdateRequest);
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        if (code != null) r'code': code,
+        if (name != null) r'name': name,
+        if (description != null) r'description': description,
+        if (type != null) r'type': type,
+        if (level != null) r'level': level,
+        if (targetRole != null) r'targetRole': targetRole,
+        if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
+        if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
+        if (isActive != null) r'isActive': isActive,
+        if (displayOrder != null) r'displayOrder': displayOrder,
+        if (icon != null) r'icon': icon,
+      });
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),

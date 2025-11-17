@@ -8,11 +8,9 @@ import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
 import 'package:api_client/src/model/badge.dart';
 import 'package:api_client/src/model/badge_benefits.dart';
 import 'package:api_client/src/model/badge_create200_response.dart';
-import 'package:api_client/src/model/badge_create_request.dart';
-import 'package:api_client/src/model/badge_create_request_criteria.dart';
+import 'package:api_client/src/model/badge_criteria.dart';
 import 'package:api_client/src/model/badge_list200_response.dart';
 import 'package:api_client/src/model/badge_remove200_response.dart';
-import 'package:api_client/src/model/badge_update_request.dart';
 import 'package:api_client/src/model/badge_user_create200_response.dart';
 import 'package:api_client/src/model/badge_user_create_request.dart';
 import 'package:api_client/src/model/badge_user_list200_response.dart';
@@ -200,11 +198,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BadgeCreate200Response':
       return BadgeCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'BadgeCreateRequest':
-      return BadgeCreateRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'BadgeCreateRequestCriteria':
-      return BadgeCreateRequestCriteria.fromJson(value as Map<String, dynamic>)
+    case 'BadgeCriteria':
+      return BadgeCriteria.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'BadgeLevel':
     case 'BadgeList200Response':
@@ -215,9 +210,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'BadgeTargetRole':
     case 'BadgeType':
-    case 'BadgeUpdateRequest':
-      return BadgeUpdateRequest.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
     case 'BadgeUserCreate200Response':
       return BadgeUserCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;

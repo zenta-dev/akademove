@@ -234,6 +234,7 @@ Map<String, dynamic> _$BadgeCreateRequestToJson(BadgeCreateRequest instance) =>
     };
 
 const _$BadgeTypeEnumMap = {
+  BadgeType.achievement: 'achievement',
   BadgeType.performance: 'performance',
   BadgeType.volume: 'volume',
   BadgeType.streak: 'streak',

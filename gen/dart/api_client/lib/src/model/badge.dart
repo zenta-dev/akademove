@@ -7,7 +7,7 @@ import 'package:api_client/src/model/badge_target_role.dart';
 import 'package:api_client/src/model/badge_type.dart';
 import 'package:api_client/src/model/badge_level.dart';
 import 'package:api_client/src/model/badge_benefits.dart';
-import 'package:api_client/src/model/badge_create_request_criteria.dart';
+import 'package:api_client/src/model/badge_criteria.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -64,7 +64,7 @@ class Badge {
   final String? icon;
 
   @JsonKey(name: r'criteria', required: true, includeIfNull: false)
-  final BadgeCreateRequestCriteria criteria;
+  final BadgeCriteria criteria;
 
   @JsonKey(name: r'benefits', required: false, includeIfNull: false)
   final BadgeBenefits? benefits;

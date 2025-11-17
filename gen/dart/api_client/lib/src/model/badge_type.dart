@@ -6,6 +6,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum BadgeType {
+  @JsonValue(r'achievement')
+  achievement(r'achievement'),
   @JsonValue(r'performance')
   performance(r'performance'),
   @JsonValue(r'volume')
