@@ -20,7 +20,7 @@ export type CountryCode = z.infer<typeof CountryCodeSchema>;
 
 export const PhoneSchema = z.object({
 	countryCode: CountryCodeSchema,
-	number: z.coerce.number<number>(),
+	number: z.coerce.number<number>().int().min(0),
 });
 export type Phone = z.infer<typeof PhoneSchema>;
 
