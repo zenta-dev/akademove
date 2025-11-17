@@ -2,6 +2,7 @@ import { z } from "zod";
 import { DateSchema, type SchemaRegistries } from "./common.ts";
 import { BADGE_LEVELS, BADGE_TARGET_ROLES, BADGE_TYPES } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { flattenZodObject } from "./flatten.helper.ts";
 
 export const BadgeCriteriaSchema = z.object({
 	minOrders: z.number().int().min(0).optional(),
@@ -44,17 +45,25 @@ export const BadgeKeySchema = extractSchemaKeysAsEnum(BadgeSchema);
 
 export const InsertBadgeSchema = BadgeSchema.omit({
 	id: true,
+	icon: true,
 	createdAt: true,
 	updatedAt: true,
+}).extend({
+	icon: z
+		.file()
+		.mime(["image/png", "image/jpg", "image/jpeg", "image/svg"])
+		.optional(),
 });
 export type InsertBadge = z.infer<typeof InsertBadgeSchema>;
 
-export const UpdateBadgeSchema = BadgeSchema.omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-}).partial();
+export const FlatInsertBadgeSchema = flattenZodObject(InsertBadgeSchema);
+export type FlatInsertBadge = z.infer<typeof FlatInsertBadgeSchema>;
+
+export const UpdateBadgeSchema = InsertBadgeSchema.partial();
 export type UpdateBadge = z.infer<typeof UpdateBadgeSchema>;
+
+export const FlatUpdateBadgeSchema = flattenZodObject(UpdateBadgeSchema);
+export type FlatUpdateBadge = z.infer<typeof FlatUpdateBadgeSchema>;
 
 export const UserBadgeMetadataSchema = z.object({
 	ordersCompleted: z.number().int().min(0).optional(),

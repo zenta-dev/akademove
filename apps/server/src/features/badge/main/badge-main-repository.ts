@@ -31,7 +31,13 @@ export class BadgeRepository extends BaseRepository {
 		this.#storage = storage;
 	}
 
-	static composeEntity(item: BadgeDatabase): Badge {
+	static composeEntity(item: BadgeDatabase, storage: StorageService): Badge {
+		if (item.icon) {
+			item.icon = storage.getPublicUrl({
+				key: item.icon,
+				bucket: BUCKET,
+			});
+		}
 		return nullsToUndefined(item);
 	}
 
@@ -41,7 +47,9 @@ export class BadgeRepository extends BaseRepository {
 			where: (f, op) => op.eq(f.id, id),
 		});
 
-		return result ? BadgeRepository.composeEntity(result) : undefined;
+		return result
+			? BadgeRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
 	async #getQueryCount(query: string): Promise<number> {
@@ -94,7 +102,9 @@ export class BadgeRepository extends BaseRepository {
 					limit: limit + 1,
 				});
 
-				const rows = res.map(BadgeRepository.composeEntity);
+				const rows = res.map((r) =>
+					BadgeRepository.composeEntity(r, this.#storage),
+				);
 
 				return { rows };
 			}
@@ -109,7 +119,9 @@ export class BadgeRepository extends BaseRepository {
 					limit,
 				});
 
-				const rows = res.map(BadgeRepository.composeEntity);
+				const rows = res.map((r) =>
+					BadgeRepository.composeEntity(r, this.#storage),
+				);
 
 				const totalCount = search
 					? await this.#getQueryCount(search)
@@ -126,7 +138,9 @@ export class BadgeRepository extends BaseRepository {
 				limit: limit,
 			});
 
-			const rows = res.map(BadgeRepository.composeEntity);
+			const rows = res.map((r) =>
+				BadgeRepository.composeEntity(r, this.#storage),
+			);
 
 			return { rows };
 		} catch (error) {
@@ -158,7 +172,9 @@ export class BadgeRepository extends BaseRepository {
 				const result = await tx.query.badge.findFirst({
 					where: (f, op) => op.eq(f.code, code),
 				});
-				const res = result ? BadgeRepository.composeEntity(result) : undefined;
+				const res = result
+					? BadgeRepository.composeEntity(result, this.#storage)
+					: undefined;
 				if (!res) throw new RepositoryError("Failed to get badge from db");
 				await this.setCache(code, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
@@ -201,7 +217,7 @@ export class BadgeRepository extends BaseRepository {
 					}),
 			]);
 
-			const result = BadgeRepository.composeEntity(operation);
+			const result = BadgeRepository.composeEntity(operation, this.#storage);
 			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
@@ -243,7 +259,7 @@ export class BadgeRepository extends BaseRepository {
 					}),
 			]);
 
-			const result = BadgeRepository.composeEntity(operation);
+			const result = BadgeRepository.composeEntity(operation, this.#storage);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {

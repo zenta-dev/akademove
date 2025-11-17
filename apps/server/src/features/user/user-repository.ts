@@ -57,7 +57,7 @@ export class UserRepository extends BaseRepository {
 			banExpires: user.banExpires ?? undefined,
 			gender: user.gender ?? undefined,
 			badges: user.userBadgePivots.map((e) =>
-				BadgeRepository.composeEntity(e.badge),
+				BadgeRepository.composeEntity(e.badge, storage),
 			),
 		};
 	}
