@@ -54,12 +54,15 @@ const dummyPlaceOrderResponse = PlaceOrderResponse(
   payment: dummyPayment,
   transaction: dummyTransaction,
 );
+
+const dummyPhone = Phone(countryCode: CountryCode.ID, number: 123456);
+
 const dummyMerchant = Merchant(
   id: dummyUUIDString,
   userId: dummyUUIDString,
   name: 'Bakso Solo',
   email: 'bakso@gmail.com',
-  phone: Phone(countryCode: CountryCode.ID, number: 123456),
+  phone: dummyPhone,
   address: 'St. Somewhere',
   isActive: true,
   rating: 3,
@@ -76,4 +79,17 @@ const dummyPlace = Place(
   lat: 0,
   lng: 0,
   icon: '${UrlConstants.randomImageUrl}/seed/24/24',
+);
+
+const dummyUser = User(
+  id: dummyUUIDString,
+  name: 'Folks',
+  email: 'folks@akademove.com',
+  emailVerified: false,
+  role: UserRole.user,
+  banned: false,
+  phone: dummyPhone,
+  createdAt: dummyConstDateTime,
+  updatedAt: dummyConstDateTime,
+  badges: [],
 );
