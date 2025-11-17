@@ -1,3 +1,5 @@
+import { unflattenData } from "@repo/schema/flatten.helper";
+import { trimObjectValues } from "@repo/shared";
 import { requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { BadgeMainSpec } from "./badge-main-spec";
@@ -29,7 +31,8 @@ export const BadgeMainHandler = priv.router({
 	create: priv.create
 		.use(roleMiddleware)
 		.handler(async ({ context, input: { body } }) => {
-			const result = await context.repo.badge.main.create(body);
+			const data = trimObjectValues(unflattenData(body));
+			const result = await context.repo.badge.main.create(data);
 
 			return {
 				status: 200,
@@ -39,7 +42,8 @@ export const BadgeMainHandler = priv.router({
 	update: priv.update
 		.use(roleMiddleware)
 		.handler(async ({ context, input: { params, body } }) => {
-			const result = await context.repo.badge.main.update(params.id, body);
+			const data = trimObjectValues(unflattenData(body));
+			const result = await context.repo.badge.main.update(params.id, data);
 
 			return {
 				status: 200,

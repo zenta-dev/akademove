@@ -5,7 +5,7 @@ import {
 	type UpdateBadge,
 } from "@repo/schema/badge";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { nullsToUndefined } from "@repo/shared";
+import { getFileExtension, nullsToUndefined } from "@repo/shared";
 import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -14,12 +14,21 @@ import { RepositoryError } from "@/core/error";
 import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { StorageService } from "@/core/services/storage";
 import type { BadgeDatabase } from "@/core/tables/badge";
 import { log } from "@/utils";
 
+const BUCKET = "badges";
+
 export class BadgeRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	readonly #storage: StorageService;
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
 		super("badge", kv, db);
+		this.#storage = storage;
 	}
 
 	static composeEntity(item: BadgeDatabase): Badge {
@@ -164,15 +173,33 @@ export class BadgeRepository extends BaseRepository {
 
 	async create(item: InsertBadge, opts?: WithTx): Promise<Badge> {
 		try {
+			let iconKey: string | undefined;
+
+			if (item.icon) {
+				const extension = getFileExtension(item.icon);
+				iconKey = `${item.code}.${extension}`;
+			}
+
 			const tx = opts?.tx ?? this.db;
-			const [operation] = await tx
-				.insert(tables.badge)
-				.values({
-					...item,
-					id: v7(),
-					createdAt: new Date(),
-				})
-				.returning();
+			const [operation] = await Promise.all([
+				tx
+					.insert(tables.badge)
+					.values({
+						...item,
+						icon: iconKey,
+						id: v7(),
+						createdAt: new Date(),
+					})
+					.returning()
+					.then(([r]) => r),
+				item.icon &&
+					iconKey &&
+					this.#storage.upload({
+						bucket: BUCKET,
+						key: iconKey,
+						file: item.icon,
+					}),
+			]);
 
 			const result = BadgeRepository.composeEntity(operation);
 			await this.setCache(result.id, result);
@@ -188,17 +215,32 @@ export class BadgeRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Badge with id "${id}" not found`);
 
+			let iconKey: string | undefined;
+
+			if (item.icon) {
+				const extension = getFileExtension(item.icon);
+				iconKey = `${item.code ?? existing.code}.${extension}`;
+			}
+
 			const tx = opts?.tx ?? this.db;
 			const [operation] = await Promise.all([
 				tx
 					.update(tables.badge)
 					.set({
 						...item,
+						icon: iconKey,
 					})
 					.where(eq(tables.badge.id, id))
 					.returning()
 					.then(([r]) => r),
 				this.deleteCache(existing.code),
+				item.icon &&
+					iconKey &&
+					this.#storage.upload({
+						bucket: BUCKET,
+						key: iconKey,
+						file: item.icon,
+					}),
 			]);
 
 			const result = BadgeRepository.composeEntity(operation);

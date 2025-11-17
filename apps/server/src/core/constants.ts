@@ -30,6 +30,7 @@ export const CACHE_TTLS = Object.freeze({
 export const TRUSTED_ORIGINS = [env.AUTH_URL, env.CORS_ORIGIN];
 
 export const STORAGE_BUCKETS = [
+	"badges",
 	"driver",
 	"merchant",
 	"merchant-priv",

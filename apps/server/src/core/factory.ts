@@ -88,7 +88,7 @@ export function getRepositories(
 	const repo: RepositoryContext = {
 		auth: new AuthRepository(svc.db, svc.kv, svc.storage, manager.jwt),
 		badge: {
-			main: new BadgeRepository(svc.db, svc.kv),
+			main: new BadgeRepository(svc.db, svc.kv, svc.storage),
 			user: new UserBadgeRepository(svc.db, svc.kv),
 		},
 		configuration: new ConfigurationRepository(svc.db, svc.kv),

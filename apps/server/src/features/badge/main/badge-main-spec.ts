@@ -1,12 +1,15 @@
 import { oc } from "@orpc/contract";
 import {
 	BadgeSchema,
+	FlatInsertBadgeSchema,
+	FlatUpdateBadgeSchema,
 	InsertBadgeSchema,
 	UpdateBadgeSchema,
 } from "@repo/schema/badge";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const BadgeMainSpec = {
 	list: oc
@@ -43,8 +46,12 @@ export const BadgeMainSpec = {
 			path: "/",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(FlatInsertBadgeSchema),
+			}),
 		})
-		.input(z.object({ body: InsertBadgeSchema }))
+		.input(z.object({ body: FlatInsertBadgeSchema }))
 		.output(createSuccesSchema(BadgeSchema, "Badge created successfully")),
 	update: oc
 		.route({
@@ -53,11 +60,15 @@ export const BadgeMainSpec = {
 			path: "/{id}",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
+			spec: (spec) => ({
+				...spec,
+				...toOAPIRequestBody(FlatUpdateBadgeSchema),
+			}),
 		})
 		.input(
 			z.object({
 				params: z.object({ id: z.string() }),
-				body: UpdateBadgeSchema,
+				body: FlatUpdateBadgeSchema,
 			}),
 		)
 		.output(createSuccesSchema(BadgeSchema, "Badge updated successfully")),
