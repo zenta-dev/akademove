@@ -77,6 +77,7 @@ export const PAYMENT_METHOD = [
 ] as const;
 
 export const BADGE_TYPES = [
+	"achievement",
 	"performance",
 	"volume",
 	"streak",
