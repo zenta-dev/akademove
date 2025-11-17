@@ -343,7 +343,7 @@ class _MerchantCardWidget extends StatelessWidget {
                       topLeft: radius14,
                       topRight: radius14,
                     ),
-                    color: Colors.amber,
+                    color: context.colorScheme.mutedForeground,
                     image: DecorationImage(
                       image: imageProvider,
                       fit: BoxFit.cover,

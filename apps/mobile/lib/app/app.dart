@@ -1,5 +1,4 @@
 import 'package:akademove/app/_export.dart';
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/app/theme.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';

@@ -154,6 +154,16 @@ final userRouter = StatefulShellRoute.indexedStack(
           path: Routes.userProfile.path,
           builder: (context, state) => const UserProfileScreen(),
         ),
+        GoRoute(
+          name: Routes.userEditProfile.name,
+          path: Routes.userEditProfile.path,
+          builder: (context, state) => const UserEditProfileScreen(),
+        ),
+        GoRoute(
+          name: Routes.userChangePassword.name,
+          path: Routes.userChangePassword.path,
+          builder: (context, state) => const UserChangePasswordScreen(),
+        ),
       ],
     ),
   ],

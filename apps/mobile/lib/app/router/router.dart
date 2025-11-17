@@ -40,7 +40,10 @@ enum Routes {
   userVoucher('/user/home/voucher'),
 
   userHistory('/user/history'),
+
   userProfile('/user/profile'),
+  userEditProfile('/user/profile/edit'),
+  userChangePassword('/user/profile/change-password'),
 
   ///
   /// Driver Routes
