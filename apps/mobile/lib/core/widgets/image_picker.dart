@@ -15,12 +15,14 @@ class ImagePickerWidget extends StatefulWidget {
     this.onImagePicked,
     this.size = const Size(120, 120),
     this.borderRadius = 12,
+    this.enabled = true,
   });
 
   final File? initialImage;
   final void Function(File file)? onImagePicked;
   final Size size;
   final double borderRadius;
+  final bool enabled;
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -59,7 +61,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   }
 
   void _showSourceOptions() {
-    material.showModalBottomSheet(
+    material.showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -104,7 +106,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     final hasImage = _selectedImage != null && _selectedImage!.existsSync();
 
     return GestureDetector(
-      onTap: _showSourceOptions,
+      onTap: widget.enabled ? _showSourceOptions : null,
       child: Container(
         height: widget.size.height,
         width: widget.size.width,
