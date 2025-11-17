@@ -49,6 +49,32 @@ class UserProfileScreen extends StatelessWidget {
               ],
             ),
           ),
+          Button(
+            style: ButtonStyle.card(
+              density: ButtonDensity(
+                (val) => EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+              ),
+            ),
+            onPressed: () {
+              context.pushNamed(Routes.userChangePassword.name);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Change Password',
+                  style: context.typography.small.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Icon(
+                  LucideIcons.pencil,
+                  size: 14.sp,
+                ),
+              ],
+            ),
+          ),
           const SignOutButtonWidget(),
         ],
       ),

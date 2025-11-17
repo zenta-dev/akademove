@@ -1,10 +1,201 @@
-import 'package:flutter/cupertino.dart';
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' show TextInputAction;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class UserChangePasswordScreen extends StatelessWidget {
+class UserChangePasswordScreen extends StatefulWidget {
   const UserChangePasswordScreen({super.key});
 
   @override
+  State<UserChangePasswordScreen> createState() =>
+      _UserChangePasswordScreenState();
+}
+
+class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
+  static const TextFieldKey _oldPasswordKey = TextFieldKey('oldPassword');
+  static const TextFieldKey _newPasswordKey = TextFieldKey('newPassword');
+  static const TextFieldKey _confirmNewPasswordKey = TextFieldKey(
+    'confirmNewPassword',
+  );
+
+  late FocusNode _oldPasswordFn;
+  late FocusNode _newPasswordFn;
+  late FocusNode _confirmNewPasswordFn;
+
+  @override
+  void initState() {
+    super.initState();
+    _oldPasswordFn = FocusNode();
+    _newPasswordFn = FocusNode();
+    _confirmNewPasswordFn = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _oldPasswordFn.dispose();
+    _newPasswordFn.dispose();
+    _confirmNewPasswordFn.dispose();
+  }
+
+  void _handleFormSubmit<T>(
+    BuildContext context,
+    Map<FormKey<T>, dynamic> values,
+  ) {
+    final cubit = context.read<UserProfileCubit>();
+    if (cubit.state.isLoading) return;
+
+    final oldPassword = _oldPasswordKey[values];
+    final newPassword = _newPasswordKey[values];
+    final confirmNewPassword = _confirmNewPasswordKey[values];
+
+    if (oldPassword == null ||
+        newPassword == null ||
+        confirmNewPassword == null) {
+      return;
+    }
+
+    cubit.updatePassword(
+      UpdateUserPassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        confirmNewPassword: confirmNewPassword,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MyScaffold(
+      headers: const [DefaultAppBar(title: 'Change Password')],
+      body: Form(
+        onSubmit: _handleFormSubmit,
+        child: BlocConsumer<UserProfileCubit, UserProfileState>(
+          listener: (context, state) {
+            state.whenOr(
+              success: (message) {
+                if (state.updatePasswordResult == null) return;
+                context.showMyToast(message, type: ToastType.success);
+                delay(const Duration(seconds: 3), () {
+                  context.read<UserProfileCubit>().reset();
+                  context.read<AuthCubit>().authenticate();
+                  context.pop();
+                });
+              },
+              failure: (error, message) {
+                context.showMyToast(error.message, type: ToastType.failed);
+              },
+              orElse: noop,
+            );
+          },
+          builder: (context, state) {
+            return Column(
+              spacing: 8.h,
+              children: [
+                FormField(
+                  key: _oldPasswordKey,
+                  label: const Text('Old Password').small(),
+                  validator: const LengthValidator(min: 8),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextField(
+                    enabled: !state.isLoading,
+                    focusNode: _oldPasswordFn,
+                    placeholder: const Text('********'),
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.password],
+                    onSubmitted: (value) {
+                      _newPasswordFn.requestFocus();
+                    },
+                    features: const [
+                      InputFeature.leading(Icon(LucideIcons.key)),
+                      InputFeature.passwordToggle(),
+                    ],
+                  ),
+                ),
+                FormField(
+                  key: _newPasswordKey,
+                  label: const Text('New Password').small(),
+                  validator: const LengthValidator(min: 8),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextField(
+                    enabled: !state.isLoading,
+                    focusNode: _newPasswordFn,
+                    placeholder: const Text('********'),
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.newPassword],
+                    onSubmitted: (value) {
+                      _confirmNewPasswordFn.requestFocus();
+                    },
+                    features: const [
+                      InputFeature.leading(Icon(LucideIcons.key)),
+                      InputFeature.passwordToggle(),
+                    ],
+                  ),
+                ),
+                FormField(
+                  key: _confirmNewPasswordKey,
+                  label: const Text('Confirm New Password').small(),
+                  validator: const LengthValidator(min: 8),
+                  showErrors: const {
+                    FormValidationMode.changed,
+                    FormValidationMode.submitted,
+                  },
+                  child: TextField(
+                    enabled: !state.isLoading,
+                    focusNode: _confirmNewPasswordFn,
+                    placeholder: const Text('********'),
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.newPassword],
+                    onSubmitted: (value) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    features: const [
+                      InputFeature.leading(Icon(LucideIcons.key)),
+                      InputFeature.passwordToggle(),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: FormErrorBuilder(
+                    builder: (context, errors, child) {
+                      final hasErrors = errors.isNotEmpty;
+                      final isLoading = state.isLoading;
+
+                      return Button(
+                        style: isLoading || hasErrors
+                            ? const ButtonStyle.outline()
+                            : const ButtonStyle.primary(),
+                        onPressed: (!hasErrors && !isLoading)
+                            ? () => context.submitForm()
+                            : null,
+                        child: isLoading
+                            ? const Submiting()
+                            : Text(
+                                'Save Changes',
+                                style: context.theme.typography.medium.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 }

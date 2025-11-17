@@ -58,7 +58,8 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
     final file = await downloadImage(img);
     logger.f('[DOWNLOAD IMAGE] file => $file');
     _pickedPhoto = file;
-    setState(() {});
+
+    if (mounted && context.mounted) setState(() {});
   }
 
   void _handleFormSubmit<T>(
@@ -93,12 +94,21 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
         builder: (context, authState) {
           return BlocConsumer<UserProfileCubit, UserProfileState>(
             listener: (context, profileState) {
-              if (profileState.isSuccess &&
-                  profileState.updateProfileResult != null) {
-                context.read<UserProfileCubit>().reset();
-                context.read<AuthCubit>().authenticate();
-                context.pop();
-              }
+              profileState.whenOr(
+                success: (message) {
+                  if (profileState.updateProfileResult == null) return;
+                  context.showMyToast(message, type: ToastType.success);
+                  delay(const Duration(seconds: 3), () {
+                    context.read<UserProfileCubit>().reset();
+                    context.read<AuthCubit>().authenticate();
+                    context.pop();
+                  });
+                },
+                failure: (error, message) {
+                  context.showMyToast(error.message, type: ToastType.failed);
+                },
+                orElse: noop,
+              );
             },
             builder: (context, profileState) {
               return Form(

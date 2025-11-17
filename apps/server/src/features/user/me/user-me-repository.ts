@@ -188,7 +188,8 @@ export class UserMeRepository extends BaseRepository {
 						eq(tables.account.userId, id),
 						eq(tables.account.providerId, "credentials"),
 					),
-				);
+				)
+				.returning({ id: tables.account.id });
 
 			const ok = res.length > 0;
 
