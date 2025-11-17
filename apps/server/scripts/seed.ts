@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import * as readline from "node:readline";
 import { faker } from "@faker-js/faker";
+import type { InsertBadge } from "@repo/schema/badge";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { InsertMerchant } from "@repo/schema/merchant";
 import type { InsertUser } from "@repo/schema/user";
@@ -55,7 +56,7 @@ function generateId(): string {
 async function seedUser() {
 	const pw = new PasswordManager();
 
-	const FIXED_USERS: Omit<InsertUser, "confirmPassword">[] = [
+	const FIXED_USERS: Omit<InsertUser, "confirmPassword" | "badges">[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
@@ -507,14 +508,351 @@ async function seedOrders() {
 	console.log(`✅ Inserted ${orders.length} orders.`);
 }
 
+async function seedBadges() {
+	const DEFAULT_BADGES: InsertBadge[] = [
+		// ==========================================
+		// USER BADGES (Passengers)
+		// ==========================================
+		{
+			code: "NEW_CUSTOMER",
+			name: "New Customer",
+			description: "Welcome to the akademove community!",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "user",
+			criteria: {
+				minOrders: 0, // Awarded upon registration approval
+			},
+			isActive: true,
+			displayOrder: 100,
+		},
+		{
+			code: "FIRST_RIDE",
+			name: "First Ride",
+			description: "Complete your first ride successfully",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "user",
+			criteria: {
+				minOrders: 1,
+			},
+			isActive: true,
+			displayOrder: 1,
+		},
+		{
+			code: "FREQUENT_RIDER",
+			name: "Frequent Rider",
+			description: "Complete 50 rides",
+			type: "milestone",
+			level: "silver",
+			targetRole: "user",
+			criteria: {
+				minOrders: 50,
+			},
+			isActive: true,
+			displayOrder: 10,
+		},
+		{
+			code: "SUPER_RIDER",
+			name: "Super Rider",
+			description: "Complete 100 rides",
+			type: "milestone",
+			level: "gold",
+			targetRole: "user",
+			criteria: {
+				minOrders: 100,
+			},
+			isActive: true,
+			displayOrder: 11,
+		},
+		{
+			code: "ELITE_RIDER",
+			name: "Elite Rider",
+			description: "Complete 500 rides",
+			type: "milestone",
+			level: "platinum",
+			targetRole: "user",
+			criteria: {
+				minOrders: 500,
+			},
+			isActive: true,
+			displayOrder: 12,
+		},
+
+		// ==========================================
+		// DRIVER BADGES
+		// ==========================================
+		{
+			code: "NEW_DRIVER",
+			name: "New Driver",
+			description: "Welcome to the driver community!",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 0, // Awarded upon registration approval
+			},
+			isActive: true,
+			displayOrder: 100,
+		},
+		{
+			code: "FIRST_TRIP",
+			name: "First Trip",
+			description: "Complete your first trip as a driver",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 1,
+			},
+			isActive: true,
+			displayOrder: 101,
+		},
+		{
+			code: "RELIABLE_DRIVER",
+			name: "Reliable Driver",
+			description: "Maintain 4.5+ rating with 50 completed rides",
+			type: "performance",
+			level: "silver",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 50,
+				minRating: 4.5,
+			},
+			benefits: {
+				priorityBoost: 10,
+			},
+			isActive: true,
+			displayOrder: 110,
+		},
+		{
+			code: "STAR_DRIVER",
+			name: "Star Driver",
+			description: "Maintain 4.8+ rating with 100 completed rides",
+			type: "performance",
+			level: "gold",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 100,
+				minRating: 4.8,
+			},
+			benefits: {
+				priorityBoost: 20,
+				commissionReduction: 0.05, // 5% commission reduction
+			},
+			isActive: true,
+			displayOrder: 111,
+		},
+		{
+			code: "ELITE_DRIVER",
+			name: "Elite Driver",
+			description: "Maintain 4.9+ rating with 500 completed rides",
+			type: "performance",
+			level: "platinum",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 500,
+				minRating: 4.9,
+			},
+			benefits: {
+				priorityBoost: 30,
+				commissionReduction: 0.1, // 10% commission reduction
+			},
+			isActive: true,
+			displayOrder: 112,
+		},
+		{
+			code: "CENTURION",
+			name: "Centurion",
+			description: "Complete 100 rides",
+			type: "milestone",
+			level: "gold",
+			targetRole: "driver",
+			criteria: {
+				minOrders: 100,
+			},
+			benefits: {
+				priorityBoost: 15,
+			},
+			isActive: true,
+			displayOrder: 120,
+		},
+		{
+			code: "STREAK_KEEPER",
+			name: "Streak Keeper",
+			description: "Complete rides for 7 consecutive days",
+			type: "achievement",
+			level: "gold",
+			targetRole: "driver",
+			criteria: {
+				minStreak: 7,
+				minOrders: 7,
+			},
+			benefits: {
+				priorityBoost: 5,
+			},
+			isActive: true,
+			displayOrder: 130,
+		},
+		{
+			code: "TOP_EARNER",
+			name: "Top Earner",
+			description: "Earn over IDR 1,000,000",
+			type: "achievement",
+			level: "silver",
+			targetRole: "driver",
+			criteria: {
+				minEarnings: 1000000,
+			},
+			isActive: true,
+			displayOrder: 140,
+		},
+
+		// ==========================================
+		// MERCHANT BADGES
+		// ==========================================
+		{
+			code: "NEW_MERCHANT",
+			name: "New Merchant",
+			description: "Welcome to the merchant community!",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "merchant",
+			criteria: {
+				minOrders: 0, // Awarded upon registration
+			},
+			isActive: true,
+			displayOrder: 200,
+		},
+		{
+			code: "FIRST_ORDER",
+			name: "First Order",
+			description: "Receive your first order",
+			type: "achievement",
+			level: "bronze",
+			targetRole: "merchant",
+			criteria: {
+				minOrders: 1,
+			},
+			isActive: true,
+			displayOrder: 201,
+		},
+		{
+			code: "POPULAR_MERCHANT",
+			name: "Popular Merchant",
+			description: "Complete 50 orders with 4.5+ rating",
+			type: "performance",
+			level: "silver",
+			targetRole: "merchant",
+			criteria: {
+				minOrders: 50,
+				minRating: 4.5,
+			},
+			benefits: {
+				priorityBoost: 10,
+			},
+			isActive: true,
+			displayOrder: 210,
+		},
+		{
+			code: "TOP_RATED_MERCHANT",
+			name: "Top Rated Merchant",
+			description: "Maintain 4.8+ rating with 100 orders",
+			type: "performance",
+			level: "gold",
+			targetRole: "merchant",
+			criteria: {
+				minOrders: 100,
+				minRating: 4.8,
+			},
+			benefits: {
+				priorityBoost: 20,
+				commissionReduction: 0.05,
+			},
+			isActive: true,
+			displayOrder: 211,
+		},
+	];
+	await db
+		.insert(tables.badge)
+		.values(DEFAULT_BADGES.map((e) => ({ ...e, id: v7() })));
+}
+
+async function seedUserBadges() {
+	const [
+		testUser,
+		testDriver,
+		testMerchant,
+		newCustomerBadge,
+		newDriverBadge,
+		newMerchantBadge,
+	] = await Promise.all([
+		db
+			.select()
+			.from(tables.user)
+			.where(eq(tables.user.email, "test-user-1@akademove.com"))
+			.then(([r]) => r),
+		db
+			.select()
+			.from(tables.user)
+			.where(eq(tables.user.email, "test-driver-1@akademove.com"))
+			.then(([r]) => r),
+		db
+			.select()
+			.from(tables.user)
+			.where(eq(tables.user.email, "test-merchant-1@akademove.com"))
+			.then(([r]) => r),
+		db
+			.select()
+			.from(tables.badge)
+			.where(eq(tables.badge.code, "NEW_CUSTOMER"))
+			.then(([r]) => r),
+		db
+			.select()
+			.from(tables.badge)
+			.where(eq(tables.badge.code, "NEW_DRIVER"))
+			.then(([r]) => r),
+		db
+			.select()
+			.from(tables.badge)
+			.where(eq(tables.badge.code, "NEW_MERCHANT"))
+			.then(([r]) => r),
+	]);
+
+	const values = [
+		{
+			id: v7(),
+			userId: testUser.id,
+			badgeId: newCustomerBadge.id,
+		},
+		{
+			id: v7(),
+			userId: testDriver.id,
+			badgeId: newDriverBadge.id,
+		},
+		{
+			id: v7(),
+			userId: testMerchant.id,
+			badgeId: newMerchantBadge.id,
+		},
+	];
+
+	await db.insert(tables.userBadge).values(values);
+}
+
 async function main() {
 	try {
 		await confirmExecution();
 
 		console.log("\n🌱 Starting database seeding...\n");
 
-		await seedUser();
-		await Promise.all([seedConfigurations(), seedMerchants(), seedDrivers()]);
+		await Promise.all([seedUser(), seedBadges()]);
+		await Promise.all([
+			seedConfigurations(),
+			seedMerchants(),
+			seedDrivers(),
+			seedUserBadges(),
+		]);
 		await seedOrders();
 
 		console.log("\n✅ Database seeded successfully with test data.");
