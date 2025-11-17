@@ -127,6 +127,7 @@ export type GetSessionResponse = z.infer<typeof GetSessionResponseSchema>;
 
 export const AuthSchemaRegistries = {
 	Session: { schema: SessionSchema, strategy: "output" },
+	SignInRequest: { schema: SignInSchema, strategy: "input" },
 	ResetPassword: { schema: ResetPasswordSchema, strategy: "input" },
 	SignInResponse: { schema: SignInResponseSchema, strategy: "output" },
 	SignUpResponse: { schema: SignUpResponseSchema, strategy: "output" },
