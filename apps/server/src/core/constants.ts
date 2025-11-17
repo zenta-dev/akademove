@@ -59,7 +59,7 @@ export const createSuccesSchema = <
 		body: z.object({
 			message: z.string(),
 			data: schema,
-			totalPages: z.int().optional(),
+			totalPages: z.int().min(0).optional(),
 		}),
 	});
 

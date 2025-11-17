@@ -48,7 +48,9 @@ export class S3StorageService implements StorageService {
 	readonly #bucketExists = new Map<StorageBucket, boolean>();
 	readonly #bucketCreationPromises = new Map<StorageBucket, Promise<void>>();
 
-	private static readonly DEFAULT_PRESIGNED_URL_EXPIRY = 900; // 15 minutes
+	static readonly DEFAULT_PRESIGNED_URL_EXPIRY = 900; // 15 minutes
+	static readonly ONE_DAY_PRESIGNED_URL_EXPIRY = 86400; // 1 day
+	static readonly SEVEN_DAY_PRESIGNED_URL_EXPIRY = 604800; // 1 day
 
 	constructor(options: S3StorageOptions) {
 		this.#client = new S3Client({
