@@ -1,4 +1,8 @@
+import "@cloudflare/workers-types";
+
 import { randomBytes } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import * as readline from "node:readline";
 import { faker } from "@faker-js/faker";
 import type { InsertBadge } from "@repo/schema/badge";
@@ -9,6 +13,7 @@ import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { v7 } from "uuid";
+import { S3StorageService } from "@/core/services/storage";
 import {
 	configuration,
 	configurationAuditLog,
@@ -48,6 +53,13 @@ async function confirmExecution() {
 
 const client = postgres(process.env.DATABASE_URL || "");
 const db = drizzle({ client });
+const storage = new S3StorageService({
+	endpoint: process.env.S3_ENDPOINT || "",
+	region: process.env.S3_REGION || "",
+	accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
+	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
+	publicUrl: process.env.S3_PUBLIC_URL || "",
+});
 
 function generateId(): string {
 	return randomBytes(32).toString("hex");
@@ -509,7 +521,10 @@ async function seedOrders() {
 }
 
 async function seedBadges() {
-	const DEFAULT_BADGES: InsertBadge[] = [
+	type Insert = Omit<InsertBadge, "icon"> & {
+		iconPath: string;
+	};
+	const DEFAULT_BADGES: Insert[] = [
 		// ==========================================
 		// USER BADGES (Passengers)
 		// ==========================================
@@ -525,6 +540,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 100,
+			iconPath: "assets/New-Customer.png",
 		},
 		{
 			code: "FIRST_RIDE",
@@ -538,6 +554,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 1,
+			iconPath: "assets/First-Ride.png",
 		},
 		{
 			code: "FREQUENT_RIDER",
@@ -551,6 +568,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 10,
+			iconPath: "assets/Frequent-Rider.png",
 		},
 		{
 			code: "SUPER_RIDER",
@@ -564,6 +582,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 11,
+			iconPath: "assets/Super-Rider.png",
 		},
 		{
 			code: "ELITE_RIDER",
@@ -577,6 +596,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 12,
+			iconPath: "assets/Elite-Rider.png",
 		},
 
 		// ==========================================
@@ -594,6 +614,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 100,
+			iconPath: "assets/New-Driver.png",
 		},
 		{
 			code: "FIRST_TRIP",
@@ -607,6 +628,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 101,
+			iconPath: "assets/First-Trip.png",
 		},
 		{
 			code: "RELIABLE_DRIVER",
@@ -624,6 +646,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 110,
+			iconPath: "assets/Reliable-Driver.png",
 		},
 		{
 			code: "STAR_DRIVER",
@@ -642,6 +665,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 111,
+			iconPath: "assets/Star-Driver.png",
 		},
 		{
 			code: "ELITE_DRIVER",
@@ -660,6 +684,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 112,
+			iconPath: "assets/Elite-Driver.png",
 		},
 		{
 			code: "CENTURION",
@@ -676,36 +701,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 120,
-		},
-		{
-			code: "STREAK_KEEPER",
-			name: "Streak Keeper",
-			description: "Complete rides for 7 consecutive days",
-			type: "achievement",
-			level: "gold",
-			targetRole: "driver",
-			criteria: {
-				minStreak: 7,
-				minOrders: 7,
-			},
-			benefits: {
-				priorityBoost: 5,
-			},
-			isActive: true,
-			displayOrder: 130,
-		},
-		{
-			code: "TOP_EARNER",
-			name: "Top Earner",
-			description: "Earn over IDR 1,000,000",
-			type: "achievement",
-			level: "silver",
-			targetRole: "driver",
-			criteria: {
-				minEarnings: 1000000,
-			},
-			isActive: true,
-			displayOrder: 140,
+			iconPath: "assets/Centurion.png",
 		},
 
 		// ==========================================
@@ -723,6 +719,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 200,
+			iconPath: "assets/New-Merchant.png",
 		},
 		{
 			code: "FIRST_ORDER",
@@ -736,6 +733,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 201,
+			iconPath: "assets/First-Order.png",
 		},
 		{
 			code: "POPULAR_MERCHANT",
@@ -753,6 +751,7 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 210,
+			iconPath: "assets/Popular-Merchant.png",
 		},
 		{
 			code: "TOP_RATED_MERCHANT",
@@ -771,11 +770,34 @@ async function seedBadges() {
 			},
 			isActive: true,
 			displayOrder: 211,
+			iconPath: "assets/Top-Rated-Merchant.png",
 		},
 	];
-	await db
-		.insert(tables.badge)
-		.values(DEFAULT_BADGES.map((e) => ({ ...e, id: v7() })));
+	const cwd = process.cwd();
+
+	await Promise.all([
+		db
+			.insert(tables.badge)
+			.values(
+				DEFAULT_BADGES.map((e) => ({ ...e, id: v7(), icon: `${e.code}.png` })),
+			),
+		...DEFAULT_BADGES.map(async (badge) => {
+			const filePath = join(cwd, badge.iconPath);
+			const buff = await readFile(filePath);
+			const fileName = `${badge.code}.png`;
+
+			const file = new File([buff], fileName, {
+				type: "image/png",
+				lastModified: Date.now(),
+			});
+
+			return storage.upload({
+				bucket: "badges",
+				key: fileName,
+				file,
+			});
+		}),
+	]);
 }
 
 async function seedUserBadges() {
