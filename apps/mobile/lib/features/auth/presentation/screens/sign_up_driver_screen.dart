@@ -703,7 +703,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         Text(label),
         ImagePickerWidget(
           size: Size(double.infinity, 64.h),
-          onImagePicked: (file) => setState(() => docs[key] = file),
+          onValueChanged: (file) => setState(() => docs[key] = file),
         ),
         if (errors[key] != null)
           DefaultTextStyle.merge(

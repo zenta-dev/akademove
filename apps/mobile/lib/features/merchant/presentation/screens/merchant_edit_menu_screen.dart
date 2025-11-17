@@ -322,7 +322,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         ),
         ImagePickerWidget(
           size: Size(double.infinity, 64.h),
-          onImagePicked: (file) => setState(() => docs[key] = file),
+          onValueChanged: (file) => setState(() => docs[key] = file),
         ),
         if (!isOptional && errors[key] != null)
           DefaultTextStyle.merge(

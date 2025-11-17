@@ -729,7 +729,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
         ),
         ImagePickerWidget(
           size: Size(double.infinity, 200.h),
-          onImagePicked: (file) {
+          onValueChanged: (file) {
             setState(() {
               docs[key] = file;
               errors[key] = null; // Clear error when image is picked
