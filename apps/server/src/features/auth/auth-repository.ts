@@ -19,7 +19,7 @@ import {
 	tables,
 } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { StorageService } from "@/core/services/storage";
+import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
 import { UserAdminRepository } from "../user/admin/user-admin-repository";
@@ -82,7 +82,7 @@ export class AuthRepository extends BaseRepository {
 			const composedUser = await UserAdminRepository.composeEntity(
 				omit(user, ["accounts"]),
 				this.#storage,
-				{ expiresIn: 604800 },
+				{ expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY },
 			);
 
 			const [token, _] = await Promise.all([
@@ -247,7 +247,7 @@ export class AuthRepository extends BaseRepository {
 					res,
 					this.#storage,
 					{
-						expiresIn: 604800,
+						expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
 					},
 				);
 				await this.setCache(user.id, user);

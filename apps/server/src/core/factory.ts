@@ -26,7 +26,7 @@ import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import { UserMeRepository } from "@/features/user/me/user-me-admin-repository";
+import { UserMeRepository } from "@/features/user/me/user-me-repository";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";

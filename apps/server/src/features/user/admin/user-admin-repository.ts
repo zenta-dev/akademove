@@ -15,7 +15,7 @@ import type {
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { StorageService } from "@/core/services/storage";
+import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { BadgeDatabase } from "@/core/tables/badge";
 import { log } from "@/utils";
@@ -73,7 +73,9 @@ export class UserAdminRepository extends BaseRepository {
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
-			? UserAdminRepository.composeEntity(result, this.#storage)
+			? UserAdminRepository.composeEntity(result, this.#storage, {
+					expiresIn: S3StorageService.ONE_DAY_PRESIGNED_URL_EXPIRY,
+				})
 			: undefined;
 	}
 

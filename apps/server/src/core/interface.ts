@@ -19,7 +19,7 @@ import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
-import type { UserMeRepository } from "@/features/user/me/user-me-admin-repository";
+import type { UserMeRepository } from "@/features/user/me/user-me-repository";
 import type { WalletRepository } from "@/features/wallet/wallet-repository";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";

@@ -1,13 +1,17 @@
+import type { Phone } from "@repo/schema/common";
 import type { UpdateUser, UpdateUserPassword, User } from "@repo/schema/user";
+import { getFileExtension } from "@repo/shared";
 import { and, eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
 import type { PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { StorageService } from "@/core/services/storage";
+import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { PasswordManager } from "@/utils/password";
 import { UserAdminRepository } from "../admin/user-admin-repository";
+
+const BUCKET = "user";
 
 export class UserMeRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -40,7 +44,9 @@ export class UserMeRepository extends BaseRepository {
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
-			? UserAdminRepository.composeEntity(result, this.#storage)
+			? UserAdminRepository.composeEntity(result, this.#storage, {
+					expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
+				})
 			: undefined;
 	}
 
@@ -75,7 +81,44 @@ export class UserMeRepository extends BaseRepository {
 
 			const tx = opts?.tx ?? this.db;
 
-			await tx.update(tables.user).set(item).where(eq(tables.user.id, id));
+			let phone: Phone | undefined;
+			if (item.phone) {
+				const cc = item.phone.countryCode;
+				const num = item.phone.number;
+				if (!cc || !num) {
+					throw new RepositoryError("Invalid phone values must suplied", {
+						code: "BAD_REQUEST",
+					});
+				}
+
+				phone = { countryCode: cc, number: num };
+			}
+
+			let photoKey: string | undefined;
+
+			if (item.photo) {
+				const extension = getFileExtension(item.photo);
+				photoKey = `PP-${existing.id}.${extension}`;
+			}
+
+			const tasks: Promise<unknown>[] = [
+				tx
+					.update(tables.user)
+					.set({ ...item, phone, image: photoKey })
+					.where(eq(tables.user.id, id)),
+			];
+
+			if (item.photo && photoKey) {
+				tasks.push(
+					this.#storage.upload({
+						bucket: BUCKET,
+						key: photoKey,
+						file: item.photo,
+					}),
+				);
+			}
+
+			await Promise.allSettled(tasks);
 
 			const fresh = await this.#getFromDB(id, opts);
 			if (!fresh) {
