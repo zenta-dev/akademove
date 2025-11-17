@@ -68,13 +68,22 @@ export type InsertUser = z.infer<typeof InsertUserSchema>;
 export const UpdateUserRoleSchema = UserSchema.pick({ role: true });
 export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
 
-export const UpdateUserPasswordSchema = InsertUserSchema.pick({
-	password: true,
-	confirmPassword: true,
-}).refine((data) => data.password === data.confirmPassword, {
-	path: ["confirmPassword"],
-	message: m.password_do_not_match(),
-});
+export const UpdateUserPasswordSchema = z
+	.object({
+		oldPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
+		newPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
+		confirmNewPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 })),
+	})
+	.refine((data) => data.newPassword === data.confirmNewPassword, {
+		path: ["confirmNewPassword"],
+		message: m.password_do_not_match(),
+	});
 export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
 
 export const BanUserSchema = z.object({

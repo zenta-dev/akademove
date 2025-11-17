@@ -140,11 +140,12 @@ export class UserMeRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	): Promise<boolean> {
 		try {
-			if (item.password !== item.confirmPassword) {
+			if (item.newPassword !== item.confirmNewPassword) {
 				throw new RepositoryError("Password didnt same", {
 					code: "BAD_REQUEST",
 				});
 			}
+
 			const tx = opts?.tx ?? this.db;
 
 			const [existing, account] = await Promise.all([
@@ -165,7 +166,19 @@ export class UserMeRepository extends BaseRepository {
 				});
 			}
 
-			const hashedPassword = this.#pw.hash(item.password);
+			if (account.password) {
+				const isValidPassword = this.#pw.verify(
+					account.password,
+					item.oldPassword,
+				);
+				if (!isValidPassword) {
+					throw new RepositoryError("Invalid credentials", {
+						code: "UNAUTHORIZED",
+					});
+				}
+			}
+
+			const hashedPassword = this.#pw.hash(item.newPassword);
 
 			const res = await tx
 				.update(tables.account)
