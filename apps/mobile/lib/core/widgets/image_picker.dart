@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/locator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart'
     as material
     show ListTile, showModalBottomSheet;
@@ -11,15 +12,17 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class ImagePickerWidget extends StatefulWidget {
   const ImagePickerWidget({
     super.key,
-    this.initialImage,
-    this.onImagePicked,
+    this.value,
+    this.onValueChanged,
+    this.previewUrl,
     this.size = const Size(120, 120),
     this.borderRadius = 12,
     this.enabled = true,
   });
 
-  final File? initialImage;
-  final void Function(File file)? onImagePicked;
+  final File? value;
+  final void Function(File file)? onValueChanged;
+  final String? previewUrl;
   final Size size;
   final double borderRadius;
   final bool enabled;
@@ -35,7 +38,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   @override
   void initState() {
     super.initState();
-    _selectedImage = widget.initialImage;
+    _selectedImage = widget.value;
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -45,10 +48,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           : await _picker.pickFromGallery();
 
       setState(() => _selectedImage = pickedFile);
-      widget.onImagePicked?.call(pickedFile);
+      widget.onValueChanged?.call(pickedFile);
     } catch (e, stack) {
       logger.e('ImagePickerWidget Error', error: e, stackTrace: stack);
-      if (context.mounted) {
+      if (context.mounted && mounted) {
         showToast(
           context: context,
           builder: (context, overlay) => context.buildToast(
@@ -92,7 +95,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 onTap: () {
                   Navigator.pop(context);
                   setState(() => _selectedImage = null);
-                  widget.onImagePicked?.call(File(''));
+                  widget.onValueChanged?.call(File(''));
                 },
               ),
           ],
@@ -103,39 +106,97 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final previewUrl = widget.previewUrl;
     final hasImage = _selectedImage != null && _selectedImage!.existsSync();
+
+    const placeholder = Center(
+      child: Icon(
+        LucideIcons.camera,
+        color: Colors.neutral,
+        size: 36,
+      ),
+    );
 
     return GestureDetector(
       onTap: widget.enabled ? _showSourceOptions : null,
-      child: Container(
-        height: widget.size.height,
-        width: widget.size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: context.isDarkMode
-              ? Colors.neutral.shade900
-              : Colors.neutral.shade100,
-          border: Border.all(
-            color: context.isDarkMode
-                ? Colors.neutral.shade700
-                : Colors.neutral.shade400,
+      child: Stack(
+        clipBehavior: Clip.none,
+
+        children: [
+          Container(
+            height: widget.size.height,
+            width: widget.size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              color: context.isDarkMode
+                  ? Colors.neutral.shade900
+                  : Colors.neutral.shade100,
+              border: Border.all(
+                color: context.isDarkMode
+                    ? Colors.neutral.shade700
+                    : Colors.neutral.shade400,
+              ),
+              image: hasImage
+                  ? DecorationImage(
+                      image: FileImage(_selectedImage!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: !hasImage
+                ? previewUrl != null
+                      ? CachedNetworkImage(
+                          imageUrl: previewUrl,
+                          width: 36,
+                          height: 36,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.mutedForeground,
+                              borderRadius: BorderRadius.circular(
+                                widget.borderRadius,
+                              ),
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          placeholder: (context, url) => Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.mutedForeground,
+                              borderRadius: BorderRadius.circular(
+                                widget.borderRadius,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => placeholder,
+                        )
+                      : placeholder
+                : null,
           ),
-          image: hasImage
-              ? DecorationImage(
-                  image: FileImage(_selectedImage!),
-                  fit: BoxFit.cover,
-                )
-              : null,
-        ),
-        child: !hasImage
-            ? const Center(
-                child: Icon(
-                  LucideIcons.camera,
-                  color: Colors.neutral,
-                  size: 36,
+          if (hasImage || previewUrl != null)
+            Positioned(
+              right: -8,
+              bottom: -8,
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primary.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.colorScheme.primary,
+                    width: 2,
+                  ),
                 ),
-              )
-            : null,
+                child: const Icon(
+                  LucideIcons.pencil,
+                  size: 16,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
