@@ -97,12 +97,12 @@ export type AdminUpdateUser = z.infer<typeof AdminUpdateUserSchema>;
 export const UpdateUserSchema = UserSchema.pick({
 	name: true,
 	email: true,
-	phone: true,
 })
 	.extend({
 		photo: z
 			.file(m.required_placeholder({ field: m.photo() }))
 			.mime(["image/png", "image/jpg", "image/jpeg"]),
+		phone: PhoneSchema.partial(),
 	})
 	.partial();
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
