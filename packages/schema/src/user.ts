@@ -4,6 +4,7 @@ import { BadgeSchema } from "./badge.ts";
 import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { flattenZodObject } from "./flatten.helper.ts";
 
 export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES);
 export type UserRole = z.infer<typeof UserRoleSchema>;
@@ -70,6 +71,9 @@ export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
 export const UpdateUserPasswordSchema = InsertUserSchema.pick({
 	password: true,
 	confirmPassword: true,
+}).refine((data) => data.password === data.confirmPassword, {
+	path: ["confirmPassword"],
+	message: m.password_do_not_match(),
 });
 export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
 
@@ -90,6 +94,20 @@ export const AdminUpdateUserSchema = z.union([
 ]);
 export type AdminUpdateUser = z.infer<typeof AdminUpdateUserSchema>;
 
+export const UpdateUserSchema = UserSchema.pick({
+	name: true,
+	email: true,
+	phone: true,
+})
+	.extend({
+		photo: z
+			.file(m.required_placeholder({ field: m.photo() }))
+			.mime(["image/png", "image/jpg", "image/jpeg"]),
+	})
+	.partial();
+export type UpdateUser = z.infer<typeof UpdateUserSchema>;
+export const FlatUpdateUserSchema = flattenZodObject(UpdateUserSchema);
+
 export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
 	UserGender: { schema: UserGenderSchema, strategy: "output" },
@@ -99,6 +117,6 @@ export const UserSchemaRegistries = {
 	UpdateUserPassword: { schema: UpdateUserPasswordSchema, strategy: "input" },
 	BanUser: { schema: BanUserSchema, strategy: "input" },
 	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
-	UpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },
+	AdminUpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },
 	UserKey: { schema: UserKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;
