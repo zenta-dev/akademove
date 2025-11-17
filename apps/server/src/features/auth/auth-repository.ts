@@ -22,7 +22,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
-import { UserRepository } from "../user/user-repository";
+import { UserAdminRepository } from "../user/admin/user-admin-repository";
 
 const BUCKET = "user";
 
@@ -78,7 +78,7 @@ export class AuthRepository extends BaseRepository {
 				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
 			}
 
-			const composedUser = await UserRepository.composeEntity(
+			const composedUser = await UserAdminRepository.composeEntity(
 				omit(user, ["accounts"]),
 				this.#storage,
 				{ expiresIn: 604800 },
@@ -181,7 +181,7 @@ export class AuthRepository extends BaseRepository {
 			await Promise.all(promises);
 
 			return {
-				user: await UserRepository.composeEntity(
+				user: await UserAdminRepository.composeEntity(
 					{ ...user, userBadgePivots: [] },
 					this.#storage,
 				),
@@ -242,9 +242,13 @@ export class AuthRepository extends BaseRepository {
 				if (!res) {
 					throw new AuthError("User not found", { code: "UNAUTHORIZED" });
 				}
-				const user = await UserRepository.composeEntity(res, this.#storage, {
-					expiresIn: 604800,
-				});
+				const user = await UserAdminRepository.composeEntity(
+					res,
+					this.#storage,
+					{
+						expiresIn: 604800,
+					},
+				);
 				await this.setCache(user.id, user);
 				return user;
 			};

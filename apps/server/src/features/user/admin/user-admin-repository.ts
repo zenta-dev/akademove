@@ -1,7 +1,7 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import {
+	type AdminUpdateUser,
 	type InsertUser,
-	type UpdateUser,
 	type User,
 	UserKeySchema,
 } from "@repo/schema/user";
@@ -19,11 +19,11 @@ import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { BadgeDatabase } from "@/core/tables/badge";
 import { log } from "@/utils";
-import { BadgeRepository } from "../badge/main/badge-main-repository";
+import { BadgeRepository } from "../../badge/main/badge-main-repository";
 
 const BUCKET = "user";
 
-export class UserRepository extends BaseRepository {
+export class UserAdminRepository extends BaseRepository {
 	#storage: StorageService;
 
 	constructor(
@@ -73,7 +73,7 @@ export class UserRepository extends BaseRepository {
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
-			? UserRepository.composeEntity(result, this.#storage)
+			? UserAdminRepository.composeEntity(result, this.#storage)
 			: undefined;
 	}
 
@@ -136,7 +136,9 @@ export class UserRepository extends BaseRepository {
 				});
 
 				const rows = await Promise.all(
-					result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+					result.map((r) =>
+						UserAdminRepository.composeEntity(r, this.#storage),
+					),
 				);
 				return { rows };
 			}
@@ -160,7 +162,9 @@ export class UserRepository extends BaseRepository {
 				});
 
 				const rows = await Promise.all(
-					result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+					result.map((r) =>
+						UserAdminRepository.composeEntity(r, this.#storage),
+					),
 				);
 
 				const totalCount = search
@@ -184,7 +188,7 @@ export class UserRepository extends BaseRepository {
 				limit,
 			});
 			const rows = await Promise.all(
-				result.map((r) => UserRepository.composeEntity(r, this.#storage)),
+				result.map((r) => UserAdminRepository.composeEntity(r, this.#storage)),
 			);
 			return { rows };
 		} catch (error) {
@@ -231,7 +235,7 @@ export class UserRepository extends BaseRepository {
 
 	async update(
 		_id: string,
-		_item: UpdateUser,
+		_item: AdminUpdateUser,
 		_opts: PartialWithTx,
 		_header: Headers,
 	): Promise<User> {

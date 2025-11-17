@@ -25,7 +25,7 @@ import { PaymentRepository } from "@/features/payment/payment-repository";
 import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
-import { UserRepository } from "@/features/user/user-repository";
+import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
 import { FirebaseAdminService } from "./services/firebase";
@@ -107,7 +107,7 @@ export function getRepositories(
 		report: new ReportRepository(svc.db, svc.kv),
 		review: new ReviewRepository(svc.db, svc.kv),
 		wallet,
-		user: new UserRepository(svc.db, svc.kv, svc.storage),
+		user: { admin: new UserAdminRepository(svc.db, svc.kv, svc.storage) },
 		transaction,
 		notification,
 	};

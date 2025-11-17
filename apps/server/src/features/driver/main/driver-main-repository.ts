@@ -27,7 +27,7 @@ import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { BadgeDatabase } from "@/core/tables/badge";
 import type { DriverDatabase } from "@/core/tables/driver";
-import { UserRepository } from "@/features/user/user-repository";
+import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
 import type { NearbyQuery } from "./driver-main-spec";
 
@@ -73,7 +73,7 @@ export class DriverMainRepository extends BaseRepository {
 					bucket: BUCKET,
 					key: item.vehicleCertificate,
 				}),
-				UserRepository.composeEntity(item.user, storage),
+				UserAdminRepository.composeEntity(item.user, storage),
 			]);
 
 		return {
