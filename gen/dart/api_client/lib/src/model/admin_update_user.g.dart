@@ -9,9 +9,11 @@ part of 'admin_update_user.dart';
 abstract class _$AdminUpdateUserCWProxy {
   AdminUpdateUser role(UserRole role);
 
-  AdminUpdateUser password(String password);
+  AdminUpdateUser oldPassword(String oldPassword);
 
-  AdminUpdateUser confirmPassword(String confirmPassword);
+  AdminUpdateUser newPassword(String newPassword);
+
+  AdminUpdateUser confirmNewPassword(String confirmNewPassword);
 
   AdminUpdateUser banReason(String banReason);
 
@@ -27,8 +29,9 @@ abstract class _$AdminUpdateUserCWProxy {
   /// ````
   AdminUpdateUser call({
     UserRole role,
-    String password,
-    String confirmPassword,
+    String oldPassword,
+    String newPassword,
+    String confirmNewPassword,
     String banReason,
     num? banExpiresIn,
     String id,
@@ -45,11 +48,16 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
   AdminUpdateUser role(UserRole role) => this(role: role);
 
   @override
-  AdminUpdateUser password(String password) => this(password: password);
+  AdminUpdateUser oldPassword(String oldPassword) =>
+      this(oldPassword: oldPassword);
 
   @override
-  AdminUpdateUser confirmPassword(String confirmPassword) =>
-      this(confirmPassword: confirmPassword);
+  AdminUpdateUser newPassword(String newPassword) =>
+      this(newPassword: newPassword);
+
+  @override
+  AdminUpdateUser confirmNewPassword(String confirmNewPassword) =>
+      this(confirmNewPassword: confirmNewPassword);
 
   @override
   AdminUpdateUser banReason(String banReason) => this(banReason: banReason);
@@ -70,8 +78,9 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
   /// ````
   AdminUpdateUser call({
     Object? role = const $CopyWithPlaceholder(),
-    Object? password = const $CopyWithPlaceholder(),
-    Object? confirmPassword = const $CopyWithPlaceholder(),
+    Object? oldPassword = const $CopyWithPlaceholder(),
+    Object? newPassword = const $CopyWithPlaceholder(),
+    Object? confirmNewPassword = const $CopyWithPlaceholder(),
     Object? banReason = const $CopyWithPlaceholder(),
     Object? banExpiresIn = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
@@ -81,14 +90,18 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
-      password: password == const $CopyWithPlaceholder()
-          ? _value.password
+      oldPassword: oldPassword == const $CopyWithPlaceholder()
+          ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
-          : password as String,
-      confirmPassword: confirmPassword == const $CopyWithPlaceholder()
-          ? _value.confirmPassword
+          : oldPassword as String,
+      newPassword: newPassword == const $CopyWithPlaceholder()
+          ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
-          : confirmPassword as String,
+          : newPassword as String,
+      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder()
+          ? _value.confirmNewPassword
+          // ignore: cast_nullable_to_non_nullable
+          : confirmNewPassword as String,
       banReason: banReason == const $CopyWithPlaceholder()
           ? _value.banReason
           // ignore: cast_nullable_to_non_nullable
@@ -121,16 +134,21 @@ AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
         json,
         requiredKeys: const [
           'role',
-          'password',
-          'confirmPassword',
+          'oldPassword',
+          'newPassword',
+          'confirmNewPassword',
           'banReason',
           'id',
         ],
       );
       final val = AdminUpdateUser(
         role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
-        password: $checkedConvert('password', (v) => v as String),
-        confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
+        oldPassword: $checkedConvert('oldPassword', (v) => v as String),
+        newPassword: $checkedConvert('newPassword', (v) => v as String),
+        confirmNewPassword: $checkedConvert(
+          'confirmNewPassword',
+          (v) => v as String,
+        ),
         banReason: $checkedConvert('banReason', (v) => v as String),
         banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
         id: $checkedConvert('id', (v) => v as String),
@@ -141,8 +159,9 @@ AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AdminUpdateUserToJson(AdminUpdateUser instance) =>
     <String, dynamic>{
       'role': _$UserRoleEnumMap[instance.role]!,
-      'password': instance.password,
-      'confirmPassword': instance.confirmPassword,
+      'oldPassword': instance.oldPassword,
+      'newPassword': instance.newPassword,
+      'confirmNewPassword': instance.confirmNewPassword,
       'banReason': instance.banReason,
       'banExpiresIn': ?instance.banExpiresIn,
       'id': instance.id,

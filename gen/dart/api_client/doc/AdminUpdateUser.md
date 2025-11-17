@@ -9,8 +9,9 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **role** | [**UserRole**](UserRole.md) |  | 
-**password** | **String** |  | 
-**confirmPassword** | **String** |  | 
+**oldPassword** | **String** |  | 
+**newPassword** | **String** |  | 
+**confirmNewPassword** | **String** |  | 
 **banReason** | **String** |  | 
 **banExpiresIn** | **num** |  | [optional] 
 **id** | **String** |  | 

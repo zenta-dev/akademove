@@ -8,8 +8,9 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**password** | **String** |  | 
-**confirmPassword** | **String** |  | 
+**oldPassword** | **String** |  | 
+**newPassword** | **String** |  | 
+**confirmNewPassword** | **String** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

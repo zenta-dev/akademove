@@ -7,9 +7,11 @@ part of 'update_user_password.dart';
 // **************************************************************************
 
 abstract class _$UpdateUserPasswordCWProxy {
-  UpdateUserPassword password(String password);
+  UpdateUserPassword oldPassword(String oldPassword);
 
-  UpdateUserPassword confirmPassword(String confirmPassword);
+  UpdateUserPassword newPassword(String newPassword);
+
+  UpdateUserPassword confirmNewPassword(String confirmNewPassword);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPassword(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -17,7 +19,11 @@ abstract class _$UpdateUserPasswordCWProxy {
   /// ```dart
   /// UpdateUserPassword(...).copyWith(id: 12, name: "My name")
   /// ````
-  UpdateUserPassword call({String password, String confirmPassword});
+  UpdateUserPassword call({
+    String oldPassword,
+    String newPassword,
+    String confirmNewPassword,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateUserPassword.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateUserPassword.copyWith.fieldName(...)`
@@ -27,11 +33,16 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
   final UpdateUserPassword _value;
 
   @override
-  UpdateUserPassword password(String password) => this(password: password);
+  UpdateUserPassword oldPassword(String oldPassword) =>
+      this(oldPassword: oldPassword);
 
   @override
-  UpdateUserPassword confirmPassword(String confirmPassword) =>
-      this(confirmPassword: confirmPassword);
+  UpdateUserPassword newPassword(String newPassword) =>
+      this(newPassword: newPassword);
+
+  @override
+  UpdateUserPassword confirmNewPassword(String confirmNewPassword) =>
+      this(confirmNewPassword: confirmNewPassword);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPassword(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -41,18 +52,23 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
   /// UpdateUserPassword(...).copyWith(id: 12, name: "My name")
   /// ````
   UpdateUserPassword call({
-    Object? password = const $CopyWithPlaceholder(),
-    Object? confirmPassword = const $CopyWithPlaceholder(),
+    Object? oldPassword = const $CopyWithPlaceholder(),
+    Object? newPassword = const $CopyWithPlaceholder(),
+    Object? confirmNewPassword = const $CopyWithPlaceholder(),
   }) {
     return UpdateUserPassword(
-      password: password == const $CopyWithPlaceholder()
-          ? _value.password
+      oldPassword: oldPassword == const $CopyWithPlaceholder()
+          ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
-          : password as String,
-      confirmPassword: confirmPassword == const $CopyWithPlaceholder()
-          ? _value.confirmPassword
+          : oldPassword as String,
+      newPassword: newPassword == const $CopyWithPlaceholder()
+          ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
-          : confirmPassword as String,
+          : newPassword as String,
+      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder()
+          ? _value.confirmNewPassword
+          // ignore: cast_nullable_to_non_nullable
+          : confirmNewPassword as String,
     );
   }
 }
@@ -70,16 +86,28 @@ extension $UpdateUserPasswordCopyWith on UpdateUserPassword {
 
 UpdateUserPassword _$UpdateUserPasswordFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateUserPassword', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['password', 'confirmPassword']);
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'oldPassword',
+          'newPassword',
+          'confirmNewPassword',
+        ],
+      );
       final val = UpdateUserPassword(
-        password: $checkedConvert('password', (v) => v as String),
-        confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
+        oldPassword: $checkedConvert('oldPassword', (v) => v as String),
+        newPassword: $checkedConvert('newPassword', (v) => v as String),
+        confirmNewPassword: $checkedConvert(
+          'confirmNewPassword',
+          (v) => v as String,
+        ),
       );
       return val;
     });
 
 Map<String, dynamic> _$UpdateUserPasswordToJson(UpdateUserPassword instance) =>
     <String, dynamic>{
-      'password': instance.password,
-      'confirmPassword': instance.confirmPassword,
+      'oldPassword': instance.oldPassword,
+      'newPassword': instance.newPassword,
+      'confirmNewPassword': instance.confirmNewPassword,
     };

@@ -20,8 +20,9 @@ class AdminUpdateUser {
   /// Returns a new [AdminUpdateUser] instance.
   const AdminUpdateUser({
     required this.role,
-    required this.password,
-    required this.confirmPassword,
+    required this.oldPassword,
+    required this.newPassword,
+    required this.confirmNewPassword,
     required this.banReason,
     this.banExpiresIn,
     required this.id,
@@ -30,11 +31,14 @@ class AdminUpdateUser {
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final UserRole role;
 
-  @JsonKey(name: r'password', required: true, includeIfNull: false)
-  final String password;
+  @JsonKey(name: r'oldPassword', required: true, includeIfNull: false)
+  final String oldPassword;
 
-  @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
-  final String confirmPassword;
+  @JsonKey(name: r'newPassword', required: true, includeIfNull: false)
+  final String newPassword;
+
+  @JsonKey(name: r'confirmNewPassword', required: true, includeIfNull: false)
+  final String confirmNewPassword;
 
   @JsonKey(name: r'banReason', required: true, includeIfNull: false)
   final String banReason;
@@ -50,8 +54,9 @@ class AdminUpdateUser {
       identical(this, other) ||
       other is AdminUpdateUser &&
           other.role == role &&
-          other.password == password &&
-          other.confirmPassword == confirmPassword &&
+          other.oldPassword == oldPassword &&
+          other.newPassword == newPassword &&
+          other.confirmNewPassword == confirmNewPassword &&
           other.banReason == banReason &&
           other.banExpiresIn == banExpiresIn &&
           other.id == id;
@@ -59,8 +64,9 @@ class AdminUpdateUser {
   @override
   int get hashCode =>
       role.hashCode +
-      password.hashCode +
-      confirmPassword.hashCode +
+      oldPassword.hashCode +
+      newPassword.hashCode +
+      confirmNewPassword.hashCode +
       banReason.hashCode +
       banExpiresIn.hashCode +
       id.hashCode;
