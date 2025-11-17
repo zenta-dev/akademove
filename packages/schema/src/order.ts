@@ -14,61 +14,77 @@ import { CoordinateSchema } from "./position.ts";
 import { TransactionSchema } from "./transaction.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
-export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES).meta({
-	title: "OrderStatus",
+export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
+export type OrderStatus = z.infer<typeof OrderStatusSchema>;
+
+export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
+export type OrderType = z.infer<typeof OrderTypeSchema>;
+
+export const OrderNoteSchema = z.object({
+	pickup: z.string().optional(),
+	dropoff: z.string().optional(),
 });
-export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES).meta({
-	title: "OrderType",
+export type OrderNote = z.infer<typeof OrderNoteSchema>;
+
+export const OrderItemSchema = z.object({
+	quantity: z.number(),
+	item: MerchantMenuSchema.partial(),
 });
 
-export const OrderNoteSchema = z
-	.object({
-		pickup: z.string().optional(),
-		dropoff: z.string().optional(),
-	})
-	.meta({ title: "OrderNote" });
+export const OrderSummarySchema = z.object({
+	distanceKm: z.coerce.number(),
+	baseFare: z.coerce.number(),
+	distanceFare: z.coerce.number(),
+	additionalFees: z.coerce.number(),
+	subtotal: z.coerce.number(),
+	platformFee: z.coerce.number(),
+	tax: z.coerce.number(),
+	totalCost: z.coerce.number(),
+	breakdown: z
+		.object({
+			distance: z.coerce.number(),
+			duration: z.coerce.number(),
+			perMinuteRate: z.coerce.number(),
+			weight: z.coerce.number(),
+			perKgRate: z.coerce.number(),
+		})
+		.partial(),
+});
+export type OrderSummary = z.infer<typeof OrderSummarySchema>;
 
-export const OrderItemSchema = z
-	.object({
-		quantity: z.number(),
-		item: MerchantMenuSchema.partial(),
-	})
-	.meta({ title: "OrderItem" });
+export const OrderSchema = z.object({
+	id: z.uuid(),
+	userId: z.string(),
+	driverId: z.string().optional(),
+	merchantId: z.string().optional(),
+	type: OrderTypeSchema,
+	status: OrderStatusSchema,
+	pickupLocation: CoordinateSchema,
+	dropoffLocation: CoordinateSchema,
+	distanceKm: z.number(),
+	basePrice: z.number(),
+	tip: z.number().optional(),
+	totalPrice: z.number(),
+	note: OrderNoteSchema.optional(),
+	requestedAt: DateSchema,
+	acceptedAt: DateSchema.optional(),
+	arrivedAt: DateSchema.optional(),
+	cancelReason: z.string().optional(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
 
-export const OrderSchema = z
-	.object({
-		id: z.uuid(),
-		userId: z.string(),
-		driverId: z.string().optional(),
-		merchantId: z.string().optional(),
-		type: OrderTypeSchema,
-		status: OrderStatusSchema,
-		pickupLocation: CoordinateSchema,
-		dropoffLocation: CoordinateSchema,
-		distanceKm: z.number(),
-		basePrice: z.number(),
-		tip: z.number().optional(),
-		totalPrice: z.number(),
-		note: OrderNoteSchema.optional(),
-		requestedAt: DateSchema,
-		acceptedAt: DateSchema.optional(),
-		arrivedAt: DateSchema.optional(),
-		cancelReason: z.string().optional(),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
+	gender: UserGenderSchema.optional(),
 
-		gender: UserGenderSchema.optional(),
+	// delivery, food
+	itemCount: z.number().optional(),
+	items: z.array(OrderItemSchema).optional(),
 
-		// delivery, food
-		itemCount: z.number().optional(),
-		items: z.array(OrderItemSchema).optional(),
-
-		// relations
-		user: UserSchema.partial().optional(),
-		driver: DriverSchema.partial().optional(),
-		merchant: MerchantSchema.partial().optional(),
-	})
-	.meta({ title: "Order" });
+	// relations
+	user: UserSchema.partial().optional(),
+	driver: DriverSchema.partial().optional(),
+	merchant: MerchantSchema.partial().optional(),
+});
+export type Order = z.infer<typeof OrderSchema>;
 
 export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
 	"items",
@@ -78,28 +94,6 @@ export const OrderKeySchema = extractSchemaKeysAsEnum(OrderSchema).exclude([
 	"merchant",
 ]);
 
-export const OrderSummarySchema = z
-	.object({
-		distanceKm: z.coerce.number(),
-		baseFare: z.coerce.number(),
-		distanceFare: z.coerce.number(),
-		additionalFees: z.coerce.number(),
-		subtotal: z.coerce.number(),
-		platformFee: z.coerce.number(),
-		tax: z.coerce.number(),
-		totalCost: z.coerce.number(),
-		breakdown: z
-			.object({
-				distance: z.coerce.number(),
-				duration: z.coerce.number(),
-				perMinuteRate: z.coerce.number(),
-				weight: z.coerce.number(),
-				perKgRate: z.coerce.number(),
-			})
-			.partial(),
-	})
-	.meta({ title: "OrderSummary" });
-
 export const PlaceOrderSchema = OrderSchema.pick({
 	dropoffLocation: true,
 	pickupLocation: true,
@@ -107,22 +101,20 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	type: true,
 	items: true,
 	gender: true,
-})
-	.extend({
-		payment: z.object({
-			method: PaymentMethodSchema,
-			provider: PaymentProviderSchema,
-		}),
-	})
-	.meta({ title: "PlaceOrder" });
+}).extend({
+	payment: z.object({
+		method: PaymentMethodSchema,
+		provider: PaymentProviderSchema,
+	}),
+});
+export type PlaceOrder = z.infer<typeof PlaceOrderSchema>;
 
-export const PlaceOrderResponseSchema = z
-	.object({
-		order: OrderSchema,
-		payment: PaymentSchema,
-		transaction: TransactionSchema,
-	})
-	.meta({ title: "PlaceOrderResponse" });
+export const PlaceOrderResponseSchema = z.object({
+	order: OrderSchema,
+	payment: PaymentSchema,
+	transaction: TransactionSchema,
+});
+export type PlaceOrderResponse = z.infer<typeof PlaceOrderResponseSchema>;
 
 export const UpdateOrderSchema = OrderSchema.omit({
 	id: true,
@@ -135,28 +127,18 @@ export const UpdateOrderSchema = OrderSchema.omit({
 	arrivedAt: true,
 	createdAt: true,
 	updatedAt: true,
-})
-	.partial()
-	.meta({ title: "UpdateOrderRequest" });
+}).partial();
+export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
 
-export const EstimateOrderSchema = PlaceOrderSchema.omit({ payment: true })
-	.extend({
-		discountIds: z.array(z.coerce.number()).optional(),
-		weight: z.number().positive().max(20).optional(),
-	})
-	.meta({ title: "EstimateOrder" });
+export const EstimateOrderSchema = PlaceOrderSchema.omit({
+	payment: true,
+}).extend({
+	discountIds: z.array(z.coerce.number()).optional(),
+	weight: z.number().positive().max(20).optional(),
+});
+export type EstimateOrder = z.infer<typeof EstimateOrderSchema>;
 
 export const FlatEstimateOrderSchema = flattenZodObject(EstimateOrderSchema);
-
-export type OrderStatus = z.infer<typeof OrderStatusSchema>;
-export type OrderType = z.infer<typeof OrderTypeSchema>;
-export type OrderNote = z.infer<typeof OrderNoteSchema>;
-export type Order = z.infer<typeof OrderSchema>;
-export type OrderSummary = z.infer<typeof OrderSummarySchema>;
-export type PlaceOrder = z.infer<typeof PlaceOrderSchema>;
-export type PlaceOrderResponse = z.infer<typeof PlaceOrderResponseSchema>;
-export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
-export type EstimateOrder = z.infer<typeof EstimateOrderSchema>;
 
 export const OrderSchemaRegistries = {
 	OrderStatus: { schema: OrderStatusSchema, strategy: "output" },

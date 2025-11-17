@@ -107,8 +107,5 @@ export class RBACService {
 		}
 	}
 
-	static schema = createStatementSchema(statement).partial().meta({
-		title: "Statements",
-		ref: "Statements",
-	});
+	static schema = createStatementSchema(statement).partial();
 }

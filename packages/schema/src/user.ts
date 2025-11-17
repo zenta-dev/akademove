@@ -5,39 +5,36 @@ import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
-export const UserRoleSchema = z
-	.enum(CONSTANTS.USER_ROLES)
-	.meta({ title: "UserRole" });
+export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES);
+export type UserRole = z.infer<typeof UserRoleSchema>;
 
-export const UserGenderSchema = z
-	.enum(CONSTANTS.USER_GENDERS)
-	.meta({ title: "UserGender" });
+export const UserGenderSchema = z.enum(CONSTANTS.USER_GENDERS);
+export type UserGender = z.infer<typeof UserGenderSchema>;
 
-export const UserSchema = z
-	.object({
-		id: z.string(),
-		name: z
-			.string()
-			.min(1, m.required_placeholder({ field: m.name() }))
-			.max(256),
-		email: z
-			.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
-			.max(256),
-		emailVerified: z.boolean(),
-		image: z.url().optional(),
-		role: UserRoleSchema,
-		banned: z.boolean(),
-		banReason: z.string().optional(),
-		banExpires: DateSchema.optional(),
-		gender: UserGenderSchema.optional(),
-		phone: PhoneSchema,
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
+export const UserSchema = z.object({
+	id: z.string(),
+	name: z
+		.string()
+		.min(1, m.required_placeholder({ field: m.name() }))
+		.max(256),
+	email: z
+		.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
+		.max(256),
+	emailVerified: z.boolean(),
+	image: z.url().optional(),
+	role: UserRoleSchema,
+	banned: z.boolean(),
+	banReason: z.string().optional(),
+	banExpires: DateSchema.optional(),
+	gender: UserGenderSchema.optional(),
+	phone: PhoneSchema,
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
 
-		// attachements:
-		badges: z.array(BadgeSchema),
-	})
-	.meta({ title: "User" });
+	// attachements:
+	badges: z.array(BadgeSchema),
+});
+export type User = z.infer<typeof UserSchema>;
 
 export const UserKeySchema = extractSchemaKeysAsEnum(UserSchema).exclude([
 	"badges",
@@ -64,49 +61,34 @@ export const InsertUserSchema = UserSchema.omit({
 	.refine((data) => data.password === data.confirmPassword, {
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
-	})
-	.meta({ title: "InsertUserRequest" });
+	});
+export type InsertUser = z.infer<typeof InsertUserSchema>;
 
-export const UpdateUserRoleSchema = UserSchema.pick({ role: true }).meta({
-	title: "UpdateUserRoleRequest",
-});
+export const UpdateUserRoleSchema = UserSchema.pick({ role: true });
+export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
 
 export const UpdateUserPasswordSchema = InsertUserSchema.pick({
 	password: true,
 	confirmPassword: true,
-}).meta({
-	title: "UpdateUserPasswordRequest",
 });
+export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
 
-export const BanUserSchema = z
-	.object({
-		banReason: z.string(),
-		banExpiresIn: z.number().optional(),
-	})
-	.meta({
-		title: "BanUserSchemaRequest",
-	});
-
-export const UnbanUserSchema = UserSchema.pick({ id: true }).meta({
-	title: "UnbanUserSchemaRequest",
+export const BanUserSchema = z.object({
+	banReason: z.string(),
+	banExpiresIn: z.number().optional(),
 });
+export type BanUser = z.infer<typeof BanUserSchema>;
 
-export const UpdateUserSchema = z.union([
+export const UnbanUserSchema = UserSchema.pick({ id: true });
+export type UnbanUser = z.infer<typeof UnbanUserSchema>;
+
+export const AdminUpdateUserSchema = z.union([
 	UpdateUserRoleSchema,
 	UpdateUserPasswordSchema,
 	BanUserSchema,
 	UnbanUserSchema,
 ]);
-
-export type UserRole = z.infer<typeof UserRoleSchema>;
-export type UserGender = z.infer<typeof UserGenderSchema>;
-export type User = z.infer<typeof UserSchema>;
-export type InsertUser = z.infer<typeof InsertUserSchema>;
-export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
-export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
-export type BanUser = z.infer<typeof BanUserSchema>;
-export type UnbanUser = z.infer<typeof UnbanUserSchema>;
-export type UpdateUser = z.infer<typeof UpdateUserSchema>;
+export type AdminUpdateUser = z.infer<typeof AdminUpdateUserSchema>;
 
 export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
@@ -117,6 +99,6 @@ export const UserSchemaRegistries = {
 	UpdateUserPassword: { schema: UpdateUserPasswordSchema, strategy: "input" },
 	BanUser: { schema: BanUserSchema, strategy: "input" },
 	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
-	UpdateUser: { schema: UpdateUserSchema, strategy: "input" },
+	UpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },
 	UserKey: { schema: UserKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

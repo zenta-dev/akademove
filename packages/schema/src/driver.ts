@@ -11,38 +11,36 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { CoordinateSchema } from "./position.ts";
 import { UserSchema } from "./user.ts";
 
-export const DriverStatusSchema = z
-	.enum(CONSTANTS.DRIVER_STATUSES)
-	.meta({ title: "DriverStatus" });
+export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
+export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 
-export const DriverSchema = z
-	.object({
-		id: z.uuid(),
-		userId: z.string(),
-		studentId: z.coerce.number<number>(),
-		licensePlate: z.string().min(6).max(32),
-		status: DriverStatusSchema,
-		rating: z.number(),
-		isTakingOrder: z.boolean(),
-		isOnline: z.boolean(),
-		currentLocation: CoordinateSchema.optional(),
-		lastLocationUpdate: DateSchema.optional(),
-		createdAt: DateSchema,
+export const DriverSchema = z.object({
+	id: z.uuid(),
+	userId: z.string(),
+	studentId: z.coerce.number<number>(),
+	licensePlate: z.string().min(6).max(32),
+	status: DriverStatusSchema,
+	rating: z.number(),
+	isTakingOrder: z.boolean(),
+	isOnline: z.boolean(),
+	currentLocation: CoordinateSchema.optional(),
+	lastLocationUpdate: DateSchema.optional(),
+	createdAt: DateSchema,
 
-		studentCard: z.url(),
-		driverLicense: z.url(),
-		vehicleCertificate: z.url(),
-		bank: BankSchema,
-		// relations
-		user: UserSchema.partial().optional(),
+	studentCard: z.url(),
+	driverLicense: z.url(),
+	vehicleCertificate: z.url(),
+	bank: BankSchema,
+	// relations
+	user: UserSchema.partial().optional(),
 
-		// scoped
-		distance: z
-			.number()
-			.optional()
-			.describe("Each user has different result since it calculated value"),
-	})
-	.meta({ title: "Driver" });
+	// scoped
+	distance: z
+		.number()
+		.optional()
+		.describe("Each user has different result since it calculated value"),
+});
+export type Driver = z.infer<typeof DriverSchema>;
 
 export const DriverKeySchema = extractSchemaKeysAsEnum(DriverSchema).exclude([
 	"user",
@@ -68,11 +66,10 @@ export const InsertDriverSchema = DriverSchema.pick({
 	driverLicense: true,
 	vehicleCertificate: true,
 	bank: true,
-})
-	.extend({
-		...DriverDocumentSchema.shape,
-	})
-	.meta({ title: "InsertDriverRequest" });
+}).extend({
+	...DriverDocumentSchema.shape,
+});
+export type InsertDriver = z.infer<typeof InsertDriverSchema>;
 
 export const UpdateDriverSchema = DriverSchema.pick({
 	studentId: true,
@@ -87,31 +84,23 @@ export const UpdateDriverSchema = DriverSchema.pick({
 		currentLocation: CoordinateSchema.optional(),
 		...DriverDocumentSchema.shape,
 	})
-	.partial()
-	.meta({
-		title: "UpdateDriverRequest",
-	});
-
-export type DriverStatus = z.infer<typeof DriverStatusSchema>;
-export type Driver = z.infer<typeof DriverSchema>;
-export type InsertDriver = z.infer<typeof InsertDriverSchema>;
+	.partial();
 export type UpdateDriver = z.infer<typeof UpdateDriverSchema>;
 
-export const DriverScheduleSchema = z
-	.object({
-		id: z.uuid(),
-		name: z.string(),
-		driverId: z.uuid(),
-		dayOfWeek: DayOfWeekSchema,
-		startTime: TimeSchema,
-		endTime: TimeSchema,
-		isRecurring: z.boolean().default(true),
-		specificDate: DateSchema.optional(),
-		isActive: z.boolean().default(true),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
-	})
-	.meta({ title: "DriverSchedule" });
+export const DriverScheduleSchema = z.object({
+	id: z.uuid(),
+	name: z.string(),
+	driverId: z.uuid(),
+	dayOfWeek: DayOfWeekSchema,
+	startTime: TimeSchema,
+	endTime: TimeSchema,
+	isRecurring: z.boolean().default(true),
+	specificDate: DateSchema.optional(),
+	isActive: z.boolean().default(true),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type DriverSchedule = z.infer<typeof DriverScheduleSchema>;
 
 export const DriverScheduleKeySchema =
 	extractSchemaKeysAsEnum(DriverScheduleSchema);
@@ -120,20 +109,15 @@ export const InsertDriverScheduleSchema = DriverScheduleSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-}).meta({ title: "InsertDriverScheduleRequest" });
+});
+export type InsertDriverSchedule = z.infer<typeof InsertDriverScheduleSchema>;
 
 export const UpdateDriverScheduleSchema = DriverScheduleSchema.omit({
 	id: true,
 	driverId: true,
 	createdAt: true,
 	updatedAt: true,
-})
-	.partial()
-	.meta({ title: "UpdateDriverScheduleRequest" });
-
-export type DayOfWeek = z.infer<typeof DayOfWeekSchema>;
-export type DriverSchedule = z.infer<typeof DriverScheduleSchema>;
-export type InsertDriverSchedule = z.infer<typeof InsertDriverScheduleSchema>;
+}).partial();
 export type UpdateDriverSchedule = z.infer<typeof UpdateDriverScheduleSchema>;
 
 export const DriverSchemaRegistries = {

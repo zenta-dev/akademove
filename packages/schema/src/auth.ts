@@ -6,29 +6,27 @@ import { flattenZodObject } from "./flatten.helper.ts";
 import { InsertMerchantSchema } from "./merchant.ts";
 import { UserGenderSchema, UserSchema } from "./user.ts";
 
-export const SessionSchema = z
-	.object({
-		id: z.string(),
-		expiresAt: DateSchema,
-		token: z.string(),
-		ipAddress: z.string().optional(),
-		userAgent: z.string().optional(),
-		userId: z.string(),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
-	})
-	.meta({ title: "Session" });
+export const SessionSchema = z.object({
+	id: z.string(),
+	expiresAt: DateSchema,
+	token: z.string(),
+	ipAddress: z.string().optional(),
+	userAgent: z.string().optional(),
+	userId: z.string(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type Session = z.infer<typeof SessionSchema>;
 
-export const SignInSchema = z
-	.object({
-		email: z
-			.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
-			.max(255),
-		password: z
-			.string()
-			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
-	})
-	.meta({ title: "SignInRequest" });
+export const SignInSchema = z.object({
+	email: z
+		.email(m.invalid_placeholder({ field: m.email_address().toLowerCase() }))
+		.max(255),
+	password: z
+		.string()
+		.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
+});
+export type SignIn = z.infer<typeof SignInSchema>;
 
 export const SignUpSchema = z
 	.object({
@@ -54,42 +52,43 @@ export const SignUpSchema = z
 	.refine((data) => data.password === data.confirmPassword, {
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
-	})
-	.meta({ title: "SignUpRequest" });
-export const FlatSignUpSchema = flattenZodObject(SignUpSchema, "").meta({
-	title: "FlatSignUpRequest",
-});
+	});
+export type SignUp = z.infer<typeof SignUpSchema>;
 
-export const SignUpDriverSchema = SignUpSchema.omit({ photo: true })
-	.safeExtend({
+export const FlatSignUpSchema = flattenZodObject(SignUpSchema, "");
+export type FlatSignUp = z.infer<typeof FlatSignUpSchema>;
+
+export const SignUpDriverSchema = SignUpSchema.omit({ photo: true }).safeExtend(
+	{
 		photo: z
 			.file(m.required_placeholder({ field: m.photo() }))
 			.mime(["image/png", "image/jpg", "image/jpeg"]),
 		detail: InsertDriverSchema,
-	})
-	.meta({ title: "SignUpDriverRequest" });
-export const FlatSignUpDriverSchema = flattenZodObject(
-	SignUpDriverSchema,
-	"",
-).meta({ title: "FlatSignUpDriverRequest" });
+	},
+);
+export type SignUpDriver = z.infer<typeof SignUpDriverSchema>;
+
+export const FlatSignUpDriverSchema = flattenZodObject(SignUpDriverSchema, "");
+export type FlatSignUpDriver = z.infer<typeof FlatSignUpDriverSchema>;
 
 export const SignUpMerchantSchema = SignUpSchema.safeExtend({
 	gender: UserGenderSchema.optional(),
 	detail: InsertMerchantSchema,
-}).meta({ title: "SignUpMerchantRequest" });
+});
+export type SignUpMerchant = z.infer<typeof SignUpMerchantSchema>;
 
 export const FlatSignUpMerchantSchema = flattenZodObject(
 	SignUpMerchantSchema,
 	"",
-).meta({ title: "FlatSignUpMerchantRequest" });
+);
+export type FlatSignUpMerchant = z.infer<typeof FlatSignUpMerchantSchema>;
 
-export const ForgotPasswordSchema = z
-	.object({
-		email: z.email(
-			m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
-		),
-	})
-	.meta({ title: "ForgotPasswordRequest" });
+export const ForgotPasswordSchema = z.object({
+	email: z.email(
+		m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
+	),
+});
+export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
 
 export const ResetPasswordSchema = z
 	.object({
@@ -104,42 +103,26 @@ export const ResetPasswordSchema = z
 	.refine((data) => data.newPassword === data.confirmPassword, {
 		path: ["confirmPassword"],
 		message: m.password_do_not_match(),
-	})
-	.meta({ title: "ResetPasswordRequest" });
+	});
+export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 
-export const SignInResponseSchema = z
-	.object({
-		token: z.string(),
-		user: UserSchema,
-	})
-	.meta({ title: "SignInResBody" });
+export const SignInResponseSchema = z.object({
+	token: z.string(),
+	user: UserSchema,
+});
+export type SignInResponse = z.infer<typeof SignInResponseSchema>;
 
-export const SignUpResponseSchema = z
-	.object({
-		user: UserSchema,
-	})
-	.meta({ title: "SignUpResBody" });
+export const SignUpResponseSchema = z.object({
+	user: UserSchema,
+});
+export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
 
 export const GetSessionResponseSchema = z
 	.object({
 		token: z.string().optional(),
 		user: UserSchema,
 	})
-	.nullable()
-	.meta({ title: "GetSessionResBody" });
-
-export type Session = z.infer<typeof SessionSchema>;
-export type SignIn = z.infer<typeof SignInSchema>;
-export type SignUp = z.infer<typeof SignUpSchema>;
-export type SignUpDriver = z.infer<typeof SignUpDriverSchema>;
-export type SignUpMerchant = z.infer<typeof SignUpMerchantSchema>;
-export type FlatSignUp = z.infer<typeof FlatSignUpSchema>;
-export type FlatSignUpDriver = z.infer<typeof FlatSignUpDriverSchema>;
-export type FlatSignUpMerchant = z.infer<typeof FlatSignUpMerchantSchema>;
-export type ForgotPassword = z.infer<typeof ForgotPasswordSchema>;
-export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
-export type SignInResponse = z.infer<typeof SignInResponseSchema>;
-export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
+	.nullable();
 export type GetSessionResponse = z.infer<typeof GetSessionResponseSchema>;
 
 export const AuthSchemaRegistries = {

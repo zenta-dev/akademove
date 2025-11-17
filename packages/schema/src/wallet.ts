@@ -5,17 +5,15 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 
 export const CurrencySchema = z.enum(CURRENCY);
 
-export const WalletSchema = z
-	.object({
-		id: z.uuid(),
-		userId: z.string(),
-		balance: z.number(),
-		currency: CurrencySchema,
-		isActive: z.boolean(),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
-	})
-	.meta({ title: "Wallet" });
+export const WalletSchema = z.object({
+	id: z.uuid(),
+	userId: z.string(),
+	balance: z.number(),
+	currency: CurrencySchema,
+	isActive: z.boolean(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
 
 export const WalletKeySchema = extractSchemaKeysAsEnum(WalletSchema);
 
@@ -23,25 +21,19 @@ export const UpdateWalletSchema = WalletSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-})
-	.partial()
-	.meta({ title: "UpdateWallet" });
+}).partial();
 
-export const WalletMonthlySummaryQuerySchema = z
-	.object({
-		year: z.coerce.number(),
-		month: z.coerce.number(),
-	})
-	.meta({ title: "WalletMonthlySummaryQuery" });
+export const WalletMonthlySummaryQuerySchema = z.object({
+	year: z.coerce.number(),
+	month: z.coerce.number(),
+});
 
-export const WalletMonthlySummaryResponseSchema = z
-	.object({
-		month: z.string().describe("YYYY-MM"),
-		totalIncome: z.coerce.number(),
-		totalExpense: z.coerce.number(),
-		net: z.coerce.number(),
-	})
-	.meta({ title: "WalletMonthlySummaryResponse" });
+export const WalletMonthlySummaryResponseSchema = z.object({
+	month: z.string().describe("YYYY-MM"),
+	totalIncome: z.coerce.number(),
+	totalExpense: z.coerce.number(),
+	net: z.coerce.number(),
+});
 
 export type WalletCurrency = z.infer<typeof CurrencySchema>;
 export type Wallet = z.infer<typeof WalletSchema>;

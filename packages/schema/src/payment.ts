@@ -5,26 +5,28 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { TransactionStatusSchema } from "./transaction.ts";
 
 export const PaymentProviderSchema = z.enum(PAYMENT_PROVIDER);
-export const PaymentMethodSchema = z.enum(PAYMENT_METHOD);
+export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
 
-export const PaymentSchema = z
-	.object({
-		id: z.uuid(),
-		transactionId: z.uuid(),
-		provider: PaymentProviderSchema,
-		method: PaymentMethodSchema,
-		amount: z.number(),
-		status: TransactionStatusSchema,
-		externalId: z.string().optional(),
-		paymentUrl: z.string().optional(),
-		metadata: z.any().optional(),
-		expiresAt: DateSchema.optional(),
-		payload: z.any().optional(),
-		response: z.any().optional(),
-		createdAt: DateSchema,
-		updatedAt: DateSchema,
-	})
-	.meta({ title: "Payment" });
+export const PaymentMethodSchema = z.enum(PAYMENT_METHOD);
+export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
+
+export const PaymentSchema = z.object({
+	id: z.uuid(),
+	transactionId: z.uuid(),
+	provider: PaymentProviderSchema,
+	method: PaymentMethodSchema,
+	amount: z.number(),
+	status: TransactionStatusSchema,
+	externalId: z.string().optional(),
+	paymentUrl: z.string().optional(),
+	metadata: z.any().optional(),
+	expiresAt: DateSchema.optional(),
+	payload: z.any().optional(),
+	response: z.any().optional(),
+	createdAt: DateSchema,
+	updatedAt: DateSchema,
+});
+export type Payment = z.infer<typeof PaymentSchema>;
 
 export const PaymentKeySchema = extractSchemaKeysAsEnum(PaymentSchema);
 
@@ -32,57 +34,33 @@ export const InsertPaymentSchema = PaymentSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-}).meta({
-	title: "InsertPayment",
 });
+export type InsertPayment = z.infer<typeof InsertPaymentSchema>;
 
 export const UpdatePaymentSchema = PaymentSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
-})
-	.partial()
-	.meta({
-		title: "UpdatePayment",
-	});
+}).partial();
+export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
 
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
 	provider: true,
-})
-	.extend({
-		method: PaymentMethodSchema.exclude(["WALLET"]),
-	})
-	.meta({ title: "TopUpRequest" });
+}).extend({ method: PaymentMethodSchema.exclude(["WALLET"]) });
+export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 
 export const PayRequestSchema = PaymentSchema.pick({
 	amount: true,
-})
-	.extend({
-		referenceId: z.string().optional(),
-	})
-	.meta({ title: "PayRequest" });
+}).extend({ referenceId: z.string().optional() });
+export type PayRequest = z.infer<typeof PayRequestSchema>;
 
 export const TransferRequestSchema = PaymentSchema.pick({
 	amount: true,
-})
-	.extend({
-		walletId: z.uuid(),
-	})
-	.meta({ title: "TransferRequest" });
-
-export const WebhookRequestSchema = z
-	.record(z.string(), z.any())
-	.meta({ title: "WebhookRequest" });
-
-export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
-export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
-export type Payment = z.infer<typeof PaymentSchema>;
-export type InsertPayment = z.infer<typeof InsertPaymentSchema>;
-export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
-export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
-export type PayRequest = z.infer<typeof PayRequestSchema>;
+}).extend({ walletId: z.uuid() });
 export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
+
+export const WebhookRequestSchema = z.record(z.string(), z.any());
 
 export const PaymentSchemaRegistries = {
 	PaymentProvider: { schema: PaymentProviderSchema, strategy: "output" },

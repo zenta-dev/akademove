@@ -1,8 +1,8 @@
 import { oc } from "@orpc/contract";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
+	AdminUpdateUserSchema,
 	InsertUserSchema,
-	UpdateUserSchema,
 	UserSchema,
 } from "@repo/schema/user";
 import * as z from "zod";
@@ -55,7 +55,7 @@ export const UserSpec = {
 		.input(
 			z.object({
 				params: z.object({ id: z.string() }),
-				body: UpdateUserSchema,
+				body: AdminUpdateUserSchema,
 			}),
 		)
 		.output(createSuccesSchema(UserSchema, "User updated successfully")),

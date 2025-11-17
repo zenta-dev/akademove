@@ -14,33 +14,31 @@ import { WalletKeySchema } from "./wallet.ts";
 
 const MAX_LIMIT = 100;
 
-export const OffsetPaginationQuerySchema = z
-	.object({
-		page: z
-			.preprocess((v) => {
-				if (v === undefined || v === null || v === "") return 1;
-				const n = Number(v);
-				return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-			}, z.number().int().min(1).optional().default(1))
-			.optional(),
-		limit: z.preprocess((v) => {
-			if (v === undefined || v === null || v === "") return 10;
+export const OffsetPaginationQuerySchema = z.object({
+	page: z
+		.preprocess((v) => {
+			if (v === undefined || v === null || v === "") return 1;
 			const n = Number(v);
 			return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-		}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
-	})
-	.meta({ title: "OffsetPaginationQuery" });
+		}, z.number().int().min(1).optional().default(1))
+		.optional(),
+	limit: z.preprocess((v) => {
+		if (v === undefined || v === null || v === "") return 10;
+		const n = Number(v);
+		return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
+	}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
+});
+export type OffsetPaginationQuery = z.infer<typeof OffsetPaginationQuerySchema>;
 
-export const CursorPaginationQuerySchema = z
-	.object({
-		cursor: z.string().optional(),
-		limit: z.preprocess((v) => {
-			if (v === undefined || v === null || v === "") return 10;
-			const n = Number(v);
-			return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
-		}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
-	})
-	.meta({ title: "CursorPaginationQuery" });
+export const CursorPaginationQuerySchema = z.object({
+	cursor: z.string().optional(),
+	limit: z.preprocess((v) => {
+		if (v === undefined || v === null || v === "") return 10;
+		const n = Number(v);
+		return Number.isFinite(n) ? Math.floor(n) : Number.NaN;
+	}, z.number().int().min(1).max(MAX_LIMIT).optional().default(10)),
+});
+export type CursorPaginationQuery = z.infer<typeof CursorPaginationQuerySchema>;
 
 export const SortBySchema = mergeEnums(
 	ConfigurationKeySchema,
@@ -67,11 +65,7 @@ export const UnifiedPaginationQuerySchema = z
 	})
 	.refine((data) => !(data.cursor && data.page), {
 		message: "Cannot use both cursor and page at the same time.",
-	})
-	.meta({ title: "UnifiedPaginationQuery" });
-
-export type OffsetPaginationQuery = z.infer<typeof OffsetPaginationQuerySchema>;
-export type CursorPaginationQuery = z.infer<typeof CursorPaginationQuerySchema>;
+	});
 export type UnifiedPaginationQuery = z.infer<
 	typeof UnifiedPaginationQuerySchema
 >;
