@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:akademove/app/_export.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -34,5 +36,17 @@ extension BuildContextExt on BuildContext {
       decimalDigits: 0,
     );
     return formatter.format(amount);
+  }
+
+  Color get randomColor {
+    final colors = [
+      colorScheme.primary,
+      colorScheme.secondary,
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+    ];
+
+    return colors[Random().nextInt(colors.length)];
   }
 }
