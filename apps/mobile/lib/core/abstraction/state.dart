@@ -52,7 +52,7 @@ abstract class BaseState2 {
     required R Function() initial,
     required R Function() loading,
     required R Function({String? message}) success,
-    required R Function({BaseError error, String? message}) failure,
+    required R Function({BaseError error}) failure,
   }) {
     switch (state) {
       case CubitState.initial:
@@ -62,7 +62,7 @@ abstract class BaseState2 {
       case CubitState.success:
         return success(message: message);
       case CubitState.failure:
-        return failure(error: error!, message: message);
+        return failure(error: error!);
     }
   }
 
@@ -71,7 +71,7 @@ abstract class BaseState2 {
     R Function()? initial,
     R Function()? loading,
     R Function(String? message)? success,
-    R Function(BaseError error, String? message)? failure,
+    R Function(BaseError error)? failure,
   }) {
     switch (state) {
       case CubitState.initial:
@@ -81,7 +81,7 @@ abstract class BaseState2 {
       case CubitState.success:
         return success?.call(message) ?? orElse();
       case CubitState.failure:
-        return failure?.call(error!, message) ?? orElse();
+        return failure?.call(error!) ?? orElse();
     }
   }
 
@@ -137,7 +137,7 @@ abstract class BaseState3<T> {
     required R Function() initial,
     required R Function() loading,
     required R Function({List<T>? list, T? selected, String? message}) success,
-    required R Function({BaseError error, String? message}) failure,
+    required R Function({BaseError error}) failure,
   }) {
     switch (state) {
       case CubitState.initial:
@@ -147,7 +147,7 @@ abstract class BaseState3<T> {
       case CubitState.success:
         return success(list: list, selected: selected, message: message);
       case CubitState.failure:
-        return failure(error: error!, message: message);
+        return failure(error: error!);
     }
   }
 
@@ -156,7 +156,7 @@ abstract class BaseState3<T> {
     R Function()? initial,
     R Function()? loading,
     R Function(List<T>? list, T? selected, String? message)? success,
-    R Function(BaseError error, String? message)? failure,
+    R Function(BaseError error)? failure,
   }) {
     switch (state) {
       case CubitState.initial:
@@ -166,7 +166,7 @@ abstract class BaseState3<T> {
       case CubitState.success:
         return success?.call(list, selected, message) ?? orElse();
       case CubitState.failure:
-        return failure?.call(error!, message) ?? orElse();
+        return failure?.call(error!) ?? orElse();
     }
   }
 }
