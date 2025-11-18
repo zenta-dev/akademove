@@ -52,6 +52,47 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     }
   }
 
+  Future<void> maybeGet(String? id) async {
+    if (id == null) return;
+
+    final methodName = getMethodName();
+    if (state.checkAndAssignOperation(methodName)) return;
+
+    try {
+      emit(state.toLoading());
+
+      final local = state.orderHistories?.cast<Order?>().firstWhere(
+        (v) => v?.id == id,
+        orElse: () => null,
+      );
+
+      if (local != null) {
+        state.unAssignOperation(methodName);
+        emit(state.toSuccess(selectedOrder: local));
+        return;
+      }
+
+      // Fetch from API
+      final res = await _orderRepository.get(id);
+
+      state.unAssignOperation(methodName);
+      emit(
+        state.toSuccess(
+          selectedOrder: res.data,
+          message: res.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      state.unAssignOperation(methodName);
+      logger.e(
+        '[UserRideCubit] - Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
   Future<void> estimate(Place pickup, Place dropoff) async {
     try {
       final methodName = getMethodName();

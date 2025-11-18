@@ -10,6 +10,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     this.placeOrderResult,
     this.driverCoordinate,
     this.orderHistories,
+    this.selectedOrder,
     this.wsPaymentEnvelope,
     this.wsPlaceOrderEnvelope,
     this.wsOrderEnvelope,
@@ -22,6 +23,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   final PlaceOrderResponse? placeOrderResult;
   final Coordinate? driverCoordinate;
   final List<Order>? orderHistories;
+  final Order? selectedOrder;
 
   final WSPaymentEnvelope? wsPaymentEnvelope;
   final WSPlaceOrderEnvelope? wsPlaceOrderEnvelope;
@@ -50,6 +52,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
     WSOrderEnvelope? wsOrderEnvelope,
     List<Order>? orderHistories,
+    Order? selectedOrder,
     String? message,
   }) => copyWith(
     state: CubitState.success,
@@ -60,6 +63,7 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
     wsPlaceOrderEnvelope: wsPlaceOrderEnvelope ?? this.wsPlaceOrderEnvelope,
     wsOrderEnvelope: wsOrderEnvelope ?? this.wsOrderEnvelope,
     orderHistories: orderHistories ?? this.orderHistories,
+    selectedOrder: selectedOrder ?? this.selectedOrder,
     message: message,
     error: null,
   );
