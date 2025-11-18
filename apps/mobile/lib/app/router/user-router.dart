@@ -143,7 +143,10 @@ final userRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.userHistory.name,
           path: Routes.userHistory.path,
-          builder: (context, state) => const UserHistoryScreen(),
+          builder: (context, state) => BlocProvider.value(
+            value: BlocProvider.of<UserOrderCubit>(context)..list(),
+            child: const UserHistoryScreen(),
+          ),
         ),
       ],
     ),
