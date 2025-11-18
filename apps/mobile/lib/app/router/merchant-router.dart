@@ -67,6 +67,11 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => const MerchantMenuDetailScreen(),
         ),
         GoRoute(
+          name: Routes.merchantCreateMenu.name,
+          path: Routes.merchantCreateMenu.path,
+          builder: (context, state) => const MerchantCreateMenuScreen(),
+        ),
+        GoRoute(
           name: Routes.merchantEditMenu.name,
           path: Routes.merchantEditMenu.path,
           builder: (context, state) => const MerchantEditMenuScreen(),

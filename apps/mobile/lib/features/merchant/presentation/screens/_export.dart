@@ -1,5 +1,6 @@
 export 'merchant_change_password.dart';
 export 'merchant_commission_report_detail.dart';
+export 'merchant_create_menu.dart';
 export 'merchant_edit_menu_screen.dart';
 export 'merchant_edit_profile.dart';
 export 'merchant_home_screen.dart';

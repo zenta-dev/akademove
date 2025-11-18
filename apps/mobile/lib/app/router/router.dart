@@ -61,6 +61,7 @@ enum Routes {
   merchantCommissionReportDetail('/merchant/commission/report/detail'),
   merchantOrder('/merchant/order'),
   merchantOrderDetail('/merchant/order/detail'),
+  merchantCreateMenu('/merchant/create/menu'),
   merchantEditMenu('/merchant/edit/menu'),
   merchantMenu('/merchant/menu'),
   merchantMenuDetail('/merchant/menu/detail'),
