@@ -43,6 +43,7 @@ enum Routes {
   userHistory('/user/history'),
 
   userProfile('/user/profile'),
+  userDetailProfile('/user/profile/detail'),
   userEditProfile('/user/profile/edit'),
   userChangePassword('/user/profile/change-password'),
 

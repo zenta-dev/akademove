@@ -155,6 +155,11 @@ final userRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => const UserProfileScreen(),
         ),
         GoRoute(
+          name: Routes.userDetailProfile.name,
+          path: Routes.userDetailProfile.path,
+          builder: (context, state) => const UserDetailProfileScreen(),
+        ),
+        GoRoute(
           name: Routes.userEditProfile.name,
           path: Routes.userEditProfile.path,
           builder: (context, state) => BlocProvider(
