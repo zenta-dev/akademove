@@ -56,7 +56,8 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () =>
+                      context.pushNamed(Routes.merchantCreateMenu.name),
                   icon: const Icon(LucideIcons.plus, size: 18),
                   variance: ButtonVariance.primary,
                 ),
