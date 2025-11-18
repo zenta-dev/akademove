@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/pagination_result.dart';
 import 'package:api_client/src/model/sign_up_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -21,6 +22,7 @@ class AuthSignUpUser201Response {
   const AuthSignUpUser201Response({
     required this.message,
     required this.data,
+    this.pagination,
     this.totalPages,
   });
 
@@ -29,6 +31,9 @@ class AuthSignUpUser201Response {
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final SignUpResponse data;
+
+  @JsonKey(name: r'pagination', required: false, includeIfNull: false)
+  final PaginationResult? pagination;
 
   // minimum: 0
   // maximum: 9007199254740991
@@ -41,10 +46,15 @@ class AuthSignUpUser201Response {
       other is AuthSignUpUser201Response &&
           other.message == message &&
           other.data == data &&
+          other.pagination == pagination &&
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory AuthSignUpUser201Response.fromJson(Map<String, dynamic> json) =>
       _$AuthSignUpUser201ResponseFromJson(json);

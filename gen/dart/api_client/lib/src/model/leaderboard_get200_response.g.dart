@@ -11,6 +11,8 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
 
   LeaderboardGet200Response data(Leaderboard data);
 
+  LeaderboardGet200Response pagination(PaginationResult? pagination);
+
   LeaderboardGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `LeaderboardGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
   LeaderboardGet200Response call({
     String message,
     Leaderboard data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$LeaderboardGet200ResponseCWProxyImpl
   LeaderboardGet200Response data(Leaderboard data) => this(data: data);
 
   @override
+  LeaderboardGet200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   LeaderboardGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$LeaderboardGet200ResponseCWProxyImpl
   LeaderboardGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return LeaderboardGet200Response(
@@ -64,6 +72,10 @@ class _$LeaderboardGet200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Leaderboard,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -93,6 +105,12 @@ LeaderboardGet200Response _$LeaderboardGet200ResponseFromJson(
       'data',
       (v) => Leaderboard.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -103,5 +121,6 @@ Map<String, dynamic> _$LeaderboardGet200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

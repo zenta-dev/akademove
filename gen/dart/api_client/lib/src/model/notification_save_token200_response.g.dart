@@ -13,6 +13,8 @@ abstract class _$NotificationSaveToken200ResponseCWProxy {
     NotificationSaveToken200ResponseData data,
   );
 
+  NotificationSaveToken200Response pagination(PaginationResult? pagination);
+
   NotificationSaveToken200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSaveToken200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -24,6 +26,7 @@ abstract class _$NotificationSaveToken200ResponseCWProxy {
   NotificationSaveToken200Response call({
     String message,
     NotificationSaveToken200ResponseData data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -45,6 +48,10 @@ class _$NotificationSaveToken200ResponseCWProxyImpl
   ) => this(data: data);
 
   @override
+  NotificationSaveToken200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   NotificationSaveToken200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -58,6 +65,7 @@ class _$NotificationSaveToken200ResponseCWProxyImpl
   NotificationSaveToken200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationSaveToken200Response(
@@ -69,6 +77,10 @@ class _$NotificationSaveToken200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as NotificationSaveToken200ResponseData,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -102,6 +114,12 @@ NotificationSaveToken200Response _$NotificationSaveToken200ResponseFromJson(
             v as Map<String, dynamic>,
           ),
         ),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null
+              ? null
+              : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
@@ -112,5 +130,6 @@ Map<String, dynamic> _$NotificationSaveToken200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

@@ -11,6 +11,8 @@ abstract class _$ConfigurationGet200ResponseCWProxy {
 
   ConfigurationGet200Response data(Configuration data);
 
+  ConfigurationGet200Response pagination(PaginationResult? pagination);
+
   ConfigurationGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$ConfigurationGet200ResponseCWProxy {
   ConfigurationGet200Response call({
     String message,
     Configuration data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$ConfigurationGet200ResponseCWProxyImpl
   ConfigurationGet200Response data(Configuration data) => this(data: data);
 
   @override
+  ConfigurationGet200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   ConfigurationGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$ConfigurationGet200ResponseCWProxyImpl
   ConfigurationGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ConfigurationGet200Response(
@@ -64,6 +72,10 @@ class _$ConfigurationGet200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Configuration,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -93,6 +105,12 @@ ConfigurationGet200Response _$ConfigurationGet200ResponseFromJson(
       'data',
       (v) => Configuration.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -103,5 +121,6 @@ Map<String, dynamic> _$ConfigurationGet200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

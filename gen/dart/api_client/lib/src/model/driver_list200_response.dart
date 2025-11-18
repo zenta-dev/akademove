@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/pagination_result.dart';
 import 'package:api_client/src/model/driver.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -21,6 +22,7 @@ class DriverList200Response {
   const DriverList200Response({
     required this.message,
     required this.data,
+    this.pagination,
     this.totalPages,
   });
 
@@ -29,6 +31,9 @@ class DriverList200Response {
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final List<Driver> data;
+
+  @JsonKey(name: r'pagination', required: false, includeIfNull: false)
+  final PaginationResult? pagination;
 
   // minimum: 0
   // maximum: 9007199254740991
@@ -41,10 +46,15 @@ class DriverList200Response {
       other is DriverList200Response &&
           other.message == message &&
           other.data == data &&
+          other.pagination == pagination &&
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory DriverList200Response.fromJson(Map<String, dynamic> json) =>
       _$DriverList200ResponseFromJson(json);

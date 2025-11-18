@@ -119,7 +119,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderList**
-> OrderList200Response orderList(cursor, limit, page, query, sortBy, order, statuses)
+> OrderList200Response orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses)
 
 
 
@@ -130,14 +130,16 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getOrderApi();
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 final Object statuses = ; // Object | 
 
 try {
-    final response = api.orderList(cursor, limit, page, query, sortBy, order, statuses);
+    final response = api.orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderList: $e\n');
@@ -150,10 +152,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **statuses** | [**Object**](.md)|  | [optional] 
 
 ### Return type

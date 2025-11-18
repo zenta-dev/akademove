@@ -11,6 +11,8 @@ abstract class _$CouponList200ResponseCWProxy {
 
   CouponList200Response data(List<Coupon> data);
 
+  CouponList200Response pagination(PaginationResult? pagination);
+
   CouponList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$CouponList200ResponseCWProxy {
   CouponList200Response call({
     String message,
     List<Coupon> data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$CouponList200ResponseCWProxyImpl
   CouponList200Response data(List<Coupon> data) => this(data: data);
 
   @override
+  CouponList200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   CouponList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$CouponList200ResponseCWProxyImpl
   CouponList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return CouponList200Response(
@@ -64,6 +72,10 @@ class _$CouponList200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<Coupon>,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -95,6 +107,12 @@ CouponList200Response _$CouponList200ResponseFromJson(
           .map((e) => Coupon.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -105,5 +123,6 @@ Map<String, dynamic> _$CouponList200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

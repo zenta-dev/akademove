@@ -13,6 +13,10 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
     NotificationSubscribeToTopic200ResponseData data,
   );
 
+  NotificationSubscribeToTopic200Response pagination(
+    PaginationResult? pagination,
+  );
+
   NotificationSubscribeToTopic200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSubscribeToTopic200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -24,6 +28,7 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
   NotificationSubscribeToTopic200Response call({
     String message,
     NotificationSubscribeToTopic200ResponseData data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -45,6 +50,11 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
   ) => this(data: data);
 
   @override
+  NotificationSubscribeToTopic200Response pagination(
+    PaginationResult? pagination,
+  ) => this(pagination: pagination);
+
+  @override
   NotificationSubscribeToTopic200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -58,6 +68,7 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
   NotificationSubscribeToTopic200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationSubscribeToTopic200Response(
@@ -69,6 +80,10 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as NotificationSubscribeToTopic200ResponseData,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -103,6 +118,12 @@ _$NotificationSubscribeToTopic200ResponseFromJson(Map<String, dynamic> json) =>
             v as Map<String, dynamic>,
           ),
         ),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null
+              ? null
+              : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
@@ -113,5 +134,6 @@ Map<String, dynamic> _$NotificationSubscribeToTopic200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

@@ -11,6 +11,8 @@ abstract class _$OrderList200ResponseCWProxy {
 
   OrderList200Response data(List<Order> data);
 
+  OrderList200Response pagination(PaginationResult? pagination);
+
   OrderList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$OrderList200ResponseCWProxy {
   OrderList200Response call({
     String message,
     List<Order> data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$OrderList200ResponseCWProxyImpl
   OrderList200Response data(List<Order> data) => this(data: data);
 
   @override
+  OrderList200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   OrderList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$OrderList200ResponseCWProxyImpl
   OrderList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderList200Response(
@@ -64,6 +72,10 @@ class _$OrderList200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<Order>,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -95,6 +107,12 @@ OrderList200Response _$OrderList200ResponseFromJson(
           .map((e) => Order.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -105,5 +123,6 @@ Map<String, dynamic> _$OrderList200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<UserAdminList200Response> userAdminList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<UserAdminList200Response> userAdminList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test userAdminList', () async {
       // TODO
     });

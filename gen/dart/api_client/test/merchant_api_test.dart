@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test merchantList', () async {
       // TODO
     });
@@ -31,7 +31,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantMenuList200Response> merchantMenuList(String merchantId, { String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<MerchantMenuList200Response> merchantMenuList(String merchantId, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test merchantMenuList', () async {
       // TODO
     });
@@ -46,7 +46,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantPopulars({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<MerchantPopulars200Response> merchantPopulars({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test merchantPopulars', () async {
       // TODO
     });

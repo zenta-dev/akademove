@@ -11,6 +11,8 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
 
   DriverScheduleList200Response data(List<DriverSchedule> data);
 
+  DriverScheduleList200Response pagination(PaginationResult? pagination);
+
   DriverScheduleList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
   DriverScheduleList200Response call({
     String message,
     List<DriverSchedule> data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -42,6 +45,10 @@ class _$DriverScheduleList200ResponseCWProxyImpl
       this(data: data);
 
   @override
+  DriverScheduleList200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   DriverScheduleList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -55,6 +62,7 @@ class _$DriverScheduleList200ResponseCWProxyImpl
   DriverScheduleList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleList200Response(
@@ -66,6 +74,10 @@ class _$DriverScheduleList200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<DriverSchedule>,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -98,6 +110,12 @@ DriverScheduleList200Response _$DriverScheduleList200ResponseFromJson(
           .map((e) => DriverSchedule.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -108,5 +126,6 @@ Map<String, dynamic> _$DriverScheduleList200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

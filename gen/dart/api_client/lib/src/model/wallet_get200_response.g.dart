@@ -11,6 +11,8 @@ abstract class _$WalletGet200ResponseCWProxy {
 
   WalletGet200Response data(Wallet data);
 
+  WalletGet200Response pagination(PaginationResult? pagination);
+
   WalletGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -19,7 +21,12 @@ abstract class _$WalletGet200ResponseCWProxy {
   /// ```dart
   /// WalletGet200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  WalletGet200Response call({String message, Wallet data, int? totalPages});
+  WalletGet200Response call({
+    String message,
+    Wallet data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWalletGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWalletGet200Response.copyWith.fieldName(...)`
@@ -36,6 +43,10 @@ class _$WalletGet200ResponseCWProxyImpl
   WalletGet200Response data(Wallet data) => this(data: data);
 
   @override
+  WalletGet200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   WalletGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -49,6 +60,7 @@ class _$WalletGet200ResponseCWProxyImpl
   WalletGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return WalletGet200Response(
@@ -60,6 +72,10 @@ class _$WalletGet200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Wallet,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -89,6 +105,12 @@ WalletGet200Response _$WalletGet200ResponseFromJson(
       'data',
       (v) => Wallet.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -99,5 +121,6 @@ Map<String, dynamic> _$WalletGet200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

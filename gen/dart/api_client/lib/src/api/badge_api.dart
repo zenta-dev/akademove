@@ -16,6 +16,8 @@ import 'package:api_client/src/model/badge_user_create200_response.dart';
 import 'package:api_client/src/model/badge_user_create_request.dart';
 import 'package:api_client/src/model/badge_user_list200_response.dart';
 import 'package:api_client/src/model/badge_user_update_request.dart';
+import 'package:api_client/src/model/pagination_mode.dart';
+import 'package:api_client/src/model/pagination_order.dart';
 
 class BadgeApi {
   final Dio _dio;
@@ -253,10 +255,12 @@ class BadgeApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -269,10 +273,12 @@ class BadgeApi {
   Future<Response<BadgeList200Response>> badgeList({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -296,10 +302,12 @@ class BadgeApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(
@@ -756,10 +764,12 @@ class BadgeApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -772,10 +782,12 @@ class BadgeApi {
   Future<Response<BadgeUserList200Response>> badgeUserList({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -799,10 +811,12 @@ class BadgeApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(

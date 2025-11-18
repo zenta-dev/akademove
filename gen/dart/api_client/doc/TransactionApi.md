@@ -55,7 +55,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **transactionList**
-> TransactionList200Response transactionList(cursor, limit, page, query, sortBy, order)
+> TransactionList200Response transactionList(cursor, limit, direction, page, query, sortBy, order, mode)
 
 
 
@@ -66,13 +66,15 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getTransactionApi();
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 
 try {
-    final response = api.transactionList(cursor, limit, page, query, sortBy, order);
+    final response = api.transactionList(cursor, limit, direction, page, query, sortBy, order, mode);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling TransactionApi->transactionList: $e\n');
@@ -85,10 +87,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
 
 ### Return type
 

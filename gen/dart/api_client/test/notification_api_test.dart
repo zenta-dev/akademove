@@ -6,7 +6,7 @@ void main() {
   final instance = ApiClient().getNotificationApi();
 
   group(NotificationApi, () {
-    //Future<NotificationList200Response> notificationList(String read, { String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<NotificationList200Response> notificationList(String read, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test notificationList', () async {
       // TODO
     });

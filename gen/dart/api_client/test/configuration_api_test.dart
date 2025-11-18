@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<ConfigurationList200Response> configurationList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<ConfigurationList200Response> configurationList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test configurationList', () async {
       // TODO
     });

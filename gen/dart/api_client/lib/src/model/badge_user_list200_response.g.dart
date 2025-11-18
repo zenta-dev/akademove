@@ -11,6 +11,8 @@ abstract class _$BadgeUserList200ResponseCWProxy {
 
   BadgeUserList200Response data(List<UserBadge> data);
 
+  BadgeUserList200Response pagination(PaginationResult? pagination);
+
   BadgeUserList200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$BadgeUserList200ResponseCWProxy {
   BadgeUserList200Response call({
     String message,
     List<UserBadge> data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$BadgeUserList200ResponseCWProxyImpl
   BadgeUserList200Response data(List<UserBadge> data) => this(data: data);
 
   @override
+  BadgeUserList200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   BadgeUserList200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$BadgeUserList200ResponseCWProxyImpl
   BadgeUserList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeUserList200Response(
@@ -64,6 +72,10 @@ class _$BadgeUserList200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<UserBadge>,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -95,6 +107,12 @@ BadgeUserList200Response _$BadgeUserList200ResponseFromJson(
           .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -105,5 +123,6 @@ Map<String, dynamic> _$BadgeUserList200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

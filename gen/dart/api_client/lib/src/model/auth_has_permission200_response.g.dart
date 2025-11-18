@@ -11,6 +11,8 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
 
   AuthHasPermission200Response data(bool data);
 
+  AuthHasPermission200Response pagination(PaginationResult? pagination);
+
   AuthHasPermission200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermission200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
   AuthHasPermission200Response call({
     String message,
     bool data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -41,6 +44,10 @@ class _$AuthHasPermission200ResponseCWProxyImpl
   AuthHasPermission200Response data(bool data) => this(data: data);
 
   @override
+  AuthHasPermission200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   AuthHasPermission200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -54,6 +61,7 @@ class _$AuthHasPermission200ResponseCWProxyImpl
   AuthHasPermission200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthHasPermission200Response(
@@ -65,6 +73,10 @@ class _$AuthHasPermission200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as bool,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -92,6 +104,12 @@ AuthHasPermission200Response _$AuthHasPermission200ResponseFromJson(
   final val = AuthHasPermission200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v as bool),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -102,5 +120,6 @@ Map<String, dynamic> _$AuthHasPermission200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

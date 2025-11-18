@@ -11,6 +11,8 @@ abstract class _$BadgeCreate200ResponseCWProxy {
 
   BadgeCreate200Response data(Badge data);
 
+  BadgeCreate200Response pagination(PaginationResult? pagination);
+
   BadgeCreate200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -19,7 +21,12 @@ abstract class _$BadgeCreate200ResponseCWProxy {
   /// ```dart
   /// BadgeCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  BadgeCreate200Response call({String message, Badge data, int? totalPages});
+  BadgeCreate200Response call({
+    String message,
+    Badge data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeCreate200Response.copyWith.fieldName(...)`
@@ -36,6 +43,10 @@ class _$BadgeCreate200ResponseCWProxyImpl
   BadgeCreate200Response data(Badge data) => this(data: data);
 
   @override
+  BadgeCreate200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   BadgeCreate200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -49,6 +60,7 @@ class _$BadgeCreate200ResponseCWProxyImpl
   BadgeCreate200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeCreate200Response(
@@ -60,6 +72,10 @@ class _$BadgeCreate200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Badge,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -89,6 +105,12 @@ BadgeCreate200Response _$BadgeCreate200ResponseFromJson(
       'data',
       (v) => Badge.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -99,5 +121,6 @@ Map<String, dynamic> _$BadgeCreate200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

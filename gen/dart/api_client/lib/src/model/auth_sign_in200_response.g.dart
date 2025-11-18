@@ -11,6 +11,8 @@ abstract class _$AuthSignIn200ResponseCWProxy {
 
   AuthSignIn200Response data(SignInResponse data);
 
+  AuthSignIn200Response pagination(PaginationResult? pagination);
+
   AuthSignIn200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthSignIn200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   AuthSignIn200Response call({
     String message,
     SignInResponse data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$AuthSignIn200ResponseCWProxyImpl
   AuthSignIn200Response data(SignInResponse data) => this(data: data);
 
   @override
+  AuthSignIn200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   AuthSignIn200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$AuthSignIn200ResponseCWProxyImpl
   AuthSignIn200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthSignIn200Response(
@@ -64,6 +72,10 @@ class _$AuthSignIn200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as SignInResponse,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -93,6 +105,12 @@ AuthSignIn200Response _$AuthSignIn200ResponseFromJson(
       'data',
       (v) => SignInResponse.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -103,5 +121,6 @@ Map<String, dynamic> _$AuthSignIn200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

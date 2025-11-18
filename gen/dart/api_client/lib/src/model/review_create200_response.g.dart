@@ -11,6 +11,8 @@ abstract class _$ReviewCreate200ResponseCWProxy {
 
   ReviewCreate200Response data(Review data);
 
+  ReviewCreate200Response pagination(PaginationResult? pagination);
+
   ReviewCreate200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReviewCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -19,7 +21,12 @@ abstract class _$ReviewCreate200ResponseCWProxy {
   /// ```dart
   /// ReviewCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  ReviewCreate200Response call({String message, Review data, int? totalPages});
+  ReviewCreate200Response call({
+    String message,
+    Review data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReviewCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReviewCreate200Response.copyWith.fieldName(...)`
@@ -36,6 +43,10 @@ class _$ReviewCreate200ResponseCWProxyImpl
   ReviewCreate200Response data(Review data) => this(data: data);
 
   @override
+  ReviewCreate200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   ReviewCreate200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -49,6 +60,7 @@ class _$ReviewCreate200ResponseCWProxyImpl
   ReviewCreate200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ReviewCreate200Response(
@@ -60,6 +72,10 @@ class _$ReviewCreate200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Review,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -89,6 +105,12 @@ ReviewCreate200Response _$ReviewCreate200ResponseFromJson(
       'data',
       (v) => Review.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -99,5 +121,6 @@ Map<String, dynamic> _$ReviewCreate200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

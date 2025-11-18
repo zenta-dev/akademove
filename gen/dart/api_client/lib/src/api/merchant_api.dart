@@ -15,6 +15,8 @@ import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
+import 'package:api_client/src/model/pagination_mode.dart';
+import 'package:api_client/src/model/pagination_order.dart';
 
 class MerchantApi {
   final Dio _dio;
@@ -183,10 +185,12 @@ class MerchantApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -199,10 +203,12 @@ class MerchantApi {
   Future<Response<MerchantPopulars200Response>> merchantList({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -226,10 +232,12 @@ class MerchantApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(
@@ -482,10 +490,12 @@ class MerchantApi {
   /// * [merchantId]
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -499,10 +509,12 @@ class MerchantApi {
     required String merchantId,
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -531,10 +543,12 @@ class MerchantApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(
@@ -796,10 +810,12 @@ class MerchantApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -812,10 +828,12 @@ class MerchantApi {
   Future<Response<MerchantPopulars200Response>> merchantPopulars({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -839,10 +857,12 @@ class MerchantApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(

@@ -11,6 +11,8 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
 
   MerchantGetMine200ResponseBody data(Merchant data);
 
+  MerchantGetMine200ResponseBody pagination(PaginationResult? pagination);
+
   MerchantGetMine200ResponseBody totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
   MerchantGetMine200ResponseBody call({
     String message,
     Merchant data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -41,6 +44,10 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
   MerchantGetMine200ResponseBody data(Merchant data) => this(data: data);
 
   @override
+  MerchantGetMine200ResponseBody pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   MerchantGetMine200ResponseBody totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -54,6 +61,7 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
   MerchantGetMine200ResponseBody call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetMine200ResponseBody(
@@ -65,6 +73,10 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Merchant,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -95,6 +107,12 @@ MerchantGetMine200ResponseBody _$MerchantGetMine200ResponseBodyFromJson(
       'data',
       (v) => Merchant.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -105,5 +123,6 @@ Map<String, dynamic> _$MerchantGetMine200ResponseBodyToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

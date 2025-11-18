@@ -11,6 +11,8 @@ abstract class _$WalletGetMonthlySummary200ResponseCWProxy {
 
   WalletGetMonthlySummary200Response data(WalletMonthlySummaryResponse data);
 
+  WalletGetMonthlySummary200Response pagination(PaginationResult? pagination);
+
   WalletGetMonthlySummary200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletGetMonthlySummary200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$WalletGetMonthlySummary200ResponseCWProxy {
   WalletGetMonthlySummary200Response call({
     String message,
     WalletMonthlySummaryResponse data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -42,6 +45,10 @@ class _$WalletGetMonthlySummary200ResponseCWProxyImpl
       this(data: data);
 
   @override
+  WalletGetMonthlySummary200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   WalletGetMonthlySummary200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -55,6 +62,7 @@ class _$WalletGetMonthlySummary200ResponseCWProxyImpl
   WalletGetMonthlySummary200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return WalletGetMonthlySummary200Response(
@@ -66,6 +74,10 @@ class _$WalletGetMonthlySummary200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as WalletMonthlySummaryResponse,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -98,6 +110,12 @@ WalletGetMonthlySummary200Response _$WalletGetMonthlySummary200ResponseFromJson(
       'data',
       (v) => WalletMonthlySummaryResponse.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -108,5 +126,6 @@ Map<String, dynamic> _$WalletGetMonthlySummary200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

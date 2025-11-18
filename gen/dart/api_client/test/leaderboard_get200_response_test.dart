@@ -18,6 +18,11 @@ void main() {
       // TODO
     });
 
+    // PaginationResult pagination
+    test('to test the property `pagination`', () async {
+      // TODO
+    });
+
     // int totalPages
     test('to test the property `totalPages`', () async {
       // TODO

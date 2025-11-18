@@ -11,6 +11,8 @@ abstract class _$OrderGet200ResponseCWProxy {
 
   OrderGet200Response data(Order data);
 
+  OrderGet200Response pagination(PaginationResult? pagination);
+
   OrderGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -19,7 +21,12 @@ abstract class _$OrderGet200ResponseCWProxy {
   /// ```dart
   /// OrderGet200Response(...).copyWith(id: 12, name: "My name")
   /// ````
-  OrderGet200Response call({String message, Order data, int? totalPages});
+  OrderGet200Response call({
+    String message,
+    Order data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderGet200Response.copyWith.fieldName(...)`
@@ -35,6 +42,10 @@ class _$OrderGet200ResponseCWProxyImpl implements _$OrderGet200ResponseCWProxy {
   OrderGet200Response data(Order data) => this(data: data);
 
   @override
+  OrderGet200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   OrderGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -48,6 +59,7 @@ class _$OrderGet200ResponseCWProxyImpl implements _$OrderGet200ResponseCWProxy {
   OrderGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderGet200Response(
@@ -59,6 +71,10 @@ class _$OrderGet200ResponseCWProxyImpl implements _$OrderGet200ResponseCWProxy {
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Order,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -87,6 +103,12 @@ OrderGet200Response _$OrderGet200ResponseFromJson(Map<String, dynamic> json) =>
           'data',
           (v) => Order.fromJson(v as Map<String, dynamic>),
         ),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null
+              ? null
+              : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
@@ -97,5 +119,6 @@ Map<String, dynamic> _$OrderGet200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

@@ -84,6 +84,7 @@ import 'package:api_client/src/model/order_note.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
 import 'package:api_client/src/model/order_summary.dart';
 import 'package:api_client/src/model/order_summary_breakdown.dart';
+import 'package:api_client/src/model/pagination_result.dart';
 import 'package:api_client/src/model/pay_request.dart';
 import 'package:api_client/src/model/payment.dart';
 import 'package:api_client/src/model/phone.dart';
@@ -450,6 +451,11 @@ ReturnType deserialize<ReturnType, BaseType>(
       return OrderSummaryBreakdown.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'OrderType':
+    case 'PaginationMode':
+    case 'PaginationOrder':
+    case 'PaginationResult':
+      return PaginationResult.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'PayRequest':
       return PayRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Payment':

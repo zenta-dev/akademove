@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/pagination_mode.dart';
+import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/transaction_get200_response.dart';
 import 'package:api_client/src/model/transaction_list200_response.dart';
 
@@ -105,10 +107,12 @@ class TransactionApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -121,10 +125,12 @@ class TransactionApi {
   Future<Response<TransactionList200Response>> transactionList({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -148,10 +154,12 @@ class TransactionApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
     };
 
     final _response = await _dio.request<Object>(

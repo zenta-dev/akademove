@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 
 # **notificationList**
-> NotificationList200Response notificationList(read, cursor, limit, page, query, sortBy, order)
+> NotificationList200Response notificationList(read, cursor, limit, direction, page, query, sortBy, order, mode)
 
 
 
@@ -29,13 +29,15 @@ final api = ApiClient().getNotificationApi();
 final String read = read_example; // String | 
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 
 try {
-    final response = api.notificationList(read, cursor, limit, page, query, sortBy, order);
+    final response = api.notificationList(read, cursor, limit, direction, page, query, sortBy, order, mode);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling NotificationApi->notificationList: $e\n');
@@ -49,10 +51,12 @@ Name | Type | Description  | Notes
  **read** | **String**|  | 
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
 
 ### Return type
 

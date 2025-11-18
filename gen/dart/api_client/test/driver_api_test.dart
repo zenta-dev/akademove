@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverList200Response> driverList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<DriverList200Response> driverList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test driverList', () async {
       // TODO
     });
@@ -41,7 +41,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverScheduleList200Response> driverScheduleList(String driverId, { String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<DriverScheduleList200Response> driverScheduleList(String driverId, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test driverScheduleList', () async {
       // TODO
     });

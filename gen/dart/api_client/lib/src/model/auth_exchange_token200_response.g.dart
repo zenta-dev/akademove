@@ -11,6 +11,8 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
 
   AuthExchangeToken200Response data(String data);
 
+  AuthExchangeToken200Response pagination(PaginationResult? pagination);
+
   AuthExchangeToken200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthExchangeToken200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
   AuthExchangeToken200Response call({
     String message,
     String data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -41,6 +44,10 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
   AuthExchangeToken200Response data(String data) => this(data: data);
 
   @override
+  AuthExchangeToken200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   AuthExchangeToken200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -54,6 +61,7 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
   AuthExchangeToken200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthExchangeToken200Response(
@@ -65,6 +73,10 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as String,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -92,6 +104,12 @@ AuthExchangeToken200Response _$AuthExchangeToken200ResponseFromJson(
   final val = AuthExchangeToken200Response(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert('data', (v) => v as String),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -102,5 +120,6 @@ Map<String, dynamic> _$AuthExchangeToken200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

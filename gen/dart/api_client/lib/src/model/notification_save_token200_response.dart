@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/notification_save_token200_response_data.dart';
+import 'package:api_client/src/model/pagination_result.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -21,6 +22,7 @@ class NotificationSaveToken200Response {
   const NotificationSaveToken200Response({
     required this.message,
     required this.data,
+    this.pagination,
     this.totalPages,
   });
 
@@ -29,6 +31,9 @@ class NotificationSaveToken200Response {
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final NotificationSaveToken200ResponseData data;
+
+  @JsonKey(name: r'pagination', required: false, includeIfNull: false)
+  final PaginationResult? pagination;
 
   // minimum: 0
   // maximum: 9007199254740991
@@ -41,10 +46,15 @@ class NotificationSaveToken200Response {
       other is NotificationSaveToken200Response &&
           other.message == message &&
           other.data == data &&
+          other.pagination == pagination &&
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory NotificationSaveToken200Response.fromJson(
     Map<String, dynamic> json,

@@ -11,6 +11,8 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
 
   MerchantPopulars200Response data(List<Merchant> data);
 
+  MerchantPopulars200Response pagination(PaginationResult? pagination);
+
   MerchantPopulars200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantPopulars200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
   MerchantPopulars200Response call({
     String message,
     List<Merchant> data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$MerchantPopulars200ResponseCWProxyImpl
   MerchantPopulars200Response data(List<Merchant> data) => this(data: data);
 
   @override
+  MerchantPopulars200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   MerchantPopulars200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$MerchantPopulars200ResponseCWProxyImpl
   MerchantPopulars200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantPopulars200Response(
@@ -64,6 +72,10 @@ class _$MerchantPopulars200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<Merchant>,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -95,6 +107,12 @@ MerchantPopulars200Response _$MerchantPopulars200ResponseFromJson(
           .map((e) => Merchant.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -105,5 +123,6 @@ Map<String, dynamic> _$MerchantPopulars200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

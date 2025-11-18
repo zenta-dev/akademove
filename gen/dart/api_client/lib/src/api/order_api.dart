@@ -15,6 +15,8 @@ import 'package:api_client/src/model/order_item.dart';
 import 'package:api_client/src/model/order_list200_response.dart';
 import 'package:api_client/src/model/order_place_order200_response.dart';
 import 'package:api_client/src/model/order_type.dart';
+import 'package:api_client/src/model/pagination_mode.dart';
+import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/update_order.dart';
 import 'package:api_client/src/model/user_gender.dart';
@@ -224,10 +226,12 @@ class OrderApi {
   /// Parameters:
   /// * [cursor]
   /// * [limit]
+  /// * [direction]
   /// * [page]
   /// * [query]
   /// * [sortBy]
   /// * [order]
+  /// * [mode]
   /// * [statuses]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
@@ -241,10 +245,12 @@ class OrderApi {
   Future<Response<OrderList200Response>> orderList({
     String? cursor,
     Object? limit,
+    String? direction,
     Object? page,
     String? query,
     String? sortBy,
-    String? order = 'desc',
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
     Object? statuses,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -269,10 +275,12 @@ class OrderApi {
     final _queryParameters = <String, dynamic>{
       if (cursor != null) r'cursor': cursor,
       if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
       if (page != null) r'page': page,
       if (query != null) r'query': query,
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
       if (statuses != null) r'statuses': statuses,
     };
 

@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<ReviewList200Response> reviewList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<ReviewList200Response> reviewList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test reviewList', () async {
       // TODO
     });

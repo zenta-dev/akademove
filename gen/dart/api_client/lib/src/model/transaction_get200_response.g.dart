@@ -11,6 +11,8 @@ abstract class _$TransactionGet200ResponseCWProxy {
 
   TransactionGet200Response data(Transaction data);
 
+  TransactionGet200Response pagination(PaginationResult? pagination);
+
   TransactionGet200Response totalPages(int? totalPages);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TransactionGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -22,6 +24,7 @@ abstract class _$TransactionGet200ResponseCWProxy {
   TransactionGet200Response call({
     String message,
     Transaction data,
+    PaginationResult? pagination,
     int? totalPages,
   });
 }
@@ -40,6 +43,10 @@ class _$TransactionGet200ResponseCWProxyImpl
   TransactionGet200Response data(Transaction data) => this(data: data);
 
   @override
+  TransactionGet200Response pagination(PaginationResult? pagination) =>
+      this(pagination: pagination);
+
+  @override
   TransactionGet200Response totalPages(int? totalPages) =>
       this(totalPages: totalPages);
 
@@ -53,6 +60,7 @@ class _$TransactionGet200ResponseCWProxyImpl
   TransactionGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
+    Object? pagination = const $CopyWithPlaceholder(),
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return TransactionGet200Response(
@@ -64,6 +72,10 @@ class _$TransactionGet200ResponseCWProxyImpl
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Transaction,
+      pagination: pagination == const $CopyWithPlaceholder()
+          ? _value.pagination
+          // ignore: cast_nullable_to_non_nullable
+          : pagination as PaginationResult?,
       totalPages: totalPages == const $CopyWithPlaceholder()
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
@@ -93,6 +105,12 @@ TransactionGet200Response _$TransactionGet200ResponseFromJson(
       'data',
       (v) => Transaction.fromJson(v as Map<String, dynamic>),
     ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
     totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
   );
   return val;
@@ -103,5 +121,6 @@ Map<String, dynamic> _$TransactionGet200ResponseToJson(
 ) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

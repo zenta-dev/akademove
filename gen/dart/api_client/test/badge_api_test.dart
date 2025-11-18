@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<BadgeList200Response> badgeList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<BadgeList200Response> badgeList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test badgeList', () async {
       // TODO
     });
@@ -41,7 +41,7 @@ void main() {
       // TODO
     });
 
-    //Future<BadgeUserList200Response> badgeUserList({ String cursor, Object limit, Object page, String query, String sortBy, String order }) async
+    //Future<BadgeUserList200Response> badgeUserList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test badgeUserList', () async {
       // TODO
     });

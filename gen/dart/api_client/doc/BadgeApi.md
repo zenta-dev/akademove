@@ -134,7 +134,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **badgeList**
-> BadgeList200Response badgeList(cursor, limit, page, query, sortBy, order)
+> BadgeList200Response badgeList(cursor, limit, direction, page, query, sortBy, order, mode)
 
 
 
@@ -145,13 +145,15 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getBadgeApi();
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 
 try {
-    final response = api.badgeList(cursor, limit, page, query, sortBy, order);
+    final response = api.badgeList(cursor, limit, direction, page, query, sortBy, order, mode);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling BadgeApi->badgeList: $e\n');
@@ -164,10 +166,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
 
 ### Return type
 
@@ -381,7 +385,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **badgeUserList**
-> BadgeUserList200Response badgeUserList(cursor, limit, page, query, sortBy, order)
+> BadgeUserList200Response badgeUserList(cursor, limit, direction, page, query, sortBy, order, mode)
 
 
 
@@ -392,13 +396,15 @@ import 'package:api_client/api.dart';
 final api = ApiClient().getBadgeApi();
 final String cursor = cursor_example; // String | 
 final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final String order = order_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
 
 try {
-    final response = api.badgeUserList(cursor, limit, page, query, sortBy, order);
+    final response = api.badgeUserList(cursor, limit, direction, page, query, sortBy, order, mode);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling BadgeApi->badgeUserList: $e\n');
@@ -411,10 +417,12 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **cursor** | **String**|  | [optional] 
  **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | **String**|  | [optional] [default to 'desc']
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
 
 ### Return type
 
