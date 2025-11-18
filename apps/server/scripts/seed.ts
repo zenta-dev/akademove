@@ -68,7 +68,7 @@ function generateId(): string {
 async function seedUser() {
 	const pw = new PasswordManager();
 
-	const FIXED_USERS: Omit<InsertUser, "confirmPassword" | "badges">[] = [
+	const FIXED_USERS: Omit<InsertUser, "confirmPassword" | "userBadges">[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
