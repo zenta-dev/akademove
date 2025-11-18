@@ -86,7 +86,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   context.pop();
                 });
               },
-              failure: (error, message) {
+              failure: (error) {
                 context.showMyToast(error.message, type: ToastType.failed);
               },
               orElse: noop,

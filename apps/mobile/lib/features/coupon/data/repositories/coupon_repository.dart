@@ -27,7 +27,8 @@ class CouponRepository extends BaseRepository {
         page: query.page,
         query: query.query?.trim(),
         sortBy: query.sortBy?.trim(),
-        order: query.orderBy.name,
+        order: query.orderBy,
+        mode: PaginationMode.cursor,
       );
 
       final data =
