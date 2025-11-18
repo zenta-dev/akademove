@@ -4,14 +4,20 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DefaultAppBar extends StatelessWidget {
-  const DefaultAppBar({required this.title, this.subtitle, super.key});
+  const DefaultAppBar({
+    required this.title,
+    this.subtitle,
+    this.padding,
+    super.key,
+  });
   final String title;
   final String? subtitle;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      padding: EdgeInsets.all(4.dg),
+      padding: padding ?? EdgeInsets.all(4.dg),
       title: Text(
         title,
         style: context.typography.h4.copyWith(fontSize: 18.sp),
