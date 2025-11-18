@@ -44,3 +44,13 @@ extension OrderStatusExt on OrderStatus {
     };
   }
 }
+
+extension OrderTypeExt on OrderType {
+  String localizedName(BuildContext context) {
+    return switch (this) {
+      OrderType.ride => 'Ride Hailing',
+      OrderType.delivery => 'Package Delivery',
+      OrderType.food => 'Food Delivery',
+    };
+  }
+}
