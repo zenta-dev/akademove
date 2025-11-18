@@ -8,41 +8,29 @@ import {
 	PlaceOrderSchema,
 	UpdateOrderSchema,
 } from "@repo/schema/order";
-import {
-	CursorPaginationQuerySchema,
-	OffsetPaginationQuerySchema,
-} from "@repo/schema/pagination";
+import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-const UnifiedPaginationQuerySchema = z
-	.object({
-		...CursorPaginationQuerySchema.shape,
-		...OffsetPaginationQuerySchema.shape,
-		query: z.string().optional(),
-		sortBy: z.string().optional(),
-		order: z.enum(["asc", "desc"]).optional().default("desc"),
-		statuses: z
-			.preprocess((val) => {
-				console.log("STATUSES => ", val);
-				if (val === undefined) return undefined;
+const _UnifiedPaginationQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
+	statuses: z
+		.preprocess((val) => {
+			console.log("STATUSES => ", val);
+			if (val === undefined) return undefined;
 
-				if (Array.isArray(val)) return val;
+			if (Array.isArray(val)) return val;
 
-				if (typeof val === "string") {
-					try {
-						const parsed = JSON.parse(val);
-						if (Array.isArray(parsed)) return parsed;
-					} catch (_) {}
-					return [val];
-				}
-				return val;
-			}, z.array(OrderStatusSchema).optional())
-			.optional(),
-	})
-	.refine((data) => !(data.cursor && data.page), {
-		message: "Cannot use both cursor and page at the same time.",
-	});
+			if (typeof val === "string") {
+				try {
+					const parsed = JSON.parse(val);
+					if (Array.isArray(parsed)) return parsed;
+				} catch (_) {}
+				return [val];
+			}
+			return val;
+		}, z.array(OrderStatusSchema).optional())
+		.optional(),
+});
 
 export const OrderSortBySchema = z.enum(["id"]);
 
@@ -55,7 +43,7 @@ export const OrderSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(z.object({ query: _UnifiedPaginationQuerySchema }))
 		.output(
 			createSuccesSchema(
 				z.array(OrderSchema),

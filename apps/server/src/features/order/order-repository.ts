@@ -21,7 +21,7 @@ import {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
-import { count, eq, gt, ilike, inArray, or, type SQL } from "drizzle-orm";
+import { count, eq, gt, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
@@ -29,6 +29,7 @@ import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
 	OrderByOperation,
+	UnifiedListResult,
 	WithTx,
 	WithUserId,
 } from "@/core/interface";
@@ -149,20 +150,21 @@ export class OrderRepository extends BaseRepository {
 			role: UserRole;
 		},
 		opts?: WithTx,
-	): Promise<ListResult<Order>> {
+	): Promise<UnifiedListResult<Order>> {
+		const {
+			cursor,
+			page = 1,
+			limit = 10,
+			query: search,
+			sortBy,
+			order = "asc",
+			statuses = [],
+			id,
+			role,
+			mode = "offset",
+		} = query ?? {};
 		try {
 			const tx = opts?.tx ?? this.db;
-			const {
-				cursor,
-				page,
-				limit = 10,
-				query: search,
-				sortBy,
-				order = "asc",
-				statuses = [],
-				id,
-				role,
-			} = query ?? {};
 
 			const orderBy = (
 				f: typeof tables.order._.columns,
@@ -233,9 +235,8 @@ export class OrderRepository extends BaseRepository {
 				if (join) clauses.push(join);
 			}
 
-			if (cursor) {
-				clauses.push(gt(tables.order.updatedAt, new Date(cursor)));
-
+			if (mode === "cursor") {
+				if (cursor) clauses.push(lt(tables.order.id, cursor));
 				const res = await tx.query.order.findMany({
 					with: withx,
 					where: (_f, op) => op.and(...clauses),
@@ -243,43 +244,37 @@ export class OrderRepository extends BaseRepository {
 					limit: limit + 1,
 				});
 
-				const rows = res.map(OrderRepository.composeEntity);
-				return { rows };
+				const mapped = res.map(OrderRepository.composeEntity);
+				const hasMore = mapped.length > limit;
+				const rows = hasMore ? mapped.slice(0, limit) : mapped;
+				const nextCursor = hasMore ? mapped[mapped.length - 1].id : undefined;
+
+				return { rows, pagination: { hasMore, nextCursor } };
 			}
 
-			if (page) {
-				const offset = (page - 1) * limit;
+			const offset = (page - 1) * limit;
 
-				const result = await tx.query.order.findMany({
-					with: withx,
-					where: (_f, op) => op.and(...clauses),
-					orderBy,
-					offset,
-					limit,
-				});
-
-				const rows = result.map(OrderRepository.composeEntity);
-
-				const totalCount = search
-					? await this.#getQueryCount(search, opts)
-					: await this.getTotalRow();
-
-				const totalPages = Math.ceil(totalCount / limit);
-
-				return { rows, totalPages };
-			}
-
-			const res = await tx.query.order.findMany({
+			const result = await tx.query.order.findMany({
 				with: withx,
+				where: (_f, op) => op.and(...clauses),
 				orderBy,
+				offset,
 				limit,
 			});
 
-			const rows = res.map(OrderRepository.composeEntity);
-			return { rows };
+			const rows = result.map(OrderRepository.composeEntity);
+
+			const totalCount = search
+				? await this.#getQueryCount(search, opts)
+				: await this.getTotalRow();
+
+			const totalPages = Math.ceil(totalCount / limit);
+
+			return { rows, pagination: { totalPages } };
 		} catch (error) {
 			this.handleError(error, "list");
-			return { rows: [] };
+			const res = { rows: [] };
+			return res;
 		}
 	}
 	async #getPricingConfiguration(
@@ -489,9 +484,12 @@ export class OrderRepository extends BaseRepository {
 			const order = await this.#getFromDB(orderRow.id, opts);
 			if (!order) throw new RepositoryError("Failed to retrieve placed order");
 
-			await this.setCache(order.id, order, {
-				expirationTtl: CACHE_TTLS["1h"],
-			});
+			await Promise.allSettled([
+				this.setCache(order.id, order, {
+					expirationTtl: CACHE_TTLS["1h"],
+				}),
+				this.deleteCache("count"),
+			]);
 
 			return { order, payment, transaction };
 		} catch (err) {

@@ -12,6 +12,8 @@ export const OrderHandler = priv.router({
 			let id: string | undefined;
 			const role = context.user.role;
 
+			console.log("QUERY => ", query);
+
 			if (role === "merchant") {
 				const mine = await context.repo.merchant.main.getByUserId(
 					context.user.id,
@@ -29,7 +31,7 @@ export const OrderHandler = priv.router({
 				id = context.user.id;
 			}
 
-			const { rows, totalPages } = await context.repo.order.list({
+			const { rows, pagination } = await context.repo.order.list({
 				...query,
 				id,
 				role,
@@ -39,7 +41,8 @@ export const OrderHandler = priv.router({
 				body: {
 					message: "Successfully retrieved orders data",
 					data: rows,
-					totalPages,
+					totalPages: pagination?.totalPages,
+					pagination,
 				},
 			};
 		}),
