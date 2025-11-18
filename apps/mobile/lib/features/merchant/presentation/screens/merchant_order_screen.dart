@@ -168,25 +168,10 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   }) => Container(
     width: double.infinity,
     padding: EdgeInsets.only(top: 16.dg),
-    child: Alert.destructive(
-      title: Text(
-        'Oops...',
-        style: context.typography.small.copyWith(
-          fontSize: 16.sp,
-        ),
-      ),
-      content: Text(
-        message,
-        style: context.typography.small.copyWith(
-          fontSize: 14.sp,
-        ),
-      ),
-      leading: const Icon(LucideIcons.info),
-      trailing: IconButton.ghost(
-        icon: const Icon(LucideIcons.refreshCcw),
-        onPressed: () => context.read<MerchantOrderCubit>().getMine(
-          statuses: statuses,
-        ),
+    child: OopsAlertWidget(
+      message: message,
+      onRefresh: () => context.read<MerchantOrderCubit>().getMine(
+        statuses: statuses,
       ),
     ),
   );
@@ -215,8 +200,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
               ),
             );
           },
-          failure: (error, message) => _buildFail(
-            message: message ?? 'An unexpected error occurred',
+          failure: (error) => _buildFail(
+            message: error.message ?? 'An unexpected error occurred',
             statuses: statuses,
           ),
           orElse: () => ListView.separated(

@@ -160,23 +160,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 ),
               ),
             ),
-            failure: (error, message) => Container(
+            failure: (error) => Container(
               width: double.infinity,
               padding: EdgeInsets.only(top: 16.dg),
-              child: Alert.destructive(
-                title: Text(
-                  'Oops...',
-                  style: context.typography.small.copyWith(
-                    fontSize: 16.sp,
-                  ),
-                ),
-                content: Text(
-                  message ?? 'An unexpected error occurred',
-                  style: context.typography.small.copyWith(
-                    fontSize: 14.sp,
-                  ),
-                ),
-                leading: const Icon(LucideIcons.info),
+              child: OopsAlertWidget(
+                message: error.message ?? 'An unexpected error occurred',
+                onRefresh: () => context.read<UserHomeCubit>().getPopulars(),
               ),
             ),
             orElse: () => ListView.separated(
