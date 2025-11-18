@@ -35,6 +35,12 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     _$driverCoordinate,
     opt: true,
   );
+  static List<Order>? _$orderHistories(UserOrderState v) => v.orderHistories;
+  static const Field<UserOrderState, List<Order>> _f$orderHistories = Field(
+    'orderHistories',
+    _$orderHistories,
+    opt: true,
+  );
   static WSPaymentEnvelope? _$wsPaymentEnvelope(UserOrderState v) =>
       v.wsPaymentEnvelope;
   static const Field<UserOrderState, WSPaymentEnvelope> _f$wsPaymentEnvelope =
@@ -76,6 +82,7 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     #estimateOrder: _f$estimateOrder,
     #placeOrderResult: _f$placeOrderResult,
     #driverCoordinate: _f$driverCoordinate,
+    #orderHistories: _f$orderHistories,
     #wsPaymentEnvelope: _f$wsPaymentEnvelope,
     #wsPlaceOrderEnvelope: _f$wsPlaceOrderEnvelope,
     #wsOrderEnvelope: _f$wsOrderEnvelope,
@@ -89,6 +96,7 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
       estimateOrder: data.dec(_f$estimateOrder),
       placeOrderResult: data.dec(_f$placeOrderResult),
       driverCoordinate: data.dec(_f$driverCoordinate),
+      orderHistories: data.dec(_f$orderHistories),
       wsPaymentEnvelope: data.dec(_f$wsPaymentEnvelope),
       wsPlaceOrderEnvelope: data.dec(_f$wsPlaceOrderEnvelope),
       wsOrderEnvelope: data.dec(_f$wsOrderEnvelope),
@@ -140,10 +148,12 @@ extension UserOrderStateValueCopy<$R, $Out>
 
 abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>? get orderHistories;
   $R call({
     EstimateOrderResult? estimateOrder,
     PlaceOrderResponse? placeOrderResult,
     Coordinate? driverCoordinate,
+    List<Order>? orderHistories,
     WSPaymentEnvelope? wsPaymentEnvelope,
     WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
     WSOrderEnvelope? wsOrderEnvelope,
@@ -165,10 +175,20 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<UserOrderState> $mapper =
       UserOrderStateMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>?
+  get orderHistories => $value.orderHistories != null
+      ? ListCopyWith(
+          $value.orderHistories!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(orderHistories: v),
+        )
+      : null;
+  @override
   $R call({
     Object? estimateOrder = $none,
     Object? placeOrderResult = $none,
     Object? driverCoordinate = $none,
+    Object? orderHistories = $none,
     Object? wsPaymentEnvelope = $none,
     Object? wsPlaceOrderEnvelope = $none,
     Object? wsOrderEnvelope = $none,
@@ -180,6 +200,7 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
       if (estimateOrder != $none) #estimateOrder: estimateOrder,
       if (placeOrderResult != $none) #placeOrderResult: placeOrderResult,
       if (driverCoordinate != $none) #driverCoordinate: driverCoordinate,
+      if (orderHistories != $none) #orderHistories: orderHistories,
       if (wsPaymentEnvelope != $none) #wsPaymentEnvelope: wsPaymentEnvelope,
       if (wsPlaceOrderEnvelope != $none)
         #wsPlaceOrderEnvelope: wsPlaceOrderEnvelope,
@@ -194,6 +215,7 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
     estimateOrder: data.get(#estimateOrder, or: $value.estimateOrder),
     placeOrderResult: data.get(#placeOrderResult, or: $value.placeOrderResult),
     driverCoordinate: data.get(#driverCoordinate, or: $value.driverCoordinate),
+    orderHistories: data.get(#orderHistories, or: $value.orderHistories),
     wsPaymentEnvelope: data.get(
       #wsPaymentEnvelope,
       or: $value.wsPaymentEnvelope,

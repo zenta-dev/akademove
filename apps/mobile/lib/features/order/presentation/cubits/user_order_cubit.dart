@@ -30,6 +30,28 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     return super.close();
   }
 
+  Future<void> list() async {
+    try {
+      final methodName = getMethodName();
+      if (state.checkAndAssignOperation(methodName)) return;
+      emit(state.toLoading());
+
+      final res = await _orderRepository.list(
+        const ListOrderQuery(statuses: OrderStatus.values),
+      );
+
+      state.unAssignOperation(methodName);
+      emit(state.toSuccess(orderHistories: res.data, message: res.message));
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserRideCubit] - Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
   Future<void> estimate(Place pickup, Place dropoff) async {
     try {
       final methodName = getMethodName();
