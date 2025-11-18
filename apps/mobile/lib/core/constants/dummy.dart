@@ -91,5 +91,5 @@ const dummyUser = User(
   phone: dummyPhone,
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
-  badges: [],
+  userBadges: [],
 );
