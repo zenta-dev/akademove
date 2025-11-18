@@ -76,8 +76,16 @@ class $AssetsImagesBgGen {
   /// File path: assets/images/bg/sign-in.svg
   SvgGenImage get signIn => const SvgGenImage('assets/images/bg/sign-in.svg');
 
+  /// File path: assets/images/bg/static-gradient-dark.png
+  AssetGenImage get staticGradientDark =>
+      const AssetGenImage('assets/images/bg/static-gradient-dark.png');
+
+  /// File path: assets/images/bg/static-gradient-light.png
+  AssetGenImage get staticGradientLight =>
+      const AssetGenImage('assets/images/bg/static-gradient-light.png');
+
   /// List of all assets
-  List<SvgGenImage> get values => [signIn];
+  List<dynamic> get values => [signIn, staticGradientDark, staticGradientLight];
 }
 
 class $AssetsImagesCharacterGen {
@@ -100,6 +108,10 @@ class $AssetsImagesCharacterGen {
 
 class $AssetsImagesHeroGen {
   const $AssetsImagesHeroGen();
+
+  /// File path: assets/images/hero/order-ride.png
+  AssetGenImage get orderRide =>
+      const AssetGenImage('assets/images/hero/order-ride.png');
 
   /// File path: assets/images/hero/sign-up-driver-1.png
   AssetGenImage get signUpDriver1 =>
@@ -139,6 +151,7 @@ class $AssetsImagesHeroGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    orderRide,
     signUpDriver1,
     signUpDriver2,
     signUpDriver3,
