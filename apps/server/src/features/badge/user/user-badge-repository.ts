@@ -14,24 +14,43 @@ import { RepositoryError } from "@/core/error";
 import type { ListResult, OrderByOperation, WithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { UserBadgeDatabase } from "@/core/tables/badge";
+import type { StorageService } from "@/core/services/storage";
+import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
+import { BadgeRepository } from "../main/badge-main-repository";
 
 export class UserBadgeRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	readonly #storage: StorageService;
+
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		storage: StorageService,
+	) {
 		super("userBadge", kv, db);
+		this.#storage = storage;
 	}
 
-	static composeEntity(item: UserBadgeDatabase): UserBadge {
-		return nullsToUndefined(item);
+	static composeEntity(
+		item: DetailedUserBadgeDatabase,
+		storage: StorageService,
+	): UserBadge {
+		const data: UserBadge = nullsToUndefined(item);
+		if (item.badge) {
+			data.badge = BadgeRepository.composeEntity(item.badge, storage);
+		}
+		return data;
 	}
 
 	async #getFromDB(id: string, opts?: WithTx): Promise<UserBadge | undefined> {
 		const tx = opts?.tx ?? this.db;
 		const result = await tx.query.userBadge.findFirst({
+			with: { badge: true },
 			where: (f, op) => op.eq(f.id, id),
 		});
 
-		return result ? UserBadgeRepository.composeEntity(result) : undefined;
+		return result
+			? UserBadgeRepository.composeEntity(result, this.#storage)
+			: undefined;
 	}
 
 	async list(query?: UnifiedPaginationQuery): Promise<ListResult<UserBadge>> {
@@ -56,12 +75,15 @@ export class UserBadgeRepository extends BaseRepository {
 				clauses.push(gt(tables.userBadge.createdAt, new Date(cursor)));
 
 				const res = await this.db.query.userBadge.findMany({
+					with: { badge: true },
 					where: (_, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
 				});
 
-				const rows = res.map(UserBadgeRepository.composeEntity);
+				const rows = res.map((r) =>
+					UserBadgeRepository.composeEntity(r, this.#storage),
+				);
 
 				return { rows };
 			}
@@ -70,13 +92,16 @@ export class UserBadgeRepository extends BaseRepository {
 				const offset = (page - 1) * limit;
 
 				const res = await this.db.query.userBadge.findMany({
+					with: { badge: true },
 					where: (_, op) => op.and(...clauses),
 					orderBy,
 					offset,
 					limit,
 				});
 
-				const rows = res.map(UserBadgeRepository.composeEntity);
+				const rows = res.map((r) =>
+					UserBadgeRepository.composeEntity(r, this.#storage),
+				);
 
 				const totalCount = await this.getTotalRow();
 
@@ -86,12 +111,15 @@ export class UserBadgeRepository extends BaseRepository {
 			}
 
 			const res = await this.db.query.userBadge.findMany({
+				with: { badge: true },
 				where: (_, op) => op.and(...clauses),
 				orderBy,
 				limit: limit,
 			});
 
-			const rows = res.map(UserBadgeRepository.composeEntity);
+			const rows = res.map((r) =>
+				UserBadgeRepository.composeEntity(r, this.#storage),
+			);
 
 			return { rows };
 		} catch (error) {
@@ -119,16 +147,31 @@ export class UserBadgeRepository extends BaseRepository {
 	async create(item: InsertUserBadge, opts?: WithTx): Promise<UserBadge> {
 		try {
 			const tx = opts?.tx ?? this.db;
-			const [operation] = await tx
-				.insert(tables.userBadge)
-				.values({
-					...item,
-					id: v7(),
-					createdAt: new Date(),
-				})
-				.returning();
+			const [operation, badge] = await Promise.all([
+				tx
+					.insert(tables.userBadge)
+					.values({
+						...item,
+						id: v7(),
+						createdAt: new Date(),
+					})
+					.returning()
+					.then(([r]) => r),
+				tx.query.badge.findFirst({
+					where: (f, op) => op.eq(f.id, item.badgeId),
+				}),
+			]);
 
-			const result = UserBadgeRepository.composeEntity(operation);
+			if (!badge) {
+				throw new RepositoryError(`Badge with id ${item.badgeId} not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const result = UserBadgeRepository.composeEntity(
+				{ ...operation, badge },
+				this.#storage,
+			);
 			await this.setCache(result.id, result);
 			return result;
 		} catch (error) {
@@ -147,15 +190,31 @@ export class UserBadgeRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`User badge with id "${id}" not found`);
 
-			const [operation] = await tx
-				.update(tables.userBadge)
-				.set({
-					...item,
-				})
-				.where(eq(tables.userBadge.id, id))
-				.returning();
+			const [operation, badge] = await Promise.all([
+				tx
+					.update(tables.userBadge)
+					.set({
+						...item,
+					})
+					.where(eq(tables.userBadge.id, id))
+					.returning()
+					.then(([r]) => r),
 
-			const result = UserBadgeRepository.composeEntity(operation);
+				tx.query.badge.findFirst({
+					where: (f, op) => op.eq(f.id, item.badgeId ?? existing.badgeId),
+				}),
+			]);
+
+			if (!badge) {
+				throw new RepositoryError(`Badge with id ${item.badgeId} not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const result = UserBadgeRepository.composeEntity(
+				{ ...operation, badge },
+				this.#storage,
+			);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 			return result;
 		} catch (error) {

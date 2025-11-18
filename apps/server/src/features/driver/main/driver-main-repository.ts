@@ -25,7 +25,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
-import type { BadgeDatabase } from "@/core/tables/badge";
+import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
@@ -48,7 +48,7 @@ export class DriverMainRepository extends BaseRepository {
 	static async composeEntity(
 		item: DriverDatabase & {
 			user: UserDatabase & {
-				userBadgePivots: { badge: BadgeDatabase }[];
+				userBadges: DetailedUserBadgeDatabase[];
 			};
 		},
 		storage: StorageService,
@@ -106,12 +106,7 @@ export class DriverMainRepository extends BaseRepository {
 		const result = await tx.query.driver.findFirst({
 			with: {
 				user: {
-					with: {
-						userBadgePivots: {
-							columns: {},
-							with: { badge: true },
-						},
-					},
+					with: { userBadges: { with: { badge: true } } },
 				},
 			},
 			where: (f, op) => op.eq(f.id, id),
@@ -170,12 +165,7 @@ export class DriverMainRepository extends BaseRepository {
 				const result = await this.db.query.driver.findMany({
 					with: {
 						user: {
-							with: {
-								userBadgePivots: {
-									columns: {},
-									with: { badge: true },
-								},
-							},
+							with: { userBadges: { with: { badge: true } } },
 						},
 					},
 					where: (_, op) => op.and(...clauses),
@@ -197,12 +187,7 @@ export class DriverMainRepository extends BaseRepository {
 				const result = await this.db.query.driver.findMany({
 					with: {
 						user: {
-							with: {
-								userBadgePivots: {
-									columns: {},
-									with: { badge: true },
-								},
-							},
+							with: { userBadges: { with: { badge: true } } },
 						},
 					},
 					where: (_, op) => op.and(...clauses),
@@ -227,16 +212,7 @@ export class DriverMainRepository extends BaseRepository {
 			}
 
 			const result = await this.db.query.driver.findMany({
-				with: {
-					user: {
-						with: {
-							userBadgePivots: {
-								columns: {},
-								with: { badge: true },
-							},
-						},
-					},
-				},
+				with: { user: { with: { userBadges: { with: { badge: true } } } } },
 				where: (_, op) => op.and(...clauses),
 				orderBy,
 				limit,
@@ -286,7 +262,7 @@ export class DriverMainRepository extends BaseRepository {
 			return await Promise.all(
 				result.map((r) =>
 					DriverMainRepository.composeEntity(
-						{ ...r.driver, user: { ...r.user, userBadgePivots: [] } },
+						{ ...r.driver, user: { ...r.user, userBadges: [] } },
 						this.#storage,
 					),
 				),
@@ -314,16 +290,7 @@ export class DriverMainRepository extends BaseRepository {
 	async getByUserId(userId: string): Promise<Driver> {
 		try {
 			const result = await this.db.query.driver.findFirst({
-				with: {
-					user: {
-						with: {
-							userBadgePivots: {
-								columns: {},
-								with: { badge: true },
-							},
-						},
-					},
-				},
+				with: { user: { with: { userBadges: { with: { badge: true } } } } },
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
@@ -342,12 +309,7 @@ export class DriverMainRepository extends BaseRepository {
 		try {
 			const [user, existingDriver] = await Promise.all([
 				(opts?.tx ?? this.db).query.user.findFirst({
-					with: {
-						userBadgePivots: {
-							columns: {},
-							with: { badge: true },
-						},
-					},
+					with: { userBadges: { with: { badge: true } } },
 					where: (f, op) => op.eq(f.id, item.userId),
 				}),
 				(opts?.tx ?? this.db).query.driver.findFirst({
@@ -439,12 +401,7 @@ export class DriverMainRepository extends BaseRepository {
 				throw new RepositoryError(`Driver with id "${id}" not found`);
 
 			const user = await tx.query.user.findFirst({
-				with: {
-					userBadgePivots: {
-						columns: {},
-						with: { badge: true },
-					},
-				},
+				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
 			if (!user) throw new RepositoryError("User not found");

@@ -17,9 +17,9 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
-import type { BadgeDatabase } from "@/core/tables/badge";
+import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
+import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import { log } from "@/utils";
-import { BadgeRepository } from "../../badge/main/badge-main-repository";
 
 const BUCKET = "user";
 
@@ -37,7 +37,7 @@ export class UserAdminRepository extends BaseRepository {
 
 	static async composeEntity(
 		user: UserDatabase & {
-			userBadgePivots: { badge: BadgeDatabase }[];
+			userBadges: DetailedUserBadgeDatabase[];
 		},
 		storage: StorageService,
 		options?: { expiresIn?: number },
@@ -56,20 +56,15 @@ export class UserAdminRepository extends BaseRepository {
 			banReason: user.banReason ?? undefined,
 			banExpires: user.banExpires ?? undefined,
 			gender: user.gender ?? undefined,
-			badges: user.userBadgePivots.map((e) =>
-				BadgeRepository.composeEntity(e.badge, storage),
+			userBadges: user.userBadges.map((e) =>
+				UserBadgeRepository.composeEntity(e, storage),
 			),
 		};
 	}
 
 	async #getFromDB(id: string): Promise<User | undefined> {
 		const result = await this.db.query.user.findFirst({
-			with: {
-				userBadgePivots: {
-					columns: {},
-					with: { badge: true },
-				},
-			},
+			with: { userBadges: { with: { badge: true } } },
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result
@@ -126,12 +121,7 @@ export class UserAdminRepository extends BaseRepository {
 				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
 
 				const result = await this.db.query.user.findMany({
-					with: {
-						userBadgePivots: {
-							columns: {},
-							with: { badge: true },
-						},
-					},
+					with: { userBadges: { with: { badge: true } } },
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
@@ -151,12 +141,7 @@ export class UserAdminRepository extends BaseRepository {
 				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
 
 				const result = await this.db.query.user.findMany({
-					with: {
-						userBadgePivots: {
-							columns: {},
-							with: { badge: true },
-						},
-					},
+					with: { userBadges: { with: { badge: true } } },
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
 					offset,
@@ -179,12 +164,7 @@ export class UserAdminRepository extends BaseRepository {
 			}
 
 			const result = await this.db.query.user.findMany({
-				with: {
-					userBadgePivots: {
-						columns: {},
-						with: { badge: true },
-					},
-				},
+				with: { userBadges: { with: { badge: true } } },
 				where: (_f, op) => op.and(...clauses),
 				orderBy,
 				limit,

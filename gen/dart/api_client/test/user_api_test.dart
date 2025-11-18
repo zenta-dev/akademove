@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<UserAdminCreate200Response> userMeUpdate(String phoneCountryCode, num phoneNumber, { String name, String email, MultipartFile photo }) async
+    //Future<UserAdminCreate200Response> userMeUpdate({ String name, String email, MultipartFile photo, String phoneCountryCode, int phoneNumber }) async
     test('test userMeUpdate', () async {
       // TODO
     });

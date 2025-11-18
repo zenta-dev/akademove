@@ -58,10 +58,7 @@ export class AuthRepository extends BaseRepository {
 						columns: { password: true },
 						where: (f, op) => op.eq(f.providerId, "credentials"),
 					},
-					userBadgePivots: {
-						columns: {},
-						with: { badge: true },
-					},
+					userBadges: { with: { badge: true } },
 				},
 				where: (f, op) => op.eq(f.email, params.email),
 			});
@@ -183,7 +180,7 @@ export class AuthRepository extends BaseRepository {
 
 			return {
 				user: await UserAdminRepository.composeEntity(
-					{ ...user, userBadgePivots: [] },
+					{ ...user, userBadges: [] },
 					this.#storage,
 				),
 			};
@@ -233,10 +230,7 @@ export class AuthRepository extends BaseRepository {
 			const fallback = async () => {
 				const res = await this.db.query.user.findFirst({
 					with: {
-						userBadgePivots: {
-							columns: {},
-							with: { badge: true },
-						},
+						userBadges: { with: { badge: true } },
 					},
 					where: (f, op) => op.eq(f.id, payload.id),
 				});

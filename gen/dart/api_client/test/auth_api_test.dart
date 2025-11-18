@@ -31,7 +31,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignIn200Response> authSignIn(AuthSignInRequest authSignInRequest) async
+    //Future<AuthSignIn200Response> authSignIn(SignInRequest signInRequest) async
     test('test authSignIn', () async {
       // TODO
     });
@@ -41,17 +41,17 @@ void main() {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, String detailBankProvider, num detailBankNumber, { String gender }) async
+    //Future<AuthSignUpUser201Response> authSignUpDriver(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, MultipartFile photo, num detailStudentId, String detailLicensePlate, MultipartFile detailStudentCard, MultipartFile detailDriverLicense, MultipartFile detailVehicleCertificate, String detailBankProvider, num detailBankNumber, { String gender }) async
     test('test authSignUpDriver', () async {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, num detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
+    //Future<AuthSignUpUser201Response> authSignUpMerchant(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, String detailName, String detailEmail, String detailPhoneCountryCode, int detailPhoneNumber, String detailAddress, num detailLocationX, num detailLocationY, String detailBankProvider, num detailBankNumber, { MultipartFile photo, String gender, MultipartFile detailDocument, MultipartFile detailImage }) async
     test('test authSignUpMerchant', () async {
       // TODO
     });
 
-    //Future<AuthSignUpUser201Response> authSignUpUser(String name, String email, String phoneCountryCode, num phoneNumber, String password, String confirmPassword, { MultipartFile photo, String gender }) async
+    //Future<AuthSignUpUser201Response> authSignUpUser(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, { MultipartFile photo, String gender }) async
     test('test authSignUpUser', () async {
       // TODO
     });

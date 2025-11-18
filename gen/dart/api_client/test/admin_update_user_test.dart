@@ -12,13 +12,18 @@ void main() {
       // TODO
     });
 
-    // String password
-    test('to test the property `password`', () async {
+    // String oldPassword
+    test('to test the property `oldPassword`', () async {
       // TODO
     });
 
-    // String confirmPassword
-    test('to test the property `confirmPassword`', () async {
+    // String newPassword
+    test('to test the property `newPassword`', () async {
+      // TODO
+    });
+
+    // String confirmNewPassword
+    test('to test the property `confirmNewPassword`', () async {
       // TODO
     });
 

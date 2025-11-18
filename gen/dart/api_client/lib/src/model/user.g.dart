@@ -33,7 +33,7 @@ abstract class _$UserCWProxy {
 
   User updatedAt(DateTime updatedAt);
 
-  User badges(List<Badge> badges);
+  User userBadges(List<UserBadge> userBadges);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -55,7 +55,7 @@ abstract class _$UserCWProxy {
     Phone phone,
     DateTime createdAt,
     DateTime updatedAt,
-    List<Badge> badges,
+    List<UserBadge> userBadges,
   });
 }
 
@@ -105,7 +105,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
 
   @override
-  User badges(List<Badge> badges) => this(badges: badges);
+  User userBadges(List<UserBadge> userBadges) => this(userBadges: userBadges);
 
   @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -128,7 +128,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
     Object? phone = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
-    Object? badges = const $CopyWithPlaceholder(),
+    Object? userBadges = const $CopyWithPlaceholder(),
   }) {
     return User(
       id: id == const $CopyWithPlaceholder()
@@ -183,10 +183,10 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
-      badges: badges == const $CopyWithPlaceholder()
-          ? _value.badges
+      userBadges: userBadges == const $CopyWithPlaceholder()
+          ? _value.userBadges
           // ignore: cast_nullable_to_non_nullable
-          : badges as List<Badge>,
+          : userBadges as List<UserBadge>,
     );
   }
 }
@@ -216,7 +216,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
       'phone',
       'createdAt',
       'updatedAt',
-      'badges',
+      'userBadges',
     ],
   );
   final val = User(
@@ -242,10 +242,10 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    badges: $checkedConvert(
-      'badges',
+    userBadges: $checkedConvert(
+      'userBadges',
       (v) => (v as List<dynamic>)
-          .map((e) => Badge.fromJson(e as Map<String, dynamic>))
+          .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
           .toList(),
     ),
   );
@@ -266,7 +266,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'phone': instance.phone.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
-  'badges': instance.badges.map((e) => e.toJson()).toList(),
+  'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),
 };
 
 const _$UserRoleEnumMap = {

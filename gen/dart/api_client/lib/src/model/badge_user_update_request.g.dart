@@ -7,6 +7,10 @@ part of 'badge_user_update_request.dart';
 // **************************************************************************
 
 abstract class _$BadgeUserUpdateRequestCWProxy {
+  BadgeUserUpdateRequest userId(String? userId);
+
+  BadgeUserUpdateRequest badgeId(String? badgeId);
+
   BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -15,7 +19,11 @@ abstract class _$BadgeUserUpdateRequestCWProxy {
   /// ```dart
   /// BadgeUserUpdateRequest(...).copyWith(id: 12, name: "My name")
   /// ````
-  BadgeUserUpdateRequest call({UserBadgeMetadata? metadata});
+  BadgeUserUpdateRequest call({
+    String? userId,
+    String? badgeId,
+    UserBadgeMetadata? metadata,
+  });
 }
 
 /// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeUserUpdateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(...)`
@@ -24,6 +32,12 @@ class _$BadgeUserUpdateRequestCWProxyImpl
   const _$BadgeUserUpdateRequestCWProxyImpl(this._value);
 
   final BadgeUserUpdateRequest _value;
+
+  @override
+  BadgeUserUpdateRequest userId(String? userId) => this(userId: userId);
+
+  @override
+  BadgeUserUpdateRequest badgeId(String? badgeId) => this(badgeId: badgeId);
 
   @override
   BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata) =>
@@ -37,9 +51,19 @@ class _$BadgeUserUpdateRequestCWProxyImpl
   /// BadgeUserUpdateRequest(...).copyWith(id: 12, name: "My name")
   /// ````
   BadgeUserUpdateRequest call({
+    Object? userId = const $CopyWithPlaceholder(),
+    Object? badgeId = const $CopyWithPlaceholder(),
     Object? metadata = const $CopyWithPlaceholder(),
   }) {
     return BadgeUserUpdateRequest(
+      userId: userId == const $CopyWithPlaceholder()
+          ? _value.userId
+          // ignore: cast_nullable_to_non_nullable
+          : userId as String?,
+      badgeId: badgeId == const $CopyWithPlaceholder()
+          ? _value.badgeId
+          // ignore: cast_nullable_to_non_nullable
+          : badgeId as String?,
       metadata: metadata == const $CopyWithPlaceholder()
           ? _value.metadata
           // ignore: cast_nullable_to_non_nullable
@@ -63,6 +87,8 @@ BadgeUserUpdateRequest _$BadgeUserUpdateRequestFromJson(
   Map<String, dynamic> json,
 ) => $checkedCreate('BadgeUserUpdateRequest', json, ($checkedConvert) {
   final val = BadgeUserUpdateRequest(
+    userId: $checkedConvert('userId', (v) => v as String?),
+    badgeId: $checkedConvert('badgeId', (v) => v as String?),
     metadata: $checkedConvert(
       'metadata',
       (v) => v == null
@@ -75,4 +101,8 @@ BadgeUserUpdateRequest _$BadgeUserUpdateRequestFromJson(
 
 Map<String, dynamic> _$BadgeUserUpdateRequestToJson(
   BadgeUserUpdateRequest instance,
-) => <String, dynamic>{'metadata': ?instance.metadata?.toJson()};
+) => <String, dynamic>{
+  'userId': ?instance.userId,
+  'badgeId': ?instance.badgeId,
+  'metadata': ?instance.metadata?.toJson(),
+};

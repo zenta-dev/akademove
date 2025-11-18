@@ -35,12 +35,7 @@ export class UserMeRepository extends BaseRepository {
 		const tx = opts?.tx ?? this.db;
 
 		const result = await tx.query.user.findFirst({
-			with: {
-				userBadgePivots: {
-					columns: {},
-					with: { badge: true },
-				},
-			},
+			with: { userBadges: { with: { badge: true } } },
 			where: (f, op) => op.eq(f.id, id),
 		});
 		return result

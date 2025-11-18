@@ -80,27 +80,25 @@ export const UserBadgeSchema = z.object({
 	metadata: UserBadgeMetadataSchema.optional(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
+
+	badge: BadgeSchema,
 });
 export type UserBadge = z.infer<typeof UserBadgeSchema>;
 
-export const UserBadgeKeySchema = extractSchemaKeysAsEnum(UserBadgeSchema);
+export const UserBadgeKeySchema = extractSchemaKeysAsEnum(
+	UserBadgeSchema,
+).exclude(["badge"]);
 
 export const InsertUserBadgeSchema = UserBadgeSchema.omit({
 	id: true,
 	createdAt: true,
 	updatedAt: true,
 	earnedAt: true,
+	badge: true,
 });
 export type InsertUserBadge = z.infer<typeof InsertUserBadgeSchema>;
 
-export const UpdateUserBadgeSchema = UserBadgeSchema.omit({
-	id: true,
-	userId: true,
-	badgeId: true,
-	createdAt: true,
-	updatedAt: true,
-	earnedAt: true,
-}).partial();
+export const UpdateUserBadgeSchema = InsertUserBadgeSchema.partial();
 export type UpdateUserBadge = z.infer<typeof UpdateUserBadgeSchema>;
 
 export const BadgeSchemaRegistries = {

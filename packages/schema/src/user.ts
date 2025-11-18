@@ -1,6 +1,6 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { BadgeSchema } from "./badge.ts";
+import { UserBadgeSchema } from "./badge.ts";
 import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
@@ -33,12 +33,12 @@ export const UserSchema = z.object({
 	updatedAt: DateSchema,
 
 	// attachements:
-	badges: z.array(BadgeSchema),
+	userBadges: z.array(UserBadgeSchema),
 });
 export type User = z.infer<typeof UserSchema>;
 
 export const UserKeySchema = extractSchemaKeysAsEnum(UserSchema).exclude([
-	"badges",
+	"userBadges",
 ]);
 
 export const InsertUserSchema = UserSchema.omit({

@@ -12,7 +12,7 @@ void main() {
       // TODO
     });
 
-    // num number
+    // int number
     test('to test the property `number`', () async {
       // TODO
     });

@@ -81,7 +81,7 @@ export const verification = pgTable(
 ///
 export const userRelations = relations(user, ({ many }) => ({
 	accounts: many(account),
-	userBadgePivots: many(userBadge),
+	userBadges: many(userBadge),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({

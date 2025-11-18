@@ -3,10 +3,10 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/user_badge.dart';
 import 'package:api_client/src/model/user_gender.dart';
 import 'package:api_client/src/model/user_role.dart';
 import 'package:api_client/src/model/phone.dart';
-import 'package:api_client/src/model/badge.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -35,7 +35,7 @@ class User {
     required this.phone,
     required this.createdAt,
     required this.updatedAt,
-    required this.badges,
+    required this.userBadges,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
@@ -77,8 +77,8 @@ class User {
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
 
-  @JsonKey(name: r'badges', required: true, includeIfNull: false)
-  final List<Badge> badges;
+  @JsonKey(name: r'userBadges', required: true, includeIfNull: false)
+  final List<UserBadge> userBadges;
 
   @override
   bool operator ==(Object other) =>
@@ -97,7 +97,7 @@ class User {
           other.phone == phone &&
           other.createdAt == createdAt &&
           other.updatedAt == updatedAt &&
-          other.badges == badges;
+          other.userBadges == userBadges;
 
   @override
   int get hashCode =>
@@ -114,7 +114,7 @@ class User {
       phone.hashCode +
       createdAt.hashCode +
       updatedAt.hashCode +
-      badges.hashCode;
+      userBadges.hashCode;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -32,7 +32,7 @@ void main() {
       // TODO
     });
 
-    // List<Badge> badges
+    // List<UserBadge> badges
     test('to test the property `badges`', () async {
       // TODO
     });

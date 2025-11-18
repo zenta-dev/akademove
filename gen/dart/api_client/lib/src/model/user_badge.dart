@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/user_badge_metadata.dart';
+import 'package:api_client/src/model/badge.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -26,6 +27,7 @@ class UserBadge {
     this.metadata,
     required this.createdAt,
     required this.updatedAt,
+    required this.badge,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
@@ -49,6 +51,9 @@ class UserBadge {
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
 
+  @JsonKey(name: r'badge', required: true, includeIfNull: false)
+  final Badge badge;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -59,7 +64,8 @@ class UserBadge {
           other.earnedAt == earnedAt &&
           other.metadata == metadata &&
           other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+          other.updatedAt == updatedAt &&
+          other.badge == badge;
 
   @override
   int get hashCode =>
@@ -69,7 +75,8 @@ class UserBadge {
       earnedAt.hashCode +
       metadata.hashCode +
       createdAt.hashCode +
-      updatedAt.hashCode;
+      updatedAt.hashCode +
+      badge.hashCode;
 
   factory UserBadge.fromJson(Map<String, dynamic> json) =>
       _$UserBadgeFromJson(json);

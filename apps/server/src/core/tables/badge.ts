@@ -99,3 +99,7 @@ export const userBadgeRelations = relations(userBadge, ({ one }) => ({
 		references: [badge.id],
 	}),
 }));
+
+export type DetailedUserBadgeDatabase = UserBadgeDatabase & {
+	badge: BadgeDatabase;
+};

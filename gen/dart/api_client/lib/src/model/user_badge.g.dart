@@ -21,6 +21,8 @@ abstract class _$UserBadgeCWProxy {
 
   UserBadge updatedAt(DateTime updatedAt);
 
+  UserBadge badge(Badge badge);
+
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadge(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -35,6 +37,7 @@ abstract class _$UserBadgeCWProxy {
     UserBadgeMetadata? metadata,
     DateTime createdAt,
     DateTime updatedAt,
+    Badge badge,
   });
 }
 
@@ -66,6 +69,9 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
   UserBadge updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
 
   @override
+  UserBadge badge(Badge badge) => this(badge: badge);
+
+  @override
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadge(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
@@ -80,6 +86,7 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
     Object? metadata = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
+    Object? badge = const $CopyWithPlaceholder(),
   }) {
     return UserBadge(
       id: id == const $CopyWithPlaceholder()
@@ -110,6 +117,10 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
+      badge: badge == const $CopyWithPlaceholder()
+          ? _value.badge
+          // ignore: cast_nullable_to_non_nullable
+          : badge as Badge,
     );
   }
 }
@@ -136,6 +147,7 @@ UserBadge _$UserBadgeFromJson(
       'earnedAt',
       'createdAt',
       'updatedAt',
+      'badge',
     ],
   );
   final val = UserBadge(
@@ -151,6 +163,10 @@ UserBadge _$UserBadgeFromJson(
     ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+    badge: $checkedConvert(
+      'badge',
+      (v) => Badge.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -163,4 +179,5 @@ Map<String, dynamic> _$UserBadgeToJson(UserBadge instance) => <String, dynamic>{
   'metadata': ?instance.metadata?.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
+  'badge': instance.badge.toJson(),
 };
