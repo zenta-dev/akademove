@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { PaginationResultSchema } from "@repo/schema/pagination";
 import * as z from "zod";
 
 export const FEATURE_TAGS = Object.freeze({
@@ -59,6 +60,7 @@ export const createSuccesSchema = <
 		body: z.object({
 			message: z.string(),
 			data: schema,
+			pagination: PaginationResultSchema.optional(),
 			totalPages: z.int().min(0).optional(),
 		}),
 	});

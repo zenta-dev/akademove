@@ -1,5 +1,6 @@
 import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
 import type { ClientAgent } from "@repo/schema/common";
+import type { PaginationResult } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
 import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
@@ -128,4 +129,9 @@ export type OrderByOperation = {
 	sql: typeof sql;
 	asc: typeof asc;
 	desc: typeof desc;
+};
+
+export type UnifiedListResult<T> = {
+	rows: T[];
+	pagination?: PaginationResult;
 };
