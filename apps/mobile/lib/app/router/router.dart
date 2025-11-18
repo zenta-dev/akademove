@@ -41,6 +41,7 @@ enum Routes {
   userVoucher('/user/home/voucher'),
 
   userHistory('/user/history'),
+  userHistoryDetail('/user/history/:orderId'),
 
   userProfile('/user/profile'),
   userDetailProfile('/user/profile/detail'),

@@ -148,6 +148,19 @@ final userRouter = StatefulShellRoute.indexedStack(
             child: const UserHistoryScreen(),
           ),
         ),
+        GoRoute(
+          name: Routes.userHistoryDetail.name,
+          path: Routes.userHistoryDetail.path,
+          builder: (context, state) {
+            final orderId = state.pathParameters['orderId'];
+
+            return BlocProvider.value(
+              value: BlocProvider.of<UserOrderCubit>(context)
+                ..maybeGet(orderId),
+              child: const UserDetailHistoryScreen(),
+            );
+          },
+        ),
       ],
     ),
     StatefulShellBranch(

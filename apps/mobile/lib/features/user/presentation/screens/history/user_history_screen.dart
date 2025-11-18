@@ -1,3 +1,4 @@
+import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
@@ -6,6 +7,7 @@ import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserHistoryScreen extends StatelessWidget {
@@ -101,7 +103,11 @@ class UserOrderCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return CardButton(
+      onPressed: () => context.pushNamed(
+        Routes.userHistoryDetail.name,
+        pathParameters: {'orderId': order.id},
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8.h,
