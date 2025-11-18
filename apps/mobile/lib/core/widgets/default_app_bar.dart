@@ -8,11 +8,13 @@ class DefaultAppBar extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.padding,
+    this.trailing = const [],
     super.key,
   });
   final String title;
   final String? subtitle;
   final EdgeInsetsGeometry? padding;
+  final List<Widget> trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +27,10 @@ class DefaultAppBar extends StatelessWidget {
       subtitle: subtitle != null
           ? Text(
               subtitle ?? '',
-              style: context.typography.h4.copyWith(fontSize: 14.sp),
+              style: context.typography.small.copyWith(fontSize: 14.sp),
             )
           : null,
+      trailing: trailing,
       leading: [
         if (context.canPop()) ...[
           IconButton(
