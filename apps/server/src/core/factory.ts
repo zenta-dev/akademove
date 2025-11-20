@@ -100,7 +100,7 @@ export function getRepositories(
 		),
 		badge: {
 			main: new BadgeRepository(svc.db, svc.kv, svc.storage),
-			user: new UserBadgeRepository(svc.db, svc.kv),
+			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		driver: {
