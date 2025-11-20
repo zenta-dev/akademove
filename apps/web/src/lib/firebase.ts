@@ -17,7 +17,7 @@ export interface FirebaseConfig {
 }
 
 export class FirebaseClient {
-	private static instance: FirebaseClient;
+	static _instance: FirebaseClient;
 
 	private app: FirebaseApp;
 	private messaging: Messaging | null = null;
@@ -32,16 +32,16 @@ export class FirebaseClient {
 
 		if (typeof window !== "undefined" && "serviceWorker" in navigator) {
 			this.messaging = getMessaging(this.app);
-			this.setupMessageListener();
+			this._setupMessageListener();
 		}
 	}
 
 	static getInstance(config?: FirebaseConfig): FirebaseClient {
-		if (!FirebaseClient.instance) {
+		if (!FirebaseClient._instance) {
 			if (!config) throw new Error("Firebase config required.");
-			FirebaseClient.instance = new FirebaseClient(config);
+			FirebaseClient._instance = new FirebaseClient(config);
 		}
-		return FirebaseClient.instance;
+		return FirebaseClient._instance;
 	}
 
 	/**
@@ -60,7 +60,7 @@ export class FirebaseClient {
 	/**
 	 * Foreground message listener
 	 */
-	private setupMessageListener() {
+	_setupMessageListener() {
 		if (!this.messaging) return;
 
 		onMessage(this.messaging, (payload) => {

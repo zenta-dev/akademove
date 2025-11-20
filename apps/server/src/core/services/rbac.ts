@@ -11,73 +11,71 @@ import { type PermissionMap, type Permissions, statement } from "@repo/shared";
 import { log } from "@/utils";
 import { AuthError, BaseError } from "../error";
 
-const roles: Record<UserRole, PermissionMap> = {
-	admin: {
-		driver: ["list", "get", "update", "ban", "approve"],
-		merchant: ["list", "get", "update", "delete", "approve"],
-		order: ["list", "get", "update", "delete", "cancel", "assign"],
-		schedule: ["list", "get", "update", "delete"],
-		coupon: ["list", "get", "create", "update", "delete", "approve"],
-		report: ["list", "get", "create", "update", "delete", "export"],
-		review: ["list", "get", "update", "delete"],
-		user: [
-			"list",
-			"get",
-			"invite",
-			"update",
-			"delete",
-			"verify",
-			"set-role",
-			"set-password",
-			"ban",
-		],
-		session: ["list", "revoke", "delete"],
-		bookings: ["list", "get", "create", "update", "delete"],
-		configurations: ["list", "get", "update"],
-	},
-	operator: {
-		driver: ["list", "get", "update", "ban"],
-		merchant: ["list", "get", "update"],
-		order: ["list", "get", "update", "cancel", "assign"],
-		schedule: ["list", "get", "update"],
-		coupon: ["list", "get", "create", "update"],
-		report: ["list", "get", "create", "export"],
-		review: ["list", "get"],
-		user: ["list", "get", "update"],
-		configurations: ["list", "get", "update"],
-	},
-	merchant: {
-		merchant: ["get", "update"],
-		merchantMenu: ["list", "get", "create", "update", "delete"],
-		order: ["list", "get", "update"],
-		review: ["get"],
-		report: ["get"],
-	},
-	driver: {
-		driver: ["get", "update"],
-		schedule: ["list", "get", "create", "update", "delete"],
-		order: ["get", "update"],
-		review: ["get"],
-		report: ["get"],
-	},
-	user: {
-		user: ["get", "update"],
-		driver: ["list", "get"],
-		order: ["list", "get", "create", "update", "cancel"],
-		review: ["list", "get", "create", "update"],
-		merchant: ["list", "get"],
-		coupon: ["list", "get"],
-		bookings: ["get", "create", "update", "delete"],
-	},
-} as const;
-
 export interface HasPermissionInput<R extends UserRole = UserRole> {
 	role: R;
 	permissions: Permissions;
 }
 
 export class RBACService {
-	private readonly roles = roles;
+	readonly _roles: Record<UserRole, PermissionMap> = {
+		admin: {
+			driver: ["list", "get", "update", "ban", "approve"],
+			merchant: ["list", "get", "update", "delete", "approve"],
+			order: ["list", "get", "update", "delete", "cancel", "assign"],
+			schedule: ["list", "get", "update", "delete"],
+			coupon: ["list", "get", "create", "update", "delete", "approve"],
+			report: ["list", "get", "create", "update", "delete", "export"],
+			review: ["list", "get", "update", "delete"],
+			user: [
+				"list",
+				"get",
+				"invite",
+				"update",
+				"delete",
+				"verify",
+				"set-role",
+				"set-password",
+				"ban",
+			],
+			session: ["list", "revoke", "delete"],
+			bookings: ["list", "get", "create", "update", "delete"],
+			configurations: ["list", "get", "update"],
+		},
+		operator: {
+			driver: ["list", "get", "update", "ban"],
+			merchant: ["list", "get", "update"],
+			order: ["list", "get", "update", "cancel", "assign"],
+			schedule: ["list", "get", "update"],
+			coupon: ["list", "get", "create", "update"],
+			report: ["list", "get", "create", "export"],
+			review: ["list", "get"],
+			user: ["list", "get", "update"],
+			configurations: ["list", "get", "update"],
+		},
+		merchant: {
+			merchant: ["get", "update"],
+			merchantMenu: ["list", "get", "create", "update", "delete"],
+			order: ["list", "get", "update"],
+			review: ["get"],
+			report: ["get"],
+		},
+		driver: {
+			driver: ["get", "update"],
+			schedule: ["list", "get", "create", "update", "delete"],
+			order: ["get", "update"],
+			review: ["get"],
+			report: ["get"],
+		},
+		user: {
+			user: ["get", "update"],
+			driver: ["list", "get"],
+			order: ["list", "get", "create", "update", "cancel"],
+			review: ["list", "get", "create", "update"],
+			merchant: ["list", "get"],
+			coupon: ["list", "get"],
+			bookings: ["get", "create", "update", "delete"],
+		},
+	} as const;
 
 	public hasPermission<R extends UserRole>(
 		input: HasPermissionInput<R>,
@@ -85,7 +83,7 @@ export class RBACService {
 		try {
 			const { role, permissions } = input;
 
-			const rolePerms = this.roles[role];
+			const rolePerms = this._roles[role];
 			if (!rolePerms) return false;
 
 			for (const [resource, actions] of Object.entries(permissions)) {

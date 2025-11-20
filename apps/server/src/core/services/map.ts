@@ -111,8 +111,8 @@ export class GoogleMapService implements MapService {
 	readonly #timeout = 10000;
 	readonly #headers: Record<string, string>;
 
-	static readonly #EARTH_RADIUS = 6371000;
-	static readonly #DEG_TO_RAD = Math.PI / 180;
+	static readonly _EARTH_RADIUS = 6371000;
+	static readonly _DEG_TO_RAD = Math.PI / 180;
 
 	constructor(apiKey: string) {
 		if (!apiKey) throw new MapError("Google Maps API key is required");
@@ -405,10 +405,10 @@ export class GoogleMapService implements MapService {
 	// ---------------------------------------------------------------------------
 
 	#haversine(from: Coordinate, to: Coordinate): number {
-		const dLat = (to.y - from.y) * GoogleMapService.#DEG_TO_RAD;
-		const dLon = (to.x - from.x) * GoogleMapService.#DEG_TO_RAD;
-		const fromLatRad = from.y * GoogleMapService.#DEG_TO_RAD;
-		const toLatRad = to.y * GoogleMapService.#DEG_TO_RAD;
+		const dLat = (to.y - from.y) * GoogleMapService._DEG_TO_RAD;
+		const dLon = (to.x - from.x) * GoogleMapService._DEG_TO_RAD;
+		const fromLatRad = from.y * GoogleMapService._DEG_TO_RAD;
+		const toLatRad = to.y * GoogleMapService._DEG_TO_RAD;
 
 		const sinDLat = Math.sin(dLat / 2);
 		const sinDLon = Math.sin(dLon / 2);
@@ -418,7 +418,7 @@ export class GoogleMapService implements MapService {
 			Math.cos(fromLatRad) * Math.cos(toLatRad) * sinDLon * sinDLon;
 
 		return (
-			GoogleMapService.#EARTH_RADIUS *
+			GoogleMapService._EARTH_RADIUS *
 			2 *
 			Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 		);

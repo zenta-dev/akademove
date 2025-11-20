@@ -30,13 +30,13 @@ export interface SendToTopicOptions extends NotificationPayload {
 }
 
 export class FirebaseAdminService {
-	readonly #app: App;
+	readonly _app: App;
 	readonly #messaging: Messaging;
 
 	constructor(credStr: string) {
 		const parse = JSON.parse(credStr);
 		if (!getApps().length) {
-			this.#app = initializeApp({
+			this._app = initializeApp({
 				credential: cert({
 					projectId: parse.project_id,
 					clientEmail: parse.client_email,
@@ -44,10 +44,10 @@ export class FirebaseAdminService {
 				}),
 			});
 		} else {
-			this.#app = getApps()[0];
+			this._app = getApps()[0];
 		}
 
-		this.#messaging = getMessaging(this.#app);
+		this.#messaging = getMessaging(this._app);
 	}
 
 	async sendNotification(options: SendNotificationOptions): Promise<string> {
