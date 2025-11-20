@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'akademove-86180.firebasestorage.app',
     iosBundleId: 'com.akademove.akademove',
   );
-
 }

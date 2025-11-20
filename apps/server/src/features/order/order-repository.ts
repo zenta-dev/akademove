@@ -21,13 +21,12 @@ import {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
-import { count, eq, gt, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
+import { count, eq, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type {
-	ListResult,
 	OrderByOperation,
 	UnifiedListResult,
 	WithTx,
