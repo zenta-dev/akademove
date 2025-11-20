@@ -21,12 +21,13 @@ abstract class _$AdminUpdateUserCWProxy {
 
   AdminUpdateUser id(String id);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AdminUpdateUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AdminUpdateUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AdminUpdateUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AdminUpdateUser call({
     UserRole role,
     String oldPassword,
@@ -38,44 +39,46 @@ abstract class _$AdminUpdateUserCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAdminUpdateUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAdminUpdateUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfAdminUpdateUser.copyWith(...)` or call `instanceOfAdminUpdateUser.copyWith.fieldName(value)` for a single field.
 class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
   const _$AdminUpdateUserCWProxyImpl(this._value);
 
   final AdminUpdateUser _value;
 
   @override
-  AdminUpdateUser role(UserRole role) => this(role: role);
+  AdminUpdateUser role(UserRole role) => call(role: role);
 
   @override
   AdminUpdateUser oldPassword(String oldPassword) =>
-      this(oldPassword: oldPassword);
+      call(oldPassword: oldPassword);
 
   @override
   AdminUpdateUser newPassword(String newPassword) =>
-      this(newPassword: newPassword);
+      call(newPassword: newPassword);
 
   @override
   AdminUpdateUser confirmNewPassword(String confirmNewPassword) =>
-      this(confirmNewPassword: confirmNewPassword);
+      call(confirmNewPassword: confirmNewPassword);
 
   @override
-  AdminUpdateUser banReason(String banReason) => this(banReason: banReason);
+  AdminUpdateUser banReason(String banReason) => call(banReason: banReason);
 
   @override
   AdminUpdateUser banExpiresIn(num? banExpiresIn) =>
-      this(banExpiresIn: banExpiresIn);
+      call(banExpiresIn: banExpiresIn);
 
   @override
-  AdminUpdateUser id(String id) => this(id: id);
+  AdminUpdateUser id(String id) => call(id: id);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AdminUpdateUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AdminUpdateUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AdminUpdateUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AdminUpdateUser call({
     Object? role = const $CopyWithPlaceholder(),
     Object? oldPassword = const $CopyWithPlaceholder(),
@@ -86,23 +89,27 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
     Object? id = const $CopyWithPlaceholder(),
   }) {
     return AdminUpdateUser(
-      role: role == const $CopyWithPlaceholder()
+      role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
-      oldPassword: oldPassword == const $CopyWithPlaceholder()
+      oldPassword:
+          oldPassword == const $CopyWithPlaceholder() || oldPassword == null
           ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
           : oldPassword as String,
-      newPassword: newPassword == const $CopyWithPlaceholder()
+      newPassword:
+          newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
           : newPassword as String,
-      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder()
+      confirmNewPassword:
+          confirmNewPassword == const $CopyWithPlaceholder() ||
+              confirmNewPassword == null
           ? _value.confirmNewPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmNewPassword as String,
-      banReason: banReason == const $CopyWithPlaceholder()
+      banReason: banReason == const $CopyWithPlaceholder() || banReason == null
           ? _value.banReason
           // ignore: cast_nullable_to_non_nullable
           : banReason as String,
@@ -110,7 +117,7 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
           ? _value.banExpiresIn
           // ignore: cast_nullable_to_non_nullable
           : banExpiresIn as num?,
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
@@ -119,7 +126,8 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
 }
 
 extension $AdminUpdateUserCopyWith on AdminUpdateUser {
-  /// Returns a callable class that can be used as follows: `instanceOfAdminUpdateUser.copyWith(...)` or like so:`instanceOfAdminUpdateUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfAdminUpdateUser.copyWith(...)` or `instanceOfAdminUpdateUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$AdminUpdateUserCWProxy get copyWith => _$AdminUpdateUserCWProxyImpl(this);
 }

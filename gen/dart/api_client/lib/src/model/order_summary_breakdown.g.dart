@@ -17,12 +17,13 @@ abstract class _$OrderSummaryBreakdownCWProxy {
 
   OrderSummaryBreakdown perKgRate(num? perKgRate);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderSummaryBreakdown(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderSummaryBreakdown(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderSummaryBreakdown(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderSummaryBreakdown call({
     num? distance,
     num? duration,
@@ -32,7 +33,8 @@ abstract class _$OrderSummaryBreakdownCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderSummaryBreakdown.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderSummaryBreakdown.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderSummaryBreakdown.copyWith(...)` or call `instanceOfOrderSummaryBreakdown.copyWith.fieldName(value)` for a single field.
 class _$OrderSummaryBreakdownCWProxyImpl
     implements _$OrderSummaryBreakdownCWProxy {
   const _$OrderSummaryBreakdownCWProxyImpl(this._value);
@@ -40,28 +42,29 @@ class _$OrderSummaryBreakdownCWProxyImpl
   final OrderSummaryBreakdown _value;
 
   @override
-  OrderSummaryBreakdown distance(num? distance) => this(distance: distance);
+  OrderSummaryBreakdown distance(num? distance) => call(distance: distance);
 
   @override
-  OrderSummaryBreakdown duration(num? duration) => this(duration: duration);
+  OrderSummaryBreakdown duration(num? duration) => call(duration: duration);
 
   @override
   OrderSummaryBreakdown perMinuteRate(num? perMinuteRate) =>
-      this(perMinuteRate: perMinuteRate);
+      call(perMinuteRate: perMinuteRate);
 
   @override
-  OrderSummaryBreakdown weight(num? weight) => this(weight: weight);
+  OrderSummaryBreakdown weight(num? weight) => call(weight: weight);
 
   @override
-  OrderSummaryBreakdown perKgRate(num? perKgRate) => this(perKgRate: perKgRate);
+  OrderSummaryBreakdown perKgRate(num? perKgRate) => call(perKgRate: perKgRate);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderSummaryBreakdown(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderSummaryBreakdown(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderSummaryBreakdown(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderSummaryBreakdown call({
     Object? distance = const $CopyWithPlaceholder(),
     Object? duration = const $CopyWithPlaceholder(),
@@ -95,7 +98,8 @@ class _$OrderSummaryBreakdownCWProxyImpl
 }
 
 extension $OrderSummaryBreakdownCopyWith on OrderSummaryBreakdown {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderSummaryBreakdown.copyWith(...)` or like so:`instanceOfOrderSummaryBreakdown.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderSummaryBreakdown.copyWith(...)` or `instanceOfOrderSummaryBreakdown.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderSummaryBreakdownCWProxy get copyWith =>
       _$OrderSummaryBreakdownCWProxyImpl(this);

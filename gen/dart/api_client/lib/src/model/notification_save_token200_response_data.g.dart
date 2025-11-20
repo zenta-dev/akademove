@@ -9,16 +9,18 @@ part of 'notification_save_token200_response_data.dart';
 abstract class _$NotificationSaveToken200ResponseDataCWProxy {
   NotificationSaveToken200ResponseData ok(bool ok);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSaveToken200ResponseData(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSaveToken200ResponseData(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSaveToken200ResponseData(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSaveToken200ResponseData call({bool ok});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNotificationSaveToken200ResponseData.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNotificationSaveToken200ResponseData.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfNotificationSaveToken200ResponseData.copyWith(...)` or call `instanceOfNotificationSaveToken200ResponseData.copyWith.fieldName(value)` for a single field.
 class _$NotificationSaveToken200ResponseDataCWProxyImpl
     implements _$NotificationSaveToken200ResponseDataCWProxy {
   const _$NotificationSaveToken200ResponseDataCWProxyImpl(this._value);
@@ -26,20 +28,21 @@ class _$NotificationSaveToken200ResponseDataCWProxyImpl
   final NotificationSaveToken200ResponseData _value;
 
   @override
-  NotificationSaveToken200ResponseData ok(bool ok) => this(ok: ok);
+  NotificationSaveToken200ResponseData ok(bool ok) => call(ok: ok);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSaveToken200ResponseData(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSaveToken200ResponseData(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSaveToken200ResponseData(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSaveToken200ResponseData call({
     Object? ok = const $CopyWithPlaceholder(),
   }) {
     return NotificationSaveToken200ResponseData(
-      ok: ok == const $CopyWithPlaceholder()
+      ok: ok == const $CopyWithPlaceholder() || ok == null
           ? _value.ok
           // ignore: cast_nullable_to_non_nullable
           : ok as bool,
@@ -49,7 +52,8 @@ class _$NotificationSaveToken200ResponseDataCWProxyImpl
 
 extension $NotificationSaveToken200ResponseDataCopyWith
     on NotificationSaveToken200ResponseData {
-  /// Returns a callable class that can be used as follows: `instanceOfNotificationSaveToken200ResponseData.copyWith(...)` or like so:`instanceOfNotificationSaveToken200ResponseData.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfNotificationSaveToken200ResponseData.copyWith(...)` or `instanceOfNotificationSaveToken200ResponseData.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$NotificationSaveToken200ResponseDataCWProxy get copyWith =>
       _$NotificationSaveToken200ResponseDataCWProxyImpl(this);

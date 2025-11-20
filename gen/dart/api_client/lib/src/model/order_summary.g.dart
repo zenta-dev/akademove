@@ -25,12 +25,13 @@ abstract class _$OrderSummaryCWProxy {
 
   OrderSummary breakdown(OrderSummaryBreakdown breakdown);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderSummary(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderSummary(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderSummary(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderSummary call({
     num distanceKm,
     num baseFare,
@@ -44,49 +45,51 @@ abstract class _$OrderSummaryCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderSummary.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderSummary.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderSummary.copyWith(...)` or call `instanceOfOrderSummary.copyWith.fieldName(value)` for a single field.
 class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
   const _$OrderSummaryCWProxyImpl(this._value);
 
   final OrderSummary _value;
 
   @override
-  OrderSummary distanceKm(num distanceKm) => this(distanceKm: distanceKm);
+  OrderSummary distanceKm(num distanceKm) => call(distanceKm: distanceKm);
 
   @override
-  OrderSummary baseFare(num baseFare) => this(baseFare: baseFare);
+  OrderSummary baseFare(num baseFare) => call(baseFare: baseFare);
 
   @override
   OrderSummary distanceFare(num distanceFare) =>
-      this(distanceFare: distanceFare);
+      call(distanceFare: distanceFare);
 
   @override
   OrderSummary additionalFees(num additionalFees) =>
-      this(additionalFees: additionalFees);
+      call(additionalFees: additionalFees);
 
   @override
-  OrderSummary subtotal(num subtotal) => this(subtotal: subtotal);
+  OrderSummary subtotal(num subtotal) => call(subtotal: subtotal);
 
   @override
-  OrderSummary platformFee(num platformFee) => this(platformFee: platformFee);
+  OrderSummary platformFee(num platformFee) => call(platformFee: platformFee);
 
   @override
-  OrderSummary tax(num tax) => this(tax: tax);
+  OrderSummary tax(num tax) => call(tax: tax);
 
   @override
-  OrderSummary totalCost(num totalCost) => this(totalCost: totalCost);
+  OrderSummary totalCost(num totalCost) => call(totalCost: totalCost);
 
   @override
   OrderSummary breakdown(OrderSummaryBreakdown breakdown) =>
-      this(breakdown: breakdown);
+      call(breakdown: breakdown);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderSummary(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderSummary(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderSummary(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderSummary call({
     Object? distanceKm = const $CopyWithPlaceholder(),
     Object? baseFare = const $CopyWithPlaceholder(),
@@ -99,39 +102,44 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
     Object? breakdown = const $CopyWithPlaceholder(),
   }) {
     return OrderSummary(
-      distanceKm: distanceKm == const $CopyWithPlaceholder()
+      distanceKm:
+          distanceKm == const $CopyWithPlaceholder() || distanceKm == null
           ? _value.distanceKm
           // ignore: cast_nullable_to_non_nullable
           : distanceKm as num,
-      baseFare: baseFare == const $CopyWithPlaceholder()
+      baseFare: baseFare == const $CopyWithPlaceholder() || baseFare == null
           ? _value.baseFare
           // ignore: cast_nullable_to_non_nullable
           : baseFare as num,
-      distanceFare: distanceFare == const $CopyWithPlaceholder()
+      distanceFare:
+          distanceFare == const $CopyWithPlaceholder() || distanceFare == null
           ? _value.distanceFare
           // ignore: cast_nullable_to_non_nullable
           : distanceFare as num,
-      additionalFees: additionalFees == const $CopyWithPlaceholder()
+      additionalFees:
+          additionalFees == const $CopyWithPlaceholder() ||
+              additionalFees == null
           ? _value.additionalFees
           // ignore: cast_nullable_to_non_nullable
           : additionalFees as num,
-      subtotal: subtotal == const $CopyWithPlaceholder()
+      subtotal: subtotal == const $CopyWithPlaceholder() || subtotal == null
           ? _value.subtotal
           // ignore: cast_nullable_to_non_nullable
           : subtotal as num,
-      platformFee: platformFee == const $CopyWithPlaceholder()
+      platformFee:
+          platformFee == const $CopyWithPlaceholder() || platformFee == null
           ? _value.platformFee
           // ignore: cast_nullable_to_non_nullable
           : platformFee as num,
-      tax: tax == const $CopyWithPlaceholder()
+      tax: tax == const $CopyWithPlaceholder() || tax == null
           ? _value.tax
           // ignore: cast_nullable_to_non_nullable
           : tax as num,
-      totalCost: totalCost == const $CopyWithPlaceholder()
+      totalCost: totalCost == const $CopyWithPlaceholder() || totalCost == null
           ? _value.totalCost
           // ignore: cast_nullable_to_non_nullable
           : totalCost as num,
-      breakdown: breakdown == const $CopyWithPlaceholder()
+      breakdown: breakdown == const $CopyWithPlaceholder() || breakdown == null
           ? _value.breakdown
           // ignore: cast_nullable_to_non_nullable
           : breakdown as OrderSummaryBreakdown,
@@ -140,7 +148,8 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
 }
 
 extension $OrderSummaryCopyWith on OrderSummary {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderSummary.copyWith(...)` or like so:`instanceOfOrderSummary.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderSummary.copyWith(...)` or `instanceOfOrderSummary.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderSummaryCWProxy get copyWith => _$OrderSummaryCWProxyImpl(this);
 }

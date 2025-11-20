@@ -25,12 +25,13 @@ abstract class _$UserNotificationCWProxy {
 
   UserNotification readAt(DateTime? readAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserNotification(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserNotification(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserNotification(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserNotification call({
     String id,
     String userId,
@@ -44,46 +45,48 @@ abstract class _$UserNotificationCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserNotification.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserNotification.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUserNotification.copyWith(...)` or call `instanceOfUserNotification.copyWith.fieldName(value)` for a single field.
 class _$UserNotificationCWProxyImpl implements _$UserNotificationCWProxy {
   const _$UserNotificationCWProxyImpl(this._value);
 
   final UserNotification _value;
 
   @override
-  UserNotification id(String id) => this(id: id);
+  UserNotification id(String id) => call(id: id);
 
   @override
-  UserNotification userId(String userId) => this(userId: userId);
+  UserNotification userId(String userId) => call(userId: userId);
 
   @override
-  UserNotification title(String title) => this(title: title);
+  UserNotification title(String title) => call(title: title);
 
   @override
-  UserNotification body(String body) => this(body: body);
+  UserNotification body(String body) => call(body: body);
 
   @override
-  UserNotification data(Object? data) => this(data: data);
+  UserNotification data(Object? data) => call(data: data);
 
   @override
-  UserNotification messageId(String? messageId) => this(messageId: messageId);
+  UserNotification messageId(String? messageId) => call(messageId: messageId);
 
   @override
-  UserNotification isRead(bool isRead) => this(isRead: isRead);
+  UserNotification isRead(bool isRead) => call(isRead: isRead);
 
   @override
-  UserNotification createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  UserNotification createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  UserNotification readAt(DateTime? readAt) => this(readAt: readAt);
+  UserNotification readAt(DateTime? readAt) => call(readAt: readAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserNotification(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserNotification(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserNotification(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserNotification call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -96,19 +99,19 @@ class _$UserNotificationCWProxyImpl implements _$UserNotificationCWProxy {
     Object? readAt = const $CopyWithPlaceholder(),
   }) {
     return UserNotification(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      title: title == const $CopyWithPlaceholder()
+      title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
           : title as String,
-      body: body == const $CopyWithPlaceholder()
+      body: body == const $CopyWithPlaceholder() || body == null
           ? _value.body
           // ignore: cast_nullable_to_non_nullable
           : body as String,
@@ -120,11 +123,11 @@ class _$UserNotificationCWProxyImpl implements _$UserNotificationCWProxy {
           ? _value.messageId
           // ignore: cast_nullable_to_non_nullable
           : messageId as String?,
-      isRead: isRead == const $CopyWithPlaceholder()
+      isRead: isRead == const $CopyWithPlaceholder() || isRead == null
           ? _value.isRead
           // ignore: cast_nullable_to_non_nullable
           : isRead as bool,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
@@ -137,7 +140,8 @@ class _$UserNotificationCWProxyImpl implements _$UserNotificationCWProxy {
 }
 
 extension $UserNotificationCopyWith on UserNotification {
-  /// Returns a callable class that can be used as follows: `instanceOfUserNotification.copyWith(...)` or like so:`instanceOfUserNotification.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUserNotification.copyWith(...)` or `instanceOfUserNotification.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserNotificationCWProxy get copyWith => _$UserNotificationCWProxyImpl(this);
 }

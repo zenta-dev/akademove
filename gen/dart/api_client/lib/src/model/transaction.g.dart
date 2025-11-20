@@ -31,12 +31,13 @@ abstract class _$TransactionCWProxy {
 
   Transaction updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Transaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Transaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Transaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Transaction call({
     String id,
     String walletId,
@@ -53,59 +54,61 @@ abstract class _$TransactionCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTransaction.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfTransaction.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfTransaction.copyWith(...)` or call `instanceOfTransaction.copyWith.fieldName(value)` for a single field.
 class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
   const _$TransactionCWProxyImpl(this._value);
 
   final Transaction _value;
 
   @override
-  Transaction id(String id) => this(id: id);
+  Transaction id(String id) => call(id: id);
 
   @override
-  Transaction walletId(String walletId) => this(walletId: walletId);
+  Transaction walletId(String walletId) => call(walletId: walletId);
 
   @override
-  Transaction type(TransactionType type) => this(type: type);
+  Transaction type(TransactionType type) => call(type: type);
 
   @override
-  Transaction amount(num amount) => this(amount: amount);
+  Transaction amount(num amount) => call(amount: amount);
 
   @override
   Transaction balanceBefore(num? balanceBefore) =>
-      this(balanceBefore: balanceBefore);
+      call(balanceBefore: balanceBefore);
 
   @override
   Transaction balanceAfter(num? balanceAfter) =>
-      this(balanceAfter: balanceAfter);
+      call(balanceAfter: balanceAfter);
 
   @override
-  Transaction status(TransactionStatus status) => this(status: status);
+  Transaction status(TransactionStatus status) => call(status: status);
 
   @override
   Transaction description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
   Transaction referenceId(String? referenceId) =>
-      this(referenceId: referenceId);
+      call(referenceId: referenceId);
 
   @override
-  Transaction metadata(Object? metadata) => this(metadata: metadata);
+  Transaction metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  Transaction createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Transaction createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Transaction updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Transaction updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Transaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Transaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Transaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Transaction call({
     Object? id = const $CopyWithPlaceholder(),
     Object? walletId = const $CopyWithPlaceholder(),
@@ -121,19 +124,19 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Transaction(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      walletId: walletId == const $CopyWithPlaceholder()
+      walletId: walletId == const $CopyWithPlaceholder() || walletId == null
           ? _value.walletId
           // ignore: cast_nullable_to_non_nullable
           : walletId as String,
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as TransactionType,
-      amount: amount == const $CopyWithPlaceholder()
+      amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
@@ -145,7 +148,7 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
           ? _value.balanceAfter
           // ignore: cast_nullable_to_non_nullable
           : balanceAfter as num?,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as TransactionStatus,
@@ -161,11 +164,11 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
           ? _value.metadata
           // ignore: cast_nullable_to_non_nullable
           : metadata as Object?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -174,7 +177,8 @@ class _$TransactionCWProxyImpl implements _$TransactionCWProxy {
 }
 
 extension $TransactionCopyWith on Transaction {
-  /// Returns a callable class that can be used as follows: `instanceOfTransaction.copyWith(...)` or like so:`instanceOfTransaction.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfTransaction.copyWith(...)` or `instanceOfTransaction.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$TransactionCWProxy get copyWith => _$TransactionCWProxyImpl(this);
 }

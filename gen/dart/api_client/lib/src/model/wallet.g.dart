@@ -21,12 +21,13 @@ abstract class _$WalletCWProxy {
 
   Wallet updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Wallet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Wallet(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Wallet(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Wallet call({
     String id,
     String userId,
@@ -38,40 +39,42 @@ abstract class _$WalletCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWallet.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWallet.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWallet.copyWith(...)` or call `instanceOfWallet.copyWith.fieldName(value)` for a single field.
 class _$WalletCWProxyImpl implements _$WalletCWProxy {
   const _$WalletCWProxyImpl(this._value);
 
   final Wallet _value;
 
   @override
-  Wallet id(String id) => this(id: id);
+  Wallet id(String id) => call(id: id);
 
   @override
-  Wallet userId(String userId) => this(userId: userId);
+  Wallet userId(String userId) => call(userId: userId);
 
   @override
-  Wallet balance(num balance) => this(balance: balance);
+  Wallet balance(num balance) => call(balance: balance);
 
   @override
-  Wallet currency(Currency currency) => this(currency: currency);
+  Wallet currency(Currency currency) => call(currency: currency);
 
   @override
-  Wallet isActive(bool isActive) => this(isActive: isActive);
+  Wallet isActive(bool isActive) => call(isActive: isActive);
 
   @override
-  Wallet createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Wallet createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Wallet updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Wallet updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Wallet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Wallet(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Wallet(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Wallet call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -82,31 +85,31 @@ class _$WalletCWProxyImpl implements _$WalletCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Wallet(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      balance: balance == const $CopyWithPlaceholder()
+      balance: balance == const $CopyWithPlaceholder() || balance == null
           ? _value.balance
           // ignore: cast_nullable_to_non_nullable
           : balance as num,
-      currency: currency == const $CopyWithPlaceholder()
+      currency: currency == const $CopyWithPlaceholder() || currency == null
           ? _value.currency
           // ignore: cast_nullable_to_non_nullable
           : currency as Currency,
-      isActive: isActive == const $CopyWithPlaceholder()
+      isActive: isActive == const $CopyWithPlaceholder() || isActive == null
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -115,7 +118,8 @@ class _$WalletCWProxyImpl implements _$WalletCWProxy {
 }
 
 extension $WalletCopyWith on Wallet {
-  /// Returns a callable class that can be used as follows: `instanceOfWallet.copyWith(...)` or like so:`instanceOfWallet.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWallet.copyWith(...)` or `instanceOfWallet.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WalletCWProxy get copyWith => _$WalletCWProxyImpl(this);
 }

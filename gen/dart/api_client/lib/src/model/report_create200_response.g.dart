@@ -15,12 +15,13 @@ abstract class _$ReportCreate200ResponseCWProxy {
 
   ReportCreate200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReportCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ReportCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// ReportCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   ReportCreate200Response call({
     String message,
     Report data,
@@ -29,7 +30,8 @@ abstract class _$ReportCreate200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReportCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReportCreate200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfReportCreate200Response.copyWith(...)` or call `instanceOfReportCreate200Response.copyWith.fieldName(value)` for a single field.
 class _$ReportCreate200ResponseCWProxyImpl
     implements _$ReportCreate200ResponseCWProxy {
   const _$ReportCreate200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$ReportCreate200ResponseCWProxyImpl
   final ReportCreate200Response _value;
 
   @override
-  ReportCreate200Response message(String message) => this(message: message);
+  ReportCreate200Response message(String message) => call(message: message);
 
   @override
-  ReportCreate200Response data(Report data) => this(data: data);
+  ReportCreate200Response data(Report data) => call(data: data);
 
   @override
   ReportCreate200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   ReportCreate200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ReportCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ReportCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// ReportCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   ReportCreate200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$ReportCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ReportCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Report,
@@ -85,7 +88,8 @@ class _$ReportCreate200ResponseCWProxyImpl
 }
 
 extension $ReportCreate200ResponseCopyWith on ReportCreate200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfReportCreate200Response.copyWith(...)` or like so:`instanceOfReportCreate200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfReportCreate200Response.copyWith(...)` or `instanceOfReportCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$ReportCreate200ResponseCWProxy get copyWith =>
       _$ReportCreate200ResponseCWProxyImpl(this);

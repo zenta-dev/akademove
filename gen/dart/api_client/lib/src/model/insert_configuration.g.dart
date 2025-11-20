@@ -13,45 +13,48 @@ abstract class _$InsertConfigurationCWProxy {
 
   InsertConfiguration description(String? description);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertConfiguration call({String name, Object? value, String? description});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertConfiguration.copyWith(...)` or call `instanceOfInsertConfiguration.copyWith.fieldName(value)` for a single field.
 class _$InsertConfigurationCWProxyImpl implements _$InsertConfigurationCWProxy {
   const _$InsertConfigurationCWProxyImpl(this._value);
 
   final InsertConfiguration _value;
 
   @override
-  InsertConfiguration name(String name) => this(name: name);
+  InsertConfiguration name(String name) => call(name: name);
 
   @override
-  InsertConfiguration value(Object? value) => this(value: value);
+  InsertConfiguration value(Object? value) => call(value: value);
 
   @override
   InsertConfiguration description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertConfiguration call({
     Object? name = const $CopyWithPlaceholder(),
     Object? value = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
   }) {
     return InsertConfiguration(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
@@ -68,7 +71,8 @@ class _$InsertConfigurationCWProxyImpl implements _$InsertConfigurationCWProxy {
 }
 
 extension $InsertConfigurationCopyWith on InsertConfiguration {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertConfiguration.copyWith(...)` or like so:`instanceOfInsertConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertConfiguration.copyWith(...)` or `instanceOfInsertConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertConfigurationCWProxy get copyWith =>
       _$InsertConfigurationCWProxyImpl(this);

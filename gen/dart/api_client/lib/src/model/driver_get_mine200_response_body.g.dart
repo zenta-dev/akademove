@@ -15,12 +15,13 @@ abstract class _$DriverGetMine200ResponseBodyCWProxy {
 
   DriverGetMine200ResponseBody totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverGetMine200ResponseBody(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverGetMine200ResponseBody call({
     String message,
     Driver data,
@@ -29,7 +30,8 @@ abstract class _$DriverGetMine200ResponseBodyCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverGetMine200ResponseBody.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverGetMine200ResponseBody.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverGetMine200ResponseBody.copyWith(...)` or call `instanceOfDriverGetMine200ResponseBody.copyWith.fieldName(value)` for a single field.
 class _$DriverGetMine200ResponseBodyCWProxyImpl
     implements _$DriverGetMine200ResponseBodyCWProxy {
   const _$DriverGetMine200ResponseBodyCWProxyImpl(this._value);
@@ -38,26 +40,27 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
 
   @override
   DriverGetMine200ResponseBody message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
-  DriverGetMine200ResponseBody data(Driver data) => this(data: data);
+  DriverGetMine200ResponseBody data(Driver data) => call(data: data);
 
   @override
   DriverGetMine200ResponseBody pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   DriverGetMine200ResponseBody totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverGetMine200ResponseBody(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverGetMine200ResponseBody call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -65,11 +68,11 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverGetMine200ResponseBody(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Driver,
@@ -87,7 +90,8 @@ class _$DriverGetMine200ResponseBodyCWProxyImpl
 
 extension $DriverGetMine200ResponseBodyCopyWith
     on DriverGetMine200ResponseBody {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverGetMine200ResponseBody.copyWith(...)` or like so:`instanceOfDriverGetMine200ResponseBody.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverGetMine200ResponseBody.copyWith(...)` or `instanceOfDriverGetMine200ResponseBody.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverGetMine200ResponseBodyCWProxy get copyWith =>
       _$DriverGetMine200ResponseBodyCWProxyImpl(this);

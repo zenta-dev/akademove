@@ -9,34 +9,37 @@ part of 'unban_user.dart';
 abstract class _$UnbanUserCWProxy {
   UnbanUser id(String id);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UnbanUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UnbanUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UnbanUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UnbanUser call({String id});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUnbanUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUnbanUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUnbanUser.copyWith(...)` or call `instanceOfUnbanUser.copyWith.fieldName(value)` for a single field.
 class _$UnbanUserCWProxyImpl implements _$UnbanUserCWProxy {
   const _$UnbanUserCWProxyImpl(this._value);
 
   final UnbanUser _value;
 
   @override
-  UnbanUser id(String id) => this(id: id);
+  UnbanUser id(String id) => call(id: id);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UnbanUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UnbanUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UnbanUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UnbanUser call({Object? id = const $CopyWithPlaceholder()}) {
     return UnbanUser(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
@@ -45,7 +48,8 @@ class _$UnbanUserCWProxyImpl implements _$UnbanUserCWProxy {
 }
 
 extension $UnbanUserCopyWith on UnbanUser {
-  /// Returns a callable class that can be used as follows: `instanceOfUnbanUser.copyWith(...)` or like so:`instanceOfUnbanUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUnbanUser.copyWith(...)` or `instanceOfUnbanUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UnbanUserCWProxy get copyWith => _$UnbanUserCWProxyImpl(this);
 }

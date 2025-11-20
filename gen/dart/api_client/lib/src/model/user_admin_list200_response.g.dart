@@ -15,12 +15,13 @@ abstract class _$UserAdminList200ResponseCWProxy {
 
   UserAdminList200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserAdminList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserAdminList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserAdminList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserAdminList200Response call({
     String message,
     List<User> data,
@@ -29,7 +30,8 @@ abstract class _$UserAdminList200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserAdminList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserAdminList200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUserAdminList200Response.copyWith(...)` or call `instanceOfUserAdminList200Response.copyWith.fieldName(value)` for a single field.
 class _$UserAdminList200ResponseCWProxyImpl
     implements _$UserAdminList200ResponseCWProxy {
   const _$UserAdminList200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$UserAdminList200ResponseCWProxyImpl
   final UserAdminList200Response _value;
 
   @override
-  UserAdminList200Response message(String message) => this(message: message);
+  UserAdminList200Response message(String message) => call(message: message);
 
   @override
-  UserAdminList200Response data(List<User> data) => this(data: data);
+  UserAdminList200Response data(List<User> data) => call(data: data);
 
   @override
   UserAdminList200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   UserAdminList200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserAdminList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserAdminList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserAdminList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserAdminList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$UserAdminList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return UserAdminList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<User>,
@@ -85,7 +88,8 @@ class _$UserAdminList200ResponseCWProxyImpl
 }
 
 extension $UserAdminList200ResponseCopyWith on UserAdminList200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfUserAdminList200Response.copyWith(...)` or like so:`instanceOfUserAdminList200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUserAdminList200Response.copyWith(...)` or `instanceOfUserAdminList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserAdminList200ResponseCWProxy get copyWith =>
       _$UserAdminList200ResponseCWProxyImpl(this);

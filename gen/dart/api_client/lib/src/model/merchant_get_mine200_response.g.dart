@@ -11,19 +11,21 @@ abstract class _$MerchantGetMine200ResponseCWProxy {
 
   MerchantGetMine200Response body(MerchantGetMine200ResponseBody body);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantGetMine200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantGetMine200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantGetMine200Response call({
     Object? status,
     MerchantGetMine200ResponseBody body,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantGetMine200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantGetMine200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchantGetMine200Response.copyWith(...)` or call `instanceOfMerchantGetMine200Response.copyWith.fieldName(value)` for a single field.
 class _$MerchantGetMine200ResponseCWProxyImpl
     implements _$MerchantGetMine200ResponseCWProxy {
   const _$MerchantGetMine200ResponseCWProxyImpl(this._value);
@@ -31,19 +33,20 @@ class _$MerchantGetMine200ResponseCWProxyImpl
   final MerchantGetMine200Response _value;
 
   @override
-  MerchantGetMine200Response status(Object? status) => this(status: status);
+  MerchantGetMine200Response status(Object? status) => call(status: status);
 
   @override
   MerchantGetMine200Response body(MerchantGetMine200ResponseBody body) =>
-      this(body: body);
+      call(body: body);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantGetMine200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantGetMine200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantGetMine200Response call({
     Object? status = const $CopyWithPlaceholder(),
     Object? body = const $CopyWithPlaceholder(),
@@ -53,7 +56,7 @@ class _$MerchantGetMine200ResponseCWProxyImpl
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as Object?,
-      body: body == const $CopyWithPlaceholder()
+      body: body == const $CopyWithPlaceholder() || body == null
           ? _value.body
           // ignore: cast_nullable_to_non_nullable
           : body as MerchantGetMine200ResponseBody,
@@ -62,7 +65,8 @@ class _$MerchantGetMine200ResponseCWProxyImpl
 }
 
 extension $MerchantGetMine200ResponseCopyWith on MerchantGetMine200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchantGetMine200Response.copyWith(...)` or like so:`instanceOfMerchantGetMine200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchantGetMine200Response.copyWith(...)` or `instanceOfMerchantGetMine200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantGetMine200ResponseCWProxy get copyWith =>
       _$MerchantGetMine200ResponseCWProxyImpl(this);

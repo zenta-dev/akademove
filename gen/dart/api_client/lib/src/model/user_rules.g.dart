@@ -9,31 +9,34 @@ part of 'user_rules.dart';
 abstract class _$UserRulesCWProxy {
   UserRules newUserOnly(bool? newUserOnly);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserRules call({bool? newUserOnly});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserRules.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserRules.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUserRules.copyWith(...)` or call `instanceOfUserRules.copyWith.fieldName(value)` for a single field.
 class _$UserRulesCWProxyImpl implements _$UserRulesCWProxy {
   const _$UserRulesCWProxyImpl(this._value);
 
   final UserRules _value;
 
   @override
-  UserRules newUserOnly(bool? newUserOnly) => this(newUserOnly: newUserOnly);
+  UserRules newUserOnly(bool? newUserOnly) => call(newUserOnly: newUserOnly);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserRules call({Object? newUserOnly = const $CopyWithPlaceholder()}) {
     return UserRules(
       newUserOnly: newUserOnly == const $CopyWithPlaceholder()
@@ -45,7 +48,8 @@ class _$UserRulesCWProxyImpl implements _$UserRulesCWProxy {
 }
 
 extension $UserRulesCopyWith on UserRules {
-  /// Returns a callable class that can be used as follows: `instanceOfUserRules.copyWith(...)` or like so:`instanceOfUserRules.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUserRules.copyWith(...)` or `instanceOfUserRules.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserRulesCWProxy get copyWith => _$UserRulesCWProxyImpl(this);
 }

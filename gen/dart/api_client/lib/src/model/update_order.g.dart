@@ -37,12 +37,13 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder merchant(OrderMerchant? merchant);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateOrder(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateOrder(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateOrder call({
     String? driverId,
     String? merchantId,
@@ -62,65 +63,67 @@ abstract class _$UpdateOrderCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateOrder.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateOrder.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateOrder.copyWith(...)` or call `instanceOfUpdateOrder.copyWith.fieldName(value)` for a single field.
 class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   const _$UpdateOrderCWProxyImpl(this._value);
 
   final UpdateOrder _value;
 
   @override
-  UpdateOrder driverId(String? driverId) => this(driverId: driverId);
+  UpdateOrder driverId(String? driverId) => call(driverId: driverId);
 
   @override
-  UpdateOrder merchantId(String? merchantId) => this(merchantId: merchantId);
+  UpdateOrder merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  UpdateOrder type(OrderType? type) => this(type: type);
+  UpdateOrder type(OrderType? type) => call(type: type);
 
   @override
-  UpdateOrder status(OrderStatus? status) => this(status: status);
+  UpdateOrder status(OrderStatus? status) => call(status: status);
 
   @override
-  UpdateOrder distanceKm(num? distanceKm) => this(distanceKm: distanceKm);
+  UpdateOrder distanceKm(num? distanceKm) => call(distanceKm: distanceKm);
 
   @override
-  UpdateOrder tip(num? tip) => this(tip: tip);
+  UpdateOrder tip(num? tip) => call(tip: tip);
 
   @override
-  UpdateOrder totalPrice(num? totalPrice) => this(totalPrice: totalPrice);
+  UpdateOrder totalPrice(num? totalPrice) => call(totalPrice: totalPrice);
 
   @override
-  UpdateOrder note(OrderNote? note) => this(note: note);
+  UpdateOrder note(OrderNote? note) => call(note: note);
 
   @override
   UpdateOrder cancelReason(String? cancelReason) =>
-      this(cancelReason: cancelReason);
+      call(cancelReason: cancelReason);
 
   @override
-  UpdateOrder gender(UserGender? gender) => this(gender: gender);
+  UpdateOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
-  UpdateOrder itemCount(num? itemCount) => this(itemCount: itemCount);
+  UpdateOrder itemCount(num? itemCount) => call(itemCount: itemCount);
 
   @override
-  UpdateOrder items(List<OrderItem>? items) => this(items: items);
+  UpdateOrder items(List<OrderItem>? items) => call(items: items);
 
   @override
-  UpdateOrder user(DriverUser? user) => this(user: user);
+  UpdateOrder user(DriverUser? user) => call(user: user);
 
   @override
-  UpdateOrder driver(OrderDriver? driver) => this(driver: driver);
+  UpdateOrder driver(OrderDriver? driver) => call(driver: driver);
 
   @override
-  UpdateOrder merchant(OrderMerchant? merchant) => this(merchant: merchant);
+  UpdateOrder merchant(OrderMerchant? merchant) => call(merchant: merchant);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateOrder(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateOrder(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateOrder call({
     Object? driverId = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
@@ -204,7 +207,8 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
 }
 
 extension $UpdateOrderCopyWith on UpdateOrder {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateOrder.copyWith(...)` or like so:`instanceOfUpdateOrder.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateOrder.copyWith(...)` or `instanceOfUpdateOrder.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateOrderCWProxy get copyWith => _$UpdateOrderCWProxyImpl(this);
 }

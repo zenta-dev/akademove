@@ -25,12 +25,13 @@ abstract class _$InsertCouponCWProxy {
 
   InsertCoupon isActive(bool isActive);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertCoupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertCoupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertCoupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertCoupon call({
     String name,
     String code,
@@ -44,49 +45,51 @@ abstract class _$InsertCouponCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertCoupon.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertCoupon.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertCoupon.copyWith(...)` or call `instanceOfInsertCoupon.copyWith.fieldName(value)` for a single field.
 class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
   const _$InsertCouponCWProxyImpl(this._value);
 
   final InsertCoupon _value;
 
   @override
-  InsertCoupon name(String name) => this(name: name);
+  InsertCoupon name(String name) => call(name: name);
 
   @override
-  InsertCoupon code(String code) => this(code: code);
+  InsertCoupon code(String code) => call(code: code);
 
   @override
-  InsertCoupon rules(CouponRules rules) => this(rules: rules);
+  InsertCoupon rules(CouponRules rules) => call(rules: rules);
 
   @override
   InsertCoupon discountAmount(num? discountAmount) =>
-      this(discountAmount: discountAmount);
+      call(discountAmount: discountAmount);
 
   @override
   InsertCoupon discountPercentage(num? discountPercentage) =>
-      this(discountPercentage: discountPercentage);
+      call(discountPercentage: discountPercentage);
 
   @override
-  InsertCoupon usageLimit(num usageLimit) => this(usageLimit: usageLimit);
+  InsertCoupon usageLimit(num usageLimit) => call(usageLimit: usageLimit);
 
   @override
   InsertCoupon periodStart(DateTime periodStart) =>
-      this(periodStart: periodStart);
+      call(periodStart: periodStart);
 
   @override
-  InsertCoupon periodEnd(DateTime periodEnd) => this(periodEnd: periodEnd);
+  InsertCoupon periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  InsertCoupon isActive(bool isActive) => this(isActive: isActive);
+  InsertCoupon isActive(bool isActive) => call(isActive: isActive);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertCoupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertCoupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertCoupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertCoupon call({
     Object? name = const $CopyWithPlaceholder(),
     Object? code = const $CopyWithPlaceholder(),
@@ -99,15 +102,15 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
     return InsertCoupon(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      code: code == const $CopyWithPlaceholder()
+      code: code == const $CopyWithPlaceholder() || code == null
           ? _value.code
           // ignore: cast_nullable_to_non_nullable
           : code as String,
-      rules: rules == const $CopyWithPlaceholder()
+      rules: rules == const $CopyWithPlaceholder() || rules == null
           ? _value.rules
           // ignore: cast_nullable_to_non_nullable
           : rules as CouponRules,
@@ -119,19 +122,21 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
           ? _value.discountPercentage
           // ignore: cast_nullable_to_non_nullable
           : discountPercentage as num?,
-      usageLimit: usageLimit == const $CopyWithPlaceholder()
+      usageLimit:
+          usageLimit == const $CopyWithPlaceholder() || usageLimit == null
           ? _value.usageLimit
           // ignore: cast_nullable_to_non_nullable
           : usageLimit as num,
-      periodStart: periodStart == const $CopyWithPlaceholder()
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder()
+      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
           : periodEnd as DateTime,
-      isActive: isActive == const $CopyWithPlaceholder()
+      isActive: isActive == const $CopyWithPlaceholder() || isActive == null
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool,
@@ -140,7 +145,8 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
 }
 
 extension $InsertCouponCopyWith on InsertCoupon {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertCoupon.copyWith(...)` or like so:`instanceOfInsertCoupon.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertCoupon.copyWith(...)` or `instanceOfInsertCoupon.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertCouponCWProxy get copyWith => _$InsertCouponCWProxyImpl(this);
 }

@@ -15,12 +15,13 @@ abstract class _$BadgeRemove200ResponseCWProxy {
 
   BadgeRemove200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeRemove200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeRemove200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeRemove200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeRemove200Response call({
     String message,
     Object? data,
@@ -29,7 +30,8 @@ abstract class _$BadgeRemove200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeRemove200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeRemove200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeRemove200Response.copyWith(...)` or call `instanceOfBadgeRemove200Response.copyWith.fieldName(value)` for a single field.
 class _$BadgeRemove200ResponseCWProxyImpl
     implements _$BadgeRemove200ResponseCWProxy {
   const _$BadgeRemove200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$BadgeRemove200ResponseCWProxyImpl
   final BadgeRemove200Response _value;
 
   @override
-  BadgeRemove200Response message(String message) => this(message: message);
+  BadgeRemove200Response message(String message) => call(message: message);
 
   @override
-  BadgeRemove200Response data(Object? data) => this(data: data);
+  BadgeRemove200Response data(Object? data) => call(data: data);
 
   @override
   BadgeRemove200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   BadgeRemove200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeRemove200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeRemove200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeRemove200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeRemove200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,7 +67,7 @@ class _$BadgeRemove200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeRemove200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
@@ -85,7 +88,8 @@ class _$BadgeRemove200ResponseCWProxyImpl
 }
 
 extension $BadgeRemove200ResponseCopyWith on BadgeRemove200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeRemove200Response.copyWith(...)` or like so:`instanceOfBadgeRemove200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeRemove200Response.copyWith(...)` or `instanceOfBadgeRemove200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeRemove200ResponseCWProxy get copyWith =>
       _$BadgeRemove200ResponseCWProxyImpl(this);

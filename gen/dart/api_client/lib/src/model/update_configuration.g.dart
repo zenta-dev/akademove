@@ -13,38 +13,41 @@ abstract class _$UpdateConfigurationCWProxy {
 
   UpdateConfiguration description(String? description);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateConfiguration call({String? name, Object? value, String? description});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateConfiguration.copyWith(...)` or call `instanceOfUpdateConfiguration.copyWith.fieldName(value)` for a single field.
 class _$UpdateConfigurationCWProxyImpl implements _$UpdateConfigurationCWProxy {
   const _$UpdateConfigurationCWProxyImpl(this._value);
 
   final UpdateConfiguration _value;
 
   @override
-  UpdateConfiguration name(String? name) => this(name: name);
+  UpdateConfiguration name(String? name) => call(name: name);
 
   @override
-  UpdateConfiguration value(Object? value) => this(value: value);
+  UpdateConfiguration value(Object? value) => call(value: value);
 
   @override
   UpdateConfiguration description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateConfiguration call({
     Object? name = const $CopyWithPlaceholder(),
     Object? value = const $CopyWithPlaceholder(),
@@ -68,7 +71,8 @@ class _$UpdateConfigurationCWProxyImpl implements _$UpdateConfigurationCWProxy {
 }
 
 extension $UpdateConfigurationCopyWith on UpdateConfiguration {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateConfiguration.copyWith(...)` or like so:`instanceOfUpdateConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateConfiguration.copyWith(...)` or `instanceOfUpdateConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateConfigurationCWProxy get copyWith =>
       _$UpdateConfigurationCWProxyImpl(this);

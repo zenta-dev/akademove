@@ -15,12 +15,13 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
 
   DriverScheduleList200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleList200Response call({
     String message,
     List<DriverSchedule> data,
@@ -29,7 +30,8 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverScheduleList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverScheduleList200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverScheduleList200Response.copyWith(...)` or call `instanceOfDriverScheduleList200Response.copyWith.fieldName(value)` for a single field.
 class _$DriverScheduleList200ResponseCWProxyImpl
     implements _$DriverScheduleList200ResponseCWProxy {
   const _$DriverScheduleList200ResponseCWProxyImpl(this._value);
@@ -38,27 +40,28 @@ class _$DriverScheduleList200ResponseCWProxyImpl
 
   @override
   DriverScheduleList200Response message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
   DriverScheduleList200Response data(List<DriverSchedule> data) =>
-      this(data: data);
+      call(data: data);
 
   @override
   DriverScheduleList200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   DriverScheduleList200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -66,11 +69,11 @@ class _$DriverScheduleList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<DriverSchedule>,
@@ -88,7 +91,8 @@ class _$DriverScheduleList200ResponseCWProxyImpl
 
 extension $DriverScheduleList200ResponseCopyWith
     on DriverScheduleList200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverScheduleList200Response.copyWith(...)` or like so:`instanceOfDriverScheduleList200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverScheduleList200Response.copyWith(...)` or `instanceOfDriverScheduleList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverScheduleList200ResponseCWProxy get copyWith =>
       _$DriverScheduleList200ResponseCWProxyImpl(this);

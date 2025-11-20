@@ -17,12 +17,13 @@ abstract class _$RidePricingConfigurationCWProxy {
 
   RidePricingConfiguration taxRate(num taxRate);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `RidePricingConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `RidePricingConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// RidePricingConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   RidePricingConfiguration call({
     num baseFare,
     num perKmRate,
@@ -32,7 +33,8 @@ abstract class _$RidePricingConfigurationCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfRidePricingConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfRidePricingConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfRidePricingConfiguration.copyWith(...)` or call `instanceOfRidePricingConfiguration.copyWith.fieldName(value)` for a single field.
 class _$RidePricingConfigurationCWProxyImpl
     implements _$RidePricingConfigurationCWProxy {
   const _$RidePricingConfigurationCWProxyImpl(this._value);
@@ -40,30 +42,31 @@ class _$RidePricingConfigurationCWProxyImpl
   final RidePricingConfiguration _value;
 
   @override
-  RidePricingConfiguration baseFare(num baseFare) => this(baseFare: baseFare);
+  RidePricingConfiguration baseFare(num baseFare) => call(baseFare: baseFare);
 
   @override
   RidePricingConfiguration perKmRate(num perKmRate) =>
-      this(perKmRate: perKmRate);
+      call(perKmRate: perKmRate);
 
   @override
   RidePricingConfiguration minimumFare(num minimumFare) =>
-      this(minimumFare: minimumFare);
+      call(minimumFare: minimumFare);
 
   @override
   RidePricingConfiguration platformFeeRate(num platformFeeRate) =>
-      this(platformFeeRate: platformFeeRate);
+      call(platformFeeRate: platformFeeRate);
 
   @override
-  RidePricingConfiguration taxRate(num taxRate) => this(taxRate: taxRate);
+  RidePricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `RidePricingConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `RidePricingConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// RidePricingConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   RidePricingConfiguration call({
     Object? baseFare = const $CopyWithPlaceholder(),
     Object? perKmRate = const $CopyWithPlaceholder(),
@@ -72,23 +75,26 @@ class _$RidePricingConfigurationCWProxyImpl
     Object? taxRate = const $CopyWithPlaceholder(),
   }) {
     return RidePricingConfiguration(
-      baseFare: baseFare == const $CopyWithPlaceholder()
+      baseFare: baseFare == const $CopyWithPlaceholder() || baseFare == null
           ? _value.baseFare
           // ignore: cast_nullable_to_non_nullable
           : baseFare as num,
-      perKmRate: perKmRate == const $CopyWithPlaceholder()
+      perKmRate: perKmRate == const $CopyWithPlaceholder() || perKmRate == null
           ? _value.perKmRate
           // ignore: cast_nullable_to_non_nullable
           : perKmRate as num,
-      minimumFare: minimumFare == const $CopyWithPlaceholder()
+      minimumFare:
+          minimumFare == const $CopyWithPlaceholder() || minimumFare == null
           ? _value.minimumFare
           // ignore: cast_nullable_to_non_nullable
           : minimumFare as num,
-      platformFeeRate: platformFeeRate == const $CopyWithPlaceholder()
+      platformFeeRate:
+          platformFeeRate == const $CopyWithPlaceholder() ||
+              platformFeeRate == null
           ? _value.platformFeeRate
           // ignore: cast_nullable_to_non_nullable
           : platformFeeRate as num,
-      taxRate: taxRate == const $CopyWithPlaceholder()
+      taxRate: taxRate == const $CopyWithPlaceholder() || taxRate == null
           ? _value.taxRate
           // ignore: cast_nullable_to_non_nullable
           : taxRate as num,
@@ -97,7 +103,8 @@ class _$RidePricingConfigurationCWProxyImpl
 }
 
 extension $RidePricingConfigurationCopyWith on RidePricingConfiguration {
-  /// Returns a callable class that can be used as follows: `instanceOfRidePricingConfiguration.copyWith(...)` or like so:`instanceOfRidePricingConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfRidePricingConfiguration.copyWith(...)` or `instanceOfRidePricingConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$RidePricingConfigurationCWProxy get copyWith =>
       _$RidePricingConfigurationCWProxyImpl(this);

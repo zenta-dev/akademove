@@ -15,12 +15,13 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
 
   LeaderboardGet200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `LeaderboardGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `LeaderboardGet200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// LeaderboardGet200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   LeaderboardGet200Response call({
     String message,
     Leaderboard data,
@@ -29,7 +30,8 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfLeaderboardGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfLeaderboardGet200Response.copyWith(...)` or call `instanceOfLeaderboardGet200Response.copyWith.fieldName(value)` for a single field.
 class _$LeaderboardGet200ResponseCWProxyImpl
     implements _$LeaderboardGet200ResponseCWProxy {
   const _$LeaderboardGet200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$LeaderboardGet200ResponseCWProxyImpl
   final LeaderboardGet200Response _value;
 
   @override
-  LeaderboardGet200Response message(String message) => this(message: message);
+  LeaderboardGet200Response message(String message) => call(message: message);
 
   @override
-  LeaderboardGet200Response data(Leaderboard data) => this(data: data);
+  LeaderboardGet200Response data(Leaderboard data) => call(data: data);
 
   @override
   LeaderboardGet200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   LeaderboardGet200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `LeaderboardGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `LeaderboardGet200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// LeaderboardGet200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   LeaderboardGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$LeaderboardGet200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return LeaderboardGet200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Leaderboard,
@@ -85,7 +88,8 @@ class _$LeaderboardGet200ResponseCWProxyImpl
 }
 
 extension $LeaderboardGet200ResponseCopyWith on LeaderboardGet200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfLeaderboardGet200Response.copyWith(...)` or like so:`instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfLeaderboardGet200Response.copyWith(...)` or `instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$LeaderboardGet200ResponseCWProxy get copyWith =>
       _$LeaderboardGet200ResponseCWProxyImpl(this);

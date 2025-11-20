@@ -9,34 +9,37 @@ part of 'update_user_role.dart';
 abstract class _$UpdateUserRoleCWProxy {
   UpdateUserRole role(UserRole role);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserRole(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateUserRole(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateUserRole(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateUserRole call({UserRole role});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateUserRole.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateUserRole.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateUserRole.copyWith(...)` or call `instanceOfUpdateUserRole.copyWith.fieldName(value)` for a single field.
 class _$UpdateUserRoleCWProxyImpl implements _$UpdateUserRoleCWProxy {
   const _$UpdateUserRoleCWProxyImpl(this._value);
 
   final UpdateUserRole _value;
 
   @override
-  UpdateUserRole role(UserRole role) => this(role: role);
+  UpdateUserRole role(UserRole role) => call(role: role);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserRole(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateUserRole(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateUserRole(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateUserRole call({Object? role = const $CopyWithPlaceholder()}) {
     return UpdateUserRole(
-      role: role == const $CopyWithPlaceholder()
+      role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
@@ -45,7 +48,8 @@ class _$UpdateUserRoleCWProxyImpl implements _$UpdateUserRoleCWProxy {
 }
 
 extension $UpdateUserRoleCopyWith on UpdateUserRole {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateUserRole.copyWith(...)` or like so:`instanceOfUpdateUserRole.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateUserRole.copyWith(...)` or `instanceOfUpdateUserRole.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateUserRoleCWProxy get copyWith => _$UpdateUserRoleCWProxyImpl(this);
 }

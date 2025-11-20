@@ -31,12 +31,13 @@ abstract class _$ReportCWProxy {
 
   Report resolvedAt(DateTime? resolvedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Report(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Report(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Report(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Report call({
     String id,
     String? orderId,
@@ -53,55 +54,57 @@ abstract class _$ReportCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReport.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReport.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfReport.copyWith(...)` or call `instanceOfReport.copyWith.fieldName(value)` for a single field.
 class _$ReportCWProxyImpl implements _$ReportCWProxy {
   const _$ReportCWProxyImpl(this._value);
 
   final Report _value;
 
   @override
-  Report id(String id) => this(id: id);
+  Report id(String id) => call(id: id);
 
   @override
-  Report orderId(String? orderId) => this(orderId: orderId);
+  Report orderId(String? orderId) => call(orderId: orderId);
 
   @override
-  Report reporterId(String reporterId) => this(reporterId: reporterId);
+  Report reporterId(String reporterId) => call(reporterId: reporterId);
 
   @override
-  Report targetUserId(String targetUserId) => this(targetUserId: targetUserId);
+  Report targetUserId(String targetUserId) => call(targetUserId: targetUserId);
 
   @override
-  Report category(ReportCategory category) => this(category: category);
+  Report category(ReportCategory category) => call(category: category);
 
   @override
-  Report description(String description) => this(description: description);
+  Report description(String description) => call(description: description);
 
   @override
-  Report evidenceUrl(String? evidenceUrl) => this(evidenceUrl: evidenceUrl);
+  Report evidenceUrl(String? evidenceUrl) => call(evidenceUrl: evidenceUrl);
 
   @override
-  Report status(ReportStatus status) => this(status: status);
+  Report status(ReportStatus status) => call(status: status);
 
   @override
-  Report handledById(String? handledById) => this(handledById: handledById);
+  Report handledById(String? handledById) => call(handledById: handledById);
 
   @override
-  Report resolution(String? resolution) => this(resolution: resolution);
+  Report resolution(String? resolution) => call(resolution: resolution);
 
   @override
-  Report reportedAt(DateTime reportedAt) => this(reportedAt: reportedAt);
+  Report reportedAt(DateTime reportedAt) => call(reportedAt: reportedAt);
 
   @override
-  Report resolvedAt(DateTime? resolvedAt) => this(resolvedAt: resolvedAt);
+  Report resolvedAt(DateTime? resolvedAt) => call(resolvedAt: resolvedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Report(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Report(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Report(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Report call({
     Object? id = const $CopyWithPlaceholder(),
     Object? orderId = const $CopyWithPlaceholder(),
@@ -117,7 +120,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
     Object? resolvedAt = const $CopyWithPlaceholder(),
   }) {
     return Report(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
@@ -125,19 +128,22 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String?,
-      reporterId: reporterId == const $CopyWithPlaceholder()
+      reporterId:
+          reporterId == const $CopyWithPlaceholder() || reporterId == null
           ? _value.reporterId
           // ignore: cast_nullable_to_non_nullable
           : reporterId as String,
-      targetUserId: targetUserId == const $CopyWithPlaceholder()
+      targetUserId:
+          targetUserId == const $CopyWithPlaceholder() || targetUserId == null
           ? _value.targetUserId
           // ignore: cast_nullable_to_non_nullable
           : targetUserId as String,
-      category: category == const $CopyWithPlaceholder()
+      category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as ReportCategory,
-      description: description == const $CopyWithPlaceholder()
+      description:
+          description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -145,7 +151,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.evidenceUrl
           // ignore: cast_nullable_to_non_nullable
           : evidenceUrl as String?,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as ReportStatus,
@@ -157,7 +163,8 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.resolution
           // ignore: cast_nullable_to_non_nullable
           : resolution as String?,
-      reportedAt: reportedAt == const $CopyWithPlaceholder()
+      reportedAt:
+          reportedAt == const $CopyWithPlaceholder() || reportedAt == null
           ? _value.reportedAt
           // ignore: cast_nullable_to_non_nullable
           : reportedAt as DateTime,
@@ -170,7 +177,8 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
 }
 
 extension $ReportCopyWith on Report {
-  /// Returns a callable class that can be used as follows: `instanceOfReport.copyWith(...)` or like so:`instanceOfReport.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfReport.copyWith(...)` or `instanceOfReport.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$ReportCWProxy get copyWith => _$ReportCWProxyImpl(this);
 }

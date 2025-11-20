@@ -15,12 +15,13 @@ abstract class _$WSOrderEnvelopeCWProxy {
 
   WSOrderEnvelope payload(WSOrderEnvelopePayload payload);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSOrderEnvelope(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSOrderEnvelope(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSOrderEnvelope call({
     WSEnvelopeType type,
     WSEnvelopeSender from,
@@ -29,32 +30,34 @@ abstract class _$WSOrderEnvelopeCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSOrderEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSOrderEnvelope.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWSOrderEnvelope.copyWith(...)` or call `instanceOfWSOrderEnvelope.copyWith.fieldName(value)` for a single field.
 class _$WSOrderEnvelopeCWProxyImpl implements _$WSOrderEnvelopeCWProxy {
   const _$WSOrderEnvelopeCWProxyImpl(this._value);
 
   final WSOrderEnvelope _value;
 
   @override
-  WSOrderEnvelope type(WSEnvelopeType type) => this(type: type);
+  WSOrderEnvelope type(WSEnvelopeType type) => call(type: type);
 
   @override
-  WSOrderEnvelope from(WSEnvelopeSender from) => this(from: from);
+  WSOrderEnvelope from(WSEnvelopeSender from) => call(from: from);
 
   @override
-  WSOrderEnvelope to(WSEnvelopeSender to) => this(to: to);
+  WSOrderEnvelope to(WSEnvelopeSender to) => call(to: to);
 
   @override
   WSOrderEnvelope payload(WSOrderEnvelopePayload payload) =>
-      this(payload: payload);
+      call(payload: payload);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSOrderEnvelope(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSOrderEnvelope(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSOrderEnvelope call({
     Object? type = const $CopyWithPlaceholder(),
     Object? from = const $CopyWithPlaceholder(),
@@ -62,19 +65,19 @@ class _$WSOrderEnvelopeCWProxyImpl implements _$WSOrderEnvelopeCWProxy {
     Object? payload = const $CopyWithPlaceholder(),
   }) {
     return WSOrderEnvelope(
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as WSEnvelopeType,
-      from: from == const $CopyWithPlaceholder()
+      from: from == const $CopyWithPlaceholder() || from == null
           ? _value.from
           // ignore: cast_nullable_to_non_nullable
           : from as WSEnvelopeSender,
-      to: to == const $CopyWithPlaceholder()
+      to: to == const $CopyWithPlaceholder() || to == null
           ? _value.to
           // ignore: cast_nullable_to_non_nullable
           : to as WSEnvelopeSender,
-      payload: payload == const $CopyWithPlaceholder()
+      payload: payload == const $CopyWithPlaceholder() || payload == null
           ? _value.payload
           // ignore: cast_nullable_to_non_nullable
           : payload as WSOrderEnvelopePayload,
@@ -83,7 +86,8 @@ class _$WSOrderEnvelopeCWProxyImpl implements _$WSOrderEnvelopeCWProxy {
 }
 
 extension $WSOrderEnvelopeCopyWith on WSOrderEnvelope {
-  /// Returns a callable class that can be used as follows: `instanceOfWSOrderEnvelope.copyWith(...)` or like so:`instanceOfWSOrderEnvelope.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWSOrderEnvelope.copyWith(...)` or `instanceOfWSOrderEnvelope.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WSOrderEnvelopeCWProxy get copyWith => _$WSOrderEnvelopeCWProxyImpl(this);
 }

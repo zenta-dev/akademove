@@ -9,16 +9,18 @@ part of 'notification_save_token_request.dart';
 abstract class _$NotificationSaveTokenRequestCWProxy {
   NotificationSaveTokenRequest token(String token);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSaveTokenRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSaveTokenRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSaveTokenRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSaveTokenRequest call({String token});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNotificationSaveTokenRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNotificationSaveTokenRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfNotificationSaveTokenRequest.copyWith(...)` or call `instanceOfNotificationSaveTokenRequest.copyWith.fieldName(value)` for a single field.
 class _$NotificationSaveTokenRequestCWProxyImpl
     implements _$NotificationSaveTokenRequestCWProxy {
   const _$NotificationSaveTokenRequestCWProxyImpl(this._value);
@@ -26,20 +28,21 @@ class _$NotificationSaveTokenRequestCWProxyImpl
   final NotificationSaveTokenRequest _value;
 
   @override
-  NotificationSaveTokenRequest token(String token) => this(token: token);
+  NotificationSaveTokenRequest token(String token) => call(token: token);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSaveTokenRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSaveTokenRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSaveTokenRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSaveTokenRequest call({
     Object? token = const $CopyWithPlaceholder(),
   }) {
     return NotificationSaveTokenRequest(
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String,
@@ -49,7 +52,8 @@ class _$NotificationSaveTokenRequestCWProxyImpl
 
 extension $NotificationSaveTokenRequestCopyWith
     on NotificationSaveTokenRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfNotificationSaveTokenRequest.copyWith(...)` or like so:`instanceOfNotificationSaveTokenRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfNotificationSaveTokenRequest.copyWith(...)` or `instanceOfNotificationSaveTokenRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$NotificationSaveTokenRequestCWProxy get copyWith =>
       _$NotificationSaveTokenRequestCWProxyImpl(this);

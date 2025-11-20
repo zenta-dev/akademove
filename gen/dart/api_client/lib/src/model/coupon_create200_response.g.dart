@@ -15,12 +15,13 @@ abstract class _$CouponCreate200ResponseCWProxy {
 
   CouponCreate200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CouponCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   CouponCreate200Response call({
     String message,
     Coupon data,
@@ -29,7 +30,8 @@ abstract class _$CouponCreate200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponCreate200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfCouponCreate200Response.copyWith(...)` or call `instanceOfCouponCreate200Response.copyWith.fieldName(value)` for a single field.
 class _$CouponCreate200ResponseCWProxyImpl
     implements _$CouponCreate200ResponseCWProxy {
   const _$CouponCreate200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$CouponCreate200ResponseCWProxyImpl
   final CouponCreate200Response _value;
 
   @override
-  CouponCreate200Response message(String message) => this(message: message);
+  CouponCreate200Response message(String message) => call(message: message);
 
   @override
-  CouponCreate200Response data(Coupon data) => this(data: data);
+  CouponCreate200Response data(Coupon data) => call(data: data);
 
   @override
   CouponCreate200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   CouponCreate200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CouponCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   CouponCreate200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$CouponCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return CouponCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Coupon,
@@ -85,7 +88,8 @@ class _$CouponCreate200ResponseCWProxyImpl
 }
 
 extension $CouponCreate200ResponseCopyWith on CouponCreate200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfCouponCreate200Response.copyWith(...)` or like so:`instanceOfCouponCreate200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfCouponCreate200Response.copyWith(...)` or `instanceOfCouponCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$CouponCreate200ResponseCWProxy get copyWith =>
       _$CouponCreate200ResponseCWProxyImpl(this);

@@ -13,12 +13,13 @@ abstract class _$WSPaymentEnvelopePayloadCWProxy {
 
   WSPaymentEnvelopePayload payment(Payment payment);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPaymentEnvelopePayload(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSPaymentEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSPaymentEnvelopePayload(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSPaymentEnvelopePayload call({
     Wallet wallet,
     Transaction transaction,
@@ -26,7 +27,8 @@ abstract class _$WSPaymentEnvelopePayloadCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSPaymentEnvelopePayload.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSPaymentEnvelopePayload.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWSPaymentEnvelopePayload.copyWith(...)` or call `instanceOfWSPaymentEnvelopePayload.copyWith.fieldName(value)` for a single field.
 class _$WSPaymentEnvelopePayloadCWProxyImpl
     implements _$WSPaymentEnvelopePayloadCWProxy {
   const _$WSPaymentEnvelopePayloadCWProxyImpl(this._value);
@@ -34,37 +36,39 @@ class _$WSPaymentEnvelopePayloadCWProxyImpl
   final WSPaymentEnvelopePayload _value;
 
   @override
-  WSPaymentEnvelopePayload wallet(Wallet wallet) => this(wallet: wallet);
+  WSPaymentEnvelopePayload wallet(Wallet wallet) => call(wallet: wallet);
 
   @override
   WSPaymentEnvelopePayload transaction(Transaction transaction) =>
-      this(transaction: transaction);
+      call(transaction: transaction);
 
   @override
-  WSPaymentEnvelopePayload payment(Payment payment) => this(payment: payment);
+  WSPaymentEnvelopePayload payment(Payment payment) => call(payment: payment);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSPaymentEnvelopePayload(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSPaymentEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSPaymentEnvelopePayload(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSPaymentEnvelopePayload call({
     Object? wallet = const $CopyWithPlaceholder(),
     Object? transaction = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
   }) {
     return WSPaymentEnvelopePayload(
-      wallet: wallet == const $CopyWithPlaceholder()
+      wallet: wallet == const $CopyWithPlaceholder() || wallet == null
           ? _value.wallet
           // ignore: cast_nullable_to_non_nullable
           : wallet as Wallet,
-      transaction: transaction == const $CopyWithPlaceholder()
+      transaction:
+          transaction == const $CopyWithPlaceholder() || transaction == null
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
           : transaction as Transaction,
-      payment: payment == const $CopyWithPlaceholder()
+      payment: payment == const $CopyWithPlaceholder() || payment == null
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
           : payment as Payment,
@@ -73,7 +77,8 @@ class _$WSPaymentEnvelopePayloadCWProxyImpl
 }
 
 extension $WSPaymentEnvelopePayloadCopyWith on WSPaymentEnvelopePayload {
-  /// Returns a callable class that can be used as follows: `instanceOfWSPaymentEnvelopePayload.copyWith(...)` or like so:`instanceOfWSPaymentEnvelopePayload.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWSPaymentEnvelopePayload.copyWith(...)` or `instanceOfWSPaymentEnvelopePayload.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WSPaymentEnvelopePayloadCWProxy get copyWith =>
       _$WSPaymentEnvelopePayloadCWProxyImpl(this);

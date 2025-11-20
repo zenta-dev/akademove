@@ -19,12 +19,13 @@ abstract class _$ConfigurationCWProxy {
 
   Configuration updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Configuration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Configuration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Configuration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Configuration call({
     String key,
     String name,
@@ -35,39 +36,41 @@ abstract class _$ConfigurationCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfConfiguration.copyWith(...)` or call `instanceOfConfiguration.copyWith.fieldName(value)` for a single field.
 class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
   const _$ConfigurationCWProxyImpl(this._value);
 
   final Configuration _value;
 
   @override
-  Configuration key(String key) => this(key: key);
+  Configuration key(String key) => call(key: key);
 
   @override
-  Configuration name(String name) => this(name: name);
+  Configuration name(String name) => call(name: name);
 
   @override
-  Configuration value(Object? value) => this(value: value);
+  Configuration value(Object? value) => call(value: value);
 
   @override
   Configuration description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
   Configuration updatedById(String updatedById) =>
-      this(updatedById: updatedById);
+      call(updatedById: updatedById);
 
   @override
-  Configuration updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Configuration updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Configuration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Configuration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Configuration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Configuration call({
     Object? key = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -77,11 +80,11 @@ class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Configuration(
-      key: key == const $CopyWithPlaceholder()
+      key: key == const $CopyWithPlaceholder() || key == null
           ? _value.key
           // ignore: cast_nullable_to_non_nullable
           : key as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
@@ -93,11 +96,12 @@ class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String?,
-      updatedById: updatedById == const $CopyWithPlaceholder()
+      updatedById:
+          updatedById == const $CopyWithPlaceholder() || updatedById == null
           ? _value.updatedById
           // ignore: cast_nullable_to_non_nullable
           : updatedById as String,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -106,7 +110,8 @@ class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
 }
 
 extension $ConfigurationCopyWith on Configuration {
-  /// Returns a callable class that can be used as follows: `instanceOfConfiguration.copyWith(...)` or like so:`instanceOfConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfConfiguration.copyWith(...)` or `instanceOfConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$ConfigurationCWProxy get copyWith => _$ConfigurationCWProxyImpl(this);
 }

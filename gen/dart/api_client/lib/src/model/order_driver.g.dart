@@ -41,12 +41,13 @@ abstract class _$OrderDriverCWProxy {
 
   OrderDriver distance(num? distance);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderDriver(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderDriver(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderDriver call({
     String? id,
     String? userId,
@@ -68,77 +69,79 @@ abstract class _$OrderDriverCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderDriver.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderDriver.copyWith(...)` or call `instanceOfOrderDriver.copyWith.fieldName(value)` for a single field.
 class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
   const _$OrderDriverCWProxyImpl(this._value);
 
   final OrderDriver _value;
 
   @override
-  OrderDriver id(String? id) => this(id: id);
+  OrderDriver id(String? id) => call(id: id);
 
   @override
-  OrderDriver userId(String? userId) => this(userId: userId);
+  OrderDriver userId(String? userId) => call(userId: userId);
 
   @override
-  OrderDriver studentId(num? studentId) => this(studentId: studentId);
+  OrderDriver studentId(num? studentId) => call(studentId: studentId);
 
   @override
   OrderDriver licensePlate(String? licensePlate) =>
-      this(licensePlate: licensePlate);
+      call(licensePlate: licensePlate);
 
   @override
-  OrderDriver status(DriverStatus? status) => this(status: status);
+  OrderDriver status(DriverStatus? status) => call(status: status);
 
   @override
-  OrderDriver rating(num? rating) => this(rating: rating);
+  OrderDriver rating(num? rating) => call(rating: rating);
 
   @override
   OrderDriver isTakingOrder(bool? isTakingOrder) =>
-      this(isTakingOrder: isTakingOrder);
+      call(isTakingOrder: isTakingOrder);
 
   @override
-  OrderDriver isOnline(bool? isOnline) => this(isOnline: isOnline);
+  OrderDriver isOnline(bool? isOnline) => call(isOnline: isOnline);
 
   @override
   OrderDriver currentLocation(Coordinate? currentLocation) =>
-      this(currentLocation: currentLocation);
+      call(currentLocation: currentLocation);
 
   @override
   OrderDriver lastLocationUpdate(DateTime? lastLocationUpdate) =>
-      this(lastLocationUpdate: lastLocationUpdate);
+      call(lastLocationUpdate: lastLocationUpdate);
 
   @override
-  OrderDriver createdAt(DateTime? createdAt) => this(createdAt: createdAt);
+  OrderDriver createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
   OrderDriver studentCard(String? studentCard) =>
-      this(studentCard: studentCard);
+      call(studentCard: studentCard);
 
   @override
   OrderDriver driverLicense(String? driverLicense) =>
-      this(driverLicense: driverLicense);
+      call(driverLicense: driverLicense);
 
   @override
   OrderDriver vehicleCertificate(String? vehicleCertificate) =>
-      this(vehicleCertificate: vehicleCertificate);
+      call(vehicleCertificate: vehicleCertificate);
 
   @override
-  OrderDriver bank(Bank? bank) => this(bank: bank);
+  OrderDriver bank(Bank? bank) => call(bank: bank);
 
   @override
-  OrderDriver user(DriverUser? user) => this(user: user);
+  OrderDriver user(DriverUser? user) => call(user: user);
 
   @override
-  OrderDriver distance(num? distance) => this(distance: distance);
+  OrderDriver distance(num? distance) => call(distance: distance);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderDriver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderDriver(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderDriver(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderDriver call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -232,7 +235,8 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
 }
 
 extension $OrderDriverCopyWith on OrderDriver {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderDriver.copyWith(...)` or like so:`instanceOfOrderDriver.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderDriver.copyWith(...)` or `instanceOfOrderDriver.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderDriverCWProxy get copyWith => _$OrderDriverCWProxyImpl(this);
 }

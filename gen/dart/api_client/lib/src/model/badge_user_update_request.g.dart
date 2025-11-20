@@ -13,12 +13,13 @@ abstract class _$BadgeUserUpdateRequestCWProxy {
 
   BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserUpdateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserUpdateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserUpdateRequest call({
     String? userId,
     String? badgeId,
@@ -26,7 +27,8 @@ abstract class _$BadgeUserUpdateRequestCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeUserUpdateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeUserUpdateRequest.copyWith(...)` or call `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(value)` for a single field.
 class _$BadgeUserUpdateRequestCWProxyImpl
     implements _$BadgeUserUpdateRequestCWProxy {
   const _$BadgeUserUpdateRequestCWProxyImpl(this._value);
@@ -34,22 +36,23 @@ class _$BadgeUserUpdateRequestCWProxyImpl
   final BadgeUserUpdateRequest _value;
 
   @override
-  BadgeUserUpdateRequest userId(String? userId) => this(userId: userId);
+  BadgeUserUpdateRequest userId(String? userId) => call(userId: userId);
 
   @override
-  BadgeUserUpdateRequest badgeId(String? badgeId) => this(badgeId: badgeId);
+  BadgeUserUpdateRequest badgeId(String? badgeId) => call(badgeId: badgeId);
 
   @override
   BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata) =>
-      this(metadata: metadata);
+      call(metadata: metadata);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserUpdateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserUpdateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserUpdateRequest call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? badgeId = const $CopyWithPlaceholder(),
@@ -73,7 +76,8 @@ class _$BadgeUserUpdateRequestCWProxyImpl
 }
 
 extension $BadgeUserUpdateRequestCopyWith on BadgeUserUpdateRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeUserUpdateRequest.copyWith(...)` or like so:`instanceOfBadgeUserUpdateRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeUserUpdateRequest.copyWith(...)` or `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeUserUpdateRequestCWProxy get copyWith =>
       _$BadgeUserUpdateRequestCWProxyImpl(this);

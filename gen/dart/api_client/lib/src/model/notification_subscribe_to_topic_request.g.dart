@@ -11,16 +11,18 @@ abstract class _$NotificationSubscribeToTopicRequestCWProxy {
 
   NotificationSubscribeToTopicRequest token(String token);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSubscribeToTopicRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSubscribeToTopicRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSubscribeToTopicRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSubscribeToTopicRequest call({String topic, String token});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)` or call `instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(value)` for a single field.
 class _$NotificationSubscribeToTopicRequestCWProxyImpl
     implements _$NotificationSubscribeToTopicRequestCWProxy {
   const _$NotificationSubscribeToTopicRequestCWProxyImpl(this._value);
@@ -28,28 +30,29 @@ class _$NotificationSubscribeToTopicRequestCWProxyImpl
   final NotificationSubscribeToTopicRequest _value;
 
   @override
-  NotificationSubscribeToTopicRequest topic(String topic) => this(topic: topic);
+  NotificationSubscribeToTopicRequest topic(String topic) => call(topic: topic);
 
   @override
-  NotificationSubscribeToTopicRequest token(String token) => this(token: token);
+  NotificationSubscribeToTopicRequest token(String token) => call(token: token);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSubscribeToTopicRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSubscribeToTopicRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSubscribeToTopicRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSubscribeToTopicRequest call({
     Object? topic = const $CopyWithPlaceholder(),
     Object? token = const $CopyWithPlaceholder(),
   }) {
     return NotificationSubscribeToTopicRequest(
-      topic: topic == const $CopyWithPlaceholder()
+      topic: topic == const $CopyWithPlaceholder() || topic == null
           ? _value.topic
           // ignore: cast_nullable_to_non_nullable
           : topic as String,
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String,
@@ -59,7 +62,8 @@ class _$NotificationSubscribeToTopicRequestCWProxyImpl
 
 extension $NotificationSubscribeToTopicRequestCopyWith
     on NotificationSubscribeToTopicRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)` or like so:`instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)` or `instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$NotificationSubscribeToTopicRequestCWProxy get copyWith =>
       _$NotificationSubscribeToTopicRequestCWProxyImpl(this);

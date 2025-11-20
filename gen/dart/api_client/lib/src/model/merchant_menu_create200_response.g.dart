@@ -15,12 +15,13 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
 
   MerchantMenuCreate200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenuCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantMenuCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantMenuCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantMenuCreate200Response call({
     String message,
     MerchantMenu data,
@@ -29,7 +30,8 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantMenuCreate200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchantMenuCreate200Response.copyWith(...)` or call `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(value)` for a single field.
 class _$MerchantMenuCreate200ResponseCWProxyImpl
     implements _$MerchantMenuCreate200ResponseCWProxy {
   const _$MerchantMenuCreate200ResponseCWProxyImpl(this._value);
@@ -38,26 +40,27 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
 
   @override
   MerchantMenuCreate200Response message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
-  MerchantMenuCreate200Response data(MerchantMenu data) => this(data: data);
+  MerchantMenuCreate200Response data(MerchantMenu data) => call(data: data);
 
   @override
   MerchantMenuCreate200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   MerchantMenuCreate200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenuCreate200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantMenuCreate200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantMenuCreate200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantMenuCreate200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -65,11 +68,11 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantMenuCreate200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as MerchantMenu,
@@ -87,7 +90,8 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl
 
 extension $MerchantMenuCreate200ResponseCopyWith
     on MerchantMenuCreate200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchantMenuCreate200Response.copyWith(...)` or like so:`instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchantMenuCreate200Response.copyWith(...)` or `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantMenuCreate200ResponseCWProxy get copyWith =>
       _$MerchantMenuCreate200ResponseCWProxyImpl(this);

@@ -25,12 +25,13 @@ abstract class _$UpdateTransactionCWProxy {
 
   UpdateTransaction metadata(Object? metadata);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateTransaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateTransaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateTransaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateTransaction call({
     String? walletId,
     TransactionType? type,
@@ -44,50 +45,52 @@ abstract class _$UpdateTransactionCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateTransaction.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateTransaction.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateTransaction.copyWith(...)` or call `instanceOfUpdateTransaction.copyWith.fieldName(value)` for a single field.
 class _$UpdateTransactionCWProxyImpl implements _$UpdateTransactionCWProxy {
   const _$UpdateTransactionCWProxyImpl(this._value);
 
   final UpdateTransaction _value;
 
   @override
-  UpdateTransaction walletId(String? walletId) => this(walletId: walletId);
+  UpdateTransaction walletId(String? walletId) => call(walletId: walletId);
 
   @override
-  UpdateTransaction type(TransactionType? type) => this(type: type);
+  UpdateTransaction type(TransactionType? type) => call(type: type);
 
   @override
-  UpdateTransaction amount(num? amount) => this(amount: amount);
+  UpdateTransaction amount(num? amount) => call(amount: amount);
 
   @override
   UpdateTransaction balanceBefore(num? balanceBefore) =>
-      this(balanceBefore: balanceBefore);
+      call(balanceBefore: balanceBefore);
 
   @override
   UpdateTransaction balanceAfter(num? balanceAfter) =>
-      this(balanceAfter: balanceAfter);
+      call(balanceAfter: balanceAfter);
 
   @override
-  UpdateTransaction status(TransactionStatus? status) => this(status: status);
+  UpdateTransaction status(TransactionStatus? status) => call(status: status);
 
   @override
   UpdateTransaction description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
   UpdateTransaction referenceId(String? referenceId) =>
-      this(referenceId: referenceId);
+      call(referenceId: referenceId);
 
   @override
-  UpdateTransaction metadata(Object? metadata) => this(metadata: metadata);
+  UpdateTransaction metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateTransaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateTransaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateTransaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateTransaction call({
     Object? walletId = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
@@ -141,7 +144,8 @@ class _$UpdateTransactionCWProxyImpl implements _$UpdateTransactionCWProxy {
 }
 
 extension $UpdateTransactionCopyWith on UpdateTransaction {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateTransaction.copyWith(...)` or like so:`instanceOfUpdateTransaction.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateTransaction.copyWith(...)` or `instanceOfUpdateTransaction.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateTransactionCWProxy get copyWith =>
       _$UpdateTransactionCWProxyImpl(this);

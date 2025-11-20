@@ -11,16 +11,18 @@ abstract class _$WalletMonthlySummaryQueryCWProxy {
 
   WalletMonthlySummaryQuery month(num month);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletMonthlySummaryQuery(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryQuery(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WalletMonthlySummaryQuery(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WalletMonthlySummaryQuery call({num year, num month});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWalletMonthlySummaryQuery.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWalletMonthlySummaryQuery.copyWith(...)` or call `instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(value)` for a single field.
 class _$WalletMonthlySummaryQueryCWProxyImpl
     implements _$WalletMonthlySummaryQueryCWProxy {
   const _$WalletMonthlySummaryQueryCWProxyImpl(this._value);
@@ -28,28 +30,29 @@ class _$WalletMonthlySummaryQueryCWProxyImpl
   final WalletMonthlySummaryQuery _value;
 
   @override
-  WalletMonthlySummaryQuery year(num year) => this(year: year);
+  WalletMonthlySummaryQuery year(num year) => call(year: year);
 
   @override
-  WalletMonthlySummaryQuery month(num month) => this(month: month);
+  WalletMonthlySummaryQuery month(num month) => call(month: month);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletMonthlySummaryQuery(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryQuery(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WalletMonthlySummaryQuery(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WalletMonthlySummaryQuery call({
     Object? year = const $CopyWithPlaceholder(),
     Object? month = const $CopyWithPlaceholder(),
   }) {
     return WalletMonthlySummaryQuery(
-      year: year == const $CopyWithPlaceholder()
+      year: year == const $CopyWithPlaceholder() || year == null
           ? _value.year
           // ignore: cast_nullable_to_non_nullable
           : year as num,
-      month: month == const $CopyWithPlaceholder()
+      month: month == const $CopyWithPlaceholder() || month == null
           ? _value.month
           // ignore: cast_nullable_to_non_nullable
           : month as num,
@@ -58,7 +61,8 @@ class _$WalletMonthlySummaryQueryCWProxyImpl
 }
 
 extension $WalletMonthlySummaryQueryCopyWith on WalletMonthlySummaryQuery {
-  /// Returns a callable class that can be used as follows: `instanceOfWalletMonthlySummaryQuery.copyWith(...)` or like so:`instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWalletMonthlySummaryQuery.copyWith(...)` or `instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WalletMonthlySummaryQueryCWProxy get copyWith =>
       _$WalletMonthlySummaryQueryCWProxyImpl(this);

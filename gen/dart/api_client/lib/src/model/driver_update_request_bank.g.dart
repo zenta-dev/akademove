@@ -13,19 +13,21 @@ abstract class _$DriverUpdateRequestBankCWProxy {
 
   DriverUpdateRequestBank number(num number);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverUpdateRequestBank(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverUpdateRequestBank(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverUpdateRequestBank(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverUpdateRequestBank call({
     DriverUpdateRequestBankProviderEnum provider,
     num number,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverUpdateRequestBank.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverUpdateRequestBank.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverUpdateRequestBank.copyWith(...)` or call `instanceOfDriverUpdateRequestBank.copyWith.fieldName(value)` for a single field.
 class _$DriverUpdateRequestBankCWProxyImpl
     implements _$DriverUpdateRequestBankCWProxy {
   const _$DriverUpdateRequestBankCWProxyImpl(this._value);
@@ -35,28 +37,29 @@ class _$DriverUpdateRequestBankCWProxyImpl
   @override
   DriverUpdateRequestBank provider(
     DriverUpdateRequestBankProviderEnum provider,
-  ) => this(provider: provider);
+  ) => call(provider: provider);
 
   @override
-  DriverUpdateRequestBank number(num number) => this(number: number);
+  DriverUpdateRequestBank number(num number) => call(number: number);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverUpdateRequestBank(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverUpdateRequestBank(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverUpdateRequestBank(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverUpdateRequestBank call({
     Object? provider = const $CopyWithPlaceholder(),
     Object? number = const $CopyWithPlaceholder(),
   }) {
     return DriverUpdateRequestBank(
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as DriverUpdateRequestBankProviderEnum,
-      number: number == const $CopyWithPlaceholder()
+      number: number == const $CopyWithPlaceholder() || number == null
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
           : number as num,
@@ -65,7 +68,8 @@ class _$DriverUpdateRequestBankCWProxyImpl
 }
 
 extension $DriverUpdateRequestBankCopyWith on DriverUpdateRequestBank {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverUpdateRequestBank.copyWith(...)` or like so:`instanceOfDriverUpdateRequestBank.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverUpdateRequestBank.copyWith(...)` or `instanceOfDriverUpdateRequestBank.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverUpdateRequestBankCWProxy get copyWith =>
       _$DriverUpdateRequestBankCWProxyImpl(this);

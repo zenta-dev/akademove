@@ -15,12 +15,13 @@ abstract class _$OrderList200ResponseCWProxy {
 
   OrderList200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderList200Response call({
     String message,
     List<Order> data,
@@ -29,7 +30,8 @@ abstract class _$OrderList200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderList200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderList200Response.copyWith(...)` or call `instanceOfOrderList200Response.copyWith.fieldName(value)` for a single field.
 class _$OrderList200ResponseCWProxyImpl
     implements _$OrderList200ResponseCWProxy {
   const _$OrderList200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$OrderList200ResponseCWProxyImpl
   final OrderList200Response _value;
 
   @override
-  OrderList200Response message(String message) => this(message: message);
+  OrderList200Response message(String message) => call(message: message);
 
   @override
-  OrderList200Response data(List<Order> data) => this(data: data);
+  OrderList200Response data(List<Order> data) => call(data: data);
 
   @override
   OrderList200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   OrderList200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$OrderList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return OrderList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<Order>,
@@ -85,7 +88,8 @@ class _$OrderList200ResponseCWProxyImpl
 }
 
 extension $OrderList200ResponseCopyWith on OrderList200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderList200Response.copyWith(...)` or like so:`instanceOfOrderList200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderList200Response.copyWith(...)` or `instanceOfOrderList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderList200ResponseCWProxy get copyWith =>
       _$OrderList200ResponseCWProxyImpl(this);

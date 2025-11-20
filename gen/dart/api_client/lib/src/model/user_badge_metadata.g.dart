@@ -13,12 +13,13 @@ abstract class _$UserBadgeMetadataCWProxy {
 
   UserBadgeMetadata streakDays(int? streakDays);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadgeMetadata(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserBadgeMetadata(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserBadgeMetadata(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserBadgeMetadata call({
     int? ordersCompleted,
     num? finalRating,
@@ -26,7 +27,8 @@ abstract class _$UserBadgeMetadataCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserBadgeMetadata.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserBadgeMetadata.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUserBadgeMetadata.copyWith(...)` or call `instanceOfUserBadgeMetadata.copyWith.fieldName(value)` for a single field.
 class _$UserBadgeMetadataCWProxyImpl implements _$UserBadgeMetadataCWProxy {
   const _$UserBadgeMetadataCWProxyImpl(this._value);
 
@@ -34,22 +36,23 @@ class _$UserBadgeMetadataCWProxyImpl implements _$UserBadgeMetadataCWProxy {
 
   @override
   UserBadgeMetadata ordersCompleted(int? ordersCompleted) =>
-      this(ordersCompleted: ordersCompleted);
+      call(ordersCompleted: ordersCompleted);
 
   @override
   UserBadgeMetadata finalRating(num? finalRating) =>
-      this(finalRating: finalRating);
+      call(finalRating: finalRating);
 
   @override
-  UserBadgeMetadata streakDays(int? streakDays) => this(streakDays: streakDays);
+  UserBadgeMetadata streakDays(int? streakDays) => call(streakDays: streakDays);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadgeMetadata(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserBadgeMetadata(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserBadgeMetadata(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserBadgeMetadata call({
     Object? ordersCompleted = const $CopyWithPlaceholder(),
     Object? finalRating = const $CopyWithPlaceholder(),
@@ -73,7 +76,8 @@ class _$UserBadgeMetadataCWProxyImpl implements _$UserBadgeMetadataCWProxy {
 }
 
 extension $UserBadgeMetadataCopyWith on UserBadgeMetadata {
-  /// Returns a callable class that can be used as follows: `instanceOfUserBadgeMetadata.copyWith(...)` or like so:`instanceOfUserBadgeMetadata.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUserBadgeMetadata.copyWith(...)` or `instanceOfUserBadgeMetadata.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserBadgeMetadataCWProxy get copyWith =>
       _$UserBadgeMetadataCWProxyImpl(this);

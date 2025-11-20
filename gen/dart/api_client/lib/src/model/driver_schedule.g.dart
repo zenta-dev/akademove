@@ -29,12 +29,13 @@ abstract class _$DriverScheduleCWProxy {
 
   DriverSchedule updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverSchedule(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverSchedule(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverSchedule(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverSchedule call({
     String id,
     String name,
@@ -50,54 +51,56 @@ abstract class _$DriverScheduleCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverSchedule.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverSchedule.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverSchedule.copyWith(...)` or call `instanceOfDriverSchedule.copyWith.fieldName(value)` for a single field.
 class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
   const _$DriverScheduleCWProxyImpl(this._value);
 
   final DriverSchedule _value;
 
   @override
-  DriverSchedule id(String id) => this(id: id);
+  DriverSchedule id(String id) => call(id: id);
 
   @override
-  DriverSchedule name(String name) => this(name: name);
+  DriverSchedule name(String name) => call(name: name);
 
   @override
-  DriverSchedule driverId(String driverId) => this(driverId: driverId);
+  DriverSchedule driverId(String driverId) => call(driverId: driverId);
 
   @override
-  DriverSchedule dayOfWeek(DayOfWeek dayOfWeek) => this(dayOfWeek: dayOfWeek);
+  DriverSchedule dayOfWeek(DayOfWeek dayOfWeek) => call(dayOfWeek: dayOfWeek);
 
   @override
-  DriverSchedule startTime(Time startTime) => this(startTime: startTime);
+  DriverSchedule startTime(Time startTime) => call(startTime: startTime);
 
   @override
-  DriverSchedule endTime(Time endTime) => this(endTime: endTime);
+  DriverSchedule endTime(Time endTime) => call(endTime: endTime);
 
   @override
   DriverSchedule isRecurring(bool? isRecurring) =>
-      this(isRecurring: isRecurring);
+      call(isRecurring: isRecurring);
 
   @override
   DriverSchedule specificDate(DateTime? specificDate) =>
-      this(specificDate: specificDate);
+      call(specificDate: specificDate);
 
   @override
-  DriverSchedule isActive(bool? isActive) => this(isActive: isActive);
+  DriverSchedule isActive(bool? isActive) => call(isActive: isActive);
 
   @override
-  DriverSchedule createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  DriverSchedule createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  DriverSchedule updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  DriverSchedule updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverSchedule(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverSchedule(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverSchedule(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverSchedule call({
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -112,27 +115,27 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return DriverSchedule(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      driverId: driverId == const $CopyWithPlaceholder()
+      driverId: driverId == const $CopyWithPlaceholder() || driverId == null
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
           : driverId as String,
-      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder()
+      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder() || dayOfWeek == null
           ? _value.dayOfWeek
           // ignore: cast_nullable_to_non_nullable
           : dayOfWeek as DayOfWeek,
-      startTime: startTime == const $CopyWithPlaceholder()
+      startTime: startTime == const $CopyWithPlaceholder() || startTime == null
           ? _value.startTime
           // ignore: cast_nullable_to_non_nullable
           : startTime as Time,
-      endTime: endTime == const $CopyWithPlaceholder()
+      endTime: endTime == const $CopyWithPlaceholder() || endTime == null
           ? _value.endTime
           // ignore: cast_nullable_to_non_nullable
           : endTime as Time,
@@ -148,11 +151,11 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -161,7 +164,8 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
 }
 
 extension $DriverScheduleCopyWith on DriverSchedule {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverSchedule.copyWith(...)` or like so:`instanceOfDriverSchedule.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverSchedule.copyWith(...)` or `instanceOfDriverSchedule.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverScheduleCWProxy get copyWith => _$DriverScheduleCWProxyImpl(this);
 }

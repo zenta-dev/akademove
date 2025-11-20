@@ -9,16 +9,18 @@ part of 'ws_order_envelope_payload.dart';
 abstract class _$WSOrderEnvelopePayloadCWProxy {
   WSOrderEnvelopePayload driverUpdateLocation(Coordinate? driverUpdateLocation);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelopePayload(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSOrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSOrderEnvelopePayload(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSOrderEnvelopePayload call({Coordinate? driverUpdateLocation});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSOrderEnvelopePayload.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSOrderEnvelopePayload.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWSOrderEnvelopePayload.copyWith(...)` or call `instanceOfWSOrderEnvelopePayload.copyWith.fieldName(value)` for a single field.
 class _$WSOrderEnvelopePayloadCWProxyImpl
     implements _$WSOrderEnvelopePayloadCWProxy {
   const _$WSOrderEnvelopePayloadCWProxyImpl(this._value);
@@ -28,15 +30,16 @@ class _$WSOrderEnvelopePayloadCWProxyImpl
   @override
   WSOrderEnvelopePayload driverUpdateLocation(
     Coordinate? driverUpdateLocation,
-  ) => this(driverUpdateLocation: driverUpdateLocation);
+  ) => call(driverUpdateLocation: driverUpdateLocation);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSOrderEnvelopePayload(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSOrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSOrderEnvelopePayload(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSOrderEnvelopePayload call({
     Object? driverUpdateLocation = const $CopyWithPlaceholder(),
   }) {
@@ -50,7 +53,8 @@ class _$WSOrderEnvelopePayloadCWProxyImpl
 }
 
 extension $WSOrderEnvelopePayloadCopyWith on WSOrderEnvelopePayload {
-  /// Returns a callable class that can be used as follows: `instanceOfWSOrderEnvelopePayload.copyWith(...)` or like so:`instanceOfWSOrderEnvelopePayload.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWSOrderEnvelopePayload.copyWith(...)` or `instanceOfWSOrderEnvelopePayload.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WSOrderEnvelopePayloadCWProxy get copyWith =>
       _$WSOrderEnvelopePayloadCWProxyImpl(this);

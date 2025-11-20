@@ -25,12 +25,13 @@ abstract class _$InsertLeaderboardCWProxy {
 
   InsertLeaderboard periodEnd(DateTime periodEnd);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertLeaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertLeaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertLeaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertLeaderboard call({
     String userId,
     String? driverId,
@@ -44,50 +45,52 @@ abstract class _$InsertLeaderboardCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertLeaderboard.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertLeaderboard.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertLeaderboard.copyWith(...)` or call `instanceOfInsertLeaderboard.copyWith.fieldName(value)` for a single field.
 class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   const _$InsertLeaderboardCWProxyImpl(this._value);
 
   final InsertLeaderboard _value;
 
   @override
-  InsertLeaderboard userId(String userId) => this(userId: userId);
+  InsertLeaderboard userId(String userId) => call(userId: userId);
 
   @override
-  InsertLeaderboard driverId(String? driverId) => this(driverId: driverId);
+  InsertLeaderboard driverId(String? driverId) => call(driverId: driverId);
 
   @override
   InsertLeaderboard merchantId(String? merchantId) =>
-      this(merchantId: merchantId);
+      call(merchantId: merchantId);
 
   @override
   InsertLeaderboard category(InsertLeaderboardCategoryEnum category) =>
-      this(category: category);
+      call(category: category);
 
   @override
   InsertLeaderboard period(InsertLeaderboardPeriodEnum period) =>
-      this(period: period);
+      call(period: period);
 
   @override
-  InsertLeaderboard rank(int rank) => this(rank: rank);
+  InsertLeaderboard rank(int rank) => call(rank: rank);
 
   @override
-  InsertLeaderboard score(int score) => this(score: score);
+  InsertLeaderboard score(int score) => call(score: score);
 
   @override
   InsertLeaderboard periodStart(DateTime periodStart) =>
-      this(periodStart: periodStart);
+      call(periodStart: periodStart);
 
   @override
-  InsertLeaderboard periodEnd(DateTime periodEnd) => this(periodEnd: periodEnd);
+  InsertLeaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertLeaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertLeaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertLeaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertLeaderboard call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? driverId = const $CopyWithPlaceholder(),
@@ -100,7 +103,7 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
   }) {
     return InsertLeaderboard(
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
@@ -112,27 +115,28 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
-      category: category == const $CopyWithPlaceholder()
+      category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as InsertLeaderboardCategoryEnum,
-      period: period == const $CopyWithPlaceholder()
+      period: period == const $CopyWithPlaceholder() || period == null
           ? _value.period
           // ignore: cast_nullable_to_non_nullable
           : period as InsertLeaderboardPeriodEnum,
-      rank: rank == const $CopyWithPlaceholder()
+      rank: rank == const $CopyWithPlaceholder() || rank == null
           ? _value.rank
           // ignore: cast_nullable_to_non_nullable
           : rank as int,
-      score: score == const $CopyWithPlaceholder()
+      score: score == const $CopyWithPlaceholder() || score == null
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart: periodStart == const $CopyWithPlaceholder()
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder()
+      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
           : periodEnd as DateTime,
@@ -141,7 +145,8 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
 }
 
 extension $InsertLeaderboardCopyWith on InsertLeaderboard {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertLeaderboard.copyWith(...)` or like so:`instanceOfInsertLeaderboard.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertLeaderboard.copyWith(...)` or `instanceOfInsertLeaderboard.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertLeaderboardCWProxy get copyWith =>
       _$InsertLeaderboardCWProxyImpl(this);

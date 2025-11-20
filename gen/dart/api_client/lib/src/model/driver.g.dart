@@ -41,12 +41,13 @@ abstract class _$DriverCWProxy {
 
   Driver distance(num? distance);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Driver(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Driver(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Driver call({
     String id,
     String userId,
@@ -68,75 +69,77 @@ abstract class _$DriverCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriver.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriver.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriver.copyWith(...)` or call `instanceOfDriver.copyWith.fieldName(value)` for a single field.
 class _$DriverCWProxyImpl implements _$DriverCWProxy {
   const _$DriverCWProxyImpl(this._value);
 
   final Driver _value;
 
   @override
-  Driver id(String id) => this(id: id);
+  Driver id(String id) => call(id: id);
 
   @override
-  Driver userId(String userId) => this(userId: userId);
+  Driver userId(String userId) => call(userId: userId);
 
   @override
-  Driver studentId(num studentId) => this(studentId: studentId);
+  Driver studentId(num studentId) => call(studentId: studentId);
 
   @override
-  Driver licensePlate(String licensePlate) => this(licensePlate: licensePlate);
+  Driver licensePlate(String licensePlate) => call(licensePlate: licensePlate);
 
   @override
-  Driver status(DriverStatus status) => this(status: status);
+  Driver status(DriverStatus status) => call(status: status);
 
   @override
-  Driver rating(num rating) => this(rating: rating);
+  Driver rating(num rating) => call(rating: rating);
 
   @override
   Driver isTakingOrder(bool isTakingOrder) =>
-      this(isTakingOrder: isTakingOrder);
+      call(isTakingOrder: isTakingOrder);
 
   @override
-  Driver isOnline(bool isOnline) => this(isOnline: isOnline);
+  Driver isOnline(bool isOnline) => call(isOnline: isOnline);
 
   @override
   Driver currentLocation(Coordinate? currentLocation) =>
-      this(currentLocation: currentLocation);
+      call(currentLocation: currentLocation);
 
   @override
   Driver lastLocationUpdate(DateTime? lastLocationUpdate) =>
-      this(lastLocationUpdate: lastLocationUpdate);
+      call(lastLocationUpdate: lastLocationUpdate);
 
   @override
-  Driver createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Driver createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Driver studentCard(String studentCard) => this(studentCard: studentCard);
+  Driver studentCard(String studentCard) => call(studentCard: studentCard);
 
   @override
   Driver driverLicense(String driverLicense) =>
-      this(driverLicense: driverLicense);
+      call(driverLicense: driverLicense);
 
   @override
   Driver vehicleCertificate(String vehicleCertificate) =>
-      this(vehicleCertificate: vehicleCertificate);
+      call(vehicleCertificate: vehicleCertificate);
 
   @override
-  Driver bank(Bank bank) => this(bank: bank);
+  Driver bank(Bank bank) => call(bank: bank);
 
   @override
-  Driver user(DriverUser? user) => this(user: user);
+  Driver user(DriverUser? user) => call(user: user);
 
   @override
-  Driver distance(num? distance) => this(distance: distance);
+  Driver distance(num? distance) => call(distance: distance);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Driver(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Driver(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Driver(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Driver call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -157,35 +160,37 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? distance = const $CopyWithPlaceholder(),
   }) {
     return Driver(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      studentId: studentId == const $CopyWithPlaceholder()
+      studentId: studentId == const $CopyWithPlaceholder() || studentId == null
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
           : studentId as num,
-      licensePlate: licensePlate == const $CopyWithPlaceholder()
+      licensePlate:
+          licensePlate == const $CopyWithPlaceholder() || licensePlate == null
           ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
           : licensePlate as String,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as DriverStatus,
-      rating: rating == const $CopyWithPlaceholder()
+      rating: rating == const $CopyWithPlaceholder() || rating == null
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
           : rating as num,
-      isTakingOrder: isTakingOrder == const $CopyWithPlaceholder()
+      isTakingOrder:
+          isTakingOrder == const $CopyWithPlaceholder() || isTakingOrder == null
           ? _value.isTakingOrder
           // ignore: cast_nullable_to_non_nullable
           : isTakingOrder as bool,
-      isOnline: isOnline == const $CopyWithPlaceholder()
+      isOnline: isOnline == const $CopyWithPlaceholder() || isOnline == null
           ? _value.isOnline
           // ignore: cast_nullable_to_non_nullable
           : isOnline as bool,
@@ -197,23 +202,27 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.lastLocationUpdate
           // ignore: cast_nullable_to_non_nullable
           : lastLocationUpdate as DateTime?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      studentCard: studentCard == const $CopyWithPlaceholder()
+      studentCard:
+          studentCard == const $CopyWithPlaceholder() || studentCard == null
           ? _value.studentCard
           // ignore: cast_nullable_to_non_nullable
           : studentCard as String,
-      driverLicense: driverLicense == const $CopyWithPlaceholder()
+      driverLicense:
+          driverLicense == const $CopyWithPlaceholder() || driverLicense == null
           ? _value.driverLicense
           // ignore: cast_nullable_to_non_nullable
           : driverLicense as String,
-      vehicleCertificate: vehicleCertificate == const $CopyWithPlaceholder()
+      vehicleCertificate:
+          vehicleCertificate == const $CopyWithPlaceholder() ||
+              vehicleCertificate == null
           ? _value.vehicleCertificate
           // ignore: cast_nullable_to_non_nullable
           : vehicleCertificate as String,
-      bank: bank == const $CopyWithPlaceholder()
+      bank: bank == const $CopyWithPlaceholder() || bank == null
           ? _value.bank
           // ignore: cast_nullable_to_non_nullable
           : bank as Bank,
@@ -230,7 +239,8 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
 }
 
 extension $DriverCopyWith on Driver {
-  /// Returns a callable class that can be used as follows: `instanceOfDriver.copyWith(...)` or like so:`instanceOfDriver.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriver.copyWith(...)` or `instanceOfDriver.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverCWProxy get copyWith => _$DriverCWProxyImpl(this);
 }

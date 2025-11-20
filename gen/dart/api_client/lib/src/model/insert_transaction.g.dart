@@ -25,12 +25,13 @@ abstract class _$InsertTransactionCWProxy {
 
   InsertTransaction metadata(Object? metadata);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertTransaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertTransaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertTransaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertTransaction call({
     String walletId,
     TransactionType type,
@@ -44,50 +45,52 @@ abstract class _$InsertTransactionCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertTransaction.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertTransaction.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertTransaction.copyWith(...)` or call `instanceOfInsertTransaction.copyWith.fieldName(value)` for a single field.
 class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
   const _$InsertTransactionCWProxyImpl(this._value);
 
   final InsertTransaction _value;
 
   @override
-  InsertTransaction walletId(String walletId) => this(walletId: walletId);
+  InsertTransaction walletId(String walletId) => call(walletId: walletId);
 
   @override
-  InsertTransaction type(TransactionType type) => this(type: type);
+  InsertTransaction type(TransactionType type) => call(type: type);
 
   @override
-  InsertTransaction amount(num amount) => this(amount: amount);
+  InsertTransaction amount(num amount) => call(amount: amount);
 
   @override
   InsertTransaction balanceBefore(num? balanceBefore) =>
-      this(balanceBefore: balanceBefore);
+      call(balanceBefore: balanceBefore);
 
   @override
   InsertTransaction balanceAfter(num? balanceAfter) =>
-      this(balanceAfter: balanceAfter);
+      call(balanceAfter: balanceAfter);
 
   @override
-  InsertTransaction status(TransactionStatus status) => this(status: status);
+  InsertTransaction status(TransactionStatus status) => call(status: status);
 
   @override
   InsertTransaction description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
   InsertTransaction referenceId(String? referenceId) =>
-      this(referenceId: referenceId);
+      call(referenceId: referenceId);
 
   @override
-  InsertTransaction metadata(Object? metadata) => this(metadata: metadata);
+  InsertTransaction metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertTransaction(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertTransaction(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertTransaction(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertTransaction call({
     Object? walletId = const $CopyWithPlaceholder(),
     Object? type = const $CopyWithPlaceholder(),
@@ -100,15 +103,15 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
     Object? metadata = const $CopyWithPlaceholder(),
   }) {
     return InsertTransaction(
-      walletId: walletId == const $CopyWithPlaceholder()
+      walletId: walletId == const $CopyWithPlaceholder() || walletId == null
           ? _value.walletId
           // ignore: cast_nullable_to_non_nullable
           : walletId as String,
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as TransactionType,
-      amount: amount == const $CopyWithPlaceholder()
+      amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
@@ -120,7 +123,7 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
           ? _value.balanceAfter
           // ignore: cast_nullable_to_non_nullable
           : balanceAfter as num?,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as TransactionStatus,
@@ -141,7 +144,8 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
 }
 
 extension $InsertTransactionCopyWith on InsertTransaction {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertTransaction.copyWith(...)` or like so:`instanceOfInsertTransaction.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertTransaction.copyWith(...)` or `instanceOfInsertTransaction.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertTransactionCWProxy get copyWith =>
       _$InsertTransactionCWProxyImpl(this);

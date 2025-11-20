@@ -23,12 +23,13 @@ abstract class _$UserBadgeCWProxy {
 
   UserBadge badge(Badge badge);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadge(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserBadge(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserBadge(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserBadge call({
     String id,
     String userId,
@@ -41,43 +42,45 @@ abstract class _$UserBadgeCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUserBadge.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUserBadge.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUserBadge.copyWith(...)` or call `instanceOfUserBadge.copyWith.fieldName(value)` for a single field.
 class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
   const _$UserBadgeCWProxyImpl(this._value);
 
   final UserBadge _value;
 
   @override
-  UserBadge id(String id) => this(id: id);
+  UserBadge id(String id) => call(id: id);
 
   @override
-  UserBadge userId(String userId) => this(userId: userId);
+  UserBadge userId(String userId) => call(userId: userId);
 
   @override
-  UserBadge badgeId(String badgeId) => this(badgeId: badgeId);
+  UserBadge badgeId(String badgeId) => call(badgeId: badgeId);
 
   @override
-  UserBadge earnedAt(DateTime earnedAt) => this(earnedAt: earnedAt);
+  UserBadge earnedAt(DateTime earnedAt) => call(earnedAt: earnedAt);
 
   @override
-  UserBadge metadata(UserBadgeMetadata? metadata) => this(metadata: metadata);
+  UserBadge metadata(UserBadgeMetadata? metadata) => call(metadata: metadata);
 
   @override
-  UserBadge createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  UserBadge createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  UserBadge updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  UserBadge updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  UserBadge badge(Badge badge) => this(badge: badge);
+  UserBadge badge(Badge badge) => call(badge: badge);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UserBadge(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UserBadge(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UserBadge(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UserBadge call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -89,19 +92,19 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
     Object? badge = const $CopyWithPlaceholder(),
   }) {
     return UserBadge(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      badgeId: badgeId == const $CopyWithPlaceholder()
+      badgeId: badgeId == const $CopyWithPlaceholder() || badgeId == null
           ? _value.badgeId
           // ignore: cast_nullable_to_non_nullable
           : badgeId as String,
-      earnedAt: earnedAt == const $CopyWithPlaceholder()
+      earnedAt: earnedAt == const $CopyWithPlaceholder() || earnedAt == null
           ? _value.earnedAt
           // ignore: cast_nullable_to_non_nullable
           : earnedAt as DateTime,
@@ -109,15 +112,15 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
           ? _value.metadata
           // ignore: cast_nullable_to_non_nullable
           : metadata as UserBadgeMetadata?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
-      badge: badge == const $CopyWithPlaceholder()
+      badge: badge == const $CopyWithPlaceholder() || badge == null
           ? _value.badge
           // ignore: cast_nullable_to_non_nullable
           : badge as Badge,
@@ -126,7 +129,8 @@ class _$UserBadgeCWProxyImpl implements _$UserBadgeCWProxy {
 }
 
 extension $UserBadgeCopyWith on UserBadge {
-  /// Returns a callable class that can be used as follows: `instanceOfUserBadge.copyWith(...)` or like so:`instanceOfUserBadge.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUserBadge.copyWith(...)` or `instanceOfUserBadge.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserBadgeCWProxy get copyWith => _$UserBadgeCWProxyImpl(this);
 }

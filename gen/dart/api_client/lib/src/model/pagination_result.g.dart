@@ -13,38 +13,41 @@ abstract class _$PaginationResultCWProxy {
 
   PaginationResult hasMore(bool? hasMore);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PaginationResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PaginationResult(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// PaginationResult(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   PaginationResult call({int? totalPages, String? nextCursor, bool? hasMore});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPaginationResult.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPaginationResult.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfPaginationResult.copyWith(...)` or call `instanceOfPaginationResult.copyWith.fieldName(value)` for a single field.
 class _$PaginationResultCWProxyImpl implements _$PaginationResultCWProxy {
   const _$PaginationResultCWProxyImpl(this._value);
 
   final PaginationResult _value;
 
   @override
-  PaginationResult totalPages(int? totalPages) => this(totalPages: totalPages);
+  PaginationResult totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   PaginationResult nextCursor(String? nextCursor) =>
-      this(nextCursor: nextCursor);
+      call(nextCursor: nextCursor);
 
   @override
-  PaginationResult hasMore(bool? hasMore) => this(hasMore: hasMore);
+  PaginationResult hasMore(bool? hasMore) => call(hasMore: hasMore);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PaginationResult(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PaginationResult(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// PaginationResult(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   PaginationResult call({
     Object? totalPages = const $CopyWithPlaceholder(),
     Object? nextCursor = const $CopyWithPlaceholder(),
@@ -68,7 +71,8 @@ class _$PaginationResultCWProxyImpl implements _$PaginationResultCWProxy {
 }
 
 extension $PaginationResultCopyWith on PaginationResult {
-  /// Returns a callable class that can be used as follows: `instanceOfPaginationResult.copyWith(...)` or like so:`instanceOfPaginationResult.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfPaginationResult.copyWith(...)` or `instanceOfPaginationResult.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$PaginationResultCWProxy get copyWith => _$PaginationResultCWProxyImpl(this);
 }

@@ -15,12 +15,13 @@ abstract class _$BadgeUserList200ResponseCWProxy {
 
   BadgeUserList200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserList200Response call({
     String message,
     List<UserBadge> data,
@@ -29,7 +30,8 @@ abstract class _$BadgeUserList200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeUserList200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeUserList200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeUserList200Response.copyWith(...)` or call `instanceOfBadgeUserList200Response.copyWith.fieldName(value)` for a single field.
 class _$BadgeUserList200ResponseCWProxyImpl
     implements _$BadgeUserList200ResponseCWProxy {
   const _$BadgeUserList200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$BadgeUserList200ResponseCWProxyImpl
   final BadgeUserList200Response _value;
 
   @override
-  BadgeUserList200Response message(String message) => this(message: message);
+  BadgeUserList200Response message(String message) => call(message: message);
 
   @override
-  BadgeUserList200Response data(List<UserBadge> data) => this(data: data);
+  BadgeUserList200Response data(List<UserBadge> data) => call(data: data);
 
   @override
   BadgeUserList200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   BadgeUserList200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserList200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserList200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserList200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserList200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$BadgeUserList200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return BadgeUserList200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<UserBadge>,
@@ -85,7 +88,8 @@ class _$BadgeUserList200ResponseCWProxyImpl
 }
 
 extension $BadgeUserList200ResponseCopyWith on BadgeUserList200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeUserList200Response.copyWith(...)` or like so:`instanceOfBadgeUserList200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeUserList200Response.copyWith(...)` or `instanceOfBadgeUserList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeUserList200ResponseCWProxy get copyWith =>
       _$BadgeUserList200ResponseCWProxyImpl(this);

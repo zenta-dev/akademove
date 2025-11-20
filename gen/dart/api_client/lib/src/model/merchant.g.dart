@@ -37,12 +37,13 @@ abstract class _$MerchantCWProxy {
 
   Merchant updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Merchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Merchant(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Merchant(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Merchant call({
     String id,
     String userId,
@@ -62,64 +63,66 @@ abstract class _$MerchantCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchant.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchant.copyWith(...)` or call `instanceOfMerchant.copyWith.fieldName(value)` for a single field.
 class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   const _$MerchantCWProxyImpl(this._value);
 
   final Merchant _value;
 
   @override
-  Merchant id(String id) => this(id: id);
+  Merchant id(String id) => call(id: id);
 
   @override
-  Merchant userId(String userId) => this(userId: userId);
+  Merchant userId(String userId) => call(userId: userId);
 
   @override
-  Merchant name(String name) => this(name: name);
+  Merchant name(String name) => call(name: name);
 
   @override
-  Merchant email(String email) => this(email: email);
+  Merchant email(String email) => call(email: email);
 
   @override
-  Merchant phone(Phone phone) => this(phone: phone);
+  Merchant phone(Phone phone) => call(phone: phone);
 
   @override
-  Merchant address(String address) => this(address: address);
+  Merchant address(String address) => call(address: address);
 
   @override
-  Merchant location(Coordinate? location) => this(location: location);
+  Merchant location(Coordinate? location) => call(location: location);
 
   @override
-  Merchant isActive(bool isActive) => this(isActive: isActive);
+  Merchant isActive(bool isActive) => call(isActive: isActive);
 
   @override
-  Merchant rating(num rating) => this(rating: rating);
+  Merchant rating(num rating) => call(rating: rating);
 
   @override
-  Merchant document(String? document) => this(document: document);
+  Merchant document(String? document) => call(document: document);
 
   @override
-  Merchant image(String? image) => this(image: image);
+  Merchant image(String? image) => call(image: image);
 
   @override
-  Merchant categories(List<String> categories) => this(categories: categories);
+  Merchant categories(List<String> categories) => call(categories: categories);
 
   @override
-  Merchant bank(Bank bank) => this(bank: bank);
+  Merchant bank(Bank bank) => call(bank: bank);
 
   @override
-  Merchant createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Merchant createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Merchant updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Merchant updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Merchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Merchant(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Merchant(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Merchant call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -138,27 +141,27 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Merchant(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      email: email == const $CopyWithPlaceholder()
+      email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
-      phone: phone == const $CopyWithPlaceholder()
+      phone: phone == const $CopyWithPlaceholder() || phone == null
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone,
-      address: address == const $CopyWithPlaceholder()
+      address: address == const $CopyWithPlaceholder() || address == null
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
           : address as String,
@@ -166,11 +169,11 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.location
           // ignore: cast_nullable_to_non_nullable
           : location as Coordinate?,
-      isActive: isActive == const $CopyWithPlaceholder()
+      isActive: isActive == const $CopyWithPlaceholder() || isActive == null
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool,
-      rating: rating == const $CopyWithPlaceholder()
+      rating: rating == const $CopyWithPlaceholder() || rating == null
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
           : rating as num,
@@ -182,19 +185,20 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
           : image as String?,
-      categories: categories == const $CopyWithPlaceholder()
+      categories:
+          categories == const $CopyWithPlaceholder() || categories == null
           ? _value.categories
           // ignore: cast_nullable_to_non_nullable
           : categories as List<String>,
-      bank: bank == const $CopyWithPlaceholder()
+      bank: bank == const $CopyWithPlaceholder() || bank == null
           ? _value.bank
           // ignore: cast_nullable_to_non_nullable
           : bank as Bank,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -203,7 +207,8 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
 }
 
 extension $MerchantCopyWith on Merchant {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchant.copyWith(...)` or like so:`instanceOfMerchant.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchant.copyWith(...)` or `instanceOfMerchant.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantCWProxy get copyWith => _$MerchantCWProxyImpl(this);
 }

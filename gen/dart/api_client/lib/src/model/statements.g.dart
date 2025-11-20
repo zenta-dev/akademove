@@ -33,12 +33,13 @@ abstract class _$StatementsCWProxy {
 
   Statements configurations(List<StatementsConfigurationsEnum>? configurations);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Statements(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Statements(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Statements call({
     List<StatementsDriverEnum>? driver,
     List<StatementsMerchantEnum>? merchant,
@@ -56,66 +57,68 @@ abstract class _$StatementsCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfStatements.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfStatements.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfStatements.copyWith(...)` or call `instanceOfStatements.copyWith.fieldName(value)` for a single field.
 class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   const _$StatementsCWProxyImpl(this._value);
 
   final Statements _value;
 
   @override
-  Statements driver(List<StatementsDriverEnum>? driver) => this(driver: driver);
+  Statements driver(List<StatementsDriverEnum>? driver) => call(driver: driver);
 
   @override
   Statements merchant(List<StatementsMerchantEnum>? merchant) =>
-      this(merchant: merchant);
+      call(merchant: merchant);
 
   @override
   Statements merchantMenu(List<StatementsMerchantMenuEnum>? merchantMenu) =>
-      this(merchantMenu: merchantMenu);
+      call(merchantMenu: merchantMenu);
 
   @override
-  Statements order(List<StatementsOrderEnum>? order) => this(order: order);
+  Statements order(List<StatementsOrderEnum>? order) => call(order: order);
 
   @override
   Statements schedule(List<StatementsScheduleEnum>? schedule) =>
-      this(schedule: schedule);
+      call(schedule: schedule);
 
   @override
-  Statements coupon(List<StatementsCouponEnum>? coupon) => this(coupon: coupon);
+  Statements coupon(List<StatementsCouponEnum>? coupon) => call(coupon: coupon);
 
   @override
-  Statements report(List<StatementsReportEnum>? report) => this(report: report);
+  Statements report(List<StatementsReportEnum>? report) => call(report: report);
 
   @override
-  Statements review(List<StatementsReviewEnum>? review) => this(review: review);
+  Statements review(List<StatementsReviewEnum>? review) => call(review: review);
 
   @override
-  Statements user(List<StatementsUserEnum>? user) => this(user: user);
+  Statements user(List<StatementsUserEnum>? user) => call(user: user);
 
   @override
   Statements session(List<StatementsSessionEnum>? session) =>
-      this(session: session);
+      call(session: session);
 
   @override
   Statements pricing(List<StatementsPricingEnum>? pricing) =>
-      this(pricing: pricing);
+      call(pricing: pricing);
 
   @override
   Statements bookings(List<StatementsBookingsEnum>? bookings) =>
-      this(bookings: bookings);
+      call(bookings: bookings);
 
   @override
   Statements configurations(
     List<StatementsConfigurationsEnum>? configurations,
-  ) => this(configurations: configurations);
+  ) => call(configurations: configurations);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Statements(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Statements(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Statements call({
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
@@ -189,7 +192,8 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
 }
 
 extension $StatementsCopyWith on Statements {
-  /// Returns a callable class that can be used as follows: `instanceOfStatements.copyWith(...)` or like so:`instanceOfStatements.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfStatements.copyWith(...)` or `instanceOfStatements.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$StatementsCWProxy get copyWith => _$StatementsCWProxyImpl(this);
 }

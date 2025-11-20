@@ -15,12 +15,13 @@ abstract class _$AuthSignIn200ResponseCWProxy {
 
   AuthSignIn200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthSignIn200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthSignIn200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthSignIn200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthSignIn200Response call({
     String message,
     SignInResponse data,
@@ -29,7 +30,8 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAuthSignIn200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAuthSignIn200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfAuthSignIn200Response.copyWith(...)` or call `instanceOfAuthSignIn200Response.copyWith.fieldName(value)` for a single field.
 class _$AuthSignIn200ResponseCWProxyImpl
     implements _$AuthSignIn200ResponseCWProxy {
   const _$AuthSignIn200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$AuthSignIn200ResponseCWProxyImpl
   final AuthSignIn200Response _value;
 
   @override
-  AuthSignIn200Response message(String message) => this(message: message);
+  AuthSignIn200Response message(String message) => call(message: message);
 
   @override
-  AuthSignIn200Response data(SignInResponse data) => this(data: data);
+  AuthSignIn200Response data(SignInResponse data) => call(data: data);
 
   @override
   AuthSignIn200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   AuthSignIn200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthSignIn200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthSignIn200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthSignIn200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthSignIn200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$AuthSignIn200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthSignIn200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as SignInResponse,
@@ -85,7 +88,8 @@ class _$AuthSignIn200ResponseCWProxyImpl
 }
 
 extension $AuthSignIn200ResponseCopyWith on AuthSignIn200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfAuthSignIn200Response.copyWith(...)` or like so:`instanceOfAuthSignIn200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfAuthSignIn200Response.copyWith(...)` or `instanceOfAuthSignIn200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$AuthSignIn200ResponseCWProxy get copyWith =>
       _$AuthSignIn200ResponseCWProxyImpl(this);

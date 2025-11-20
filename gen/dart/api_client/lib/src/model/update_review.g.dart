@@ -19,12 +19,13 @@ abstract class _$UpdateReviewCWProxy {
 
   UpdateReview comment(String? comment);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateReview(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateReview(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateReview(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateReview call({
     String? orderId,
     String? fromUserId,
@@ -35,37 +36,39 @@ abstract class _$UpdateReviewCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateReview.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateReview.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateReview.copyWith(...)` or call `instanceOfUpdateReview.copyWith.fieldName(value)` for a single field.
 class _$UpdateReviewCWProxyImpl implements _$UpdateReviewCWProxy {
   const _$UpdateReviewCWProxyImpl(this._value);
 
   final UpdateReview _value;
 
   @override
-  UpdateReview orderId(String? orderId) => this(orderId: orderId);
+  UpdateReview orderId(String? orderId) => call(orderId: orderId);
 
   @override
-  UpdateReview fromUserId(String? fromUserId) => this(fromUserId: fromUserId);
+  UpdateReview fromUserId(String? fromUserId) => call(fromUserId: fromUserId);
 
   @override
-  UpdateReview toUserId(String? toUserId) => this(toUserId: toUserId);
+  UpdateReview toUserId(String? toUserId) => call(toUserId: toUserId);
 
   @override
-  UpdateReview category(ReviewCategory? category) => this(category: category);
+  UpdateReview category(ReviewCategory? category) => call(category: category);
 
   @override
-  UpdateReview score(num? score) => this(score: score);
+  UpdateReview score(num? score) => call(score: score);
 
   @override
-  UpdateReview comment(String? comment) => this(comment: comment);
+  UpdateReview comment(String? comment) => call(comment: comment);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateReview(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateReview(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateReview(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateReview call({
     Object? orderId = const $CopyWithPlaceholder(),
     Object? fromUserId = const $CopyWithPlaceholder(),
@@ -104,7 +107,8 @@ class _$UpdateReviewCWProxyImpl implements _$UpdateReviewCWProxy {
 }
 
 extension $UpdateReviewCopyWith on UpdateReview {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateReview.copyWith(...)` or like so:`instanceOfUpdateReview.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateReview.copyWith(...)` or `instanceOfUpdateReview.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateReviewCWProxy get copyWith => _$UpdateReviewCWProxyImpl(this);
 }

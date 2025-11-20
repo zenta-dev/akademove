@@ -25,12 +25,13 @@ abstract class _$UpdateCouponCWProxy {
 
   UpdateCoupon isActive(bool? isActive);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateCoupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateCoupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateCoupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateCoupon call({
     String? name,
     String? code,
@@ -44,49 +45,51 @@ abstract class _$UpdateCouponCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateCoupon.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateCoupon.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateCoupon.copyWith(...)` or call `instanceOfUpdateCoupon.copyWith.fieldName(value)` for a single field.
 class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
   const _$UpdateCouponCWProxyImpl(this._value);
 
   final UpdateCoupon _value;
 
   @override
-  UpdateCoupon name(String? name) => this(name: name);
+  UpdateCoupon name(String? name) => call(name: name);
 
   @override
-  UpdateCoupon code(String? code) => this(code: code);
+  UpdateCoupon code(String? code) => call(code: code);
 
   @override
-  UpdateCoupon rules(CouponRules? rules) => this(rules: rules);
+  UpdateCoupon rules(CouponRules? rules) => call(rules: rules);
 
   @override
   UpdateCoupon discountAmount(num? discountAmount) =>
-      this(discountAmount: discountAmount);
+      call(discountAmount: discountAmount);
 
   @override
   UpdateCoupon discountPercentage(num? discountPercentage) =>
-      this(discountPercentage: discountPercentage);
+      call(discountPercentage: discountPercentage);
 
   @override
-  UpdateCoupon usageLimit(num? usageLimit) => this(usageLimit: usageLimit);
+  UpdateCoupon usageLimit(num? usageLimit) => call(usageLimit: usageLimit);
 
   @override
   UpdateCoupon periodStart(DateTime? periodStart) =>
-      this(periodStart: periodStart);
+      call(periodStart: periodStart);
 
   @override
-  UpdateCoupon periodEnd(DateTime? periodEnd) => this(periodEnd: periodEnd);
+  UpdateCoupon periodEnd(DateTime? periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  UpdateCoupon isActive(bool? isActive) => this(isActive: isActive);
+  UpdateCoupon isActive(bool? isActive) => call(isActive: isActive);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateCoupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateCoupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateCoupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateCoupon call({
     Object? name = const $CopyWithPlaceholder(),
     Object? code = const $CopyWithPlaceholder(),
@@ -140,7 +143,8 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
 }
 
 extension $UpdateCouponCopyWith on UpdateCoupon {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateCoupon.copyWith(...)` or like so:`instanceOfUpdateCoupon.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateCoupon.copyWith(...)` or `instanceOfUpdateCoupon.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateCouponCWProxy get copyWith => _$UpdateCouponCWProxyImpl(this);
 }

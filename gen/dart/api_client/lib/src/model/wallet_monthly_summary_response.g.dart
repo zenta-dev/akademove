@@ -15,12 +15,13 @@ abstract class _$WalletMonthlySummaryResponseCWProxy {
 
   WalletMonthlySummaryResponse net(num net);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletMonthlySummaryResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WalletMonthlySummaryResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WalletMonthlySummaryResponse call({
     String month,
     num totalIncome,
@@ -29,7 +30,8 @@ abstract class _$WalletMonthlySummaryResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWalletMonthlySummaryResponse.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWalletMonthlySummaryResponse.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWalletMonthlySummaryResponse.copyWith(...)` or call `instanceOfWalletMonthlySummaryResponse.copyWith.fieldName(value)` for a single field.
 class _$WalletMonthlySummaryResponseCWProxyImpl
     implements _$WalletMonthlySummaryResponseCWProxy {
   const _$WalletMonthlySummaryResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
   final WalletMonthlySummaryResponse _value;
 
   @override
-  WalletMonthlySummaryResponse month(String month) => this(month: month);
+  WalletMonthlySummaryResponse month(String month) => call(month: month);
 
   @override
   WalletMonthlySummaryResponse totalIncome(num totalIncome) =>
-      this(totalIncome: totalIncome);
+      call(totalIncome: totalIncome);
 
   @override
   WalletMonthlySummaryResponse totalExpense(num totalExpense) =>
-      this(totalExpense: totalExpense);
+      call(totalExpense: totalExpense);
 
   @override
-  WalletMonthlySummaryResponse net(num net) => this(net: net);
+  WalletMonthlySummaryResponse net(num net) => call(net: net);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WalletMonthlySummaryResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WalletMonthlySummaryResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WalletMonthlySummaryResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WalletMonthlySummaryResponse call({
     Object? month = const $CopyWithPlaceholder(),
     Object? totalIncome = const $CopyWithPlaceholder(),
@@ -64,19 +67,21 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
     Object? net = const $CopyWithPlaceholder(),
   }) {
     return WalletMonthlySummaryResponse(
-      month: month == const $CopyWithPlaceholder()
+      month: month == const $CopyWithPlaceholder() || month == null
           ? _value.month
           // ignore: cast_nullable_to_non_nullable
           : month as String,
-      totalIncome: totalIncome == const $CopyWithPlaceholder()
+      totalIncome:
+          totalIncome == const $CopyWithPlaceholder() || totalIncome == null
           ? _value.totalIncome
           // ignore: cast_nullable_to_non_nullable
           : totalIncome as num,
-      totalExpense: totalExpense == const $CopyWithPlaceholder()
+      totalExpense:
+          totalExpense == const $CopyWithPlaceholder() || totalExpense == null
           ? _value.totalExpense
           // ignore: cast_nullable_to_non_nullable
           : totalExpense as num,
-      net: net == const $CopyWithPlaceholder()
+      net: net == const $CopyWithPlaceholder() || net == null
           ? _value.net
           // ignore: cast_nullable_to_non_nullable
           : net as num,
@@ -86,7 +91,8 @@ class _$WalletMonthlySummaryResponseCWProxyImpl
 
 extension $WalletMonthlySummaryResponseCopyWith
     on WalletMonthlySummaryResponse {
-  /// Returns a callable class that can be used as follows: `instanceOfWalletMonthlySummaryResponse.copyWith(...)` or like so:`instanceOfWalletMonthlySummaryResponse.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWalletMonthlySummaryResponse.copyWith(...)` or `instanceOfWalletMonthlySummaryResponse.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WalletMonthlySummaryResponseCWProxy get copyWith =>
       _$WalletMonthlySummaryResponseCWProxyImpl(this);

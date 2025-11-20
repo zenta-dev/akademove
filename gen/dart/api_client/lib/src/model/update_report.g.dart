@@ -25,12 +25,13 @@ abstract class _$UpdateReportCWProxy {
 
   UpdateReport resolution(String? resolution);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateReport(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateReport(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateReport(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateReport call({
     String? orderId,
     String? reporterId,
@@ -44,50 +45,52 @@ abstract class _$UpdateReportCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateReport.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateReport.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateReport.copyWith(...)` or call `instanceOfUpdateReport.copyWith.fieldName(value)` for a single field.
 class _$UpdateReportCWProxyImpl implements _$UpdateReportCWProxy {
   const _$UpdateReportCWProxyImpl(this._value);
 
   final UpdateReport _value;
 
   @override
-  UpdateReport orderId(String? orderId) => this(orderId: orderId);
+  UpdateReport orderId(String? orderId) => call(orderId: orderId);
 
   @override
-  UpdateReport reporterId(String? reporterId) => this(reporterId: reporterId);
+  UpdateReport reporterId(String? reporterId) => call(reporterId: reporterId);
 
   @override
   UpdateReport targetUserId(String? targetUserId) =>
-      this(targetUserId: targetUserId);
+      call(targetUserId: targetUserId);
 
   @override
-  UpdateReport category(ReportCategory? category) => this(category: category);
+  UpdateReport category(ReportCategory? category) => call(category: category);
 
   @override
   UpdateReport description(String? description) =>
-      this(description: description);
+      call(description: description);
 
   @override
   UpdateReport evidenceUrl(String? evidenceUrl) =>
-      this(evidenceUrl: evidenceUrl);
+      call(evidenceUrl: evidenceUrl);
 
   @override
-  UpdateReport status(ReportStatus? status) => this(status: status);
+  UpdateReport status(ReportStatus? status) => call(status: status);
 
   @override
   UpdateReport handledById(String? handledById) =>
-      this(handledById: handledById);
+      call(handledById: handledById);
 
   @override
-  UpdateReport resolution(String? resolution) => this(resolution: resolution);
+  UpdateReport resolution(String? resolution) => call(resolution: resolution);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateReport(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateReport(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateReport(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateReport call({
     Object? orderId = const $CopyWithPlaceholder(),
     Object? reporterId = const $CopyWithPlaceholder(),
@@ -141,7 +144,8 @@ class _$UpdateReportCWProxyImpl implements _$UpdateReportCWProxy {
 }
 
 extension $UpdateReportCopyWith on UpdateReport {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateReport.copyWith(...)` or like so:`instanceOfUpdateReport.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateReport.copyWith(...)` or `instanceOfUpdateReport.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateReportCWProxy get copyWith => _$UpdateReportCWProxyImpl(this);
 }

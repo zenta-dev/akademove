@@ -17,12 +17,13 @@ abstract class _$BadgeCriteriaCWProxy {
 
   BadgeCriteria minEarnings(num? minEarnings);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeCriteria(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeCriteria(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeCriteria(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeCriteria call({
     int? minOrders,
     num? minRating,
@@ -32,35 +33,37 @@ abstract class _$BadgeCriteriaCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeCriteria.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeCriteria.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeCriteria.copyWith(...)` or call `instanceOfBadgeCriteria.copyWith.fieldName(value)` for a single field.
 class _$BadgeCriteriaCWProxyImpl implements _$BadgeCriteriaCWProxy {
   const _$BadgeCriteriaCWProxyImpl(this._value);
 
   final BadgeCriteria _value;
 
   @override
-  BadgeCriteria minOrders(int? minOrders) => this(minOrders: minOrders);
+  BadgeCriteria minOrders(int? minOrders) => call(minOrders: minOrders);
 
   @override
-  BadgeCriteria minRating(num? minRating) => this(minRating: minRating);
+  BadgeCriteria minRating(num? minRating) => call(minRating: minRating);
 
   @override
   BadgeCriteria minOnTimeRate(num? minOnTimeRate) =>
-      this(minOnTimeRate: minOnTimeRate);
+      call(minOnTimeRate: minOnTimeRate);
 
   @override
-  BadgeCriteria minStreak(int? minStreak) => this(minStreak: minStreak);
+  BadgeCriteria minStreak(int? minStreak) => call(minStreak: minStreak);
 
   @override
-  BadgeCriteria minEarnings(num? minEarnings) => this(minEarnings: minEarnings);
+  BadgeCriteria minEarnings(num? minEarnings) => call(minEarnings: minEarnings);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeCriteria(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeCriteria(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeCriteria(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeCriteria call({
     Object? minOrders = const $CopyWithPlaceholder(),
     Object? minRating = const $CopyWithPlaceholder(),
@@ -94,7 +97,8 @@ class _$BadgeCriteriaCWProxyImpl implements _$BadgeCriteriaCWProxy {
 }
 
 extension $BadgeCriteriaCopyWith on BadgeCriteria {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeCriteria.copyWith(...)` or like so:`instanceOfBadgeCriteria.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeCriteria.copyWith(...)` or `instanceOfBadgeCriteria.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeCriteriaCWProxy get copyWith => _$BadgeCriteriaCWProxyImpl(this);
 }

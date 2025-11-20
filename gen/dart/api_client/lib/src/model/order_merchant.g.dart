@@ -37,12 +37,13 @@ abstract class _$OrderMerchantCWProxy {
 
   OrderMerchant updatedAt(DateTime? updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderMerchant(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderMerchant(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderMerchant call({
     String? id,
     String? userId,
@@ -62,65 +63,67 @@ abstract class _$OrderMerchantCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderMerchant.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderMerchant.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderMerchant.copyWith(...)` or call `instanceOfOrderMerchant.copyWith.fieldName(value)` for a single field.
 class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
   const _$OrderMerchantCWProxyImpl(this._value);
 
   final OrderMerchant _value;
 
   @override
-  OrderMerchant id(String? id) => this(id: id);
+  OrderMerchant id(String? id) => call(id: id);
 
   @override
-  OrderMerchant userId(String? userId) => this(userId: userId);
+  OrderMerchant userId(String? userId) => call(userId: userId);
 
   @override
-  OrderMerchant name(String? name) => this(name: name);
+  OrderMerchant name(String? name) => call(name: name);
 
   @override
-  OrderMerchant email(String? email) => this(email: email);
+  OrderMerchant email(String? email) => call(email: email);
 
   @override
-  OrderMerchant phone(Phone? phone) => this(phone: phone);
+  OrderMerchant phone(Phone? phone) => call(phone: phone);
 
   @override
-  OrderMerchant address(String? address) => this(address: address);
+  OrderMerchant address(String? address) => call(address: address);
 
   @override
-  OrderMerchant location(Coordinate? location) => this(location: location);
+  OrderMerchant location(Coordinate? location) => call(location: location);
 
   @override
-  OrderMerchant isActive(bool? isActive) => this(isActive: isActive);
+  OrderMerchant isActive(bool? isActive) => call(isActive: isActive);
 
   @override
-  OrderMerchant rating(num? rating) => this(rating: rating);
+  OrderMerchant rating(num? rating) => call(rating: rating);
 
   @override
-  OrderMerchant document(String? document) => this(document: document);
+  OrderMerchant document(String? document) => call(document: document);
 
   @override
-  OrderMerchant image(String? image) => this(image: image);
+  OrderMerchant image(String? image) => call(image: image);
 
   @override
   OrderMerchant categories(List<String>? categories) =>
-      this(categories: categories);
+      call(categories: categories);
 
   @override
-  OrderMerchant bank(Bank? bank) => this(bank: bank);
+  OrderMerchant bank(Bank? bank) => call(bank: bank);
 
   @override
-  OrderMerchant createdAt(DateTime? createdAt) => this(createdAt: createdAt);
+  OrderMerchant createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  OrderMerchant updatedAt(DateTime? updatedAt) => this(updatedAt: updatedAt);
+  OrderMerchant updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderMerchant(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderMerchant(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderMerchant(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderMerchant call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -204,7 +207,8 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
 }
 
 extension $OrderMerchantCopyWith on OrderMerchant {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderMerchant.copyWith(...)` or like so:`instanceOfOrderMerchant.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderMerchant.copyWith(...)` or `instanceOfOrderMerchant.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderMerchantCWProxy get copyWith => _$OrderMerchantCWProxyImpl(this);
 }

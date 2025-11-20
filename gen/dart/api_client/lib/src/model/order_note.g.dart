@@ -11,34 +11,37 @@ abstract class _$OrderNoteCWProxy {
 
   OrderNote dropoff(String? dropoff);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderNote(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderNote(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderNote(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderNote call({String? pickup, String? dropoff});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderNote.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderNote.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderNote.copyWith(...)` or call `instanceOfOrderNote.copyWith.fieldName(value)` for a single field.
 class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
   const _$OrderNoteCWProxyImpl(this._value);
 
   final OrderNote _value;
 
   @override
-  OrderNote pickup(String? pickup) => this(pickup: pickup);
+  OrderNote pickup(String? pickup) => call(pickup: pickup);
 
   @override
-  OrderNote dropoff(String? dropoff) => this(dropoff: dropoff);
+  OrderNote dropoff(String? dropoff) => call(dropoff: dropoff);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderNote(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderNote(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderNote(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderNote call({
     Object? pickup = const $CopyWithPlaceholder(),
     Object? dropoff = const $CopyWithPlaceholder(),
@@ -57,7 +60,8 @@ class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
 }
 
 extension $OrderNoteCopyWith on OrderNote {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderNote.copyWith(...)` or like so:`instanceOfOrderNote.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderNote.copyWith(...)` or `instanceOfOrderNote.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderNoteCWProxy get copyWith => _$OrderNoteCWProxyImpl(this);
 }

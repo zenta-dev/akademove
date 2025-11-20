@@ -23,12 +23,13 @@ abstract class _$ReviewCWProxy {
 
   Review createdAt(DateTime createdAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Review(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Review(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Review(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Review call({
     String id,
     String orderId,
@@ -41,43 +42,45 @@ abstract class _$ReviewCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfReview.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfReview.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfReview.copyWith(...)` or call `instanceOfReview.copyWith.fieldName(value)` for a single field.
 class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
   const _$ReviewCWProxyImpl(this._value);
 
   final Review _value;
 
   @override
-  Review id(String id) => this(id: id);
+  Review id(String id) => call(id: id);
 
   @override
-  Review orderId(String orderId) => this(orderId: orderId);
+  Review orderId(String orderId) => call(orderId: orderId);
 
   @override
-  Review fromUserId(String fromUserId) => this(fromUserId: fromUserId);
+  Review fromUserId(String fromUserId) => call(fromUserId: fromUserId);
 
   @override
-  Review toUserId(String toUserId) => this(toUserId: toUserId);
+  Review toUserId(String toUserId) => call(toUserId: toUserId);
 
   @override
-  Review category(ReviewCategory category) => this(category: category);
+  Review category(ReviewCategory category) => call(category: category);
 
   @override
-  Review score(num score) => this(score: score);
+  Review score(num score) => call(score: score);
 
   @override
-  Review comment(String? comment) => this(comment: comment);
+  Review comment(String? comment) => call(comment: comment);
 
   @override
-  Review createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Review createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Review(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Review(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Review(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Review call({
     Object? id = const $CopyWithPlaceholder(),
     Object? orderId = const $CopyWithPlaceholder(),
@@ -89,27 +92,28 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
     Object? createdAt = const $CopyWithPlaceholder(),
   }) {
     return Review(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      orderId: orderId == const $CopyWithPlaceholder()
+      orderId: orderId == const $CopyWithPlaceholder() || orderId == null
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String,
-      fromUserId: fromUserId == const $CopyWithPlaceholder()
+      fromUserId:
+          fromUserId == const $CopyWithPlaceholder() || fromUserId == null
           ? _value.fromUserId
           // ignore: cast_nullable_to_non_nullable
           : fromUserId as String,
-      toUserId: toUserId == const $CopyWithPlaceholder()
+      toUserId: toUserId == const $CopyWithPlaceholder() || toUserId == null
           ? _value.toUserId
           // ignore: cast_nullable_to_non_nullable
           : toUserId as String,
-      category: category == const $CopyWithPlaceholder()
+      category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as ReviewCategory,
-      score: score == const $CopyWithPlaceholder()
+      score: score == const $CopyWithPlaceholder() || score == null
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as num,
@@ -117,7 +121,7 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
           ? _value.comment
           // ignore: cast_nullable_to_non_nullable
           : comment as String?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
@@ -126,7 +130,8 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
 }
 
 extension $ReviewCopyWith on Review {
-  /// Returns a callable class that can be used as follows: `instanceOfReview.copyWith(...)` or like so:`instanceOfReview.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfReview.copyWith(...)` or `instanceOfReview.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$ReviewCWProxy get copyWith => _$ReviewCWProxyImpl(this);
 }

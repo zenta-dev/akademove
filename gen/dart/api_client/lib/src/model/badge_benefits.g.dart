@@ -11,16 +11,18 @@ abstract class _$BadgeBenefitsCWProxy {
 
   BadgeBenefits commissionReduction(num? commissionReduction);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeBenefits(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeBenefits(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeBenefits(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeBenefits call({int? priorityBoost, num? commissionReduction});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeBenefits.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeBenefits.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeBenefits.copyWith(...)` or call `instanceOfBadgeBenefits.copyWith.fieldName(value)` for a single field.
 class _$BadgeBenefitsCWProxyImpl implements _$BadgeBenefitsCWProxy {
   const _$BadgeBenefitsCWProxyImpl(this._value);
 
@@ -28,19 +30,20 @@ class _$BadgeBenefitsCWProxyImpl implements _$BadgeBenefitsCWProxy {
 
   @override
   BadgeBenefits priorityBoost(int? priorityBoost) =>
-      this(priorityBoost: priorityBoost);
+      call(priorityBoost: priorityBoost);
 
   @override
   BadgeBenefits commissionReduction(num? commissionReduction) =>
-      this(commissionReduction: commissionReduction);
+      call(commissionReduction: commissionReduction);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeBenefits(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeBenefits(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeBenefits(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeBenefits call({
     Object? priorityBoost = const $CopyWithPlaceholder(),
     Object? commissionReduction = const $CopyWithPlaceholder(),
@@ -59,7 +62,8 @@ class _$BadgeBenefitsCWProxyImpl implements _$BadgeBenefitsCWProxy {
 }
 
 extension $BadgeBenefitsCopyWith on BadgeBenefits {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeBenefits.copyWith(...)` or like so:`instanceOfBadgeBenefits.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeBenefits.copyWith(...)` or `instanceOfBadgeBenefits.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeBenefitsCWProxy get copyWith => _$BadgeBenefitsCWProxyImpl(this);
 }

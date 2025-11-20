@@ -19,12 +19,13 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
 
   NotificationSubscribeToTopic200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSubscribeToTopic200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSubscribeToTopic200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSubscribeToTopic200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSubscribeToTopic200Response call({
     String message,
     NotificationSubscribeToTopic200ResponseData data,
@@ -33,7 +34,8 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)` or call `instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(value)` for a single field.
 class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
     implements _$NotificationSubscribeToTopic200ResponseCWProxy {
   const _$NotificationSubscribeToTopic200ResponseCWProxyImpl(this._value);
@@ -42,29 +44,30 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
 
   @override
   NotificationSubscribeToTopic200Response message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
   NotificationSubscribeToTopic200Response data(
     NotificationSubscribeToTopic200ResponseData data,
-  ) => this(data: data);
+  ) => call(data: data);
 
   @override
   NotificationSubscribeToTopic200Response pagination(
     PaginationResult? pagination,
-  ) => this(pagination: pagination);
+  ) => call(pagination: pagination);
 
   @override
   NotificationSubscribeToTopic200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NotificationSubscribeToTopic200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `NotificationSubscribeToTopic200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// NotificationSubscribeToTopic200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   NotificationSubscribeToTopic200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -72,11 +75,11 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return NotificationSubscribeToTopic200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as NotificationSubscribeToTopic200ResponseData,
@@ -94,7 +97,8 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
 
 extension $NotificationSubscribeToTopic200ResponseCopyWith
     on NotificationSubscribeToTopic200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)` or like so:`instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)` or `instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$NotificationSubscribeToTopic200ResponseCWProxy get copyWith =>
       _$NotificationSubscribeToTopic200ResponseCWProxyImpl(this);

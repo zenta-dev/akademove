@@ -29,12 +29,13 @@ abstract class _$FCMNotificationLogCWProxy {
 
   FCMNotificationLog sentAt(DateTime sentAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FCMNotificationLog(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FCMNotificationLog(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// FCMNotificationLog(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   FCMNotificationLog call({
     String id,
     String userId,
@@ -50,53 +51,55 @@ abstract class _$FCMNotificationLogCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfFCMNotificationLog.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfFCMNotificationLog.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfFCMNotificationLog.copyWith(...)` or call `instanceOfFCMNotificationLog.copyWith.fieldName(value)` for a single field.
 class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
   const _$FCMNotificationLogCWProxyImpl(this._value);
 
   final FCMNotificationLog _value;
 
   @override
-  FCMNotificationLog id(String id) => this(id: id);
+  FCMNotificationLog id(String id) => call(id: id);
 
   @override
-  FCMNotificationLog userId(String userId) => this(userId: userId);
+  FCMNotificationLog userId(String userId) => call(userId: userId);
 
   @override
-  FCMNotificationLog token(String? token) => this(token: token);
+  FCMNotificationLog token(String? token) => call(token: token);
 
   @override
-  FCMNotificationLog topic(String? topic) => this(topic: topic);
+  FCMNotificationLog topic(String? topic) => call(topic: topic);
 
   @override
-  FCMNotificationLog title(String title) => this(title: title);
+  FCMNotificationLog title(String title) => call(title: title);
 
   @override
-  FCMNotificationLog body(String body) => this(body: body);
+  FCMNotificationLog body(String body) => call(body: body);
 
   @override
-  FCMNotificationLog data(Object? data) => this(data: data);
+  FCMNotificationLog data(Object? data) => call(data: data);
 
   @override
-  FCMNotificationLog messageId(String? messageId) => this(messageId: messageId);
+  FCMNotificationLog messageId(String? messageId) => call(messageId: messageId);
 
   @override
   FCMNotificationLog status(FCMNotificationLogStatusEnum status) =>
-      this(status: status);
+      call(status: status);
 
   @override
-  FCMNotificationLog error(String? error) => this(error: error);
+  FCMNotificationLog error(String? error) => call(error: error);
 
   @override
-  FCMNotificationLog sentAt(DateTime sentAt) => this(sentAt: sentAt);
+  FCMNotificationLog sentAt(DateTime sentAt) => call(sentAt: sentAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FCMNotificationLog(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FCMNotificationLog(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// FCMNotificationLog(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   FCMNotificationLog call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -111,11 +114,11 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
     Object? sentAt = const $CopyWithPlaceholder(),
   }) {
     return FCMNotificationLog(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
@@ -127,11 +130,11 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
           ? _value.topic
           // ignore: cast_nullable_to_non_nullable
           : topic as String?,
-      title: title == const $CopyWithPlaceholder()
+      title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
           : title as String,
-      body: body == const $CopyWithPlaceholder()
+      body: body == const $CopyWithPlaceholder() || body == null
           ? _value.body
           // ignore: cast_nullable_to_non_nullable
           : body as String,
@@ -143,7 +146,7 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
           ? _value.messageId
           // ignore: cast_nullable_to_non_nullable
           : messageId as String?,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as FCMNotificationLogStatusEnum,
@@ -151,7 +154,7 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
           ? _value.error
           // ignore: cast_nullable_to_non_nullable
           : error as String?,
-      sentAt: sentAt == const $CopyWithPlaceholder()
+      sentAt: sentAt == const $CopyWithPlaceholder() || sentAt == null
           ? _value.sentAt
           // ignore: cast_nullable_to_non_nullable
           : sentAt as DateTime,
@@ -160,7 +163,8 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
 }
 
 extension $FCMNotificationLogCopyWith on FCMNotificationLog {
-  /// Returns a callable class that can be used as follows: `instanceOfFCMNotificationLog.copyWith(...)` or like so:`instanceOfFCMNotificationLog.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfFCMNotificationLog.copyWith(...)` or `instanceOfFCMNotificationLog.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$FCMNotificationLogCWProxy get copyWith =>
       _$FCMNotificationLogCWProxyImpl(this);

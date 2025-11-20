@@ -15,12 +15,13 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
 
   MerchantGetMine200ResponseBody totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantGetMine200ResponseBody call({
     String message,
     Merchant data,
@@ -29,7 +30,8 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantGetMine200ResponseBody.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchantGetMine200ResponseBody.copyWith(...)` or call `instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(value)` for a single field.
 class _$MerchantGetMine200ResponseBodyCWProxyImpl
     implements _$MerchantGetMine200ResponseBodyCWProxy {
   const _$MerchantGetMine200ResponseBodyCWProxyImpl(this._value);
@@ -38,26 +40,27 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
 
   @override
   MerchantGetMine200ResponseBody message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
-  MerchantGetMine200ResponseBody data(Merchant data) => this(data: data);
+  MerchantGetMine200ResponseBody data(Merchant data) => call(data: data);
 
   @override
   MerchantGetMine200ResponseBody pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   MerchantGetMine200ResponseBody totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantGetMine200ResponseBody(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantGetMine200ResponseBody call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -65,11 +68,11 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantGetMine200ResponseBody(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Merchant,
@@ -87,7 +90,8 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
 
 extension $MerchantGetMine200ResponseBodyCopyWith
     on MerchantGetMine200ResponseBody {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchantGetMine200ResponseBody.copyWith(...)` or like so:`instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchantGetMine200ResponseBody.copyWith(...)` or `instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantGetMine200ResponseBodyCWProxy get copyWith =>
       _$MerchantGetMine200ResponseBodyCWProxyImpl(this);

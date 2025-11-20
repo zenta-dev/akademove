@@ -35,12 +35,13 @@ abstract class _$UserCWProxy {
 
   User userBadges(List<UserBadge> userBadges);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `User(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// User(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   User call({
     String id,
     String name,
@@ -59,61 +60,63 @@ abstract class _$UserCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUser.copyWith(...)` or call `instanceOfUser.copyWith.fieldName(value)` for a single field.
 class _$UserCWProxyImpl implements _$UserCWProxy {
   const _$UserCWProxyImpl(this._value);
 
   final User _value;
 
   @override
-  User id(String id) => this(id: id);
+  User id(String id) => call(id: id);
 
   @override
-  User name(String name) => this(name: name);
+  User name(String name) => call(name: name);
 
   @override
-  User email(String email) => this(email: email);
+  User email(String email) => call(email: email);
 
   @override
-  User emailVerified(bool emailVerified) => this(emailVerified: emailVerified);
+  User emailVerified(bool emailVerified) => call(emailVerified: emailVerified);
 
   @override
-  User image(String? image) => this(image: image);
+  User image(String? image) => call(image: image);
 
   @override
-  User role(UserRole role) => this(role: role);
+  User role(UserRole role) => call(role: role);
 
   @override
-  User banned(bool banned) => this(banned: banned);
+  User banned(bool banned) => call(banned: banned);
 
   @override
-  User banReason(String? banReason) => this(banReason: banReason);
+  User banReason(String? banReason) => call(banReason: banReason);
 
   @override
-  User banExpires(DateTime? banExpires) => this(banExpires: banExpires);
+  User banExpires(DateTime? banExpires) => call(banExpires: banExpires);
 
   @override
-  User gender(UserGender? gender) => this(gender: gender);
+  User gender(UserGender? gender) => call(gender: gender);
 
   @override
-  User phone(Phone phone) => this(phone: phone);
+  User phone(Phone phone) => call(phone: phone);
 
   @override
-  User createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  User createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  User updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  User updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  User userBadges(List<UserBadge> userBadges) => this(userBadges: userBadges);
+  User userBadges(List<UserBadge> userBadges) => call(userBadges: userBadges);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `User(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// User(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   User call({
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -131,19 +134,20 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
     Object? userBadges = const $CopyWithPlaceholder(),
   }) {
     return User(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      email: email == const $CopyWithPlaceholder()
+      email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
-      emailVerified: emailVerified == const $CopyWithPlaceholder()
+      emailVerified:
+          emailVerified == const $CopyWithPlaceholder() || emailVerified == null
           ? _value.emailVerified
           // ignore: cast_nullable_to_non_nullable
           : emailVerified as bool,
@@ -151,11 +155,11 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
           : image as String?,
-      role: role == const $CopyWithPlaceholder()
+      role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
-      banned: banned == const $CopyWithPlaceholder()
+      banned: banned == const $CopyWithPlaceholder() || banned == null
           ? _value.banned
           // ignore: cast_nullable_to_non_nullable
           : banned as bool,
@@ -171,19 +175,20 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
-      phone: phone == const $CopyWithPlaceholder()
+      phone: phone == const $CopyWithPlaceholder() || phone == null
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
-      userBadges: userBadges == const $CopyWithPlaceholder()
+      userBadges:
+          userBadges == const $CopyWithPlaceholder() || userBadges == null
           ? _value.userBadges
           // ignore: cast_nullable_to_non_nullable
           : userBadges as List<UserBadge>,
@@ -192,7 +197,8 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
 }
 
 extension $UserCopyWith on User {
-  /// Returns a callable class that can be used as follows: `instanceOfUser.copyWith(...)` or like so:`instanceOfUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUser.copyWith(...)` or `instanceOfUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UserCWProxy get copyWith => _$UserCWProxyImpl(this);
 }

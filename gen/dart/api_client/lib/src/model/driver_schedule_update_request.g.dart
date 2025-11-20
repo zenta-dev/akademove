@@ -21,12 +21,13 @@ abstract class _$DriverScheduleUpdateRequestCWProxy {
 
   DriverScheduleUpdateRequest isActive(bool? isActive);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleUpdateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleUpdateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleUpdateRequest call({
     String? name,
     DayOfWeek? dayOfWeek,
@@ -38,7 +39,8 @@ abstract class _$DriverScheduleUpdateRequestCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverScheduleUpdateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverScheduleUpdateRequest.copyWith(...)` or call `instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(value)` for a single field.
 class _$DriverScheduleUpdateRequestCWProxyImpl
     implements _$DriverScheduleUpdateRequestCWProxy {
   const _$DriverScheduleUpdateRequestCWProxyImpl(this._value);
@@ -46,38 +48,39 @@ class _$DriverScheduleUpdateRequestCWProxyImpl
   final DriverScheduleUpdateRequest _value;
 
   @override
-  DriverScheduleUpdateRequest name(String? name) => this(name: name);
+  DriverScheduleUpdateRequest name(String? name) => call(name: name);
 
   @override
   DriverScheduleUpdateRequest dayOfWeek(DayOfWeek? dayOfWeek) =>
-      this(dayOfWeek: dayOfWeek);
+      call(dayOfWeek: dayOfWeek);
 
   @override
   DriverScheduleUpdateRequest startTime(Time? startTime) =>
-      this(startTime: startTime);
+      call(startTime: startTime);
 
   @override
-  DriverScheduleUpdateRequest endTime(Time? endTime) => this(endTime: endTime);
+  DriverScheduleUpdateRequest endTime(Time? endTime) => call(endTime: endTime);
 
   @override
   DriverScheduleUpdateRequest isRecurring(bool? isRecurring) =>
-      this(isRecurring: isRecurring);
+      call(isRecurring: isRecurring);
 
   @override
   DriverScheduleUpdateRequest specificDate(DateTime? specificDate) =>
-      this(specificDate: specificDate);
+      call(specificDate: specificDate);
 
   @override
   DriverScheduleUpdateRequest isActive(bool? isActive) =>
-      this(isActive: isActive);
+      call(isActive: isActive);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleUpdateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleUpdateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleUpdateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleUpdateRequest call({
     Object? name = const $CopyWithPlaceholder(),
     Object? dayOfWeek = const $CopyWithPlaceholder(),
@@ -121,7 +124,8 @@ class _$DriverScheduleUpdateRequestCWProxyImpl
 }
 
 extension $DriverScheduleUpdateRequestCopyWith on DriverScheduleUpdateRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverScheduleUpdateRequest.copyWith(...)` or like so:`instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverScheduleUpdateRequest.copyWith(...)` or `instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverScheduleUpdateRequestCWProxy get copyWith =>
       _$DriverScheduleUpdateRequestCWProxyImpl(this);

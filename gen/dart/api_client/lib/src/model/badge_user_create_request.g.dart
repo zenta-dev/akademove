@@ -13,12 +13,13 @@ abstract class _$BadgeUserCreateRequestCWProxy {
 
   BadgeUserCreateRequest metadata(UserBadgeMetadata? metadata);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserCreateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserCreateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserCreateRequest call({
     String userId,
     String badgeId,
@@ -26,7 +27,8 @@ abstract class _$BadgeUserCreateRequestCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBadgeUserCreateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBadgeUserCreateRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBadgeUserCreateRequest.copyWith(...)` or call `instanceOfBadgeUserCreateRequest.copyWith.fieldName(value)` for a single field.
 class _$BadgeUserCreateRequestCWProxyImpl
     implements _$BadgeUserCreateRequestCWProxy {
   const _$BadgeUserCreateRequestCWProxyImpl(this._value);
@@ -34,33 +36,34 @@ class _$BadgeUserCreateRequestCWProxyImpl
   final BadgeUserCreateRequest _value;
 
   @override
-  BadgeUserCreateRequest userId(String userId) => this(userId: userId);
+  BadgeUserCreateRequest userId(String userId) => call(userId: userId);
 
   @override
-  BadgeUserCreateRequest badgeId(String badgeId) => this(badgeId: badgeId);
+  BadgeUserCreateRequest badgeId(String badgeId) => call(badgeId: badgeId);
 
   @override
   BadgeUserCreateRequest metadata(UserBadgeMetadata? metadata) =>
-      this(metadata: metadata);
+      call(metadata: metadata);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BadgeUserCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BadgeUserCreateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BadgeUserCreateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BadgeUserCreateRequest call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? badgeId = const $CopyWithPlaceholder(),
     Object? metadata = const $CopyWithPlaceholder(),
   }) {
     return BadgeUserCreateRequest(
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      badgeId: badgeId == const $CopyWithPlaceholder()
+      badgeId: badgeId == const $CopyWithPlaceholder() || badgeId == null
           ? _value.badgeId
           // ignore: cast_nullable_to_non_nullable
           : badgeId as String,
@@ -73,7 +76,8 @@ class _$BadgeUserCreateRequestCWProxyImpl
 }
 
 extension $BadgeUserCreateRequestCopyWith on BadgeUserCreateRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfBadgeUserCreateRequest.copyWith(...)` or like so:`instanceOfBadgeUserCreateRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBadgeUserCreateRequest.copyWith(...)` or `instanceOfBadgeUserCreateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BadgeUserCreateRequestCWProxy get copyWith =>
       _$BadgeUserCreateRequestCWProxyImpl(this);

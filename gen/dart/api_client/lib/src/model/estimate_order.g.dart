@@ -23,12 +23,13 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder weight(num? weight);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `EstimateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `EstimateOrder(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// EstimateOrder(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   EstimateOrder call({
     Coordinate dropoffLocation,
     Coordinate pickupLocation,
@@ -41,7 +42,8 @@ abstract class _$EstimateOrderCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfEstimateOrder.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfEstimateOrder.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfEstimateOrder.copyWith(...)` or call `instanceOfEstimateOrder.copyWith.fieldName(value)` for a single field.
 class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   const _$EstimateOrderCWProxyImpl(this._value);
 
@@ -49,38 +51,39 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
 
   @override
   EstimateOrder dropoffLocation(Coordinate dropoffLocation) =>
-      this(dropoffLocation: dropoffLocation);
+      call(dropoffLocation: dropoffLocation);
 
   @override
   EstimateOrder pickupLocation(Coordinate pickupLocation) =>
-      this(pickupLocation: pickupLocation);
+      call(pickupLocation: pickupLocation);
 
   @override
-  EstimateOrder note(OrderNote? note) => this(note: note);
+  EstimateOrder note(OrderNote? note) => call(note: note);
 
   @override
-  EstimateOrder type(OrderType type) => this(type: type);
+  EstimateOrder type(OrderType type) => call(type: type);
 
   @override
-  EstimateOrder items(List<OrderItem>? items) => this(items: items);
+  EstimateOrder items(List<OrderItem>? items) => call(items: items);
 
   @override
-  EstimateOrder gender(UserGender? gender) => this(gender: gender);
+  EstimateOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
   EstimateOrder discountIds(List<num>? discountIds) =>
-      this(discountIds: discountIds);
+      call(discountIds: discountIds);
 
   @override
-  EstimateOrder weight(num? weight) => this(weight: weight);
+  EstimateOrder weight(num? weight) => call(weight: weight);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `EstimateOrder(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `EstimateOrder(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// EstimateOrder(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   EstimateOrder call({
     Object? dropoffLocation = const $CopyWithPlaceholder(),
     Object? pickupLocation = const $CopyWithPlaceholder(),
@@ -92,11 +95,15 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? weight = const $CopyWithPlaceholder(),
   }) {
     return EstimateOrder(
-      dropoffLocation: dropoffLocation == const $CopyWithPlaceholder()
+      dropoffLocation:
+          dropoffLocation == const $CopyWithPlaceholder() ||
+              dropoffLocation == null
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
           : dropoffLocation as Coordinate,
-      pickupLocation: pickupLocation == const $CopyWithPlaceholder()
+      pickupLocation:
+          pickupLocation == const $CopyWithPlaceholder() ||
+              pickupLocation == null
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
@@ -104,7 +111,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
           : note as OrderNote?,
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as OrderType,
@@ -129,7 +136,8 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
 }
 
 extension $EstimateOrderCopyWith on EstimateOrder {
-  /// Returns a callable class that can be used as follows: `instanceOfEstimateOrder.copyWith(...)` or like so:`instanceOfEstimateOrder.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfEstimateOrder.copyWith(...)` or `instanceOfEstimateOrder.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$EstimateOrderCWProxy get copyWith => _$EstimateOrderCWProxyImpl(this);
 }

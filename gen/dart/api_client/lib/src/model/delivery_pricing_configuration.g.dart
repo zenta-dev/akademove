@@ -19,12 +19,13 @@ abstract class _$DeliveryPricingConfigurationCWProxy {
 
   DeliveryPricingConfiguration perKgRate(num perKgRate);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DeliveryPricingConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DeliveryPricingConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DeliveryPricingConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DeliveryPricingConfiguration call({
     num baseFare,
     num perKmRate,
@@ -35,7 +36,8 @@ abstract class _$DeliveryPricingConfigurationCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDeliveryPricingConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDeliveryPricingConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDeliveryPricingConfiguration.copyWith(...)` or call `instanceOfDeliveryPricingConfiguration.copyWith.fieldName(value)` for a single field.
 class _$DeliveryPricingConfigurationCWProxyImpl
     implements _$DeliveryPricingConfigurationCWProxy {
   const _$DeliveryPricingConfigurationCWProxyImpl(this._value);
@@ -44,34 +46,35 @@ class _$DeliveryPricingConfigurationCWProxyImpl
 
   @override
   DeliveryPricingConfiguration baseFare(num baseFare) =>
-      this(baseFare: baseFare);
+      call(baseFare: baseFare);
 
   @override
   DeliveryPricingConfiguration perKmRate(num perKmRate) =>
-      this(perKmRate: perKmRate);
+      call(perKmRate: perKmRate);
 
   @override
   DeliveryPricingConfiguration minimumFare(num minimumFare) =>
-      this(minimumFare: minimumFare);
+      call(minimumFare: minimumFare);
 
   @override
   DeliveryPricingConfiguration platformFeeRate(num platformFeeRate) =>
-      this(platformFeeRate: platformFeeRate);
+      call(platformFeeRate: platformFeeRate);
 
   @override
-  DeliveryPricingConfiguration taxRate(num taxRate) => this(taxRate: taxRate);
+  DeliveryPricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
 
   @override
   DeliveryPricingConfiguration perKgRate(num perKgRate) =>
-      this(perKgRate: perKgRate);
+      call(perKgRate: perKgRate);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DeliveryPricingConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DeliveryPricingConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DeliveryPricingConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DeliveryPricingConfiguration call({
     Object? baseFare = const $CopyWithPlaceholder(),
     Object? perKmRate = const $CopyWithPlaceholder(),
@@ -81,27 +84,30 @@ class _$DeliveryPricingConfigurationCWProxyImpl
     Object? perKgRate = const $CopyWithPlaceholder(),
   }) {
     return DeliveryPricingConfiguration(
-      baseFare: baseFare == const $CopyWithPlaceholder()
+      baseFare: baseFare == const $CopyWithPlaceholder() || baseFare == null
           ? _value.baseFare
           // ignore: cast_nullable_to_non_nullable
           : baseFare as num,
-      perKmRate: perKmRate == const $CopyWithPlaceholder()
+      perKmRate: perKmRate == const $CopyWithPlaceholder() || perKmRate == null
           ? _value.perKmRate
           // ignore: cast_nullable_to_non_nullable
           : perKmRate as num,
-      minimumFare: minimumFare == const $CopyWithPlaceholder()
+      minimumFare:
+          minimumFare == const $CopyWithPlaceholder() || minimumFare == null
           ? _value.minimumFare
           // ignore: cast_nullable_to_non_nullable
           : minimumFare as num,
-      platformFeeRate: platformFeeRate == const $CopyWithPlaceholder()
+      platformFeeRate:
+          platformFeeRate == const $CopyWithPlaceholder() ||
+              platformFeeRate == null
           ? _value.platformFeeRate
           // ignore: cast_nullable_to_non_nullable
           : platformFeeRate as num,
-      taxRate: taxRate == const $CopyWithPlaceholder()
+      taxRate: taxRate == const $CopyWithPlaceholder() || taxRate == null
           ? _value.taxRate
           // ignore: cast_nullable_to_non_nullable
           : taxRate as num,
-      perKgRate: perKgRate == const $CopyWithPlaceholder()
+      perKgRate: perKgRate == const $CopyWithPlaceholder() || perKgRate == null
           ? _value.perKgRate
           // ignore: cast_nullable_to_non_nullable
           : perKgRate as num,
@@ -111,7 +117,8 @@ class _$DeliveryPricingConfigurationCWProxyImpl
 
 extension $DeliveryPricingConfigurationCopyWith
     on DeliveryPricingConfiguration {
-  /// Returns a callable class that can be used as follows: `instanceOfDeliveryPricingConfiguration.copyWith(...)` or like so:`instanceOfDeliveryPricingConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDeliveryPricingConfiguration.copyWith(...)` or `instanceOfDeliveryPricingConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DeliveryPricingConfigurationCWProxy get copyWith =>
       _$DeliveryPricingConfigurationCWProxyImpl(this);

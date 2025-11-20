@@ -13,12 +13,13 @@ abstract class _$UpdateUserPasswordCWProxy {
 
   UpdateUserPassword confirmNewPassword(String confirmNewPassword);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPassword(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateUserPassword(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateUserPassword(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateUserPassword call({
     String oldPassword,
     String newPassword,
@@ -26,7 +27,8 @@ abstract class _$UpdateUserPasswordCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateUserPassword.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateUserPassword.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateUserPassword.copyWith(...)` or call `instanceOfUpdateUserPassword.copyWith.fieldName(value)` for a single field.
 class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
   const _$UpdateUserPasswordCWProxyImpl(this._value);
 
@@ -34,38 +36,43 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
 
   @override
   UpdateUserPassword oldPassword(String oldPassword) =>
-      this(oldPassword: oldPassword);
+      call(oldPassword: oldPassword);
 
   @override
   UpdateUserPassword newPassword(String newPassword) =>
-      this(newPassword: newPassword);
+      call(newPassword: newPassword);
 
   @override
   UpdateUserPassword confirmNewPassword(String confirmNewPassword) =>
-      this(confirmNewPassword: confirmNewPassword);
+      call(confirmNewPassword: confirmNewPassword);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateUserPassword(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateUserPassword(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateUserPassword(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateUserPassword call({
     Object? oldPassword = const $CopyWithPlaceholder(),
     Object? newPassword = const $CopyWithPlaceholder(),
     Object? confirmNewPassword = const $CopyWithPlaceholder(),
   }) {
     return UpdateUserPassword(
-      oldPassword: oldPassword == const $CopyWithPlaceholder()
+      oldPassword:
+          oldPassword == const $CopyWithPlaceholder() || oldPassword == null
           ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
           : oldPassword as String,
-      newPassword: newPassword == const $CopyWithPlaceholder()
+      newPassword:
+          newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
           : newPassword as String,
-      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder()
+      confirmNewPassword:
+          confirmNewPassword == const $CopyWithPlaceholder() ||
+              confirmNewPassword == null
           ? _value.confirmNewPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmNewPassword as String,
@@ -74,7 +81,8 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
 }
 
 extension $UpdateUserPasswordCopyWith on UpdateUserPassword {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateUserPassword.copyWith(...)` or like so:`instanceOfUpdateUserPassword.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateUserPassword.copyWith(...)` or `instanceOfUpdateUserPassword.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateUserPasswordCWProxy get copyWith =>
       _$UpdateUserPasswordCWProxyImpl(this);

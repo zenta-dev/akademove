@@ -15,12 +15,13 @@ abstract class _$ConfigurationGet200ResponseCWProxy {
 
   ConfigurationGet200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ConfigurationGet200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// ConfigurationGet200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   ConfigurationGet200Response call({
     String message,
     Configuration data,
@@ -29,7 +30,8 @@ abstract class _$ConfigurationGet200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfConfigurationGet200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfConfigurationGet200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfConfigurationGet200Response.copyWith(...)` or call `instanceOfConfigurationGet200Response.copyWith.fieldName(value)` for a single field.
 class _$ConfigurationGet200ResponseCWProxyImpl
     implements _$ConfigurationGet200ResponseCWProxy {
   const _$ConfigurationGet200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$ConfigurationGet200ResponseCWProxyImpl
   final ConfigurationGet200Response _value;
 
   @override
-  ConfigurationGet200Response message(String message) => this(message: message);
+  ConfigurationGet200Response message(String message) => call(message: message);
 
   @override
-  ConfigurationGet200Response data(Configuration data) => this(data: data);
+  ConfigurationGet200Response data(Configuration data) => call(data: data);
 
   @override
   ConfigurationGet200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   ConfigurationGet200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `ConfigurationGet200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `ConfigurationGet200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// ConfigurationGet200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   ConfigurationGet200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$ConfigurationGet200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return ConfigurationGet200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as Configuration,
@@ -85,7 +88,8 @@ class _$ConfigurationGet200ResponseCWProxyImpl
 }
 
 extension $ConfigurationGet200ResponseCopyWith on ConfigurationGet200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfConfigurationGet200Response.copyWith(...)` or like so:`instanceOfConfigurationGet200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfConfigurationGet200Response.copyWith(...)` or `instanceOfConfigurationGet200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$ConfigurationGet200ResponseCWProxy get copyWith =>
       _$ConfigurationGet200ResponseCWProxyImpl(this);

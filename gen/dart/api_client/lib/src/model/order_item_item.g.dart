@@ -25,12 +25,13 @@ abstract class _$OrderItemItemCWProxy {
 
   OrderItemItem updatedAt(DateTime? updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderItemItem(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderItemItem(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderItemItem(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderItemItem call({
     String? id,
     String? merchantId,
@@ -44,46 +45,48 @@ abstract class _$OrderItemItemCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrderItemItem.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrderItemItem.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrderItemItem.copyWith(...)` or call `instanceOfOrderItemItem.copyWith.fieldName(value)` for a single field.
 class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
   const _$OrderItemItemCWProxyImpl(this._value);
 
   final OrderItemItem _value;
 
   @override
-  OrderItemItem id(String? id) => this(id: id);
+  OrderItemItem id(String? id) => call(id: id);
 
   @override
-  OrderItemItem merchantId(String? merchantId) => this(merchantId: merchantId);
+  OrderItemItem merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  OrderItemItem name(String? name) => this(name: name);
+  OrderItemItem name(String? name) => call(name: name);
 
   @override
-  OrderItemItem image(String? image) => this(image: image);
+  OrderItemItem image(String? image) => call(image: image);
 
   @override
-  OrderItemItem category(String? category) => this(category: category);
+  OrderItemItem category(String? category) => call(category: category);
 
   @override
-  OrderItemItem price(num? price) => this(price: price);
+  OrderItemItem price(num? price) => call(price: price);
 
   @override
-  OrderItemItem stock(int? stock) => this(stock: stock);
+  OrderItemItem stock(int? stock) => call(stock: stock);
 
   @override
-  OrderItemItem createdAt(DateTime? createdAt) => this(createdAt: createdAt);
+  OrderItemItem createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  OrderItemItem updatedAt(DateTime? updatedAt) => this(updatedAt: updatedAt);
+  OrderItemItem updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `OrderItemItem(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderItemItem(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// OrderItemItem(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   OrderItemItem call({
     Object? id = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
@@ -137,7 +140,8 @@ class _$OrderItemItemCWProxyImpl implements _$OrderItemItemCWProxy {
 }
 
 extension $OrderItemItemCopyWith on OrderItemItem {
-  /// Returns a callable class that can be used as follows: `instanceOfOrderItemItem.copyWith(...)` or like so:`instanceOfOrderItemItem.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrderItemItem.copyWith(...)` or `instanceOfOrderItemItem.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderItemItemCWProxy get copyWith => _$OrderItemItemCWProxyImpl(this);
 }

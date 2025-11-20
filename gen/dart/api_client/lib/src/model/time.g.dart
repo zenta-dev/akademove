@@ -11,44 +11,47 @@ abstract class _$TimeCWProxy {
 
   Time m(num m);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Time(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Time(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Time(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Time call({num h, num m});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTime.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfTime.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfTime.copyWith(...)` or call `instanceOfTime.copyWith.fieldName(value)` for a single field.
 class _$TimeCWProxyImpl implements _$TimeCWProxy {
   const _$TimeCWProxyImpl(this._value);
 
   final Time _value;
 
   @override
-  Time h(num h) => this(h: h);
+  Time h(num h) => call(h: h);
 
   @override
-  Time m(num m) => this(m: m);
+  Time m(num m) => call(m: m);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Time(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Time(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Time(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Time call({
     Object? h = const $CopyWithPlaceholder(),
     Object? m = const $CopyWithPlaceholder(),
   }) {
     return Time(
-      h: h == const $CopyWithPlaceholder()
+      h: h == const $CopyWithPlaceholder() || h == null
           ? _value.h
           // ignore: cast_nullable_to_non_nullable
           : h as num,
-      m: m == const $CopyWithPlaceholder()
+      m: m == const $CopyWithPlaceholder() || m == null
           ? _value.m
           // ignore: cast_nullable_to_non_nullable
           : m as num,
@@ -57,7 +60,8 @@ class _$TimeCWProxyImpl implements _$TimeCWProxy {
 }
 
 extension $TimeCopyWith on Time {
-  /// Returns a callable class that can be used as follows: `instanceOfTime.copyWith(...)` or like so:`instanceOfTime.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfTime.copyWith(...)` or `instanceOfTime.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$TimeCWProxy get copyWith => _$TimeCWProxyImpl(this);
 }

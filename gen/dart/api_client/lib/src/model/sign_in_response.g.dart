@@ -11,44 +11,47 @@ abstract class _$SignInResponseCWProxy {
 
   SignInResponse user(User user);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `SignInResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `SignInResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// SignInResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   SignInResponse call({String token, User user});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfSignInResponse.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfSignInResponse.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfSignInResponse.copyWith(...)` or call `instanceOfSignInResponse.copyWith.fieldName(value)` for a single field.
 class _$SignInResponseCWProxyImpl implements _$SignInResponseCWProxy {
   const _$SignInResponseCWProxyImpl(this._value);
 
   final SignInResponse _value;
 
   @override
-  SignInResponse token(String token) => this(token: token);
+  SignInResponse token(String token) => call(token: token);
 
   @override
-  SignInResponse user(User user) => this(user: user);
+  SignInResponse user(User user) => call(user: user);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `SignInResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `SignInResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// SignInResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   SignInResponse call({
     Object? token = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
   }) {
     return SignInResponse(
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String,
-      user: user == const $CopyWithPlaceholder()
+      user: user == const $CopyWithPlaceholder() || user == null
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
           : user as User,
@@ -57,7 +60,8 @@ class _$SignInResponseCWProxyImpl implements _$SignInResponseCWProxy {
 }
 
 extension $SignInResponseCopyWith on SignInResponse {
-  /// Returns a callable class that can be used as follows: `instanceOfSignInResponse.copyWith(...)` or like so:`instanceOfSignInResponse.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfSignInResponse.copyWith(...)` or `instanceOfSignInResponse.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$SignInResponseCWProxy get copyWith => _$SignInResponseCWProxyImpl(this);
 }

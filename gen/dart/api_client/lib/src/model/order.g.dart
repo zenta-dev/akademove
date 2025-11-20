@@ -57,12 +57,13 @@ abstract class _$OrderCWProxy {
 
   Order merchant(OrderMerchant? merchant);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Order(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Order(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Order call({
     String id,
     String userId,
@@ -92,96 +93,98 @@ abstract class _$OrderCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOrder.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOrder.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfOrder.copyWith(...)` or call `instanceOfOrder.copyWith.fieldName(value)` for a single field.
 class _$OrderCWProxyImpl implements _$OrderCWProxy {
   const _$OrderCWProxyImpl(this._value);
 
   final Order _value;
 
   @override
-  Order id(String id) => this(id: id);
+  Order id(String id) => call(id: id);
 
   @override
-  Order userId(String userId) => this(userId: userId);
+  Order userId(String userId) => call(userId: userId);
 
   @override
-  Order driverId(String? driverId) => this(driverId: driverId);
+  Order driverId(String? driverId) => call(driverId: driverId);
 
   @override
-  Order merchantId(String? merchantId) => this(merchantId: merchantId);
+  Order merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  Order type(OrderType type) => this(type: type);
+  Order type(OrderType type) => call(type: type);
 
   @override
-  Order status(OrderStatus status) => this(status: status);
+  Order status(OrderStatus status) => call(status: status);
 
   @override
   Order pickupLocation(Coordinate pickupLocation) =>
-      this(pickupLocation: pickupLocation);
+      call(pickupLocation: pickupLocation);
 
   @override
   Order dropoffLocation(Coordinate dropoffLocation) =>
-      this(dropoffLocation: dropoffLocation);
+      call(dropoffLocation: dropoffLocation);
 
   @override
-  Order distanceKm(num distanceKm) => this(distanceKm: distanceKm);
+  Order distanceKm(num distanceKm) => call(distanceKm: distanceKm);
 
   @override
-  Order basePrice(num basePrice) => this(basePrice: basePrice);
+  Order basePrice(num basePrice) => call(basePrice: basePrice);
 
   @override
-  Order tip(num? tip) => this(tip: tip);
+  Order tip(num? tip) => call(tip: tip);
 
   @override
-  Order totalPrice(num totalPrice) => this(totalPrice: totalPrice);
+  Order totalPrice(num totalPrice) => call(totalPrice: totalPrice);
 
   @override
-  Order note(OrderNote? note) => this(note: note);
+  Order note(OrderNote? note) => call(note: note);
 
   @override
-  Order requestedAt(DateTime requestedAt) => this(requestedAt: requestedAt);
+  Order requestedAt(DateTime requestedAt) => call(requestedAt: requestedAt);
 
   @override
-  Order acceptedAt(DateTime? acceptedAt) => this(acceptedAt: acceptedAt);
+  Order acceptedAt(DateTime? acceptedAt) => call(acceptedAt: acceptedAt);
 
   @override
-  Order arrivedAt(DateTime? arrivedAt) => this(arrivedAt: arrivedAt);
+  Order arrivedAt(DateTime? arrivedAt) => call(arrivedAt: arrivedAt);
 
   @override
-  Order cancelReason(String? cancelReason) => this(cancelReason: cancelReason);
+  Order cancelReason(String? cancelReason) => call(cancelReason: cancelReason);
 
   @override
-  Order createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Order createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Order updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Order updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  Order gender(UserGender? gender) => this(gender: gender);
+  Order gender(UserGender? gender) => call(gender: gender);
 
   @override
-  Order itemCount(num? itemCount) => this(itemCount: itemCount);
+  Order itemCount(num? itemCount) => call(itemCount: itemCount);
 
   @override
-  Order items(List<OrderItem>? items) => this(items: items);
+  Order items(List<OrderItem>? items) => call(items: items);
 
   @override
-  Order user(DriverUser? user) => this(user: user);
+  Order user(DriverUser? user) => call(user: user);
 
   @override
-  Order driver(OrderDriver? driver) => this(driver: driver);
+  Order driver(OrderDriver? driver) => call(driver: driver);
 
   @override
-  Order merchant(OrderMerchant? merchant) => this(merchant: merchant);
+  Order merchant(OrderMerchant? merchant) => call(merchant: merchant);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Order(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Order(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Order(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Order call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -210,11 +213,11 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? merchant = const $CopyWithPlaceholder(),
   }) {
     return Order(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
@@ -226,27 +229,32 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as OrderType,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as OrderStatus,
-      pickupLocation: pickupLocation == const $CopyWithPlaceholder()
+      pickupLocation:
+          pickupLocation == const $CopyWithPlaceholder() ||
+              pickupLocation == null
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
-      dropoffLocation: dropoffLocation == const $CopyWithPlaceholder()
+      dropoffLocation:
+          dropoffLocation == const $CopyWithPlaceholder() ||
+              dropoffLocation == null
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
           : dropoffLocation as Coordinate,
-      distanceKm: distanceKm == const $CopyWithPlaceholder()
+      distanceKm:
+          distanceKm == const $CopyWithPlaceholder() || distanceKm == null
           ? _value.distanceKm
           // ignore: cast_nullable_to_non_nullable
           : distanceKm as num,
-      basePrice: basePrice == const $CopyWithPlaceholder()
+      basePrice: basePrice == const $CopyWithPlaceholder() || basePrice == null
           ? _value.basePrice
           // ignore: cast_nullable_to_non_nullable
           : basePrice as num,
@@ -254,7 +262,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.tip
           // ignore: cast_nullable_to_non_nullable
           : tip as num?,
-      totalPrice: totalPrice == const $CopyWithPlaceholder()
+      totalPrice:
+          totalPrice == const $CopyWithPlaceholder() || totalPrice == null
           ? _value.totalPrice
           // ignore: cast_nullable_to_non_nullable
           : totalPrice as num,
@@ -262,7 +271,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
           : note as OrderNote?,
-      requestedAt: requestedAt == const $CopyWithPlaceholder()
+      requestedAt:
+          requestedAt == const $CopyWithPlaceholder() || requestedAt == null
           ? _value.requestedAt
           // ignore: cast_nullable_to_non_nullable
           : requestedAt as DateTime,
@@ -278,11 +288,11 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.cancelReason
           // ignore: cast_nullable_to_non_nullable
           : cancelReason as String?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -315,7 +325,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
 }
 
 extension $OrderCopyWith on Order {
-  /// Returns a callable class that can be used as follows: `instanceOfOrder.copyWith(...)` or like so:`instanceOfOrder.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfOrder.copyWith(...)` or `instanceOfOrder.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$OrderCWProxy get copyWith => _$OrderCWProxyImpl(this);
 }

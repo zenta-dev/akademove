@@ -15,12 +15,13 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
 
   AuthHasPermission200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermission200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthHasPermission200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthHasPermission200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthHasPermission200Response call({
     String message,
     bool data,
@@ -29,7 +30,8 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAuthHasPermission200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAuthHasPermission200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfAuthHasPermission200Response.copyWith(...)` or call `instanceOfAuthHasPermission200Response.copyWith.fieldName(value)` for a single field.
 class _$AuthHasPermission200ResponseCWProxyImpl
     implements _$AuthHasPermission200ResponseCWProxy {
   const _$AuthHasPermission200ResponseCWProxyImpl(this._value);
@@ -38,26 +40,27 @@ class _$AuthHasPermission200ResponseCWProxyImpl
 
   @override
   AuthHasPermission200Response message(String message) =>
-      this(message: message);
+      call(message: message);
 
   @override
-  AuthHasPermission200Response data(bool data) => this(data: data);
+  AuthHasPermission200Response data(bool data) => call(data: data);
 
   @override
   AuthHasPermission200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   AuthHasPermission200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermission200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthHasPermission200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthHasPermission200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthHasPermission200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -65,11 +68,11 @@ class _$AuthHasPermission200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return AuthHasPermission200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as bool,
@@ -87,7 +90,8 @@ class _$AuthHasPermission200ResponseCWProxyImpl
 
 extension $AuthHasPermission200ResponseCopyWith
     on AuthHasPermission200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfAuthHasPermission200Response.copyWith(...)` or like so:`instanceOfAuthHasPermission200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfAuthHasPermission200Response.copyWith(...)` or `instanceOfAuthHasPermission200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$AuthHasPermission200ResponseCWProxy get copyWith =>
       _$AuthHasPermission200ResponseCWProxyImpl(this);

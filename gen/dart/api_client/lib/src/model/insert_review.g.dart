@@ -19,12 +19,13 @@ abstract class _$InsertReviewCWProxy {
 
   InsertReview comment(String? comment);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertReview(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertReview(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertReview(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertReview call({
     String orderId,
     String fromUserId,
@@ -35,37 +36,39 @@ abstract class _$InsertReviewCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertReview.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertReview.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertReview.copyWith(...)` or call `instanceOfInsertReview.copyWith.fieldName(value)` for a single field.
 class _$InsertReviewCWProxyImpl implements _$InsertReviewCWProxy {
   const _$InsertReviewCWProxyImpl(this._value);
 
   final InsertReview _value;
 
   @override
-  InsertReview orderId(String orderId) => this(orderId: orderId);
+  InsertReview orderId(String orderId) => call(orderId: orderId);
 
   @override
-  InsertReview fromUserId(String fromUserId) => this(fromUserId: fromUserId);
+  InsertReview fromUserId(String fromUserId) => call(fromUserId: fromUserId);
 
   @override
-  InsertReview toUserId(String toUserId) => this(toUserId: toUserId);
+  InsertReview toUserId(String toUserId) => call(toUserId: toUserId);
 
   @override
-  InsertReview category(ReviewCategory category) => this(category: category);
+  InsertReview category(ReviewCategory category) => call(category: category);
 
   @override
-  InsertReview score(num score) => this(score: score);
+  InsertReview score(num score) => call(score: score);
 
   @override
-  InsertReview comment(String? comment) => this(comment: comment);
+  InsertReview comment(String? comment) => call(comment: comment);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertReview(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertReview(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertReview(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertReview call({
     Object? orderId = const $CopyWithPlaceholder(),
     Object? fromUserId = const $CopyWithPlaceholder(),
@@ -75,23 +78,24 @@ class _$InsertReviewCWProxyImpl implements _$InsertReviewCWProxy {
     Object? comment = const $CopyWithPlaceholder(),
   }) {
     return InsertReview(
-      orderId: orderId == const $CopyWithPlaceholder()
+      orderId: orderId == const $CopyWithPlaceholder() || orderId == null
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String,
-      fromUserId: fromUserId == const $CopyWithPlaceholder()
+      fromUserId:
+          fromUserId == const $CopyWithPlaceholder() || fromUserId == null
           ? _value.fromUserId
           // ignore: cast_nullable_to_non_nullable
           : fromUserId as String,
-      toUserId: toUserId == const $CopyWithPlaceholder()
+      toUserId: toUserId == const $CopyWithPlaceholder() || toUserId == null
           ? _value.toUserId
           // ignore: cast_nullable_to_non_nullable
           : toUserId as String,
-      category: category == const $CopyWithPlaceholder()
+      category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as ReviewCategory,
-      score: score == const $CopyWithPlaceholder()
+      score: score == const $CopyWithPlaceholder() || score == null
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as num,
@@ -104,7 +108,8 @@ class _$InsertReviewCWProxyImpl implements _$InsertReviewCWProxy {
 }
 
 extension $InsertReviewCopyWith on InsertReview {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertReview.copyWith(...)` or like so:`instanceOfInsertReview.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertReview.copyWith(...)` or `instanceOfInsertReview.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertReviewCWProxy get copyWith => _$InsertReviewCWProxyImpl(this);
 }

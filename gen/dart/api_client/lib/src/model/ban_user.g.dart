@@ -11,40 +11,43 @@ abstract class _$BanUserCWProxy {
 
   BanUser banExpiresIn(num? banExpiresIn);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BanUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BanUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BanUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BanUser call({String banReason, num? banExpiresIn});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBanUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBanUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBanUser.copyWith(...)` or call `instanceOfBanUser.copyWith.fieldName(value)` for a single field.
 class _$BanUserCWProxyImpl implements _$BanUserCWProxy {
   const _$BanUserCWProxyImpl(this._value);
 
   final BanUser _value;
 
   @override
-  BanUser banReason(String banReason) => this(banReason: banReason);
+  BanUser banReason(String banReason) => call(banReason: banReason);
 
   @override
-  BanUser banExpiresIn(num? banExpiresIn) => this(banExpiresIn: banExpiresIn);
+  BanUser banExpiresIn(num? banExpiresIn) => call(banExpiresIn: banExpiresIn);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BanUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BanUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BanUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BanUser call({
     Object? banReason = const $CopyWithPlaceholder(),
     Object? banExpiresIn = const $CopyWithPlaceholder(),
   }) {
     return BanUser(
-      banReason: banReason == const $CopyWithPlaceholder()
+      banReason: banReason == const $CopyWithPlaceholder() || banReason == null
           ? _value.banReason
           // ignore: cast_nullable_to_non_nullable
           : banReason as String,
@@ -57,7 +60,8 @@ class _$BanUserCWProxyImpl implements _$BanUserCWProxy {
 }
 
 extension $BanUserCopyWith on BanUser {
-  /// Returns a callable class that can be used as follows: `instanceOfBanUser.copyWith(...)` or like so:`instanceOfBanUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBanUser.copyWith(...)` or `instanceOfBanUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BanUserCWProxy get copyWith => _$BanUserCWProxyImpl(this);
 }

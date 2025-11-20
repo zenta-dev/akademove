@@ -35,12 +35,13 @@ abstract class _$PaymentCWProxy {
 
   Payment updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Payment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Payment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Payment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Payment call({
     String id,
     String transactionId,
@@ -59,62 +60,64 @@ abstract class _$PaymentCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPayment.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPayment.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfPayment.copyWith(...)` or call `instanceOfPayment.copyWith.fieldName(value)` for a single field.
 class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
   const _$PaymentCWProxyImpl(this._value);
 
   final Payment _value;
 
   @override
-  Payment id(String id) => this(id: id);
+  Payment id(String id) => call(id: id);
 
   @override
   Payment transactionId(String transactionId) =>
-      this(transactionId: transactionId);
+      call(transactionId: transactionId);
 
   @override
-  Payment provider(PaymentProvider provider) => this(provider: provider);
+  Payment provider(PaymentProvider provider) => call(provider: provider);
 
   @override
-  Payment method(PaymentMethod method) => this(method: method);
+  Payment method(PaymentMethod method) => call(method: method);
 
   @override
-  Payment amount(num amount) => this(amount: amount);
+  Payment amount(num amount) => call(amount: amount);
 
   @override
-  Payment status(TransactionStatus status) => this(status: status);
+  Payment status(TransactionStatus status) => call(status: status);
 
   @override
-  Payment externalId(String? externalId) => this(externalId: externalId);
+  Payment externalId(String? externalId) => call(externalId: externalId);
 
   @override
-  Payment paymentUrl(String? paymentUrl) => this(paymentUrl: paymentUrl);
+  Payment paymentUrl(String? paymentUrl) => call(paymentUrl: paymentUrl);
 
   @override
-  Payment metadata(Object? metadata) => this(metadata: metadata);
+  Payment metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  Payment expiresAt(DateTime? expiresAt) => this(expiresAt: expiresAt);
+  Payment expiresAt(DateTime? expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  Payment payload(Object? payload) => this(payload: payload);
+  Payment payload(Object? payload) => call(payload: payload);
 
   @override
-  Payment response(Object? response) => this(response: response);
+  Payment response(Object? response) => call(response: response);
 
   @override
-  Payment createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Payment createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Payment updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Payment updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Payment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Payment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Payment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Payment call({
     Object? id = const $CopyWithPlaceholder(),
     Object? transactionId = const $CopyWithPlaceholder(),
@@ -132,27 +135,28 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Payment(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      transactionId: transactionId == const $CopyWithPlaceholder()
+      transactionId:
+          transactionId == const $CopyWithPlaceholder() || transactionId == null
           ? _value.transactionId
           // ignore: cast_nullable_to_non_nullable
           : transactionId as String,
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as PaymentProvider,
-      method: method == const $CopyWithPlaceholder()
+      method: method == const $CopyWithPlaceholder() || method == null
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as PaymentMethod,
-      amount: amount == const $CopyWithPlaceholder()
+      amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as TransactionStatus,
@@ -180,11 +184,11 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
           ? _value.response
           // ignore: cast_nullable_to_non_nullable
           : response as Object?,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -193,7 +197,8 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
 }
 
 extension $PaymentCopyWith on Payment {
-  /// Returns a callable class that can be used as follows: `instanceOfPayment.copyWith(...)` or like so:`instanceOfPayment.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfPayment.copyWith(...)` or `instanceOfPayment.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$PaymentCWProxy get copyWith => _$PaymentCWProxyImpl(this);
 }

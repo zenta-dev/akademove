@@ -11,44 +11,47 @@ abstract class _$BankCWProxy {
 
   Bank number(num number);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Bank(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Bank(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Bank(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Bank call({BankProviderEnum provider, num number});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBank.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBank.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBank.copyWith(...)` or call `instanceOfBank.copyWith.fieldName(value)` for a single field.
 class _$BankCWProxyImpl implements _$BankCWProxy {
   const _$BankCWProxyImpl(this._value);
 
   final Bank _value;
 
   @override
-  Bank provider(BankProviderEnum provider) => this(provider: provider);
+  Bank provider(BankProviderEnum provider) => call(provider: provider);
 
   @override
-  Bank number(num number) => this(number: number);
+  Bank number(num number) => call(number: number);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Bank(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Bank(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Bank(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Bank call({
     Object? provider = const $CopyWithPlaceholder(),
     Object? number = const $CopyWithPlaceholder(),
   }) {
     return Bank(
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as BankProviderEnum,
-      number: number == const $CopyWithPlaceholder()
+      number: number == const $CopyWithPlaceholder() || number == null
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
           : number as num,
@@ -57,7 +60,8 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
 }
 
 extension $BankCopyWith on Bank {
-  /// Returns a callable class that can be used as follows: `instanceOfBank.copyWith(...)` or like so:`instanceOfBank.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBank.copyWith(...)` or `instanceOfBank.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BankCWProxy get copyWith => _$BankCWProxyImpl(this);
 }

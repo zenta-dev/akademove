@@ -13,53 +13,57 @@ abstract class _$BannerConfigurationCWProxy {
 
   BannerConfiguration imageUrl(String imageUrl);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BannerConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BannerConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BannerConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BannerConfiguration call({String title, String description, String imageUrl});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfBannerConfiguration.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfBannerConfiguration.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfBannerConfiguration.copyWith(...)` or call `instanceOfBannerConfiguration.copyWith.fieldName(value)` for a single field.
 class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
   const _$BannerConfigurationCWProxyImpl(this._value);
 
   final BannerConfiguration _value;
 
   @override
-  BannerConfiguration title(String title) => this(title: title);
+  BannerConfiguration title(String title) => call(title: title);
 
   @override
   BannerConfiguration description(String description) =>
-      this(description: description);
+      call(description: description);
 
   @override
-  BannerConfiguration imageUrl(String imageUrl) => this(imageUrl: imageUrl);
+  BannerConfiguration imageUrl(String imageUrl) => call(imageUrl: imageUrl);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `BannerConfiguration(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `BannerConfiguration(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// BannerConfiguration(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   BannerConfiguration call({
     Object? title = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
     Object? imageUrl = const $CopyWithPlaceholder(),
   }) {
     return BannerConfiguration(
-      title: title == const $CopyWithPlaceholder()
+      title: title == const $CopyWithPlaceholder() || title == null
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
           : title as String,
-      description: description == const $CopyWithPlaceholder()
+      description:
+          description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
-      imageUrl: imageUrl == const $CopyWithPlaceholder()
+      imageUrl: imageUrl == const $CopyWithPlaceholder() || imageUrl == null
           ? _value.imageUrl
           // ignore: cast_nullable_to_non_nullable
           : imageUrl as String,
@@ -68,7 +72,8 @@ class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
 }
 
 extension $BannerConfigurationCopyWith on BannerConfiguration {
-  /// Returns a callable class that can be used as follows: `instanceOfBannerConfiguration.copyWith(...)` or like so:`instanceOfBannerConfiguration.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfBannerConfiguration.copyWith(...)` or `instanceOfBannerConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$BannerConfigurationCWProxy get copyWith =>
       _$BannerConfigurationCWProxyImpl(this);

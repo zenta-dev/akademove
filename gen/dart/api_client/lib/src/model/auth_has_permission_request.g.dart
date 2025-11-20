@@ -9,16 +9,18 @@ part of 'auth_has_permission_request.dart';
 abstract class _$AuthHasPermissionRequestCWProxy {
   AuthHasPermissionRequest permissions(Statements permissions);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermissionRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthHasPermissionRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthHasPermissionRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthHasPermissionRequest call({Statements permissions});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfAuthHasPermissionRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfAuthHasPermissionRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfAuthHasPermissionRequest.copyWith(...)` or call `instanceOfAuthHasPermissionRequest.copyWith.fieldName(value)` for a single field.
 class _$AuthHasPermissionRequestCWProxyImpl
     implements _$AuthHasPermissionRequestCWProxy {
   const _$AuthHasPermissionRequestCWProxyImpl(this._value);
@@ -27,20 +29,22 @@ class _$AuthHasPermissionRequestCWProxyImpl
 
   @override
   AuthHasPermissionRequest permissions(Statements permissions) =>
-      this(permissions: permissions);
+      call(permissions: permissions);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AuthHasPermissionRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `AuthHasPermissionRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// AuthHasPermissionRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   AuthHasPermissionRequest call({
     Object? permissions = const $CopyWithPlaceholder(),
   }) {
     return AuthHasPermissionRequest(
-      permissions: permissions == const $CopyWithPlaceholder()
+      permissions:
+          permissions == const $CopyWithPlaceholder() || permissions == null
           ? _value.permissions
           // ignore: cast_nullable_to_non_nullable
           : permissions as Statements,
@@ -49,7 +53,8 @@ class _$AuthHasPermissionRequestCWProxyImpl
 }
 
 extension $AuthHasPermissionRequestCopyWith on AuthHasPermissionRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfAuthHasPermissionRequest.copyWith(...)` or like so:`instanceOfAuthHasPermissionRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfAuthHasPermissionRequest.copyWith(...)` or `instanceOfAuthHasPermissionRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$AuthHasPermissionRequestCWProxy get copyWith =>
       _$AuthHasPermissionRequestCWProxyImpl(this);

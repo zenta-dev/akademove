@@ -13,37 +13,40 @@ abstract class _$CouponRulesCWProxy {
 
   CouponRules time(TimeRules? time);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CouponRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// CouponRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   CouponRules call({GeneralRules? general, UserRules? user, TimeRules? time});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCouponRules.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCouponRules.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfCouponRules.copyWith(...)` or call `instanceOfCouponRules.copyWith.fieldName(value)` for a single field.
 class _$CouponRulesCWProxyImpl implements _$CouponRulesCWProxy {
   const _$CouponRulesCWProxyImpl(this._value);
 
   final CouponRules _value;
 
   @override
-  CouponRules general(GeneralRules? general) => this(general: general);
+  CouponRules general(GeneralRules? general) => call(general: general);
 
   @override
-  CouponRules user(UserRules? user) => this(user: user);
+  CouponRules user(UserRules? user) => call(user: user);
 
   @override
-  CouponRules time(TimeRules? time) => this(time: time);
+  CouponRules time(TimeRules? time) => call(time: time);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `CouponRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CouponRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// CouponRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   CouponRules call({
     Object? general = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -67,7 +70,8 @@ class _$CouponRulesCWProxyImpl implements _$CouponRulesCWProxy {
 }
 
 extension $CouponRulesCopyWith on CouponRules {
-  /// Returns a callable class that can be used as follows: `instanceOfCouponRules.copyWith(...)` or like so:`instanceOfCouponRules.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfCouponRules.copyWith(...)` or `instanceOfCouponRules.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$CouponRulesCWProxy get copyWith => _$CouponRulesCWProxyImpl(this);
 }

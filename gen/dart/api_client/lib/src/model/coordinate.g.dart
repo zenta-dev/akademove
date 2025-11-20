@@ -11,44 +11,47 @@ abstract class _$CoordinateCWProxy {
 
   Coordinate y(num y);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coordinate(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Coordinate(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Coordinate(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Coordinate call({num x, num y});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCoordinate.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCoordinate.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfCoordinate.copyWith(...)` or call `instanceOfCoordinate.copyWith.fieldName(value)` for a single field.
 class _$CoordinateCWProxyImpl implements _$CoordinateCWProxy {
   const _$CoordinateCWProxyImpl(this._value);
 
   final Coordinate _value;
 
   @override
-  Coordinate x(num x) => this(x: x);
+  Coordinate x(num x) => call(x: x);
 
   @override
-  Coordinate y(num y) => this(y: y);
+  Coordinate y(num y) => call(y: y);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coordinate(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Coordinate(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Coordinate(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Coordinate call({
     Object? x = const $CopyWithPlaceholder(),
     Object? y = const $CopyWithPlaceholder(),
   }) {
     return Coordinate(
-      x: x == const $CopyWithPlaceholder()
+      x: x == const $CopyWithPlaceholder() || x == null
           ? _value.x
           // ignore: cast_nullable_to_non_nullable
           : x as num,
-      y: y == const $CopyWithPlaceholder()
+      y: y == const $CopyWithPlaceholder() || y == null
           ? _value.y
           // ignore: cast_nullable_to_non_nullable
           : y as num,
@@ -57,7 +60,8 @@ class _$CoordinateCWProxyImpl implements _$CoordinateCWProxy {
 }
 
 extension $CoordinateCopyWith on Coordinate {
-  /// Returns a callable class that can be used as follows: `instanceOfCoordinate.copyWith(...)` or like so:`instanceOfCoordinate.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfCoordinate.copyWith(...)` or `instanceOfCoordinate.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$CoordinateCWProxy get copyWith => _$CoordinateCWProxyImpl(this);
 }

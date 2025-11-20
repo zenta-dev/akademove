@@ -31,12 +31,13 @@ abstract class _$LeaderboardCWProxy {
 
   Leaderboard updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Leaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Leaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Leaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Leaderboard call({
     String id,
     String userId,
@@ -53,57 +54,59 @@ abstract class _$LeaderboardCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfLeaderboard.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfLeaderboard.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfLeaderboard.copyWith(...)` or call `instanceOfLeaderboard.copyWith.fieldName(value)` for a single field.
 class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
   const _$LeaderboardCWProxyImpl(this._value);
 
   final Leaderboard _value;
 
   @override
-  Leaderboard id(String id) => this(id: id);
+  Leaderboard id(String id) => call(id: id);
 
   @override
-  Leaderboard userId(String userId) => this(userId: userId);
+  Leaderboard userId(String userId) => call(userId: userId);
 
   @override
-  Leaderboard driverId(String? driverId) => this(driverId: driverId);
+  Leaderboard driverId(String? driverId) => call(driverId: driverId);
 
   @override
-  Leaderboard merchantId(String? merchantId) => this(merchantId: merchantId);
+  Leaderboard merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
   Leaderboard category(LeaderboardCategoryEnum category) =>
-      this(category: category);
+      call(category: category);
 
   @override
-  Leaderboard period(LeaderboardPeriodEnum period) => this(period: period);
+  Leaderboard period(LeaderboardPeriodEnum period) => call(period: period);
 
   @override
-  Leaderboard rank(int rank) => this(rank: rank);
+  Leaderboard rank(int rank) => call(rank: rank);
 
   @override
-  Leaderboard score(int score) => this(score: score);
+  Leaderboard score(int score) => call(score: score);
 
   @override
   Leaderboard periodStart(DateTime periodStart) =>
-      this(periodStart: periodStart);
+      call(periodStart: periodStart);
 
   @override
-  Leaderboard periodEnd(DateTime periodEnd) => this(periodEnd: periodEnd);
+  Leaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  Leaderboard createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Leaderboard createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Leaderboard updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Leaderboard updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Leaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Leaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Leaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Leaderboard call({
     Object? id = const $CopyWithPlaceholder(),
     Object? userId = const $CopyWithPlaceholder(),
@@ -119,11 +122,11 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Leaderboard(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
@@ -135,35 +138,36 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
-      category: category == const $CopyWithPlaceholder()
+      category: category == const $CopyWithPlaceholder() || category == null
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as LeaderboardCategoryEnum,
-      period: period == const $CopyWithPlaceholder()
+      period: period == const $CopyWithPlaceholder() || period == null
           ? _value.period
           // ignore: cast_nullable_to_non_nullable
           : period as LeaderboardPeriodEnum,
-      rank: rank == const $CopyWithPlaceholder()
+      rank: rank == const $CopyWithPlaceholder() || rank == null
           ? _value.rank
           // ignore: cast_nullable_to_non_nullable
           : rank as int,
-      score: score == const $CopyWithPlaceholder()
+      score: score == const $CopyWithPlaceholder() || score == null
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart: periodStart == const $CopyWithPlaceholder()
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder()
+      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
           : periodEnd as DateTime,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -172,7 +176,8 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
 }
 
 extension $LeaderboardCopyWith on Leaderboard {
-  /// Returns a callable class that can be used as follows: `instanceOfLeaderboard.copyWith(...)` or like so:`instanceOfLeaderboard.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfLeaderboard.copyWith(...)` or `instanceOfLeaderboard.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$LeaderboardCWProxy get copyWith => _$LeaderboardCWProxyImpl(this);
 }

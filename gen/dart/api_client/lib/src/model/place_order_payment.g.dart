@@ -11,45 +11,48 @@ abstract class _$PlaceOrderPaymentCWProxy {
 
   PlaceOrderPayment provider(PaymentProvider provider);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PlaceOrderPayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderPayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// PlaceOrderPayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   PlaceOrderPayment call({PaymentMethod method, PaymentProvider provider});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPlaceOrderPayment.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPlaceOrderPayment.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfPlaceOrderPayment.copyWith(...)` or call `instanceOfPlaceOrderPayment.copyWith.fieldName(value)` for a single field.
 class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
   const _$PlaceOrderPaymentCWProxyImpl(this._value);
 
   final PlaceOrderPayment _value;
 
   @override
-  PlaceOrderPayment method(PaymentMethod method) => this(method: method);
+  PlaceOrderPayment method(PaymentMethod method) => call(method: method);
 
   @override
   PlaceOrderPayment provider(PaymentProvider provider) =>
-      this(provider: provider);
+      call(provider: provider);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `PlaceOrderPayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderPayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// PlaceOrderPayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   PlaceOrderPayment call({
     Object? method = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
   }) {
     return PlaceOrderPayment(
-      method: method == const $CopyWithPlaceholder()
+      method: method == const $CopyWithPlaceholder() || method == null
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as PaymentMethod,
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as PaymentProvider,
@@ -58,7 +61,8 @@ class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
 }
 
 extension $PlaceOrderPaymentCopyWith on PlaceOrderPayment {
-  /// Returns a callable class that can be used as follows: `instanceOfPlaceOrderPayment.copyWith(...)` or like so:`instanceOfPlaceOrderPayment.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfPlaceOrderPayment.copyWith(...)` or `instanceOfPlaceOrderPayment.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$PlaceOrderPaymentCWProxy get copyWith =>
       _$PlaceOrderPaymentCWProxyImpl(this);

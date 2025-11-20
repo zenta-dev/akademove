@@ -23,12 +23,13 @@ abstract class _$SessionCWProxy {
 
   Session updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Session(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Session(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Session(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Session call({
     String id,
     DateTime expiresAt,
@@ -41,43 +42,45 @@ abstract class _$SessionCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfSession.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfSession.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfSession.copyWith(...)` or call `instanceOfSession.copyWith.fieldName(value)` for a single field.
 class _$SessionCWProxyImpl implements _$SessionCWProxy {
   const _$SessionCWProxyImpl(this._value);
 
   final Session _value;
 
   @override
-  Session id(String id) => this(id: id);
+  Session id(String id) => call(id: id);
 
   @override
-  Session expiresAt(DateTime expiresAt) => this(expiresAt: expiresAt);
+  Session expiresAt(DateTime expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  Session token(String token) => this(token: token);
+  Session token(String token) => call(token: token);
 
   @override
-  Session ipAddress(String? ipAddress) => this(ipAddress: ipAddress);
+  Session ipAddress(String? ipAddress) => call(ipAddress: ipAddress);
 
   @override
-  Session userAgent(String? userAgent) => this(userAgent: userAgent);
+  Session userAgent(String? userAgent) => call(userAgent: userAgent);
 
   @override
-  Session userId(String userId) => this(userId: userId);
+  Session userId(String userId) => call(userId: userId);
 
   @override
-  Session createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Session createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  Session updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  Session updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Session(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Session(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Session(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Session call({
     Object? id = const $CopyWithPlaceholder(),
     Object? expiresAt = const $CopyWithPlaceholder(),
@@ -89,15 +92,15 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return Session(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      expiresAt: expiresAt == const $CopyWithPlaceholder()
+      expiresAt: expiresAt == const $CopyWithPlaceholder() || expiresAt == null
           ? _value.expiresAt
           // ignore: cast_nullable_to_non_nullable
           : expiresAt as DateTime,
-      token: token == const $CopyWithPlaceholder()
+      token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String,
@@ -109,15 +112,15 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
           ? _value.userAgent
           // ignore: cast_nullable_to_non_nullable
           : userAgent as String?,
-      userId: userId == const $CopyWithPlaceholder()
+      userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
           : userId as String,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -126,7 +129,8 @@ class _$SessionCWProxyImpl implements _$SessionCWProxy {
 }
 
 extension $SessionCopyWith on Session {
-  /// Returns a callable class that can be used as follows: `instanceOfSession.copyWith(...)` or like so:`instanceOfSession.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfSession.copyWith(...)` or `instanceOfSession.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$SessionCWProxy get copyWith => _$SessionCWProxyImpl(this);
 }

@@ -23,12 +23,13 @@ abstract class _$InsertUserCWProxy {
 
   InsertUser confirmPassword(String confirmPassword);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertUser call({
     String name,
     String email,
@@ -41,45 +42,47 @@ abstract class _$InsertUserCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertUser.copyWith(...)` or call `instanceOfInsertUser.copyWith.fieldName(value)` for a single field.
 class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
   const _$InsertUserCWProxyImpl(this._value);
 
   final InsertUser _value;
 
   @override
-  InsertUser name(String name) => this(name: name);
+  InsertUser name(String name) => call(name: name);
 
   @override
-  InsertUser email(String email) => this(email: email);
+  InsertUser email(String email) => call(email: email);
 
   @override
-  InsertUser role(UserRole role) => this(role: role);
+  InsertUser role(UserRole role) => call(role: role);
 
   @override
-  InsertUser gender(UserGender? gender) => this(gender: gender);
+  InsertUser gender(UserGender? gender) => call(gender: gender);
 
   @override
-  InsertUser phone(Phone phone) => this(phone: phone);
+  InsertUser phone(Phone phone) => call(phone: phone);
 
   @override
   InsertUser userBadges(List<UserBadge> userBadges) =>
-      this(userBadges: userBadges);
+      call(userBadges: userBadges);
 
   @override
-  InsertUser password(String password) => this(password: password);
+  InsertUser password(String password) => call(password: password);
 
   @override
   InsertUser confirmPassword(String confirmPassword) =>
-      this(confirmPassword: confirmPassword);
+      call(confirmPassword: confirmPassword);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertUser call({
     Object? name = const $CopyWithPlaceholder(),
     Object? email = const $CopyWithPlaceholder(),
@@ -91,15 +94,15 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
     Object? confirmPassword = const $CopyWithPlaceholder(),
   }) {
     return InsertUser(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      email: email == const $CopyWithPlaceholder()
+      email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
-      role: role == const $CopyWithPlaceholder()
+      role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
@@ -107,19 +110,22 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
-      phone: phone == const $CopyWithPlaceholder()
+      phone: phone == const $CopyWithPlaceholder() || phone == null
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone,
-      userBadges: userBadges == const $CopyWithPlaceholder()
+      userBadges:
+          userBadges == const $CopyWithPlaceholder() || userBadges == null
           ? _value.userBadges
           // ignore: cast_nullable_to_non_nullable
           : userBadges as List<UserBadge>,
-      password: password == const $CopyWithPlaceholder()
+      password: password == const $CopyWithPlaceholder() || password == null
           ? _value.password
           // ignore: cast_nullable_to_non_nullable
           : password as String,
-      confirmPassword: confirmPassword == const $CopyWithPlaceholder()
+      confirmPassword:
+          confirmPassword == const $CopyWithPlaceholder() ||
+              confirmPassword == null
           ? _value.confirmPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmPassword as String,
@@ -128,7 +134,8 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
 }
 
 extension $InsertUserCopyWith on InsertUser {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertUser.copyWith(...)` or like so:`instanceOfInsertUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertUser.copyWith(...)` or `instanceOfInsertUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertUserCWProxy get copyWith => _$InsertUserCWProxyImpl(this);
 }

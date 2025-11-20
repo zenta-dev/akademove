@@ -33,12 +33,13 @@ abstract class _$CouponCWProxy {
 
   Coupon createdAt(DateTime createdAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Coupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Coupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Coupon call({
     String id,
     String name,
@@ -56,60 +57,62 @@ abstract class _$CouponCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCoupon.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCoupon.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfCoupon.copyWith(...)` or call `instanceOfCoupon.copyWith.fieldName(value)` for a single field.
 class _$CouponCWProxyImpl implements _$CouponCWProxy {
   const _$CouponCWProxyImpl(this._value);
 
   final Coupon _value;
 
   @override
-  Coupon id(String id) => this(id: id);
+  Coupon id(String id) => call(id: id);
 
   @override
-  Coupon name(String name) => this(name: name);
+  Coupon name(String name) => call(name: name);
 
   @override
-  Coupon code(String code) => this(code: code);
+  Coupon code(String code) => call(code: code);
 
   @override
-  Coupon rules(CouponRules rules) => this(rules: rules);
+  Coupon rules(CouponRules rules) => call(rules: rules);
 
   @override
   Coupon discountAmount(num? discountAmount) =>
-      this(discountAmount: discountAmount);
+      call(discountAmount: discountAmount);
 
   @override
   Coupon discountPercentage(num? discountPercentage) =>
-      this(discountPercentage: discountPercentage);
+      call(discountPercentage: discountPercentage);
 
   @override
-  Coupon usageLimit(num usageLimit) => this(usageLimit: usageLimit);
+  Coupon usageLimit(num usageLimit) => call(usageLimit: usageLimit);
 
   @override
-  Coupon usedCount(num usedCount) => this(usedCount: usedCount);
+  Coupon usedCount(num usedCount) => call(usedCount: usedCount);
 
   @override
-  Coupon periodStart(DateTime periodStart) => this(periodStart: periodStart);
+  Coupon periodStart(DateTime periodStart) => call(periodStart: periodStart);
 
   @override
-  Coupon periodEnd(DateTime periodEnd) => this(periodEnd: periodEnd);
+  Coupon periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
 
   @override
-  Coupon isActive(bool isActive) => this(isActive: isActive);
+  Coupon isActive(bool isActive) => call(isActive: isActive);
 
   @override
-  Coupon createdById(String createdById) => this(createdById: createdById);
+  Coupon createdById(String createdById) => call(createdById: createdById);
 
   @override
-  Coupon createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  Coupon createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Coupon(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Coupon(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Coupon(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Coupon call({
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -126,19 +129,19 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
     Object? createdAt = const $CopyWithPlaceholder(),
   }) {
     return Coupon(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      code: code == const $CopyWithPlaceholder()
+      code: code == const $CopyWithPlaceholder() || code == null
           ? _value.code
           // ignore: cast_nullable_to_non_nullable
           : code as String,
-      rules: rules == const $CopyWithPlaceholder()
+      rules: rules == const $CopyWithPlaceholder() || rules == null
           ? _value.rules
           // ignore: cast_nullable_to_non_nullable
           : rules as CouponRules,
@@ -150,31 +153,34 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.discountPercentage
           // ignore: cast_nullable_to_non_nullable
           : discountPercentage as num?,
-      usageLimit: usageLimit == const $CopyWithPlaceholder()
+      usageLimit:
+          usageLimit == const $CopyWithPlaceholder() || usageLimit == null
           ? _value.usageLimit
           // ignore: cast_nullable_to_non_nullable
           : usageLimit as num,
-      usedCount: usedCount == const $CopyWithPlaceholder()
+      usedCount: usedCount == const $CopyWithPlaceholder() || usedCount == null
           ? _value.usedCount
           // ignore: cast_nullable_to_non_nullable
           : usedCount as num,
-      periodStart: periodStart == const $CopyWithPlaceholder()
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
-      periodEnd: periodEnd == const $CopyWithPlaceholder()
+      periodEnd: periodEnd == const $CopyWithPlaceholder() || periodEnd == null
           ? _value.periodEnd
           // ignore: cast_nullable_to_non_nullable
           : periodEnd as DateTime,
-      isActive: isActive == const $CopyWithPlaceholder()
+      isActive: isActive == const $CopyWithPlaceholder() || isActive == null
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool,
-      createdById: createdById == const $CopyWithPlaceholder()
+      createdById:
+          createdById == const $CopyWithPlaceholder() || createdById == null
           ? _value.createdById
           // ignore: cast_nullable_to_non_nullable
           : createdById as String,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
@@ -183,7 +189,8 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
 }
 
 extension $CouponCopyWith on Coupon {
-  /// Returns a callable class that can be used as follows: `instanceOfCoupon.copyWith(...)` or like so:`instanceOfCoupon.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfCoupon.copyWith(...)` or `instanceOfCoupon.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$CouponCWProxy get copyWith => _$CouponCWProxyImpl(this);
 }

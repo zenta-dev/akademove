@@ -11,16 +11,18 @@ abstract class _$TimeRulesCWProxy {
 
   TimeRules allowedHours(List<int>? allowedHours);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TimeRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TimeRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// TimeRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   TimeRules call({List<DayOfWeek>? allowedDays, List<int>? allowedHours});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTimeRules.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfTimeRules.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfTimeRules.copyWith(...)` or call `instanceOfTimeRules.copyWith.fieldName(value)` for a single field.
 class _$TimeRulesCWProxyImpl implements _$TimeRulesCWProxy {
   const _$TimeRulesCWProxyImpl(this._value);
 
@@ -28,19 +30,20 @@ class _$TimeRulesCWProxyImpl implements _$TimeRulesCWProxy {
 
   @override
   TimeRules allowedDays(List<DayOfWeek>? allowedDays) =>
-      this(allowedDays: allowedDays);
+      call(allowedDays: allowedDays);
 
   @override
   TimeRules allowedHours(List<int>? allowedHours) =>
-      this(allowedHours: allowedHours);
+      call(allowedHours: allowedHours);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TimeRules(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TimeRules(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// TimeRules(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   TimeRules call({
     Object? allowedDays = const $CopyWithPlaceholder(),
     Object? allowedHours = const $CopyWithPlaceholder(),
@@ -59,7 +62,8 @@ class _$TimeRulesCWProxyImpl implements _$TimeRulesCWProxy {
 }
 
 extension $TimeRulesCopyWith on TimeRules {
-  /// Returns a callable class that can be used as follows: `instanceOfTimeRules.copyWith(...)` or like so:`instanceOfTimeRules.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfTimeRules.copyWith(...)` or `instanceOfTimeRules.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$TimeRulesCWProxy get copyWith => _$TimeRulesCWProxyImpl(this);
 }

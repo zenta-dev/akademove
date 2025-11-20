@@ -11,34 +11,37 @@ abstract class _$GetSessionResponseCWProxy {
 
   GetSessionResponse user(User user);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `GetSessionResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `GetSessionResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// GetSessionResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   GetSessionResponse call({String? token, User user});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfGetSessionResponse.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfGetSessionResponse.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfGetSessionResponse.copyWith(...)` or call `instanceOfGetSessionResponse.copyWith.fieldName(value)` for a single field.
 class _$GetSessionResponseCWProxyImpl implements _$GetSessionResponseCWProxy {
   const _$GetSessionResponseCWProxyImpl(this._value);
 
   final GetSessionResponse _value;
 
   @override
-  GetSessionResponse token(String? token) => this(token: token);
+  GetSessionResponse token(String? token) => call(token: token);
 
   @override
-  GetSessionResponse user(User user) => this(user: user);
+  GetSessionResponse user(User user) => call(user: user);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `GetSessionResponse(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `GetSessionResponse(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// GetSessionResponse(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   GetSessionResponse call({
     Object? token = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -48,7 +51,7 @@ class _$GetSessionResponseCWProxyImpl implements _$GetSessionResponseCWProxy {
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String?,
-      user: user == const $CopyWithPlaceholder()
+      user: user == const $CopyWithPlaceholder() || user == null
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
           : user as User,
@@ -57,7 +60,8 @@ class _$GetSessionResponseCWProxyImpl implements _$GetSessionResponseCWProxy {
 }
 
 extension $GetSessionResponseCopyWith on GetSessionResponse {
-  /// Returns a callable class that can be used as follows: `instanceOfGetSessionResponse.copyWith(...)` or like so:`instanceOfGetSessionResponse.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfGetSessionResponse.copyWith(...)` or `instanceOfGetSessionResponse.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$GetSessionResponseCWProxy get copyWith =>
       _$GetSessionResponseCWProxyImpl(this);

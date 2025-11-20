@@ -13,12 +13,13 @@ abstract class _$TopUpRequestCWProxy {
 
   TopUpRequest method(TopUpRequestMethodEnum method);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TopUpRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TopUpRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// TopUpRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   TopUpRequest call({
     num amount,
     PaymentProvider provider,
@@ -26,43 +27,45 @@ abstract class _$TopUpRequestCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfTopUpRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfTopUpRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfTopUpRequest.copyWith(...)` or call `instanceOfTopUpRequest.copyWith.fieldName(value)` for a single field.
 class _$TopUpRequestCWProxyImpl implements _$TopUpRequestCWProxy {
   const _$TopUpRequestCWProxyImpl(this._value);
 
   final TopUpRequest _value;
 
   @override
-  TopUpRequest amount(num amount) => this(amount: amount);
+  TopUpRequest amount(num amount) => call(amount: amount);
 
   @override
-  TopUpRequest provider(PaymentProvider provider) => this(provider: provider);
+  TopUpRequest provider(PaymentProvider provider) => call(provider: provider);
 
   @override
-  TopUpRequest method(TopUpRequestMethodEnum method) => this(method: method);
+  TopUpRequest method(TopUpRequestMethodEnum method) => call(method: method);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `TopUpRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `TopUpRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// TopUpRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   TopUpRequest call({
     Object? amount = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
     Object? method = const $CopyWithPlaceholder(),
   }) {
     return TopUpRequest(
-      amount: amount == const $CopyWithPlaceholder()
+      amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as PaymentProvider,
-      method: method == const $CopyWithPlaceholder()
+      method: method == const $CopyWithPlaceholder() || method == null
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as TopUpRequestMethodEnum,
@@ -71,7 +74,8 @@ class _$TopUpRequestCWProxyImpl implements _$TopUpRequestCWProxy {
 }
 
 extension $TopUpRequestCopyWith on TopUpRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfTopUpRequest.copyWith(...)` or like so:`instanceOfTopUpRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfTopUpRequest.copyWith(...)` or `instanceOfTopUpRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$TopUpRequestCWProxy get copyWith => _$TopUpRequestCWProxyImpl(this);
 }

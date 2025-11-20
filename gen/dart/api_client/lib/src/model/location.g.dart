@@ -11,44 +11,47 @@ abstract class _$LocationCWProxy {
 
   Location lng(num lng);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Location(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Location(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Location(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Location call({num lat, num lng});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfLocation.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfLocation.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfLocation.copyWith(...)` or call `instanceOfLocation.copyWith.fieldName(value)` for a single field.
 class _$LocationCWProxyImpl implements _$LocationCWProxy {
   const _$LocationCWProxyImpl(this._value);
 
   final Location _value;
 
   @override
-  Location lat(num lat) => this(lat: lat);
+  Location lat(num lat) => call(lat: lat);
 
   @override
-  Location lng(num lng) => this(lng: lng);
+  Location lng(num lng) => call(lng: lng);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Location(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Location(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Location(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Location call({
     Object? lat = const $CopyWithPlaceholder(),
     Object? lng = const $CopyWithPlaceholder(),
   }) {
     return Location(
-      lat: lat == const $CopyWithPlaceholder()
+      lat: lat == const $CopyWithPlaceholder() || lat == null
           ? _value.lat
           // ignore: cast_nullable_to_non_nullable
           : lat as num,
-      lng: lng == const $CopyWithPlaceholder()
+      lng: lng == const $CopyWithPlaceholder() || lng == null
           ? _value.lng
           // ignore: cast_nullable_to_non_nullable
           : lng as num,
@@ -57,7 +60,8 @@ class _$LocationCWProxyImpl implements _$LocationCWProxy {
 }
 
 extension $LocationCopyWith on Location {
-  /// Returns a callable class that can be used as follows: `instanceOfLocation.copyWith(...)` or like so:`instanceOfLocation.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfLocation.copyWith(...)` or `instanceOfLocation.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$LocationCWProxy get copyWith => _$LocationCWProxyImpl(this);
 }

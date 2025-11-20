@@ -29,12 +29,13 @@ abstract class _$InsertPaymentCWProxy {
 
   InsertPayment response(Object? response);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertPayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertPayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertPayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertPayment call({
     String transactionId,
     PaymentProvider provider,
@@ -50,7 +51,8 @@ abstract class _$InsertPaymentCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfInsertPayment.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfInsertPayment.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfInsertPayment.copyWith(...)` or call `instanceOfInsertPayment.copyWith.fieldName(value)` for a single field.
 class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
   const _$InsertPaymentCWProxyImpl(this._value);
 
@@ -58,45 +60,46 @@ class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
 
   @override
   InsertPayment transactionId(String transactionId) =>
-      this(transactionId: transactionId);
+      call(transactionId: transactionId);
 
   @override
-  InsertPayment provider(PaymentProvider provider) => this(provider: provider);
+  InsertPayment provider(PaymentProvider provider) => call(provider: provider);
 
   @override
-  InsertPayment method(PaymentMethod method) => this(method: method);
+  InsertPayment method(PaymentMethod method) => call(method: method);
 
   @override
-  InsertPayment amount(num amount) => this(amount: amount);
+  InsertPayment amount(num amount) => call(amount: amount);
 
   @override
-  InsertPayment status(TransactionStatus status) => this(status: status);
+  InsertPayment status(TransactionStatus status) => call(status: status);
 
   @override
-  InsertPayment externalId(String? externalId) => this(externalId: externalId);
+  InsertPayment externalId(String? externalId) => call(externalId: externalId);
 
   @override
-  InsertPayment paymentUrl(String? paymentUrl) => this(paymentUrl: paymentUrl);
+  InsertPayment paymentUrl(String? paymentUrl) => call(paymentUrl: paymentUrl);
 
   @override
-  InsertPayment metadata(Object? metadata) => this(metadata: metadata);
+  InsertPayment metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  InsertPayment expiresAt(DateTime? expiresAt) => this(expiresAt: expiresAt);
+  InsertPayment expiresAt(DateTime? expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  InsertPayment payload(Object? payload) => this(payload: payload);
+  InsertPayment payload(Object? payload) => call(payload: payload);
 
   @override
-  InsertPayment response(Object? response) => this(response: response);
+  InsertPayment response(Object? response) => call(response: response);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `InsertPayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertPayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// InsertPayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   InsertPayment call({
     Object? transactionId = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
@@ -111,23 +114,24 @@ class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
     Object? response = const $CopyWithPlaceholder(),
   }) {
     return InsertPayment(
-      transactionId: transactionId == const $CopyWithPlaceholder()
+      transactionId:
+          transactionId == const $CopyWithPlaceholder() || transactionId == null
           ? _value.transactionId
           // ignore: cast_nullable_to_non_nullable
           : transactionId as String,
-      provider: provider == const $CopyWithPlaceholder()
+      provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as PaymentProvider,
-      method: method == const $CopyWithPlaceholder()
+      method: method == const $CopyWithPlaceholder() || method == null
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as PaymentMethod,
-      amount: amount == const $CopyWithPlaceholder()
+      amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
-      status: status == const $CopyWithPlaceholder()
+      status: status == const $CopyWithPlaceholder() || status == null
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as TransactionStatus,
@@ -160,7 +164,8 @@ class _$InsertPaymentCWProxyImpl implements _$InsertPaymentCWProxy {
 }
 
 extension $InsertPaymentCopyWith on InsertPayment {
-  /// Returns a callable class that can be used as follows: `instanceOfInsertPayment.copyWith(...)` or like so:`instanceOfInsertPayment.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfInsertPayment.copyWith(...)` or `instanceOfInsertPayment.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$InsertPaymentCWProxy get copyWith => _$InsertPaymentCWProxyImpl(this);
 }

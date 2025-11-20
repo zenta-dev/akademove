@@ -29,12 +29,13 @@ abstract class _$UpdatePaymentCWProxy {
 
   UpdatePayment response(Object? response);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdatePayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdatePayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdatePayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdatePayment call({
     String? transactionId,
     PaymentProvider? provider,
@@ -50,7 +51,8 @@ abstract class _$UpdatePaymentCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdatePayment.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdatePayment.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdatePayment.copyWith(...)` or call `instanceOfUpdatePayment.copyWith.fieldName(value)` for a single field.
 class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
   const _$UpdatePaymentCWProxyImpl(this._value);
 
@@ -58,45 +60,46 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
 
   @override
   UpdatePayment transactionId(String? transactionId) =>
-      this(transactionId: transactionId);
+      call(transactionId: transactionId);
 
   @override
-  UpdatePayment provider(PaymentProvider? provider) => this(provider: provider);
+  UpdatePayment provider(PaymentProvider? provider) => call(provider: provider);
 
   @override
-  UpdatePayment method(PaymentMethod? method) => this(method: method);
+  UpdatePayment method(PaymentMethod? method) => call(method: method);
 
   @override
-  UpdatePayment amount(num? amount) => this(amount: amount);
+  UpdatePayment amount(num? amount) => call(amount: amount);
 
   @override
-  UpdatePayment status(TransactionStatus? status) => this(status: status);
+  UpdatePayment status(TransactionStatus? status) => call(status: status);
 
   @override
-  UpdatePayment externalId(String? externalId) => this(externalId: externalId);
+  UpdatePayment externalId(String? externalId) => call(externalId: externalId);
 
   @override
-  UpdatePayment paymentUrl(String? paymentUrl) => this(paymentUrl: paymentUrl);
+  UpdatePayment paymentUrl(String? paymentUrl) => call(paymentUrl: paymentUrl);
 
   @override
-  UpdatePayment metadata(Object? metadata) => this(metadata: metadata);
+  UpdatePayment metadata(Object? metadata) => call(metadata: metadata);
 
   @override
-  UpdatePayment expiresAt(DateTime? expiresAt) => this(expiresAt: expiresAt);
+  UpdatePayment expiresAt(DateTime? expiresAt) => call(expiresAt: expiresAt);
 
   @override
-  UpdatePayment payload(Object? payload) => this(payload: payload);
+  UpdatePayment payload(Object? payload) => call(payload: payload);
 
   @override
-  UpdatePayment response(Object? response) => this(response: response);
+  UpdatePayment response(Object? response) => call(response: response);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdatePayment(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdatePayment(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdatePayment(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdatePayment call({
     Object? transactionId = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
@@ -160,7 +163,8 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
 }
 
 extension $UpdatePaymentCopyWith on UpdatePayment {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdatePayment.copyWith(...)` or like so:`instanceOfUpdatePayment.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdatePayment.copyWith(...)` or `instanceOfUpdatePayment.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdatePaymentCWProxy get copyWith => _$UpdatePaymentCWProxyImpl(this);
 }

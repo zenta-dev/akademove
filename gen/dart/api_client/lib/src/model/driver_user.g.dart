@@ -35,12 +35,13 @@ abstract class _$DriverUserCWProxy {
 
   DriverUser userBadges(List<UserBadge>? userBadges);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverUser call({
     String? id,
     String? name,
@@ -59,63 +60,65 @@ abstract class _$DriverUserCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverUser.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverUser.copyWith(...)` or call `instanceOfDriverUser.copyWith.fieldName(value)` for a single field.
 class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
   const _$DriverUserCWProxyImpl(this._value);
 
   final DriverUser _value;
 
   @override
-  DriverUser id(String? id) => this(id: id);
+  DriverUser id(String? id) => call(id: id);
 
   @override
-  DriverUser name(String? name) => this(name: name);
+  DriverUser name(String? name) => call(name: name);
 
   @override
-  DriverUser email(String? email) => this(email: email);
+  DriverUser email(String? email) => call(email: email);
 
   @override
   DriverUser emailVerified(bool? emailVerified) =>
-      this(emailVerified: emailVerified);
+      call(emailVerified: emailVerified);
 
   @override
-  DriverUser image(String? image) => this(image: image);
+  DriverUser image(String? image) => call(image: image);
 
   @override
-  DriverUser role(UserRole? role) => this(role: role);
+  DriverUser role(UserRole? role) => call(role: role);
 
   @override
-  DriverUser banned(bool? banned) => this(banned: banned);
+  DriverUser banned(bool? banned) => call(banned: banned);
 
   @override
-  DriverUser banReason(String? banReason) => this(banReason: banReason);
+  DriverUser banReason(String? banReason) => call(banReason: banReason);
 
   @override
-  DriverUser banExpires(DateTime? banExpires) => this(banExpires: banExpires);
+  DriverUser banExpires(DateTime? banExpires) => call(banExpires: banExpires);
 
   @override
-  DriverUser gender(UserGender? gender) => this(gender: gender);
+  DriverUser gender(UserGender? gender) => call(gender: gender);
 
   @override
-  DriverUser phone(Phone? phone) => this(phone: phone);
+  DriverUser phone(Phone? phone) => call(phone: phone);
 
   @override
-  DriverUser createdAt(DateTime? createdAt) => this(createdAt: createdAt);
+  DriverUser createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  DriverUser updatedAt(DateTime? updatedAt) => this(updatedAt: updatedAt);
+  DriverUser updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
   DriverUser userBadges(List<UserBadge>? userBadges) =>
-      this(userBadges: userBadges);
+      call(userBadges: userBadges);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverUser(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverUser(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverUser(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverUser call({
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
@@ -194,7 +197,8 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
 }
 
 extension $DriverUserCopyWith on DriverUser {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverUser.copyWith(...)` or like so:`instanceOfDriverUser.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverUser.copyWith(...)` or `instanceOfDriverUser.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverUserCWProxy get copyWith => _$DriverUserCWProxyImpl(this);
 }

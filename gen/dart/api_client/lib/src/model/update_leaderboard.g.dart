@@ -25,12 +25,13 @@ abstract class _$UpdateLeaderboardCWProxy {
 
   UpdateLeaderboard periodEnd(DateTime? periodEnd);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateLeaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateLeaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateLeaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateLeaderboard call({
     String? userId,
     String? driverId,
@@ -44,51 +45,53 @@ abstract class _$UpdateLeaderboardCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateLeaderboard.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateLeaderboard.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateLeaderboard.copyWith(...)` or call `instanceOfUpdateLeaderboard.copyWith.fieldName(value)` for a single field.
 class _$UpdateLeaderboardCWProxyImpl implements _$UpdateLeaderboardCWProxy {
   const _$UpdateLeaderboardCWProxyImpl(this._value);
 
   final UpdateLeaderboard _value;
 
   @override
-  UpdateLeaderboard userId(String? userId) => this(userId: userId);
+  UpdateLeaderboard userId(String? userId) => call(userId: userId);
 
   @override
-  UpdateLeaderboard driverId(String? driverId) => this(driverId: driverId);
+  UpdateLeaderboard driverId(String? driverId) => call(driverId: driverId);
 
   @override
   UpdateLeaderboard merchantId(String? merchantId) =>
-      this(merchantId: merchantId);
+      call(merchantId: merchantId);
 
   @override
   UpdateLeaderboard category(UpdateLeaderboardCategoryEnum? category) =>
-      this(category: category);
+      call(category: category);
 
   @override
   UpdateLeaderboard period(UpdateLeaderboardPeriodEnum? period) =>
-      this(period: period);
+      call(period: period);
 
   @override
-  UpdateLeaderboard rank(int? rank) => this(rank: rank);
+  UpdateLeaderboard rank(int? rank) => call(rank: rank);
 
   @override
-  UpdateLeaderboard score(int? score) => this(score: score);
+  UpdateLeaderboard score(int? score) => call(score: score);
 
   @override
   UpdateLeaderboard periodStart(DateTime? periodStart) =>
-      this(periodStart: periodStart);
+      call(periodStart: periodStart);
 
   @override
   UpdateLeaderboard periodEnd(DateTime? periodEnd) =>
-      this(periodEnd: periodEnd);
+      call(periodEnd: periodEnd);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateLeaderboard(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateLeaderboard(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateLeaderboard(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateLeaderboard call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? driverId = const $CopyWithPlaceholder(),
@@ -142,7 +145,8 @@ class _$UpdateLeaderboardCWProxyImpl implements _$UpdateLeaderboardCWProxy {
 }
 
 extension $UpdateLeaderboardCopyWith on UpdateLeaderboard {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateLeaderboard.copyWith(...)` or like so:`instanceOfUpdateLeaderboard.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateLeaderboard.copyWith(...)` or `instanceOfUpdateLeaderboard.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateLeaderboardCWProxy get copyWith =>
       _$UpdateLeaderboardCWProxyImpl(this);

@@ -15,12 +15,13 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
 
   MerchantPopulars200Response totalPages(int? totalPages);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantPopulars200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantPopulars200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantPopulars200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantPopulars200Response call({
     String message,
     List<Merchant> data,
@@ -29,7 +30,8 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantPopulars200Response.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantPopulars200Response.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchantPopulars200Response.copyWith(...)` or call `instanceOfMerchantPopulars200Response.copyWith.fieldName(value)` for a single field.
 class _$MerchantPopulars200ResponseCWProxyImpl
     implements _$MerchantPopulars200ResponseCWProxy {
   const _$MerchantPopulars200ResponseCWProxyImpl(this._value);
@@ -37,26 +39,27 @@ class _$MerchantPopulars200ResponseCWProxyImpl
   final MerchantPopulars200Response _value;
 
   @override
-  MerchantPopulars200Response message(String message) => this(message: message);
+  MerchantPopulars200Response message(String message) => call(message: message);
 
   @override
-  MerchantPopulars200Response data(List<Merchant> data) => this(data: data);
+  MerchantPopulars200Response data(List<Merchant> data) => call(data: data);
 
   @override
   MerchantPopulars200Response pagination(PaginationResult? pagination) =>
-      this(pagination: pagination);
+      call(pagination: pagination);
 
   @override
   MerchantPopulars200Response totalPages(int? totalPages) =>
-      this(totalPages: totalPages);
+      call(totalPages: totalPages);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantPopulars200Response(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantPopulars200Response(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantPopulars200Response(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantPopulars200Response call({
     Object? message = const $CopyWithPlaceholder(),
     Object? data = const $CopyWithPlaceholder(),
@@ -64,11 +67,11 @@ class _$MerchantPopulars200ResponseCWProxyImpl
     Object? totalPages = const $CopyWithPlaceholder(),
   }) {
     return MerchantPopulars200Response(
-      message: message == const $CopyWithPlaceholder()
+      message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder()
+      data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
           : data as List<Merchant>,
@@ -85,7 +88,8 @@ class _$MerchantPopulars200ResponseCWProxyImpl
 }
 
 extension $MerchantPopulars200ResponseCopyWith on MerchantPopulars200Response {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchantPopulars200Response.copyWith(...)` or like so:`instanceOfMerchantPopulars200Response.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchantPopulars200Response.copyWith(...)` or `instanceOfMerchantPopulars200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantPopulars200ResponseCWProxy get copyWith =>
       _$MerchantPopulars200ResponseCWProxyImpl(this);

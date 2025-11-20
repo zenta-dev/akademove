@@ -15,12 +15,13 @@ abstract class _$WSEnvelopeCWProxy {
 
   WSEnvelope payload(Object? payload);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSEnvelope(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSEnvelope(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSEnvelope call({
     WSEnvelopeType type,
     WSEnvelopeSender from,
@@ -29,31 +30,33 @@ abstract class _$WSEnvelopeCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfWSEnvelope.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfWSEnvelope.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfWSEnvelope.copyWith(...)` or call `instanceOfWSEnvelope.copyWith.fieldName(value)` for a single field.
 class _$WSEnvelopeCWProxyImpl implements _$WSEnvelopeCWProxy {
   const _$WSEnvelopeCWProxyImpl(this._value);
 
   final WSEnvelope _value;
 
   @override
-  WSEnvelope type(WSEnvelopeType type) => this(type: type);
+  WSEnvelope type(WSEnvelopeType type) => call(type: type);
 
   @override
-  WSEnvelope from(WSEnvelopeSender from) => this(from: from);
+  WSEnvelope from(WSEnvelopeSender from) => call(from: from);
 
   @override
-  WSEnvelope to(WSEnvelopeSender to) => this(to: to);
+  WSEnvelope to(WSEnvelopeSender to) => call(to: to);
 
   @override
-  WSEnvelope payload(Object? payload) => this(payload: payload);
+  WSEnvelope payload(Object? payload) => call(payload: payload);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `WSEnvelope(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `WSEnvelope(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// WSEnvelope(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   WSEnvelope call({
     Object? type = const $CopyWithPlaceholder(),
     Object? from = const $CopyWithPlaceholder(),
@@ -61,15 +64,15 @@ class _$WSEnvelopeCWProxyImpl implements _$WSEnvelopeCWProxy {
     Object? payload = const $CopyWithPlaceholder(),
   }) {
     return WSEnvelope(
-      type: type == const $CopyWithPlaceholder()
+      type: type == const $CopyWithPlaceholder() || type == null
           ? _value.type
           // ignore: cast_nullable_to_non_nullable
           : type as WSEnvelopeType,
-      from: from == const $CopyWithPlaceholder()
+      from: from == const $CopyWithPlaceholder() || from == null
           ? _value.from
           // ignore: cast_nullable_to_non_nullable
           : from as WSEnvelopeSender,
-      to: to == const $CopyWithPlaceholder()
+      to: to == const $CopyWithPlaceholder() || to == null
           ? _value.to
           // ignore: cast_nullable_to_non_nullable
           : to as WSEnvelopeSender,
@@ -82,7 +85,8 @@ class _$WSEnvelopeCWProxyImpl implements _$WSEnvelopeCWProxy {
 }
 
 extension $WSEnvelopeCopyWith on WSEnvelope {
-  /// Returns a callable class that can be used as follows: `instanceOfWSEnvelope.copyWith(...)` or like so:`instanceOfWSEnvelope.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfWSEnvelope.copyWith(...)` or `instanceOfWSEnvelope.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$WSEnvelopeCWProxy get copyWith => _$WSEnvelopeCWProxyImpl(this);
 }

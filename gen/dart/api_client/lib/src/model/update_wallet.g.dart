@@ -15,12 +15,13 @@ abstract class _$UpdateWalletCWProxy {
 
   UpdateWallet isActive(bool? isActive);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateWallet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateWallet(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateWallet(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateWallet call({
     String? userId,
     num? balance,
@@ -29,31 +30,33 @@ abstract class _$UpdateWalletCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUpdateWallet.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUpdateWallet.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfUpdateWallet.copyWith(...)` or call `instanceOfUpdateWallet.copyWith.fieldName(value)` for a single field.
 class _$UpdateWalletCWProxyImpl implements _$UpdateWalletCWProxy {
   const _$UpdateWalletCWProxyImpl(this._value);
 
   final UpdateWallet _value;
 
   @override
-  UpdateWallet userId(String? userId) => this(userId: userId);
+  UpdateWallet userId(String? userId) => call(userId: userId);
 
   @override
-  UpdateWallet balance(num? balance) => this(balance: balance);
+  UpdateWallet balance(num? balance) => call(balance: balance);
 
   @override
-  UpdateWallet currency(Currency? currency) => this(currency: currency);
+  UpdateWallet currency(Currency? currency) => call(currency: currency);
 
   @override
-  UpdateWallet isActive(bool? isActive) => this(isActive: isActive);
+  UpdateWallet isActive(bool? isActive) => call(isActive: isActive);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `UpdateWallet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateWallet(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// UpdateWallet(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   UpdateWallet call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? balance = const $CopyWithPlaceholder(),
@@ -82,7 +85,8 @@ class _$UpdateWalletCWProxyImpl implements _$UpdateWalletCWProxy {
 }
 
 extension $UpdateWalletCopyWith on UpdateWallet {
-  /// Returns a callable class that can be used as follows: `instanceOfUpdateWallet.copyWith(...)` or like so:`instanceOfUpdateWallet.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfUpdateWallet.copyWith(...)` or `instanceOfUpdateWallet.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$UpdateWalletCWProxy get copyWith => _$UpdateWalletCWProxyImpl(this);
 }

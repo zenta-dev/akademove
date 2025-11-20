@@ -25,12 +25,13 @@ abstract class _$MerchantMenuCWProxy {
 
   MerchantMenu updatedAt(DateTime updatedAt);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenu(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantMenu(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantMenu(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantMenu call({
     String id,
     String merchantId,
@@ -44,46 +45,48 @@ abstract class _$MerchantMenuCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfMerchantMenu.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfMerchantMenu.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfMerchantMenu.copyWith(...)` or call `instanceOfMerchantMenu.copyWith.fieldName(value)` for a single field.
 class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
   const _$MerchantMenuCWProxyImpl(this._value);
 
   final MerchantMenu _value;
 
   @override
-  MerchantMenu id(String id) => this(id: id);
+  MerchantMenu id(String id) => call(id: id);
 
   @override
-  MerchantMenu merchantId(String merchantId) => this(merchantId: merchantId);
+  MerchantMenu merchantId(String merchantId) => call(merchantId: merchantId);
 
   @override
-  MerchantMenu name(String name) => this(name: name);
+  MerchantMenu name(String name) => call(name: name);
 
   @override
-  MerchantMenu image(String? image) => this(image: image);
+  MerchantMenu image(String? image) => call(image: image);
 
   @override
-  MerchantMenu category(String? category) => this(category: category);
+  MerchantMenu category(String? category) => call(category: category);
 
   @override
-  MerchantMenu price(num price) => this(price: price);
+  MerchantMenu price(num price) => call(price: price);
 
   @override
-  MerchantMenu stock(int stock) => this(stock: stock);
+  MerchantMenu stock(int stock) => call(stock: stock);
 
   @override
-  MerchantMenu createdAt(DateTime createdAt) => this(createdAt: createdAt);
+  MerchantMenu createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  MerchantMenu updatedAt(DateTime updatedAt) => this(updatedAt: updatedAt);
+  MerchantMenu updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `MerchantMenu(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantMenu(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// MerchantMenu(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   MerchantMenu call({
     Object? id = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
@@ -96,15 +99,16 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
     Object? updatedAt = const $CopyWithPlaceholder(),
   }) {
     return MerchantMenu(
-      id: id == const $CopyWithPlaceholder()
+      id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      merchantId: merchantId == const $CopyWithPlaceholder()
+      merchantId:
+          merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
@@ -116,19 +120,19 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as String?,
-      price: price == const $CopyWithPlaceholder()
+      price: price == const $CopyWithPlaceholder() || price == null
           ? _value.price
           // ignore: cast_nullable_to_non_nullable
           : price as num,
-      stock: stock == const $CopyWithPlaceholder()
+      stock: stock == const $CopyWithPlaceholder() || stock == null
           ? _value.stock
           // ignore: cast_nullable_to_non_nullable
           : stock as int,
-      createdAt: createdAt == const $CopyWithPlaceholder()
+      createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      updatedAt: updatedAt == const $CopyWithPlaceholder()
+      updatedAt: updatedAt == const $CopyWithPlaceholder() || updatedAt == null
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
@@ -137,7 +141,8 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
 }
 
 extension $MerchantMenuCopyWith on MerchantMenu {
-  /// Returns a callable class that can be used as follows: `instanceOfMerchantMenu.copyWith(...)` or like so:`instanceOfMerchantMenu.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfMerchantMenu.copyWith(...)` or `instanceOfMerchantMenu.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$MerchantMenuCWProxy get copyWith => _$MerchantMenuCWProxyImpl(this);
 }

@@ -11,44 +11,48 @@ abstract class _$PhoneCWProxy {
 
   Phone number(int number);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Phone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Phone(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Phone(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Phone call({CountryCode countryCode, int number});
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPhone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPhone.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfPhone.copyWith(...)` or call `instanceOfPhone.copyWith.fieldName(value)` for a single field.
 class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
   const _$PhoneCWProxyImpl(this._value);
 
   final Phone _value;
 
   @override
-  Phone countryCode(CountryCode countryCode) => this(countryCode: countryCode);
+  Phone countryCode(CountryCode countryCode) => call(countryCode: countryCode);
 
   @override
-  Phone number(int number) => this(number: number);
+  Phone number(int number) => call(number: number);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Phone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Phone(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// Phone(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   Phone call({
     Object? countryCode = const $CopyWithPlaceholder(),
     Object? number = const $CopyWithPlaceholder(),
   }) {
     return Phone(
-      countryCode: countryCode == const $CopyWithPlaceholder()
+      countryCode:
+          countryCode == const $CopyWithPlaceholder() || countryCode == null
           ? _value.countryCode
           // ignore: cast_nullable_to_non_nullable
           : countryCode as CountryCode,
-      number: number == const $CopyWithPlaceholder()
+      number: number == const $CopyWithPlaceholder() || number == null
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
           : number as int,
@@ -57,7 +61,8 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
 }
 
 extension $PhoneCopyWith on Phone {
-  /// Returns a callable class that can be used as follows: `instanceOfPhone.copyWith(...)` or like so:`instanceOfPhone.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfPhone.copyWith(...)` or `instanceOfPhone.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$PhoneCWProxy get copyWith => _$PhoneCWProxyImpl(this);
 }

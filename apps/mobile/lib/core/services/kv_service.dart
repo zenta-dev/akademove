@@ -55,7 +55,7 @@ class SharedPrefKeyValueService implements KeyValueService {
       ),
     };
 
-    if (success == false) {
+    if (!success) {
       throw const ServiceError(
         'Failed to write value to SharedPreferences',
         code: ErrorCode.unknown,

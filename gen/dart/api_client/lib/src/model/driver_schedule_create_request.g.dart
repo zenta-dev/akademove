@@ -23,12 +23,13 @@ abstract class _$DriverScheduleCreateRequestCWProxy {
 
   DriverScheduleCreateRequest isActive(bool? isActive);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleCreateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleCreateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleCreateRequest call({
     String name,
     String driverId,
@@ -41,7 +42,8 @@ abstract class _$DriverScheduleCreateRequestCWProxy {
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDriverScheduleCreateRequest.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDriverScheduleCreateRequest.copyWith.fieldName(...)`
+/// Callable proxy for `copyWith` functionality.
+/// Use as `instanceOfDriverScheduleCreateRequest.copyWith(...)` or call `instanceOfDriverScheduleCreateRequest.copyWith.fieldName(value)` for a single field.
 class _$DriverScheduleCreateRequestCWProxyImpl
     implements _$DriverScheduleCreateRequestCWProxy {
   const _$DriverScheduleCreateRequestCWProxyImpl(this._value);
@@ -49,42 +51,43 @@ class _$DriverScheduleCreateRequestCWProxyImpl
   final DriverScheduleCreateRequest _value;
 
   @override
-  DriverScheduleCreateRequest name(String name) => this(name: name);
+  DriverScheduleCreateRequest name(String name) => call(name: name);
 
   @override
   DriverScheduleCreateRequest driverId(String driverId) =>
-      this(driverId: driverId);
+      call(driverId: driverId);
 
   @override
   DriverScheduleCreateRequest dayOfWeek(DayOfWeek dayOfWeek) =>
-      this(dayOfWeek: dayOfWeek);
+      call(dayOfWeek: dayOfWeek);
 
   @override
   DriverScheduleCreateRequest startTime(Time startTime) =>
-      this(startTime: startTime);
+      call(startTime: startTime);
 
   @override
-  DriverScheduleCreateRequest endTime(Time endTime) => this(endTime: endTime);
+  DriverScheduleCreateRequest endTime(Time endTime) => call(endTime: endTime);
 
   @override
   DriverScheduleCreateRequest isRecurring(bool? isRecurring) =>
-      this(isRecurring: isRecurring);
+      call(isRecurring: isRecurring);
 
   @override
   DriverScheduleCreateRequest specificDate(DateTime? specificDate) =>
-      this(specificDate: specificDate);
+      call(specificDate: specificDate);
 
   @override
   DriverScheduleCreateRequest isActive(bool? isActive) =>
-      this(isActive: isActive);
+      call(isActive: isActive);
 
   @override
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DriverScheduleCreateRequest(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// Creates a new instance with the provided field values.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DriverScheduleCreateRequest(...).copyWith.fieldName(value)`.
   ///
-  /// Usage
+  /// Example:
   /// ```dart
   /// DriverScheduleCreateRequest(...).copyWith(id: 12, name: "My name")
-  /// ````
+  /// ```
   DriverScheduleCreateRequest call({
     Object? name = const $CopyWithPlaceholder(),
     Object? driverId = const $CopyWithPlaceholder(),
@@ -96,23 +99,23 @@ class _$DriverScheduleCreateRequestCWProxyImpl
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
     return DriverScheduleCreateRequest(
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      driverId: driverId == const $CopyWithPlaceholder()
+      driverId: driverId == const $CopyWithPlaceholder() || driverId == null
           ? _value.driverId
           // ignore: cast_nullable_to_non_nullable
           : driverId as String,
-      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder()
+      dayOfWeek: dayOfWeek == const $CopyWithPlaceholder() || dayOfWeek == null
           ? _value.dayOfWeek
           // ignore: cast_nullable_to_non_nullable
           : dayOfWeek as DayOfWeek,
-      startTime: startTime == const $CopyWithPlaceholder()
+      startTime: startTime == const $CopyWithPlaceholder() || startTime == null
           ? _value.startTime
           // ignore: cast_nullable_to_non_nullable
           : startTime as Time,
-      endTime: endTime == const $CopyWithPlaceholder()
+      endTime: endTime == const $CopyWithPlaceholder() || endTime == null
           ? _value.endTime
           // ignore: cast_nullable_to_non_nullable
           : endTime as Time,
@@ -133,7 +136,8 @@ class _$DriverScheduleCreateRequestCWProxyImpl
 }
 
 extension $DriverScheduleCreateRequestCopyWith on DriverScheduleCreateRequest {
-  /// Returns a callable class that can be used as follows: `instanceOfDriverScheduleCreateRequest.copyWith(...)` or like so:`instanceOfDriverScheduleCreateRequest.copyWith.fieldName(...)`.
+  /// Returns a callable class used to build a new instance with modified fields.
+  /// Example: `instanceOfDriverScheduleCreateRequest.copyWith(...)` or `instanceOfDriverScheduleCreateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
   _$DriverScheduleCreateRequestCWProxy get copyWith =>
       _$DriverScheduleCreateRequestCWProxyImpl(this);
