@@ -24,6 +24,84 @@ import { order } from "@/core/tables/order";
 import { PasswordManager } from "@/utils/password";
 import { tables } from "./tables";
 
+// Seeding options type
+type SeedOptions = {
+	mode: "all" | "base" | "custom";
+	seeders: Set<string>;
+};
+
+async function promptSeedingOptions(): Promise<SeedOptions> {
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
+	});
+
+	const question = (prompt: string): Promise<string> =>
+		new Promise((resolve) => rl.question(prompt, resolve));
+
+	console.log("\n📋 Seeding Options:");
+	console.log(
+		"1. All - Seed everything (users, badges, merchants, drivers, orders, etc.)",
+	);
+	console.log("2. Base - Seed only test users and badges");
+	console.log("3. Custom - Pick specific seeders to run");
+
+	const choice = await question("\nSelect option (1-3): ");
+
+	if (choice === "1") {
+		rl.close();
+		return { mode: "all", seeders: new Set() };
+	}
+
+	if (choice === "2") {
+		rl.close();
+		return {
+			mode: "base",
+			seeders: new Set(["users", "badges", "userBadges"]),
+		};
+	}
+
+	if (choice === "3") {
+		console.log("\n📦 Available seeders:");
+		console.log("1. users - Test users and random users");
+		console.log("2. badges - Badge definitions");
+		console.log("3. userBadges - Assign badges to test users");
+		console.log("4. configurations - System configurations");
+		console.log("5. merchants - Merchant profiles");
+		console.log("6. drivers - Driver profiles");
+		console.log("7. orders - Sample orders");
+
+		const selections = await question(
+			"\nEnter seeder numbers separated by commas (e.g., 1,2,3): ",
+		);
+
+		const seederMap: Record<string, string> = {
+			"1": "users",
+			"2": "badges",
+			"3": "userBadges",
+			"4": "configurations",
+			"5": "merchants",
+			"6": "drivers",
+			"7": "orders",
+		};
+
+		const selectedSeeders = new Set(
+			selections
+				.split(",")
+				.map((s) => s.trim())
+				.filter((s) => seederMap[s])
+				.map((s) => seederMap[s]),
+		);
+
+		rl.close();
+		return { mode: "custom", seeders: selectedSeeders };
+	}
+
+	rl.close();
+	console.log("❌ Invalid option selected.");
+	process.exit(0);
+}
+
 async function confirmExecution() {
 	if (process.env.NODE_ENV === "production") {
 		console.error("❌ Seeding is blocked in production!");
@@ -37,7 +115,7 @@ async function confirmExecution() {
 
 	const confirmation = await new Promise<string>((resolve) =>
 		rl.question(
-			"\n⚠️  WARNING: This will insert a large amount of seed data into your database.\n" +
+			"\n⚠️  WARNING: This will insert seed data into your database.\n" +
 				"Type 'SEED' to continue: ",
 			resolve,
 		),
@@ -65,7 +143,7 @@ function generateId(): string {
 	return randomBytes(32).toString("hex");
 }
 
-async function seedUser() {
+async function seedUser(baseOnly = false) {
 	const pw = new PasswordManager();
 
 	const FIXED_USERS: Omit<InsertUser, "confirmPassword" | "userBadges">[] = [
@@ -108,28 +186,32 @@ async function seedUser() {
 		},
 	];
 
-	const RANDOM_USERS = Array.from({ length: 500 }).map(
-		() =>
-			({
-				name: faker.person.fullName(),
-				email: faker.internet.email().toLowerCase(),
-				role: faker.helpers.arrayElement(["user", "driver", "merchant"]),
-				password: "Ch@ngEThi5",
-				phone: {
-					countryCode: "ID",
-					number: Number(
-						faker.phone.number({ style: "human" }).replace(/\D/g, ""),
-					),
-				},
-				gender: faker.helpers.arrayElement(["male", "female"]),
-			}) as const,
-	);
+	const RANDOM_USERS = baseOnly
+		? []
+		: Array.from({ length: 500 }).map(
+				() =>
+					({
+						name: faker.person.fullName(),
+						email: faker.internet.email().toLowerCase(),
+						role: faker.helpers.arrayElement(["user", "driver", "merchant"]),
+						password: "Ch@ngEThi5",
+						phone: {
+							countryCode: "ID",
+							number: Number(
+								faker.phone.number({ style: "human" }).replace(/\D/g, ""),
+							),
+						},
+						gender: faker.helpers.arrayElement(["male", "female"]),
+					}) as const,
+			);
 
-	const USERS = [
-		...new Map(
-			[...FIXED_USERS, ...RANDOM_USERS].map((u) => [u.email, u]),
-		).values(),
-	];
+	const USERS = baseOnly
+		? FIXED_USERS
+		: [
+				...new Map(
+					[...FIXED_USERS, ...RANDOM_USERS].map((u) => [u.email, u]),
+				).values(),
+			];
 
 	console.log("🔍 Checking existing users...");
 
@@ -353,9 +435,6 @@ async function seedMerchants() {
 			name: faker.company.name(),
 			email: user.email,
 			phone: user.phone,
-			// categories: Array.from({
-			// 	length: faker.number.int({ min: 1, max: 6 }),
-			// }).map(() => faker.food.ethnicCategory()),
 			address: faker.location.streetAddress(),
 			location: {
 				y: faker.location.latitude(),
@@ -536,7 +615,7 @@ async function seedBadges() {
 			level: "bronze",
 			targetRole: "user",
 			criteria: {
-				minOrders: 0, // Awarded upon registration approval
+				minOrders: 0,
 			},
 			isActive: true,
 			displayOrder: 100,
@@ -610,7 +689,7 @@ async function seedBadges() {
 			level: "bronze",
 			targetRole: "driver",
 			criteria: {
-				minOrders: 0, // Awarded upon registration approval
+				minOrders: 0,
 			},
 			isActive: true,
 			displayOrder: 100,
@@ -661,7 +740,7 @@ async function seedBadges() {
 			},
 			benefits: {
 				priorityBoost: 20,
-				commissionReduction: 0.05, // 5% commission reduction
+				commissionReduction: 0.05,
 			},
 			isActive: true,
 			displayOrder: 111,
@@ -680,7 +759,7 @@ async function seedBadges() {
 			},
 			benefits: {
 				priorityBoost: 30,
-				commissionReduction: 0.1, // 10% commission reduction
+				commissionReduction: 0.1,
 			},
 			isActive: true,
 			displayOrder: 112,
@@ -715,7 +794,7 @@ async function seedBadges() {
 			level: "bronze",
 			targetRole: "merchant",
 			criteria: {
-				minOrders: 0, // Awarded upon registration
+				minOrders: 0,
 			},
 			isActive: true,
 			displayOrder: 200,
@@ -775,12 +854,15 @@ async function seedBadges() {
 	];
 	const cwd = process.cwd();
 
+	console.log("🎖️ Seeding Badges...");
+
 	await Promise.all([
 		db
 			.insert(tables.badge)
 			.values(
 				DEFAULT_BADGES.map((e) => ({ ...e, id: v7(), icon: `${e.code}.png` })),
-			),
+			)
+			.onConflictDoNothing(),
 		...DEFAULT_BADGES.map(async (badge) => {
 			const filePath = join(cwd, badge.iconPath);
 			const buff = await readFile(filePath);
@@ -798,9 +880,13 @@ async function seedBadges() {
 			});
 		}),
 	]);
+
+	console.log("✅ Badges seeded successfully.");
 }
 
 async function seedUserBadges() {
+	console.log("🏅 Seeding User Badges...");
+
 	const [
 		testUser,
 		testDriver,
@@ -841,6 +927,20 @@ async function seedUserBadges() {
 			.then(([r]) => r),
 	]);
 
+	if (
+		!testUser ||
+		!testDriver ||
+		!testMerchant ||
+		!newCustomerBadge ||
+		!newDriverBadge ||
+		!newMerchantBadge
+	) {
+		console.warn(
+			"⚠️ Required test users or badges not found. Skipping user badges.",
+		);
+		return;
+	}
+
 	const values = [
 		{
 			id: v7(),
@@ -859,25 +959,64 @@ async function seedUserBadges() {
 		},
 	];
 
-	await db.insert(tables.userBadge).values(values);
+	await db.insert(tables.userBadge).values(values).onConflictDoNothing();
+	console.log("✅ User badges assigned successfully.");
 }
 
 async function main() {
 	try {
 		await confirmExecution();
 
+		const options = await promptSeedingOptions();
+
 		console.log("\n🌱 Starting database seeding...\n");
 
-		await Promise.all([seedUser(), seedBadges()]);
-		await Promise.all([
-			seedConfigurations(),
-			seedMerchants(),
-			seedDrivers(),
-			seedUserBadges(),
-		]);
-		await seedOrders();
+		// Determine which seeders to run
+		const shouldRun = (seeder: string) => {
+			if (options.mode === "all") return true;
+			return options.seeders.has(seeder);
+		};
 
-		console.log("\n✅ Database seeded successfully with test data.");
+		// Phase 1: Foundation data (users and badges)
+		const phase1: Promise<void>[] = [];
+
+		if (shouldRun("users")) {
+			phase1.push(seedUser(options.mode === "base"));
+		}
+		if (shouldRun("badges")) {
+			phase1.push(seedBadges());
+		}
+
+		if (phase1.length > 0) {
+			await Promise.all(phase1);
+		}
+
+		// Phase 2: Dependent data (requires users to exist)
+		const phase2: Promise<void>[] = [];
+
+		if (shouldRun("userBadges")) {
+			phase2.push(seedUserBadges());
+		}
+		if (shouldRun("configurations")) {
+			phase2.push(seedConfigurations());
+		}
+		if (shouldRun("merchants")) {
+			phase2.push(seedMerchants());
+		}
+		if (shouldRun("drivers")) {
+			phase2.push(seedDrivers());
+		}
+
+		if (phase2.length > 0) {
+			await Promise.all(phase2);
+		}
+
+		// Phase 3: Orders (requires users, drivers, merchants)
+		if (shouldRun("orders")) {
+			await seedOrders();
+		}
+
+		console.log("\n✅ Database seeded successfully.");
 	} catch (error) {
 		console.error("\n❌ Seeding failed:", error);
 		process.exit(1);
