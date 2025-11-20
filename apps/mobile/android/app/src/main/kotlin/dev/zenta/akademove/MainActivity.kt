@@ -1,4 +1,4 @@
-package dev.zenta.akademove
+package com.akademove.akademove
 
 import io.flutter.embedding.android.FlutterActivity
 

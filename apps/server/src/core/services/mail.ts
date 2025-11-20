@@ -29,10 +29,10 @@ export interface MailService {
 
 // TODO: Replace with actual domain
 export const MAIL_FROMS = {
-	DEFAULT: "Zenta Dev <cs@info.zenta.dev>",
-	VERIFICATION: "Zenta Verification <verification@info.zenta.dev>",
-	RESET_PASSWORD: "Zenta Reset Password <reset-password@info.zenta.dev>",
-	INVITATION: "Zenta Invitation <invitation@info.zenta.dev>",
+	DEFAULT: "Akademove <no-reply@mail.akademove.com>",
+	VERIFICATION: "Akademove Security <security@mail.akademove.com>",
+	RESET_PASSWORD: "Akademove Security <security@mail.akademove.com>",
+	INVITATION: "Akademove <no-reply@mail.akademove.com>",
 };
 
 export class ResendMailService implements MailService {

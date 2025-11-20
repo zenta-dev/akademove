@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDCX1nrb9mZgjI_Q8cRVcKHOTSBVPVewJM',
-    appId: '1:755870082701:android:a09c126a10a4a5116364c4',
-    messagingSenderId: '755870082701',
-    projectId: 'akademove-7d5e2',
-    storageBucket: 'akademove-7d5e2.firebasestorage.app',
+    apiKey: 'AIzaSyAeaY5sIfIz1kGCF5yUxh-JRE3DVYWCdT8',
+    appId: '1:469878601334:android:d22e44dadf02c5e464d157',
+    messagingSenderId: '469878601334',
+    projectId: 'akademove-86180',
+    storageBucket: 'akademove-86180.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCnvJFb6mJ9ejZPK4mJ9a9AU6r1mJ6tJ5c',
-    appId: '1:755870082701:ios:3a9c205324c848c76364c4',
-    messagingSenderId: '755870082701',
-    projectId: 'akademove-7d5e2',
-    storageBucket: 'akademove-7d5e2.firebasestorage.app',
-    iosBundleId: 'dev.zenta.akademove',
+    apiKey: 'AIzaSyCd1LXOYvlpKdM7N98aQPUren7WlmONwQQ',
+    appId: '1:469878601334:ios:40ff22c282609fc764d157',
+    messagingSenderId: '469878601334',
+    projectId: 'akademove-86180',
+    storageBucket: 'akademove-86180.firebasestorage.app',
+    iosBundleId: 'com.akademove.akademove',
   );
+
 }

@@ -78,7 +78,7 @@ export const [server, web] = await Promise.all([
 		dev: {
 			port: 3000,
 		},
-		domains: [{ domainName: `${APP_NAME}-server.zenta.dev`, zoneId }],
+		domains: [{ domainName: "server.akademove.com", zoneId, adopt: true }],
 	}),
 	TanStackStart(`${APP_NAME}-web`, {
 		name: `${APP_NAME}-web`,
@@ -104,7 +104,7 @@ export const [server, web] = await Promise.all([
 		dev: {
 			command: "bun run dev",
 		},
-		domains: [{ domainName: `${APP_NAME}.zenta.dev`, zoneId }],
+		domains: [{ domainName: "akademove.com", zoneId, adopt: true }],
 	}),
 ]);
 

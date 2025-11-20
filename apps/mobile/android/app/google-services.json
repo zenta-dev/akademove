@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "755870082701",
-    "project_id": "akademove-7d5e2",
-    "storage_bucket": "akademove-7d5e2.firebasestorage.app"
+    "project_number": "469878601334",
+    "project_id": "akademove-86180",
+    "storage_bucket": "akademove-86180.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:755870082701:android:a09c126a10a4a5116364c4",
+        "mobilesdk_app_id": "1:469878601334:android:d22e44dadf02c5e464d157",
         "android_client_info": {
-          "package_name": "dev.zenta.akademove"
+          "package_name": "com.akademove.akademove"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDCX1nrb9mZgjI_Q8cRVcKHOTSBVPVewJM"
+          "current_key": "AIzaSyAeaY5sIfIz1kGCF5yUxh-JRE3DVYWCdT8"
         }
       ],
       "services": {

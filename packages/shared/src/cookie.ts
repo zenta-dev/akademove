@@ -62,7 +62,7 @@ export function composeAuthCookieValue({
 	];
 
 	if (!isDev) {
-		parts.push("Domain=.zenta.dev");
+		parts.push("Domain=.akademove.com");
 	}
 
 	return parts.join("; ");
