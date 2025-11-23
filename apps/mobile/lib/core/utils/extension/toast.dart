@@ -7,7 +7,8 @@ enum ToastType {
   loading,
   success,
   error,
-  failed;
+  failed
+  ;
 
   Color get color {
     return switch (this) {

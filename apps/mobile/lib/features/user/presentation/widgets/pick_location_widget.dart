@@ -7,7 +7,8 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 enum LocationType {
   pickup,
-  dropoff;
+  dropoff
+  ;
 
   bool get isPickup => this == LocationType.pickup;
   bool get isDropoff => this == LocationType.dropoff;

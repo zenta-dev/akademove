@@ -19,7 +19,8 @@ enum ErrorCode {
   serviceUnavailable(503),
   gatewayTimeout(504),
   unknown(null),
-  invalidType(null);
+  invalidType(null)
+  ;
 
   const ErrorCode(this.code);
   final int? code;

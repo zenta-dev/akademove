@@ -76,7 +76,8 @@ enum Routes {
   ///
   /// Shared Routes
   ///
-  privacyPolicies('/privacy-policies');
+  privacyPolicies('/privacy-policies')
+  ;
 
   const Routes(this.path);
   final String path;
