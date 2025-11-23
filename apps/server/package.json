@@ -20,8 +20,8 @@
 		"with-env": "dotenv -e ../../.env --"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.936.0",
-		"@aws-sdk/s3-request-presigner": "^3.936.0",
+		"@aws-sdk/client-s3": "^3.937.0",
+		"@aws-sdk/s3-request-presigner": "^3.937.0",
 		"@erhahahaa/midtrans-client-typescript": "^1.0.5",
 		"@msgpack/msgpack": "^3.1.2",
 		"@orpc/contract": "^1.11.3",
@@ -44,15 +44,15 @@
 		"zod": "^4.1.11"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20251120.0",
+		"@cloudflare/workers-types": "^4.20251121.0",
 		"@faker-js/faker": "^10.1.0",
 		"@types/node": "^24.10.1",
-		"alchemy": "^0.77.5",
+		"alchemy": "^0.78.0",
 		"dotenv": "^17.2.3",
 		"dotenv-cli": "^11.0.0",
 		"drizzle-kit": "^0.31.7",
 		"tsdown": "^0.16.6",
 		"typescript": "^5.9.3",
-		"wrangler": "^4.49.1"
+		"wrangler": "^4.50.0"
 	}
 }
