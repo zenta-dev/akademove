@@ -2,7 +2,7 @@ abstract class UrlConstants {
   static const randomImageUrl = 'https://picsum.photos';
 
   static const apiProtocol = 'http://';
-  static const apiDomain = '172.25.105.105';
+  static const apiDomain = '10.213.177.105';
   static const apiPort = ':3000';
   static const apiBaseUrl = '$apiProtocol$apiDomain$apiPort/api';
 

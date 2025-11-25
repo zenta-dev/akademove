@@ -6,6 +6,7 @@ import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -58,7 +59,10 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       final cubit = context.read<UserRideCubit>();
 
       var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation();
+      coordinate ??= await cubit.getMyLocation(
+        context,
+        accuracy: LocationAccuracy.medium,
+      );
 
       if (coordinate == null) {
         debugPrint('⚠️ Coordinate is still null after getMyLocation');

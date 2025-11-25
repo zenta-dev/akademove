@@ -3,6 +3,9 @@ part of 'router.dart';
 final userRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
     providers: [
+      BlocProvider(
+        create: (_) => sl<BottomNavBarCubit>(),
+      ),
       BlocProvider.value(
         value: BlocProvider.of<ConfigurationCubit>(context)..getBanner(),
       ),
@@ -10,7 +13,9 @@ final userRouter = StatefulShellRoute.indexedStack(
         create: (_) => sl<UserHomeCubit>()..getPopulars(),
       ),
       BlocProvider(
-        create: (_) => sl<UserRideCubit>(),
+        create: (context) =>
+            sl<UserRideCubit>()
+              ..getMyLocation(context, accuracy: LocationAccuracy.lowest),
       ),
       BlocProvider(
         create: (_) => sl<UserWalletCubit>(),
@@ -41,10 +46,7 @@ final userRouter = StatefulShellRoute.indexedStack(
         ),
         //
         ShellRoute(
-          builder: (context, state, child) => BlocProvider.value(
-            value: BlocProvider.of<UserRideCubit>(context)..getMyLocation(),
-            child: RideMapShell(child: child),
-          ),
+          builder: (context, state, child) => child,
           routes: [
             GoRoute(
               name: Routes.userRide.name,

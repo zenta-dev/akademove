@@ -1,14 +1,14 @@
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
   NotificationService();
+  static const tag = 'NotificationService';
 
-  final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
+  final _plugin = FlutterLocalNotificationsPlugin();
 
-  static const AndroidNotificationChannel
-  _mainChannel = AndroidNotificationChannel(
+  static const _mainChannel = AndroidNotificationChannel(
     'main_channel',
     'General Notifications',
     description:
@@ -135,5 +135,72 @@ class NotificationService {
   void _onNotificationTap(NotificationResponse response) {
     logger.i('Notification tapped → ${response.payload}');
     // TODO: Add deep-link or navigation handling here
+  }
+
+  Future<bool> checkPermission() async {
+    logger.i('[$tag] | checkPermission called');
+    try {
+      if (await _isAndroid13OrHigher()) {
+        final status = await Permission.notification.status;
+        logger.i('[$tag] | checkPermission → Android 13+, status: $status');
+        return status.isGranted;
+      } else {
+        logger.i('[$tag] | checkPermission → Below Android 13, returning true');
+        return true;
+      }
+    } catch (e, st) {
+      logger.e('[$tag] | checkPermission failed', error: e, stackTrace: st);
+      return false;
+    }
+  }
+
+  Future<bool> requestPermission(FirebaseService firebaseService) async {
+    logger.i('[$tag] | requestPermission called');
+    try {
+      await firebaseService.requestPermission();
+      logger.i('[$tag] | Firebase permission requested');
+
+      if (await _isAndroid13OrHigher()) {
+        logger.i('[$tag] | Android 13+, requesting notification permission');
+        final status = await Permission.notification.request();
+        logger.i('[$tag] | Permission status: $status');
+
+        if (status.isGranted) {
+          logger.i('[$tag] | Permission granted');
+          return true;
+        } else if (status.isDenied) {
+          logger.w('[$tag] | Permission denied');
+          return false;
+        } else if (status.isPermanentlyDenied) {
+          logger.w('[$tag] | Permission permanently denied, opening settings');
+          await openAppSettings();
+          return false;
+        }
+        return false;
+      } else {
+        logger.i('[$tag] | Below Android 13, permission not required');
+        return true;
+      }
+    } catch (e, st) {
+      logger.e('[$tag] | requestPermission failed', error: e, stackTrace: st);
+      return false;
+    }
+  }
+
+  Future<bool> _isAndroid13OrHigher() async {
+    try {
+      final result =
+          await Permission.notification.shouldShowRequestRationale == false &&
+          await Permission.notification.status == PermissionStatus.denied;
+      logger.i('[$tag] | _isAndroid13OrHigher → $result');
+      return result;
+    } catch (e, st) {
+      logger.e(
+        '[$tag] | _isAndroid13OrHigher failed',
+        error: e,
+        stackTrace: st,
+      );
+      return false;
+    }
   }
 }

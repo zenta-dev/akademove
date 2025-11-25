@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -42,7 +43,10 @@ class _UserRideScreenState extends State<UserRideScreen> {
       final cubit = context.read<UserRideCubit>();
 
       var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation();
+      coordinate ??= await cubit.getMyLocation(
+        context,
+        accuracy: LocationAccuracy.medium,
+      );
 
       if (coordinate == null) {
         debugPrint('⚠️ Coordinate is still null after getMyLocation');
@@ -54,9 +58,6 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
       await _mapController?.animateCamera(CameraUpdate.newLatLng(LatLng(y, x)));
 
-      if (mounted) {
-        await cubit.getNearbyPlaces(coordinate);
-      }
       setState(() {});
     } catch (e, stack) {
       debugPrint('⚠️ Location setup failed: $e\n$stack');

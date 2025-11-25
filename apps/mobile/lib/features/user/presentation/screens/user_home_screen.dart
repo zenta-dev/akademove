@@ -6,6 +6,7 @@ import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide Banner, TabItem;
 
@@ -68,7 +69,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     image: state.data?.image,
                   ),
                   variance: ButtonVariance.ghost,
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<BottomNavBarCubit>().setIndex(2);
+                  },
                 ).asSkeleton(enabled: state.isLoading);
               },
             ),
@@ -191,7 +194,10 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         route: Routes.userRide,
         color: Colors.blue,
         onPressed: () async {
-          await context.read<UserRideCubit>().init();
+          await context.read<UserRideCubit>().getMyLocation(
+            context,
+            accuracy: LocationAccuracy.high,
+          );
         },
       ),
       const _Route(
@@ -231,9 +237,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 style: const ButtonStyle.ghost(
                   density: ButtonDensity.icon,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   e.onPressed?.call();
-                  context.pushNamed(e.route.name);
+                  await context.pushNamed(e.route.name);
                 },
                 child: Column(
                   spacing: 4.h,

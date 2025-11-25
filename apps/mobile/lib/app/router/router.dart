@@ -4,6 +4,7 @@ import 'package:akademove/features/shared/_export.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart' show TopUpRequestMethodEnum;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
 

@@ -86,8 +86,8 @@ class UserOrderCardWidget extends StatelessWidget {
     }
     return FutureBuilder(
       future: sl<LocationService>().getPlacemark(
-        order.pickupLocation.y.toDouble(),
-        order.pickupLocation.x.toDouble(),
+        lat: order.pickupLocation.y.toDouble(),
+        lng: order.pickupLocation.x.toDouble(),
       ),
       builder: (context, snapshot) {
         final data = snapshot.data;

@@ -3,6 +3,9 @@ part of 'router.dart';
 final merchantRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
     providers: [
+      BlocProvider(
+        create: (_) => sl<BottomNavBarCubit>(),
+      ),
       BlocProvider(create: (_) => sl<MerchantCubit>()..init()),
       BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
     ],

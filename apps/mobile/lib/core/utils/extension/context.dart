@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:akademove/app/_export.dart';
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
+import 'package:akademove/locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -48,5 +51,180 @@ extension BuildContextExt on BuildContext {
     ];
 
     return colors[Random().nextInt(colors.length)];
+  }
+
+  Future<void> ensureLocation() async {
+    final svc = sl<LocationService>();
+
+    Future<void> showPermissionDialog() async {
+      var isLoading = false;
+
+      await showDialog<bool>(
+        context: this,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Location Permission'),
+            content: const Text(
+              'This app requires location access to function properly. Please grant location permission.',
+            ),
+            actions: [
+              OutlineButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.of(context).pop(false);
+                      },
+                child: const Text('Cancel'),
+              ),
+              PrimaryButton(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        isLoading = true;
+                        final granted = await svc.requestPermission();
+                        isLoading = false;
+
+                        if (!granted) {
+                          showMyToast(
+                            'Location permission is required for this feature.',
+                            type: ToastType.error,
+                          );
+                        } else {
+                          showMyToast(
+                            'Location permission granted.',
+                            type: ToastType.success,
+                          );
+                        }
+
+                        if (context.mounted) Navigator.of(context).pop(granted);
+                      },
+                child: isLoading
+                    ? const Submiting()
+                    : const Text('Grant Permission'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Future<void> showEnableDialog() async {
+      var isLoading = false;
+
+      await showDialog<bool>(
+        context: this,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Enable Location Services'),
+            content: const Text(
+              'Location services are disabled. Please enable them to continue.',
+            ),
+            actions: [
+              OutlineButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.of(context).pop(false);
+                      },
+                child: const Text('Cancel'),
+              ),
+              PrimaryButton(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        isLoading = true;
+                        final enabled = await svc.enable();
+                        isLoading = false;
+
+                        if (!enabled) {
+                          showMyToast(
+                            'Location services need to be enabled for this feature.',
+                            type: ToastType.error,
+                          );
+                        } else {
+                          showMyToast(
+                            'Location services enabled.',
+                            type: ToastType.success,
+                          );
+                        }
+
+                        if (context.mounted) Navigator.of(context).pop(enabled);
+                      },
+                child: isLoading ? const Submiting() : const Text('Enable'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    if (!await svc.checkPermission()) await showPermissionDialog();
+    if (!await svc.checkEnable()) await showEnableDialog();
+  }
+
+  Future<void> ensureNotification() async {
+    final ntfSvc = sl<NotificationService>();
+
+    Future<void> showPermissionDialog() async {
+      var isLoading = false;
+
+      await showDialog<bool>(
+        context: this,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Notification Permission'),
+            content: const Text(
+              'This app requires notification access to function properly. Please grant notification permission.',
+            ),
+            actions: [
+              OutlineButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                        Navigator.of(context).pop(false);
+                      },
+                child: const Text('Cancel'),
+              ),
+              PrimaryButton(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        isLoading = true;
+                        final granted = await ntfSvc.requestPermission(
+                          sl<FirebaseService>(),
+                        );
+                        isLoading = false;
+
+                        if (!granted) {
+                          showMyToast(
+                            'Notification permission is required for this feature.',
+                            type: ToastType.error,
+                          );
+                        } else {
+                          showMyToast(
+                            'Notification permission granted.',
+                            type: ToastType.success,
+                          );
+
+                          final repo = sl<NotificationRepository>();
+                          await repo.syncToken();
+                        }
+
+                        if (context.mounted) Navigator.of(context).pop(granted);
+                      },
+                child: isLoading
+                    ? const Submiting()
+                    : const Text('Grant Permission'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    if (!await ntfSvc.checkPermission()) return showPermissionDialog();
+
+    final repo = sl<NotificationRepository>();
+    await repo.syncToken();
   }
 }

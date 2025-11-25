@@ -1,14 +1,21 @@
 part of 'router.dart';
 
 final driverRouter = StatefulShellRoute.indexedStack(
-  builder: (context, state, navigationShell) => BottomNavbar(
-    shell: navigationShell,
-    tabs: const [
-      BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
-      BottomNavBarItem(label: 'KRS', icon: LucideIcons.book),
-      BottomNavBarItem(label: 'History', icon: LucideIcons.history),
-      BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+  builder: (context, state, navigationShell) => MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (_) => sl<BottomNavBarCubit>(),
+      ),
     ],
+    child: BottomNavbar(
+      shell: navigationShell,
+      tabs: const [
+        BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
+        BottomNavBarItem(label: 'KRS', icon: LucideIcons.book),
+        BottomNavBarItem(label: 'History', icon: LucideIcons.history),
+        BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+      ],
+    ),
   ),
   branches: [
     StatefulShellBranch(

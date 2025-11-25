@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/features.dart';
-import 'package:akademove/locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide TabItem;
@@ -10,6 +9,31 @@ class BottomNavBarItem {
 
   final String label;
   final IconData icon;
+}
+
+class BottomNavBarCubit extends Cubit<int> {
+  BottomNavBarCubit() : super(0);
+  StatefulNavigationShell? shell;
+
+  void setIndex(int index) {
+    emit(index);
+    shell?.goBranch(index);
+  }
+
+  bool shouldShowBottomNav(BuildContext context) {
+    final state = GoRouterState.of(context);
+
+    final location = state.uri.path;
+
+    final cleanPath = location.replaceAll(RegExp(r'/+$'), '');
+
+    final depth = cleanPath
+        .split('/')
+        .where((segment) => segment.isNotEmpty)
+        .length;
+
+    return depth < 3;
+  }
 }
 
 class BottomNavbar extends StatefulWidget {
@@ -26,76 +50,51 @@ class BottomNavbar extends StatefulWidget {
 }
 
 class _BottomNavbarState extends State<BottomNavbar> {
-  bool get _shouldShowBottomNav {
-    final state = GoRouterState.of(context);
-
-    final location = state.uri.path;
-
-    final cleanPath = location.replaceAll(RegExp(r'/+$'), '');
-
-    final depth = cleanPath
-        .split('/')
-        .where((segment) => segment.isNotEmpty)
-        .length;
-
-    return depth < 3;
-  }
-
   @override
   void initState() {
     super.initState();
-    setupNotification();
-  }
-
-  Future<void> setupNotification() async {
-    try {
-      final notifRepo = sl<NotificationRepository>();
-      final notifSvc = sl<NotificationService>();
-      await notifRepo.syncToken();
-      notifRepo.onMessage((msg) async {
-        final title = msg.notification?.title ?? 'Notification';
-        final body = msg.notification?.body ?? '';
-        final data = msg.data;
-
-        logger.f('📨 Foreground FCM: ${msg.toMap()}');
-        await notifSvc.show(title: title, body: body, data: data);
-      });
-    } catch (e) {}
+    context.read<BottomNavBarCubit>().shell = widget.shell;
+    context
+      ..ensureLocation()
+      ..ensureNotification();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentIndex = widget.shell.currentIndex;
-
-    return Scaffold(
-      footers: _shouldShowBottomNav
-          ? [
-              SizedBox(
-                height: 60.h,
-                width: double.infinity,
-                child: Card(
-                  borderRadius: BorderRadius.circular(0),
-                  padding: EdgeInsets.zero,
-                  borderWidth: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(
-                      widget.tabs.length,
-                      (i) => Expanded(
-                        child: _buildButton(
-                          context,
-                          i,
-                          widget.tabs[i],
-                          currentIndex == i,
+    return BlocBuilder<BottomNavBarCubit, int>(
+      builder: (context, state) {
+        return Scaffold(
+          footers:
+              context.read<BottomNavBarCubit>().shouldShowBottomNav(context)
+              ? [
+                  SizedBox(
+                    height: 60.h,
+                    width: double.infinity,
+                    child: Card(
+                      borderRadius: BorderRadius.circular(0),
+                      padding: EdgeInsets.zero,
+                      borderWidth: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                          widget.tabs.length,
+                          (i) => Expanded(
+                            child: _buildButton(
+                              context,
+                              i,
+                              widget.tabs[i],
+                              state == i,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ]
-          : [],
-      child: widget.shell,
+                ]
+              : [],
+          child: widget.shell,
+        );
+      },
     );
   }
 
@@ -106,7 +105,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
     bool selected,
   ) {
     return GestureDetector(
-      onTap: () => _onItemTapped(index, selected),
+      onTap: () => context.read<BottomNavBarCubit>().setIndex(index),
       behavior: HitTestBehavior.translucent,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
@@ -159,11 +158,5 @@ class _BottomNavbarState extends State<BottomNavbar> {
         ).withPadding(all: 4.dg),
       ),
     );
-  }
-
-  void _onItemTapped(int index, bool selected) {
-    if (!selected) {
-      widget.shell.goBranch(index);
-    }
   }
 }

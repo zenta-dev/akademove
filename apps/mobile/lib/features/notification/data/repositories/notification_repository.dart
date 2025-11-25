@@ -6,18 +6,17 @@ class NotificationRepository extends BaseRepository {
   const NotificationRepository({
     required ApiClient apiClient,
     required FirebaseService firebaseService,
+    required NotificationService notifSvc,
   }) : _apiClient = apiClient,
-       _firebaseService = firebaseService;
+       _firebaseService = firebaseService,
+       _notifSvc = notifSvc;
 
   final ApiClient _apiClient;
   final FirebaseService _firebaseService;
-
-  Future<NotificationSettings> requestPermission() =>
-      guard(_firebaseService.requestPermission);
+  final NotificationService _notifSvc;
 
   Future<void> syncToken() {
     return guard(() async {
-      await requestPermission();
       final token = await _firebaseService.getToken();
       if (token == null) return;
       await _apiClient.getNotificationApi().notificationSaveToken(
@@ -33,6 +32,16 @@ class NotificationRepository extends BaseRepository {
             token: token,
           ),
         );
+      });
+
+      onMessage((msg) async {
+        logger.i('[NotificationRepository] - onMessage: ${msg.messageId}');
+        final title = msg.notification?.title ?? 'Akademove';
+        final body = msg.notification?.body ?? '';
+        final data = msg.data;
+
+        logger.f('📨 Foreground FCM: ${msg.toMap()}');
+        await _notifSvc.show(title: title, body: body, data: data);
       });
     });
   }

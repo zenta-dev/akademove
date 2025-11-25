@@ -32,7 +32,7 @@ void _setupService() {
     )
     ..registerSingletonAsync<KeyValueService>(SharedPrefKeyValueService().setup)
     ..registerSingleton<ImageService>(ImagePickerService()..setup())
-    ..registerSingleton<LocationService>(ILocationService()..setup())
+    ..registerSingleton<LocationService>(LocationService())
     ..registerSingletonAsync<MapService>(
       IMapService().setup,
       dispose: (param) => param.teardown(),
@@ -92,6 +92,7 @@ void _setupRepository() {
       () => NotificationRepository(
         apiClient: sl<ApiClient>(),
         firebaseService: sl<FirebaseService>(),
+        notifSvc: sl<NotificationService>(),
       ),
     )
     ..registerLazySingleton(
@@ -103,6 +104,7 @@ void _setupRepository() {
 
 void _setupCubit() {
   sl
+    ..registerFactory(BottomNavBarCubit.new)
     ..registerFactory(AppCubit.new)
     ..registerFactory(
       () => AuthCubit(
