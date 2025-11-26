@@ -1,13 +1,12 @@
 services:
   postgres:
-    image: postgres:18-alpine
-    container_name: am_postgres
-    env_file: .env.local
+    image: postgis/postgis:17-3.4
+    container_name: am_postgres 
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-app}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
@@ -17,7 +16,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-app}",
+          "pg_isready -U postgres -d ${POSTGRES_DB:-app}",
         ]
       interval: 10s
       timeout: 5s
@@ -29,8 +28,7 @@ services:
   redis:
     image: redis:8.2.2-alpine
     container_name: am_redis
-    env_file: .env.local
-    restart: unless-stopped
+    restart: unless-stopped 
     ports:
       - "6379:6379"
     command: >
@@ -53,11 +51,10 @@ services:
   s3:
     image: minio/minio:RELEASE.2025-07-23T15-54-02Z
     container_name: am_s3
-    env_file: .env.local
     restart: unless-stopped
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
     ports:
       - "9000:9000"
       - "9001:9001"
