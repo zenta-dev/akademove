@@ -2,9 +2,14 @@ import 'package:akademove/core/_export.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+enum _OperationType { check, request }
+
+enum _OperationStatus { active }
+
 class NotificationService {
   NotificationService();
   static const tag = 'NotificationService';
+  final ops = <_OperationType, _OperationStatus>{};
 
   final _plugin = FlutterLocalNotificationsPlugin();
 
@@ -140,12 +145,21 @@ class NotificationService {
   Future<bool> checkPermission() async {
     logger.i('[$tag] | checkPermission called');
     try {
+      if (ops[_OperationType.check] == _OperationStatus.active) {
+        logger.i(
+          '[$tag] | checkPermission → operation already active, returning false',
+        );
+        return false;
+      }
+      ops[_OperationType.check] = _OperationStatus.active;
       if (await _isAndroid13OrHigher()) {
         final status = await Permission.notification.status;
         logger.i('[$tag] | checkPermission → Android 13+, status: $status');
+        ops.remove(_OperationType.check);
         return status.isGranted;
       } else {
         logger.i('[$tag] | checkPermission → Below Android 13, returning true');
+        ops.remove(_OperationType.check);
         return true;
       }
     } catch (e, st) {
@@ -157,13 +171,22 @@ class NotificationService {
   Future<bool> requestPermission(FirebaseService firebaseService) async {
     logger.i('[$tag] | requestPermission called');
     try {
-      await firebaseService.requestPermission();
+      if (ops[_OperationType.request] == _OperationStatus.active) {
+        logger.i(
+          '[$tag] | requestPermission → operation already active, returning false',
+        );
+        return false;
+      }
+      ops[_OperationType.request] = _OperationStatus.active;
+
+      await safeAsync(firebaseService.requestPermission);
       logger.i('[$tag] | Firebase permission requested');
 
       if (await _isAndroid13OrHigher()) {
         logger.i('[$tag] | Android 13+, requesting notification permission');
         final status = await Permission.notification.request();
         logger.i('[$tag] | Permission status: $status');
+        ops.remove(_OperationType.request);
 
         if (status.isGranted) {
           logger.i('[$tag] | Permission granted');
