@@ -1,7 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum KeyValueKeys { token }
+enum KeyValueKeys { token, fcmToken }
 
 abstract class KeyValueService extends BaseService {
   Future<T?> get<T>(KeyValueKeys key);
@@ -26,7 +26,7 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<T?> get<T>(KeyValueKeys key) async {
-    final value = _prefs.get(key.name);
+    final value = _prefs.get(key.index.toString());
 
     if (value == null) return null;
 
@@ -44,11 +44,14 @@ class SharedPrefKeyValueService implements KeyValueService {
   @override
   Future<void> set<T>(KeyValueKeys key, T value) async {
     final success = switch (value) {
-      final String v => await _prefs.setString(key.name, v),
-      final int v => await _prefs.setInt(key.name, v),
-      final double v => await _prefs.setDouble(key.name, v),
-      final bool v => await _prefs.setBool(key.name, v),
-      final List<String> v => await _prefs.setStringList(key.name, v),
+      final String v => await _prefs.setString(key.index.toString(), v),
+      final int v => await _prefs.setInt(key.index.toString(), v),
+      final double v => await _prefs.setDouble(key.index.toString(), v),
+      final bool v => await _prefs.setBool(key.index.toString(), v),
+      final List<String> v => await _prefs.setStringList(
+        key.index.toString(),
+        v,
+      ),
       _ => throw ServiceError(
         'Unsupported type ${value.runtimeType} for key "${key.name}".',
         code: ErrorCode.invalidType,
@@ -65,7 +68,7 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<void> remove(KeyValueKeys key) async {
-    await _prefs.remove(key.name);
+    await _prefs.remove(key.index.toString());
   }
 
   @override
