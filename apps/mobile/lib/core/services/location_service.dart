@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:geocoding/geocoding.dart';
@@ -111,10 +113,14 @@ class LocationService {
   }
 
   Future<Coordinate?> getMyLocation({
-    LocationAccuracy? accuracy,
+    LocationAccuracy accuracy = LocationAccuracy.low,
     bool fromCache = true,
+    Duration? timeout,
+    bool forceLocationManager = false,
   }) async {
-    logger.d('[$tag] | getMyLocation called (fromCache: $fromCache)');
+    logger.d(
+      '[$tag] | getMyLocation called (fromCache: $fromCache,accuracy: $accuracy)',
+    );
     try {
       if (!await checkPermission()) {
         logger.w('[$tag] | No permission for location');
@@ -131,7 +137,12 @@ class LocationService {
           return currentCoordinate;
         }
 
-        final lastPosition = await Geolocator.getLastKnownPosition();
+        final future = Geolocator.getLastKnownPosition(
+          forceAndroidLocationManager: forceLocationManager,
+        );
+        final lastPosition = timeout != null
+            ? await future.timeout(timeout, onTimeout: () => null)
+            : await future;
         if (lastPosition != null) {
           logger.d('[$tag] | Using last known position');
           return currentCoordinate = Coordinate(
@@ -141,11 +152,19 @@ class LocationService {
         }
       }
 
+      var settings = LocationSettings(accuracy: accuracy, timeLimit: timeout);
+
+      if (Platform.isAndroid) {
+        settings = AndroidSettings(
+          accuracy: accuracy,
+          timeLimit: timeout,
+          forceLocationManager: forceLocationManager,
+        );
+      }
+
       logger.d('[$tag] | Getting current position');
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: LocationSettings(
-          accuracy: accuracy ?? LocationAccuracy.bestForNavigation,
-        ),
+        locationSettings: settings,
       );
 
       logger.d(
