@@ -13,8 +13,6 @@ final logger = Logger(
 class _PrintOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
-    for (final line in event.lines) {
-      log(line);
-    }
+    event.lines.forEach(log);
   }
 }
