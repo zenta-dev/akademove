@@ -20,7 +20,7 @@
       "dependencies": {
         "@aws-sdk/client-s3": "^3.937.0",
         "@aws-sdk/s3-request-presigner": "^3.937.0",
-        "@erhahahaa/midtrans-client-typescript": "^1.0.5",
+        "@erhahahaa/midtrans-client-typescript": "^1.0.8",
         "@msgpack/msgpack": "^3.1.2",
         "@orpc/contract": "^1.11.3",
         "@orpc/experimental-durable-iterator": "^1.11.3",
@@ -396,7 +396,7 @@
 
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@1.1.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-WI0DdZ8xFSbgMjR1sFsKABJ/C5OnRrjT06JXbZKexJGrDuPTzZdDYfFlsgcCXCyf+suG5QU2e/y1Wo2V/OapLQ=="],
 
-    "@erhahahaa/midtrans-client-typescript": ["@erhahahaa/midtrans-client-typescript@1.0.5", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-LzvfjR6NTsQEeguHLxN0wpxF2U/sWvA+6EHQpxFpHHo2U0+n8D4S6dMkp+mwKW89VwaqTbj3899WCgxg2bnhhA=="],
+    "@erhahahaa/midtrans-client-typescript": ["@erhahahaa/midtrans-client-typescript@1.0.8", "", { "peerDependencies": { "typescript": "^5" } }, "sha512-XhvD4t4xQikATloU4pPm1xoYoW43VBK1MNSusVsbZjAkmLsC7EAfkjvUAVqgs4Nkshl9i56/huJuqpVFs4qYLQ=="],
 
     "@esbuild-kit/core-utils": ["@esbuild-kit/core-utils@3.3.2", "", { "dependencies": { "esbuild": "~0.18.20", "source-map-support": "^0.5.21" } }, "sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ=="],
 

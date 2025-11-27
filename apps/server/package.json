@@ -22,7 +22,7 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.937.0",
 		"@aws-sdk/s3-request-presigner": "^3.937.0",
-		"@erhahahaa/midtrans-client-typescript": "^1.0.5",
+		"@erhahahaa/midtrans-client-typescript": "^1.0.8",
 		"@msgpack/msgpack": "^3.1.2",
 		"@orpc/contract": "^1.11.3",
 		"@orpc/experimental-durable-iterator": "^1.11.3",
