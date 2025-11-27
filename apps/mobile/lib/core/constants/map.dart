@@ -3,7 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 abstract class MapConstants {
   static const defaultCameraPosition = CameraPosition(
-    target: LatLng(-6.2223926, 106.8729966),
+    target: LatLng(-7.3185376, 112.7313835),
+    // target: LatLng(-6.2223926, 106.8729966),
     zoom: 14,
   );
   static const defaultCoordinate = Coordinate(x: 106.8729966, y: -6.2223926);
