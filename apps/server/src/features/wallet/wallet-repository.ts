@@ -104,15 +104,15 @@ export class WalletRepository extends BaseRepository {
 				const total = Number(row.total);
 
 				switch (type) {
-					case "topup":
-					case "refund":
+					case "TOPUP":
+					case "REFUND":
 						income += total;
 						break;
-					case "payment":
-					case "withdraw":
+					case "PAYMENT":
+					case "WITHDRAW":
 						expense += total;
 						break;
-					case "adjustment":
+					case "ADJUSTMENT":
 						break;
 				}
 			}
@@ -168,11 +168,11 @@ export class WalletRepository extends BaseRepository {
 					.values({
 						id: v7(),
 						walletId: wallet.id,
-						type: "payment",
+						type: "PAYMENT",
 						amount: amountSql,
 						balanceBefore,
 						balanceAfter,
-						status: "success",
+						status: "SUCCESS",
 						description: `Payment for ${referenceId}`,
 						referenceId,
 					})
@@ -191,7 +191,7 @@ export class WalletRepository extends BaseRepository {
 					provider: "MANUAL",
 					method: "WALLET",
 					amount: amountSql,
-					status: "success",
+					status: "SUCCESS",
 					externalId: referenceId,
 				})
 				.returning();

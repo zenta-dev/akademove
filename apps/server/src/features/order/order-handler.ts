@@ -14,20 +14,20 @@ export const OrderHandler = priv.router({
 
 			console.log("QUERY => ", query);
 
-			if (role === "merchant") {
+			if (role === "MERCHANT") {
 				const mine = await context.repo.merchant.main.getByUserId(
 					context.user.id,
 				);
 				id = mine.id;
 			}
-			if (role === "driver") {
+			if (role === "DRIVER") {
 				const mine = await context.repo.driver.main.getByUserId(
 					context.user.id,
 				);
 				id = mine.id;
 			}
 
-			if (role === "user") {
+			if (role === "USER") {
 				id = context.user.id;
 			}
 

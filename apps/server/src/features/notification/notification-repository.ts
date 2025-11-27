@@ -85,7 +85,7 @@ export class NotificationRepository {
 					...opts,
 					userId: fromUserId,
 					messageId,
-					status: "success",
+					status: "SUCCESS",
 					sentAt,
 				}),
 			);
@@ -113,7 +113,7 @@ export class NotificationRepository {
 			const failLog: InsertFCMNotificationLog = {
 				...opts,
 				userId: fromUserId,
-				status: "failed",
+				status: "FAILED",
 				sentAt: new Date(),
 				error: msg,
 			};
@@ -154,7 +154,7 @@ export class NotificationRepository {
 					...opts,
 					userId: fromUserId,
 					messageId,
-					status: "success",
+					status: "SUCCESS",
 					sentAt,
 				}),
 			);
@@ -180,7 +180,7 @@ export class NotificationRepository {
 			const failLog: InsertFCMNotificationLog = {
 				...opts,
 				userId: fromUserId,
-				status: "failed",
+				status: "FAILED",
 				sentAt: new Date(),
 				error: msg,
 			};
@@ -221,7 +221,7 @@ export class NotificationRepository {
 			await Promise.all([
 				this.#fcmNotificationLog.create({
 					...opts,
-					status: "success",
+					status: "SUCCESS",
 					sentAt: new Date(),
 				}),
 				this.#userNotification.createBatch(userNotifications),
@@ -244,7 +244,7 @@ export class NotificationRepository {
 			await Promise.all([
 				this.#fcmNotificationLog.create({
 					...opts,
-					status: "failed",
+					status: "FAILED",
 					sentAt: new Date(),
 					error: msg,
 				}),

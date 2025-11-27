@@ -30,9 +30,9 @@ export const WalletHandler = pub.router({
 			const res = await context.repo.payment.charge(
 				{
 					...body,
-					transactionType: "topup",
+					transactionType: "TOPUP",
 					userId: context.user.id,
-					orderType: "top-up",
+					orderType: "TOPUP",
 				},
 				{ tx },
 			);

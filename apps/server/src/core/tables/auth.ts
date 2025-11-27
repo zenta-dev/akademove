@@ -23,7 +23,7 @@ export const user = pgTable(
 		email: text("email").notNull().unique(),
 		emailVerified: boolean("email_verified").notNull().default(false),
 		image: text("image"),
-		role: text().notNull().$type<UserRole>().default("user"),
+		role: text().notNull().$type<UserRole>().default("USER"),
 		banned: boolean().notNull().default(false),
 		banReason: text("ban_reason"),
 		gender: userGender(),

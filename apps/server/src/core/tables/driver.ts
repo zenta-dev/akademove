@@ -25,7 +25,7 @@ export const driver = pgTable(
 			.references(() => user.id, { onDelete: "cascade" }),
 		studentId: integer("student_id").notNull().unique(),
 		licensePlate: text("license_plate").notNull().unique(),
-		status: driverStatus().notNull().default("pending"),
+		status: driverStatus().notNull().default("PENDING"),
 		rating: numeric({ precision: 2, scale: 1, mode: "number" })
 			.notNull()
 			.default(0.0),

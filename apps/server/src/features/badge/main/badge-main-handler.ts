@@ -6,7 +6,7 @@ import { BadgeMainSpec } from "./badge-main-spec";
 
 const { priv } = createORPCRouter(BadgeMainSpec);
 
-const roleMiddleware = requireRoles("admin", "operator");
+const roleMiddleware = requireRoles("ADMIN", "OPERATOR");
 
 export const BadgeMainHandler = priv.router({
 	list: priv.list.handler(async ({ context, input: { query } }) => {

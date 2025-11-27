@@ -36,10 +36,10 @@ export const report = pgTable(
 			.references(() => user.id, {
 				onDelete: "no action",
 			}),
-		category: reportCategory().notNull().default("other"),
+		category: reportCategory().notNull().default("OTHER"),
 		description: text().notNull(),
 		evidenceUrl: text("evidence_url"),
-		status: reportStatus().notNull().default("pending"),
+		status: reportStatus().notNull().default("PENDING"),
 		handledById: text("handled_by_id").references(() => user.id, {
 			onDelete: "set null",
 		}),

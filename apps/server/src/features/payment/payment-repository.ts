@@ -32,9 +32,9 @@ import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
 import { WalletRepository } from "../wallet/wallet-repository";
 
-interface ChargePayload extends WithUserId {
-	transactionType: Extract<TransactionType, "topup" | "payment">;
-	orderType: OrderType | "top-up";
+export interface ChargePayload extends WithUserId {
+	transactionType: Extract<TransactionType, "TOPUP" | "PAYMENT">;
+	orderType: OrderType | "TOPUP";
 	provider: PaymentProvider;
 	amount: number;
 	method: PaymentMethod;
@@ -172,12 +172,12 @@ export class PaymentRepository extends BaseRepository {
 			let desc: string | undefined;
 
 			switch (orderType) {
-				case "top-up":
+				case "TOPUP":
 					desc = `Top-up ${method}`;
 					break;
-				case "ride":
-				case "food":
-				case "delivery":
+				case "RIDE":
+				case "FOOD":
+				case "DELIVERY":
 					desc = "Payment";
 					break;
 			}
@@ -188,7 +188,7 @@ export class PaymentRepository extends BaseRepository {
 				walletId: wallet.id,
 				type: transactionType,
 				amount,
-				status: "pending",
+				status: "PENDING",
 				description: desc,
 				metadata,
 			});
@@ -227,7 +227,7 @@ export class PaymentRepository extends BaseRepository {
 				provider,
 				method,
 				amount,
-				status: "pending",
+				status: "PENDING",
 				externalId: transaction.id,
 				expiresAt,
 				response: paymentResponse,
@@ -266,10 +266,10 @@ export class PaymentRepository extends BaseRepository {
 
 			if (status === "settlement" || status === "success") {
 				const type = body.metadata.type as ChargePayload["orderType"];
-				if (type === "top-up") {
+				if (type === "TOPUP") {
 					await this.#handleTopUpPaymentSuccess({ tx, payment, transactionId });
 				}
-				if (type === "ride" || type === "food" || type === "delivery") {
+				if (type === "RIDE" || type === "FOOD" || type === "DELIVERY") {
 					const orderId = body.metadata.orderId as string;
 					const customerId = body.metadata.customerId as string;
 					await this.#handleOrderPaymentSuccess({
@@ -306,7 +306,7 @@ export class PaymentRepository extends BaseRepository {
 		const [updatedPayment, transaction] = await Promise.all([
 			params.tx
 				.update(tables.payment)
-				.set({ status: "expired", updatedAt: new Date() })
+				.set({ status: "EXPIRED", updatedAt: new Date() })
 				.where(eq(tables.payment.id, params.payment.id))
 				.returning()
 				.then(([r]) => r),
@@ -325,7 +325,7 @@ export class PaymentRepository extends BaseRepository {
 
 		const updatedTransaction = await this.#transaction.update(
 			transaction.id,
-			{ status: "expired" },
+			{ status: "EXPIRED" },
 			{ tx: params.tx },
 		);
 
@@ -339,7 +339,7 @@ export class PaymentRepository extends BaseRepository {
 		const tasks: Promise<unknown>[] = [];
 
 		const userId = transaction.wallet.userId;
-		if (transaction.type === "topup") {
+		if (transaction.type === "TOPUP") {
 			tasks.push(
 				stub.broadcast({
 					type: "wallet:top_up_failed",
@@ -357,7 +357,7 @@ export class PaymentRepository extends BaseRepository {
 				}),
 			);
 		}
-		if (transaction.type === "payment") {
+		if (transaction.type === "PAYMENT") {
 			tasks.push(
 				stub.broadcast({
 					type: "payment:failed",
@@ -392,7 +392,7 @@ export class PaymentRepository extends BaseRepository {
 		const [updatedPayment, transaction, order] = await Promise.all([
 			tx
 				.update(tables.payment)
-				.set({ status: "success", updatedAt: new Date() })
+				.set({ status: "SUCCESS", updatedAt: new Date() })
 				.where(eq(tables.payment.id, params.payment.id))
 				.returning()
 				.then(([p]) => p),
@@ -432,16 +432,18 @@ export class PaymentRepository extends BaseRepository {
 			this.#transaction.update(transaction.id, { status: "success" }, opts),
 			opts.tx
 				.update(tables.order)
-				.set({ status: "matching" })
+				.set({ status: "MATCHING" })
 				.where(eq(tables.order.id, order.id)),
 		]);
 
 		const paymentStub = PaymentRepository.getRoomStubByName(params.payment.id);
 		const orderStub = OrderRepository.getRoomStubByName(DRIVER_POOL_KEY);
 
-		const composedWallet = WalletRepository.composeEntity(transaction.wallet);
 		const composedPayment = PaymentRepository.composeEntity(updatedPayment);
-		const composedOrder = OrderRepository.composeEntity(order);
+		const composedOrder = OrderRepository.composeEntity({
+			...order,
+			status: "MATCHING",
+		});
 
 		const tasks: Promise<unknown>[] = [
 			paymentStub.broadcast({
@@ -515,7 +517,7 @@ export class PaymentRepository extends BaseRepository {
 		const [[updatedPayment], transaction] = await Promise.all([
 			params.tx
 				.update(tables.payment)
-				.set({ status: "success", updatedAt: new Date() })
+				.set({ status: "SUCCESS", updatedAt: new Date() })
 				.where(eq(tables.payment.id, params.payment.id))
 				.returning(),
 			params.tx.query.transaction.findFirst({
@@ -550,7 +552,7 @@ export class PaymentRepository extends BaseRepository {
 			this.#transaction.update(
 				transaction.id,
 				{
-					status: "success",
+					status: "SUCCESS",
 					balanceBefore: toNumberSafe(wallet.balance),
 					balanceAfter: toNumberSafe(newBalance),
 				},

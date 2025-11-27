@@ -23,7 +23,7 @@ export const review = pgTable(
 		toUserId: text("to_user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
-		category: reviewCategory().notNull().default("other"),
+		category: reviewCategory().notNull().default("OTHER"),
 		score: integer().notNull().default(0),
 		comment: text().notNull().default(""),
 		...DateModifier,

@@ -194,13 +194,13 @@ export class OrderRepository extends BaseRepository {
 
 			if (id && role) {
 				switch (role) {
-					case "user":
+					case "USER":
 						clauses.push(eq(tables.order.userId, id));
 						break;
-					case "driver":
+					case "DRIVER":
 						clauses.push(eq(tables.order.driverId, id));
 						break;
-					case "merchant":
+					case "MERCHANT":
 						clauses.push(eq(tables.order.merchantId, id));
 						break;
 				}
@@ -282,13 +282,13 @@ export class OrderRepository extends BaseRepository {
 	): Promise<ConfigurationValue | undefined> {
 		let key = "";
 		switch (params.type) {
-			case "ride":
+			case "RIDE":
 				key = CONFIGURATION_KEYS.RIDE_SERVICE_PRICING;
 				break;
-			case "delivery":
+			case "DELIVERY":
 				key = CONFIGURATION_KEYS.DELIVERY_SERVICE_PRICING;
 				break;
-			case "food":
+			case "FOOD":
 				key = CONFIGURATION_KEYS.FOOD_SERVICE_PRICING;
 				break;
 			default:
@@ -335,7 +335,7 @@ export class OrderRepository extends BaseRepository {
 			let pricing: Omit<OrderSummary, "driverEarning" | "currency">;
 
 			switch (params.type) {
-				case "ride": {
+				case "RIDE": {
 					const validatedConfig =
 						RidePricingConfigurationSchema.parse(pricingConfig);
 					pricing = PricingCalculator.calculateRide(
@@ -344,7 +344,7 @@ export class OrderRepository extends BaseRepository {
 					);
 					break;
 				}
-				case "delivery": {
+				case "DELIVERY": {
 					const validatedConfig =
 						DeliveryPricingConfigurationSchema.parse(pricingConfig);
 					pricing = PricingCalculator.calculateDelivery(
@@ -354,7 +354,7 @@ export class OrderRepository extends BaseRepository {
 					);
 					break;
 				}
-				case "food": {
+				case "FOOD": {
 					const validatedConfig =
 						FoodPricingConfigurationSchema.parse(pricingConfig);
 					pricing = PricingCalculator.calculateFood(

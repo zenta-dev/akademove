@@ -42,7 +42,7 @@ export const order = pgTable(
 			onDelete: "set null",
 		}),
 		type: orderType().notNull(),
-		status: orderStatus().notNull().default("requested"),
+		status: orderStatus().notNull().default("REQUESTED"),
 		pickupLocation: geometry("pickup_location", {
 			type: "point",
 			mode: "xy",

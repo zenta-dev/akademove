@@ -38,7 +38,7 @@ export const fcmTopicSubscription = pgTable(
 export type FCMTopicSubscriptionDatabase =
 	typeof fcmTopicSubscription.$inferSelect;
 
-export const fcmNotificationLogStatus = pgEnum("status", ["success", "failed"]);
+export const fcmNotificationLogStatus = pgEnum("status", ["SUCCESS", "FAILED"]);
 
 export const fcmNotificationLog = pgTable(
 	"fcm_notification_logs",

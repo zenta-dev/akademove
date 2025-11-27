@@ -146,7 +146,7 @@ export class AuthRepository extends BaseRepository {
 				.values({
 					...params,
 					id: userId,
-					role: params.role ?? "user",
+					role: params.role ?? "USER",
 					image: photoKey,
 				})
 				.returning();
@@ -194,7 +194,7 @@ export class AuthRepository extends BaseRepository {
 		opts?: { tx?: DatabaseTransaction },
 	) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "driver" }, opts);
+			const { user } = await this.signUp({ ...params, role: "DRIVER" }, opts);
 			return { user };
 		} catch (error) {
 			throw this.handleError(error, "sign up driver");
@@ -206,7 +206,7 @@ export class AuthRepository extends BaseRepository {
 		opts?: { tx?: DatabaseTransaction },
 	) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "merchant" }, opts);
+			const { user } = await this.signUp({ ...params, role: "MERCHANT" }, opts);
 			return { user };
 		} catch (error) {
 			throw this.handleError(error, "sign up merchant");

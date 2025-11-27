@@ -169,7 +169,7 @@ export class ReportRepository extends BaseRepository {
 					...item,
 					reportedAt: new Date(existing.reportedAt),
 					resolvedAt:
-						item.status === "resolved"
+						item.status === "RESOLVED"
 							? new Date()
 							: existing.resolvedAt
 								? new Date(existing.resolvedAt)

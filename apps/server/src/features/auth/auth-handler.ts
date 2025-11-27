@@ -39,7 +39,7 @@ export const AuthHandler = pub.router({
 			try {
 				const opts = { tx };
 				const [result, newCustomerBadge] = await Promise.all([
-					context.repo.auth.signUp({ ...data, role: "user" }, opts),
+					context.repo.auth.signUp({ ...data, role: "USER" }, opts),
 					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
 

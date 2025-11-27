@@ -19,7 +19,7 @@ export const payment = pgTable(
 		provider: paymentProviderEnum().notNull(),
 		method: paymentMethodEnum().notNull(),
 		amount: numeric("amount", { precision: 18, scale: 2 }).notNull(),
-		status: transactionStatusEnum().notNull().default("pending"),
+		status: transactionStatusEnum().notNull().default("PENDING"),
 		externalId: varchar("external_id", { length: 100 }).unique(),
 		paymentUrl: text("payment_url"),
 		metadata: jsonb(),

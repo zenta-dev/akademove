@@ -22,7 +22,7 @@ export const transaction = pgTable(
 		amount: numeric({ precision: 18, scale: 2 }).notNull(),
 		balanceBefore: numeric("balance_before", { precision: 18, scale: 2 }),
 		balanceAfter: numeric("balance_after", { precision: 18, scale: 2 }),
-		status: transactionStatusEnum().default("pending").notNull(),
+		status: transactionStatusEnum().default("PENDING").notNull(),
 		description: text(),
 		referenceId: text("reference_id"),
 		metadata: jsonb(),
