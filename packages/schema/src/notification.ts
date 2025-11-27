@@ -39,7 +39,7 @@ export const FCMNotificationLogSchema = z.object({
 	body: z.string(),
 	data: z.any().optional(),
 	messageId: z.string().optional(),
-	status: z.enum(["success", "failed"]),
+	status: z.enum(["SUCCESS", "FAILED"]),
 	error: z.string().optional(),
 	sentAt: DateSchema,
 });
