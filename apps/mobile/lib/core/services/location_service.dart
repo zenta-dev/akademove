@@ -184,6 +184,46 @@ class LocationService {
     }
   }
 
+  Stream<Coordinate> getLocationStream({
+    LocationAccuracy accuracy = LocationAccuracy.low,
+    Duration interval = const Duration(seconds: 5),
+    bool forceLocationManager = false,
+  }) {
+    logger.d(
+      '[$tag] | getLocationStream called (accuracy: $accuracy)',
+    );
+    try {
+      var settings = LocationSettings(
+        accuracy: accuracy,
+      );
+
+      if (Platform.isAndroid) {
+        settings = AndroidSettings(
+          accuracy: accuracy,
+          intervalDuration: interval,
+          forceLocationManager: forceLocationManager,
+        );
+      }
+
+      return Geolocator.getPositionStream(
+        locationSettings: settings,
+      ).map((position) {
+        final coord = Coordinate(
+          y: position.latitude,
+          x: position.longitude,
+        );
+        currentCoordinate = coord;
+        return coord;
+      });
+    } catch (e) {
+      logger.e(
+        '[$tag] | getLocationStream failed',
+        error: e,
+      );
+      return const Stream.empty();
+    }
+  }
+
   Future<Placemark?> getPlacemark({
     required double lat,
     required double lng,
