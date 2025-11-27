@@ -7,23 +7,33 @@ class NotificationRepository extends BaseRepository {
     required ApiClient apiClient,
     required FirebaseService firebaseService,
     required NotificationService notifSvc,
+    required KeyValueService keyValueService,
   }) : _apiClient = apiClient,
        _firebaseService = firebaseService,
-       _notifSvc = notifSvc;
+       _notifSvc = notifSvc,
+       _keyValueService = keyValueService;
 
   final ApiClient _apiClient;
   final FirebaseService _firebaseService;
   final NotificationService _notifSvc;
+  final KeyValueService _keyValueService;
 
   Future<void> syncToken() {
     return guard(() async {
-      final token = await _firebaseService.getToken();
-      if (token == null) return;
-      await _apiClient.getNotificationApi().notificationSaveToken(
-        notificationSaveTokenRequest: NotificationSaveTokenRequest(
-          token: token,
+      final [fcmToken, storedFcmToken] = await Future.wait([
+        _firebaseService.getToken(),
+        _keyValueService.get<String>(KeyValueKeys.fcmToken),
+      ]);
+      if (fcmToken == null) return;
+      if (fcmToken == storedFcmToken) return;
+      await Future.wait([
+        _apiClient.getNotificationApi().notificationSaveToken(
+          notificationSaveTokenRequest: NotificationSaveTokenRequest(
+            token: fcmToken,
+          ),
         ),
-      );
+        _keyValueService.set<String>(KeyValueKeys.fcmToken, fcmToken),
+      ]);
 
       _firebaseService.onTokenRefresh((token) async {
         if (token.isEmpty) return;
