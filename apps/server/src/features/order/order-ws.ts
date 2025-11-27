@@ -1,17 +1,12 @@
 import { env } from "cloudflare:workers";
 import type { Driver } from "@repo/schema/driver";
-import {
-	type WSOrderEnvelope,
-	WSOrderEnvelopeSchema,
-	type WSPlaceOrderEnvelope,
-	WSPlaceOrderEnvelopeSchema,
-} from "@repo/schema/websocket";
+import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
-import { toNumberSafe } from "@/utils";
+import { log, safeSync, toNumberSafe } from "@/utils";
 
 type OrderId = string;
 export class OrderRoom extends BaseDurableObject {
@@ -26,11 +21,13 @@ export class OrderRoom extends BaseDurableObject {
 		this.#broadcasted = new Map();
 	}
 
-	broadcast(
-		message: WSPlaceOrderEnvelope | WSOrderEnvelope,
-		opts?: BroadcastOptions,
-	): void {
-		super.broadcast(message, opts);
+	broadcast(message: OrderEnvelope, opts?: BroadcastOptions): void {
+		const parse = OrderEnvelopeSchema.safeParse(message);
+		if (!parse.success) {
+			log.warn(parse, "Invalid order WS message");
+			return;
+		}
+		super.broadcast(parse.data, opts);
 	}
 
 	async webSocketMessage(ws: WebSocket, message: ArrayBuffer | string) {
@@ -38,143 +35,50 @@ export class OrderRoom extends BaseDurableObject {
 		const session = this.findUserIdBySocket(ws);
 		if (!session) throw new Error("Session not found");
 
-		const raw = JSON.parse(message.toString());
-
-		if (raw.type === "driver:location_update") {
-			await this.#handleDriverUpdateLocation(ws, raw);
+		const { success, data } = await OrderEnvelopeSchema.safeParseAsync(
+			JSON.parse(message.toString()),
+		);
+		if (!success) {
+			log.warn(data, "Invalid order WS message format");
+			return;
 		}
 
-		if (raw.type === "order:request") {
-			await this.#svc.db.transaction(
-				async (tx) => await this.#handleOrderRequst(ws, raw, tx),
-			);
-		}
-		if (raw.type === "order:accepted") {
-			await this.#svc.db.transaction(
-				async (tx) => await this.#handleOrderAccepted(ws, raw, tx),
-			);
-		}
-		if (raw.type === "order:done") {
-			await this.#svc.db.transaction(
-				async (tx) => await this.#handleOrderDone(ws, raw, tx),
-			);
-		}
-	}
-
-	async #handleDriverUpdateLocation(ws: WebSocket, raw: unknown) {
-		const parse = await WSOrderEnvelopeSchema.safeParseAsync(raw);
-		if (parse.data) {
-			const driverUpdateLocation = parse.data.payload.driverUpdateLocation;
-			if (!driverUpdateLocation) return;
-
-			this.broadcast(
-				{
-					type: "driver:location_update",
-					from: "client",
-					to: "client",
-					payload: { driverUpdateLocation },
-				},
-				{ excludes: [ws] },
-			);
-
-			const driverId = this.findUserIdBySocket(ws);
-			if (!driverId) return;
-			await this.#repo.driver.main.update(driverId, {
-				currentLocation: driverUpdateLocation,
-			});
-		}
-	}
-	async #handleOrderDone(
-		ws: WebSocket,
-		_raw: unknown,
-		_tx: DatabaseTransaction,
-	) {
-		const _senderId = this.findUserIdBySocket(ws);
-	}
-
-	async #handleOrderAccepted(
-		ws: WebSocket,
-		raw: unknown,
-		tx: DatabaseTransaction,
-	) {
-		const parse = await WSPlaceOrderEnvelopeSchema.safeParseAsync(raw);
-		const payload = parse.data?.payload;
-		if (!payload) return;
-
-		const userId = payload.order.userId;
-		const orderId = payload.order.id;
-
-		const broadcastedDrivers = this.#broadcasted.get(orderId);
-
-		if (!broadcastedDrivers) return;
-
-		const driverId = this.findUserIdBySocket(ws);
-		if (!driverId) return;
-
-		const opts = { tx };
-		const [updatedOrder] = await Promise.all([
-			this.#repo.order.update(orderId, { status: "accepted", driverId }, opts),
-			this.#repo.driver.main.update(driverId, { isTakingOrder: true }),
-		]);
-		payload.order = updatedOrder;
-
-		const userWs = this.findById(userId);
-		const acceptedMsg = JSON.stringify({
-			type: "order:accepted",
-			from: "server",
-			to: "client",
-			payload,
-		});
-
-		userWs?.send(acceptedMsg);
-
-		ws.send(acceptedMsg);
-
-		for (const driverWs of broadcastedDrivers) {
-			if (driverWs !== ws) {
-				try {
-					driverWs.send(
-						JSON.stringify({
-							type: "order:unavailable",
-							from: "server",
-							to: "client",
-							payload,
-						}),
-					);
-				} catch (err) {
-					console.warn("Failed to send unavailable notice:", err);
-				}
+		if (data.t === "s" && data.a !== undefined) {
+			if (data.a === "MATCHING") {
+				await this.#svc.db.transaction(
+					async (tx) => await this.#handleOrderMatching(ws, data, tx),
+				);
+			}
+			if (data.a === "UPDATE_LOCATION") {
+				await this.#handleDriverUpdateLocation(ws, data);
+			}
+			if (data.a === "ACCEPTED") {
+				await this.#svc.db.transaction(
+					async (tx) => await this.#handleOrderAccepted(ws, data, tx),
+				);
+			}
+			if (data.a === "DONE") {
+				await this.#svc.db.transaction(
+					async (tx) => await this.#handleOrderDone(ws, data, tx),
+				);
 			}
 		}
-
-		this.#broadcasted.delete(orderId);
 	}
 
-	async #handleOrderRequst(
+	async #handleOrderMatching(
 		ws: WebSocket,
-		raw: unknown,
+		data: OrderEnvelope,
 		tx: DatabaseTransaction,
 	) {
 		const opts = { tx };
-		const parse = await WSPlaceOrderEnvelopeSchema.safeParseAsync(raw);
-		const payload = parse.data?.payload;
-		if (!payload) return;
-		const updateOrder = await this.#repo.order.update(
-			payload.order.id,
-			{
-				...payload.order,
-				status: "matching",
-			},
-			opts,
-		);
-		const data: WSPlaceOrderEnvelope = {
-			type: "order:matching",
-			from: "server",
-			to: "client",
-			payload: { ...payload, order: updateOrder },
-		};
-		const msg = JSON.stringify(data);
-		ws.send(msg);
+		const detail = data.p.detail;
+		if (!detail) {
+			log.warn(data, "Invalid order matching payload");
+			return;
+		}
+
+		const findOrder = await this.#repo.order.get(detail.order.id, opts);
+
 		let nearbyDrivers: Driver[] = [];
 		let radiusKm = 20;
 		const maxRadiusKm = 100;
@@ -182,11 +86,11 @@ export class OrderRoom extends BaseDurableObject {
 
 		while (nearbyDrivers.length === 0 && radiusKm <= maxRadiusKm) {
 			nearbyDrivers = await this.#repo.driver.main.nearby({
-				x: updateOrder.pickupLocation.x,
-				y: updateOrder.pickupLocation.y,
+				x: findOrder.pickupLocation.x,
+				y: findOrder.pickupLocation.y,
 				radiusKm,
 				limit: 1,
-				gender: updateOrder.gender,
+				gender: findOrder.gender,
 			});
 
 			if (nearbyDrivers.length === 0) {
@@ -200,46 +104,50 @@ export class OrderRoom extends BaseDurableObject {
 
 		if (nearbyDrivers.length === 0) {
 			console.warn("No nearby driver found — cancelling order.");
-			const [cancelledOrder, payment] = await Promise.all([
+			const [updatedOrder, findPayment] = await Promise.all([
 				this.#repo.order.update(
-					payload.order.id,
+					findOrder.id,
 					{
-						...payload.order,
-						status: "cancelled_by_system",
+						status: "CANCELLED_BY_SYSTEM",
 						cancelReason: "No driver around you",
 					},
 					opts,
 				),
 				opts.tx.query.payment.findFirst({
 					with: { transaction: { with: { wallet: true } } },
-					where: (f, op) => op.eq(f.id, payload.payment.id),
+					where: (f, op) => op.eq(f.id, detail.payment.id),
 				}),
 			]);
 
-			const data: WSPlaceOrderEnvelope = {
-				type: "order:cancelled",
-				from: "server",
-				to: "client",
-				payload: { ...payload, order: cancelledOrder },
+			const response: OrderEnvelope = {
+				e: "CANCELED",
+				f: "s",
+				t: "c",
+				p: data.p,
 			};
-			if (payment) {
-				const { transaction } = payment;
+
+			if (findPayment) {
+				const { transaction } = findPayment;
 				const wallet = transaction.wallet;
 				const safeCurrentBalance = new Decimal(wallet.balance);
-				const safeAmount = new Decimal(cancelledOrder.totalPrice);
+				const safeAmount = new Decimal(updatedOrder.totalPrice);
 				const safeNewBalance = safeCurrentBalance.plus(safeAmount);
 
 				const [updatedTransaction, updatedPayment, _] = await Promise.all([
 					this.#repo.transaction.update(
 						transaction.id,
 						{
-							status: "refunded",
+							status: "REFUNDED",
 							balanceBefore: toNumberSafe(safeCurrentBalance),
 							balanceAfter: toNumberSafe(safeNewBalance),
 						},
 						opts,
 					),
-					this.#repo.payment.update(payment.id, { status: "refunded" }, opts),
+					this.#repo.payment.update(
+						findPayment.id,
+						{ status: "REFUNDED" },
+						opts,
+					),
 					this.#repo.wallet.update(
 						wallet.id,
 						{ balance: toNumberSafe(safeNewBalance) },
@@ -247,16 +155,28 @@ export class OrderRoom extends BaseDurableObject {
 					),
 				]);
 
-				data.payload = {
-					transaction: updatedTransaction,
-					payment: updatedPayment,
-					order: cancelledOrder,
+				data.p = {
+					detail: {
+						transaction: updatedTransaction,
+						payment: updatedPayment,
+						order: updatedOrder,
+					},
 				};
 			}
-			ws.send(JSON.stringify(data));
+
+			ws.send(JSON.stringify(response));
 			ws.close(1000, "No driver around you");
 			return;
 		}
+
+		const envelope: OrderEnvelope = {
+			e: "OFFER",
+			f: "s",
+			t: "c",
+			tg: "DRIVER",
+			p: data.p,
+		};
+		const msg = JSON.stringify(envelope);
 
 		const tasks: Promise<unknown>[] = [];
 		const driverIds = [];
@@ -266,16 +186,16 @@ export class OrderRoom extends BaseDurableObject {
 				driverWs.send(msg);
 				driverIds.push(driver.id);
 			}
-			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${updateOrder.id}`;
+			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${findOrder.id}`;
 			tasks.push(
 				this.#repo.notification.sendNotificationToUserId({
-					fromUserId: updateOrder.userId,
+					fromUserId: findOrder.userId,
 					toUserId: driver.id,
 					title: "New Order",
-					body: `Order ${updateOrder.type} with id #${updateOrder.id}`,
+					body: `Order ${findOrder.type} with id #${findOrder.id}`,
 					data: {
 						type: "NEW_ORDER",
-						orderId: updateOrder.id,
+						orderId: findOrder.id,
 						deeplink: "akademove://driver/order", // TODO: replace with actual android url
 					},
 					android: {
@@ -290,8 +210,110 @@ export class OrderRoom extends BaseDurableObject {
 			);
 		}
 		const driversWs = this.findByIds(driverIds);
-		this.#broadcasted.set(updateOrder.id, driversWs);
+		this.#broadcasted.set(findOrder.id, driversWs);
 
-		await Promise.allSettled([tasks]);
+		await Promise.allSettled(tasks);
+	}
+
+	async #handleOrderAccepted(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const detail = data.p.detail;
+
+		if (!detail) {
+			log.warn(data, "Invalid order accepted payload");
+			return;
+		}
+
+		const userId = detail.order.userId;
+		const orderId = detail.order.id;
+
+		const broadcastedDrivers = this.#broadcasted.get(orderId);
+
+		if (broadcastedDrivers) {
+			for (const driverWs of broadcastedDrivers) {
+				if (
+					driverWs === ws ||
+					!driverWs.readyState ||
+					driverWs.readyState !== WebSocket.OPEN
+				) {
+					continue;
+				}
+				const unavailablePayload: OrderEnvelope = {
+					e: "UNAVAILABLE",
+					f: "s",
+					t: "c",
+					tg: "DRIVER",
+					p: {},
+				};
+				safeSync(() => driverWs.send(JSON.stringify(unavailablePayload)));
+			}
+
+			this.#broadcasted.delete(orderId);
+		}
+
+		const driverId = this.findUserIdBySocket(ws);
+		if (!driverId) return;
+
+		const opts = { tx };
+		const [updatedOrder, updatedDriver] = await Promise.all([
+			this.#repo.order.update(orderId, { status: "ACCEPTED", driverId }, opts),
+			this.#repo.driver.main.update(driverId, { isTakingOrder: true }),
+		]);
+		detail.order = updatedOrder;
+
+		const userWs = this.findById(userId);
+
+		const acceptedPayload: OrderEnvelope = {
+			e: "DRIVER_ACCEPTED",
+			f: "s",
+			t: "c",
+			p: {
+				detail,
+				driverAccept: updatedDriver,
+			},
+		};
+
+		userWs?.send(JSON.stringify(acceptedPayload));
+	}
+
+	async #handleDriverUpdateLocation(ws: WebSocket, data: OrderEnvelope) {
+		const payload: OrderEnvelope = {
+			e: "DRIVER_LOCATION_UPDATE",
+			f: "s",
+			t: "c",
+			p: data.p,
+		};
+		this.broadcast(payload, { excludes: [ws] });
+	}
+	async #handleOrderDone(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const done = data.p.done;
+		if (!done) {
+			log.warn(data, "Invalid order done payload");
+			return;
+		}
+
+		const opts = { tx };
+		await Promise.all([
+			this.#repo.order.update(done.orderId, { status: "COMPLETED" }, opts),
+			this.#repo.driver.main.update(done.driverId, {
+				isTakingOrder: false,
+				currentLocation: done.driverCurrentLocation,
+			}),
+		]);
+
+		const completedPayload: OrderEnvelope = {
+			e: "COMPLETED",
+			f: "s",
+			t: "c",
+			p: data.p,
+		};
+		this.broadcast(completedPayload, { excludes: [ws] });
 	}
 }
