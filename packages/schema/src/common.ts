@@ -9,8 +9,11 @@ export const TimeSchema = z.object({
 });
 export type Time = z.infer<typeof TimeSchema>;
 
+export const BankProviderSchema = z.enum(CONSTANTS.BANK_PROVIDERS);
+export type BankProvider = z.infer<typeof BankProviderSchema>;
+
 export const BankSchema = z.object({
-	provider: z.enum(CONSTANTS.BANK_PROVIDERS),
+	provider: BankProviderSchema,
 	number: z.coerce.number(),
 });
 export type Bank = z.infer<typeof BankSchema>;
@@ -56,6 +59,7 @@ export const FailedResponseSchema = z.object({
 export type FailedResponse = z.infer<typeof FailedResponseSchema>;
 
 export const CommonSchemaRegistries = {
+	BankProvider: { schema: BankProviderSchema, strategy: "output" },
 	Time: { schema: TimeSchema, strategy: "output" },
 	Bank: { schema: BankSchema, strategy: "output" },
 	CountryCode: { schema: CountryCodeSchema, strategy: "output" },
