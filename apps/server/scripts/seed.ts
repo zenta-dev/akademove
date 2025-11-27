@@ -57,7 +57,7 @@ async function promptSeedingOptions(): Promise<SeedOptions> {
 		rl.close();
 		return {
 			mode: "base",
-			seeders: new Set(["users", "badges", "userBadges"]),
+			seeders: new Set(["users", "badges", "userBadges", "configurations"]),
 		};
 	}
 
@@ -129,6 +129,8 @@ async function confirmExecution() {
 	}
 }
 
+console.log(`DB URL: ${process.env.DATABASE_URL}`);
+
 const client = postgres(process.env.DATABASE_URL || "");
 const db = drizzle({ client });
 const storage = new S3StorageService({
@@ -150,39 +152,39 @@ async function seedUser(baseOnly = false) {
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
-			role: "admin",
+			role: "ADMIN",
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230851 },
 		},
 		{
 			name: "Test Operator 1",
 			email: "test-operator-1@akademove.com",
-			role: "operator",
+			role: "OPERATOR",
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230852 },
 		},
 		{
 			name: "Test Merchant 1",
 			email: "test-merchant-1@akademove.com",
-			role: "merchant",
+			role: "MERCHANT",
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230853 },
 		},
 		{
 			name: "Test Driver 1",
 			email: "test-driver-1@akademove.com",
-			role: "driver",
+			role: "DRIVER",
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230854 },
-			gender: "male",
+			gender: "MALE",
 		},
 		{
 			name: "Test User 1",
 			email: "test-user-1@akademove.com",
-			role: "user",
+			role: "USER",
 			password: "Ch@ngEThi5",
 			phone: { countryCode: "ID", number: 8573230855 },
-			gender: "male",
+			gender: "MALE",
 		},
 	];
 
@@ -193,7 +195,7 @@ async function seedUser(baseOnly = false) {
 					({
 						name: faker.person.fullName(),
 						email: faker.internet.email().toLowerCase(),
-						role: faker.helpers.arrayElement(["user", "driver", "merchant"]),
+						role: faker.helpers.arrayElement(["USER", "DRIVER", "MERCHANT"]),
 						password: "Ch@ngEThi5",
 						phone: {
 							countryCode: "ID",
@@ -201,7 +203,7 @@ async function seedUser(baseOnly = false) {
 								faker.phone.number({ style: "human" }).replace(/\D/g, ""),
 							),
 						},
-						gender: faker.helpers.arrayElement(["male", "female"]),
+						gender: faker.helpers.arrayElement(["MALE", "FEMALE"]),
 					}) as const,
 			);
 
@@ -404,7 +406,7 @@ async function seedMerchants() {
 	const users = await db
 		.select()
 		.from(tables.user)
-		.where(eq(tables.user.role, "merchant"));
+		.where(eq(tables.user.role, "MERCHANT"));
 
 	if (users.length === 0) {
 		console.warn("⚠️ No users with role 'merchant' found.");
@@ -478,7 +480,7 @@ async function seedDrivers() {
 	const users = await db
 		.select()
 		.from(tables.user)
-		.where(eq(tables.user.role, "driver"));
+		.where(eq(tables.user.role, "DRIVER"));
 
 	if (users.length === 0) {
 		console.warn("⚠️ No users with role 'driver' found.");
@@ -538,7 +540,7 @@ async function seedOrders() {
 	const users = await db
 		.select({ id: tables.user.id })
 		.from(tables.user)
-		.where(eq(tables.user.role, "user"));
+		.where(eq(tables.user.role, "USER"));
 
 	const drivers = await db.select({ id: driver.id }).from(driver);
 	const merchants = await db.select({ id: merchant.id }).from(merchant);
@@ -611,9 +613,9 @@ async function seedBadges() {
 			code: "NEW_CUSTOMER",
 			name: "New Customer",
 			description: "Welcome to the akademove community!",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "user",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "USER",
 			criteria: {
 				minOrders: 0,
 			},
@@ -625,9 +627,9 @@ async function seedBadges() {
 			code: "FIRST_RIDE",
 			name: "First Ride",
 			description: "Complete your first ride successfully",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "user",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "USER",
 			criteria: {
 				minOrders: 1,
 			},
@@ -639,9 +641,9 @@ async function seedBadges() {
 			code: "FREQUENT_RIDER",
 			name: "Frequent Rider",
 			description: "Complete 50 rides",
-			type: "milestone",
-			level: "silver",
-			targetRole: "user",
+			type: "MILESTONE",
+			level: "SILVER",
+			targetRole: "USER",
 			criteria: {
 				minOrders: 50,
 			},
@@ -653,9 +655,9 @@ async function seedBadges() {
 			code: "SUPER_RIDER",
 			name: "Super Rider",
 			description: "Complete 100 rides",
-			type: "milestone",
-			level: "gold",
-			targetRole: "user",
+			type: "MILESTONE",
+			level: "GOLD",
+			targetRole: "USER",
 			criteria: {
 				minOrders: 100,
 			},
@@ -667,9 +669,9 @@ async function seedBadges() {
 			code: "ELITE_RIDER",
 			name: "Elite Rider",
 			description: "Complete 500 rides",
-			type: "milestone",
-			level: "platinum",
-			targetRole: "user",
+			type: "MILESTONE",
+			level: "PLATINUM",
+			targetRole: "USER",
 			criteria: {
 				minOrders: 500,
 			},
@@ -685,9 +687,9 @@ async function seedBadges() {
 			code: "NEW_DRIVER",
 			name: "New Driver",
 			description: "Welcome to the driver community!",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "driver",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 0,
 			},
@@ -699,9 +701,9 @@ async function seedBadges() {
 			code: "FIRST_TRIP",
 			name: "First Trip",
 			description: "Complete your first trip as a driver",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "driver",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 1,
 			},
@@ -713,9 +715,9 @@ async function seedBadges() {
 			code: "RELIABLE_DRIVER",
 			name: "Reliable Driver",
 			description: "Maintain 4.5+ rating with 50 completed rides",
-			type: "performance",
-			level: "silver",
-			targetRole: "driver",
+			type: "PERFORMANCE",
+			level: "SILVER",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 50,
 				minRating: 4.5,
@@ -731,9 +733,9 @@ async function seedBadges() {
 			code: "STAR_DRIVER",
 			name: "Star Driver",
 			description: "Maintain 4.8+ rating with 100 completed rides",
-			type: "performance",
-			level: "gold",
-			targetRole: "driver",
+			type: "PERFORMANCE",
+			level: "GOLD",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 100,
 				minRating: 4.8,
@@ -750,9 +752,9 @@ async function seedBadges() {
 			code: "ELITE_DRIVER",
 			name: "Elite Driver",
 			description: "Maintain 4.9+ rating with 500 completed rides",
-			type: "performance",
-			level: "platinum",
-			targetRole: "driver",
+			type: "PERFORMANCE",
+			level: "PLATINUM",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 500,
 				minRating: 4.9,
@@ -769,9 +771,9 @@ async function seedBadges() {
 			code: "CENTURION",
 			name: "Centurion",
 			description: "Complete 100 rides",
-			type: "milestone",
-			level: "gold",
-			targetRole: "driver",
+			type: "MILESTONE",
+			level: "GOLD",
+			targetRole: "DRIVER",
 			criteria: {
 				minOrders: 100,
 			},
@@ -790,9 +792,9 @@ async function seedBadges() {
 			code: "NEW_MERCHANT",
 			name: "New Merchant",
 			description: "Welcome to the merchant community!",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "merchant",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "MERCHANT",
 			criteria: {
 				minOrders: 0,
 			},
@@ -804,9 +806,9 @@ async function seedBadges() {
 			code: "FIRST_ORDER",
 			name: "First Order",
 			description: "Receive your first order",
-			type: "achievement",
-			level: "bronze",
-			targetRole: "merchant",
+			type: "ACHIEVEMENT",
+			level: "BRONZE",
+			targetRole: "MERCHANT",
 			criteria: {
 				minOrders: 1,
 			},
@@ -818,9 +820,9 @@ async function seedBadges() {
 			code: "POPULAR_MERCHANT",
 			name: "Popular Merchant",
 			description: "Complete 50 orders with 4.5+ rating",
-			type: "performance",
-			level: "silver",
-			targetRole: "merchant",
+			type: "PERFORMANCE",
+			level: "SILVER",
+			targetRole: "MERCHANT",
 			criteria: {
 				minOrders: 50,
 				minRating: 4.5,
@@ -836,9 +838,9 @@ async function seedBadges() {
 			code: "TOP_RATED_MERCHANT",
 			name: "Top Rated Merchant",
 			description: "Maintain 4.8+ rating with 100 orders",
-			type: "performance",
-			level: "gold",
-			targetRole: "merchant",
+			type: "PERFORMANCE",
+			level: "GOLD",
+			targetRole: "MERCHANT",
 			criteria: {
 				minOrders: 100,
 				minRating: 4.8,

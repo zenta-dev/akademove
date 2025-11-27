@@ -19,29 +19,8 @@
 		{
 			"idx": 2,
 			"version": "7",
-			"when": 1762410420868,
-			"tag": "0002_merge-all-migrations",
-			"breakpoints": true
-		},
-		{
-			"idx": 3,
-			"version": "7",
-			"when": 1762946187282,
-			"tag": "0003_create-notification-table",
-			"breakpoints": true
-		},
-		{
-			"idx": 4,
-			"version": "7",
-			"when": 1763373394782,
-			"tag": "0004_create-badges-table",
-			"breakpoints": true
-		},
-		{
-			"idx": 5,
-			"version": "7",
-			"when": 1763373408531,
-			"tag": "0005_create-leaderboards-table",
+			"when": 1764272555303,
+			"tag": "0002_merge_all_migrations",
 			"breakpoints": true
 		}
 	]
