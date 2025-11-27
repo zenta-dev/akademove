@@ -23,7 +23,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
               if (state.isSuccess &&
                   state.transactionResult != null &&
                   state.transactionResult?.status ==
-                      TransactionStatus.success) {
+                      TransactionStatus.SUCCESS) {
                 context.showMyToast(
                   'Top up success',
                   type: ToastType.success,
@@ -47,7 +47,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
             builder: (context, state) {
               return QRISPaymentWidget(
                 payment: state.paymentResult ?? dummyPayment,
-                transactionType: TransactionType.topup,
+                transactionType: TransactionType.TOPUP,
                 onExpired: () async {
                   context.showMyToast(
                     'This QR code has expired. Please generate a new one.',

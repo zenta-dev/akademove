@@ -43,7 +43,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _nameKey = TextFieldKey('name');
   static const FormKey<String> _emailKey = TextFieldKey('email');
   static const FormKey<UserGender> _genderKey = SelectKey(
-    UserGender.male,
+    UserGender.MALE,
   );
   static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
@@ -51,7 +51,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
     'confirm_password',
   );
 
-  UserGender _selectedGender = UserGender.male;
+  UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
 
   @override

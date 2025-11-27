@@ -111,14 +111,14 @@ class _SignInFormViewState extends State<_SignInFormView> {
             location: ToastLocation.topCenter,
           );
           switch (state.data?.role) {
-            case UserRole.user:
+            case UserRole.USER:
               context.pushReplacementNamed(Routes.userHome.name);
-            case UserRole.merchant:
+            case UserRole.MERCHANT:
               context.pushReplacementNamed(Routes.merchantHome.name);
-            case UserRole.driver:
+            case UserRole.DRIVER:
               context.pushReplacementNamed(Routes.driverHome.name);
-            case UserRole.admin:
-            case UserRole.operator_:
+            case UserRole.ADMIN:
+            case UserRole.OPERATOR:
             case null:
               // TODO: Handle this case.
               throw UnimplementedError();

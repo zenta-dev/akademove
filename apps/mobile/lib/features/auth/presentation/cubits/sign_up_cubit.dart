@@ -58,7 +58,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String studentCardPath,
     required String driverLicensePath,
     required String vehicleCertificatePath,
-    required BankProviderEnum bankProvider,
+    required BankProvider bankProvider,
     required int bankNumber,
   }) async {
     try {
@@ -102,7 +102,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required Coordinate outletLocation,
     required String outletAddress,
 
-    required BankProviderEnum bankProvider,
+    required BankProvider bankProvider,
     required int bankNumber,
 
     required String? photoPath,

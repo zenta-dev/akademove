@@ -29,23 +29,23 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
       case 0:
         cubit.getMine(
           statuses: const [
-            OrderStatus.requested,
-            OrderStatus.accepted,
-            OrderStatus.inTrip,
+            OrderStatus.REQUESTED,
+            OrderStatus.ACCEPTED,
+            OrderStatus.IN_TRIP,
           ],
         );
       case 1:
         cubit.getMine(
           statuses: const [
-            OrderStatus.completed,
+            OrderStatus.COMPLETED,
           ],
         );
       case 2:
         cubit.getMine(
           statuses: const [
-            OrderStatus.cancelledBySystem,
-            OrderStatus.cancelledByUser,
-            OrderStatus.cancelledByDriver,
+            OrderStatus.CANCELLED_BY_SYSTEM,
+            OrderStatus.CANCELLED_BY_USER,
+            OrderStatus.CANCELLED_BY_DRIVER,
           ],
         );
     }
@@ -73,21 +73,21 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                 children: [
                   _buildTab(
                     statuses: const [
-                      OrderStatus.requested,
-                      OrderStatus.accepted,
-                      OrderStatus.inTrip,
+                      OrderStatus.REQUESTED,
+                      OrderStatus.ACCEPTED,
+                      OrderStatus.IN_TRIP,
                     ],
                   ),
                   _buildTab(
                     statuses: const [
-                      OrderStatus.completed,
+                      OrderStatus.COMPLETED,
                     ],
                   ),
                   _buildTab(
                     statuses: const [
-                      OrderStatus.cancelledBySystem,
-                      OrderStatus.cancelledByUser,
-                      OrderStatus.cancelledByDriver,
+                      OrderStatus.CANCELLED_BY_SYSTEM,
+                      OrderStatus.CANCELLED_BY_USER,
+                      OrderStatus.CANCELLED_BY_DRIVER,
                     ],
                   ),
                 ],

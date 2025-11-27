@@ -253,36 +253,36 @@ class WalletListTransactionWidget extends StatelessWidget {
 
   Color? _determineColor(TransactionStatus status) {
     return switch (status) {
-      TransactionStatus.pending => null,
-      TransactionStatus.success => Colors.green,
-      TransactionStatus.refunded => Colors.green,
-      TransactionStatus.failed => Colors.red,
-      TransactionStatus.cancelled => Colors.red,
-      TransactionStatus.expired => Colors.red,
+      TransactionStatus.PENDING => null,
+      TransactionStatus.SUCCESS => Colors.green,
+      TransactionStatus.REFUNDED => Colors.green,
+      TransactionStatus.FAILED => Colors.red,
+      TransactionStatus.CANCELLED => Colors.red,
+      TransactionStatus.EXPIRED => Colors.red,
     };
   }
 
   IconData _determineTransactionIcon(TransactionType type) {
     switch (type) {
-      case TransactionType.topup:
-      case TransactionType.refund:
+      case TransactionType.TOPUP:
+      case TransactionType.REFUND:
         return LucideIcons.arrowDown;
-      case TransactionType.payment:
-      case TransactionType.withdraw:
+      case TransactionType.PAYMENT:
+      case TransactionType.WITHDRAW:
         return LucideIcons.arrowUp;
-      case TransactionType.adjustment:
+      case TransactionType.ADJUSTMENT:
         return LucideIcons.circle;
     }
   }
 
   IconData _determineStatusIcon(TransactionStatus status) {
     return switch (status) {
-      TransactionStatus.pending => LucideIcons.circle,
-      TransactionStatus.success => LucideIcons.check,
-      TransactionStatus.refunded => LucideIcons.check,
-      TransactionStatus.failed => LucideIcons.x,
-      TransactionStatus.cancelled => LucideIcons.x,
-      TransactionStatus.expired => LucideIcons.x,
+      TransactionStatus.PENDING => LucideIcons.circle,
+      TransactionStatus.SUCCESS => LucideIcons.check,
+      TransactionStatus.REFUNDED => LucideIcons.check,
+      TransactionStatus.FAILED => LucideIcons.x,
+      TransactionStatus.CANCELLED => LucideIcons.x,
+      TransactionStatus.EXPIRED => LucideIcons.x,
     };
   }
 
@@ -290,15 +290,15 @@ class WalletListTransactionWidget extends StatelessWidget {
     TransactionType type,
     TransactionStatus status,
   ) {
-    if (status == TransactionStatus.success) {
+    if (status == TransactionStatus.SUCCESS) {
       switch (type) {
-        case TransactionType.topup:
-        case TransactionType.refund:
+        case TransactionType.TOPUP:
+        case TransactionType.REFUND:
           return '+';
-        case TransactionType.payment:
-        case TransactionType.withdraw:
+        case TransactionType.PAYMENT:
+        case TransactionType.WITHDRAW:
           return '-';
-        case TransactionType.adjustment:
+        case TransactionType.ADJUSTMENT:
           return '';
       }
     } else {

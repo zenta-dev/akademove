@@ -25,7 +25,7 @@ abstract class _FormKeys {
     'outlet-benchmark',
   );
 
-  static const bankProvider = SelectKey<BankProviderEnum>('bank-provider');
+  static const bankProvider = SelectKey<BankProvider>('bank-provider');
   static const FormKey<String> bankAccount = TextFieldKey('bank-account');
 }
 
@@ -46,7 +46,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
 
-  BankProviderEnum? _selectedBankProvider;
+  BankProvider? _selectedBankProvider;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
@@ -1210,11 +1210,11 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        _buildEnumSelect<BankProviderEnum>(
+        _buildEnumSelect<BankProvider>(
           key: _FormKeys.bankProvider,
           placeholder: 'Select bank provider',
           value: _selectedBankProvider,
-          items: BankProviderEnum.values,
+          items: BankProvider.values,
           enabled: !_isLoading,
           onChanged: (value) => setState(() => _selectedBankProvider = value),
         ),
@@ -1485,7 +1485,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     );
   }
 
-  String _getBankName(BankProviderEnum? provider) {
+  String _getBankName(BankProvider? provider) {
     if (provider == null) return 'Bank';
     return 'Bank ${provider.name.toUpperCase()}';
   }

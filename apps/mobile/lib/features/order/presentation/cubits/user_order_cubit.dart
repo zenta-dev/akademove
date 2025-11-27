@@ -101,7 +101,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
       final res = await _orderRepository.estimate(
         EstimateOrderQuery(
-          type: OrderType.ride,
+          type: OrderType.RIDE,
           pickupLocation: pickup.toCoordinate(),
           dropoffLocation: dropoff.toCoordinate(),
         ),

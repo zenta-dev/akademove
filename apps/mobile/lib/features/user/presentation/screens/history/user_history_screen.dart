@@ -78,7 +78,7 @@ class UserOrderCardWidget extends StatelessWidget {
   final Order order;
 
   Widget _buildDestAddres() {
-    if (order.type == OrderType.delivery && order.merchant?.name != null) {
+    if (order.type == OrderType.DELIVERY && order.merchant?.name != null) {
       return DefaultText(
         order.merchant?.name ?? '',
         fontSize: 14.sp,
@@ -132,9 +132,9 @@ class UserOrderCardWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (order.type == OrderType.ride) ...[
+                    if (order.type == OrderType.RIDE) ...[
                       Assets.images.hero.orderRide.image(height: 24.h),
-                    ] else if (order.type == OrderType.delivery &&
+                    ] else if (order.type == OrderType.DELIVERY &&
                         order.merchant != null &&
                         order.merchant?.image != null) ...[
                       CachedNetworkImage(

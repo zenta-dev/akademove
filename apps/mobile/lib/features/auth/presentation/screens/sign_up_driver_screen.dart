@@ -32,7 +32,7 @@ class _FormKeys {
   static const FormKey<String> step3LicensePlate = TextFieldKey(
     'step-3-license-plate',
   );
-  static const step4BankProvider = SelectKey<BankProviderEnum>(
+  static const step4BankProvider = SelectKey<BankProvider>(
     'step-4-bank-provider',
   );
   static const FormKey<String> step4BankNumber = TextFieldKey(
@@ -52,8 +52,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   late final FormController _formController;
   late final StepperController _stepController;
 
-  UserGender _selectedGender = UserGender.male;
-  BankProviderEnum? _selectedBankProvider;
+  UserGender _selectedGender = UserGender.MALE;
+  BankProvider? _selectedBankProvider;
   CountryCode _selectedCountryCode = CountryCode.ID;
 
   final Map<Step2Docs, File?> _step2Docs = {
@@ -607,12 +607,12 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   }
 
   Widget _buildBankProviderSelect(SignUpState state) {
-    return _buildEnumSelect<BankProviderEnum>(
+    return _buildEnumSelect<BankProvider>(
       key: _FormKeys.step4BankProvider,
       label: 'Bank Provider',
       placeholder: 'Pick your bank provider',
       value: _selectedBankProvider,
-      items: BankProviderEnum.values,
+      items: BankProvider.values,
       enabled: !state.isLoading,
       onChanged: (value) => setState(() => _selectedBankProvider = value),
     );

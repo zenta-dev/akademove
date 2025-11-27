@@ -21,20 +21,16 @@ class SplashScreen extends StatelessWidget {
           }
           if (state.isSuccess) {
             switch (state.data?.role) {
-              case UserRole.user:
+              case UserRole.USER:
                 context.pushReplacementNamed(Routes.userHome.name);
-              case UserRole.merchant:
+              case UserRole.MERCHANT:
                 context.pushReplacementNamed(Routes.merchantHome.name);
-              case UserRole.driver:
+              case UserRole.DRIVER:
                 context.pushReplacementNamed(Routes.driverHome.name);
-              case UserRole.admin:
-                // TODO: Handle this case.
-                throw UnimplementedError();
-              case UserRole.operator_:
-                // TODO: Handle this case.
+              case UserRole.ADMIN:
+              case UserRole.OPERATOR:
                 throw UnimplementedError();
               case null:
-                // TODO: Handle this case.
                 throw UnimplementedError();
             }
           }

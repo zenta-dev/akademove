@@ -41,7 +41,7 @@ abstract class _FormKeys {
     'step-2-outlet-phone-number',
   );
 
-  static const step3BankProvider = SelectKey<BankProviderEnum>(
+  static const step3BankProvider = SelectKey<BankProvider>(
     'step-3-bank-provider',
   );
   static const FormKey<String> step3BankNumber = TextFieldKey(
@@ -66,7 +66,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   GoogleMapController? _mapController;
   Set<Marker> _markers = {};
 
-  BankProviderEnum? _selectedBankProvider;
+  BankProvider? _selectedBankProvider;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
@@ -1347,11 +1347,11 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       spacing: 4.h,
       children: [
         const Text('Bank Provider'),
-        _buildEnumSelect<BankProviderEnum>(
+        _buildEnumSelect<BankProvider>(
           key: _FormKeys.step3BankProvider,
           placeholder: 'Pick your bank provider',
           value: _selectedBankProvider,
-          items: BankProviderEnum.values,
+          items: BankProvider.values,
           enabled: !state.isLoading,
           onChanged: (value) => setState(() => _selectedBankProvider = value),
         ),
