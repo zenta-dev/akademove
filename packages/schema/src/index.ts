@@ -16,12 +16,12 @@ import { ReviewSchemaRegistries } from "./review.ts";
 import { TransactionSchemaRegistries } from "./transaction.ts";
 import { UserSchemaRegistries } from "./user.ts";
 import { WalletSchemaRegistries } from "./wallet.ts";
-import { WebsocketSchemaRegistries } from "./websocket.ts";
+import { WSSchemaRegistries } from "./ws.ts";
 
 export const AllSchemaRegistries = {
+	...CommonSchemaRegistries,
 	...AuthSchemaRegistries,
 	...BadgeSchemaRegistries,
-	...CommonSchemaRegistries,
 	...ConfigurationSchemaRegistries,
 	...CouponSchemaRegistries,
 	...DriverSchemaRegistries,
@@ -34,8 +34,8 @@ export const AllSchemaRegistries = {
 	...ReviewSchemaRegistries,
 	...UserSchemaRegistries,
 	...WalletSchemaRegistries,
-	...WebsocketSchemaRegistries,
 	...TransactionSchemaRegistries,
 	...PaginationSchemaRegistries,
 	...NotificationSchemaRegistries,
+	...WSSchemaRegistries,
 } satisfies SchemaRegistries;
