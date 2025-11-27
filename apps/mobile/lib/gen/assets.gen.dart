@@ -17,8 +17,17 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/bca.svg
+  SvgGenImage get bca => const SvgGenImage('assets/icons/bca.svg');
+
+  /// File path: assets/icons/bni.svg
+  SvgGenImage get bni => const SvgGenImage('assets/icons/bni.svg');
+
   /// File path: assets/icons/brand.svg
   SvgGenImage get brand => const SvgGenImage('assets/icons/brand.svg');
+
+  /// File path: assets/icons/bri.svg
+  SvgGenImage get bri => const SvgGenImage('assets/icons/bri.svg');
 
   /// File path: assets/icons/female.svg
   SvgGenImage get female => const SvgGenImage('assets/icons/female.svg');
@@ -26,8 +35,23 @@ class $AssetsIconsGen {
   /// File path: assets/icons/male.svg
   SvgGenImage get male => const SvgGenImage('assets/icons/male.svg');
 
+  /// File path: assets/icons/mandiri.svg
+  SvgGenImage get mandiri => const SvgGenImage('assets/icons/mandiri.svg');
+
+  /// File path: assets/icons/permata.svg
+  SvgGenImage get permata => const SvgGenImage('assets/icons/permata.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [brand, female, male];
+  List<SvgGenImage> get values => [
+    bca,
+    bni,
+    brand,
+    bri,
+    female,
+    male,
+    mandiri,
+    permata,
+  ];
 }
 
 class $AssetsImagesGen {
