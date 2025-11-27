@@ -222,6 +222,6 @@ Map<String, dynamic> _$FCMNotificationLogToJson(FCMNotificationLog instance) =>
     };
 
 const _$FCMNotificationLogStatusEnumEnumMap = {
-  FCMNotificationLogStatusEnum.success: 'success',
-  FCMNotificationLogStatusEnum.failed: 'failed',
+  FCMNotificationLogStatusEnum.SUCCESS: 'SUCCESS',
+  FCMNotificationLogStatusEnum.FAILED: 'FAILED',
 };

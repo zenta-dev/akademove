@@ -97,11 +97,11 @@ Map<String, dynamic> _$TimeRulesToJson(TimeRules instance) => <String, dynamic>{
 };
 
 const _$DayOfWeekEnumMap = {
-  DayOfWeek.sunday: 'sunday',
-  DayOfWeek.monday: 'monday',
-  DayOfWeek.tuesday: 'tuesday',
-  DayOfWeek.wednesday: 'wednesday',
-  DayOfWeek.thursday: 'thursday',
-  DayOfWeek.friday: 'friday',
-  DayOfWeek.saturday: 'saturday',
+  DayOfWeek.SUNDAY: 'SUNDAY',
+  DayOfWeek.MONDAY: 'MONDAY',
+  DayOfWeek.TUESDAY: 'TUESDAY',
+  DayOfWeek.WEDNESDAY: 'WEDNESDAY',
+  DayOfWeek.THURSDAY: 'THURSDAY',
+  DayOfWeek.FRIDAY: 'FRIDAY',
+  DayOfWeek.SATURDAY: 'SATURDAY',
 };

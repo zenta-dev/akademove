@@ -13,6 +13,8 @@ abstract class _$UpdatePaymentCWProxy {
 
   UpdatePayment method(PaymentMethod? method);
 
+  UpdatePayment bankProvider(BankProvider? bankProvider);
+
   UpdatePayment amount(num? amount);
 
   UpdatePayment status(TransactionStatus? status);
@@ -20,6 +22,8 @@ abstract class _$UpdatePaymentCWProxy {
   UpdatePayment externalId(String? externalId);
 
   UpdatePayment paymentUrl(String? paymentUrl);
+
+  UpdatePayment vaNumber(VANumber? vaNumber);
 
   UpdatePayment metadata(Object? metadata);
 
@@ -40,10 +44,12 @@ abstract class _$UpdatePaymentCWProxy {
     String? transactionId,
     PaymentProvider? provider,
     PaymentMethod? method,
+    BankProvider? bankProvider,
     num? amount,
     TransactionStatus? status,
     String? externalId,
     String? paymentUrl,
+    VANumber? vaNumber,
     Object? metadata,
     DateTime? expiresAt,
     Object? payload,
@@ -69,6 +75,10 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
   UpdatePayment method(PaymentMethod? method) => call(method: method);
 
   @override
+  UpdatePayment bankProvider(BankProvider? bankProvider) =>
+      call(bankProvider: bankProvider);
+
+  @override
   UpdatePayment amount(num? amount) => call(amount: amount);
 
   @override
@@ -79,6 +89,9 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
 
   @override
   UpdatePayment paymentUrl(String? paymentUrl) => call(paymentUrl: paymentUrl);
+
+  @override
+  UpdatePayment vaNumber(VANumber? vaNumber) => call(vaNumber: vaNumber);
 
   @override
   UpdatePayment metadata(Object? metadata) => call(metadata: metadata);
@@ -104,10 +117,12 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
     Object? transactionId = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
     Object? method = const $CopyWithPlaceholder(),
+    Object? bankProvider = const $CopyWithPlaceholder(),
     Object? amount = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
     Object? externalId = const $CopyWithPlaceholder(),
     Object? paymentUrl = const $CopyWithPlaceholder(),
+    Object? vaNumber = const $CopyWithPlaceholder(),
     Object? metadata = const $CopyWithPlaceholder(),
     Object? expiresAt = const $CopyWithPlaceholder(),
     Object? payload = const $CopyWithPlaceholder(),
@@ -126,6 +141,10 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
           ? _value.method
           // ignore: cast_nullable_to_non_nullable
           : method as PaymentMethod?,
+      bankProvider: bankProvider == const $CopyWithPlaceholder()
+          ? _value.bankProvider
+          // ignore: cast_nullable_to_non_nullable
+          : bankProvider as BankProvider?,
       amount: amount == const $CopyWithPlaceholder()
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
@@ -142,6 +161,10 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
           ? _value.paymentUrl
           // ignore: cast_nullable_to_non_nullable
           : paymentUrl as String?,
+      vaNumber: vaNumber == const $CopyWithPlaceholder()
+          ? _value.vaNumber
+          // ignore: cast_nullable_to_non_nullable
+          : vaNumber as VANumber?,
       metadata: metadata == const $CopyWithPlaceholder()
           ? _value.metadata
           // ignore: cast_nullable_to_non_nullable
@@ -185,6 +208,10 @@ UpdatePayment _$UpdatePaymentFromJson(Map<String, dynamic> json) =>
           'method',
           (v) => $enumDecodeNullable(_$PaymentMethodEnumMap, v),
         ),
+        bankProvider: $checkedConvert(
+          'bankProvider',
+          (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
+        ),
         amount: $checkedConvert('amount', (v) => v as num?),
         status: $checkedConvert(
           'status',
@@ -192,6 +219,11 @@ UpdatePayment _$UpdatePaymentFromJson(Map<String, dynamic> json) =>
         ),
         externalId: $checkedConvert('externalId', (v) => v as String?),
         paymentUrl: $checkedConvert('paymentUrl', (v) => v as String?),
+        vaNumber: $checkedConvert(
+          'va_number',
+          (v) =>
+              v == null ? null : VANumber.fromJson(v as Map<String, dynamic>),
+        ),
         metadata: $checkedConvert('metadata', (v) => v),
         expiresAt: $checkedConvert(
           'expiresAt',
@@ -201,17 +233,19 @@ UpdatePayment _$UpdatePaymentFromJson(Map<String, dynamic> json) =>
         response: $checkedConvert('response', (v) => v),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'vaNumber': 'va_number'});
 
 Map<String, dynamic> _$UpdatePaymentToJson(UpdatePayment instance) =>
     <String, dynamic>{
       'transactionId': ?instance.transactionId,
       'provider': ?_$PaymentProviderEnumMap[instance.provider],
       'method': ?_$PaymentMethodEnumMap[instance.method],
+      'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
       'amount': ?instance.amount,
       'status': ?_$TransactionStatusEnumMap[instance.status],
       'externalId': ?instance.externalId,
       'paymentUrl': ?instance.paymentUrl,
+      'va_number': ?instance.vaNumber?.toJson(),
       'metadata': ?instance.metadata,
       'expiresAt': ?instance.expiresAt?.toIso8601String(),
       'payload': ?instance.payload,
@@ -225,16 +259,23 @@ const _$PaymentProviderEnumMap = {
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',
-  PaymentMethod.VA: 'VA',
   PaymentMethod.BANK_TRANSFER: 'BANK_TRANSFER',
   PaymentMethod.WALLET: 'WALLET',
 };
 
+const _$BankProviderEnumMap = {
+  BankProvider.BCA: 'BCA',
+  BankProvider.BNI: 'BNI',
+  BankProvider.BRI: 'BRI',
+  BankProvider.MANDIRI: 'MANDIRI',
+  BankProvider.PERMATA: 'PERMATA',
+};
+
 const _$TransactionStatusEnumMap = {
-  TransactionStatus.pending: 'pending',
-  TransactionStatus.success: 'success',
-  TransactionStatus.failed: 'failed',
-  TransactionStatus.cancelled: 'cancelled',
-  TransactionStatus.expired: 'expired',
-  TransactionStatus.refunded: 'refunded',
+  TransactionStatus.PENDING: 'PENDING',
+  TransactionStatus.SUCCESS: 'SUCCESS',
+  TransactionStatus.FAILED: 'FAILED',
+  TransactionStatus.CANCELLED: 'CANCELLED',
+  TransactionStatus.EXPIRED: 'EXPIRED',
+  TransactionStatus.REFUNDED: 'REFUNDED',
 };

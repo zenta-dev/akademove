@@ -7,7 +7,7 @@ part of 'bank.dart';
 // **************************************************************************
 
 abstract class _$BankCWProxy {
-  Bank provider(BankProviderEnum provider);
+  Bank provider(BankProvider provider);
 
   Bank number(num number);
 
@@ -18,7 +18,7 @@ abstract class _$BankCWProxy {
   /// ```dart
   /// Bank(...).copyWith(id: 12, name: "My name")
   /// ```
-  Bank call({BankProviderEnum provider, num number});
+  Bank call({BankProvider provider, num number});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -29,7 +29,7 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
   final Bank _value;
 
   @override
-  Bank provider(BankProviderEnum provider) => call(provider: provider);
+  Bank provider(BankProvider provider) => call(provider: provider);
 
   @override
   Bank number(num number) => call(number: number);
@@ -50,7 +50,7 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
       provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
-          : provider as BankProviderEnum,
+          : provider as BankProvider,
       number: number == const $CopyWithPlaceholder() || number == null
           ? _value.number
           // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,7 @@ Bank _$BankFromJson(Map<String, dynamic> json) =>
       final val = Bank(
         provider: $checkedConvert(
           'provider',
-          (v) => $enumDecode(_$BankProviderEnumEnumMap, v),
+          (v) => $enumDecode(_$BankProviderEnumMap, v),
         ),
         number: $checkedConvert('number', (v) => v as num),
       );
@@ -84,16 +84,14 @@ Bank _$BankFromJson(Map<String, dynamic> json) =>
     });
 
 Map<String, dynamic> _$BankToJson(Bank instance) => <String, dynamic>{
-  'provider': _$BankProviderEnumEnumMap[instance.provider]!,
+  'provider': _$BankProviderEnumMap[instance.provider]!,
   'number': instance.number,
 };
 
-const _$BankProviderEnumEnumMap = {
-  BankProviderEnum.BCA: 'BCA',
-  BankProviderEnum.BNI: 'BNI',
-  BankProviderEnum.BRI: 'BRI',
-  BankProviderEnum.mandiri: 'Mandiri',
-  BankProviderEnum.permata: 'Permata',
-  BankProviderEnum.CIMB: 'CIMB',
-  BankProviderEnum.danamon: 'Danamon',
+const _$BankProviderEnumMap = {
+  BankProvider.BCA: 'BCA',
+  BankProvider.BNI: 'BNI',
+  BankProvider.BRI: 'BRI',
+  BankProvider.MANDIRI: 'MANDIRI',
+  BankProvider.PERMATA: 'PERMATA',
 };

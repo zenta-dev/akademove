@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   dio: ^5.9.0
-  copy_with_extension: ^10.0.1
+  copy_with_extension: '^10.0.1'
   json_annotation: '^4.9.0'
 
 dev_dependencies:

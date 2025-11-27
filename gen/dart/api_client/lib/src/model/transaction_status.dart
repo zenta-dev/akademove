@@ -6,18 +6,18 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum TransactionStatus {
-  @JsonValue(r'pending')
-  pending(r'pending'),
-  @JsonValue(r'success')
-  success(r'success'),
-  @JsonValue(r'failed')
-  failed(r'failed'),
-  @JsonValue(r'cancelled')
-  cancelled(r'cancelled'),
-  @JsonValue(r'expired')
-  expired(r'expired'),
-  @JsonValue(r'refunded')
-  refunded(r'refunded');
+  @JsonValue(r'PENDING')
+  PENDING(r'PENDING'),
+  @JsonValue(r'SUCCESS')
+  SUCCESS(r'SUCCESS'),
+  @JsonValue(r'FAILED')
+  FAILED(r'FAILED'),
+  @JsonValue(r'CANCELLED')
+  CANCELLED(r'CANCELLED'),
+  @JsonValue(r'EXPIRED')
+  EXPIRED(r'EXPIRED'),
+  @JsonValue(r'REFUNDED')
+  REFUNDED(r'REFUNDED');
 
   const TransactionStatus(this.value);
 

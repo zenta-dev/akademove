@@ -53,14 +53,10 @@ enum DriverUpdateRequestBankProviderEnum {
   BNI(r'BNI'),
   @JsonValue(r'BRI')
   BRI(r'BRI'),
-  @JsonValue(r'Mandiri')
-  mandiri(r'Mandiri'),
-  @JsonValue(r'Permata')
-  permata(r'Permata'),
-  @JsonValue(r'CIMB')
-  CIMB(r'CIMB'),
-  @JsonValue(r'Danamon')
-  danamon(r'Danamon');
+  @JsonValue(r'MANDIRI')
+  MANDIRI(r'MANDIRI'),
+  @JsonValue(r'PERMATA')
+  PERMATA(r'PERMATA');
 
   const DriverUpdateRequestBankProviderEnum(this.value);
 

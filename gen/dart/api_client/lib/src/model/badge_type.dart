@@ -6,18 +6,18 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum BadgeType {
-  @JsonValue(r'achievement')
-  achievement(r'achievement'),
-  @JsonValue(r'performance')
-  performance(r'performance'),
-  @JsonValue(r'volume')
-  volume(r'volume'),
-  @JsonValue(r'streak')
-  streak(r'streak'),
-  @JsonValue(r'milestone')
-  milestone(r'milestone'),
-  @JsonValue(r'special')
-  special(r'special');
+  @JsonValue(r'ACHIEVEMENT')
+  ACHIEVEMENT(r'ACHIEVEMENT'),
+  @JsonValue(r'PERFORMANCE')
+  PERFORMANCE(r'PERFORMANCE'),
+  @JsonValue(r'VOLUME')
+  VOLUME(r'VOLUME'),
+  @JsonValue(r'STREAK')
+  STREAK(r'STREAK'),
+  @JsonValue(r'MILESTONE')
+  MILESTONE(r'MILESTONE'),
+  @JsonValue(r'SPECIAL')
+  SPECIAL(r'SPECIAL');
 
   const BadgeType(this.value);
 

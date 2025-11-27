@@ -115,6 +115,5 @@ const _$PaymentProviderEnumMap = {
 
 const _$TopUpRequestMethodEnumEnumMap = {
   TopUpRequestMethodEnum.QRIS: 'QRIS',
-  TopUpRequestMethodEnum.VA: 'VA',
   TopUpRequestMethodEnum.BANK_TRANSFER: 'BANK_TRANSFER',
 };

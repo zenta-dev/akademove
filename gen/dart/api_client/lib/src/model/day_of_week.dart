@@ -6,20 +6,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum DayOfWeek {
-  @JsonValue(r'sunday')
-  sunday(r'sunday'),
-  @JsonValue(r'monday')
-  monday(r'monday'),
-  @JsonValue(r'tuesday')
-  tuesday(r'tuesday'),
-  @JsonValue(r'wednesday')
-  wednesday(r'wednesday'),
-  @JsonValue(r'thursday')
-  thursday(r'thursday'),
-  @JsonValue(r'friday')
-  friday(r'friday'),
-  @JsonValue(r'saturday')
-  saturday(r'saturday');
+  @JsonValue(r'SUNDAY')
+  SUNDAY(r'SUNDAY'),
+  @JsonValue(r'MONDAY')
+  MONDAY(r'MONDAY'),
+  @JsonValue(r'TUESDAY')
+  TUESDAY(r'TUESDAY'),
+  @JsonValue(r'WEDNESDAY')
+  WEDNESDAY(r'WEDNESDAY'),
+  @JsonValue(r'THURSDAY')
+  THURSDAY(r'THURSDAY'),
+  @JsonValue(r'FRIDAY')
+  FRIDAY(r'FRIDAY'),
+  @JsonValue(r'SATURDAY')
+  SATURDAY(r'SATURDAY');
 
   const DayOfWeek(this.value);
 

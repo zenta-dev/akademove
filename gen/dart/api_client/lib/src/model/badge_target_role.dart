@@ -6,12 +6,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum BadgeTargetRole {
-  @JsonValue(r'driver')
-  driver(r'driver'),
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'user')
-  user(r'user');
+  @JsonValue(r'DRIVER')
+  DRIVER(r'DRIVER'),
+  @JsonValue(r'MERCHANT')
+  MERCHANT(r'MERCHANT'),
+  @JsonValue(r'USER')
+  USER(r'USER');
 
   const BadgeTargetRole(this.value);
 

@@ -7,7 +7,7 @@ void main() {
   // TODO add properties to the entity
 
   group(Bank, () {
-    // String provider
+    // BankProvider provider
     test('to test the property `provider`', () async {
       // TODO
     });

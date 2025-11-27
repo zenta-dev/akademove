@@ -242,18 +242,18 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
     };
 
 const _$TransactionTypeEnumMap = {
-  TransactionType.topup: 'topup',
-  TransactionType.withdraw: 'withdraw',
-  TransactionType.payment: 'payment',
-  TransactionType.refund: 'refund',
-  TransactionType.adjustment: 'adjustment',
+  TransactionType.TOPUP: 'TOPUP',
+  TransactionType.WITHDRAW: 'WITHDRAW',
+  TransactionType.PAYMENT: 'PAYMENT',
+  TransactionType.REFUND: 'REFUND',
+  TransactionType.ADJUSTMENT: 'ADJUSTMENT',
 };
 
 const _$TransactionStatusEnumMap = {
-  TransactionStatus.pending: 'pending',
-  TransactionStatus.success: 'success',
-  TransactionStatus.failed: 'failed',
-  TransactionStatus.cancelled: 'cancelled',
-  TransactionStatus.expired: 'expired',
-  TransactionStatus.refunded: 'refunded',
+  TransactionStatus.PENDING: 'PENDING',
+  TransactionStatus.SUCCESS: 'SUCCESS',
+  TransactionStatus.FAILED: 'FAILED',
+  TransactionStatus.CANCELLED: 'CANCELLED',
+  TransactionStatus.EXPIRED: 'EXPIRED',
+  TransactionStatus.REFUNDED: 'REFUNDED',
 };

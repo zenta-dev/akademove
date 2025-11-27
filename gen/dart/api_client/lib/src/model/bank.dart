@@ -3,6 +3,7 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/bank_provider.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -20,7 +21,7 @@ class Bank {
   const Bank({required this.provider, required this.number});
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
-  final BankProviderEnum provider;
+  final BankProvider provider;
 
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
@@ -41,28 +42,4 @@ class Bank {
   String toString() {
     return toJson().toString();
   }
-}
-
-enum BankProviderEnum {
-  @JsonValue(r'BCA')
-  BCA(r'BCA'),
-  @JsonValue(r'BNI')
-  BNI(r'BNI'),
-  @JsonValue(r'BRI')
-  BRI(r'BRI'),
-  @JsonValue(r'Mandiri')
-  mandiri(r'Mandiri'),
-  @JsonValue(r'Permata')
-  permata(r'Permata'),
-  @JsonValue(r'CIMB')
-  CIMB(r'CIMB'),
-  @JsonValue(r'Danamon')
-  danamon(r'Danamon');
-
-  const BankProviderEnum(this.value);
-
-  final String value;
-
-  @override
-  String toString() => value;
 }

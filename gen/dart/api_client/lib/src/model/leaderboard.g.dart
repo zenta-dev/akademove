@@ -247,19 +247,19 @@ Map<String, dynamic> _$LeaderboardToJson(Leaderboard instance) =>
     };
 
 const _$LeaderboardCategoryEnumEnumMap = {
-  LeaderboardCategoryEnum.rating: 'rating',
-  LeaderboardCategoryEnum.volume: 'volume',
-  LeaderboardCategoryEnum.earnings: 'earnings',
-  LeaderboardCategoryEnum.streak: 'streak',
-  LeaderboardCategoryEnum.onTime: 'on-time',
-  LeaderboardCategoryEnum.completionRate: 'completion-rate',
+  LeaderboardCategoryEnum.RATING: 'RATING',
+  LeaderboardCategoryEnum.VOLUME: 'VOLUME',
+  LeaderboardCategoryEnum.EARNINGS: 'EARNINGS',
+  LeaderboardCategoryEnum.STREAK: 'STREAK',
+  LeaderboardCategoryEnum.ON_TIME: 'ON-TIME',
+  LeaderboardCategoryEnum.COMPLETION_RATE: 'COMPLETION-RATE',
 };
 
 const _$LeaderboardPeriodEnumEnumMap = {
-  LeaderboardPeriodEnum.daily: 'daily',
-  LeaderboardPeriodEnum.weekly: 'weekly',
-  LeaderboardPeriodEnum.monthly: 'monthly',
-  LeaderboardPeriodEnum.quarterly: 'quarterly',
-  LeaderboardPeriodEnum.yearly: 'yearly',
-  LeaderboardPeriodEnum.allTime: 'all-time',
+  LeaderboardPeriodEnum.DAILY: 'DAILY',
+  LeaderboardPeriodEnum.WEEKLY: 'WEEKLY',
+  LeaderboardPeriodEnum.MONTHLY: 'MONTHLY',
+  LeaderboardPeriodEnum.QUARTERLY: 'QUARTERLY',
+  LeaderboardPeriodEnum.YEARLY: 'YEARLY',
+  LeaderboardPeriodEnum.ALL_TIME: 'ALL-TIME',
 };

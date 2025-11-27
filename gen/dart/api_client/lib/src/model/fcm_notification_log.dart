@@ -106,10 +106,10 @@ class FCMNotificationLog {
 }
 
 enum FCMNotificationLogStatusEnum {
-  @JsonValue(r'success')
-  success(r'success'),
-  @JsonValue(r'failed')
-  failed(r'failed');
+  @JsonValue(r'SUCCESS')
+  SUCCESS(r'SUCCESS'),
+  @JsonValue(r'FAILED')
+  FAILED(r'FAILED');
 
   const FCMNotificationLogStatusEnum(this.value);
 

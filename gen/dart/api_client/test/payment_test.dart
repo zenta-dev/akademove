@@ -27,6 +27,11 @@ void main() {
       // TODO
     });
 
+    // BankProvider bankProvider
+    test('to test the property `bankProvider`', () async {
+      // TODO
+    });
+
     // num amount
     test('to test the property `amount`', () async {
       // TODO
@@ -44,6 +49,11 @@ void main() {
 
     // String paymentUrl
     test('to test the property `paymentUrl`', () async {
+      // TODO
+    });
+
+    // VANumber vaNumber
+    test('to test the property `vaNumber`', () async {
       // TODO
     });
 

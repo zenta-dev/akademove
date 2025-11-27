@@ -198,19 +198,19 @@ Map<String, dynamic> _$UpdateLeaderboardToJson(UpdateLeaderboard instance) =>
     };
 
 const _$UpdateLeaderboardCategoryEnumEnumMap = {
-  UpdateLeaderboardCategoryEnum.rating: 'rating',
-  UpdateLeaderboardCategoryEnum.volume: 'volume',
-  UpdateLeaderboardCategoryEnum.earnings: 'earnings',
-  UpdateLeaderboardCategoryEnum.streak: 'streak',
-  UpdateLeaderboardCategoryEnum.onTime: 'on-time',
-  UpdateLeaderboardCategoryEnum.completionRate: 'completion-rate',
+  UpdateLeaderboardCategoryEnum.RATING: 'RATING',
+  UpdateLeaderboardCategoryEnum.VOLUME: 'VOLUME',
+  UpdateLeaderboardCategoryEnum.EARNINGS: 'EARNINGS',
+  UpdateLeaderboardCategoryEnum.STREAK: 'STREAK',
+  UpdateLeaderboardCategoryEnum.ON_TIME: 'ON-TIME',
+  UpdateLeaderboardCategoryEnum.COMPLETION_RATE: 'COMPLETION-RATE',
 };
 
 const _$UpdateLeaderboardPeriodEnumEnumMap = {
-  UpdateLeaderboardPeriodEnum.daily: 'daily',
-  UpdateLeaderboardPeriodEnum.weekly: 'weekly',
-  UpdateLeaderboardPeriodEnum.monthly: 'monthly',
-  UpdateLeaderboardPeriodEnum.quarterly: 'quarterly',
-  UpdateLeaderboardPeriodEnum.yearly: 'yearly',
-  UpdateLeaderboardPeriodEnum.allTime: 'all-time',
+  UpdateLeaderboardPeriodEnum.DAILY: 'DAILY',
+  UpdateLeaderboardPeriodEnum.WEEKLY: 'WEEKLY',
+  UpdateLeaderboardPeriodEnum.MONTHLY: 'MONTHLY',
+  UpdateLeaderboardPeriodEnum.QUARTERLY: 'QUARTERLY',
+  UpdateLeaderboardPeriodEnum.YEARLY: 'YEARLY',
+  UpdateLeaderboardPeriodEnum.ALL_TIME: 'ALL-TIME',
 };

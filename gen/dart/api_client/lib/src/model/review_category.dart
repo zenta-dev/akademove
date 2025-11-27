@@ -6,12 +6,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum ReviewCategory {
-  @JsonValue(r'cleanliness')
-  cleanliness(r'cleanliness'),
-  @JsonValue(r'courtesy')
-  courtesy(r'courtesy'),
-  @JsonValue(r'other')
-  other(r'other');
+  @JsonValue(r'CLEANLINESS')
+  CLEANLINESS(r'CLEANLINESS'),
+  @JsonValue(r'COURTESY')
+  COURTESY(r'COURTESY'),
+  @JsonValue(r'OTHER')
+  OTHER(r'OTHER');
 
   const ReviewCategory(this.value);
 

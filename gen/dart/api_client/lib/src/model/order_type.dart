@@ -6,12 +6,12 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum OrderType {
-  @JsonValue(r'ride')
-  ride(r'ride'),
-  @JsonValue(r'delivery')
-  delivery(r'delivery'),
-  @JsonValue(r'food')
-  food(r'food');
+  @JsonValue(r'RIDE')
+  RIDE(r'RIDE'),
+  @JsonValue(r'DELIVERY')
+  DELIVERY(r'DELIVERY'),
+  @JsonValue(r'FOOD')
+  FOOD(r'FOOD');
 
   const OrderType(this.value);
 

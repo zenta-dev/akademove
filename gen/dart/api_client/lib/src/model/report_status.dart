@@ -6,14 +6,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum ReportStatus {
-  @JsonValue(r'pending')
-  pending(r'pending'),
-  @JsonValue(r'investigating')
-  investigating(r'investigating'),
-  @JsonValue(r'resolved')
-  resolved(r'resolved'),
-  @JsonValue(r'dismissed')
-  dismissed(r'dismissed');
+  @JsonValue(r'PENDING')
+  PENDING(r'PENDING'),
+  @JsonValue(r'INVESTIGATING')
+  INVESTIGATING(r'INVESTIGATING'),
+  @JsonValue(r'RESOLVED')
+  RESOLVED(r'RESOLVED'),
+  @JsonValue(r'DISMISSED')
+  DISMISSED(r'DISMISSED');
 
   const ReportStatus(this.value);
 

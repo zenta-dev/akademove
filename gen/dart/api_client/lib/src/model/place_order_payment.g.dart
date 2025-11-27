@@ -11,6 +11,8 @@ abstract class _$PlaceOrderPaymentCWProxy {
 
   PlaceOrderPayment provider(PaymentProvider provider);
 
+  PlaceOrderPayment bankProvider(BankProvider? bankProvider);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderPayment(...).copyWith.fieldName(value)`.
   ///
@@ -18,7 +20,11 @@ abstract class _$PlaceOrderPaymentCWProxy {
   /// ```dart
   /// PlaceOrderPayment(...).copyWith(id: 12, name: "My name")
   /// ```
-  PlaceOrderPayment call({PaymentMethod method, PaymentProvider provider});
+  PlaceOrderPayment call({
+    PaymentMethod method,
+    PaymentProvider provider,
+    BankProvider? bankProvider,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -36,6 +42,10 @@ class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
       call(provider: provider);
 
   @override
+  PlaceOrderPayment bankProvider(BankProvider? bankProvider) =>
+      call(bankProvider: bankProvider);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderPayment(...).copyWith.fieldName(value)`.
   ///
@@ -46,6 +56,7 @@ class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
   PlaceOrderPayment call({
     Object? method = const $CopyWithPlaceholder(),
     Object? provider = const $CopyWithPlaceholder(),
+    Object? bankProvider = const $CopyWithPlaceholder(),
   }) {
     return PlaceOrderPayment(
       method: method == const $CopyWithPlaceholder() || method == null
@@ -56,6 +67,10 @@ class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
           ? _value.provider
           // ignore: cast_nullable_to_non_nullable
           : provider as PaymentProvider,
+      bankProvider: bankProvider == const $CopyWithPlaceholder()
+          ? _value.bankProvider
+          // ignore: cast_nullable_to_non_nullable
+          : bankProvider as BankProvider?,
     );
   }
 }
@@ -84,6 +99,10 @@ PlaceOrderPayment _$PlaceOrderPaymentFromJson(Map<String, dynamic> json) =>
           'provider',
           (v) => $enumDecode(_$PaymentProviderEnumMap, v),
         ),
+        bankProvider: $checkedConvert(
+          'bankProvider',
+          (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
+        ),
       );
       return val;
     });
@@ -92,11 +111,11 @@ Map<String, dynamic> _$PlaceOrderPaymentToJson(PlaceOrderPayment instance) =>
     <String, dynamic>{
       'method': _$PaymentMethodEnumMap[instance.method]!,
       'provider': _$PaymentProviderEnumMap[instance.provider]!,
+      'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
     };
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',
-  PaymentMethod.VA: 'VA',
   PaymentMethod.BANK_TRANSFER: 'BANK_TRANSFER',
   PaymentMethod.WALLET: 'WALLET',
 };
@@ -104,4 +123,12 @@ const _$PaymentMethodEnumMap = {
 const _$PaymentProviderEnumMap = {
   PaymentProvider.MIDTRANS: 'MIDTRANS',
   PaymentProvider.MANUAL: 'MANUAL',
+};
+
+const _$BankProviderEnumMap = {
+  BankProvider.BCA: 'BCA',
+  BankProvider.BNI: 'BNI',
+  BankProvider.BRI: 'BRI',
+  BankProvider.MANDIRI: 'MANDIRI',
+  BankProvider.PERMATA: 'PERMATA',
 };

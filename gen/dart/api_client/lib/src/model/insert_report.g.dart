@@ -203,15 +203,15 @@ Map<String, dynamic> _$InsertReportToJson(InsertReport instance) =>
     };
 
 const _$ReportCategoryEnumMap = {
-  ReportCategory.behavior: 'behavior',
-  ReportCategory.safety: 'safety',
-  ReportCategory.fraud: 'fraud',
-  ReportCategory.other: 'other',
+  ReportCategory.BEHAVIOR: 'BEHAVIOR',
+  ReportCategory.SAFETY: 'SAFETY',
+  ReportCategory.FRAUD: 'FRAUD',
+  ReportCategory.OTHER: 'OTHER',
 };
 
 const _$ReportStatusEnumMap = {
-  ReportStatus.pending: 'pending',
-  ReportStatus.investigating: 'investigating',
-  ReportStatus.resolved: 'resolved',
-  ReportStatus.dismissed: 'dismissed',
+  ReportStatus.PENDING: 'PENDING',
+  ReportStatus.INVESTIGATING: 'INVESTIGATING',
+  ReportStatus.RESOLVED: 'RESOLVED',
+  ReportStatus.DISMISSED: 'DISMISSED',
 };

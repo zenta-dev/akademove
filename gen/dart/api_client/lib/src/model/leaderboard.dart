@@ -116,18 +116,18 @@ class Leaderboard {
 }
 
 enum LeaderboardCategoryEnum {
-  @JsonValue(r'rating')
-  rating(r'rating'),
-  @JsonValue(r'volume')
-  volume(r'volume'),
-  @JsonValue(r'earnings')
-  earnings(r'earnings'),
-  @JsonValue(r'streak')
-  streak(r'streak'),
-  @JsonValue(r'on-time')
-  onTime(r'on-time'),
-  @JsonValue(r'completion-rate')
-  completionRate(r'completion-rate');
+  @JsonValue(r'RATING')
+  RATING(r'RATING'),
+  @JsonValue(r'VOLUME')
+  VOLUME(r'VOLUME'),
+  @JsonValue(r'EARNINGS')
+  EARNINGS(r'EARNINGS'),
+  @JsonValue(r'STREAK')
+  STREAK(r'STREAK'),
+  @JsonValue(r'ON-TIME')
+  ON_TIME(r'ON-TIME'),
+  @JsonValue(r'COMPLETION-RATE')
+  COMPLETION_RATE(r'COMPLETION-RATE');
 
   const LeaderboardCategoryEnum(this.value);
 
@@ -138,18 +138,18 @@ enum LeaderboardCategoryEnum {
 }
 
 enum LeaderboardPeriodEnum {
-  @JsonValue(r'daily')
-  daily(r'daily'),
-  @JsonValue(r'weekly')
-  weekly(r'weekly'),
-  @JsonValue(r'monthly')
-  monthly(r'monthly'),
-  @JsonValue(r'quarterly')
-  quarterly(r'quarterly'),
-  @JsonValue(r'yearly')
-  yearly(r'yearly'),
-  @JsonValue(r'all-time')
-  allTime(r'all-time');
+  @JsonValue(r'DAILY')
+  DAILY(r'DAILY'),
+  @JsonValue(r'WEEKLY')
+  WEEKLY(r'WEEKLY'),
+  @JsonValue(r'MONTHLY')
+  MONTHLY(r'MONTHLY'),
+  @JsonValue(r'QUARTERLY')
+  QUARTERLY(r'QUARTERLY'),
+  @JsonValue(r'YEARLY')
+  YEARLY(r'YEARLY'),
+  @JsonValue(r'ALL-TIME')
+  ALL_TIME(r'ALL-TIME');
 
   const LeaderboardPeriodEnum(this.value);
 

@@ -6,24 +6,24 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum OrderStatus {
-  @JsonValue(r'requested')
-  requested(r'requested'),
-  @JsonValue(r'matching')
-  matching(r'matching'),
-  @JsonValue(r'accepted')
-  accepted(r'accepted'),
-  @JsonValue(r'arriving')
-  arriving(r'arriving'),
-  @JsonValue(r'in_trip')
-  inTrip(r'in_trip'),
-  @JsonValue(r'completed')
-  completed(r'completed'),
-  @JsonValue(r'cancelled_by_user')
-  cancelledByUser(r'cancelled_by_user'),
-  @JsonValue(r'cancelled_by_driver')
-  cancelledByDriver(r'cancelled_by_driver'),
-  @JsonValue(r'cancelled_by_system')
-  cancelledBySystem(r'cancelled_by_system');
+  @JsonValue(r'REQUESTED')
+  REQUESTED(r'REQUESTED'),
+  @JsonValue(r'MATCHING')
+  MATCHING(r'MATCHING'),
+  @JsonValue(r'ACCEPTED')
+  ACCEPTED(r'ACCEPTED'),
+  @JsonValue(r'ARRIVING')
+  ARRIVING(r'ARRIVING'),
+  @JsonValue(r'IN_TRIP')
+  IN_TRIP(r'IN_TRIP'),
+  @JsonValue(r'COMPLETED')
+  COMPLETED(r'COMPLETED'),
+  @JsonValue(r'CANCELLED_BY_USER')
+  CANCELLED_BY_USER(r'CANCELLED_BY_USER'),
+  @JsonValue(r'CANCELLED_BY_DRIVER')
+  CANCELLED_BY_DRIVER(r'CANCELLED_BY_DRIVER'),
+  @JsonValue(r'CANCELLED_BY_SYSTEM')
+  CANCELLED_BY_SYSTEM(r'CANCELLED_BY_SYSTEM');
 
   const OrderStatus(this.value);
 

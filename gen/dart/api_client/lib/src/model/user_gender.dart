@@ -6,10 +6,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum UserGender {
-  @JsonValue(r'male')
-  male(r'male'),
-  @JsonValue(r'female')
-  female(r'female');
+  @JsonValue(r'MALE')
+  MALE(r'MALE'),
+  @JsonValue(r'FEMALE')
+  FEMALE(r'FEMALE');
 
   const UserGender(this.value);
 

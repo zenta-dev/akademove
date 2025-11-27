@@ -14,6 +14,8 @@ enum PaymentKey {
   provider(r'provider'),
   @JsonValue(r'method')
   method(r'method'),
+  @JsonValue(r'bankProvider')
+  bankProvider(r'bankProvider'),
   @JsonValue(r'amount')
   amount(r'amount'),
   @JsonValue(r'status')
@@ -22,6 +24,8 @@ enum PaymentKey {
   externalId(r'externalId'),
   @JsonValue(r'paymentUrl')
   paymentUrl(r'paymentUrl'),
+  @JsonValue(r'va_number')
+  vaNumber(r'va_number'),
   @JsonValue(r'metadata')
   metadata(r'metadata'),
   @JsonValue(r'expiresAt')

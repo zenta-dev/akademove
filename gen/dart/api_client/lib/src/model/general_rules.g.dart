@@ -110,6 +110,6 @@ Map<String, dynamic> _$GeneralRulesToJson(GeneralRules instance) =>
     };
 
 const _$GeneralRuleTypeEnumMap = {
-  GeneralRuleType.percentage: 'percentage',
-  GeneralRuleType.fixed: 'fixed',
+  GeneralRuleType.PERCENTAGE: 'PERCENTAGE',
+  GeneralRuleType.FIXED: 'FIXED',
 };

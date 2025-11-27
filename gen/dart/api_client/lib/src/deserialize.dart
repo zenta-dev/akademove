@@ -74,6 +74,11 @@ import 'package:api_client/src/model/notification_subscribe_to_topic200_response
 import 'package:api_client/src/model/notification_subscribe_to_topic_request.dart';
 import 'package:api_client/src/model/order.dart';
 import 'package:api_client/src/model/order_driver.dart';
+import 'package:api_client/src/model/order_envelope.dart';
+import 'package:api_client/src/model/order_envelope_payload.dart';
+import 'package:api_client/src/model/order_envelope_payload_detail.dart';
+import 'package:api_client/src/model/order_envelope_payload_done.dart';
+import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
 import 'package:api_client/src/model/order_get200_response.dart';
 import 'package:api_client/src/model/order_item.dart';
@@ -87,6 +92,11 @@ import 'package:api_client/src/model/order_summary_breakdown.dart';
 import 'package:api_client/src/model/pagination_result.dart';
 import 'package:api_client/src/model/pay_request.dart';
 import 'package:api_client/src/model/payment.dart';
+import 'package:api_client/src/model/payment_envelope.dart';
+import 'package:api_client/src/model/payment_envelope_payload.dart';
+import 'package:api_client/src/model/payment_envelope_payload_payment.dart';
+import 'package:api_client/src/model/payment_envelope_payload_transaction.dart';
+import 'package:api_client/src/model/payment_envelope_payload_wallet.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
@@ -131,12 +141,7 @@ import 'package:api_client/src/model/user_badge.dart';
 import 'package:api_client/src/model/user_badge_metadata.dart';
 import 'package:api_client/src/model/user_notification.dart';
 import 'package:api_client/src/model/user_rules.dart';
-import 'package:api_client/src/model/ws_envelope.dart';
-import 'package:api_client/src/model/ws_order_envelope.dart';
-import 'package:api_client/src/model/ws_order_envelope_payload.dart';
-import 'package:api_client/src/model/ws_payment_envelope.dart';
-import 'package:api_client/src/model/ws_payment_envelope_payload.dart';
-import 'package:api_client/src/model/ws_place_order_envelope.dart';
+import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/wallet.dart';
 import 'package:api_client/src/model/wallet_get200_response.dart';
 import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart';
@@ -233,6 +238,7 @@ ReturnType deserialize<ReturnType, BaseType>(
       return BanUser.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Bank':
       return Bank.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'BankProvider':
     case 'BannerConfiguration':
       return BannerConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -314,6 +320,8 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'DriverUser':
       return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'EnvelopeSender':
+    case 'EnvelopeTarget':
     case 'EstimateOrder':
       return EstimateOrder.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -421,6 +429,25 @@ ReturnType deserialize<ReturnType, BaseType>(
       return Order.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderDriver':
       return OrderDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'OrderEnvelope':
+      return OrderEnvelope.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderEnvelopeAction':
+    case 'OrderEnvelopeEvent':
+    case 'OrderEnvelopePayload':
+      return OrderEnvelopePayload.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderEnvelopePayloadDetail':
+      return OrderEnvelopePayloadDetail.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderEnvelopePayloadDone':
+      return OrderEnvelopePayloadDone.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderEnvelopePayloadDriverUpdateLocation':
+      return OrderEnvelopePayloadDriverUpdateLocation.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'OrderEstimate200Response':
       return OrderEstimate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -460,6 +487,28 @@ ReturnType deserialize<ReturnType, BaseType>(
       return PayRequest.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Payment':
       return Payment.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'PaymentEnvelope':
+      return PaymentEnvelope.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'PaymentEnvelopeEvent':
+    case 'PaymentEnvelopePayload':
+      return PaymentEnvelopePayload.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'PaymentEnvelopePayloadPayment':
+      return PaymentEnvelopePayloadPayment.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'PaymentEnvelopePayloadTransaction':
+      return PaymentEnvelopePayloadTransaction.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'PaymentEnvelopePayloadWallet':
+      return PaymentEnvelopePayloadWallet.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'PaymentKey':
     case 'PaymentMethod':
     case 'PaymentProvider':
@@ -587,25 +636,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UserRole':
     case 'UserRules':
       return UserRules.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'WSEnvelope':
-      return WSEnvelope.fromJson(value as Map<String, dynamic>) as ReturnType;
-    case 'WSEnvelopeSender':
-    case 'WSEnvelopeType':
-    case 'WSOrderEnvelope':
-      return WSOrderEnvelope.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSOrderEnvelopePayload':
-      return WSOrderEnvelopePayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSPaymentEnvelope':
-      return WSPaymentEnvelope.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSPaymentEnvelopePayload':
-      return WSPaymentEnvelopePayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'WSPlaceOrderEnvelope':
-      return WSPlaceOrderEnvelope.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
+    case 'VANumber':
+      return VANumber.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'WalletGet200Response':

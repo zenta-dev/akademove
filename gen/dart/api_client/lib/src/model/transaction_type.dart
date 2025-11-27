@@ -6,16 +6,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum TransactionType {
-  @JsonValue(r'topup')
-  topup(r'topup'),
-  @JsonValue(r'withdraw')
-  withdraw(r'withdraw'),
-  @JsonValue(r'payment')
-  payment(r'payment'),
-  @JsonValue(r'refund')
-  refund(r'refund'),
-  @JsonValue(r'adjustment')
-  adjustment(r'adjustment');
+  @JsonValue(r'TOPUP')
+  TOPUP(r'TOPUP'),
+  @JsonValue(r'WITHDRAW')
+  WITHDRAW(r'WITHDRAW'),
+  @JsonValue(r'PAYMENT')
+  PAYMENT(r'PAYMENT'),
+  @JsonValue(r'REFUND')
+  REFUND(r'REFUND'),
+  @JsonValue(r'ADJUSTMENT')
+  ADJUSTMENT(r'ADJUSTMENT');
 
   const TransactionType(this.value);
 

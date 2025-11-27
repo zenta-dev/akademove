@@ -287,24 +287,24 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
     };
 
 const _$OrderTypeEnumMap = {
-  OrderType.ride: 'ride',
-  OrderType.delivery: 'delivery',
-  OrderType.food: 'food',
+  OrderType.RIDE: 'RIDE',
+  OrderType.DELIVERY: 'DELIVERY',
+  OrderType.FOOD: 'FOOD',
 };
 
 const _$OrderStatusEnumMap = {
-  OrderStatus.requested: 'requested',
-  OrderStatus.matching: 'matching',
-  OrderStatus.accepted: 'accepted',
-  OrderStatus.arriving: 'arriving',
-  OrderStatus.inTrip: 'in_trip',
-  OrderStatus.completed: 'completed',
-  OrderStatus.cancelledByUser: 'cancelled_by_user',
-  OrderStatus.cancelledByDriver: 'cancelled_by_driver',
-  OrderStatus.cancelledBySystem: 'cancelled_by_system',
+  OrderStatus.REQUESTED: 'REQUESTED',
+  OrderStatus.MATCHING: 'MATCHING',
+  OrderStatus.ACCEPTED: 'ACCEPTED',
+  OrderStatus.ARRIVING: 'ARRIVING',
+  OrderStatus.IN_TRIP: 'IN_TRIP',
+  OrderStatus.COMPLETED: 'COMPLETED',
+  OrderStatus.CANCELLED_BY_USER: 'CANCELLED_BY_USER',
+  OrderStatus.CANCELLED_BY_DRIVER: 'CANCELLED_BY_DRIVER',
+  OrderStatus.CANCELLED_BY_SYSTEM: 'CANCELLED_BY_SYSTEM',
 };
 
 const _$UserGenderEnumMap = {
-  UserGender.male: 'male',
-  UserGender.female: 'female',
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
 };

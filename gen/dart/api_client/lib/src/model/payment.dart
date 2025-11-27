@@ -4,7 +4,9 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/transaction_status.dart';
+import 'package:api_client/src/model/bank_provider.dart';
 import 'package:api_client/src/model/payment_provider.dart';
+import 'package:api_client/src/model/va_number.dart';
 import 'package:api_client/src/model/payment_method.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -25,10 +27,12 @@ class Payment {
     required this.transactionId,
     required this.provider,
     required this.method,
+    this.bankProvider,
     required this.amount,
     required this.status,
     this.externalId,
     this.paymentUrl,
+    this.vaNumber,
     this.metadata,
     this.expiresAt,
     this.payload,
@@ -49,6 +53,9 @@ class Payment {
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final PaymentMethod method;
 
+  @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
+  final BankProvider? bankProvider;
+
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 
@@ -60,6 +67,9 @@ class Payment {
 
   @JsonKey(name: r'paymentUrl', required: false, includeIfNull: false)
   final String? paymentUrl;
+
+  @JsonKey(name: r'va_number', required: false, includeIfNull: false)
+  final VANumber? vaNumber;
 
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
@@ -87,10 +97,12 @@ class Payment {
           other.transactionId == transactionId &&
           other.provider == provider &&
           other.method == method &&
+          other.bankProvider == bankProvider &&
           other.amount == amount &&
           other.status == status &&
           other.externalId == externalId &&
           other.paymentUrl == paymentUrl &&
+          other.vaNumber == vaNumber &&
           other.metadata == metadata &&
           other.expiresAt == expiresAt &&
           other.payload == payload &&
@@ -104,10 +116,12 @@ class Payment {
       transactionId.hashCode +
       provider.hashCode +
       method.hashCode +
+      bankProvider.hashCode +
       amount.hashCode +
       status.hashCode +
       externalId.hashCode +
       paymentUrl.hashCode +
+      vaNumber.hashCode +
       (metadata == null ? 0 : metadata.hashCode) +
       expiresAt.hashCode +
       (payload == null ? 0 : payload.hashCode) +

@@ -71,9 +71,9 @@ Map<String, dynamic> _$UpdateUserRoleToJson(UpdateUserRole instance) =>
     <String, dynamic>{'role': _$UserRoleEnumMap[instance.role]!};
 
 const _$UserRoleEnumMap = {
-  UserRole.admin: 'admin',
-  UserRole.operator_: 'operator',
-  UserRole.merchant: 'merchant',
-  UserRole.driver: 'driver',
-  UserRole.user: 'user',
+  UserRole.ADMIN: 'ADMIN',
+  UserRole.OPERATOR: 'OPERATOR',
+  UserRole.MERCHANT: 'MERCHANT',
+  UserRole.DRIVER: 'DRIVER',
+  UserRole.USER: 'USER',
 };

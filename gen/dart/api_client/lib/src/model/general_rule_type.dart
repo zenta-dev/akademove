@@ -6,10 +6,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum GeneralRuleType {
-  @JsonValue(r'percentage')
-  percentage(r'percentage'),
-  @JsonValue(r'fixed')
-  fixed(r'fixed');
+  @JsonValue(r'PERCENTAGE')
+  PERCENTAGE(r'PERCENTAGE'),
+  @JsonValue(r'FIXED')
+  FIXED(r'FIXED');
 
   const GeneralRuleType(this.value);
 

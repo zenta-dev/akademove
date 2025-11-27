@@ -6,18 +6,18 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum DriverStatus {
-  @JsonValue(r'pending')
-  pending(r'pending'),
-  @JsonValue(r'approved')
-  approved(r'approved'),
-  @JsonValue(r'rejected')
-  rejected(r'rejected'),
-  @JsonValue(r'active')
-  active(r'active'),
-  @JsonValue(r'inactive')
-  inactive(r'inactive'),
-  @JsonValue(r'suspended')
-  suspended(r'suspended');
+  @JsonValue(r'PENDING')
+  PENDING(r'PENDING'),
+  @JsonValue(r'APPROVED')
+  APPROVED(r'APPROVED'),
+  @JsonValue(r'REJECTED')
+  REJECTED(r'REJECTED'),
+  @JsonValue(r'ACTIVE')
+  ACTIVE(r'ACTIVE'),
+  @JsonValue(r'INACTIVE')
+  INACTIVE(r'INACTIVE'),
+  @JsonValue(r'SUSPENDED')
+  SUSPENDED(r'SUSPENDED');
 
   const DriverStatus(this.value);
 

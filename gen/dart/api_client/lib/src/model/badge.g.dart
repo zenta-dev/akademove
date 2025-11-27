@@ -275,24 +275,24 @@ Map<String, dynamic> _$BadgeToJson(Badge instance) => <String, dynamic>{
 };
 
 const _$BadgeTypeEnumMap = {
-  BadgeType.achievement: 'achievement',
-  BadgeType.performance: 'performance',
-  BadgeType.volume: 'volume',
-  BadgeType.streak: 'streak',
-  BadgeType.milestone: 'milestone',
-  BadgeType.special: 'special',
+  BadgeType.ACHIEVEMENT: 'ACHIEVEMENT',
+  BadgeType.PERFORMANCE: 'PERFORMANCE',
+  BadgeType.VOLUME: 'VOLUME',
+  BadgeType.STREAK: 'STREAK',
+  BadgeType.MILESTONE: 'MILESTONE',
+  BadgeType.SPECIAL: 'SPECIAL',
 };
 
 const _$BadgeLevelEnumMap = {
-  BadgeLevel.bronze: 'bronze',
-  BadgeLevel.silver: 'silver',
-  BadgeLevel.gold: 'gold',
-  BadgeLevel.platinum: 'platinum',
-  BadgeLevel.diamond: 'diamond',
+  BadgeLevel.BRONZE: 'BRONZE',
+  BadgeLevel.SILVER: 'SILVER',
+  BadgeLevel.GOLD: 'GOLD',
+  BadgeLevel.PLATINUM: 'PLATINUM',
+  BadgeLevel.DIAMOND: 'DIAMOND',
 };
 
 const _$BadgeTargetRoleEnumMap = {
-  BadgeTargetRole.driver: 'driver',
-  BadgeTargetRole.merchant: 'merchant',
-  BadgeTargetRole.user: 'user',
+  BadgeTargetRole.DRIVER: 'DRIVER',
+  BadgeTargetRole.MERCHANT: 'MERCHANT',
+  BadgeTargetRole.USER: 'USER',
 };

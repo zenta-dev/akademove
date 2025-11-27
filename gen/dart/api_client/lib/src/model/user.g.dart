@@ -276,14 +276,14 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
 };
 
 const _$UserRoleEnumMap = {
-  UserRole.admin: 'admin',
-  UserRole.operator_: 'operator',
-  UserRole.merchant: 'merchant',
-  UserRole.driver: 'driver',
-  UserRole.user: 'user',
+  UserRole.ADMIN: 'ADMIN',
+  UserRole.OPERATOR: 'OPERATOR',
+  UserRole.MERCHANT: 'MERCHANT',
+  UserRole.DRIVER: 'DRIVER',
+  UserRole.USER: 'USER',
 };
 
 const _$UserGenderEnumMap = {
-  UserGender.male: 'male',
-  UserGender.female: 'female',
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
 };

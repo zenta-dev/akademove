@@ -6,16 +6,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum BadgeLevel {
-  @JsonValue(r'bronze')
-  bronze(r'bronze'),
-  @JsonValue(r'silver')
-  silver(r'silver'),
-  @JsonValue(r'gold')
-  gold(r'gold'),
-  @JsonValue(r'platinum')
-  platinum(r'platinum'),
-  @JsonValue(r'diamond')
-  diamond(r'diamond');
+  @JsonValue(r'BRONZE')
+  BRONZE(r'BRONZE'),
+  @JsonValue(r'SILVER')
+  SILVER(r'SILVER'),
+  @JsonValue(r'GOLD')
+  GOLD(r'GOLD'),
+  @JsonValue(r'PLATINUM')
+  PLATINUM(r'PLATINUM'),
+  @JsonValue(r'DIAMOND')
+  DIAMOND(r'DIAMOND');
 
   const BadgeLevel(this.value);
 

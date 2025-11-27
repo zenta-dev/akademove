@@ -58,8 +58,6 @@ class TopUpRequest {
 enum TopUpRequestMethodEnum {
   @JsonValue(r'QRIS')
   QRIS(r'QRIS'),
-  @JsonValue(r'VA')
-  VA(r'VA'),
   @JsonValue(r'BANK_TRANSFER')
   BANK_TRANSFER(r'BANK_TRANSFER');
 

@@ -335,10 +335,10 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
 };
 
 const _$DriverStatusEnumMap = {
-  DriverStatus.pending: 'pending',
-  DriverStatus.approved: 'approved',
-  DriverStatus.rejected: 'rejected',
-  DriverStatus.active: 'active',
-  DriverStatus.inactive: 'inactive',
-  DriverStatus.suspended: 'suspended',
+  DriverStatus.PENDING: 'PENDING',
+  DriverStatus.APPROVED: 'APPROVED',
+  DriverStatus.REJECTED: 'REJECTED',
+  DriverStatus.ACTIVE: 'ACTIVE',
+  DriverStatus.INACTIVE: 'INACTIVE',
+  DriverStatus.SUSPENDED: 'SUSPENDED',
 };

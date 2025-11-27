@@ -6,16 +6,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum UserRole {
-  @JsonValue(r'admin')
-  admin(r'admin'),
-  @JsonValue(r'operator')
-  operator_(r'operator'),
-  @JsonValue(r'merchant')
-  merchant(r'merchant'),
-  @JsonValue(r'driver')
-  driver(r'driver'),
-  @JsonValue(r'user')
-  user(r'user');
+  @JsonValue(r'ADMIN')
+  ADMIN(r'ADMIN'),
+  @JsonValue(r'OPERATOR')
+  OPERATOR(r'OPERATOR'),
+  @JsonValue(r'MERCHANT')
+  MERCHANT(r'MERCHANT'),
+  @JsonValue(r'DRIVER')
+  DRIVER(r'DRIVER'),
+  @JsonValue(r'USER')
+  USER(r'USER');
 
   const UserRole(this.value);
 

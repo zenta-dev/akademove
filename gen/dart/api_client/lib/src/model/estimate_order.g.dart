@@ -202,12 +202,12 @@ Map<String, dynamic> _$EstimateOrderToJson(EstimateOrder instance) =>
     };
 
 const _$OrderTypeEnumMap = {
-  OrderType.ride: 'ride',
-  OrderType.delivery: 'delivery',
-  OrderType.food: 'food',
+  OrderType.RIDE: 'RIDE',
+  OrderType.DELIVERY: 'DELIVERY',
+  OrderType.FOOD: 'FOOD',
 };
 
 const _$UserGenderEnumMap = {
-  UserGender.male: 'male',
-  UserGender.female: 'female',
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
 };

@@ -6,14 +6,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum ReportCategory {
-  @JsonValue(r'behavior')
-  behavior(r'behavior'),
-  @JsonValue(r'safety')
-  safety(r'safety'),
-  @JsonValue(r'fraud')
-  fraud(r'fraud'),
-  @JsonValue(r'other')
-  other(r'other');
+  @JsonValue(r'BEHAVIOR')
+  BEHAVIOR(r'BEHAVIOR'),
+  @JsonValue(r'SAFETY')
+  SAFETY(r'SAFETY'),
+  @JsonValue(r'FRAUD')
+  FRAUD(r'FRAUD'),
+  @JsonValue(r'OTHER')
+  OTHER(r'OTHER');
 
   const ReportCategory(this.value);
 

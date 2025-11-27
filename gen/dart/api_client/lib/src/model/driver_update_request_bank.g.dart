@@ -104,8 +104,6 @@ const _$DriverUpdateRequestBankProviderEnumEnumMap = {
   DriverUpdateRequestBankProviderEnum.BCA: 'BCA',
   DriverUpdateRequestBankProviderEnum.BNI: 'BNI',
   DriverUpdateRequestBankProviderEnum.BRI: 'BRI',
-  DriverUpdateRequestBankProviderEnum.mandiri: 'Mandiri',
-  DriverUpdateRequestBankProviderEnum.permata: 'Permata',
-  DriverUpdateRequestBankProviderEnum.CIMB: 'CIMB',
-  DriverUpdateRequestBankProviderEnum.danamon: 'Danamon',
+  DriverUpdateRequestBankProviderEnum.MANDIRI: 'MANDIRI',
+  DriverUpdateRequestBankProviderEnum.PERMATA: 'PERMATA',
 };
