@@ -19,10 +19,10 @@ class AppBlocObserver extends BlocObserver {
     logger.d('''
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🌀 BLOC CHANGE
-Bloc: ${bloc.runtimeType}
+\tBloc: ${bloc.runtimeType}
 
-Current → Next:
-${change.currentState} → ${change.nextState}
+\tCurrent → Next:
+\t${change.currentState} → ${change.nextState}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ''');
   }
@@ -33,12 +33,12 @@ ${change.currentState} → ${change.nextState}
     logger.e('''
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔥 BLOC ERROR
-Bloc: ${bloc.runtimeType}
+\tBloc: ${bloc.runtimeType}
 
-Error: $error
+\tError: $error
 
-Stack Trace:
-$stackTrace
+\tStack Trace:
+\t$stackTrace
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ''');
   }
@@ -53,10 +53,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     logger.e('''
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💥 FLUTTER ERROR
-Exception: ${details.exceptionAsString()}
+\tException: ${details.exceptionAsString()}
 
-Stack Trace:
-${details.stack}
+\tStack Trace:
+\t${details.stack}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ''');
   };
