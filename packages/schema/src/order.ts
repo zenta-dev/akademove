@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
+import {
+	BankProviderSchema,
+	DateSchema,
+	type SchemaRegistries,
+} from "./common.ts";
 import { CONSTANTS } from "./constants.ts";
 import { DriverSchema } from "./driver.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
@@ -105,6 +109,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	payment: z.object({
 		method: PaymentMethodSchema,
 		provider: PaymentProviderSchema,
+		bankProvider: BankProviderSchema.optional(),
 	}),
 });
 export type PlaceOrder = z.infer<typeof PlaceOrderSchema>;
