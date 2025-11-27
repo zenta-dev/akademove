@@ -1,16 +1,20 @@
 import { env } from "cloudflare:workers";
 import type { ChargeResponse } from "@erhahahaa/midtrans-client-typescript";
+import type { BankProvider } from "@repo/schema/common";
 import type { OrderType } from "@repo/schema/order";
-import type {
-	InsertPayment,
-	Payment,
-	PaymentMethod,
-	PaymentProvider,
-	UpdatePayment,
-	WebhookRequest,
+import {
+	type InsertPayment,
+	type Payment,
+	type PaymentMethod,
+	type PaymentProvider,
+	type UpdatePayment,
+	type VANumber,
+	VANumberSchema,
+	type WebhookRequest,
 } from "@repo/schema/payment";
 import type { Transaction, TransactionType } from "@repo/schema/transaction";
 import type { Wallet } from "@repo/schema/wallet";
+import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
@@ -30,7 +34,7 @@ import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 import type { NotificationRepository } from "../notification/notification-repository";
 import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
-import { WalletRepository } from "../wallet/wallet-repository";
+import type { WalletRepository } from "../wallet/wallet-repository";
 
 export interface ChargePayload extends WithUserId {
 	transactionType: Extract<TransactionType, "TOPUP" | "PAYMENT">;
@@ -39,6 +43,8 @@ export interface ChargePayload extends WithUserId {
 	amount: number;
 	method: PaymentMethod;
 	metadata?: Record<string, unknown>;
+	bank?: BankProvider;
+	va_number?: string;
 }
 
 interface HandleWebhookPayload extends WithTx {
@@ -66,13 +72,10 @@ export class PaymentRepository extends BaseRepository {
 	}
 
 	static composeEntity(item: PaymentDatabase): Payment {
-		return {
+		return nullsToUndefined({
 			...item,
 			amount: toNumberSafe(item.amount),
-			externalId: item.externalId ? item.externalId : undefined,
-			paymentUrl: item.paymentUrl ? item.paymentUrl : undefined,
-			expiresAt: item.expiresAt ? item.expiresAt : undefined,
-		};
+		});
 	}
 
 	async #getFromDB(
@@ -206,19 +209,28 @@ export class PaymentRepository extends BaseRepository {
 				expiry: { duration: PAYMENT_EXPIRY_MINUTE, unit: "minute" },
 				method,
 				metadata,
+				bank: params.bank,
+				va_number: params.va_number,
 			})) as ChargeResponse;
 
-			const actions = paymentResponse.actions as
-				| {
-						name: string;
-						method: string;
-						url: string;
-				  }[]
-				| undefined;
+			const actions = paymentResponse.actions;
 			const action = actions?.find((val) => val.name === "generate-qr-code");
 
+			const va_numbers = paymentResponse.va_numbers;
+			let va_number: VANumber | undefined;
+			if (va_numbers && Array.isArray(va_numbers) && va_numbers.length > 0) {
+				const first = va_numbers[0];
+				const parse = VANumberSchema.safeParse(first);
+				if (parse.success) va_number = parse.data;
+			} else if (params.bank?.toLowerCase() === "permata") {
+				va_number = {
+					bank: "permata",
+					va_number: paymentResponse.permata_va_number || "",
+				};
+			}
+
 			log.debug(
-				{ paymentResponse, actions },
+				{ paymentResponse, actions, va_numbers },
 				`[${this.constructor.name}] - charge result`,
 			);
 
@@ -226,12 +238,14 @@ export class PaymentRepository extends BaseRepository {
 				transactionId: transaction.id,
 				provider,
 				method,
+				bankProvider: params.bank,
 				amount,
 				status: "PENDING",
 				externalId: transaction.id,
 				expiresAt,
 				response: paymentResponse,
 				paymentUrl: action?.url,
+				va_number: va_number,
 				payload: { method, amount, userId, provider, metadata },
 			});
 
@@ -330,11 +344,6 @@ export class PaymentRepository extends BaseRepository {
 		);
 
 		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
-		const payload = {
-			wallet: WalletRepository.composeEntity(transaction.wallet),
-			transaction: updatedTransaction,
-			payment: PaymentRepository.composeEntity(updatedPayment),
-		};
 
 		const tasks: Promise<unknown>[] = [];
 
@@ -342,10 +351,18 @@ export class PaymentRepository extends BaseRepository {
 		if (transaction.type === "TOPUP") {
 			tasks.push(
 				stub.broadcast({
-					type: "wallet:top_up_failed",
-					from: "server",
-					to: "client",
-					payload,
+					e: "TOP_UP_FAILED",
+					f: "s",
+					t: "c",
+					tg: "USER",
+					p: {
+						failReason: "Payment expired",
+						payment: {
+							id: updatedPayment.id,
+							type: "topup",
+						},
+						transaction: updatedTransaction,
+					},
 				}),
 			);
 			tasks.push(
@@ -360,10 +377,18 @@ export class PaymentRepository extends BaseRepository {
 		if (transaction.type === "PAYMENT") {
 			tasks.push(
 				stub.broadcast({
-					type: "payment:failed",
-					from: "server",
-					to: "client",
-					payload,
+					e: "PAYMENT_FAILED",
+					f: "s",
+					t: "c",
+					tg: "USER",
+					p: {
+						failReason: "Payment expired",
+						payment: {
+							id: updatedPayment.id,
+							type: "pay",
+						},
+						transaction: updatedTransaction,
+					},
 				}),
 			);
 			tasks.push(
@@ -429,7 +454,7 @@ export class PaymentRepository extends BaseRepository {
 		const opts = { tx };
 
 		const [updatedTransaction] = await Promise.all([
-			this.#transaction.update(transaction.id, { status: "success" }, opts),
+			this.#transaction.update(transaction.id, { status: "SUCCESS" }, opts),
 			opts.tx
 				.update(tables.order)
 				.set({ status: "MATCHING" })
@@ -447,30 +472,40 @@ export class PaymentRepository extends BaseRepository {
 
 		const tasks: Promise<unknown>[] = [
 			paymentStub.broadcast({
-				type: "payment:success",
-				from: "server",
-				to: "client",
-				payload: {
-					wallet: composedWallet,
+				e: "PAYMENT_SUCCESS",
+				f: "s",
+				t: "c",
+				tg: "USER",
+				p: {
+					payment: {
+						id: updatedPayment.id,
+						type: "pay",
+					},
 					transaction: updatedTransaction,
-					payment: composedPayment,
+					wallet: {
+						id: transaction.wallet.id,
+						balance: toNumberSafe(transaction.wallet.balance),
+					},
 				},
 			}),
 			orderStub.broadcast({
-				type: "order:matching",
-				from: "server",
-				to: "client",
-				payload: {
-					payment: composedPayment,
-					order: composedOrder,
-					transaction: updatedTransaction,
+				a: "MATCHING",
+				f: "s",
+				t: "s",
+				tg: "SYSTEM",
+				p: {
+					detail: {
+						payment: composedPayment,
+						order: composedOrder,
+						transaction: updatedTransaction,
+					},
 				},
 			}),
 			this.#notification.sendNotificationToUserId({
 				fromUserId: params.customerId,
-				toUserId: composedOrder.userId,
+				toUserId: order.userId,
 				title: "Payment success",
-				body: `Payment with id ${composedOrder.id} success.`,
+				body: `Payment with id ${order.id} success.`,
 			}),
 		];
 
@@ -560,18 +595,25 @@ export class PaymentRepository extends BaseRepository {
 			),
 		]);
 
-		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
+		const paymentStub = PaymentRepository.getRoomStubByName(params.payment.id);
 
 		const userId = wallet.userId;
 		const tasks: Promise<unknown>[] = [
-			stub.broadcast({
-				type: "wallet:top_up_success",
-				from: "server",
-				to: "client",
-				payload: {
-					wallet: WalletRepository.composeEntity(updatedWallet),
+			paymentStub.broadcast({
+				e: "TOP_UP_SUCCESS",
+				f: "s",
+				t: "c",
+				tg: "USER",
+				p: {
+					payment: {
+						id: updatedPayment.id,
+						type: "topup",
+					},
 					transaction: updatedTransaction,
-					payment: PaymentRepository.composeEntity(updatedPayment),
+					wallet: {
+						id: updatedWallet.id,
+						balance: toNumberSafe(updatedWallet.balance),
+					},
 				},
 			}),
 			this.#notification.sendNotificationToUserId({

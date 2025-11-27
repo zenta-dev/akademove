@@ -6,6 +6,7 @@ import {
 	MidtransError,
 	type TransactionStatusResponse,
 } from "@erhahahaa/midtrans-client-typescript";
+import type { BankProvider } from "@repo/schema/common";
 import type { PaymentMethod } from "@repo/schema/payment";
 import { log } from "@/utils";
 import { PaymentError } from "../error";
@@ -24,9 +25,10 @@ export interface PaymentChargePayload {
 		duration: number;
 		unit: "second" | "minute" | "hour" | "day";
 	};
-	bank?: string;
+	bank?: BankProvider;
 	va_number?: string;
 	metadata?: Record<string, unknown>;
+	echannel?: Record<string, unknown>;
 }
 
 export interface PaymentVerificationPayload {
@@ -71,7 +73,7 @@ export class MidtransPaymentService implements PaymentService {
 				payment_type: "qris",
 				transaction_details: {
 					order_id: payload.externalId,
-					gross_amount: payload.amount,
+					gross_amount: Math.ceil(payload.amount),
 				},
 				customer_details: payload.customer,
 				metadata: { ...payload.metadata, description: payload.description },
@@ -84,12 +86,30 @@ export class MidtransPaymentService implements PaymentService {
 				};
 			}
 
-			if ((method === "BANK_TRANSFER" || method === "VA") && bank) {
+			if (method === "BANK_TRANSFER" && bank) {
 				chargePayload.payment_type = "bank_transfer";
 				chargePayload.bank_transfer = {
-					bank: bank as BankTransfer["bank"],
-					va_number: payload.va_number,
+					bank: bank.toLowerCase() as BankTransfer["bank"],
+					// va_number: payload.va_number,
 				};
+
+				if (payload.va_number) {
+					chargePayload.bank_transfer.va_number = payload.va_number;
+				}
+
+				if (bank.toLowerCase() === "mandiri") {
+					chargePayload.echannel = {
+						bill_info1: "Payment for:",
+						bill_info2: "Akademove",
+						...payload.echannel,
+					};
+				}
+
+				if (bank.toLowerCase() === "permata") {
+					chargePayload.bank_transfer.permata = {
+						recipient_name: "Zenta Dev",
+					};
+				}
 			}
 
 			const res = await this.#client.charge(chargePayload);

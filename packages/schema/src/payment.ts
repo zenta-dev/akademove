@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
+import {
+	BankProviderSchema,
+	DateSchema,
+	type SchemaRegistries,
+} from "./common.ts";
 import { PAYMENT_METHOD, PAYMENT_PROVIDER } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { TransactionStatusSchema } from "./transaction.ts";
@@ -10,15 +14,23 @@ export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;
 export const PaymentMethodSchema = z.enum(PAYMENT_METHOD);
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
+export const VANumberSchema = z.object({
+	bank: z.string(),
+	va_number: z.string(),
+});
+export type VANumber = z.infer<typeof VANumberSchema>;
+
 export const PaymentSchema = z.object({
 	id: z.uuid(),
 	transactionId: z.uuid(),
 	provider: PaymentProviderSchema,
 	method: PaymentMethodSchema,
+	bankProvider: BankProviderSchema.optional(),
 	amount: z.number(),
 	status: TransactionStatusSchema,
 	externalId: z.string().optional(),
 	paymentUrl: z.string().optional(),
+	va_number: VANumberSchema.optional(),
 	metadata: z.any().optional(),
 	expiresAt: DateSchema.optional(),
 	payload: z.any().optional(),
@@ -65,6 +77,7 @@ export const WebhookRequestSchema = z.record(z.string(), z.any());
 export const PaymentSchemaRegistries = {
 	PaymentProvider: { schema: PaymentProviderSchema, strategy: "output" },
 	PaymentMethod: { schema: PaymentMethodSchema, strategy: "output" },
+	VANumber: { schema: VANumberSchema, strategy: "output" },
 	Payment: { schema: PaymentSchema, strategy: "output" },
 	InsertPayment: { schema: InsertPaymentSchema, strategy: "input" },
 	UpdatePayment: { schema: UpdatePaymentSchema, strategy: "input" },

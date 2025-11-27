@@ -38,7 +38,10 @@ import type { MapService } from "@/core/services/map";
 import type { OrderDatabase } from "@/core/tables/order";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
-import type { PaymentRepository } from "../payment/payment-repository";
+import type {
+	ChargePayload,
+	PaymentRepository,
+} from "../payment/payment-repository";
 
 export class OrderRepository extends BaseRepository {
 	readonly #map: MapService;
@@ -467,16 +470,26 @@ export class OrderRepository extends BaseRepository {
 				await opts.tx.insert(tables.orderItem).values(orderItems);
 			}
 
+			const chargePayload: ChargePayload = {
+				transactionType: "PAYMENT",
+				amount: estimate.totalCost,
+				method: params.payment.method,
+				provider: params.payment.provider,
+				userId: params.userId,
+				orderType: params.type,
+				metadata: { orderId: orderRow.id, customerId: params.userId },
+			};
+
+			if (
+				params.payment.bankProvider &&
+				params.payment.method === "BANK_TRANSFER"
+			) {
+				chargePayload.bank = params.payment.bankProvider;
+				chargePayload.va_number = `${user.phone.number}`;
+			}
+
 			const { transaction, payment } = await this.#paymentRepo.charge(
-				{
-					transactionType: "payment",
-					amount: estimate.totalCost,
-					method: params.payment.method,
-					provider: params.payment.provider,
-					userId: params.userId,
-					orderType: params.type,
-					metadata: { orderId: orderRow.id, customerId: params.userId },
-				},
+				chargePayload,
 				opts,
 			);
 
