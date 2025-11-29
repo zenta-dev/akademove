@@ -1,6 +1,8 @@
 import 'package:akademove/app/router/router.dart';
+import 'package:akademove/app/widgets/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +17,7 @@ class UserProfileScreen extends StatelessWidget {
       safeArea: true,
       body: Column(
         spacing: 16.h,
+        crossAxisAlignment: .start,
         children: [
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
@@ -23,6 +26,11 @@ class UserProfileScreen extends StatelessWidget {
               ).asSkeleton(enabled: state.isLoading);
             },
           ),
+          DefaultText(
+            context.l10n.account_settings,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
           Button(
             style:
                 ButtonStyle.card(
@@ -36,23 +44,14 @@ class UserProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                 ),
-            onPressed: () {
-              context.pushNamed(Routes.userEditProfile.name);
+            onPressed: () async {
+              await context.pushNamed(Routes.userEditProfile.name);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Edit Profile',
-                  style: context.typography.small.copyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Icon(
-                  LucideIcons.pencil,
-                  size: 14.sp,
-                ),
+                DefaultText(context.l10n.edit_profile, fontSize: 14.sp),
+                Icon(LucideIcons.pencil, size: 14.sp),
               ],
             ),
           ),
@@ -69,23 +68,14 @@ class UserProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                 ),
-            onPressed: () {
-              context.pushNamed(Routes.userChangePassword.name);
+            onPressed: () async {
+              await context.pushNamed(Routes.userChangePassword.name);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Change Password',
-                  style: context.typography.small.copyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Icon(
-                  LucideIcons.pencil,
-                  size: 14.sp,
-                ),
+                DefaultText(context.l10n.change_password, fontSize: 14.sp),
+                Icon(LucideIcons.pencil, size: 14.sp),
               ],
             ),
           ),
@@ -102,22 +92,42 @@ class UserProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                 ),
-            onPressed: () {
-              context.pushNamed(Routes.privacyPolicies.name);
+            onPressed: () async {
+              await context.pushNamed(Routes.privacyPolicies.name);
             },
             child: Row(
               children: [
-                Text(
-                  'Privacy Policies',
-                  style: context.typography.small.copyWith(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                DefaultText(context.l10n.privacy_policy, fontSize: 14.sp),
               ],
             ),
           ),
           const SignOutButtonWidget(),
+          DefaultText(
+            context.l10n.app_settings,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+          Column(
+            spacing: 8.h,
+            children: [
+              Column(
+                spacing: 4.h,
+                crossAxisAlignment: .start,
+                children: [
+                  DefaultText(context.l10n.language, fontSize: 14.sp),
+                  const AppSelectLocaleWidget(),
+                ],
+              ),
+              Column(
+                spacing: 4.h,
+                crossAxisAlignment: .start,
+                children: [
+                  DefaultText(context.l10n.theme, fontSize: 14.sp),
+                  const AppSelectThemeWidget(),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );

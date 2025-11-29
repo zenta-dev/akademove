@@ -12,5 +12,71 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get counterAppBarTitle => 'Counter';
+  String get hello => 'Hello';
+
+  @override
+  String get light_mode => 'Light Mode';
+
+  @override
+  String get dark_mode => 'Dark Mode';
+
+  @override
+  String get system_mode => 'System Mode';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get forget_password => 'Forget Password?';
+
+  @override
+  String get sign_in => 'Sign In';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get just_a_moment => 'Just a moment...';
+
+  @override
+  String get didnt_have_account => 'Don\'t have an account?';
+
+  @override
+  String get sign_up => 'Sign Up';
+
+  @override
+  String get lets_sign_in_to_the_akademove => 'Let\'s Sign In to the AkadeMove!';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get app_settings => 'App Settings';
+
+  @override
+  String get account_settings => 'Account Settings';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get change_password => 'Change Password';
+
+  @override
+  String get edit_profile => 'Edit Profile';
+
+  @override
+  String get sign_out => 'Sign Out';
+
+  @override
+  String get select_your_preferred_language => 'Select your preferred language';
+
+  @override
+  String get select_your_preferred_theme => 'Select your preferred theme';
 }

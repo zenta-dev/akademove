@@ -1,7 +1,26 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    }
+    "hello": "Hello",
+    "light_mode": "Light Mode",
+    "dark_mode": "Dark Mode",
+    "system_mode": "System Mode",
+    "email": "Email",
+    "password": "Password",
+    "forget_password": "Forget Password?",
+    "sign_in": "Sign In",
+    "loading": "Loading...",
+    "just_a_moment": "Just a moment...",
+    "didnt_have_account": "Don't have an account?",
+    "sign_up": "Sign Up",
+    "lets_sign_in_to_the_akademove": "Let's Sign In to the AkadeMove!",
+    "language": "Language",
+    "theme": "Theme",
+    "app_settings": "App Settings",
+    "account_settings": "Account Settings",
+    "privacy_policy": "Privacy Policy",
+    "change_password": "Change Password",
+    "edit_profile": "Edit Profile",
+    "sign_out": "Sign Out",
+    "select_your_preferred_language": "Select your preferred language",
+    "select_your_preferred_theme": "Select your preferred theme"
 }
