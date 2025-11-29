@@ -20,6 +20,7 @@ import { RepositoryError } from "@/core/error";
 import type {
 	ListResult,
 	OrderByOperation,
+	PartialWithTx,
 	WithUserId,
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -62,19 +63,20 @@ export class NotificationRepository {
 	}
 
 	async sendNotificationToUserId(
-		opts: SendNotificationOptions & {
+		params: SendNotificationOptions & {
 			toUserId: string;
 		},
+		opts?: PartialWithTx,
 	): Promise<string[]> {
-		const { toUserId, fromUserId } = opts;
+		const { toUserId, fromUserId } = params;
 
 		try {
-			const tokenResults = await this.#fcmToken.listByUserId(toUserId);
+			const tokenResults = await this.#fcmToken.listByUserId(toUserId, opts);
 			if (!tokenResults.length) return [];
 
 			const messageIds = await Promise.all(
 				tokenResults.map((t) =>
-					this.#firebaseAdmin.sendNotification({ ...opts, token: t.token }),
+					this.#firebaseAdmin.sendNotification({ ...params, token: t.token }),
 				),
 			);
 
@@ -82,7 +84,7 @@ export class NotificationRepository {
 
 			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
 				(messageId) => ({
-					...opts,
+					...params,
 					userId: fromUserId,
 					messageId,
 					status: "SUCCESS",
@@ -92,7 +94,7 @@ export class NotificationRepository {
 
 			const userNotification: InsertUserNotification[] = messageIds.map(
 				(messageId) => ({
-					...opts,
+					...params,
 					messageId,
 					userId: toUserId,
 					isRead: false,
@@ -100,8 +102,8 @@ export class NotificationRepository {
 			);
 
 			await Promise.all([
-				this.#fcmNotificationLog.createBatch(notificationLogs),
-				this.#userNotification.createBatch(userNotification),
+				this.#fcmNotificationLog.createBatch(notificationLogs, opts),
+				this.#userNotification.createBatch(userNotification, opts),
 			]);
 
 			return messageIds;
@@ -111,7 +113,7 @@ export class NotificationRepository {
 			const msg = error instanceof Error ? error.message : "Unknown error";
 
 			const failLog: InsertFCMNotificationLog = {
-				...opts,
+				...params,
 				userId: fromUserId,
 				status: "FAILED",
 				sentAt: new Date(),
@@ -119,31 +121,35 @@ export class NotificationRepository {
 			};
 
 			await Promise.all([
-				this.#fcmNotificationLog.create(failLog),
-				this.#userNotification.create({
-					...opts,
-					userId: toUserId,
-					isRead: false,
-				}),
+				this.#fcmNotificationLog.create(failLog, opts),
+				this.#userNotification.create(
+					{
+						...params,
+						userId: toUserId,
+						isRead: false,
+					},
+					opts,
+				),
 			]);
 
 			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
 		}
 	}
 	async sendNotificationToUserIds(
-		opts: SendNotificationOptions & {
+		params: SendNotificationOptions & {
 			toUserIds: string[];
 		},
+		opts?: PartialWithTx,
 	): Promise<string[]> {
-		const { toUserIds, fromUserId } = opts;
+		const { toUserIds, fromUserId } = params;
 
 		try {
-			const tokenResults = await this.#fcmToken.listByUserIds(toUserIds);
+			const tokenResults = await this.#fcmToken.listByUserIds(toUserIds, opts);
 			if (!tokenResults.length) return [];
 
 			const messageIds = await Promise.all(
 				tokenResults.map((t) =>
-					this.#firebaseAdmin.sendNotification({ ...opts, token: t.token }),
+					this.#firebaseAdmin.sendNotification({ ...params, token: t.token }),
 				),
 			);
 
@@ -151,7 +157,7 @@ export class NotificationRepository {
 
 			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
 				(messageId) => ({
-					...opts,
+					...params,
 					userId: fromUserId,
 					messageId,
 					status: "SUCCESS",
@@ -162,13 +168,18 @@ export class NotificationRepository {
 			const userNotifications: InsertUserNotification[] = [];
 			for (const userId of toUserIds) {
 				for (const messageId of messageIds) {
-					userNotifications.push({ ...opts, userId, messageId, isRead: false });
+					userNotifications.push({
+						...params,
+						userId,
+						messageId,
+						isRead: false,
+					});
 				}
 			}
 
 			await Promise.all([
-				this.#fcmNotificationLog.createBatch(notificationLogs),
-				this.#userNotification.createBatch(userNotifications),
+				this.#fcmNotificationLog.createBatch(notificationLogs, opts),
+				this.#userNotification.createBatch(userNotifications, opts),
 			]);
 
 			return messageIds;
@@ -178,7 +189,7 @@ export class NotificationRepository {
 			const msg = error instanceof Error ? error.message : "Unknown error";
 
 			const failLog: InsertFCMNotificationLog = {
-				...opts,
+				...params,
 				userId: fromUserId,
 				status: "FAILED",
 				sentAt: new Date(),
@@ -187,44 +198,50 @@ export class NotificationRepository {
 
 			const failNotifications: InsertUserNotification[] = toUserIds.map(
 				(userId) => ({
-					...opts,
+					...params,
 					userId,
 					isRead: false,
 				}),
 			);
 
 			await Promise.all([
-				this.#fcmNotificationLog.create(failLog),
-				this.#userNotification.createBatch(failNotifications),
+				this.#fcmNotificationLog.create(failLog, opts),
+				this.#userNotification.createBatch(failNotifications, opts),
 			]);
 
 			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
 		}
 	}
 
-	async sendToTopic(opts: SendToTopicOptions & WithUserId): Promise<string> {
+	async sendToTopic(
+		params: SendToTopicOptions & WithUserId,
+		opts?: PartialWithTx,
+	): Promise<string> {
 		try {
 			const [messageId, topicUsers] = await Promise.all([
-				this.#firebaseAdmin.sendToTopic(opts),
-				this.#fcmTopic.listByTopic(opts.topic),
+				this.#firebaseAdmin.sendToTopic(params),
+				this.#fcmTopic.listByTopic(params.topic, opts),
 			]);
 
 			if (!topicUsers.length) return messageId;
 
 			const userNotifications = topicUsers.map((t) => ({
-				...opts,
+				...params,
 				userId: t.userId,
 				messageId,
 				isRead: false,
 			}));
 
 			await Promise.all([
-				this.#fcmNotificationLog.create({
-					...opts,
-					status: "SUCCESS",
-					sentAt: new Date(),
-				}),
-				this.#userNotification.createBatch(userNotifications),
+				this.#fcmNotificationLog.create(
+					{
+						...params,
+						status: "SUCCESS",
+						sentAt: new Date(),
+					},
+					opts,
+				),
+				this.#userNotification.createBatch(userNotifications, opts),
 			]);
 
 			return messageId;
@@ -233,22 +250,25 @@ export class NotificationRepository {
 
 			const msg = error instanceof Error ? error.message : "Unknown error";
 
-			const topicUsers = await this.#fcmTopic.listByTopic(opts.topic);
+			const topicUsers = await this.#fcmTopic.listByTopic(params.topic, opts);
 
 			const userNotifications = topicUsers.map((t) => ({
-				...opts,
+				...params,
 				userId: t.userId,
 				isRead: false,
 			}));
 
 			await Promise.all([
-				this.#fcmNotificationLog.create({
-					...opts,
-					status: "FAILED",
-					sentAt: new Date(),
-					error: msg,
-				}),
-				this.#userNotification.createBatch(userNotifications),
+				this.#fcmNotificationLog.create(
+					{
+						...params,
+						status: "FAILED",
+						sentAt: new Date(),
+						error: msg,
+					},
+					opts,
+				),
+				this.#userNotification.createBatch(userNotifications, opts),
 			]);
 
 			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
@@ -257,42 +277,52 @@ export class NotificationRepository {
 
 	async list(
 		query: ListNotificationQuery & WithUserId,
+		opts?: PartialWithTx,
 	): Promise<ListResult<UserNotification>> {
-		return await this.#userNotification.list(query);
+		return await this.#userNotification.list(query, opts);
 	}
 
-	async subscribeToTopic(opts: {
-		token: string;
-		topic: string;
-		userId: string;
-	}) {
+	async subscribeToTopic(
+		params: {
+			token: string;
+			topic: string;
+			userId: string;
+		},
+		opts?: PartialWithTx,
+	) {
 		const [res] = await Promise.all([
-			this.#firebaseAdmin.subscribeToTopic(opts.token, opts.topic),
-			this.#fcmTopic.subscribe(opts),
+			this.#firebaseAdmin.subscribeToTopic(params.token, params.topic),
+			this.#fcmTopic.subscribe(params, opts),
 		]);
 
 		return res;
 	}
 
-	async unsubscribeFromTopic(opts: {
-		token: string;
-		topic: string;
-		userId: string;
-	}) {
+	async unsubscribeFromTopic(
+		params: {
+			token: string;
+			topic: string;
+			userId: string;
+		},
+		opts?: PartialWithTx,
+	) {
 		const [res] = await Promise.all([
-			this.#firebaseAdmin.unsubscribeFromTopic(opts.token, opts.topic),
-			this.#fcmTopic.unsubscribe(opts),
+			this.#firebaseAdmin.unsubscribeFromTopic(params.token, params.topic),
+			this.#fcmTopic.unsubscribe(params, opts),
 		]);
 
 		return res;
 	}
 
-	async saveToken(opts: { userId: string; token: string }) {
-		return await this.#fcmToken.saveToken(opts);
+	async saveToken(
+		params: { userId: string; token: string },
+		opts?: PartialWithTx,
+	) {
+		return await this.#fcmToken.saveToken(params, opts);
 	}
 
-	async removeByToken(opts: { token: string }) {
-		return await this.#fcmToken.removeByToken(opts);
+	async removeByToken(params: { token: string }, opts?: PartialWithTx) {
+		return await this.#fcmToken.removeByToken(params, opts);
 	}
 }
 
@@ -305,10 +335,14 @@ class FCMTokenRepository extends BaseRepository {
 		return item;
 	}
 
-	async listByUserId(userId: string): Promise<FCMToken[]> {
+	async listByUserId(
+		userId: string,
+		opts?: PartialWithTx,
+	): Promise<FCMToken[]> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			const fallback = async () => {
-				const res = await this.db.query.fcmToken.findMany({
+				const res = await tx.query.fcmToken.findMany({
 					where: (f, op) => op.eq(f.userId, userId),
 				});
 
@@ -328,9 +362,13 @@ class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async listByUserIds(userIds: string[]): Promise<FCMToken[]> {
+	async listByUserIds(
+		userIds: string[],
+		opts?: PartialWithTx,
+	): Promise<FCMToken[]> {
 		try {
-			const res = await this.db.query.fcmToken.findMany({
+			const tx = opts?.tx ?? this.db;
+			const res = await tx.query.fcmToken.findMany({
 				where: (f, op) => op.inArray(f.userId, userIds),
 			});
 
@@ -340,11 +378,16 @@ class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async saveToken(opts: { userId: string; token: string }) {
+	async saveToken(
+		params: { userId: string; token: string },
+		opts?: PartialWithTx,
+	): Promise<FCMToken> {
 		try {
-			const { userId, token } = opts;
+			const { userId, token } = params;
 
-			const [res] = await this.db
+			const tx = opts?.tx ?? this.db;
+
+			const [res] = await tx
 				.insert(tables.fcmToken)
 				.values({ userId, token })
 				.onConflictDoUpdate({
@@ -362,10 +405,12 @@ class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async getByToken(token: string): Promise<FCMToken> {
+	async getByToken(token: string, opts?: PartialWithTx): Promise<FCMToken> {
 		try {
+			const tx = opts?.tx ?? this.db;
+
 			const fallback = async () => {
-				const res = await this.db.query.fcmToken.findFirst({
+				const res = await tx.query.fcmToken.findFirst({
 					where: (f, op) => op.eq(f.token, token),
 				});
 
@@ -388,12 +433,12 @@ class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async removeByUserId(userId: string): Promise<void> {
+	async removeByUserId(userId: string, opts?: PartialWithTx): Promise<void> {
 		try {
+			const tx = opts?.tx ?? this.db;
+
 			await Promise.all([
-				this.db
-					.delete(tables.fcmToken)
-					.where(eq(tables.fcmToken.userId, userId)),
+				tx.delete(tables.fcmToken).where(eq(tables.fcmToken.userId, userId)),
 				this.deleteCache(userId),
 			]);
 		} catch (error) {
@@ -401,11 +446,16 @@ class FCMTokenRepository extends BaseRepository {
 		}
 	}
 
-	async removeByToken(opts: { token: string }): Promise<void> {
+	async removeByToken(
+		params: { token: string },
+		opts?: PartialWithTx,
+	): Promise<void> {
 		try {
-			await this.db
+			const tx = opts?.tx ?? this.db;
+
+			await tx
 				.delete(tables.fcmToken)
-				.where(eq(tables.fcmToken.token, opts.token));
+				.where(eq(tables.fcmToken.token, params.token));
 		} catch (error) {
 			throw this.handleError(error, "remove by token");
 		}
@@ -423,10 +473,15 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 		return item;
 	}
 
-	async listByTopic(topic: string): Promise<FCMTopicSubscription[]> {
+	async listByTopic(
+		topic: string,
+		opts?: PartialWithTx,
+	): Promise<FCMTopicSubscription[]> {
 		try {
+			const tx = opts?.tx ?? this.db;
+
 			const fallback = async () => {
-				const res = await this.db.query.fcmTopicSubscription.findMany({
+				const res = await tx.query.fcmTopicSubscription.findMany({
 					where: (f, op) => op.eq(f.topic, topic),
 				});
 
@@ -447,10 +502,13 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 
 	async subscribe(
 		item: InsertFCMTopicSubscription,
+		opts?: PartialWithTx,
 	): Promise<FCMTopicSubscription> {
 		try {
+			const tx = opts?.tx ?? this.db;
+
 			const [[res]] = await Promise.all([
-				this.db
+				tx
 					.insert(tables.fcmTopicSubscription)
 					.values({ ...item, id: v7() })
 					.onConflictDoNothing()
@@ -464,10 +522,15 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 		}
 	}
 
-	async unsubscribe(item: InsertFCMTopicSubscription): Promise<void> {
+	async unsubscribe(
+		item: InsertFCMTopicSubscription,
+		opts?: PartialWithTx,
+	): Promise<void> {
 		try {
+			const tx = opts?.tx ?? this.db;
+
 			await Promise.all([
-				this.db
+				tx
 					.delete(tables.fcmTopicSubscription)
 					.where(
 						and(
@@ -495,6 +558,7 @@ class FCMNotificationLogRepository extends BaseRepository {
 
 	async list(
 		query?: UnifiedPaginationQuery & WithUserId,
+		opts?: PartialWithTx,
 	): Promise<ListResult<FCMNotificationLog>> {
 		try {
 			const {
@@ -526,10 +590,12 @@ class FCMNotificationLogRepository extends BaseRepository {
 
 			const clauses: SQL[] = [eq(tables.fcmNotificationLog.userId, userId)];
 
+			const tx = opts?.tx ?? this.db;
+
 			if (cursor) {
 				clauses.push(gt(tables.fcmNotificationLog.sentAt, new Date(cursor)));
 
-				const res = await this.db.query.fcmNotificationLog.findMany({
+				const res = await tx.query.fcmNotificationLog.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
@@ -544,13 +610,13 @@ class FCMNotificationLogRepository extends BaseRepository {
 				const offset = (page - 1) * limit;
 
 				const [res, totalCount] = await Promise.all([
-					this.db.query.fcmNotificationLog.findMany({
+					tx.query.fcmNotificationLog.findMany({
 						where: (_, op) => op.and(...clauses),
 						orderBy,
 						offset,
 						limit,
 					}),
-					this.getTotalRow(),
+					this.getTotalRow(opts),
 				]);
 
 				const rows = res.map(FCMNotificationLogRepository.composeEntity);
@@ -560,7 +626,7 @@ class FCMNotificationLogRepository extends BaseRepository {
 				return { rows, totalPages };
 			}
 
-			const res = await this.db.query.fcmNotificationLog.findMany({
+			const res = await tx.query.fcmNotificationLog.findMany({
 				where: (_, op) => op.and(...clauses),
 				orderBy,
 				limit: limit,
@@ -574,9 +640,14 @@ class FCMNotificationLogRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertFCMNotificationLog): Promise<FCMNotificationLog> {
+	async create(
+		item: InsertFCMNotificationLog,
+		opts?: PartialWithTx,
+	): Promise<FCMNotificationLog> {
 		try {
-			const [res] = await this.db
+			const tx = opts?.tx ?? this.db;
+
+			const [res] = await tx
 				.insert(tables.fcmNotificationLog)
 				.values({
 					...item,
@@ -592,10 +663,13 @@ class FCMNotificationLogRepository extends BaseRepository {
 
 	async createBatch(
 		item: InsertFCMNotificationLog[],
+		opts?: PartialWithTx,
 	): Promise<FCMNotificationLog[]> {
 		try {
 			const values = item.map((e) => ({ ...e, id: v7() }));
-			const res = await this.db
+
+			const tx = opts?.tx ?? this.db;
+			const res = await tx
 				.insert(tables.fcmNotificationLog)
 				.values(values)
 				.returning();
@@ -618,6 +692,7 @@ class UserNotificationRepository extends BaseRepository {
 
 	async list(
 		query?: ListNotificationQuery & WithUserId,
+		opts?: PartialWithTx,
 	): Promise<ListResult<UserNotification>> {
 		try {
 			const {
@@ -658,10 +733,12 @@ class UserNotificationRepository extends BaseRepository {
 					break;
 			}
 
+			const tx = opts?.tx ?? this.db;
+
 			if (cursor) {
 				clauses.push(gt(tables.userNotification.createdAt, new Date(cursor)));
 
-				const res = await this.db.query.userNotification.findMany({
+				const res = await tx.query.userNotification.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
@@ -676,13 +753,13 @@ class UserNotificationRepository extends BaseRepository {
 				const offset = (page - 1) * limit;
 
 				const [res, totalCount] = await Promise.all([
-					this.db.query.userNotification.findMany({
+					tx.query.userNotification.findMany({
 						where: (_, op) => op.and(...clauses),
 						orderBy,
 						offset,
 						limit,
 					}),
-					this.getTotalRow(),
+					this.getTotalRow(opts),
 				]);
 
 				const rows = res.map(UserNotificationRepository.composeEntity);
@@ -692,7 +769,7 @@ class UserNotificationRepository extends BaseRepository {
 				return { rows, totalPages };
 			}
 
-			const res = await this.db.query.userNotification.findMany({
+			const res = await tx.query.userNotification.findMany({
 				where: (_, op) => op.and(...clauses),
 				orderBy,
 				limit: limit,
@@ -706,10 +783,14 @@ class UserNotificationRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertUserNotification): Promise<UserNotification> {
+	async create(
+		item: InsertUserNotification,
+		opts?: PartialWithTx,
+	): Promise<UserNotification> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			const [[res]] = await Promise.all([
-				this.db
+				tx
 					.insert(tables.userNotification)
 					.values({ ...item, id: v7() })
 					.returning(),
@@ -724,16 +805,18 @@ class UserNotificationRepository extends BaseRepository {
 
 	async createBatch(
 		items: InsertUserNotification[],
+		opts?: PartialWithTx,
 	): Promise<UserNotification[]> {
 		try {
 			const deletePromises: Promise<void>[] = [];
+			const tx = opts?.tx ?? this.db;
 			const values = items.map((item) => {
 				deletePromises.push(this.deleteCache(`unread:${item.userId}`));
 				return { ...item, id: v7() };
 			});
 
 			const [rows] = await Promise.all([
-				this.db.insert(tables.userNotification).values(values).returning(),
+				tx.insert(tables.userNotification).values(values).returning(),
 				...deletePromises,
 			]);
 
@@ -746,10 +829,12 @@ class UserNotificationRepository extends BaseRepository {
 	async update(
 		id: string,
 		item: UpdateUserNotification,
+		opts?: PartialWithTx,
 	): Promise<UserNotification> {
 		try {
+			const tx = opts?.tx ?? this.db;
 			const [[res]] = await Promise.all([
-				this.db
+				tx
 					.update(tables.userNotification)
 					.set(item)
 					.where(eq(tables.userNotification.id, id))
@@ -763,12 +848,14 @@ class UserNotificationRepository extends BaseRepository {
 		}
 	}
 
-	async countUnread(userId: string): Promise<number> {
+	async countUnread(userId: string, opts?: PartialWithTx): Promise<number> {
 		try {
 			const key = `unread:${userId}`;
 
+			const tx = opts?.tx ?? this.db;
+
 			const fallback = async () => {
-				const [res] = await this.db
+				const [res] = await tx
 					.select({
 						count: count(tables.userNotification.id),
 					})
