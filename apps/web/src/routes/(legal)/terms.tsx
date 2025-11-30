@@ -7,6 +7,7 @@ import {
 	LegalSubsection,
 } from "@/components/legal/legal-layout";
 import { APP_NAME } from "@/lib/constants";
+import { LegalContentRenderer } from "@/lib/legal/legal-content-renderer";
 import {
 	acceptanceOfTerms,
 	accountRegistration,
@@ -21,7 +22,6 @@ import {
 	serviceDescription,
 	userEligibility,
 } from "@/lib/legal/terms-content";
-import { LegalContentRenderer } from "@/lib/legal/legal-content-renderer";
 
 export const Route = createFileRoute("/(legal)/terms")({
 	component: TermsOfServiceComponent,
@@ -140,33 +140,8 @@ function TermsOfServiceComponent() {
 				<LegalContentRenderer content={acceptanceOfTerms()} />
 			</LegalSection>
 
-			<LegalSection id="service-description" title="Service Description">
-				<p>
-					{APP_NAME} is a campus-specific platform that connects students,
-					faculty, and authorized campus community members for:
-				</p>
-				<ul>
-					<li>
-						<strong>Ride-Hailing Services:</strong> Transportation services
-						within and around campus areas, connecting passengers with student
-						drivers
-					</li>
-					<li>
-						<strong>Package Delivery:</strong> Delivery of documents, parcels,
-						laundry, and other goods within campus boundaries
-					</li>
-					<li>
-						<strong>Food Delivery:</strong> Ordering and delivery of food and
-						beverages from campus merchants and tenants (canteens, cafes,
-						restaurants)
-					</li>
-				</ul>
-				<p className="mt-3">
-					{APP_NAME} acts as a technology platform connecting users with service
-					providers (drivers and merchants). We are not a transportation company
-					or food delivery company. Drivers and merchants are independent
-					contractors, not employees of {APP_NAME}.
-				</p>
+			<LegalSection id="service-description" title={serviceDescription().title}>
+				<LegalContentRenderer content={serviceDescription()} />
 			</LegalSection>
 
 			<LegalSection id="eligibility" title="User Roles and Eligibility">
@@ -228,37 +203,8 @@ function TermsOfServiceComponent() {
 				</LegalSubsection>
 			</LegalSection>
 
-			<LegalSection
-				id="registration"
-				title="Account Registration and Verification"
-			>
-				<p>To use {APP_NAME}, you must create an account by providing:</p>
-				<ul>
-					<li>Full legal name</li>
-					<li>Valid email address</li>
-					<li>Phone number (verified via OTP)</li>
-					<li>Password (securely hashed and stored)</li>
-					<li>Date of birth and gender</li>
-					<li>Profile photo (optional for passengers, required for drivers)</li>
-				</ul>
-				<p className="mt-3">
-					You are responsible for maintaining the confidentiality of your
-					account credentials and for all activities that occur under your
-					account. You must notify us immediately of any unauthorized use of
-					your account.
-				</p>
-				<p className="mt-3">
-					<strong>Driver and Merchant Verification:</strong> Driver and merchant
-					accounts require additional verification. Your account will have
-					limited functionality until verification is complete. Verification
-					typically takes 1-3 business days. We reserve the right to reject
-					verification applications that do not meet our standards.
-				</p>
-				<p className="mt-3">
-					<strong>Account Accuracy:</strong> You agree to provide accurate,
-					current, and complete information and to update it as necessary to
-					maintain its accuracy.
-				</p>
+			<LegalSection id="registration" title={accountRegistration().title}>
+				<LegalContentRenderer content={accountRegistration()} />
 			</LegalSection>
 
 			<LegalSection id="driver-requirements" title="Driver Requirements">
@@ -550,54 +496,8 @@ function TermsOfServiceComponent() {
 				</LegalSubsection>
 			</LegalSection>
 
-			<LegalSection id="cancellation" title="Cancellation and Refund Policy">
-				<p>
-					<strong>Passenger Cancellations:</strong>
-				</p>
-				<ul>
-					<li>
-						<strong>Before Driver Accepts:</strong> Free cancellation with full
-						refund
-					</li>
-					<li>
-						<strong>After Driver Accepts:</strong> 10% cancellation fee applies
-					</li>
-					<li>
-						<strong>After Driver Arrives:</strong> 50% cancellation fee if
-						passenger is a no-show after 5 minutes
-					</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Driver Cancellations:</strong>
-				</p>
-				<ul>
-					<li>
-						<strong>First Offense:</strong> Warning issued to driver account
-					</li>
-					<li>
-						<strong>Multiple Cancellations:</strong> After 3 cancellations in a
-						single day, driver may be temporarily suspended
-					</li>
-					<li>
-						<strong>Pattern of Abuse:</strong> Repeated cancellations may result
-						in permanent account suspension
-					</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Valid Cancellation Reasons:</strong>
-				</p>
-				<ul>
-					<li>Safety concerns or emergencies</li>
-					<li>Passenger/driver misconduct</li>
-					<li>Vehicle breakdown or technical issues</li>
-					<li>Inaccurate pickup/dropoff information</li>
-					<li>Weather or road conditions making completion unsafe</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Refunds:</strong> Approved refunds are credited to your wallet
-					within 24-48 hours. Refunds for payment gateway transactions may take
-					3-7 business days.
-				</p>
+			<LegalSection id="cancellation" title={cancellationPolicy().title}>
+				<LegalContentRenderer content={cancellationPolicy()} />
 			</LegalSection>
 
 			<LegalSection id="ratings" title={ratingSystem().title}>
@@ -710,159 +610,27 @@ function TermsOfServiceComponent() {
 				</p>
 			</LegalSection>
 
-			<LegalSection id="limitation-liability" title="Limitation of Liability">
-				<p>
-					<strong>Technology Platform:</strong> {APP_NAME} is a technology
-					platform connecting users with independent service providers. We do
-					not provide transportation, delivery, or food services directly.
-				</p>
-				<p className="mt-3">
-					<strong>No Warranties:</strong> The Services are provided "as is"
-					without warranties of any kind. We do not guarantee:
-				</p>
-				<ul>
-					<li>Availability of drivers or merchants at all times</li>
-					<li>Specific response times or service levels</li>
-					<li>Quality or safety of services provided by third parties</li>
-					<li>Accuracy of ETAs or route information</li>
-					<li>Uninterrupted or error-free platform operation</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Limitation of Liability:</strong> To the maximum extent
-					permitted by Indonesian law, {APP_NAME} shall not be liable for:
-				</p>
-				<ul>
-					<li>Indirect, incidental, consequential, or punitive damages</li>
-					<li>Loss of profits, revenue, data, or business opportunities</li>
-					<li>
-						Actions or omissions of drivers, passengers, merchants, or other
-						users
-					</li>
-					<li>
-						Accidents, injuries, property damage, or loss occurring during
-						service provision
-					</li>
-					<li>
-						Food quality, safety, or allergic reactions from merchant-provided
-						food
-					</li>
-					<li>
-						Theft, damage, or loss of delivered packages or personal belongings
-					</li>
-					<li>Technical issues, service interruptions, or data loss</li>
-				</ul>
-				<p className="mt-3">
-					Our total liability for any claim shall not exceed the amount you paid
-					for the specific order in question, or Rp 100,000, whichever is less.
-				</p>
-				<p className="mt-3">
-					<strong>Indemnification:</strong> You agree to indemnify and hold{" "}
-					{APP_NAME} harmless from any claims, damages, or expenses arising from
-					your use of the Services or violation of these Terms.
-				</p>
+			<LegalSection
+				id="limitation-liability"
+				title={limitationLiability().title}
+			>
+				<LegalContentRenderer content={limitationLiability()} />
 			</LegalSection>
 
-			<LegalSection id="dispute-resolution" title="Dispute Resolution">
-				<p>
-					<strong>Between Users:</strong> Disputes between passengers and
-					drivers, or between users and merchants, should first be resolved
-					through our in-app report and mediation process.
-				</p>
-				<p className="mt-3">
-					<strong>With {APP_NAME}:</strong> If you have a dispute with{" "}
-					{APP_NAME}:
-				</p>
-				<ol>
-					<li className="mb-2">
-						<strong>Contact Support:</strong> First, contact our support team at
-						hello@akademove.com to attempt informal resolution
-					</li>
-					<li className="mb-2">
-						<strong>Mediation:</strong> If informal resolution fails, we agree
-						to participate in good-faith mediation
-					</li>
-					<li className="mb-2">
-						<strong>Arbitration:</strong> If mediation fails, disputes shall be
-						resolved through binding arbitration under Indonesian law
-					</li>
-				</ol>
-				<p className="mt-3">
-					<strong>Governing Law:</strong> These Terms are governed by the laws
-					of the Republic of Indonesia. Any legal action must be brought in the
-					courts of Surabaya, Indonesia.
-				</p>
+			<LegalSection id="dispute-resolution" title={disputeResolution().title}>
+				<LegalContentRenderer content={disputeResolution()} />
 			</LegalSection>
 
-			<LegalSection id="changes-terms" title="Changes to Terms">
-				<p>
-					We may modify these Terms at any time. When we make material changes,
-					we will:
-				</p>
-				<ul>
-					<li>Update the "Last Updated" date</li>
-					<li>Notify you via email or in-app notification</li>
-					<li>
-						Require acceptance of new terms for continued use (for significant
-						changes)
-					</li>
-				</ul>
-				<p className="mt-3">
-					Your continued use of the Services after changes become effective
-					constitutes acceptance of the modified Terms. If you do not agree to
-					the changes, you must stop using the Services and may request account
-					deletion.
-				</p>
+			<LegalSection id="changes-terms" title={changesToTerms().title}>
+				<LegalContentRenderer content={changesToTerms()} />
 			</LegalSection>
 
-			<LegalSection id="termination" title="Account Termination">
-				<p>
-					<strong>Termination by You:</strong> You may delete your account at
-					any time through the app settings. Upon deletion:
-				</p>
-				<ul>
-					<li>Your access to the Services will be terminated</li>
-					<li>
-						Personal data will be retained according to our Privacy Policy
-					</li>
-					<li>Outstanding wallet balances may be withdrawn</li>
-					<li>Transaction history may be retained for legal compliance</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Termination by Us:</strong> We may suspend or terminate your
-					account:
-				</p>
-				<ul>
-					<li>For violation of these Terms</li>
-					<li>For fraudulent or illegal activity</li>
-					<li>For safety concerns or repeated user complaints</li>
-					<li>For providing false information during verification</li>
-					<li>For abusive behavior toward other users or staff</li>
-					<li>At our discretion for any other legitimate reason</li>
-				</ul>
-				<p className="mt-3">
-					<strong>Effect of Termination:</strong> Upon termination, your license
-					to use the Services immediately ends. Outstanding financial
-					obligations must still be fulfilled. Termination does not affect
-					provisions that by their nature should survive (indemnification,
-					limitation of liability, dispute resolution).
-				</p>
+			<LegalSection id="termination" title={accountTermination().title}>
+				<LegalContentRenderer content={accountTermination()} />
 			</LegalSection>
 
-			<LegalSection id="contact-terms" title="Contact Information">
-				<p>
-					If you have questions about these Terms of Service, please contact us:
-				</p>
-				<div className="mt-4 rounded-lg bg-secondary/30 p-4">
-					<p className="font-semibold">{APP_NAME} Support</p>
-					<p className="mt-2">Email: hello@akademove.com</p>
-					<p>Legal: legal@akademove.com</p>
-					<p>Phone: +62 812-3456-7890</p>
-					<p className="mt-2">Address: Surabaya, Indonesia</p>
-				</div>
-				<p className="mt-4">
-					Thank you for using {APP_NAME}. We're committed to providing a safe,
-					reliable, and innovative campus mobility solution.
-				</p>
+			<LegalSection id="contact-terms" title={contactInformation().title}>
+				<LegalContentRenderer content={contactInformation()} />
 			</LegalSection>
 		</LegalLayout>
 	);

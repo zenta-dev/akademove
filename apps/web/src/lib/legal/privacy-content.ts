@@ -8,12 +8,15 @@
 import type { LegalSectionContent } from "../legal-i18n";
 import { getLegalContent } from "../legal-i18n";
 
-export const privacyIntro = () =>
+export const privacyIntro = (): LegalSectionContent =>
 	getLegalContent({
-		en: [
-			"At AkadeMove, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you use our platform and services.",
-			"This policy complies with Indonesian data protection regulations, including Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP 27/2022) and related regulations. By using our services, you consent to the data practices described in this policy.",
-		],
+		en: {
+			title: "Introduction",
+			paragraphs: [
+				"At AkadeMove, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your data when you use our platform and services.",
+				"This policy complies with Indonesian data protection regulations, including Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP 27/2022) and related regulations. By using our services, you consent to the data practices described in this policy.",
+			],
+		},
 		id: undefined, // Indonesian translation to be added
 	});
 
