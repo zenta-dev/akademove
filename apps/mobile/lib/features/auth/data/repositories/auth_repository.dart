@@ -126,7 +126,7 @@ class AuthRepository extends BaseRepository {
     required Coordinate outletLocation,
     required String outletAddress,
 
-    required String category,
+    required MerchantCategory category,
     required Bank bank,
 
     required MultipartFile? photo,
@@ -147,7 +147,7 @@ class AuthRepository extends BaseRepository {
         detailAddress: outletAddress.trim(),
         detailLocationX: outletLocation.x,
         detailLocationY: outletLocation.y,
-        detailCategories: [category],
+        detailCategory: category.value,
         detailBankProvider: bank.provider.value,
         detailBankNumber: bank.number,
         photo: photo,

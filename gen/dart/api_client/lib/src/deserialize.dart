@@ -343,6 +343,9 @@ final _regMap = RegExp(r'^Map<String,(.*)>$');
           return MerchantBestSellers200ResponseDataInnerMenu.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantBestSellers200ResponseDataInnerMerchant':
           return MerchantBestSellers200ResponseDataInnerMerchant.fromJson(value as Map<String, dynamic>) as ReturnType;
+        case 'MerchantCategory':
+          
+          
         case 'MerchantGetMine200Response':
           return MerchantGetMine200Response.fromJson(value as Map<String, dynamic>) as ReturnType;
         case 'MerchantGetMine200ResponseBody':

@@ -238,6 +238,7 @@ Class | Method | HTTP request | Description
  - [MerchantBestSellers200ResponseDataInner](doc/MerchantBestSellers200ResponseDataInner.md)
  - [MerchantBestSellers200ResponseDataInnerMenu](doc/MerchantBestSellers200ResponseDataInnerMenu.md)
  - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
+ - [MerchantCategory](doc/MerchantCategory.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
  - [MerchantKey](doc/MerchantKey.md)

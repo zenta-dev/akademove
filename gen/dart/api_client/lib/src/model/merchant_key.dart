@@ -29,6 +29,8 @@ enum MerchantKey {
       document(r'document'),
       @JsonValue(r'image')
       image(r'image'),
+      @JsonValue(r'category')
+      category(r'category'),
       @JsonValue(r'categories')
       categories(r'categories'),
       @JsonValue(r'bank')

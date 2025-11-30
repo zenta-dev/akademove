@@ -41,7 +41,7 @@ class MerchantApi {
   /// Returns a [Future] containing a [Response] with a [MerchantBestSellers200Response] as data
   /// Throws [DioException] if API call or serialization fails
   Future<Response<MerchantBestSellers200Response>> merchantBestSellers({ 
-    num? limit = num.10,
+    required num limit,
     String? category,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -70,7 +70,7 @@ class MerchantApi {
     );
 
     final _queryParameters = <String, dynamic>{
-      if (limit != null) r'limit': limit,
+      r'limit': limit,
       if (category != null) r'category': category,
     };
 
@@ -1051,7 +1051,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   /// * [name] 
   /// * [email] 
   /// * [address] 
-  /// * [categories] 
+  /// * [category] - Primary merchant category
   /// * [document] 
   /// * [image] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
@@ -1074,7 +1074,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     String? name,
     String? email,
     String? address,
-    List<String>? categories,
+    String? category,
     MultipartFile? document,
     MultipartFile? image,
     CancelToken? cancelToken,
@@ -1115,7 +1115,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     if (address != null) r'address': address,
     r'location_x': locationX,
     r'location_y': locationY,
-    if (categories != null) r'categories': categories,
+    if (category != null) r'category': category,
     r'bank_provider': bankProvider,
     r'bank_number': bankNumber,
     if (document != null) r'document':  document ,

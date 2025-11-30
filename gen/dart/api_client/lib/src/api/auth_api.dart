@@ -788,7 +788,7 @@ _responseData = rawData == null ? null : deserialize<AuthSignUpUser201Response, 
   /// * [detailAddress] 
   /// * [detailLocationX] - Longitude (X-axis, East-West)
   /// * [detailLocationY] - Latitude (Y-axis, North-South)
-  /// * [detailCategories] 
+  /// * [detailCategory] - Primary merchant category
   /// * [detailBankProvider] 
   /// * [detailBankNumber] 
   /// * [photo] 
@@ -818,7 +818,7 @@ _responseData = rawData == null ? null : deserialize<AuthSignUpUser201Response, 
     required String detailAddress,
     required num detailLocationX,
     required num detailLocationY,
-    required List<String> detailCategories,
+    required String detailCategory,
     required String detailBankProvider,
     required num detailBankNumber,
     MultipartFile? photo,
@@ -871,7 +871,7 @@ _responseData = rawData == null ? null : deserialize<AuthSignUpUser201Response, 
     r'detail_address': detailAddress,
     r'detail_location_x': detailLocationX,
     r'detail_location_y': detailLocationY,
-    r'detail_categories': detailCategories,
+    r'detail_category': detailCategory,
     r'detail_bank_provider': detailBankProvider,
     r'detail_bank_number': detailBankNumber,
     if (detailDocument != null) r'detail_document':  detailDocument ,

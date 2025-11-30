@@ -66,6 +66,7 @@ const dummyMerchant = Merchant(
   address: 'St. Somewhere',
   isActive: true,
   rating: 3,
+  category: MerchantCategory.food,
   bank: Bank(provider: BankProvider.BCA, number: 12345),
   categories: ['Drink', 'Coffe', 'Desert', 'Food'],
   image: '${UrlConstants.randomImageUrl}/seed/512/512',

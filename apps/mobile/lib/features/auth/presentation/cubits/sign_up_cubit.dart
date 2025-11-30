@@ -97,7 +97,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required Phone outletPhone,
     required Coordinate outletLocation,
     required String outletAddress,
-    required String category,
+    required MerchantCategory category,
 
     required BankProvider bankProvider,
     required int bankNumber,

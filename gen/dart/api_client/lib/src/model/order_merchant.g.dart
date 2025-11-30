@@ -29,6 +29,8 @@ abstract class _$OrderMerchantCWProxy {
 
   OrderMerchant image(String? image);
 
+  OrderMerchant category(MerchantCategory? category);
+
   OrderMerchant categories(List<String>? categories);
 
   OrderMerchant bank(Bank? bank);
@@ -56,6 +58,7 @@ abstract class _$OrderMerchantCWProxy {
     num? rating,
     String? document,
     String? image,
+    MerchantCategory? category,
     List<String>? categories,
     Bank? bank,
     DateTime? createdAt,
@@ -104,6 +107,10 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
   OrderMerchant image(String? image) => call(image: image);
 
   @override
+  OrderMerchant category(MerchantCategory? category) =>
+      call(category: category);
+
+  @override
   OrderMerchant categories(List<String>? categories) =>
       call(categories: categories);
 
@@ -136,6 +143,7 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
+    Object? category = const $CopyWithPlaceholder(),
     Object? categories = const $CopyWithPlaceholder(),
     Object? bank = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
@@ -186,6 +194,10 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
           ? _value.image
           // ignore: cast_nullable_to_non_nullable
           : image as String?,
+      category: category == const $CopyWithPlaceholder()
+          ? _value.category
+          // ignore: cast_nullable_to_non_nullable
+          : category as MerchantCategory?,
       categories: categories == const $CopyWithPlaceholder()
           ? _value.categories
           // ignore: cast_nullable_to_non_nullable
@@ -238,6 +250,10 @@ OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
         rating: $checkedConvert('rating', (v) => v as num?),
         document: $checkedConvert('document', (v) => v as String?),
         image: $checkedConvert('image', (v) => v as String?),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecodeNullable(_$MerchantCategoryEnumMap, v),
+        ),
         categories: $checkedConvert(
           'categories',
           (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -271,8 +287,15 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'rating': ?instance.rating,
       'document': ?instance.document,
       'image': ?instance.image,
+      'category': ?_$MerchantCategoryEnumMap[instance.category],
       'categories': ?instance.categories,
       'bank': ?instance.bank?.toJson(),
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };
+
+const _$MerchantCategoryEnumMap = {
+  MerchantCategory.ATK: 'ATK',
+  MerchantCategory.printing: 'Printing',
+  MerchantCategory.food: 'Food',
+};

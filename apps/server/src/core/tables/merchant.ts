@@ -1,4 +1,5 @@
 import type { Bank, Phone } from "@repo/schema/common";
+import { CONSTANTS } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -11,7 +12,12 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { DateModifier, index, pgTable, uniqueIndex } from "./common";
+import { DateModifier, index, pgEnum, pgTable, uniqueIndex } from "./common";
+
+export const merchantCategory = pgEnum(
+	"merchant_category",
+	CONSTANTS.MERCHANT_CATEGORIES,
+);
 
 export const merchant = pgTable(
 	"merchants",
@@ -27,6 +33,7 @@ export const merchant = pgTable(
 		address: text().notNull(),
 		location: geometry("location", { type: "point", mode: "xy", srid: 4326 }),
 		bank: jsonb().$type<Bank>().notNull(),
+		category: merchantCategory().notNull(),
 		categories: text().array(),
 		isActive: boolean("is_active").notNull().default(true),
 		rating: numeric({ precision: 2, scale: 1, mode: "number" })

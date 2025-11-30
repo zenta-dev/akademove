@@ -40,7 +40,7 @@ abstract class _FormKeys {
   static const FormKey<String> step2OutletPhoneNumber = TextFieldKey(
     'step-2-outlet-phone-number',
   );
-  static const step2Category = SelectKey<String>('step-2-category');
+  static const step2Category = SelectKey<MerchantCategory>('step-2-category');
 
   static const step3BankProvider = SelectKey<BankProvider>(
     'step-3-bank-provider',
@@ -68,7 +68,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Set<Marker> _markers = {};
 
   BankProvider? _selectedBankProvider;
-  String? _selectedCategory;
+  MerchantCategory? _selectedCategory;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
@@ -1336,16 +1336,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   }
 
   Widget _buildCategorySelect(SignUpState state) {
-    const categories = ['ATK', 'Printing', 'Food'];
-    const categoryIcons = {
-      'ATK': LucideIcons.pencil,
-      'Printing': LucideIcons.printer,
-      'Food': LucideIcons.utensils,
+    const categories = MerchantCategory.values;
+    final categoryIcons = {
+      MerchantCategory.ATK: LucideIcons.pencil,
+      MerchantCategory.printing: LucideIcons.printer,
+      MerchantCategory.food: LucideIcons.utensils,
     };
-    const categoryLabels = {
-      'ATK': 'ATK (Stationery)',
-      'Printing': 'Printing',
-      'Food': 'Food & Beverages',
+    final categoryLabels = {
+      MerchantCategory.ATK: 'ATK (Stationery)',
+      MerchantCategory.printing: 'Printing',
+      MerchantCategory.food: 'Food & Beverages',
     };
 
     return Column(
@@ -1359,19 +1359,19 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         ).muted(),
         SizedBox(
           width: double.infinity,
-          child: Select<String>(
+          child: Select<MerchantCategory>(
             enabled: !state.isLoading,
             itemBuilder: (context, item) => Row(
               spacing: 8.w,
               children: [
                 Icon(categoryIcons[item], size: 16.sp),
-                Text(categoryLabels[item] ?? item),
+                Text(categoryLabels[item] ?? item.value),
               ],
             ),
             value: _selectedCategory,
             placeholder: const Text('Select outlet category'),
             onChanged: (value) => setState(() => _selectedCategory = value),
-            popup: SelectPopup<String>(
+            popup: SelectPopup<MerchantCategory>(
               items: SelectItemList(
                 children: categories
                     .map(
@@ -1381,7 +1381,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                           spacing: 8.w,
                           children: [
                             Icon(categoryIcons[e], size: 16.sp),
-                            Text(categoryLabels[e] ?? e),
+                            Text(categoryLabels[e] ?? e.value),
                           ],
                         ),
                       ),

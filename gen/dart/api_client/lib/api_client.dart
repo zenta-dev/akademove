@@ -106,6 +106,7 @@ export 'package:api_client/src/model/merchant_best_sellers200_response.dart';
 export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner.dart';
 export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_menu.dart';
 export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_merchant.dart';
+export 'package:api_client/src/model/merchant_category.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 export 'package:api_client/src/model/merchant_key.dart';

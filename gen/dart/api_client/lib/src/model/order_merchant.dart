@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coordinate.dart';
+import 'package:api_client/src/model/merchant_category.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -32,6 +33,7 @@ class OrderMerchant {
      this.rating,
      this.document,
      this.image,
+     this.category,
      this.categories,
      this.bank,
      this.createdAt,
@@ -71,6 +73,10 @@ class OrderMerchant {
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
   
+  @JsonKey(name: r'category', required: false, includeIfNull: false)
+  final MerchantCategory? category;
+  
+      /// List of merchant item categories
   @JsonKey(name: r'categories', required: false, includeIfNull: false)
   final List<String>? categories;
   
@@ -96,6 +102,7 @@ class OrderMerchant {
     other.rating == rating &&
     other.document == document &&
     other.image == image &&
+    other.category == category &&
     other.categories == categories &&
     other.bank == bank &&
     other.createdAt == createdAt &&
@@ -114,6 +121,7 @@ class OrderMerchant {
       rating.hashCode +
       document.hashCode +
       image.hashCode +
+      category.hashCode +
       categories.hashCode +
       bank.hashCode +
       createdAt.hashCode +

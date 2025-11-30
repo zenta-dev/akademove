@@ -19,7 +19,8 @@ Name | Type | Description | Notes
 **rating** | **num** |  | 
 **document** | **String** |  | [optional] 
 **image** | **String** |  | [optional] 
-**categories** | **List&lt;String&gt;** |  | 
+**category** | [**MerchantCategory**](MerchantCategory.md) |  | 
+**categories** | **List&lt;String&gt;** | List of merchant item categories | 
 **bank** | [**Bank**](Bank.md) |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 

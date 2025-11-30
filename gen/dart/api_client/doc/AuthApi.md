@@ -366,7 +366,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **authSignUpMerchant**
-> AuthSignUpUser201Response authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategories, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage)
+> AuthSignUpUser201Response authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategory, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage)
 
 
 
@@ -388,7 +388,7 @@ final int detailPhoneNumber = 56; // int |
 final String detailAddress = detailAddress_example; // String | 
 final num detailLocationX = 8.14; // num | Longitude (X-axis, East-West)
 final num detailLocationY = 8.14; // num | Latitude (Y-axis, North-South)
-final List<String> detailCategories = ; // List<String> | 
+final String detailCategory = detailCategory_example; // String | Primary merchant category
 final String detailBankProvider = detailBankProvider_example; // String | 
 final num detailBankNumber = 8.14; // num | 
 final MultipartFile photo = BINARY_DATA_HERE; // MultipartFile | 
@@ -397,7 +397,7 @@ final MultipartFile detailDocument = BINARY_DATA_HERE; // MultipartFile |
 final MultipartFile detailImage = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategories, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage);
+    final response = api.authSignUpMerchant(name, email, phoneCountryCode, phoneNumber, password, confirmPassword, detailName, detailEmail, detailPhoneCountryCode, detailPhoneNumber, detailAddress, detailLocationX, detailLocationY, detailCategory, detailBankProvider, detailBankNumber, photo, gender, detailDocument, detailImage);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AuthApi->authSignUpMerchant: $e\n');
@@ -421,7 +421,7 @@ Name | Type | Description  | Notes
  **detailAddress** | **String**|  | 
  **detailLocationX** | **num**| Longitude (X-axis, East-West) | 
  **detailLocationY** | **num**| Latitude (Y-axis, North-South) | 
- **detailCategories** | [**List&lt;String&gt;**](String.md)|  | 
+ **detailCategory** | **String**| Primary merchant category | 
  **detailBankProvider** | **String**|  | 
  **detailBankNumber** | **num**|  | 
  **photo** | **MultipartFile**|  | [optional] 

@@ -90,6 +90,7 @@ doc/MerchantBestSellers200Response.md
 doc/MerchantBestSellers200ResponseDataInner.md
 doc/MerchantBestSellers200ResponseDataInnerMenu.md
 doc/MerchantBestSellers200ResponseDataInnerMerchant.md
+doc/MerchantCategory.md
 doc/MerchantGetMine200Response.md
 doc/MerchantGetMine200ResponseBody.md
 doc/MerchantKey.md
@@ -313,6 +314,7 @@ lib/src/model/merchant_best_sellers200_response.dart
 lib/src/model/merchant_best_sellers200_response_data_inner.dart
 lib/src/model/merchant_best_sellers200_response_data_inner_menu.dart
 lib/src/model/merchant_best_sellers200_response_data_inner_merchant.dart
+lib/src/model/merchant_category.dart
 lib/src/model/merchant_get_mine200_response.dart
 lib/src/model/merchant_get_mine200_response_body.dart
 lib/src/model/merchant_key.dart
@@ -425,7 +427,3 @@ lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 pubspec.yaml
-test/merchant_best_sellers200_response_data_inner_menu_test.dart
-test/merchant_best_sellers200_response_data_inner_merchant_test.dart
-test/merchant_best_sellers200_response_data_inner_test.dart
-test/merchant_best_sellers200_response_test.dart

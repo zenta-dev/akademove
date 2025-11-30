@@ -6,9 +6,14 @@ import {
 	PhoneSchema,
 	type SchemaRegistries,
 } from "./common.ts";
+import { CONSTANTS } from "./constants.ts";
 import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
 import { flattenZodObject } from "./flatten.helper.ts";
 import { CoordinateSchema } from "./position.ts";
+
+export const MerchantCategorySchema = z
+	.enum(CONSTANTS.MERCHANT_CATEGORIES)
+	.describe("Primary merchant category");
 
 export const MerchantSchema = z.object({
 	id: z.uuid(),
@@ -24,7 +29,8 @@ export const MerchantSchema = z.object({
 	rating: z.number(),
 	document: z.url().optional(),
 	image: z.url().optional(),
-	categories: z.array(z.string()),
+	category: MerchantCategorySchema,
+	categories: z.array(z.string()).describe("List of merchant item categories"),
 	bank: BankSchema,
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
@@ -40,6 +46,7 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	isActive: true,
 	document: true,
 	image: true,
+	categories: true,
 	createdAt: true,
 	updatedAt: true,
 }).safeExtend({
@@ -48,10 +55,6 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
 		.optional(),
 	image: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
-	categories: z
-		.array(z.string())
-		.min(1, "At least one category is required")
-		.max(1, "Only one category is allowed during signup"),
 });
 export type InsertMerchant = z.infer<typeof InsertMerchantSchema>;
 
@@ -92,6 +95,7 @@ export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
 export type UpdateMerchantMenu = z.infer<typeof UpdateMerchantMenuSchema>;
 
 export const MerchantSchemaRegistries = {
+	MerchantCategory: { schema: MerchantCategorySchema, strategy: "output" },
 	Merchant: { schema: MerchantSchema, strategy: "output" },
 	MerchantMenu: { schema: MerchantMenuSchema, strategy: "output" },
 	MerchantKey: { schema: MerchantKeySchema, strategy: "input" },
