@@ -31,6 +31,9 @@ doc/BanUser.md
 doc/Bank.md
 doc/BankProvider.md
 doc/BannerConfiguration.md
+doc/ChatList200Response.md
+doc/ChatList200ResponseData.md
+doc/ChatSend200Response.md
 doc/Configuration.md
 doc/ConfigurationApi.md
 doc/ConfigurationGet200Response.md
@@ -74,6 +77,7 @@ doc/GetSessionResponse.md
 doc/InsertConfiguration.md
 doc/InsertCoupon.md
 doc/InsertLeaderboard.md
+doc/InsertOrderChatMessage.md
 doc/InsertPayment.md
 doc/InsertReport.md
 doc/InsertReview.md
@@ -109,6 +113,9 @@ doc/NotificationSubscribeToTopic200ResponseData.md
 doc/NotificationSubscribeToTopicRequest.md
 doc/Order.md
 doc/OrderApi.md
+doc/OrderChatMessage.md
+doc/OrderChatMessageListQuery.md
+doc/OrderChatMessageSender.md
 doc/OrderDriver.md
 doc/OrderEnvelope.md
 doc/OrderEnvelopeAction.md
@@ -117,6 +124,7 @@ doc/OrderEnvelopePayload.md
 doc/OrderEnvelopePayloadDetail.md
 doc/OrderEnvelopePayloadDone.md
 doc/OrderEnvelopePayloadDriverUpdateLocation.md
+doc/OrderEnvelopePayloadMessage.md
 doc/OrderEstimate200Response.md
 doc/OrderGet200Response.md
 doc/OrderItem.md
@@ -260,6 +268,9 @@ lib/src/model/ban_user.dart
 lib/src/model/bank.dart
 lib/src/model/bank_provider.dart
 lib/src/model/banner_configuration.dart
+lib/src/model/chat_list200_response.dart
+lib/src/model/chat_list200_response_data.dart
+lib/src/model/chat_send200_response.dart
 lib/src/model/configuration.dart
 lib/src/model/configuration_get200_response.dart
 lib/src/model/configuration_key.dart
@@ -300,6 +311,7 @@ lib/src/model/get_session_response.dart
 lib/src/model/insert_configuration.dart
 lib/src/model/insert_coupon.dart
 lib/src/model/insert_leaderboard.dart
+lib/src/model/insert_order_chat_message.dart
 lib/src/model/insert_payment.dart
 lib/src/model/insert_report.dart
 lib/src/model/insert_review.dart
@@ -331,6 +343,9 @@ lib/src/model/notification_subscribe_to_topic200_response.dart
 lib/src/model/notification_subscribe_to_topic200_response_data.dart
 lib/src/model/notification_subscribe_to_topic_request.dart
 lib/src/model/order.dart
+lib/src/model/order_chat_message.dart
+lib/src/model/order_chat_message_list_query.dart
+lib/src/model/order_chat_message_sender.dart
 lib/src/model/order_driver.dart
 lib/src/model/order_envelope.dart
 lib/src/model/order_envelope_action.dart
@@ -339,6 +354,7 @@ lib/src/model/order_envelope_payload.dart
 lib/src/model/order_envelope_payload_detail.dart
 lib/src/model/order_envelope_payload_done.dart
 lib/src/model/order_envelope_payload_driver_update_location.dart
+lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_estimate200_response.dart
 lib/src/model/order_get200_response.dart
 lib/src/model/order_item.dart

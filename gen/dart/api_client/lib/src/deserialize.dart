@@ -20,6 +20,9 @@ import 'package:api_client/src/model/badge_user_update_request.dart';
 import 'package:api_client/src/model/ban_user.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/banner_configuration.dart';
+import 'package:api_client/src/model/chat_list200_response.dart';
+import 'package:api_client/src/model/chat_list200_response_data.dart';
+import 'package:api_client/src/model/chat_send200_response.dart';
 import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
@@ -49,6 +52,7 @@ import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
+import 'package:api_client/src/model/insert_order_chat_message.dart';
 import 'package:api_client/src/model/insert_payment.dart';
 import 'package:api_client/src/model/insert_report.dart';
 import 'package:api_client/src/model/insert_review.dart';
@@ -77,12 +81,16 @@ import 'package:api_client/src/model/notification_subscribe_to_topic200_response
 import 'package:api_client/src/model/notification_subscribe_to_topic200_response_data.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic_request.dart';
 import 'package:api_client/src/model/order.dart';
+import 'package:api_client/src/model/order_chat_message.dart';
+import 'package:api_client/src/model/order_chat_message_list_query.dart';
+import 'package:api_client/src/model/order_chat_message_sender.dart';
 import 'package:api_client/src/model/order_driver.dart';
 import 'package:api_client/src/model/order_envelope.dart';
 import 'package:api_client/src/model/order_envelope_payload.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
+import 'package:api_client/src/model/order_envelope_payload_message.dart';
 import 'package:api_client/src/model/order_estimate200_response.dart';
 import 'package:api_client/src/model/order_get200_response.dart';
 import 'package:api_client/src/model/order_item.dart';
@@ -243,6 +251,15 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BannerConfiguration':
       return BannerConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'ChatList200Response':
+      return ChatList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ChatList200ResponseData':
+      return ChatList200ResponseData.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ChatSend200Response':
+      return ChatSend200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Configuration':
       return Configuration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -345,6 +362,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return InsertCoupon.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'InsertLeaderboard':
       return InsertLeaderboard.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'InsertOrderChatMessage':
+      return InsertOrderChatMessage.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'InsertPayment':
       return InsertPayment.fromJson(value as Map<String, dynamic>)
@@ -449,6 +469,15 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Order':
       return Order.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'OrderChatMessage':
+      return OrderChatMessage.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderChatMessageListQuery':
+      return OrderChatMessageListQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'OrderChatMessageSender':
+      return OrderChatMessageSender.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'OrderDriver':
       return OrderDriver.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'OrderEnvelope':
@@ -469,6 +498,9 @@ ReturnType deserialize<ReturnType, BaseType>(
       return OrderEnvelopePayloadDriverUpdateLocation.fromJson(
             value as Map<String, dynamic>,
           )
+          as ReturnType;
+    case 'OrderEnvelopePayloadMessage':
+      return OrderEnvelopePayloadMessage.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'OrderEstimate200Response':
       return OrderEstimate200Response.fromJson(value as Map<String, dynamic>)

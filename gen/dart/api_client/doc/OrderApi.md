@@ -9,12 +9,100 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**chatList**](OrderApi.md#chatlist) | **GET** /chat | 
+[**chatSend**](OrderApi.md#chatsend) | **POST** /chat | 
 [**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
 [**orderPlaceOrder**](OrderApi.md#orderplaceorder) | **POST** /orders | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 
+
+# **chatList**
+> ChatList200Response chatList(orderId, limit, cursor)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String orderId = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final int limit = 56; // int | 
+final String cursor = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.chatList(orderId, limit, cursor);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->chatList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **orderId** | **String**|  | 
+ **limit** | **int**|  | 
+ **cursor** | **String**|  | [optional] 
+
+### Return type
+
+[**ChatList200Response**](ChatList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **chatSend**
+> ChatSend200Response chatSend(insertOrderChatMessage)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final InsertOrderChatMessage insertOrderChatMessage = ; // InsertOrderChatMessage | 
+
+try {
+    final response = api.chatSend(insertOrderChatMessage);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->chatSend: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **insertOrderChatMessage** | [**InsertOrderChatMessage**](InsertOrderChatMessage.md)|  | 
+
+### Return type
+
+[**ChatSend200Response**](ChatSend200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderEstimate**
 > OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, discountIds, weight)

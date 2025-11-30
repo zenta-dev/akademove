@@ -19,7 +19,9 @@ enum OrderEnvelopeEvent {
   @JsonValue(r'COMPLETED')
   COMPLETED(r'COMPLETED'),
   @JsonValue(r'MATCHING')
-  MATCHING(r'MATCHING');
+  MATCHING(r'MATCHING'),
+  @JsonValue(r'CHAT_MESSAGE')
+  CHAT_MESSAGE(r'CHAT_MESSAGE');
 
   const OrderEnvelopeEvent(this.value);
 

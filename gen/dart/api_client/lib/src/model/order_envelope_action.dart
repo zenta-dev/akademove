@@ -13,7 +13,9 @@ enum OrderEnvelopeAction {
   @JsonValue(r'UPDATE_LOCATION')
   UPDATE_LOCATION(r'UPDATE_LOCATION'),
   @JsonValue(r'DONE')
-  DONE(r'DONE');
+  DONE(r'DONE'),
+  @JsonValue(r'SEND_MESSAGE')
+  SEND_MESSAGE(r'SEND_MESSAGE');
 
   const OrderEnvelopeAction(this.value);
 

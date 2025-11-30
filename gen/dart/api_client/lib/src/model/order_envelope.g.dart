@@ -161,6 +161,7 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE: 'DRIVER_LOCATION_UPDATE',
   OrderEnvelopeEvent.COMPLETED: 'COMPLETED',
   OrderEnvelopeEvent.MATCHING: 'MATCHING',
+  OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
@@ -168,6 +169,7 @@ const _$OrderEnvelopeActionEnumMap = {
   OrderEnvelopeAction.ACCEPTED: 'ACCEPTED',
   OrderEnvelopeAction.UPDATE_LOCATION: 'UPDATE_LOCATION',
   OrderEnvelopeAction.DONE: 'DONE',
+  OrderEnvelopeAction.SEND_MESSAGE: 'SEND_MESSAGE',
 };
 
 const _$EnvelopeTargetEnumMap = {

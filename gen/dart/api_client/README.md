@@ -129,6 +129,8 @@ Class | Method | HTTP request | Description
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSaveToken**](doc/NotificationApi.md#notificationsavetoken) | **POST** /notifications/token | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSubscribeToTopic**](doc/NotificationApi.md#notificationsubscribetotopic) | **POST** /notifications/subscribe | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationUnsubscribeToTopic**](doc/NotificationApi.md#notificationunsubscribetotopic) | **POST** /notifications/unsubscribe | 
+[*OrderApi*](doc/OrderApi.md) | [**chatList**](doc/OrderApi.md#chatlist) | **GET** /chat | 
+[*OrderApi*](doc/OrderApi.md) | [**chatSend**](doc/OrderApi.md#chatsend) | **POST** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
@@ -184,6 +186,9 @@ Class | Method | HTTP request | Description
  - [Bank](doc/Bank.md)
  - [BankProvider](doc/BankProvider.md)
  - [BannerConfiguration](doc/BannerConfiguration.md)
+ - [ChatList200Response](doc/ChatList200Response.md)
+ - [ChatList200ResponseData](doc/ChatList200ResponseData.md)
+ - [ChatSend200Response](doc/ChatSend200Response.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
  - [ConfigurationKey](doc/ConfigurationKey.md)
@@ -224,6 +229,7 @@ Class | Method | HTTP request | Description
  - [InsertConfiguration](doc/InsertConfiguration.md)
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
+ - [InsertOrderChatMessage](doc/InsertOrderChatMessage.md)
  - [InsertPayment](doc/InsertPayment.md)
  - [InsertReport](doc/InsertReport.md)
  - [InsertReview](doc/InsertReview.md)
@@ -255,6 +261,9 @@ Class | Method | HTTP request | Description
  - [NotificationSubscribeToTopic200ResponseData](doc/NotificationSubscribeToTopic200ResponseData.md)
  - [NotificationSubscribeToTopicRequest](doc/NotificationSubscribeToTopicRequest.md)
  - [Order](doc/Order.md)
+ - [OrderChatMessage](doc/OrderChatMessage.md)
+ - [OrderChatMessageListQuery](doc/OrderChatMessageListQuery.md)
+ - [OrderChatMessageSender](doc/OrderChatMessageSender.md)
  - [OrderDriver](doc/OrderDriver.md)
  - [OrderEnvelope](doc/OrderEnvelope.md)
  - [OrderEnvelopeAction](doc/OrderEnvelopeAction.md)
@@ -263,6 +272,7 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadDetail](doc/OrderEnvelopePayloadDetail.md)
  - [OrderEnvelopePayloadDone](doc/OrderEnvelopePayloadDone.md)
  - [OrderEnvelopePayloadDriverUpdateLocation](doc/OrderEnvelopePayloadDriverUpdateLocation.md)
+ - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
  - [OrderGet200Response](doc/OrderGet200Response.md)
  - [OrderItem](doc/OrderItem.md)
