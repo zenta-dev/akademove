@@ -29,6 +29,7 @@ export const setupHonoRouter = () => {
 			allowHeaders: [
 				"Content-Type",
 				"Authorization",
+				"Accept-Language",
 				"X-Client-Agent",
 				"X-Orpc-Batch",
 			],
