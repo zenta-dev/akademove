@@ -446,15 +446,452 @@ export const contactInformation = (): LegalSectionContent =>
 		id: undefined,
 	});
 
-/**
- * NOTE: Additional sections from the Terms of Service can be added here following
- * the same pattern. Sections not yet migrated include:
- * - Driver Requirements (detailed)
- * - Pricing and Payments
- * - Order Management
- * - Safety and Reporting
- * - Gender Preference Feature
- * - Intellectual Property
- *
- * Each section should export a function that returns LegalSectionContent.
- */
+// Driver Requirements Section
+export const driverRequirements = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Driver Requirements",
+			paragraphs: [],
+		},
+		id: undefined,
+	});
+
+export const driverDocuments = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Required Documents",
+			paragraphs: ["All drivers must submit and maintain current:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Student ID Card (KTM)",
+							content: "Valid proof of current enrollment",
+						},
+						{
+							label: "Driver's License (SIM)",
+							content:
+								"Valid SIM C (motorcycle) or SIM A (car) from Indonesian authorities",
+						},
+						{
+							label: "Vehicle Registration (STNK)",
+							content:
+								"Current vehicle registration matching the vehicle used for services",
+						},
+						{
+							label: "Vehicle Photos",
+							content: "Clear photos of your vehicle from multiple angles",
+						},
+						{
+							label: "Selfie Photo",
+							content: "Recent photo for identity verification",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Documents must be clearly readable and not expired. You must update documents before expiration to maintain active driver status.",
+			],
+		},
+		id: undefined,
+	});
+
+export const driverSchedule = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Class Schedule Management",
+			paragraphs: [
+				"One of AkadeMove's unique features is class schedule integration:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								"Drivers can input their class schedules (manual entry or calendar import when available)",
+						},
+						{
+							content:
+								'The system automatically sets drivers to "offline" status during scheduled class times',
+						},
+						{
+							content: "Schedules can be one-time or recurring weekly",
+						},
+						{
+							content:
+								"Drivers can override automatic offline status if their schedule changes",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"This feature helps drivers balance their academic responsibilities with earning opportunities. However, you remain responsible for managing your own schedule and ensuring you do not accept orders during times you are unavailable.",
+			],
+		},
+		id: undefined,
+	});
+
+export const driverAvailability = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Availability and Online Status",
+			paragraphs: ["As a driver, you control your availability:"],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								'Toggle between "online" (available for orders) and "offline" (not available)',
+						},
+						{
+							content:
+								"When online, you will receive order requests based on your location and rider preferences",
+						},
+						{
+							content: "You have the right to accept or reject order requests",
+						},
+						{
+							content:
+								"However, excessive rejection rates may affect your priority in the matching algorithm",
+						},
+						{
+							content:
+								"Repeated cancellations after accepting orders may result in warnings or suspension",
+						},
+					],
+				},
+			],
+		},
+		id: undefined,
+	});
+
+// Pricing and Payments Sections
+export const pricingPayments = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Pricing and Payments",
+			paragraphs: [],
+		},
+		id: undefined,
+	});
+
+export const pricingStructure = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Pricing Structure",
+			paragraphs: [
+				"Pricing for rides and delivery services is calculated using the following formula:",
+				"**Total Price = Base Price + (Distance in KM × Price per KM) + Tip - Coupon Discount**",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Base Price",
+							content: "Minimum charge for any order, set by campus operators",
+						},
+						{
+							label: "Price per KM",
+							content: "Rate per kilometer traveled, configurable by operators",
+						},
+						{
+							label: "Distance Calculation",
+							content:
+								"Calculated using Google Maps API for the shortest route",
+						},
+						{
+							label: "Tips",
+							content: "Optional gratuity added by passengers",
+						},
+						{
+							label: "Coupons",
+							content: "Promotional discounts applied at checkout",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Food Orders:** Food prices are set by merchants. A delivery fee based on distance applies separately.",
+				"You will see the estimated fare before confirming your order. The final fare is calculated based on the actual route taken.",
+			],
+		},
+		id: undefined,
+	});
+
+export const commissionStructure = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Commission Structure",
+			paragraphs: ["AkadeMove operates on a commission-based model:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Rides and Package Delivery",
+							content: "15% platform commission deducted from the total fare",
+						},
+						{
+							label: "Food Delivery",
+							content:
+								"20% total commission (10% from merchant, 10% from driver earnings)",
+						},
+						{
+							label: "Tips",
+							content:
+								"Tips go directly to drivers without commission deduction (configurable by operators)",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Example Calculation:**\nRide Total: Rp 25,000\nPlatform Commission (15%): Rp 3,750\nDriver Earnings: Rp 21,250",
+				"Commission rates are subject to change with advance notice. Drivers and merchants will be notified of any rate changes at least 14 days in advance.",
+			],
+		},
+		id: undefined,
+	});
+
+export const walletSystem = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Wallet System",
+			paragraphs: ["All users have an in-app wallet for managing funds:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Top-Up",
+							content:
+								"Passengers can add funds via QRIS, bank transfer, or e-wallet through our payment partner Midtrans",
+						},
+						{
+							label: "Payment",
+							content:
+								"Order payments are automatically deducted from wallet balance",
+						},
+						{
+							label: "Earnings",
+							content:
+								"Driver and merchant earnings are credited to their wallets after order completion",
+						},
+						{
+							label: "Balance Tracking",
+							content: "View real-time wallet balance and transaction history",
+						},
+						{
+							label: "Currency",
+							content: "All transactions are in Indonesian Rupiah (IDR)",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Insufficient wallet balance will prevent order placement. Minimum top-up amounts and transaction limits may apply.",
+			],
+		},
+		id: undefined,
+	});
+
+export const withdrawals = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Withdrawals",
+			paragraphs: [
+				"Drivers and merchants can withdraw earnings to their registered bank accounts:",
+			],
+			lists: [
+				{
+					items: [
+						{ content: "Minimum withdrawal amount: Rp 50,000" },
+						{ content: "Processing time: 1-3 business days" },
+						{
+							content: "Bank account must be in the driver/merchant's name",
+						},
+						{ content: "Transaction fees may apply depending on the bank" },
+						{
+							content:
+								"Failed withdrawals due to incorrect bank information may incur fees",
+						},
+					],
+				},
+			],
+		},
+		id: undefined,
+	});
+
+// Order Management Sections
+export const orderManagement = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Order Management",
+			paragraphs: [],
+		},
+		id: undefined,
+	});
+
+export const rideHailing = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Ride-Hailing Services",
+			paragraphs: [
+				"**Passenger Responsibilities:**",
+				"- Specify accurate pickup and dropoff locations\n- Be ready at the pickup location when the driver arrives\n- Treat drivers with respect and courtesy\n- Follow all safety guidelines\n- Ensure you have sufficient wallet balance",
+				"",
+				"**Driver Responsibilities:**",
+				"- Accept orders you can fulfill\n- Navigate to pickup location promptly\n- Follow the designated route or a reasonable alternative\n- Maintain vehicle cleanliness and safety\n- Treat passengers with respect and ensure a comfortable journey\n- Complete orders as requested",
+				"",
+				"**Order Status Flow:**",
+				"Requested → Matching → Accepted → Arriving → In-Trip → Completed",
+			],
+		},
+		id: undefined,
+	});
+
+export const packageDelivery = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Package Delivery",
+			paragraphs: ["For package delivery services:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Sender Responsibilities",
+							content:
+								"Accurately describe package size, provide clear pickup/dropoff addresses, ensure package is ready for pickup",
+						},
+						{
+							label: "Driver Responsibilities",
+							content:
+								"Handle packages with care, obtain proof of delivery (photo or OTP from recipient), do not open or inspect package contents",
+						},
+						{
+							label: "Prohibited Items",
+							content:
+								"Illegal substances, weapons, hazardous materials, cash, perishable food without proper packaging, or items exceeding size/weight limits",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"AkadeMove is not responsible for package contents. Users agree not to ship prohibited or illegal items through our platform.",
+			],
+		},
+		id: undefined,
+	});
+
+export const foodDelivery = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Food Delivery",
+			paragraphs: [
+				"**Order Workflow:**",
+				"- Customer places order from merchant menu\n- Merchant accepts and prepares order\n- Driver is assigned to pick up from merchant\n- Driver delivers to customer location",
+				"",
+				"**Merchant Responsibilities:**",
+				"- Maintain accurate menu, pricing, and availability\n- Prepare orders within reasonable timeframes\n- Package food securely for delivery\n- Ensure food safety and quality standards\n- Mark items as out of stock promptly",
+				"",
+				"**Food Quality:** AkadeMove is not responsible for food quality, preparation, or safety. Merchants are solely responsible for the food they provide.",
+			],
+		},
+		id: undefined,
+	});
+
+// Safety and Additional Sections
+export const safetyReporting = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Safety and Reporting",
+			paragraphs: [
+				"Your safety is our priority. AkadeMove provides several safety features:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "In-App Chat",
+							content:
+								"Communicate without sharing phone numbers (phone masking enabled)",
+						},
+						{
+							label: "Driver Verification",
+							content:
+								"All drivers undergo document verification before activation",
+						},
+						{
+							label: "Real-Time Tracking",
+							content: "Share your trip with trusted contacts",
+						},
+						{
+							label: "Emergency Button",
+							content: "Quick access to campus security or emergency services",
+						},
+						{
+							label: "Report System",
+							content:
+								"Report misconduct, harassment, fraud, or safety concerns",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Reporting Process:**\n- Submit report through the app with description and evidence\n- Reports are reviewed by our safety team within 24-48 hours\n- Investigation may include reviewing chat logs, order details, and GPS data\n- Actions taken may include warnings, temporary suspension, or permanent ban\n- Serious incidents may be reported to campus security or police",
+				"**User Responsibilities:**\n- Report any safety concerns immediately\n- Do not share personal information unnecessarily\n- Use only the in-app communication features\n- Follow campus safety guidelines\n- Do not engage in prohibited conduct",
+			],
+		},
+		id: undefined,
+	});
+
+export const genderPreference = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Gender Preference Feature",
+			paragraphs: [
+				"AkadeMove offers an optional gender preference feature for enhanced comfort and safety:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								"Passengers can specify preference for same-gender drivers",
+						},
+						{
+							content:
+								"This preference is considered in the matching algorithm",
+						},
+						{
+							content:
+								"Availability depends on driver availability in your area",
+						},
+						{
+							content:
+								"Using this feature may increase wait times if same-gender drivers are not nearby",
+						},
+						{
+							content:
+								"Gender preference is optional and can be enabled/disabled",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"This feature is designed to promote inclusivity and comfort, particularly for users who may feel more comfortable with same-gender service providers.",
+			],
+		},
+		id: undefined,
+	});
+
+export const intellectualProperty = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Intellectual Property",
+			paragraphs: [
+				"The AkadeMove platform, including its software, design, content, trademarks, and logos, is owned by AkadeMove and protected by Indonesian and international intellectual property laws.",
+				"You are granted a limited, non-exclusive, non-transferable license to access and use the Services for personal, non-commercial purposes.",
+				"**User Content:** You retain ownership of content you submit (photos, reviews, messages). By submitting content, you grant AkadeMove a worldwide, royalty-free license to use, display, and distribute your content for platform operations and marketing purposes.",
+				"You represent that you have all necessary rights to submit content and that your content does not violate any third-party rights or laws.",
+			],
+		},
+		id: undefined,
+	});

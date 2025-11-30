@@ -26,7 +26,13 @@ export function LegalContentRenderer({ content }: LegalContentRendererProps) {
 						{list.items.map((item, itemIndex: number) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Items are static content
 							<li key={itemIndex}>
-								<strong>{item.label}:</strong> {item.content}
+								{item.label ? (
+									<>
+										<strong>{item.label}:</strong> {item.content}
+									</>
+								) : (
+									item.content
+								)}
 							</li>
 						))}
 					</ul>

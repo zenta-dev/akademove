@@ -28,7 +28,7 @@ export type LegalSectionContent = {
 	lists?: {
 		title?: string;
 		items: Array<{
-			label: string;
+			label?: string;
 			content: string;
 		}>;
 	}[];
