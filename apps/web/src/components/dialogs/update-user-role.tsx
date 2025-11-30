@@ -33,33 +33,25 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { BetterAuthClientError } from "@/lib/error";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 	const [open, setOpen] = useState(false);
 	const form = useForm<UpdateUserRole>({
 		resolver: zodResolver(UpdateUserRoleSchema),
-		defaultValues: { role: "user" },
+		defaultValues: { role: "USER" },
 	});
 
 	const mutation = useMutation(
-		orpcQuery.user.update.mutationOptions({
-			mutationFn: async (data) => {
-				const result = await orpcClient.user.update(data);
-				if (result.status !== 200) {
-					throw new BetterAuthClientError(result.body.message);
-				}
-				return result;
-			},
+		orpcQuery.user.admin.update.mutationOptions({
 			onSuccess: async () => {
-				queryClient.invalidateQueries();
+				await queryClient.invalidateQueries();
 				toast.success(m.success_placeholder({ action: m.update_user_role() }));
 				setOpen(false);
-				form.setValue("role", "user");
+				form.setValue("role", "USER");
 				form.clearErrors();
 			},
-			onError: (error: BetterAuthClientError) => {
+			onError: (error: Error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(m.update_user_role().toLowerCase()),

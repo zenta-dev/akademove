@@ -40,7 +40,6 @@ abstract class _FormKeys {
   static const FormKey<String> step2OutletPhoneNumber = TextFieldKey(
     'step-2-outlet-phone-number',
   );
-  static const step2Category = SelectKey<MerchantCategory>('step-2-category');
 
   static const step3BankProvider = SelectKey<BankProvider>(
     'step-3-bank-provider',
@@ -326,7 +325,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Future<Position> _determinePosition() async {
     return Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
   }
 

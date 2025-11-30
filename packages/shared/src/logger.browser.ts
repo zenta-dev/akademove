@@ -1,12 +1,10 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: cant cast */
 import pino from "pino";
 
-declare global {
-	var window: unknown;
-}
-
 export function createBrowserLogger() {
-	const isBrowser = typeof window !== "undefined";
+	const isBrowser =
+		typeof globalThis !== "undefined" &&
+		typeof globalThis.window !== "undefined";
 
 	if (isBrowser) {
 		return pino({

@@ -18,19 +18,13 @@ type BuildPrefix<P extends string, K extends string> = P extends ""
 
 type Entry<K extends string, V extends z.ZodTypeAny> = { key: K; value: V };
 
-type FlattenEntries<
-	T extends Record<string, z.ZodTypeAny>,
-	P extends string = "",
-> = {
+type FlattenEntries<T extends Record<string, any>, P extends string = ""> = {
 	[K in keyof T & string]: UnwrapZodType<T[K]> extends z.ZodObject<infer U>
 		? FlattenEntries<U, BuildPrefix<P, K>>
 		: Entry<BuildPrefix<P, K>, T[K]>;
 }[keyof T & string];
 
-type FlattenZodShape<
-	T extends Record<string, z.ZodTypeAny>,
-	P extends string = "",
-> = {
+type FlattenZodShape<T extends Record<string, any>, P extends string = ""> = {
 	[E in FlattenEntries<T, P> as E extends Entry<infer K, any>
 		? K
 		: never]: E extends Entry<any, infer V> ? V : never;

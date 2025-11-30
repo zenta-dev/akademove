@@ -188,8 +188,9 @@ class IMapService implements MapService {
       if (response.routes.isEmpty) return [];
 
       final route = response.routes.first;
-      print('Duration: ${route.durationMinutes} minutes');
-      print('Distance: ${route.distanceKm} km');
+      logger.d(
+        'Route info: Duration: ${route.durationMinutes} minutes, Distance: ${route.distanceKm} km',
+      );
 
       return route.polylinePoints
               ?.map((p) => Coordinate(x: p.longitude, y: p.latitude))

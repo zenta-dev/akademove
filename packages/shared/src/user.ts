@@ -3,23 +3,23 @@ import type { UserRole } from "@repo/schema/user";
 
 export const ROLES_TYPED: { id: UserRole; name: string }[] = [
 	{
-		id: "admin",
+		id: "ADMIN",
 		name: m.administrator(),
 	},
 	{
-		id: "operator",
+		id: "OPERATOR",
 		name: m.operator(),
 	},
 	{
-		id: "merchant",
+		id: "MERCHANT",
 		name: m.merchant(),
 	},
 	{
-		id: "driver",
+		id: "DRIVER",
 		name: m.driver(),
 	},
 	{
-		id: "user",
+		id: "USER",
 		name: m.user(),
 	},
 ];

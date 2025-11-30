@@ -49,8 +49,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   BankProvider? _selectedBankProvider;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
-  CountryCode _selectedOwnerCountryCode = CountryCode.ID;
-  CountryCode _selectedOutletCountryCode = CountryCode.ID;
   bool _isLocationLoaded = false;
   bool _isDraggingMarker = false;
   bool _isLoading = false;
@@ -311,7 +309,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
 
   Future<Position> _determinePosition() async {
     return Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     );
   }
 
@@ -586,13 +584,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     }
   }
 
-  void _cancelBankAccountEdit() {
-    setState(() {
-      _isBankAccountEditing = false;
-      _bankAccountController.clear();
-    });
-  }
-
   Future<void> _handleSaveChanges() async {
     final isValid = _formController.errors.isEmpty;
 
@@ -668,9 +659,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       _FormKeys.ownerPhoneNumber,
                       "Owner's Phone Number",
                       (val) {
-                        if (val.country == Country.indonesia) {
-                          _selectedOwnerCountryCode = CountryCode.ID;
-                        }
+                        // Phone number change callback
                       },
                     ),
                     _buildTextField(
@@ -687,9 +676,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       _FormKeys.outletPhoneNumber,
                       "Outlet's Phone Number",
                       (val) {
-                        if (val.country == Country.indonesia) {
-                          _selectedOutletCountryCode = CountryCode.ID;
-                        }
+                        // Phone number change callback
                       },
                     ),
                     _buildTextField(

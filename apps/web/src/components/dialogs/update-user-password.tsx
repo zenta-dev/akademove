@@ -31,8 +31,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { BetterAuthClientError } from "@/lib/error";
-import { orpcClient, orpcQuery } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -45,15 +44,9 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 	});
 
 	const mutation = useMutation(
-		orpcQuery.user.update.mutationOptions({
-			mutationFn: async (data) => {
-				const result = await orpcClient.user.update(data);
-				if (result.status !== 200) {
-					throw new BetterAuthClientError(result.body.message);
-				}
-				return result;
-			},
+		orpcQuery.user.admin.update.mutationOptions({
 			onSuccess: async () => {
+				await queryClient.invalidateQueries();
 				toast.success(
 					m.success_placeholder({ action: m.update_user_password() }),
 				);
@@ -62,7 +55,7 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 				form.setValue("confirmPassword", "");
 				form.clearErrors();
 			},
-			onError: (error: BetterAuthClientError) => {
+			onError: (error: Error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(

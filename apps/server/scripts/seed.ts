@@ -430,6 +430,7 @@ async function seedMerchants() {
 	const merchants = Array.from({ length: merchantsToCreate }).map((_, i) => {
 		const user = availableUsers[i];
 		const bankProvider = faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS);
+		const category = faker.helpers.arrayElement(CONSTANTS.MERCHANT_CATEGORIES);
 
 		return {
 			id: v7(),
@@ -438,6 +439,7 @@ async function seedMerchants() {
 			email: user.email,
 			phone: user.phone,
 			address: faker.location.streetAddress(),
+			category,
 			location: {
 				y: faker.location.latitude(),
 				x: faker.location.longitude(),

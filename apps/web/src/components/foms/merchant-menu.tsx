@@ -125,7 +125,11 @@ export const MerchantMenuForm = ({
 						body: parse.data,
 					});
 				} else {
-					console.error("Validation errors:", parse.error);
+					toast.error("Validation failed", {
+						description: parse.error.issues
+							.map((e: { message: string }) => e.message)
+							.join(", "),
+					});
 				}
 			}
 
@@ -137,7 +141,11 @@ export const MerchantMenuForm = ({
 						body: parse.data,
 					});
 				} else {
-					console.error("Validation errors:", parse.error);
+					toast.error("Validation failed", {
+						description: parse.error.issues
+							.map((e: { message: string }) => e.message)
+							.join(", "),
+					});
 				}
 			}
 		},

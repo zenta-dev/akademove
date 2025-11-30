@@ -35,8 +35,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { BetterAuthClientError } from "@/lib/error";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const InviteUserDialog = () => {
 	const [open, setOpen] = useState(false);
@@ -47,33 +46,26 @@ export const InviteUserDialog = () => {
 		defaultValues: {
 			name: "",
 			email: "",
-			role: "user",
+			role: "USER",
 			password: "",
 			confirmPassword: "",
 		},
 	});
 
 	const mutation = useMutation(
-		orpcQuery.user.create.mutationOptions({
-			mutationFn: async (data) => {
-				const result = await orpcClient.user.create(data);
-				if (result.status !== 200) {
-					throw new BetterAuthClientError(result.body.message);
-				}
-				return result;
-			},
+		orpcQuery.user.admin.create.mutationOptions({
 			onSuccess: async () => {
-				queryClient.invalidateQueries();
+				await queryClient.invalidateQueries();
 				toast.success(m.success_placeholder({ action: m.invite_user() }));
 				setOpen(false);
 				form.setValue("name", "");
 				form.setValue("email", "");
-				form.setValue("role", "user");
+				form.setValue("role", "USER");
 				form.setValue("password", "");
 				form.setValue("confirmPassword", "");
 				form.clearErrors();
 			},
-			onError: (error: BetterAuthClientError) => {
+			onError: (error: Error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(m.invite_user().toLowerCase()),
@@ -82,7 +74,7 @@ export const InviteUserDialog = () => {
 						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
-				if (error.code === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL") {
+				if (error.message.toLowerCase().includes("email")) {
 					form.setError("email", { message: error.message });
 				} else {
 					form.setError("confirmPassword", { message: error.message });

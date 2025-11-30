@@ -35,8 +35,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { BetterAuthClientError } from "@/lib/error";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { Separator } from "../ui/separator";
 
 export const BanUserDialog = ({ userId }: { userId: string }) => {
@@ -51,22 +50,15 @@ export const BanUserDialog = ({ userId }: { userId: string }) => {
 	});
 
 	const mutation = useMutation(
-		orpcQuery.user.update.mutationOptions({
-			mutationFn: async (data) => {
-				const result = await orpcClient.user.update(data);
-				if (result.status !== 200) {
-					throw new BetterAuthClientError(result.body.message);
-				}
-				return result;
-			},
+		orpcQuery.user.admin.update.mutationOptions({
 			onSuccess: async () => {
-				queryClient.invalidateQueries();
+				await queryClient.invalidateQueries();
 				toast.success(m.success_placeholder({ action: m.ban_user() }));
 				setDialogOpen(false);
 				form.setValue("banReason", "");
 				form.clearErrors();
 			},
-			onError: (error: BetterAuthClientError) => {
+			onError: (error: Error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(m.ban_user().toLowerCase()),

@@ -19,8 +19,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { BetterAuthClientError } from "@/lib/error";
-import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,21 +30,14 @@ export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 	});
 
 	const mutation = useMutation(
-		orpcQuery.user.update.mutationOptions({
-			mutationFn: async (data) => {
-				const result = await orpcClient.user.update(data);
-				if (result.status !== 200) {
-					throw new BetterAuthClientError(result.body.message);
-				}
-				return result;
-			},
+		orpcQuery.user.admin.update.mutationOptions({
 			onSuccess: async () => {
-				queryClient.invalidateQueries();
+				await queryClient.invalidateQueries();
 				toast.success(m.success_placeholder({ action: m.unban_user() }));
 				setDialogOpen(false);
 				form.clearErrors();
 			},
-			onError: (error: BetterAuthClientError) => {
+			onError: (error: Error) => {
 				toast.error(
 					m.failed_placeholder({
 						action: capitalizeFirstLetter(m.unban_user().toLowerCase()),

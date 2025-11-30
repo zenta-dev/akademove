@@ -4,9 +4,7 @@ import 'package:api_client/api_client.dart';
 
 class ConfigurationCubit extends BaseCubit<ConfigurationState> {
   ConfigurationCubit({required ConfigurationRepository configurationRepository})
-    : _configurationRepository = configurationRepository,
-      super(const ConfigurationState());
-  final ConfigurationRepository _configurationRepository;
+    : super(const ConfigurationState());
 
   Future<void> init() async {}
 
