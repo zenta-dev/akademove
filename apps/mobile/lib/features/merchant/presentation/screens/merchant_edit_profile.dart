@@ -584,37 +584,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     }
   }
 
-  Future<void> _handleSaveChanges() async {
-    final isValid = _formController.errors.isEmpty;
-
-    if (!isValid) {
-      _showToast(
-        context,
-        'Validation Error',
-        'Please fill all required fields correctly',
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        _showToast(context, 'Success', 'Profile updated successfully');
-      }
-    } catch (e) {
-      if (mounted) {
-        _showToast(context, 'Error', 'Failed to update profile');
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(

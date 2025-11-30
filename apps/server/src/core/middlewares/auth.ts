@@ -77,8 +77,7 @@ export const orpcRequireAuthMiddleware = base.middleware(
 );
 
 export const hasPermission = (_permissions: Permissions) =>
-	base.middleware(async (props) => {
-		const { context, next } = props;
+	base.middleware(async ({ next }) => {
 		// const { user, svc } = context;
 		// if (!user) {
 		// 	throw new AuthError("Invalid session", {
