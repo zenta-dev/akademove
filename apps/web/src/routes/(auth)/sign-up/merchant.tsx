@@ -5,14 +5,16 @@ import {
 	type FlatSignUpMerchant,
 	FlatSignUpMerchantSchema,
 } from "@repo/schema/auth";
+import type { CountryCode } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/router";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { parsePhoneNumber } from "react-phone-number-input";
 import { toast } from "sonner";
 import { MapWrapper } from "@/components/misc/map-wrapper";
 import { Submitting } from "@/components/misc/submitting";
@@ -35,6 +37,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import {
 	Select,
 	SelectContent,
@@ -78,7 +81,8 @@ function RouteComponent() {
 			detail_document: undefined,
 			detail_name: "",
 			detail_email: "",
-			detail_phone: "",
+			detail_phone_countryCode: "ID",
+			detail_phone_number: 0,
 			detail_address: "",
 			detail_type: "merchant",
 			detail_bank_provider: undefined,
@@ -116,7 +120,7 @@ function RouteComponent() {
 					}
 
 					if (fields.includes("phone")) {
-						form.setError("phone", { message: error.message });
+						form.setError("phone_number", { message: error.message });
 						scrollToField("phone");
 					}
 				}
@@ -137,14 +141,21 @@ function RouteComponent() {
 				if (name === "email") {
 					form.setValue("detail_email", value.email || "");
 				}
-				if (name === "phone") {
-					form.setValue("detail_phone", value.phone || "");
+				if (name === "phone_countryCode") {
+					form.setValue(
+						"detail_phone_countryCode",
+						value.phone_countryCode || "ID",
+					);
+				}
+				if (name === "phone_number") {
+					form.setValue("detail_phone_number", value.phone_number || 0);
 				}
 			});
 
 			const values = form.getValues();
 			form.setValue("detail_email", values.email);
-			form.setValue("detail_phone", values.phone);
+			form.setValue("detail_phone_countryCode", values.phone_countryCode);
+			form.setValue("detail_phone_number", values.phone_number);
 
 			return () => subscription.unsubscribe();
 		}
@@ -266,16 +277,37 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="phone"
+								name="phone_number"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.phone()}</FormLabel>
 										<FormControl>
-											<Input
-												placeholder="+6281222333444"
-												autoComplete="tel"
-												disabled={mutation.isPending}
-												{...field}
+											<PhoneInput
+												countries={["ID"]}
+												defaultCountry={"ID"}
+												name={field.name}
+												disabled={field.disabled}
+												onCountryChange={(val) => {
+													if (val)
+														form.setValue(
+															"phone_countryCode",
+															val as CountryCode,
+														);
+												}}
+												onChange={(val) => {
+													const parse = parsePhoneNumber(val);
+													if (parse) {
+														form.setValue(
+															"phone_number",
+															Number(parse.nationalNumber),
+														);
+														if (parse.country)
+															form.setValue(
+																"phone_countryCode",
+																parse.country as CountryCode,
+															);
+													}
+												}}
 											/>
 										</FormControl>
 										<FormMessage />
@@ -412,14 +444,37 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail_phone"
+								name="detail_phone_number"
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>{m.phone()}</FormLabel>
 										<FormControl>
-											<Input
+											<PhoneInput
+												countries={["ID"]}
+												defaultCountry={"ID"}
+												name={field.name}
 												disabled={copyPersonal ?? mutation.isPending}
-												{...field}
+												onCountryChange={(val) => {
+													if (val)
+														form.setValue(
+															"detail_phone_countryCode",
+															val as CountryCode,
+														);
+												}}
+												onChange={(val) => {
+													const parse = parsePhoneNumber(val);
+													if (parse) {
+														form.setValue(
+															"detail_phone_number",
+															Number(parse.nationalNumber),
+														);
+														if (parse.country)
+															form.setValue(
+																"detail_phone_countryCode",
+																parse.country as CountryCode,
+															);
+													}
+												}}
 											/>
 										</FormControl>
 										<FormMessage />
