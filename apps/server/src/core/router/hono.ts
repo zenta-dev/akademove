@@ -9,6 +9,7 @@ import { TRUSTED_ORIGINS } from "../constants";
 import { getManagers, getRepositories, getServices } from "../factory";
 import { honoAuthMiddleware } from "../middlewares/auth";
 import { honoClientAgentMiddleware } from "../middlewares/client";
+import { localeMiddleware } from "../middlewares/language";
 
 export const createHono = () => new Hono<HonoContext>();
 
@@ -55,6 +56,7 @@ export const setupHonoRouter = () => {
 	});
 
 	app.use(honoAuthMiddleware);
+	app.use(localeMiddleware);
 
 	app.onError((err, c) => {
 		logError(err);

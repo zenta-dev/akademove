@@ -37,11 +37,12 @@ const _sharedInterceptor: Interceptor<
 	any,
 	Promise<StandardHandleResult>
 > = async (opts) => {
+	const path = opts.request.url.pathname;
+	log.debug({ path }, "Incoming Request");
 	try {
-		const path = opts.request.url.pathname;
-		log.debug({ path }, "Incoming Request");
 		const res = await opts.next();
-		log.debug("Outcoming response");
+		const { response } = res;
+		log.debug(response, "Outcoming response");
 		return res;
 	} catch (error) {
 		console.error("ORPC Error Interceptor:", error);
@@ -100,6 +101,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 			manager,
 			clientAgent,
 			user: c.var.session?.user,
+			locale: c.var.locale,
 		};
 
 		if (isRPC) {
