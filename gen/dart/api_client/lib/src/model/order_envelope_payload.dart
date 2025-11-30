@@ -23,16 +23,17 @@ class OrderEnvelopePayload {
   /// Returns a new [OrderEnvelopePayload] instance.
   const OrderEnvelopePayload({
     this.detail,
-    this.driverAccept,
+    this.driverAssigned,
     this.driverUpdateLocation,
     this.done,
+    this.cancelReason,
   });
 
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDetail? detail;
 
-  @JsonKey(name: r'driverAccept', required: false, includeIfNull: false)
-  final Driver? driverAccept;
+  @JsonKey(name: r'driverAssigned', required: false, includeIfNull: false)
+  final Driver? driverAssigned;
 
   @JsonKey(name: r'driverUpdateLocation', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation;
@@ -40,21 +41,26 @@ class OrderEnvelopePayload {
   @JsonKey(name: r'done', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDone? done;
 
+  @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
+  final String? cancelReason;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is OrderEnvelopePayload &&
           other.detail == detail &&
-          other.driverAccept == driverAccept &&
+          other.driverAssigned == driverAssigned &&
           other.driverUpdateLocation == driverUpdateLocation &&
-          other.done == done;
+          other.done == done &&
+          other.cancelReason == cancelReason;
 
   @override
   int get hashCode =>
       detail.hashCode +
-      driverAccept.hashCode +
+      driverAssigned.hashCode +
       driverUpdateLocation.hashCode +
-      done.hashCode;
+      done.hashCode +
+      cancelReason.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>
       _$OrderEnvelopePayloadFromJson(json);

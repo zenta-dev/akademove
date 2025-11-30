@@ -13,17 +13,17 @@ void main() {
       // TODO
     });
 
-    // PaymentEnvelopePayloadPayment payment
+    // Payment payment
     test('to test the property `payment`', () async {
       // TODO
     });
 
-    // PaymentEnvelopePayloadTransaction transaction
+    // Transaction transaction
     test('to test the property `transaction`', () async {
       // TODO
     });
 
-    // PaymentEnvelopePayloadWallet wallet
+    // Wallet wallet
     test('to test the property `wallet`', () async {
       // TODO
     });

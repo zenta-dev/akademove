@@ -135,9 +135,6 @@ doc/PaymentApi.md
 doc/PaymentEnvelope.md
 doc/PaymentEnvelopeEvent.md
 doc/PaymentEnvelopePayload.md
-doc/PaymentEnvelopePayloadPayment.md
-doc/PaymentEnvelopePayloadTransaction.md
-doc/PaymentEnvelopePayloadWallet.md
 doc/PaymentKey.md
 doc/PaymentMethod.md
 doc/PaymentProvider.md
@@ -354,9 +351,6 @@ lib/src/model/payment.dart
 lib/src/model/payment_envelope.dart
 lib/src/model/payment_envelope_event.dart
 lib/src/model/payment_envelope_payload.dart
-lib/src/model/payment_envelope_payload_payment.dart
-lib/src/model/payment_envelope_payload_transaction.dart
-lib/src/model/payment_envelope_payload_wallet.dart
 lib/src/model/payment_key.dart
 lib/src/model/payment_method.dart
 lib/src/model/payment_provider.dart
@@ -553,10 +547,7 @@ test/pagination_result_test.dart
 test/pay_request_test.dart
 test/payment_api_test.dart
 test/payment_envelope_event_test.dart
-test/payment_envelope_payload_payment_test.dart
 test/payment_envelope_payload_test.dart
-test/payment_envelope_payload_transaction_test.dart
-test/payment_envelope_payload_wallet_test.dart
 test/payment_envelope_test.dart
 test/payment_key_test.dart
 test/payment_method_test.dart

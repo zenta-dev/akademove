@@ -160,6 +160,7 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.DRIVER_ACCEPTED: 'DRIVER_ACCEPTED',
   OrderEnvelopeEvent.DRIVER_LOCATION_UPDATE: 'DRIVER_LOCATION_UPDATE',
   OrderEnvelopeEvent.COMPLETED: 'COMPLETED',
+  OrderEnvelopeEvent.MATCHING: 'MATCHING',
 };
 
 const _$OrderEnvelopeActionEnumMap = {

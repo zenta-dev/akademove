@@ -9,13 +9,15 @@ part of 'order_envelope_payload.dart';
 abstract class _$OrderEnvelopePayloadCWProxy {
   OrderEnvelopePayload detail(OrderEnvelopePayloadDetail? detail);
 
-  OrderEnvelopePayload driverAccept(Driver? driverAccept);
+  OrderEnvelopePayload driverAssigned(Driver? driverAssigned);
 
   OrderEnvelopePayload driverUpdateLocation(
     OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation,
   );
 
   OrderEnvelopePayload done(OrderEnvelopePayloadDone? done);
+
+  OrderEnvelopePayload cancelReason(String? cancelReason);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
@@ -26,9 +28,10 @@ abstract class _$OrderEnvelopePayloadCWProxy {
   /// ```
   OrderEnvelopePayload call({
     OrderEnvelopePayloadDetail? detail,
-    Driver? driverAccept,
+    Driver? driverAssigned,
     OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation,
     OrderEnvelopePayloadDone? done,
+    String? cancelReason,
   });
 }
 
@@ -45,8 +48,8 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(detail: detail);
 
   @override
-  OrderEnvelopePayload driverAccept(Driver? driverAccept) =>
-      call(driverAccept: driverAccept);
+  OrderEnvelopePayload driverAssigned(Driver? driverAssigned) =>
+      call(driverAssigned: driverAssigned);
 
   @override
   OrderEnvelopePayload driverUpdateLocation(
@@ -55,6 +58,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
 
   @override
   OrderEnvelopePayload done(OrderEnvelopePayloadDone? done) => call(done: done);
+
+  @override
+  OrderEnvelopePayload cancelReason(String? cancelReason) =>
+      call(cancelReason: cancelReason);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -66,19 +73,20 @@ class _$OrderEnvelopePayloadCWProxyImpl
   /// ```
   OrderEnvelopePayload call({
     Object? detail = const $CopyWithPlaceholder(),
-    Object? driverAccept = const $CopyWithPlaceholder(),
+    Object? driverAssigned = const $CopyWithPlaceholder(),
     Object? driverUpdateLocation = const $CopyWithPlaceholder(),
     Object? done = const $CopyWithPlaceholder(),
+    Object? cancelReason = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
       detail: detail == const $CopyWithPlaceholder()
           ? _value.detail
           // ignore: cast_nullable_to_non_nullable
           : detail as OrderEnvelopePayloadDetail?,
-      driverAccept: driverAccept == const $CopyWithPlaceholder()
-          ? _value.driverAccept
+      driverAssigned: driverAssigned == const $CopyWithPlaceholder()
+          ? _value.driverAssigned
           // ignore: cast_nullable_to_non_nullable
-          : driverAccept as Driver?,
+          : driverAssigned as Driver?,
       driverUpdateLocation: driverUpdateLocation == const $CopyWithPlaceholder()
           ? _value.driverUpdateLocation
           // ignore: cast_nullable_to_non_nullable
@@ -87,6 +95,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.done
           // ignore: cast_nullable_to_non_nullable
           : done as OrderEnvelopePayloadDone?,
+      cancelReason: cancelReason == const $CopyWithPlaceholder()
+          ? _value.cancelReason
+          // ignore: cast_nullable_to_non_nullable
+          : cancelReason as String?,
     );
   }
 }
@@ -113,8 +125,8 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadDetail.fromJson(v as Map<String, dynamic>),
     ),
-    driverAccept: $checkedConvert(
-      'driverAccept',
+    driverAssigned: $checkedConvert(
+      'driverAssigned',
       (v) => v == null ? null : Driver.fromJson(v as Map<String, dynamic>),
     ),
     driverUpdateLocation: $checkedConvert(
@@ -131,6 +143,7 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadDone.fromJson(v as Map<String, dynamic>),
     ),
+    cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
   );
   return val;
 });
@@ -139,7 +152,8 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   OrderEnvelopePayload instance,
 ) => <String, dynamic>{
   'detail': ?instance.detail?.toJson(),
-  'driverAccept': ?instance.driverAccept?.toJson(),
+  'driverAssigned': ?instance.driverAssigned?.toJson(),
   'driverUpdateLocation': ?instance.driverUpdateLocation?.toJson(),
   'done': ?instance.done?.toJson(),
+  'cancelReason': ?instance.cancelReason,
 };

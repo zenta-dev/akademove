@@ -3,9 +3,9 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/payment_envelope_payload_payment.dart';
-import 'package:api_client/src/model/payment_envelope_payload_transaction.dart';
-import 'package:api_client/src/model/payment_envelope_payload_wallet.dart';
+import 'package:api_client/src/model/transaction.dart';
+import 'package:api_client/src/model/payment.dart';
+import 'package:api_client/src/model/wallet.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -31,13 +31,13 @@ class PaymentEnvelopePayload {
   final String? failReason;
 
   @JsonKey(name: r'payment', required: true, includeIfNull: false)
-  final PaymentEnvelopePayloadPayment payment;
+  final Payment payment;
 
   @JsonKey(name: r'transaction', required: true, includeIfNull: false)
-  final PaymentEnvelopePayloadTransaction transaction;
+  final Transaction transaction;
 
   @JsonKey(name: r'wallet', required: false, includeIfNull: false)
-  final PaymentEnvelopePayloadWallet? wallet;
+  final Wallet? wallet;
 
   @override
   bool operator ==(Object other) =>

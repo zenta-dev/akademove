@@ -17,7 +17,9 @@ enum OrderEnvelopeEvent {
   @JsonValue(r'DRIVER_LOCATION_UPDATE')
   DRIVER_LOCATION_UPDATE(r'DRIVER_LOCATION_UPDATE'),
   @JsonValue(r'COMPLETED')
-  COMPLETED(r'COMPLETED');
+  COMPLETED(r'COMPLETED'),
+  @JsonValue(r'MATCHING')
+  MATCHING(r'MATCHING');
 
   const OrderEnvelopeEvent(this.value);
 

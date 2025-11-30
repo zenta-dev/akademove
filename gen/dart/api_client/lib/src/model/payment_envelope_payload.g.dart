@@ -9,13 +9,11 @@ part of 'payment_envelope_payload.dart';
 abstract class _$PaymentEnvelopePayloadCWProxy {
   PaymentEnvelopePayload failReason(String? failReason);
 
-  PaymentEnvelopePayload payment(PaymentEnvelopePayloadPayment payment);
+  PaymentEnvelopePayload payment(Payment payment);
 
-  PaymentEnvelopePayload transaction(
-    PaymentEnvelopePayloadTransaction transaction,
-  );
+  PaymentEnvelopePayload transaction(Transaction transaction);
 
-  PaymentEnvelopePayload wallet(PaymentEnvelopePayloadWallet? wallet);
+  PaymentEnvelopePayload wallet(Wallet? wallet);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PaymentEnvelopePayload(...).copyWith.fieldName(value)`.
@@ -26,9 +24,9 @@ abstract class _$PaymentEnvelopePayloadCWProxy {
   /// ```
   PaymentEnvelopePayload call({
     String? failReason,
-    PaymentEnvelopePayloadPayment payment,
-    PaymentEnvelopePayloadTransaction transaction,
-    PaymentEnvelopePayloadWallet? wallet,
+    Payment payment,
+    Transaction transaction,
+    Wallet? wallet,
   });
 }
 
@@ -45,17 +43,14 @@ class _$PaymentEnvelopePayloadCWProxyImpl
       call(failReason: failReason);
 
   @override
-  PaymentEnvelopePayload payment(PaymentEnvelopePayloadPayment payment) =>
-      call(payment: payment);
+  PaymentEnvelopePayload payment(Payment payment) => call(payment: payment);
 
   @override
-  PaymentEnvelopePayload transaction(
-    PaymentEnvelopePayloadTransaction transaction,
-  ) => call(transaction: transaction);
+  PaymentEnvelopePayload transaction(Transaction transaction) =>
+      call(transaction: transaction);
 
   @override
-  PaymentEnvelopePayload wallet(PaymentEnvelopePayloadWallet? wallet) =>
-      call(wallet: wallet);
+  PaymentEnvelopePayload wallet(Wallet? wallet) => call(wallet: wallet);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -79,16 +74,16 @@ class _$PaymentEnvelopePayloadCWProxyImpl
       payment: payment == const $CopyWithPlaceholder() || payment == null
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
-          : payment as PaymentEnvelopePayloadPayment,
+          : payment as Payment,
       transaction:
           transaction == const $CopyWithPlaceholder() || transaction == null
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
-          : transaction as PaymentEnvelopePayloadTransaction,
+          : transaction as Transaction,
       wallet: wallet == const $CopyWithPlaceholder()
           ? _value.wallet
           // ignore: cast_nullable_to_non_nullable
-          : wallet as PaymentEnvelopePayloadWallet?,
+          : wallet as Wallet?,
     );
   }
 }
@@ -113,18 +108,15 @@ PaymentEnvelopePayload _$PaymentEnvelopePayloadFromJson(
     failReason: $checkedConvert('failReason', (v) => v as String?),
     payment: $checkedConvert(
       'payment',
-      (v) => PaymentEnvelopePayloadPayment.fromJson(v as Map<String, dynamic>),
+      (v) => Payment.fromJson(v as Map<String, dynamic>),
     ),
     transaction: $checkedConvert(
       'transaction',
-      (v) =>
-          PaymentEnvelopePayloadTransaction.fromJson(v as Map<String, dynamic>),
+      (v) => Transaction.fromJson(v as Map<String, dynamic>),
     ),
     wallet: $checkedConvert(
       'wallet',
-      (v) => v == null
-          ? null
-          : PaymentEnvelopePayloadWallet.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Wallet.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;

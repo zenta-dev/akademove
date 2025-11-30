@@ -94,9 +94,6 @@ import 'package:api_client/src/model/pay_request.dart';
 import 'package:api_client/src/model/payment.dart';
 import 'package:api_client/src/model/payment_envelope.dart';
 import 'package:api_client/src/model/payment_envelope_payload.dart';
-import 'package:api_client/src/model/payment_envelope_payload_payment.dart';
-import 'package:api_client/src/model/payment_envelope_payload_transaction.dart';
-import 'package:api_client/src/model/payment_envelope_payload_wallet.dart';
 import 'package:api_client/src/model/phone.dart';
 import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
@@ -493,21 +490,6 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'PaymentEnvelopeEvent':
     case 'PaymentEnvelopePayload':
       return PaymentEnvelopePayload.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'PaymentEnvelopePayloadPayment':
-      return PaymentEnvelopePayloadPayment.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PaymentEnvelopePayloadTransaction':
-      return PaymentEnvelopePayloadTransaction.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'PaymentEnvelopePayloadWallet':
-      return PaymentEnvelopePayloadWallet.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     case 'PaymentKey':
     case 'PaymentMethod':

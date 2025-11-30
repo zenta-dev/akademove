@@ -12,8 +12,8 @@ void main() {
       // TODO
     });
 
-    // Driver driverAccept
-    test('to test the property `driverAccept`', () async {
+    // Driver driverAssigned
+    test('to test the property `driverAssigned`', () async {
       // TODO
     });
 
@@ -24,6 +24,11 @@ void main() {
 
     // OrderEnvelopePayloadDone done
     test('to test the property `done`', () async {
+      // TODO
+    });
+
+    // String cancelReason
+    test('to test the property `cancelReason`', () async {
       // TODO
     });
   });
