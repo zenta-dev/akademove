@@ -1,3 +1,4 @@
 export 'app.dart';
 export 'cubit/_export.dart';
+export 'widgets/_export.dart';
 export 'router/router.dart';

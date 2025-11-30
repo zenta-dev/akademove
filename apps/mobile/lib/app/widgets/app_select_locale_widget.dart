@@ -50,7 +50,7 @@ class AppSelectLocaleWidget extends StatelessWidget {
               if (value == null) {
                 context.showMyToast(
                   'Failed to change locale',
-                  type: ToastType.error,
+                  type: ToastType.failed,
                 );
                 return;
               }

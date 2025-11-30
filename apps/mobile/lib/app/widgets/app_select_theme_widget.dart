@@ -58,7 +58,7 @@ class AppSelectThemeWidget extends StatelessWidget {
               if (value == null) {
                 context.showMyToast(
                   'Failed to change theme',
-                  type: ToastType.error,
+                  type: ToastType.failed,
                 );
                 return;
               }
