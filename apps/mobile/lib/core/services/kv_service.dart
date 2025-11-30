@@ -1,9 +1,9 @@
 import 'package:akademove/core/_export.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum KeyValueKeys { token, fcmToken }
+enum KeyValueKeys { token, fcmToken, themeMode, locale }
 
-abstract class KeyValueService extends BaseService {
+abstract class KeyValueService {
   Future<T?> get<T>(KeyValueKeys key);
   Future<void> set<T>(KeyValueKeys key, T value);
   Future<void> remove(KeyValueKeys key);
@@ -13,20 +13,16 @@ abstract class KeyValueService extends BaseService {
 class SharedPrefKeyValueService implements KeyValueService {
   SharedPrefKeyValueService();
 
-  late final SharedPreferences _prefs;
+  SharedPreferences? _prefs;
 
-  @override
-  Future<KeyValueService> setup() async {
-    _prefs = await SharedPreferences.getInstance();
-    return this;
+  Future<SharedPreferences> _ensurePrefsInitialized() async {
+    return _prefs ??= await SharedPreferences.getInstance();
   }
 
   @override
-  void teardown() {}
-
-  @override
   Future<T?> get<T>(KeyValueKeys key) async {
-    final value = _prefs.get(key.index.toString());
+    final prefs = await _ensurePrefsInitialized();
+    final value = prefs.get(key.index.toString());
 
     if (value == null) return null;
 
@@ -43,12 +39,13 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<void> set<T>(KeyValueKeys key, T value) async {
+    final prefs = await _ensurePrefsInitialized();
     final success = switch (value) {
-      final String v => await _prefs.setString(key.index.toString(), v),
-      final int v => await _prefs.setInt(key.index.toString(), v),
-      final double v => await _prefs.setDouble(key.index.toString(), v),
-      final bool v => await _prefs.setBool(key.index.toString(), v),
-      final List<String> v => await _prefs.setStringList(
+      final String v => await prefs.setString(key.index.toString(), v),
+      final int v => await prefs.setInt(key.index.toString(), v),
+      final double v => await prefs.setDouble(key.index.toString(), v),
+      final bool v => await prefs.setBool(key.index.toString(), v),
+      final List<String> v => await prefs.setStringList(
         key.index.toString(),
         v,
       ),
@@ -68,11 +65,13 @@ class SharedPrefKeyValueService implements KeyValueService {
 
   @override
   Future<void> remove(KeyValueKeys key) async {
-    await _prefs.remove(key.index.toString());
+    final prefs = await _ensurePrefsInitialized();
+    await prefs.remove(key.index.toString());
   }
 
   @override
   Future<void> clear() async {
-    await _prefs.clear();
+    final prefs = await _ensurePrefsInitialized();
+    await prefs.clear();
   }
 }
