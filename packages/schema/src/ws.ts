@@ -5,7 +5,8 @@ import { DriverSchema } from "./driver.ts";
 import { OrderSchema } from "./order.ts";
 import { PaymentSchema } from "./payment.ts";
 import { CoordinateSchema } from "./position.ts";
-import { TransactionSchema, TransactionStatusSchema } from "./transaction.ts";
+import { TransactionSchema } from "./transaction.ts";
+import { WalletSchema } from "./wallet.ts";
 
 export const EnvelopeSenderSchema = z
 	.enum(["s", "c"])
@@ -44,6 +45,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"DRIVER_ACCEPTED",
 	"DRIVER_LOCATION_UPDATE",
 	"COMPLETED",
+	"MATCHING",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
@@ -59,7 +61,7 @@ export const OrderEnvelopePayloadSchema = z.object({
 			transaction: TransactionSchema,
 		})
 		.optional(),
-	driverAccept: DriverSchema.optional(),
+	driverAssigned: DriverSchema.optional(),
 	driverUpdateLocation: z
 		.object({
 			driverId: z.string(),
@@ -74,6 +76,7 @@ export const OrderEnvelopePayloadSchema = z.object({
 			driverCurrentLocation: CoordinateSchema,
 		})
 		.optional(),
+	cancelReason: z.string().optional(),
 });
 export const OrderEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: OrderEnvelopeEventSchema,
@@ -91,20 +94,9 @@ export const PaymentEnvelopeEventSchema = z.enum([
 export const PaymentEnvelopeActionSchema = z.enum([]);
 export const PaymentEnvelopePayloadSchema = z.object({
 	failReason: z.string().optional(),
-	payment: z.object({
-		id: z.string(),
-		type: z.enum(["topup", "pay"]),
-	}),
-	transaction: z.object({
-		id: z.string(),
-		status: TransactionStatusSchema,
-	}),
-	wallet: z
-		.object({
-			id: z.string(),
-			balance: z.number(),
-		})
-		.optional(),
+	payment: PaymentSchema,
+	transaction: TransactionSchema,
+	wallet: WalletSchema.optional(),
 });
 export const PaymentEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: PaymentEnvelopeEventSchema,
