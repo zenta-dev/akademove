@@ -239,7 +239,7 @@ export class OrderRoom extends BaseDurableObject {
 					data: {
 						type: "NEW_ORDER",
 						orderId: findOrder.id,
-						deeplink: "akademove://driver/order", // TODO: replace with actual android url
+						deeplink: `akademove://driver/order/${findOrder.id}`,
 					},
 					android: {
 						priority: "high",
