@@ -28,7 +28,21 @@ export const transaction = pgTable(
 		metadata: jsonb(),
 		...DateModifier,
 	},
-	(t) => [index("transaction_wallet_id_idx").on(t.walletId)],
+	(t) => [
+		// Existing index
+		index("transaction_wallet_id_idx").on(t.walletId),
+
+		// OPTIMIZATION: Add indexes for common query patterns
+		index("transaction_status_idx").on(t.status),
+		index("transaction_wallet_status_idx").on(t.walletId, t.status),
+		index("transaction_wallet_status_date_idx").on(
+			t.walletId,
+			t.status,
+			t.createdAt,
+		),
+		index("transaction_created_at_idx").on(t.createdAt),
+		index("transaction_reference_id_idx").on(t.referenceId),
+	],
 );
 
 export const transactionRelations = relations(transaction, ({ one }) => ({

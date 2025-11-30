@@ -76,12 +76,9 @@ export class WalletRepository extends BaseRepository {
 						total: sql<string>`SUM(${tables.transaction.amount})`,
 					})
 					.from(tables.transaction)
-					.where(sql`
-      wallet_id = ${wallet.id}
-      AND status = 'success'
-      AND ${tables.transaction.createdAt} >= ${startDate.toISOString()}
-      AND ${tables.transaction.createdAt} < ${endDate.toISOString()}
-    `)
+					.where(
+						sql`${tables.transaction.walletId} = ${wallet.id} AND ${tables.transaction.status} = 'SUCCESS' AND ${tables.transaction.createdAt} >= ${startDate} AND ${tables.transaction.createdAt} < ${endDate}`,
+					)
 					.groupBy(tables.transaction.type),
 			);
 
@@ -134,7 +131,7 @@ export class WalletRepository extends BaseRepository {
 			const { tx } = opts;
 
 			const [wallet, user] = await Promise.all([
-				this.#ensureWallet(userId),
+				this.#ensureWallet(userId, opts),
 				tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, userId),
@@ -148,40 +145,47 @@ export class WalletRepository extends BaseRepository {
 			}
 
 			const safeAmount = new Decimal(amount);
-			const safeBalance = new Decimal(wallet.balance);
-			if (safeBalance.lessThan(safeAmount)) {
+			const amountSql = toStringNumberSafe(safeAmount);
+
+			// CRITICAL FIX: Atomic update with WHERE clause check to prevent race conditions
+			// This uses database-level constraints to ensure balance never goes negative
+			const [updatedWallet] = await tx
+				.update(tables.wallet)
+				.set({
+					balance: sql`balance - ${amountSql}`,
+					updatedAt: new Date(),
+				})
+				.where(
+					sql`${tables.wallet.id} = ${wallet.id} AND balance >= ${amountSql}`,
+				)
+				.returning();
+
+			if (!updatedWallet) {
 				throw new RepositoryError(
-					`Insufficient balance, current balance ${safeBalance}`,
+					`Insufficient balance. Payment of ${amount} exceeds available balance.`,
 					{ code: "BAD_REQUEST" },
 				);
 			}
 
-			const amountSql = toStringNumberSafe(safeAmount);
-			const safeBalanceBefore = safeBalance;
-			const safeBalanceAfter = safeBalanceBefore.minus(safeAmount);
+			const safeBalanceBefore = new Decimal(wallet.balance);
+			const safeBalanceAfter = new Decimal(updatedWallet.balance);
 			const balanceBefore = toStringNumberSafe(safeBalanceBefore);
 			const balanceAfter = toStringNumberSafe(safeBalanceAfter);
 
-			const [[transaction], _] = await Promise.all([
-				tx
-					.insert(tables.transaction)
-					.values({
-						id: v7(),
-						walletId: wallet.id,
-						type: "PAYMENT",
-						amount: amountSql,
-						balanceBefore,
-						balanceAfter,
-						status: "SUCCESS",
-						description: `Payment for ${referenceId}`,
-						referenceId,
-					})
-					.returning(),
-				tx
-					.update(tables.wallet)
-					.set({ balance: balanceAfter, updatedAt: new Date() })
-					.where(eq(tables.wallet.id, wallet.id)),
-			]);
+			const [transaction] = await tx
+				.insert(tables.transaction)
+				.values({
+					id: v7(),
+					walletId: wallet.id,
+					type: "PAYMENT",
+					amount: amountSql,
+					balanceBefore,
+					balanceAfter,
+					status: "SUCCESS",
+					description: `Payment for ${referenceId}`,
+					referenceId,
+				})
+				.returning();
 
 			const [payment] = await tx
 				.insert(tables.payment)

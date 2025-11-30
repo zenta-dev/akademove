@@ -39,7 +39,18 @@ export const payment = pgTable(
 		response: jsonb(),
 		...DateModifier,
 	},
-	(t) => [index("payment_external_id_idx").on(t.externalId)],
+	(t) => [
+		// Existing index
+		index("payment_external_id_idx").on(t.externalId),
+
+		// OPTIMIZATION: Add indexes for common query patterns
+		index("payment_transaction_id_idx").on(t.transactionId),
+		index("payment_status_idx").on(t.status),
+		index("payment_method_idx").on(t.method),
+		index("payment_provider_idx").on(t.provider),
+		index("payment_created_at_idx").on(t.createdAt),
+		index("payment_expires_at_idx").on(t.expiresAt),
+	],
 );
 
 export type PaymentDatabase = typeof payment.$inferSelect;

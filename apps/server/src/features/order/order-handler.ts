@@ -47,26 +47,23 @@ export const OrderHandler = priv.router({
 			};
 		}),
 	estimate: priv.estimate.handler(async ({ context, input: { query } }) => {
-		return await context.svc.db.transaction(async (tx) => {
-			const res = await context.repo.order.estimate(
-				{
-					...query,
-					pickupLocation: {
-						x: query.pickupLocation_x,
-						y: query.pickupLocation_y,
-					},
-					dropoffLocation: {
-						x: query.dropoffLocation_x,
-						y: query.dropoffLocation_y,
-					},
-				},
-				{ tx },
-			);
-			return {
-				status: 200,
-				body: { message: "Successfully estimate pricing", data: res },
-			} as const;
+		// PERFORMANCE: No transaction needed for read-only estimate endpoint
+		// This endpoint only reads pricing config (now cached in memory) and calls external API
+		const res = await context.repo.order.estimate({
+			...query,
+			pickupLocation: {
+				x: query.pickupLocation_x,
+				y: query.pickupLocation_y,
+			},
+			dropoffLocation: {
+				x: query.dropoffLocation_x,
+				y: query.dropoffLocation_y,
+			},
 		});
+		return {
+			status: 200,
+			body: { message: "Successfully estimate pricing", data: res },
+		} as const;
 	}),
 	get: priv.get
 		.use(hasPermission({ order: ["get"] }))

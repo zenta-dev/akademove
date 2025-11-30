@@ -16,7 +16,7 @@ import type { Transaction, TransactionType } from "@repo/schema/transaction";
 import type { Wallet } from "@repo/schema/wallet";
 import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import {
@@ -296,7 +296,7 @@ export class PaymentRepository extends BaseRepository {
 		try {
 			const { body, tx } = payload;
 
-			log.debug({ body }, "[WalletRepository] handleWebhook");
+			log.debug({ body }, "[PaymentRepository] handleWebhook");
 			const paymentId = body.order_id;
 			const status = body.transaction_status;
 			if (status === "pending") return;
@@ -309,6 +309,19 @@ export class PaymentRepository extends BaseRepository {
 				throw new RepositoryError(`Payment with id ${paymentId} not found`, {
 					code: "NOT_FOUND",
 				});
+			}
+
+			// CRITICAL: Idempotency check - prevent duplicate processing
+			if (
+				payment.status === "SUCCESS" ||
+				payment.status === "REFUNDED" ||
+				payment.status === "EXPIRED"
+			) {
+				log.warn(
+					{ paymentId, currentStatus: payment.status, webhookStatus: status },
+					"[PaymentRepository] Webhook already processed - idempotent response",
+				);
+				return; // Idempotent - already processed
 			}
 
 			if (status === "expire") {
@@ -334,9 +347,9 @@ export class PaymentRepository extends BaseRepository {
 				}
 			}
 		} catch (error) {
-			log.error({ error }, "Failed to get wallet");
+			log.error({ error }, "Failed to process webhook");
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Faile to process webhook", {
+			throw new RepositoryError("Failed to process webhook", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
 		}
@@ -682,15 +695,9 @@ export class PaymentRepository extends BaseRepository {
 		const { wallet, amount, orderType, transactionType, metadata, tx } = params;
 
 		try {
-			// Check if wallet has sufficient balance
-			const currentBalance = new Decimal(wallet.balance);
 			const amountDecimal = new Decimal(amount);
-
-			if (currentBalance.lessThan(amountDecimal)) {
-				throw new RepositoryError("Insufficient wallet balance", {
-					code: "BAD_REQUEST",
-				});
-			}
+			const currentBalance = new Decimal(wallet.balance);
+			const amountSql = toStringNumberSafe(amountDecimal);
 
 			let desc: string | undefined;
 			switch (orderType) {
@@ -706,7 +713,30 @@ export class PaymentRepository extends BaseRepository {
 
 			const fullMetadata = { ...metadata, type: orderType, desc };
 
-			// Create transaction with SUCCESS status
+			// CRITICAL FIX: Atomic wallet deduction with balance check
+			// This prevents race conditions and ensures balance never goes negative
+			const [updatedWallet] = await tx
+				.update(tables.wallet)
+				.set({
+					balance: sql`balance - ${amountSql}`,
+					updatedAt: new Date(),
+				})
+				.where(
+					sql`${tables.wallet.id} = ${wallet.id} AND balance >= ${amountSql}`,
+				)
+				.returning();
+
+			if (!updatedWallet) {
+				throw new RepositoryError("Insufficient wallet balance", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const newBalance = new Decimal(updatedWallet.balance);
+			const balanceBefore = toNumberSafe(currentBalance);
+			const balanceAfter = toNumberSafe(newBalance);
+
+			// Create transaction with SUCCESS status and balance info
 			const transaction = await this.#transaction.insert({
 				walletId: wallet.id,
 				type: transactionType,
@@ -714,28 +744,9 @@ export class PaymentRepository extends BaseRepository {
 				status: "SUCCESS",
 				description: desc,
 				metadata: fullMetadata,
+				balanceBefore,
+				balanceAfter,
 			});
-
-			// Deduct amount from wallet
-			const newBalance = currentBalance.minus(amountDecimal);
-
-			const updatedWallet = await this.#wallet.update(
-				wallet.id,
-				{
-					balance: toNumberSafe(newBalance),
-				},
-				{ tx },
-			);
-
-			// Update transaction with balance info
-			const updatedTransaction = await this.#transaction.update(
-				transaction.id,
-				{
-					balanceBefore: toNumberSafe(currentBalance),
-					balanceAfter: toNumberSafe(newBalance),
-				},
-				{ tx },
-			);
 
 			// Create payment record
 			const payment = await this.#insert(
@@ -761,8 +772,8 @@ export class PaymentRepository extends BaseRepository {
 
 			return {
 				payment,
-				transaction: updatedTransaction,
-				wallet: updatedWallet,
+				transaction,
+				wallet: WalletRepository.composeEntity(updatedWallet),
 			};
 		} catch (error) {
 			log.error(
