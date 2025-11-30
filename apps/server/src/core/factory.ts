@@ -97,6 +97,7 @@ export function getRepositories(
 			svc.storage,
 			manager.jwt,
 			manager.pw,
+			svc.mail,
 		),
 		badge: {
 			main: new BadgeRepository(svc.db, svc.kv, svc.storage),

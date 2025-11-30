@@ -21,6 +21,7 @@ enum Routes {
   authSignUpDriver('/auth/sign-up/driver'),
   authSignUpMerchant('/auth/sign-up/merchant'),
   authForgotPassword('/auth/forgot-password'),
+  authResetPassword('/auth/reset-password'),
 
   ///
   /// User Routes

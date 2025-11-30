@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { randomBytes } from "node:crypto";
 import { m } from "@repo/i18n";
 import type {
@@ -11,6 +12,7 @@ import type {
 import type { ClientAgent } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
 import { getFileExtension, omit } from "@repo/shared";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { AuthError, RepositoryError } from "@/core/error";
@@ -20,7 +22,9 @@ import {
 	tables,
 } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { MailService } from "@/core/services/mail";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
+import { log } from "@/utils";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
 import { UserAdminRepository } from "../user/admin/user-admin-repository";
@@ -31,8 +35,10 @@ export class AuthRepository extends BaseRepository {
 	readonly #storage: StorageService;
 	readonly #jwt: JwtManager;
 	readonly #pw: PasswordManager;
+	readonly #mail: MailService;
 
 	readonly #JWT_EXPIRY = "7d";
+	readonly #RESET_TOKEN_EXPIRY_HOURS = 1;
 
 	constructor(
 		db: DatabaseService,
@@ -40,11 +46,13 @@ export class AuthRepository extends BaseRepository {
 		storage: StorageService,
 		jwt: JwtManager,
 		pw: PasswordManager,
+		mail: MailService,
 	) {
 		super("user", kv, db);
 		this.#storage = storage;
 		this.#jwt = jwt;
 		this.#pw = pw;
+		this.#mail = mail;
 	}
 
 	#generateId(): string {
@@ -270,13 +278,100 @@ export class AuthRepository extends BaseRepository {
 		}
 	}
 
-	async forgotPassword(_params: ForgotPassword) {
-		// TODO: Implement this
-		throw new RepositoryError("UNIMPLEMENTED");
+	async forgotPassword(params: ForgotPassword) {
+		try {
+			const user = await this.db.query.user.findFirst({
+				columns: { id: true, name: true, email: true },
+				where: (f, op) => op.eq(f.email, params.email),
+			});
+
+			if (!user) {
+				throw new AuthError(m.email_not_registered(), { code: "NOT_FOUND" });
+			}
+
+			const token = randomBytes(32).toString("hex");
+			const expiresAt = new Date(
+				Date.now() + this.#RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
+			);
+
+			await this.db.insert(tables.verification).values({
+				id: v7(),
+				identifier: params.email,
+				value: token,
+				expiresAt,
+			});
+
+			const resetUrl = `${env.CORS_ORIGIN}/auth/reset-password?token=${token}`;
+
+			await this.#mail.sendResetPassword({
+				to: user.email,
+				url: resetUrl,
+				userName: user.name,
+			});
+
+			log.info(
+				{ userId: user.id, email: user.email },
+				"[AuthRepository] Password reset email sent",
+			);
+
+			return true;
+		} catch (error) {
+			throw this.handleError(error, "forgot password");
+		}
 	}
 
-	async resetPassword(_params: ResetPassword) {
-		// TODO: Implement this
-		throw new RepositoryError("UNIMPLEMENTED");
+	async resetPassword(params: ResetPassword) {
+		try {
+			const verification = await this.db.query.verification.findFirst({
+				where: (f, op) =>
+					op.and(op.eq(f.value, params.token), op.gt(f.expiresAt, new Date())),
+			});
+
+			if (!verification) {
+				throw new AuthError("Invalid or expired reset token", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const user = await this.db.query.user.findFirst({
+				columns: { id: true, email: true },
+				with: {
+					accounts: {
+						columns: { id: true },
+						where: (f, op) => op.eq(f.providerId, "credentials"),
+					},
+				},
+				where: (f, op) => op.eq(f.email, verification.identifier),
+			});
+
+			if (!user?.accounts[0]) {
+				throw new AuthError("User account not found", { code: "NOT_FOUND" });
+			}
+
+			const hashedPassword = this.#pw.hash(params.newPassword);
+
+			await this.db.transaction(async (tx) => {
+				await Promise.all([
+					tx
+						.update(tables.account)
+						.set({ password: hashedPassword })
+						.where(eq(tables.account.id, user.accounts[0].id)),
+					tx
+						.delete(tables.verification)
+						.where(eq(tables.verification.id, verification.id)),
+				]);
+			});
+
+			await this.deleteCache(user.id);
+
+			log.info(
+				{ userId: user.id, email: user.email },
+				"[AuthRepository] Password reset successful",
+			);
+
+			return true;
+		} catch (error) {
+			throw this.handleError(error, "reset password");
+		}
 	}
 }

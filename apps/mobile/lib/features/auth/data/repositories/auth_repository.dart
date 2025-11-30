@@ -223,4 +223,48 @@ class AuthRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: remoteUser);
     });
   }
+
+  Future<BaseResponse<bool>> forgotPassword({required String email}) async {
+    return guard(() async {
+      final result = await _apiClient.getAuthApi().authForgotPassword(
+        authForgotPasswordRequest: AuthForgotPasswordRequest(
+          email: email.trim(),
+        ),
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'Failed to send reset email',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: true);
+    });
+  }
+
+  Future<BaseResponse<bool>> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    return guard(() async {
+      final result = await _apiClient.getAuthApi().authResetPassword(
+        resetPassword: ResetPassword(
+          token: token.trim(),
+          newPassword: newPassword.trim(),
+          confirmPassword: confirmPassword.trim(),
+        ),
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'Failed to reset password',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: true);
+    });
+  }
 }

@@ -34,5 +34,35 @@ class AuthCubit extends BaseCubit<AuthState> {
     }
   }
 
+  Future<void> forgotPassword(String email) async {
+    try {
+      emit(AuthState.loading());
+      final res = await _authRepository.forgotPassword(email: email);
+      emit(AuthState.success(null, message: res.message));
+    } on BaseError catch (e, st) {
+      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
+      emit(AuthState.failure(e));
+    }
+  }
+
+  Future<void> resetPassword({
+    required String token,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      emit(AuthState.loading());
+      final res = await _authRepository.resetPassword(
+        token: token,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+      emit(AuthState.success(null, message: res.message));
+    } on BaseError catch (e, st) {
+      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
+      emit(AuthState.failure(e));
+    }
+  }
+
   void reset() => emit(AuthState.initial());
 }

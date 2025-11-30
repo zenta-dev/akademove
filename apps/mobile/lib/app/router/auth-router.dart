@@ -48,5 +48,24 @@ final authRouter = ShellRoute(
         child: const SignUpMerchantScreen(),
       ),
     ),
+    GoRoute(
+      name: Routes.authForgotPassword.name,
+      path: Routes.authForgotPassword.path,
+      builder: (context, state) => BlocProvider.value(
+        value: sl<AuthCubit>()..reset(),
+        child: const ForgotPasswordScreen(),
+      ),
+    ),
+    GoRoute(
+      name: Routes.authResetPassword.name,
+      path: Routes.authResetPassword.path,
+      builder: (context, state) {
+        final token = state.uri.queryParameters['token'];
+        return BlocProvider.value(
+          value: sl<AuthCubit>()..reset(),
+          child: ResetPasswordScreen(token: token),
+        );
+      },
+    ),
   ],
 );
