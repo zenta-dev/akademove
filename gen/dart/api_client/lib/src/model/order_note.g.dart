@@ -11,6 +11,8 @@ abstract class _$OrderNoteCWProxy {
 
   OrderNote dropoff(String? dropoff);
 
+  OrderNote instructions(String? instructions);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderNote(...).copyWith.fieldName(value)`.
   ///
@@ -18,7 +20,7 @@ abstract class _$OrderNoteCWProxy {
   /// ```dart
   /// OrderNote(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderNote call({String? pickup, String? dropoff});
+  OrderNote call({String? pickup, String? dropoff, String? instructions});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -35,6 +37,10 @@ class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
   OrderNote dropoff(String? dropoff) => call(dropoff: dropoff);
 
   @override
+  OrderNote instructions(String? instructions) =>
+      call(instructions: instructions);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderNote(...).copyWith.fieldName(value)`.
   ///
@@ -45,6 +51,7 @@ class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
   OrderNote call({
     Object? pickup = const $CopyWithPlaceholder(),
     Object? dropoff = const $CopyWithPlaceholder(),
+    Object? instructions = const $CopyWithPlaceholder(),
   }) {
     return OrderNote(
       pickup: pickup == const $CopyWithPlaceholder()
@@ -55,6 +62,10 @@ class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
           ? _value.dropoff
           // ignore: cast_nullable_to_non_nullable
           : dropoff as String?,
+      instructions: instructions == const $CopyWithPlaceholder()
+          ? _value.instructions
+          // ignore: cast_nullable_to_non_nullable
+          : instructions as String?,
     );
   }
 }
@@ -75,6 +86,7 @@ OrderNote _$OrderNoteFromJson(Map<String, dynamic> json) =>
       final val = OrderNote(
         pickup: $checkedConvert('pickup', (v) => v as String?),
         dropoff: $checkedConvert('dropoff', (v) => v as String?),
+        instructions: $checkedConvert('instructions', (v) => v as String?),
       );
       return val;
     });
@@ -82,4 +94,5 @@ OrderNote _$OrderNoteFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$OrderNoteToJson(OrderNote instance) => <String, dynamic>{
   'pickup': ?instance.pickup,
   'dropoff': ?instance.dropoff,
+  'instructions': ?instance.instructions,
 };
