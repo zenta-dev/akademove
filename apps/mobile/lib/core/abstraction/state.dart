@@ -27,8 +27,16 @@ abstract class BaseState<T> {
 abstract class BaseCubit<T> extends Cubit<T> {
   BaseCubit(super.initialState);
 
+  final taskManager = TaskDedupeManager();
+
   // Future<void> init();
   // void reset();
+
+  @override
+  void emit(T state) {
+    if (isClosed) return;
+    super.emit(state);
+  }
 }
 
 abstract class BaseState2 {
