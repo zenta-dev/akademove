@@ -1,76 +1,381 @@
 # akademove
+*A platform enabling mobility, courier, and food delivery inside a campus ecosystem — powered by real-time services, clean architecture, and multi-role workflows.*
+Built for **users**, **drivers (students)**, **merchants**, **operators**, and **administrators**.
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Hono, and more.
+# **🔗 Table of Contents**
 
-## Features
+* [Overview](#overview)
+* [Features](#features)
+* [Architecture](#architecture)
+* [Tech Stack](#tech-stack)
+* [Monorepo Structure](#monorepo-structure)
+* [Installation](#installation)
+* [Environment Variables](#environment-variables)
+* [API Overview](#api-overview)
+* [WebSocket Channels](#websocket-channels)
+* [Development Guidelines](#development-guidelines)
+* [Contribution Guide](#contribution-guide)
+* [Commit Convention](#commit-convention)
+* [Versioning](#versioning)
+* [License](#license)
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Start** - SSR framework with TanStack Router
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **Hono** - Lightweight, performant server framework
-- **workers** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Biome** - Linting and formatting
-- **Husky** - Git hooks for code quality
-- **Turborepo** - Optimized monorepo build system
+# **📌 Overview**
 
-## Getting Started
+This platform provides a comprehensive mobility and delivery solution for university communities:
 
-First, install the dependencies:
+* Ride hailing
+* Delivery (goods/documents)
+* Food delivery
+* Real-time location tracking
+* In-app wallet & QRIS payment
+* Merchant dashboard
+* Operator administration & reporting
+
+
+Built with **modular clean architecture**, shared schemas, and a modern developer experience across backend, mobile, and web dashboards.
+
+# **🚀 Features**
+
+### **User**
+
+* Ride/food/goods ordering
+* Gender-based driver preference
+* Live driver tracking
+* Wallet + QRIS payment
+* Chat with driver (number masking)
+* Ratings & reports
+
+
+### **Driver**
+
+* Online/offline availability
+* Auto-off during class schedule (KRS)
+* Auto-matching & prioritization
+* Earnings dashboard
+* Delivery proof (photo/OTP)
+
+
+### **Merchant**
+
+* Menu & inventory management
+* Order preparation flow
+* Sales reporting & commission tracking
+
+
+### **Operator/Admin**
+
+* Pricing rules (tariff/km)
+* Promo / coupon management
+* Driver & merchant monitoring
+* Broadcast announcements
+* Audit logs & analytics
+
+
+# **🧱 Architecture**
+
+This monorepo contains three primary applications:
+
+| Component         | Stack                                           | Purpose                            |
+| ----------------- | ----------------------------------------------- | ---------------------------------- |
+| **Backend**       | TypeScript, oRPC, Drizzle, CF Workers, Postgres | API, real-time, payments, matching |
+| **Mobile App**    | Flutter                                         | User/Driver client                 |
+| **Web Dashboard** | React (TanStack Start)                          | Merchant, Operator, Admin panels   |
+
+All three follow clean architecture principles as documented in the project’s tech stack reference.
+
+
+# **🛠 Tech Stack**
+
+### **Backend**
+
+* TypeScript
+* oRPC
+* Drizzle ORM
+* PostgreSQL + PostGIS
+* Cloudflare KV & Durable Objects
+* Firebase Admin + FCM
+* AWS S3
+* Google Maps API
+* Zod validation
+
+
+**Rule:** Avoid `any`, use `unknown` instead.
+
+### **Mobile**
+
+* Flutter (Dart)
+* Cubit (BLoC minimal)
+* Dio
+* Dart Mappable
+* Google Maps Flutter
+* GeoLocator
+* WebSocket Channel
+* Custom OpenAPI generator
+
+
+**Rule:** Avoid `dynamic`.
+
+### **Web Dashboard**
+
+* TypeScript
+* React + TanStack Start
+* TanStack Query
+* Shadcn UI
+* Firebase
+* Google Maps via `@vis.gl/react-google-maps`
+
+
+# **📂 Monorepo Structure**
+
+```
+/
+│── backend/
+│   ├── src/
+│   │   ├── core/
+│   │   ├── features/
+│   │   ├── utils/
+│   │   └── index.ts
+│   └── drizzle/
+│
+│── mobile/
+│   ├── lib/
+│   │   ├── app/
+│   │   ├── core/
+│   │   ├── features/
+│   │   ├── widgets/
+│   │   └── main.dart
+│
+│── web/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── routes/
+│   │   ├── hooks/
+│   │   └── lib/
+│   └── server.ts
+│
+│── shared/
+│   ├── schemas/
+│   ├── types/
+│   └── openapi/
+│
+└── README.md
+```
+
+# **📦 Installation**
+
+## **1. Clone the Monorepo**
 
 ```bash
-bun install
-```
-## Database Setup
-
-This project uses PostgreSQL with Drizzle ORM.
-
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
-```bash
-bun db:push
+git clone https://github.com/<org>/<repo>.git
+cd repo
 ```
 
+## **2. Backend Setup**
 
-Then, run the development server:
+### Install dependencies:
 
 ```bash
-bun dev
+cd backend
+pnpm install
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+### Generate database schema:
 
-
-
-
-## Deployment (Alchemy)
-- Dev: bun dev
-- Deploy: bun deploy
-- Destroy: bun destroy
-
-
-## Project Structure
-
-```
-akademove/
-├── apps/
-│   ├── web/         # Frontend application (React + TanStack Start)
-│   └── server/      # Backend API (Hono)
+```bash
+pnpm drizzle:push
 ```
 
-## Available Scripts
+### Start dev server:
 
-- `bun dev`: Start all applications in development mode
-- `bun build`: Build all applications
-- `bun dev:web`: Start only the web application
-- `bun dev:server`: Start only the server
-- `bun check-types`: Check TypeScript types across all apps
-- `bun db:push`: Push schema changes to database
-- `bun db:studio`: Open database studio UI
-- `bun check`: Run Biome formatting and linting
+```bash
+pnpm dev
+```
+
+## **3. Mobile Setup**
+
+```bash
+cd mobile
+flutter pub get
+flutter run
+```
+
+## **4. Web Dashboard Setup**
+
+```bash
+cd web
+pnpm install
+pnpm dev
+```
+
+# **🔐 Environment Variables**
+
+A complete `.env.example` file is recommended.
+
+### Backend (sample)
+
+```
+DATABASE_URL=
+FIREBASE_SERVICE_ACCOUNT=
+GOOGLE_MAPS_KEY=
+AWS_S3_KEY=
+AWS_S3_SECRET=
+RESEND_API_KEY=
+QRIS_CALLBACK_URL=
+```
+
+### Mobile
+
+```
+API_BASE_URL=
+GOOGLE_MAPS_KEY=
+FCM_SERVER_KEY=
+```
+
+### Web
+
+```
+VITE_API_URL=
+VITE_GOOGLE_MAPS_KEY=
+VITE_FIREBASE_API_KEY=
+```
+
+# **📡 API Overview**
+
+A complete OpenAPI specification is stored in `/shared/openapi`.
+
+### Core Endpoints
+
+| Domain       | Methods                          |
+| ------------ | -------------------------------- |
+| Auth         | register/login/logout            |
+| User         | profile, history, wallet         |
+| Driver       | schedule, availability, earnings |
+| Order        | create, cancel, status, track    |
+| Merchant     | menu, items, orders              |
+| Payment      | create, verify, webhook          |
+| Notification | FCM tokens                       |
+| Operator     | pricing, coupons, reports        |
+
+### Example (Order creation)
+
+```
+POST /orders
+Body:
+{
+  pickup: { lat, lng },
+  dropoff: { lat, lng },
+  type: "ride" | "delivery" | "food",
+  genderPreference: "same" | "any"
+}
+```
+
+### Webhooks
+
+```
+POST /payments/midtrans/webhook
+```
+
+# **📡 WebSocket Channels**
+
+### Order updates
+
+```
+/ws/order/{orderId}
+```
+
+Events:
+
+```
+ORDER_MATCHING
+ORDER_ACCEPTED
+DRIVER_ARRIVING
+IN_TRIP
+COMPLETED
+CANCELLED
+PAYMENT_CONFIRMED
+```
+
+### Driver location stream
+
+```
+/ws/driver/{driverId}/location
+```
+
+# **🧭 Development Guidelines**
+
+### **Backend**
+
+* Avoid `any`
+* Always validate inputs with **Zod**
+* Strict type safety
+* Business logic must never reside inside handlers
+
+### **Mobile**
+
+* Use Cubit, not full BLoC
+* Avoid `dynamic`
+* WebSocket must be wrapped in `WebsocketService`
+
+### **Web**
+
+* Use TanStack Query for all data fetching
+* UI must follow Shadcn component standards
+* Avoid unnecessary client components
+
+# **🤝 Contribution Guide**
+
+### 1. Fork & create a branch
+
+```
+git checkout -b feature/<short-title>
+```
+
+### 2. Follow commit conventions
+
+(see below)
+
+### 3. Submit PR with:
+
+* clear description
+* screenshots for UI work
+* test coverage (if applicable)
+
+### 4. CI must pass
+
+* lint
+* typecheck
+* build
+
+# **📜 Commit Convention**
+
+Use **Conventional Commits**:
+
+| Type        | Meaning                        |
+| ----------- | ------------------------------ |
+| `feat:`     | New feature                    |
+| `fix:`      | Bug fix                        |
+| `docs:`     | Documentation                  |
+| `refactor:` | Code cleanup (no logic change) |
+| `perf:`     | Performance improvements       |
+| `test:`     | Tests                          |
+| `chore:`    | Build/CI/tooling               |
+
+Example:
+
+```
+feat(order): add gender preference to matching engine
+```
+
+# **🏷 Versioning**
+
+Use **Semantic Versioning (SemVer)**:
+
+```
+MAJOR.MINOR.PATCH
+```
+
+Example:
+
+* `1.0.0` release
+* `1.1.0` new features
+* `1.1.1` small fixes
