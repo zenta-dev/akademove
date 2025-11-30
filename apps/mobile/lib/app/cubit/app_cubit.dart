@@ -5,10 +5,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class AppCubit extends BaseCubit<AppState> {
-  AppCubit({
-    required KeyValueService keyValueService,
-  }) : _keyValueService = keyValueService,
-       super(AppState.initial());
+  AppCubit({required KeyValueService keyValueService})
+    : _keyValueService = keyValueService,
+      super(AppState.initial());
 
   final KeyValueService _keyValueService;
 
@@ -46,11 +45,7 @@ class AppCubit extends BaseCubit<AppState> {
       );
     } catch (e, st) {
       logger.e('Failed to initialize app', error: e, stackTrace: st);
-      emit(
-        AppState.failure(
-          e is BaseError ? e : UnknownError(e.toString()),
-        ),
-      );
+      emit(AppState.failure(e is BaseError ? e : UnknownError(e.toString())));
     }
   }
 
@@ -58,10 +53,7 @@ class AppCubit extends BaseCubit<AppState> {
 
   Future<void> updateThemeMode(ThemeMode themeMode) async {
     try {
-      await _keyValueService.set<int>(
-        KeyValueKeys.themeMode,
-        themeMode.index,
-      );
+      await _keyValueService.set<int>(KeyValueKeys.themeMode, themeMode.index);
       final currentData = state.data;
       final newState = currentData != null
           ? currentData.copyWith(themeMode: themeMode)

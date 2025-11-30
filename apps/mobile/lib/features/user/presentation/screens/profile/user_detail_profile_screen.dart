@@ -18,11 +18,7 @@ class UserDetailProfileScreen extends StatelessWidget {
       padding: EdgeInsets.zero,
       body: Column(
         spacing: 16.h,
-        children: [
-          _buildHeader(context),
-          const SizedBox(),
-          _buildDetail(),
-        ],
+        children: [_buildHeader(context), const SizedBox(), _buildDetail()],
       ),
     );
   }
@@ -55,24 +51,15 @@ class UserDetailProfileScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DefaultText(
-                            'Email',
-                            fontSize: 14.sp,
-                          ),
-                          DefaultText(
-                            user.email,
-                            fontSize: 14.sp,
-                          ),
+                          DefaultText('Email', fontSize: 14.sp),
+                          DefaultText(user.email, fontSize: 14.sp),
                         ],
                       ),
                       const Divider(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          DefaultText(
-                            'Phone',
-                            fontSize: 14.sp,
-                          ),
+                          DefaultText('Phone', fontSize: 14.sp),
                           DefaultText(
                             user.phone.toPhoneNumber().toString(),
                             fontSize: 14.sp,
@@ -85,10 +72,7 @@ class UserDetailProfileScreen extends StatelessWidget {
               ),
             ),
           ),
-          const DefaultText(
-            'Achievements',
-            fontWeight: FontWeight.w500,
-          ),
+          const DefaultText('Achievements', fontWeight: FontWeight.w500),
           SizedBox(
             width: double.infinity,
             height: 0.3.sh,
@@ -110,10 +94,7 @@ class UserDetailProfileScreen extends StatelessWidget {
                           color: context.colorScheme.mutedForeground,
                         ),
                         errorWidget: (context, url, error) => const Center(
-                          child: Icon(
-                            LucideIcons.info,
-                            color: Colors.red,
-                          ),
+                          child: Icon(LucideIcons.info, color: Colors.red),
                         ),
                       ),
                       title: DefaultText(badge.name),
@@ -140,11 +121,7 @@ class UserDetailProfileScreen extends StatelessWidget {
         (context.isDarkMode
                 ? Assets.images.bg.staticGradientDark
                 : Assets.images.bg.staticGradientLight)
-            .image(
-              width: double.infinity,
-              height: 180.h,
-              fit: BoxFit.cover,
-            ),
+            .image(width: double.infinity, height: 180.h, fit: BoxFit.cover),
 
         Positioned(
           top: 0.08.sw,

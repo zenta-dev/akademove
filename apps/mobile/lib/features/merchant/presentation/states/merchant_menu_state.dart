@@ -18,11 +18,8 @@ class MerchantMenuState extends BaseState3<MerchantMenu>
     super.selected,
   });
 
-  MerchantMenuState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  MerchantMenuState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   MerchantMenuState toLoading() => copyWith(
     state: CubitState.loading,
@@ -44,9 +41,6 @@ class MerchantMenuState extends BaseState3<MerchantMenu>
     error: null,
   );
 
-  MerchantMenuState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  MerchantMenuState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

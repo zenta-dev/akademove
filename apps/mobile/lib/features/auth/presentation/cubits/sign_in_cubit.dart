@@ -3,10 +3,9 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class SignInCubit extends BaseCubit<SignInState> {
-  SignInCubit({
-    required AuthRepository authRepository,
-  }) : _authRepository = authRepository,
-       super(SignInState.initial());
+  SignInCubit({required AuthRepository authRepository})
+    : _authRepository = authRepository,
+      super(SignInState.initial());
   final AuthRepository _authRepository;
 
   Future<void> signIn(String email, String password) async {

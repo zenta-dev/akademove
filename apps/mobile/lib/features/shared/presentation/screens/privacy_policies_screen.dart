@@ -23,12 +23,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
           'title': 'Customer Data',
           'description':
               'When you register and use AkadeMove as a Customer, we collect:',
-          'items': [
-            'Name',
-            'Email address',
-            'Phone number',
-            'Gender',
-          ],
+          'items': ['Name', 'Email address', 'Phone number', 'Gender'],
           'footer':
               'This data allows us to verify your identity, communicate with you, process bookings and payments, and improve your overall experience.',
           'additional':
@@ -114,14 +109,8 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
       'content':
           'AkadeMove requires location access (GPS) to function properly. We use location data to:',
       'items': [
-        {
-          'number': '1',
-          'text': 'Identify pick-up and drop-off points.',
-        },
-        {
-          'number': '2',
-          'text': 'Show real-time driver locations.',
-        },
+        {'number': '1', 'text': 'Identify pick-up and drop-off points.'},
+        {'number': '2', 'text': 'Show real-time driver locations.'},
         {
           'number': '3',
           'text': 'Improve route accuracy and service efficiency.',
@@ -180,9 +169,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
     return Stack(
       children: [
         MyScaffold(
-          headers: const [
-            DefaultAppBar(title: 'Privacy Policies'),
-          ],
+          headers: const [DefaultAppBar(title: 'Privacy Policies')],
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,
@@ -279,19 +266,14 @@ class _PrivacySection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8.h,
-        children: [
-          _buildHeader(context),
-          if (isOpen) _buildContent(context),
-        ],
+        children: [_buildHeader(context), if (isOpen) _buildContent(context)],
       ),
     );
   }
 
   Widget _buildHeader(BuildContext context) {
     return Button(
-      style: const ButtonStyle.ghost(
-        density: ButtonDensity.compact,
-      ),
+      style: const ButtonStyle.ghost(density: ButtonDensity.compact),
       onPressed: onToggle,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

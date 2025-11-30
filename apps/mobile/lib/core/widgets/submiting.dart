@@ -17,9 +17,7 @@ class Submiting extends StatelessWidget {
           SizedBox(
             width: 16.w,
             height: 16.w,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.dg,
-            ),
+            child: CircularProgressIndicator(strokeWidth: 2.dg),
           ),
           Gap(8.w),
           DefaultText(

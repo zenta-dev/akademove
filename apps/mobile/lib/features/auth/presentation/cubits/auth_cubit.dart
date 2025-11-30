@@ -2,10 +2,9 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
 class AuthCubit extends BaseCubit<AuthState> {
-  AuthCubit({
-    required AuthRepository authRepository,
-  }) : _authRepository = authRepository,
-       super(AuthState.initial());
+  AuthCubit({required AuthRepository authRepository})
+    : _authRepository = authRepository,
+      super(AuthState.initial());
 
   final AuthRepository _authRepository;
 

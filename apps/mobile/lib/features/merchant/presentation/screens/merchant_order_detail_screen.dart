@@ -37,9 +37,7 @@ class MerchantOrderDetailScreen extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              context.pushNamed(
-                Routes.merchantCommissionReportDetail.name,
-              );
+              context.pushNamed(Routes.merchantCommissionReportDetail.name);
             },
             icon: const Icon(Icons.message_rounded),
             variance: ButtonVariance.primary,
@@ -66,10 +64,7 @@ class MerchantOrderDetailScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 6,
-                  vertical: 2,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: const Color(0XFF0498B1),
                   borderRadius: BorderRadius.circular(16),
@@ -97,9 +92,7 @@ class MerchantOrderDetailScreen extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  context.pushNamed(
-                    Routes.merchantCommissionReportDetail.name,
-                  );
+                  context.pushNamed(Routes.merchantCommissionReportDetail.name);
                 },
                 icon: const Icon(Icons.message_rounded),
                 variance: const ButtonStyle.primary(),
@@ -234,10 +227,7 @@ class MerchantOrderDetailScreen extends StatelessWidget {
       children: [
         MyScaffold(
           headers: const [
-            DefaultAppBar(
-              title: 'Order Detail',
-              subtitle: 'F-123456789',
-            ),
+            DefaultAppBar(title: 'Order Detail', subtitle: 'F-123456789'),
           ],
           padding: EdgeInsets.all(16.w),
           body: SafeArea(

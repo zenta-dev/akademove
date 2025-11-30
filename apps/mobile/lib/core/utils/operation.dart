@@ -3,12 +3,7 @@
 import 'package:akademove/core/_export.dart';
 
 class Result<T> {
-  const Result._(
-    this.success, {
-    this.data,
-    this.error,
-    this.stackTrace,
-  });
+  const Result._(this.success, {this.data, this.error, this.stackTrace});
 
   final bool success;
   final T? data;

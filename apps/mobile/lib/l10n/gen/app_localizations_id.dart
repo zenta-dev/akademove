@@ -112,4 +112,16 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get destination => 'Destination';
+
+  @override
+  String get special_instructions => 'Instruksi Khusus (Opsional)';
+
+  @override
+  String get special_instructions_hint => 'mis., \'Harap tangani dengan hati-hati\', \'Telepon sebelum mengantarkan\'';
+
+  @override
+  String get item_photos => 'Foto Barang (Opsional)';
+
+  @override
+  String get add_up_to_3_photos => 'Tambahkan hingga 3 foto barang';
 }

@@ -86,9 +86,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     if (useCache) {
       if (!mounted) return;
 
-      _updateDriverMarkers(
-        context.read<UserRideCubit>().state.nearbyDrivers,
-      );
+      _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
       setState(() {});
       return;
     }
@@ -106,9 +104,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
     if (!mounted) return;
 
-    _updateDriverMarkers(
-      context.read<UserRideCubit>().state.nearbyDrivers,
-    );
+    _updateDriverMarkers(context.read<UserRideCubit>().state.nearbyDrivers);
     setState(() {});
   }
 

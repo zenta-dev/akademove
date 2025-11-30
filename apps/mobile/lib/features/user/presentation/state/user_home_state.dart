@@ -15,18 +15,12 @@ class UserHomeState extends BaseState2 with UserHomeStateMappable {
   final List<Merchant> popularMerchants;
 
   @override
-  UserHomeState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserHomeState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserHomeState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserHomeState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserHomeState toSuccess({
@@ -40,9 +34,6 @@ class UserHomeState extends BaseState2 with UserHomeStateMappable {
   );
 
   @override
-  UserHomeState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  UserHomeState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

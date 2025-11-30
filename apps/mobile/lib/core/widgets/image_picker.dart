@@ -110,11 +110,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     final hasImage = _selectedImage != null && _selectedImage!.existsSync();
 
     const placeholder = Center(
-      child: Icon(
-        LucideIcons.camera,
-        color: Colors.neutral,
-        size: 36,
-      ),
+      child: Icon(LucideIcons.camera, color: Colors.neutral, size: 36),
     );
 
     return GestureDetector(
@@ -190,10 +186,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     width: 2,
                   ),
                 ),
-                child: const Icon(
-                  LucideIcons.pencil,
-                  size: 16,
-                ),
+                child: const Icon(LucideIcons.pencil, size: 16),
               ),
             ),
         ],

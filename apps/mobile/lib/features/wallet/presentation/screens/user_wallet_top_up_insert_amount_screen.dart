@@ -9,10 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserWalletTopUpInsertAmountScreen extends StatefulWidget {
-  const UserWalletTopUpInsertAmountScreen({
-    required this.method,
-    super.key,
-  });
+  const UserWalletTopUpInsertAmountScreen({required this.method, super.key});
 
   final TopUpRequestMethodEnum method;
 
@@ -41,44 +38,28 @@ class _UserWalletTopUpInsertAmountScreenState
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [
-        DefaultAppBar(title: 'Top Up QRIS'),
-      ],
+      headers: const [DefaultAppBar(title: 'Top Up QRIS')],
       body: Column(
         spacing: 16.h,
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             spacing: 16.w,
-            children: [
-              _buildTemplate(10_000),
-              _buildTemplate(20_000),
-            ],
+            children: [_buildTemplate(10_000), _buildTemplate(20_000)],
           ),
           Row(
             spacing: 16.w,
-            children: [
-              _buildTemplate(50_000),
-              _buildTemplate(100_000),
-            ],
+            children: [_buildTemplate(50_000), _buildTemplate(100_000)],
           ),
           Row(
             spacing: 16.w,
-            children: [
-              _buildTemplate(500_000),
-              _buildTemplate(1_000_000),
-            ],
+            children: [_buildTemplate(500_000), _buildTemplate(1_000_000)],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 4.h,
             children: [
-              Label(
-                child: DefaultText(
-                  'Amount',
-                  fontSize: 14.sp,
-                ),
-              ),
+              Label(child: DefaultText('Amount', fontSize: 14.sp)),
               TextField(
                 controller: amountController,
                 onChanged: (value) {

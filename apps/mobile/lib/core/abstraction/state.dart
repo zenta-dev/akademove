@@ -40,11 +40,7 @@ abstract class BaseCubit<T> extends Cubit<T> {
 }
 
 abstract class BaseState2 {
-  BaseState2({
-    this.state = CubitState.initial,
-    this.message,
-    this.error,
-  });
+  BaseState2({this.state = CubitState.initial, this.message, this.error});
 
   final CubitState state;
   final String? message;

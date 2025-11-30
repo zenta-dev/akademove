@@ -110,10 +110,7 @@ class _UserRideScreenState extends State<UserRideScreen> {
           icon: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
           ),
-          infoWindow: InfoWindow(
-            title: 'Pickup',
-            snippet: pickup!.vicinity,
-          ),
+          infoWindow: InfoWindow(title: 'Pickup', snippet: pickup!.vicinity),
         ),
       );
     }
@@ -127,13 +124,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
         Marker(
           markerId: const MarkerId('dropoff'),
           position: dropoffLatLng,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueRed,
-          ),
-          infoWindow: InfoWindow(
-            title: 'Dropoff',
-            snippet: dropoff!.vicinity,
-          ),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: InfoWindow(title: 'Dropoff', snippet: dropoff!.vicinity),
         ),
       );
     }
@@ -440,9 +432,7 @@ class _UserRidePickupScreenState extends State<UserRidePickupScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [
-        DefaultAppBar(title: 'Where you at?'),
-      ],
+      headers: const [DefaultAppBar(title: 'Where you at?')],
       body: PickLocationWidget(
         type: LocationType.pickup,
         pickupController: pickupController,
@@ -483,9 +473,7 @@ class _UserRideDropoffScreenState extends State<UserRideDropoffScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [
-        DefaultAppBar(title: 'Where are you going?'),
-      ],
+      headers: const [DefaultAppBar(title: 'Where are you going?')],
       body: PickLocationWidget(
         type: LocationType.dropoff,
         pickupController: pickupController,

@@ -35,11 +35,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
           ],
         );
       case 1:
-        cubit.getMine(
-          statuses: const [
-            OrderStatus.COMPLETED,
-          ],
-        );
+        cubit.getMine(statuses: const [OrderStatus.COMPLETED]);
       case 2:
         cubit.getMine(
           statuses: const [
@@ -78,11 +74,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                       OrderStatus.IN_TRIP,
                     ],
                   ),
-                  _buildTab(
-                    statuses: const [
-                      OrderStatus.COMPLETED,
-                    ],
-                  ),
+                  _buildTab(statuses: const [OrderStatus.COMPLETED]),
                   _buildTab(
                     statuses: const [
                       OrderStatus.CANCELLED_BY_SYSTEM,
@@ -110,12 +102,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
           children: List.generate(
             tabs.length,
             (i) => Expanded(
-              child: _buildTabButton(
-                context,
-                i,
-                tabs[i],
-                _currentIndex == i,
-              ),
+              child: _buildTabButton(context, i, tabs[i], _currentIndex == i),
             ),
           ),
         ),
@@ -170,9 +157,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
     padding: EdgeInsets.only(top: 16.dg),
     child: OopsAlertWidget(
       message: message,
-      onRefresh: () => context.read<MerchantOrderCubit>().getMine(
-        statuses: statuses,
-      ),
+      onRefresh: () =>
+          context.read<MerchantOrderCubit>().getMine(statuses: statuses),
     ),
   );
 

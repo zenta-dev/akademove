@@ -15,17 +15,13 @@ class _Option {
 class UserWalletTopUpScreen extends StatelessWidget {
   const UserWalletTopUpScreen({super.key});
 
-  static const _options = [
-    _Option('QRIS', TopUpRequestMethodEnum.QRIS),
-  ];
+  static const _options = [_Option('QRIS', TopUpRequestMethodEnum.QRIS)];
 
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [
-        DefaultAppBar(title: 'Top Up'),
-      ],
+      headers: const [DefaultAppBar(title: 'Top Up')],
       body: ListView.separated(
         padding: EdgeInsets.zero,
         itemCount: _options.length,

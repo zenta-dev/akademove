@@ -76,12 +76,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       final res = await _orderRepository.get(id);
 
       state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          selectedOrder: res.data,
-          message: res.message,
-        ),
-      );
+      emit(state.toSuccess(selectedOrder: res.data, message: res.message));
     } on BaseError catch (e, st) {
       state.unAssignOperation(methodName);
       logger.e(

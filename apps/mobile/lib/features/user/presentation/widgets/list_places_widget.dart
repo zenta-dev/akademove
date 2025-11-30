@@ -55,22 +55,16 @@ class ListPlacesWidget extends StatelessWidget {
                   width: 24.w,
                   height: 24.w,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: imageProvider,
-                    ),
+                    image: DecorationImage(image: imageProvider),
                   ),
                 ),
                 placeholder: (context, url) => Container(
                   width: 24.w,
                   height: 24.w,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.primary,
-                  ),
+                  decoration: BoxDecoration(color: context.colorScheme.primary),
                 ).asSkeleton(),
-                errorWidget: (context, url, error) => Icon(
-                  LucideIcons.info,
-                  size: 24.sp,
-                ),
+                errorWidget: (context, url, error) =>
+                    Icon(LucideIcons.info, size: 24.sp),
               ),
               DefaultText(
                 place.distance.toString(),

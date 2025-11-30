@@ -31,9 +31,7 @@ enum PickMenuCategoryEnum {
 
 abstract class _FormKeys {
   static const FormKey<PickMenuCategoryEnum> menuCategory =
-      SelectKey<PickMenuCategoryEnum>(
-        'menu-category',
-      );
+      SelectKey<PickMenuCategoryEnum>('menu-category');
   static const FormKey<String> menuName = TextFieldKey('menu-name');
   static const FormKey<String> menuDescription = TextFieldKey(
     'menu-description',
@@ -97,17 +95,11 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
-        _showToast(
-          'Success',
-          'Menu updated successfully',
-        );
+        _showToast('Success', 'Menu updated successfully');
       }
     } catch (e) {
       if (mounted) {
-        _showToast(
-          'Error',
-          'Failed to update menu',
-        );
+        _showToast('Error', 'Failed to update menu');
       }
     } finally {
       if (mounted) {
@@ -121,10 +113,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
 
     showToast(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: title,
-        message: message,
-      ),
+      builder: (context, overlay) =>
+          context.buildToast(title: title, message: message),
       location: ToastLocation.topCenter,
     );
   }
@@ -149,11 +139,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       children: [
         MyScaffold(
           safeArea: true,
-          headers: const [
-            DefaultAppBar(
-              title: 'Create Menu',
-            ),
-          ],
+          headers: const [DefaultAppBar(title: 'Create Menu')],
           body: Form(
             controller: _formController,
             child: SingleChildScrollView(
@@ -237,9 +223,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : Text(
                           'Create',
@@ -294,9 +278,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
         keyboardType: keyboardType,
         maxLines: maxLines,
         maxLength: maxLength,
-        features: [
-          InputFeature.leading(Icon(icon)),
-        ],
+        features: [InputFeature.leading(Icon(icon))],
       ),
     );
   }
@@ -401,9 +383,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
               placeholder: const Text('0'),
               enabled: !_isLoading,
               keyboardType: TextInputType.number,
-              features: const [
-                InputFeature.leading(Icon(LucideIcons.package)),
-              ],
+              features: const [InputFeature.leading(Icon(LucideIcons.package))],
               onChanged: (value) {
                 final intValue = int.tryParse(value) ?? 0;
                 final clampedValue = intValue.clamp(0, 999);

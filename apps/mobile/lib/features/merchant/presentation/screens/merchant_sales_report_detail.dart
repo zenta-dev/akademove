@@ -236,15 +236,11 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
     return Stack(
       children: [
         MyScaffold(
-          headers: const [
-            DefaultAppBar(title: 'Sales Report'),
-          ],
+          headers: const [DefaultAppBar(title: 'Sales Report')],
           padding: EdgeInsets.all(16.w),
           body: SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                bottom: 100.h,
-              ),
+              padding: EdgeInsets.only(bottom: 100.h),
               child: Column(
                 spacing: 16.h,
                 children: [

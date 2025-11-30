@@ -30,18 +30,12 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   final Driver? currentAssignedDriver;
 
   @override
-  UserOrderState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserOrderState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserOrderState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserOrderState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserOrderState toSuccess({
@@ -67,9 +61,6 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   );
 
   @override
-  UserOrderState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  UserOrderState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

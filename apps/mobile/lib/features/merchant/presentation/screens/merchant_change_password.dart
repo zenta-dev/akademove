@@ -12,9 +12,7 @@ class MerchantChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return MyScaffold(
-      headers: const [
-        DefaultAppBar(title: 'Change Password'),
-      ],
+      headers: const [DefaultAppBar(title: 'Change Password')],
       body: Card(
         padding: EdgeInsets.all(8.dg),
         child: SizedBox(

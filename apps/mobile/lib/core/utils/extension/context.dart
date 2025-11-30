@@ -18,10 +18,7 @@ extension BuildContextExt on BuildContext {
   MediaQueryData get mediaQuery => MediaQuery.of(this);
   Size get mediaQuerySize => mediaQuery.size;
 
-  Widget buildToast({
-    required String title,
-    required String message,
-  }) {
+  Widget buildToast({required String title, required String message}) {
     return SurfaceCard(
       child: Basic(
         title: Text(title),

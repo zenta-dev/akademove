@@ -18,9 +18,8 @@ class GetDriverNearbyQuery {
 }
 
 class DriverRepository extends BaseRepository {
-  const DriverRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  const DriverRepository({required ApiClient apiClient})
+    : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 

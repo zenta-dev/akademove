@@ -2,11 +2,7 @@ part of 'router.dart';
 
 final driverRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (_) => sl<BottomNavBarCubit>(),
-      ),
-    ],
+    providers: [BlocProvider(create: (_) => sl<BottomNavBarCubit>())],
     child: BottomNavbar(
       shell: navigationShell,
       tabs: const [

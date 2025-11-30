@@ -11,9 +11,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       safeArea: true,
-      headers: const [
-        DefaultAppBar(title: 'Menu’s Detail'),
-      ],
+      headers: const [DefaultAppBar(title: 'Menu’s Detail')],
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -46,9 +44,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                         context.pushNamed(Routes.merchantEditMenu.name),
                     child: Text(
                       'Edit menu',
-                      style: context.typography.small.copyWith(
-                        fontSize: 16.sp,
-                      ),
+                      style: context.typography.small.copyWith(fontSize: 16.sp),
                     ),
                   ),
                 ),
@@ -57,9 +53,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                     onPressed: () => _showDeleteConfirmation(context),
                     child: Text(
                       'Delete menu',
-                      style: context.typography.small.copyWith(
-                        fontSize: 16.sp,
-                      ),
+                      style: context.typography.small.copyWith(fontSize: 16.sp),
                     ),
                   ),
                 ),
@@ -123,9 +117,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
             flex: 6,
             child: Text(
               value,
-              style: context.typography.small.copyWith(
-                fontSize: 14.sp,
-              ),
+              style: context.typography.small.copyWith(fontSize: 14.sp),
             ),
           ),
         ],

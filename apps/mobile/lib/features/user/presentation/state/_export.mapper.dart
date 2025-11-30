@@ -731,3 +731,267 @@ class _UserLocationStateCopyWithImpl<$R, $Out>
   ) => _UserLocationStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
+class UserDeliveryStateMapper extends ClassMapperBase<UserDeliveryState> {
+  UserDeliveryStateMapper._();
+
+  static UserDeliveryStateMapper? _instance;
+  static UserDeliveryStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UserDeliveryStateMapper._());
+      PlaceMapper.ensureInitialized();
+      PageTokenPaginationResultMapper.ensureInitialized();
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UserDeliveryState';
+
+  static Place? _$pickup(UserDeliveryState v) => v.pickup;
+  static const Field<UserDeliveryState, Place> _f$pickup = Field(
+    'pickup',
+    _$pickup,
+    opt: true,
+  );
+  static Place? _$dropoff(UserDeliveryState v) => v.dropoff;
+  static const Field<UserDeliveryState, Place> _f$dropoff = Field(
+    'dropoff',
+    _$dropoff,
+    opt: true,
+  );
+  static DeliveryDetails? _$details(UserDeliveryState v) => v.details;
+  static const Field<UserDeliveryState, DeliveryDetails> _f$details = Field(
+    'details',
+    _$details,
+    opt: true,
+  );
+  static DeliveryEstimateResult? _$estimate(UserDeliveryState v) => v.estimate;
+  static const Field<UserDeliveryState, DeliveryEstimateResult> _f$estimate =
+      Field('estimate', _$estimate, opt: true);
+  static PageTokenPaginationResult<List<Place>> _$nearbyPlaces(
+    UserDeliveryState v,
+  ) => v.nearbyPlaces;
+  static const Field<UserDeliveryState, PageTokenPaginationResult<List<Place>>>
+  _f$nearbyPlaces = Field(
+    'nearbyPlaces',
+    _$nearbyPlaces,
+    opt: true,
+    def: const PageTokenPaginationResult<List<Place>>(data: []),
+  );
+  static PageTokenPaginationResult<List<Place>> _$searchPlaces(
+    UserDeliveryState v,
+  ) => v.searchPlaces;
+  static const Field<UserDeliveryState, PageTokenPaginationResult<List<Place>>>
+  _f$searchPlaces = Field(
+    'searchPlaces',
+    _$searchPlaces,
+    opt: true,
+    def: const PageTokenPaginationResult<List<Place>>(data: []),
+  );
+  static CubitState _$state(UserDeliveryState v) => v.state;
+  static const Field<UserDeliveryState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(UserDeliveryState v) => v.message;
+  static const Field<UserDeliveryState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(UserDeliveryState v) => v.error;
+  static const Field<UserDeliveryState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<UserDeliveryState> fields = const {
+    #pickup: _f$pickup,
+    #dropoff: _f$dropoff,
+    #details: _f$details,
+    #estimate: _f$estimate,
+    #nearbyPlaces: _f$nearbyPlaces,
+    #searchPlaces: _f$searchPlaces,
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+  };
+
+  static UserDeliveryState _instantiate(DecodingData data) {
+    return UserDeliveryState(
+      pickup: data.dec(_f$pickup),
+      dropoff: data.dec(_f$dropoff),
+      details: data.dec(_f$details),
+      estimate: data.dec(_f$estimate),
+      nearbyPlaces: data.dec(_f$nearbyPlaces),
+      searchPlaces: data.dec(_f$searchPlaces),
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin UserDeliveryStateMappable {
+  UserDeliveryStateCopyWith<
+    UserDeliveryState,
+    UserDeliveryState,
+    UserDeliveryState
+  >
+  get copyWith =>
+      _UserDeliveryStateCopyWithImpl<UserDeliveryState, UserDeliveryState>(
+        this as UserDeliveryState,
+        $identity,
+        $identity,
+      );
+  @override
+  String toString() {
+    return UserDeliveryStateMapper.ensureInitialized().stringifyValue(
+      this as UserDeliveryState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UserDeliveryStateMapper.ensureInitialized().equalsValue(
+      this as UserDeliveryState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return UserDeliveryStateMapper.ensureInitialized().hashValue(
+      this as UserDeliveryState,
+    );
+  }
+}
+
+extension UserDeliveryStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserDeliveryState, $Out> {
+  UserDeliveryStateCopyWith<$R, UserDeliveryState, $Out>
+  get $asUserDeliveryState => $base.as(
+    (v, t, t2) => _UserDeliveryStateCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class UserDeliveryStateCopyWith<
+  $R,
+  $In extends UserDeliveryState,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  PlaceCopyWith<$R, Place, Place>? get pickup;
+  PlaceCopyWith<$R, Place, Place>? get dropoff;
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get nearbyPlaces;
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get searchPlaces;
+  $R call({
+    Place? pickup,
+    Place? dropoff,
+    DeliveryDetails? details,
+    DeliveryEstimateResult? estimate,
+    PageTokenPaginationResult<List<Place>>? nearbyPlaces,
+    PageTokenPaginationResult<List<Place>>? searchPlaces,
+    CubitState? state,
+    String? message,
+    BaseError? error,
+  });
+  UserDeliveryStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _UserDeliveryStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserDeliveryState, $Out>
+    implements UserDeliveryStateCopyWith<$R, UserDeliveryState, $Out> {
+  _UserDeliveryStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UserDeliveryState> $mapper =
+      UserDeliveryStateMapper.ensureInitialized();
+  @override
+  PlaceCopyWith<$R, Place, Place>? get pickup =>
+      $value.pickup?.copyWith.$chain((v) => call(pickup: v));
+  @override
+  PlaceCopyWith<$R, Place, Place>? get dropoff =>
+      $value.dropoff?.copyWith.$chain((v) => call(dropoff: v));
+  @override
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get nearbyPlaces =>
+      $value.nearbyPlaces.copyWith.$chain((v) => call(nearbyPlaces: v));
+  @override
+  PageTokenPaginationResultCopyWith<
+    $R,
+    PageTokenPaginationResult<List<Place>>,
+    PageTokenPaginationResult<List<Place>>,
+    List<Place>
+  >
+  get searchPlaces =>
+      $value.searchPlaces.copyWith.$chain((v) => call(searchPlaces: v));
+  @override
+  $R call({
+    Object? pickup = $none,
+    Object? dropoff = $none,
+    Object? details = $none,
+    Object? estimate = $none,
+    PageTokenPaginationResult<List<Place>>? nearbyPlaces,
+    PageTokenPaginationResult<List<Place>>? searchPlaces,
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (pickup != $none) #pickup: pickup,
+      if (dropoff != $none) #dropoff: dropoff,
+      if (details != $none) #details: details,
+      if (estimate != $none) #estimate: estimate,
+      if (nearbyPlaces != null) #nearbyPlaces: nearbyPlaces,
+      if (searchPlaces != null) #searchPlaces: searchPlaces,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+    }),
+  );
+  @override
+  UserDeliveryState $make(CopyWithData data) => UserDeliveryState(
+    pickup: data.get(#pickup, or: $value.pickup),
+    dropoff: data.get(#dropoff, or: $value.dropoff),
+    details: data.get(#details, or: $value.details),
+    estimate: data.get(#estimate, or: $value.estimate),
+    nearbyPlaces: data.get(#nearbyPlaces, or: $value.nearbyPlaces),
+    searchPlaces: data.get(#searchPlaces, or: $value.searchPlaces),
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+  );
+
+  @override
+  UserDeliveryStateCopyWith<$R2, UserDeliveryState, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _UserDeliveryStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+

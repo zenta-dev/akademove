@@ -68,9 +68,7 @@ class MerchantOrderCardWidget extends StatelessWidget {
               const Divider(),
               Text(
                 'Rp. ${order.totalPrice}',
-                style: context.typography.small.copyWith(
-                  fontSize: 14.sp,
-                ),
+                style: context.typography.small.copyWith(fontSize: 14.sp),
               ),
               if (onAccept != null && order.status == OrderStatus.REQUESTED)
                 ...[],

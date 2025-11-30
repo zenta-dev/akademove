@@ -112,4 +112,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get destination => 'Destination';
+
+  @override
+  String get special_instructions => 'Special Instructions (Optional)';
+
+  @override
+  String get special_instructions_hint => 'e.g., \'Please handle with care\', \'Call before delivery\'';
+
+  @override
+  String get item_photos => 'Item Photos (Optional)';
+
+  @override
+  String get add_up_to_3_photos => 'Add up to 3 photos of the item';
 }

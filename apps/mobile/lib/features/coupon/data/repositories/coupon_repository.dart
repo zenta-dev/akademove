@@ -13,9 +13,7 @@ class ListCouponQuery extends UnifiedQuery {
 }
 
 class CouponRepository extends BaseRepository {
-  CouponRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  CouponRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 

@@ -54,9 +54,7 @@ abstract class _FormKeys {
   static const FormKey<String> step3MenuCategory = TextFieldKey(
     'step-3-menu-category',
   );
-  static const FormKey<String> step3MenuName = TextFieldKey(
-    'step-3-menu-name',
-  );
+  static const FormKey<String> step3MenuName = TextFieldKey('step-3-menu-name');
   static const FormKey<String> step3MenuDescription = TextFieldKey(
     'step-3-menu-description',
   );
@@ -226,10 +224,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   void _showToast(BuildContext context, String title, String message) {
     showToast(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: title,
-        message: message,
-      ),
+      builder: (context, overlay) =>
+          context.buildToast(title: title, message: message),
       location: ToastLocation.topCenter,
     );
   }
@@ -261,9 +257,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       children: [
         MyScaffold(
           controller: _scrollController,
-          headers: const [
-            DefaultAppBar(title: 'Set Up Outlet'),
-          ],
+          headers: const [DefaultAppBar(title: 'Set Up Outlet')],
           body: Form(
             controller: _formController,
             child: Column(
@@ -347,10 +341,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
             label: 'Back',
-            onPressed: () => _handleStepNavigation(
-              isNext: false,
-              validator: () => true,
-            ),
+            onPressed: () =>
+                _handleStepNavigation(isNext: false, validator: () => true),
           ),
           _buildActionButton(
             icon: LucideIcons.arrowRight,
@@ -372,9 +364,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: context.theme.colorScheme.border,
-        ),
+        border: Border.all(color: context.theme.colorScheme.border),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -545,10 +535,8 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
             label: 'Back',
-            onPressed: () => _handleStepNavigation(
-              isNext: false,
-              validator: () => true,
-            ),
+            onPressed: () =>
+                _handleStepNavigation(isNext: false, validator: () => true),
           ),
           _buildActionButton(
             icon: LucideIcons.check,

@@ -43,12 +43,8 @@ void _setupService() {
       WebSocketService.new,
       dispose: (param) => param.dispose(),
     )
-    ..registerLazySingleton(
-      FirebaseService.new,
-    )
-    ..registerLazySingleton(
-      NotificationService.new,
-    );
+    ..registerLazySingleton(FirebaseService.new)
+    ..registerLazySingleton(NotificationService.new);
 }
 
 void _setupRepository() {
@@ -61,35 +57,17 @@ void _setupRepository() {
       ),
     )
     ..registerLazySingleton(
-      () => MerchantRepository(
-        apiClient: sl<ApiClient>(),
-      ),
+      () => MerchantRepository(apiClient: sl<ApiClient>()),
     )
+    ..registerLazySingleton(() => DriverRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
-      () => DriverRepository(
-        apiClient: sl<ApiClient>(),
-      ),
+      () => ConfigurationRepository(apiClient: sl<ApiClient>()),
     )
+    ..registerLazySingleton(() => OrderRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
-      () => ConfigurationRepository(
-        apiClient: sl<ApiClient>(),
-      ),
+      () => TransactionRepository(apiClient: sl<ApiClient>()),
     )
-    ..registerLazySingleton(
-      () => OrderRepository(
-        apiClient: sl<ApiClient>(),
-      ),
-    )
-    ..registerLazySingleton(
-      () => TransactionRepository(
-        apiClient: sl<ApiClient>(),
-      ),
-    )
-    ..registerLazySingleton(
-      () => WalletRepository(
-        apiClient: sl<ApiClient>(),
-      ),
-    )
+    ..registerLazySingleton(() => WalletRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => NotificationRepository(
         apiClient: sl<ApiClient>(),
@@ -97,55 +75,37 @@ void _setupRepository() {
         keyValueService: sl<KeyValueService>(),
       ),
     )
-    ..registerLazySingleton(
-      () => UserRepository(
-        apiClient: sl<ApiClient>(),
-      ),
-    );
+    ..registerLazySingleton(() => UserRepository(apiClient: sl<ApiClient>()));
 }
 
 void _setupCubit() {
   sl
     ..registerFactory(BottomNavBarCubit.new)
     ..registerFactory(() => AppCubit(keyValueService: sl<KeyValueService>()))
+    ..registerFactory(() => AuthCubit(authRepository: sl<AuthRepository>()))
+    ..registerFactory(() => SignInCubit(authRepository: sl<AuthRepository>()))
+    ..registerFactory(() => SignUpCubit(authRepository: sl<AuthRepository>()))
     ..registerFactory(
-      () => AuthCubit(
-        authRepository: sl<AuthRepository>(),
-      ),
+      () => MerchantCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
-      () => SignInCubit(
-        authRepository: sl<AuthRepository>(),
-      ),
+      () => MerchantOrderCubit(orderRepository: sl<OrderRepository>()),
     )
     ..registerFactory(
-      () => SignUpCubit(
-        authRepository: sl<AuthRepository>(),
-      ),
+      () => UserHomeCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
-      () => MerchantCubit(
-        merchantRepository: sl<MerchantRepository>(),
-      ),
-    )
-    ..registerFactory(
-      () => MerchantOrderCubit(
-        orderRepository: sl<OrderRepository>(),
-      ),
-    )
-    ..registerFactory(
-      () => UserHomeCubit(
-        merchantRepository: sl<MerchantRepository>(),
-      ),
-    )
-    ..registerFactory(
-      () => UserLocationCubit(
-        locationService: sl<LocationService>(),
-      ),
+      () => UserLocationCubit(locationService: sl<LocationService>()),
     )
     ..registerFactory(
       () => UserRideCubit(
         driverRepository: sl<DriverRepository>(),
+        mapService: sl<MapService>(),
+      ),
+    )
+    ..registerFactory(
+      () => UserDeliveryCubit(
+        orderRepository: sl<OrderRepository>(),
         mapService: sl<MapService>(),
       ),
     )
@@ -168,9 +128,7 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
-      () => UserProfileCubit(
-        userRepository: sl<UserRepository>(),
-      ),
+      () => UserProfileCubit(userRepository: sl<UserRepository>()),
     )
     ..registerFactory(
       () => ConfigurationCubit(

@@ -3,10 +3,9 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class ConfigurationCubit extends BaseCubit<ConfigurationState> {
-  ConfigurationCubit({
-    required ConfigurationRepository configurationRepository,
-  }) : _configurationRepository = configurationRepository,
-       super(const ConfigurationState());
+  ConfigurationCubit({required ConfigurationRepository configurationRepository})
+    : _configurationRepository = configurationRepository,
+      super(const ConfigurationState());
   final ConfigurationRepository _configurationRepository;
 
   Future<void> init() async {}

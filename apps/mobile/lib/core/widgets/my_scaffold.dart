@@ -48,10 +48,7 @@ class MyScaffold extends StatelessWidget {
     );
 
     if (scrollable) {
-      child = SingleChildScrollView(
-        controller: controller,
-        child: child,
-      );
+      child = SingleChildScrollView(controller: controller, child: child);
     }
 
     if (safeArea) {

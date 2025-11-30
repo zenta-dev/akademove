@@ -17,9 +17,7 @@ class SignUpUserScreen extends StatelessWidget {
       body: Column(
         spacing: 16.h,
         children: [
-          Assets.images.hero.signUpUser.svg(
-            height: 200.h,
-          ),
+          Assets.images.hero.signUpUser.svg(height: 200.h),
           Text(
             'Sign up now — your next ride or meal is just a tap away 🚴‍♂️🍔',
             textAlign: TextAlign.center,
@@ -42,9 +40,7 @@ class _SignUpUserFormView extends StatefulWidget {
 class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   static const FormKey<String> _nameKey = TextFieldKey('name');
   static const FormKey<String> _emailKey = TextFieldKey('email');
-  static const FormKey<UserGender> _genderKey = SelectKey(
-    UserGender.MALE,
-  );
+  static const FormKey<UserGender> _genderKey = SelectKey(UserGender.MALE);
   static const FormKey<String> _phoneNumberKey = TextFieldKey('phone-number');
   static const FormKey<String> _passwordKey = TextFieldKey('password');
   static const FormKey<String> _confirmPasswordKey = TextFieldKey(

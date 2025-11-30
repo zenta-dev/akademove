@@ -300,6 +300,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Destination'**
   String get destination;
+
+  /// No description provided for @special_instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Special Instructions (Optional)'**
+  String get special_instructions;
+
+  /// No description provided for @special_instructions_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., \'Please handle with care\', \'Call before delivery\''**
+  String get special_instructions_hint;
+
+  /// No description provided for @item_photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Photos (Optional)'**
+  String get item_photos;
+
+  /// No description provided for @add_up_to_3_photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add up to 3 photos of the item'**
+  String get add_up_to_3_photos;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,54 +1,80 @@
 part of '_export.dart';
 
-class EstimateOrderResult {
-  const EstimateOrderResult({
+class DeliveryDetails {
+  const DeliveryDetails({
+    required this.description,
+    required this.weight,
+    this.specialInstructions,
+    this.itemPhotos = const [],
+  });
+
+  final String description;
+  final double weight; // in kg
+  final String? specialInstructions;
+  final List<File> itemPhotos; // Max 3 photos
+}
+
+class DeliveryEstimateResult {
+  const DeliveryEstimateResult({
     required this.summary,
     required this.pickup,
     required this.dropoff,
+    required this.details,
   });
 
   final OrderSummary summary;
   final Place pickup;
   final Place dropoff;
+  final DeliveryDetails details;
 }
 
 @MappableClass(
   generateMethods:
       GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
 )
-class UserRideState extends BaseState2 with UserRideStateMappable {
-  UserRideState({
-    this.nearbyDrivers = const [],
+class UserDeliveryState extends BaseState2 with UserDeliveryStateMappable {
+  UserDeliveryState({
+    this.pickup,
+    this.dropoff,
+    this.details,
+    this.estimate,
     this.nearbyPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
     this.searchPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
-    this.mapController,
     super.state,
     super.message,
     super.error,
   });
 
-  final List<Driver> nearbyDrivers;
+  final Place? pickup;
+  final Place? dropoff;
+  final DeliveryDetails? details;
+  final DeliveryEstimateResult? estimate;
   final PageTokenPaginationResult<List<Place>> nearbyPlaces;
   final PageTokenPaginationResult<List<Place>> searchPlaces;
-  final GoogleMapController? mapController;
 
   @override
-  UserRideState toInitial() =>
+  UserDeliveryState toInitial() =>
       copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserRideState toLoading() =>
+  UserDeliveryState toLoading() =>
       copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
-  UserRideState toSuccess({
-    List<Driver>? nearbyDrivers,
+  UserDeliveryState toSuccess({
+    Place? pickup,
+    Place? dropoff,
+    DeliveryDetails? details,
+    DeliveryEstimateResult? estimate,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
     PageTokenPaginationResult<List<Place>>? searchPlaces,
     String? message,
   }) => copyWith(
     state: CubitState.success,
-    nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
+    pickup: pickup ?? this.pickup,
+    dropoff: dropoff ?? this.dropoff,
+    details: details ?? this.details,
+    estimate: estimate ?? this.estimate,
     nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
     searchPlaces: searchPlaces ?? this.searchPlaces,
     message: message,
@@ -56,9 +82,6 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
   );
 
   @override
-  UserRideState toFailure(BaseError error, {String? message}) =>
+  UserDeliveryState toFailure(BaseError error, {String? message}) =>
       copyWith(state: CubitState.failure, error: error, message: message);
-
-  UserRideState setMapController(GoogleMapController con) =>
-      copyWith(mapController: con);
 }

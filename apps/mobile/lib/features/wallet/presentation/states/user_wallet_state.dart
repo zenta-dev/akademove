@@ -19,18 +19,12 @@ class UserWalletState extends BaseState2 with UserWalletStateMappable {
   final WalletMonthlySummaryResponse? thisMonthSummary;
 
   @override
-  UserWalletState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserWalletState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserWalletState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserWalletState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserWalletState toSuccess({
@@ -48,11 +42,8 @@ class UserWalletState extends BaseState2 with UserWalletStateMappable {
   );
 
   @override
-  UserWalletState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  UserWalletState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }
 
 @MappableClass(
@@ -75,18 +66,12 @@ class UserWalletTopUpState extends BaseState2
   final Wallet? walletResult;
 
   @override
-  UserWalletTopUpState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserWalletTopUpState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserWalletTopUpState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserWalletTopUpState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserWalletTopUpState toSuccess({
@@ -105,9 +90,5 @@ class UserWalletTopUpState extends BaseState2
 
   @override
   UserWalletTopUpState toFailure(BaseError error, {String? message}) =>
-      copyWith(
-        state: CubitState.failure,
-        error: error,
-        message: message,
-      );
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

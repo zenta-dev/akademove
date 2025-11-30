@@ -31,10 +31,7 @@ class ImagePickerService implements ImageService {
       final result = await _picker.pickImage(source: source);
 
       if (result == null) {
-        throw const ServiceError(
-          'No image selected',
-          code: ErrorCode.notFound,
-        );
+        throw const ServiceError('No image selected', code: ErrorCode.notFound);
       }
 
       return File(result.path);

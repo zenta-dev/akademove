@@ -2,10 +2,9 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
 class UserHomeCubit extends BaseCubit<UserHomeState> {
-  UserHomeCubit({
-    required MerchantRepository merchantRepository,
-  }) : _merchantRepository = merchantRepository,
-       super(UserHomeState());
+  UserHomeCubit({required MerchantRepository merchantRepository})
+    : _merchantRepository = merchantRepository,
+      super(UserHomeState());
   final MerchantRepository _merchantRepository;
 
   Future<void> getPopulars() async {

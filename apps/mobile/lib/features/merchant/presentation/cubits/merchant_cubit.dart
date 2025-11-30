@@ -2,10 +2,9 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 
 class MerchantCubit extends BaseCubit<MerchantState> {
-  MerchantCubit({
-    required MerchantRepository merchantRepository,
-  }) : _merchantRepository = merchantRepository,
-       super(MerchantState());
+  MerchantCubit({required MerchantRepository merchantRepository})
+    : _merchantRepository = merchantRepository,
+      super(MerchantState());
   final MerchantRepository _merchantRepository;
 
   Future<void> init() async {}

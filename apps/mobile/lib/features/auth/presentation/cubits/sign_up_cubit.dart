@@ -4,10 +4,9 @@ import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 
 class SignUpCubit extends BaseCubit<SignUpState> {
-  SignUpCubit({
-    required AuthRepository authRepository,
-  }) : _authRepository = authRepository,
-       super(SignUpState.initial());
+  SignUpCubit({required AuthRepository authRepository})
+    : _authRepository = authRepository,
+      super(SignUpState.initial());
 
   final AuthRepository _authRepository;
 

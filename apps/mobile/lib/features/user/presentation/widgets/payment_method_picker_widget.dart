@@ -40,10 +40,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
             child: Row(
               spacing: 8.w,
               children: [
-                Icon(
-                  LucideIcons.walletMinimal,
-                  size: 16.sp,
-                ),
+                Icon(LucideIcons.walletMinimal, size: 16.sp),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -94,10 +91,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
             child: Row(
               spacing: 8.w,
               children: [
-                Icon(
-                  LucideIcons.qrCode,
-                  size: 16.sp,
-                ),
+                Icon(LucideIcons.qrCode, size: 16.sp),
                 const DefaultText('QRIS'),
                 const Spacer(),
                 ChecklistIndicatorWidget(
@@ -113,10 +107,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
             child: Row(
               spacing: 8.w,
               children: [
-                Icon(
-                  LucideIcons.arrowUpDown,
-                  size: 16.sp,
-                ),
+                Icon(LucideIcons.arrowUpDown, size: 16.sp),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -148,10 +139,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
       builder: (context) {
         return BankProviderSelectorWidget(
           onSelected: (provider) {
-            onChanged(
-              PaymentMethod.BANK_TRANSFER,
-              bankProvider: provider,
-            );
+            onChanged(PaymentMethod.BANK_TRANSFER, bankProvider: provider);
           },
         );
       },

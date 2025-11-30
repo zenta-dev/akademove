@@ -15,10 +15,7 @@ class RideSummaryWidget extends StatelessWidget {
         children: [
           _buildRow('Distance', '${summary?.distanceKm} Km'),
           const Divider(),
-          _buildRow(
-            'Fare',
-            context.formatCurrency(summary?.subtotal ?? 0),
-          ),
+          _buildRow('Fare', context.formatCurrency(summary?.subtotal ?? 0)),
           const Divider(),
           _buildRow('Tax', context.formatCurrency(summary?.tax ?? 0)),
           const Divider(),

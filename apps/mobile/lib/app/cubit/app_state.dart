@@ -65,10 +65,7 @@ class LocaleMapper extends SimpleMapper<Locale> {
 
   @override
   dynamic encode(Locale self) {
-    return {
-      'languageCode': self.languageCode,
-      'countryCode': self.countryCode,
-    };
+    return {'languageCode': self.languageCode, 'countryCode': self.countryCode};
   }
 }
 

@@ -67,10 +67,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
 
       final mergedList = isRefresh
           ? res.data
-          : [
-              ...state.nearbyPlaces.data,
-              ...res.data,
-            ];
+          : [...state.nearbyPlaces.data, ...res.data];
 
       state.unAssignOperation(methodName);
       emit(
@@ -116,10 +113,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
 
       final mergedList = (isRefresh || isNewQuery)
           ? res.data
-          : [
-              ...state.searchPlaces.data,
-              ...res.data,
-            ];
+          : [...state.searchPlaces.data, ...res.data];
 
       _searchQuery = query;
 
@@ -138,9 +132,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
         error: e,
         stackTrace: st,
       );
-      emit(
-        state.toSuccess(searchPlaces: state.searchPlaces),
-      );
+      emit(state.toSuccess(searchPlaces: state.searchPlaces));
     }
   }
 

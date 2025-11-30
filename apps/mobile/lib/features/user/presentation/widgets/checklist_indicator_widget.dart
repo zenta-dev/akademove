@@ -3,10 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ChecklistIndicatorWidget extends StatelessWidget {
-  const ChecklistIndicatorWidget({
-    required this.isSelected,
-    super.key,
-  });
+  const ChecklistIndicatorWidget({required this.isSelected, super.key});
   final bool isSelected;
 
   @override
@@ -35,10 +32,7 @@ class ChecklistIndicatorWidget extends StatelessWidget {
                       ? context.colorScheme.primary
                       : context.colorScheme.mutedForeground,
                 ),
-                child: Icon(
-                  LucideIcons.check,
-                  size: 8.sp,
-                ),
+                child: Icon(LucideIcons.check, size: 8.sp),
               ),
             )
           : null,

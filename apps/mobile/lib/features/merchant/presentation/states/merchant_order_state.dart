@@ -18,11 +18,8 @@ class MerchantOrderState extends BaseState3<Order>
     super.selected,
   });
 
-  MerchantOrderState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  MerchantOrderState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   MerchantOrderState toLoading() => copyWith(
     state: CubitState.loading,
@@ -44,9 +41,6 @@ class MerchantOrderState extends BaseState3<Order>
     error: null,
   );
 
-  MerchantOrderState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  MerchantOrderState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

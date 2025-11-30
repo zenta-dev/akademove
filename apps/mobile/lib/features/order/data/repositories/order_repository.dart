@@ -20,17 +20,21 @@ class EstimateOrderQuery {
     required this.type,
     required this.pickupLocation,
     required this.dropoffLocation,
+    this.weight,
+    this.items,
+    this.gender,
   });
 
   final OrderType type;
   final Coordinate pickupLocation;
   final Coordinate dropoffLocation;
+  final num? weight;
+  final List<OrderItem>? items;
+  final UserGender? gender;
 }
 
 class OrderRepository extends BaseRepository {
-  OrderRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  OrderRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 
@@ -66,6 +70,9 @@ class OrderRepository extends BaseRepository {
         pickupLocationY: query.pickupLocation.y,
         dropoffLocationX: query.dropoffLocation.x,
         dropoffLocationY: query.dropoffLocation.y,
+        weight: query.weight,
+        items: query.items,
+        gender: query.gender,
       );
 
       final data =

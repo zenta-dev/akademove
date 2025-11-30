@@ -72,9 +72,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
 
       // Draw title
       final paragraph =
-          (ui.ParagraphBuilder(
-                  ui.ParagraphStyle(textAlign: TextAlign.center),
-                )
+          (ui.ParagraphBuilder(ui.ParagraphStyle(textAlign: TextAlign.center))
                 ..pushStyle(
                   ui.TextStyle(
                     color: Colors.black,
@@ -294,9 +292,7 @@ class _TimeTickerWidgetState extends State<TimeTickerWidget> {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      style: const ButtonStyle.outline(
-        density: ButtonDensity.dense,
-      ),
+      style: const ButtonStyle.outline(density: ButtonDensity.dense),
       child: Row(
         spacing: 4.w,
         mainAxisAlignment: MainAxisAlignment.center,

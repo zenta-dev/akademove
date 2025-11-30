@@ -3,12 +3,11 @@ part of 'router.dart';
 final userRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
     providers: [
-      BlocProvider(
-        create: (_) => sl<BottomNavBarCubit>(),
-      ),
+      BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
       BlocProvider(create: (_) => sl<UserHomeCubit>()),
       BlocProvider(create: (context) => sl<UserLocationCubit>()),
       BlocProvider(create: (context) => sl<UserRideCubit>()),
+      BlocProvider(create: (context) => sl<UserDeliveryCubit>()),
       BlocProvider(create: (_) => sl<UserWalletCubit>()),
       BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
       BlocProvider(create: (_) => sl<UserOrderCubit>()),
@@ -97,6 +96,31 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userDelivery.name,
           path: Routes.userDelivery.path,
           builder: (context, state) => const UserDeliveryScreen(),
+        ),
+        GoRoute(
+          name: Routes.userDeliveryPickup.name,
+          path: Routes.userDeliveryPickup.path,
+          builder: (context, state) => const UserDeliveryPickupScreen(),
+        ),
+        GoRoute(
+          name: Routes.userDeliveryDropoff.name,
+          path: Routes.userDeliveryDropoff.path,
+          builder: (context, state) => const UserDeliveryDropoffScreen(),
+        ),
+        GoRoute(
+          name: Routes.userDeliveryDetails.name,
+          path: Routes.userDeliveryDetails.path,
+          builder: (context, state) => const UserDeliveryDetailsScreen(),
+        ),
+        GoRoute(
+          name: Routes.userDeliverySummary.name,
+          path: Routes.userDeliverySummary.path,
+          builder: (context, state) => const UserDeliverySummaryScreen(),
+        ),
+        GoRoute(
+          name: Routes.userDeliveryPayment.name,
+          path: Routes.userDeliveryPayment.path,
+          builder: (context, state) => const UserDeliveryPaymentScreen(),
         ),
         GoRoute(
           name: Routes.userMart.name,

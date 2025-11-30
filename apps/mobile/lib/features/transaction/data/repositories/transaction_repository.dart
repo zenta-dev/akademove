@@ -2,9 +2,8 @@ import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class TransactionRepository extends BaseRepository {
-  TransactionRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  TransactionRepository({required ApiClient apiClient})
+    : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 

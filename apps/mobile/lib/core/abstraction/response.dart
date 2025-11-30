@@ -2,10 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:flutter/foundation.dart';
 
 sealed class BaseResponse<T> {
-  const BaseResponse({
-    required this.message,
-    required this.data,
-  });
+  const BaseResponse({required this.message, required this.data});
 
   final String message;
   final T data;
@@ -55,10 +52,7 @@ sealed class BaseResponse<T> {
 
 @immutable
 final class SuccessResponse<T> extends BaseResponse<T> {
-  const SuccessResponse({
-    required super.message,
-    required super.data,
-  });
+  const SuccessResponse({required super.message, required super.data});
 
   @override
   String toString() => 'SuccessResponse(message: $message, data: $data)';
@@ -77,10 +71,8 @@ final class SuccessResponse<T> extends BaseResponse<T> {
 
 @immutable
 final class FailedResponse extends BaseResponse<void> {
-  const FailedResponse({
-    required this.code,
-    required super.message,
-  }) : super(data: null);
+  const FailedResponse({required this.code, required super.message})
+    : super(data: null);
 
   factory FailedResponse.fromJson(Map<String, dynamic> json) {
     final codeStr = json['code'];

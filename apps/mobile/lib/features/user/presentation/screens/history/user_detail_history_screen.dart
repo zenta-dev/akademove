@@ -39,12 +39,8 @@ class UserDetailHistoryScreen extends StatelessWidget {
                 builder: (context, snapshot) {
                   return PickLocationCardWidget(
                     borderColor: context.colorScheme.card,
-                    pickup: const PickLocationParameters(
-                      enabled: false,
-                    ),
-                    dropoff: const PickLocationParameters(
-                      enabled: false,
-                    ),
+                    pickup: const PickLocationParameters(enabled: false),
+                    dropoff: const PickLocationParameters(enabled: false),
                   );
                 },
               );

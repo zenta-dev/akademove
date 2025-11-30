@@ -50,10 +50,7 @@ class PickLocationCardWidget extends StatelessWidget {
           Column(
             spacing: 8.h,
             children: [
-              Icon(
-                LucideIcons.circle,
-                size: 12.sp,
-              ),
+              Icon(LucideIcons.circle, size: 12.sp),
               SizedBox(height: 20.h, child: const VerticalDivider()),
               Icon(LucideIcons.arrowDown, size: 12.sp),
             ],
@@ -85,9 +82,7 @@ class PickLocationCardWidget extends StatelessWidget {
         : param?.controller;
 
     return Button(
-      style: const ButtonStyle.ghost(
-        density: ButtonDensity.compact,
-      ),
+      style: const ButtonStyle.ghost(density: ButtonDensity.compact),
       onPressed: param?.onPresesed,
       child: TextField(
         controller: effectiveController,

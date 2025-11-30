@@ -130,10 +130,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       final position = await _determinePosition();
       if (!mounted) return;
 
-      final location = Coordinate(
-        x: position.longitude,
-        y: position.latitude,
-      );
+      final location = Coordinate(x: position.longitude, y: position.latitude);
       _updateLocationAndMarker(location);
 
       setState(() {
@@ -305,9 +302,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           );
         },
         onDragEnd: _onMarkerDragEnd,
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueRed,
-        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ),
     };
   }
@@ -413,10 +408,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     });
 
     await _mapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(
-        LatLng(latitude, longitude),
-        16,
-      ),
+      CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 16),
     );
 
     await _getAddressFromLatLng(LatLng(latitude, longitude));
@@ -447,9 +439,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
     try {
       // Search for locations
-      final locations = await locationFromAddress(
-        query,
-      );
+      final locations = await locationFromAddress(query);
 
       if (mounted && locations.isNotEmpty) {
         // Get placemarks for each location
@@ -594,10 +584,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   void _showToast(BuildContext context, String title, String message) {
     showToast(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: title,
-        message: message,
-      ),
+      builder: (context, overlay) =>
+          context.buildToast(title: title, message: message),
       location: ToastLocation.topCenter,
     );
   }
@@ -766,16 +754,13 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             keyboardType: TextInputType.emailAddress,
             enabled: !state.isLoading,
           ),
-          _buildPhoneField(
-            context,
-            state,
-            _FormKeys.step1OwnerPhoneNumber,
-            (val) {
-              if (val.country == Country.indonesia) {
-                _selectedOwnerCountryCode = CountryCode.ID;
-              }
-            },
-          ),
+          _buildPhoneField(context, state, _FormKeys.step1OwnerPhoneNumber, (
+            val,
+          ) {
+            if (val.country == Country.indonesia) {
+              _selectedOwnerCountryCode = CountryCode.ID;
+            }
+          }),
           _buildTextField(
             key: _FormKeys.step1OwnerPassword,
             label: 'Password',
@@ -843,16 +828,13 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             validator: const EmailValidator(),
             enabled: !state.isLoading,
           ),
-          _buildPhoneField(
-            context,
-            state,
-            _FormKeys.step2OutletPhoneNumber,
-            (val) {
-              if (val.country == Country.indonesia) {
-                _selectedOutletCountryCode = CountryCode.ID;
-              }
-            },
-          ),
+          _buildPhoneField(context, state, _FormKeys.step2OutletPhoneNumber, (
+            val,
+          ) {
+            if (val.country == Country.indonesia) {
+              _selectedOutletCountryCode = CountryCode.ID;
+            }
+          }),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
@@ -963,9 +945,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                               ),
                             ],
                           ),
-                          constraints: BoxConstraints(
-                            maxHeight: 200.h,
-                          ),
+                          constraints: BoxConstraints(maxHeight: 200.h),
                           child: ListView.separated(
                             shrinkWrap: true,
                             padding: EdgeInsets.zero,
@@ -1117,9 +1097,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                             mapToolbarEnabled: false,
                           ),
                         )
-                      : const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                      : const Center(child: CircularProgressIndicator()),
                 ),
               ),
               if (_outletAddress.isNotEmpty)
@@ -1130,9 +1108,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                       alpha: .1,
                     ),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: context.theme.colorScheme.border,
-                    ),
+                    border: Border.all(color: context.theme.colorScheme.border),
                   ),
                   child: Row(
                     spacing: 8.w,
@@ -1190,10 +1166,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
             label: 'Back',
-            onPressed: () => _handleStepNavigation(
-              isNext: false,
-              validator: () => true,
-            ),
+            onPressed: () =>
+                _handleStepNavigation(isNext: false, validator: () => true),
           ),
           _buildSubmitButton(state),
         ],
@@ -1265,20 +1239,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       _buildActionButton(
         icon: LucideIcons.arrowLeft,
         label: 'Back',
-        onPressed: () => _handleStepNavigation(
-          isNext: false,
-          validator: () => true,
-        ),
+        onPressed: () =>
+            _handleStepNavigation(isNext: false, validator: () => true),
       ),
       _buildActionButton(
         icon: LucideIcons.arrowRight,
         label: 'Next',
         isPrimary: true,
         isTrailing: true,
-        onPressed: () => _handleStepNavigation(
-          isNext: true,
-          validator: validator,
-        ),
+        onPressed: () =>
+            _handleStepNavigation(isNext: true, validator: validator),
       ),
     ];
   }
@@ -1378,12 +1348,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         popup: SelectPopup<T>(
           items: SelectItemList(
             children: items
-                .map(
-                  (e) => SelectItemButton(
-                    value: e,
-                    child: Text(e.name),
-                  ),
-                )
+                .map((e) => SelectItemButton(value: e, child: Text(e.name)))
                 .toList(),
           ),
         ).call,

@@ -3,10 +3,9 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class UserProfileCubit extends BaseCubit<UserProfileState> {
-  UserProfileCubit({
-    required UserRepository userRepository,
-  }) : _userRepository = userRepository,
-       super(UserProfileState());
+  UserProfileCubit({required UserRepository userRepository})
+    : _userRepository = userRepository,
+      super(UserProfileState());
 
   final UserRepository _userRepository;
 

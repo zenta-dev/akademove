@@ -85,10 +85,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       padding: EdgeInsets.zero,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildBanners(),
-          _buildBody(context),
-        ],
+        children: [_buildBanners(), _buildBody(context)],
       ),
     );
   }
@@ -128,10 +125,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Icon(
-                      LucideIcons.chevronRight,
-                      size: 10.sp,
-                    ),
+                    Icon(LucideIcons.chevronRight, size: 10.sp),
                   ],
                 ),
               ),
@@ -155,9 +149,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               itemCount: state.popularMerchants.length,
               separatorBuilder: (context, index) => Gap(16.w),
               itemBuilder: (context, index) => Button(
-                style: const ButtonStyle.ghost(
-                  density: ButtonDensity.compact,
-                ),
+                style: const ButtonStyle.ghost(density: ButtonDensity.compact),
                 onPressed: () {},
                 child: LimitedBox(
                   maxWidth: 111.w,
@@ -232,9 +224,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         children: routes
             .map(
               (e) => Button(
-                style: const ButtonStyle.ghost(
-                  density: ButtonDensity.icon,
-                ),
+                style: const ButtonStyle.ghost(density: ButtonDensity.icon),
                 onPressed: () async {
                   await context.pushNamed(e.route.name);
                 },
@@ -248,11 +238,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                         color: e.color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
-                      child: Icon(
-                        e.icon,
-                        size: 36.sp,
-                        color: e.color,
-                      ),
+                      child: Icon(e.icon, size: 36.sp, color: e.color),
                     ),
                     Text(
                       e.label,
@@ -343,16 +329,11 @@ class _MerchantCardWidget extends StatelessWidget {
                   ),
                 );
               },
-              errorWidget: (context, url, error) => Assets.images.noImage.svg(
-                width: 135.w,
-                height: 100.h,
-              ),
+              errorWidget: (context, url, error) =>
+                  Assets.images.noImage.svg(width: 135.w, height: 100.h),
             ),
           ] else ...[
-            Assets.images.noImage.svg(
-              width: 135.w,
-              height: 100.h,
-            ),
+            Assets.images.noImage.svg(width: 135.w, height: 100.h),
           ],
           Padding(
             padding: EdgeInsetsGeometry.all(8.dg),

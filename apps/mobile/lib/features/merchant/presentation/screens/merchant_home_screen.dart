@@ -100,10 +100,7 @@ class MerchantHomeScreen extends StatelessWidget {
                     child: Column(
                       spacing: 4.h,
                       children: [
-                        Icon(
-                          LucideIcons.shoppingCart,
-                          size: 32.sp,
-                        ),
+                        Icon(LucideIcons.shoppingCart, size: 32.sp),
                         Text(
                           'Today’s transaction',
                           style: context.typography.p.copyWith(
@@ -128,10 +125,7 @@ class MerchantHomeScreen extends StatelessWidget {
                     child: Column(
                       spacing: 4.h,
                       children: [
-                        Icon(
-                          LucideIcons.circleDollarSign,
-                          size: 32.sp,
-                        ),
+                        Icon(LucideIcons.circleDollarSign, size: 32.sp),
                         Text(
                           "Today's gross sales",
                           style: context.typography.p.copyWith(
@@ -170,10 +164,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       child: Column(
                         spacing: 4.h,
                         children: [
-                          Icon(
-                            LucideIcons.chartArea,
-                            size: 32.sp,
-                          ),
+                          Icon(LucideIcons.chartArea, size: 32.sp),
                           Text(
                             'Sales Report',
                             style: context.typography.p.copyWith(
@@ -191,10 +182,7 @@ class MerchantHomeScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text('See detail').xSmall,
-                                  Icon(
-                                    LucideIcons.chevronRight,
-                                    size: 16.sp,
-                                  ),
+                                  Icon(LucideIcons.chevronRight, size: 16.sp),
                                 ],
                               ),
                             ),
@@ -220,10 +208,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       child: Column(
                         spacing: 4.h,
                         children: [
-                          Icon(
-                            LucideIcons.badgeDollarSign,
-                            size: 32.sp,
-                          ),
+                          Icon(LucideIcons.badgeDollarSign, size: 32.sp),
                           Text(
                             'Commission Report',
                             style: context.typography.p.copyWith(
@@ -241,10 +226,7 @@ class MerchantHomeScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text('See detail').xSmall,
-                                  Icon(
-                                    LucideIcons.chevronRight,
-                                    size: 16.sp,
-                                  ),
+                                  Icon(LucideIcons.chevronRight, size: 16.sp),
                                 ],
                               ),
                             ),

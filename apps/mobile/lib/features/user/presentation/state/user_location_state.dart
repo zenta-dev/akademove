@@ -17,18 +17,12 @@ class UserLocationState extends BaseState2 with UserLocationStateMappable {
   final Placemark? placemark;
 
   @override
-  UserLocationState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserLocationState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserLocationState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserLocationState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserLocationState toSuccess({
@@ -44,9 +38,6 @@ class UserLocationState extends BaseState2 with UserLocationStateMappable {
   );
 
   @override
-  UserLocationState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  UserLocationState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

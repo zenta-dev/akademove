@@ -34,6 +34,11 @@ enum Routes {
   userRideOnTrip('/user/home/ride/on-trip'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
+  userDeliveryPickup('/user/home/delivery/pickup'),
+  userDeliveryDropoff('/user/home/delivery/dropoff'),
+  userDeliveryDetails('/user/home/delivery/details'),
+  userDeliverySummary('/user/home/delivery/summary'),
+  userDeliveryPayment('/user/home/delivery/payment'),
   userMart('/user/home/mart'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
@@ -77,8 +82,7 @@ enum Routes {
   ///
   /// Shared Routes
   ///
-  privacyPolicies('/privacy-policies')
-  ;
+  privacyPolicies('/privacy-policies');
 
   const Routes(this.path);
   final String path;

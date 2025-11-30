@@ -18,11 +18,8 @@ class ConfigurationState extends BaseState3<Configuration>
     super.selected,
   });
 
-  ConfigurationState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  ConfigurationState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   ConfigurationState toLoading() => copyWith(
     state: CubitState.loading,
@@ -44,9 +41,6 @@ class ConfigurationState extends BaseState3<Configuration>
     error: null,
   );
 
-  ConfigurationState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  ConfigurationState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

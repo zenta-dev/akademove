@@ -11,16 +11,8 @@ class AppSelectLocaleWidget extends StatelessWidget {
   const AppSelectLocaleWidget({super.key});
 
   static const List<_AppLocale> _locales = [
-    (
-      name: 'English',
-      locale: Locale('en'),
-      icon: '🇺🇸',
-    ),
-    (
-      name: 'Bahasa Indonesia',
-      locale: Locale('id'),
-      icon: '🇮🇩',
-    ),
+    (name: 'English', locale: Locale('en'), icon: '🇺🇸'),
+    (name: 'Bahasa Indonesia', locale: Locale('id'), icon: '🇮🇩'),
   ];
 
   Widget _buildDisplayName(_AppLocale locale) {

@@ -646,12 +646,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           popup: SelectPopup<T>(
             items: SelectItemList(
               children: items
-                  .map(
-                    (e) => SelectItemButton(
-                      value: e,
-                      child: Text(e.name),
-                    ),
-                  )
+                  .map((e) => SelectItemButton(value: e, child: Text(e.name)))
                   .toList(),
             ),
           ).call,

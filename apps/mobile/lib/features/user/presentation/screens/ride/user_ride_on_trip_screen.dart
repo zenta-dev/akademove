@@ -70,9 +70,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           position: LatLng(pickupLat, pickupLng),
           icon:
               _pickupIcon ??
-              BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueGreen,
-              ),
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           infoWindow: InfoWindow(
             title: context.l10n.origin,
             snippet: 'Pickup location',
@@ -86,9 +84,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           position: LatLng(dropoffLat, dropoffLng),
           icon:
               _dropoffIcon ??
-              BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueRed,
-              ),
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: context.l10n.destination,
             snippet: 'Dropoff location',
@@ -107,9 +103,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           position: LatLng(driverLat, driverLng),
           icon:
               _driverIcon ??
-              BitmapDescriptor.defaultMarkerWithHue(
-                BitmapDescriptor.hueBlue,
-              ),
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
           infoWindow: InfoWindow(
             title:
                 '${context.l10n.your_driver_is} ${driver.user?.name ?? "Driver"}',
@@ -349,10 +343,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
           padding: EdgeInsets.all(12.w),
           child: Row(
             children: [
-              Avatar(
-                size: 48.w,
-                initials: '?',
-              ).asSkeleton(),
+              Avatar(size: 48.w, initials: '?').asSkeleton(),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
@@ -364,10 +355,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
                     ).asSkeleton(),
-                    DefaultText(
-                      'License plate',
-                      fontSize: 12.sp,
-                    ).asSkeleton(),
+                    DefaultText('License plate', fontSize: 12.sp).asSkeleton(),
                   ],
                 ),
               ),
@@ -479,11 +467,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             spacing: 4.h,
             crossAxisAlignment: .start,
             children: [
-              _buildCell(
-                context.l10n.origin,
-                pickupName,
-                allowMultiline: true,
-              ),
+              _buildCell(context.l10n.origin, pickupName, allowMultiline: true),
               const Divider(),
               _buildCell(
                 context.l10n.destination,
@@ -496,20 +480,14 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 order != null ? '${order.distanceKm} Km' : '-',
               ),
               const Divider(),
-              _buildCell(
-                'Payment Method',
-                getPaymentMethodDisplay(),
-              ),
+              _buildCell('Payment Method', getPaymentMethodDisplay()),
               const Divider(),
               _buildCell(
                 'Total Price',
                 order != null ? context.formatCurrency(order.totalPrice) : '-',
               ),
               const Divider(),
-              _buildCell(
-                'Status',
-                order?.status.name ?? '-',
-              ),
+              _buildCell('Status', order?.status.name ?? '-'),
             ],
           ),
         ).asSkeleton(enabled: order == null),
@@ -552,10 +530,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               mounted &&
               context.mounted) {
             // Navigate to rating/review screen
-            context.showMyToast(
-              'Trip completed!',
-              type: ToastType.success,
-            );
+            context.showMyToast('Trip completed!', type: ToastType.success);
           } else if ((state.currentOrder?.status ==
                           OrderStatus.CANCELLED_BY_USER ||
                       state.currentOrder?.status ==
@@ -564,10 +539,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                           OrderStatus.CANCELLED_BY_SYSTEM) &
                   mounted &&
               context.mounted) {
-            context.showMyToast(
-              'Trip was canceled',
-              type: ToastType.failed,
-            );
+            context.showMyToast('Trip was canceled', type: ToastType.failed);
           }
         },
         child: Column(

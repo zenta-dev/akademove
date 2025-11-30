@@ -70,11 +70,7 @@ class TaskDedupeManager {
     FutureOr<T> Function() task, {
     Duration cacheDuration = const Duration(minutes: 5),
   }) async {
-    return _CachedTaskDedupeManager._instance.execute(
-      key,
-      task,
-      cacheDuration,
-    );
+    return _CachedTaskDedupeManager._instance.execute(key, task, cacheDuration);
   }
 
   Future<T> executeInIsolateWithCache<T>(
@@ -99,10 +95,7 @@ class TaskDedupeManager {
     try {
       await Isolate.spawn(
         _isolateEntryPoint<T>,
-        _IsolateParams(
-          sendPort: receivePort.sendPort,
-          task: task,
-        ),
+        _IsolateParams(sendPort: receivePort.sendPort, task: task),
       );
 
       final resultFuture = receivePort.first.then((result) {

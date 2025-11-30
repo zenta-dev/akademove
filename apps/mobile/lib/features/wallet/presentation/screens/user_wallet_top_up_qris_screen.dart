@@ -24,10 +24,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                   state.transactionResult != null &&
                   state.transactionResult?.status ==
                       TransactionStatus.SUCCESS) {
-                context.showMyToast(
-                  'Top up success',
-                  type: ToastType.success,
-                );
+                context.showMyToast('Top up success', type: ToastType.success);
                 await Future.delayed(const Duration(seconds: 3), () {
                   if (!context.mounted) return;
                   context.read<UserWalletTopUpCubit>().teardownWebsocket();

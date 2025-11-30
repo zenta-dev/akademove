@@ -17,9 +17,7 @@ class UpdateProfileRequest {
 }
 
 class UserRepository extends BaseRepository {
-  const UserRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  const UserRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 

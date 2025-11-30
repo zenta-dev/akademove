@@ -9,34 +9,20 @@ part 'merchant_state.mapper.dart';
       GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
 )
 class MerchantState extends BaseState2 with MerchantStateMappable {
-  MerchantState({
-    this.mine,
-    super.state,
-    super.message,
-    super.error,
-  });
+  MerchantState({this.mine, super.state, super.message, super.error});
 
   final Merchant? mine;
 
   @override
-  MerchantState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  MerchantState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  MerchantState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  MerchantState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
-  MerchantState toSuccess({
-    Merchant? mine,
-    String? message,
-  }) => copyWith(
+  MerchantState toSuccess({Merchant? mine, String? message}) => copyWith(
     state: CubitState.success,
     mine: mine ?? this.mine,
     message: message,
@@ -44,9 +30,6 @@ class MerchantState extends BaseState2 with MerchantStateMappable {
   );
 
   @override
-  MerchantState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  MerchantState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

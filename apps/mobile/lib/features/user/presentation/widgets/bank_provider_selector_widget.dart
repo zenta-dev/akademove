@@ -4,10 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class BankProviderSelectorWidget extends StatelessWidget {
-  const BankProviderSelectorWidget({
-    required this.onSelected,
-    super.key,
-  });
+  const BankProviderSelectorWidget({required this.onSelected, super.key});
 
   final void Function(BankProvider provider) onSelected;
 
@@ -38,10 +35,7 @@ class BankProviderSelectorWidget extends StatelessWidget {
                     SizedBox(
                       width: 24.sp,
                       height: 24.sp,
-                      child: e.icon.svg(
-                        width: 24.sp,
-                        height: 24.sp,
-                      ),
+                      child: e.icon.svg(width: 24.sp, height: 24.sp),
                     ),
                     DefaultText(e.provider.value),
                   ],

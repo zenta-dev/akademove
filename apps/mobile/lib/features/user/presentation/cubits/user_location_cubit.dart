@@ -5,10 +5,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserLocationCubit extends BaseCubit<UserLocationState> {
-  UserLocationCubit({
-    required LocationService locationService,
-  }) : _locationService = locationService,
-       super(UserLocationState());
+  UserLocationCubit({required LocationService locationService})
+    : _locationService = locationService,
+      super(UserLocationState());
 
   final LocationService _locationService;
 

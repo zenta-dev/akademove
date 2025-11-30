@@ -107,11 +107,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
       child: Column(
         spacing: 8.h,
         children: [
-          DefaultText(
-            'My Balance',
-            fontSize: 12.sp,
-            color: Colors.white,
-          ),
+          DefaultText('My Balance', fontSize: 12.sp, color: Colors.white),
           DefaultText(
             context.formatCurrency(balance),
             fontSize: 24.sp,
@@ -120,9 +116,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
           Button(
             style: const ButtonStyle.primary().copyWith(
               decoration: (context, states, value) =>
-                  value.copyWithIfBoxDecoration(
-                    color: Colors.white,
-                  ),
+                  value.copyWithIfBoxDecoration(color: Colors.white),
             ),
             onPressed: () {
               context.read<UserWalletTopUpCubit>().reset();
@@ -132,10 +126,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 4.w,
               children: [
-                const Icon(
-                  LucideIcons.plus,
-                  color: Colors.black,
-                ),
+                const Icon(LucideIcons.plus, color: Colors.black),
                 Text(
                   'Top Up',
                   // color: Colors.black,
@@ -180,21 +171,11 @@ class WalletMonthlySummaryCardWidget extends StatelessWidget {
             spacing: 4.w,
             children: [
               const Icon(LucideIcons.coins),
-              DefaultText(
-                title,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-              ),
+              DefaultText(title, fontSize: 12.sp, fontWeight: FontWeight.w600),
             ],
           ),
-          DefaultText(
-            context.formatCurrency(amount),
-            fontSize: 20.sp,
-          ),
-          DefaultText(
-            'This month',
-            fontSize: 12.sp,
-          ),
+          DefaultText(context.formatCurrency(amount), fontSize: 20.sp),
+          DefaultText('This month', fontSize: 12.sp),
         ],
       ),
     );
@@ -286,10 +267,7 @@ class WalletListTransactionWidget extends StatelessWidget {
     };
   }
 
-  String _determinePlusMinus(
-    TransactionType type,
-    TransactionStatus status,
-  ) {
+  String _determinePlusMinus(TransactionType type, TransactionStatus status) {
     if (status == TransactionStatus.SUCCESS) {
       switch (type) {
         case TransactionType.TOPUP:

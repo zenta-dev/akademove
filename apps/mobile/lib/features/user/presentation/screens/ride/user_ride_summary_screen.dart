@@ -56,10 +56,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     final payment = orderCubit.state.currentPayment;
 
     if (order == null) {
-      context.showMyToast(
-        'Failed to place order',
-        type: ToastType.failed,
-      );
+      context.showMyToast('Failed to place order', type: ToastType.failed);
       return;
     }
 
@@ -81,9 +78,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       case PaymentMethod.QRIS:
         await context.pushNamed(
           Routes.userRidePayment.name,
-          queryParameters: {
-            'paymentMethod': PaymentMethod.QRIS.name,
-          },
+          queryParameters: {'paymentMethod': PaymentMethod.QRIS.name},
         );
       case PaymentMethod.BANK_TRANSFER:
         await context.pushNamed(
@@ -98,10 +93,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
         if (payment.status == TransactionStatus.SUCCESS) {
           context.pushReplacementNamed(Routes.userRideOnTrip.name);
         } else {
-          context.showMyToast(
-            'Wallet payment failed',
-            type: ToastType.failed,
-          );
+          context.showMyToast('Wallet payment failed', type: ToastType.failed);
         }
     }
   }

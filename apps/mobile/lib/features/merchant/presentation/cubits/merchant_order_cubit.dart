@@ -3,10 +3,9 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
-  MerchantOrderCubit({
-    required OrderRepository orderRepository,
-  }) : _orderRepository = orderRepository,
-       super(const MerchantOrderState());
+  MerchantOrderCubit({required OrderRepository orderRepository})
+    : _orderRepository = orderRepository,
+      super(const MerchantOrderState());
   final OrderRepository _orderRepository;
 
   Future<void> init() async {}

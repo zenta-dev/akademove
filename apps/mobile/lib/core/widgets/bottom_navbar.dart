@@ -37,11 +37,7 @@ class BottomNavBarCubit extends Cubit<int> {
 }
 
 class BottomNavbar extends StatefulWidget {
-  const BottomNavbar({
-    required this.shell,
-    required this.tabs,
-    super.key,
-  });
+  const BottomNavbar({required this.shell, required this.tabs, super.key});
   final StatefulNavigationShell shell;
   final List<BottomNavBarItem> tabs;
 

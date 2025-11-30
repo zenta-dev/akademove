@@ -17,18 +17,12 @@ class UserProfileState extends BaseState2 with UserProfileStateMappable {
   final bool? updatePasswordResult;
 
   @override
-  UserProfileState toInitial() => copyWith(
-    state: CubitState.initial,
-    message: null,
-    error: null,
-  );
+  UserProfileState toInitial() =>
+      copyWith(state: CubitState.initial, message: null, error: null);
 
   @override
-  UserProfileState toLoading() => copyWith(
-    state: CubitState.loading,
-    message: null,
-    error: null,
-  );
+  UserProfileState toLoading() =>
+      copyWith(state: CubitState.loading, message: null, error: null);
 
   @override
   UserProfileState toSuccess({
@@ -44,9 +38,6 @@ class UserProfileState extends BaseState2 with UserProfileStateMappable {
   );
 
   @override
-  UserProfileState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message,
-  );
+  UserProfileState toFailure(BaseError error, {String? message}) =>
+      copyWith(state: CubitState.failure, error: error, message: message);
 }

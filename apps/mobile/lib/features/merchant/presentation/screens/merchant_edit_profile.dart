@@ -118,10 +118,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       final position = await _determinePosition();
       if (!mounted) return;
 
-      final location = Coordinate(
-        x: position.longitude,
-        y: position.latitude,
-      );
+      final location = Coordinate(x: position.longitude, y: position.latitude);
       _updateLocationAndMarker(location);
 
       setState(() {
@@ -293,9 +290,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           );
         },
         onDragEnd: _onMarkerDragEnd,
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueRed,
-        ),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       ),
     };
   }
@@ -400,10 +395,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     });
 
     await _mapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(
-        LatLng(latitude, longitude),
-        16,
-      ),
+      CameraUpdate.newLatLngZoom(LatLng(latitude, longitude), 16),
     );
 
     await _getAddressFromLatLng(LatLng(latitude, longitude));
@@ -514,10 +506,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   void _showToast(BuildContext context, String title, String message) {
     showToast(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: title,
-        message: message,
-      ),
+      builder: (context, overlay) =>
+          context.buildToast(title: title, message: message),
       location: ToastLocation.topCenter,
     );
   }
@@ -586,20 +576,12 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           _isLoading = false;
         });
 
-        _showToast(
-          context,
-          'Success',
-          'Bank account verified successfully',
-        );
+        _showToast(context, 'Success', 'Bank account verified successfully');
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showToast(
-          context,
-          'Error',
-          'Failed to verify bank account',
-        );
+        _showToast(context, 'Error', 'Failed to verify bank account');
       }
     }
   }
@@ -629,19 +611,11 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
-        _showToast(
-          context,
-          'Success',
-          'Profile updated successfully',
-        );
+        _showToast(context, 'Success', 'Profile updated successfully');
       }
     } catch (e) {
       if (mounted) {
-        _showToast(
-          context,
-          'Error',
-          'Failed to update profile',
-        );
+        _showToast(context, 'Error', 'Failed to update profile');
       }
     } finally {
       if (mounted) {
@@ -656,9 +630,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       children: [
         MyScaffold(
           controller: _scrollController,
-          headers: const [
-            DefaultAppBar(title: 'Edit Profile'),
-          ],
+          headers: const [DefaultAppBar(title: 'Edit Profile')],
           body: NotificationListener<ScrollNotification>(
             onNotification: (notification) {
               if (_isDraggingMarker) {
@@ -669,9 +641,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
             child: Form(
               controller: _formController,
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(
-                  bottom: 100.h,
-                ),
+                padding: EdgeInsets.only(bottom: 100.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: 20.h,
@@ -811,9 +781,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         ),
         enabled: enabled,
         keyboardType: keyboardType,
-        features: [
-          InputFeature.leading(Icon(icon)),
-        ],
+        features: [InputFeature.leading(Icon(icon))],
       ),
     );
   }
@@ -869,10 +837,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
             ),
             if (_isDraggingMarker)
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.w,
-                  vertical: 4.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: context.theme.colorScheme.primary.withValues(
                     alpha: 0.1,
@@ -1071,22 +1036,19 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       markers: _markers,
                       onMapCreated: (controller) {
                         _mapController = controller;
-                        Future.delayed(
-                          const Duration(milliseconds: 300),
-                          () {
-                            if (_mapController != null && mounted) {
-                              _mapController!.animateCamera(
-                                CameraUpdate.newLatLngZoom(
-                                  LatLng(
-                                    _outletLocation.y.toDouble(),
-                                    _outletLocation.x.toDouble(),
-                                  ),
-                                  16,
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (_mapController != null && mounted) {
+                            _mapController!.animateCamera(
+                              CameraUpdate.newLatLngZoom(
+                                LatLng(
+                                  _outletLocation.y.toDouble(),
+                                  _outletLocation.x.toDouble(),
                                 ),
-                              );
-                            }
-                          },
-                        );
+                                16,
+                              ),
+                            );
+                          }
+                        });
                       },
                       onTap: (position) {
                         setState(() {
@@ -1105,14 +1067,11 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                         }
                       },
                       onCameraIdle: () {
-                        Future.delayed(
-                          const Duration(milliseconds: 300),
-                          () {
-                            if (mounted) {
-                              setState(() => _isDraggingMarker = false);
-                            }
-                          },
-                        );
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          if (mounted) {
+                            setState(() => _isDraggingMarker = false);
+                          }
+                        });
                       },
                       myLocationEnabled: true,
                       zoomControlsEnabled: false,
@@ -1131,10 +1090,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                           size: 32.sp,
                           color: context.theme.colorScheme.primary,
                         ),
-                        Text(
-                          'Loading map...',
-                          style: context.typography.small,
-                        ),
+                        Text('Loading map...', style: context.typography.small),
                       ],
                     ),
                   ),
@@ -1146,9 +1102,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
             decoration: BoxDecoration(
               color: context.theme.colorScheme.secondary.withValues(alpha: .1),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: context.theme.colorScheme.border,
-              ),
+              border: Border.all(color: context.theme.colorScheme.border),
             ),
             child: Row(
               spacing: 8.w,
@@ -1189,9 +1143,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
               ),
             ),
             enabled: !_isLoading,
-            features: const [
-              InputFeature.leading(Icon(LucideIcons.mapPinned)),
-            ],
+            features: const [InputFeature.leading(Icon(LucideIcons.mapPinned))],
           ),
         ),
       ],
@@ -1247,12 +1199,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         popup: SelectPopup<T>(
           items: SelectItemList(
             children: items
-                .map(
-                  (e) => SelectItemButton(
-                    value: e,
-                    child: Text(e.name),
-                  ),
-                )
+                .map((e) => SelectItemButton(value: e, child: Text(e.name)))
                 .toList(),
           ),
         ).call,
@@ -1438,10 +1385,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                   "Account Holder's Name",
                   _accountHolderName ?? '',
                 ),
-                _buildBankDetailRow(
-                  "Owner's Name",
-                  _ownerBankName ?? '',
-                ),
+                _buildBankDetailRow("Owner's Name", _ownerBankName ?? ''),
               ],
             ),
           ),

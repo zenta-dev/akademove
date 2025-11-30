@@ -26,11 +26,7 @@ class UserProfileCardWidget extends StatelessWidget {
       child: Row(
         spacing: 8.w,
         children: [
-          UserAvatarWidget(
-            name: user.name,
-            image: user.image,
-            size: 40.dg,
-          ),
+          UserAvatarWidget(name: user.name, image: user.image, size: 40.dg),
           Expanded(
             child: Button(
               style: const ButtonStyle.ghost(density: ButtonDensity.compact),
@@ -41,10 +37,9 @@ class UserProfileCardWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 4.h,
                 children: [
-                  Text(user.name).normal(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18.sp,
-                  ),
+                  Text(
+                    user.name,
+                  ).normal(fontWeight: FontWeight.w500, fontSize: 18.sp),
                   Row(
                     spacing: 4.w,
                     children: [
@@ -71,21 +66,19 @@ class UserProfileCardWidget extends StatelessWidget {
     BuildContext context,
     List<UserBadge> userBadges,
   ) {
-    return userBadges.map(
-      (e) {
-        final randColor = context.randomColor.withValues(alpha: 0.1);
+    return userBadges.map((e) {
+      final randColor = context.randomColor.withValues(alpha: 0.1);
 
-        return Avatar(
-          size: 28,
-          initials: Avatar.getInitials(e.badge.name),
-          backgroundColor: randColor,
-          provider: e.badge.icon != null
-              ? CachedNetworkImageProvider(
-                  e.badge.icon ?? UrlConstants.placeholderImageUrl,
-                )
-              : null,
-        );
-      },
-    ).toList();
+      return Avatar(
+        size: 28,
+        initials: Avatar.getInitials(e.badge.name),
+        backgroundColor: randColor,
+        provider: e.badge.icon != null
+            ? CachedNetworkImageProvider(
+                e.badge.icon ?? UrlConstants.placeholderImageUrl,
+              )
+            : null,
+      );
+    }).toList();
   }
 }

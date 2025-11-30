@@ -126,9 +126,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                         enabled: !profileState.isLoading,
                         focusNode: _nameFn,
                         initialValue: authState.data?.name,
-                        placeholder: Text(
-                          authState.data?.name ?? 'John Doe',
-                        ),
+                        placeholder: Text(authState.data?.name ?? 'John Doe'),
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.name],
@@ -206,9 +204,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                                 : Text(
                                     'Save Changes',
                                     style: context.theme.typography.medium
-                                        .copyWith(
-                                          color: Colors.white,
-                                        ),
+                                        .copyWith(color: Colors.white),
                                   ),
                           );
                         },

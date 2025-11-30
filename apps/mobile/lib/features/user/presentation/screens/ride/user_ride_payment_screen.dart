@@ -46,17 +46,11 @@ class UserRidePaymentScreen extends StatelessWidget {
               if (state.isSuccess &&
                   payment.status == TransactionStatus.SUCCESS) {
                 context
-                  ..showMyToast(
-                    'Payment successful',
-                    type: ToastType.success,
-                  )
+                  ..showMyToast('Payment successful', type: ToastType.success)
                   ..pushReplacementNamed(Routes.userRideOnTrip.name);
               } else if (state.isFailure ||
                   payment.status == TransactionStatus.FAILED) {
-                context.showMyToast(
-                  'Payment failed',
-                  type: ToastType.failed,
-                );
+                context.showMyToast('Payment failed', type: ToastType.failed);
               }
             },
             builder: (context, state) {
@@ -103,15 +97,9 @@ class BankTransferPaymentWidget extends StatelessWidget {
   final BankProvider? bankProvider;
   final VoidCallback onExpired;
 
-  Future<void> _copyVaNumber(
-    BuildContext context,
-    VANumber? vaNumber,
-  ) async {
+  Future<void> _copyVaNumber(BuildContext context, VANumber? vaNumber) async {
     if (vaNumber == null || vaNumber.vaNumber.isEmpty) {
-      context.showMyToast(
-        'VA Number is not available',
-        type: ToastType.failed,
-      );
+      context.showMyToast('VA Number is not available', type: ToastType.failed);
       return;
     }
 
@@ -139,9 +127,7 @@ class BankTransferPaymentWidget extends StatelessWidget {
         : bankProvider;
 
     final dict = prov != null
-        ? bankProviderDicts.firstWhere(
-            (e) => e.provider == prov,
-          )
+        ? bankProviderDicts.firstWhere((e) => e.provider == prov)
         : null;
 
     return Column(
@@ -163,10 +149,7 @@ class BankTransferPaymentWidget extends StatelessWidget {
                       SizedBox(
                         width: 24.sp,
                         height: 24.sp,
-                        child: dict.icon.svg(
-                          width: 24.sp,
-                          height: 24.sp,
-                        ),
+                        child: dict.icon.svg(width: 24.sp, height: 24.sp),
                       ),
                       DefaultText(
                         dict.provider.value,

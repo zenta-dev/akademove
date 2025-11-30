@@ -64,22 +64,10 @@ class PickGenderWidget extends StatelessWidget {
               spacing: 4.w,
               children: [
                 if (value == UserGender.MALE)
-                  Icon(
-                    LucideIcons.mars,
-                    size: 16.sp,
-                    color: Colors.blue,
-                  ),
+                  Icon(LucideIcons.mars, size: 16.sp, color: Colors.blue),
                 if (value == UserGender.FEMALE)
-                  Icon(
-                    LucideIcons.venus,
-                    size: 16.sp,
-                    color: Colors.pink,
-                  ),
-                if (value == null)
-                  Icon(
-                    LucideIcons.nonBinary,
-                    size: 16.sp,
-                  ),
+                  Icon(LucideIcons.venus, size: 16.sp, color: Colors.pink),
+                if (value == null) Icon(LucideIcons.nonBinary, size: 16.sp),
                 DefaultText(
                   value == null ? 'Mixed' : value!.name,
                   fontSize: 14.sp,
@@ -92,10 +80,7 @@ class PickGenderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildGenderButton(
-    UserGender? gender,
-    void Function() onPresesed,
-  ) {
+  Widget _buildGenderButton(UserGender? gender, void Function() onPresesed) {
     return Button(
       style: const ButtonStyle.outline().copyWith(
         decoration: (context, states, value) => value.copyWithIfBoxDecoration(
@@ -112,11 +97,7 @@ class PickGenderWidget extends StatelessWidget {
             Assets.icons.male.svg(width: 64.w, height: 64.w),
           if (gender == UserGender.FEMALE)
             Assets.icons.female.svg(width: 64.w, height: 64.w),
-          if (gender == null)
-            Icon(
-              LucideIcons.nonBinary,
-              size: 64.sp,
-            ),
+          if (gender == null) Icon(LucideIcons.nonBinary, size: 64.sp),
           DefaultText(
             gender == null
                 ? 'Mixed'

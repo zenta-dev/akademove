@@ -17,11 +17,7 @@ class LocationService {
       logger.d('[$tag] | Location service enabled: $enabled');
       return enabled;
     } catch (e, st) {
-      logger.e(
-        '[$tag] | checkEnable failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | checkEnable failed', error: e, stackTrace: st);
       return false;
     }
   }
@@ -33,16 +29,10 @@ class LocationService {
       final allowed =
           permission == LocationPermission.always ||
           permission == LocationPermission.whileInUse;
-      logger.d(
-        '[$tag] | Location permission allowed: $allowed',
-      );
+      logger.d('[$tag] | Location permission allowed: $allowed');
       return allowed;
     } catch (e, st) {
-      logger.e(
-        '[$tag] | checkPermission failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | checkPermission failed', error: e, stackTrace: st);
       return false;
     }
   }
@@ -59,9 +49,7 @@ class LocationService {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        logger.w(
-          '[$tag] | Permission denied forever, opening settings',
-        );
+        logger.w('[$tag] | Permission denied forever, opening settings');
         await Geolocator.openAppSettings();
         return false;
       }
@@ -72,11 +60,7 @@ class LocationService {
       logger.d('[$tag] | requestPermission result: $result');
       return result;
     } catch (e, st) {
-      logger.e(
-        '[$tag] | requestPermission failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | requestPermission failed', error: e, stackTrace: st);
       return false;
     }
   }
@@ -89,11 +73,7 @@ class LocationService {
       logger.d('[$tag] | Location settings opened: $opened');
       return opened;
     } catch (e, st) {
-      logger.e(
-        '[$tag] | enable failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | enable failed', error: e, stackTrace: st);
       return false;
     }
   }
@@ -104,11 +84,7 @@ class LocationService {
       if (!await checkPermission()) await requestPermission();
       if (!await checkEnable()) await enable();
     } catch (e, st) {
-      logger.e(
-        '[$tag] | ensureInitialized failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | ensureInitialized failed', error: e, stackTrace: st);
     }
   }
 
@@ -175,11 +151,7 @@ class LocationService {
         x: position.longitude,
       );
     } catch (e, st) {
-      logger.e(
-        '[$tag] | getMyLocation failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | getMyLocation failed', error: e, stackTrace: st);
       return null;
     }
   }
@@ -189,13 +161,9 @@ class LocationService {
     Duration interval = const Duration(seconds: 5),
     bool forceLocationManager = false,
   }) {
-    logger.d(
-      '[$tag] | getLocationStream called (accuracy: $accuracy)',
-    );
+    logger.d('[$tag] | getLocationStream called (accuracy: $accuracy)');
     try {
-      var settings = LocationSettings(
-        accuracy: accuracy,
-      );
+      var settings = LocationSettings(accuracy: accuracy);
 
       if (Platform.isAndroid) {
         settings = AndroidSettings(
@@ -205,21 +173,15 @@ class LocationService {
         );
       }
 
-      return Geolocator.getPositionStream(
-        locationSettings: settings,
-      ).map((position) {
-        final coord = Coordinate(
-          y: position.latitude,
-          x: position.longitude,
-        );
+      return Geolocator.getPositionStream(locationSettings: settings).map((
+        position,
+      ) {
+        final coord = Coordinate(y: position.latitude, x: position.longitude);
         currentCoordinate = coord;
         return coord;
       });
     } catch (e) {
-      logger.e(
-        '[$tag] | getLocationStream failed',
-        error: e,
-      );
+      logger.e('[$tag] | getLocationStream failed', error: e);
       return const Stream.empty();
     }
   }
@@ -232,16 +194,10 @@ class LocationService {
     try {
       final placemarks = await placemarkFromCoordinates(lat, lng);
       final result = placemarks.isEmpty ? null : placemarks.first;
-      logger.d(
-        '[$tag] | Placemark result: ${result?.locality ?? "none"}',
-      );
+      logger.d('[$tag] | Placemark result: ${result?.locality ?? "none"}');
       return result;
     } catch (e, st) {
-      logger.e(
-        '[$tag] | getPlacemark failed',
-        error: e,
-        stackTrace: st,
-      );
+      logger.e('[$tag] | getPlacemark failed', error: e, stackTrace: st);
       return null;
     }
   }

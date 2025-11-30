@@ -33,5 +33,7 @@
     "failed": "Failed",
     "your_driver_is": "Your driver is",
     "origin": "Origin",
-    "destination": "Destination"
+    "destination": "Destination",
+    "special_instructions": "Special Instructions (Optional)",
+    "special_instructions_hint": "e.g., 'Please handle with care', 'Call before delivery'"
 }

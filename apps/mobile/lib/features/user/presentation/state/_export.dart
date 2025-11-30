@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:dart_mappable/dart_mappable.dart';
@@ -10,3 +12,4 @@ part 'user_home_state.dart';
 part 'user_ride_state.dart';
 part 'user_profile_state.dart';
 part 'user_location_state.dart';
+part 'user_delivery_state.dart';

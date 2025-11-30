@@ -94,10 +94,7 @@ const dummyUser = User(
   userBadges: [],
 );
 
-const dummyBank = Bank(
-  provider: BankProvider.BCA,
-  number: 12345678,
-);
+const dummyBank = Bank(provider: BankProvider.BCA, number: 12345678);
 
 const dummyDriver = Driver(
   id: dummyUUIDString,

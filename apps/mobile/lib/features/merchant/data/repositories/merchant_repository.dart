@@ -2,9 +2,8 @@ import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantRepository extends BaseRepository {
-  const MerchantRepository({
-    required ApiClient apiClient,
-  }) : _apiClient = apiClient;
+  const MerchantRepository({required ApiClient apiClient})
+    : _apiClient = apiClient;
 
   final ApiClient _apiClient;
 

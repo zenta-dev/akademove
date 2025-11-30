@@ -196,10 +196,7 @@ class IMapService implements MapService {
               .toList() ??
           [];
     } catch (e) {
-      throw ServiceError(
-        'Failed to get routes: $e',
-        code: ErrorCode.unknown,
-      );
+      throw ServiceError('Failed to get routes: $e', code: ErrorCode.unknown);
     }
   }
 
@@ -276,10 +273,7 @@ class IMapService implements MapService {
         code: ErrorCode.fromIntOrUnknown(e.response?.statusCode),
       );
     } catch (e) {
-      throw ServiceError(
-        'Unexpected API error: $e',
-        code: ErrorCode.unknown,
-      );
+      throw ServiceError('Unexpected API error: $e', code: ErrorCode.unknown);
     }
   }
 

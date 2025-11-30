@@ -242,9 +242,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
             ),
             Text(
               value,
-              style: context.typography.p.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: context.typography.p.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),

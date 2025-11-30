@@ -16,15 +16,11 @@ class OopsAlertWidget extends StatelessWidget {
     return Alert.destructive(
       title: Text(
         'Oops...',
-        style: context.typography.small.copyWith(
-          fontSize: 16.sp,
-        ),
+        style: context.typography.small.copyWith(fontSize: 16.sp),
       ),
       content: Text(
         message,
-        style: context.typography.small.copyWith(
-          fontSize: 14.sp,
-        ),
+        style: context.typography.small.copyWith(fontSize: 14.sp),
       ),
       leading: const Icon(LucideIcons.info),
       trailing: IconButton.ghost(

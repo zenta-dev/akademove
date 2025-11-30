@@ -7,8 +7,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 enum LocationType {
   pickup,
-  dropoff
-  ;
+  dropoff;
 
   bool get isPickup => this == LocationType.pickup;
   bool get isDropoff => this == LocationType.dropoff;
@@ -75,10 +74,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
         coordinate: coord,
       );
     } else if (coord != null) {
-      await cubit.getNearbyPlaces(
-        coord,
-        isRefresh: true,
-      );
+      await cubit.getNearbyPlaces(coord, isRefresh: true);
     }
   }
 
@@ -122,36 +118,26 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
           pickup: PickLocationParameters(
             enabled: widget.type.isPickup,
             controller: pickupController,
-            onChanged: (value) => searchDebouncer.run(
-              () async {
-                final cubit = context.read<UserRideCubit>();
-                if (value.isEmpty) {
-                  return cubit.clearSearchPlaces();
-                }
-                final coord = context
-                    .read<UserLocationCubit>()
-                    .state
-                    .coordinate;
-                return cubit.searchPlaces(value, coordinate: coord);
-              },
-            ),
+            onChanged: (value) => searchDebouncer.run(() async {
+              final cubit = context.read<UserRideCubit>();
+              if (value.isEmpty) {
+                return cubit.clearSearchPlaces();
+              }
+              final coord = context.read<UserLocationCubit>().state.coordinate;
+              return cubit.searchPlaces(value, coordinate: coord);
+            }),
           ),
           dropoff: PickLocationParameters(
             enabled: widget.type.isDropoff,
             controller: dropoffController,
-            onChanged: (value) => searchDebouncer.run(
-              () async {
-                final cubit = context.read<UserRideCubit>();
-                if (value.isEmpty) {
-                  return cubit.clearSearchPlaces();
-                }
-                final coord = context
-                    .read<UserLocationCubit>()
-                    .state
-                    .coordinate;
-                return cubit.searchPlaces(value, coordinate: coord);
-              },
-            ),
+            onChanged: (value) => searchDebouncer.run(() async {
+              final cubit = context.read<UserRideCubit>();
+              if (value.isEmpty) {
+                return cubit.clearSearchPlaces();
+              }
+              final coord = context.read<UserLocationCubit>().state.coordinate;
+              return cubit.searchPlaces(value, coordinate: coord);
+            }),
           ),
         ),
         Button(

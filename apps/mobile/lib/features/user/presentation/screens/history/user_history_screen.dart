@@ -14,17 +14,15 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class UserHistoryScreen extends StatelessWidget {
   const UserHistoryScreen({super.key});
 
-  Widget _buildFail(
-    BuildContext context, {
-    required String message,
-  }) => Container(
-    width: double.infinity,
-    padding: EdgeInsets.only(top: 16.dg),
-    child: OopsAlertWidget(
-      message: message,
-      onRefresh: () => context.read<UserOrderCubit>().list(),
-    ),
-  );
+  Widget _buildFail(BuildContext context, {required String message}) =>
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.only(top: 16.dg),
+        child: OopsAlertWidget(
+          message: message,
+          onRefresh: () => context.read<UserOrderCubit>().list(),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -80,10 +78,7 @@ class UserOrderCardWidget extends StatelessWidget {
 
   Widget _buildDestAddres() {
     if (order.type == OrderType.DELIVERY && order.merchant?.name != null) {
-      return DefaultText(
-        order.merchant?.name ?? '',
-        fontSize: 14.sp,
-      );
+      return DefaultText(order.merchant?.name ?? '', fontSize: 14.sp);
     }
     return FutureBuilder(
       future: sl<LocationService>().getPlacemark(
@@ -95,9 +90,7 @@ class UserOrderCardWidget extends StatelessWidget {
         return DefaultText(
           '${data?.name ?? ''}, ${data?.street ?? ''}',
           fontSize: 14.sp,
-        ).asSkeleton(
-          enabled: snapshot.connectionState != ConnectionState.done,
-        );
+        ).asSkeleton(enabled: snapshot.connectionState != ConnectionState.done);
       },
     );
   }
@@ -168,10 +161,7 @@ class UserOrderCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 6.w,
                       children: [
-                        Flexible(
-                          flex: 2,
-                          child: _buildDestAddres(),
-                        ),
+                        Flexible(flex: 2, child: _buildDestAddres()),
                         DefaultText(
                           context.formatCurrency(order.totalPrice),
                           fontSize: 14.sp,

@@ -31,9 +31,7 @@ enum MenuCategoryEnumEdit {
 
 abstract class _FormKeys {
   static const FormKey<MenuCategoryEnumEdit> menuCategory =
-      SelectKey<MenuCategoryEnumEdit>(
-        'menu-category',
-      );
+      SelectKey<MenuCategoryEnumEdit>('menu-category');
   static const FormKey<String> menuName = TextFieldKey('menu-name');
   static const FormKey<String> menuDescription = TextFieldKey(
     'menu-description',
@@ -96,17 +94,11 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
       await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
-        _showToast(
-          'Success',
-          'Menu updated successfully',
-        );
+        _showToast('Success', 'Menu updated successfully');
       }
     } catch (e) {
       if (mounted) {
-        _showToast(
-          'Error',
-          'Failed to update menu',
-        );
+        _showToast('Error', 'Failed to update menu');
       }
     } finally {
       if (mounted) {
@@ -120,10 +112,8 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
     showToast(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: title,
-        message: message,
-      ),
+      builder: (context, overlay) =>
+          context.buildToast(title: title, message: message),
       location: ToastLocation.topCenter,
     );
   }
@@ -148,11 +138,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
       children: [
         MyScaffold(
           safeArea: true,
-          headers: const [
-            DefaultAppBar(
-              title: 'Edit Menu',
-            ),
-          ],
+          headers: const [DefaultAppBar(title: 'Edit Menu')],
           body: Form(
             controller: _formController,
             child: SingleChildScrollView(
@@ -237,9 +223,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : Text(
                           'Save changes',
@@ -294,9 +278,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         keyboardType: keyboardType,
         maxLines: maxLines,
         maxLength: maxLength,
-        features: [
-          InputFeature.leading(Icon(icon)),
-        ],
+        features: [InputFeature.leading(Icon(icon))],
       ),
     );
   }
@@ -401,9 +383,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
               placeholder: const Text('0'),
               enabled: !_isLoading,
               keyboardType: TextInputType.number,
-              features: const [
-                InputFeature.leading(Icon(LucideIcons.package)),
-              ],
+              features: const [InputFeature.leading(Icon(LucideIcons.package))],
               onChanged: (value) {
                 final intValue = int.tryParse(value) ?? 0;
                 final clampedValue = intValue.clamp(0, 999);
