@@ -1,5 +1,3 @@
-import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
-import { toOAPIRequestBody } from "@/utils/oapi";
 import { oc } from "@orpc/contract";
 import {
 	FlatUpdateMerchantSchema,
@@ -7,6 +5,8 @@ import {
 } from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const MerchantMainSpec = {
 	getMine: oc
@@ -114,7 +114,7 @@ export const MerchantMainSpec = {
 		.input(
 			z.object({
 				query: z.object({
-					limit: z.coerce.number().default(10),
+					limit: z.coerce.number(),
 					category: z.string().optional(),
 				}),
 			}),
