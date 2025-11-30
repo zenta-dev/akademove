@@ -81,8 +81,7 @@ class AuthRepository extends BaseRepository {
     required MultipartFile studentCard,
     required MultipartFile driverLicense,
     required MultipartFile vehicleCertificate,
-    required BankProvider bankProvider,
-    required int bankNumber,
+    required Bank bank,
   }) async {
     return guard(() async {
       final result = await _apiClient.getAuthApi().authSignUpDriver(
@@ -99,8 +98,8 @@ class AuthRepository extends BaseRepository {
         detailStudentCard: studentCard,
         detailDriverLicense: driverLicense,
         detailVehicleCertificate: vehicleCertificate,
-        detailBankProvider: bankProvider.value,
-        detailBankNumber: bankNumber,
+        detailBankProvider: bank.provider.value,
+        detailBankNumber: bank.number,
       );
 
       final data =
@@ -127,8 +126,7 @@ class AuthRepository extends BaseRepository {
     required Coordinate outletLocation,
     required String outletAddress,
 
-    required BankProvider bankProvider,
-    required int bankNumber,
+    required Bank bank,
 
     required MultipartFile? photo,
     required MultipartFile? document,
@@ -148,8 +146,10 @@ class AuthRepository extends BaseRepository {
         detailAddress: outletAddress.trim(),
         detailLocationX: outletLocation.x,
         detailLocationY: outletLocation.y,
-        detailBankProvider: bankProvider.value,
-        detailBankNumber: bankNumber,
+        detailBankProvider: bank.provider.value,
+        detailBankNumber: bank.number,
+        photo: photo,
+        detailDocument: document,
       );
 
       final data =

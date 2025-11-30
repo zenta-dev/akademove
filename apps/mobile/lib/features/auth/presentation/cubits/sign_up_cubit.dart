@@ -76,8 +76,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
         vehicleCertificate: await MultipartFile.fromFile(
           vehicleCertificatePath,
         ),
-        bankProvider: bankProvider,
-        bankNumber: bankNumber,
+        bank: Bank(provider: bankProvider, number: bankNumber),
       );
       emit(SignUpState.success(res.data, message: res.message));
     } on BaseError catch (e, st) {
@@ -126,8 +125,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
         outletPhone: outletPhone,
         outletLocation: outletLocation,
         outletAddress: outletAddress,
-        bankProvider: bankProvider,
-        bankNumber: bankNumber,
+        bank: Bank(provider: bankProvider, number: bankNumber),
         photo: photo,
         document: document,
       );
