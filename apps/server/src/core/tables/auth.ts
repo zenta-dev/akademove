@@ -34,6 +34,9 @@ export const user = pgTable(
 	(t) => [
 		uniqueIndex("user_email_idx").on(t.email),
 		uniqueIndex("user_phone_idx").on(t.phone),
+		// Text search index for name field (used in order list searches)
+		index("user_name_text_idx").on(t.name.op("text_pattern_ops")),
+		index("user_role_idx").on(t.role),
 	],
 );
 

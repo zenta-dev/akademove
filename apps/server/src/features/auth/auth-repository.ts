@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { m } from "@repo/i18n";
 import type {
 	ForgotPassword,
 	ResetPassword,
@@ -64,7 +65,7 @@ export class AuthRepository extends BaseRepository {
 			});
 
 			if (!user?.accounts[0]) {
-				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
+				throw new AuthError(m.email_not_registered(), { code: "NOT_FOUND" });
 			}
 
 			const isValidPassword = this.#pw.verify(
@@ -73,7 +74,7 @@ export class AuthRepository extends BaseRepository {
 			);
 
 			if (!isValidPassword) {
-				throw new AuthError("Invalid credentials", { code: "UNAUTHORIZED" });
+				throw new AuthError(m.invalid_credentials(), { code: "UNAUTHORIZED" });
 			}
 
 			const composedUser = await UserAdminRepository.composeEntity(

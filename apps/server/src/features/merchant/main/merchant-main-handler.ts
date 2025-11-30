@@ -1,6 +1,6 @@
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
-import { hasPermission } from "@/core/middlewares/auth";
+import { hasPermission, requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMainSpec } from "./merchant-main-spec";
 
@@ -9,6 +9,7 @@ const { priv } = createORPCRouter(MerchantMainSpec);
 export const MerchantMainHandler = priv.router({
 	getMine: priv.getMine
 		.use(hasPermission({ merchant: ["get"] }))
+		.use(requireRoles("DRIVER", "SYSTEM"))
 		.handler(async ({ context }) => {
 			const result = await context.repo.merchant.main.getByUserId(
 				context.user.id,
@@ -21,6 +22,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	list: priv.list
 		.use(hasPermission({ merchant: ["list"] }))
+		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.merchant.main.list(query);
 
@@ -35,6 +37,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	populars: priv.populars
 		.use(hasPermission({ merchant: ["list"] }))
+		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
 			console.log("POPULARS MERCHANT => ", query);
 			const result =
@@ -50,6 +53,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	get: priv.get
 		.use(hasPermission({ merchant: ["get"] }))
+		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { params } }) => {
 			console.log("GET MERCHANT => ", params);
 			const result = await context.repo.merchant.main.get(params.id);
@@ -64,6 +68,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	update: priv.update
 		.use(hasPermission({ merchant: ["update"] }))
+		.use(requireRoles("DRIVER", "SYSTEM"))
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(unflattenData(body));
 			const result = await context.repo.merchant.main.update(params.id, data);
@@ -75,6 +80,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	remove: priv.remove
 		.use(hasPermission({ merchant: ["update"] }))
+		.use(requireRoles("DRIVER", "SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.main.remove(params.id);
 

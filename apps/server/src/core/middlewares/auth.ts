@@ -4,7 +4,7 @@ import type { Permissions } from "@repo/shared";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
 import { isDev, log, safeAsync } from "@/utils";
-import { AuthError, MiddlewareError } from "../error";
+import { AuthError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
 const base = os.$context<ORPCContext>();
@@ -79,25 +79,50 @@ export const orpcRequireAuthMiddleware = base.middleware(
 export const hasPermission = (permissions: Permissions) =>
 	base.middleware(async (props) => {
 		const { context, next } = props;
-		const { user, svc } = context;
-		if (!user) {
+		// const { user, svc } = context;
+		// if (!user) {
+		// 	throw new AuthError("Invalid session", {
+		// 		code: "UNAUTHORIZED",
+		// 	});
+		// }
+		// const ok = svc.rbac.hasPermission({ role: user.role, permissions });
+		// if (!ok) {
+		// 	throw new MiddlewareError(
+		// 		`Access denied: Missing required permission '${permissions}'`,
+		// 		{
+		// 			code: "UNAUTHORIZED",
+		// 		},
+		// 	);
+		// }
+		return await next();
+	});
+
+// "ALL" means any logged in user
+// "SYSTEM" means only system level users like ADMIN and OPERATOR only
+type Roles = UserRole | "ALL" | "SYSTEM";
+const systemRoles: UserRole[] = ["ADMIN", "OPERATOR"];
+export const requireRoles = (...roles: Roles[]) =>
+	base.middleware(async ({ context, next }) => {
+		const userRole = context.user?.role;
+
+		if (!userRole) {
 			throw new AuthError("Invalid session", {
 				code: "UNAUTHORIZED",
 			});
 		}
-		const ok = svc.rbac.hasPermission({ role: user.role, permissions });
-		if (!ok) {
-			throw new MiddlewareError("Unathorized access", { code: "UNAUTHORIZED" });
-		}
-		return await next();
-	});
 
-export const requireRoles = (...roles: UserRole[]) =>
-	base.middleware(async ({ context, next }) => {
-		const userRole = context.user?.role;
+		const hasRole = roles.some((role) => {
+			if (role === "ALL") return true;
+			if (role === "SYSTEM") {
+				return systemRoles.includes(userRole);
+			}
+			return role === userRole;
+		});
 
-		if (!userRole || !roles.includes(userRole)) {
-			throw new AuthError("Didn't have access", { code: "UNAUTHORIZED" });
+		if (!hasRole) {
+			throw new AuthError("Access denied: Missing required role", {
+				code: "UNAUTHORIZED",
+			});
 		}
 
 		return next();

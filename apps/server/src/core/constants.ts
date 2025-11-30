@@ -24,6 +24,7 @@ export const FEATURE_TAGS = Object.freeze({
 } as const);
 
 export const CACHE_TTLS = Object.freeze({
+	"5m": 5 * 60,
 	"1h": 1 * 3600,
 	"24h": 24 * 3600,
 	"7d": 7 * 24 * 3600,

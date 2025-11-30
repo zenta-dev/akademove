@@ -80,9 +80,26 @@ export const order = pgTable(
 		gender: userGender(),
 	},
 	(t) => [
+		// Foreign key indexes for filtering by user/driver/merchant
 		index("order_user_id_idx").on(t.userId),
 		index("order_driver_id_idx").on(t.driverId),
 		index("order_merchant_id_idx").on(t.merchantId),
+
+		// Status index for filtering by order status
+		index("order_status_idx").on(t.status),
+
+		// Composite indexes for common query patterns
+		index("order_user_status_idx").on(t.userId, t.status),
+		index("order_driver_status_idx").on(t.driverId, t.status),
+		index("order_merchant_status_idx").on(t.merchantId, t.status),
+
+		// Sorting indexes for common sort fields
+		index("order_created_at_idx").on(t.createdAt),
+		index("order_requested_at_idx").on(t.requestedAt),
+		index("order_type_idx").on(t.type),
+
+		// Composite index for cursor pagination (id + createdAt for efficient ordering)
+		index("order_id_created_at_idx").on(t.id, t.createdAt),
 	],
 );
 

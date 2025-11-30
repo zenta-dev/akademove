@@ -1,4 +1,5 @@
 import type { ResponseHeadersPluginContext } from "@orpc/server/plugins";
+import type { Locale } from "@repo/i18n";
 import type { ClientAgent } from "@repo/schema/common";
 import type { PaginationResult } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
@@ -95,6 +96,7 @@ export interface HonoContext {
 			token: string;
 		};
 		clientAgent: ClientAgent;
+		locale: Locale;
 	};
 	Bindings: Env;
 }
@@ -106,6 +108,7 @@ export interface ORPCContext extends ResponseHeadersPluginContext {
 	manager: ManagerContext;
 	user?: UserInContext;
 	clientAgent: ClientAgent;
+	locale: Locale;
 	token?: string;
 }
 

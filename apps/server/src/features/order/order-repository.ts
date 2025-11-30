@@ -321,6 +321,21 @@ export class OrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<OrderSummary & { config: ConfigurationValue }> {
 		try {
+			// Create cache key based on parameters (rounded to 4 decimal places for coordinate precision)
+			const pickup = `${params.pickupLocation.x.toFixed(4)},${params.pickupLocation.y.toFixed(4)}`;
+			const dropoff = `${params.dropoffLocation.x.toFixed(4)},${params.dropoffLocation.y.toFixed(4)}`;
+			const weight = params.weight ? `:${params.weight}` : "";
+			const cacheKey = `estimate:${params.type}:${pickup}:${dropoff}${weight}`;
+
+			// Try to get cached estimate (5 minute TTL for repeated requests)
+			const cached = await this.getCache<
+				OrderSummary & { config: ConfigurationValue }
+			>(cacheKey);
+			if (cached) {
+				log.debug({ cacheKey }, "[OrderRepository] Returning cached estimate");
+				return cached;
+			}
+
 			const [pricingConfig, { distanceMeters }] = await Promise.all([
 				this.#getPricingConfiguration({ type: params.type }, { tx: opts.tx }),
 				this.#map.getRouteDistance(
@@ -368,7 +383,19 @@ export class OrderRepository extends BaseRepository {
 				}
 			}
 
-			return { ...pricing, config: pricingConfig };
+			const result = { ...pricing, config: pricingConfig };
+
+			// Cache the result for 5 minutes (300 seconds)
+			await this.setCache(cacheKey, result, {
+				expirationTtl: CACHE_TTLS["5m"],
+			});
+
+			log.debug(
+				{ cacheKey, distanceKm },
+				"[OrderRepository] Cached new estimate",
+			);
+
+			return result;
 		} catch (error) {
 			throw this.handleError(error, "estimate");
 		}
@@ -394,6 +421,38 @@ export class OrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<PlaceOrderResponse> {
 		try {
+			// Validate required parameters
+			if (!params.pickupLocation || !params.dropoffLocation) {
+				throw new RepositoryError("Pickup and dropoff locations are required", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			if (!params.type) {
+				throw new RepositoryError("Order type is required", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			if (
+				!params.payment ||
+				!params.payment.method ||
+				!params.payment.provider
+			) {
+				throw new RepositoryError("Payment information is required", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			log.debug(
+				{
+					userId: params.userId,
+					type: params.type,
+					method: params.payment.method,
+				},
+				"[OrderRepository] Starting order placement",
+			);
+
 			const itemIds = params.items
 				?.map((el) => el.item?.id)
 				.filter((id): id is string => !!id);
@@ -493,8 +552,22 @@ export class OrderRepository extends BaseRepository {
 				opts,
 			);
 
-			const order = await this.#getFromDB(orderRow.id, opts);
+			let order = await this.#getFromDB(orderRow.id, opts);
 			if (!order) throw new RepositoryError("Failed to retrieve placed order");
+
+			// For wallet payments, automatically update order status to MATCHING
+			if (params.payment.method === "WALLET" && payment.status === "SUCCESS") {
+				order = await this.update(order.id, { status: "MATCHING" }, opts);
+
+				log.info(
+					{
+						orderId: order.id,
+						userId: params.userId,
+						amount: estimate.totalCost,
+					},
+					"[OrderRepository] Wallet payment successful - Order moved to MATCHING",
+				);
+			}
 
 			await Promise.allSettled([
 				this.setCache(order.id, order, {
@@ -503,8 +576,28 @@ export class OrderRepository extends BaseRepository {
 				this.deleteCache("count"),
 			]);
 
+			log.info(
+				{
+					orderId: order.id,
+					userId: params.userId,
+					type: params.type,
+					method: params.payment.method,
+					status: order.status,
+				},
+				"[OrderRepository] Order placed successfully",
+			);
+
 			return { order, payment, transaction };
 		} catch (err) {
+			log.error(
+				{
+					error: err,
+					userId: params.userId,
+					type: params.type,
+					method: params.payment?.method,
+				},
+				"[OrderRepository] Failed to place order - transaction will be rolled back",
+			);
 			throw this.handleError(err, "place");
 		}
 	}

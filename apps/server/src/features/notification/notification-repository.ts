@@ -72,6 +72,7 @@ export class NotificationRepository {
 
 		try {
 			const tokenResults = await this.#fcmToken.listByUserId(toUserId, opts);
+			log.info({ tokenResults }, "FCM tokens found for user");
 			if (!tokenResults.length) return [];
 
 			const messageIds = await Promise.all(
@@ -79,6 +80,7 @@ export class NotificationRepository {
 					this.#firebaseAdmin.sendNotification({ ...params, token: t.token }),
 				),
 			);
+			log.info({ messageIds }, "FCM messages sent to tokens");
 
 			const sentAt = new Date();
 

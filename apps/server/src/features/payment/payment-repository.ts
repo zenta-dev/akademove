@@ -30,11 +30,12 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { PaymentService } from "@/core/services/payment";
 import type { PaymentDatabase } from "@/core/tables/payment";
-import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { delay, log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { generateOrderCode } from "@/utils/uuid";
 import type { NotificationRepository } from "../notification/notification-repository";
 import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
-import type { WalletRepository } from "../wallet/wallet-repository";
+import { WalletRepository } from "../wallet/wallet-repository";
 
 export interface ChargePayload extends WithUserId {
 	transactionType: Extract<TransactionType, "TOPUP" | "PAYMENT">;
@@ -172,6 +173,19 @@ export class PaymentRepository extends BaseRepository {
 				});
 			}
 
+			// Handle wallet payment directly without external payment provider
+			if (method === "WALLET") {
+				return await this.#handleWalletPayment({
+					wallet,
+					amount,
+					userId,
+					orderType,
+					transactionType,
+					metadata: params.metadata,
+					tx,
+				});
+			}
+
 			let desc: string | undefined;
 
 			switch (orderType) {
@@ -199,19 +213,42 @@ export class PaymentRepository extends BaseRepository {
 			const expiresAt = new Date(
 				Date.now() + PAYMENT_EXPIRY_MINUTE * 60 * 1000,
 			);
-			const paymentResponse = (await this.#paymentSvc.charge({
-				externalId: transaction.id,
-				amount,
-				customer: {
-					...user,
-					phone: `${user?.phone.countryCode}-${user?.phone.number}`,
-				},
-				expiry: { duration: PAYMENT_EXPIRY_MINUTE, unit: "minute" },
-				method,
-				metadata,
-				bank: params.bank,
-				va_number: params.va_number,
-			})) as ChargeResponse;
+
+			let paymentResponse: ChargeResponse;
+			try {
+				paymentResponse = (await this.#paymentSvc.charge({
+					externalId: transaction.id,
+					amount,
+					customer: {
+						...user,
+						phone: `${user?.phone.countryCode}-${user?.phone.number}`,
+					},
+					expiry: { duration: PAYMENT_EXPIRY_MINUTE, unit: "minute" },
+					method,
+					metadata,
+					bank: params.bank,
+					va_number: params.va_number,
+				})) as ChargeResponse;
+			} catch (paymentError) {
+				log.error(
+					{ error: paymentError, transactionId: transaction.id },
+					"[PaymentRepository] Payment gateway failed - transaction will be rolled back",
+				);
+
+				// Mark transaction as FAILED before re-throwing
+				await this.#transaction.update(
+					transaction.id,
+					{ status: "FAILED" },
+					{ tx },
+				);
+
+				throw new RepositoryError(
+					"Payment gateway failed. Please try again later.",
+					{
+						code: "INTERNAL_SERVER_ERROR",
+					},
+				);
+			}
 
 			const actions = paymentResponse.actions;
 			const action = actions?.find((val) => val.name === "generate-qr-code");
@@ -317,6 +354,8 @@ export class PaymentRepository extends BaseRepository {
 			transactionId: string;
 		} & WithTx,
 	) {
+		const opts = { tx: params.tx };
+
 		const [updatedPayment, transaction] = await Promise.all([
 			params.tx
 				.update(tables.payment)
@@ -340,10 +379,12 @@ export class PaymentRepository extends BaseRepository {
 		const updatedTransaction = await this.#transaction.update(
 			transaction.id,
 			{ status: "EXPIRED" },
-			{ tx: params.tx },
+			opts,
 		);
 
 		const stub = PaymentRepository.getRoomStubByName(params.payment.id);
+
+		const composedPayment = PaymentRepository.composeEntity(updatedPayment);
 
 		const tasks: Promise<unknown>[] = [];
 
@@ -357,21 +398,21 @@ export class PaymentRepository extends BaseRepository {
 					tg: "USER",
 					p: {
 						failReason: "Payment expired",
-						payment: {
-							id: updatedPayment.id,
-							type: "topup",
-						},
+						payment: composedPayment,
 						transaction: updatedTransaction,
 					},
 				}),
 			);
 			tasks.push(
-				this.#notification.sendNotificationToUserId({
-					fromUserId: userId,
-					toUserId: userId,
-					title: "Top up failed",
-					body: `Top up with id ${transaction.id} failed`,
-				}),
+				this.#notification.sendNotificationToUserId(
+					{
+						fromUserId: userId,
+						toUserId: userId,
+						title: "Top up failed",
+						body: `Top up with id ${transaction.id} failed`,
+					},
+					opts,
+				),
 			);
 		}
 		if (transaction.type === "PAYMENT") {
@@ -383,21 +424,21 @@ export class PaymentRepository extends BaseRepository {
 					tg: "USER",
 					p: {
 						failReason: "Payment expired",
-						payment: {
-							id: updatedPayment.id,
-							type: "pay",
-						},
+						payment: composedPayment,
 						transaction: updatedTransaction,
 					},
 				}),
 			);
 			tasks.push(
-				this.#notification.sendNotificationToUserId({
-					fromUserId: userId,
-					toUserId: userId,
-					title: "Payment failed",
-					body: `Payment with id ${transaction.id} failed`,
-				}),
+				this.#notification.sendNotificationToUserId(
+					{
+						fromUserId: userId,
+						toUserId: userId,
+						title: "Payment failed",
+						body: `Payment with id ${transaction.id} failed`,
+					},
+					opts,
+				),
 			);
 		}
 
@@ -469,6 +510,7 @@ export class PaymentRepository extends BaseRepository {
 			...order,
 			status: "MATCHING",
 		});
+		const composedWallet = WalletRepository.composeEntity(transaction.wallet);
 
 		const tasks: Promise<unknown>[] = [
 			paymentStub.broadcast({
@@ -477,36 +519,35 @@ export class PaymentRepository extends BaseRepository {
 				t: "c",
 				tg: "USER",
 				p: {
-					payment: {
-						id: updatedPayment.id,
-						type: "pay",
-					},
+					payment: composedPayment,
 					transaction: updatedTransaction,
-					wallet: {
-						id: transaction.wallet.id,
-						balance: toNumberSafe(transaction.wallet.balance),
-					},
+					wallet: composedWallet,
 				},
 			}),
-			orderStub.broadcast({
-				a: "MATCHING",
-				f: "s",
-				t: "s",
-				tg: "SYSTEM",
-				p: {
-					detail: {
-						payment: composedPayment,
-						order: composedOrder,
-						transaction: updatedTransaction,
+			delay(500, () =>
+				orderStub.broadcast({
+					a: "MATCHING",
+					f: "s",
+					t: "s",
+					tg: "SYSTEM",
+					p: {
+						detail: {
+							payment: composedPayment,
+							order: composedOrder,
+							transaction: updatedTransaction,
+						},
 					},
+				}),
+			),
+			this.#notification.sendNotificationToUserId(
+				{
+					fromUserId: params.customerId,
+					toUserId: order.userId,
+					title: "Akademove Payment Success",
+					body: `Payment for ${generateOrderCode(order.id)} success.`,
 				},
-			}),
-			this.#notification.sendNotificationToUserId({
-				fromUserId: params.customerId,
-				toUserId: order.userId,
-				title: "Payment success",
-				body: `Payment with id ${order.id} success.`,
-			}),
+				opts,
+			),
 		];
 
 		const merchantUserId = order.merchant?.user.id;
@@ -517,26 +558,29 @@ export class PaymentRepository extends BaseRepository {
 			const orderUrl = `${env.CORS_ORIGIN}/dash/merchant/orders/${order.id}`;
 
 			tasks.push(
-				this.#notification.sendNotificationToUserId({
-					fromUserId: params.customerId,
-					toUserId: merchantUserId,
-					title: "📦 New Order Received",
-					body: `You have a new order (#${order.id}) with ${itemCount} item${itemCount > 1 ? "s" : ""}. Tap to view details.`,
-					data: {
-						type: "NEW_ORDER",
-						orderId: order.id,
-						merchantId,
-						deeplink: "akademove://merchant/order", // TODO: replace with actual android url
+				this.#notification.sendNotificationToUserId(
+					{
+						fromUserId: params.customerId,
+						toUserId: merchantUserId,
+						title: "📦 New Order Received",
+						body: `You have a new order (#${order.id}) with ${itemCount} item${itemCount > 1 ? "s" : ""}. Tap to view details.`,
+						data: {
+							type: "NEW_ORDER",
+							orderId: order.id,
+							merchantId,
+							deeplink: "akademove://merchant/order", // TODO: replace with actual android url
+						},
+						android: {
+							priority: "high",
+							notification: { clickAction: "MERCHANT_OPEN_ORDER_DETAIL" },
+						},
+						apns: {
+							payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
+						},
+						webpush: { fcmOptions: { link: orderUrl } },
 					},
-					android: {
-						priority: "high",
-						notification: { clickAction: "MERCHANT_OPEN_ORDER_DETAIL" },
-					},
-					apns: {
-						payload: { aps: { category: "ORDER_DETAIL", sound: "default" } },
-					},
-					webpush: { fcmOptions: { link: orderUrl } },
-				}),
+					opts,
+				),
 			);
 		}
 
@@ -549,6 +593,7 @@ export class PaymentRepository extends BaseRepository {
 			transactionId: string;
 		} & WithTx,
 	) {
+		const opts = { tx: params.tx };
 		const [[updatedPayment], transaction] = await Promise.all([
 			params.tx
 				.update(tables.payment)
@@ -591,7 +636,7 @@ export class PaymentRepository extends BaseRepository {
 					balanceBefore: toNumberSafe(wallet.balance),
 					balanceAfter: toNumberSafe(newBalance),
 				},
-				{ tx: params.tx },
+				opts,
 			),
 		]);
 
@@ -605,25 +650,127 @@ export class PaymentRepository extends BaseRepository {
 				t: "c",
 				tg: "USER",
 				p: {
-					payment: {
-						id: updatedPayment.id,
-						type: "topup",
-					},
+					payment: PaymentRepository.composeEntity(updatedPayment),
 					transaction: updatedTransaction,
-					wallet: {
-						id: updatedWallet.id,
-						balance: toNumberSafe(updatedWallet.balance),
-					},
+					wallet: WalletRepository.composeEntity(updatedWallet),
 				},
 			}),
-			this.#notification.sendNotificationToUserId({
-				fromUserId: userId,
-				toUserId: userId,
-				title: "Top up success",
-				body: `Top up Rp ${toNumberSafe(transaction.amount)} success`,
-			}),
+			this.#notification.sendNotificationToUserId(
+				{
+					fromUserId: userId,
+					toUserId: userId,
+					title: "Top up success",
+					body: `Top up Rp ${toNumberSafe(transaction.amount)} success`,
+				},
+				opts,
+			),
 		];
 
 		await Promise.allSettled(tasks);
+	}
+
+	async #handleWalletPayment(
+		params: {
+			wallet: Wallet;
+			amount: number;
+			userId: string;
+			orderType: ChargePayload["orderType"];
+			transactionType: TransactionType;
+			metadata?: Record<string, unknown>;
+		} & WithTx,
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
+		const { wallet, amount, orderType, transactionType, metadata, tx } = params;
+
+		try {
+			// Check if wallet has sufficient balance
+			const currentBalance = new Decimal(wallet.balance);
+			const amountDecimal = new Decimal(amount);
+
+			if (currentBalance.lessThan(amountDecimal)) {
+				throw new RepositoryError("Insufficient wallet balance", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			let desc: string | undefined;
+			switch (orderType) {
+				case "TOPUP":
+					desc = "Top-up WALLET";
+					break;
+				case "RIDE":
+				case "FOOD":
+				case "DELIVERY":
+					desc = `Payment for ${orderType}`;
+					break;
+			}
+
+			const fullMetadata = { ...metadata, type: orderType, desc };
+
+			// Create transaction with SUCCESS status
+			const transaction = await this.#transaction.insert({
+				walletId: wallet.id,
+				type: transactionType,
+				amount,
+				status: "SUCCESS",
+				description: desc,
+				metadata: fullMetadata,
+			});
+
+			// Deduct amount from wallet
+			const newBalance = currentBalance.minus(amountDecimal);
+
+			const updatedWallet = await this.#wallet.update(
+				wallet.id,
+				{
+					balance: toNumberSafe(newBalance),
+				},
+				{ tx },
+			);
+
+			// Update transaction with balance info
+			const updatedTransaction = await this.#transaction.update(
+				transaction.id,
+				{
+					balanceBefore: toNumberSafe(currentBalance),
+					balanceAfter: toNumberSafe(newBalance),
+				},
+				{ tx },
+			);
+
+			// Create payment record
+			const payment = await this.#insert(
+				{
+					transactionId: transaction.id,
+					provider: "MIDTRANS",
+					method: "WALLET",
+					amount,
+					status: "SUCCESS",
+					externalId: transaction.id,
+					expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+					response: { wallet_payment: true },
+					payload: {
+						method: "WALLET",
+						amount,
+						userId: params.userId,
+						provider: "MIDTRANS",
+						metadata: fullMetadata,
+					},
+				},
+				{ tx },
+			);
+
+			return {
+				payment,
+				transaction: updatedTransaction,
+				wallet: updatedWallet,
+			};
+		} catch (error) {
+			log.error(
+				{ error, userId: params.userId, amount, walletId: wallet.id },
+				"[PaymentRepository] Failed to handle wallet payment - transaction will be rolled back",
+			);
+			// Re-throw the error to trigger transaction rollback
+			throw error;
+		}
 	}
 }

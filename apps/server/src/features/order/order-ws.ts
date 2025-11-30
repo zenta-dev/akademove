@@ -44,23 +44,32 @@ export class OrderRoom extends BaseDurableObject {
 		}
 
 		if (data.t === "s" && data.a !== undefined) {
-			if (data.a === "MATCHING") {
-				await this.#svc.db.transaction(
-					async (tx) => await this.#handleOrderMatching(ws, data, tx),
+			try {
+				if (data.a === "MATCHING") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleOrderMatching(ws, data, tx),
+					);
+				}
+				if (data.a === "UPDATE_LOCATION") {
+					await this.#handleDriverUpdateLocation(ws, data);
+				}
+				if (data.a === "ACCEPTED") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleOrderAccepted(ws, data, tx),
+					);
+				}
+				if (data.a === "DONE") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleOrderDone(ws, data, tx),
+					);
+				}
+			} catch (error) {
+				log.error(
+					{ error, action: data.a, userId: session },
+					"[OrderRoom] WebSocket message handler failed - transaction rolled back",
 				);
-			}
-			if (data.a === "UPDATE_LOCATION") {
-				await this.#handleDriverUpdateLocation(ws, data);
-			}
-			if (data.a === "ACCEPTED") {
-				await this.#svc.db.transaction(
-					async (tx) => await this.#handleOrderAccepted(ws, data, tx),
-				);
-			}
-			if (data.a === "DONE") {
-				await this.#svc.db.transaction(
-					async (tx) => await this.#handleOrderDone(ws, data, tx),
-				);
+				// Close the WebSocket connection on critical errors
+				ws.close(1011, "An error occurred while processing your request");
 			}
 		}
 	}
@@ -80,30 +89,43 @@ export class OrderRoom extends BaseDurableObject {
 		const findOrder = await this.#repo.order.get(detail.order.id, opts);
 
 		let nearbyDrivers: Driver[] = [];
-		let radiusKm = 20;
+		const initialRadiusKm = 10;
+		const radiusIncrement = 10;
 		const maxRadiusKm = 100;
-		const searchDelayMs = 3000; // delay between searches (3 seconds)
+		const searchDelayMs = 2000; // Reduced to 2 seconds for faster response
+
+		let radiusKm = initialRadiusKm;
 
 		while (nearbyDrivers.length === 0 && radiusKm <= maxRadiusKm) {
-			nearbyDrivers = await this.#repo.driver.main.nearby({
+			const foundDrivers = await this.#repo.driver.main.nearby({
 				x: findOrder.pickupLocation.x,
 				y: findOrder.pickupLocation.y,
 				radiusKm,
-				limit: 1,
+				limit: 5, // Get multiple drivers to increase acceptance chance
 				gender: findOrder.gender,
 			});
 
+			// Filter out busy drivers
+			nearbyDrivers = foundDrivers.filter((d) => !d.isTakingOrder);
+
 			if (nearbyDrivers.length === 0) {
-				console.info(
-					`No drivers within ${radiusKm}km — retrying after ${searchDelayMs / 1000}s.`,
+				log.info(
+					{ radius: radiusKm, maxRadius: maxRadiusKm },
+					`No available drivers within ${radiusKm}km — expanding search`,
 				);
-				radiusKm *= 2;
-				await new Promise((resolve) => setTimeout(resolve, searchDelayMs));
+				radiusKm += radiusIncrement;
+				if (radiusKm <= maxRadiusKm) {
+					await new Promise((resolve) => setTimeout(resolve, searchDelayMs));
+				}
 			}
 		}
 
 		if (nearbyDrivers.length === 0) {
-			console.warn("No nearby driver found — cancelling order.");
+			log.warn(
+				{ orderId: findOrder.id, userId: findOrder.userId },
+				"[OrderRoom] No nearby driver found — cancelling order and processing refund",
+			);
+
 			const [updatedOrder, findPayment] = await Promise.all([
 				this.#repo.order.update(
 					findOrder.id,
@@ -127,41 +149,62 @@ export class OrderRoom extends BaseDurableObject {
 			};
 
 			if (findPayment) {
-				const { transaction } = findPayment;
-				const wallet = transaction.wallet;
-				const safeCurrentBalance = new Decimal(wallet.balance);
-				const safeAmount = new Decimal(updatedOrder.totalPrice);
-				const safeNewBalance = safeCurrentBalance.plus(safeAmount);
+				try {
+					const { transaction } = findPayment;
+					const wallet = transaction.wallet;
+					const safeCurrentBalance = new Decimal(wallet.balance);
+					const safeAmount = new Decimal(updatedOrder.totalPrice);
+					const safeNewBalance = safeCurrentBalance.plus(safeAmount);
 
-				const [updatedTransaction, updatedPayment, _] = await Promise.all([
-					this.#repo.transaction.update(
-						transaction.id,
-						{
-							status: "REFUNDED",
-							balanceBefore: toNumberSafe(safeCurrentBalance),
-							balanceAfter: toNumberSafe(safeNewBalance),
+					const [updatedTransaction, updatedPayment, _] = await Promise.all([
+						this.#repo.transaction.update(
+							transaction.id,
+							{
+								status: "REFUNDED",
+								balanceBefore: toNumberSafe(safeCurrentBalance),
+								balanceAfter: toNumberSafe(safeNewBalance),
+							},
+							opts,
+						),
+						this.#repo.payment.update(
+							findPayment.id,
+							{ status: "REFUNDED" },
+							opts,
+						),
+						this.#repo.wallet.update(
+							wallet.id,
+							{ balance: toNumberSafe(safeNewBalance) },
+							opts,
+						),
+					]);
+
+					data.p = {
+						detail: {
+							transaction: updatedTransaction,
+							payment: updatedPayment,
+							order: updatedOrder,
 						},
-						opts,
-					),
-					this.#repo.payment.update(
-						findPayment.id,
-						{ status: "REFUNDED" },
-						opts,
-					),
-					this.#repo.wallet.update(
-						wallet.id,
-						{ balance: toNumberSafe(safeNewBalance) },
-						opts,
-					),
-				]);
+					};
 
-				data.p = {
-					detail: {
-						transaction: updatedTransaction,
-						payment: updatedPayment,
-						order: updatedOrder,
-					},
-				};
+					log.info(
+						{
+							orderId: updatedOrder.id,
+							userId: wallet.userId,
+							refundAmount: toNumberSafe(safeAmount),
+						},
+						"[OrderRoom] Refund processed successfully",
+					);
+				} catch (refundError) {
+					log.error(
+						{
+							error: refundError,
+							orderId: updatedOrder.id,
+							paymentId: findPayment.id,
+						},
+						"[OrderRoom] Failed to process refund - transaction will be rolled back",
+					);
+					throw refundError; // Re-throw to trigger transaction rollback
+				}
 			}
 
 			ws.send(JSON.stringify(response));
@@ -272,7 +315,7 @@ export class OrderRoom extends BaseDurableObject {
 			t: "c",
 			p: {
 				detail,
-				driverAccept: updatedDriver,
+				driverAssigned: updatedDriver,
 			},
 		};
 

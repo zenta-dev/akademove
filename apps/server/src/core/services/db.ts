@@ -35,7 +35,7 @@ export const tables = {
 };
 
 export const getDatabase = () => {
-	const client = postgres(env.MAIN_DB.connectionString);
+	const client = postgres(isDev ? env.DB_URL : env.MAIN_DB.connectionString);
 	return drizzle({
 		client,
 		logger: isDev,

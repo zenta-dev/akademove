@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
@@ -28,7 +29,7 @@ export const AuthHandler = pub.router({
 		return {
 			status: 200,
 			body: {
-				message: "User authenticated successfully.",
+				message: m.sign_in_successful({}, context),
 				data: nullToUndefined(result),
 			},
 		} as const;
@@ -194,7 +195,6 @@ export const AuthHandler = pub.router({
 				code: "BAD_REQUEST",
 			});
 		}
-
 		const result = await context.repo.auth.getSession(context.token);
 
 		if (result.token) {

@@ -4,7 +4,7 @@ import { count } from "drizzle-orm";
 import type { PgColumn } from "drizzle-orm/pg-core";
 import { log, type PromiseFn, safeSync } from "@/utils";
 import { CACHE_TTLS } from "./constants";
-import { RepositoryError } from "./error";
+import { BaseError, RepositoryError } from "./error";
 import type { CountCache, PartialWithTx } from "./interface";
 import { type DatabaseName, type DatabaseService, tables } from "./services/db";
 import type { KeyValueService, PutCacheOptions } from "./services/kv";
@@ -101,10 +101,17 @@ export class BaseDurableObject extends DurableObject {
 		return filtered;
 	}
 
-	protected broadcast(object: unknown, opts?: BroadcastOptions) {
+	protected broadcast(msg: unknown, opts?: BroadcastOptions) {
+		log.debug(
+			{ msg, opts },
+			`[${this.className}] | Broadcasting message to ${
+				this.sessions.size
+			} sessions`,
+		);
+
 		if (this.sessions.size === 0) return;
 
-		const encoded = JSON.stringify(object);
+		const encoded = JSON.stringify(msg);
 
 		const excludeSet = opts?.excludes?.length ? new Set(opts.excludes) : null;
 
@@ -171,11 +178,12 @@ export abstract class BaseRepository {
 		}
 	}
 
-	protected async getTotalRow(): Promise<number> {
+	protected async getTotalRow(opts?: PartialWithTx): Promise<number> {
 		try {
 			let tableToCount: PgColumn | undefined;
 
 			const table = tables[this.#tableName];
+			const tx = opts?.tx ?? this.db;
 
 			if ("id" in table) {
 				tableToCount = table.id;
@@ -184,7 +192,7 @@ export abstract class BaseRepository {
 			}
 
 			const fallback = async () => {
-				const [dbResult] = await this.db
+				const [dbResult] = await tx
 					.select({
 						count: count(tableToCount),
 					})
@@ -208,7 +216,7 @@ export abstract class BaseRepository {
 			{ detail: error },
 			`[${this.constructor.name}] - ${action} failed`,
 		);
-		if (error instanceof RepositoryError) return error;
+		if (error instanceof BaseError) return error;
 		return new RepositoryError(
 			`Failed to ${action} ${this.#tableName.toLowerCase()}`,
 		);

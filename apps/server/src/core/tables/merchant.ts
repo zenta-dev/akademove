@@ -40,6 +40,8 @@ export const merchant = pgTable(
 		uniqueIndex("merchant_user_id_idx").on(t.userId),
 		uniqueIndex("merchant_email_idx").on(t.email),
 		uniqueIndex("merchant_phone_idx").on(t.phone),
+		// Text search index for name field (used in order list searches)
+		index("merchant_name_text_idx").on(t.name.op("text_pattern_ops")),
 		// index("merchant_type_idx").on(t.type),
 		index("merchant_is_active_idx").on(t.isActive),
 		index("merchant_rating_idx").on(t.rating),

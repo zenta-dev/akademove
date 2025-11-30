@@ -234,7 +234,7 @@ export class MerchantMainRepository extends BaseRepository {
 					m.created_at
 				FROM am_orders o
 				JOIN am_merchants m ON m.id = o.merchant_id
-				WHERE o.status = 'completed'
+				WHERE o.status = 'COMPLETED'
 					AND o.requested_at > NOW() - INTERVAL '30 days'
 				GROUP BY o.merchant_id, m.rating, m.created_at
 			),

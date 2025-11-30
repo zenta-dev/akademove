@@ -72,3 +72,16 @@ export function withQueryParams(
 	}
 	return new Request(url.toString(), req);
 }
+
+export function delay<T>(ms: number, fn?: PromiseLike<T>): Promise<T | void> {
+	return new Promise((resolve) => {
+		setTimeout(async () => {
+			if (fn) {
+				const result = await (typeof fn === "function" ? fn() : fn);
+				resolve(result);
+			} else {
+				resolve();
+			}
+		}, ms);
+	});
+}
