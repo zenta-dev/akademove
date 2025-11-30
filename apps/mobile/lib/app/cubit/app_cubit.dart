@@ -1,5 +1,6 @@
 import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/locator.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -29,6 +30,10 @@ class AppCubit extends BaseCubit<AppState> {
           countryCode: parts.length > 1 ? parts[1] : null,
         );
       }
+
+      sl<AcceptLanguageInterceptor>().updateCached(
+        locale?.toLanguageTag() ?? 'en',
+      );
 
       emit(
         AppState.success(
@@ -77,10 +82,13 @@ class AppCubit extends BaseCubit<AppState> {
         KeyValueKeys.locale,
         locale.toLanguageTag(),
       );
+      sl<AcceptLanguageInterceptor>().updateCached(locale.toLanguageTag());
+
       final currentData = state.data;
       final newState = currentData != null
           ? currentData.copyWith(locale: locale)
           : InternalAppState(locale: locale);
+
       emit(AppState.success(newState));
     } on BaseError catch (e, st) {
       logger.e('Failed to update locale', error: e, stackTrace: st);

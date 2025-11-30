@@ -22,5 +22,13 @@
     "edit_profile": "Sunting Profil",
     "sign_out": "Keluar",
     "select_your_preferred_language": "Pilih bahasa yang Anda inginkan",
-    "select_your_preferred_theme": "Pilih tema yang Anda inginkan"
+    "select_your_preferred_theme": "Pilih tema yang Anda inginkan",
+    "history": "Riwayat",
+    "home": "Beranda",
+    "profile": "Profil",
+    "an_error_occurred": "Terjadi kesalahan",
+    "info": "Informasi",
+    "success": "Berhasil",
+    "error": "Kesalahan",
+    "failed": "Gagal"
 }

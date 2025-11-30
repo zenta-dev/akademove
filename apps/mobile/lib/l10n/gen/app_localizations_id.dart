@@ -79,4 +79,37 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get select_your_preferred_theme => 'Pilih tema yang Anda inginkan';
+
+  @override
+  String get history => 'Riwayat';
+
+  @override
+  String get home => 'Beranda';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get an_error_occurred => 'Terjadi kesalahan';
+
+  @override
+  String get info => 'Informasi';
+
+  @override
+  String get success => 'Berhasil';
+
+  @override
+  String get error => 'Kesalahan';
+
+  @override
+  String get failed => 'Gagal';
+
+  @override
+  String get your_driver_is => 'Your driver is';
+
+  @override
+  String get origin => 'Origin';
+
+  @override
+  String get destination => 'Destination';
 }

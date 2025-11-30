@@ -22,5 +22,16 @@
     "edit_profile": "Edit Profile",
     "sign_out": "Sign Out",
     "select_your_preferred_language": "Select your preferred language",
-    "select_your_preferred_theme": "Select your preferred theme"
+    "select_your_preferred_theme": "Select your preferred theme",
+    "history": "History",
+    "home": "Home",
+    "profile": "Profile",
+    "an_error_occurred": "An error occurred",
+    "info": "Information",
+    "success": "Success",
+    "error": "Error",
+    "failed": "Failed",
+    "your_driver_is": "Your driver is",
+    "origin": "Origin",
+    "destination": "Destination"
 }

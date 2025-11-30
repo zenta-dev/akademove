@@ -15,6 +15,8 @@ void setupLocator() {
 
 void _setupService() {
   sl
+    ..registerSingleton<KeyValueService>(SharedPrefKeyValueService())
+    ..registerSingleton(AcceptLanguageInterceptor(sl<KeyValueService>()))
     ..registerSingleton(
       ApiClient(
         dio: Dio(
@@ -26,11 +28,11 @@ void _setupService() {
         ),
         interceptors: [
           BearerAuthInterceptor(),
+          sl<AcceptLanguageInterceptor>(),
           LoggerInterceptor(),
         ],
       ),
     )
-    ..registerSingletonAsync<KeyValueService>(SharedPrefKeyValueService().setup)
     ..registerSingleton<ImageService>(ImagePickerService()..setup())
     ..registerSingleton<LocationService>(LocationService())
     ..registerSingletonAsync<MapService>(
@@ -92,7 +94,7 @@ void _setupRepository() {
       () => NotificationRepository(
         apiClient: sl<ApiClient>(),
         firebaseService: sl<FirebaseService>(),
-        notifSvc: sl<NotificationService>(),
+        keyValueService: sl<KeyValueService>(),
       ),
     )
     ..registerLazySingleton(
@@ -105,7 +107,7 @@ void _setupRepository() {
 void _setupCubit() {
   sl
     ..registerFactory(BottomNavBarCubit.new)
-    ..registerFactory(AppCubit.new)
+    ..registerFactory(() => AppCubit(keyValueService: sl<KeyValueService>()))
     ..registerFactory(
       () => AuthCubit(
         authRepository: sl<AuthRepository>(),
@@ -137,10 +139,14 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
+      () => UserLocationCubit(
+        locationService: sl<LocationService>(),
+      ),
+    )
+    ..registerFactory(
       () => UserRideCubit(
         driverRepository: sl<DriverRepository>(),
         mapService: sl<MapService>(),
-        locationService: sl<LocationService>(),
       ),
     )
     ..registerFactory(
