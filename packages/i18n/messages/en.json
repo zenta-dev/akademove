@@ -242,5 +242,8 @@
   "wallet": "Wallet",
   "wednesday": "Wednesday",
   "welcome_back_placeholder": "Welcome back, {name}! 👋",
-  "yes": "Yes"
+  "yes": "Yes",
+  "sign_in_successful": "Sign-in successful",
+  "email_not_registered": "Email is not registered.",
+  "invalid_credentials": "Invalid email or password."
 }

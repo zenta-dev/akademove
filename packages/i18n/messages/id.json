@@ -242,5 +242,8 @@
   "wallet": "Dompet",
   "wednesday": "Rabu",
   "welcome_back_placeholder": "Selamat datang kembali, {name}! 👋",
-  "yes": "Ya"
+  "yes": "Ya",
+  "sign_in_successful": "Berhasil masuk",
+  "invalid_credentials": "Email atau kata sandi salah.",
+  "email_not_registered": "Email belum terdaftar."
 }
