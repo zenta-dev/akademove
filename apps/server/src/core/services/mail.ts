@@ -1,5 +1,14 @@
+/** @jsxImportSource react */
 import { env } from "cloudflare:workers";
+import * as React from "react";
 import { Resend } from "resend";
+import {
+	createEmailService,
+	type EmailService,
+	InvitationEmail,
+	MAIL_SENDERS,
+	ResetPasswordEmail,
+} from "@/emails";
 import { MailError } from "../error";
 
 interface BaseSendMailProps {
@@ -9,13 +18,14 @@ interface BaseSendMailProps {
 	text: string;
 }
 
-interface SendResetPasswordProps
-	extends Omit<BaseSendMailProps, "from" | "subject" | "text"> {
+interface SendResetPasswordProps {
+	to: string;
 	url: string;
+	userName?: string;
 }
 
-interface SendInvitationProps
-	extends Omit<BaseSendMailProps, "from" | "subject" | "text"> {
+interface SendInvitationProps {
+	to: string;
 	email: string;
 	password: string;
 	role: string;
@@ -37,8 +47,11 @@ export const MAIL_FROMS = {
 
 export class ResendMailService implements MailService {
 	#client: Resend;
+	#emailService: EmailService;
+
 	constructor(apiKey: string) {
 		this.#client = new Resend(apiKey);
+		this.#emailService = createEmailService();
 	}
 
 	async sendMail(props: BaseSendMailProps): Promise<void> {
@@ -50,20 +63,42 @@ export class ResendMailService implements MailService {
 	}
 
 	async sendResetPassword(props: SendResetPasswordProps): Promise<void> {
-		await this.sendMail({
-			...props,
-			from: MAIL_FROMS.RESET_PASSWORD,
-			subject: "Reset password",
-			text: `Click the link to verify your email: ${props.url}\nIf you did not request this, please ignore this email.`,
-		});
+		try {
+			await this.#emailService.send(
+				React.createElement(ResetPasswordEmail, {
+					userName: props.userName ?? "User",
+					resetUrl: props.url,
+				}),
+				{
+					from: MAIL_SENDERS.SECURITY,
+					to: props.to,
+					subject: "Reset Your AkadeMove Password",
+				},
+			);
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send reset password email");
+		}
 	}
 
 	async sendInvitation(props: SendInvitationProps): Promise<void> {
-		await this.sendMail({
-			...props,
-			from: MAIL_FROMS.INVITATION,
-			subject: "Invitation",
-			text: `Your are invited into AkadeMove Platform as ${props.role}, this your credentials\nEmail: ${props.email}\nPassword: ${props.password}\nPlease immedietly change your password on ${env.CORS_ORIGIN}/sign-in`,
-		});
+		try {
+			await this.#emailService.send(
+				React.createElement(InvitationEmail, {
+					email: props.email,
+					password: props.password,
+					role: props.role,
+					loginUrl: `${env.CORS_ORIGIN}/sign-in`,
+				}),
+				{
+					from: MAIL_SENDERS.DEFAULT,
+					to: props.to,
+					subject: "Welcome to AkadeMove Platform",
+				},
+			);
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send invitation email");
+		}
 	}
 }
