@@ -44,7 +44,13 @@ export const MerchantMainSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(
+			z.object({
+				query: UnifiedPaginationQuerySchema.extend({
+					category: z.string().optional(),
+				}),
+			}),
+		)
 		.output(
 			createSuccesSchema(
 				z.array(MerchantSchema),
@@ -109,4 +115,47 @@ export const MerchantMainSpec = {
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(createSuccesSchema(z.null(), "Merchant deleted successfully")),
+	bestSellers: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/best-sellers",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				query: z.object({
+					limit: z.coerce.number().default(10),
+					category: z.string().optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.array(
+					z.object({
+						menu: z.object({
+							id: z.string(),
+							merchantId: z.string(),
+							name: z.string(),
+							image: z.string().optional(),
+							category: z.string().optional(),
+							price: z.number(),
+							stock: z.number(),
+							createdAt: z.date(),
+							updatedAt: z.date(),
+						}),
+						merchant: z.object({
+							id: z.string(),
+							name: z.string(),
+							image: z.string().optional(),
+							rating: z.number(),
+						}),
+						orderCount: z.number(),
+					}),
+				),
+				"Successfully retrieved best sellers",
+			),
+		),
 };

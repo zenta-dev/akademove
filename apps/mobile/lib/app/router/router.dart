@@ -40,6 +40,7 @@ enum Routes {
   userDeliverySummary('/user/home/delivery/summary'),
   userDeliveryPayment('/user/home/delivery/payment'),
   userMart('/user/home/mart'),
+  userMartCategory('/user/home/mart/category'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),

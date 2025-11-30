@@ -89,4 +89,21 @@ export const MerchantMainHandler = priv.router({
 				body: { message: "Merchant deleted successfully", data: null },
 			};
 		}),
+	bestSellers: priv.bestSellers
+		.use(hasPermission({ merchantMenu: ["list"] }))
+		.use(requireRoles("ALL"))
+		.handler(async ({ context, input: { query } }) => {
+			const result = await context.repo.merchant.menu.getBestSellers({
+				limit: query.limit,
+				category: query.category,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved best sellers",
+					data: result,
+				},
+			};
+		}),
 });

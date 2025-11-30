@@ -995,3 +995,233 @@ class _UserDeliveryStateCopyWithImpl<$R, $Out>
   ) => _UserDeliveryStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 
+class UserMartStateMapper extends ClassMapperBase<UserMartState> {
+  UserMartStateMapper._();
+
+  static UserMartStateMapper? _instance;
+  static UserMartStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UserMartStateMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UserMartState';
+
+  static List<String> _$categories(UserMartState v) => v.categories;
+  static const Field<UserMartState, List<String>> _f$categories = Field(
+    'categories',
+    _$categories,
+    opt: true,
+    def: const ['ATK', 'Printing', 'Food'],
+  );
+  static List<MerchantMenu> _$bestSellers(UserMartState v) => v.bestSellers;
+  static const Field<UserMartState, List<MerchantMenu>> _f$bestSellers = Field(
+    'bestSellers',
+    _$bestSellers,
+    opt: true,
+    def: const [],
+  );
+  static List<Order> _$recentOrders(UserMartState v) => v.recentOrders;
+  static const Field<UserMartState, List<Order>> _f$recentOrders = Field(
+    'recentOrders',
+    _$recentOrders,
+    opt: true,
+    def: const [],
+  );
+  static List<Merchant> _$categoryMerchants(UserMartState v) =>
+      v.categoryMerchants;
+  static const Field<UserMartState, List<Merchant>> _f$categoryMerchants =
+      Field('categoryMerchants', _$categoryMerchants, opt: true, def: const []);
+  static String? _$selectedCategory(UserMartState v) => v.selectedCategory;
+  static const Field<UserMartState, String> _f$selectedCategory = Field(
+    'selectedCategory',
+    _$selectedCategory,
+    opt: true,
+  );
+  static CubitState _$state(UserMartState v) => v.state;
+  static const Field<UserMartState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(UserMartState v) => v.message;
+  static const Field<UserMartState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(UserMartState v) => v.error;
+  static const Field<UserMartState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<UserMartState> fields = const {
+    #categories: _f$categories,
+    #bestSellers: _f$bestSellers,
+    #recentOrders: _f$recentOrders,
+    #categoryMerchants: _f$categoryMerchants,
+    #selectedCategory: _f$selectedCategory,
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+  };
+
+  static UserMartState _instantiate(DecodingData data) {
+    return UserMartState(
+      categories: data.dec(_f$categories),
+      bestSellers: data.dec(_f$bestSellers),
+      recentOrders: data.dec(_f$recentOrders),
+      categoryMerchants: data.dec(_f$categoryMerchants),
+      selectedCategory: data.dec(_f$selectedCategory),
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin UserMartStateMappable {
+  UserMartStateCopyWith<UserMartState, UserMartState, UserMartState>
+  get copyWith => _UserMartStateCopyWithImpl<UserMartState, UserMartState>(
+    this as UserMartState,
+    $identity,
+    $identity,
+  );
+  @override
+  String toString() {
+    return UserMartStateMapper.ensureInitialized().stringifyValue(
+      this as UserMartState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UserMartStateMapper.ensureInitialized().equalsValue(
+      this as UserMartState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return UserMartStateMapper.ensureInitialized().hashValue(
+      this as UserMartState,
+    );
+  }
+}
+
+extension UserMartStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserMartState, $Out> {
+  UserMartStateCopyWith<$R, UserMartState, $Out> get $asUserMartState =>
+      $base.as((v, t, t2) => _UserMartStateCopyWithImpl<$R, $Out>(v, t, t2));
+}
+
+abstract class UserMartStateCopyWith<$R, $In extends UserMartState, $Out>
+    implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get categories;
+  ListCopyWith<$R, MerchantMenu, ObjectCopyWith<$R, MerchantMenu, MerchantMenu>>
+  get bestSellers;
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>> get recentOrders;
+  ListCopyWith<$R, Merchant, ObjectCopyWith<$R, Merchant, Merchant>>
+  get categoryMerchants;
+  $R call({
+    List<String>? categories,
+    List<MerchantMenu>? bestSellers,
+    List<Order>? recentOrders,
+    List<Merchant>? categoryMerchants,
+    String? selectedCategory,
+    CubitState? state,
+    String? message,
+    BaseError? error,
+  });
+  UserMartStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
+}
+
+class _UserMartStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserMartState, $Out>
+    implements UserMartStateCopyWith<$R, UserMartState, $Out> {
+  _UserMartStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UserMartState> $mapper =
+      UserMartStateMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>> get categories =>
+      ListCopyWith(
+        $value.categories,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(categories: v),
+      );
+  @override
+  ListCopyWith<$R, MerchantMenu, ObjectCopyWith<$R, MerchantMenu, MerchantMenu>>
+  get bestSellers => ListCopyWith(
+    $value.bestSellers,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(bestSellers: v),
+  );
+  @override
+  ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>> get recentOrders =>
+      ListCopyWith(
+        $value.recentOrders,
+        (v, t) => ObjectCopyWith(v, $identity, t),
+        (v) => call(recentOrders: v),
+      );
+  @override
+  ListCopyWith<$R, Merchant, ObjectCopyWith<$R, Merchant, Merchant>>
+  get categoryMerchants => ListCopyWith(
+    $value.categoryMerchants,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(categoryMerchants: v),
+  );
+  @override
+  $R call({
+    List<String>? categories,
+    List<MerchantMenu>? bestSellers,
+    List<Order>? recentOrders,
+    List<Merchant>? categoryMerchants,
+    Object? selectedCategory = $none,
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (categories != null) #categories: categories,
+      if (bestSellers != null) #bestSellers: bestSellers,
+      if (recentOrders != null) #recentOrders: recentOrders,
+      if (categoryMerchants != null) #categoryMerchants: categoryMerchants,
+      if (selectedCategory != $none) #selectedCategory: selectedCategory,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+    }),
+  );
+  @override
+  UserMartState $make(CopyWithData data) => UserMartState(
+    categories: data.get(#categories, or: $value.categories),
+    bestSellers: data.get(#bestSellers, or: $value.bestSellers),
+    recentOrders: data.get(#recentOrders, or: $value.recentOrders),
+    categoryMerchants: data.get(
+      #categoryMerchants,
+      or: $value.categoryMerchants,
+    ),
+    selectedCategory: data.get(#selectedCategory, or: $value.selectedCategory),
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+  );
+
+  @override
+  UserMartStateCopyWith<$R2, UserMartState, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _UserMartStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+

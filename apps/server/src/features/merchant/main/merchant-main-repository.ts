@@ -89,7 +89,9 @@ export class MerchantMainRepository extends BaseRepository {
 		}
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Merchant>> {
+	async list(
+		query?: UnifiedPaginationQuery & { category?: string },
+	): Promise<ListResult<Merchant>> {
 		try {
 			const {
 				cursor,
@@ -98,6 +100,7 @@ export class MerchantMainRepository extends BaseRepository {
 				query: search,
 				sortBy,
 				order = "asc",
+				category,
 			} = query ?? {};
 
 			const orderBy = (
@@ -115,6 +118,13 @@ export class MerchantMainRepository extends BaseRepository {
 			const clauses: SQL[] = [];
 
 			if (search) clauses.push(ilike(tables.merchant.name, `%${search}%`));
+
+			// Add category filter for mart functionality
+			if (category) {
+				clauses.push(
+					sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`,
+				);
+			}
 
 			if (cursor) {
 				clauses.push(gt(tables.merchant.updatedAt, new Date(cursor)));

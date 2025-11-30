@@ -1,3 +1,4 @@
+import type { Merchant } from "@repo/schema/merchant";
 import {
 	type InsertMerchantMenu,
 	type MerchantMenu,
@@ -6,7 +7,7 @@ import {
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { getFileExtension } from "@repo/shared";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { and, count, desc, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -15,6 +16,7 @@ import type {
 	CountCache,
 	ListResult,
 	OrderByOperation,
+	WithTx,
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
@@ -358,6 +360,149 @@ export class MerchantMenuRepository extends BaseRepository {
 			}
 		} catch (error) {
 			throw this.handleError(error, "delete");
+		}
+	}
+
+	async getBestSellers(
+		params: { limit?: number; category?: string },
+		opts?: WithTx,
+	): Promise<
+		Array<{
+			menu: MerchantMenu;
+			merchant: Pick<Merchant, "id" | "name" | "image" | "rating">;
+			orderCount: number;
+		}>
+	> {
+		try {
+			const { limit = 10, category } = params;
+			const cacheKey = `bestsellers:${category || "all"}:${limit}`;
+
+			// Try cache first
+			const cached =
+				await this.getCache<
+					Array<{
+						menu: MerchantMenu;
+						merchant: Pick<Merchant, "id" | "name" | "image" | "rating">;
+						orderCount: number;
+					}>
+				>(cacheKey);
+			if (cached) return cached;
+
+			const tx = opts?.tx ?? this.db;
+
+			// Build category filter
+			const categoryFilter = category
+				? sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`
+				: sql`${tables.merchant.categories} && ARRAY['ATK', 'Printing', 'Food']::text[]`;
+
+			// Query to aggregate best sellers
+			const result = await tx
+				.select({
+					menuId: tables.merchantMenu.id,
+					menuName: tables.merchantMenu.name,
+					menuImage: tables.merchantMenu.image,
+					menuPrice: tables.merchantMenu.price,
+					menuCategory: tables.merchantMenu.category,
+					menuStock: tables.merchantMenu.stock,
+					menuCreatedAt: tables.merchantMenu.createdAt,
+					menuUpdatedAt: tables.merchantMenu.updatedAt,
+					merchantId: tables.merchant.id,
+					merchantName: tables.merchant.name,
+					merchantImage: tables.merchant.image,
+					merchantRating: tables.merchant.rating,
+					orderCount: count(tables.orderItem.id),
+				})
+				.from(tables.orderItem)
+				.innerJoin(tables.order, eq(tables.orderItem.orderId, tables.order.id))
+				.innerJoin(
+					tables.merchantMenu,
+					eq(tables.orderItem.menuId, tables.merchantMenu.id),
+				)
+				.innerJoin(
+					tables.merchant,
+					eq(tables.merchantMenu.merchantId, tables.merchant.id),
+				)
+				.where(
+					and(
+						eq(tables.order.type, "FOOD"),
+						eq(tables.order.status, "COMPLETED"),
+						categoryFilter,
+					),
+				)
+				.groupBy(
+					tables.merchantMenu.id,
+					tables.merchantMenu.name,
+					tables.merchantMenu.image,
+					tables.merchantMenu.price,
+					tables.merchantMenu.category,
+					tables.merchantMenu.stock,
+					tables.merchantMenu.createdAt,
+					tables.merchantMenu.updatedAt,
+					tables.merchant.id,
+					tables.merchant.name,
+					tables.merchant.image,
+					tables.merchant.rating,
+				)
+				.orderBy(desc(count(tables.orderItem.id)))
+				.limit(limit);
+
+			// Transform result to proper structure
+			const bestSellers = await Promise.all(
+				result.map(async (row) => {
+					const menuImage = row.menuImage
+						? this.#storage.getPublicUrl({
+								bucket: BUCKET,
+								key: row.menuImage,
+							})
+						: undefined;
+
+					const merchantImage = row.merchantImage
+						? this.#storage.getPublicUrl({
+								bucket: "merchant",
+								key: row.merchantImage,
+							})
+						: undefined;
+
+					return {
+						menu: {
+							id: row.menuId,
+							merchantId: row.merchantId,
+							name: row.menuName,
+							image: menuImage,
+							category: row.menuCategory ?? undefined,
+							price: toNumberSafe(row.menuPrice),
+							stock: row.menuStock,
+							createdAt: row.menuCreatedAt,
+							updatedAt: row.menuUpdatedAt,
+						},
+						merchant: {
+							id: row.merchantId,
+							name: row.merchantName,
+							image: merchantImage,
+							rating: toNumberSafe(row.merchantRating),
+						},
+						orderCount: row.orderCount,
+					};
+				}),
+			);
+
+			// Cache for 1 hour
+			await this.setCache(cacheKey, bestSellers, {
+				expirationTtl: CACHE_TTLS["1h"],
+			});
+
+			log.info(
+				{ category, limit, count: bestSellers.length },
+				"[MerchantMenuRepository] Retrieved best sellers",
+			);
+
+			return bestSellers;
+		} catch (error) {
+			log.error(
+				{ error, params },
+				"[MerchantMenuRepository] getBestSellers failed",
+			);
+			throw this.handleError(error, "get best sellers");
 		}
 	}
 }
