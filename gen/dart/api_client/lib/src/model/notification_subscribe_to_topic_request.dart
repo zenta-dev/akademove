@@ -24,28 +24,29 @@ class NotificationSubscribeToTopicRequest {
 
   @JsonKey(name: r'topic', required: true, includeIfNull: false)
   final String topic;
-  
+
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is NotificationSubscribeToTopicRequest &&
-    other.topic == topic &&
-    other.token == token;
 
   @override
-  int get hashCode =>
-      topic.hashCode +
-      token.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NotificationSubscribeToTopicRequest &&
+          other.topic == topic &&
+          other.token == token;
 
-  factory NotificationSubscribeToTopicRequest.fromJson(Map<String, dynamic> json) => _$NotificationSubscribeToTopicRequestFromJson(json);
+  @override
+  int get hashCode => topic.hashCode + token.hashCode;
 
-  Map<String, dynamic> toJson() => _$NotificationSubscribeToTopicRequestToJson(this);
+  factory NotificationSubscribeToTopicRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NotificationSubscribeToTopicRequestFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$NotificationSubscribeToTopicRequestToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

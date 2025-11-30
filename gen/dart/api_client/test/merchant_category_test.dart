@@ -3,7 +3,5 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantCategory
 void main() {
-
-  group(MerchantCategory, () {
-  });
+  group(MerchantCategory, () {});
 }

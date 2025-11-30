@@ -19,55 +19,57 @@ part 'update_coupon.g.dart';
 class UpdateCoupon {
   /// Returns a new [UpdateCoupon] instance.
   const UpdateCoupon({
-     this.name,
-     this.code,
-     this.rules,
-     this.discountAmount,
-     this.discountPercentage,
-     this.usageLimit,
-     this.periodStart,
-     this.periodEnd,
-     this.isActive,
+    this.name,
+    this.code,
+    this.rules,
+    this.discountAmount,
+    this.discountPercentage,
+    this.usageLimit,
+    this.periodStart,
+    this.periodEnd,
+    this.isActive,
   });
 
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
-  
+
   @JsonKey(name: r'code', required: false, includeIfNull: false)
   final String? code;
-  
+
   @JsonKey(name: r'rules', required: false, includeIfNull: false)
   final CouponRules? rules;
-  
+
   @JsonKey(name: r'discountAmount', required: false, includeIfNull: false)
   final num? discountAmount;
-  
+
   @JsonKey(name: r'discountPercentage', required: false, includeIfNull: false)
   final num? discountPercentage;
-  
+
   @JsonKey(name: r'usageLimit', required: false, includeIfNull: false)
   final num? usageLimit;
-  
+
   @JsonKey(name: r'periodStart', required: false, includeIfNull: false)
   final DateTime? periodStart;
-  
+
   @JsonKey(name: r'periodEnd', required: false, includeIfNull: false)
   final DateTime? periodEnd;
-  
+
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateCoupon &&
-    other.name == name &&
-    other.code == code &&
-    other.rules == rules &&
-    other.discountAmount == discountAmount &&
-    other.discountPercentage == discountPercentage &&
-    other.usageLimit == usageLimit &&
-    other.periodStart == periodStart &&
-    other.periodEnd == periodEnd &&
-    other.isActive == isActive;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateCoupon &&
+          other.name == name &&
+          other.code == code &&
+          other.rules == rules &&
+          other.discountAmount == discountAmount &&
+          other.discountPercentage == discountPercentage &&
+          other.usageLimit == usageLimit &&
+          other.periodStart == periodStart &&
+          other.periodEnd == periodEnd &&
+          other.isActive == isActive;
 
   @override
   int get hashCode =>
@@ -81,7 +83,8 @@ class UpdateCoupon {
       periodEnd.hashCode +
       isActive.hashCode;
 
-  factory UpdateCoupon.fromJson(Map<String, dynamic> json) => _$UpdateCouponFromJson(json);
+  factory UpdateCoupon.fromJson(Map<String, dynamic> json) =>
+      _$UpdateCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateCouponToJson(this);
 
@@ -89,6 +92,4 @@ class UpdateCoupon {
   String toString() {
     return toJson().toString();
   }
-
 }
-
