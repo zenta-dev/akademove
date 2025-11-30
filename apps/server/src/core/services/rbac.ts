@@ -18,7 +18,7 @@ export interface HasPermissionInput<R extends UserRole = UserRole> {
 
 export class RBACService {
 	readonly _roles: Record<UserRole, PermissionMap> = {
-		admin: {
+		ADMIN: {
 			driver: ["list", "get", "update", "ban", "approve"],
 			merchant: ["list", "get", "update", "delete", "approve"],
 			order: ["list", "get", "update", "delete", "cancel", "assign"],
@@ -41,7 +41,7 @@ export class RBACService {
 			bookings: ["list", "get", "create", "update", "delete"],
 			configurations: ["list", "get", "update"],
 		},
-		operator: {
+		OPERATOR: {
 			driver: ["list", "get", "update", "ban"],
 			merchant: ["list", "get", "update"],
 			order: ["list", "get", "update", "cancel", "assign"],
@@ -52,21 +52,21 @@ export class RBACService {
 			user: ["list", "get", "update"],
 			configurations: ["list", "get", "update"],
 		},
-		merchant: {
+		MERCHANT: {
 			merchant: ["get", "update"],
 			merchantMenu: ["list", "get", "create", "update", "delete"],
 			order: ["list", "get", "update"],
 			review: ["get"],
 			report: ["get"],
 		},
-		driver: {
+		DRIVER: {
 			driver: ["get", "update"],
 			schedule: ["list", "get", "create", "update", "delete"],
 			order: ["get", "update"],
 			review: ["get"],
 			report: ["get"],
 		},
-		user: {
+		USER: {
 			user: ["get", "update"],
 			driver: ["list", "get"],
 			order: ["list", "get", "create", "update", "cancel"],

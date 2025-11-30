@@ -83,7 +83,7 @@ export function delay<T>(
 				const result = await (typeof fn === "function" ? fn() : fn);
 				resolve(result);
 			} else {
-				resolve();
+				resolve(undefined);
 			}
 		}, ms);
 	});
