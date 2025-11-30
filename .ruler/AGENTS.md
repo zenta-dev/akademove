@@ -1,6 +1,6 @@
 # Agent Development Guide - AkadeMove
 
-## 🎯 Domain Context (Read SRS AkadeMove.pdf)
+## 🎯 Domain Context (Read docs/srs-new.md)
 **AkadeMove** is a campus mobility & delivery platform connecting students as users/drivers with campus merchants. **Key differentiators**: driver flexibility (can disable during class), gender-based driver matching, campus-only ecosystem, commission-based model, real-time tracking, leaderboard/badges for gamification.
 
 **Roles**: USER (passenger/customer), DRIVER (student mitra), MERCHANT/TENANT (campus shops), OPERATOR (campus management), ADMIN (platform owner). **Services**: RIDE (transport), DELIVERY (goods/documents), FOOD (campus food delivery). **Core flows**: order matching → driver acceptance → pickup → in-trip → completion → payment → rating/review.
@@ -9,10 +9,10 @@
 **Monorepo**: Turbo + Bun workspaces. **Server**: Cloudflare Workers (Hono + oRPC + Drizzle ORM + PostgreSQL + PostGIS). **Web**: React 19 + TanStack Router/Query + Shadcn UI. **Mobile**: Flutter + BLoC + GetIt DI. **Packages**: `@repo/schema` (Zod), `@repo/shared` (utils), `@repo/i18n` (translations). **Real-time**: WebSocket + Durable Objects for order tracking, driver location streaming.
 
 ## 🚀 Commands
-**Lint/Format**: `bun run check` (Biome auto-fix). **Type Check**: `turbo check-types`. **Build All**: `turbo build`. **Dev Server**: `turbo -F server dev` or `bun run dev:server`. **Dev Web**: `turbo -F web dev` or `bun run dev:web`. **Flutter Test (Single)**: `cd apps/mobile && flutter test test/path/to/test_file.dart`. **Flutter Test (All)**: `cd apps/mobile && flutter test`. **DB Push**: `turbo -F server db:push` or `bun run db:push`. **DB Studio**: `bun run db:studio`. **DB Generate Migration**: `turbo -F server db:generate`. **Melos**: `melos generate`, `melos analyze`, `melos fix`, `melos format`.
+**Lint/Format**: `bun run check` (Biome auto-fix). **Type Check**: `turbo check-types`. **Build All**: `turbo build`. **Dev All**: `bun run dev` (alchemy + i18n). **Dev Server**: `turbo -F server dev` or `bun run dev:server`. **Dev Web**: `turbo -F web dev` or `bun run dev:web`. **Flutter Test (Single)**: `cd apps/mobile && flutter test test/path/to/test_file.dart`. **Flutter Test (All)**: `cd apps/mobile && flutter test`. **DB Push**: `turbo -F server db:push` or `bun run db:push`. **DB Studio**: `bun run db:studio`. **DB Generate Migration**: `turbo -F server db:generate`. **DB Migrate**: `turbo -F server db:migrate`. **DB Seed**: `bun run db:seed`. **DB Reset**: `bun run db:reset`.
 
 ## 📝 Code Style
-**Formatting**: Tabs (indentStyle), double quotes (Biome enforced). **Imports**: Auto-organize imports (Biome). Use `@/*` path aliases (e.g., `@/core/services/db`). Import from `@repo/schema`, `@repo/shared`. **Types**: NEVER use `any` (TypeScript) or `dynamic` (Dart) - use `unknown` instead. Enable strict mode. **Naming**: camelCase for TS/JS variables, PascalCase for classes/components, snake_case for Dart/database columns. **File Naming**: kebab-case for all files (e.g., `order-handler.ts`, `order_cubit.dart`).
+**Formatting**: Tabs (indentStyle), double quotes (Biome enforced). **Imports**: Auto-organize imports (Biome). Use `@/*` path aliases (e.g., `@/core/services/db`). Import from `@repo/schema`, `@repo/shared`, `@repo/i18n`. **Types**: NEVER use `any` (TypeScript) or `dynamic` (Dart) - use `unknown` instead. Enable strict mode. **Naming**: camelCase for TS/JS variables, PascalCase for classes/components, snake_case for Dart/database columns. **File Naming**: kebab-case for all files (e.g., `order-handler.ts`, `order_cubit.dart`).
 
 ## 🔧 TypeScript/Server Patterns
 
@@ -77,7 +77,7 @@ export class OrderRepository extends BaseRepository {
 2. Log errors with context: `log.error({ error, userId }, "[ClassName] Operation failed")`
 3. Re-throw to trigger transaction rollback
 4. Use typed errors: `RepositoryError`, `BaseError`, `AuthError`
-5. Include error codes: `{ code: "BAD_REQUEST" | "NOT_FOUND" | "UNAUTHORIZED" | "INTERNAL_SERVER_ERROR" }`
+5. Include error codes: `{ code: "BAD_REQUEST" | "NOT_FOUND" | "UNAUTHORIZED" | "FORBIDDEN" | "INTERNAL_SERVER_ERROR" }`
 
 ### Database & Transactions
 1. All write operations MUST be in transactions: `context.svc.db.transaction(async (tx) => { ... })`
@@ -225,7 +225,7 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 3. Check permissions with `hasPermission()` middleware (RBAC: admin/operator/merchant/driver/user)
 4. Never expose sensitive data in API responses (phone numbers masked in chat)
 5. Use environment variables for secrets (never commit `.env`)
-6. **Driver verification**: Require KTP/SIM upload and approval before activation
+6. **Driver verification**: Require KTM/SIM upload and approval before activation
 
 ### Logging
 1. Use structured logging: `log.info({ userId, orderId }, "Action description")`
@@ -235,7 +235,7 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 
 ### Code Organization
 1. Keep handlers thin - business logic in repositories
-2. Reuse code via shared packages (`@repo/schema`, `@repo/shared`)
+2. Reuse code via shared packages (`@repo/schema`, `@repo/shared`, `@repo/i18n`)
 3. Feature-based folder structure (group by feature, not by type)
 4. Co-locate related files (handler, repository, spec, ws in same feature folder)
 5. **Domain alignment**: Feature folders match SRS domains (order, driver, merchant, wallet, etc.)
@@ -278,11 +278,21 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 4. **Categories**: Rate by cleanliness, courtesy, safety, etc. (see `REVIEW_CATEGORIES`)
 
 ### Wallet & Payment
-1. **Top-up**: Users add balance via QRIS/bank transfer
+1. **Top-up**: Users add balance via QRIS/bank transfer (Midtrans)
 2. **Auto-deduct**: Order cost deducted from wallet on order placement
 3. **Refund**: Auto-refund if order cancelled by system/driver
 4. **Driver earnings**: Transfer to driver wallet on order completion (minus commission)
 5. **Withdrawal**: Drivers can withdraw to bank account (see `BANK_PROVIDERS`)
+
+### Order State Machine
+**States**: `REQUESTED → MATCHING → ACCEPTED → ARRIVING → IN_TRIP → COMPLETED/CANCELLED`
+- **REQUESTED**: User created order, waiting for matching
+- **MATCHING**: System searching for available driver
+- **ACCEPTED**: Driver accepted, navigating to pickup
+- **ARRIVING**: Driver near pickup location
+- **IN_TRIP**: Order in progress (pickup complete)
+- **COMPLETED**: Trip finished, awaiting rating
+- **CANCELLED**: Cancelled by user/driver/system
 
 ## 🧪 Testing Guidelines
 **Server**: Add tests when implementing complex business logic (matching algorithm, commission calculation, distance pricing). **Web**: Focus on integration tests for critical flows (order placement, merchant order management, operator configuration). **Mobile**: Test cubits with `bloc_test`, mock repositories with `mocktail`. **Coverage**: Aim for >70% on critical business logic.
@@ -290,7 +300,7 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 ## 🔄 Git Workflow
 1. Create feature branch: `git checkout -b feature/description`
 2. Commit with conventional commits: `feat:`, `fix:`, `chore:`, etc.
-3. Pre-commit hook runs `biome check` and `melos fix/format` automatically
+3. Pre-commit hook runs `lint-staged` (biome check + auto-fix) automatically
 4. Keep commits focused and atomic
 
 ## 📚 Key Files
@@ -301,7 +311,7 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 - **Shared Utils**: `packages/shared/src/*.ts`
 - **DB Tables**: `apps/server/src/core/tables/*.ts`
 - **Constants**: `packages/schema/src/constants.ts` (ORDER_TYPES, ORDER_STATUSES, USER_ROLES, etc.)
-- **SRS Document**: `SRS AkadeMove.pdf` (business requirements and domain rules)
+- **SRS Document**: `docs/srs-new.md` (business requirements and domain rules)
 
 ## ⚠️ Common Pitfalls
 1. ❌ Forgetting `db.transaction()` for write operations
