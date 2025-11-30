@@ -1,23 +1,18 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserRideCubit extends BaseCubit<UserRideState> {
   UserRideCubit({
     required DriverRepository driverRepository,
     required MapService mapService,
-    required LocationService locationService,
   }) : _driverRepository = driverRepository,
        _mapService = mapService,
-       _locationService = locationService,
        super(UserRideState());
 
   final DriverRepository _driverRepository;
   final MapService _mapService;
-  final LocationService _locationService;
 
   void reset() => emit(UserRideState());
 
@@ -97,7 +92,11 @@ class UserRideCubit extends BaseCubit<UserRideState> {
   }
 
   String? _searchQuery;
-  Future<void> searchPlaces(String query, {bool isRefresh = false}) async {
+  Future<void> searchPlaces(
+    String query, {
+    Coordinate? coordinate,
+    bool isRefresh = false,
+  }) async {
     try {
       final methodName = getMethodName();
       if (state.checkAndAssignOperation(methodName)) return;
@@ -109,7 +108,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
 
       final res = await _mapService.searchPlace(
         query,
-        coordinate: state.coordinate,
+        coordinate: coordinate,
         nextPageToken: (isRefresh || isNewQuery)
             ? null
             : state.searchPlaces.token,
@@ -145,29 +144,19 @@ class UserRideCubit extends BaseCubit<UserRideState> {
     }
   }
 
-  Future<Coordinate?> getMyLocation(
-    BuildContext context, {
-    LocationAccuracy accuracy = LocationAccuracy.best,
-  }) async {
+  Future<List<Coordinate>> getRoutes(
+    Coordinate origin,
+    Coordinate destination,
+  ) async {
     try {
-      await _locationService.ensureInitialized();
-
-      final loc = await _locationService.getMyLocation(accuracy: accuracy);
-      if (loc != null) {
-        final placemark = await _locationService.getPlacemark(
-          lat: loc.y.toDouble(),
-          lng: loc.x.toDouble(),
-        );
-        emit(state.toSuccess(coordinate: loc, placemark: placemark));
-        await getNearbyPlaces(loc);
-        return loc;
-      }
-
-      emit(state.toSuccess(coordinate: loc));
-      return loc;
-    } catch (e) {
-      emit(state.toSuccess());
-      return null;
+      return await _mapService.getRoutes(origin, destination);
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserRideCubit] - getRoutes error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      return [];
     }
   }
 }

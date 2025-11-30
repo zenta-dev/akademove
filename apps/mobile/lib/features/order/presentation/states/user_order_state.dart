@@ -7,27 +7,27 @@ part of '_export.dart';
 class UserOrderState extends BaseState2 with UserOrderStateMappable {
   UserOrderState({
     this.estimateOrder,
-    this.placeOrderResult,
-    this.driverCoordinate,
     this.orderHistories,
     this.selectedOrder,
-    this.wsPaymentEnvelope,
-    this.wsPlaceOrderEnvelope,
-    this.wsOrderEnvelope,
+
+    this.currentOrder,
+    this.currentPayment,
+    this.currentTransaction,
+    this.currentAssignedDriver,
+
     super.state,
     super.message,
     super.error,
   });
 
   final EstimateOrderResult? estimateOrder;
-  final PlaceOrderResponse? placeOrderResult;
-  final Coordinate? driverCoordinate;
   final List<Order>? orderHistories;
   final Order? selectedOrder;
 
-  final WSPaymentEnvelope? wsPaymentEnvelope;
-  final WSPlaceOrderEnvelope? wsPlaceOrderEnvelope;
-  final WSOrderEnvelope? wsOrderEnvelope;
+  final Order? currentOrder;
+  final Payment? currentPayment;
+  final Transaction? currentTransaction;
+  final Driver? currentAssignedDriver;
 
   @override
   UserOrderState toInitial() => copyWith(
@@ -46,22 +46,20 @@ class UserOrderState extends BaseState2 with UserOrderStateMappable {
   @override
   UserOrderState toSuccess({
     EstimateOrderResult? estimateOrder,
-    PlaceOrderResponse? placeOrderResult,
-    Coordinate? driverCoordinate,
-    WSPaymentEnvelope? wsPaymentEnvelope,
-    WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
-    WSOrderEnvelope? wsOrderEnvelope,
+    Order? currentOrder,
+    Payment? currentPayment,
+    Transaction? currentTransaction,
+    Driver? currentAssignedDriver,
     List<Order>? orderHistories,
     Order? selectedOrder,
     String? message,
   }) => copyWith(
     state: CubitState.success,
     estimateOrder: estimateOrder ?? this.estimateOrder,
-    placeOrderResult: placeOrderResult ?? this.placeOrderResult,
-    driverCoordinate: driverCoordinate ?? this.driverCoordinate,
-    wsPaymentEnvelope: wsPaymentEnvelope ?? this.wsPaymentEnvelope,
-    wsPlaceOrderEnvelope: wsPlaceOrderEnvelope ?? this.wsPlaceOrderEnvelope,
-    wsOrderEnvelope: wsOrderEnvelope ?? this.wsOrderEnvelope,
+    currentOrder: currentOrder ?? this.currentOrder,
+    currentPayment: currentPayment ?? this.currentPayment,
+    currentTransaction: currentTransaction ?? this.currentTransaction,
+    currentAssignedDriver: currentAssignedDriver ?? this.currentAssignedDriver,
     orderHistories: orderHistories ?? this.orderHistories,
     selectedOrder: selectedOrder ?? this.selectedOrder,
     message: message,

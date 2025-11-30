@@ -2,6 +2,7 @@ import 'package:akademove/app/_export.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -30,7 +31,7 @@ class UserHistoryScreen extends StatelessWidget {
     return MyScaffold(
       headers: [
         DefaultAppBar(
-          title: 'History',
+          title: context.l10n.history,
           padding: EdgeInsets.all(16.r),
         ),
       ],

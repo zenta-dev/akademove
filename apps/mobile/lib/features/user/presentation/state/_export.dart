@@ -9,3 +9,4 @@ part '_export.mapper.dart';
 part 'user_home_state.dart';
 part 'user_ride_state.dart';
 part 'user_profile_state.dart';
+part 'user_location_state.dart';

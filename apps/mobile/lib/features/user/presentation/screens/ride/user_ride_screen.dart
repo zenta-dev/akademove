@@ -1,9 +1,9 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -19,9 +19,15 @@ class _UserRideScreenState extends State<UserRideScreen> {
   late TextEditingController pickupController;
   late TextEditingController dropoffController;
   GoogleMapController? _mapController;
+  final Set<Marker> _markers = {};
+  final Set<Polyline> _polylines = {};
 
   Place? pickup;
   Place? dropoff;
+
+  // Cache route to avoid redundant API calls
+  List<Coordinate>? _cachedRoute;
+  String? _cachedRouteKey;
 
   @override
   void initState() {
@@ -40,12 +46,13 @@ class _UserRideScreenState extends State<UserRideScreen> {
 
   Future<void> _setupLocation() async {
     try {
-      final cubit = context.read<UserRideCubit>();
+      final cubit = context.read<UserLocationCubit>();
 
       var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation(
-        context,
-        accuracy: LocationAccuracy.medium,
+      coordinate ??= await cubit.getMyLocation(context);
+
+      logger.d(
+        '🏁 UserRideScreen | _setupLocation got coordinate: $coordinate',
       );
 
       if (coordinate == null) {
@@ -56,11 +63,178 @@ class _UserRideScreenState extends State<UserRideScreen> {
       final x = coordinate.x.toDouble();
       final y = coordinate.y.toDouble();
 
-      await _mapController?.animateCamera(CameraUpdate.newLatLng(LatLng(y, x)));
+      final position = LatLng(y, x);
+
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(position, 15),
+      );
 
       setState(() {});
+
+      await _fetchDriversAtLocation(position, 10);
     } catch (e, stack) {
       debugPrint('⚠️ Location setup failed: $e\n$stack');
+    }
+  }
+
+  Future<void> _fetchDriversAtLocation(LatLng center, int radiusKm) async {
+    final user = context.read<AuthCubit>().state.data;
+    await context.read<UserRideCubit>().getNearbyDrivers(
+      GetDriverNearbyQuery(
+        x: center.longitude,
+        y: center.latitude,
+        radiusKm: radiusKm,
+        limit: 10,
+        gender: user?.gender,
+      ),
+    );
+
+    if (!mounted) return;
+
+    setState(() {});
+  }
+
+  Future<void> _updateMapMarkers() async {
+    final newMarkers = <Marker>{};
+    final bounds = <LatLng>[];
+
+    // Add pickup marker
+    if (pickup != null) {
+      final pickupLatLng = LatLng(pickup!.lat, pickup!.lng);
+      bounds.add(pickupLatLng);
+
+      newMarkers.add(
+        Marker(
+          markerId: const MarkerId('pickup'),
+          position: pickupLatLng,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueGreen,
+          ),
+          infoWindow: InfoWindow(
+            title: 'Pickup',
+            snippet: pickup!.vicinity,
+          ),
+        ),
+      );
+    }
+
+    // Add dropoff marker
+    if (dropoff != null) {
+      final dropoffLatLng = LatLng(dropoff!.lat, dropoff!.lng);
+      bounds.add(dropoffLatLng);
+
+      newMarkers.add(
+        Marker(
+          markerId: const MarkerId('dropoff'),
+          position: dropoffLatLng,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueRed,
+          ),
+          infoWindow: InfoWindow(
+            title: 'Dropoff',
+            snippet: dropoff!.vicinity,
+          ),
+        ),
+      );
+    }
+
+    // Add polyline if both locations are selected
+    _polylines.clear();
+    if (pickup != null && dropoff != null) {
+      try {
+        // Create cache key from pickup and dropoff coordinates
+        final routeKey =
+            '${pickup!.lat},${pickup!.lng}-${dropoff!.lat},${dropoff!.lng}';
+
+        // Use cached route if available
+        List<Coordinate> routeCoordinates;
+        if (_cachedRouteKey == routeKey && _cachedRoute != null) {
+          routeCoordinates = _cachedRoute!;
+        } else {
+          // Get actual route from MapService via cubit
+          routeCoordinates = await context.read<UserRideCubit>().getRoutes(
+            pickup!.toCoordinate(),
+            dropoff!.toCoordinate(),
+          );
+          // Cache the route
+          _cachedRoute = routeCoordinates;
+          _cachedRouteKey = routeKey;
+        }
+
+        if (!mounted) return;
+
+        if (routeCoordinates.isNotEmpty) {
+          final routePoints = routeCoordinates
+              .map((coord) => LatLng(coord.y.toDouble(), coord.x.toDouble()))
+              .toList();
+
+          _polylines.add(
+            Polyline(
+              polylineId: const PolylineId('route'),
+              points: routePoints,
+              color: context.colorScheme.primary,
+              width: 4,
+            ),
+          );
+        } else {
+          // Fallback to straight line if no route available
+          _polylines.add(
+            Polyline(
+              polylineId: const PolylineId('route'),
+              points: [
+                LatLng(pickup!.lat, pickup!.lng),
+                LatLng(dropoff!.lat, dropoff!.lng),
+              ],
+              color: context.colorScheme.primary,
+              width: 4,
+            ),
+          );
+        }
+      } catch (e) {
+        if (!mounted) return;
+
+        logger.e('Failed to get route: $e');
+        // Fallback to straight line on error
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId('route'),
+            points: [
+              LatLng(pickup!.lat, pickup!.lng),
+              LatLng(dropoff!.lat, dropoff!.lng),
+            ],
+            color: context.colorScheme.primary,
+            width: 4,
+          ),
+        );
+      }
+    }
+
+    setState(() {
+      _markers
+        ..clear()
+        ..addAll(newMarkers);
+    });
+
+    // Adjust camera to show both markers
+    if (bounds.length > 1 && _mapController != null) {
+      final boundsToFit = LatLngBounds(
+        southwest: LatLng(
+          bounds.map((e) => e.latitude).reduce((a, b) => a < b ? a : b),
+          bounds.map((e) => e.longitude).reduce((a, b) => a < b ? a : b),
+        ),
+        northeast: LatLng(
+          bounds.map((e) => e.latitude).reduce((a, b) => a > b ? a : b),
+          bounds.map((e) => e.longitude).reduce((a, b) => a > b ? a : b),
+        ),
+      );
+
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngBounds(boundsToFit, 100),
+      );
+    } else if (bounds.length == 1 && _mapController != null) {
+      await _mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(bounds.first, 15),
+      );
     }
   }
 
@@ -83,86 +257,107 @@ class _UserRideScreenState extends State<UserRideScreen> {
           ],
         ),
       ],
-      body: Column(
-        spacing: 16.h,
-        children: [
-          Text(
-            'Choose your pick-up and destination point!',
-            style: context.typography.h4.copyWith(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
+      body: BlocListener<UserOrderCubit, UserOrderState>(
+        listener: (context, state) {
+          if (state.isFailure && state.error != null) {
+            context.showMyToast(
+              state.error?.message ?? 'Failed to estimate order',
+              type: ToastType.failed,
+            );
+          }
+        },
+        child: Column(
+          spacing: 16.h,
+          children: [
+            Text(
+              'Choose your pick-up and destination point!',
+              style: context.typography.h4.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          Card(
-            child: Column(
-              spacing: 16.h,
-              children: [
-                _buildMapSection(),
-                PickLocationCardWidget(
-                  padding: EdgeInsets.zero,
-                  borderColor: context.colorScheme.card,
-                  pickup: PickLocationParameters(
-                    enabled: false,
-                    controller: pickupController,
-                    onPresesed: () async {
-                      pickup = await context.pushNamed(
-                        Routes.userRidePickup.name,
-                        extra: {
-                          LocationType.pickup.name: pickupController,
-                          LocationType.dropoff.name: dropoffController,
-                        },
-                      );
-                      pickupController.text = pickup?.vicinity ?? '';
-                      setState(() {});
-                    },
+            Card(
+              child: Column(
+                spacing: 16.h,
+                children: [
+                  _buildMapSection(),
+                  PickLocationCardWidget(
+                    padding: EdgeInsets.zero,
+                    borderColor: context.colorScheme.card,
+                    pickup: PickLocationParameters(
+                      enabled: false,
+                      controller: pickupController,
+                      onPresesed: () async {
+                        pickup = await context.pushNamed(
+                          Routes.userRidePickup.name,
+                          extra: {
+                            LocationType.pickup.name: pickupController,
+                            LocationType.dropoff.name: dropoffController,
+                          },
+                        );
+                        pickupController.text = pickup?.vicinity ?? '';
+                        await _updateMapMarkers();
+                      },
+                    ),
+                    dropoff: PickLocationParameters(
+                      enabled: false,
+                      controller: dropoffController,
+                      onPresesed: () async {
+                        dropoff = await context.pushNamed(
+                          Routes.userRideDropoff.name,
+                          extra: {
+                            LocationType.pickup.name: pickupController,
+                            LocationType.dropoff.name: dropoffController,
+                          },
+                        );
+                        dropoffController.text = dropoff?.vicinity ?? '';
+                        await _updateMapMarkers();
+                      },
+                    ),
                   ),
-                  dropoff: PickLocationParameters(
-                    enabled: false,
-                    controller: dropoffController,
-                    onPresesed: () async {
-                      dropoff = await context.pushNamed(
-                        Routes.userRideDropoff.name,
-                        extra: {
-                          LocationType.pickup.name: pickupController,
-                          LocationType.dropoff.name: dropoffController,
-                        },
-                      );
-                      dropoffController.text = dropoff?.vicinity ?? '';
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          BlocBuilder<UserOrderCubit, UserOrderState>(
-            builder: (context, state) {
-              return SizedBox(
-                width: double.infinity,
-                child: Button.primary(
-                  enabled: !state.isLoading,
-                  onPressed: (pickup != null && dropoff != null)
-                      ? () async {
-                          if (pickup == null || dropoff == null) return;
-                          await context.read<UserOrderCubit>().estimate(
-                            pickup!,
-                            dropoff!,
-                          );
-                          if (context.mounted) {
-                            await context.pushNamed(
-                              Routes.userRideSummary.name,
+            BlocBuilder<UserOrderCubit, UserOrderState>(
+              builder: (context, state) {
+                final canProceed = pickup != null && dropoff != null;
+
+                return SizedBox(
+                  width: double.infinity,
+                  child: Button.primary(
+                    enabled: !state.isLoading && canProceed,
+                    onPressed: canProceed
+                        ? () async {
+                            if (pickup == null || dropoff == null) return;
+
+                            await context.read<UserOrderCubit>().estimate(
+                              pickup!,
+                              dropoff!,
                             );
+
+                            if (context.mounted) {
+                              final orderState = context
+                                  .read<UserOrderCubit>()
+                                  .state;
+                              if (orderState.isSuccess &&
+                                  orderState.estimateOrder != null) {
+                                await context.pushNamed(
+                                  Routes.userRideSummary.name,
+                                );
+                              }
+                            }
                           }
-                        }
-                      : null,
-                  child: state.isLoading
-                      ? const Submiting()
-                      : const DefaultText('Procced'),
-                ),
-              );
-            },
-          ),
-        ],
+                        : null,
+                    child: state.isLoading
+                        ? const Submiting()
+                        : const DefaultText('Proceed'),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -181,13 +376,18 @@ class _UserRideScreenState extends State<UserRideScreen> {
           borderRadius: BorderRadius.circular(16.dg),
           child: Stack(
             children: [
-              MapWrapperWidget(
-                onMapCreated: (controller) {
+              GoogleMap(
+                initialCameraPosition: MapConstants.defaultCameraPosition,
+                style: context.isDarkMode ? MapConstants.darkStyle : null,
+                onMapCreated: (controller) async {
                   _mapController = controller;
                   setState(() {});
-                  _setupLocation();
+                  await _setupLocation();
                 },
+                markers: _markers,
+                polylines: _polylines,
                 myLocationEnabled: true,
+                myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
                 scrollGesturesEnabled: false,
                 zoomGesturesEnabled: false,

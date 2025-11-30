@@ -17,6 +17,7 @@ class UserRideSummaryScreen extends StatefulWidget {
 class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   PaymentMethod method = PaymentMethod.QRIS;
   UserGender? gender;
+  BankProvider? bankProvider;
 
   @override
   void initState() {
@@ -26,6 +27,83 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> placeOrder(UserOrderState state) async {
+    final pickup = state.estimateOrder?.pickup;
+    final dropoff = state.estimateOrder?.dropoff;
+    if (pickup == null || dropoff == null) {
+      context.showMyToast(
+        'App state corrupted, please restart',
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    final orderCubit = context.read<UserOrderCubit>();
+    await orderCubit.placeOrder(
+      pickup,
+      dropoff,
+      OrderType.RIDE,
+      method,
+      gender: gender,
+      bankProvider: bankProvider,
+    );
+
+    if (!mounted || !context.mounted) return;
+
+    final order = orderCubit.state.currentOrder;
+    final payment = orderCubit.state.currentPayment;
+
+    if (order == null) {
+      context.showMyToast(
+        'Failed to place order',
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    // Pop the summary screen
+    context.pop();
+
+    if (!mounted || !context.mounted) return;
+
+    // Navigate based on payment method
+    if (payment == null) {
+      context.showMyToast(
+        'Payment information not available',
+        type: ToastType.failed,
+      );
+      return;
+    }
+
+    switch (payment.method) {
+      case PaymentMethod.QRIS:
+        await context.pushNamed(
+          Routes.userRidePayment.name,
+          queryParameters: {
+            'paymentMethod': PaymentMethod.QRIS.name,
+          },
+        );
+      case PaymentMethod.BANK_TRANSFER:
+        await context.pushNamed(
+          Routes.userRidePayment.name,
+          queryParameters: {
+            'paymentMethod': PaymentMethod.BANK_TRANSFER.name,
+            'bankProvider': payment.bankProvider?.name,
+          },
+        );
+      case PaymentMethod.WALLET:
+        // Wallet payment is instant, navigate directly to trip screen
+        if (payment.status == TransactionStatus.SUCCESS) {
+          context.pushReplacementNamed(Routes.userRideOnTrip.name);
+        } else {
+          context.showMyToast(
+            'Wallet payment failed',
+            type: ToastType.failed,
+          );
+        }
+    }
   }
 
   @override
@@ -56,6 +134,46 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               gender = val;
             }),
           ),
+          DefaultText(
+            'Payment Method',
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+          ),
+          BlocBuilder<UserOrderCubit, UserOrderState>(
+            builder: (context, orderState) {
+              return BlocBuilder<UserWalletCubit, UserWalletState>(
+                builder: (context, walletState) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: PaymentMethodPickerWidget(
+                          value: method,
+                          onChanged: (val, {BankProvider? bankProvider}) =>
+                              setState(() {
+                                method = val;
+                                this.bankProvider = bankProvider;
+                              }),
+                          bankProvider: bankProvider,
+                          walletBalance:
+                              walletState.myWallet?.balance.toDouble() ?? 0,
+                          totalCost:
+                              orderState.estimateOrder?.summary.totalCost
+                                  .toDouble() ??
+                              0,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          DefaultText(
+            'Payment Summary',
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w500,
+          ),
           BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
               return RideSummaryWidget(
@@ -63,66 +181,22 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               ).asSkeleton(enabled: state.isLoading);
             },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: PickPaymentMethodWidget(
-                  value: method,
-                  onChanged: (val) => setState(() {
-                    method = val;
-                  }),
-                ),
-              ),
-            ],
-          ),
+
           BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
+              final hasEstimate = state.estimateOrder != null;
+              final canProceed =
+                  state.isSuccess && hasEstimate && !state.isLoading;
+
               return SizedBox(
                 width: double.infinity,
                 child: Button(
                   style: const ButtonStyle.primary(),
-                  enabled: !state.isLoading,
-                  onPressed: state.isSuccess
-                      ? () async {
-                          final pickup = state.estimateOrder?.pickup;
-                          final dropoff = state.estimateOrder?.dropoff;
-                          if (pickup == null || dropoff == null) {
-                            context.showMyToast(
-                              'App state corrupted, please restart',
-                              type: ToastType.error,
-                            );
-                            return;
-                          }
-
-                          final orderCubit = context.read<UserOrderCubit>();
-                          await orderCubit.placeOrder(
-                            pickup,
-                            dropoff,
-                            OrderType.ride,
-                            method,
-                          );
-
-                          if (mounted && context.mounted) {
-                            final order = orderCubit.state.placeOrderResult;
-                            if (order == null) {
-                              context.showMyToast(
-                                'Failed to place order',
-                                type: ToastType.error,
-                              );
-                              return;
-                            }
-                            if (order.payment.method == PaymentMethod.QRIS) {
-                              await context.pushNamed(
-                                Routes.userRidePayQRIS.name,
-                              );
-                            }
-                          }
-                        }
-                      : null,
+                  enabled: canProceed,
+                  onPressed: canProceed ? () => placeOrder(state) : null,
                   child: state.isLoading
                       ? const Submiting()
-                      : const Text('Procced'),
+                      : const Text('Proceed'),
                 ),
               );
             },

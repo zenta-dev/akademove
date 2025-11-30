@@ -8,8 +8,6 @@ class UserHomeCubit extends BaseCubit<UserHomeState> {
        super(UserHomeState());
   final MerchantRepository _merchantRepository;
 
-  Future<void> init() async {}
-
   Future<void> getPopulars() async {
     try {
       emit(state.toLoading());

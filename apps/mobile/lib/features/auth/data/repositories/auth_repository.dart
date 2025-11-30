@@ -24,7 +24,7 @@ class AuthRepository extends BaseRepository {
       final data =
           result.data ??
           (throw const RepositoryError(
-            'User not found',
+            'Failed to sign in',
             code: ErrorCode.unknown,
           ));
 
@@ -81,7 +81,7 @@ class AuthRepository extends BaseRepository {
     required MultipartFile studentCard,
     required MultipartFile driverLicense,
     required MultipartFile vehicleCertificate,
-    required BankProviderEnum bankProvider,
+    required BankProvider bankProvider,
     required int bankNumber,
   }) async {
     return guard(() async {
@@ -127,7 +127,7 @@ class AuthRepository extends BaseRepository {
     required Coordinate outletLocation,
     required String outletAddress,
 
-    required BankProviderEnum bankProvider,
+    required BankProvider bankProvider,
     required int bankNumber,
 
     required MultipartFile? photo,

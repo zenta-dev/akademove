@@ -6,7 +6,6 @@ import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -56,13 +55,10 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
   Future<void> _setupLocation() async {
     try {
-      final cubit = context.read<UserRideCubit>();
+      final cubit = context.read<UserLocationCubit>();
 
       var coordinate = cubit.state.coordinate;
-      coordinate ??= await cubit.getMyLocation(
-        context,
-        accuracy: LocationAccuracy.medium,
-      );
+      coordinate ??= await cubit.getMyLocation(context);
 
       if (coordinate == null) {
         debugPrint('⚠️ Coordinate is still null after getMyLocation');
@@ -75,14 +71,28 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       final myPos = LatLng(y, x);
       await _mapController?.animateCamera(CameraUpdate.newLatLng(myPos));
 
-      await _fetchDriversAtLocation(myPos, _radiusKm);
+      await _fetchDriversAtLocation(myPos, _radiusKm, true);
       setState(() {});
     } catch (e) {
       debugPrint('⚠️ Location setup failed: $e');
     }
   }
 
-  Future<void> _fetchDriversAtLocation(LatLng center, int radiusKm) async {
+  Future<void> _fetchDriversAtLocation(
+    LatLng center,
+    int radiusKm,
+    bool useCache,
+  ) async {
+    if (useCache) {
+      if (!mounted) return;
+
+      _updateDriverMarkers(
+        context.read<UserRideCubit>().state.nearbyDrivers,
+      );
+      setState(() {});
+      return;
+    }
+
     final user = context.read<AuthCubit>().state.data;
     await context.read<UserRideCubit>().getNearbyDrivers(
       GetDriverNearbyQuery(
@@ -162,7 +172,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
         '📍 Map changed → Fetching drivers | Zoom: $_lastZoom | Radius: $_radiusKm km | Center: $_lastCenter',
       );
 
-      await _fetchDriversAtLocation(newCenter, _radiusKm);
+      await _fetchDriversAtLocation(newCenter, _radiusKm, false);
     }
   }
 
@@ -258,7 +268,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                     color: context.colorScheme.primary,
                   ),
                 ),
-                BlocBuilder<UserRideCubit, UserRideState>(
+                BlocBuilder<UserLocationCubit, UserLocationState>(
                   builder: (context, state) {
                     return Text(
                       state.placemark?.street ?? 'St. Boulevard No.80',

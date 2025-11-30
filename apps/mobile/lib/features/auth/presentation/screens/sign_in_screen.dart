@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,7 +38,11 @@ class SignInScreen extends StatelessWidget {
                   Column(
                     children: [
                       Assets.icons.brand.svg(width: 48.w),
-                      const Text("Let's Sign In to the AkadeMove!").h4,
+                      DefaultText(
+                        context.l10n.lets_sign_in_to_the_akademove,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ],
                   ).gap(8.h),
                   Gap(16.h),
@@ -87,44 +92,34 @@ class _SignInFormViewState extends State<_SignInFormView> {
     super.dispose();
   }
 
+  Future<void> handleEvent(BuildContext context, SignInState state) async {
+    if (state.isFailure) {
+      context.showMyToast(state.error?.message, type: ToastType.failed);
+    }
+    if (state.isSuccess) {
+      context.showMyToast(state.message, type: ToastType.success);
+      await delay(const Duration(seconds: 1), () {});
+      if (context.mounted) {
+        switch (state.data?.role) {
+          case UserRole.USER:
+            context.pushReplacementNamed(Routes.userHome.name);
+          case UserRole.MERCHANT:
+            context.pushReplacementNamed(Routes.merchantHome.name);
+          case UserRole.DRIVER:
+            context.pushReplacementNamed(Routes.driverHome.name);
+          case UserRole.ADMIN:
+          case UserRole.OPERATOR:
+          case null:
+            throw UnimplementedError();
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SignInCubit, SignInState>(
-      listener: (context, state) {
-        if (state.isFailure) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: 'Sign In Failed',
-              message: state.error?.message ?? 'Unknown error',
-            ),
-            location: ToastLocation.topCenter,
-          );
-        }
-        if (state.isSuccess) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: 'Sign In Success',
-              message: state.message ?? 'Successfully signed in',
-            ),
-            location: ToastLocation.topCenter,
-          );
-          switch (state.data?.role) {
-            case UserRole.USER:
-              context.pushReplacementNamed(Routes.userHome.name);
-            case UserRole.MERCHANT:
-              context.pushReplacementNamed(Routes.merchantHome.name);
-            case UserRole.DRIVER:
-              context.pushReplacementNamed(Routes.driverHome.name);
-            case UserRole.ADMIN:
-            case UserRole.OPERATOR:
-            case null:
-              // TODO: Handle this case.
-              throw UnimplementedError();
-          }
-        }
-      },
+      listener: handleEvent,
       builder: (context, state) {
         return Form(
           onSubmit: (context, values) async {
@@ -135,6 +130,7 @@ class _SignInFormViewState extends State<_SignInFormView> {
 
             await context.read<SignInCubit>().signIn(email, password);
           },
+
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -144,7 +140,10 @@ class _SignInFormViewState extends State<_SignInFormView> {
                 children: [
                   FormField(
                     key: _emailKey,
-                    label: const Text('Email'),
+                    label: DefaultText(
+                      context.l10n.email,
+                      fontWeight: FontWeight.w500,
+                    ),
                     validator: _emailValidator,
                     showErrors: const {
                       FormValidationMode.changed,
@@ -173,16 +172,21 @@ class _SignInFormViewState extends State<_SignInFormView> {
                     label: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Password'),
-                        Button.link(
-                          onPressed: () {
-                            context.pushNamed(Routes.authForgotPassword.name);
+                        DefaultText(
+                          context.l10n.password,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        LinkButton(
+                          density: ButtonDensity.compact,
+                          onPressed: () async {
+                            await context.pushNamed(
+                              Routes.authForgotPassword.name,
+                            );
                           },
-                          child: Text(
-                            'Forgot Password?',
-                            style: context.theme.typography.small.copyWith(
-                              color: const Color(0xFF3B82F6),
-                            ),
+                          child: DefaultText(
+                            context.l10n.forget_password,
+                            fontSize: 14.sp,
+                            color: const Color(0xFF3B82F6),
                           ),
                         ),
                       ],
@@ -217,11 +221,10 @@ class _SignInFormViewState extends State<_SignInFormView> {
                             : null,
                         child: isLoading
                             ? const Submiting()
-                            : Text(
-                                'Sign In',
-                                style: context.theme.typography.medium.copyWith(
-                                  color: Colors.white,
-                                ),
+                            : DefaultText(
+                                context.l10n.sign_in,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
                               ),
                       );
                     },
@@ -230,20 +233,23 @@ class _SignInFormViewState extends State<_SignInFormView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     spacing: 4.w,
                     children: [
-                      const Text("Didn't have an account?").small.muted,
+                      DefaultText(
+                        context.l10n.didnt_have_account,
+                        fontSize: 14.sp,
+                        color: context.colorScheme.mutedForeground,
+                      ),
                       Button(
                         style: const ButtonStyle.link(
                           size: ButtonSize.small,
                           density: ButtonDensity.compact,
                         ),
-                        onPressed: () {
-                          context.pushNamed(Routes.authSignUpChoice.name);
+                        onPressed: () async {
+                          await context.pushNamed(Routes.authSignUpChoice.name);
                         },
-                        child: Text(
-                          'Sign Up',
-                          style: context.theme.typography.small.copyWith(
-                            color: const Color(0xFF3B82F6),
-                          ),
+                        child: DefaultText(
+                          context.l10n.sign_up,
+                          fontSize: 14.sp,
+                          color: const Color(0xFF3B82F6),
                         ),
                       ),
                     ],

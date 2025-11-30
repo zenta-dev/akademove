@@ -44,7 +44,7 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
 
       state.unAssignOperation(methodName);
       _paymentId = res.data.id;
-      _setupPaymentWebsocket(paymentId: res.data.id);
+      await _setupPaymentWebsocket(paymentId: res.data.id);
 
       emit(state.toSuccess(paymentResult: res.data));
     } on BaseError catch (e, st) {
@@ -56,32 +56,37 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     }
   }
 
-  void _setupPaymentWebsocket({required String paymentId}) {
+  Future<void> _setupPaymentWebsocket({required String paymentId}) async {
     _paymentId = paymentId;
 
     void handleMessage(Map<String, dynamic> json) {
-      final data = WSPaymentEnvelope.fromJson(json);
+      final data = PaymentEnvelope.fromJson(json);
 
-      if (data.type == WSEnvelopeType.walletColonTopUpSuccess) {
+      if (data.e == PaymentEnvelopeEvent.TOP_UP_SUCCESS) {
         emit(
           state.toSuccess(
-            transactionResult: data.payload.transaction,
-            paymentResult: data.payload.payment,
+            paymentResult: data.p.payment,
+            transactionResult: data.p.transaction,
+            walletResult: data.p.wallet,
           ),
         );
+        return;
       }
-      if (data.type == WSEnvelopeType.walletColonTopUpFailed) {
+
+      if (data.e == PaymentEnvelopeEvent.TOP_UP_FAILED) {
         emit(
           state.toSuccess(
-            transactionResult: data.payload.transaction,
-            paymentResult: data.payload.payment,
+            paymentResult: data.p.payment,
+            transactionResult: data.p.transaction,
+            walletResult: data.p.wallet,
           ),
         );
-        emit(state.toFailure(const UnknownError('Payment expired')));
+        emit(state.toFailure(const UnknownError('Top up failed')));
+        return;
       }
     }
 
-    _webSocketService.connect(
+    await _webSocketService.connect(
       paymentId,
       '${UrlConstants.wsBaseUrl}/payment/$paymentId',
       onMessage: (msg) {

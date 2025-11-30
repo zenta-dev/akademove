@@ -1,10 +1,10 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/features/shared/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
-import 'package:api_client/api_client.dart' show TopUpRequestMethodEnum;
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
 
@@ -30,8 +30,8 @@ enum Routes {
   userRidePickup('/user/home/ride/pickup'),
   userRideDropoff('/user/home/ride/dropoff'),
   userRideSummary('/user/home/ride/summary'),
-  userRidePayQRIS('/user/home/ride/pay/qris'),
-  userRidePayOnTrip('/user/home/ride/on-trip'),
+  userRidePayment('/user/home/ride/payment'),
+  userRideOnTrip('/user/home/ride/on-trip'),
   userDriverNearMe('/user/home/driver/near-me'),
   userDelivery('/user/home/delivery'),
   userMart('/user/home/mart'),

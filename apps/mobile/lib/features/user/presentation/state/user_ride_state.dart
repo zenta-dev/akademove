@@ -21,8 +21,6 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
     this.nearbyDrivers = const [],
     this.nearbyPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
     this.searchPlaces = const PageTokenPaginationResult<List<Place>>(data: []),
-    this.coordinate,
-    this.placemark,
     this.mapController,
     super.state,
     super.message,
@@ -32,8 +30,6 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
   final List<Driver> nearbyDrivers;
   final PageTokenPaginationResult<List<Place>> nearbyPlaces;
   final PageTokenPaginationResult<List<Place>> searchPlaces;
-  final Coordinate? coordinate;
-  final Placemark? placemark;
   final GoogleMapController? mapController;
 
   @override
@@ -55,16 +51,12 @@ class UserRideState extends BaseState2 with UserRideStateMappable {
     List<Driver>? nearbyDrivers,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
     PageTokenPaginationResult<List<Place>>? searchPlaces,
-    Coordinate? coordinate,
-    Placemark? placemark,
     String? message,
   }) => copyWith(
     state: CubitState.success,
     nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
     nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
     searchPlaces: searchPlaces ?? this.searchPlaces,
-    coordinate: coordinate ?? this.coordinate,
-    placemark: placemark ?? this.placemark,
     message: message,
     error: null,
   );

@@ -25,16 +25,6 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
       v.estimateOrder;
   static const Field<UserOrderState, EstimateOrderResult> _f$estimateOrder =
       Field('estimateOrder', _$estimateOrder, opt: true);
-  static PlaceOrderResponse? _$placeOrderResult(UserOrderState v) =>
-      v.placeOrderResult;
-  static const Field<UserOrderState, PlaceOrderResponse> _f$placeOrderResult =
-      Field('placeOrderResult', _$placeOrderResult, opt: true);
-  static Coordinate? _$driverCoordinate(UserOrderState v) => v.driverCoordinate;
-  static const Field<UserOrderState, Coordinate> _f$driverCoordinate = Field(
-    'driverCoordinate',
-    _$driverCoordinate,
-    opt: true,
-  );
   static List<Order>? _$orderHistories(UserOrderState v) => v.orderHistories;
   static const Field<UserOrderState, List<Order>> _f$orderHistories = Field(
     'orderHistories',
@@ -47,22 +37,32 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
     _$selectedOrder,
     opt: true,
   );
-  static WSPaymentEnvelope? _$wsPaymentEnvelope(UserOrderState v) =>
-      v.wsPaymentEnvelope;
-  static const Field<UserOrderState, WSPaymentEnvelope> _f$wsPaymentEnvelope =
-      Field('wsPaymentEnvelope', _$wsPaymentEnvelope, opt: true);
-  static WSPlaceOrderEnvelope? _$wsPlaceOrderEnvelope(UserOrderState v) =>
-      v.wsPlaceOrderEnvelope;
-  static const Field<UserOrderState, WSPlaceOrderEnvelope>
-  _f$wsPlaceOrderEnvelope = Field(
-    'wsPlaceOrderEnvelope',
-    _$wsPlaceOrderEnvelope,
+  static Order? _$currentOrder(UserOrderState v) => v.currentOrder;
+  static const Field<UserOrderState, Order> _f$currentOrder = Field(
+    'currentOrder',
+    _$currentOrder,
     opt: true,
   );
-  static WSOrderEnvelope? _$wsOrderEnvelope(UserOrderState v) =>
-      v.wsOrderEnvelope;
-  static const Field<UserOrderState, WSOrderEnvelope> _f$wsOrderEnvelope =
-      Field('wsOrderEnvelope', _$wsOrderEnvelope, opt: true);
+  static Payment? _$currentPayment(UserOrderState v) => v.currentPayment;
+  static const Field<UserOrderState, Payment> _f$currentPayment = Field(
+    'currentPayment',
+    _$currentPayment,
+    opt: true,
+  );
+  static Transaction? _$currentTransaction(UserOrderState v) =>
+      v.currentTransaction;
+  static const Field<UserOrderState, Transaction> _f$currentTransaction = Field(
+    'currentTransaction',
+    _$currentTransaction,
+    opt: true,
+  );
+  static Driver? _$currentAssignedDriver(UserOrderState v) =>
+      v.currentAssignedDriver;
+  static const Field<UserOrderState, Driver> _f$currentAssignedDriver = Field(
+    'currentAssignedDriver',
+    _$currentAssignedDriver,
+    opt: true,
+  );
   static CubitState _$state(UserOrderState v) => v.state;
   static const Field<UserOrderState, CubitState> _f$state = Field(
     'state',
@@ -86,13 +86,12 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
   @override
   final MappableFields<UserOrderState> fields = const {
     #estimateOrder: _f$estimateOrder,
-    #placeOrderResult: _f$placeOrderResult,
-    #driverCoordinate: _f$driverCoordinate,
     #orderHistories: _f$orderHistories,
     #selectedOrder: _f$selectedOrder,
-    #wsPaymentEnvelope: _f$wsPaymentEnvelope,
-    #wsPlaceOrderEnvelope: _f$wsPlaceOrderEnvelope,
-    #wsOrderEnvelope: _f$wsOrderEnvelope,
+    #currentOrder: _f$currentOrder,
+    #currentPayment: _f$currentPayment,
+    #currentTransaction: _f$currentTransaction,
+    #currentAssignedDriver: _f$currentAssignedDriver,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -101,13 +100,12 @@ class UserOrderStateMapper extends ClassMapperBase<UserOrderState> {
   static UserOrderState _instantiate(DecodingData data) {
     return UserOrderState(
       estimateOrder: data.dec(_f$estimateOrder),
-      placeOrderResult: data.dec(_f$placeOrderResult),
-      driverCoordinate: data.dec(_f$driverCoordinate),
       orderHistories: data.dec(_f$orderHistories),
       selectedOrder: data.dec(_f$selectedOrder),
-      wsPaymentEnvelope: data.dec(_f$wsPaymentEnvelope),
-      wsPlaceOrderEnvelope: data.dec(_f$wsPlaceOrderEnvelope),
-      wsOrderEnvelope: data.dec(_f$wsOrderEnvelope),
+      currentOrder: data.dec(_f$currentOrder),
+      currentPayment: data.dec(_f$currentPayment),
+      currentTransaction: data.dec(_f$currentTransaction),
+      currentAssignedDriver: data.dec(_f$currentAssignedDriver),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -159,13 +157,12 @@ abstract class UserOrderStateCopyWith<$R, $In extends UserOrderState, $Out>
   ListCopyWith<$R, Order, ObjectCopyWith<$R, Order, Order>>? get orderHistories;
   $R call({
     EstimateOrderResult? estimateOrder,
-    PlaceOrderResponse? placeOrderResult,
-    Coordinate? driverCoordinate,
     List<Order>? orderHistories,
     Order? selectedOrder,
-    WSPaymentEnvelope? wsPaymentEnvelope,
-    WSPlaceOrderEnvelope? wsPlaceOrderEnvelope,
-    WSOrderEnvelope? wsOrderEnvelope,
+    Order? currentOrder,
+    Payment? currentPayment,
+    Transaction? currentTransaction,
+    Driver? currentAssignedDriver,
     CubitState? state,
     String? message,
     BaseError? error,
@@ -195,27 +192,25 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
   @override
   $R call({
     Object? estimateOrder = $none,
-    Object? placeOrderResult = $none,
-    Object? driverCoordinate = $none,
     Object? orderHistories = $none,
     Object? selectedOrder = $none,
-    Object? wsPaymentEnvelope = $none,
-    Object? wsPlaceOrderEnvelope = $none,
-    Object? wsOrderEnvelope = $none,
+    Object? currentOrder = $none,
+    Object? currentPayment = $none,
+    Object? currentTransaction = $none,
+    Object? currentAssignedDriver = $none,
     CubitState? state,
     Object? message = $none,
     Object? error = $none,
   }) => $apply(
     FieldCopyWithData({
       if (estimateOrder != $none) #estimateOrder: estimateOrder,
-      if (placeOrderResult != $none) #placeOrderResult: placeOrderResult,
-      if (driverCoordinate != $none) #driverCoordinate: driverCoordinate,
       if (orderHistories != $none) #orderHistories: orderHistories,
       if (selectedOrder != $none) #selectedOrder: selectedOrder,
-      if (wsPaymentEnvelope != $none) #wsPaymentEnvelope: wsPaymentEnvelope,
-      if (wsPlaceOrderEnvelope != $none)
-        #wsPlaceOrderEnvelope: wsPlaceOrderEnvelope,
-      if (wsOrderEnvelope != $none) #wsOrderEnvelope: wsOrderEnvelope,
+      if (currentOrder != $none) #currentOrder: currentOrder,
+      if (currentPayment != $none) #currentPayment: currentPayment,
+      if (currentTransaction != $none) #currentTransaction: currentTransaction,
+      if (currentAssignedDriver != $none)
+        #currentAssignedDriver: currentAssignedDriver,
       if (state != null) #state: state,
       if (message != $none) #message: message,
       if (error != $none) #error: error,
@@ -224,19 +219,18 @@ class _UserOrderStateCopyWithImpl<$R, $Out>
   @override
   UserOrderState $make(CopyWithData data) => UserOrderState(
     estimateOrder: data.get(#estimateOrder, or: $value.estimateOrder),
-    placeOrderResult: data.get(#placeOrderResult, or: $value.placeOrderResult),
-    driverCoordinate: data.get(#driverCoordinate, or: $value.driverCoordinate),
     orderHistories: data.get(#orderHistories, or: $value.orderHistories),
     selectedOrder: data.get(#selectedOrder, or: $value.selectedOrder),
-    wsPaymentEnvelope: data.get(
-      #wsPaymentEnvelope,
-      or: $value.wsPaymentEnvelope,
+    currentOrder: data.get(#currentOrder, or: $value.currentOrder),
+    currentPayment: data.get(#currentPayment, or: $value.currentPayment),
+    currentTransaction: data.get(
+      #currentTransaction,
+      or: $value.currentTransaction,
     ),
-    wsPlaceOrderEnvelope: data.get(
-      #wsPlaceOrderEnvelope,
-      or: $value.wsPlaceOrderEnvelope,
+    currentAssignedDriver: data.get(
+      #currentAssignedDriver,
+      or: $value.currentAssignedDriver,
     ),
-    wsOrderEnvelope: data.get(#wsOrderEnvelope, or: $value.wsOrderEnvelope),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),

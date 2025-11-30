@@ -15,7 +15,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignIn.name,
       path: Routes.authSignIn.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignInCubit>()..init(),
+        create: (_) => sl<SignInCubit>()..reset(),
         child: const SignInScreen(),
       ),
     ),
@@ -28,7 +28,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpUser.name,
       path: Routes.authSignUpUser.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..init(),
+        create: (_) => sl<SignUpCubit>()..reset(),
         child: const SignUpUserScreen(),
       ),
     ),
@@ -36,7 +36,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpDriver.name,
       path: Routes.authSignUpDriver.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..init(),
+        create: (_) => sl<SignUpCubit>()..reset(),
         child: const SignUpDriverScreen(),
       ),
     ),
@@ -44,7 +44,7 @@ final authRouter = ShellRoute(
       name: Routes.authSignUpMerchant.name,
       path: Routes.authSignUpMerchant.path,
       builder: (context, state) => BlocProvider(
-        create: (_) => sl<SignUpCubit>()..init(),
+        create: (_) => sl<SignUpCubit>()..reset(),
         child: const SignUpMerchantScreen(),
       ),
     ),

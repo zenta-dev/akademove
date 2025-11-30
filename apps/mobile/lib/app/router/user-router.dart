@@ -6,33 +6,22 @@ final userRouter = StatefulShellRoute.indexedStack(
       BlocProvider(
         create: (_) => sl<BottomNavBarCubit>(),
       ),
-      BlocProvider.value(
-        value: BlocProvider.of<ConfigurationCubit>(context)..getBanner(),
-      ),
-      BlocProvider(
-        create: (_) => sl<UserHomeCubit>()..getPopulars(),
-      ),
-      BlocProvider(
-        create: (context) =>
-            sl<UserRideCubit>()
-              ..getMyLocation(context, accuracy: LocationAccuracy.lowest),
-      ),
-      BlocProvider(
-        create: (_) => sl<UserWalletCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => sl<UserWalletTopUpCubit>(),
-      ),
-      BlocProvider(
-        create: (_) => sl<UserOrderCubit>(),
-      ),
+      BlocProvider(create: (_) => sl<UserHomeCubit>()),
+      BlocProvider(create: (context) => sl<UserLocationCubit>()),
+      BlocProvider(create: (context) => sl<UserRideCubit>()),
+      BlocProvider(create: (_) => sl<UserWalletCubit>()),
+      BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
+      BlocProvider(create: (_) => sl<UserOrderCubit>()),
     ],
     child: BottomNavbar(
       shell: navigationShell,
-      tabs: const [
-        BottomNavBarItem(label: 'Home', icon: LucideIcons.house),
-        BottomNavBarItem(label: 'History', icon: LucideIcons.history),
-        BottomNavBarItem(label: 'Profile', icon: LucideIcons.user),
+      tabs: [
+        BottomNavBarItem(label: context.l10n.home, icon: LucideIcons.house),
+        BottomNavBarItem(
+          label: context.l10n.history,
+          icon: LucideIcons.history,
+        ),
+        BottomNavBarItem(label: context.l10n.profile, icon: LucideIcons.user),
       ],
     ),
   ),
@@ -74,13 +63,30 @@ final userRouter = StatefulShellRoute.indexedStack(
               builder: (context, state) => const UserRideSummaryScreen(),
             ),
             GoRoute(
-              name: Routes.userRidePayQRIS.name,
-              path: Routes.userRidePayQRIS.path,
-              builder: (context, state) => const UserRidePayQrisScreen(),
+              name: Routes.userRidePayment.name,
+              path: Routes.userRidePayment.path,
+              builder: (context, state) {
+                final paymentMethod =
+                    state.uri.queryParameters['paymentMethod'];
+                final bankProvider = state.uri.queryParameters['bankProvider'];
+                return UserRidePaymentScreen(
+                  paymentMethod: PaymentMethod.values.firstWhere(
+                    (e) => e.name.toLowerCase() == paymentMethod?.toLowerCase(),
+                    orElse: () => PaymentMethod.QRIS,
+                  ),
+                  bankProvider: bankProvider != null
+                      ? BankProvider.values.firstWhere(
+                          (e) =>
+                              e.name.toLowerCase() ==
+                              bankProvider.toLowerCase(),
+                        )
+                      : null,
+                );
+              },
             ),
             GoRoute(
-              name: Routes.userRidePayOnTrip.name,
-              path: Routes.userRidePayOnTrip.path,
+              name: Routes.userRideOnTrip.name,
+              path: Routes.userRideOnTrip.path,
               builder: (context, state) => const UserRideOnTripScreen(),
             ),
           ],
@@ -119,8 +125,6 @@ final userRouter = StatefulShellRoute.indexedStack(
             switch (state.uri.queryParameters['method']) {
               case 'QRIS':
                 method = TopUpRequestMethodEnum.QRIS;
-              case 'VA':
-                method = TopUpRequestMethodEnum.VA;
               case 'BANK_TRANSFER':
                 method = TopUpRequestMethodEnum.BANK_TRANSFER;
             }

@@ -9,8 +9,6 @@ class SignInCubit extends BaseCubit<SignInState> {
        super(SignInState.initial());
   final AuthRepository _authRepository;
 
-  Future<void> init() async {}
-
   Future<void> signIn(String email, String password) async {
     try {
       emit(SignInState.loading());

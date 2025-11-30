@@ -45,6 +45,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
     dropoffController = widget.dropoffController ?? TextEditingController();
     scrollController = ScrollController()..addListener(_onScroll);
     refreshTriggerKey = GlobalKey<RefreshTriggerState>();
+    refresh();
   }
 
   @override
@@ -59,21 +60,45 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
     super.dispose();
   }
 
-  void _onScroll() {
+  Future<void> refresh() async {
+    final cubit = context.read<UserRideCubit>();
+    final coord = context.read<UserLocationCubit>().state.coordinate;
+    final isSearchMode =
+        (widget.type.isPickup ? pickupController : dropoffController)
+            .text
+            .isNotEmpty;
+
+    if (isSearchMode) {
+      await cubit.searchPlaces(
+        (widget.type.isPickup ? pickupController : dropoffController).text,
+        isRefresh: true,
+        coordinate: coord,
+      );
+    } else if (coord != null) {
+      await cubit.getNearbyPlaces(
+        coord,
+        isRefresh: true,
+      );
+    }
+  }
+
+  Future<void> _onScroll() async {
     if (_isBottom) {
       final cubit = context.read<UserRideCubit>();
       final state = cubit.state;
-
       if (pickupController.text.isNotEmpty ||
           dropoffController.text.isNotEmpty) {
         if (state.searchPlaces.token != null) {
-          cubit.searchPlaces(
+          final coord = context.read<UserLocationCubit>().state.coordinate;
+          await cubit.searchPlaces(
             (widget.type.isPickup ? pickupController : dropoffController).text,
+            coordinate: coord,
           );
         }
       } else {
-        if (state.nearbyPlaces.token != null && state.coordinate != null) {
-          cubit.getNearbyPlaces(state.coordinate!);
+        final coord = context.read<UserLocationCubit>().state.coordinate;
+        if (state.nearbyPlaces.token != null && coord != null) {
+          await cubit.getNearbyPlaces(coord);
         }
       }
     }
@@ -103,7 +128,11 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
                 if (value.isEmpty) {
                   return cubit.clearSearchPlaces();
                 }
-                return cubit.searchPlaces(value);
+                final coord = context
+                    .read<UserLocationCubit>()
+                    .state
+                    .coordinate;
+                return cubit.searchPlaces(value, coordinate: coord);
               },
             ),
           ),
@@ -116,7 +145,11 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
                 if (value.isEmpty) {
                   return cubit.clearSearchPlaces();
                 }
-                return cubit.searchPlaces(value);
+                final coord = context
+                    .read<UserLocationCubit>()
+                    .state
+                    .coordinate;
+                return cubit.searchPlaces(value, coordinate: coord);
               },
             ),
           ),
@@ -137,46 +170,48 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             ],
           ),
         ),
-        Expanded(
-          child: BlocBuilder<UserRideCubit, UserRideState>(
-            builder: (context, state) {
-              if (state.isLoading) {
-                return ListPlacesWidget(
-                  places: List.generate(5, (_) => dummyPlace),
+        BlocBuilder<UserRideCubit, UserRideState>(
+          builder: (context, state) {
+            if (state.isLoading) {
+              return Expanded(
+                child: ListPlacesWidget(
+                  places: List.generate(10, (_) => dummyPlace),
                   hasMore: false,
                   isLoading: true,
-                ).asSkeleton();
-              }
-              final isSearchMode =
-                  (widget.type.isPickup ? pickupController : dropoffController)
-                      .text
-                      .isNotEmpty;
-              final places = isSearchMode
-                  ? state.searchPlaces.data
-                  : state.nearbyPlaces.data;
-              final hasMore = isSearchMode
-                  ? state.searchPlaces.token != null
-                  : state.nearbyPlaces.token != null;
+                ).asSkeleton(),
+              );
+            }
+            final isSearchMode =
+                (widget.type.isPickup ? pickupController : dropoffController)
+                    .text
+                    .isNotEmpty;
+            final places = isSearchMode
+                ? state.searchPlaces.data
+                : state.nearbyPlaces.data;
 
-              return RefreshTrigger(
+            if (places.isEmpty && !state.isLoading) {
+              return SizedBox(
+                width: double.infinity,
+                child: Alert.destructive(
+                  content: const Text('No place found'),
+                  leading: const Icon(LucideIcons.info),
+                  trailing: IconButton(
+                    icon: const Icon(LucideIcons.refreshCcw),
+                    variance: const ButtonStyle.ghost(),
+                    onPressed: refresh,
+                  ),
+                ),
+              );
+            }
+
+            final hasMore = isSearchMode
+                ? state.searchPlaces.token != null
+                : state.nearbyPlaces.token != null;
+
+            return Expanded(
+              child: RefreshTrigger(
                 key: refreshTriggerKey,
-                onRefresh: () async {
-                  final cubit = context.read<UserRideCubit>();
-                  if (isSearchMode) {
-                    await cubit.searchPlaces(
-                      (widget.type.isPickup
-                              ? pickupController
-                              : dropoffController)
-                          .text,
-                      isRefresh: true,
-                    );
-                  } else if (state.coordinate != null) {
-                    await cubit.getNearbyPlaces(
-                      state.coordinate!,
-                      isRefresh: true,
-                    );
-                  }
-                },
+                onRefresh: refresh,
                 child: ListPlacesWidget(
                   scrollController: scrollController,
                   places: places,
@@ -184,9 +219,9 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
                   isLoading: false,
                   onItemTap: context.pop,
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ],
     );

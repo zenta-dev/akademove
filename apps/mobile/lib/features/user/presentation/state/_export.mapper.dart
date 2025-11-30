@@ -205,18 +205,6 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
     opt: true,
     def: const PageTokenPaginationResult<List<Place>>(data: []),
   );
-  static Coordinate? _$coordinate(UserRideState v) => v.coordinate;
-  static const Field<UserRideState, Coordinate> _f$coordinate = Field(
-    'coordinate',
-    _$coordinate,
-    opt: true,
-  );
-  static Placemark? _$placemark(UserRideState v) => v.placemark;
-  static const Field<UserRideState, Placemark> _f$placemark = Field(
-    'placemark',
-    _$placemark,
-    opt: true,
-  );
   static GoogleMapController? _$mapController(UserRideState v) =>
       v.mapController;
   static const Field<UserRideState, GoogleMapController> _f$mapController =
@@ -246,8 +234,6 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
     #nearbyDrivers: _f$nearbyDrivers,
     #nearbyPlaces: _f$nearbyPlaces,
     #searchPlaces: _f$searchPlaces,
-    #coordinate: _f$coordinate,
-    #placemark: _f$placemark,
     #mapController: _f$mapController,
     #state: _f$state,
     #message: _f$message,
@@ -259,8 +245,6 @@ class UserRideStateMapper extends ClassMapperBase<UserRideState> {
       nearbyDrivers: data.dec(_f$nearbyDrivers),
       nearbyPlaces: data.dec(_f$nearbyPlaces),
       searchPlaces: data.dec(_f$searchPlaces),
-      coordinate: data.dec(_f$coordinate),
-      placemark: data.dec(_f$placemark),
       mapController: data.dec(_f$mapController),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
@@ -330,8 +314,6 @@ abstract class UserRideStateCopyWith<$R, $In extends UserRideState, $Out>
     List<Driver>? nearbyDrivers,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
     PageTokenPaginationResult<List<Place>>? searchPlaces,
-    Coordinate? coordinate,
-    Placemark? placemark,
     GoogleMapController? mapController,
     CubitState? state,
     String? message,
@@ -378,8 +360,6 @@ class _UserRideStateCopyWithImpl<$R, $Out>
     List<Driver>? nearbyDrivers,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
     PageTokenPaginationResult<List<Place>>? searchPlaces,
-    Object? coordinate = $none,
-    Object? placemark = $none,
     Object? mapController = $none,
     CubitState? state,
     Object? message = $none,
@@ -389,8 +369,6 @@ class _UserRideStateCopyWithImpl<$R, $Out>
       if (nearbyDrivers != null) #nearbyDrivers: nearbyDrivers,
       if (nearbyPlaces != null) #nearbyPlaces: nearbyPlaces,
       if (searchPlaces != null) #searchPlaces: searchPlaces,
-      if (coordinate != $none) #coordinate: coordinate,
-      if (placemark != $none) #placemark: placemark,
       if (mapController != $none) #mapController: mapController,
       if (state != null) #state: state,
       if (message != $none) #message: message,
@@ -402,8 +380,6 @@ class _UserRideStateCopyWithImpl<$R, $Out>
     nearbyDrivers: data.get(#nearbyDrivers, or: $value.nearbyDrivers),
     nearbyPlaces: data.get(#nearbyPlaces, or: $value.nearbyPlaces),
     searchPlaces: data.get(#searchPlaces, or: $value.searchPlaces),
-    coordinate: data.get(#coordinate, or: $value.coordinate),
-    placemark: data.get(#placemark, or: $value.placemark),
     mapController: data.get(#mapController, or: $value.mapController),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
@@ -584,5 +560,174 @@ class _UserProfileStateCopyWithImpl<$R, $Out>
   UserProfileStateCopyWith<$R2, UserProfileState, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
   ) => _UserProfileStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
+}
+
+class UserLocationStateMapper extends ClassMapperBase<UserLocationState> {
+  UserLocationStateMapper._();
+
+  static UserLocationStateMapper? _instance;
+  static UserLocationStateMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = UserLocationStateMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'UserLocationState';
+
+  static Coordinate? _$coordinate(UserLocationState v) => v.coordinate;
+  static const Field<UserLocationState, Coordinate> _f$coordinate = Field(
+    'coordinate',
+    _$coordinate,
+    opt: true,
+  );
+  static Placemark? _$placemark(UserLocationState v) => v.placemark;
+  static const Field<UserLocationState, Placemark> _f$placemark = Field(
+    'placemark',
+    _$placemark,
+    opt: true,
+  );
+  static CubitState _$state(UserLocationState v) => v.state;
+  static const Field<UserLocationState, CubitState> _f$state = Field(
+    'state',
+    _$state,
+    opt: true,
+    def: CubitState.initial,
+  );
+  static String? _$message(UserLocationState v) => v.message;
+  static const Field<UserLocationState, String> _f$message = Field(
+    'message',
+    _$message,
+    opt: true,
+  );
+  static BaseError? _$error(UserLocationState v) => v.error;
+  static const Field<UserLocationState, BaseError> _f$error = Field(
+    'error',
+    _$error,
+    opt: true,
+  );
+
+  @override
+  final MappableFields<UserLocationState> fields = const {
+    #coordinate: _f$coordinate,
+    #placemark: _f$placemark,
+    #state: _f$state,
+    #message: _f$message,
+    #error: _f$error,
+  };
+
+  static UserLocationState _instantiate(DecodingData data) {
+    return UserLocationState(
+      coordinate: data.dec(_f$coordinate),
+      placemark: data.dec(_f$placemark),
+      state: data.dec(_f$state),
+      message: data.dec(_f$message),
+      error: data.dec(_f$error),
+    );
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+}
+
+mixin UserLocationStateMappable {
+  UserLocationStateCopyWith<
+    UserLocationState,
+    UserLocationState,
+    UserLocationState
+  >
+  get copyWith =>
+      _UserLocationStateCopyWithImpl<UserLocationState, UserLocationState>(
+        this as UserLocationState,
+        $identity,
+        $identity,
+      );
+  @override
+  String toString() {
+    return UserLocationStateMapper.ensureInitialized().stringifyValue(
+      this as UserLocationState,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return UserLocationStateMapper.ensureInitialized().equalsValue(
+      this as UserLocationState,
+      other,
+    );
+  }
+
+  @override
+  int get hashCode {
+    return UserLocationStateMapper.ensureInitialized().hashValue(
+      this as UserLocationState,
+    );
+  }
+}
+
+extension UserLocationStateValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, UserLocationState, $Out> {
+  UserLocationStateCopyWith<$R, UserLocationState, $Out>
+  get $asUserLocationState => $base.as(
+    (v, t, t2) => _UserLocationStateCopyWithImpl<$R, $Out>(v, t, t2),
+  );
+}
+
+abstract class UserLocationStateCopyWith<
+  $R,
+  $In extends UserLocationState,
+  $Out
+>
+    implements ClassCopyWith<$R, $In, $Out> {
+  $R call({
+    Coordinate? coordinate,
+    Placemark? placemark,
+    CubitState? state,
+    String? message,
+    BaseError? error,
+  });
+  UserLocationStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  );
+}
+
+class _UserLocationStateCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, UserLocationState, $Out>
+    implements UserLocationStateCopyWith<$R, UserLocationState, $Out> {
+  _UserLocationStateCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<UserLocationState> $mapper =
+      UserLocationStateMapper.ensureInitialized();
+  @override
+  $R call({
+    Object? coordinate = $none,
+    Object? placemark = $none,
+    CubitState? state,
+    Object? message = $none,
+    Object? error = $none,
+  }) => $apply(
+    FieldCopyWithData({
+      if (coordinate != $none) #coordinate: coordinate,
+      if (placemark != $none) #placemark: placemark,
+      if (state != null) #state: state,
+      if (message != $none) #message: message,
+      if (error != $none) #error: error,
+    }),
+  );
+  @override
+  UserLocationState $make(CopyWithData data) => UserLocationState(
+    coordinate: data.get(#coordinate, or: $value.coordinate),
+    placemark: data.get(#placemark, or: $value.placemark),
+    state: data.get(#state, or: $value.state),
+    message: data.get(#message, or: $value.message),
+    error: data.get(#error, or: $value.error),
+  );
+
+  @override
+  UserLocationStateCopyWith<$R2, UserLocationState, $Out2> $chain<$R2, $Out2>(
+    Then<$Out2, $R2> t,
+  ) => _UserLocationStateCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
 

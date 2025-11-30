@@ -19,7 +19,7 @@ class UserDetailHistoryScreen extends StatelessWidget {
               subtitle: order.requestedAt.format('dd MMM yyy - HH:mm'),
               trailing: [
                 DefaultText(
-                  generateInvoiceCode(order.id),
+                  '#${generateOrderCode(order.id)}',
                   fontSize: 12.sp,
                   color: context.colorScheme.mutedForeground,
                 ),

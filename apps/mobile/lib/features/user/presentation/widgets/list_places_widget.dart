@@ -21,18 +21,9 @@ class ListPlacesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (places.isEmpty && !isLoading) {
-      return const SizedBox(
-        width: double.infinity,
-        child: Alert.destructive(
-          content: DefaultText('No place found'),
-        ),
-      );
-    }
     return ListView.separated(
       padding: EdgeInsets.zero,
       separatorBuilder: (context, index) => Gap(8.h),
-      shrinkWrap: true,
       controller: scrollController,
       itemCount: hasMore ? places.length + 1 : places.length,
       itemBuilder: (context, index) {

@@ -6,7 +6,6 @@ import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' hide Banner, TabItem;
 
@@ -16,12 +15,10 @@ class _Route extends BottomNavBarItem {
     required super.icon,
     required this.route,
     required this.color,
-    this.onPressed,
   });
 
   final Routes route;
   final Color color;
-  final VoidCallback? onPressed;
 }
 
 class UserHomeScreen extends StatefulWidget {
@@ -40,6 +37,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     super.initState();
     _searchController = TextEditingController();
     _bannerController = CarouselController();
+    Future.wait([
+      context.read<UserHomeCubit>().getPopulars(),
+      context.read<ConfigurationCubit>().getBanner(),
+      context.read<UserLocationCubit>().getMyLocation(context),
+      context.read<UserWalletCubit>().getMine(),
+    ]);
   }
 
   @override
@@ -71,6 +74,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   variance: ButtonVariance.ghost,
                   onPressed: () {
                     context.read<BottomNavBarCubit>().setIndex(2);
+                    context.goNamed(Routes.userProfile.name);
                   },
                 ).asSkeleton(enabled: state.isLoading);
               },
@@ -188,17 +192,11 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget _buildNavigation(BuildContext context) {
     final routes = [
-      _Route(
+      const _Route(
         label: 'Ride',
         icon: LucideIcons.bike,
         route: Routes.userRide,
         color: Colors.blue,
-        onPressed: () async {
-          await context.read<UserRideCubit>().getMyLocation(
-            context,
-            accuracy: LocationAccuracy.high,
-          );
-        },
       ),
       const _Route(
         label: 'Delivery',
@@ -238,7 +236,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                   density: ButtonDensity.icon,
                 ),
                 onPressed: () async {
-                  e.onPressed?.call();
                   await context.pushNamed(e.route.name);
                 },
                 child: Column(
