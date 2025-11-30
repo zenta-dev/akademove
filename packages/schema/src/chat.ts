@@ -4,8 +4,8 @@ import { DateSchema } from "./common.ts";
 import { UserSchema } from "./user.ts";
 
 export const OrderChatMessageSchema = z.object({
-	id: z.string().uuid(),
-	orderId: z.string().uuid(),
+	id: z.uuid(),
+	orderId: z.uuid(),
 	senderId: z.string(),
 	message: z.string(),
 	sentAt: DateSchema,
@@ -26,9 +26,9 @@ export type InsertOrderChatMessage = z.infer<
 >;
 
 export const OrderChatMessageListQuerySchema = z.object({
-	orderId: z.string().uuid(),
-	limit: z.coerce.number().positive().max(100).default(50),
-	cursor: z.string().uuid().optional(),
+	orderId: z.uuid(),
+	limit: z.coerce.number().int().max(100),
+	cursor: z.uuid().optional(),
 });
 export type OrderChatMessageListQuery = z.infer<
 	typeof OrderChatMessageListQuerySchema
