@@ -87,7 +87,7 @@ extension BuildContextExt on BuildContext {
                         if (!granted) {
                           showMyToast(
                             'Location permission is required for this feature.',
-                            type: ToastType.error,
+                            type: ToastType.failed,
                           );
                         } else {
                           showMyToast(
@@ -139,7 +139,7 @@ extension BuildContextExt on BuildContext {
                         if (!enabled) {
                           showMyToast(
                             'Location services need to be enabled for this feature.',
-                            type: ToastType.error,
+                            type: ToastType.failed,
                           );
                         } else {
                           showMyToast(
@@ -198,7 +198,7 @@ extension BuildContextExt on BuildContext {
                         if (!granted) {
                           showMyToast(
                             'Notification permission is required for this feature.',
-                            type: ToastType.error,
+                            type: ToastType.failed,
                           );
                         } else {
                           showMyToast(
@@ -226,5 +226,14 @@ extension BuildContextExt on BuildContext {
 
     final repo = sl<NotificationRepository>();
     await repo.syncToken();
+    repo.onMessage((msg) async {
+      logger.i('[NotificationRepository] - onMessage: ${msg.messageId}');
+      final title = msg.notification?.title ?? 'Akademove';
+      final body = msg.notification?.body ?? '';
+      final data = msg.data;
+
+      logger.f('📨 Foreground FCM: ${msg.toMap()}');
+      await ntfSvc.show(title: title, body: body, data: data);
+    });
   }
 }

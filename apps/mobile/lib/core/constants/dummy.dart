@@ -93,3 +93,24 @@ const dummyUser = User(
   updatedAt: dummyConstDateTime,
   userBadges: [],
 );
+
+const dummyBank = Bank(
+  provider: BankProvider.BCA,
+  number: 12345678,
+);
+
+const dummyDriver = Driver(
+  id: dummyUUIDString,
+  userId: dummyUUIDString,
+  studentId: 21051204020,
+  licensePlate: 'S 1234 AB',
+  status: DriverStatus.ACTIVE,
+  rating: 4.5,
+  isTakingOrder: false,
+  isOnline: true,
+  createdAt: dummyConstDateTime,
+  studentCard: '${UrlConstants.randomImageUrl}/seed/24/24',
+  driverLicense: '${UrlConstants.randomImageUrl}/seed/24/24',
+  vehicleCertificate: '${UrlConstants.randomImageUrl}/seed/24/24',
+  bank: dummyBank,
+);

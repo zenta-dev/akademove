@@ -1,4 +1,4 @@
-String generateInvoiceCode(String orderId) {
+String generateOrderCode(String orderId) {
   final clean = orderId.replaceAll('-', '');
 
   if (clean.length < 12) {
@@ -16,5 +16,6 @@ String generateInvoiceCode(String orderId) {
 
   final short = clean.substring(clean.length - 6);
 
-  return 'INV-$yyyy$mm$dd-$short';
+  return '$yyyy$mm$dd-$short';
 }
+

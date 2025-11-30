@@ -26,62 +26,6 @@ class QRISPaymentWidget extends StatefulWidget {
 }
 
 class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
-  Timer? _tickerTimer;
-  Duration _remainingTime = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTickerTimer();
-  }
-
-  @override
-  void dispose() {
-    _tickerTimer?.cancel();
-    _remainingTime = Duration.zero;
-    super.dispose();
-  }
-
-  void _startTickerTimer() {
-    _updateRemainingTime();
-    _tickerTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateRemainingTime();
-    });
-  }
-
-  void _updateRemainingTime() {
-    if (!mounted) return;
-
-    final expiresAt = widget.payment.expiresAt;
-    if (expiresAt == null) return;
-
-    final now = DateTime.now();
-    final newRemainingTime = now.isAfter(expiresAt)
-        ? Duration.zero
-        : expiresAt.difference(now);
-
-    if (_remainingTime.inSeconds != newRemainingTime.inSeconds) {
-      setState(() {
-        _remainingTime = newRemainingTime;
-      });
-
-      if (newRemainingTime.inSeconds <= 0) {
-        _handleExpiration();
-      }
-    }
-  }
-
-  void _handleExpiration() {
-    _tickerTimer?.cancel();
-
-    setState(() {
-      _tickerTimer = null;
-      _remainingTime = Duration.zero;
-    });
-
-    widget.onExpired();
-  }
-
   Future<void> _downloadQR(
     BuildContext context,
     String url,
@@ -202,7 +146,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
       if (context.mounted) {
         context.showMyToast(
           'Failed to copy QR URL: $e',
-          type: ToastType.error,
+          type: ToastType.failed,
         );
       }
     }
@@ -212,7 +156,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
   Widget build(BuildContext context) {
     final expiresAt = widget.payment.expiresAt ?? DateTime.now();
     final dateStr = expiresAt.format('d MMM yyyy, HH:mm');
-    final width = 0.9.sw;
+    final width = 0.9.sw.round();
     final imageUrl =
         widget.payment.paymentUrl ??
         '${UrlConstants.randomImageUrl}/$width/$width';
@@ -222,8 +166,8 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
       children: [
         CachedNetworkImage(
           imageUrl: imageUrl,
-          width: width,
-          height: width,
+          width: width.toDouble(),
+          height: width.toDouble(),
         ),
         SizedBox(
           width: double.infinity,
@@ -238,40 +182,9 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
                   spacing: 4.w,
                   children: [
                     const Text('Remaining Time :').muted(fontSize: 14.sp),
-                    Chip(
-                      style: const ButtonStyle.outline(
-                        density: ButtonDensity.dense,
-                      ),
-                      child: Row(
-                        spacing: 4.w,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          NumberTicker(
-                            initialNumber: 15,
-                            number: _remainingTime.inMinutes,
-                            style: context.typography.xSmall.copyWith(
-                              color: _remainingTime.inMinutes < 1
-                                  ? Colors.red
-                                  : context.colorScheme.primary,
-                            ),
-                            formatter: (value) =>
-                                value.toInt().toString().padLeft(2, '0'),
-                          ),
-                          const DefaultText(':'),
-                          NumberTicker(
-                            initialNumber: 0,
-                            number: _remainingTime.inSeconds % 60,
-                            style: context.typography.xSmall.copyWith(
-                              color: _remainingTime.inMinutes < 1
-                                  ? Colors.red
-                                  : context.colorScheme.primary,
-                            ),
-                            formatter: (value) =>
-                                value.toInt().toString().padLeft(2, '0'),
-                          ),
-                        ],
-                      ),
+                    TimeTickerWidget(
+                      expiresAt: widget.payment.expiresAt,
+                      onExpired: widget.onExpired,
                     ),
                   ],
                 ),
@@ -280,7 +193,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
           ),
         ),
         SizedBox(
-          width: width,
+          width: width.toDouble(),
           child: Button.primary(
             onPressed: () => _downloadQR(context, imageUrl, widget.payment.id),
             child: Row(
@@ -294,7 +207,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
           ),
         ),
         SizedBox(
-          width: width,
+          width: width.toDouble(),
           child: Button.secondary(
             onPressed: () => _copyQRUrl(context, imageUrl),
             child: Row(
@@ -308,6 +221,110 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class TimeTickerWidget extends StatefulWidget {
+  const TimeTickerWidget({required this.onExpired, super.key, this.expiresAt});
+  final DateTime? expiresAt;
+  final void Function() onExpired;
+
+  @override
+  State<TimeTickerWidget> createState() => _TimeTickerWidgetState();
+}
+
+class _TimeTickerWidgetState extends State<TimeTickerWidget> {
+  Timer? _tickerTimer;
+  Duration _remainingTime = Duration.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTickerTimer();
+  }
+
+  @override
+  void dispose() {
+    _tickerTimer?.cancel();
+    _remainingTime = Duration.zero;
+    super.dispose();
+  }
+
+  void _startTickerTimer() {
+    _updateRemainingTime();
+    _tickerTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _updateRemainingTime();
+    });
+  }
+
+  void _updateRemainingTime() {
+    if (!mounted) return;
+
+    final expiresAt = widget.expiresAt;
+    if (expiresAt == null) return;
+
+    final now = DateTime.now();
+    final newRemainingTime = now.isAfter(expiresAt)
+        ? Duration.zero
+        : expiresAt.difference(now);
+
+    if (_remainingTime.inSeconds != newRemainingTime.inSeconds) {
+      setState(() {
+        _remainingTime = newRemainingTime;
+      });
+
+      if (newRemainingTime.inSeconds <= 0) {
+        _handleExpiration();
+      }
+    }
+  }
+
+  void _handleExpiration() {
+    _tickerTimer?.cancel();
+
+    setState(() {
+      _tickerTimer = null;
+      _remainingTime = Duration.zero;
+    });
+
+    widget.onExpired();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      style: const ButtonStyle.outline(
+        density: ButtonDensity.dense,
+      ),
+      child: Row(
+        spacing: 4.w,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          NumberTicker(
+            initialNumber: 15,
+            number: _remainingTime.inMinutes,
+            style: context.typography.xSmall.copyWith(
+              color: _remainingTime.inMinutes < 1
+                  ? Colors.red
+                  : context.colorScheme.primary,
+            ),
+            formatter: (value) => value.toInt().toString().padLeft(2, '0'),
+          ),
+          const DefaultText(':'),
+          NumberTicker(
+            initialNumber: 0,
+            number: _remainingTime.inSeconds % 60,
+            style: context.typography.xSmall.copyWith(
+              color: _remainingTime.inMinutes < 1
+                  ? Colors.red
+                  : context.colorScheme.primary,
+            ),
+            formatter: (value) => value.toInt().toString().padLeft(2, '0'),
+          ),
+        ],
+      ),
     );
   }
 }
