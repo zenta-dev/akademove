@@ -587,7 +587,6 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                     markers: _markers,
                     polylines: _polylines,
                     myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
                   ),
                   if (_mapController == null)
                     Positioned.fill(

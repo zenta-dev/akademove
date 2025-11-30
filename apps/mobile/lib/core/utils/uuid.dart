@@ -18,4 +18,3 @@ String generateOrderCode(String orderId) {
 
   return '$yyyy$mm$dd-$short';
 }
-

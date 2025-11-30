@@ -73,7 +73,10 @@ export function withQueryParams(
 	return new Request(url.toString(), req);
 }
 
-export function delay<T>(ms: number, fn?: PromiseLike<T>): Promise<T | void> {
+export function delay<T>(
+	ms: number,
+	fn?: PromiseLike<T>,
+): Promise<T | undefined> {
 	return new Promise((resolve) => {
 		setTimeout(async () => {
 			if (fn) {

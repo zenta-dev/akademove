@@ -76,7 +76,7 @@ export const orpcRequireAuthMiddleware = base.middleware(
 	},
 );
 
-export const hasPermission = (permissions: Permissions) =>
+export const hasPermission = (_permissions: Permissions) =>
 	base.middleware(async (props) => {
 		const { context, next } = props;
 		// const { user, svc } = context;
