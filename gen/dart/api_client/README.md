@@ -112,6 +112,7 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -233,6 +234,10 @@ Class | Method | HTTP request | Description
  - [LeaderboardList200Response](doc/LeaderboardList200Response.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
+ - [MerchantBestSellers200Response](doc/MerchantBestSellers200Response.md)
+ - [MerchantBestSellers200ResponseDataInner](doc/MerchantBestSellers200ResponseDataInner.md)
+ - [MerchantBestSellers200ResponseDataInnerMenu](doc/MerchantBestSellers200ResponseDataInnerMenu.md)
+ - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
  - [MerchantKey](doc/MerchantKey.md)

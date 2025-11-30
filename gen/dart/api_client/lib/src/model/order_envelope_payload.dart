@@ -22,37 +22,35 @@ part 'order_envelope_payload.g.dart';
 class OrderEnvelopePayload {
   /// Returns a new [OrderEnvelopePayload] instance.
   const OrderEnvelopePayload({
-    this.detail,
-    this.driverAssigned,
-    this.driverUpdateLocation,
-    this.done,
-    this.cancelReason,
+     this.detail,
+     this.driverAssigned,
+     this.driverUpdateLocation,
+     this.done,
+     this.cancelReason,
   });
 
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDetail? detail;
-
+  
   @JsonKey(name: r'driverAssigned', required: false, includeIfNull: false)
   final Driver? driverAssigned;
-
+  
   @JsonKey(name: r'driverUpdateLocation', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation;
-
+  
   @JsonKey(name: r'done', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDone? done;
-
+  
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelopePayload &&
-          other.detail == detail &&
-          other.driverAssigned == driverAssigned &&
-          other.driverUpdateLocation == driverUpdateLocation &&
-          other.done == done &&
-          other.cancelReason == cancelReason;
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayload &&
+    other.detail == detail &&
+    other.driverAssigned == driverAssigned &&
+    other.driverUpdateLocation == driverUpdateLocation &&
+    other.done == done &&
+    other.cancelReason == cancelReason;
 
   @override
   int get hashCode =>
@@ -62,8 +60,7 @@ class OrderEnvelopePayload {
       done.hashCode +
       cancelReason.hashCode;
 
-  factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopePayloadFromJson(json);
+  factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadToJson(this);
 
@@ -71,4 +68,6 @@ class OrderEnvelopePayload {
   String toString() {
     return toJson().toString();
   }
+
 }
+

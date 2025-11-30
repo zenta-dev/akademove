@@ -40,15 +40,18 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	isActive: true,
 	document: true,
 	image: true,
-	categories: true,
 	createdAt: true,
 	updatedAt: true,
-}).extend({
+}).safeExtend({
 	document: z
 		.file()
 		.mime(["image/png", "image/jpg", "image/jpeg", "application/pdf"])
 		.optional(),
 	image: z.file().mime(["image/png", "image/jpg", "image/jpeg"]).optional(),
+	categories: z
+		.array(z.string())
+		.min(1, "At least one category is required")
+		.max(1, "Only one category is allowed during signup"),
 });
 export type InsertMerchant = z.infer<typeof InsertMerchantSchema>;
 

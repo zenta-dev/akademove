@@ -17,24 +17,28 @@ part 'location.g.dart';
 )
 class Location {
   /// Returns a new [Location] instance.
-  const Location({required this.lat, required this.lng});
+  const Location({
+    required this.lat,
+    required this.lng,
+  });
 
   @JsonKey(name: r'lat', required: true, includeIfNull: false)
   final num lat;
-
+  
   @JsonKey(name: r'lng', required: true, includeIfNull: false)
   final num lng;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is Location &&
+    other.lat == lat &&
+    other.lng == lng;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Location && other.lat == lat && other.lng == lng;
+  int get hashCode =>
+      lat.hashCode +
+      lng.hashCode;
 
-  @override
-  int get hashCode => lat.hashCode + lng.hashCode;
-
-  factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
+  factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 
@@ -42,4 +46,6 @@ class Location {
   String toString() {
     return toJson().toString();
   }
+
 }
+

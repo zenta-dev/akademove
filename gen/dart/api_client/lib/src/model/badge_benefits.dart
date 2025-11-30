@@ -17,30 +17,32 @@ part 'badge_benefits.g.dart';
 )
 class BadgeBenefits {
   /// Returns a new [BadgeBenefits] instance.
-  const BadgeBenefits({this.priorityBoost, this.commissionReduction});
+  const BadgeBenefits({
+     this.priorityBoost,
+     this.commissionReduction,
+  });
 
-  // minimum: 0
-  // maximum: 100
+          // minimum: 0
+          // maximum: 100
   @JsonKey(name: r'priorityBoost', required: false, includeIfNull: false)
   final int? priorityBoost;
-
-  // minimum: 0
-  // maximum: 0.5
+  
+          // minimum: 0
+          // maximum: 0.5
   @JsonKey(name: r'commissionReduction', required: false, includeIfNull: false)
   final num? commissionReduction;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is BadgeBenefits &&
+    other.priorityBoost == priorityBoost &&
+    other.commissionReduction == commissionReduction;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BadgeBenefits &&
-          other.priorityBoost == priorityBoost &&
-          other.commissionReduction == commissionReduction;
+  int get hashCode =>
+      priorityBoost.hashCode +
+      commissionReduction.hashCode;
 
-  @override
-  int get hashCode => priorityBoost.hashCode + commissionReduction.hashCode;
-
-  factory BadgeBenefits.fromJson(Map<String, dynamic> json) =>
-      _$BadgeBenefitsFromJson(json);
+  factory BadgeBenefits.fromJson(Map<String, dynamic> json) => _$BadgeBenefitsFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeBenefitsToJson(this);
 
@@ -48,4 +50,6 @@ class BadgeBenefits {
   String toString() {
     return toJson().toString();
   }
+
 }
+

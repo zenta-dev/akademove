@@ -97,6 +97,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required Phone outletPhone,
     required Coordinate outletLocation,
     required String outletAddress,
+    required String category,
 
     required BankProvider bankProvider,
     required int bankNumber,
@@ -125,6 +126,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
         outletPhone: outletPhone,
         outletLocation: outletLocation,
         outletAddress: outletAddress,
+        category: category,
         bank: Bank(provider: bankProvider, number: bankNumber),
         photo: photo,
         document: document,

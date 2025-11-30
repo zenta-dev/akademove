@@ -30,87 +30,75 @@ class Badge {
     required this.type,
     required this.level,
     required this.targetRole,
-    this.icon,
+     this.icon,
     required this.criteria,
-    this.benefits,
-    this.isActive = true,
-    this.displayOrder = 0,
+     this.benefits,
+     this.isActive = true,
+     this.displayOrder = 0,
     required this.createdAt,
     required this.updatedAt,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
-
+  
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'description', required: true, includeIfNull: false)
   final String description;
-
+  
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final BadgeType type;
-
+  
   @JsonKey(name: r'level', required: true, includeIfNull: false)
   final BadgeLevel level;
-
+  
   @JsonKey(name: r'targetRole', required: true, includeIfNull: false)
   final BadgeTargetRole targetRole;
-
+  
   @JsonKey(name: r'icon', required: false, includeIfNull: false)
   final String? icon;
-
+  
   @JsonKey(name: r'criteria', required: true, includeIfNull: false)
   final BadgeCriteria criteria;
-
+  
   @JsonKey(name: r'benefits', required: false, includeIfNull: false)
   final BadgeBenefits? benefits;
-
-  @JsonKey(
-    defaultValue: true,
-    name: r'isActive',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: true,name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
-  // minimum: 0
-  // maximum: 9007199254740991
-  @JsonKey(
-    defaultValue: 0,
-    name: r'displayOrder',
-    required: false,
-    includeIfNull: false,
-  )
+  
+          // minimum: 0
+          // maximum: 9007199254740991
+  @JsonKey(defaultValue: 0,name: r'displayOrder', required: false, includeIfNull: false)
   final int? displayOrder;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Badge &&
-          other.id == id &&
-          other.code == code &&
-          other.name == name &&
-          other.description == description &&
-          other.type == type &&
-          other.level == level &&
-          other.targetRole == targetRole &&
-          other.icon == icon &&
-          other.criteria == criteria &&
-          other.benefits == benefits &&
-          other.isActive == isActive &&
-          other.displayOrder == displayOrder &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is Badge &&
+    other.id == id &&
+    other.code == code &&
+    other.name == name &&
+    other.description == description &&
+    other.type == type &&
+    other.level == level &&
+    other.targetRole == targetRole &&
+    other.icon == icon &&
+    other.criteria == criteria &&
+    other.benefits == benefits &&
+    other.isActive == isActive &&
+    other.displayOrder == displayOrder &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -137,4 +125,6 @@ class Badge {
   String toString() {
     return toJson().toString();
   }
+
 }
+

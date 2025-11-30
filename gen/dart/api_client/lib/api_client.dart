@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -101,6 +102,10 @@ export 'package:api_client/src/model/leaderboard_get200_response.dart';
 export 'package:api_client/src/model/leaderboard_list200_response.dart';
 export 'package:api_client/src/model/location.dart';
 export 'package:api_client/src/model/merchant.dart';
+export 'package:api_client/src/model/merchant_best_sellers200_response.dart';
+export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner.dart';
+export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_menu.dart';
+export 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_merchant.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response.dart';
 export 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 export 'package:api_client/src/model/merchant_key.dart';
@@ -212,3 +217,4 @@ export 'package:api_client/src/model/wallet_key.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/wallet_top_up200_response.dart';
+

@@ -5,9 +5,10 @@
 // ignore_for_file: unused_element
 import 'package:json_annotation/json_annotation.dart';
 
+
 enum CountryCode {
-  @JsonValue(r'ID')
-  ID(r'ID');
+      @JsonValue(r'ID')
+      ID(r'ID');
 
   const CountryCode(this.value);
 

@@ -1,3 +1,5 @@
+import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
+import { toOAPIRequestBody } from "@/utils/oapi";
 import { oc } from "@orpc/contract";
 import {
 	FlatUpdateMerchantSchema,
@@ -5,8 +7,6 @@ import {
 } from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
-import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
-import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const MerchantMainSpec = {
 	getMine: oc
@@ -46,7 +46,7 @@ export const MerchantMainSpec = {
 		})
 		.input(
 			z.object({
-				query: UnifiedPaginationQuerySchema.extend({
+				query: UnifiedPaginationQuerySchema.safeExtend({
 					category: z.string().optional(),
 				}),
 			}),
@@ -72,18 +72,6 @@ export const MerchantMainSpec = {
 				"Successfully retrieved merchant data",
 			),
 		),
-	// create: oc
-	// 	.route({
-	// 		tags: [FEATURE_TAGS.MERCHANT],
-	// 		method: "POST",
-	// 		path: "/",
-	// 		inputStructure: "detailed",
-	// 		outputStructure: "detailed",
-	// 	})
-	// 	.input(z.object({ body: InsertMerchantSchema }))
-	// 	.output(
-	// 		createSuccesSchema(MerchantSchema, "Merchant created successfully"),
-	// 	),
 	update: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],

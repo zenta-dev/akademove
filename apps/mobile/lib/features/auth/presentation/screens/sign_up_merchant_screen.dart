@@ -40,6 +40,7 @@ abstract class _FormKeys {
   static const FormKey<String> step2OutletPhoneNumber = TextFieldKey(
     'step-2-outlet-phone-number',
   );
+  static const step2Category = SelectKey<String>('step-2-category');
 
   static const step3BankProvider = SelectKey<BankProvider>(
     'step-3-bank-provider',
@@ -67,6 +68,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   Set<Marker> _markers = {};
 
   BankProvider? _selectedBankProvider;
+  String? _selectedCategory;
   Coordinate _outletLocation = MapConstants.defaultCoordinate;
   String _outletAddress = '';
   CountryCode _selectedOwnerCountryCode = CountryCode.ID;
@@ -562,7 +564,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         _FormKeys.step2OutletEmail,
         _FormKeys.step2OutletPhoneNumber,
       ]) &&
-      _validateDocuments(_step2Docs, _step2DocsErrors);
+      _validateDocuments(_step2Docs, _step2DocsErrors) &&
+      _selectedCategory != null;
 
   bool get _isStep3Valid =>
       _validateFormFields([
@@ -632,6 +635,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       ),
       outletLocation: _outletLocation,
       outletAddress: _outletAddress,
+      category: _selectedCategory!,
       bankProvider: _selectedBankProvider!,
       bankNumber: int.parse(formData['bankNumber']!),
       photoPath: null,
@@ -655,7 +659,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     // Validate all fields are present
     if (data.values.any((v) => v == null) ||
         _step2Docs.values.any((v) => v == null) ||
-        _selectedBankProvider == null) {
+        _selectedBankProvider == null ||
+        _selectedCategory == null) {
       return null;
     }
 
@@ -835,6 +840,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               _selectedOutletCountryCode = CountryCode.ID;
             }
           }),
+          _buildCategorySelect(state),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8.h,
@@ -1324,6 +1330,66 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           items: BankProvider.values,
           enabled: !state.isLoading,
           onChanged: (value) => setState(() => _selectedBankProvider = value),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCategorySelect(SignUpState state) {
+    const categories = ['ATK', 'Printing', 'Food'];
+    const categoryIcons = {
+      'ATK': LucideIcons.pencil,
+      'Printing': LucideIcons.printer,
+      'Food': LucideIcons.utensils,
+    };
+    const categoryLabels = {
+      'ATK': 'ATK (Stationery)',
+      'Printing': 'Printing',
+      'Food': 'Food & Beverages',
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4.h,
+      children: [
+        const Text('Outlet Category'),
+        Text(
+          'Select the main category for your outlet',
+          style: context.theme.typography.small,
+        ).muted(),
+        SizedBox(
+          width: double.infinity,
+          child: Select<String>(
+            enabled: !state.isLoading,
+            itemBuilder: (context, item) => Row(
+              spacing: 8.w,
+              children: [
+                Icon(categoryIcons[item], size: 16.sp),
+                Text(categoryLabels[item] ?? item),
+              ],
+            ),
+            value: _selectedCategory,
+            placeholder: const Text('Select outlet category'),
+            onChanged: (value) => setState(() => _selectedCategory = value),
+            popup: SelectPopup<String>(
+              items: SelectItemList(
+                children: categories
+                    .map(
+                      (e) => SelectItemButton(
+                        value: e,
+                        child: Row(
+                          spacing: 8.w,
+                          children: [
+                            Icon(categoryIcons[e], size: 16.sp),
+                            Text(categoryLabels[e] ?? e),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ).call,
+          ),
         ),
       ],
     );

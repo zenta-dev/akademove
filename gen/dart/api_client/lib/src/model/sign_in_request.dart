@@ -17,26 +17,28 @@ part 'sign_in_request.g.dart';
 )
 class SignInRequest {
   /// Returns a new [SignInRequest] instance.
-  const SignInRequest({required this.email, required this.password});
+  const SignInRequest({
+    required this.email,
+    required this.password,
+  });
 
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-
+  
   @JsonKey(name: r'password', required: true, includeIfNull: false)
   final String password;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is SignInRequest &&
+    other.email == email &&
+    other.password == password;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SignInRequest &&
-          other.email == email &&
-          other.password == password;
+  int get hashCode =>
+      email.hashCode +
+      password.hashCode;
 
-  @override
-  int get hashCode => email.hashCode + password.hashCode;
-
-  factory SignInRequest.fromJson(Map<String, dynamic> json) =>
-      _$SignInRequestFromJson(json);
+  factory SignInRequest.fromJson(Map<String, dynamic> json) => _$SignInRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignInRequestToJson(this);
 
@@ -44,4 +46,6 @@ class SignInRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

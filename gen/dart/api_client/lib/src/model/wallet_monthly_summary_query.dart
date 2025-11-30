@@ -17,26 +17,28 @@ part 'wallet_monthly_summary_query.g.dart';
 )
 class WalletMonthlySummaryQuery {
   /// Returns a new [WalletMonthlySummaryQuery] instance.
-  const WalletMonthlySummaryQuery({required this.year, required this.month});
+  const WalletMonthlySummaryQuery({
+    required this.year,
+    required this.month,
+  });
 
   @JsonKey(name: r'year', required: true, includeIfNull: false)
   final num year;
-
+  
   @JsonKey(name: r'month', required: true, includeIfNull: false)
   final num month;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is WalletMonthlySummaryQuery &&
+    other.year == year &&
+    other.month == month;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WalletMonthlySummaryQuery &&
-          other.year == year &&
-          other.month == month;
+  int get hashCode =>
+      year.hashCode +
+      month.hashCode;
 
-  @override
-  int get hashCode => year.hashCode + month.hashCode;
-
-  factory WalletMonthlySummaryQuery.fromJson(Map<String, dynamic> json) =>
-      _$WalletMonthlySummaryQueryFromJson(json);
+  factory WalletMonthlySummaryQuery.fromJson(Map<String, dynamic> json) => _$WalletMonthlySummaryQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$WalletMonthlySummaryQueryToJson(this);
 
@@ -44,4 +46,6 @@ class WalletMonthlySummaryQuery {
   String toString() {
     return toJson().toString();
   }
+
 }
+

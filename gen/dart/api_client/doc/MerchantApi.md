@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**merchantBestSellers**](MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -21,6 +22,49 @@ Method | HTTP request | Description
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 
+
+# **merchantBestSellers**
+> MerchantBestSellers200Response merchantBestSellers(limit, category)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final num limit = 8.14; // num | 
+final String category = category_example; // String | 
+
+try {
+    final response = api.merchantBestSellers(limit, category);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantBestSellers: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **limit** | **num**|  | [optional] [default to 10]
+ **category** | **String**|  | [optional] 
+
+### Return type
+
+[**MerchantBestSellers200Response**](MerchantBestSellers200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantGet**
 > MerchantGetMine200ResponseBody merchantGet(id)
@@ -101,7 +145,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantList**
-> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode)
+> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, category)
 
 
 
@@ -118,9 +162,10 @@ final String query = query_example; // String |
 final String sortBy = sortBy_example; // String | 
 final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
+final String category = category_example; // String | 
 
 try {
-    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode);
+    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, category);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantList: $e\n');
@@ -139,6 +184,7 @@ Name | Type | Description  | Notes
  **sortBy** | **String**|  | [optional] 
  **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **category** | **String**|  | [optional] 
 
 ### Return type
 
@@ -499,7 +545,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantUpdate**
-> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, document, image)
+> MerchantGetMine200ResponseBody merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, categories, document, image)
 
 
 
@@ -518,11 +564,12 @@ final num bankNumber = 8.14; // num |
 final String name = name_example; // String | 
 final String email = email_example; // String | 
 final String address = address_example; // String | 
+final List<String> categories = ; // List<String> | 
 final MultipartFile document = BINARY_DATA_HERE; // MultipartFile | 
 final MultipartFile image = BINARY_DATA_HERE; // MultipartFile | 
 
 try {
-    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, document, image);
+    final response = api.merchantUpdate(id, phoneCountryCode, phoneNumber, locationX, locationY, bankProvider, bankNumber, name, email, address, categories, document, image);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantUpdate: $e\n');
@@ -543,6 +590,7 @@ Name | Type | Description  | Notes
  **name** | **String**|  | [optional] 
  **email** | **String**|  | [optional] 
  **address** | **String**|  | [optional] 
+ **categories** | [**List&lt;String&gt;**](String.md)|  | [optional] 
  **document** | **MultipartFile**|  | [optional] 
  **image** | **MultipartFile**|  | [optional] 
 

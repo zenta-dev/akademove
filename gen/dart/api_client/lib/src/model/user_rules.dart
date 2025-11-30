@@ -17,21 +17,22 @@ part 'user_rules.g.dart';
 )
 class UserRules {
   /// Returns a new [UserRules] instance.
-  const UserRules({this.newUserOnly});
+  const UserRules({
+     this.newUserOnly,
+  });
 
   @JsonKey(name: r'newUserOnly', required: false, includeIfNull: false)
   final bool? newUserOnly;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is UserRules &&
+    other.newUserOnly == newUserOnly;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UserRules && other.newUserOnly == newUserOnly;
+  int get hashCode =>
+      newUserOnly.hashCode;
 
-  @override
-  int get hashCode => newUserOnly.hashCode;
-
-  factory UserRules.fromJson(Map<String, dynamic> json) =>
-      _$UserRulesFromJson(json);
+  factory UserRules.fromJson(Map<String, dynamic> json) => _$UserRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRulesToJson(this);
 
@@ -39,4 +40,6 @@ class UserRules {
   String toString() {
     return toJson().toString();
   }
+
 }
+
