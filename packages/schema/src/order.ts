@@ -27,6 +27,7 @@ export type OrderType = z.infer<typeof OrderTypeSchema>;
 export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),
 	dropoff: z.string().optional(),
+	instructions: z.string().optional(),
 });
 export type OrderNote = z.infer<typeof OrderNoteSchema>;
 
