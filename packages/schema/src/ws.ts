@@ -46,12 +46,14 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"DRIVER_LOCATION_UPDATE",
 	"COMPLETED",
 	"MATCHING",
+	"CHAT_MESSAGE",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
 	"ACCEPTED",
 	"UPDATE_LOCATION",
 	"DONE",
+	"SEND_MESSAGE",
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z
@@ -74,6 +76,16 @@ export const OrderEnvelopePayloadSchema = z.object({
 			orderId: z.string(),
 			driverId: z.string(),
 			driverCurrentLocation: CoordinateSchema,
+		})
+		.optional(),
+	message: z
+		.object({
+			id: z.string().uuid(),
+			orderId: z.string().uuid(),
+			senderId: z.string(),
+			senderName: z.string(),
+			message: z.string(),
+			sentAt: z.date(),
 		})
 		.optional(),
 	cancelReason: z.string().optional(),

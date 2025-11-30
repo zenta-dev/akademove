@@ -12,6 +12,7 @@ import { S3StorageService } from "@/core/services/storage";
 import { AuthRepository } from "@/features/auth/auth-repository";
 import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -103,6 +104,7 @@ export function getRepositories(
 			main: new BadgeRepository(svc.db, svc.kv, svc.storage),
 			user: new UserBadgeRepository(svc.db, svc.kv, svc.storage),
 		},
+		chat: new ChatRepository(svc.db, svc.kv),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		driver: {
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),

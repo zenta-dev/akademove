@@ -43,6 +43,13 @@
 			"when": 1764535274247,
 			"tag": "0005_chilly_goliath",
 			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "7",
+			"when": 1764537020311,
+			"tag": "0006_messy_stellaris",
+			"breakpoints": true
 		}
 	]
 }

@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as auth from "@/core/tables/auth";
 import * as badge from "@/core/tables/badge";
+import * as chat from "@/core/tables/chat";
 import * as configuration from "@/core/tables/configuration";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
@@ -20,6 +21,7 @@ import { isDev } from "@/utils";
 export const tables = {
 	...auth,
 	...badge,
+	...chat,
 	...configuration,
 	...coupon,
 	...driver,

@@ -7,6 +7,7 @@ import type { asc, desc, sql } from "drizzle-orm";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import type { ChatRepository } from "@/features/chat/chat-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
@@ -51,6 +52,7 @@ export interface RepositoryContext {
 		main: BadgeRepository;
 		user: UserBadgeRepository;
 	};
+	chat: ChatRepository;
 	configuration: ConfigurationRepository;
 	driver: {
 		main: DriverMainRepository;

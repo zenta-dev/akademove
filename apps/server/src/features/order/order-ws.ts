@@ -62,6 +62,11 @@ export class OrderRoom extends BaseDurableObject {
 						async (tx) => await this.#handleOrderDone(ws, data, tx),
 					);
 				}
+				if (data.a === "SEND_MESSAGE") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleChatMessage(ws, data, tx),
+					);
+				}
 			} catch (error) {
 				log.error(
 					{ error, action: data.a, userId: session },
@@ -347,5 +352,67 @@ export class OrderRoom extends BaseDurableObject {
 			p: data.p,
 		};
 		this.broadcast(completedPayload, { excludes: [ws] });
+	}
+
+	async #handleChatMessage(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const userId = this.findUserIdBySocket(ws);
+		if (!userId) {
+			log.warn("[OrderRoom] No userId found for chat message sender");
+			return;
+		}
+
+		const messagePayload = data.p.message;
+		if (!messagePayload) {
+			log.warn(data, "Invalid chat message payload");
+			return;
+		}
+
+		const opts = { tx };
+
+		try {
+			// Create the chat message in the database
+			const chatMessage = await this.#repo.chat.create(
+				{
+					orderId: messagePayload.orderId,
+					message: messagePayload.message,
+					userId,
+				},
+				opts,
+			);
+
+			log.info(
+				{ messageId: chatMessage.id, orderId: chatMessage.orderId, userId },
+				"[OrderRoom] Chat message created",
+			);
+
+			// Broadcast the message to all participants except the sender
+			const broadcastPayload: OrderEnvelope = {
+				e: "CHAT_MESSAGE",
+				f: "s",
+				t: "c",
+				p: {
+					message: {
+						id: chatMessage.id,
+						orderId: chatMessage.orderId,
+						senderId: chatMessage.senderId,
+						senderName: chatMessage.sender?.name ?? "Unknown",
+						message: chatMessage.message,
+						sentAt: chatMessage.sentAt,
+					},
+				},
+			};
+
+			this.broadcast(broadcastPayload, { excludes: [ws] });
+		} catch (error) {
+			log.error(
+				{ error, userId, orderId: messagePayload.orderId },
+				"[OrderRoom] Failed to handle chat message",
+			);
+			throw error;
+		}
 	}
 }

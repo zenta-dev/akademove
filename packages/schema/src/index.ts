@@ -1,5 +1,6 @@
 import { AuthSchemaRegistries } from "./auth.ts";
 import { BadgeSchemaRegistries } from "./badge.ts";
+import { ChatSchemaRegistries } from "./chat.ts";
 import { CommonSchemaRegistries, type SchemaRegistries } from "./common.ts";
 import { ConfigurationSchemaRegistries } from "./configuration.ts";
 import { CouponSchemaRegistries } from "./coupon.ts";
@@ -22,6 +23,7 @@ export const AllSchemaRegistries = {
 	...CommonSchemaRegistries,
 	...AuthSchemaRegistries,
 	...BadgeSchemaRegistries,
+	...ChatSchemaRegistries,
 	...ConfigurationSchemaRegistries,
 	...CouponSchemaRegistries,
 	...DriverSchemaRegistries,
