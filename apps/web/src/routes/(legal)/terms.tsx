@@ -9,8 +9,17 @@ import {
 import { APP_NAME } from "@/lib/constants";
 import {
 	acceptanceOfTerms,
+	accountRegistration,
+	accountTermination,
+	cancellationPolicy,
+	changesToTerms,
+	contactInformation,
+	disputeResolution,
+	limitationLiability,
 	prohibitedConduct,
 	ratingSystem,
+	serviceDescription,
+	userEligibility,
 } from "@/lib/legal/terms-content";
 import { LegalContentRenderer } from "@/lib/legal/legal-content-renderer";
 
@@ -31,11 +40,11 @@ export const Route = createFileRoute("/(legal)/terms")({
 });
 
 const sections: LegalSectionType[] = [
-	{ id: "acceptance", title: "Acceptance of Terms" },
-	{ id: "service-description", title: "Service Description" },
+	{ id: "acceptance", title: acceptanceOfTerms().title },
+	{ id: "service-description", title: serviceDescription().title },
 	{
 		id: "eligibility",
-		title: "User Roles and Eligibility",
+		title: userEligibility().title,
 		subsections: [
 			{ id: "passengers", title: "Passengers/Users" },
 			{ id: "drivers", title: "Drivers" },
@@ -43,7 +52,7 @@ const sections: LegalSectionType[] = [
 			{ id: "operators", title: "Operators" },
 		],
 	},
-	{ id: "registration", title: "Account Registration and Verification" },
+	{ id: "registration", title: accountRegistration().title },
 	{
 		id: "driver-requirements",
 		title: "Driver Requirements",
@@ -74,11 +83,11 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "cancellation",
-		title: "Cancellation and Refund Policy",
+		title: cancellationPolicy().title,
 	},
 	{
 		id: "ratings",
-		title: "Rating and Review System",
+		title: ratingSystem().title,
 	},
 	{
 		id: "safety",
@@ -90,7 +99,7 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "prohibited-conduct",
-		title: "Prohibited Conduct",
+		title: prohibitedConduct().title,
 	},
 	{
 		id: "intellectual-property",
@@ -98,23 +107,23 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "limitation-liability",
-		title: "Limitation of Liability",
+		title: limitationLiability().title,
 	},
 	{
 		id: "dispute-resolution",
-		title: "Dispute Resolution",
+		title: disputeResolution().title,
 	},
 	{
 		id: "changes-terms",
-		title: "Changes to Terms",
+		title: changesToTerms().title,
 	},
 	{
 		id: "termination",
-		title: "Account Termination",
+		title: accountTermination().title,
 	},
 	{
 		id: "contact-terms",
-		title: "Contact Information",
+		title: contactInformation().title,
 	},
 ];
 

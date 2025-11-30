@@ -8,7 +8,15 @@ import {
 } from "@/components/legal/legal-layout";
 import { APP_NAME } from "@/lib/constants";
 import {
+	changesToPolicy,
+	childrenPrivacy,
+	contactUs,
 	dataRetention,
+	dataSecurity,
+	howWeUseInformation,
+	informationSharing,
+	informationWeCollect,
+	internationalTransfers,
 	privacyIntro,
 	yourRights,
 } from "@/lib/legal/privacy-content";
@@ -31,10 +39,10 @@ export const Route = createFileRoute("/(legal)/privacy")({
 });
 
 const sections: LegalSectionType[] = [
-	{ id: "introduction", title: "Introduction" },
+	{ id: "introduction", title: m.privacy_policy() },
 	{
 		id: "information-collection",
-		title: "Information We Collect",
+		title: informationWeCollect().title,
 		subsections: [
 			{ id: "personal-info", title: "Personal Information" },
 			{ id: "location-data", title: "Location Data" },
@@ -45,7 +53,7 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "how-we-use",
-		title: "How We Use Your Information",
+		title: howWeUseInformation().title,
 		subsections: [
 			{ id: "service-provision", title: "Service Provision" },
 			{ id: "safety-security", title: "Safety and Security" },
@@ -55,7 +63,7 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "data-sharing",
-		title: "Data Sharing and Disclosure",
+		title: informationSharing().title,
 		subsections: [
 			{ id: "within-platform", title: "Within the Platform" },
 			{ id: "third-party", title: "Third-Party Services" },
@@ -64,27 +72,27 @@ const sections: LegalSectionType[] = [
 	},
 	{
 		id: "data-security",
-		title: "Data Security",
+		title: dataSecurity().title,
 	},
 	{
 		id: "your-rights",
-		title: "Your Rights",
+		title: yourRights().title,
 	},
 	{
 		id: "data-retention",
-		title: "Data Retention",
+		title: dataRetention().title,
 	},
 	{
 		id: "childrens-privacy",
-		title: "Children's Privacy",
+		title: childrenPrivacy().title,
 	},
 	{
 		id: "changes",
-		title: "Changes to This Policy",
+		title: changesToPolicy().title,
 	},
 	{
 		id: "contact",
-		title: "Contact Information",
+		title: contactUs().title,
 	},
 ];
 
