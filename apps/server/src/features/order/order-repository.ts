@@ -133,6 +133,8 @@ export class OrderRepository extends BaseRepository {
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
 			acceptedAt: item.acceptedAt ?? undefined,
+			preparedAt: item.preparedAt ?? undefined,
+			readyAt: item.readyAt ?? undefined,
 			arrivedAt: item.arrivedAt ?? undefined,
 			cancelReason: item.cancelReason ?? undefined,
 			gender: item.gender ?? undefined,
@@ -689,10 +691,16 @@ export class OrderRepository extends BaseRepository {
 	): void {
 		// Define valid state transitions
 		const validTransitions: Record<OrderStatus, OrderStatus[]> = {
-			REQUESTED: ["MATCHING", "CANCELLED_BY_USER", "CANCELLED_BY_SYSTEM"],
+			REQUESTED: [
+				"MATCHING",
+				"CANCELLED_BY_USER",
+				"CANCELLED_BY_MERCHANT",
+				"CANCELLED_BY_SYSTEM",
+			],
 			MATCHING: [
 				"ACCEPTED",
 				"CANCELLED_BY_USER",
+				"CANCELLED_BY_MERCHANT",
 				"CANCELLED_BY_SYSTEM",
 				"REQUESTED", // Allow retry
 			],
@@ -701,18 +709,21 @@ export class OrderRepository extends BaseRepository {
 				"ARRIVING", // Ride/Delivery: driver heads to pickup (skip preparation)
 				"CANCELLED_BY_USER",
 				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_MERCHANT",
 				"CANCELLED_BY_SYSTEM",
 			],
 			PREPARING: [
 				"READY_FOR_PICKUP", // Food is ready for driver pickup
 				"CANCELLED_BY_USER",
 				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_MERCHANT",
 				"CANCELLED_BY_SYSTEM",
 			],
 			READY_FOR_PICKUP: [
 				"ARRIVING", // Driver is on the way to pickup
 				"CANCELLED_BY_USER",
 				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_MERCHANT",
 				"CANCELLED_BY_SYSTEM",
 			],
 			ARRIVING: [
@@ -725,6 +736,7 @@ export class OrderRepository extends BaseRepository {
 			COMPLETED: [], // Terminal state - no transitions allowed
 			CANCELLED_BY_USER: [], // Terminal state
 			CANCELLED_BY_DRIVER: [], // Terminal state
+			CANCELLED_BY_MERCHANT: [], // Terminal state
 			CANCELLED_BY_SYSTEM: [], // Terminal state
 		};
 

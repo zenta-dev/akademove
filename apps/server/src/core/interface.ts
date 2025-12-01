@@ -16,6 +16,7 @@ import type { EmergencyRepository } from "@/features/emergency/emergency-reposit
 import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import type { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
 import type { PaymentRepository } from "@/features/payment/payment-repository";
@@ -64,6 +65,7 @@ export interface RepositoryContext {
 	merchant: {
 		main: MerchantMainRepository;
 		menu: MerchantMenuRepository;
+		order: MerchantOrderRepository;
 	};
 	payment: PaymentRepository;
 	order: OrderRepository;

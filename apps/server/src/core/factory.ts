@@ -21,6 +21,7 @@ import { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
+import { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
 import { NotificationRepository } from "@/features/notification/notification-repository";
 import { OrderRepository } from "@/features/order/order-repository";
 import { PaymentRepository } from "@/features/payment/payment-repository";
@@ -116,6 +117,7 @@ export function getRepositories(
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),
 			menu: new MerchantMenuRepository(svc.db, svc.kv, svc.storage),
+			order: new MerchantOrderRepository(svc.db, svc.kv),
 		},
 		order: new OrderRepository(svc.db, svc.kv, svc.map, payment),
 		payment,

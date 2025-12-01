@@ -71,6 +71,13 @@
 			"when": 1764555149328,
 			"tag": "0009_chilly_loners",
 			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "7",
+			"when": 1764555530345,
+			"tag": "0010_careless_mach_iv",
+			"breakpoints": true
 		}
 	]
 }

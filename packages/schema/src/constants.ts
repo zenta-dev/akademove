@@ -19,6 +19,7 @@ export const CONSTANTS = Object.freeze({
 		"COMPLETED",
 		"CANCELLED_BY_USER",
 		"CANCELLED_BY_DRIVER",
+		"CANCELLED_BY_MERCHANT",
 		"CANCELLED_BY_SYSTEM",
 	] as const,
 	ORDER_TYPES: ["RIDE", "DELIVERY", "FOOD"] as const,
@@ -51,6 +52,13 @@ export const CONSTANTS = Object.freeze({
 	USER_ROLES: ["ADMIN", "OPERATOR", "MERCHANT", "DRIVER", "USER"] as const,
 	USER_GENDERS: ["MALE", "FEMALE"] as const,
 	BANK_PROVIDERS: ["BCA", "BNI", "BRI", "MANDIRI", "PERMATA"] as const,
+	ORDER_REJECTION_REASONS: [
+		"OUT_OF_STOCK",
+		"TOO_BUSY",
+		"INGREDIENT_UNAVAILABLE",
+		"CLOSED",
+		"OTHER",
+	] as const,
 } as const);
 
 export const AUTH_CONSTANTS = Object.freeze({
