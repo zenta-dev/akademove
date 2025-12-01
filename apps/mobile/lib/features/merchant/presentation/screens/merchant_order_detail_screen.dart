@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,7 @@ class MerchantOrderDetailScreen extends StatefulWidget {
 class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   late Order _currentOrder;
   String? _merchantId;
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -52,6 +54,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _handleAcceptOrder() async {
+    if (_isProcessing) return;
+
     if (_merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
@@ -76,12 +80,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
 
     if (confirmed == true && mounted) {
+      setState(() => _isProcessing = true);
+
       await context.read<MerchantOrderCubit>().acceptOrder(
         merchantId: _merchantId!,
         orderId: _currentOrder.id,
       );
 
       if (mounted) {
+        setState(() => _isProcessing = false);
+
         final cubitState = context.read<MerchantOrderCubit>().state;
         if (cubitState.isSuccess) {
           if (cubitState.selected != null) {
@@ -102,6 +110,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _handleRejectOrder() async {
+    if (_isProcessing) return;
+
     if (_merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
@@ -110,6 +120,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     final result = await showOrderRejectionDialog(context: context);
 
     if (result != null && mounted) {
+      setState(() => _isProcessing = true);
+
       await context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: _merchantId!,
         orderId: _currentOrder.id,
@@ -118,6 +130,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       );
 
       if (mounted) {
+        setState(() => _isProcessing = false);
+
         final cubitState = context.read<MerchantOrderCubit>().state;
         if (cubitState.isSuccess) {
           context.showMyToast(
@@ -136,10 +150,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _handleMarkPreparing() async {
+    if (_isProcessing) return;
+
     if (_merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
+
+    setState(() => _isProcessing = true);
 
     await context.read<MerchantOrderCubit>().markPreparing(
       merchantId: _merchantId!,
@@ -147,6 +165,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
 
     if (mounted) {
+      setState(() => _isProcessing = false);
+
       final cubitState = context.read<MerchantOrderCubit>().state;
       if (cubitState.isSuccess) {
         if (cubitState.selected != null) {
@@ -166,10 +186,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _handleMarkReady() async {
+    if (_isProcessing) return;
+
     if (_merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
+
+    setState(() => _isProcessing = true);
 
     await context.read<MerchantOrderCubit>().markReady(
       merchantId: _merchantId!,
@@ -177,6 +201,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     );
 
     if (mounted) {
+      setState(() => _isProcessing = false);
+
       final cubitState = context.read<MerchantOrderCubit>().state;
       if (cubitState.isSuccess) {
         if (cubitState.selected != null) {
@@ -491,14 +517,25 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       case OrderStatus.MATCHING:
         // Show accept/reject buttons
         primaryButton = Button.primary(
-          onPressed: _handleAcceptOrder,
-          child: Text(
-            'Accept Order',
-            style: context.typography.small.copyWith(fontSize: 16.sp),
-          ),
+          onPressed: _isProcessing ? null : _handleAcceptOrder,
+          child: _isProcessing
+              ? material.SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: const material.CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
+                      material.Colors.white,
+                    ),
+                  ),
+                )
+              : Text(
+                  'Accept Order',
+                  style: context.typography.small.copyWith(fontSize: 16.sp),
+                ),
         );
         secondaryButton = Button.destructive(
-          onPressed: _handleRejectOrder,
+          onPressed: _isProcessing ? null : _handleRejectOrder,
           child: Text(
             'Reject Order',
             style: context.typography.small.copyWith(fontSize: 16.sp),
@@ -509,22 +546,44 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       case OrderStatus.ACCEPTED:
         // Show start preparing button
         primaryButton = Button.primary(
-          onPressed: _handleMarkPreparing,
-          child: Text(
-            'Start Preparing',
-            style: context.typography.small.copyWith(fontSize: 16.sp),
-          ),
+          onPressed: _isProcessing ? null : _handleMarkPreparing,
+          child: _isProcessing
+              ? material.SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: const material.CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
+                      material.Colors.white,
+                    ),
+                  ),
+                )
+              : Text(
+                  'Start Preparing',
+                  style: context.typography.small.copyWith(fontSize: 16.sp),
+                ),
         );
         break;
 
       case OrderStatus.PREPARING:
         // Show order ready button
         primaryButton = Button.primary(
-          onPressed: _handleMarkReady,
-          child: Text(
-            'Order Ready',
-            style: context.typography.small.copyWith(fontSize: 16.sp),
-          ),
+          onPressed: _isProcessing ? null : _handleMarkReady,
+          child: _isProcessing
+              ? material.SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: const material.CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
+                      material.Colors.white,
+                    ),
+                  ),
+                )
+              : Text(
+                  'Order Ready',
+                  style: context.typography.small.copyWith(fontSize: 16.sp),
+                ),
         );
         break;
 
