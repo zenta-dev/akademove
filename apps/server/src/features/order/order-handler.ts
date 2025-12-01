@@ -181,4 +181,22 @@ export const OrderHandler = priv.router({
 				};
 			});
 		}),
+	cancel: priv.cancel
+		.use(hasPermission({ order: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.order.cancelOrder(
+					params.id,
+					context.user.id,
+					context.user.role,
+					body.reason,
+					{ tx },
+				);
+
+				return {
+					status: 200,
+					body: { message: "Order cancelled successfully", data: result },
+				};
+			});
+		}),
 });

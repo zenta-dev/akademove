@@ -99,6 +99,13 @@
 			"when": 1764566632589,
 			"tag": "0013_wise_firelord",
 			"breakpoints": true
+		},
+		{
+			"idx": 14,
+			"version": "7",
+			"when": 1764585284957,
+			"tag": "0014_noisy_wolfpack",
+			"breakpoints": true
 		}
 	]
 }

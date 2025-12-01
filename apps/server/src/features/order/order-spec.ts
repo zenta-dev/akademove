@@ -117,6 +117,23 @@ export const OrderSpec = {
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order updated successfully")),
+	cancel: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/{id}/cancel",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string().uuid() }),
+				body: z.object({
+					reason: z.string().optional(),
+				}),
+			}),
+		)
+		.output(createSuccesSchema(OrderSchema, "Order cancelled successfully")),
 	listMessages: oc
 		.route({
 			tags: [FEATURE_TAGS.ORDER],

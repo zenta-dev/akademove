@@ -41,6 +41,8 @@ export const driver = pgTable(
 		studentCard: text("student_card").notNull(),
 		driverLicense: text("driver_license").notNull(),
 		vehicleCertificate: text("vehicle_certificate").notNull(),
+		cancellationCount: integer("cancellation_count").notNull().default(0),
+		lastCancellationDate: timestamp("last_cancellation_date"),
 		...DateModifier,
 	},
 	(t) => [
@@ -52,6 +54,7 @@ export const driver = pgTable(
 		index("driver_online_location_idx")
 			.using("gist", t.currentLocation)
 			.where(sql`is_online = true`),
+		index("driver_cancellation_idx").on(t.lastCancellationDate),
 	],
 );
 

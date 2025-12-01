@@ -794,6 +794,236 @@ export class OrderRepository extends BaseRepository {
 		}
 	}
 
+	/**
+	 * Cancels an order with penalty logic based on SRS requirements:
+	 * - User cancels: No penalty before driver acceptance, 10% fee after acceptance
+	 * - Driver cancels: Warning and suspension tracking after 3 cancellations/day
+	 * - System/Merchant cancels: Full refund
+	 */
+	async cancelOrder(
+		orderId: string,
+		userId: string,
+		userRole: UserRole,
+		reason?: string,
+		opts: WithTx = {} as WithTx,
+	): Promise<Order> {
+		if (!opts.tx) {
+			throw new RepositoryError(
+				"cancelOrder must be called within a transaction",
+				{ code: "BAD_REQUEST" },
+			);
+		}
+
+		try {
+			// Get order details
+			const order = await this.#getFromDB(orderId, opts);
+			if (!order) {
+				throw new RepositoryError(`Order with id "${orderId}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			// Determine cancellation type based on role
+			let cancelStatus: OrderStatus;
+			if (userRole === "USER") {
+				cancelStatus = "CANCELLED_BY_USER";
+			} else if (userRole === "DRIVER") {
+				cancelStatus = "CANCELLED_BY_DRIVER";
+			} else if (userRole === "MERCHANT") {
+				cancelStatus = "CANCELLED_BY_MERCHANT";
+			} else {
+				cancelStatus = "CANCELLED_BY_SYSTEM";
+			}
+
+			// Validate status transition
+			this.#validateStatusTransition(order.status, cancelStatus);
+
+			// Calculate refund amount with penalty logic
+			const totalPrice = new Decimal(order.totalPrice);
+			let refundAmount = totalPrice;
+			let penaltyAmount = new Decimal(0);
+
+			// Apply 10% penalty for user cancellation after driver acceptance
+			if (
+				cancelStatus === "CANCELLED_BY_USER" &&
+				order.driverId &&
+				["ACCEPTED", "PREPARING", "READY_FOR_PICKUP", "ARRIVING"].includes(
+					order.status,
+				)
+			) {
+				penaltyAmount = totalPrice.times(0.1); // 10% penalty
+				refundAmount = totalPrice.minus(penaltyAmount);
+
+				log.info(
+					{
+						orderId: order.id,
+						userId: order.userId,
+						totalPrice: toNumberSafe(totalPrice),
+						penaltyAmount: toNumberSafe(penaltyAmount),
+						refundAmount: toNumberSafe(refundAmount),
+					},
+					"[OrderRepository] User cancellation penalty applied (10%)",
+				);
+			}
+
+			// Handle driver cancellation - track and suspend if excessive
+			if (cancelStatus === "CANCELLED_BY_DRIVER" && order.driverId) {
+				const driverId = order.driverId;
+				// Get driver details
+				const driver = await opts.tx.query.driver.findFirst({
+					where: (f, op) => op.eq(f.id, driverId),
+				});
+
+				if (driver) {
+					const now = new Date();
+					const lastCancellation = driver.lastCancellationDate
+						? new Date(driver.lastCancellationDate)
+						: null;
+
+					// Check if last cancellation was today
+					const isToday =
+						lastCancellation &&
+						lastCancellation.toDateString() === now.toDateString();
+
+					const newCancellationCount = isToday
+						? driver.cancellationCount + 1
+						: 1;
+
+					// Update driver cancellation tracking
+					await opts.tx
+						.update(tables.driver)
+						.set({
+							cancellationCount: newCancellationCount,
+							lastCancellationDate: now,
+						})
+						.where(eq(tables.driver.id, order.driverId));
+
+					// Suspend driver if 3 or more cancellations today (per SRS 8.3)
+					if (newCancellationCount >= 3) {
+						await opts.tx
+							.update(tables.driver)
+							.set({
+								status: "SUSPENDED",
+								isOnline: false,
+								isTakingOrder: false,
+							})
+							.where(eq(tables.driver.id, order.driverId));
+
+						log.warn(
+							{
+								driverId: order.driverId,
+								cancellationCount: newCancellationCount,
+								orderId: order.id,
+							},
+							"[OrderRepository] Driver suspended due to excessive cancellations (3/day)",
+						);
+					} else {
+						log.info(
+							{
+								driverId: order.driverId,
+								cancellationCount: newCancellationCount,
+								orderId: order.id,
+							},
+							"[OrderRepository] Driver cancellation recorded - warning issued",
+						);
+					}
+				}
+			}
+
+			// Process refund - find transaction by referenceId (orderId)
+			const paymentTransaction = await opts.tx.query.transaction.findFirst({
+				where: (f, op) =>
+					op.and(
+						op.eq(f.referenceId, order.id),
+						op.eq(f.type, "PAYMENT"),
+						op.inArray(f.status, ["PENDING", "SUCCESS"]),
+					),
+			});
+
+			if (paymentTransaction) {
+				// Get wallet
+				const wallet = await opts.tx.query.wallet.findFirst({
+					where: (f, op) => op.eq(f.id, paymentTransaction.walletId),
+				});
+
+				// Get payment
+				const payment = await opts.tx.query.payment.findFirst({
+					where: (f, op) => op.eq(f.transactionId, paymentTransaction.id),
+				});
+
+				if (wallet && payment) {
+					const currentBalance = new Decimal(wallet.balance);
+					const newBalance = currentBalance.plus(refundAmount);
+
+					// Update transaction status
+					await opts.tx
+						.update(tables.transaction)
+						.set({
+							status: "REFUNDED",
+							balanceBefore: toStringNumberSafe(currentBalance),
+							balanceAfter: toStringNumberSafe(newBalance),
+						})
+						.where(eq(tables.transaction.id, paymentTransaction.id));
+
+					// Update payment status
+					await opts.tx
+						.update(tables.payment)
+						.set({ status: "REFUNDED" })
+						.where(eq(tables.payment.id, payment.id));
+
+					// Update wallet balance
+					await opts.tx
+						.update(tables.wallet)
+						.set({ balance: toStringNumberSafe(newBalance) })
+						.where(eq(tables.wallet.id, wallet.id));
+
+					log.info(
+						{
+							orderId: order.id,
+							userId: order.userId,
+							refundAmount: toNumberSafe(refundAmount),
+							penaltyAmount: toNumberSafe(penaltyAmount),
+						},
+						"[OrderRepository] Refund processed successfully",
+					);
+				}
+			}
+
+			// Update order status
+			const updatedOrder = await this.update(
+				orderId,
+				{
+					status: cancelStatus,
+					cancelReason: reason,
+				},
+				opts,
+			);
+
+			log.info(
+				{
+					orderId: order.id,
+					status: cancelStatus,
+					role: userRole,
+					refundAmount: toNumberSafe(refundAmount),
+				},
+				"[OrderRepository] Order cancelled successfully",
+			);
+
+			return updatedOrder;
+		} catch (error) {
+			log.error(
+				{
+					error,
+					orderId,
+					userId,
+					userRole,
+				},
+				"[OrderRepository] Failed to cancel order - transaction will be rolled back",
+			);
+			throw this.handleError(error, "cancel");
+		}
+	}
+
 	async remove(id: string, opts: WithTx): Promise<void> {
 		try {
 			const result = await opts.tx

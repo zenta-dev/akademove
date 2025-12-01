@@ -25,6 +25,8 @@ export const DriverSchema = z.object({
 	isOnline: z.boolean(),
 	currentLocation: CoordinateSchema.optional(),
 	lastLocationUpdate: DateSchema.optional(),
+	cancellationCount: z.number().int().default(0),
+	lastCancellationDate: DateSchema.optional(),
 	createdAt: DateSchema,
 
 	studentCard: z.url(),
