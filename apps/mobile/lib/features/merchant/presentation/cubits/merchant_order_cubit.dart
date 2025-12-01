@@ -3,20 +3,24 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/services.dart';
 
 class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
   MerchantOrderCubit({
     required OrderRepository orderRepository,
     required MerchantOrderRepository merchantOrderRepository,
     WebSocketService? webSocketService,
+    NotificationService? notificationService,
   }) : _orderRepository = orderRepository,
        _merchantOrderRepository = merchantOrderRepository,
        _webSocketService = webSocketService ?? sl<WebSocketService>(),
+       _notificationService = notificationService ?? sl<NotificationService>(),
        super(const MerchantOrderState());
 
   final OrderRepository _orderRepository;
   final MerchantOrderRepository _merchantOrderRepository;
   final WebSocketService _webSocketService;
+  final NotificationService _notificationService;
 
   static const String _wsKey = 'merchant_order';
 
@@ -67,6 +71,17 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       return;
     }
 
+    // Check if this is a new order (REQUESTED or MATCHING status and not in our list)
+    final isNewOrder =
+        (updatedOrder.status == OrderStatus.REQUESTED ||
+            updatedOrder.status == OrderStatus.MATCHING) &&
+        !state.list.any((order) => order.id == updatedOrder.id);
+
+    // Trigger notification and vibration for new orders
+    if (isNewOrder) {
+      _notifyNewOrder(updatedOrder);
+    }
+
     // Update the order in list and selected
     final updatedList = state.list.map((order) {
       if (order.id == updatedOrder.id) {
@@ -75,6 +90,9 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
       return order;
     }).toList();
 
+    // Add new order to list if not present
+    final finalList = isNewOrder ? [updatedOrder, ...updatedList] : updatedList;
+
     // Update selected if it's the same order
     final updatedSelected = state.selected?.id == updatedOrder.id
         ? updatedOrder
@@ -82,11 +100,37 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
     emit(
       state.toSuccess(
-        list: updatedList,
+        list: finalList,
         selected: updatedSelected,
         message: _getEventMessage(envelope.e),
       ),
     );
+  }
+
+  /// Notify merchant of new order with sound and vibration
+  Future<void> _notifyNewOrder(Order order) async {
+    try {
+      // Vibrate device
+      await HapticFeedback.heavyImpact();
+
+      // Show local notification with sound
+      final orderType = order.type.name.toLowerCase();
+      await _notificationService.show(
+        title: 'New ${orderType.toUpperCase()} Order!',
+        body: 'Order #${order.id.substring(0, 8)} - Tap to view details',
+        data: {'orderId': order.id, 'type': orderType},
+      );
+
+      logger.i(
+        '[MerchantOrderCubit] - Notified merchant of new order: ${order.id}',
+      );
+    } catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Failed to notify new order',
+        error: e,
+        stackTrace: st,
+      );
+    }
   }
 
   String? _getEventMessage(OrderEnvelopeEvent? event) {
