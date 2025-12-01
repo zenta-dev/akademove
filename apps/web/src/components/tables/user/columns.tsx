@@ -121,9 +121,9 @@ export const USER_COLUMNS = [
 				return (
 					<Badge
 						variant="secondary"
-						className="bg-green-500/20 text-green-500 dark:bg-green-600/20 dark:text-green-600"
+						className="bg-red-500/20 text-red-500 dark:bg-red-600/20 dark:text-red-600"
 					>
-						<BadgeCheckIcon />
+						<BadgeXIcon />
 						{m.yes().toUpperCase()}
 					</Badge>
 				);
@@ -131,9 +131,9 @@ export const USER_COLUMNS = [
 			return (
 				<Badge
 					variant="secondary"
-					className="bg-red-500/20 text-red-500 dark:bg-red-600/20 dark:text-red-600"
+					className="bg-green-500/20 text-green-500 dark:bg-green-600/20 dark:text-green-600"
 				>
-					<BadgeXIcon />
+					<BadgeCheckIcon />
 					{m.no().toUpperCase()}
 				</Badge>
 			);
