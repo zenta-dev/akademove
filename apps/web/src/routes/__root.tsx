@@ -7,7 +7,8 @@ import {
 	Scripts,
 	useRouterState,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { ThemeProvider } from "@/components/providers/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocaleIsomorphic, getThemeCookie } from "@/lib/actions";
@@ -92,18 +93,20 @@ function RootDocument() {
 						: "w-[99.2vw]"
 				}
 			>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<Outlet />
-					<Toaster richColors />
-				</ThemeProvider>
-				<TanStackRouterDevtools position="bottom-left" />
-				<ReactQueryDevtools />
-				<Scripts />
+				<ErrorBoundary>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<Outlet />
+						<Toaster richColors />
+					</ThemeProvider>
+					<TanStackRouterDevtools position="bottom-left" />
+					<ReactQueryDevtools />
+					<Scripts />
+				</ErrorBoundary>
 			</body>
 		</html>
 	);
