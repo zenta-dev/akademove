@@ -53,6 +53,23 @@ export const BannerConfigurationSchema = z.object({
 });
 export type Banner = z.infer<typeof BannerConfigurationSchema>;
 
+export const EmergencyContactConfigurationSchema = z.object({
+	name: z.string().min(1),
+	phone: z.string().min(1),
+	type: z.enum([
+		"CAMPUS_SECURITY",
+		"POLICE",
+		"AMBULANCE",
+		"FIRE_DEPT",
+		"OTHER",
+	]),
+	description: z.string().optional(),
+	isActive: z.boolean().default(true),
+});
+export type EmergencyContactConfiguration = z.infer<
+	typeof EmergencyContactConfigurationSchema
+>;
+
 export const ConfigurationSchema = z.object({
 	key: z.string().max(256),
 	name: z
@@ -103,6 +120,10 @@ export const ConfigurationSchemaRegistries = {
 	},
 	BannerConfiguration: {
 		schema: BannerConfigurationSchema,
+		strategy: "output",
+	},
+	EmergencyContactConfiguration: {
+		schema: EmergencyContactConfigurationSchema,
 		strategy: "output",
 	},
 	Configuration: { schema: ConfigurationSchema, strategy: "output" },

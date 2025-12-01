@@ -5,6 +5,7 @@ import { CommonSchemaRegistries, type SchemaRegistries } from "./common.ts";
 import { ConfigurationSchemaRegistries } from "./configuration.ts";
 import { CouponSchemaRegistries } from "./coupon.ts";
 import { DriverSchemaRegistries } from "./driver.ts";
+import { EmergencySchemaRegistries } from "./emergency.ts";
 import { LeaderboardSchemaRegistries } from "./leaderboard.ts";
 import { MerchantSchemaRegistries } from "./merchant.ts";
 import { NotificationSchemaRegistries } from "./notification.ts";
@@ -27,6 +28,7 @@ export const AllSchemaRegistries = {
 	...ConfigurationSchemaRegistries,
 	...CouponSchemaRegistries,
 	...DriverSchemaRegistries,
+	...EmergencySchemaRegistries,
 	...LeaderboardSchemaRegistries,
 	...MerchantSchemaRegistries,
 	...OrderSchemaRegistries,

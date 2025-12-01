@@ -8,6 +8,7 @@ export const FEATURE_TAGS = Object.freeze({
 	BADGE: "Badge",
 	CONFIGURATION: "Configuration",
 	DRIVER: "Driver",
+	EMERGENCY: "Emergency",
 	LEADERBOARD: "Leaderboard",
 	DRIVER_SCHEDULE: "DriverSchedule",
 	NOTIFICATION: "Notification",

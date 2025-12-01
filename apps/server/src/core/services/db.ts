@@ -7,6 +7,7 @@ import * as chat from "@/core/tables/chat";
 import * as configuration from "@/core/tables/configuration";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
+import * as emergency from "@/core/tables/emergency";
 import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
 import * as notification from "@/core/tables/notification";
@@ -25,6 +26,7 @@ export const tables = {
 	...configuration,
 	...coupon,
 	...driver,
+	...emergency,
 	...leaderboard,
 	...merchant,
 	...notification,
