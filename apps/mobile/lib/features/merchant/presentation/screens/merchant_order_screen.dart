@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -165,42 +166,57 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   Widget _buildTab({required List<OrderStatus> statuses}) {
     return BlocBuilder<MerchantOrderCubit, MerchantOrderState>(
       builder: (context, state) {
-        return state.whenOr(
-          success: (orders, selected, message) {
-            final filtered = (orders ?? [])
-                .where((o) => statuses.contains(o.status))
-                .toList();
-
-            if (filtered.isEmpty) {
-              return _buildFail(message: 'No orders found', statuses: statuses);
-            }
-
-            return ListView.separated(
-              itemCount: filtered.length,
-              separatorBuilder: (_, __) => Gap(16.h),
-              itemBuilder: (_, index) {
-                final order = filtered[index];
-                return MerchantOrderCardWidget(
-                  order: order,
-                  onPressed: () {
-                    context.pushNamed(
-                      Routes.merchantOrderDetail.name,
-                      extra: order,
-                    );
-                  },
-                );
-              },
+        return material.RefreshIndicator(
+          onRefresh: () async {
+            await context.read<MerchantOrderCubit>().getMine(
+              statuses: statuses,
             );
           },
-          failure: (error) => _buildFail(
-            message: error.message ?? 'An unexpected error occurred',
-            statuses: statuses,
-          ),
-          orElse: () => ListView.separated(
-            itemCount: 5,
-            separatorBuilder: (_, __) => Gap(16.h),
-            itemBuilder: (_, _) =>
-                const MerchantOrderCardWidget(order: dummyOrder).asSkeleton(),
+          child: state.whenOr(
+            success: (orders, selected, message) {
+              final filtered = (orders ?? [])
+                  .where((o) => statuses.contains(o.status))
+                  .toList();
+
+              if (filtered.isEmpty) {
+                return ListView(
+                  children: [
+                    _buildFail(message: 'No orders found', statuses: statuses),
+                  ],
+                );
+              }
+
+              return ListView.separated(
+                itemCount: filtered.length,
+                separatorBuilder: (_, __) => Gap(16.h),
+                itemBuilder: (_, index) {
+                  final order = filtered[index];
+                  return MerchantOrderCardWidget(
+                    order: order,
+                    onPressed: () {
+                      context.pushNamed(
+                        Routes.merchantOrderDetail.name,
+                        extra: order,
+                      );
+                    },
+                  );
+                },
+              );
+            },
+            failure: (error) => ListView(
+              children: [
+                _buildFail(
+                  message: error.message ?? 'An unexpected error occurred',
+                  statuses: statuses,
+                ),
+              ],
+            ),
+            orElse: () => ListView.separated(
+              itemCount: 5,
+              separatorBuilder: (_, __) => Gap(16.h),
+              itemBuilder: (_, _) =>
+                  const MerchantOrderCardWidget(order: dummyOrder).asSkeleton(),
+            ),
           ),
         );
       },
