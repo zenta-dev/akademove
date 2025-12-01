@@ -20,6 +20,16 @@ final driverRouter = StatefulShellRoute.indexedStack(
           name: Routes.driverHome.name,
           path: Routes.driverHome.path,
           builder: (context, state) => const DriverHomeScreen(),
+          routes: [
+            GoRoute(
+              name: Routes.driverOrderDetail.name,
+              path: 'order/:orderId',
+              builder: (context, state) {
+                final orderId = state.pathParameters['orderId']!;
+                return DriverOrderDetailScreen(orderId: orderId);
+              },
+            ),
+          ],
         ),
       ],
     ),
