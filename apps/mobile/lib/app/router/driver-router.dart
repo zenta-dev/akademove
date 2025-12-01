@@ -29,6 +29,11 @@ final driverRouter = StatefulShellRoute.indexedStack(
                 return DriverOrderDetailScreen(orderId: orderId);
               },
             ),
+            GoRoute(
+              name: Routes.driverEarnings.name,
+              path: 'earnings',
+              builder: (context, state) => const DriverEarningsScreen(),
+            ),
           ],
         ),
       ],
