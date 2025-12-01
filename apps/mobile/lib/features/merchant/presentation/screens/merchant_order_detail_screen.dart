@@ -26,6 +26,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     super.initState();
     _currentOrder = widget.order;
     _loadMerchantId();
+    _subscribeToOrderUpdates();
+  }
+
+  @override
+  void dispose() {
+    _unsubscribeFromOrderUpdates();
+    super.dispose();
   }
 
   Future<void> _loadMerchantId() async {
@@ -34,6 +41,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     setState(() {
       _merchantId = _currentOrder.merchantId;
     });
+  }
+
+  Future<void> _subscribeToOrderUpdates() async {
+    await context.read<MerchantOrderCubit>().subscribeToOrder(_currentOrder.id);
+  }
+
+  Future<void> _unsubscribeFromOrderUpdates() async {
+    await context.read<MerchantOrderCubit>().unsubscribeFromOrder();
   }
 
   Future<void> _handleAcceptOrder() async {
@@ -575,7 +590,17 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   Widget build(BuildContext context) {
     return BlocListener<MerchantOrderCubit, MerchantOrderState>(
       listener: (context, state) {
-        // Handle state changes if needed
+        // Update current order when state changes (from WebSocket or actions)
+        if (state.selected != null && state.selected!.id == _currentOrder.id) {
+          setState(() {
+            _currentOrder = state.selected!;
+          });
+
+          // Show toast for important events
+          if (state.message != null && state.message!.isNotEmpty) {
+            context.showMyToast(state.message!, type: ToastType.success);
+          }
+        }
       },
       child: Stack(
         children: [
