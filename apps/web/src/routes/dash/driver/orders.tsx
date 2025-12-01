@@ -40,7 +40,6 @@ function RouteComponent() {
 				<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
 			</div>
 			<Card className="p-0">
-				TODO: FETCH FROM DRIVER DATA ONLY
 				<CardContent className="p-0">
 					<OrderTable search={search} to="/dash/driver/orders" />
 				</CardContent>
