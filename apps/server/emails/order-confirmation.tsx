@@ -8,7 +8,7 @@ import {
 	Section,
 	Text,
 } from "@react-email/components";
-import { BaseLayout } from "../components/base-layout";
+import { BaseLayout } from "./components/base-layout";
 
 interface OrderConfirmationEmailProps {
 	userName: string;

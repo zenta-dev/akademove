@@ -1,14 +1,9 @@
-/** @jsxImportSource react */
 import { env } from "cloudflare:workers";
+import { render } from "@react-email/components";
+import { InvitationEmail } from "emails/invitation";
+import { ResetPasswordEmail } from "emails/reset-password";
 import * as React from "react";
 import { Resend } from "resend";
-import {
-	createEmailService,
-	type EmailService,
-	InvitationEmail,
-	MAIL_SENDERS,
-	ResetPasswordEmail,
-} from "@/emails";
 import { MailError } from "../error";
 
 interface BaseSendMailProps {
@@ -30,6 +25,20 @@ interface SendInvitationProps {
 	password: string;
 	role: string;
 }
+interface RenderEmailOptions {
+	pretty?: boolean;
+	plainText?: boolean;
+}
+
+interface SendEmailOptions {
+	from?: string;
+	to: string | string[];
+	subject: string;
+	replyTo?: string;
+	cc?: string | string[];
+	bcc?: string | string[];
+	tags?: Array<{ name: string; value: string }>;
+}
 
 export interface MailService {
 	sendMail(props: BaseSendMailProps): Promise<void>;
@@ -40,18 +49,15 @@ export interface MailService {
 // TODO: Replace with actual domain
 export const MAIL_FROMS = {
 	DEFAULT: "Akademove <no-reply@mail.akademove.com>",
-	VERIFICATION: "Akademove Security <security@mail.akademove.com>",
-	RESET_PASSWORD: "Akademove Security <security@mail.akademove.com>",
+	SECURITY: "Akademove Security <security@mail.akademove.com>",
 	INVITATION: "Akademove <no-reply@mail.akademove.com>",
 };
 
 export class ResendMailService implements MailService {
 	#client: Resend;
-	#emailService: EmailService;
 
 	constructor(apiKey: string) {
 		this.#client = new Resend(apiKey);
-		this.#emailService = createEmailService();
 	}
 
 	async sendMail(props: BaseSendMailProps): Promise<void> {
@@ -64,13 +70,13 @@ export class ResendMailService implements MailService {
 
 	async sendResetPassword(props: SendResetPasswordProps): Promise<void> {
 		try {
-			await this.#emailService.send(
+			await this.#send(
 				React.createElement(ResetPasswordEmail, {
 					userName: props.userName ?? "User",
 					resetUrl: props.url,
 				}),
 				{
-					from: MAIL_SENDERS.SECURITY,
+					from: MAIL_FROMS.SECURITY,
 					to: props.to,
 					subject: "Reset Your AkadeMove Password",
 				},
@@ -83,7 +89,7 @@ export class ResendMailService implements MailService {
 
 	async sendInvitation(props: SendInvitationProps): Promise<void> {
 		try {
-			await this.#emailService.send(
+			await this.#send(
 				React.createElement(InvitationEmail, {
 					email: props.email,
 					password: props.password,
@@ -91,7 +97,7 @@ export class ResendMailService implements MailService {
 					loginUrl: `${env.CORS_ORIGIN}/sign-in`,
 				}),
 				{
-					from: MAIL_SENDERS.DEFAULT,
+					from: MAIL_FROMS.DEFAULT,
 					to: props.to,
 					subject: "Welcome to AkadeMove Platform",
 				},
@@ -99,6 +105,54 @@ export class ResendMailService implements MailService {
 		} catch (error) {
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send invitation email");
+		}
+	}
+
+	async #render(
+		component: React.ReactElement,
+		opts: RenderEmailOptions = {},
+	): Promise<string> {
+		try {
+			const html = await render(component, {
+				pretty: opts.pretty ?? false,
+				plainText: opts.plainText ?? false,
+			});
+			return html;
+		} catch (_error) {
+			throw new MailError("Failed to render email template");
+		}
+	}
+
+	async #send(
+		component: React.ReactElement,
+		opts: SendEmailOptions,
+	): Promise<{ id: string }> {
+		try {
+			const [html, text] = await Promise.all([
+				this.#render(component),
+				this.#render(component, { plainText: true }),
+			]);
+
+			const response = await this.#client.emails.send({
+				from: opts.from ?? MAIL_FROMS.DEFAULT,
+				to: opts.to,
+				subject: opts.subject,
+				html,
+				text,
+				replyTo: opts.replyTo,
+				cc: opts.cc,
+				bcc: opts.bcc,
+				tags: opts.tags,
+			});
+
+			if (!response.data?.id) {
+				throw new MailError("Failed to send email - no response ID");
+			}
+
+			return { id: response.data.id };
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send email");
 		}
 	}
 }
