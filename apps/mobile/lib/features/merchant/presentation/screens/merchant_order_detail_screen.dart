@@ -38,13 +38,26 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   Future<void> _handleAcceptOrder() async {
     if (_merchantId == null) {
-      showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
 
-    final confirmed = await showMyDialog(
-      title: 'Accept Order',
-      message: 'Are you sure you want to accept this order?',
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Accept Order'),
+        content: const Text('Are you sure you want to accept this order?'),
+        actions: [
+          Button.ghost(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          Button.primary(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Accept'),
+          ),
+        ],
+      ),
     );
 
     if (confirmed == true && mounted) {
@@ -58,13 +71,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         if (cubitState.isSuccess) {
           if (cubitState.selected != null) {
             setState(() => _currentOrder = cubitState.selected!);
-            showMyToast(
+            context.showMyToast(
               cubitState.message ?? 'Order accepted successfully',
               type: ToastType.success,
             );
           }
         } else if (cubitState.isFailure) {
-          showMyToast(
+          context.showMyToast(
             cubitState.error?.message ?? 'Failed to accept order',
             type: ToastType.failed,
           );
@@ -75,14 +88,27 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   Future<void> _handleRejectOrder() async {
     if (_merchantId == null) {
-      showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
 
     // For now, use a simple dialog. TODO: Create proper rejection dialog with reasons
-    final confirmed = await showMyDialog(
-      title: 'Reject Order',
-      message: 'Are you sure you want to reject this order?',
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reject Order'),
+        content: const Text('Are you sure you want to reject this order?'),
+        actions: [
+          Button.ghost(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          Button.destructive(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Reject'),
+          ),
+        ],
+      ),
     );
 
     if (confirmed == true && mounted) {
@@ -96,13 +122,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       if (mounted) {
         final cubitState = context.read<MerchantOrderCubit>().state;
         if (cubitState.isSuccess) {
-          showMyToast(
+          context.showMyToast(
             cubitState.message ?? 'Order rejected successfully',
             type: ToastType.success,
           );
           context.pop(); // Go back to order list
         } else if (cubitState.isFailure) {
-          showMyToast(
+          context.showMyToast(
             cubitState.error?.message ?? 'Failed to reject order',
             type: ToastType.failed,
           );
@@ -113,7 +139,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   Future<void> _handleMarkPreparing() async {
     if (_merchantId == null) {
-      showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
 
@@ -127,13 +153,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       if (cubitState.isSuccess) {
         if (cubitState.selected != null) {
           setState(() => _currentOrder = cubitState.selected!);
-          showMyToast(
+          context.showMyToast(
             cubitState.message ?? 'Order marked as preparing',
             type: ToastType.success,
           );
         }
       } else if (cubitState.isFailure) {
-        showMyToast(
+        context.showMyToast(
           cubitState.error?.message ?? 'Failed to update order',
           type: ToastType.failed,
         );
@@ -143,7 +169,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
   Future<void> _handleMarkReady() async {
     if (_merchantId == null) {
-      showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
 
@@ -157,13 +183,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       if (cubitState.isSuccess) {
         if (cubitState.selected != null) {
           setState(() => _currentOrder = cubitState.selected!);
-          showMyToast(
+          context.showMyToast(
             cubitState.message ?? 'Order marked as ready for pickup',
             type: ToastType.success,
           );
         }
       } else if (cubitState.isFailure) {
-        showMyToast(
+        context.showMyToast(
           cubitState.error?.message ?? 'Failed to update order',
           type: ToastType.failed,
         );
@@ -303,7 +329,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   const Icon(Icons.menu_book_rounded),
                   Expanded(
                     child: Text(
-                      _currentOrder.note?.text ?? '',
+                      _currentOrder.note?.instructions ?? '',
                       style: context.typography.small.copyWith(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
