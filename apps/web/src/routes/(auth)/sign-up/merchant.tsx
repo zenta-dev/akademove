@@ -7,6 +7,7 @@ import {
 } from "@repo/schema/auth";
 import type { CountryCode } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
+import { createDefaults } from "@repo/schema/default.helper";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -71,26 +72,13 @@ function RouteComponent() {
 	const form = useForm({
 		resolver: zodResolver(FlatSignUpMerchantSchema),
 		defaultValues: {
-			name: "",
-			email: "",
-			gender: "MALE",
-			phone_countryCode: "ID",
-			phone_number: 0,
-			password: "",
-			confirmPassword: "",
-			detail_document: undefined,
-			detail_name: "",
-			detail_email: "",
-			detail_phone_countryCode: "ID",
-			detail_phone_number: 0,
-			detail_address: "",
-			detail_bank_provider: undefined,
-			detail_bank_number: "",
-			detail_category: undefined,
-			detail_location_x: 0,
-			detail_location_y: 0,
-			// detail_location_lat: 0,
-			// detail_location_lng: 0,
+			...createDefaults(FlatSignUpMerchantSchema, {
+				overrides: {
+					gender: "MALE",
+					phone_countryCode: "ID",
+					detail_phone_countryCode: "ID",
+				},
+			}),
 		},
 	});
 
@@ -645,8 +633,10 @@ function RouteComponent() {
 										<FormControl>
 											<MapWrapper
 												value={{
-													lat: form.getValues("detail_location_y"),
-													lng: form.getValues("detail_location_x"),
+													lat: (form.getValues("detail_location_y") ||
+														0) as number,
+													lng: (form.getValues("detail_location_x") ||
+														0) as number,
 												}}
 												onLocationChange={({ lat, lng }) => {
 													form.setValue("detail_location_y", lat);
