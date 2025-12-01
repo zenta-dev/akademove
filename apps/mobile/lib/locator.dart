@@ -63,6 +63,7 @@ void _setupRepository() {
       () => MerchantOrderRepository(apiClient: sl<ApiClient>()),
     )
     ..registerLazySingleton(() => DriverRepository(apiClient: sl<ApiClient>()))
+    ..registerLazySingleton(() => ReviewRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => ConfigurationRepository(apiClient: sl<ApiClient>()),
     )
@@ -166,5 +167,8 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => DriverProfileCubit(driverRepository: sl<DriverRepository>()),
+    )
+    ..registerFactory(
+      () => ReviewCubit(reviewRepository: sl<ReviewRepository>()),
     );
 }
