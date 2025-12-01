@@ -7,11 +7,14 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.REQUESTED => Colors.blue,
       OrderStatus.MATCHING => Colors.indigo,
       OrderStatus.ACCEPTED => Colors.teal,
+      OrderStatus.PREPARING => Colors.amber,
+      OrderStatus.READY_FOR_PICKUP => Colors.lime,
       OrderStatus.ARRIVING => Colors.yellow,
       OrderStatus.IN_TRIP => Colors.purple,
       OrderStatus.COMPLETED => Colors.green,
       OrderStatus.CANCELLED_BY_USER => Colors.red,
       OrderStatus.CANCELLED_BY_DRIVER => Colors.orange,
+      OrderStatus.CANCELLED_BY_MERCHANT => Colors.pink,
       OrderStatus.CANCELLED_BY_SYSTEM => Colors.gray,
     };
   }
@@ -21,11 +24,14 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.REQUESTED => LucideIcons.clock,
       OrderStatus.MATCHING => LucideIcons.search,
       OrderStatus.ACCEPTED => LucideIcons.circleCheck,
+      OrderStatus.PREPARING => LucideIcons.chefHat,
+      OrderStatus.READY_FOR_PICKUP => LucideIcons.packageCheck,
       OrderStatus.ARRIVING => LucideIcons.navigation,
       OrderStatus.IN_TRIP => LucideIcons.car,
       OrderStatus.COMPLETED => LucideIcons.flag,
       OrderStatus.CANCELLED_BY_USER => LucideIcons.userX,
       OrderStatus.CANCELLED_BY_DRIVER => LucideIcons.octagonX,
+      OrderStatus.CANCELLED_BY_MERCHANT => LucideIcons.store,
       OrderStatus.CANCELLED_BY_SYSTEM => LucideIcons.triangleAlert,
     };
   }
@@ -35,11 +41,14 @@ extension OrderStatusExt on OrderStatus {
       OrderStatus.REQUESTED => 'Requested',
       OrderStatus.MATCHING => 'Matching',
       OrderStatus.ACCEPTED => 'Accepted',
+      OrderStatus.PREPARING => 'Preparing',
+      OrderStatus.READY_FOR_PICKUP => 'Ready for Pickup',
       OrderStatus.ARRIVING => 'Arriving',
       OrderStatus.IN_TRIP => 'In Trip',
       OrderStatus.COMPLETED => 'Completed',
       OrderStatus.CANCELLED_BY_USER => 'Cancelled by User',
       OrderStatus.CANCELLED_BY_DRIVER => 'Cancelled by Driver',
+      OrderStatus.CANCELLED_BY_MERCHANT => 'Cancelled by Merchant',
       OrderStatus.CANCELLED_BY_SYSTEM => 'Cancelled by System',
     };
   }

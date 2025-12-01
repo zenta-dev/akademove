@@ -620,7 +620,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           ? Row(
               spacing: 16.w,
               children: [
-                Expanded(child: primaryButton!),
+                Expanded(child: primaryButton),
                 Expanded(child: secondaryButton),
               ],
             )
