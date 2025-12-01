@@ -73,6 +73,8 @@ export const TRANSACTION_TYPE = [
 	"PAYMENT",
 	"REFUND",
 	"ADJUSTMENT",
+	"COMMISSION",
+	"EARNING",
 ] as const;
 export const TRANSACTION_STATUS = [
 	"PENDING",

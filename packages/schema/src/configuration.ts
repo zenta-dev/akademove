@@ -44,7 +44,8 @@ export type PricingConfiguration = z.infer<typeof PricingConfigurationSchema>;
 export type ConfigurationValue =
 	| RidePricingConfiguration
 	| DeliveryPricingConfiguration
-	| FoodPricingConfiguration;
+	| FoodPricingConfiguration
+	| CommissionConfiguration;
 
 export const BannerConfigurationSchema = z.object({
 	title: z.string(),
@@ -68,6 +69,40 @@ export const EmergencyContactConfigurationSchema = z.object({
 });
 export type EmergencyContactConfiguration = z.infer<
 	typeof EmergencyContactConfigurationSchema
+>;
+
+export const CommissionConfigurationSchema = z.object({
+	rideCommissionRate: z.coerce
+		.number()
+		.min(0)
+		.max(1)
+		.describe(
+			"Platform commission rate for RIDE orders (0-1, e.g., 0.15 for 15%)",
+		),
+	deliveryCommissionRate: z.coerce
+		.number()
+		.min(0)
+		.max(1)
+		.describe(
+			"Platform commission rate for DELIVERY orders (0-1, e.g., 0.15 for 15%)",
+		),
+	foodCommissionRate: z.coerce
+		.number()
+		.min(0)
+		.max(1)
+		.describe(
+			"Platform commission rate for FOOD orders (0-1, e.g., 0.20 for 20%)",
+		),
+	merchantCommissionRate: z.coerce
+		.number()
+		.min(0)
+		.max(1)
+		.describe(
+			"Merchant commission rate on food orders (0-1, e.g., 0.10 for 10%)",
+		),
+});
+export type CommissionConfiguration = z.infer<
+	typeof CommissionConfigurationSchema
 >;
 
 export const ConfigurationSchema = z.object({
@@ -124,6 +159,10 @@ export const ConfigurationSchemaRegistries = {
 	},
 	EmergencyContactConfiguration: {
 		schema: EmergencyContactConfigurationSchema,
+		strategy: "output",
+	},
+	CommissionConfiguration: {
+		schema: CommissionConfigurationSchema,
 		strategy: "output",
 	},
 	Configuration: { schema: ConfigurationSchema, strategy: "output" },
