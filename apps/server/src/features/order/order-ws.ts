@@ -97,12 +97,21 @@ export class OrderRoom extends BaseDurableObject {
 		// Optimized: Single query up to 50km = <1 second (20x faster)
 		// The repository already filters for available drivers (isTakingOrder = false)
 		const maxRadiusKm = 50;
+
+		// Determine driver gender filter based on user's gender preference
+		let driverGenderFilter: "MALE" | "FEMALE" | undefined;
+		if (findOrder.genderPreference === "SAME" && findOrder.gender) {
+			// User wants same gender driver
+			driverGenderFilter = findOrder.gender;
+		}
+		// If preference is "ANY" or not set, driverGenderFilter remains undefined (matches any gender)
+
 		const nearbyDrivers = await this.#repo.driver.main.nearby({
 			x: findOrder.pickupLocation.x,
 			y: findOrder.pickupLocation.y,
 			radiusKm: maxRadiusKm,
 			limit: 10, // Get multiple drivers to increase acceptance chance
-			gender: findOrder.gender,
+			gender: driverGenderFilter,
 		});
 
 		log.info(

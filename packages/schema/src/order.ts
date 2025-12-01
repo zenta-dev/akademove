@@ -24,6 +24,9 @@ export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 export const OrderTypeSchema = z.enum(CONSTANTS.ORDER_TYPES);
 export type OrderType = z.infer<typeof OrderTypeSchema>;
 
+export const GenderPreferenceSchema = z.enum(["SAME", "ANY"]);
+export type GenderPreference = z.infer<typeof GenderPreferenceSchema>;
+
 export const OrderNoteSchema = z.object({
 	pickup: z.string().optional(),
 	dropoff: z.string().optional(),
@@ -84,6 +87,7 @@ export const OrderSchema = z.object({
 	updatedAt: DateSchema,
 
 	gender: UserGenderSchema.optional(),
+	genderPreference: GenderPreferenceSchema.optional(),
 
 	// delivery, food
 	itemCount: z.number().optional(),

@@ -92,6 +92,7 @@ export const order = pgTable(
 		...DateModifier,
 
 		gender: userGender(),
+		genderPreference: text("gender_preference").$type<"SAME" | "ANY">(),
 	},
 	(t) => [
 		// Foreign key indexes for filtering by user/driver/merchant
