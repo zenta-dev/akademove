@@ -3,6 +3,7 @@ import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { hasPermission, requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
+import { log } from "@/utils";
 import { MerchantMainSpec } from "./merchant-main-spec";
 
 const { priv } = createORPCRouter(MerchantMainSpec);
@@ -40,7 +41,10 @@ export const MerchantMainHandler = priv.router({
 		.use(hasPermission({ merchant: ["list"] }))
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
-			console.log("POPULARS MERCHANT => ", query);
+			log.debug(
+				{ query, userId: context.user.id },
+				"[MerchantMainHandler] Getting popular merchants",
+			);
 			const result =
 				await context.repo.merchant.main.getPopularMerchants(query);
 
@@ -56,7 +60,10 @@ export const MerchantMainHandler = priv.router({
 		.use(hasPermission({ merchant: ["get"] }))
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { params } }) => {
-			console.log("GET MERCHANT => ", params);
+			log.debug(
+				{ merchantId: params.id, userId: context.user.id },
+				"[MerchantMainHandler] Getting merchant",
+			);
 			const result = await context.repo.merchant.main.get(params.id);
 
 			return {

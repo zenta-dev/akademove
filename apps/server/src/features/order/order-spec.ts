@@ -20,7 +20,6 @@ import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 const _UnifiedPaginationQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 	statuses: z
 		.preprocess((val) => {
-			console.log("STATUSES => ", val);
 			if (val === undefined) return undefined;
 
 			if (Array.isArray(val)) return val;

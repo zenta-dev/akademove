@@ -8,7 +8,7 @@ import {
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
-import { isDev } from "@/utils";
+import { isDev, log } from "@/utils";
 import { AuthSpec } from "./auth-spec";
 
 const { pub, priv } = createORPCRouter(AuthSpec);
@@ -60,7 +60,7 @@ export const AuthHandler = pub.router({
 					},
 				} as const;
 			} catch (error) {
-				console.error(error);
+				log.error({ error }, "[AuthHandler] Failed to sign up user");
 				if (error instanceof BaseError) {
 					throw error;
 				}
@@ -105,7 +105,7 @@ export const AuthHandler = pub.router({
 						},
 					} as const;
 				} catch (error) {
-					console.error(error);
+					log.error({ error }, "[AuthHandler] Failed to sign up driver");
 					if (error instanceof BaseError) {
 						throw error;
 					}
@@ -152,7 +152,7 @@ export const AuthHandler = pub.router({
 						},
 					} as const;
 				} catch (error) {
-					console.error(error);
+					log.error({ error }, "[AuthHandler] Failed to sign up merchant");
 					if (error instanceof BaseError) {
 						throw error;
 					}

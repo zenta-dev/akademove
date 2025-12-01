@@ -2,6 +2,7 @@ import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
+import { log } from "@/utils";
 import { OrderSpec } from "./order-spec";
 
 const { priv } = createORPCRouter(OrderSpec);
@@ -13,7 +14,10 @@ export const OrderHandler = priv.router({
 			let id: string | undefined;
 			const role = context.user.role;
 
-			console.log("QUERY => ", query);
+			log.debug(
+				{ query, role, userId: context.user.id },
+				"[OrderHandler] Listing orders",
+			);
 
 			if (role === "MERCHANT") {
 				const mine = await context.repo.merchant.main.getByUserId(
