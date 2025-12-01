@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+import '../widgets/review_submission_dialog.dart';
+
 class DriverOrderDetailScreen extends StatefulWidget {
   const DriverOrderDetailScreen({required this.orderId, super.key});
 
@@ -221,6 +223,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       case OrderStatus.MATCHING:
         statusText = 'Finding Driver';
         statusColor = material.Colors.blue;
+      case OrderStatus.PREPARING:
+        statusText = 'Preparing';
+        statusColor = material.Colors.orange;
+      case OrderStatus.READY_FOR_PICKUP:
+        statusText = 'Ready for Pickup';
+        statusColor = material.Colors.green;
       case OrderStatus.ACCEPTED:
         statusText = 'Order Accepted';
         statusColor = material.Colors.green;
@@ -235,6 +243,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         statusColor = material.Colors.green;
       case OrderStatus.CANCELLED_BY_USER:
       case OrderStatus.CANCELLED_BY_DRIVER:
+      case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
         statusText = 'Cancelled';
         statusColor = material.Colors.red;
@@ -521,7 +530,37 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       );
     }
 
-    // Completed or cancelled - show back button
+    // Completed - show rating and back button
+    if (status == OrderStatus.COMPLETED) {
+      return Column(
+        spacing: 12.h,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: PrimaryButton(
+              onPressed: () async {
+                await showReviewDialog(
+                  context: context,
+                  orderId: order.id,
+                  toUserId: order.userId,
+                  toUserName: order.user?.name ?? 'Customer',
+                );
+              },
+              child: const Text('Rate Customer'),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: OutlineButton(
+              onPressed: () => context.goNamed(Routes.driverHome.name),
+              child: const Text('Back to Home'),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // Cancelled - show back button only
     return SizedBox(
       width: double.infinity,
       child: PrimaryButton(

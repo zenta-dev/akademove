@@ -445,6 +445,9 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
       case OrderStatus.REQUESTED:
       case OrderStatus.MATCHING:
         return material.Colors.orange;
+      case OrderStatus.PREPARING:
+      case OrderStatus.READY_FOR_PICKUP:
+        return material.Colors.orange;
       case OrderStatus.ACCEPTED:
       case OrderStatus.ARRIVING:
         return material.Colors.blue;
@@ -454,6 +457,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return material.Colors.green;
       case OrderStatus.CANCELLED_BY_USER:
       case OrderStatus.CANCELLED_BY_DRIVER:
+      case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
         return material.Colors.red;
     }
@@ -465,6 +469,10 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return 'Requested';
       case OrderStatus.MATCHING:
         return 'Matching';
+      case OrderStatus.PREPARING:
+        return 'Preparing';
+      case OrderStatus.READY_FOR_PICKUP:
+        return 'Ready for Pickup';
       case OrderStatus.ACCEPTED:
         return 'Accepted';
       case OrderStatus.ARRIVING:
@@ -475,6 +483,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return 'Completed';
       case OrderStatus.CANCELLED_BY_USER:
       case OrderStatus.CANCELLED_BY_DRIVER:
+      case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
         return 'Cancelled';
     }
