@@ -354,5 +354,17 @@
   "confirm_booking": "Konfirmasi Pemesanan",
   "package_details": "Detail Paket",
   "recipient_name": "Nama Penerima",
-  "recipient_phone": "Telepon Penerima"
+  "recipient_phone": "Telepon Penerima",
+  "manage_your_merchant_profile": "Lihat dan perbarui informasi bisnis Anda",
+  "business_information": "Informasi Bisnis",
+  "your_merchant_details": "Detail profil merchant Anda",
+  "business_name": "Nama Bisnis",
+  "bank_information": "Informasi Bank",
+  "your_payment_details": "Informasi akun pembayaran Anda",
+  "merchant_photo": "Foto Merchant",
+  "update_your_merchant_information": "Perbarui informasi profil bisnis Anda",
+  "failed_to_load_merchant_profile": "Gagal memuat profil merchant",
+  "edit_profile": "Edit Profil",
+  "update_profile": "Perbarui Profil",
+  "select_category": "Pilih kategori"
 }

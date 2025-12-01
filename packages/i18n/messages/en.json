@@ -354,5 +354,17 @@
   "confirm_booking": "Confirm Booking",
   "package_details": "Package Details",
   "recipient_name": "Recipient Name",
-  "recipient_phone": "Recipient Phone"
+  "recipient_phone": "Recipient Phone",
+  "manage_your_merchant_profile": "View and update your business information",
+  "business_information": "Business Information",
+  "your_merchant_details": "Your merchant profile details",
+  "business_name": "Business Name",
+  "bank_information": "Bank Information",
+  "your_payment_details": "Your payment account information",
+  "merchant_photo": "Merchant Photo",
+  "update_your_merchant_information": "Update your business profile information",
+  "failed_to_load_merchant_profile": "Failed to load merchant profile",
+  "edit_profile": "Edit Profile",
+  "update_profile": "Update Profile",
+  "select_category": "Select a category"
 }
