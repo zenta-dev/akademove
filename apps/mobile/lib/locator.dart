@@ -143,5 +143,22 @@ void _setupCubit() {
       () => ConfigurationCubit(
         configurationRepository: sl<ConfigurationRepository>(),
       ),
+    )
+    ..registerFactory(
+      () => DriverHomeCubit(
+        driverRepository: sl<DriverRepository>(),
+        orderRepository: sl<OrderRepository>(),
+        webSocketService: sl<WebSocketService>(),
+      ),
+    )
+    ..registerFactory(
+      () => DriverOrderCubit(
+        orderRepository: sl<OrderRepository>(),
+        webSocketService: sl<WebSocketService>(),
+        driverRepository: sl<DriverRepository>(),
+      ),
+    )
+    ..registerFactory(
+      () => DriverProfileCubit(driverRepository: sl<DriverRepository>()),
     );
 }
