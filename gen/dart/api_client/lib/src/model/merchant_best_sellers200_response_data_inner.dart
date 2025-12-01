@@ -27,33 +27,33 @@ class MerchantBestSellers200ResponseDataInner {
 
   @JsonKey(name: r'menu', required: true, includeIfNull: false)
   final MerchantBestSellers200ResponseDataInnerMenu menu;
-
+  
   @JsonKey(name: r'merchant', required: true, includeIfNull: false)
   final MerchantBestSellers200ResponseDataInnerMerchant merchant;
-
+  
   @JsonKey(name: r'orderCount', required: true, includeIfNull: false)
   final num orderCount;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is MerchantBestSellers200ResponseDataInner &&
+    other.menu == menu &&
+    other.merchant == merchant &&
+    other.orderCount == orderCount;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MerchantBestSellers200ResponseDataInner &&
-          other.menu == menu &&
-          other.merchant == merchant &&
-          other.orderCount == orderCount;
+  int get hashCode =>
+      menu.hashCode +
+      merchant.hashCode +
+      orderCount.hashCode;
 
-  @override
-  int get hashCode => menu.hashCode + merchant.hashCode + orderCount.hashCode;
+  factory MerchantBestSellers200ResponseDataInner.fromJson(Map<String, dynamic> json) => _$MerchantBestSellers200ResponseDataInnerFromJson(json);
 
-  factory MerchantBestSellers200ResponseDataInner.fromJson(
-    Map<String, dynamic> json,
-  ) => _$MerchantBestSellers200ResponseDataInnerFromJson(json);
-
-  Map<String, dynamic> toJson() =>
-      _$MerchantBestSellers200ResponseDataInnerToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantBestSellers200ResponseDataInnerToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
+
 }
+

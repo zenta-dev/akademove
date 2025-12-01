@@ -33,6 +33,8 @@ abstract class _$StatementsCWProxy {
 
   Statements configurations(List<StatementsConfigurationsEnum>? configurations);
 
+  Statements emergency(List<StatementsEmergencyEnum>? emergency);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
@@ -54,6 +56,7 @@ abstract class _$StatementsCWProxy {
     List<StatementsPricingEnum>? pricing,
     List<StatementsBookingsEnum>? bookings,
     List<StatementsConfigurationsEnum>? configurations,
+    List<StatementsEmergencyEnum>? emergency,
   });
 }
 
@@ -112,6 +115,10 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   ) => call(configurations: configurations);
 
   @override
+  Statements emergency(List<StatementsEmergencyEnum>? emergency) =>
+      call(emergency: emergency);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
@@ -133,6 +140,7 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
     Object? pricing = const $CopyWithPlaceholder(),
     Object? bookings = const $CopyWithPlaceholder(),
     Object? configurations = const $CopyWithPlaceholder(),
+    Object? emergency = const $CopyWithPlaceholder(),
   }) {
     return Statements(
       driver: driver == const $CopyWithPlaceholder()
@@ -187,6 +195,10 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
           ? _value.configurations
           // ignore: cast_nullable_to_non_nullable
           : configurations as List<StatementsConfigurationsEnum>?,
+      emergency: emergency == const $CopyWithPlaceholder()
+          ? _value.emergency
+          // ignore: cast_nullable_to_non_nullable
+          : emergency as List<StatementsEmergencyEnum>?,
     );
   }
 }
@@ -285,6 +297,12 @@ Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate(
             ?.map((e) => $enumDecode(_$StatementsConfigurationsEnumEnumMap, e))
             .toList(),
       ),
+      emergency: $checkedConvert(
+        'emergency',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsEmergencyEnumEnumMap, e))
+            .toList(),
+      ),
     );
     return val;
   },
@@ -329,6 +347,9 @@ Map<String, dynamic> _$StatementsToJson(
       .toList(),
   'configurations': ?instance.configurations
       ?.map((e) => _$StatementsConfigurationsEnumEnumMap[e]!)
+      .toList(),
+  'emergency': ?instance.emergency
+      ?.map((e) => _$StatementsEmergencyEnumEnumMap[e]!)
       .toList(),
 };
 
@@ -441,4 +462,11 @@ const _$StatementsConfigurationsEnumEnumMap = {
   StatementsConfigurationsEnum.list: 'list',
   StatementsConfigurationsEnum.get_: 'get',
   StatementsConfigurationsEnum.update: 'update',
+};
+
+const _$StatementsEmergencyEnumEnumMap = {
+  StatementsEmergencyEnum.list: 'list',
+  StatementsEmergencyEnum.get_: 'get',
+  StatementsEmergencyEnum.create: 'create',
+  StatementsEmergencyEnum.update: 'update',
 };

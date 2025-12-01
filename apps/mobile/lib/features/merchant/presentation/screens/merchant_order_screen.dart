@@ -178,12 +178,18 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
             return ListView.separated(
               itemCount: filtered.length,
               separatorBuilder: (_, __) => Gap(16.h),
-              itemBuilder: (_, index) => MerchantOrderCardWidget(
-                order: filtered[index],
-                onPressed: () {
-                  context.pushNamed(Routes.merchantOrderDetail.name);
-                },
-              ),
+              itemBuilder: (_, index) {
+                final order = filtered[index];
+                return MerchantOrderCardWidget(
+                  order: order,
+                  onPressed: () {
+                    context.pushNamed(
+                      Routes.merchantOrderDetail.name,
+                      extra: order,
+                    );
+                  },
+                );
+              },
             );
           },
           failure: (error) => _buildFail(

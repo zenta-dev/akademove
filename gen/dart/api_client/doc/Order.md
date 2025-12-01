@@ -23,6 +23,8 @@ Name | Type | Description | Notes
 **note** | [**OrderNote**](OrderNote.md) |  | [optional] 
 **requestedAt** | [**DateTime**](DateTime.md) |  | 
 **acceptedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**preparedAt** | [**DateTime**](DateTime.md) |  | [optional] 
+**readyAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **arrivedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **cancelReason** | **String** |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | 

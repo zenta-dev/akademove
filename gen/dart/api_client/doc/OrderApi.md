@@ -170,7 +170,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderGet**
-> OrderGet200Response orderGet(id)
+> MerchantOrderAccept200Response orderGet(id)
 
 
 
@@ -197,7 +197,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OrderGet200Response**](OrderGet200Response.md)
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
 
 ### Authorization
 
@@ -397,7 +397,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderUpdate**
-> OrderGet200Response orderUpdate(id, updateOrder)
+> MerchantOrderAccept200Response orderUpdate(id, updateOrder)
 
 
 
@@ -426,7 +426,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**OrderGet200Response**](OrderGet200Response.md)
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
 
 ### Authorization
 

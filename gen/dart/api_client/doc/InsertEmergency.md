@@ -8,7 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**orderId** | **String** |  | [optional] 
+**orderId** | **String** |  | 
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **type** | [**EmergencyType**](EmergencyType.md) |  | 

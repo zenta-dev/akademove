@@ -22,7 +22,10 @@ export const MerchantOrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string() }),
+				params: z.object({
+					merchantId: z.string(),
+					id: z.string(),
+				}),
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order accepted successfully")),
@@ -41,7 +44,10 @@ export const MerchantOrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string() }),
+				params: z.object({
+					merchantId: z.string(),
+					id: z.string(),
+				}),
 				body: RejectOrderBodySchema,
 			}),
 		)
@@ -57,7 +63,10 @@ export const MerchantOrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string() }),
+				params: z.object({
+					merchantId: z.string(),
+					id: z.string(),
+				}),
 			}),
 		)
 		.output(
@@ -74,7 +83,10 @@ export const MerchantOrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string() }),
+				params: z.object({
+					merchantId: z.string(),
+					id: z.string(),
+				}),
 			}),
 		)
 		.output(

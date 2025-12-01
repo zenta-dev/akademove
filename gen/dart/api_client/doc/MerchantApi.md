@@ -18,6 +18,10 @@ Method | HTTP request | Description
 [**merchantMenuList**](MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [**merchantMenuRemove**](MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [**merchantMenuUpdate**](MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[**merchantOrderAccept**](MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/orders/{id}/accept | 
+[**merchantOrderMarkPreparing**](MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/orders/{id}/preparing | 
+[**merchantOrderMarkReady**](MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/orders/{id}/ready | 
+[**merchantOrderReject**](MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
 [**merchantPopulars**](MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
@@ -436,6 +440,182 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantMenuCreate200Response**](MerchantMenuCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOrderAccept**
+> MerchantOrderAccept200Response merchantOrderAccept(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantOrderAccept(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOrderAccept: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOrderMarkPreparing**
+> MerchantOrderAccept200Response merchantOrderMarkPreparing(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantOrderMarkPreparing(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOrderMarkPreparing: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOrderMarkReady**
+> MerchantOrderAccept200Response merchantOrderMarkReady(merchantId, id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantOrderMarkReady(merchantId, id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOrderMarkReady: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantOrderReject**
+> MerchantOrderAccept200Response merchantOrderReject(merchantId, id, reason, note)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final String id = id_example; // String | 
+final String reason = reason_example; // String | 
+final String note = note_example; // String | 
+
+try {
+    final response = api.merchantOrderReject(merchantId, id, reason, note);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantOrderReject: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **id** | **String**|  | 
+ **reason** | **String**|  | 
+ **note** | **String**|  | [optional] 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
 
 ### Authorization
 

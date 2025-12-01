@@ -110,6 +110,10 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleRemove**](doc/DriverApi.md#driverscheduleremove) | **DELETE** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverScheduleUpdate**](doc/DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyGet**](doc/EmergencyApi.md#emergencyget) | **GET** /emergencies/{id} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyListByOrder**](doc/EmergencyApi.md#emergencylistbyorder) | **GET** /emergencies/order/{orderId} | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyTrigger**](doc/EmergencyApi.md#emergencytrigger) | **POST** /emergencies | 
+[*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyUpdateStatus**](doc/EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
@@ -121,6 +125,10 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuList**](doc/MerchantApi.md#merchantmenulist) | **GET** /merchants/{merchantId}/menus | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuRemove**](doc/MerchantApi.md#merchantmenuremove) | **DELETE** /merchants/{merchantId}/menus/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuUpdate**](doc/MerchantApi.md#merchantmenuupdate) | **PUT** /merchants/{merchantId}/menus/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderAccept**](doc/MerchantApi.md#merchantorderaccept) | **POST** /merchants/{merchantId}/orders/orders/{id}/accept | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkPreparing**](doc/MerchantApi.md#merchantordermarkpreparing) | **PUT** /merchants/{merchantId}/orders/orders/{id}/preparing | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderMarkReady**](doc/MerchantApi.md#merchantordermarkready) | **PUT** /merchants/{merchantId}/orders/orders/{id}/ready | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderReject**](doc/MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
@@ -223,9 +231,12 @@ Class | Method | HTTP request | Description
  - [Emergency](doc/Emergency.md)
  - [EmergencyContactConfiguration](doc/EmergencyContactConfiguration.md)
  - [EmergencyKey](doc/EmergencyKey.md)
+ - [EmergencyListByOrder200Response](doc/EmergencyListByOrder200Response.md)
  - [EmergencyLocation](doc/EmergencyLocation.md)
  - [EmergencyStatus](doc/EmergencyStatus.md)
+ - [EmergencyTrigger200Response](doc/EmergencyTrigger200Response.md)
  - [EmergencyType](doc/EmergencyType.md)
+ - [EmergencyUpdateStatusRequest](doc/EmergencyUpdateStatusRequest.md)
  - [EnvelopeSender](doc/EnvelopeSender.md)
  - [EnvelopeTarget](doc/EnvelopeTarget.md)
  - [EstimateOrder](doc/EstimateOrder.md)
@@ -261,6 +272,7 @@ Class | Method | HTTP request | Description
  - [MerchantMenuCreate200Response](doc/MerchantMenuCreate200Response.md)
  - [MerchantMenuKey](doc/MerchantMenuKey.md)
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
+ - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
  - [NotificationList200Response](doc/NotificationList200Response.md)
  - [NotificationSaveToken200Response](doc/NotificationSaveToken200Response.md)
@@ -283,7 +295,6 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadDriverUpdateLocation](doc/OrderEnvelopePayloadDriverUpdateLocation.md)
  - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
- - [OrderGet200Response](doc/OrderGet200Response.md)
  - [OrderItem](doc/OrderItem.md)
  - [OrderItemItem](doc/OrderItemItem.md)
  - [OrderKey](doc/OrderKey.md)

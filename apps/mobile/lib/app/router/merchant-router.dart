@@ -51,7 +51,8 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.merchantOrderDetail.name,
           path: Routes.merchantOrderDetail.path,
-          builder: (context, state) => const MerchantOrderDetailScreen(),
+          builder: (context, state) =>
+              MerchantOrderDetailScreen(order: state.extra! as Order),
         ),
       ],
     ),

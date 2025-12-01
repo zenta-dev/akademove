@@ -23,9 +23,9 @@ part 'order_envelope.g.dart';
 class OrderEnvelope {
   /// Returns a new [OrderEnvelope] instance.
   const OrderEnvelope({
-    this.e,
-    this.a,
-    this.tg,
+     this.e,
+     this.a,
+     this.tg,
     required this.f,
     required this.t,
     required this.p,
@@ -33,32 +33,30 @@ class OrderEnvelope {
 
   @JsonKey(name: r'e', required: false, includeIfNull: false)
   final OrderEnvelopeEvent? e;
-
+  
   @JsonKey(name: r'a', required: false, includeIfNull: false)
   final OrderEnvelopeAction? a;
-
+  
   @JsonKey(name: r'tg', required: false, includeIfNull: false)
   final EnvelopeTarget? tg;
-
+  
   @JsonKey(name: r'f', required: true, includeIfNull: false)
   final EnvelopeSender f;
-
+  
   @JsonKey(name: r't', required: true, includeIfNull: false)
   final EnvelopeSender t;
-
+  
   @JsonKey(name: r'p', required: true, includeIfNull: false)
   final OrderEnvelopePayload p;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderEnvelope &&
-          other.e == e &&
-          other.a == a &&
-          other.tg == tg &&
-          other.f == f &&
-          other.t == t &&
-          other.p == p;
+  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelope &&
+    other.e == e &&
+    other.a == a &&
+    other.tg == tg &&
+    other.f == f &&
+    other.t == t &&
+    other.p == p;
 
   @override
   int get hashCode =>
@@ -69,8 +67,7 @@ class OrderEnvelope {
       t.hashCode +
       p.hashCode;
 
-  factory OrderEnvelope.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopeFromJson(json);
+  factory OrderEnvelope.fromJson(Map<String, dynamic> json) => _$OrderEnvelopeFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopeToJson(this);
 
@@ -78,4 +75,6 @@ class OrderEnvelope {
   String toString() {
     return toJson().toString();
   }
+
 }
+

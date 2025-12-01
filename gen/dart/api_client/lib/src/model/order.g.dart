@@ -37,6 +37,10 @@ abstract class _$OrderCWProxy {
 
   Order acceptedAt(DateTime? acceptedAt);
 
+  Order preparedAt(DateTime? preparedAt);
+
+  Order readyAt(DateTime? readyAt);
+
   Order arrivedAt(DateTime? arrivedAt);
 
   Order cancelReason(String? cancelReason);
@@ -80,6 +84,8 @@ abstract class _$OrderCWProxy {
     OrderNote? note,
     DateTime requestedAt,
     DateTime? acceptedAt,
+    DateTime? preparedAt,
+    DateTime? readyAt,
     DateTime? arrivedAt,
     String? cancelReason,
     DateTime createdAt,
@@ -148,6 +154,12 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order acceptedAt(DateTime? acceptedAt) => call(acceptedAt: acceptedAt);
 
   @override
+  Order preparedAt(DateTime? preparedAt) => call(preparedAt: preparedAt);
+
+  @override
+  Order readyAt(DateTime? readyAt) => call(readyAt: readyAt);
+
+  @override
   Order arrivedAt(DateTime? arrivedAt) => call(arrivedAt: arrivedAt);
 
   @override
@@ -201,6 +213,8 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? note = const $CopyWithPlaceholder(),
     Object? requestedAt = const $CopyWithPlaceholder(),
     Object? acceptedAt = const $CopyWithPlaceholder(),
+    Object? preparedAt = const $CopyWithPlaceholder(),
+    Object? readyAt = const $CopyWithPlaceholder(),
     Object? arrivedAt = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
@@ -280,6 +294,14 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.acceptedAt
           // ignore: cast_nullable_to_non_nullable
           : acceptedAt as DateTime?,
+      preparedAt: preparedAt == const $CopyWithPlaceholder()
+          ? _value.preparedAt
+          // ignore: cast_nullable_to_non_nullable
+          : preparedAt as DateTime?,
+      readyAt: readyAt == const $CopyWithPlaceholder()
+          ? _value.readyAt
+          // ignore: cast_nullable_to_non_nullable
+          : readyAt as DateTime?,
       arrivedAt: arrivedAt == const $CopyWithPlaceholder()
           ? _value.arrivedAt
           // ignore: cast_nullable_to_non_nullable
@@ -389,6 +411,14 @@ Order _$OrderFromJson(
       'acceptedAt',
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
+    preparedAt: $checkedConvert(
+      'preparedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    readyAt: $checkedConvert(
+      'readyAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
     arrivedAt: $checkedConvert(
       'arrivedAt',
       (v) => v == null ? null : DateTime.parse(v as String),
@@ -440,6 +470,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'note': ?instance.note?.toJson(),
   'requestedAt': instance.requestedAt.toIso8601String(),
   'acceptedAt': ?instance.acceptedAt?.toIso8601String(),
+  'preparedAt': ?instance.preparedAt?.toIso8601String(),
+  'readyAt': ?instance.readyAt?.toIso8601String(),
   'arrivedAt': ?instance.arrivedAt?.toIso8601String(),
   'cancelReason': ?instance.cancelReason,
   'createdAt': instance.createdAt.toIso8601String(),
@@ -462,11 +494,14 @@ const _$OrderStatusEnumMap = {
   OrderStatus.REQUESTED: 'REQUESTED',
   OrderStatus.MATCHING: 'MATCHING',
   OrderStatus.ACCEPTED: 'ACCEPTED',
+  OrderStatus.PREPARING: 'PREPARING',
+  OrderStatus.READY_FOR_PICKUP: 'READY_FOR_PICKUP',
   OrderStatus.ARRIVING: 'ARRIVING',
   OrderStatus.IN_TRIP: 'IN_TRIP',
   OrderStatus.COMPLETED: 'COMPLETED',
   OrderStatus.CANCELLED_BY_USER: 'CANCELLED_BY_USER',
   OrderStatus.CANCELLED_BY_DRIVER: 'CANCELLED_BY_DRIVER',
+  OrderStatus.CANCELLED_BY_MERCHANT: 'CANCELLED_BY_MERCHANT',
   OrderStatus.CANCELLED_BY_SYSTEM: 'CANCELLED_BY_SYSTEM',
 };
 

@@ -22,32 +22,30 @@ class LeaderboardGet200Response {
   const LeaderboardGet200Response({
     required this.message,
     required this.data,
-    this.pagination,
-    this.totalPages,
+     this.pagination,
+     this.totalPages,
   });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-
+  
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final Leaderboard data;
-
+  
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-
-  // minimum: 0
-  // maximum: 9007199254740991
+  
+          // minimum: 0
+          // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is LeaderboardGet200Response &&
-          other.message == message &&
-          other.data == data &&
-          other.pagination == pagination &&
-          other.totalPages == totalPages;
+  bool operator ==(Object other) => identical(this, other) || other is LeaderboardGet200Response &&
+    other.message == message &&
+    other.data == data &&
+    other.pagination == pagination &&
+    other.totalPages == totalPages;
 
   @override
   int get hashCode =>
@@ -56,8 +54,7 @@ class LeaderboardGet200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory LeaderboardGet200Response.fromJson(Map<String, dynamic> json) =>
-      _$LeaderboardGet200ResponseFromJson(json);
+  factory LeaderboardGet200Response.fromJson(Map<String, dynamic> json) => _$LeaderboardGet200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeaderboardGet200ResponseToJson(this);
 
@@ -65,4 +62,6 @@ class LeaderboardGet200Response {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -5,17 +5,18 @@
 // ignore_for_file: unused_element
 import 'package:json_annotation/json_annotation.dart';
 
+
 enum OrderEnvelopeAction {
-  @JsonValue(r'MATCHING')
-  MATCHING(r'MATCHING'),
-  @JsonValue(r'ACCEPTED')
-  ACCEPTED(r'ACCEPTED'),
-  @JsonValue(r'UPDATE_LOCATION')
-  UPDATE_LOCATION(r'UPDATE_LOCATION'),
-  @JsonValue(r'DONE')
-  DONE(r'DONE'),
-  @JsonValue(r'SEND_MESSAGE')
-  SEND_MESSAGE(r'SEND_MESSAGE');
+      @JsonValue(r'MATCHING')
+      MATCHING(r'MATCHING'),
+      @JsonValue(r'ACCEPTED')
+      ACCEPTED(r'ACCEPTED'),
+      @JsonValue(r'UPDATE_LOCATION')
+      UPDATE_LOCATION(r'UPDATE_LOCATION'),
+      @JsonValue(r'DONE')
+      DONE(r'DONE'),
+      @JsonValue(r'SEND_MESSAGE')
+      SEND_MESSAGE(r'SEND_MESSAGE');
 
   const OrderEnvelopeAction(this.value);
 

@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **id** | **String** |  | 
-**orderId** | **String** |  | [optional] 
+**orderId** | **String** |  | 
 **userId** | **String** |  | 
 **driverId** | **String** |  | [optional] 
 **type** | [**EmergencyType**](EmergencyType.md) |  | 

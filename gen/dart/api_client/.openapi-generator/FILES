@@ -67,11 +67,15 @@ doc/DriverUpdateRequestBank.md
 doc/DriverUpdateRequestCurrentLocation.md
 doc/DriverUser.md
 doc/Emergency.md
+doc/EmergencyApi.md
 doc/EmergencyContactConfiguration.md
 doc/EmergencyKey.md
+doc/EmergencyListByOrder200Response.md
 doc/EmergencyLocation.md
 doc/EmergencyStatus.md
+doc/EmergencyTrigger200Response.md
 doc/EmergencyType.md
+doc/EmergencyUpdateStatusRequest.md
 doc/EnvelopeSender.md
 doc/EnvelopeTarget.md
 doc/EstimateOrder.md
@@ -109,6 +113,7 @@ doc/MerchantMenu.md
 doc/MerchantMenuCreate200Response.md
 doc/MerchantMenuKey.md
 doc/MerchantMenuList200Response.md
+doc/MerchantOrderAccept200Response.md
 doc/MerchantPopulars200Response.md
 doc/NotificationApi.md
 doc/NotificationList200Response.md
@@ -133,7 +138,6 @@ doc/OrderEnvelopePayloadDone.md
 doc/OrderEnvelopePayloadDriverUpdateLocation.md
 doc/OrderEnvelopePayloadMessage.md
 doc/OrderEstimate200Response.md
-doc/OrderGet200Response.md
 doc/OrderItem.md
 doc/OrderItemItem.md
 doc/OrderKey.md
@@ -235,6 +239,7 @@ lib/src/api/badge_api.dart
 lib/src/api/configuration_api.dart
 lib/src/api/coupon_api.dart
 lib/src/api/driver_api.dart
+lib/src/api/emergency_api.dart
 lib/src/api/leaderboard_api.dart
 lib/src/api/merchant_api.dart
 lib/src/api/notification_api.dart
@@ -312,9 +317,12 @@ lib/src/model/driver_user.dart
 lib/src/model/emergency.dart
 lib/src/model/emergency_contact_configuration.dart
 lib/src/model/emergency_key.dart
+lib/src/model/emergency_list_by_order200_response.dart
 lib/src/model/emergency_location.dart
 lib/src/model/emergency_status.dart
+lib/src/model/emergency_trigger200_response.dart
 lib/src/model/emergency_type.dart
+lib/src/model/emergency_update_status_request.dart
 lib/src/model/envelope_sender.dart
 lib/src/model/envelope_target.dart
 lib/src/model/estimate_order.dart
@@ -350,6 +358,7 @@ lib/src/model/merchant_menu.dart
 lib/src/model/merchant_menu_create200_response.dart
 lib/src/model/merchant_menu_key.dart
 lib/src/model/merchant_menu_list200_response.dart
+lib/src/model/merchant_order_accept200_response.dart
 lib/src/model/merchant_populars200_response.dart
 lib/src/model/notification_list200_response.dart
 lib/src/model/notification_save_token200_response.dart
@@ -372,7 +381,6 @@ lib/src/model/order_envelope_payload_done.dart
 lib/src/model/order_envelope_payload_driver_update_location.dart
 lib/src/model/order_envelope_payload_message.dart
 lib/src/model/order_estimate200_response.dart
-lib/src/model/order_get200_response.dart
 lib/src/model/order_item.dart
 lib/src/model/order_item_item.dart
 lib/src/model/order_key.dart
@@ -461,11 +469,8 @@ lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 pubspec.yaml
-test/emergency_contact_configuration_test.dart
-test/emergency_key_test.dart
-test/emergency_location_test.dart
-test/emergency_status_test.dart
-test/emergency_test.dart
-test/emergency_type_test.dart
-test/insert_emergency_test.dart
-test/update_emergency_test.dart
+test/emergency_api_test.dart
+test/emergency_list_by_order200_response_test.dart
+test/emergency_trigger200_response_test.dart
+test/emergency_update_status_request_test.dart
+test/merchant_order_accept200_response_test.dart

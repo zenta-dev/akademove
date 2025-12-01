@@ -27,88 +27,86 @@ class Payment {
     required this.transactionId,
     required this.provider,
     required this.method,
-    this.bankProvider,
+     this.bankProvider,
     required this.amount,
     required this.status,
-    this.externalId,
-    this.paymentUrl,
-    this.vaNumber,
-    this.metadata,
-    this.expiresAt,
-    this.payload,
-    this.response,
+     this.externalId,
+     this.paymentUrl,
+     this.vaNumber,
+     this.metadata,
+     this.expiresAt,
+     this.payload,
+     this.response,
     required this.createdAt,
     required this.updatedAt,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-
+  
   @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
   final String transactionId;
-
+  
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final PaymentProvider provider;
-
+  
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final PaymentMethod method;
-
+  
   @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
   final BankProvider? bankProvider;
-
+  
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-
+  
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final TransactionStatus status;
-
+  
   @JsonKey(name: r'externalId', required: false, includeIfNull: false)
   final String? externalId;
-
+  
   @JsonKey(name: r'paymentUrl', required: false, includeIfNull: false)
   final String? paymentUrl;
-
+  
   @JsonKey(name: r'va_number', required: false, includeIfNull: false)
   final VANumber? vaNumber;
-
+  
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
-
+  
   @JsonKey(name: r'expiresAt', required: false, includeIfNull: false)
   final DateTime? expiresAt;
-
+  
   @JsonKey(name: r'payload', required: false, includeIfNull: false)
   final Object? payload;
-
+  
   @JsonKey(name: r'response', required: false, includeIfNull: false)
   final Object? response;
-
+  
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-
+  
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Payment &&
-          other.id == id &&
-          other.transactionId == transactionId &&
-          other.provider == provider &&
-          other.method == method &&
-          other.bankProvider == bankProvider &&
-          other.amount == amount &&
-          other.status == status &&
-          other.externalId == externalId &&
-          other.paymentUrl == paymentUrl &&
-          other.vaNumber == vaNumber &&
-          other.metadata == metadata &&
-          other.expiresAt == expiresAt &&
-          other.payload == payload &&
-          other.response == response &&
-          other.createdAt == createdAt &&
-          other.updatedAt == updatedAt;
+  bool operator ==(Object other) => identical(this, other) || other is Payment &&
+    other.id == id &&
+    other.transactionId == transactionId &&
+    other.provider == provider &&
+    other.method == method &&
+    other.bankProvider == bankProvider &&
+    other.amount == amount &&
+    other.status == status &&
+    other.externalId == externalId &&
+    other.paymentUrl == paymentUrl &&
+    other.vaNumber == vaNumber &&
+    other.metadata == metadata &&
+    other.expiresAt == expiresAt &&
+    other.payload == payload &&
+    other.response == response &&
+    other.createdAt == createdAt &&
+    other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -129,8 +127,7 @@ class Payment {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory Payment.fromJson(Map<String, dynamic> json) =>
-      _$PaymentFromJson(json);
+  factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaymentToJson(this);
 
@@ -138,4 +135,6 @@ class Payment {
   String toString() {
     return toJson().toString();
   }
+
 }
+

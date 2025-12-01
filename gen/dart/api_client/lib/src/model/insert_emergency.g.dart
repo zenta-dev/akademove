@@ -7,7 +7,7 @@ part of 'insert_emergency.dart';
 // **************************************************************************
 
 abstract class _$InsertEmergencyCWProxy {
-  InsertEmergency orderId(String? orderId);
+  InsertEmergency orderId(String orderId);
 
   InsertEmergency userId(String userId);
 
@@ -35,7 +35,7 @@ abstract class _$InsertEmergencyCWProxy {
   /// InsertEmergency(...).copyWith(id: 12, name: "My name")
   /// ```
   InsertEmergency call({
-    String? orderId,
+    String orderId,
     String userId,
     String? driverId,
     EmergencyType type,
@@ -56,7 +56,7 @@ class _$InsertEmergencyCWProxyImpl implements _$InsertEmergencyCWProxy {
   final InsertEmergency _value;
 
   @override
-  InsertEmergency orderId(String? orderId) => call(orderId: orderId);
+  InsertEmergency orderId(String orderId) => call(orderId: orderId);
 
   @override
   InsertEmergency userId(String userId) => call(userId: userId);
@@ -111,10 +111,10 @@ class _$InsertEmergencyCWProxyImpl implements _$InsertEmergencyCWProxy {
     Object? resolution = const $CopyWithPlaceholder(),
   }) {
     return InsertEmergency(
-      orderId: orderId == const $CopyWithPlaceholder()
+      orderId: orderId == const $CopyWithPlaceholder() || orderId == null
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
-          : orderId as String?,
+          : orderId as String,
       userId: userId == const $CopyWithPlaceholder() || userId == null
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
@@ -171,10 +171,16 @@ InsertEmergency _$InsertEmergencyFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertEmergency', json, ($checkedConvert) {
       $checkKeys(
         json,
-        requiredKeys: const ['userId', 'type', 'status', 'description'],
+        requiredKeys: const [
+          'orderId',
+          'userId',
+          'type',
+          'status',
+          'description',
+        ],
       );
       final val = InsertEmergency(
-        orderId: $checkedConvert('orderId', (v) => v as String?),
+        orderId: $checkedConvert('orderId', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
         driverId: $checkedConvert('driverId', (v) => v as String?),
         type: $checkedConvert(
@@ -204,7 +210,7 @@ InsertEmergency _$InsertEmergencyFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$InsertEmergencyToJson(InsertEmergency instance) =>
     <String, dynamic>{
-      'orderId': ?instance.orderId,
+      'orderId': instance.orderId,
       'userId': instance.userId,
       'driverId': ?instance.driverId,
       'type': _$EmergencyTypeEnumMap[instance.type]!,
