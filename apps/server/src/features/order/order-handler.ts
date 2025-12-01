@@ -1,4 +1,5 @@
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { OrderSpec } from "./order-spec";
@@ -95,6 +96,46 @@ export const OrderHandler = priv.router({
 		.use(hasPermission({ order: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			return await context.svc.db.transaction(async (tx) => {
+				// IDOR Protection: Users/Drivers can only update their own orders
+				// Admins/Operators can update any order
+				if (
+					context.user.role === "USER" ||
+					context.user.role === "DRIVER" ||
+					context.user.role === "MERCHANT"
+				) {
+					const order = await context.repo.order.get(params.id, { tx });
+
+					// Users can only update their own orders
+					if (
+						context.user.role === "USER" &&
+						order.userId !== context.user.id
+					) {
+						throw new AuthError("You can only update your own orders", {
+							code: "FORBIDDEN",
+						});
+					}
+
+					// Drivers can only update orders assigned to them
+					if (
+						context.user.role === "DRIVER" &&
+						order.driverId !== context.user.id
+					) {
+						throw new AuthError("You can only update orders assigned to you", {
+							code: "FORBIDDEN",
+						});
+					}
+
+					// Merchants can only update orders for their restaurant
+					if (
+						context.user.role === "MERCHANT" &&
+						order.merchantId !== context.user.id
+					) {
+						throw new AuthError("You can only update your own orders", {
+							code: "FORBIDDEN",
+						});
+					}
+				}
+
 				const data = trimObjectValues(body);
 				const result = await context.repo.order.update(params.id, data, { tx });
 

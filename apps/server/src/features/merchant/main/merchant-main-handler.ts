@@ -1,5 +1,6 @@
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { hasPermission, requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantMainSpec } from "./merchant-main-spec";
@@ -68,8 +69,19 @@ export const MerchantMainHandler = priv.router({
 		}),
 	update: priv.update
 		.use(hasPermission({ merchant: ["update"] }))
-		.use(requireRoles("DRIVER", "SYSTEM"))
+		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Merchants can only update their own profile
+			// Admins/Operators can update any merchant
+			if (context.user.role === "MERCHANT") {
+				const merchant = await context.repo.merchant.main.get(params.id);
+				if (merchant.userId !== context.user.id) {
+					throw new AuthError("You can only update your own merchant profile", {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
 			const data = trimObjectValues(unflattenData(body));
 			const result = await context.repo.merchant.main.update(params.id, data);
 

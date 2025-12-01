@@ -1,4 +1,5 @@
 import { trimObjectValues } from "@repo/shared";
+import { AuthError } from "@/core/error";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { DriverMainSpec } from "./driver-main-spec";
@@ -54,6 +55,17 @@ export const DriverMainHandler = priv.router({
 	update: priv.update
 		.use(hasPermission({ driver: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Drivers can only update their own profile
+			// Admins/Operators can update any driver
+			if (context.user.role === "DRIVER") {
+				const driver = await context.repo.driver.main.get(params.id);
+				if (driver.userId !== context.user.id) {
+					throw new AuthError("You can only update your own driver profile", {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
 			const data = trimObjectValues(body);
 			const result = await context.repo.driver.main.update(params.id, data);
 
