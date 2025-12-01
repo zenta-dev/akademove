@@ -4,7 +4,7 @@ import type { Permissions } from "@repo/shared";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
 import { isDev, log, safeAsync } from "@/utils";
-import { AuthError } from "../error";
+import { AuthError, MiddlewareError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
 const base = os.$context<ORPCContext>();
@@ -76,23 +76,23 @@ export const orpcRequireAuthMiddleware = base.middleware(
 	},
 );
 
-export const hasPermission = (_permissions: Permissions) =>
-	base.middleware(async ({ next }) => {
-		// const { user, svc } = context;
-		// if (!user) {
-		// 	throw new AuthError("Invalid session", {
-		// 		code: "UNAUTHORIZED",
-		// 	});
-		// }
-		// const ok = svc.rbac.hasPermission({ role: user.role, permissions });
-		// if (!ok) {
-		// 	throw new MiddlewareError(
-		// 		`Access denied: Missing required permission '${permissions}'`,
-		// 		{
-		// 			code: "UNAUTHORIZED",
-		// 		},
-		// 	);
-		// }
+export const hasPermission = (permissions: Permissions) =>
+	base.middleware(async ({ context, next }) => {
+		const { user, svc } = context;
+		if (!user) {
+			throw new AuthError("Invalid session", {
+				code: "UNAUTHORIZED",
+			});
+		}
+		const ok = svc.rbac.hasPermission({ role: user.role, permissions });
+		if (!ok) {
+			throw new MiddlewareError(
+				`Access denied: Missing required permission '${JSON.stringify(permissions)}'`,
+				{
+					code: "FORBIDDEN",
+				},
+			);
+		}
 		return await next();
 	});
 
