@@ -10,7 +10,7 @@ import { CONSTANTS } from "@repo/schema/constants";
 import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -73,7 +73,7 @@ function RouteComponent() {
 		defaultValues: {
 			name: "",
 			email: "",
-			gender: "male" as UserGender,
+			gender: "MALE",
 			phone_countryCode: "ID",
 			phone_number: 0,
 			password: "",
@@ -84,11 +84,13 @@ function RouteComponent() {
 			detail_phone_countryCode: "ID",
 			detail_phone_number: 0,
 			detail_address: "",
-			detail_type: "merchant",
 			detail_bank_provider: undefined,
 			detail_bank_number: "",
-			detail_location_lat: 0,
-			detail_location_lng: 0,
+			detail_category: undefined,
+			detail_location_x: 0,
+			detail_location_y: 0,
+			// detail_location_lat: 0,
+			// detail_location_lng: 0,
 		},
 	});
 
@@ -330,8 +332,8 @@ function RouteComponent() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												<SelectItem value="male">{m.male()}</SelectItem>
-												<SelectItem value="female">{m.female()}</SelectItem>
+												<SelectItem value="MALE">{m.male()}</SelectItem>
+												<SelectItem value="FEMALE">{m.female()}</SelectItem>
 											</SelectContent>
 										</Select>
 										<FormMessage />
@@ -483,10 +485,10 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail_type"
+								name="detail_category"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>{m.type()}</FormLabel>
+										<FormLabel>{m.category()}</FormLabel>
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
@@ -499,7 +501,7 @@ function RouteComponent() {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												{CONSTANTS.MERCHANT_TYPES.map((val) => (
+												{CONSTANTS.MERCHANT_CATEGORIES.map((val) => (
 													<SelectItem key={val} value={val}>
 														{capitalizeFirstLetter(val)}
 													</SelectItem>
@@ -610,7 +612,11 @@ function RouteComponent() {
 									<FormItem>
 										<FormLabel>{m.bank_number()}</FormLabel>
 										<FormControl>
-											<Input disabled={mutation.isPending} {...field} />
+											<Input
+												disabled={mutation.isPending}
+												{...field}
+												value={field.value as string}
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -632,19 +638,19 @@ function RouteComponent() {
 							/>
 							<FormField
 								control={form.control}
-								name="detail_location_lat"
+								name="detail_location_y"
 								render={() => (
 									<FormItem className="md:col-span-2">
 										<FormLabel>{m.pin_point()}</FormLabel>
 										<FormControl>
 											<MapWrapper
 												value={{
-													lat: form.getValues("detail_location_lat"),
-													lng: form.getValues("detail_location_lng"),
+													lat: form.getValues("detail_location_y"),
+													lng: form.getValues("detail_location_x"),
 												}}
 												onLocationChange={({ lat, lng }) => {
-													form.setValue("detail_location_lat", lat);
-													form.setValue("detail_location_lng", lng);
+													form.setValue("detail_location_y", lat);
+													form.setValue("detail_location_x", lng);
 												}}
 											/>
 										</FormControl>

@@ -102,7 +102,7 @@ function RouteComponent() {
 		defaultValues: {
 			name: "",
 			email: "",
-			gender: "male" as UserGender,
+			gender: "MALE",
 			phone_countryCode: "ID",
 			phone_number: 0,
 			password: "",
@@ -279,8 +279,8 @@ function RouteComponent() {
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											<SelectItem value="male">{m.male()}</SelectItem>
-											<SelectItem value="female">{m.female()}</SelectItem>
+											<SelectItem value="MALE">{m.male()}</SelectItem>
+											<SelectItem value="FEMALE">{m.female()}</SelectItem>
 										</SelectContent>
 									</Select>
 									<FormMessage />

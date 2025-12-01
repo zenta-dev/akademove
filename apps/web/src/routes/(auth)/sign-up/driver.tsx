@@ -115,7 +115,7 @@ function RouteComponent() {
 		defaultValues: {
 			name: "",
 			email: "",
-			gender: "male" as UserGender,
+			gender: "MALE",
 			phone_countryCode: "ID",
 			phone_number: 0,
 			password: "",
