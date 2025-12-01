@@ -24,6 +24,8 @@ export const honoAuthMiddleware = createMiddleware<HonoContext>(
 							id: session.user.id,
 							role: session.user.role,
 							banned: session.user.banned,
+							banReason: session.user.banReason,
+							banExpires: session.user.banExpires,
 						},
 						token,
 					}
@@ -53,6 +55,26 @@ export const honoRequireAuthMiddleware = createMiddleware<HonoContext>(
 			});
 		}
 
+		// Check if user is banned
+		if (session.user.banned) {
+			// Check if ban has expired
+			if (session.user.banExpires && new Date() > session.user.banExpires) {
+				// Ban expired - allow through but log for auto-unban process
+				log.info(
+					{ userId: session.user.id, banExpires: session.user.banExpires },
+					"User ban expired, allowing access",
+				);
+			} else {
+				// Ban is still active
+				const message = session.user.banReason
+					? `Account banned: ${session.user.banReason}`
+					: "Your account has been banned";
+				throw new AuthError(message, {
+					code: "FORBIDDEN",
+				});
+			}
+		}
+
 		return next();
 	},
 );
@@ -70,6 +92,26 @@ export const orpcRequireAuthMiddleware = base.middleware(
 			throw new AuthError("Invalid session", {
 				code: "UNAUTHORIZED",
 			});
+		}
+
+		// Check if user is banned
+		if (user.banned) {
+			// Check if ban has expired
+			if (user.banExpires && new Date() > user.banExpires) {
+				// Ban expired - allow through but log for auto-unban process
+				log.info(
+					{ userId: user.id, banExpires: user.banExpires },
+					"User ban expired, allowing access",
+				);
+			} else {
+				// Ban is still active
+				const message = user.banReason
+					? `Account banned: ${user.banReason}`
+					: "Your account has been banned";
+				throw new AuthError(message, {
+					code: "FORBIDDEN",
+				});
+			}
 		}
 
 		return next({ context: { user, token } });

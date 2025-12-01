@@ -85,6 +85,8 @@ export interface UserInContext {
 	id: string;
 	role: UserRole;
 	banned: boolean;
+	banReason?: string;
+	banExpires?: Date;
 }
 
 export interface ManagerContext {
