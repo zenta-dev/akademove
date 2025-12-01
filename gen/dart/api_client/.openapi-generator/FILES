@@ -66,6 +66,12 @@ doc/DriverStatus.md
 doc/DriverUpdateRequestBank.md
 doc/DriverUpdateRequestCurrentLocation.md
 doc/DriverUser.md
+doc/Emergency.md
+doc/EmergencyContactConfiguration.md
+doc/EmergencyKey.md
+doc/EmergencyLocation.md
+doc/EmergencyStatus.md
+doc/EmergencyType.md
 doc/EnvelopeSender.md
 doc/EnvelopeTarget.md
 doc/EstimateOrder.md
@@ -76,6 +82,7 @@ doc/GeneralRules.md
 doc/GetSessionResponse.md
 doc/InsertConfiguration.md
 doc/InsertCoupon.md
+doc/InsertEmergency.md
 doc/InsertLeaderboard.md
 doc/InsertOrderChatMessage.md
 doc/InsertPayment.md
@@ -190,6 +197,7 @@ doc/TransferRequest.md
 doc/UnbanUser.md
 doc/UpdateConfiguration.md
 doc/UpdateCoupon.md
+doc/UpdateEmergency.md
 doc/UpdateLeaderboard.md
 doc/UpdateOrder.md
 doc/UpdatePayment.md
@@ -301,6 +309,12 @@ lib/src/model/driver_status.dart
 lib/src/model/driver_update_request_bank.dart
 lib/src/model/driver_update_request_current_location.dart
 lib/src/model/driver_user.dart
+lib/src/model/emergency.dart
+lib/src/model/emergency_contact_configuration.dart
+lib/src/model/emergency_key.dart
+lib/src/model/emergency_location.dart
+lib/src/model/emergency_status.dart
+lib/src/model/emergency_type.dart
 lib/src/model/envelope_sender.dart
 lib/src/model/envelope_target.dart
 lib/src/model/estimate_order.dart
@@ -311,6 +325,7 @@ lib/src/model/general_rules.dart
 lib/src/model/get_session_response.dart
 lib/src/model/insert_configuration.dart
 lib/src/model/insert_coupon.dart
+lib/src/model/insert_emergency.dart
 lib/src/model/insert_leaderboard.dart
 lib/src/model/insert_order_chat_message.dart
 lib/src/model/insert_payment.dart
@@ -417,6 +432,7 @@ lib/src/model/transfer_request.dart
 lib/src/model/unban_user.dart
 lib/src/model/update_configuration.dart
 lib/src/model/update_coupon.dart
+lib/src/model/update_emergency.dart
 lib/src/model/update_leaderboard.dart
 lib/src/model/update_order.dart
 lib/src/model/update_payment.dart
@@ -445,4 +461,11 @@ lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 pubspec.yaml
-test/order_send_message_request_test.dart
+test/emergency_contact_configuration_test.dart
+test/emergency_key_test.dart
+test/emergency_location_test.dart
+test/emergency_status_test.dart
+test/emergency_test.dart
+test/emergency_type_test.dart
+test/insert_emergency_test.dart
+test/update_emergency_test.dart

@@ -17,6 +17,7 @@ import { ConfigurationRepository } from "@/features/configuration/configuration-
 import { CouponRepository } from "@/features/coupon/coupon-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
@@ -110,6 +111,7 @@ export function getRepositories(
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
 			schedule: new DriverScheduleRepository(svc.db, svc.kv),
 		},
+		emergency: new EmergencyRepository(svc.db, svc.kv),
 		leaderboard: new LeaderboardRepository(svc.db, svc.kv),
 		merchant: {
 			main: new MerchantMainRepository(svc.db, svc.kv, svc.storage),

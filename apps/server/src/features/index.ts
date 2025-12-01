@@ -13,6 +13,8 @@ import { CouponHandler } from "./coupon/coupon-handler";
 import { CouponSpec } from "./coupon/coupon-spec";
 import { DriverHandler } from "./driver/driver-handler";
 import { DriverSpec } from "./driver/driver-spec";
+import { EmergencyHandler } from "./emergency/emergency-handler";
+import { EmergencySpec } from "./emergency/emergency-spec";
 import { LeaderboardHandler } from "./leaderboard/leaderboard-handler";
 import { LeaderboardSpec } from "./leaderboard/leaderboard-spec";
 import { MerchantHandler } from "./merchant/merchant-handler";
@@ -40,6 +42,7 @@ export const FetchServerSpec = oc.router({
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
+	emergency: oc.prefix("/emergencies").router(EmergencySpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
 	order: oc.prefix("/orders").router(OrderSpec),
@@ -60,6 +63,7 @@ export const FetchServerRouter = os.router({
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
 	driver: DriverHandler,
+	emergency: EmergencyHandler,
 	leaderboard: LeaderboardHandler,
 	merchant: MerchantHandler,
 	order: OrderHandler,

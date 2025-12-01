@@ -11,7 +11,7 @@ export type EmergencyStatus = z.infer<typeof EmergencyStatusSchema>;
 
 export const EmergencySchema = z.object({
 	id: z.uuid(),
-	orderId: z.uuid().optional(),
+	orderId: z.uuid(), // Required - emergency must be tied to an order
 	userId: z.uuid(),
 	driverId: z.uuid().optional(),
 	type: EmergencyTypeSchema,

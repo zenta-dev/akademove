@@ -30,6 +30,7 @@ export const statement = {
 	pricing: ["get", "update", "delete"],
 	bookings: ["list", "get", "create", "update", "delete"],
 	configurations: ["list", "get", "update"],
+	emergency: ["list", "get", "create", "update"],
 } as const;
 
 export type Statement = typeof statement;

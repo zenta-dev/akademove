@@ -1,0 +1,60 @@
+import 'package:test/test.dart';
+import 'package:api_client/api_client.dart';
+
+// tests for UpdateEmergency
+void main() {
+  final UpdateEmergency? instance = /* UpdateEmergency(...) */ null;
+  // TODO add properties to the entity
+
+  group(UpdateEmergency, () {
+    // String orderId
+    test('to test the property `orderId`', () async {
+      // TODO
+    });
+
+    // String userId
+    test('to test the property `userId`', () async {
+      // TODO
+    });
+
+    // String driverId
+    test('to test the property `driverId`', () async {
+      // TODO
+    });
+
+    // EmergencyType type
+    test('to test the property `type`', () async {
+      // TODO
+    });
+
+    // EmergencyStatus status
+    test('to test the property `status`', () async {
+      // TODO
+    });
+
+    // String description
+    test('to test the property `description`', () async {
+      // TODO
+    });
+
+    // EmergencyLocation location
+    test('to test the property `location`', () async {
+      // TODO
+    });
+
+    // List<String> contactedAuthorities
+    test('to test the property `contactedAuthorities`', () async {
+      // TODO
+    });
+
+    // String respondedById
+    test('to test the property `respondedById`', () async {
+      // TODO
+    });
+
+    // String resolution
+    test('to test the property `resolution`', () async {
+      // TODO
+    });
+  });
+}

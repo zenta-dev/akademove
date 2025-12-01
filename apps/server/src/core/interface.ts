@@ -12,6 +12,7 @@ import type { ConfigurationRepository } from "@/features/configuration/configura
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import type { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
@@ -58,6 +59,7 @@ export interface RepositoryContext {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;
 	};
+	emergency: EmergencyRepository;
 	leaderboard: LeaderboardRepository;
 	merchant: {
 		main: MerchantMainRepository;

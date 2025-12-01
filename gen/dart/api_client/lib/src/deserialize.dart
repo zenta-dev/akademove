@@ -44,6 +44,9 @@ import 'package:api_client/src/model/driver_schedule_update_request.dart';
 import 'package:api_client/src/model/driver_update_request_bank.dart';
 import 'package:api_client/src/model/driver_update_request_current_location.dart';
 import 'package:api_client/src/model/driver_user.dart';
+import 'package:api_client/src/model/emergency.dart';
+import 'package:api_client/src/model/emergency_contact_configuration.dart';
+import 'package:api_client/src/model/emergency_location.dart';
 import 'package:api_client/src/model/estimate_order.dart';
 import 'package:api_client/src/model/fcm_notification_log.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
@@ -51,6 +54,7 @@ import 'package:api_client/src/model/general_rules.dart';
 import 'package:api_client/src/model/get_session_response.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
+import 'package:api_client/src/model/insert_emergency.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_order_chat_message.dart';
 import 'package:api_client/src/model/insert_payment.dart';
@@ -135,6 +139,7 @@ import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_coupon.dart';
+import 'package:api_client/src/model/update_emergency.dart';
 import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_order.dart';
 import 'package:api_client/src/model/update_payment.dart';
@@ -339,6 +344,19 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'DriverUser':
       return DriverUser.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'Emergency':
+      return Emergency.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'EmergencyContactConfiguration':
+      return EmergencyContactConfiguration.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'EmergencyKey':
+    case 'EmergencyLocation':
+      return EmergencyLocation.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'EmergencyStatus':
+    case 'EmergencyType':
     case 'EnvelopeSender':
     case 'EnvelopeTarget':
     case 'EstimateOrder':
@@ -361,6 +379,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'InsertCoupon':
       return InsertCoupon.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'InsertEmergency':
+      return InsertEmergency.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertLeaderboard':
       return InsertLeaderboard.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -635,6 +656,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UpdateCoupon':
       return UpdateCoupon.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdateEmergency':
+      return UpdateEmergency.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateLeaderboard':
       return UpdateLeaderboard.fromJson(value as Map<String, dynamic>)
           as ReturnType;
