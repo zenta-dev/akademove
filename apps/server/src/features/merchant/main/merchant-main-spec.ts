@@ -146,4 +146,51 @@ export const MerchantMainSpec = {
 				"Successfully retrieved best sellers",
 			),
 		),
+	analytics: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/{id}/analytics",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				query: z.object({
+					period: z.enum(["today", "week", "month", "year"]).optional(),
+					startDate: z.coerce.date().optional(),
+					endDate: z.coerce.date().optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					totalOrders: z.number(),
+					totalRevenue: z.number(),
+					totalCommission: z.number(),
+					completedOrders: z.number(),
+					cancelledOrders: z.number(),
+					averageOrderValue: z.number(),
+					topSellingItems: z.array(
+						z.object({
+							menuId: z.string(),
+							menuName: z.string(),
+							menuImage: z.string().optional(),
+							totalOrders: z.number(),
+							totalRevenue: z.number(),
+						}),
+					),
+					revenueByDay: z.array(
+						z.object({
+							date: z.string(),
+							revenue: z.number(),
+							orders: z.number(),
+						}),
+					),
+				}),
+				"Successfully retrieved merchant analytics",
+			),
+		),
 };

@@ -125,4 +125,31 @@ export const MerchantMainHandler = priv.router({
 				},
 			};
 		}),
+	analytics: priv.analytics
+		.use(hasPermission({ merchant: ["get"], order: ["list"] }))
+		.use(requireRoles("MERCHANT", "SYSTEM"))
+		.handler(async ({ context, input: { params, query } }) => {
+			// IDOR Protection: Merchants can only view their own analytics
+			if (context.user.role === "MERCHANT") {
+				const merchant = await context.repo.merchant.main.get(params.id);
+				if (merchant.userId !== context.user.id) {
+					throw new AuthError("You can only view your own analytics", {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const result = await context.repo.merchant.main.getAnalytics(
+				params.id,
+				query,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved merchant analytics",
+					data: result,
+				},
+			};
+		}),
 });
