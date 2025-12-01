@@ -119,6 +119,7 @@ export const DRIVER_COLUMNS = [
 		},
 		cell: ({ row }) => {
 			const rating = row.getValue<number>("rating") ?? 0;
+			const roundedRating = Math.round(rating);
 			const id = `rating-${row.index}`;
 			return (
 				<div className="flex items-center text-muted-foreground">
@@ -130,13 +131,13 @@ export const DRIVER_COLUMNS = [
 							}`}
 							className={cn(
 								"h-4 w-4",
-								i < rating
+								i < roundedRating
 									? "fill-amber-400/80 text-amber-400/80"
 									: "text-gray-300 dark:text-gray-600",
 							)}
 						/>
 					))}
-					/({rating})
+					/({rating.toFixed(1)})
 				</div>
 			);
 		},
