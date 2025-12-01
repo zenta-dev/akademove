@@ -10,6 +10,7 @@ import { getManagers, getRepositories, getServices } from "../factory";
 import { honoAuthMiddleware } from "../middlewares/auth";
 import { honoClientAgentMiddleware } from "../middlewares/client";
 import { localeMiddleware } from "../middlewares/language";
+import { honoRateLimit, RATE_LIMITS } from "../middlewares/rate-limit";
 
 export const createHono = () => new Hono<HonoContext>();
 
@@ -58,6 +59,10 @@ export const setupHonoRouter = () => {
 
 	app.use(honoAuthMiddleware);
 	app.use(localeMiddleware);
+
+	// Apply global rate limiting (1000 requests per hour per IP)
+	app.use("/rpc/*", honoRateLimit(RATE_LIMITS.GLOBAL));
+	app.use("/api/*", honoRateLimit(RATE_LIMITS.GLOBAL));
 
 	app.onError((err, c) => {
 		logError(err);
