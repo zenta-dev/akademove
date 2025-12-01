@@ -3,10 +3,15 @@ import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 
 class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
-  MerchantOrderCubit({required OrderRepository orderRepository})
-    : _orderRepository = orderRepository,
-      super(const MerchantOrderState());
+  MerchantOrderCubit({
+    required OrderRepository orderRepository,
+    required MerchantOrderRepository merchantOrderRepository,
+  }) : _orderRepository = orderRepository,
+       _merchantOrderRepository = merchantOrderRepository,
+       super(const MerchantOrderState());
+
   final OrderRepository _orderRepository;
+  final MerchantOrderRepository _merchantOrderRepository;
 
   Future<void> init() async {}
 
@@ -27,6 +32,163 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     } on BaseError catch (e, st) {
       logger.e(
         '[MerchantOrderCubit] - Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
+  /// Accept an order
+  /// Updates order status from REQUESTED/MATCHING to ACCEPTED
+  Future<void> acceptOrder({
+    required String merchantId,
+    required String orderId,
+  }) async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _merchantOrderRepository.acceptOrder(
+        merchantId: merchantId,
+        orderId: orderId,
+      );
+
+      // Update the order in the list
+      final updatedList = state.list.map((order) {
+        if (order.id == orderId) {
+          return res.data;
+        }
+        return order;
+      }).toList();
+
+      emit(
+        state.toSuccess(
+          list: updatedList,
+          selected: res.data,
+          message: res.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Accept order error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
+  /// Reject an order
+  /// Updates order status to CANCELLED_BY_MERCHANT and processes refund
+  Future<void> rejectOrder({
+    required String merchantId,
+    required String orderId,
+    required String reason,
+    String? note,
+  }) async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _merchantOrderRepository.rejectOrder(
+        merchantId: merchantId,
+        orderId: orderId,
+        reason: reason,
+        note: note,
+      );
+
+      // Remove the rejected order from the list
+      final updatedList = state.list
+          .where((order) => order.id != orderId)
+          .toList();
+
+      emit(
+        state.toSuccess(
+          list: updatedList,
+          selected: res.data,
+          message: res.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Reject order error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
+  /// Mark order as preparing
+  /// Updates order status from ACCEPTED to PREPARING
+  Future<void> markPreparing({
+    required String merchantId,
+    required String orderId,
+  }) async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _merchantOrderRepository.markPreparing(
+        merchantId: merchantId,
+        orderId: orderId,
+      );
+
+      // Update the order in the list
+      final updatedList = state.list.map((order) {
+        if (order.id == orderId) {
+          return res.data;
+        }
+        return order;
+      }).toList();
+
+      emit(
+        state.toSuccess(
+          list: updatedList,
+          selected: res.data,
+          message: res.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Mark preparing error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  }
+
+  /// Mark order as ready for pickup
+  /// Updates order status from PREPARING to READY_FOR_PICKUP
+  Future<void> markReady({
+    required String merchantId,
+    required String orderId,
+  }) async {
+    try {
+      emit(state.toLoading());
+
+      final res = await _merchantOrderRepository.markReady(
+        merchantId: merchantId,
+        orderId: orderId,
+      );
+
+      // Update the order in the list
+      final updatedList = state.list.map((order) {
+        if (order.id == orderId) {
+          return res.data;
+        }
+        return order;
+      }).toList();
+
+      emit(
+        state.toSuccess(
+          list: updatedList,
+          selected: res.data,
+          message: res.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[MerchantOrderCubit] - Mark ready error: ${e.message}',
         error: e,
         stackTrace: st,
       );

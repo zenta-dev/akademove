@@ -59,6 +59,9 @@ void _setupRepository() {
     ..registerLazySingleton(
       () => MerchantRepository(apiClient: sl<ApiClient>()),
     )
+    ..registerLazySingleton(
+      () => MerchantOrderRepository(apiClient: sl<ApiClient>()),
+    )
     ..registerLazySingleton(() => DriverRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => ConfigurationRepository(apiClient: sl<ApiClient>()),
@@ -92,7 +95,10 @@ void _setupCubit() {
       () => MerchantCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
-      () => MerchantOrderCubit(orderRepository: sl<OrderRepository>()),
+      () => MerchantOrderCubit(
+        orderRepository: sl<OrderRepository>(),
+        merchantOrderRepository: sl<MerchantOrderRepository>(),
+      ),
     )
     ..registerFactory(
       () => UserHomeCubit(merchantRepository: sl<MerchantRepository>()),
