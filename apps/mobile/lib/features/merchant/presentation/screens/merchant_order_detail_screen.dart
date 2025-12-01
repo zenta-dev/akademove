@@ -1,6 +1,6 @@
-import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -107,31 +107,14 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       return;
     }
 
-    // For now, use a simple dialog. TODO: Create proper rejection dialog with reasons
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Reject Order'),
-        content: const Text('Are you sure you want to reject this order?'),
-        actions: [
-          Button.ghost(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          Button.destructive(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reject'),
-          ),
-        ],
-      ),
-    );
+    final result = await showOrderRejectionDialog(context: context);
 
-    if (confirmed == true && mounted) {
+    if (result != null && mounted) {
       await context.read<MerchantOrderCubit>().rejectOrder(
         merchantId: _merchantId!,
         orderId: _currentOrder.id,
-        reason: 'OUT_OF_STOCK', // TODO: Get from dialog
-        note: null,
+        reason: result['reason'] as String,
+        note: result['note'] as String?,
       );
 
       if (mounted) {
