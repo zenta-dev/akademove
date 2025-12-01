@@ -31,7 +31,10 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
         cubit.getMine(
           statuses: const [
             OrderStatus.REQUESTED,
+            OrderStatus.MATCHING,
             OrderStatus.ACCEPTED,
+            OrderStatus.PREPARING,
+            OrderStatus.READY_FOR_PICKUP,
             OrderStatus.IN_TRIP,
           ],
         );
@@ -43,6 +46,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
             OrderStatus.CANCELLED_BY_SYSTEM,
             OrderStatus.CANCELLED_BY_USER,
             OrderStatus.CANCELLED_BY_DRIVER,
+            OrderStatus.CANCELLED_BY_MERCHANT,
           ],
         );
     }
@@ -71,7 +75,10 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                   _buildTab(
                     statuses: const [
                       OrderStatus.REQUESTED,
+                      OrderStatus.MATCHING,
                       OrderStatus.ACCEPTED,
+                      OrderStatus.PREPARING,
+                      OrderStatus.READY_FOR_PICKUP,
                       OrderStatus.IN_TRIP,
                     ],
                   ),
@@ -81,6 +88,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
                       OrderStatus.CANCELLED_BY_SYSTEM,
                       OrderStatus.CANCELLED_BY_USER,
                       OrderStatus.CANCELLED_BY_DRIVER,
+                      OrderStatus.CANCELLED_BY_MERCHANT,
                     ],
                   ),
                 ],
