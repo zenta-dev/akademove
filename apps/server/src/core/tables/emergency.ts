@@ -30,7 +30,7 @@ export const emergency = pgTable(
 			.references(() => user.id, {
 				onDelete: "no action",
 			}),
-		driverId: text("driver_id").references(() => driver.id, {
+		driverId: uuid("driver_id").references(() => driver.id, {
 			onDelete: "set null",
 		}),
 		type: emergencyType().notNull().default("OTHER"),
