@@ -73,6 +73,8 @@ export const order = pgTable(
 		note: jsonb().$type<OrderNote>(),
 		requestedAt: timestamp("requested_at").notNull().$defaultFn(nowFn),
 		acceptedAt: timestamp("accepted_at"),
+		preparedAt: timestamp("prepared_at"),
+		readyAt: timestamp("ready_at"),
 		arrivedAt: timestamp("arrived_at"),
 		cancelReason: text(),
 		...DateModifier,

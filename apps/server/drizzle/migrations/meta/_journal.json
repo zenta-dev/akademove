@@ -50,6 +50,27 @@
 			"when": 1764537020311,
 			"tag": "0006_messy_stellaris",
 			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "7",
+			"when": 1764555069832,
+			"tag": "0007_sticky_black_knight",
+			"breakpoints": true
+		},
+		{
+			"idx": 8,
+			"version": "7",
+			"when": 1764555122511,
+			"tag": "0008_superb_wendell_rand",
+			"breakpoints": true
+		},
+		{
+			"idx": 9,
+			"version": "7",
+			"when": 1764555149328,
+			"tag": "0009_chilly_loners",
+			"breakpoints": true
 		}
 	]
 }

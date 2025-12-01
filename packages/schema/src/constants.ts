@@ -12,6 +12,8 @@ export const CONSTANTS = Object.freeze({
 		"REQUESTED",
 		"MATCHING",
 		"ACCEPTED",
+		"PREPARING",
+		"READY_FOR_PICKUP",
 		"ARRIVING",
 		"IN_TRIP",
 		"COMPLETED",

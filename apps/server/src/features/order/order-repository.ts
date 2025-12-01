@@ -697,7 +697,20 @@ export class OrderRepository extends BaseRepository {
 				"REQUESTED", // Allow retry
 			],
 			ACCEPTED: [
-				"ARRIVING",
+				"PREPARING", // Food orders: merchant starts preparing
+				"ARRIVING", // Ride/Delivery: driver heads to pickup (skip preparation)
+				"CANCELLED_BY_USER",
+				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_SYSTEM",
+			],
+			PREPARING: [
+				"READY_FOR_PICKUP", // Food is ready for driver pickup
+				"CANCELLED_BY_USER",
+				"CANCELLED_BY_DRIVER",
+				"CANCELLED_BY_SYSTEM",
+			],
+			READY_FOR_PICKUP: [
+				"ARRIVING", // Driver is on the way to pickup
 				"CANCELLED_BY_USER",
 				"CANCELLED_BY_DRIVER",
 				"CANCELLED_BY_SYSTEM",
