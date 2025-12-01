@@ -134,6 +134,7 @@ doc/OrderList200Response.md
 doc/OrderMerchant.md
 doc/OrderNote.md
 doc/OrderPlaceOrder200Response.md
+doc/OrderSendMessageRequest.md
 doc/OrderStatus.md
 doc/OrderSummary.md
 doc/OrderSummaryBreakdown.md
@@ -364,6 +365,7 @@ lib/src/model/order_list200_response.dart
 lib/src/model/order_merchant.dart
 lib/src/model/order_note.dart
 lib/src/model/order_place_order200_response.dart
+lib/src/model/order_send_message_request.dart
 lib/src/model/order_status.dart
 lib/src/model/order_summary.dart
 lib/src/model/order_summary_breakdown.dart
@@ -443,3 +445,4 @@ lib/src/model/wallet_monthly_summary_query.dart
 lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 pubspec.yaml
+test/order_send_message_request_test.dart

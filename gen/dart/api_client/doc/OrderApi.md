@@ -14,7 +14,9 @@ Method | HTTP request | Description
 [**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
+[**orderListMessages**](OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
 [**orderPlaceOrder**](OrderApi.md#orderplaceorder) | **POST** /orders | 
+[**orderSendMessage**](OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 
 
@@ -265,6 +267,51 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **orderListMessages**
+> ChatList200Response orderListMessages(id, limit, cursor)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final int limit = 56; // int | 
+final String cursor = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.orderListMessages(id, limit, cursor);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderListMessages: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **limit** | **int**|  | 
+ **cursor** | **String**|  | [optional] 
+
+### Return type
+
+[**ChatList200Response**](ChatList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **orderPlaceOrder**
 > OrderPlaceOrder200Response orderPlaceOrder(placeOrder)
 
@@ -294,6 +341,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**OrderPlaceOrder200Response**](OrderPlaceOrder200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderSendMessage**
+> ChatSend200Response orderSendMessage(id, orderSendMessageRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderSendMessageRequest orderSendMessageRequest = ; // OrderSendMessageRequest | 
+
+try {
+    final response = api.orderSendMessage(id, orderSendMessageRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderSendMessage: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderSendMessageRequest** | [**OrderSendMessageRequest**](OrderSendMessageRequest.md)|  | 
+
+### Return type
+
+[**ChatSend200Response**](ChatSend200Response.md)
 
 ### Authorization
 

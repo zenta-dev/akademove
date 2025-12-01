@@ -147,6 +147,7 @@ export 'package:api_client/src/model/order_list200_response.dart';
 export 'package:api_client/src/model/order_merchant.dart';
 export 'package:api_client/src/model/order_note.dart';
 export 'package:api_client/src/model/order_place_order200_response.dart';
+export 'package:api_client/src/model/order_send_message_request.dart';
 export 'package:api_client/src/model/order_status.dart';
 export 'package:api_client/src/model/order_summary.dart';
 export 'package:api_client/src/model/order_summary_breakdown.dart';

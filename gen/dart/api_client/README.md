@@ -134,7 +134,9 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderListMessages**](doc/OrderApi.md#orderlistmessages) | **GET** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderPlaceOrder**](doc/OrderApi.md#orderplaceorder) | **POST** /orders | 
+[*OrderApi*](doc/OrderApi.md) | [**orderSendMessage**](doc/OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
 [*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
@@ -282,6 +284,7 @@ Class | Method | HTTP request | Description
  - [OrderMerchant](doc/OrderMerchant.md)
  - [OrderNote](doc/OrderNote.md)
  - [OrderPlaceOrder200Response](doc/OrderPlaceOrder200Response.md)
+ - [OrderSendMessageRequest](doc/OrderSendMessageRequest.md)
  - [OrderStatus](doc/OrderStatus.md)
  - [OrderSummary](doc/OrderSummary.md)
  - [OrderSummaryBreakdown](doc/OrderSummaryBreakdown.md)
