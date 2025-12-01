@@ -20,7 +20,7 @@ config({ path: isDev ? ".env" : ".env.prod" });
 
 const APP_NAME = "akademove";
 const app = await alchemy(APP_NAME, { noTrack: true });
-const zoneId = alchemy.env.ZONE_ID;
+const zoneId = isDev ? undefined : alchemy.env.ZONE_ID;
 
 const [mainDB, mainKV] = await Promise.all([
 	Hyperdrive(`${APP_NAME}-db`, {
@@ -80,7 +80,9 @@ export const [server, web] = await Promise.all([
 		dev: {
 			port: 3000,
 		},
-		domains: [{ domainName: "server.akademove.com", zoneId, adopt: true }],
+		domains: isDev
+			? []
+			: [{ domainName: "server.akademove.com", zoneId, adopt: true }],
 	}),
 	TanStackStart(`${APP_NAME}-web`, {
 		name: `${APP_NAME}-web`,
@@ -106,7 +108,9 @@ export const [server, web] = await Promise.all([
 		dev: {
 			command: "bun run dev",
 		},
-		domains: [{ domainName: "akademove.com", zoneId, adopt: true }],
+		domains: isDev
+			? []
+			: [{ domainName: "akademove.com", zoneId, adopt: true }],
 	}),
 ]);
 
