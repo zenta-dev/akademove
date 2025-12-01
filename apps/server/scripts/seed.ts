@@ -347,6 +347,21 @@ export async function seedConfigurations() {
 				createdAt: now,
 				updatedAt: now,
 			},
+			{
+				key: "commission_rates",
+				name: "Commission Rates",
+				value: {
+					rideCommissionRate: 0.15,
+					deliveryCommissionRate: 0.15,
+					foodCommissionRate: 0.2,
+					merchantCommissionRate: 0.1,
+				},
+				description:
+					"Platform commission rates for different order types (SRS 8.4)",
+				updatedById: admin.id,
+				createdAt: now,
+				updatedAt: now,
+			},
 		];
 
 		await tx
