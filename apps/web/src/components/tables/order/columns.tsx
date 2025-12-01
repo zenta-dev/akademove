@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OrderActionTable } from "./action";
 
 export const STATUS: Record<
 	OrderStatus,
@@ -277,12 +278,12 @@ export const ORDER_COLUMNS = [
 			);
 		},
 	},
-	// {
-	// 	id: "actions",
-	// 	enableHiding: false,
-	// 	header: m.actions(),
-	// 	cell: ({ row }) => {
-	// 		return <UserActionTable val={row.original} />;
-	// 	},
-	// },
+	{
+		id: "actions",
+		enableHiding: false,
+		header: m.actions(),
+		cell: ({ row }) => {
+			return <OrderActionTable val={row.original} />;
+		},
+	},
 ] as const satisfies ColumnDef<Order>[];

@@ -6,6 +6,7 @@ import { ArrowUpDown, BadgeCheckIcon, BadgeXIcon, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
+import { MerchantActionTable } from "./action";
 
 export const merchantTypeVariants = cva("", {
 	variants: {
@@ -140,12 +141,12 @@ export const MERCHANT_COLUMNS = [
 			);
 		},
 	},
-	// {
-	// 	id: "actions",
-	// 	enableHiding: false,
-	// 	header: m.actions(),
-	// 	cell: ({ row }) => {
-	// 		return <UserActionTable val={row.original} />;
-	// 	},
-	// },
+	{
+		id: "actions",
+		enableHiding: false,
+		header: m.actions(),
+		cell: ({ row }) => {
+			return <MerchantActionTable val={row.original} />;
+		},
+	},
 ] as const satisfies ColumnDef<Merchant>[];

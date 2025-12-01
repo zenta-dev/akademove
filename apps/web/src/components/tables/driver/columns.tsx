@@ -17,6 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
+import { DriverActionTable } from "./action";
 
 export const STATUS_DICT: Record<
 	DriverStatus,
@@ -215,12 +216,12 @@ export const DRIVER_COLUMNS = [
 			);
 		},
 	},
-	// {
-	// 	id: "actions",
-	// 	enableHiding: false,
-	// 	header: m.actions(),
-	// 	cell: ({ row }) => {
-	// 		return <UserActionTable val={row.original} />;
-	// 	},
-	// },
+	{
+		id: "actions",
+		enableHiding: false,
+		header: m.actions(),
+		cell: ({ row }) => {
+			return <DriverActionTable val={row.original} />;
+		},
+	},
 ] as const satisfies ColumnDef<Driver>[];

@@ -1,55 +1,51 @@
 import { m } from "@repo/i18n";
-import type { User } from "@repo/schema/user";
+import type { Driver } from "@repo/schema/driver";
 import { MoreHorizontal } from "lucide-react";
-import { BanUserDialog } from "@/components/dialogs/ban-user";
-import { UnbanUserDialog } from "@/components/dialogs/unban-user";
-import { UpdateUserPasswordDialog } from "@/components/dialogs/update-user-password";
-import { UpdateUserRoleDialog } from "@/components/dialogs/update-user-role";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const UserActionTable = ({ val }: { val: User }) => {
+export const DriverActionTable = ({ val }: { val: Driver }) => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button variant="ghost" className="h-8 w-8 p-0">
-					<span className="sr-only">
-						{m.perform_user_action_placeholder({ name: val.name })}
-					</span>
+					<span className="sr-only">{m.actions()}</span>
 					<MoreHorizontal className="h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
-				<DropdownMenuGroup className="flex flex-1 flex-col gap-2">
-					<DropdownMenuItem asChild>
-						<UpdateUserRoleDialog userId={val.id} />
-					</DropdownMenuItem>
-					<DropdownMenuItem asChild>
-						<UpdateUserPasswordDialog userId={val.id} />
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuGroup className="flex flex-1 flex-col gap-2">
-					{val.banned && (
-						<DropdownMenuItem asChild>
-							<UnbanUserDialog userId={val.id} />
+				{val.status === "PENDING" && (
+					<>
+						<DropdownMenuItem>Approve Driver</DropdownMenuItem>
+						<DropdownMenuItem className="text-red-600">
+							Reject Driver
 						</DropdownMenuItem>
-					)}
-					{!val.banned && (
-						<DropdownMenuItem asChild>
-							<BanUserDialog userId={val.id} />
+					</>
+				)}
+				{val.status === "APPROVED" && (
+					<DropdownMenuItem>Activate Driver</DropdownMenuItem>
+				)}
+				{val.status === "ACTIVE" && (
+					<>
+						<DropdownMenuItem>View Details</DropdownMenuItem>
+						<DropdownMenuItem className="text-orange-600">
+							Suspend Driver
 						</DropdownMenuItem>
-					)}
-				</DropdownMenuGroup>
+					</>
+				)}
+				{val.status === "INACTIVE" && (
+					<DropdownMenuItem>Activate Driver</DropdownMenuItem>
+				)}
+				{val.status === "SUSPENDED" && (
+					<DropdownMenuItem>Reactivate Driver</DropdownMenuItem>
+				)}
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
