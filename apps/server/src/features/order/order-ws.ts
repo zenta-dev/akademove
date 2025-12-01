@@ -337,13 +337,127 @@ export class OrderRoom extends BaseDurableObject {
 		}
 
 		const opts = { tx };
+
+		// Get order details to calculate commission
+		const order = await this.#repo.order.get(done.orderId, opts);
+
+		// Get commission configuration
+		const commissionConfig =
+			await this.#repo.configuration.get("commission_rates");
+		const commissionRates = commissionConfig.value as {
+			rideCommissionRate: number;
+			deliveryCommissionRate: number;
+			foodCommissionRate: number;
+			merchantCommissionRate: number;
+		};
+
+		// Calculate commission based on order type
+		let commissionRate = 0;
+		if (order.type === "RIDE") {
+			commissionRate = commissionRates.rideCommissionRate || 0.15;
+		} else if (order.type === "DELIVERY") {
+			commissionRate = commissionRates.deliveryCommissionRate || 0.15;
+		} else if (order.type === "FOOD") {
+			commissionRate = commissionRates.foodCommissionRate || 0.2;
+		}
+
+		// Calculate amounts
+		const totalPrice = new Decimal(order.totalPrice);
+		const platformCommission = totalPrice.times(commissionRate);
+		const driverEarning = totalPrice.minus(platformCommission);
+		const merchantCommission =
+			order.type === "FOOD"
+				? totalPrice.times(commissionRates.merchantCommissionRate || 0.1)
+				: new Decimal(0);
+
+		// Get driver wallet
+		const driverWallet = await this.#repo.wallet.getByUserId(
+			order.driverId ?? "",
+			opts,
+		);
+
+		// Create transaction records for driver earning and platform commission
 		await Promise.all([
-			this.#repo.order.update(done.orderId, { status: "COMPLETED" }, opts),
+			// Update order with commission details
+			this.#repo.order.update(
+				done.orderId,
+				{
+					status: "COMPLETED",
+					platformCommission: toNumberSafe(platformCommission.toString()),
+					driverEarning: toNumberSafe(driverEarning.toString()),
+					merchantCommission: toNumberSafe(merchantCommission.toString()),
+				},
+				opts,
+			),
+
+			// Credit driver wallet with earnings
+			this.#repo.transaction.insert(
+				{
+					walletId: driverWallet.id,
+					type: "EARNING",
+					amount: toNumberSafe(driverEarning.toString()),
+					balanceBefore: driverWallet.balance,
+					balanceAfter:
+						driverWallet.balance + toNumberSafe(driverEarning.toString()),
+					status: "SUCCESS",
+					description: `Driver earning for order #${order.id.slice(0, 8)}`,
+					referenceId: order.id,
+					metadata: {
+						orderId: order.id,
+						orderType: order.type,
+						totalPrice: toNumberSafe(totalPrice.toString()),
+						commissionRate,
+					},
+				},
+				opts,
+			),
+
+			// Record platform commission
+			this.#repo.transaction.insert(
+				{
+					walletId: driverWallet.id, // Use driver wallet for tracking
+					type: "COMMISSION",
+					amount: toNumberSafe(platformCommission.toString()),
+					status: "SUCCESS",
+					description: `Platform commission for order #${order.id.slice(0, 8)}`,
+					referenceId: order.id,
+					metadata: {
+						orderId: order.id,
+						orderType: order.type,
+						totalPrice: toNumberSafe(totalPrice.toString()),
+						commissionRate,
+					},
+				},
+				opts,
+			),
+
+			// Update driver availability
 			this.#repo.driver.main.update(done.driverId, {
 				isTakingOrder: false,
 				currentLocation: done.driverCurrentLocation,
 			}),
 		]);
+
+		// Update driver wallet balance
+		await this.#repo.wallet.update(
+			driverWallet.id,
+			{
+				balance: driverWallet.balance + toNumberSafe(driverEarning.toString()),
+			},
+			opts,
+		);
+
+		log.info(
+			{
+				orderId: order.id,
+				orderType: order.type,
+				totalPrice: toNumberSafe(totalPrice.toString()),
+				platformCommission: toNumberSafe(platformCommission.toString()),
+				driverEarning: toNumberSafe(driverEarning.toString()),
+				merchantCommission: toNumberSafe(merchantCommission.toString()),
+			},
+			"[OrderRoom] Commission calculated and distributed",
+		);
 
 		const completedPayload: OrderEnvelope = {
 			e: "COMPLETED",
