@@ -1,4 +1,5 @@
-import type { Order } from "@repo/schema/order";
+import { env } from "cloudflare:workers";
+import type { Order, OrderStatus } from "@repo/schema/order";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -33,7 +34,51 @@ export class MerchantOrderRepository extends BaseRepository {
 			arrivedAt: item.arrivedAt ?? undefined,
 			cancelReason: item.cancelReason ?? undefined,
 			gender: item.gender ?? undefined,
+			genderPreference: item.genderPreference ?? undefined,
+			platformCommission: item.platformCommission
+				? toNumberSafe(item.platformCommission)
+				: undefined,
+			driverEarning: item.driverEarning
+				? toNumberSafe(item.driverEarning)
+				: undefined,
+			merchantCommission: item.merchantCommission
+				? toNumberSafe(item.merchantCommission)
+				: undefined,
 		};
+	}
+
+	/**
+	 * Emit WebSocket event for order status update
+	 * Broadcasts status change to all connected clients in the order room
+	 */
+	async #emitOrderStatusUpdate(
+		orderId: string,
+		status: OrderStatus,
+	): Promise<void> {
+		try {
+			const stub = env.ORDER_ROOM.idFromName(orderId);
+			const room = env.ORDER_ROOM.get(stub);
+
+			await room.fetch("https://internal/broadcast", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					t: "r",
+					e: "ORDER_STATUS_UPDATED",
+					p: { detail: { order: { id: orderId, status } } },
+				}),
+			});
+
+			log.info(
+				{ orderId, status },
+				"[MerchantOrderRepository] WebSocket event emitted",
+			);
+		} catch (error) {
+			log.warn(
+				{ error, orderId, status },
+				"[MerchantOrderRepository] Failed to emit WebSocket event - non-critical",
+			);
+		}
 	}
 
 	/**
@@ -88,7 +133,11 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order accepted",
 			);
 
-			// TODO: Invalidate cache and emit WebSocket event
+			// Invalidate cache and emit WebSocket event
+			await Promise.allSettled([
+				this.deleteCache(orderId),
+				this.#emitOrderStatusUpdate(orderId, updated.status),
+			]);
 
 			return this.composeEntity(updated);
 		} catch (error) {
@@ -163,7 +212,12 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order rejected",
 			);
 
-			// TODO: Refund user wallet and emit WebSocket event
+			// Invalidate cache and emit WebSocket event
+			// NOTE: Refund logic should be handled by payment service/handler
+			await Promise.allSettled([
+				this.deleteCache(orderId),
+				this.#emitOrderStatusUpdate(orderId, updated.status),
+			]);
 
 			return this.composeEntity(updated);
 		} catch (error) {
@@ -227,7 +281,11 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order marked as preparing",
 			);
 
-			// TODO: Emit WebSocket event to notify driver/user
+			// Invalidate cache and emit WebSocket event to notify driver/user
+			await Promise.allSettled([
+				this.deleteCache(orderId),
+				this.#emitOrderStatusUpdate(orderId, updated.status),
+			]);
 
 			return this.composeEntity(updated);
 		} catch (error) {
@@ -291,7 +349,12 @@ export class MerchantOrderRepository extends BaseRepository {
 				"[MerchantOrderRepository] Order marked as ready",
 			);
 
-			// TODO: Emit WebSocket event and send push notification to driver
+			// Invalidate cache and emit WebSocket event
+			// NOTE: Push notification should be handled by notification service
+			await Promise.allSettled([
+				this.deleteCache(orderId),
+				this.#emitOrderStatusUpdate(orderId, updated.status),
+			]);
 
 			return this.composeEntity(updated);
 		} catch (error) {
