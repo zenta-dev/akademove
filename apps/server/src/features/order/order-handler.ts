@@ -104,4 +104,40 @@ export const OrderHandler = priv.router({
 				};
 			});
 		}),
+	listMessages: priv.listMessages
+		.use(hasPermission({ order: ["get"] }))
+		.handler(async ({ context, input: { params, query } }) => {
+			const result = await context.repo.chat.listMessages({
+				orderId: params.id,
+				...query,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved chat messages",
+					data: result,
+				},
+			};
+		}),
+	sendMessage: priv.sendMessage
+		.use(hasPermission({ order: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			return await context.svc.db.transaction(async (tx) => {
+				const data = trimObjectValues(body);
+				const result = await context.repo.chat.create(
+					{
+						orderId: params.id,
+						message: data.message,
+						userId: context.user.id,
+					},
+					{ tx },
+				);
+
+				return {
+					status: 200,
+					body: { message: "Message sent successfully", data: result },
+				};
+			});
+		}),
 });

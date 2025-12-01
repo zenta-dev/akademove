@@ -65,6 +65,9 @@ void _setupRepository() {
     )
     ..registerLazySingleton(() => OrderRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
+      () => OrderChatRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(
       () => TransactionRepository(apiClient: sl<ApiClient>()),
     )
     ..registerLazySingleton(() => WalletRepository(apiClient: sl<ApiClient>()))
@@ -129,6 +132,9 @@ void _setupCubit() {
         orderRepository: sl<OrderRepository>(),
         webSocketService: sl<WebSocketService>(),
       ),
+    )
+    ..registerFactory(
+      () => OrderChatCubit(orderChatRepository: sl<OrderChatRepository>()),
     )
     ..registerFactory(
       () => UserProfileCubit(userRepository: sl<UserRepository>()),

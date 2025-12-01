@@ -1,5 +1,10 @@
 import { oc } from "@orpc/contract";
 import {
+	InsertOrderChatMessageSchema,
+	OrderChatMessageListQuerySchema,
+	OrderChatMessageSchema,
+} from "@repo/schema/chat";
+import {
 	FlatEstimateOrderSchema,
 	OrderSchema,
 	OrderStatusSchema,
@@ -112,4 +117,45 @@ export const OrderSpec = {
 			}),
 		)
 		.output(createSuccesSchema(OrderSchema, "Order updated successfully")),
+	listMessages: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "GET",
+			path: "/{id}/messages",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string().uuid() }),
+				query: OrderChatMessageListQuerySchema.omit({ orderId: true }),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					rows: z.array(OrderChatMessageSchema),
+					hasMore: z.boolean(),
+					nextCursor: z.string().uuid().optional(),
+				}),
+				"Successfully retrieved chat messages",
+			),
+		),
+	sendMessage: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/{id}/messages",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string().uuid() }),
+				body: InsertOrderChatMessageSchema.omit({ orderId: true }),
+			}),
+		)
+		.output(
+			createSuccesSchema(OrderChatMessageSchema, "Message sent successfully"),
+		),
 };
