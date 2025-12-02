@@ -20,6 +20,7 @@ export type GeneralRules = z.infer<typeof GeneralRulesSchema>;
 
 const UserRulesSchema = z.object({
 	newUserOnly: z.boolean().optional(),
+	perUserLimit: z.number().int().positive().optional(),
 });
 export type UserRules = z.infer<typeof UserRulesSchema>;
 
@@ -54,6 +55,7 @@ export const CouponSchema = z.object({
 	periodStart: DateSchema,
 	periodEnd: DateSchema,
 	isActive: z.boolean(),
+	merchantId: z.string().uuid().nullable().optional(), // For merchant-specific coupons
 	createdById: z.string(),
 	createdAt: DateSchema,
 });

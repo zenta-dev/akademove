@@ -4,6 +4,7 @@ import {
 	InsertCouponSchema,
 	UpdateCouponSchema,
 } from "@repo/schema/coupon";
+import { OrderTypeSchema } from "@repo/schema/order";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
@@ -49,6 +50,8 @@ export const CouponSpec = {
 				body: z.object({
 					code: z.string(),
 					orderAmount: z.number(),
+					serviceType: OrderTypeSchema.optional(),
+					merchantId: z.string().uuid().optional(),
 				}),
 			}),
 		)
@@ -58,9 +61,37 @@ export const CouponSpec = {
 					valid: z.boolean(),
 					coupon: CouponSchema.optional(),
 					discountAmount: z.number(),
+					finalAmount: z.number(),
 					reason: z.string().optional(),
 				}),
 				"Coupon validated successfully",
+			),
+		),
+	getEligibleCoupons: oc
+		.route({
+			tags: [FEATURE_TAGS.COUPON],
+			method: "POST",
+			path: "/eligible",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: z.object({
+					serviceType: OrderTypeSchema,
+					totalAmount: z.coerce.number().positive(),
+					merchantId: z.string().uuid().optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					coupons: z.array(CouponSchema),
+					bestCoupon: CouponSchema.nullable(),
+					bestDiscountAmount: z.number(),
+				}),
+				"Successfully retrieved eligible coupons",
 			),
 		),
 	create: oc

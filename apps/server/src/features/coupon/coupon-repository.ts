@@ -214,14 +214,143 @@ export class CouponRepository extends BaseRepository {
 		}
 	}
 
+	async getEligibleCoupons(params: {
+		serviceType: string;
+		totalAmount: number;
+		userId: string;
+		merchantId?: string;
+	}): Promise<{
+		coupons: Coupon[];
+		bestCoupon: Coupon | null;
+		bestDiscountAmount: number;
+	}> {
+		try {
+			const { totalAmount, userId, merchantId } = params;
+			const now = new Date();
+
+			// Query active coupons within validity period
+			const coupons = await this.db.query.coupon.findMany({
+				where: (f, op) =>
+					op.and(
+						op.eq(f.isActive, true),
+						op.lte(f.periodStart, now),
+						op.gte(f.periodEnd, now),
+						op.lt(f.usedCount, f.usageLimit),
+						// Filter by merchantId if specified
+						merchantId
+							? op.or(op.isNull(f.merchantId), op.eq(f.merchantId, merchantId))
+							: op.isNull(f.merchantId), // Only platform-wide if no merchantId
+					),
+			});
+
+			const eligibleCoupons: Array<Coupon & { calculatedDiscount: number }> =
+				[];
+
+			// Validate each coupon and calculate discount
+			for (const couponData of coupons) {
+				const coupon = CouponRepository.composeEntity(couponData);
+
+				// Check service type compatibility
+				const couponServiceType = coupon.rules?.general?.type;
+				if (
+					couponServiceType &&
+					couponServiceType !== "FIXED" &&
+					couponServiceType !== "PERCENTAGE"
+				) {
+					continue; // Skip if type doesn't match (future: add ORDER_TYPE filter)
+				}
+
+				// Check minimum order amount
+				const minOrderAmount = coupon.rules?.general?.minOrderAmount;
+				if (minOrderAmount !== undefined && totalAmount < minOrderAmount) {
+					continue;
+				}
+
+				// Check per-user usage limit
+				const userUsageCount = await this.getUserUsageCount(coupon.id, userId);
+				const perUserLimit = coupon.rules?.user?.perUserLimit ?? 1;
+				if (userUsageCount >= perUserLimit) {
+					continue;
+				}
+
+				// Check if new user only
+				if (coupon.rules?.user?.newUserOnly) {
+					const userOrderCount = await this.db
+						.select({ count: count(tables.order.id) })
+						.from(tables.order)
+						.where(eq(tables.order.userId, userId));
+
+					if (userOrderCount[0]?.count > 0) {
+						continue;
+					}
+				}
+
+				// Calculate discount
+				let discountAmount = 0;
+				if (coupon.discountAmount !== undefined && coupon.discountAmount > 0) {
+					discountAmount = coupon.discountAmount;
+				} else if (
+					coupon.discountPercentage !== undefined &&
+					coupon.discountPercentage > 0
+				) {
+					discountAmount = (totalAmount * coupon.discountPercentage) / 100;
+				}
+
+				// Apply max discount cap
+				const maxDiscountAmount = coupon.rules?.general?.maxDiscountAmount;
+				if (
+					maxDiscountAmount !== undefined &&
+					discountAmount > maxDiscountAmount
+				) {
+					discountAmount = maxDiscountAmount;
+				}
+
+				if (discountAmount > 0) {
+					eligibleCoupons.push({
+						...coupon,
+						calculatedDiscount: discountAmount,
+					});
+				}
+			}
+
+			// Sort by discount amount (best first)
+			eligibleCoupons.sort(
+				(a, b) => b.calculatedDiscount - a.calculatedDiscount,
+			);
+
+			// Auto-select best coupon
+			const bestCoupon = eligibleCoupons[0] ?? null;
+			const bestDiscountAmount = bestCoupon?.calculatedDiscount ?? 0;
+
+			// Remove calculated discount from return (not in schema)
+			const cleanCoupons = eligibleCoupons.map(
+				({ calculatedDiscount, ...c }) => c,
+			);
+
+			return {
+				coupons: cleanCoupons,
+				bestCoupon: bestCoupon
+					? ({ ...bestCoupon, calculatedDiscount: undefined } as Coupon)
+					: null,
+				bestDiscountAmount,
+			};
+		} catch (error) {
+			log.error({ params, error }, "Failed to get eligible coupons");
+			throw this.handleError(error, "getEligibleCoupons");
+		}
+	}
+
 	async validateCoupon(
 		code: string,
 		orderAmount: number,
 		userId: string,
+		_serviceType?: string,
+		merchantId?: string,
 	): Promise<{
 		valid: boolean;
 		coupon?: Coupon;
 		discountAmount: number;
+		finalAmount: number;
 		reason?: string;
 	}> {
 		try {
@@ -234,6 +363,7 @@ export class CouponRepository extends BaseRepository {
 				return {
 					valid: false,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: "Coupon code not found",
 				};
 			}
@@ -246,7 +376,19 @@ export class CouponRepository extends BaseRepository {
 					valid: false,
 					coupon,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: "Coupon is not active",
+				};
+			}
+
+			// Check merchantId if specified
+			if (merchantId && coupon.merchantId && coupon.merchantId !== merchantId) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					finalAmount: orderAmount,
+					reason: "Coupon not valid for this merchant",
 				};
 			}
 
@@ -260,6 +402,7 @@ export class CouponRepository extends BaseRepository {
 					valid: false,
 					coupon,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: "Coupon is not yet valid",
 				};
 			}
@@ -269,6 +412,7 @@ export class CouponRepository extends BaseRepository {
 					valid: false,
 					coupon,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: "Coupon has expired",
 				};
 			}
@@ -279,8 +423,41 @@ export class CouponRepository extends BaseRepository {
 					valid: false,
 					coupon,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: "Coupon usage limit reached",
 				};
+			}
+
+			// Check per-user usage limit (if applicable)
+			const userUsageCount = await this.getUserUsageCount(coupon.id, userId);
+			// Assuming a default per-user limit of 1, can be made configurable in rules
+			const perUserLimit = coupon.rules?.user?.perUserLimit ?? 1;
+			if (userUsageCount >= perUserLimit) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					finalAmount: orderAmount,
+					reason: "You have already used this coupon",
+				};
+			}
+
+			// Check if coupon is for new users only
+			if (coupon.rules?.user?.newUserOnly) {
+				const userOrderCount = await this.db
+					.select({ count: count(tables.order.id) })
+					.from(tables.order)
+					.where(eq(tables.order.userId, userId));
+
+				if (userOrderCount[0]?.count > 0) {
+					return {
+						valid: false,
+						coupon,
+						discountAmount: 0,
+						finalAmount: orderAmount,
+						reason: "This coupon is for new users only",
+					};
+				}
 			}
 
 			// Check minimum order amount
@@ -290,6 +467,7 @@ export class CouponRepository extends BaseRepository {
 					valid: false,
 					coupon,
 					discountAmount: 0,
+					finalAmount: orderAmount,
 					reason: `Minimum order amount is ${minOrderAmount}`,
 				};
 			}
@@ -325,6 +503,7 @@ export class CouponRepository extends BaseRepository {
 						valid: false,
 						coupon,
 						discountAmount: 0,
+						finalAmount: orderAmount,
 						reason: "Coupon not valid on this day",
 					};
 				}
@@ -338,6 +517,7 @@ export class CouponRepository extends BaseRepository {
 						valid: false,
 						coupon,
 						discountAmount: 0,
+						finalAmount: orderAmount,
 						reason: "Coupon not valid at this hour",
 					};
 				}
@@ -363,10 +543,13 @@ export class CouponRepository extends BaseRepository {
 				discountAmount = maxDiscountAmount;
 			}
 
+			const finalAmount = Math.max(0, orderAmount - discountAmount);
+
 			return {
 				valid: true,
 				coupon,
 				discountAmount,
+				finalAmount,
 			};
 		} catch (error) {
 			log.error(
@@ -374,6 +557,59 @@ export class CouponRepository extends BaseRepository {
 				"Failed to validate coupon",
 			);
 			throw this.handleError(error, "validateCoupon");
+		}
+	}
+
+	async getUserUsageCount(couponId: string, userId: string): Promise<number> {
+		try {
+			const usages = await this.db.query.couponUsage.findMany({
+				where: (f, op) =>
+					op.and(op.eq(f.couponId, couponId), op.eq(f.userId, userId)),
+			});
+
+			return usages.length;
+		} catch (error) {
+			log.error({ couponId, userId, error }, "Failed to get user usage count");
+			throw this.handleError(error, "getUserUsageCount");
+		}
+	}
+
+	async incrementUsageCount(id: string): Promise<void> {
+		try {
+			await this.db
+				.update(tables.coupon)
+				.set({
+					usedCount: count(tables.couponUsage.id),
+				})
+				.where(eq(tables.coupon.id, id));
+
+			await this.deleteCache(id);
+		} catch (error) {
+			log.error({ id, error }, "Failed to increment usage count");
+			throw this.handleError(error, "incrementUsageCount");
+		}
+	}
+
+	async recordUsage(
+		couponId: string,
+		orderId: string,
+		userId: string,
+		discountApplied: number,
+	): Promise<void> {
+		try {
+			await this.db.insert(tables.couponUsage).values({
+				id: v7(),
+				couponId,
+				orderId,
+				userId,
+				discountApplied: toStringNumberSafe(discountApplied),
+			});
+		} catch (error) {
+			log.error(
+				{ couponId, orderId, userId, discountApplied, error },
+				"Failed to record coupon usage",
+			);
+			throw this.handleError(error, "recordUsage");
 		}
 	}
 }

@@ -18,6 +18,7 @@ import {
 	timestamp,
 	uniqueIndex,
 } from "./common";
+import { merchant } from "./merchant";
 import { order } from "./order";
 
 export const coupon = pgTable(
@@ -41,6 +42,9 @@ export const coupon = pgTable(
 		periodStart: timestamp("period_start").notNull(),
 		periodEnd: timestamp("period_end").notNull(),
 		isActive: boolean("is_active").notNull().default(false),
+		merchantId: uuid("merchant_id").references(() => merchant.id, {
+			onDelete: "cascade",
+		}), // Nullable - if null, coupon is platform-wide
 		createdById: text("created_by_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
@@ -56,6 +60,7 @@ export const coupon = pgTable(
 			t.periodStart,
 			t.periodEnd,
 		),
+		index("coupon_merchant_id_idx").on(t.merchantId),
 		index("coupon_created_by_id_idx").on(t.createdById),
 		index("coupon_used_count_idx").on(t.usedCount),
 		index("coupon_created_at_idx").on(t.createdAt),
@@ -100,6 +105,10 @@ export const couponRelations = relations(coupon, ({ one }) => ({
 	createdBy: one(user, {
 		fields: [coupon.createdById],
 		references: [user.id],
+	}),
+	merchant: one(merchant, {
+		fields: [coupon.merchantId],
+		references: [merchant.id],
 	}),
 }));
 

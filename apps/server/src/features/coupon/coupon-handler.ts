@@ -33,17 +33,39 @@ export const CouponHandler = priv.router({
 	validate: priv.validate
 		.use(hasPermission({ coupon: ["get"] }))
 		.handler(async ({ context, input: { body } }) => {
-			const { code, orderAmount } = trimObjectValues(body);
+			const { code, orderAmount, serviceType, merchantId } =
+				trimObjectValues(body);
 			const result = await context.repo.coupon.validateCoupon(
 				code,
 				orderAmount,
 				context.user.id,
+				serviceType,
+				merchantId,
 			);
 
 			return {
 				status: 200,
 				body: {
 					message: "Coupon validated successfully",
+					data: result,
+				},
+			};
+		}),
+	getEligibleCoupons: priv.getEligibleCoupons
+		.use(hasPermission({ coupon: ["list"] }))
+		.handler(async ({ context, input: { body } }) => {
+			const { serviceType, totalAmount, merchantId } = trimObjectValues(body);
+			const result = await context.repo.coupon.getEligibleCoupons({
+				serviceType,
+				totalAmount,
+				userId: context.user.id,
+				merchantId,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved eligible coupons",
 					data: result,
 				},
 			};
