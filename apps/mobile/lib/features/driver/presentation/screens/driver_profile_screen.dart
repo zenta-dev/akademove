@@ -64,13 +64,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             IconButton(
               icon: const Icon(LucideIcons.settings),
               onPressed: () {
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'Settings',
-                    message: 'Settings feature coming soon',
-                  ),
-                );
+                _showSettingsDialog();
               },
               variance: ButtonVariance.ghost,
             ),
@@ -608,6 +602,87 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               }
             },
             child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSettingsDialog() {
+    if (_driver == null) return;
+
+    material.showDialog(
+      context: context,
+      builder: (dialogContext) => material.AlertDialog(
+        title: const Text('Settings'),
+        content: material.Column(
+          mainAxisSize: material.MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Driver preferences and settings',
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            material.ListTile(
+              leading: Icon(LucideIcons.bell, size: 24.sp),
+              title: const Text('Notifications'),
+              subtitle: const Text('Manage notification preferences'),
+              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+              onTap: () {
+                Navigator.of(dialogContext).pop();
+                showToast(
+                  context: context,
+                  builder: (context, overlay) => context.buildToast(
+                    title: 'Notifications',
+                    message: 'Notification settings coming soon',
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+            material.ListTile(
+              leading: Icon(LucideIcons.shield, size: 24.sp),
+              title: const Text('Privacy'),
+              subtitle: const Text('Control your privacy settings'),
+              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+              onTap: () {
+                Navigator.of(dialogContext).pop();
+                showToast(
+                  context: context,
+                  builder: (context, overlay) => context.buildToast(
+                    title: 'Privacy',
+                    message: 'Privacy settings coming soon',
+                  ),
+                );
+              },
+            ),
+            const Divider(),
+            material.ListTile(
+              leading: Icon(LucideIcons.info, size: 24.sp),
+              title: const Text('About'),
+              subtitle: const Text('App information and version'),
+              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+              onTap: () {
+                Navigator.of(dialogContext).pop();
+                showToast(
+                  context: context,
+                  builder: (context, overlay) => context.buildToast(
+                    title: 'About',
+                    message: 'AkadeMove Driver v1.0.0',
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          material.TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
