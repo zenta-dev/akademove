@@ -78,7 +78,7 @@ class MerchantConflictDialog extends StatelessWidget {
             context.read<CartCubit>().cancelReplaceCart();
             Navigator.of(context).pop();
           },
-          child: Text(context.l10n.button_cancel),
+          child: Text(context.l10n.cancel),
         ),
         ElevatedButton(
           onPressed: () {

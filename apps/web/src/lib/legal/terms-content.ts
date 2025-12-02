@@ -654,7 +654,7 @@ export const commissionStructure = (): LegalSectionContent =>
 export const walletSystem = (): LegalSectionContent =>
 	getLegalContent({
 		en: {
-			title: "Wallet System",
+			title: "wallet System",
 			paragraphs: ["All users have an in-app wallet for managing funds:"],
 			lists: [
 				{

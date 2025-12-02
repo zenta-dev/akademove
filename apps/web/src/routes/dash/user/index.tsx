@@ -229,7 +229,7 @@ function RouteComponent() {
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="font-medium text-sm">
-							Wallet Balance
+							wallet Balance
 						</CardTitle>
 						<Wallet className="h-4 w-4 text-muted-foreground" />
 					</CardHeader>
@@ -359,10 +359,10 @@ function RouteComponent() {
 
 				{/* Quick Actions */}
 				<div className="space-y-4">
-					{/* Wallet Card */}
+					{/* wallet Card */}
 					<Card>
 						<CardHeader className="border-b">
-							<CardTitle>Wallet</CardTitle>
+							<CardTitle>wallet</CardTitle>
 							<CardDescription>Manage your balance</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-3">

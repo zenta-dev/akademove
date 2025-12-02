@@ -25,7 +25,7 @@ class OrderConfirmationScreen extends StatefulWidget {
 }
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
-  PaymentMethod _selectedPaymentMethod = PaymentMethod.WALLET;
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.wallet;
   bool _isPlacingOrder = false;
 
   @override
@@ -244,16 +244,16 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             style: context.typography.h4.copyWith(fontSize: 16.sp),
           ),
           Gap(12.h),
-          // Wallet payment option
+          // wallet payment option
           material.Material(
-            color: _selectedPaymentMethod == PaymentMethod.WALLET
+            color: _selectedPaymentMethod == PaymentMethod.wallet
                 ? context.colorScheme.primary.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             child: material.InkWell(
               onTap: () {
                 setState(() {
-                  _selectedPaymentMethod = PaymentMethod.WALLET;
+                  _selectedPaymentMethod = PaymentMethod.wallet;
                 });
               },
               borderRadius: BorderRadius.circular(8),
@@ -261,10 +261,10 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                 padding: EdgeInsets.all(12.dg),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: _selectedPaymentMethod == PaymentMethod.WALLET
+                    color: _selectedPaymentMethod == PaymentMethod.wallet
                         ? context.colorScheme.primary
                         : context.colorScheme.border,
-                    width: _selectedPaymentMethod == PaymentMethod.WALLET
+                    width: _selectedPaymentMethod == PaymentMethod.wallet
                         ? 2
                         : 1,
                   ),
@@ -275,7 +275,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                     Icon(
                       LucideIcons.wallet,
                       size: 24.sp,
-                      color: _selectedPaymentMethod == PaymentMethod.WALLET
+                      color: _selectedPaymentMethod == PaymentMethod.wallet
                           ? context.colorScheme.primary
                           : mutedColor,
                     ),
@@ -301,7 +301,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                         ],
                       ),
                     ),
-                    if (_selectedPaymentMethod == PaymentMethod.WALLET)
+                    if (_selectedPaymentMethod == PaymentMethod.wallet)
                       Icon(
                         LucideIcons.circleCheck,
                         size: 20.sp,

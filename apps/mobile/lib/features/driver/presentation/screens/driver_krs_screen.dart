@@ -443,7 +443,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
           actions: [
             material.TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(context.l10n.button_cancel),
+              child: Text(context.l10n.cancel),
             ),
             material.TextButton(
               onPressed: () async {

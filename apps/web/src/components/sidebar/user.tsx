@@ -1,6 +1,6 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BookMarked, Gauge, History, UserRound, Wallet } from "lucide-react";
+import { BookMarked, Gauge, History, UserRound, wallet } from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -31,7 +31,7 @@ const navMain = Object.freeze([
 	{
 		title: m.wallet(),
 		href: localizeHref("/dash/user/wallet"),
-		icon: Wallet,
+		icon: wallet,
 	},
 	{
 		title: m.profile(),

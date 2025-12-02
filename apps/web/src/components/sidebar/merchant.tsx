@@ -6,7 +6,7 @@ import {
 	Logs,
 	Receipt,
 	UserRound,
-	Wallet,
+	wallet,
 } from "lucide-react";
 import {
 	Sidebar,
@@ -43,7 +43,7 @@ const navMain = Object.freeze([
 	{
 		title: m.wallet(),
 		href: localizeHref("/dash/merchant/wallet"),
-		icon: Wallet,
+		icon: wallet,
 	},
 	{
 		title: m.profile(),

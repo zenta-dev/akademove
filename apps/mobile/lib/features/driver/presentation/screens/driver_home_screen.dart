@@ -45,7 +45,7 @@ class _DriverHomeView extends StatelessWidget {
         return MyScaffold(
           headers: [
             DefaultAppBar(
-              title: context.l10n.screen_title_driver_dashboard,
+              title: context.l10n.driver_dashboard,
               trailing: [
                 IconButton(
                   icon: const Icon(material.Icons.person),
@@ -99,7 +99,7 @@ class _DriverHomeView extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
-                    context.l10n.status_welcome_back,
+                    context.l10n.welcome_back,
                     style: context.typography.h4.copyWith(fontSize: 18.sp),
                   ),
                 ),
@@ -116,7 +116,7 @@ class _DriverHomeView extends StatelessWidget {
                     spacing: 8.h,
                     children: [
                       Text(
-                        '${context.l10n.status_license_plate} ${driver.licensePlate}',
+                        '${context.l10n.license_plate} ${driver.licensePlate}',
                         style: context.typography.small.copyWith(
                           color: context.colorScheme.mutedForeground,
                         ),
@@ -164,13 +164,13 @@ class _DriverHomeView extends StatelessWidget {
                   spacing: 4.h,
                   children: [
                     Text(
-                      context.l10n.status_driver_status,
+                      context.l10n.driver_status,
                       style: context.typography.h4.copyWith(fontSize: 16.sp),
                     ),
                     Text(
                       isOnline
-                          ? context.l10n.status_accepting_orders
-                          : context.l10n.status_offline,
+                          ? context.l10n.accepting_orders
+                          : context.l10n.offline,
                       style: context.typography.small.copyWith(
                         color: context.colorScheme.mutedForeground,
                       ),
@@ -244,7 +244,7 @@ class _DriverHomeView extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     icon: material.Icons.attach_money,
-                    label: context.l10n.label_earnings,
+                    label: context.l10n.earnings,
                     value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
                     color: material.Colors.green,
                   ),
@@ -254,7 +254,7 @@ class _DriverHomeView extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     icon: material.Icons.local_shipping,
-                    label: context.l10n.label_trips,
+                    label: context.l10n.trips,
                     value: '${state.todayTrips ?? 0}',
                     color: material.Colors.blue,
                   ),
@@ -318,7 +318,7 @@ class _DriverHomeView extends StatelessWidget {
             _buildActionButton(
               context,
               icon: material.Icons.history,
-              label: context.l10n.screen_title_order_history,
+              label: context.l10n.order_history,
               onTap: () => context.push(Routes.driverHistory.path),
             ),
             _buildActionButton(

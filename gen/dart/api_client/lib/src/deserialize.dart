@@ -176,7 +176,7 @@ import 'package:api_client/src/model/update_review.dart';
 import 'package:api_client/src/model/update_transaction.dart';
 import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/update_user_role.dart';
-import 'package:api_client/src/model/update_wallet.dart';
+import 'package:api_client/src/model/updatewallet.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/user_admin_create200_response.dart';
 import 'package:api_client/src/model/user_admin_dashboard_stats200_response.dart';
@@ -820,8 +820,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateUserRole':
       return UpdateUserRole.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'UpdateWallet':
-      return UpdateWallet.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'Updatewallet':
+      return Updatewallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'User':
       return User.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UserAdminCreate200Response':

@@ -13,7 +13,7 @@ import {
 	type WebhookRequest,
 } from "@repo/schema/payment";
 import type { Transaction, TransactionType } from "@repo/schema/transaction";
-import type { Wallet } from "@repo/schema/wallet";
+import type { wallet } from "@repo/schema/wallet";
 import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { eq, sql } from "drizzle-orm";
@@ -35,7 +35,7 @@ import { generateOrderCode } from "@/utils/uuid";
 import type { NotificationRepository } from "../notification/notification-repository";
 import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
-import { WalletRepository } from "../wallet/wallet-repository";
+import { walletRepository } from "../wallet/wallet-repository";
 
 export interface ChargePayload extends WithUserId {
 	transactionType: Extract<TransactionType, "TOPUP" | "PAYMENT">;
@@ -54,7 +54,7 @@ interface HandleWebhookPayload extends WithTx {
 export class PaymentRepository extends BaseRepository {
 	readonly #paymentSvc: PaymentService;
 	readonly #transaction: TransactionRepository;
-	readonly #wallet: WalletRepository;
+	readonly #wallet: walletRepository;
 	readonly #notification: NotificationRepository;
 
 	constructor(
@@ -62,7 +62,7 @@ export class PaymentRepository extends BaseRepository {
 		kv: KeyValueService,
 		paymentSvc: PaymentService,
 		transaction: TransactionRepository,
-		wallet: WalletRepository,
+		wallet: walletRepository,
 		notification: NotificationRepository,
 	) {
 		super("payment", kv, db);
@@ -155,7 +155,7 @@ export class PaymentRepository extends BaseRepository {
 	async charge(
 		params: ChargePayload,
 		opts: WithTx,
-	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: wallet }> {
 		try {
 			const { provider, method, amount, userId, orderType, transactionType } =
 				params;
@@ -174,8 +174,8 @@ export class PaymentRepository extends BaseRepository {
 			}
 
 			// Handle wallet payment directly without external payment provider
-			if (method === "WALLET") {
-				return await this.#handleWalletPayment({
+			if (method === "wallet") {
+				return await this.#handlewalletPayment({
 					wallet,
 					amount,
 					userId,
@@ -523,7 +523,7 @@ export class PaymentRepository extends BaseRepository {
 			...order,
 			status: "MATCHING",
 		});
-		const composedWallet = WalletRepository.composeEntity(transaction.wallet);
+		const composedwallet = walletRepository.composeEntity(transaction.wallet);
 
 		const tasks: Promise<unknown>[] = [
 			paymentStub.broadcast({
@@ -534,7 +534,7 @@ export class PaymentRepository extends BaseRepository {
 				p: {
 					payment: composedPayment,
 					transaction: updatedTransaction,
-					wallet: composedWallet,
+					wallet: composedwallet,
 				},
 			}),
 			delay(500, () =>
@@ -633,7 +633,7 @@ export class PaymentRepository extends BaseRepository {
 		const safeNewBalance = safeCurrentBalance.plus(safeAmount);
 		const newBalance = toStringNumberSafe(safeNewBalance);
 
-		const [[updatedWallet], updatedTransaction] = await Promise.all([
+		const [[updatedwallet], updatedTransaction] = await Promise.all([
 			params.tx
 				.update(tables.wallet)
 				.set({
@@ -665,7 +665,7 @@ export class PaymentRepository extends BaseRepository {
 				p: {
 					payment: PaymentRepository.composeEntity(updatedPayment),
 					transaction: updatedTransaction,
-					wallet: WalletRepository.composeEntity(updatedWallet),
+					wallet: walletRepository.composeEntity(updatedwallet),
 				},
 			}),
 			this.#notification.sendNotificationToUserId(
@@ -682,16 +682,16 @@ export class PaymentRepository extends BaseRepository {
 		await Promise.allSettled(tasks);
 	}
 
-	async #handleWalletPayment(
+	async #handlewalletPayment(
 		params: {
-			wallet: Wallet;
+			wallet: wallet;
 			amount: number;
 			userId: string;
 			orderType: ChargePayload["orderType"];
 			transactionType: TransactionType;
 			metadata?: Record<string, unknown>;
 		} & WithTx,
-	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: wallet }> {
 		const { wallet, amount, orderType, transactionType, metadata, tx } = params;
 
 		try {
@@ -702,7 +702,7 @@ export class PaymentRepository extends BaseRepository {
 			let desc: string | undefined;
 			switch (orderType) {
 				case "TOPUP":
-					desc = "Top-up WALLET";
+					desc = "Top-up wallet";
 					break;
 				case "RIDE":
 				case "FOOD":
@@ -715,7 +715,7 @@ export class PaymentRepository extends BaseRepository {
 
 			// CRITICAL FIX: Atomic wallet deduction with balance check
 			// This prevents race conditions and ensures balance never goes negative
-			const [updatedWallet] = await tx
+			const [updatedwallet] = await tx
 				.update(tables.wallet)
 				.set({
 					balance: sql`balance - ${amountSql}`,
@@ -726,13 +726,13 @@ export class PaymentRepository extends BaseRepository {
 				)
 				.returning();
 
-			if (!updatedWallet) {
+			if (!updatedwallet) {
 				throw new RepositoryError("Insufficient wallet balance", {
 					code: "BAD_REQUEST",
 				});
 			}
 
-			const newBalance = new Decimal(updatedWallet.balance);
+			const newBalance = new Decimal(updatedwallet.balance);
 			const balanceBefore = toNumberSafe(currentBalance);
 			const balanceAfter = toNumberSafe(newBalance);
 
@@ -753,14 +753,14 @@ export class PaymentRepository extends BaseRepository {
 				{
 					transactionId: transaction.id,
 					provider: "MIDTRANS",
-					method: "WALLET",
+					method: "wallet",
 					amount,
 					status: "SUCCESS",
 					externalId: transaction.id,
 					expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
 					response: { wallet_payment: true },
 					payload: {
-						method: "WALLET",
+						method: "wallet",
 						amount,
 						userId: params.userId,
 						provider: "MIDTRANS",
@@ -773,7 +773,7 @@ export class PaymentRepository extends BaseRepository {
 			return {
 				payment,
 				transaction,
-				wallet: WalletRepository.composeEntity(updatedWallet),
+				wallet: walletRepository.composeEntity(updatedwallet),
 			};
 		} catch (error) {
 			log.error(

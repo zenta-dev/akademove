@@ -5644,7 +5644,7 @@
 		"public.am_payment_method": {
 			"name": "am_payment_method",
 			"schema": "public",
-			"values": ["QRIS", "BANK_TRANSFER", "WALLET"]
+			"values": ["QRIS", "BANK_TRANSFER", "wallet"]
 		},
 		"public.am_payment_provider": {
 			"name": "am_payment_provider",

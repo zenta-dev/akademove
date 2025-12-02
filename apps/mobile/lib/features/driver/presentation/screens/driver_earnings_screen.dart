@@ -547,7 +547,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   controller: accountNumberController,
                   keyboardType: TextInputType.number,
                   decoration: material.InputDecoration(
-                    labelText: context.l10n.label_bank_account_number,
+                    labelText: context.l10n.bank_account_number,
                     hintText: context.l10n.hint_bank_account_number,
                     border: material.OutlineInputBorder(),
                   ),
@@ -567,7 +567,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           actions: [
             material.TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(context.l10n.button_cancel),
+              child: Text(context.l10n.cancel),
             ),
             material.TextButton(
               onPressed: () async {

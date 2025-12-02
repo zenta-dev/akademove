@@ -1,6 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/emergency/data/emergency_repository.dart';
-import 'package:akademove/features/emergency/presentation/states/_export.dart';
+import 'package:akademove/features/emergency/_export.dart';
 import 'package:api_client/api_client.dart';
 
 class EmergencyCubit extends BaseCubit<EmergencyState> {

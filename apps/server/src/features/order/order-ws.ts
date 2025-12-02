@@ -380,7 +380,7 @@ export class OrderRoom extends BaseDurableObject {
 				: new Decimal(0);
 
 		// Get driver wallet
-		const driverWallet = await this.#repo.wallet.getByUserId(
+		const driverwallet = await this.#repo.wallet.getByUserId(
 			order.driverId ?? "",
 			opts,
 		);
@@ -402,12 +402,12 @@ export class OrderRoom extends BaseDurableObject {
 			// Credit driver wallet with earnings
 			this.#repo.transaction.insert(
 				{
-					walletId: driverWallet.id,
+					walletId: driverwallet.id,
 					type: "EARNING",
 					amount: toNumberSafe(driverEarning.toString()),
-					balanceBefore: driverWallet.balance,
+					balanceBefore: driverwallet.balance,
 					balanceAfter:
-						driverWallet.balance + toNumberSafe(driverEarning.toString()),
+						driverwallet.balance + toNumberSafe(driverEarning.toString()),
 					status: "SUCCESS",
 					description: `Driver earning for order #${order.id.slice(0, 8)}`,
 					referenceId: order.id,
@@ -424,7 +424,7 @@ export class OrderRoom extends BaseDurableObject {
 			// Record platform commission
 			this.#repo.transaction.insert(
 				{
-					walletId: driverWallet.id, // Use driver wallet for tracking
+					walletId: driverwallet.id, // Use driver wallet for tracking
 					type: "COMMISSION",
 					amount: toNumberSafe(platformCommission.toString()),
 					status: "SUCCESS",
@@ -449,9 +449,9 @@ export class OrderRoom extends BaseDurableObject {
 
 		// Update driver wallet balance
 		await this.#repo.wallet.update(
-			driverWallet.id,
+			driverwallet.id,
 			{
-				balance: driverWallet.balance + toNumberSafe(driverEarning.toString()),
+				balance: driverwallet.balance + toNumberSafe(driverEarning.toString()),
 			},
 			opts,
 		);

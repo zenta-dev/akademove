@@ -127,7 +127,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   Widget _buildProfileHeader(Driver driver) {
     final user = driver.user;
     final statusColor = _getStatusColor(driver.status);
-    final statusText = _getStatusText(driver.status);
+    final statusText = _getStatusText(context, driver.status);
 
     return Card(
       child: Padding(
@@ -556,7 +556,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               licensePlateController.dispose();
               Navigator.of(dialogContext).pop();
             },
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           material.TextButton(
             onPressed: () async {
@@ -569,6 +569,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                     title: 'Validation Error',
                     message: 'License plate cannot be empty',
                   ),
+                );
+                context.showMyToast(
+                  context.l10n.license_plate_cannot_be_empty,
+                  type: ToastType.warning,
                 );
                 return;
               }
@@ -592,28 +596,27 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                     _isLoading = false;
                   });
 
-                  showToast(
-                    context: context,
-                    builder: (context, overlay) => context.buildToast(
-                      title: 'Success',
-                      message: 'Profile updated successfully',
-                    ),
+                  context.showMyToast(
+                    context.l10n.profile_updated_successfully,
+                    type: ToastType.success,
                   );
+                }
+              } on BaseError catch (e) {
+                if (mounted) {
+                  setState(() => _isLoading = false);
+                  context.showMyToast(e.message, type: ToastType.failed);
                 }
               } catch (e) {
                 if (mounted) {
                   setState(() => _isLoading = false);
-                  showToast(
-                    context: context,
-                    builder: (context, overlay) => context.buildToast(
-                      title: 'Error',
-                      message: 'Failed to update profile: ${e.toString()}',
-                    ),
+                  context.showMyToast(
+                    context.l10n.an_error_occurred,
+                    type: ToastType.failed,
                   );
                 }
               }
             },
-            child: const Text('Save'),
+            child: Text(context.l10n.save),
           ),
         ],
       ),
@@ -626,13 +629,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Settings'),
+        title: Text(context.l10n.settings),
         content: material.Column(
           mainAxisSize: material.MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Driver preferences and settings',
+              context.l10n.driver_preferences_and_settings,
               style: context.typography.small.copyWith(
                 fontSize: 12.sp,
                 color: context.colorScheme.mutedForeground,
@@ -641,42 +644,36 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             SizedBox(height: 16.h),
             material.ListTile(
               leading: Icon(LucideIcons.bell, size: 24.sp),
-              title: const Text('Notifications'),
-              subtitle: const Text('Manage notification preferences'),
+              title: Text(context.l10n.notifications),
+              subtitle: Text(context.l10n.manage_notification_preferences),
               trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
               onTap: () {
                 Navigator.of(dialogContext).pop();
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'Notifications',
-                    message: 'Notification settings coming soon',
-                  ),
-                );
+                context.ensureNotification();
               },
             ),
-            const Divider(),
-            material.ListTile(
-              leading: Icon(LucideIcons.shield, size: 24.sp),
-              title: const Text('Privacy'),
-              subtitle: const Text('Control your privacy settings'),
-              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
-              onTap: () {
-                Navigator.of(dialogContext).pop();
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'Privacy',
-                    message: 'Privacy settings coming soon',
-                  ),
-                );
-              },
-            ),
+            // const Divider(),
+            // material.ListTile(
+            //   leading: Icon(LucideIcons.shield, size: 24.sp),
+            //   title: const Text('Privacy'),
+            //   subtitle: const Text('Control your privacy settings'),
+            //   trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+            //   onTap: () {
+            //     Navigator.of(dialogContext).pop();
+            //     showToast(
+            //       context: context,
+            //       builder: (context, overlay) => context.buildToast(
+            //         title: 'Privacy',
+            //         message: 'Privacy settings coming soon',
+            //       ),
+            //     );
+            //   },
+            // ),
             const Divider(),
             material.ListTile(
               leading: Icon(LucideIcons.info, size: 24.sp),
-              title: const Text('About'),
-              subtitle: const Text('App information and version'),
+              title: Text(context.l10n.about),
+              subtitle: Text(context.l10n.app_version_information),
               trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
               onTap: () {
                 Navigator.of(dialogContext).pop();
@@ -694,7 +691,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         actions: [
           material.TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
+            child: Text(context.l10n.close),
           ),
         ],
       ),
@@ -716,20 +713,20 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     }
   }
 
-  String _getStatusText(DriverStatus status) {
+  String _getStatusText(BuildContext context, DriverStatus status) {
     switch (status) {
       case DriverStatus.PENDING:
-        return 'Pending Approval';
+        return context.l10n.pending_approval;
       case DriverStatus.ACTIVE:
-        return 'Active';
+        return context.l10n.active;
       case DriverStatus.APPROVED:
-        return 'Approved';
+        return context.l10n.approved;
       case DriverStatus.REJECTED:
-        return 'Rejected';
+        return context.l10n.rejected;
       case DriverStatus.INACTIVE:
-        return 'Inactive';
+        return context.l10n.inactive;
       case DriverStatus.SUSPENDED:
-        return 'Suspended';
+        return context.l10n.suspended;
     }
   }
 }

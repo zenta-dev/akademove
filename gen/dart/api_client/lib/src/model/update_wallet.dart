@@ -16,9 +16,9 @@ part 'update_wallet.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class UpdateWallet {
-  /// Returns a new [UpdateWallet] instance.
-  const UpdateWallet({this.userId, this.balance, this.currency, this.isActive});
+class Updatewallet {
+  /// Returns a new [Updatewallet] instance.
+  const Updatewallet({this.userId, this.balance, this.currency, this.isActive});
 
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
@@ -35,7 +35,7 @@ class UpdateWallet {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UpdateWallet &&
+      other is Updatewallet &&
           other.userId == userId &&
           other.balance == balance &&
           other.currency == currency &&
@@ -48,10 +48,10 @@ class UpdateWallet {
       currency.hashCode +
       isActive.hashCode;
 
-  factory UpdateWallet.fromJson(Map<String, dynamic> json) =>
-      _$UpdateWalletFromJson(json);
+  factory Updatewallet.fromJson(Map<String, dynamic> json) =>
+      _$UpdatewalletFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UpdateWalletToJson(this);
+  Map<String, dynamic> toJson() => _$UpdatewalletToJson(this);
 
   @override
   String toString() {

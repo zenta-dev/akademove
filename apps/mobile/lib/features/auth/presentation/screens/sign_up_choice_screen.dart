@@ -26,19 +26,19 @@ class SignUpChoiceScreen extends StatelessWidget {
 
   List<_SignUpRoutes> _getRoutes(BuildContext context) => [
     _SignUpRoutes(
-      name: context.l10n.label_user_role,
+      name: context.l10n.user_role,
       icon: Assets.images.character.user,
       route: Routes.authSignUpUser,
       description: context.l10n.description_user_role,
     ),
     _SignUpRoutes(
-      name: context.l10n.label_driver_role,
+      name: context.l10n.driver_role,
       icon: Assets.images.character.driver,
       route: Routes.authSignUpDriver,
       description: context.l10n.description_driver_role,
     ),
     _SignUpRoutes(
-      name: context.l10n.label_merchant_role,
+      name: context.l10n.merchant_role,
       icon: Assets.images.character.merchant,
       route: Routes.authSignUpMerchant,
       description: context.l10n.description_merchant_role,
@@ -57,7 +57,7 @@ class SignUpChoiceScreen extends StatelessWidget {
             children: [
               Assets.images.brand.svg(height: 80.h),
               Text(
-                context.l10n.screen_title_sign_up_choice,
+                context.l10n.sign_up_choice,
                 style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
                 textAlign: TextAlign.center,
               ),

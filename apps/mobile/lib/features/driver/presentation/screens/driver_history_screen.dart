@@ -142,7 +142,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     return MyScaffold(
       headers: [
         AppBar(
-          title: Text(context.l10n.screen_title_order_history),
+          title: Text(context.l10n.order_history),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.filterX),
@@ -192,16 +192,13 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                 spacing: 8.w,
                 children: [
                   _buildTypeFilterChip(context.l10n.all_types, null),
+                  _buildTypeFilterChip(context.l10n.ride, OrderType.RIDE),
                   _buildTypeFilterChip(
-                    context.l10n.label_service_ride,
-                    OrderType.RIDE,
-                  ),
-                  _buildTypeFilterChip(
-                    context.l10n.label_service_delivery,
+                    context.l10n.delivery,
                     OrderType.DELIVERY,
                   ),
                   _buildTypeFilterChip(
-                    context.l10n.label_order_type_food,
+                    context.l10n.order_type_food,
                     OrderType.FOOD,
                   ),
                 ],

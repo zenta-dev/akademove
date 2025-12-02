@@ -403,7 +403,7 @@ Class | Method | HTTP request | Description
  - [UpdateTransaction](doc/UpdateTransaction.md)
  - [UpdateUserPassword](doc/UpdateUserPassword.md)
  - [UpdateUserRole](doc/UpdateUserRole.md)
- - [UpdateWallet](doc/UpdateWallet.md)
+ - [Updatewallet](doc/Updatewallet.md)
  - [User](doc/User.md)
  - [UserAdminCreate200Response](doc/UserAdminCreate200Response.md)
  - [UserAdminDashboardStats200Response](doc/UserAdminDashboardStats200Response.md)

@@ -59,7 +59,7 @@ export type UpdatePayment = z.infer<typeof UpdatePaymentSchema>;
 export const TopUpRequestSchema = PaymentSchema.pick({
 	amount: true,
 	provider: true,
-}).extend({ method: PaymentMethodSchema.exclude(["WALLET"]) });
+}).extend({ method: PaymentMethodSchema.exclude(["wallet"]) });
 export type TopUpRequest = z.infer<typeof TopUpRequestSchema>;
 
 export const PayRequestSchema = PaymentSchema.pick({

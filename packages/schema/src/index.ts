@@ -19,7 +19,7 @@ import { ReportSchemaRegistries } from "./report.js";
 import { ReviewSchemaRegistries } from "./review.js";
 import { TransactionSchemaRegistries } from "./transaction.js";
 import { UserSchemaRegistries } from "./user.js";
-import { WalletSchemaRegistries } from "./wallet.js";
+import { walletSchemaRegistries } from "./wallet.js";
 import { WSSchemaRegistries } from "./ws.js";
 
 export const AllSchemaRegistries = {
@@ -41,7 +41,7 @@ export const AllSchemaRegistries = {
 	...ReportSchemaRegistries,
 	...ReviewSchemaRegistries,
 	...UserSchemaRegistries,
-	...WalletSchemaRegistries,
+	...walletSchemaRegistries,
 	...TransactionSchemaRegistries,
 	...PaginationSchemaRegistries,
 	...NotificationSchemaRegistries,

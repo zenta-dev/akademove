@@ -10,8 +10,8 @@ enum PaymentMethod {
   QRIS(r'QRIS'),
   @JsonValue(r'BANK_TRANSFER')
   BANK_TRANSFER(r'BANK_TRANSFER'),
-  @JsonValue(r'WALLET')
-  WALLET(r'WALLET');
+  @JsonValue(r'wallet')
+  wallet(r'wallet');
 
   const PaymentMethod(this.value);
 

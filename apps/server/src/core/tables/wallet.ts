@@ -26,4 +26,4 @@ export const walletRelations = relations(wallet, ({ one, many }) => ({
 	transactions: many(transaction),
 }));
 
-export type WalletDatabase = typeof wallet.$inferSelect;
+export type walletDatabase = typeof wallet.$inferSelect;

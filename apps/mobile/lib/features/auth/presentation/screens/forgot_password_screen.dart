@@ -37,7 +37,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     children: [
                       Assets.icons.brand.svg(width: 48.w),
                       DefaultText(
-                        context.l10n.screen_title_forgot_password,
+                        context.l10n.forgot_password,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                       ),
@@ -163,7 +163,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                         child: isLoading
                             ? const Submiting()
                             : DefaultText(
-                                context.l10n.button_send_reset_link,
+                                context.l10n.send_reset_link,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),

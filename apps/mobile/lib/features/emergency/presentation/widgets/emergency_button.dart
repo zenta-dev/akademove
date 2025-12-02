@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/emergency/presentation/cubits/emergency_cubit.dart';
+import 'package:akademove/features/emergency/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class EmergencyButton extends StatelessWidget {
         backgroundColor: const Color(0xFFDC2626), // Red 600
         foregroundColor: Colors.white,
         elevation: 8,
-        heroTag: 'emergency_button',
+        heroTag: 'button',
         child: const Icon(Icons.warning_rounded, size: 32),
       ),
     );

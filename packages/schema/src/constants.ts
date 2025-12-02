@@ -97,7 +97,7 @@ export const PAYMENT_METHOD = [
 	"QRIS",
 	// "VA",
 	"BANK_TRANSFER",
-	"WALLET",
+	"wallet",
 ] as const;
 
 export const BADGE_TYPES = [

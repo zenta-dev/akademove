@@ -237,7 +237,7 @@ doc/UpdateReview.md
 doc/UpdateTransaction.md
 doc/UpdateUserPassword.md
 doc/UpdateUserRole.md
-doc/UpdateWallet.md
+doc/Updatewallet.md
 doc/User.md
 doc/UserAdminCreate200Response.md
 doc/UserAdminDashboardStats200Response.md
@@ -505,7 +505,7 @@ lib/src/model/update_review.dart
 lib/src/model/update_transaction.dart
 lib/src/model/update_user_password.dart
 lib/src/model/update_user_role.dart
-lib/src/model/update_wallet.dart
+lib/src/model/updatewallet.dart
 lib/src/model/user.dart
 lib/src/model/user_admin_create200_response.dart
 lib/src/model/user_admin_dashboard_stats200_response.dart
@@ -527,8 +527,3 @@ lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 lib/src/model/withdraw_request.dart
 pubspec.yaml
-test/add_to_cart_test.dart
-test/cart_item_test.dart
-test/cart_test.dart
-test/review_check_can_review200_response_data_test.dart
-test/review_check_can_review200_response_test.dart

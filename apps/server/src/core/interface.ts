@@ -26,7 +26,7 @@ import type { ReviewRepository } from "@/features/review/review-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import type { UserMeRepository } from "@/features/user/me/user-me-repository";
-import type { WalletRepository } from "@/features/wallet/wallet-repository";
+import type { walletRepository } from "@/features/wallet/wallet-repository";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
 import type { DatabaseService, DatabaseTransaction } from "./services/db";
@@ -79,7 +79,7 @@ export interface RepositoryContext {
 		admin: UserAdminRepository;
 		me: UserMeRepository;
 	};
-	wallet: WalletRepository;
+	wallet: walletRepository;
 	notification: NotificationRepository;
 }
 

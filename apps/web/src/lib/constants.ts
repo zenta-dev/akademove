@@ -34,7 +34,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		MENU: `${m.menu()} - ${ROUTE_TITLES.MERCHANT}`,
 		ORDERS: `${m.orders()} - ${ROUTE_TITLES.MERCHANT}`,
 		SALES: `${m.earnings()} - ${ROUTE_TITLES.MERCHANT}`,
-		WALLET: `${m.wallet()} - ${ROUTE_TITLES.MERCHANT}`,
+		wallet: `${m.wallet()} - ${ROUTE_TITLES.MERCHANT}`,
 		PROFILE: `${m.profile()} - ${ROUTE_TITLES.MERCHANT}`,
 	} as const,
 	DRIVER: {
@@ -49,7 +49,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		OVERVIEW: `${m.overview()} - ${ROUTE_TITLES.USER}`,
 		BOOKINGS: `${m.bookings()} - ${ROUTE_TITLES.USER}`,
 		HISTORY: `${m.history()} - ${ROUTE_TITLES.USER}`,
-		WALLET: `${m.wallet()} - ${ROUTE_TITLES.USER}`,
+		wallet: `${m.wallet()} - ${ROUTE_TITLES.USER}`,
 		PROFILE: `${m.profile()} - ${ROUTE_TITLES.USER}`,
 	} as const,
 } as const);

@@ -12,6 +12,57 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get popular_merchants => 'Mitra populer';
+
+  @override
+  String get choose_the_service_that_you_want => 'Pilih layanan yang Anda inginkan';
+
+  @override
+  String get pending_approval => 'Menunggu Persetujuan';
+
+  @override
+  String get approved => 'Disetujui';
+
+  @override
+  String get rejected => 'Ditolak';
+
+  @override
+  String get suspended => 'Ditangguhkan';
+
+  @override
+  String get app_version_information => 'Informasi aplikasi dan versi';
+
+  @override
+  String get about => 'Tentang';
+
+  @override
+  String get manage_notification_preferences => 'Kelola preferensi notifikasi';
+
+  @override
+  String get notifications => 'Notifikasi';
+
+  @override
+  String get driver_preferences_and_settings => 'Preferensi dan pengaturan driver';
+
+  @override
+  String get settings => 'Pengaturan';
+
+  @override
+  String get save => 'Simpan';
+
+  @override
+  String get profile_updated_successfully => 'Profil berhasil diperbarui';
+
+  @override
+  String get license_plate_cannot_be_empty => 'Plat nomor tidak boleh kosong';
+
+  @override
+  String get enter_license_plate => 'Masukkan plat nomor';
+
+  @override
+  String get update_your_license_plate => 'Perbarui informasi plat nomor Anda';
+
+  @override
   String get logged_out_successfully => 'Berhasil keluar';
 
   @override
@@ -45,7 +96,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get not_taking_orders => 'Tidak Menerima Pesanan';
 
   @override
-  String get license_plate => 'Plat Nomor';
+  String get license_plate => 'Nomor Kendaraan';
 
   @override
   String get failed_to_load_profile => 'Gagal memuat profil';
@@ -84,7 +135,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get start_trip => 'Mulai Perjalanan';
 
   @override
-  String get cancel => 'Batalkan';
+  String get cancel => 'Batal';
 
   @override
   String get are_you_sure_you_want_to_reject_this_order => 'Apakah Anda yakin ingin menolak pesanan ini? Tindakan ini tidak dapat dibatalkan.';
@@ -245,7 +296,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get leadeboard_and_badges => 'Papan Peringkat & Lencana';
 
   @override
-  String get label_trips => 'Perjalanan';
+  String get trips => 'Perjalanan';
 
   @override
   String get ready_to_accept_new_orders => 'Siap menerima pesanan baru';
@@ -299,7 +350,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get failed_to_load_orders => 'Gagal memuat pesanan';
 
   @override
-  String get top_up => 'Top up';
+  String get top_up => 'Isi Ulang';
 
   @override
   String get withdrawal => 'Penarikan';
@@ -380,7 +431,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get available_balance => 'Saldo Tersedia';
 
   @override
-  String get earnings_wallet => 'Dompet dan Penghasilan';
+  String get earnings_wallet => 'Penghasilan & Dompet';
 
   @override
   String get failed_to_load_earnings => 'Gagal memuat penghasilan';
@@ -527,522 +578,411 @@ class AppLocalizationsId extends AppLocalizations {
   String get delivery_service => 'Layanan Pengiriman';
 
   @override
-  String get button_cancel => 'Batal';
+  String get back => 'Kembali';
 
   @override
-  String get button_continue => 'Lanjutkan';
+  String get next => 'Lanjut';
 
   @override
-  String get button_back => 'Kembali';
+  String get submit => 'Kirim';
 
   @override
-  String get button_next => 'Lanjut';
+  String get save_changes => 'Simpan Perubahan';
 
   @override
-  String get button_submit => 'Kirim';
+  String get allow => 'Izinkan';
 
   @override
-  String get button_save_changes => 'Simpan Perubahan';
+  String get open_settings => 'Buka Pengaturan';
 
   @override
-  String get button_allow => 'Izinkan';
+  String get send_reset_link => 'Kirim Tautan Reset';
 
   @override
-  String get button_open_settings => 'Buka Pengaturan';
+  String get back_to_sign_in => 'Kembali ke Masuk';
 
   @override
-  String get button_view_all => 'Lihat Semua';
+  String get reset_password => 'Atur Ulang Kata Sandi';
 
   @override
-  String get button_send_reset_link => 'Kirim Tautan Reset';
+  String get reject => 'Tolak';
 
   @override
-  String get button_back_to_sign_in => 'Kembali ke Masuk';
+  String get accept => 'Terima';
 
   @override
-  String get button_reset_password => 'Atur Ulang Kata Sandi';
+  String get grant_permission => 'Berikan Izin';
 
   @override
-  String get button_reject => 'Tolak';
+  String get send_alert => 'Kirim Peringatan';
 
   @override
-  String get button_accept => 'Terima';
+  String get download_qr => 'Unduh QR';
 
   @override
-  String get button_grant_permission => 'Berikan Izin';
+  String get copy_qr_url => 'Salin URL QR';
 
   @override
-  String get button_send_alert => 'Kirim Peringatan';
+  String get name => 'Nama';
 
   @override
-  String get button_download_qr => 'Unduh QR';
+  String get phone => 'Telepon';
 
   @override
-  String get button_copy_qr_url => 'Salin URL QR';
+  String get gender => 'Jenis Kelamin';
 
   @override
-  String get button_top_up => 'Isi Ulang';
+  String get photo => 'Foto';
 
   @override
-  String get button_retry => 'Coba Lagi';
+  String get address => 'Alamat';
 
   @override
-  String get label_name => 'Nama';
+  String get location => 'Lokasi';
 
   @override
-  String get label_email => 'Email';
+  String get unknown => 'Tidak Diketahui';
 
   @override
-  String get label_phone => 'Telepon';
+  String get user_role => 'Pengguna';
 
   @override
-  String get label_password => 'Kata Sandi';
+  String get driver_role => 'Driver';
 
   @override
-  String get label_gender => 'Jenis Kelamin';
+  String get merchant_role => 'Mitra';
 
   @override
-  String get label_photo => 'Foto';
+  String get student_id => 'NIM';
 
   @override
-  String get label_address => 'Alamat';
+  String get confirm_password => 'Konfirmasi Kata Sandi';
 
   @override
-  String get label_location => 'Lokasi';
+  String get vehicle_registration => 'STNK';
 
   @override
-  String get label_unknown => 'Tidak Diketahui';
+  String get bank_provider => 'Bank';
 
   @override
-  String get label_user_role => 'Pengguna';
+  String get owner_name => 'Nama Pemilik';
 
   @override
-  String get label_driver_role => 'Driver';
+  String get outlet_name => 'Nama Outlet';
 
   @override
-  String get label_merchant_role => 'Mitra';
+  String get outlet_category => 'Kategori Outlet';
 
   @override
-  String get label_student_id => 'NIM';
+  String get outlet_location => 'Lokasi Outlet';
 
   @override
-  String get label_confirm_password => 'Konfirmasi Kata Sandi';
+  String get government_document => 'Dokumen Identitas';
 
   @override
-  String get label_student_card => 'Kartu Mahasiswa (KTM)';
+  String get bank_account_number => 'Nomor Rekening Bank';
 
   @override
-  String get label_driver_license => 'SIM';
+  String get choose_service => 'Pilih layanan yang Anda inginkan';
 
   @override
-  String get label_license_plate => 'Nomor Kendaraan';
+  String get popular_merchant => 'Mitra populer';
 
   @override
-  String get label_vehicle_registration => 'STNK';
+  String get ride => 'Perjalanan';
 
   @override
-  String get label_bank_provider => 'Bank';
+  String get delivery => 'Pengiriman';
 
   @override
-  String get label_bank_account => 'Rekening Bank';
+  String get mart => 'AMart';
 
   @override
-  String get label_owner_name => 'Nama Pemilik';
+  String get wallet => 'E-wallet';
 
   @override
-  String get label_outlet_name => 'Nama Outlet';
+  String get voucher => 'Voucher Saya';
 
   @override
-  String get label_outlet_category => 'Kategori Outlet';
+  String get photo_profile => 'Foto Profil';
 
   @override
-  String get label_outlet_location => 'Lokasi Outlet';
+  String get old_password => 'Kata Sandi Lama';
 
   @override
-  String get label_government_document => 'Dokumen Identitas';
+  String get new_password => 'Kata Sandi Baru';
 
   @override
-  String get label_bank_account_number => 'Nomor Rekening Bank';
+  String get confirm_new_password => 'Konfirmasi Kata Sandi Baru';
 
   @override
-  String get label_choose_service => 'Pilih layanan yang Anda inginkan';
+  String get this_month => 'Bulan ini';
 
   @override
-  String get label_popular_merchant => 'Mitra populer';
+  String get expenses => 'Pengeluaran';
 
   @override
-  String get label_service_ride => 'Perjalanan';
+  String get income => 'Pemasukan';
 
   @override
-  String get label_service_delivery => 'Pengiriman';
+  String get payment_method_qris => 'QRIS';
 
   @override
-  String get label_service_mart => 'AMart';
+  String get order_id => 'Pesanan #';
 
   @override
-  String get label_service_wallet => 'E-Wallet';
+  String get pickup => 'Penjemputan';
 
   @override
-  String get label_service_voucher => 'Voucher Saya';
+  String get dropoff => 'Tujuan';
 
   @override
-  String get label_photo_profile => 'Foto Profil';
+  String get earnings => 'Penghasilan';
 
   @override
-  String get label_old_password => 'Kata Sandi Lama';
+  String get gender_preference => 'Preferensi gender: ';
 
   @override
-  String get label_new_password => 'Kata Sandi Baru';
+  String get note => 'Catatan:';
 
   @override
-  String get label_confirm_new_password => 'Konfirmasi Kata Sandi Baru';
+  String get order_type_ride => 'Perjalanan';
 
   @override
-  String get label_my_balance => 'Saldo Saya';
+  String get order_type_delivery => 'Pengiriman';
 
   @override
-  String get label_this_month => 'Bulan ini';
+  String get order_type_food => 'Makanan';
 
   @override
-  String get label_expenses => 'Pengeluaran';
+  String get note_pickup => 'Penjemputan: ';
 
   @override
-  String get label_income => 'Pemasukan';
+  String get note_dropoff => 'Tujuan: ';
 
   @override
-  String get label_payment_method_qris => 'QRIS';
+  String get note_instructions => 'Instruksi: ';
 
   @override
-  String get label_order_id => 'Pesanan #';
+  String get benefit_nearby_orders => 'Mencocokkan Anda dengan pesanan terdekat';
 
   @override
-  String get label_pickup => 'Penjemputan';
+  String get benefit_track_arrival => 'Pelanggan dapat melacak kedatangan Anda';
 
   @override
-  String get label_dropoff => 'Tujuan';
+  String get benefit_safety => 'Memastikan keamanan dan akuntabilitas';
 
   @override
-  String get label_distance => 'Jarak';
+  String get review_category => 'Kategori Ulasan';
 
   @override
-  String get label_earnings => 'Penghasilan';
+  String get cleanliness => 'Kebersihan';
 
   @override
-  String get label_gender_preference => 'Preferensi gender: ';
+  String get courtesy => 'Kesopanan';
 
   @override
-  String get label_note => 'Catatan:';
+  String get other => 'Lainnya';
 
   @override
-  String get label_order_type_ride => 'Perjalanan';
+  String get comment_optional => 'Komentar (Opsional)';
 
   @override
-  String get label_order_type_delivery => 'Pengiriman';
+  String get select_type => 'Pilih jenis darurat:';
 
   @override
-  String get label_order_type_food => 'Makanan';
+  String get accident => 'Kecelakaan';
 
   @override
-  String get label_note_pickup => 'Penjemputan: ';
+  String get harassment => 'Pelecehan';
 
   @override
-  String get label_note_dropoff => 'Tujuan: ';
+  String get theft => 'Pencurian';
 
   @override
-  String get label_note_instructions => 'Instruksi: ';
+  String get medical => 'Darurat Medis';
 
   @override
-  String get label_benefit_nearby_orders => 'Mencocokkan Anda dengan pesanan terdekat';
+  String get description => 'Deskripsi:';
 
   @override
-  String get label_benefit_track_arrival => 'Pelanggan dapat melacak kedatangan Anda';
+  String get akademove_pay => 'Akademove Pay';
 
   @override
-  String get label_benefit_safety => 'Memastikan keamanan dan akuntabilitas';
+  String get valid_until => 'Berlaku sampai ';
 
   @override
-  String get label_review_category => 'Kategori Ulasan';
+  String get remaining_time => 'Waktu Tersisa :';
 
   @override
-  String get label_category_cleanliness => 'Kebersihan';
+  String get atk => 'ATK (Alat Tulis Kantor)';
 
   @override
-  String get label_category_courtesy => 'Kesopanan';
+  String get printing => 'Percetakan';
 
   @override
-  String get label_category_other => 'Lainnya';
+  String get food => 'Makanan & Minuman';
 
   @override
-  String get label_comment_optional => 'Komentar (Opsional)';
+  String get drag_marker => 'Geser untuk mengatur posisi';
 
   @override
-  String get label_select_emergency_type => 'Pilih jenis darurat:';
+  String get step_1 => 'Langkah 1';
 
   @override
-  String get label_emergency_accident => 'Kecelakaan';
+  String get step_2 => 'Langkah 2';
 
   @override
-  String get label_emergency_harassment => 'Pelecehan';
+  String get step_3 => 'Langkah 3';
 
   @override
-  String get label_emergency_theft => 'Pencurian';
+  String get step_4 => 'Langkah 4';
 
   @override
-  String get label_emergency_medical => 'Darurat Medis';
+  String get hint_bank_provider => 'Pilih bank';
 
   @override
-  String get label_emergency_other => 'Lainnya';
+  String get hint_outlet_category => 'Pilih kategori outlet';
 
   @override
-  String get label_description => 'Deskripsi:';
+  String get hint_search_location => 'Cari lokasi (mis., Monas Jakarta)';
 
   @override
-  String get label_akademove_pay => 'Akademove Pay';
+  String get hint_share_experience => 'Bagikan pengalaman Anda...';
 
   @override
-  String get label_valid_until => 'Berlaku sampai ';
+  String get hint_description => 'Jelaskan situasi darurat...';
 
   @override
-  String get label_remaining_time => 'Waktu Tersisa :';
+  String get sign_up_choice => 'Mulai Perjalanan Anda Bersama Kami!';
 
   @override
-  String get label_category_atk => 'ATK (Alat Tulis Kantor)';
+  String get driver_sign_up_step1 => 'Ceritakan sedikit tentang diri Anda untuk memulai!';
 
   @override
-  String get label_category_printing => 'Percetakan';
+  String get driver_sign_up_step2 => 'Unggah foto dan dokumen Anda untuk verifikasi akun!';
 
   @override
-  String get label_category_food => 'Makanan & Minuman';
+  String get driver_sign_up_step3 => 'Masukkan detail kendaraan Anda agar siap di jalan!';
 
   @override
-  String get label_drag_marker => 'Geser untuk mengatur posisi';
+  String get driver_sign_up_step4 => 'Tambahkan rekening bank untuk menerima penghasilan Anda dengan aman!';
 
   @override
-  String get label_step_1 => 'Langkah 1';
+  String get user_sign_up => 'Daftar sekarang — perjalanan atau makanan Anda hanya seketuk saja 🚴‍♂️🍔';
 
   @override
-  String get label_step_2 => 'Langkah 2';
+  String get merchant_sign_up_step1 => 'Ceritakan tentang diri Anda untuk memulai perjalanan mitra!';
 
   @override
-  String get label_step_3 => 'Langkah 3';
+  String get merchant_sign_up_step2 => 'Bagikan detail dan lokasi outlet agar pelanggan mudah menemukan Anda!';
 
   @override
-  String get label_step_4 => 'Langkah 4';
+  String get merchant_sign_up_step3 => 'Tambahkan rekening bank untuk menerima pembayaran dengan aman!';
 
   @override
-  String get placeholder_email => 'john@gmail.com';
+  String get forgot_password => 'Lupa Kata Sandi';
 
   @override
-  String get placeholder_password => '********';
+  String get driver_dashboard => 'Beranda Driver';
 
   @override
-  String get placeholder_name => 'John Doe';
+  String get order_history => 'Riwayat Pesanan';
 
   @override
-  String get placeholder_student_id => '25051204020';
+  String get merchant_edit_profile => 'Sunting Profil';
 
   @override
-  String get placeholder_gender => 'Pilih jenis kelamin';
+  String get setup_outlet => 'Atur Outlet';
 
   @override
-  String get placeholder_license_plate => 'B 1234 AM';
+  String get order_detail => 'Detail Pesanan';
 
   @override
-  String get placeholder_bank_provider => 'Pilih bank';
+  String get menu_detail => 'Detail Menu';
 
   @override
-  String get placeholder_bank_account => '11223344';
+  String get sales_report => 'Laporan Penjualan';
 
   @override
-  String get placeholder_outlet_name => 'Nama Outlet Anda';
+  String get commission_report => 'Laporan Komisi';
 
   @override
-  String get placeholder_outlet_email => 'outlet@example.com';
+  String get merchant_change_password => 'Ganti Kata Sandi';
 
   @override
-  String get placeholder_outlet_category => 'Pilih kategori outlet';
+  String get where_you_at => 'Posisi Anda di mana?';
 
   @override
-  String get placeholder_search_location => 'Cari lokasi (mis., Monas Jakarta)';
+  String get where_going => 'Mau ke mana?';
 
   @override
-  String get placeholder_share_experience => 'Bagikan pengalaman Anda...';
+  String get on_trip => 'Sedang Perjalanan';
 
   @override
-  String get placeholder_emergency_description => 'Jelaskan situasi darurat...';
+  String get trip_details => 'Detail Perjalanan';
 
   @override
-  String get screen_title_sign_up_choice => 'Mulai Perjalanan Anda Bersama Kami!';
+  String get create_menu => 'Buat Menu';
 
   @override
-  String get screen_title_driver_sign_up_step1 => 'Ceritakan sedikit tentang diri Anda untuk memulai!';
+  String get edit_menu => 'Sunting Menu';
 
   @override
-  String get screen_title_driver_sign_up_step2 => 'Unggah foto dan dokumen Anda untuk verifikasi akun!';
+  String get sign_up_success => 'Pendaftaran Berhasil';
 
   @override
-  String get screen_title_driver_sign_up_step3 => 'Masukkan detail kendaraan Anda agar siap di jalan!';
+  String get sign_up_failed => 'Pendaftaran Gagal';
 
   @override
-  String get screen_title_driver_sign_up_step4 => 'Tambahkan rekening bank untuk menerima penghasilan Anda dengan aman!';
+  String get location_permission => 'Izin Lokasi';
 
   @override
-  String get screen_title_user_sign_up => 'Daftar sekarang — perjalanan atau makanan Anda hanya seketuk saja 🚴‍♂️🍔';
+  String get permission_denied => 'Izin Ditolak';
 
   @override
-  String get screen_title_merchant_sign_up_step1 => 'Ceritakan tentang diri Anda untuk memulai perjalanan mitra!';
+  String get location_disabled => 'Layanan Lokasi Dinonaktifkan';
 
   @override
-  String get screen_title_merchant_sign_up_step2 => 'Bagikan detail dan lokasi outlet agar pelanggan mudah menemukan Anda!';
+  String get location_permission_required => 'Izin Lokasi Diperlukan';
 
   @override
-  String get screen_title_merchant_sign_up_step3 => 'Tambahkan rekening bank untuk menerima pembayaran dengan aman!';
+  String get search_error => 'Kesalahan Pencarian';
 
   @override
-  String get screen_title_forgot_password => 'Lupa Kata Sandi';
+  String get location_found => 'Lokasi Ditemukan';
 
   @override
-  String get screen_title_reset_password => 'Atur Ulang Kata Sandi';
+  String get not_found => 'Tidak Ditemukan';
 
   @override
-  String get screen_title_edit_profile => 'Sunting Profil';
+  String get validation_error => 'Kesalahan Validasi';
 
   @override
-  String get screen_title_change_password => 'Ganti Kata Sandi';
+  String get oops => 'Ups...';
 
   @override
-  String get screen_title_wallet => 'E-Wallet';
-
-  @override
-  String get screen_title_top_up => 'Isi Ulang';
-
-  @override
-  String get screen_title_driver_dashboard => 'Beranda Driver';
-
-  @override
-  String get screen_title_earnings_wallet => 'Penghasilan & Dompet';
-
-  @override
-  String get screen_title_order_history => 'Riwayat Pesanan';
-
-  @override
-  String get screen_title_my_schedule => 'Jadwal Saya (KRS)';
-
-  @override
-  String get screen_title_merchant_edit_profile => 'Sunting Profil';
-
-  @override
-  String get screen_title_setup_outlet => 'Atur Outlet';
-
-  @override
-  String get screen_title_order_detail => 'Detail Pesanan';
-
-  @override
-  String get screen_title_menu_detail => 'Detail Menu';
-
-  @override
-  String get screen_title_sales_report => 'Laporan Penjualan';
-
-  @override
-  String get screen_title_commission_report => 'Laporan Komisi';
-
-  @override
-  String get screen_title_merchant_change_password => 'Ganti Kata Sandi';
-
-  @override
-  String get screen_title_where_you_at => 'Posisi Anda di mana?';
-
-  @override
-  String get screen_title_where_going => 'Mau ke mana?';
-
-  @override
-  String get screen_title_on_trip => 'Sedang Perjalanan';
-
-  @override
-  String get screen_title_trip_details => 'Detail Perjalanan';
-
-  @override
-  String get screen_title_create_menu => 'Buat Menu';
-
-  @override
-  String get screen_title_edit_menu => 'Sunting Menu';
-
-  @override
-  String get dialog_title_sign_up_success => 'Pendaftaran Berhasil';
-
-  @override
-  String get dialog_title_sign_up_failed => 'Pendaftaran Gagal';
-
-  @override
-  String get dialog_title_location_permission => 'Izin Lokasi';
-
-  @override
-  String get dialog_title_permission_denied => 'Izin Ditolak';
-
-  @override
-  String get dialog_title_location_disabled => 'Layanan Lokasi Dinonaktifkan';
-
-  @override
-  String get dialog_title_location_permission_required => 'Izin Lokasi Diperlukan';
-
-  @override
-  String get dialog_title_search_error => 'Kesalahan Pencarian';
-
-  @override
-  String get dialog_title_location_found => 'Lokasi Ditemukan';
-
-  @override
-  String get dialog_title_not_found => 'Tidak Ditemukan';
-
-  @override
-  String get dialog_title_validation_error => 'Kesalahan Validasi';
-
-  @override
-  String get dialog_title_error => 'Kesalahan';
-
-  @override
-  String get dialog_title_oops => 'Ups...';
-
-  @override
-  String dialog_title_new_order(String type) {
+  String new_order(String type) {
     return 'Pesanan $type Baru';
   }
 
   @override
-  String get dialog_title_order_unavailable => 'Pesanan Tidak Tersedia';
+  String get order_unavailable => 'Pesanan Tidak Tersedia';
 
   @override
-  String get dialog_title_order_rejected => 'Pesanan Ditolak';
+  String get order_rejected => 'Pesanan Ditolak';
 
   @override
-  String get dialog_title_rate_customer => 'Beri Rating Pelanggan';
+  String get alert => 'Peringatan Darurat';
 
   @override
-  String get dialog_title_success => 'Berhasil';
+  String get report_emergency => 'Laporkan Darurat';
 
   @override
-  String get dialog_title_emergency_alert => 'Peringatan Darurat';
+  String get confirm_logout => 'Keluar';
 
   @override
-  String get dialog_title_report_emergency => 'Laporkan Darurat';
-
-  @override
-  String get dialog_title_confirm_logout => 'Keluar';
-
-  @override
-  String get dialog_title_reject_order => 'Tolak Pesanan';
-
-  @override
-  String get dialog_title_cancel_order => 'Batalkan Pesanan';
-
-  @override
-  String get dialog_title_delete_schedule => 'Hapus Jadwal';
-
-  @override
-  String get dialog_title_accept_order => 'Terima Pesanan';
-
-  @override
-  String get dialog_title_delete_menu => 'Hapus Menu';
+  String get delete_menu => 'Hapus Menu';
 
   @override
   String get description_user_role => 'Nikmati perjalanan yang nyaman dan aman ke tujuan Anda.';
@@ -1174,7 +1114,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get message_location_default => 'Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.';
 
   @override
-  String get message_location_permission_required => 'Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.';
+  String get message_leocation_permission_required => 'Location permission is required to set your outlet location automatically.';
 
   @override
   String get message_location_permission_explanation => 'Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda di peta secara otomatis. Ini membantu pelanggan menemukan bisnis Anda dengan mudah.\n\nAnda juga dapat mengatur lokasi secara manual dengan menggeser penanda.';
@@ -1206,7 +1146,7 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get message_emergency_confirmation => 'Ini akan mengirim peringatan darurat ke otoritas kampus dan memberi tahu kontak darurat. Apakah Anda yakin ingin melanjutkan?';
+  String get message_confirmation => 'Ini akan mengirim peringatan darurat ke otoritas kampus dan memberi tahu kontak darurat. Apakah Anda yakin ingin melanjutkan?';
 
   @override
   String get message_settings_coming_soon => 'Fitur pengaturan akan segera hadir';
@@ -1244,89 +1184,89 @@ class AppLocalizationsId extends AppLocalizations {
   String get message_select_reject_reason => 'Mohon pilih alasan untuk menolak pesanan ini:';
 
   @override
-  String get status_dragging_marker => 'Menggeser...';
+  String get dragging_marker => 'Menggeser...';
 
   @override
-  String get status_welcome_back => 'Selamat datang kembali!';
+  String get welcome_back => 'Selamat datang kembali!';
 
   @override
-  String get status_license_plate => 'Nomor Kendaraan: ';
+  String get license_plate => 'Nomor Kendaraan: ';
 
   @override
-  String status_rating(String rating) {
+  String rating(String rating) {
     return 'Rating $rating';
   }
 
   @override
-  String get status_driver_status => 'Status Driver';
+  String get driver_status => 'Status Driver';
 
   @override
-  String get status_accepting_orders => 'Anda menerima pesanan';
+  String get accepting_orders => 'Anda menerima pesanan';
 
   @override
-  String get status_offline => 'Anda offline';
+  String get offline => 'Anda offline';
 
   @override
-  String get status_ready_accept => 'Siap menerima pesanan baru';
+  String get ready_accept => 'Siap menerima pesanan baru';
 
   @override
-  String get status_toggle_receive => 'Aktifkan untuk mulai menerima pesanan';
+  String get toggle_receive => 'Aktifkan untuk mulai menerima pesanan';
 
   @override
-  String get status_today_performance => 'Performa Hari Ini';
+  String get today_performance => 'Performa Hari Ini';
 
   @override
-  String get status_trips => 'Perjalanan';
+  String get trips => 'Perjalanan';
 
   @override
-  String get status_quick_actions => 'Aksi Cepat';
+  String get quick_actions => 'Aksi Cepat';
 
   @override
-  String get status_manage_schedule => 'Kelola Jadwal';
+  String get manage_schedule => 'Kelola Jadwal';
 
   @override
-  String status_hello(String name) {
+  String hello(String name) {
     return 'Halo, $name';
   }
 
   @override
-  String get status_open_today => 'Buka Hari Ini';
+  String get open_today => 'Buka Hari Ini';
 
   @override
-  String get status_operating_hours => '10.00 - 22.00 WIB';
+  String get operating_hours => '10.00 - 22.00 WIB';
 
   @override
-  String get status_sales_recap => 'Rekap Penjualan';
+  String get sales_recap => 'Rekap Penjualan';
 
   @override
-  String get status_today_transaction => 'Transaksi hari ini';
+  String get today_transaction => 'Transaksi hari ini';
 
   @override
-  String get status_today_gross_sales => 'Penjualan kotor hari ini';
+  String get today_gross_sales => 'Penjualan kotor hari ini';
 
   @override
-  String get status_see_detail => 'Lihat detail';
+  String get see_detail => 'Lihat detail';
 
   @override
-  String get status_send_packages => 'Kirim paket di dalam kampus';
+  String get send_packages => 'Kirim paket di dalam kampus';
 
   @override
-  String get status_max_weight => 'Maks berat: 20kg';
+  String get max_weight => 'Maks berat: 20kg';
 
   @override
-  String get status_fast_delivery => 'Pengiriman cepat';
+  String get fast_delivery => 'Pengiriman cepat';
 
   @override
-  String get status_secure_handling => 'Penanganan aman';
+  String get secure_handling => 'Penanganan aman';
 
   @override
-  String get status_start_delivery => 'Mulai Pengiriman';
+  String get start_delivery => 'Mulai Pengiriman';
 
   @override
-  String get status_choose_pickup_destination => 'Pilih titik penjemputan dan tujuan Anda!';
+  String get choose_pickup_destination => 'Pilih titik penjemputan dan tujuan Anda!';
 
   @override
-  String status_rating_score(String score) {
+  String rating_score(String score) {
     return 'Rating: $score / 5.0';
   }
 

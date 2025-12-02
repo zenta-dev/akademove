@@ -447,8 +447,8 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       if (payment == null) return '-';
 
       switch (payment.method) {
-        case PaymentMethod.WALLET:
-          return 'Wallet';
+        case PaymentMethod.wallet:
+          return 'wallet';
         case PaymentMethod.QRIS:
           return 'QRIS';
         case PaymentMethod.BANK_TRANSFER:

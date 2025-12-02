@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,7 +99,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         spacing: 12.h,
         children: [
           Text(
-            'Choose the service that you want',
+            context.l10n.choose_the_service_that_you_want,
             style: context.typography.h4.copyWith(fontSize: 16.sp),
           ),
           _buildNavigation(context),
@@ -106,7 +107,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Popular merchant',
+                context.l10n.popular_merchants,
                 style: context.typography.h4.copyWith(fontSize: 16.sp),
               ),
               Button(
@@ -119,7 +120,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'View All',
+                      context.l10n.view_all,
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w500,
@@ -163,7 +164,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               width: double.infinity,
               padding: EdgeInsets.only(top: 16.dg),
               child: OopsAlertWidget(
-                message: error.message ?? 'An unexpected error occurred',
+                message: error.message ?? context.l10n.an_error_occurred,
                 onRefresh: () => context.read<UserHomeCubit>().getPopulars(),
               ),
             ),
@@ -184,32 +185,32 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget _buildNavigation(BuildContext context) {
     final routes = [
-      const _Route(
-        label: 'Ride',
+      _Route(
+        label: context.l10n.ride,
         icon: LucideIcons.bike,
         route: Routes.userRide,
         color: Colors.blue,
       ),
-      const _Route(
-        label: 'Delivery',
+      _Route(
+        label: context.l10n.delivery,
         icon: LucideIcons.package,
         route: Routes.userDelivery,
         color: Colors.green,
       ),
-      const _Route(
-        label: 'AMart',
+      _Route(
+        label: context.l10n.mart,
         icon: LucideIcons.store,
         route: Routes.userMart,
         color: Colors.pink,
       ),
-      const _Route(
-        label: 'E-Wallet',
+      _Route(
+        label: context.l10n.wallet,
         icon: LucideIcons.wallet,
         route: Routes.userWallet,
         color: Colors.red,
       ),
-      const _Route(
-        label: 'My Voucher',
+      _Route(
+        label: context.l10n.voucher,
         icon: LucideIcons.tag,
         route: Routes.userVoucher,
         color: Colors.yellow,

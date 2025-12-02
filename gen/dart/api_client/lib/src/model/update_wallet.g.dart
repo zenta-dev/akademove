@@ -6,23 +6,23 @@ part of 'update_wallet.dart';
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$UpdateWalletCWProxy {
-  UpdateWallet userId(String? userId);
+abstract class _$UpdatewalletCWProxy {
+  Updatewallet userId(String? userId);
 
-  UpdateWallet balance(num? balance);
+  Updatewallet balance(num? balance);
 
-  UpdateWallet currency(Currency? currency);
+  Updatewallet currency(Currency? currency);
 
-  UpdateWallet isActive(bool? isActive);
+  Updatewallet isActive(bool? isActive);
 
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateWallet(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Updatewallet(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// UpdateWallet(...).copyWith(id: 12, name: "My name")
+  /// Updatewallet(...).copyWith(id: 12, name: "My name")
   /// ```
-  UpdateWallet call({
+  Updatewallet call({
     String? userId,
     num? balance,
     Currency? currency,
@@ -31,39 +31,39 @@ abstract class _$UpdateWalletCWProxy {
 }
 
 /// Callable proxy for `copyWith` functionality.
-/// Use as `instanceOfUpdateWallet.copyWith(...)` or call `instanceOfUpdateWallet.copyWith.fieldName(value)` for a single field.
-class _$UpdateWalletCWProxyImpl implements _$UpdateWalletCWProxy {
-  const _$UpdateWalletCWProxyImpl(this._value);
+/// Use as `instanceOfUpdatewallet.copyWith(...)` or call `instanceOfUpdatewallet.copyWith.fieldName(value)` for a single field.
+class _$UpdatewalletCWProxyImpl implements _$UpdatewalletCWProxy {
+  const _$UpdatewalletCWProxyImpl(this._value);
 
-  final UpdateWallet _value;
-
-  @override
-  UpdateWallet userId(String? userId) => call(userId: userId);
+  final Updatewallet _value;
 
   @override
-  UpdateWallet balance(num? balance) => call(balance: balance);
+  Updatewallet userId(String? userId) => call(userId: userId);
 
   @override
-  UpdateWallet currency(Currency? currency) => call(currency: currency);
+  Updatewallet balance(num? balance) => call(balance: balance);
 
   @override
-  UpdateWallet isActive(bool? isActive) => call(isActive: isActive);
+  Updatewallet currency(Currency? currency) => call(currency: currency);
+
+  @override
+  Updatewallet isActive(bool? isActive) => call(isActive: isActive);
 
   @override
   /// Creates a new instance with the provided field values.
-  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateWallet(...).copyWith.fieldName(value)`.
+  /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Updatewallet(...).copyWith.fieldName(value)`.
   ///
   /// Example:
   /// ```dart
-  /// UpdateWallet(...).copyWith(id: 12, name: "My name")
+  /// Updatewallet(...).copyWith(id: 12, name: "My name")
   /// ```
-  UpdateWallet call({
+  Updatewallet call({
     Object? userId = const $CopyWithPlaceholder(),
     Object? balance = const $CopyWithPlaceholder(),
     Object? currency = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
   }) {
-    return UpdateWallet(
+    return Updatewallet(
       userId: userId == const $CopyWithPlaceholder()
           ? _value.userId
           // ignore: cast_nullable_to_non_nullable
@@ -84,20 +84,20 @@ class _$UpdateWalletCWProxyImpl implements _$UpdateWalletCWProxy {
   }
 }
 
-extension $UpdateWalletCopyWith on UpdateWallet {
+extension $UpdatewalletCopyWith on Updatewallet {
   /// Returns a callable class used to build a new instance with modified fields.
-  /// Example: `instanceOfUpdateWallet.copyWith(...)` or `instanceOfUpdateWallet.copyWith.fieldName(...)`.
+  /// Example: `instanceOfUpdatewallet.copyWith(...)` or `instanceOfUpdatewallet.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UpdateWalletCWProxy get copyWith => _$UpdateWalletCWProxyImpl(this);
+  _$UpdatewalletCWProxy get copyWith => _$UpdatewalletCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UpdateWallet _$UpdateWalletFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UpdateWallet', json, ($checkedConvert) {
-      final val = UpdateWallet(
+Updatewallet _$UpdatewalletFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Updatewallet', json, ($checkedConvert) {
+      final val = Updatewallet(
         userId: $checkedConvert('userId', (v) => v as String?),
         balance: $checkedConvert('balance', (v) => v as num?),
         currency: $checkedConvert(
@@ -109,7 +109,7 @@ UpdateWallet _$UpdateWalletFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$UpdateWalletToJson(UpdateWallet instance) =>
+Map<String, dynamic> _$UpdatewalletToJson(Updatewallet instance) =>
     <String, dynamic>{
       'userId': ?instance.userId,
       'balance': ?instance.balance,

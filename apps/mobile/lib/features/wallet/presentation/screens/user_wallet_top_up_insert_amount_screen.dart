@@ -147,7 +147,7 @@ class _UserWalletTopUpInsertAmountScreenState
                         },
                   child: state.isLoading
                       ? const Submiting()
-                      : DefaultText(context.l10n.button_next),
+                      : DefaultText(context.l10n.next),
                 ),
               );
             },

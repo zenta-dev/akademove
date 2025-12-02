@@ -22,7 +22,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
   final double totalCost;
   final double walletBalance;
 
-  bool get isWalletSufficient => walletBalance >= totalCost;
+  bool get iswalletSufficient => walletBalance >= totalCost;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +32,9 @@ class PaymentMethodPickerWidget extends StatelessWidget {
         spacing: 8.h,
         children: [
           OutlineButton(
-            onPressed: isWalletSufficient
+            onPressed: iswalletSufficient
                 ? () {
-                    onChanged(PaymentMethod.WALLET, bankProvider: null);
+                    onChanged(PaymentMethod.wallet, bankProvider: null);
                   }
                 : null,
             child: Row(
@@ -44,20 +44,20 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DefaultText('Wallet'),
+                    const DefaultText('wallet'),
                     DefaultText(
                       'Balance: ${context.formatCurrency(walletBalance)}',
                       fontSize: 12.sp,
-                      color: isWalletSufficient
+                      color: iswalletSufficient
                           ? context.colorScheme.primary
                           : context.colorScheme.destructive,
                     ),
                   ],
                 ),
                 const Spacer(),
-                if (isWalletSufficient)
+                if (iswalletSufficient)
                   ChecklistIndicatorWidget(
-                    isSelected: value == PaymentMethod.WALLET,
+                    isSelected: value == PaymentMethod.wallet,
                   )
                 else
                   Button(

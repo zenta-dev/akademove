@@ -97,6 +97,108 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @popular_merchants.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular merchants'**
+  String get popular_merchants;
+
+  /// No description provided for @choose_the_service_that_you_want.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the service that you want'**
+  String get choose_the_service_that_you_want;
+
+  /// No description provided for @pending_approval.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Approval'**
+  String get pending_approval;
+
+  /// No description provided for @approved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approved;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
+
+  /// No description provided for @suspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended'**
+  String get suspended;
+
+  /// No description provided for @app_version_information.
+  ///
+  /// In en, this message translates to:
+  /// **'App information and version'**
+  String get app_version_information;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @manage_notification_preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage notification preferences'**
+  String get manage_notification_preferences;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @driver_preferences_and_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver preferences and settings'**
+  String get driver_preferences_and_settings;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @profile_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profile_updated_successfully;
+
+  /// No description provided for @license_plate_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate cannot be empty'**
+  String get license_plate_cannot_be_empty;
+
+  /// No description provided for @enter_license_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter license plate'**
+  String get enter_license_plate;
+
+  /// No description provided for @update_your_license_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your license plate information'**
+  String get update_your_license_plate;
+
   /// No description provided for @logged_out_successfully.
   ///
   /// In en, this message translates to:
@@ -559,11 +661,11 @@ abstract class AppLocalizations {
   /// **'Leaderboard & Badges'**
   String get leadeboard_and_badges;
 
-  /// No description provided for @label_trips.
+  /// No description provided for @trips.
   ///
   /// In en, this message translates to:
   /// **'Trips'**
-  String get label_trips;
+  String get trips;
 
   /// No description provided for @ready_to_accept_new_orders.
   ///
@@ -778,7 +880,7 @@ abstract class AppLocalizations {
   /// No description provided for @view_all.
   ///
   /// In en, this message translates to:
-  /// **'View all'**
+  /// **'View All'**
   String get view_all;
 
   /// No description provided for @recent_transactions.
@@ -832,7 +934,7 @@ abstract class AppLocalizations {
   /// No description provided for @earnings_wallet.
   ///
   /// In en, this message translates to:
-  /// **'Earnings & Wallet'**
+  /// **'Earnings & wallet'**
   String get earnings_wallet;
 
   /// No description provided for @failed_to_load_earnings.
@@ -892,7 +994,7 @@ abstract class AppLocalizations {
   /// No description provided for @e_wallet.
   ///
   /// In en, this message translates to:
-  /// **'E-Wallet'**
+  /// **'E-wallet'**
   String get e_wallet;
 
   /// No description provided for @my_balance.
@@ -1123,1037 +1225,815 @@ abstract class AppLocalizations {
   /// **'Delivery Service'**
   String get delivery_service;
 
-  /// No description provided for @button_cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get button_cancel;
-
-  /// No description provided for @button_continue.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get button_continue;
-
-  /// No description provided for @button_back.
+  /// No description provided for @back.
   ///
   /// In en, this message translates to:
   /// **'Back'**
-  String get button_back;
+  String get back;
 
-  /// No description provided for @button_next.
+  /// No description provided for @next.
   ///
   /// In en, this message translates to:
   /// **'Next'**
-  String get button_next;
+  String get next;
 
-  /// No description provided for @button_submit.
+  /// No description provided for @submit.
   ///
   /// In en, this message translates to:
   /// **'Submit'**
-  String get button_submit;
+  String get submit;
 
-  /// No description provided for @button_save_changes.
+  /// No description provided for @save_changes.
   ///
   /// In en, this message translates to:
   /// **'Save Changes'**
-  String get button_save_changes;
+  String get save_changes;
 
-  /// No description provided for @button_allow.
+  /// No description provided for @allow.
   ///
   /// In en, this message translates to:
   /// **'Allow'**
-  String get button_allow;
+  String get allow;
 
-  /// No description provided for @button_open_settings.
+  /// No description provided for @open_settings.
   ///
   /// In en, this message translates to:
   /// **'Open Settings'**
-  String get button_open_settings;
+  String get open_settings;
 
-  /// No description provided for @button_view_all.
-  ///
-  /// In en, this message translates to:
-  /// **'View All'**
-  String get button_view_all;
-
-  /// No description provided for @button_send_reset_link.
+  /// No description provided for @send_reset_link.
   ///
   /// In en, this message translates to:
   /// **'Send Reset Link'**
-  String get button_send_reset_link;
+  String get send_reset_link;
 
-  /// No description provided for @button_back_to_sign_in.
+  /// No description provided for @back_to_sign_in.
   ///
   /// In en, this message translates to:
   /// **'Back to Sign In'**
-  String get button_back_to_sign_in;
+  String get back_to_sign_in;
 
-  /// No description provided for @button_reset_password.
+  /// No description provided for @reset_password.
   ///
   /// In en, this message translates to:
   /// **'Reset Password'**
-  String get button_reset_password;
+  String get reset_password;
 
-  /// No description provided for @button_reject.
+  /// No description provided for @reject.
   ///
   /// In en, this message translates to:
   /// **'Reject'**
-  String get button_reject;
+  String get reject;
 
-  /// No description provided for @button_accept.
+  /// No description provided for @accept.
   ///
   /// In en, this message translates to:
   /// **'Accept'**
-  String get button_accept;
+  String get accept;
 
-  /// No description provided for @button_grant_permission.
+  /// No description provided for @grant_permission.
   ///
   /// In en, this message translates to:
   /// **'Grant Permission'**
-  String get button_grant_permission;
+  String get grant_permission;
 
-  /// No description provided for @button_send_alert.
+  /// No description provided for @send_alert.
   ///
   /// In en, this message translates to:
   /// **'Send Alert'**
-  String get button_send_alert;
+  String get send_alert;
 
-  /// No description provided for @button_download_qr.
+  /// No description provided for @download_qr.
   ///
   /// In en, this message translates to:
   /// **'Download QR'**
-  String get button_download_qr;
+  String get download_qr;
 
-  /// No description provided for @button_copy_qr_url.
+  /// No description provided for @copy_qr_url.
   ///
   /// In en, this message translates to:
   /// **'Copy QR URL'**
-  String get button_copy_qr_url;
+  String get copy_qr_url;
 
-  /// No description provided for @button_top_up.
-  ///
-  /// In en, this message translates to:
-  /// **'Top Up'**
-  String get button_top_up;
-
-  /// No description provided for @button_retry.
-  ///
-  /// In en, this message translates to:
-  /// **'Retry'**
-  String get button_retry;
-
-  /// No description provided for @label_name.
+  /// No description provided for @name.
   ///
   /// In en, this message translates to:
   /// **'Name'**
-  String get label_name;
+  String get name;
 
-  /// No description provided for @label_email.
-  ///
-  /// In en, this message translates to:
-  /// **'Email'**
-  String get label_email;
-
-  /// No description provided for @label_phone.
+  /// No description provided for @phone.
   ///
   /// In en, this message translates to:
   /// **'Phone'**
-  String get label_phone;
+  String get phone;
 
-  /// No description provided for @label_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Password'**
-  String get label_password;
-
-  /// No description provided for @label_gender.
+  /// No description provided for @gender.
   ///
   /// In en, this message translates to:
   /// **'Gender'**
-  String get label_gender;
+  String get gender;
 
-  /// No description provided for @label_photo.
+  /// No description provided for @photo.
   ///
   /// In en, this message translates to:
   /// **'Photo'**
-  String get label_photo;
+  String get photo;
 
-  /// No description provided for @label_address.
+  /// No description provided for @address.
   ///
   /// In en, this message translates to:
   /// **'Address'**
-  String get label_address;
+  String get address;
 
-  /// No description provided for @label_location.
+  /// No description provided for @location.
   ///
   /// In en, this message translates to:
   /// **'Location'**
-  String get label_location;
+  String get location;
 
-  /// No description provided for @label_unknown.
+  /// No description provided for @unknown.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
-  String get label_unknown;
+  String get unknown;
 
-  /// No description provided for @label_user_role.
+  /// No description provided for @user_role.
   ///
   /// In en, this message translates to:
   /// **'User'**
-  String get label_user_role;
+  String get user_role;
 
-  /// No description provided for @label_driver_role.
+  /// No description provided for @driver_role.
   ///
   /// In en, this message translates to:
   /// **'Driver'**
-  String get label_driver_role;
+  String get driver_role;
 
-  /// No description provided for @label_merchant_role.
+  /// No description provided for @merchant_role.
   ///
   /// In en, this message translates to:
   /// **'Merchant'**
-  String get label_merchant_role;
+  String get merchant_role;
 
-  /// No description provided for @label_student_id.
+  /// No description provided for @student_id.
   ///
   /// In en, this message translates to:
   /// **'NIM'**
-  String get label_student_id;
+  String get student_id;
 
-  /// No description provided for @label_confirm_password.
+  /// No description provided for @confirm_password.
   ///
   /// In en, this message translates to:
   /// **'Confirm Password'**
-  String get label_confirm_password;
+  String get confirm_password;
 
-  /// No description provided for @label_student_card.
-  ///
-  /// In en, this message translates to:
-  /// **'Student Card (KTM)'**
-  String get label_student_card;
-
-  /// No description provided for @label_driver_license.
-  ///
-  /// In en, this message translates to:
-  /// **'Driver License (SIM)'**
-  String get label_driver_license;
-
-  /// No description provided for @label_license_plate.
-  ///
-  /// In en, this message translates to:
-  /// **'License Plate'**
-  String get label_license_plate;
-
-  /// No description provided for @label_vehicle_registration.
+  /// No description provided for @vehicle_registration.
   ///
   /// In en, this message translates to:
   /// **'Vehicle Registration (STNK)'**
-  String get label_vehicle_registration;
+  String get vehicle_registration;
 
-  /// No description provided for @label_bank_provider.
+  /// No description provided for @bank_provider.
   ///
   /// In en, this message translates to:
   /// **'Bank Provider'**
-  String get label_bank_provider;
+  String get bank_provider;
 
-  /// No description provided for @label_bank_account.
-  ///
-  /// In en, this message translates to:
-  /// **'Bank Account'**
-  String get label_bank_account;
-
-  /// No description provided for @label_owner_name.
+  /// No description provided for @owner_name.
   ///
   /// In en, this message translates to:
   /// **'Owner Name'**
-  String get label_owner_name;
+  String get owner_name;
 
-  /// No description provided for @label_outlet_name.
+  /// No description provided for @outlet_name.
   ///
   /// In en, this message translates to:
   /// **'Outlet Name'**
-  String get label_outlet_name;
+  String get outlet_name;
 
-  /// No description provided for @label_outlet_category.
+  /// No description provided for @outlet_category.
   ///
   /// In en, this message translates to:
   /// **'Outlet Category'**
-  String get label_outlet_category;
+  String get outlet_category;
 
-  /// No description provided for @label_outlet_location.
+  /// No description provided for @outlet_location.
   ///
   /// In en, this message translates to:
   /// **'Outlet Location'**
-  String get label_outlet_location;
+  String get outlet_location;
 
-  /// No description provided for @label_government_document.
+  /// No description provided for @government_document.
   ///
   /// In en, this message translates to:
   /// **'Government Document'**
-  String get label_government_document;
+  String get government_document;
 
-  /// No description provided for @label_bank_account_number.
+  /// No description provided for @bank_account_number.
   ///
   /// In en, this message translates to:
   /// **'Bank Account Number'**
-  String get label_bank_account_number;
+  String get bank_account_number;
 
-  /// No description provided for @label_choose_service.
+  /// No description provided for @choose_service.
   ///
   /// In en, this message translates to:
   /// **'Choose the service that you want'**
-  String get label_choose_service;
+  String get choose_service;
 
-  /// No description provided for @label_popular_merchant.
+  /// No description provided for @popular_merchant.
   ///
   /// In en, this message translates to:
   /// **'Popular merchant'**
-  String get label_popular_merchant;
+  String get popular_merchant;
 
-  /// No description provided for @label_service_ride.
+  /// No description provided for @ride.
   ///
   /// In en, this message translates to:
   /// **'Ride'**
-  String get label_service_ride;
+  String get ride;
 
-  /// No description provided for @label_service_delivery.
+  /// No description provided for @delivery.
   ///
   /// In en, this message translates to:
   /// **'Delivery'**
-  String get label_service_delivery;
+  String get delivery;
 
-  /// No description provided for @label_service_mart.
+  /// No description provided for @mart.
   ///
   /// In en, this message translates to:
   /// **'AMart'**
-  String get label_service_mart;
+  String get mart;
 
-  /// No description provided for @label_service_wallet.
+  /// No description provided for @wallet.
   ///
   /// In en, this message translates to:
-  /// **'E-Wallet'**
-  String get label_service_wallet;
+  /// **'E-wallet'**
+  String get wallet;
 
-  /// No description provided for @label_service_voucher.
+  /// No description provided for @voucher.
   ///
   /// In en, this message translates to:
   /// **'My Voucher'**
-  String get label_service_voucher;
+  String get voucher;
 
-  /// No description provided for @label_photo_profile.
+  /// No description provided for @photo_profile.
   ///
   /// In en, this message translates to:
   /// **'Photo Profile'**
-  String get label_photo_profile;
+  String get photo_profile;
 
-  /// No description provided for @label_old_password.
+  /// No description provided for @old_password.
   ///
   /// In en, this message translates to:
   /// **'Old Password'**
-  String get label_old_password;
+  String get old_password;
 
-  /// No description provided for @label_new_password.
+  /// No description provided for @new_password.
   ///
   /// In en, this message translates to:
   /// **'New Password'**
-  String get label_new_password;
+  String get new_password;
 
-  /// No description provided for @label_confirm_new_password.
+  /// No description provided for @confirm_new_password.
   ///
   /// In en, this message translates to:
   /// **'Confirm New Password'**
-  String get label_confirm_new_password;
+  String get confirm_new_password;
 
-  /// No description provided for @label_my_balance.
-  ///
-  /// In en, this message translates to:
-  /// **'My Balance'**
-  String get label_my_balance;
-
-  /// No description provided for @label_this_month.
+  /// No description provided for @this_month.
   ///
   /// In en, this message translates to:
   /// **'This month'**
-  String get label_this_month;
+  String get this_month;
 
-  /// No description provided for @label_expenses.
+  /// No description provided for @expenses.
   ///
   /// In en, this message translates to:
   /// **'Expenses'**
-  String get label_expenses;
+  String get expenses;
 
-  /// No description provided for @label_income.
+  /// No description provided for @income.
   ///
   /// In en, this message translates to:
   /// **'Income'**
-  String get label_income;
+  String get income;
 
-  /// No description provided for @label_payment_method_qris.
+  /// No description provided for @payment_method_qris.
   ///
   /// In en, this message translates to:
   /// **'QRIS'**
-  String get label_payment_method_qris;
+  String get payment_method_qris;
 
-  /// No description provided for @label_order_id.
+  /// No description provided for @order_id.
   ///
   /// In en, this message translates to:
   /// **'Order #'**
-  String get label_order_id;
+  String get order_id;
 
-  /// No description provided for @label_pickup.
+  /// No description provided for @pickup.
   ///
   /// In en, this message translates to:
   /// **'Pickup'**
-  String get label_pickup;
+  String get pickup;
 
-  /// No description provided for @label_dropoff.
+  /// No description provided for @dropoff.
   ///
   /// In en, this message translates to:
   /// **'Dropoff'**
-  String get label_dropoff;
+  String get dropoff;
 
-  /// No description provided for @label_distance.
-  ///
-  /// In en, this message translates to:
-  /// **'Distance'**
-  String get label_distance;
-
-  /// No description provided for @label_earnings.
+  /// No description provided for @earnings.
   ///
   /// In en, this message translates to:
   /// **'Earnings'**
-  String get label_earnings;
+  String get earnings;
 
-  /// No description provided for @label_gender_preference.
+  /// No description provided for @gender_preference.
   ///
   /// In en, this message translates to:
   /// **'Gender preference: '**
-  String get label_gender_preference;
+  String get gender_preference;
 
-  /// No description provided for @label_note.
+  /// No description provided for @note.
   ///
   /// In en, this message translates to:
   /// **'Note:'**
-  String get label_note;
+  String get note;
 
-  /// No description provided for @label_order_type_ride.
+  /// No description provided for @order_type_ride.
   ///
   /// In en, this message translates to:
   /// **'Ride'**
-  String get label_order_type_ride;
+  String get order_type_ride;
 
-  /// No description provided for @label_order_type_delivery.
+  /// No description provided for @order_type_delivery.
   ///
   /// In en, this message translates to:
   /// **'Delivery'**
-  String get label_order_type_delivery;
+  String get order_type_delivery;
 
-  /// No description provided for @label_order_type_food.
+  /// No description provided for @order_type_food.
   ///
   /// In en, this message translates to:
   /// **'Food'**
-  String get label_order_type_food;
+  String get order_type_food;
 
-  /// No description provided for @label_note_pickup.
+  /// No description provided for @note_pickup.
   ///
   /// In en, this message translates to:
   /// **'Pickup: '**
-  String get label_note_pickup;
+  String get note_pickup;
 
-  /// No description provided for @label_note_dropoff.
+  /// No description provided for @note_dropoff.
   ///
   /// In en, this message translates to:
   /// **'Dropoff: '**
-  String get label_note_dropoff;
+  String get note_dropoff;
 
-  /// No description provided for @label_note_instructions.
+  /// No description provided for @note_instructions.
   ///
   /// In en, this message translates to:
   /// **'Instructions: '**
-  String get label_note_instructions;
+  String get note_instructions;
 
-  /// No description provided for @label_benefit_nearby_orders.
+  /// No description provided for @benefit_nearby_orders.
   ///
   /// In en, this message translates to:
   /// **'Match you with nearby orders'**
-  String get label_benefit_nearby_orders;
+  String get benefit_nearby_orders;
 
-  /// No description provided for @label_benefit_track_arrival.
+  /// No description provided for @benefit_track_arrival.
   ///
   /// In en, this message translates to:
   /// **'Let customers track your arrival'**
-  String get label_benefit_track_arrival;
+  String get benefit_track_arrival;
 
-  /// No description provided for @label_benefit_safety.
+  /// No description provided for @benefit_safety.
   ///
   /// In en, this message translates to:
   /// **'Ensure safety and accountability'**
-  String get label_benefit_safety;
+  String get benefit_safety;
 
-  /// No description provided for @label_review_category.
+  /// No description provided for @review_category.
   ///
   /// In en, this message translates to:
   /// **'Review Category'**
-  String get label_review_category;
+  String get review_category;
 
-  /// No description provided for @label_category_cleanliness.
+  /// No description provided for @cleanliness.
   ///
   /// In en, this message translates to:
   /// **'Cleanliness'**
-  String get label_category_cleanliness;
+  String get cleanliness;
 
-  /// No description provided for @label_category_courtesy.
+  /// No description provided for @courtesy.
   ///
   /// In en, this message translates to:
   /// **'Courtesy'**
-  String get label_category_courtesy;
+  String get courtesy;
 
-  /// No description provided for @label_category_other.
+  /// No description provided for @other.
   ///
   /// In en, this message translates to:
   /// **'Other'**
-  String get label_category_other;
+  String get other;
 
-  /// No description provided for @label_comment_optional.
+  /// No description provided for @comment_optional.
   ///
   /// In en, this message translates to:
   /// **'Comment (Optional)'**
-  String get label_comment_optional;
+  String get comment_optional;
 
-  /// No description provided for @label_select_emergency_type.
+  /// No description provided for @select_type.
   ///
   /// In en, this message translates to:
   /// **'Select emergency type:'**
-  String get label_select_emergency_type;
+  String get select_type;
 
-  /// No description provided for @label_emergency_accident.
+  /// No description provided for @accident.
   ///
   /// In en, this message translates to:
   /// **'Accident'**
-  String get label_emergency_accident;
+  String get accident;
 
-  /// No description provided for @label_emergency_harassment.
+  /// No description provided for @harassment.
   ///
   /// In en, this message translates to:
   /// **'Harassment'**
-  String get label_emergency_harassment;
+  String get harassment;
 
-  /// No description provided for @label_emergency_theft.
+  /// No description provided for @theft.
   ///
   /// In en, this message translates to:
   /// **'Theft'**
-  String get label_emergency_theft;
+  String get theft;
 
-  /// No description provided for @label_emergency_medical.
+  /// No description provided for @medical.
   ///
   /// In en, this message translates to:
   /// **'Medical Emergency'**
-  String get label_emergency_medical;
+  String get medical;
 
-  /// No description provided for @label_emergency_other.
-  ///
-  /// In en, this message translates to:
-  /// **'Other'**
-  String get label_emergency_other;
-
-  /// No description provided for @label_description.
+  /// No description provided for @description.
   ///
   /// In en, this message translates to:
   /// **'Description:'**
-  String get label_description;
+  String get description;
 
-  /// No description provided for @label_akademove_pay.
+  /// No description provided for @akademove_pay.
   ///
   /// In en, this message translates to:
   /// **'Akademove Pay'**
-  String get label_akademove_pay;
+  String get akademove_pay;
 
-  /// No description provided for @label_valid_until.
+  /// No description provided for @valid_until.
   ///
   /// In en, this message translates to:
   /// **'Valid until '**
-  String get label_valid_until;
+  String get valid_until;
 
-  /// No description provided for @label_remaining_time.
+  /// No description provided for @remaining_time.
   ///
   /// In en, this message translates to:
   /// **'Remaining Time :'**
-  String get label_remaining_time;
+  String get remaining_time;
 
-  /// No description provided for @label_category_atk.
+  /// No description provided for @atk.
   ///
   /// In en, this message translates to:
   /// **'ATK (Stationery)'**
-  String get label_category_atk;
+  String get atk;
 
-  /// No description provided for @label_category_printing.
+  /// No description provided for @printing.
   ///
   /// In en, this message translates to:
   /// **'Printing'**
-  String get label_category_printing;
+  String get printing;
 
-  /// No description provided for @label_category_food.
+  /// No description provided for @food.
   ///
   /// In en, this message translates to:
   /// **'Food & Beverages'**
-  String get label_category_food;
+  String get food;
 
-  /// No description provided for @label_drag_marker.
+  /// No description provided for @drag_marker.
   ///
   /// In en, this message translates to:
   /// **'Drag to adjust position'**
-  String get label_drag_marker;
+  String get drag_marker;
 
-  /// No description provided for @label_step_1.
+  /// No description provided for @step_1.
   ///
   /// In en, this message translates to:
   /// **'Step 1'**
-  String get label_step_1;
+  String get step_1;
 
-  /// No description provided for @label_step_2.
+  /// No description provided for @step_2.
   ///
   /// In en, this message translates to:
   /// **'Step 2'**
-  String get label_step_2;
+  String get step_2;
 
-  /// No description provided for @label_step_3.
+  /// No description provided for @step_3.
   ///
   /// In en, this message translates to:
   /// **'Step 3'**
-  String get label_step_3;
+  String get step_3;
 
-  /// No description provided for @label_step_4.
+  /// No description provided for @step_4.
   ///
   /// In en, this message translates to:
   /// **'Step 4'**
-  String get label_step_4;
+  String get step_4;
 
-  /// No description provided for @placeholder_email.
-  ///
-  /// In en, this message translates to:
-  /// **'john@gmail.com'**
-  String get placeholder_email;
-
-  /// No description provided for @placeholder_password.
-  ///
-  /// In en, this message translates to:
-  /// **'********'**
-  String get placeholder_password;
-
-  /// No description provided for @placeholder_name.
-  ///
-  /// In en, this message translates to:
-  /// **'John Doe'**
-  String get placeholder_name;
-
-  /// No description provided for @placeholder_student_id.
-  ///
-  /// In en, this message translates to:
-  /// **'25051204020'**
-  String get placeholder_student_id;
-
-  /// No description provided for @placeholder_gender.
-  ///
-  /// In en, this message translates to:
-  /// **'Pick your gender'**
-  String get placeholder_gender;
-
-  /// No description provided for @placeholder_license_plate.
-  ///
-  /// In en, this message translates to:
-  /// **'B 1234 AM'**
-  String get placeholder_license_plate;
-
-  /// No description provided for @placeholder_bank_provider.
+  /// No description provided for @hint_bank_provider.
   ///
   /// In en, this message translates to:
   /// **'Pick your bank provider'**
-  String get placeholder_bank_provider;
+  String get hint_bank_provider;
 
-  /// No description provided for @placeholder_bank_account.
-  ///
-  /// In en, this message translates to:
-  /// **'11223344'**
-  String get placeholder_bank_account;
-
-  /// No description provided for @placeholder_outlet_name.
-  ///
-  /// In en, this message translates to:
-  /// **'Your Outlet Name'**
-  String get placeholder_outlet_name;
-
-  /// No description provided for @placeholder_outlet_email.
-  ///
-  /// In en, this message translates to:
-  /// **'outlet@example.com'**
-  String get placeholder_outlet_email;
-
-  /// No description provided for @placeholder_outlet_category.
+  /// No description provided for @hint_outlet_category.
   ///
   /// In en, this message translates to:
   /// **'Select outlet category'**
-  String get placeholder_outlet_category;
+  String get hint_outlet_category;
 
-  /// No description provided for @placeholder_search_location.
+  /// No description provided for @hint_search_location.
   ///
   /// In en, this message translates to:
   /// **'Search location (e.g., Monas Jakarta)'**
-  String get placeholder_search_location;
+  String get hint_search_location;
 
-  /// No description provided for @placeholder_share_experience.
+  /// No description provided for @hint_share_experience.
   ///
   /// In en, this message translates to:
   /// **'Share your experience...'**
-  String get placeholder_share_experience;
+  String get hint_share_experience;
 
-  /// No description provided for @placeholder_emergency_description.
+  /// No description provided for @hint_description.
   ///
   /// In en, this message translates to:
   /// **'Describe the emergency situation...'**
-  String get placeholder_emergency_description;
+  String get hint_description;
 
-  /// No description provided for @screen_title_sign_up_choice.
+  /// No description provided for @sign_up_choice.
   ///
   /// In en, this message translates to:
   /// **'Start Your Journey with Us!'**
-  String get screen_title_sign_up_choice;
+  String get sign_up_choice;
 
-  /// No description provided for @screen_title_driver_sign_up_step1.
+  /// No description provided for @driver_sign_up_step1.
   ///
   /// In en, this message translates to:
   /// **'Tell us a bit about yourself to get started!'**
-  String get screen_title_driver_sign_up_step1;
+  String get driver_sign_up_step1;
 
-  /// No description provided for @screen_title_driver_sign_up_step2.
+  /// No description provided for @driver_sign_up_step2.
   ///
   /// In en, this message translates to:
   /// **'Upload your photo and documents to verify your account!'**
-  String get screen_title_driver_sign_up_step2;
+  String get driver_sign_up_step2;
 
-  /// No description provided for @screen_title_driver_sign_up_step3.
+  /// No description provided for @driver_sign_up_step3.
   ///
   /// In en, this message translates to:
   /// **'Enter your vehicle details so we can set you up on the road!'**
-  String get screen_title_driver_sign_up_step3;
+  String get driver_sign_up_step3;
 
-  /// No description provided for @screen_title_driver_sign_up_step4.
+  /// No description provided for @driver_sign_up_step4.
   ///
   /// In en, this message translates to:
   /// **'Add your bank account to receive your earnings securely!'**
-  String get screen_title_driver_sign_up_step4;
+  String get driver_sign_up_step4;
 
-  /// No description provided for @screen_title_user_sign_up.
+  /// No description provided for @user_sign_up.
   ///
   /// In en, this message translates to:
   /// **'Sign up now — your next ride or meal is just a tap away 🚴‍♂️🍔'**
-  String get screen_title_user_sign_up;
+  String get user_sign_up;
 
-  /// No description provided for @screen_title_merchant_sign_up_step1.
+  /// No description provided for @merchant_sign_up_step1.
   ///
   /// In en, this message translates to:
   /// **'Tell us about yourself to kickstart your merchant journey!'**
-  String get screen_title_merchant_sign_up_step1;
+  String get merchant_sign_up_step1;
 
-  /// No description provided for @screen_title_merchant_sign_up_step2.
+  /// No description provided for @merchant_sign_up_step2.
   ///
   /// In en, this message translates to:
   /// **'Share your outlet details and location so customers can find you easily!'**
-  String get screen_title_merchant_sign_up_step2;
+  String get merchant_sign_up_step2;
 
-  /// No description provided for @screen_title_merchant_sign_up_step3.
+  /// No description provided for @merchant_sign_up_step3.
   ///
   /// In en, this message translates to:
   /// **'Add your bank account to receive payments securely!'**
-  String get screen_title_merchant_sign_up_step3;
+  String get merchant_sign_up_step3;
 
-  /// No description provided for @screen_title_forgot_password.
+  /// No description provided for @forgot_password.
   ///
   /// In en, this message translates to:
   /// **'Forgot Password'**
-  String get screen_title_forgot_password;
+  String get forgot_password;
 
-  /// No description provided for @screen_title_reset_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset Password'**
-  String get screen_title_reset_password;
-
-  /// No description provided for @screen_title_edit_profile.
-  ///
-  /// In en, this message translates to:
-  /// **'Edit Profile'**
-  String get screen_title_edit_profile;
-
-  /// No description provided for @screen_title_change_password.
-  ///
-  /// In en, this message translates to:
-  /// **'Change Password'**
-  String get screen_title_change_password;
-
-  /// No description provided for @screen_title_wallet.
-  ///
-  /// In en, this message translates to:
-  /// **'E-Wallet'**
-  String get screen_title_wallet;
-
-  /// No description provided for @screen_title_top_up.
-  ///
-  /// In en, this message translates to:
-  /// **'Top Up'**
-  String get screen_title_top_up;
-
-  /// No description provided for @screen_title_driver_dashboard.
+  /// No description provided for @driver_dashboard.
   ///
   /// In en, this message translates to:
   /// **'Driver Dashboard'**
-  String get screen_title_driver_dashboard;
+  String get driver_dashboard;
 
-  /// No description provided for @screen_title_earnings_wallet.
-  ///
-  /// In en, this message translates to:
-  /// **'Earnings & Wallet'**
-  String get screen_title_earnings_wallet;
-
-  /// No description provided for @screen_title_order_history.
+  /// No description provided for @order_history.
   ///
   /// In en, this message translates to:
   /// **'Order History'**
-  String get screen_title_order_history;
+  String get order_history;
 
-  /// No description provided for @screen_title_my_schedule.
-  ///
-  /// In en, this message translates to:
-  /// **'My Schedule (KRS)'**
-  String get screen_title_my_schedule;
-
-  /// No description provided for @screen_title_merchant_edit_profile.
+  /// No description provided for @merchant_edit_profile.
   ///
   /// In en, this message translates to:
   /// **'Edit Profile'**
-  String get screen_title_merchant_edit_profile;
+  String get merchant_edit_profile;
 
-  /// No description provided for @screen_title_setup_outlet.
+  /// No description provided for @setup_outlet.
   ///
   /// In en, this message translates to:
   /// **'Set Up Outlet'**
-  String get screen_title_setup_outlet;
+  String get setup_outlet;
 
-  /// No description provided for @screen_title_order_detail.
+  /// No description provided for @order_detail.
   ///
   /// In en, this message translates to:
   /// **'Order Detail'**
-  String get screen_title_order_detail;
+  String get order_detail;
 
-  /// No description provided for @screen_title_menu_detail.
+  /// No description provided for @menu_detail.
   ///
   /// In en, this message translates to:
   /// **'Menu\'s Detail'**
-  String get screen_title_menu_detail;
+  String get menu_detail;
 
-  /// No description provided for @screen_title_sales_report.
+  /// No description provided for @sales_report.
   ///
   /// In en, this message translates to:
   /// **'Sales Report'**
-  String get screen_title_sales_report;
+  String get sales_report;
 
-  /// No description provided for @screen_title_commission_report.
+  /// No description provided for @commission_report.
   ///
   /// In en, this message translates to:
   /// **'Commission Report'**
-  String get screen_title_commission_report;
+  String get commission_report;
 
-  /// No description provided for @screen_title_merchant_change_password.
+  /// No description provided for @merchant_change_password.
   ///
   /// In en, this message translates to:
   /// **'Change Password'**
-  String get screen_title_merchant_change_password;
+  String get merchant_change_password;
 
-  /// No description provided for @screen_title_where_you_at.
+  /// No description provided for @where_you_at.
   ///
   /// In en, this message translates to:
   /// **'Where you at?'**
-  String get screen_title_where_you_at;
+  String get where_you_at;
 
-  /// No description provided for @screen_title_where_going.
+  /// No description provided for @where_going.
   ///
   /// In en, this message translates to:
   /// **'Where are you going?'**
-  String get screen_title_where_going;
+  String get where_going;
 
-  /// No description provided for @screen_title_on_trip.
+  /// No description provided for @on_trip.
   ///
   /// In en, this message translates to:
   /// **'On Trip'**
-  String get screen_title_on_trip;
+  String get on_trip;
 
-  /// No description provided for @screen_title_trip_details.
+  /// No description provided for @trip_details.
   ///
   /// In en, this message translates to:
   /// **'Trip Details'**
-  String get screen_title_trip_details;
+  String get trip_details;
 
-  /// No description provided for @screen_title_create_menu.
+  /// No description provided for @create_menu.
   ///
   /// In en, this message translates to:
   /// **'Create Menu'**
-  String get screen_title_create_menu;
+  String get create_menu;
 
-  /// No description provided for @screen_title_edit_menu.
+  /// No description provided for @edit_menu.
   ///
   /// In en, this message translates to:
   /// **'Edit Menu'**
-  String get screen_title_edit_menu;
+  String get edit_menu;
 
-  /// No description provided for @dialog_title_sign_up_success.
+  /// No description provided for @sign_up_success.
   ///
   /// In en, this message translates to:
   /// **'Sign Up Success'**
-  String get dialog_title_sign_up_success;
+  String get sign_up_success;
 
-  /// No description provided for @dialog_title_sign_up_failed.
+  /// No description provided for @sign_up_failed.
   ///
   /// In en, this message translates to:
   /// **'Sign Up Failed'**
-  String get dialog_title_sign_up_failed;
+  String get sign_up_failed;
 
-  /// No description provided for @dialog_title_location_permission.
+  /// No description provided for @location_permission.
   ///
   /// In en, this message translates to:
   /// **'Location Permission'**
-  String get dialog_title_location_permission;
+  String get location_permission;
 
-  /// No description provided for @dialog_title_permission_denied.
+  /// No description provided for @permission_denied.
   ///
   /// In en, this message translates to:
   /// **'Permission Denied'**
-  String get dialog_title_permission_denied;
+  String get permission_denied;
 
-  /// No description provided for @dialog_title_location_disabled.
+  /// No description provided for @location_disabled.
   ///
   /// In en, this message translates to:
   /// **'Location Services Disabled'**
-  String get dialog_title_location_disabled;
+  String get location_disabled;
 
-  /// No description provided for @dialog_title_location_permission_required.
+  /// No description provided for @location_permission_required.
   ///
   /// In en, this message translates to:
   /// **'Location Permission Required'**
-  String get dialog_title_location_permission_required;
+  String get location_permission_required;
 
-  /// No description provided for @dialog_title_search_error.
+  /// No description provided for @search_error.
   ///
   /// In en, this message translates to:
   /// **'Search Error'**
-  String get dialog_title_search_error;
+  String get search_error;
 
-  /// No description provided for @dialog_title_location_found.
+  /// No description provided for @location_found.
   ///
   /// In en, this message translates to:
   /// **'Location Found'**
-  String get dialog_title_location_found;
+  String get location_found;
 
-  /// No description provided for @dialog_title_not_found.
+  /// No description provided for @not_found.
   ///
   /// In en, this message translates to:
   /// **'Not Found'**
-  String get dialog_title_not_found;
+  String get not_found;
 
-  /// No description provided for @dialog_title_validation_error.
+  /// No description provided for @validation_error.
   ///
   /// In en, this message translates to:
   /// **'Validation Error'**
-  String get dialog_title_validation_error;
+  String get validation_error;
 
-  /// No description provided for @dialog_title_error.
-  ///
-  /// In en, this message translates to:
-  /// **'Error'**
-  String get dialog_title_error;
-
-  /// No description provided for @dialog_title_oops.
+  /// No description provided for @oops.
   ///
   /// In en, this message translates to:
   /// **'Oops...'**
-  String get dialog_title_oops;
+  String get oops;
 
-  /// No description provided for @dialog_title_new_order.
+  /// No description provided for @new_order.
   ///
   /// In en, this message translates to:
   /// **'New {type} Order'**
-  String dialog_title_new_order(String type);
+  String new_order(String type);
 
-  /// No description provided for @dialog_title_order_unavailable.
+  /// No description provided for @order_unavailable.
   ///
   /// In en, this message translates to:
   /// **'Order Unavailable'**
-  String get dialog_title_order_unavailable;
+  String get order_unavailable;
 
-  /// No description provided for @dialog_title_order_rejected.
+  /// No description provided for @order_rejected.
   ///
   /// In en, this message translates to:
   /// **'Order Rejected'**
-  String get dialog_title_order_rejected;
+  String get order_rejected;
 
-  /// No description provided for @dialog_title_rate_customer.
-  ///
-  /// In en, this message translates to:
-  /// **'Rate Customer'**
-  String get dialog_title_rate_customer;
-
-  /// No description provided for @dialog_title_success.
-  ///
-  /// In en, this message translates to:
-  /// **'Success'**
-  String get dialog_title_success;
-
-  /// No description provided for @dialog_title_emergency_alert.
+  /// No description provided for @alert.
   ///
   /// In en, this message translates to:
   /// **'Emergency Alert'**
-  String get dialog_title_emergency_alert;
+  String get alert;
 
-  /// No description provided for @dialog_title_report_emergency.
+  /// No description provided for @report_emergency.
   ///
   /// In en, this message translates to:
   /// **'Report Emergency'**
-  String get dialog_title_report_emergency;
+  String get report_emergency;
 
-  /// No description provided for @dialog_title_confirm_logout.
+  /// No description provided for @confirm_logout.
   ///
   /// In en, this message translates to:
   /// **'Logout'**
-  String get dialog_title_confirm_logout;
+  String get confirm_logout;
 
-  /// No description provided for @dialog_title_reject_order.
-  ///
-  /// In en, this message translates to:
-  /// **'Reject Order'**
-  String get dialog_title_reject_order;
-
-  /// No description provided for @dialog_title_cancel_order.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel Order'**
-  String get dialog_title_cancel_order;
-
-  /// No description provided for @dialog_title_delete_schedule.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Schedule'**
-  String get dialog_title_delete_schedule;
-
-  /// No description provided for @dialog_title_accept_order.
-  ///
-  /// In en, this message translates to:
-  /// **'Accept Order'**
-  String get dialog_title_accept_order;
-
-  /// No description provided for @dialog_title_delete_menu.
+  /// No description provided for @delete_menu.
   ///
   /// In en, this message translates to:
   /// **'Delete Menu'**
-  String get dialog_title_delete_menu;
+  String get delete_menu;
 
   /// No description provided for @description_user_role.
   ///
@@ -2413,11 +2293,11 @@ abstract class AppLocalizations {
   /// **'Using default location. You can drag the marker to set your outlet location.'**
   String get message_location_default;
 
-  /// No description provided for @message_location_permission_required.
+  /// No description provided for @message_leocation_permission_required.
   ///
   /// In en, this message translates to:
   /// **'Location permission is required to set your outlet location automatically.'**
-  String get message_location_permission_required;
+  String get message_leocation_permission_required;
 
   /// No description provided for @message_location_permission_explanation.
   ///
@@ -2473,11 +2353,11 @@ abstract class AppLocalizations {
   /// **'How was your experience with {name}?'**
   String message_rate_experience(String name);
 
-  /// No description provided for @message_emergency_confirmation.
+  /// No description provided for @message_confirmation.
   ///
   /// In en, this message translates to:
   /// **'This will send an emergency alert to campus authorities and notify emergency contacts. Are you sure you want to continue?'**
-  String get message_emergency_confirmation;
+  String get message_confirmation;
 
   /// No description provided for @message_settings_coming_soon.
   ///
@@ -2545,167 +2425,167 @@ abstract class AppLocalizations {
   /// **'Please select a reason for rejecting this order:'**
   String get message_select_reject_reason;
 
-  /// No description provided for @status_dragging_marker.
+  /// No description provided for @dragging_marker.
   ///
   /// In en, this message translates to:
   /// **'Dragging...'**
-  String get status_dragging_marker;
+  String get dragging_marker;
 
-  /// No description provided for @status_welcome_back.
+  /// No description provided for @welcome_back.
   ///
   /// In en, this message translates to:
   /// **'Welcome back!'**
-  String get status_welcome_back;
+  String get welcome_back;
 
-  /// No description provided for @status_license_plate.
+  /// No description provided for @license_plate.
   ///
   /// In en, this message translates to:
   /// **'License Plate: '**
-  String get status_license_plate;
+  String get license_plate;
 
-  /// No description provided for @status_rating.
+  /// No description provided for @rating.
   ///
   /// In en, this message translates to:
   /// **'{rating} rating'**
-  String status_rating(String rating);
+  String rating(String rating);
 
-  /// No description provided for @status_driver_status.
+  /// No description provided for @driver_status.
   ///
   /// In en, this message translates to:
   /// **'Driver Status'**
-  String get status_driver_status;
+  String get driver_status;
 
-  /// No description provided for @status_accepting_orders.
+  /// No description provided for @accepting_orders.
   ///
   /// In en, this message translates to:
   /// **'You are accepting orders'**
-  String get status_accepting_orders;
+  String get accepting_orders;
 
-  /// No description provided for @status_offline.
+  /// No description provided for @offline.
   ///
   /// In en, this message translates to:
   /// **'You are offline'**
-  String get status_offline;
+  String get offline;
 
-  /// No description provided for @status_ready_accept.
+  /// No description provided for @ready_accept.
   ///
   /// In en, this message translates to:
   /// **'Ready to accept new orders'**
-  String get status_ready_accept;
+  String get ready_accept;
 
-  /// No description provided for @status_toggle_receive.
+  /// No description provided for @toggle_receive.
   ///
   /// In en, this message translates to:
   /// **'Toggle on to start receiving orders'**
-  String get status_toggle_receive;
+  String get toggle_receive;
 
-  /// No description provided for @status_today_performance.
+  /// No description provided for @today_performance.
   ///
   /// In en, this message translates to:
   /// **'Today\'s Performance'**
-  String get status_today_performance;
+  String get today_performance;
 
-  /// No description provided for @status_trips.
+  /// No description provided for @trips.
   ///
   /// In en, this message translates to:
   /// **'Trips'**
-  String get status_trips;
+  String get trips;
 
-  /// No description provided for @status_quick_actions.
+  /// No description provided for @quick_actions.
   ///
   /// In en, this message translates to:
   /// **'Quick Actions'**
-  String get status_quick_actions;
+  String get quick_actions;
 
-  /// No description provided for @status_manage_schedule.
+  /// No description provided for @manage_schedule.
   ///
   /// In en, this message translates to:
   /// **'Manage Schedule'**
-  String get status_manage_schedule;
+  String get manage_schedule;
 
-  /// No description provided for @status_hello.
+  /// No description provided for @hello.
   ///
   /// In en, this message translates to:
   /// **'Hello, {name}'**
-  String status_hello(String name);
+  String hello(String name);
 
-  /// No description provided for @status_open_today.
+  /// No description provided for @open_today.
   ///
   /// In en, this message translates to:
   /// **'Open Today'**
-  String get status_open_today;
+  String get open_today;
 
-  /// No description provided for @status_operating_hours.
+  /// No description provided for @operating_hours.
   ///
   /// In en, this message translates to:
   /// **'10.00 - 22.00 WIB'**
-  String get status_operating_hours;
+  String get operating_hours;
 
-  /// No description provided for @status_sales_recap.
+  /// No description provided for @sales_recap.
   ///
   /// In en, this message translates to:
   /// **'Sales Recap'**
-  String get status_sales_recap;
+  String get sales_recap;
 
-  /// No description provided for @status_today_transaction.
+  /// No description provided for @today_transaction.
   ///
   /// In en, this message translates to:
   /// **'Today\'s transaction'**
-  String get status_today_transaction;
+  String get today_transaction;
 
-  /// No description provided for @status_today_gross_sales.
+  /// No description provided for @today_gross_sales.
   ///
   /// In en, this message translates to:
   /// **'Today\'s gross sales'**
-  String get status_today_gross_sales;
+  String get today_gross_sales;
 
-  /// No description provided for @status_see_detail.
+  /// No description provided for @see_detail.
   ///
   /// In en, this message translates to:
   /// **'See detail'**
-  String get status_see_detail;
+  String get see_detail;
 
-  /// No description provided for @status_send_packages.
+  /// No description provided for @send_packages.
   ///
   /// In en, this message translates to:
   /// **'Send packages within campus'**
-  String get status_send_packages;
+  String get send_packages;
 
-  /// No description provided for @status_max_weight.
+  /// No description provided for @max_weight.
   ///
   /// In en, this message translates to:
   /// **'Max weight: 20kg'**
-  String get status_max_weight;
+  String get max_weight;
 
-  /// No description provided for @status_fast_delivery.
+  /// No description provided for @fast_delivery.
   ///
   /// In en, this message translates to:
   /// **'Fast delivery'**
-  String get status_fast_delivery;
+  String get fast_delivery;
 
-  /// No description provided for @status_secure_handling.
+  /// No description provided for @secure_handling.
   ///
   /// In en, this message translates to:
   /// **'Secure handling'**
-  String get status_secure_handling;
+  String get secure_handling;
 
-  /// No description provided for @status_start_delivery.
+  /// No description provided for @start_delivery.
   ///
   /// In en, this message translates to:
   /// **'Start Delivery'**
-  String get status_start_delivery;
+  String get start_delivery;
 
-  /// No description provided for @status_choose_pickup_destination.
+  /// No description provided for @choose_pickup_destination.
   ///
   /// In en, this message translates to:
   /// **'Choose your pick-up and destination point!'**
-  String get status_choose_pickup_destination;
+  String get choose_pickup_destination;
 
-  /// No description provided for @status_rating_score.
+  /// No description provided for @rating_score.
   ///
   /// In en, this message translates to:
   /// **'Rating: {score} / 5.0'**
-  String status_rating_score(String score);
+  String rating_score(String score);
 
   /// No description provided for @action_take_photo.
   ///
@@ -2938,7 +2818,7 @@ abstract class AppLocalizations {
   /// No description provided for @order_confirm_payment_wallet.
   ///
   /// In en, this message translates to:
-  /// **'Wallet'**
+  /// **'wallet'**
   String get order_confirm_payment_wallet;
 
   /// No description provided for @order_confirm_payment_description.

@@ -7,17 +7,17 @@ import {
 	WithdrawRequestSchema,
 } from "@repo/schema/payment";
 import {
-	WalletMonthlySummaryQuerySchema,
-	WalletMonthlySummaryResponseSchema,
-	WalletSchema,
+	walletMonthlySummaryQuerySchema,
+	walletMonthlySummaryResponseSchema,
+	walletSchema,
 } from "@repo/schema/wallet";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-export const WalletSpec = {
+export const walletSpec = {
 	get: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "GET",
 			path: "/",
 			inputStructure: "detailed",
@@ -25,26 +25,26 @@ export const WalletSpec = {
 		})
 		.input(z.object())
 		.output(
-			createSuccesSchema(WalletSchema, "Successfully retrieved users data"),
+			createSuccesSchema(walletSchema, "Successfully retrieved users data"),
 		),
 	getMonthlySummary: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "GET",
 			path: "/summary",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: WalletMonthlySummaryQuerySchema }))
+		.input(z.object({ query: walletMonthlySummaryQuerySchema }))
 		.output(
 			createSuccesSchema(
-				WalletMonthlySummaryResponseSchema,
+				walletMonthlySummaryResponseSchema,
 				"Successfully retrieved users data",
 			),
 		),
 	topUp: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "POST",
 			path: "/topup",
 			inputStructure: "detailed",
@@ -60,7 +60,7 @@ export const WalletSpec = {
 		),
 	pay: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "POST",
 			path: "/pay",
 			inputStructure: "detailed",
@@ -76,7 +76,7 @@ export const WalletSpec = {
 		),
 	transfer: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "POST",
 			path: "/transfer",
 			inputStructure: "detailed",
@@ -92,7 +92,7 @@ export const WalletSpec = {
 		),
 	withdraw: oc
 		.route({
-			tags: [FEATURE_TAGS.WALLET],
+			tags: [FEATURE_TAGS.wallet],
 			method: "POST",
 			path: "/withdraw",
 			inputStructure: "detailed",

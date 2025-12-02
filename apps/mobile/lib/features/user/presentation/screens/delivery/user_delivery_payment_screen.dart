@@ -16,7 +16,7 @@ class UserDeliveryPaymentScreen extends StatefulWidget {
 }
 
 class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
-  PaymentMethod method = PaymentMethod.WALLET;
+  PaymentMethod method = PaymentMethod.wallet;
   BankProvider? bankProvider;
 
   @override
@@ -90,7 +90,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
 
                       if (result != null && context.mounted) {
                         // For wallet payment, navigate to trip tracking screen
-                        if (method == PaymentMethod.WALLET &&
+                        if (method == PaymentMethod.wallet &&
                             result.payment.status ==
                                 TransactionStatus.SUCCESS) {
                           context

@@ -39,7 +39,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     children: [
                       Assets.icons.brand.svg(width: 48.w),
                       DefaultText(
-                        context.l10n.screen_title_reset_password,
+                        context.l10n.reset_password,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                       ),
@@ -132,7 +132,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
           Button(
             style: const ButtonStyle.primary(),
             onPressed: () => context.goNamed(Routes.authSignIn.name),
-            child: Text(context.l10n.button_back_to_sign_in),
+            child: Text(context.l10n.back_to_sign_in),
           ),
         ],
       ).gap(8.h);
@@ -192,7 +192,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                   FormField(
                     key: _confirmPasswordKey,
                     label: DefaultText(
-                      context.l10n.label_confirm_password,
+                      context.l10n.confirm_password,
                       fontWeight: FontWeight.w500,
                     ),
                     validator: const LengthValidator(min: 8),
@@ -224,7 +224,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                         child: isLoading
                             ? const Submiting()
                             : DefaultText(
-                                context.l10n.button_reset_password,
+                                context.l10n.reset_password,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),

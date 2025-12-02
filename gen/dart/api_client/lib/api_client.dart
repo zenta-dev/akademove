@@ -246,7 +246,7 @@ export 'package:api_client/src/model/update_review.dart';
 export 'package:api_client/src/model/update_transaction.dart';
 export 'package:api_client/src/model/update_user_password.dart';
 export 'package:api_client/src/model/update_user_role.dart';
-export 'package:api_client/src/model/update_wallet.dart';
+export 'package:api_client/src/model/updatewallet.dart';
 export 'package:api_client/src/model/user.dart';
 export 'package:api_client/src/model/user_admin_create200_response.dart';
 export 'package:api_client/src/model/user_admin_dashboard_stats200_response.dart';

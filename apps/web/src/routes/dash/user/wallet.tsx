@@ -59,7 +59,7 @@ export const Route = createFileRoute("/dash/user/wallet")({
 		if (!values.limit) return { ...search, page: 1, limit: 15 };
 		return search;
 	},
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.WALLET }] }),
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.wallet }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
 			user: ["get"],
@@ -223,7 +223,7 @@ function RouteComponent() {
 				</p>
 			</div>
 
-			{/* Wallet Stats */}
+			{/* wallet Stats */}
 			<div className="grid gap-4 md:grid-cols-3">
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -399,7 +399,7 @@ function RouteComponent() {
 			<Dialog open={topUpDialogOpen} onOpenChange={setTopUpDialogOpen}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>Top Up Wallet</DialogTitle>
+						<DialogTitle>Top Up wallet</DialogTitle>
 						<DialogDescription>
 							Add funds to your wallet to use AkadeMove services
 						</DialogDescription>
@@ -446,7 +446,7 @@ function RouteComponent() {
 									<SelectItem value="QRIS">QRIS</SelectItem>
 									<SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
 									<SelectItem value="CREDIT_CARD">Credit Card</SelectItem>
-									<SelectItem value="E_WALLET">E-Wallet</SelectItem>
+									<SelectItem value="E_wallet">E-wallet</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>

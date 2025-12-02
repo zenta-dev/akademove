@@ -35,8 +35,8 @@ import { TransactionHandler } from "./transaction/transaction-handler";
 import { TransactionSpec } from "./transaction/transaction-spec";
 import { UserHandler } from "./user/user-handler";
 import { UserSpec } from "./user/user-spec";
-import { WalletHandler } from "./wallet/wallet-handler";
-import { WalletSpec } from "./wallet/wallet-spec";
+import { walletHandler } from "./wallet/wallet-handler";
+import { walletSpec } from "./wallet/wallet-spec";
 
 export const FetchServerSpec = oc.router({
 	auth: oc.prefix("/auth").router(AuthSpec),
@@ -55,7 +55,7 @@ export const FetchServerSpec = oc.router({
 	review: oc.prefix("/reviews").router(ReviewSpec),
 	transaction: oc.prefix("/transactions").router(TransactionSpec),
 	user: oc.prefix("/users").router(UserSpec),
-	wallet: oc.prefix("/wallets").router(WalletSpec),
+	wallet: oc.prefix("/wallets").router(walletSpec),
 	notification: oc.prefix("/notifications").router(NotificationSpec),
 });
 
@@ -77,7 +77,7 @@ export const FetchServerRouter = os.router({
 	review: ReviewHandler,
 	transaction: TransactionHandler,
 	user: UserHandler,
-	wallet: WalletHandler,
+	wallet: walletHandler,
 	notification: NotificationHandler,
 });
 

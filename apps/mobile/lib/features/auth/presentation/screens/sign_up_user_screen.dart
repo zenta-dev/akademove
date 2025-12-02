@@ -20,7 +20,7 @@ class SignUpUserScreen extends StatelessWidget {
         children: [
           Assets.images.hero.signUpUser.svg(height: 200.h),
           Text(
-            context.l10n.screen_title_user_sign_up,
+            context.l10n.user_sign_up,
             textAlign: TextAlign.center,
             style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
           ),
@@ -59,7 +59,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
-              title: context.l10n.dialog_title_sign_up_failed,
+              title: context.l10n.sign_up_failed,
               message: state.error?.message ?? context.l10n.error_unknown,
             ),
             location: ToastLocation.topCenter,
@@ -69,7 +69,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
-              title: context.l10n.dialog_title_sign_up_success,
+              title: context.l10n.sign_up_success,
               message: state.message ?? context.l10n.success_sign_up,
             ),
             location: ToastLocation.topCenter,
@@ -115,14 +115,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             children: [
               FormField(
                 key: _nameKey,
-                label: Text(context.l10n.label_name),
+                label: Text(context.l10n.name),
                 validator: const LengthValidator(min: 3),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text(context.l10n.placeholder_name),
+                  placeholder: Text("John Doe"),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.user)),
@@ -138,7 +138,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text(context.l10n.placeholder_email),
+                  placeholder: Text("john@gmail.com"),
                   enabled: !state.isLoading,
                   keyboardType: TextInputType.emailAddress,
                   features: const [
@@ -148,7 +148,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _genderKey,
-                label: Text(context.l10n.label_gender),
+                label: Text(context.l10n.gender),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
@@ -185,7 +185,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _phoneNumberKey,
-                label: Text(context.l10n.label_phone),
+                label: Text(context.l10n.phone),
                 validator: const LengthValidator(min: 10),
                 showErrors: const {
                   FormValidationMode.changed,
@@ -218,7 +218,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text(context.l10n.placeholder_password),
+                  placeholder: Text("********"),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
@@ -228,14 +228,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _confirmPasswordKey,
-                label: Text(context.l10n.label_confirm_password),
+                label: Text(context.l10n.confirm_password),
                 // validator: const CompareWith<String>.equal(_passwordKey),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text(context.l10n.placeholder_password),
+                  placeholder: Text("********"),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),

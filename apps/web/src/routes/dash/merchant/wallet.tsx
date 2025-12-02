@@ -41,7 +41,7 @@ export const Route = createFileRoute("/dash/merchant/wallet")({
 		if (!values.limit) return { ...search, page: 1, limit: 15 };
 		return search;
 	},
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.WALLET }] }),
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.wallet }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
 			merchant: ["get"],
@@ -162,7 +162,7 @@ function RouteComponent() {
 				</p>
 			</div>
 
-			{/* Wallet Stats */}
+			{/* wallet Stats */}
 			<div className="grid gap-4 md:grid-cols-3">
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

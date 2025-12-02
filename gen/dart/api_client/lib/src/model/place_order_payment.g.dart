@@ -117,7 +117,7 @@ Map<String, dynamic> _$PlaceOrderPaymentToJson(PlaceOrderPayment instance) =>
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',
   PaymentMethod.BANK_TRANSFER: 'BANK_TRANSFER',
-  PaymentMethod.WALLET: 'WALLET',
+  PaymentMethod.wallet: 'wallet',
 };
 
 const _$PaymentProviderEnumMap = {

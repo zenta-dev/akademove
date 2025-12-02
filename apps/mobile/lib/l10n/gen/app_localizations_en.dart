@@ -12,6 +12,57 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get popular_merchants => 'Popular merchants';
+
+  @override
+  String get choose_the_service_that_you_want => 'Choose the service that you want';
+
+  @override
+  String get pending_approval => 'Pending Approval';
+
+  @override
+  String get approved => 'Approved';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get suspended => 'Suspended';
+
+  @override
+  String get app_version_information => 'App information and version';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get manage_notification_preferences => 'Manage notification preferences';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get driver_preferences_and_settings => 'Driver preferences and settings';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get profile_updated_successfully => 'Profile updated successfully';
+
+  @override
+  String get license_plate_cannot_be_empty => 'License plate cannot be empty';
+
+  @override
+  String get enter_license_plate => 'Enter license plate';
+
+  @override
+  String get update_your_license_plate => 'Update your license plate information';
+
+  @override
   String get logged_out_successfully => 'Logged out successfully';
 
   @override
@@ -245,7 +296,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get leadeboard_and_badges => 'Leaderboard & Badges';
 
   @override
-  String get label_trips => 'Trips';
+  String get trips => 'Trips';
 
   @override
   String get ready_to_accept_new_orders => 'Ready to accept new orders';
@@ -353,7 +404,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_transactions_yet => 'No transactions yet';
 
   @override
-  String get view_all => 'View all';
+  String get view_all => 'View All';
 
   @override
   String get recent_transactions => 'Recent Transactions';
@@ -380,7 +431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get available_balance => 'Available Balance';
 
   @override
-  String get earnings_wallet => 'Earnings & Wallet';
+  String get earnings_wallet => 'Earnings & wallet';
 
   @override
   String get failed_to_load_earnings => 'Failed to load earnings';
@@ -410,7 +461,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total => 'Total';
 
   @override
-  String get e_wallet => 'E-Wallet';
+  String get e_wallet => 'E-wallet';
 
   @override
   String get my_balance => 'My Balance';
@@ -527,522 +578,411 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delivery_service => 'Delivery Service';
 
   @override
-  String get button_cancel => 'Cancel';
+  String get back => 'Back';
 
   @override
-  String get button_continue => 'Continue';
+  String get next => 'Next';
 
   @override
-  String get button_back => 'Back';
+  String get submit => 'Submit';
 
   @override
-  String get button_next => 'Next';
+  String get save_changes => 'Save Changes';
 
   @override
-  String get button_submit => 'Submit';
+  String get allow => 'Allow';
 
   @override
-  String get button_save_changes => 'Save Changes';
+  String get open_settings => 'Open Settings';
 
   @override
-  String get button_allow => 'Allow';
+  String get send_reset_link => 'Send Reset Link';
 
   @override
-  String get button_open_settings => 'Open Settings';
+  String get back_to_sign_in => 'Back to Sign In';
 
   @override
-  String get button_view_all => 'View All';
+  String get reset_password => 'Reset Password';
 
   @override
-  String get button_send_reset_link => 'Send Reset Link';
+  String get reject => 'Reject';
 
   @override
-  String get button_back_to_sign_in => 'Back to Sign In';
+  String get accept => 'Accept';
 
   @override
-  String get button_reset_password => 'Reset Password';
+  String get grant_permission => 'Grant Permission';
 
   @override
-  String get button_reject => 'Reject';
+  String get send_alert => 'Send Alert';
 
   @override
-  String get button_accept => 'Accept';
+  String get download_qr => 'Download QR';
 
   @override
-  String get button_grant_permission => 'Grant Permission';
+  String get copy_qr_url => 'Copy QR URL';
 
   @override
-  String get button_send_alert => 'Send Alert';
+  String get name => 'Name';
 
   @override
-  String get button_download_qr => 'Download QR';
+  String get phone => 'Phone';
 
   @override
-  String get button_copy_qr_url => 'Copy QR URL';
+  String get gender => 'Gender';
 
   @override
-  String get button_top_up => 'Top Up';
+  String get photo => 'Photo';
 
   @override
-  String get button_retry => 'Retry';
+  String get address => 'Address';
 
   @override
-  String get label_name => 'Name';
+  String get location => 'Location';
 
   @override
-  String get label_email => 'Email';
+  String get unknown => 'Unknown';
 
   @override
-  String get label_phone => 'Phone';
+  String get user_role => 'User';
 
   @override
-  String get label_password => 'Password';
+  String get driver_role => 'Driver';
 
   @override
-  String get label_gender => 'Gender';
+  String get merchant_role => 'Merchant';
 
   @override
-  String get label_photo => 'Photo';
+  String get student_id => 'NIM';
 
   @override
-  String get label_address => 'Address';
+  String get confirm_password => 'Confirm Password';
 
   @override
-  String get label_location => 'Location';
+  String get vehicle_registration => 'Vehicle Registration (STNK)';
 
   @override
-  String get label_unknown => 'Unknown';
+  String get bank_provider => 'Bank Provider';
 
   @override
-  String get label_user_role => 'User';
+  String get owner_name => 'Owner Name';
 
   @override
-  String get label_driver_role => 'Driver';
+  String get outlet_name => 'Outlet Name';
 
   @override
-  String get label_merchant_role => 'Merchant';
+  String get outlet_category => 'Outlet Category';
 
   @override
-  String get label_student_id => 'NIM';
+  String get outlet_location => 'Outlet Location';
 
   @override
-  String get label_confirm_password => 'Confirm Password';
+  String get government_document => 'Government Document';
 
   @override
-  String get label_student_card => 'Student Card (KTM)';
+  String get bank_account_number => 'Bank Account Number';
 
   @override
-  String get label_driver_license => 'Driver License (SIM)';
+  String get choose_service => 'Choose the service that you want';
 
   @override
-  String get label_license_plate => 'License Plate';
+  String get popular_merchant => 'Popular merchant';
 
   @override
-  String get label_vehicle_registration => 'Vehicle Registration (STNK)';
+  String get ride => 'Ride';
 
   @override
-  String get label_bank_provider => 'Bank Provider';
+  String get delivery => 'Delivery';
 
   @override
-  String get label_bank_account => 'Bank Account';
+  String get mart => 'AMart';
 
   @override
-  String get label_owner_name => 'Owner Name';
+  String get wallet => 'E-wallet';
 
   @override
-  String get label_outlet_name => 'Outlet Name';
+  String get voucher => 'My Voucher';
 
   @override
-  String get label_outlet_category => 'Outlet Category';
+  String get photo_profile => 'Photo Profile';
 
   @override
-  String get label_outlet_location => 'Outlet Location';
+  String get old_password => 'Old Password';
 
   @override
-  String get label_government_document => 'Government Document';
+  String get new_password => 'New Password';
 
   @override
-  String get label_bank_account_number => 'Bank Account Number';
+  String get confirm_new_password => 'Confirm New Password';
 
   @override
-  String get label_choose_service => 'Choose the service that you want';
+  String get this_month => 'This month';
 
   @override
-  String get label_popular_merchant => 'Popular merchant';
+  String get expenses => 'Expenses';
 
   @override
-  String get label_service_ride => 'Ride';
+  String get income => 'Income';
 
   @override
-  String get label_service_delivery => 'Delivery';
+  String get payment_method_qris => 'QRIS';
 
   @override
-  String get label_service_mart => 'AMart';
+  String get order_id => 'Order #';
 
   @override
-  String get label_service_wallet => 'E-Wallet';
+  String get pickup => 'Pickup';
 
   @override
-  String get label_service_voucher => 'My Voucher';
+  String get dropoff => 'Dropoff';
 
   @override
-  String get label_photo_profile => 'Photo Profile';
+  String get earnings => 'Earnings';
 
   @override
-  String get label_old_password => 'Old Password';
+  String get gender_preference => 'Gender preference: ';
 
   @override
-  String get label_new_password => 'New Password';
+  String get note => 'Note:';
 
   @override
-  String get label_confirm_new_password => 'Confirm New Password';
+  String get order_type_ride => 'Ride';
 
   @override
-  String get label_my_balance => 'My Balance';
+  String get order_type_delivery => 'Delivery';
 
   @override
-  String get label_this_month => 'This month';
+  String get order_type_food => 'Food';
 
   @override
-  String get label_expenses => 'Expenses';
+  String get note_pickup => 'Pickup: ';
 
   @override
-  String get label_income => 'Income';
+  String get note_dropoff => 'Dropoff: ';
 
   @override
-  String get label_payment_method_qris => 'QRIS';
+  String get note_instructions => 'Instructions: ';
 
   @override
-  String get label_order_id => 'Order #';
+  String get benefit_nearby_orders => 'Match you with nearby orders';
 
   @override
-  String get label_pickup => 'Pickup';
+  String get benefit_track_arrival => 'Let customers track your arrival';
 
   @override
-  String get label_dropoff => 'Dropoff';
+  String get benefit_safety => 'Ensure safety and accountability';
 
   @override
-  String get label_distance => 'Distance';
+  String get review_category => 'Review Category';
 
   @override
-  String get label_earnings => 'Earnings';
+  String get cleanliness => 'Cleanliness';
 
   @override
-  String get label_gender_preference => 'Gender preference: ';
+  String get courtesy => 'Courtesy';
 
   @override
-  String get label_note => 'Note:';
+  String get other => 'Other';
 
   @override
-  String get label_order_type_ride => 'Ride';
+  String get comment_optional => 'Comment (Optional)';
 
   @override
-  String get label_order_type_delivery => 'Delivery';
+  String get select_type => 'Select emergency type:';
 
   @override
-  String get label_order_type_food => 'Food';
+  String get accident => 'Accident';
 
   @override
-  String get label_note_pickup => 'Pickup: ';
+  String get harassment => 'Harassment';
 
   @override
-  String get label_note_dropoff => 'Dropoff: ';
+  String get theft => 'Theft';
 
   @override
-  String get label_note_instructions => 'Instructions: ';
+  String get medical => 'Medical Emergency';
 
   @override
-  String get label_benefit_nearby_orders => 'Match you with nearby orders';
+  String get description => 'Description:';
 
   @override
-  String get label_benefit_track_arrival => 'Let customers track your arrival';
+  String get akademove_pay => 'Akademove Pay';
 
   @override
-  String get label_benefit_safety => 'Ensure safety and accountability';
+  String get valid_until => 'Valid until ';
 
   @override
-  String get label_review_category => 'Review Category';
+  String get remaining_time => 'Remaining Time :';
 
   @override
-  String get label_category_cleanliness => 'Cleanliness';
+  String get atk => 'ATK (Stationery)';
 
   @override
-  String get label_category_courtesy => 'Courtesy';
+  String get printing => 'Printing';
 
   @override
-  String get label_category_other => 'Other';
+  String get food => 'Food & Beverages';
 
   @override
-  String get label_comment_optional => 'Comment (Optional)';
+  String get drag_marker => 'Drag to adjust position';
 
   @override
-  String get label_select_emergency_type => 'Select emergency type:';
+  String get step_1 => 'Step 1';
 
   @override
-  String get label_emergency_accident => 'Accident';
+  String get step_2 => 'Step 2';
 
   @override
-  String get label_emergency_harassment => 'Harassment';
+  String get step_3 => 'Step 3';
 
   @override
-  String get label_emergency_theft => 'Theft';
+  String get step_4 => 'Step 4';
 
   @override
-  String get label_emergency_medical => 'Medical Emergency';
+  String get hint_bank_provider => 'Pick your bank provider';
 
   @override
-  String get label_emergency_other => 'Other';
+  String get hint_outlet_category => 'Select outlet category';
 
   @override
-  String get label_description => 'Description:';
+  String get hint_search_location => 'Search location (e.g., Monas Jakarta)';
 
   @override
-  String get label_akademove_pay => 'Akademove Pay';
+  String get hint_share_experience => 'Share your experience...';
 
   @override
-  String get label_valid_until => 'Valid until ';
+  String get hint_description => 'Describe the emergency situation...';
 
   @override
-  String get label_remaining_time => 'Remaining Time :';
+  String get sign_up_choice => 'Start Your Journey with Us!';
 
   @override
-  String get label_category_atk => 'ATK (Stationery)';
+  String get driver_sign_up_step1 => 'Tell us a bit about yourself to get started!';
 
   @override
-  String get label_category_printing => 'Printing';
+  String get driver_sign_up_step2 => 'Upload your photo and documents to verify your account!';
 
   @override
-  String get label_category_food => 'Food & Beverages';
+  String get driver_sign_up_step3 => 'Enter your vehicle details so we can set you up on the road!';
 
   @override
-  String get label_drag_marker => 'Drag to adjust position';
+  String get driver_sign_up_step4 => 'Add your bank account to receive your earnings securely!';
 
   @override
-  String get label_step_1 => 'Step 1';
+  String get user_sign_up => 'Sign up now — your next ride or meal is just a tap away 🚴‍♂️🍔';
 
   @override
-  String get label_step_2 => 'Step 2';
+  String get merchant_sign_up_step1 => 'Tell us about yourself to kickstart your merchant journey!';
 
   @override
-  String get label_step_3 => 'Step 3';
+  String get merchant_sign_up_step2 => 'Share your outlet details and location so customers can find you easily!';
 
   @override
-  String get label_step_4 => 'Step 4';
+  String get merchant_sign_up_step3 => 'Add your bank account to receive payments securely!';
 
   @override
-  String get placeholder_email => 'john@gmail.com';
+  String get forgot_password => 'Forgot Password';
 
   @override
-  String get placeholder_password => '********';
+  String get driver_dashboard => 'Driver Dashboard';
 
   @override
-  String get placeholder_name => 'John Doe';
+  String get order_history => 'Order History';
 
   @override
-  String get placeholder_student_id => '25051204020';
+  String get merchant_edit_profile => 'Edit Profile';
 
   @override
-  String get placeholder_gender => 'Pick your gender';
+  String get setup_outlet => 'Set Up Outlet';
 
   @override
-  String get placeholder_license_plate => 'B 1234 AM';
+  String get order_detail => 'Order Detail';
 
   @override
-  String get placeholder_bank_provider => 'Pick your bank provider';
+  String get menu_detail => 'Menu\'s Detail';
 
   @override
-  String get placeholder_bank_account => '11223344';
+  String get sales_report => 'Sales Report';
 
   @override
-  String get placeholder_outlet_name => 'Your Outlet Name';
+  String get commission_report => 'Commission Report';
 
   @override
-  String get placeholder_outlet_email => 'outlet@example.com';
+  String get merchant_change_password => 'Change Password';
 
   @override
-  String get placeholder_outlet_category => 'Select outlet category';
+  String get where_you_at => 'Where you at?';
 
   @override
-  String get placeholder_search_location => 'Search location (e.g., Monas Jakarta)';
+  String get where_going => 'Where are you going?';
 
   @override
-  String get placeholder_share_experience => 'Share your experience...';
+  String get on_trip => 'On Trip';
 
   @override
-  String get placeholder_emergency_description => 'Describe the emergency situation...';
+  String get trip_details => 'Trip Details';
 
   @override
-  String get screen_title_sign_up_choice => 'Start Your Journey with Us!';
+  String get create_menu => 'Create Menu';
 
   @override
-  String get screen_title_driver_sign_up_step1 => 'Tell us a bit about yourself to get started!';
+  String get edit_menu => 'Edit Menu';
 
   @override
-  String get screen_title_driver_sign_up_step2 => 'Upload your photo and documents to verify your account!';
+  String get sign_up_success => 'Sign Up Success';
 
   @override
-  String get screen_title_driver_sign_up_step3 => 'Enter your vehicle details so we can set you up on the road!';
+  String get sign_up_failed => 'Sign Up Failed';
 
   @override
-  String get screen_title_driver_sign_up_step4 => 'Add your bank account to receive your earnings securely!';
+  String get location_permission => 'Location Permission';
 
   @override
-  String get screen_title_user_sign_up => 'Sign up now — your next ride or meal is just a tap away 🚴‍♂️🍔';
+  String get permission_denied => 'Permission Denied';
 
   @override
-  String get screen_title_merchant_sign_up_step1 => 'Tell us about yourself to kickstart your merchant journey!';
+  String get location_disabled => 'Location Services Disabled';
 
   @override
-  String get screen_title_merchant_sign_up_step2 => 'Share your outlet details and location so customers can find you easily!';
+  String get location_permission_required => 'Location Permission Required';
 
   @override
-  String get screen_title_merchant_sign_up_step3 => 'Add your bank account to receive payments securely!';
+  String get search_error => 'Search Error';
 
   @override
-  String get screen_title_forgot_password => 'Forgot Password';
+  String get location_found => 'Location Found';
 
   @override
-  String get screen_title_reset_password => 'Reset Password';
+  String get not_found => 'Not Found';
 
   @override
-  String get screen_title_edit_profile => 'Edit Profile';
+  String get validation_error => 'Validation Error';
 
   @override
-  String get screen_title_change_password => 'Change Password';
+  String get oops => 'Oops...';
 
   @override
-  String get screen_title_wallet => 'E-Wallet';
-
-  @override
-  String get screen_title_top_up => 'Top Up';
-
-  @override
-  String get screen_title_driver_dashboard => 'Driver Dashboard';
-
-  @override
-  String get screen_title_earnings_wallet => 'Earnings & Wallet';
-
-  @override
-  String get screen_title_order_history => 'Order History';
-
-  @override
-  String get screen_title_my_schedule => 'My Schedule (KRS)';
-
-  @override
-  String get screen_title_merchant_edit_profile => 'Edit Profile';
-
-  @override
-  String get screen_title_setup_outlet => 'Set Up Outlet';
-
-  @override
-  String get screen_title_order_detail => 'Order Detail';
-
-  @override
-  String get screen_title_menu_detail => 'Menu\'s Detail';
-
-  @override
-  String get screen_title_sales_report => 'Sales Report';
-
-  @override
-  String get screen_title_commission_report => 'Commission Report';
-
-  @override
-  String get screen_title_merchant_change_password => 'Change Password';
-
-  @override
-  String get screen_title_where_you_at => 'Where you at?';
-
-  @override
-  String get screen_title_where_going => 'Where are you going?';
-
-  @override
-  String get screen_title_on_trip => 'On Trip';
-
-  @override
-  String get screen_title_trip_details => 'Trip Details';
-
-  @override
-  String get screen_title_create_menu => 'Create Menu';
-
-  @override
-  String get screen_title_edit_menu => 'Edit Menu';
-
-  @override
-  String get dialog_title_sign_up_success => 'Sign Up Success';
-
-  @override
-  String get dialog_title_sign_up_failed => 'Sign Up Failed';
-
-  @override
-  String get dialog_title_location_permission => 'Location Permission';
-
-  @override
-  String get dialog_title_permission_denied => 'Permission Denied';
-
-  @override
-  String get dialog_title_location_disabled => 'Location Services Disabled';
-
-  @override
-  String get dialog_title_location_permission_required => 'Location Permission Required';
-
-  @override
-  String get dialog_title_search_error => 'Search Error';
-
-  @override
-  String get dialog_title_location_found => 'Location Found';
-
-  @override
-  String get dialog_title_not_found => 'Not Found';
-
-  @override
-  String get dialog_title_validation_error => 'Validation Error';
-
-  @override
-  String get dialog_title_error => 'Error';
-
-  @override
-  String get dialog_title_oops => 'Oops...';
-
-  @override
-  String dialog_title_new_order(String type) {
+  String new_order(String type) {
     return 'New $type Order';
   }
 
   @override
-  String get dialog_title_order_unavailable => 'Order Unavailable';
+  String get order_unavailable => 'Order Unavailable';
 
   @override
-  String get dialog_title_order_rejected => 'Order Rejected';
+  String get order_rejected => 'Order Rejected';
 
   @override
-  String get dialog_title_rate_customer => 'Rate Customer';
+  String get alert => 'Emergency Alert';
 
   @override
-  String get dialog_title_success => 'Success';
+  String get report_emergency => 'Report Emergency';
 
   @override
-  String get dialog_title_emergency_alert => 'Emergency Alert';
+  String get confirm_logout => 'Logout';
 
   @override
-  String get dialog_title_report_emergency => 'Report Emergency';
-
-  @override
-  String get dialog_title_confirm_logout => 'Logout';
-
-  @override
-  String get dialog_title_reject_order => 'Reject Order';
-
-  @override
-  String get dialog_title_cancel_order => 'Cancel Order';
-
-  @override
-  String get dialog_title_delete_schedule => 'Delete Schedule';
-
-  @override
-  String get dialog_title_accept_order => 'Accept Order';
-
-  @override
-  String get dialog_title_delete_menu => 'Delete Menu';
+  String get delete_menu => 'Delete Menu';
 
   @override
   String get description_user_role => 'Enjoy a comfortable and safe journey to your destination.';
@@ -1174,7 +1114,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get message_location_default => 'Using default location. You can drag the marker to set your outlet location.';
 
   @override
-  String get message_location_permission_required => 'Location permission is required to set your outlet location automatically.';
+  String get message_leocation_permission_required => 'Location permission is required to set your outlet location automatically.';
 
   @override
   String get message_location_permission_explanation => 'We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily.\n\nYou can also manually set the location by dragging the marker.';
@@ -1206,7 +1146,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get message_emergency_confirmation => 'This will send an emergency alert to campus authorities and notify emergency contacts. Are you sure you want to continue?';
+  String get message_confirmation => 'This will send an emergency alert to campus authorities and notify emergency contacts. Are you sure you want to continue?';
 
   @override
   String get message_settings_coming_soon => 'Settings feature coming soon';
@@ -1244,89 +1184,89 @@ class AppLocalizationsEn extends AppLocalizations {
   String get message_select_reject_reason => 'Please select a reason for rejecting this order:';
 
   @override
-  String get status_dragging_marker => 'Dragging...';
+  String get dragging_marker => 'Dragging...';
 
   @override
-  String get status_welcome_back => 'Welcome back!';
+  String get welcome_back => 'Welcome back!';
 
   @override
-  String get status_license_plate => 'License Plate: ';
+  String get license_plate => 'License Plate: ';
 
   @override
-  String status_rating(String rating) {
+  String rating(String rating) {
     return '$rating rating';
   }
 
   @override
-  String get status_driver_status => 'Driver Status';
+  String get driver_status => 'Driver Status';
 
   @override
-  String get status_accepting_orders => 'You are accepting orders';
+  String get accepting_orders => 'You are accepting orders';
 
   @override
-  String get status_offline => 'You are offline';
+  String get offline => 'You are offline';
 
   @override
-  String get status_ready_accept => 'Ready to accept new orders';
+  String get ready_accept => 'Ready to accept new orders';
 
   @override
-  String get status_toggle_receive => 'Toggle on to start receiving orders';
+  String get toggle_receive => 'Toggle on to start receiving orders';
 
   @override
-  String get status_today_performance => 'Today\'s Performance';
+  String get today_performance => 'Today\'s Performance';
 
   @override
-  String get status_trips => 'Trips';
+  String get trips => 'Trips';
 
   @override
-  String get status_quick_actions => 'Quick Actions';
+  String get quick_actions => 'Quick Actions';
 
   @override
-  String get status_manage_schedule => 'Manage Schedule';
+  String get manage_schedule => 'Manage Schedule';
 
   @override
-  String status_hello(String name) {
+  String hello(String name) {
     return 'Hello, $name';
   }
 
   @override
-  String get status_open_today => 'Open Today';
+  String get open_today => 'Open Today';
 
   @override
-  String get status_operating_hours => '10.00 - 22.00 WIB';
+  String get operating_hours => '10.00 - 22.00 WIB';
 
   @override
-  String get status_sales_recap => 'Sales Recap';
+  String get sales_recap => 'Sales Recap';
 
   @override
-  String get status_today_transaction => 'Today\'s transaction';
+  String get today_transaction => 'Today\'s transaction';
 
   @override
-  String get status_today_gross_sales => 'Today\'s gross sales';
+  String get today_gross_sales => 'Today\'s gross sales';
 
   @override
-  String get status_see_detail => 'See detail';
+  String get see_detail => 'See detail';
 
   @override
-  String get status_send_packages => 'Send packages within campus';
+  String get send_packages => 'Send packages within campus';
 
   @override
-  String get status_max_weight => 'Max weight: 20kg';
+  String get max_weight => 'Max weight: 20kg';
 
   @override
-  String get status_fast_delivery => 'Fast delivery';
+  String get fast_delivery => 'Fast delivery';
 
   @override
-  String get status_secure_handling => 'Secure handling';
+  String get secure_handling => 'Secure handling';
 
   @override
-  String get status_start_delivery => 'Start Delivery';
+  String get start_delivery => 'Start Delivery';
 
   @override
-  String get status_choose_pickup_destination => 'Choose your pick-up and destination point!';
+  String get choose_pickup_destination => 'Choose your pick-up and destination point!';
 
   @override
-  String status_rating_score(String score) {
+  String rating_score(String score) {
     return 'Rating: $score / 5.0';
   }
 
@@ -1455,7 +1395,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get order_confirm_select_payment => 'Select payment method';
 
   @override
-  String get order_confirm_payment_wallet => 'Wallet';
+  String get order_confirm_payment_wallet => 'wallet';
 
   @override
   String get order_confirm_payment_description => 'Pay using your Akademove wallet balance';

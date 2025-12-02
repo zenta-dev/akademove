@@ -15,7 +15,7 @@ CREATE TYPE "public"."am_status" AS ENUM('SUCCESS', 'FAILED');--> statement-brea
 CREATE TYPE "public"."am_order_status" AS ENUM('REQUESTED', 'MATCHING', 'ACCEPTED', 'PREPARING', 'READY_FOR_PICKUP', 'ARRIVING', 'IN_TRIP', 'COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM');--> statement-breakpoint
 CREATE TYPE "public"."am_order_type" AS ENUM('RIDE', 'DELIVERY', 'FOOD');--> statement-breakpoint
 CREATE TYPE "public"."am_bank_provider" AS ENUM('BCA', 'BNI', 'BRI', 'MANDIRI', 'PERMATA');--> statement-breakpoint
-CREATE TYPE "public"."am_payment_method" AS ENUM('QRIS', 'BANK_TRANSFER', 'WALLET');--> statement-breakpoint
+CREATE TYPE "public"."am_payment_method" AS ENUM('QRIS', 'BANK_TRANSFER', 'wallet');--> statement-breakpoint
 CREATE TYPE "public"."am_payment_provider" AS ENUM('MIDTRANS', 'MANUAL');--> statement-breakpoint
 CREATE TYPE "public"."am_report_category" AS ENUM('BEHAVIOR', 'SAFETY', 'FRAUD', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."am_report_status" AS ENUM('PENDING', 'INVESTIGATING', 'RESOLVED', 'DISMISSED');--> statement-breakpoint

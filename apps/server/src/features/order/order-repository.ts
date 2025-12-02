@@ -709,7 +709,7 @@ export class OrderRepository extends BaseRepository {
 			if (!order) throw new RepositoryError("Failed to retrieve placed order");
 
 			// For wallet payments, automatically update order status to MATCHING
-			if (params.payment.method === "WALLET" && payment.status === "SUCCESS") {
+			if (params.payment.method === "wallet" && payment.status === "SUCCESS") {
 				order = await this.update(order.id, { status: "MATCHING" }, opts);
 
 				log.info(
@@ -718,7 +718,7 @@ export class OrderRepository extends BaseRepository {
 						userId: params.userId,
 						amount: estimate.totalCost,
 					},
-					"[OrderRepository] Wallet payment successful - Order moved to MATCHING",
+					"[OrderRepository] wallet payment successful - Order moved to MATCHING",
 				);
 			}
 

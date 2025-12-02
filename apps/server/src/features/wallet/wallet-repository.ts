@@ -1,9 +1,9 @@
 import type { Payment, PayRequest } from "@repo/schema/payment";
 import type {
-	UpdateWallet,
-	Wallet,
-	WalletMonthlySummaryRequest,
-	WalletMonthlySummaryResponse,
+	Updatewallet,
+	wallet,
+	walletMonthlySummaryRequest,
+	walletMonthlySummaryResponse,
 } from "@repo/schema/wallet";
 import Decimal from "decimal.js";
 import { eq, sql } from "drizzle-orm";
@@ -13,26 +13,26 @@ import { RepositoryError } from "@/core/error";
 import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
-import type { WalletDatabase } from "@/core/tables/wallet";
+import type { walletDatabase } from "@/core/tables/wallet";
 import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PaymentRepository } from "../payment/payment-repository";
 
-interface WalletGetMonthlyPayload
-	extends WalletMonthlySummaryRequest,
+interface walletGetMonthlyPayload
+	extends walletMonthlySummaryRequest,
 		WithUserId {}
 
 interface PayPayload extends PayRequest, WithUserId {}
 
-export class WalletRepository extends BaseRepository {
+export class walletRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("wallet", kv, db);
 	}
 
-	static composeEntity(item: WalletDatabase): Wallet {
+	static composeEntity(item: walletDatabase): wallet {
 		return { ...item, balance: toNumberSafe(item.balance) };
 	}
 
-	async #ensureWallet(userId: string, opts?: WithTx): Promise<Wallet> {
+	async #ensurewallet(userId: string, opts?: WithTx): Promise<wallet> {
 		try {
 			let wallet = await (opts?.tx ?? this.db).query.wallet.findFirst({
 				where: (f, op) => op.eq(f.userId, userId),
@@ -43,28 +43,28 @@ export class WalletRepository extends BaseRepository {
 					.values({ id: v7(), userId })
 					.returning();
 			}
-			return WalletRepository.composeEntity(wallet);
+			return walletRepository.composeEntity(wallet);
 		} catch (error) {
 			throw this.handleError(error, "ensure");
 		}
 	}
 
-	async getByUserId(userId: string, opts?: WithTx): Promise<Wallet> {
+	async getByUserId(userId: string, opts?: WithTx): Promise<wallet> {
 		try {
-			return await this.#ensureWallet(userId, opts);
+			return await this.#ensurewallet(userId, opts);
 		} catch (error) {
 			throw this.handleError(error, "get by user id");
 		}
 	}
 
 	async getMonthlySummary(
-		params: WalletGetMonthlyPayload,
+		params: walletGetMonthlyPayload,
 		opts?: WithTx,
-	): Promise<WalletMonthlySummaryResponse> {
+	): Promise<walletMonthlySummaryResponse> {
 		try {
 			const { year, month } = params;
 			const tx = opts?.tx ?? this.db;
-			const wallet = await this.#ensureWallet(params.userId);
+			const wallet = await this.#ensurewallet(params.userId);
 
 			const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
 			const endDate = new Date(Date.UTC(year, month, 1, 0, 0, 0));
@@ -131,7 +131,7 @@ export class WalletRepository extends BaseRepository {
 			const { tx } = opts;
 
 			const [wallet, user] = await Promise.all([
-				this.#ensureWallet(userId, opts),
+				this.#ensurewallet(userId, opts),
 				tx.query.user.findFirst({
 					columns: { name: true, email: true, phone: true },
 					where: (f, op) => op.eq(f.id, userId),
@@ -149,7 +149,7 @@ export class WalletRepository extends BaseRepository {
 
 			// CRITICAL FIX: Atomic update with WHERE clause check to prevent race conditions
 			// This uses database-level constraints to ensure balance never goes negative
-			const [updatedWallet] = await tx
+			const [updatedwallet] = await tx
 				.update(tables.wallet)
 				.set({
 					balance: sql`balance - ${amountSql}`,
@@ -160,7 +160,7 @@ export class WalletRepository extends BaseRepository {
 				)
 				.returning();
 
-			if (!updatedWallet) {
+			if (!updatedwallet) {
 				throw new RepositoryError(
 					`Insufficient balance. Payment of ${amount} exceeds available balance.`,
 					{ code: "BAD_REQUEST" },
@@ -168,7 +168,7 @@ export class WalletRepository extends BaseRepository {
 			}
 
 			const safeBalanceBefore = new Decimal(wallet.balance);
-			const safeBalanceAfter = new Decimal(updatedWallet.balance);
+			const safeBalanceAfter = new Decimal(updatedwallet.balance);
 			const balanceBefore = toStringNumberSafe(safeBalanceBefore);
 			const balanceAfter = toStringNumberSafe(safeBalanceAfter);
 
@@ -193,7 +193,7 @@ export class WalletRepository extends BaseRepository {
 					id: v7(),
 					transactionId: transaction.id,
 					provider: "MANUAL",
-					method: "WALLET",
+					method: "wallet",
 					amount: amountSql,
 					status: "SUCCESS",
 					externalId: referenceId,
@@ -208,9 +208,9 @@ export class WalletRepository extends BaseRepository {
 
 	async update(
 		id: string,
-		params: UpdateWallet,
+		params: Updatewallet,
 		opts?: Partial<WithTx>,
-	): Promise<Wallet> {
+	): Promise<wallet> {
 		try {
 			const [wallet] = await (opts?.tx ?? this.db)
 				.update(tables.wallet)
@@ -223,7 +223,7 @@ export class WalletRepository extends BaseRepository {
 				.where(eq(tables.wallet.id, id))
 				.returning();
 
-			return WalletRepository.composeEntity(wallet);
+			return walletRepository.composeEntity(wallet);
 		} catch (error) {
 			throw this.handleError(error, "update");
 		}

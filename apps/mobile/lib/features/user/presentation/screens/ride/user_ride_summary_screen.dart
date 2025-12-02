@@ -103,12 +103,12 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             'bankProvider': payment.bankProvider?.name,
           },
         );
-      case PaymentMethod.WALLET:
-        // Wallet payment is instant, navigate directly to trip screen
+      case PaymentMethod.wallet:
+        // wallet payment is instant, navigate directly to trip screen
         if (payment.status == TransactionStatus.SUCCESS) {
           context.pushReplacementNamed(Routes.userRideOnTrip.name);
         } else {
-          context.showMyToast('Wallet payment failed', type: ToastType.failed);
+          context.showMyToast('wallet payment failed', type: ToastType.failed);
         }
     }
   }

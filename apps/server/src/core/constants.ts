@@ -22,7 +22,7 @@ export const FEATURE_TAGS = Object.freeze({
 	REVIEW: "Review",
 	TRANSACTION: "Transaction",
 	USER: "User",
-	WALLET: "Wallet",
+	wallet: "wallet",
 } as const);
 
 export const CACHE_TTLS = Object.freeze({

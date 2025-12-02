@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for WalletKey
+// tests for walletKey
 void main() {
-  group(WalletKey, () {});
+  group(walletKey, () {});
 }

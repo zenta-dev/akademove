@@ -23,7 +23,7 @@ void main() {
       // TODO
     });
 
-    // Wallet wallet
+    // wallet wallet
     test('to test the property `wallet`', () async {
       // TODO
     });
