@@ -59,16 +59,17 @@ class UserMartCubit extends BaseCubit<UserMartState> {
   });
 
   /// Load merchants by category (ATK, Printing, Food)
-  /// Note: Currently uses popular merchants as the API doesn't support category filtering yet
-  /// When backend adds category parameter to merchant list, update this method
+  /// Uses backend category filtering to show merchants with matching categories
   Future<void> loadCategoryMerchants({required String category}) async =>
       await taskManager.execute('UMC-lCM-$category', () async {
         try {
           emit(state.toLoading());
 
-          // Use getPopulars for now
-          // TODO: Add category filter when backend supports it
-          final res = await _merchantRepository.getPopulars();
+          // Use list() with category filter
+          final res = await _merchantRepository.list(
+            category: category,
+            limit: 50, // Get reasonable number of merchants per category
+          );
 
           emit(
             state.toSuccess(

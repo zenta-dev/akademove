@@ -38,6 +38,33 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  /// Get list of merchants with optional category filter
+  /// Used for UserMart category screens (ATK, Printing, Food, etc.)
+  Future<BaseResponse<List<Merchant>>> list({
+    String? category,
+    String? query,
+    int? page,
+    int? limit,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantList(
+        category: category,
+        query: query,
+        page: page,
+        limit: limit,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Merchants not found',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   /// Get best-selling menu items across all merchants
   /// Used for mart home screen to show popular products
   Future<BaseResponse<List<MerchantBestSellers200ResponseDataInner>>>
