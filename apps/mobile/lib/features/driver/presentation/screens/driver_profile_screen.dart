@@ -423,13 +423,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           width: double.infinity,
           child: OutlineButton(
             onPressed: () {
-              showToast(
-                context: context,
-                builder: (context, overlay) => context.buildToast(
-                  title: 'Edit Profile',
-                  message: 'Edit profile feature coming soon',
-                ),
-              );
+              _showEditProfileDialog();
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -515,6 +509,109 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         );
       }
     }
+  }
+
+  void _showEditProfileDialog() {
+    if (_driver == null) return;
+
+    final licensePlateController = material.TextEditingController(
+      text: _driver!.licensePlate,
+    );
+
+    material.showDialog(
+      context: context,
+      builder: (dialogContext) => material.AlertDialog(
+        title: const Text('Edit Profile'),
+        content: material.Column(
+          mainAxisSize: material.MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Update your profile information',
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            material.TextField(
+              controller: licensePlateController,
+              decoration: const material.InputDecoration(
+                labelText: 'License Plate',
+                hintText: 'Enter license plate',
+                border: material.OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          material.TextButton(
+            onPressed: () {
+              licensePlateController.dispose();
+              Navigator.of(dialogContext).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          material.TextButton(
+            onPressed: () async {
+              final newLicensePlate = licensePlateController.text.trim();
+
+              if (newLicensePlate.isEmpty) {
+                showToast(
+                  context: context,
+                  builder: (context, overlay) => context.buildToast(
+                    title: 'Validation Error',
+                    message: 'License plate cannot be empty',
+                  ),
+                );
+                return;
+              }
+
+              // Close dialog
+              licensePlateController.dispose();
+              Navigator.of(dialogContext).pop();
+
+              // Update profile
+              try {
+                setState(() => _isLoading = true);
+
+                final response = await context.read<DriverRepository>().update(
+                  driverId: _driver!.id,
+                  licensePlate: newLicensePlate,
+                );
+
+                if (mounted) {
+                  setState(() {
+                    _driver = response.data;
+                    _isLoading = false;
+                  });
+
+                  showToast(
+                    context: context,
+                    builder: (context, overlay) => context.buildToast(
+                      title: 'Success',
+                      message: 'Profile updated successfully',
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  setState(() => _isLoading = false);
+                  showToast(
+                    context: context,
+                    builder: (context, overlay) => context.buildToast(
+                      title: 'Error',
+                      message: 'Failed to update profile: ${e.toString()}',
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 
   material.Color _getStatusColor(DriverStatus status) {
