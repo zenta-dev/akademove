@@ -9,6 +9,7 @@ final userRouter = StatefulShellRoute.indexedStack(
       BlocProvider(create: (context) => sl<UserRideCubit>()),
       BlocProvider(create: (context) => sl<UserDeliveryCubit>()),
       BlocProvider(create: (_) => sl<UserMartCubit>()),
+      BlocProvider(create: (_) => sl<CartCubit>()..loadCart()),
       BlocProvider(create: (_) => sl<UserWalletCubit>()),
       BlocProvider(create: (_) => sl<UserWalletTopUpCubit>()),
       BlocProvider(create: (_) => sl<UserOrderCubit>()),
@@ -142,6 +143,23 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userMartCategory.name,
           path: Routes.userMartCategory.path,
           builder: (context, state) => const UserMartCategoryScreen(),
+        ),
+        GoRoute(
+          name: Routes.userMenuDetail.name,
+          path: Routes.userMenuDetail.path,
+          builder: (context, state) {
+            final menuId = state.pathParameters['menuId'] ?? '';
+            // TODO: Create UserMenuDetailScreen
+            return const UserMartScreen();
+          },
+        ),
+        GoRoute(
+          name: Routes.userCart.name,
+          path: Routes.userCart.path,
+          builder: (context, state) => BlocProvider.value(
+            value: BlocProvider.of<CartCubit>(context),
+            child: const CartScreen(),
+          ),
         ),
         GoRoute(
           name: Routes.userWallet.name,

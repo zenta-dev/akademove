@@ -40,6 +40,14 @@ class _UserMartScreenState extends State<UserMartScreen> {
               variance: const ButtonStyle.ghost(),
             ),
           ],
+          trailing: [
+            BlocProvider.value(
+              value: context.read<CartCubit>(),
+              child: CartBadge(
+                onTap: () => context.pushNamed(Routes.userCart.name),
+              ),
+            ),
+          ],
         ),
       ],
       padding: EdgeInsets.zero,
@@ -330,7 +338,10 @@ class _BestSellerItem extends StatelessWidget {
     return Button(
       style: const ButtonStyle.ghost(density: ButtonDensity.compact),
       onPressed: () {
-        // Navigate to menu details
+        context.pushNamed(
+          Routes.userMenuDetail.name,
+          pathParameters: {'menuId': menu.id},
+        );
       },
       child: SizedBox(
         width: 150.w,
