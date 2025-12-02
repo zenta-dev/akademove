@@ -318,13 +318,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
             const Spacer(),
             TextButton(
               onPressed: () {
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'View All',
-                    message: 'Full transaction history coming soon',
-                  ),
-                );
+                _showAllTransactionsDialog(recentTransactions);
               },
               child: const Text('View All'),
             ),
@@ -722,5 +716,158 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
       case TransactionType.EARNING:
         return 'Earning';
     }
+  }
+
+  void _showAllTransactionsDialog(List<Transaction> transactions) {
+    material.showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (bottomSheetContext) => material.DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => material.Container(
+          decoration: material.BoxDecoration(
+            color: material.Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const material.BorderRadius.only(
+              topLeft: material.Radius.circular(16),
+              topRight: material.Radius.circular(16),
+            ),
+          ),
+          child: material.Column(
+            children: [
+              material.Container(
+                padding: material.EdgeInsets.all(16.w),
+                decoration: material.BoxDecoration(
+                  border: material.Border(
+                    bottom: material.BorderSide(
+                      color: material.Colors.grey.shade300,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: material.Row(
+                  mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                  children: [
+                    material.Text(
+                      'All Transactions',
+                      style: material.TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: material.FontWeight.bold,
+                      ),
+                    ),
+                    material.IconButton(
+                      icon: const material.Icon(material.Icons.close),
+                      onPressed: () =>
+                          material.Navigator.of(bottomSheetContext).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              if (transactions.isEmpty)
+                material.Expanded(
+                  child: material.Center(
+                    child: material.Column(
+                      mainAxisAlignment: material.MainAxisAlignment.center,
+                      children: [
+                        material.Icon(
+                          material.Icons.receipt_long,
+                          size: 64.sp,
+                          color: material.Colors.grey,
+                        ),
+                        material.SizedBox(height: 16.h),
+                        material.Text(
+                          'No transactions found',
+                          style: material.TextStyle(
+                            fontSize: 16.sp,
+                            color: material.Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                material.Expanded(
+                  child: material.ListView.separated(
+                    controller: scrollController,
+                    padding: material.EdgeInsets.all(16.w),
+                    itemCount: transactions.length,
+                    separatorBuilder: (context, index) =>
+                        material.SizedBox(height: 12.h),
+                    itemBuilder: (context, index) {
+                      final transaction = transactions[index];
+                      final isIncome =
+                          transaction.type == TransactionType.TOPUP ||
+                          transaction.type == TransactionType.REFUND ||
+                          transaction.type == TransactionType.EARNING;
+                      final amountColor = isIncome
+                          ? material.Colors.green
+                          : material.Colors.red;
+                      final amountPrefix = isIncome ? '+' : '-';
+
+                      return material.Card(
+                        child: material.ListTile(
+                          leading: material.CircleAvatar(
+                            backgroundColor: amountColor.withValues(alpha: 0.1),
+                            child: material.Icon(
+                              _getTransactionIcon(transaction.type),
+                              color: amountColor,
+                              size: 20.sp,
+                            ),
+                          ),
+                          title: material.Text(
+                            _getTransactionTypeText(transaction.type),
+                            style: material.TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: material.FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: material.Column(
+                            crossAxisAlignment:
+                                material.CrossAxisAlignment.start,
+                            children: [
+                              material.SizedBox(height: 4.h),
+                              if (transaction.description != null)
+                                material.Text(
+                                  transaction.description!,
+                                  style: material.TextStyle(
+                                    fontSize: 12.sp,
+                                    color: material.Colors.grey,
+                                  ),
+                                ),
+                              material.SizedBox(height: 4.h),
+                              material.Text(
+                                DateFormat(
+                                  'MMM dd, yyyy HH:mm',
+                                ).format(transaction.createdAt),
+                                style: material.TextStyle(
+                                  fontSize: 11.sp,
+                                  color: material.Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: Builder(
+                            builder: (context) => material.Text(
+                              '$amountPrefix${context.formatCurrency(transaction.amount)}',
+                              style: material.TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: material.FontWeight.bold,
+                                color: amountColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
