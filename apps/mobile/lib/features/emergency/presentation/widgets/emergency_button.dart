@@ -1,7 +1,9 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/emergency/presentation/cubits/emergency_cubit.dart';
+import 'package:akademove/features/emergency/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'emergency_trigger_dialog.dart';
 
@@ -19,13 +21,36 @@ class EmergencyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _showEmergencyDialog(context),
-      backgroundColor: const Color(0xFFDC2626), // Red 600
-      foregroundColor: Colors.white,
-      elevation: 8,
-      heroTag: 'emergency_button',
-      child: const Icon(LucideIcons.alertTriangle, size: 32),
+    return BlocListener<EmergencyCubit, EmergencyState>(
+      listener: (context, state) {
+        if (state.state == CubitState.success && state.triggered != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Emergency alert sent successfully'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        } else if (state.state == CubitState.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Failed to send alert: ${state.message ?? 'Unknown error'}',
+              ),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      },
+      child: FloatingActionButton(
+        onPressed: () => _showEmergencyDialog(context),
+        backgroundColor: const Color(0xFFDC2626), // Red 600
+        foregroundColor: Colors.white,
+        elevation: 8,
+        heroTag: 'emergency_button',
+        child: const Icon(Icons.warning_rounded, size: 32),
+      ),
     );
   }
 

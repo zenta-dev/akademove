@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -519,66 +520,101 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MyScaffold(
-      scrollable: false,
-      padding: EdgeInsets.zero,
-      headers: const [DefaultAppBar(title: 'On Trip')],
-      body: BlocListener<UserOrderCubit, UserOrderState>(
-        listener: (context, state) async {
-          await _updateMapWithOrderData(state);
+    return BlocProvider(
+      create: (context) => sl<EmergencyCubit>(),
+      child: MyScaffold(
+        scrollable: false,
+        padding: EdgeInsets.zero,
+        headers: const [DefaultAppBar(title: 'On Trip')],
+        body: BlocListener<UserOrderCubit, UserOrderState>(
+          listener: (context, state) async {
+            await _updateMapWithOrderData(state);
 
-          if (state.currentOrder?.status == OrderStatus.COMPLETED &&
-              mounted &&
-              context.mounted) {
-            // Navigate to rating/review screen
-            context.showMyToast('Trip completed!', type: ToastType.success);
-          } else if ((state.currentOrder?.status ==
-                          OrderStatus.CANCELLED_BY_USER ||
-                      state.currentOrder?.status ==
-                          OrderStatus.CANCELLED_BY_DRIVER ||
-                      state.currentOrder?.status ==
-                          OrderStatus.CANCELLED_BY_SYSTEM) &
-                  mounted &&
-              context.mounted) {
-            context.showMyToast('Trip was canceled', type: ToastType.failed);
-          }
-        },
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 300.h,
-              child: Stack(
-                children: [
-                  MapWrapperWidget(
-                    onMapCreated: (controller) {
-                      _mapController = controller;
-                      // Initial map update
-                      final state = context.read<UserOrderCubit>().state;
-                      _updateMapWithOrderData(state);
-                    },
-                    markers: _markers,
-                    polylines: _polylines,
-                    myLocationEnabled: true,
-                  ),
-                  if (_mapController == null)
-                    Positioned.fill(
-                      child: Container(
-                        color: context.colorScheme.mutedForeground,
-                      ).asSkeleton(),
+            if (state.currentOrder?.status == OrderStatus.COMPLETED &&
+                mounted &&
+                context.mounted) {
+              // Navigate to rating/review screen
+              context.showMyToast('Trip completed!', type: ToastType.success);
+            } else if ((state.currentOrder?.status ==
+                            OrderStatus.CANCELLED_BY_USER ||
+                        state.currentOrder?.status ==
+                            OrderStatus.CANCELLED_BY_DRIVER ||
+                        state.currentOrder?.status ==
+                            OrderStatus.CANCELLED_BY_SYSTEM) &
+                    mounted &&
+                context.mounted) {
+              context.showMyToast('Trip was canceled', type: ToastType.failed);
+            }
+          },
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 300.h,
+                child: Stack(
+                  children: [
+                    MapWrapperWidget(
+                      onMapCreated: (controller) {
+                        _mapController = controller;
+                        // Initial map update
+                        final state = context.read<UserOrderCubit>().state;
+                        _updateMapWithOrderData(state);
+                      },
+                      markers: _markers,
+                      polylines: _polylines,
+                      myLocationEnabled: true,
                     ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16.w),
-                child: BlocBuilder<UserOrderCubit, UserOrderState>(
-                  builder: _buildBody,
+                    if (_mapController == null)
+                      Positioned.fill(
+                        child: Container(
+                          color: context.colorScheme.mutedForeground,
+                        ).asSkeleton(),
+                      ),
+                    // Emergency button - only show during IN_TRIP status
+                    BlocBuilder<UserOrderCubit, UserOrderState>(
+                      builder: (context, state) {
+                        final order = state.currentOrder;
+                        if (order == null ||
+                            order.status != OrderStatus.IN_TRIP) {
+                          return const SizedBox.shrink();
+                        }
+
+                        // Get current location from driver or order
+                        final driverLocation =
+                            state.currentAssignedDriver?.currentLocation;
+                        final emergencyLocation = driverLocation != null
+                            ? EmergencyLocation(
+                                latitude: driverLocation.y.toDouble(),
+                                longitude: driverLocation.x.toDouble(),
+                              )
+                            : EmergencyLocation(
+                                latitude: order.pickupLocation.y.toDouble(),
+                                longitude: order.pickupLocation.x.toDouble(),
+                              );
+
+                        return Positioned(
+                          bottom: 16,
+                          right: 16,
+                          child: EmergencyButton(
+                            orderId: order.id,
+                            currentLocation: emergencyLocation,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16.w),
+                  child: BlocBuilder<UserOrderCubit, UserOrderState>(
+                    builder: _buildBody,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

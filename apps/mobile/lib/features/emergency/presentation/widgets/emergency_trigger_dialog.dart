@@ -1,5 +1,5 @@
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/features.dart';
+import 'package:akademove/features/auth/presentation/cubits/auth_cubit.dart';
+import 'package:akademove/features/emergency/presentation/cubits/emergency_cubit.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,8 +73,21 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     }
 
     final cubit = context.read<EmergencyCubit>();
+    final userId = context.read<AuthCubit>().state.data?.id;
+
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User not authenticated'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     cubit.trigger(
       orderId: widget.orderId,
+      userId: userId,
       type: _selectedType,
       description: _descriptionController.text.trim(),
       location: widget.currentLocation,

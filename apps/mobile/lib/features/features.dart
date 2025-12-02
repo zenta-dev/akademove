@@ -2,6 +2,7 @@ export 'package:akademove/features/auth/_export.dart';
 export 'package:akademove/features/configuration/_export.dart';
 export 'package:akademove/features/coupon/_export.dart';
 export 'package:akademove/features/driver/_export.dart';
+export 'package:akademove/features/emergency/_export.dart';
 export 'package:akademove/features/merchant/_export.dart';
 export 'package:akademove/features/notification/_export.dart';
 export 'package:akademove/features/order/_export.dart';
