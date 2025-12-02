@@ -17,26 +17,24 @@ part 'update_configuration.g.dart';
 )
 class UpdateConfiguration {
   /// Returns a new [UpdateConfiguration] instance.
-  const UpdateConfiguration({
-     this.name,
-     this.value,
-     this.description,
-  });
+  const UpdateConfiguration({this.name, this.value, this.description});
 
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
-  
+
   @JsonKey(name: r'value', required: false, includeIfNull: false)
   final Object? value;
-  
+
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateConfiguration &&
-    other.name == name &&
-    other.value == value &&
-    other.description == description;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateConfiguration &&
+          other.name == name &&
+          other.value == value &&
+          other.description == description;
 
   @override
   int get hashCode =>
@@ -44,7 +42,8 @@ class UpdateConfiguration {
       (value == null ? 0 : value.hashCode) +
       description.hashCode;
 
-  factory UpdateConfiguration.fromJson(Map<String, dynamic> json) => _$UpdateConfigurationFromJson(json);
+  factory UpdateConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$UpdateConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateConfigurationToJson(this);
 
@@ -52,6 +51,4 @@ class UpdateConfiguration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

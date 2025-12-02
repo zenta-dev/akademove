@@ -21,8 +21,8 @@ class Session {
     required this.id,
     required this.expiresAt,
     required this.token,
-     this.ipAddress,
-     this.userAgent,
+    this.ipAddress,
+    this.userAgent,
     required this.userId,
     required this.createdAt,
     required this.updatedAt,
@@ -30,38 +30,40 @@ class Session {
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'expiresAt', required: true, includeIfNull: false)
   final DateTime expiresAt;
-  
+
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
-  
+
   @JsonKey(name: r'ipAddress', required: false, includeIfNull: false)
   final String? ipAddress;
-  
+
   @JsonKey(name: r'userAgent', required: false, includeIfNull: false)
   final String? userAgent;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Session &&
-    other.id == id &&
-    other.expiresAt == expiresAt &&
-    other.token == token &&
-    other.ipAddress == ipAddress &&
-    other.userAgent == userAgent &&
-    other.userId == userId &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Session &&
+          other.id == id &&
+          other.expiresAt == expiresAt &&
+          other.token == token &&
+          other.ipAddress == ipAddress &&
+          other.userAgent == userAgent &&
+          other.userId == userId &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -74,7 +76,8 @@ class Session {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory Session.fromJson(Map<String, dynamic> json) => _$SessionFromJson(json);
+  factory Session.fromJson(Map<String, dynamic> json) =>
+      _$SessionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SessionToJson(this);
 
@@ -82,6 +85,4 @@ class Session {
   String toString() {
     return toJson().toString();
   }
-
 }
-

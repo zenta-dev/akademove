@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponGetEligibleCoupons200ResponseData
 void main() {
-  final CouponGetEligibleCoupons200ResponseData? instance = /* CouponGetEligibleCoupons200ResponseData(...) */ null;
+  final CouponGetEligibleCoupons200ResponseData?
+  instance = /* CouponGetEligibleCoupons200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(CouponGetEligibleCoupons200ResponseData, () {
@@ -21,6 +22,5 @@ void main() {
     test('to test the property `bestDiscountAmount`', () async {
       // TODO
     });
-
   });
 }

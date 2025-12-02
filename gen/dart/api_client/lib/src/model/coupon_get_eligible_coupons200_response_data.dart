@@ -26,18 +26,20 @@ class CouponGetEligibleCoupons200ResponseData {
 
   @JsonKey(name: r'coupons', required: true, includeIfNull: false)
   final List<Coupon> coupons;
-  
+
   @JsonKey(name: r'bestCoupon', required: true, includeIfNull: true)
   final Coupon? bestCoupon;
-  
+
   @JsonKey(name: r'bestDiscountAmount', required: true, includeIfNull: false)
   final num bestDiscountAmount;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CouponGetEligibleCoupons200ResponseData &&
-    other.coupons == coupons &&
-    other.bestCoupon == bestCoupon &&
-    other.bestDiscountAmount == bestDiscountAmount;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponGetEligibleCoupons200ResponseData &&
+          other.coupons == coupons &&
+          other.bestCoupon == bestCoupon &&
+          other.bestDiscountAmount == bestDiscountAmount;
 
   @override
   int get hashCode =>
@@ -45,14 +47,15 @@ class CouponGetEligibleCoupons200ResponseData {
       (bestCoupon == null ? 0 : bestCoupon.hashCode) +
       bestDiscountAmount.hashCode;
 
-  factory CouponGetEligibleCoupons200ResponseData.fromJson(Map<String, dynamic> json) => _$CouponGetEligibleCoupons200ResponseDataFromJson(json);
+  factory CouponGetEligibleCoupons200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$CouponGetEligibleCoupons200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CouponGetEligibleCoupons200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$CouponGetEligibleCoupons200ResponseDataToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

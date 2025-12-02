@@ -17,22 +17,21 @@ part 'order_send_message_request.g.dart';
 )
 class OrderSendMessageRequest {
   /// Returns a new [OrderSendMessageRequest] instance.
-  const OrderSendMessageRequest({
-    required this.message,
-  });
+  const OrderSendMessageRequest({required this.message});
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderSendMessageRequest &&
-    other.message == message;
 
   @override
-  int get hashCode =>
-      message.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderSendMessageRequest && other.message == message;
 
-  factory OrderSendMessageRequest.fromJson(Map<String, dynamic> json) => _$OrderSendMessageRequestFromJson(json);
+  @override
+  int get hashCode => message.hashCode;
+
+  factory OrderSendMessageRequest.fromJson(Map<String, dynamic> json) =>
+      _$OrderSendMessageRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderSendMessageRequestToJson(this);
 
@@ -40,6 +39,4 @@ class OrderSendMessageRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

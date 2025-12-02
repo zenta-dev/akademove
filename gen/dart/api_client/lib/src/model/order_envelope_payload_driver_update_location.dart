@@ -25,39 +25,39 @@ class OrderEnvelopePayloadDriverUpdateLocation {
 
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
-  
-      /// Longitude (X-axis, East-West)
-          // minimum: -180
-          // maximum: 180
+
+  /// Longitude (X-axis, East-West)
+  // minimum: -180
+  // maximum: 180
   @JsonKey(name: r'x', required: true, includeIfNull: false)
   final num x;
-  
-      /// Latitude (Y-axis, North-South)
-          // minimum: -90
-          // maximum: 90
+
+  /// Latitude (Y-axis, North-South)
+  // minimum: -90
+  // maximum: 90
   @JsonKey(name: r'y', required: true, includeIfNull: false)
   final num y;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadDriverUpdateLocation &&
-    other.driverId == driverId &&
-    other.x == x &&
-    other.y == y;
 
   @override
-  int get hashCode =>
-      driverId.hashCode +
-      x.hashCode +
-      y.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadDriverUpdateLocation &&
+          other.driverId == driverId &&
+          other.x == x &&
+          other.y == y;
 
-  factory OrderEnvelopePayloadDriverUpdateLocation.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDriverUpdateLocationFromJson(json);
+  @override
+  int get hashCode => driverId.hashCode + x.hashCode + y.hashCode;
 
-  Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDriverUpdateLocationToJson(this);
+  factory OrderEnvelopePayloadDriverUpdateLocation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$OrderEnvelopePayloadDriverUpdateLocationFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$OrderEnvelopePayloadDriverUpdateLocationToJson(this);
 
   @override
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -12,16 +12,15 @@ import 'package:dio/dio.dart';
 import 'package:api_client/src/model/badge_remove200_response.dart';
 
 class PaymentApi {
-
   final Dio _dio;
 
   const PaymentApi(this._dio);
 
   /// paymentWebhookMidtrans
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [body] 
+  /// * [body]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -31,7 +30,7 @@ class PaymentApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> paymentWebhookMidtrans({ 
+  Future<Response<BadgeRemove200Response>> paymentWebhookMidtrans({
     required Object body,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -43,16 +42,10 @@ class PaymentApi {
     final _path = r'/payments/webhook/midtrans';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -63,13 +56,10 @@ class PaymentApi {
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(body);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(body);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -89,7 +79,13 @@ class PaymentApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -111,5 +107,4 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
       extra: _response.extra,
     );
   }
-
 }

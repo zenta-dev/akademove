@@ -23,75 +23,77 @@ part 'update_payment.g.dart';
 class UpdatePayment {
   /// Returns a new [UpdatePayment] instance.
   const UpdatePayment({
-     this.transactionId,
-     this.provider,
-     this.method,
-     this.bankProvider,
-     this.amount,
-     this.status,
-     this.externalId,
-     this.paymentUrl,
-     this.vaNumber,
-     this.metadata,
-     this.expiresAt,
-     this.payload,
-     this.response,
+    this.transactionId,
+    this.provider,
+    this.method,
+    this.bankProvider,
+    this.amount,
+    this.status,
+    this.externalId,
+    this.paymentUrl,
+    this.vaNumber,
+    this.metadata,
+    this.expiresAt,
+    this.payload,
+    this.response,
   });
 
   @JsonKey(name: r'transactionId', required: false, includeIfNull: false)
   final String? transactionId;
-  
+
   @JsonKey(name: r'provider', required: false, includeIfNull: false)
   final PaymentProvider? provider;
-  
+
   @JsonKey(name: r'method', required: false, includeIfNull: false)
   final PaymentMethod? method;
-  
+
   @JsonKey(name: r'bankProvider', required: false, includeIfNull: false)
   final BankProvider? bankProvider;
-  
+
   @JsonKey(name: r'amount', required: false, includeIfNull: false)
   final num? amount;
-  
+
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final TransactionStatus? status;
-  
+
   @JsonKey(name: r'externalId', required: false, includeIfNull: false)
   final String? externalId;
-  
+
   @JsonKey(name: r'paymentUrl', required: false, includeIfNull: false)
   final String? paymentUrl;
-  
+
   @JsonKey(name: r'va_number', required: false, includeIfNull: false)
   final VANumber? vaNumber;
-  
+
   @JsonKey(name: r'metadata', required: false, includeIfNull: false)
   final Object? metadata;
-  
+
   @JsonKey(name: r'expiresAt', required: false, includeIfNull: false)
   final DateTime? expiresAt;
-  
+
   @JsonKey(name: r'payload', required: false, includeIfNull: false)
   final Object? payload;
-  
+
   @JsonKey(name: r'response', required: false, includeIfNull: false)
   final Object? response;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdatePayment &&
-    other.transactionId == transactionId &&
-    other.provider == provider &&
-    other.method == method &&
-    other.bankProvider == bankProvider &&
-    other.amount == amount &&
-    other.status == status &&
-    other.externalId == externalId &&
-    other.paymentUrl == paymentUrl &&
-    other.vaNumber == vaNumber &&
-    other.metadata == metadata &&
-    other.expiresAt == expiresAt &&
-    other.payload == payload &&
-    other.response == response;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdatePayment &&
+          other.transactionId == transactionId &&
+          other.provider == provider &&
+          other.method == method &&
+          other.bankProvider == bankProvider &&
+          other.amount == amount &&
+          other.status == status &&
+          other.externalId == externalId &&
+          other.paymentUrl == paymentUrl &&
+          other.vaNumber == vaNumber &&
+          other.metadata == metadata &&
+          other.expiresAt == expiresAt &&
+          other.payload == payload &&
+          other.response == response;
 
   @override
   int get hashCode =>
@@ -109,7 +111,8 @@ class UpdatePayment {
       (payload == null ? 0 : payload.hashCode) +
       (response == null ? 0 : response.hashCode);
 
-  factory UpdatePayment.fromJson(Map<String, dynamic> json) => _$UpdatePaymentFromJson(json);
+  factory UpdatePayment.fromJson(Map<String, dynamic> json) =>
+      _$UpdatePaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdatePaymentToJson(this);
 
@@ -117,6 +120,4 @@ class UpdatePayment {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -18,28 +18,24 @@ part 'sign_in_response.g.dart';
 )
 class SignInResponse {
   /// Returns a new [SignInResponse] instance.
-  const SignInResponse({
-    required this.token,
-    required this.user,
-  });
+  const SignInResponse({required this.token, required this.user});
 
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
-  
+
   @JsonKey(name: r'user', required: true, includeIfNull: false)
   final User user;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is SignInResponse &&
-    other.token == token &&
-    other.user == user;
 
   @override
-  int get hashCode =>
-      token.hashCode +
-      user.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SignInResponse && other.token == token && other.user == user;
 
-  factory SignInResponse.fromJson(Map<String, dynamic> json) => _$SignInResponseFromJson(json);
+  @override
+  int get hashCode => token.hashCode + user.hashCode;
+
+  factory SignInResponse.fromJson(Map<String, dynamic> json) =>
+      _$SignInResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignInResponseToJson(this);
 
@@ -47,6 +43,4 @@ class SignInResponse {
   String toString() {
     return toJson().toString();
   }
-
 }
-

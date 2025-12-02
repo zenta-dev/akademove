@@ -22,30 +22,19 @@ class MerchantOrderRepository extends BaseRepository {
     required String orderId,
   }) {
     return guard(() async {
-      // TODO: Regenerate API client after server changes
-      // Run: bun run dev (start server)
-      // Run: make gen (generate client)
-      // Run: melos generate (build_runner)
-      //
-      // Expected API client method:
-      // final res = await _apiClient.getMerchantApi().merchantAcceptOrder(
-      //   merchantId: merchantId,
-      //   orderId: orderId,
-      // );
-
-      throw UnimplementedError(
-        'API client needs regeneration. '
-        'Run: bun run dev && make gen && melos generate',
+      final res = await _apiClient.getMerchantApi().merchantOrderAccept(
+        merchantId: merchantId,
+        id: orderId,
       );
 
-      // final data =
-      //     res.data?.body ??
-      //     (throw const RepositoryError(
-      //       'Failed to accept order',
-      //       code: ErrorCode.unknown,
-      //     ));
-      //
-      // return SuccessResponse(message: data.message, data: data.data);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to accept order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -66,28 +55,21 @@ class MerchantOrderRepository extends BaseRepository {
     String? note,
   }) {
     return guard(() async {
-      // TODO: Regenerate API client after server changes
-      //
-      // Expected API client method:
-      // final res = await _apiClient.getMerchantApi().merchantRejectOrder(
-      //   merchantId: merchantId,
-      //   orderId: orderId,
-      //   body: RejectOrderBody(reason: reason, note: note),
-      // );
-
-      throw UnimplementedError(
-        'API client needs regeneration. '
-        'Run: bun run dev && make gen && melos generate',
+      final res = await _apiClient.getMerchantApi().merchantOrderReject(
+        merchantId: merchantId,
+        id: orderId,
+        reason: reason,
+        note: note,
       );
 
-      // final data =
-      //     res.data?.body ??
-      //     (throw const RepositoryError(
-      //       'Failed to reject order',
-      //       code: ErrorCode.unknown,
-      //     ));
-      //
-      // return SuccessResponse(message: data.message, data: data.data);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to reject order',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -104,27 +86,19 @@ class MerchantOrderRepository extends BaseRepository {
     required String orderId,
   }) {
     return guard(() async {
-      // TODO: Regenerate API client after server changes
-      //
-      // Expected API client method:
-      // final res = await _apiClient.getMerchantApi().merchantMarkPreparing(
-      //   merchantId: merchantId,
-      //   orderId: orderId,
-      // );
-
-      throw UnimplementedError(
-        'API client needs regeneration. '
-        'Run: bun run dev && make gen && melos generate',
+      final res = await _apiClient.getMerchantApi().merchantOrderMarkPreparing(
+        merchantId: merchantId,
+        id: orderId,
       );
 
-      // final data =
-      //     res.data?.body ??
-      //     (throw const RepositoryError(
-      //       'Failed to mark order as preparing',
-      //       code: ErrorCode.unknown,
-      //     ));
-      //
-      // return SuccessResponse(message: data.message, data: data.data);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to mark order as preparing',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -142,27 +116,19 @@ class MerchantOrderRepository extends BaseRepository {
     required String orderId,
   }) {
     return guard(() async {
-      // TODO: Regenerate API client after server changes
-      //
-      // Expected API client method:
-      // final res = await _apiClient.getMerchantApi().merchantMarkReady(
-      //   merchantId: merchantId,
-      //   orderId: orderId,
-      // );
-
-      throw UnimplementedError(
-        'API client needs regeneration. '
-        'Run: bun run dev && make gen && melos generate',
+      final res = await _apiClient.getMerchantApi().merchantOrderMarkReady(
+        merchantId: merchantId,
+        id: orderId,
       );
 
-      // final data =
-      //     res.data?.body ??
-      //     (throw const RepositoryError(
-      //       'Failed to mark order as ready',
-      //       code: ErrorCode.unknown,
-      //     ));
-      //
-      // return SuccessResponse(message: data.message, data: data.data);
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to mark order as ready',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 }
