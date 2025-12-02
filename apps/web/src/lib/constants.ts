@@ -34,6 +34,7 @@ export const SUB_ROUTE_TITLES = Object.freeze({
 		MENU: `${m.menu()} - ${ROUTE_TITLES.MERCHANT}`,
 		ORDERS: `${m.orders()} - ${ROUTE_TITLES.MERCHANT}`,
 		SALES: `${m.earnings()} - ${ROUTE_TITLES.MERCHANT}`,
+		WALLET: `${m.wallet()} - ${ROUTE_TITLES.MERCHANT}`,
 		PROFILE: `${m.profile()} - ${ROUTE_TITLES.MERCHANT}`,
 	} as const,
 	DRIVER: {

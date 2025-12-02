@@ -1,6 +1,13 @@
 import { localizeHref, m } from "@repo/i18n";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Gauge, LineChart, Logs, Receipt, UserRound } from "lucide-react";
+import {
+	Gauge,
+	LineChart,
+	Logs,
+	Receipt,
+	UserRound,
+	Wallet,
+} from "lucide-react";
 import {
 	Sidebar,
 	SidebarContent,
@@ -32,6 +39,11 @@ const navMain = Object.freeze([
 		title: m.sales(),
 		href: localizeHref("/dash/merchant/sales"),
 		icon: LineChart,
+	},
+	{
+		title: m.wallet(),
+		href: localizeHref("/dash/merchant/wallet"),
+		icon: Wallet,
 	},
 	{
 		title: m.profile(),
