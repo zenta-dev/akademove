@@ -10,41 +10,64 @@ class UserMartCubit extends BaseCubit<UserMartState> {
   final MerchantRepository _merchantRepository;
 
   /// Load mart home screen data (best sellers + recent orders)
-  Future<void> loadMartHome() async =>
-      await taskManager.execute('UMC-lMH', () async {
-        try {
-          emit(state.toLoading());
+  Future<void>
+  loadMartHome() async => await taskManager.execute('UMC-lMH', () async {
+    try {
+      emit(state.toLoading());
 
-          // TODO: Implement best sellers API call when backend is ready
-          // For now, just load with empty data
-          final bestSellers = <MerchantMenu>[];
-          final recentOrders = <Order>[];
+      // Load best sellers from API
+      final bestSellersRes = await _merchantRepository.getBestSellers(
+        limit: 20,
+      );
 
-          emit(
-            state.toSuccess(
-              bestSellers: bestSellers,
-              recentOrders: recentOrders,
-              message: 'Mart home loaded successfully',
-            ),
-          );
-        } on BaseError catch (e, st) {
-          logger.e(
-            '[UserMartCubit] - loadMartHome Error: ${e.message}',
-            error: e,
-            stackTrace: st,
-          );
-          emit(state.toFailure(e));
-        }
-      });
+      // Convert best seller menu items to MerchantMenu
+      // The types have the same structure, so we create MerchantMenu instances
+      final bestSellers = bestSellersRes.data.map((item) {
+        final menu = item.menu;
+        return MerchantMenu(
+          id: menu.id,
+          merchantId: menu.merchantId,
+          name: menu.name,
+          image: menu.image,
+          category: menu.category,
+          price: menu.price,
+          stock: menu.stock.toInt(),
+          createdAt: menu.createdAt,
+          updatedAt: menu.updatedAt,
+        );
+      }).toList();
+
+      // Recent orders would come from order repository
+      // For now, we don't have a specific API endpoint for user's recent mart orders
+      final recentOrders = <Order>[];
+
+      emit(
+        state.toSuccess(
+          bestSellers: bestSellers,
+          recentOrders: recentOrders,
+          message: bestSellersRes.message,
+        ),
+      );
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserMartCubit] - loadMartHome Error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      emit(state.toFailure(e));
+    }
+  });
 
   /// Load merchants by category (ATK, Printing, Food)
+  /// Note: Currently uses popular merchants as the API doesn't support category filtering yet
+  /// When backend adds category parameter to merchant list, update this method
   Future<void> loadCategoryMerchants({required String category}) async =>
       await taskManager.execute('UMC-lCM-$category', () async {
         try {
           emit(state.toLoading());
 
-          // TODO: Call merchant API with category filter when backend is ready
-          // For now, use getPopulars
+          // Use getPopulars for now
+          // TODO: Add category filter when backend supports it
           final res = await _merchantRepository.getPopulars();
 
           emit(

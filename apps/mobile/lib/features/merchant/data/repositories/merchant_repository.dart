@@ -38,6 +38,27 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  /// Get best-selling menu items across all merchants
+  /// Used for mart home screen to show popular products
+  Future<BaseResponse<List<MerchantBestSellers200ResponseDataInner>>>
+  getBestSellers({num limit = 10, String? category}) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantBestSellers(
+        limit: limit,
+        category: category,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Best sellers not found',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   // ========== MERCHANT MENU METHODS ==========
 
   Future<BaseResponse<List<MerchantMenu>>> getMenuList({
