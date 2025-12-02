@@ -40,6 +40,8 @@ const _sharedInterceptor: Interceptor<
 	const path = opts.request.url.pathname;
 	log.debug({ path }, "Incoming Request");
 	try {
+		const body = (await opts.request.body) ?? {};
+		log.debug({ body }, "Incoming request body");
 		const res = await opts.next();
 		const { response } = res;
 		log.debug(response, "Outcoming response");

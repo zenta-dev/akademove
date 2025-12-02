@@ -73,17 +73,20 @@ export const order = pgTable(
 		platformCommission: numeric("platform_commission", {
 			precision: 18,
 			scale: 2,
-			mode: "number",
 		}),
 		driverEarning: numeric("driver_earning", {
 			precision: 18,
 			scale: 2,
-			mode: "number",
 		}),
 		merchantCommission: numeric("merchant_commission", {
 			precision: 18,
 			scale: 2,
-			mode: "number",
+		}),
+		couponId: uuid("coupon_id"),
+		couponCode: text("coupon_code"),
+		discountAmount: numeric("discount_amount", {
+			precision: 18,
+			scale: 2,
 		}),
 		note: jsonb().$type<OrderNote>(),
 		requestedAt: timestamp("requested_at").notNull().$defaultFn(nowFn),
@@ -118,6 +121,9 @@ export const order = pgTable(
 
 		// Composite index for cursor pagination (id + createdAt for efficient ordering)
 		index("order_id_created_at_idx").on(t.id, t.createdAt),
+
+		// Coupon index for analytics
+		index("order_coupon_id_idx").on(t.couponId),
 	],
 );
 

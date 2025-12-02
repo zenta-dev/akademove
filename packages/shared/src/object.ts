@@ -1,14 +1,13 @@
-export function unprefixKeys<
-	T extends Record<string, unknown>,
-	Prefix extends string,
->(
-	obj: T,
-	prefix: Prefix,
-): {
+type Output<T, Prefix extends string> = {
 	[K in keyof T as K extends `${Prefix}${infer Rest}`
 		? Uncapitalize<Rest>
 		: K]: T[K];
-} {
+};
+
+export function unprefixKeys<
+	T extends Record<string, unknown>,
+	Prefix extends string,
+>(obj: T, prefix: Prefix): Output<T, Prefix> {
 	const result: Record<string, unknown> = {};
 
 	for (const [key, value] of Object.entries(obj)) {
@@ -20,8 +19,7 @@ export function unprefixKeys<
 		}
 	}
 
-	// biome-ignore lint/suspicious/noExplicitAny: cant cast the output
-	return result as any;
+	return result as unknown as Output<T, Prefix>;
 }
 
 export function trimObjectValues<T extends Record<string, unknown>>(obj: T): T {

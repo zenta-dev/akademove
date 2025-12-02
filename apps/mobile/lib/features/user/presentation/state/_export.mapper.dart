@@ -747,6 +747,13 @@ class UserDeliveryStateMapper extends ClassMapperBase<UserDeliveryState> {
   @override
   final String id = 'UserDeliveryState';
 
+  static List<Driver> _$nearbyDrivers(UserDeliveryState v) => v.nearbyDrivers;
+  static const Field<UserDeliveryState, List<Driver>> _f$nearbyDrivers = Field(
+    'nearbyDrivers',
+    _$nearbyDrivers,
+    opt: true,
+    def: const [],
+  );
   static Place? _$pickup(UserDeliveryState v) => v.pickup;
   static const Field<UserDeliveryState, Place> _f$pickup = Field(
     'pickup',
@@ -810,6 +817,7 @@ class UserDeliveryStateMapper extends ClassMapperBase<UserDeliveryState> {
 
   @override
   final MappableFields<UserDeliveryState> fields = const {
+    #nearbyDrivers: _f$nearbyDrivers,
     #pickup: _f$pickup,
     #dropoff: _f$dropoff,
     #details: _f$details,
@@ -823,6 +831,7 @@ class UserDeliveryStateMapper extends ClassMapperBase<UserDeliveryState> {
 
   static UserDeliveryState _instantiate(DecodingData data) {
     return UserDeliveryState(
+      nearbyDrivers: data.dec(_f$nearbyDrivers),
       pickup: data.dec(_f$pickup),
       dropoff: data.dec(_f$dropoff),
       details: data.dec(_f$details),
@@ -888,6 +897,8 @@ abstract class UserDeliveryStateCopyWith<
   $Out
 >
     implements ClassCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, Driver, ObjectCopyWith<$R, Driver, Driver>>
+  get nearbyDrivers;
   PlaceCopyWith<$R, Place, Place>? get pickup;
   PlaceCopyWith<$R, Place, Place>? get dropoff;
   PageTokenPaginationResultCopyWith<
@@ -905,6 +916,7 @@ abstract class UserDeliveryStateCopyWith<
   >
   get searchPlaces;
   $R call({
+    List<Driver>? nearbyDrivers,
     Place? pickup,
     Place? dropoff,
     DeliveryDetails? details,
@@ -928,6 +940,13 @@ class _UserDeliveryStateCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<UserDeliveryState> $mapper =
       UserDeliveryStateMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, Driver, ObjectCopyWith<$R, Driver, Driver>>
+  get nearbyDrivers => ListCopyWith(
+    $value.nearbyDrivers,
+    (v, t) => ObjectCopyWith(v, $identity, t),
+    (v) => call(nearbyDrivers: v),
+  );
   @override
   PlaceCopyWith<$R, Place, Place>? get pickup =>
       $value.pickup?.copyWith.$chain((v) => call(pickup: v));
@@ -954,6 +973,7 @@ class _UserDeliveryStateCopyWithImpl<$R, $Out>
       $value.searchPlaces.copyWith.$chain((v) => call(searchPlaces: v));
   @override
   $R call({
+    List<Driver>? nearbyDrivers,
     Object? pickup = $none,
     Object? dropoff = $none,
     Object? details = $none,
@@ -965,6 +985,7 @@ class _UserDeliveryStateCopyWithImpl<$R, $Out>
     Object? error = $none,
   }) => $apply(
     FieldCopyWithData({
+      if (nearbyDrivers != null) #nearbyDrivers: nearbyDrivers,
       if (pickup != $none) #pickup: pickup,
       if (dropoff != $none) #dropoff: dropoff,
       if (details != $none) #details: details,
@@ -978,6 +999,7 @@ class _UserDeliveryStateCopyWithImpl<$R, $Out>
   );
   @override
   UserDeliveryState $make(CopyWithData data) => UserDeliveryState(
+    nearbyDrivers: data.get(#nearbyDrivers, or: $value.nearbyDrivers),
     pickup: data.get(#pickup, or: $value.pickup),
     dropoff: data.get(#dropoff, or: $value.dropoff),
     details: data.get(#details, or: $value.details),

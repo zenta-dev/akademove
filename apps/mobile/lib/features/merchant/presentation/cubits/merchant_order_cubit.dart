@@ -24,8 +24,6 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
 
   static const String _wsKey = 'merchant_order';
 
-  Future<void> init() async {}
-
   /// Subscribe to order WebSocket for real-time updates
   Future<void> subscribeToOrder(String orderId) async {
     try {

@@ -120,6 +120,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get special_instructions_hint => 'e.g., \'Please handle with care\', \'Call before delivery\'';
 
   @override
+  String get delivery_service => 'Delivery Service';
+
+  @override
   String get button_cancel => 'Cancel';
 
   @override

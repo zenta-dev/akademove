@@ -79,14 +79,6 @@ class DriverHomeStateMapper extends ClassMapperBase<DriverHomeState> {
     _$message,
     opt: true,
   );
-  static Set<String> _$ongoingOperations(DriverHomeState v) =>
-      v.ongoingOperations;
-  static const Field<DriverHomeState, Set<String>> _f$ongoingOperations = Field(
-    'ongoingOperations',
-    _$ongoingOperations,
-    opt: true,
-    def: const {},
-  );
 
   @override
   final MappableFields<DriverHomeState> fields = const {
@@ -99,7 +91,6 @@ class DriverHomeStateMapper extends ClassMapperBase<DriverHomeState> {
     #isLoading: _f$isLoading,
     #error: _f$error,
     #message: _f$message,
-    #ongoingOperations: _f$ongoingOperations,
   };
 
   static DriverHomeState _instantiate(DecodingData data) {
@@ -113,7 +104,6 @@ class DriverHomeStateMapper extends ClassMapperBase<DriverHomeState> {
       isLoading: data.dec(_f$isLoading),
       error: data.dec(_f$error),
       message: data.dec(_f$message),
-      ongoingOperations: data.dec(_f$ongoingOperations),
     );
   }
 
@@ -189,7 +179,6 @@ abstract class DriverHomeStateCopyWith<$R, $In extends DriverHomeState, $Out>
     bool? isLoading,
     BaseError? error,
     String? message,
-    Set<String>? ongoingOperations,
   });
   DriverHomeStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -215,7 +204,6 @@ class _DriverHomeStateCopyWithImpl<$R, $Out>
     bool? isLoading,
     Object? error = $none,
     Object? message = $none,
-    Set<String>? ongoingOperations,
   }) => $apply(
     FieldCopyWithData({
       if (myDriver != $none) #myDriver: myDriver,
@@ -227,7 +215,6 @@ class _DriverHomeStateCopyWithImpl<$R, $Out>
       if (isLoading != null) #isLoading: isLoading,
       if (error != $none) #error: error,
       if (message != $none) #message: message,
-      if (ongoingOperations != null) #ongoingOperations: ongoingOperations,
     }),
   );
   @override
@@ -241,10 +228,6 @@ class _DriverHomeStateCopyWithImpl<$R, $Out>
     isLoading: data.get(#isLoading, or: $value.isLoading),
     error: data.get(#error, or: $value.error),
     message: data.get(#message, or: $value.message),
-    ongoingOperations: data.get(
-      #ongoingOperations,
-      or: $value.ongoingOperations,
-    ),
   );
 
   @override

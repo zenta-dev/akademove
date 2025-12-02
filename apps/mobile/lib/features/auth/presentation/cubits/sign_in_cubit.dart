@@ -8,18 +8,23 @@ class SignInCubit extends BaseCubit<SignInState> {
       super(SignInState.initial());
   final AuthRepository _authRepository;
 
-  Future<void> signIn(String email, String password) async {
-    try {
-      emit(SignInState.loading());
-      final res = await _authRepository.signIn(
-        SignInRequest(email: email, password: password),
-      );
-      emit(SignInState.success(res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e('[SignInCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(SignInState.failure(e));
-    }
-  }
+  Future<void> signIn(String email, String password) async =>
+      await taskManager.execute('SC-sI1-$email', () async {
+        try {
+          emit(SignInState.loading());
+          final res = await _authRepository.signIn(
+            SignInRequest(email: email, password: password),
+          );
+          emit(SignInState.success(res.data, message: res.message));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[SignInCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(SignInState.failure(e));
+        }
+      });
 
   void reset() => emit(SignInState.initial());
 }

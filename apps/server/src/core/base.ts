@@ -124,7 +124,7 @@ export class BaseDurableObject extends DurableObject {
 
 export abstract class BaseRepository {
 	readonly #tableName: DatabaseName;
-	readonly #kv: KeyValueService;
+	protected readonly kv: KeyValueService;
 	protected readonly db: DatabaseService;
 
 	constructor(
@@ -133,7 +133,7 @@ export abstract class BaseRepository {
 		database: DatabaseService,
 	) {
 		this.#tableName = table;
-		this.#kv = kv;
+		this.kv = kv;
 		this.db = database;
 	}
 
@@ -145,7 +145,7 @@ export abstract class BaseRepository {
 		key: string,
 		options?: { fallback?: PromiseFn<T> },
 	): Promise<T> {
-		return await this.#kv.get(this.#composeCacheKey(key), options);
+		return await this.kv.get(this.#composeCacheKey(key), options);
 	}
 
 	protected async setCache<T>(
@@ -154,7 +154,7 @@ export abstract class BaseRepository {
 		opts?: PutCacheOptions,
 	): Promise<void> {
 		try {
-			await this.#kv.put(this.#composeCacheKey(key), data, {
+			await this.kv.put(this.#composeCacheKey(key), data, {
 				expirationTtl: opts?.expirationTtl ?? CACHE_TTLS["7d"],
 			});
 		} catch {}
@@ -162,7 +162,7 @@ export abstract class BaseRepository {
 
 	protected async deleteCache(key: string): Promise<void> {
 		try {
-			await this.#kv.delete(this.#composeCacheKey(key));
+			await this.kv.delete(this.#composeCacheKey(key));
 		} catch {}
 	}
 

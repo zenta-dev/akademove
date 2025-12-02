@@ -57,9 +57,8 @@ export const RejectOrderDialog = ({
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const merchant = useMyMerchant();
 
-	const form = useForm<RejectOrderForm>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(RejectOrderSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(RejectOrderSchema),
 		defaultValues: {
 			reason: "OUT_OF_STOCK",
 			note: "",

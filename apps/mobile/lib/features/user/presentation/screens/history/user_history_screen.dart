@@ -14,15 +14,19 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 class UserHistoryScreen extends StatelessWidget {
   const UserHistoryScreen({super.key});
 
-  Widget _buildFail(BuildContext context, {required String message}) =>
-      Container(
-        width: double.infinity,
-        padding: EdgeInsets.only(top: 16.dg),
-        child: OopsAlertWidget(
-          message: message,
-          onRefresh: () => context.read<UserOrderCubit>().list(),
+  Widget _buildFail(BuildContext context, {required String message}) => Column(
+    children: [
+      IntrinsicHeight(
+        child: SizedBox(
+          width: double.infinity,
+          child: OopsAlertWidget(
+            message: message,
+            onRefresh: () => context.read<UserOrderCubit>().list(),
+          ),
         ),
-      );
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {

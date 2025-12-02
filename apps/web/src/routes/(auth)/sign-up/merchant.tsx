@@ -69,8 +69,7 @@ function RouteComponent() {
 
 	const router = useRouter();
 	const form = useForm({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(FlatSignUpMerchantSchema) as any,
+		resolver: zodResolver(FlatSignUpMerchantSchema),
 		defaultValues: {
 			...createDefaults(FlatSignUpMerchantSchema, {
 				overrides: {
@@ -603,7 +602,7 @@ function RouteComponent() {
 											<Input
 												disabled={mutation.isPending}
 												{...field}
-												value={field.value as string}
+												value={field.value}
 											/>
 										</FormControl>
 										<FormMessage />

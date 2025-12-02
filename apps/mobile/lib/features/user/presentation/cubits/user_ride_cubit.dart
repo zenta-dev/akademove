@@ -24,80 +24,77 @@ class UserRideCubit extends BaseCubit<UserRideState> {
     emit(state.setMapController(controller));
   }
 
-  Future<void> getNearbyDrivers(GetDriverNearbyQuery req) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> getNearbyDrivers(GetDriverNearbyQuery req) async =>
+      await taskManager.execute("URC-gND-${req.hashCode}", () async {
+        try {
+          emit(state.toLoading());
 
-      final res = await _driverRepository.getDriverNearby(req);
+          final res = await _driverRepository.getDriverNearby(req);
 
-      final mergedList = {
-        for (final item in state.nearbyDrivers) item.id: item,
-        for (final item in res.data) item.id: item,
-      }.values.toList();
+          final mergedList = {
+            for (final item in state.nearbyDrivers) item.id: item,
+            for (final item in res.data) item.id: item,
+          }.values.toList();
 
-      state.unAssignOperation(methodName);
-      emit(state.toSuccess(nearbyDrivers: mergedList, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toSuccess(nearbyDrivers: state.nearbyDrivers));
-    }
-  }
+          emit(
+            state.toSuccess(nearbyDrivers: mergedList, message: res.message),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserRideCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toSuccess(nearbyDrivers: state.nearbyDrivers));
+        }
+      });
 
   Future<void> getNearbyPlaces(
     Coordinate coord, {
     bool isRefresh = false,
-  }) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      if (isRefresh && state.nearbyPlaces.token == null) {
-        emit(state.toLoading());
-      }
+  }) async => await taskManager.execute(
+    'URC-gNP-${coord.hashCode}-$isRefresh',
+    () async {
+      try {
+        if (isRefresh && state.nearbyPlaces.token == null) {
+          emit(state.toLoading());
+        }
 
-      final res = await _mapService.nearbyLocation(
-        coord,
-        nextPageToken: isRefresh ? null : state.nearbyPlaces.token,
-      );
+        final res = await _mapService.nearbyLocation(
+          coord,
+          nextPageToken: isRefresh ? null : state.nearbyPlaces.token,
+        );
 
-      final mergedList = isRefresh
-          ? res.data
-          : [...state.nearbyPlaces.data, ...res.data];
+        final mergedList = isRefresh
+            ? res.data
+            : [...state.nearbyPlaces.data, ...res.data];
 
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          nearbyPlaces: PageTokenPaginationResult(
-            data: mergedList,
-            token: res.token,
+        emit(
+          state.toSuccess(
+            nearbyPlaces: PageTokenPaginationResult(
+              data: mergedList,
+              token: res.token,
+            ),
           ),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toSuccess(nearbyPlaces: state.nearbyPlaces));
-    }
-  }
+        );
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserRideCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.toSuccess(nearbyPlaces: state.nearbyPlaces));
+      }
+    },
+  );
 
   String? _searchQuery;
   Future<void> searchPlaces(
     String query, {
     Coordinate? coordinate,
     bool isRefresh = false,
-  }) async {
+  }) async => await taskManager.execute('URC-sP-$query', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-
       final isNewQuery = _searchQuery != query;
       if (isNewQuery || (isRefresh && state.searchPlaces.token == null)) {
         emit(state.toLoading());
@@ -117,7 +114,6 @@ class UserRideCubit extends BaseCubit<UserRideState> {
 
       _searchQuery = query;
 
-      state.unAssignOperation(methodName);
       emit(
         state.toSuccess(
           searchPlaces: PageTokenPaginationResult(
@@ -134,7 +130,7 @@ class UserRideCubit extends BaseCubit<UserRideState> {
       );
       emit(state.toSuccess(searchPlaces: state.searchPlaces));
     }
-  }
+  });
 
   Future<List<Coordinate>> getRoutes(
     Coordinate origin,

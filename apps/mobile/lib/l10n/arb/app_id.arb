@@ -1,6 +1,5 @@
 {
 	"@@locale": "id",
-	
 	"hello": "Halo",
 	"light_mode": "Mode Terang",
 	"dark_mode": "Mode Gelap",
@@ -37,7 +36,7 @@
 	"destination": "Tujuan",
 	"special_instructions": "Instruksi Khusus (Opsional)",
 	"special_instructions_hint": "mis., 'Harap tangani dengan hati-hati', 'Telepon sebelum mengantarkan'",
-	
+	"delivery_service": "Layanan Pengiriman",
 	"button_cancel": "Batal",
 	"button_continue": "Lanjutkan",
 	"button_back": "Kembali",
@@ -58,7 +57,6 @@
 	"button_copy_qr_url": "Salin URL QR",
 	"button_top_up": "Isi Ulang",
 	"button_retry": "Coba Lagi",
-	
 	"label_name": "Nama",
 	"label_email": "Email",
 	"label_phone": "Telepon",
@@ -140,7 +138,6 @@
 	"label_step_2": "Langkah 2",
 	"label_step_3": "Langkah 3",
 	"label_step_4": "Langkah 4",
-	
 	"placeholder_email": "john@gmail.com",
 	"placeholder_password": "********",
 	"placeholder_name": "John Doe",
@@ -155,7 +152,6 @@
 	"placeholder_search_location": "Cari lokasi (mis., Monas Jakarta)",
 	"placeholder_share_experience": "Bagikan pengalaman Anda...",
 	"placeholder_emergency_description": "Jelaskan situasi darurat...",
-	
 	"screen_title_sign_up_choice": "Mulai Perjalanan Anda Bersama Kami!",
 	"screen_title_driver_sign_up_step1": "Ceritakan sedikit tentang diri Anda untuk memulai!",
 	"screen_title_driver_sign_up_step2": "Unggah foto dan dokumen Anda untuk verifikasi akun!",
@@ -188,7 +184,6 @@
 	"screen_title_trip_details": "Detail Perjalanan",
 	"screen_title_create_menu": "Buat Menu",
 	"screen_title_edit_menu": "Sunting Menu",
-	
 	"dialog_title_sign_up_success": "Pendaftaran Berhasil",
 	"dialog_title_sign_up_failed": "Pendaftaran Gagal",
 	"dialog_title_location_permission": "Izin Lokasi",
@@ -214,16 +209,13 @@
 	"dialog_title_delete_schedule": "Hapus Jadwal",
 	"dialog_title_accept_order": "Terima Pesanan",
 	"dialog_title_delete_menu": "Hapus Menu",
-	
 	"description_user_role": "Nikmati perjalanan yang nyaman dan aman ke tujuan Anda.",
 	"description_driver_role": "Dapatkan penghasilan tambahan dengan mengemudi bersama kami.",
 	"description_merchant_role": "Perluas jangkauan bisnis Anda dengan platform kami.",
 	"description_forgot_password": "Masukkan email Anda untuk menerima instruksi reset kata sandi",
 	"description_reset_password": "Masukkan kata sandi baru Anda",
-	
 	"helper_outlet_category": "Pilih kategori utama untuk outlet Anda",
 	"helper_outlet_location": "Cari lokasi, ketuk peta, atau geser penanda",
-	
 	"error_password_mismatch": "Kata sandi tidak cocok",
 	"error_file_required": "File tidak boleh kosong",
 	"error_photo_pick_failed": "Gagal memilih foto",
@@ -251,7 +243,6 @@
 	"error_fill_all_fields": "Mohon isi semua kolom dengan benar",
 	"error_enter_bank_account": "Mohon masukkan nomor rekening bank",
 	"error_select_bank_first": "Mohon pilih bank terlebih dahulu",
-	
 	"success_sign_up": "Pendaftaran berhasil",
 	"success_location_found": "Penanda dipindahkan ke lokasi yang dicari",
 	"success_review_submitted": "Ulasan berhasil dikirim",
@@ -259,7 +250,6 @@
 	"success_qr_url_copied": "URL QR disalin ke clipboard",
 	"success_menu_updated": "Menu berhasil diperbarui",
 	"success_bank_verified": "Rekening bank berhasil diverifikasi",
-	
 	"message_remember_password": "Ingat kata sandi Anda?",
 	"message_location_default": "Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.",
 	"message_location_permission_required": "Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.",
@@ -284,7 +274,6 @@
 	"message_confirm_accept_order": "Apakah Anda yakin ingin menerima pesanan ini?",
 	"message_confirm_delete_menu": "Apakah Anda yakin ingin menghapus menu ini?",
 	"message_select_reject_reason": "Mohon pilih alasan untuk menolak pesanan ini:",
-	
 	"status_dragging_marker": "Menggeser...",
 	"status_welcome_back": "Selamat datang kembali!",
 	"status_license_plate": "Nomor Kendaraan: ",
@@ -312,7 +301,6 @@
 	"status_start_delivery": "Mulai Pengiriman",
 	"status_choose_pickup_destination": "Pilih titik penjemputan dan tujuan Anda!",
 	"status_rating_score": "Rating: {score} / 5.0",
-	
 	"action_take_photo": "Ambil foto",
 	"action_choose_gallery": "Pilih dari galeri",
 	"action_remove_image": "Hapus gambar"

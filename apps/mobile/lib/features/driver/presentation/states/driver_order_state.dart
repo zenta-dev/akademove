@@ -13,7 +13,6 @@ class DriverOrderState with DriverOrderStateMappable {
     this.isLoading = false,
     this.error,
     this.message,
-    this.ongoingOperations = const {},
   });
 
   final Order? currentOrder;
@@ -22,19 +21,9 @@ class DriverOrderState with DriverOrderStateMappable {
   final bool isLoading;
   final BaseError? error;
   final String? message;
-  final Set<String> ongoingOperations;
 
   bool get isSuccess => error == null && !isLoading;
   bool get isFailure => error != null;
-
-  bool checkAndAssignOperation(String operationName) {
-    if (ongoingOperations.contains(operationName)) return true;
-    return false;
-  }
-
-  void unAssignOperation(String operationName) {
-    ongoingOperations.remove(operationName);
-  }
 
   DriverOrderState toLoading() {
     return copyWith(isLoading: true, error: null, message: null);

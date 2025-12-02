@@ -24,9 +24,8 @@ import { orpcQuery, queryClient } from "@/lib/orpc";
 export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const form = useForm<UnbanUser>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(UnbanUserSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(UnbanUserSchema),
 		defaultValues: { id: userId },
 	});
 

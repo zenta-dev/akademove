@@ -11,49 +11,46 @@ class UserProfileCubit extends BaseCubit<UserProfileState> {
 
   void reset() => emit(UserProfileState());
 
-  Future<void> updateProfile(UpdateProfileRequest req) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> updateProfile(UpdateProfileRequest req) async =>
+      await taskManager.execute('UPC-uP', () async {
+        try {
+          emit(state.toLoading());
+          final res = await _userRepository.updateProfile(req);
+          emit(
+            state.toSuccess(
+              updateProfileResult: res.data,
+              message: res.message,
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserProfileCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-      final res = await _userRepository.updateProfile(req);
+  Future<void> updatePassword(UpdateUserPassword req) async =>
+      await taskManager.execute('UPC-uPW', () async {
+        try {
+          emit(state.toLoading());
+          final res = await _userRepository.updatePassword(req);
+          emit(
+            state.toSuccess(
+              updatePasswordResult: res.data,
+              message: res.message,
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserProfileCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
 
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(updateProfileResult: res.data, message: res.message),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserProfileCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-
-      emit(state.toFailure(e));
-    }
-  }
-
-  Future<void> updatePassword(UpdateUserPassword req) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
-
-      final res = await _userRepository.updatePassword(req);
-
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(updatePasswordResult: res.data, message: res.message),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserProfileCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-
-      emit(state.toFailure(e));
-    }
-  }
+          emit(state.toFailure(e));
+        }
+      });
 }

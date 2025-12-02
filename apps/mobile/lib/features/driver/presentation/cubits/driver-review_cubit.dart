@@ -3,8 +3,8 @@ import 'package:akademove/features/driver/data/repositories/_export.dart';
 import 'package:akademove/features/driver/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 
-class ReviewCubit extends BaseCubit<ReviewState> {
-  ReviewCubit({required ReviewRepository reviewRepository})
+class DriverReviewCubit extends BaseCubit<ReviewState> {
+  DriverReviewCubit({required ReviewRepository reviewRepository})
     : _reviewRepository = reviewRepository,
       super(const ReviewState());
 
@@ -17,7 +17,7 @@ class ReviewCubit extends BaseCubit<ReviewState> {
     required ReviewCategory category,
     required num score,
     String? comment,
-  }) async {
+  }) async => await taskManager.execute('DRC-sR1-$orderId', () async {
     try {
       emit(state.toLoading());
 
@@ -38,46 +38,51 @@ class ReviewCubit extends BaseCubit<ReviewState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
   /// Load reviews received by the current user (driver)
-  Future<void> loadMyReviews({bool refresh = false}) async {
-    try {
-      if (refresh) {
-        emit(const ReviewState().toLoading());
-      } else {
-        if (!state.hasMore || state.isLoading) return;
-        emit(state.toLoading());
-      }
+  Future<void> loadMyReviews({
+    bool refresh = false,
+  }) async => await taskManager.execute(
+    'DRC-lMR1-${refresh ? "refresh" : "loadMore"}-${state.cursor ?? "start"}',
+    () async {
+      try {
+        if (refresh) {
+          emit(const ReviewState().toLoading());
+        } else {
+          if (!state.hasMore || state.isLoading) return;
+          emit(state.toLoading());
+        }
 
-      final res = await _reviewRepository.getMyReviews(
-        limit: 20,
-        cursor: refresh ? null : state.cursor,
-      );
+        final res = await _reviewRepository.getMyReviews(
+          limit: 20,
+          cursor: refresh ? null : state.cursor,
+        );
 
-      if (refresh) {
-        emit(
-          state.toSuccess(
-            reviews: res.data,
-            cursor: (res as dynamic).pagination?.cursor,
-            hasMore: (res as dynamic).pagination?.cursor != null,
-            message: res.message,
-          ),
+        if (refresh) {
+          emit(
+            state.toSuccess(
+              reviews: res.data,
+              cursor: (res as dynamic).pagination?.cursor,
+              hasMore: (res as dynamic).pagination?.cursor != null,
+              message: res.message,
+            ),
+          );
+        } else {
+          emit(
+            state.appendReviews(res.data, (res as dynamic).pagination?.cursor),
+          );
+        }
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[ReviewCubit] Failed to load reviews: ${e.message}',
+          error: e,
+          stackTrace: st,
         );
-      } else {
-        emit(
-          state.appendReviews(res.data, (res as dynamic).pagination?.cursor),
-        );
+        emit(state.toFailure(e));
       }
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[ReviewCubit] Failed to load reviews: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+    },
+  );
 
   /// Load more reviews (pagination)
   Future<void> loadMoreReviews() async {

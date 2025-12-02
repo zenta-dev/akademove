@@ -42,105 +42,97 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     return super.close();
   }
 
-  Future<void> acceptOrder(String orderId) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> acceptOrder(String orderId) async =>
+      await taskManager.execute('DOC-aO1-$orderId', () async {
+        try {
+          emit(state.toLoading());
 
-      final res = await _orderRepository.update(
-        orderId,
-        const UpdateOrder(status: OrderStatus.ACCEPTED),
-      );
+          final res = await _orderRepository.update(
+            orderId,
+            const UpdateOrder(status: OrderStatus.ACCEPTED),
+          );
 
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          currentOrder: res.data,
-          orderStatus: res.data.status,
-          message: res.message,
-        ),
-      );
+          emit(
+            state.toSuccess(
+              currentOrder: res.data,
+              orderStatus: res.data.status,
+              message: res.message,
+            ),
+          );
 
-      // Set up WebSocket for this order
-      await _setupOrderWebSocket(orderId);
-      _startLocationTracking();
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverOrderCubit] - Error accepting order: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          await _setupOrderWebSocket(orderId);
+          _startLocationTracking();
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverOrderCubit] - Error accepting order: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-  Future<void> rejectOrder(String orderId, {String? reason}) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> rejectOrder(String orderId, {String? reason}) async =>
+      await taskManager.execute('DOC-rO2-$orderId', () async {
+        try {
+          emit(state.toLoading());
 
-      await _orderRepository.update(
-        orderId,
-        const UpdateOrder(
-          status: OrderStatus.CANCELLED_BY_DRIVER,
-          // Note: Backend should handle reject reason
-        ),
-      );
+          await _orderRepository.update(
+            orderId,
+            const UpdateOrder(
+              status: OrderStatus.CANCELLED_BY_DRIVER,
+              // Note: Backend should handle reject reason
+            ),
+          );
 
-      state.unAssignOperation(methodName);
-      emit(state.clearOrder());
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverOrderCubit] - Error rejecting order: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          emit(state.clearOrder());
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverOrderCubit] - Error rejecting order: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-  Future<void> updateOrderStatus(OrderStatus newStatus) async {
-    final orderId = _currentOrderId;
-    if (orderId == null) return;
+  Future<void> updateOrderStatus(OrderStatus newStatus) async =>
+      await taskManager.execute('DOC-uOS5-$newStatus', () async {
+        final orderId = _currentOrderId;
+        if (orderId == null) return;
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+        try {
+          emit(state.toLoading());
 
-      final res = await _orderRepository.update(
-        orderId,
-        UpdateOrder(status: newStatus),
-      );
+          final res = await _orderRepository.update(
+            orderId,
+            UpdateOrder(status: newStatus),
+          );
 
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          currentOrder: res.data,
-          orderStatus: res.data.status,
-          message: res.message,
-        ),
-      );
+          emit(
+            state.toSuccess(
+              currentOrder: res.data,
+              orderStatus: res.data.status,
+              message: res.message,
+            ),
+          );
 
-      // Stop location tracking if order is completed or cancelled
-      if (newStatus == OrderStatus.COMPLETED ||
-          newStatus == OrderStatus.CANCELLED_BY_USER ||
-          newStatus == OrderStatus.CANCELLED_BY_DRIVER ||
-          newStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
-        _stopLocationTracking();
-        await teardownWebSocket();
-      }
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverOrderCubit] - Error updating order status: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          if (newStatus == OrderStatus.COMPLETED ||
+              newStatus == OrderStatus.CANCELLED_BY_USER ||
+              newStatus == OrderStatus.CANCELLED_BY_DRIVER ||
+              newStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
+            _stopLocationTracking();
+            await teardownWebSocket();
+          }
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverOrderCubit] - Error updating order status: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
   Future<void> markArrived() async {
     await updateOrderStatus(OrderStatus.ARRIVING);
@@ -161,14 +153,12 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   void _startLocationTracking() {
-    // Send location update every 10 seconds during active trip
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
       _,
     ) async {
       await _updateLocation();
     });
-    // Send immediate location update
     _updateLocation();
   }
 
@@ -176,12 +166,12 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     _locationUpdateTimer?.cancel();
   }
 
-  Future<void> _updateLocation() async {
+  Future<void>
+  _updateLocation() async => await taskManager.execute('DOC-uL1', () async {
     final orderId = _currentOrderId;
     if (orderId == null) return;
 
     try {
-      // Check permission
       final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
@@ -189,14 +179,12 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         return;
       }
 
-      // Get current position
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
         ),
       );
 
-      // Get driver profile to get ID
       final driverRes = await _driverRepository.getMine();
 
       // Update location on server
@@ -218,7 +206,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
         stackTrace: st,
       );
     }
-  }
+  });
 
   Future<void> _setupOrderWebSocket(String orderId) async {
     try {

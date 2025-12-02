@@ -59,7 +59,7 @@ export function RateOrderDialog({
 }: RateOrderDialogProps) {
 	const [hoveredStar, setHoveredStar] = useState(0);
 
-	const form = useForm<z.infer<typeof InsertReviewSchema>>({
+	const form = useForm({
 		resolver: zodResolver(InsertReviewSchema),
 		defaultValues: {
 			orderId,
@@ -73,9 +73,10 @@ export function RateOrderDialog({
 
 	const createReviewMutation = useMutation(
 		orpcQuery.review.create.mutationOptions({
-			mutationFn: async (data: z.infer<typeof InsertReviewSchema>) => {
+			mutationFn: async (data: unknown) => {
+				const parsed = InsertReviewSchema.parse(data);
 				const result = await orpcClient.review.create({
-					body: data,
+					body: parsed,
 				});
 				if (result.status !== 200) throw new Error(result.body.message);
 				return result;
@@ -93,12 +94,14 @@ export function RateOrderDialog({
 		}),
 	);
 
-	const onSubmit = (values: z.infer<typeof InsertReviewSchema>) => {
-		if (values.score === 0) {
+	const onSubmit = (values: unknown) => {
+		const parsedValues = InsertReviewSchema.parse(values);
+
+		if (parsedValues.score === 0) {
 			toast.error("Please select a rating");
 			return;
 		}
-		createReviewMutation.mutate(values);
+		createReviewMutation.mutate({ body: parsedValues });
 	};
 
 	const currentScore = form.watch("score");

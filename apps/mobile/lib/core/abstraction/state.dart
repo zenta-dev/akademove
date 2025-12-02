@@ -45,7 +45,7 @@ abstract class BaseState2 {
   final CubitState state;
   final String? message;
   final BaseError? error;
-  List<String> operations = List.from([]);
+  // List<String> operations = List.from([]);
 
   bool get isInitial => state == CubitState.initial;
   bool get isLoading => state == CubitState.loading;
@@ -97,26 +97,26 @@ abstract class BaseState2 {
     }
   }
 
-  bool _isInOperationAndLoading(String name) {
-    try {
-      final find = operations.where((val) => val == name);
-      if (find.isNotEmpty && isLoading) return true;
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
+  // bool _isInOperationAndLoading(String name) {
+  //   try {
+  //     final find = operations.where((val) => val == name);
+  //     if (find.isNotEmpty && isLoading) return true;
+  //     return false;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 
-  bool checkAndAssignOperation(String name) {
-    final ok = _isInOperationAndLoading(name);
-    if (!ok) assignOperation(name);
-    return ok;
-  }
+  // bool checkAndAssignOperation(String name) {
+  //   final ok = _isInOperationAndLoading(name);
+  //   if (!ok) assignOperation(name);
+  //   return ok;
+  // }
 
-  void unAssignOperation(String name) =>
-      safeSync(() => operations.removeWhere((val) => val == name));
+  // void unAssignOperation(String name) =>
+  //     safeSync(() => operations.removeWhere((val) => val == name));
 
-  void assignOperation(String name) => safeSync(() => operations.add(name));
+  // void assignOperation(String name) => safeSync(() => operations.add(name));
 
   BaseState2 toInitial();
   BaseState2 toLoading();

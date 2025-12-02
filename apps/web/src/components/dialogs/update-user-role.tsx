@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { type UpdateUserRole, UpdateUserRoleSchema } from "@repo/schema/user";
+import {
+	type UpdateUserRole,
+	UpdateUserRoleSchema,
+	type UserRole,
+} from "@repo/schema/user";
 import { capitalizeFirstLetter, ROLES_TYPED } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -37,10 +41,9 @@ import { orpcQuery, queryClient } from "@/lib/orpc";
 
 export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 	const [open, setOpen] = useState(false);
-	const form = useForm<UpdateUserRole>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(UpdateUserRoleSchema) as any,
-		defaultValues: { role: "USER" },
+	const form = useForm({
+		resolver: zodResolver(UpdateUserRoleSchema),
+		defaultValues: { role: "USER" as UserRole } as const,
 	});
 
 	const mutation = useMutation(

@@ -33,9 +33,8 @@ export const Route = createFileRoute("/(auth)/forgot-password")({
 });
 
 function RouteComponent() {
-	const form = useForm<ForgotPassword>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(ForgotPasswordSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(ForgotPasswordSchema),
 		defaultValues: { email: "" },
 	});
 

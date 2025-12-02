@@ -120,6 +120,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get special_instructions_hint => 'mis., \'Harap tangani dengan hati-hati\', \'Telepon sebelum mengantarkan\'';
 
   @override
+  String get delivery_service => 'Layanan Pengiriman';
+
+  @override
   String get button_cancel => 'Batal';
 
   @override

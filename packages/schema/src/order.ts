@@ -76,6 +76,9 @@ export const OrderSchema = z.object({
 	platformCommission: z.number().optional(),
 	driverEarning: z.number().optional(),
 	merchantCommission: z.number().optional(),
+	couponId: z.string().uuid().optional(),
+	couponCode: z.string().optional(),
+	discountAmount: z.number().optional(),
 	note: OrderNoteSchema.optional(),
 	requestedAt: DateSchema,
 	acceptedAt: DateSchema.optional(),
@@ -116,6 +119,7 @@ export const PlaceOrderSchema = OrderSchema.pick({
 	items: true,
 	gender: true,
 }).extend({
+	couponCode: z.string().optional(),
 	payment: z.object({
 		method: PaymentMethodSchema,
 		provider: PaymentProviderSchema,

@@ -110,7 +110,10 @@ class _SignInFormViewState extends State<_SignInFormView> {
           case UserRole.ADMIN:
           case UserRole.OPERATOR:
           case null:
-            throw UnimplementedError();
+            context.showMyToast(
+              'Invalid user role, please use website to access admin features.',
+              type: ToastType.failed,
+            );
         }
       }
     }

@@ -20,71 +20,62 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
     emit(OrderChatState());
   }
 
-  Future<void> loadMessages({bool loadMore = false}) async {
-    if (_currentOrderId == null) return;
+  Future<void> loadMessages({bool loadMore = false}) async =>
+      await taskManager.execute('ORC-lM-$loadMore', () async {
+        if (_currentOrderId == null) return;
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
+        try {
+          if (!loadMore) {
+            emit(state.toLoading());
+          }
 
-      if (!loadMore) {
-        emit(state.toLoading());
-      }
+          final orderId = _currentOrderId;
+          if (orderId == null) {
+            throw StateError('Order ID is null');
+          }
 
-      final orderId = _currentOrderId;
-      if (orderId == null) {
-        throw StateError('Order ID is null');
-      }
+          final res = await _orderChatRepository.listMessages(
+            ListOrderChatMessagesQuery(
+              orderId: orderId,
+              limit: 50,
+              cursor: loadMore ? state.nextCursor : null,
+            ),
+          );
 
-      final res = await _orderChatRepository.listMessages(
-        ListOrderChatMessagesQuery(
-          orderId: orderId,
-          limit: 50,
-          cursor: loadMore ? state.nextCursor : null,
-        ),
-      );
+          final existingMessages = loadMore
+              ? (state.messages ?? [])
+              : <OrderChatMessage>[];
+          final newMessages = [...existingMessages, ...res.data.rows];
 
-      state.unAssignOperation(methodName);
+          emit(
+            state.toSuccess(
+              messages: newMessages,
+              hasMore: res.data.hasMore,
+              nextCursor: res.data.nextCursor,
+              message: res.message,
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[OrderChatCubit] - Error loading messages: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-      final existingMessages = loadMore
-          ? (state.messages ?? [])
-          : <OrderChatMessage>[];
-      final newMessages = [...existingMessages, ...res.data.rows];
-
-      emit(
-        state.toSuccess(
-          messages: newMessages,
-          hasMore: res.data.hasMore,
-          nextCursor: res.data.nextCursor,
-          message: res.message,
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[OrderChatCubit] - Error loading messages: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
-
-  Future<void> sendMessage(String message) async {
+  Future<void> sendMessage(
+    String message,
+  ) async => await taskManager.execute('ORC-sM-$message', () async {
     final orderId = _currentOrderId;
     if (orderId == null) return;
     if (message.trim().isEmpty) return;
-
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-
       final res = await _orderChatRepository.sendMessage(
         SendOrderChatMessageRequest(orderId: orderId, message: message.trim()),
       );
 
-      state.unAssignOperation(methodName);
-
-      // Add the new message to the top of the list (most recent first)
       final existingMessages = state.messages ?? [];
       final updatedMessages = [res.data, ...existingMessages];
 
@@ -97,7 +88,7 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
   Future<void> loadMoreMessages() async {
     if (!state.hasMore) return;

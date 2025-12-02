@@ -22,6 +22,7 @@ import {
 } from "@repo/schema/order";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
+import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { count, eq, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
@@ -125,25 +126,22 @@ export class OrderRepository extends BaseRepository {
 	): Order {
 		return {
 			...item,
-			user: item.user ? { name: item.user.name } : undefined,
-			driver: item.driver ? { user: item.driver.user } : undefined,
-			merchant: item.merchant ? { name: item.merchant.name } : undefined,
-			driverId: item.driverId ?? undefined,
-			merchantId: item.merchantId ?? undefined,
-			note: item.note ?? undefined,
+			...nullsToUndefined(item),
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
-			platformCommission: item.platformCommission ?? undefined,
-			driverEarning: item.driverEarning ?? undefined,
-			merchantCommission: item.merchantCommission ?? undefined,
-			acceptedAt: item.acceptedAt ?? undefined,
-			preparedAt: item.preparedAt ?? undefined,
-			readyAt: item.readyAt ?? undefined,
-			arrivedAt: item.arrivedAt ?? undefined,
-			cancelReason: item.cancelReason ?? undefined,
-			gender: item.gender ?? undefined,
-			genderPreference: item.genderPreference ?? undefined,
+			platformCommission: item.platformCommission
+				? toNumberSafe(item.platformCommission)
+				: undefined,
+			driverEarning: item.driverEarning
+				? toNumberSafe(item.driverEarning)
+				: undefined,
+			merchantCommission: item.merchantCommission
+				? toNumberSafe(item.merchantCommission)
+				: undefined,
+			discountAmount: item.discountAmount
+				? toNumberSafe(item.discountAmount)
+				: undefined,
 		};
 	}
 
@@ -566,6 +564,62 @@ export class OrderRepository extends BaseRepository {
 					: Promise.resolve([]),
 			]);
 
+			// Validate and apply coupon if provided
+			let couponValidation:
+				| {
+						valid: boolean;
+						coupon?: unknown;
+						discountAmount: number;
+						reason?: string;
+				  }
+				| undefined;
+			let finalTotalCost = estimate.totalCost;
+			let couponId: string | undefined;
+			let couponCode: string | undefined;
+			let discountAmount = 0;
+
+			if (params.couponCode) {
+				// Create a CouponRepository instance
+				const couponRepo = new (
+					await import("../coupon/coupon-repository")
+				).CouponRepository(this.db, this.kv);
+
+				couponValidation = await couponRepo.validateCoupon(
+					params.couponCode,
+					estimate.totalCost,
+					params.userId,
+				);
+
+				if (!couponValidation.valid) {
+					throw new RepositoryError(
+						couponValidation.reason ?? "Invalid coupon",
+						{ code: "BAD_REQUEST" },
+					);
+				}
+
+				if (
+					couponValidation.coupon &&
+					typeof couponValidation.coupon === "object" &&
+					"id" in couponValidation.coupon
+				) {
+					couponId = couponValidation.coupon.id as string;
+				}
+				couponCode = params.couponCode;
+				discountAmount = couponValidation.discountAmount;
+				finalTotalCost = Math.max(0, estimate.totalCost - discountAmount);
+
+				log.info(
+					{
+						userId: params.userId,
+						couponCode,
+						originalPrice: estimate.totalCost,
+						discountAmount,
+						finalPrice: finalTotalCost,
+					},
+					"[OrderRepository] Coupon applied successfully",
+				);
+			}
+
 			if (!user)
 				throw new RepositoryError(`User ${params.userId} not found`, {
 					code: "NOT_FOUND",
@@ -585,8 +639,10 @@ export class OrderRepository extends BaseRepository {
 			const merchantId = menus[0]?.merchantId;
 			const now = new Date();
 
-			const safeTotalCost = toStringNumberSafe(estimate.totalCost);
+			const safeTotalCost = toStringNumberSafe(finalTotalCost);
 			const baseFare = toStringNumberSafe(estimate.config.baseFare);
+			const safeDiscountAmount =
+				discountAmount > 0 ? toStringNumberSafe(discountAmount) : undefined;
 
 			const [orderRow] = await opts.tx
 				.insert(tables.order)
@@ -601,6 +657,9 @@ export class OrderRepository extends BaseRepository {
 					distanceKm: estimate.distanceKm,
 					basePrice: baseFare,
 					totalPrice: safeTotalCost,
+					couponId,
+					couponCode,
+					discountAmount: safeDiscountAmount,
 					requestedAt: now,
 					createdAt: now,
 					updatedAt: now,
@@ -621,12 +680,16 @@ export class OrderRepository extends BaseRepository {
 
 			const chargePayload: ChargePayload = {
 				transactionType: "PAYMENT",
-				amount: estimate.totalCost,
+				amount: finalTotalCost,
 				method: params.payment.method,
 				provider: params.payment.provider,
 				userId: params.userId,
 				orderType: params.type,
-				metadata: { orderId: orderRow.id, customerId: params.userId },
+				metadata: {
+					orderId: orderRow.id,
+					customerId: params.userId,
+					...(couponCode && { couponCode, discountAmount }),
+				},
 			};
 
 			if (
@@ -779,13 +842,25 @@ export class OrderRepository extends BaseRepository {
 					basePrice: existing.basePrice
 						? toStringNumberSafe(existing.basePrice)
 						: undefined,
-					totalPrice: existing.totalPrice
-						? toStringNumberSafe(existing.totalPrice)
+					totalPrice: item.totalPrice
+						? toStringNumberSafe(item.totalPrice)
 						: undefined,
 					tip: item.tip ? toStringNumberSafe(item.tip) : undefined,
 					acceptedAt: existing.acceptedAt
 						? new Date(existing.acceptedAt)
 						: null,
+					discountAmount: item.discountAmount
+						? toStringNumberSafe(item.discountAmount)
+						: undefined,
+					platformCommission: item.platformCommission
+						? toStringNumberSafe(item.platformCommission)
+						: undefined,
+					driverEarning: item.driverEarning
+						? toStringNumberSafe(item.driverEarning)
+						: undefined,
+					merchantCommission: item.merchantCommission
+						? toStringNumberSafe(item.merchantCommission)
+						: undefined,
 					arrivedAt: existing.arrivedAt ? new Date(existing.arrivedAt) : null,
 					createdAt: new Date(existing.createdAt),
 					updatedAt: new Date(),

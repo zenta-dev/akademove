@@ -103,8 +103,7 @@ export const CouponForm = ({
 	const form = useForm({
 		resolver: zodResolver(
 			kind === "new" ? InsertCouponSchema : UpdateCouponSchema,
-			// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		) as any,
+		),
 		defaultValues:
 			kind === "edit" && coupon
 				? coupon

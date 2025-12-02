@@ -41,129 +41,115 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     return super.close();
   }
 
-  Future<void> loadDriverProfile() async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> loadDriverProfile() async =>
+      await taskManager.execute("DHC-lDP1", () async {
+        try {
+          final res = await _driverRepository.getMine();
+          _driverId = res.data.id;
 
-      final res = await _driverRepository.getMine();
-      _driverId = res.data.id;
+          emit(
+            state.toSuccess(
+              myDriver: res.data,
+              isOnline: res.data.isTakingOrder,
+              message: res.message,
+            ),
+          );
 
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          myDriver: res.data,
-          isOnline: res.data.isTakingOrder,
-          message: res.message,
-        ),
-      );
+          if (res.data.isTakingOrder) {
+            await _connectToDriverPool();
+            _startLocationTracking();
+          }
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverHomeCubit] - Error loading profile: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-      // If driver is online, start WebSocket connection
-      if (res.data.isTakingOrder) {
-        await _connectToDriverPool();
-        _startLocationTracking();
-      }
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverHomeCubit] - Error loading profile: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+  Future<void> loadTodayStats() async =>
+      await taskManager.execute('DHC-lTS2', () async {
+        try {
+          final now = DateTime.now();
+          final startOfDay = DateTime(now.year, now.month, now.day);
 
-  Future<void> loadTodayStats() async {
-    try {
-      // Get today's date range
-      final now = DateTime.now();
-      final startOfDay = DateTime(now.year, now.month, now.day);
+          final ordersRes = await _orderRepository.list(
+            ListOrderQuery(statuses: const [OrderStatus.COMPLETED]),
+          );
 
-      // Get today's completed orders
-      final ordersRes = await _orderRepository.list(
-        ListOrderQuery(statuses: const [OrderStatus.COMPLETED]),
-      );
+          final todayOrders = ordersRes.data.where((order) {
+            final orderDate = order.createdAt;
+            return orderDate.isAfter(startOfDay);
+          }).toList();
 
-      // Filter to today and calculate stats
-      final todayOrders = ordersRes.data.where((order) {
-        final orderDate = order.createdAt;
-        return orderDate.isAfter(startOfDay);
-      }).toList();
+          final todayEarnings = todayOrders.fold<num>(
+            0,
+            (sum, order) => sum + order.totalPrice,
+          );
 
-      final todayEarnings = todayOrders.fold<num>(
-        0,
-        (sum, order) => sum + order.totalPrice,
-      );
+          emit(
+            state.toSuccess(
+              todayTrips: todayOrders.length,
+              todayEarnings: todayEarnings,
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverHomeCubit] - Error loading today stats: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+        }
+      });
 
-      emit(
-        state.toSuccess(
-          todayTrips: todayOrders.length,
-          todayEarnings: todayEarnings,
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverHomeCubit] - Error loading today stats: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      // Don't emit failure for stats, just log error
-    }
-  }
+  Future<void> toggleOnlineStatus() async =>
+      await taskManager.execute('DHC-tOS3', () async {
+        final driverId = _driverId;
+        if (driverId == null) return;
 
-  Future<void> toggleOnlineStatus() async {
-    final driverId = _driverId;
-    if (driverId == null) return;
+        try {
+          final newStatus = !state.isOnline;
+          emit(state.toLoading());
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
+          final res = await _driverRepository.updateOnlineStatus(
+            driverId: driverId,
+            isOnline: newStatus,
+          );
 
-      final newStatus = !state.isOnline;
-      emit(state.toLoading());
+          emit(
+            state.toSuccess(
+              myDriver: res.data,
+              isOnline: res.data.isTakingOrder,
+              message: res.message,
+            ),
+          );
 
-      final res = await _driverRepository.updateOnlineStatus(
-        driverId: driverId,
-        isOnline: newStatus,
-      );
-
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          myDriver: res.data,
-          isOnline: res.data.isTakingOrder,
-          message: res.message,
-        ),
-      );
-
-      // Handle WebSocket and location tracking based on new status
-      if (newStatus) {
-        await _connectToDriverPool();
-        _startLocationTracking();
-      } else {
-        await _disconnectDriverPool();
-        _stopLocationTracking();
-      }
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverHomeCubit] - Error toggling online status: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          if (newStatus) {
+            await _connectToDriverPool();
+            _startLocationTracking();
+          } else {
+            await _disconnectDriverPool();
+            _stopLocationTracking();
+          }
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverHomeCubit] - Error toggling online status: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
   void _startLocationTracking() {
-    // Send location update every 10 seconds when online
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
       _,
     ) async {
       await _updateLocation();
     });
-    // Send immediate location update
     _updateLocation();
   }
 
@@ -184,14 +170,12 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
         return;
       }
 
-      // Get current position
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
         ),
       );
 
-      // Update location on server
       await _driverRepository.updateLocation(
         driverId: driverId,
         location: UpdateDriverLocationRequest(
@@ -212,59 +196,60 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     }
   }
 
-  Future<void> _connectToDriverPool() async {
-    try {
-      const driverPool = 'driver-pool';
-
-      Future<void> handleMessage(Map<String, dynamic> json) async {
+  Future<void> _connectToDriverPool() async =>
+      await taskManager.execute('DHC-cTDP5', () async {
         try {
-          final envelope = OrderEnvelope.fromJson(json);
-          logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
+          const driverPool = 'driver-pool';
 
-          if (envelope.e == OrderEnvelopeEvent.OFFER) {
-            // New order offer received
-            final order = envelope.p.detail?.order;
-            if (order != null) {
-              emit(state.toSuccess(incomingOrder: order));
+          Future<void> handleMessage(Map<String, dynamic> json) async {
+            try {
+              final envelope = OrderEnvelope.fromJson(json);
+              logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
+
+              if (envelope.e == OrderEnvelopeEvent.OFFER) {
+                // New order offer received
+                final order = envelope.p.detail?.order;
+                if (order != null) {
+                  emit(state.toSuccess(incomingOrder: order));
+                }
+              }
+
+              if (envelope.e == OrderEnvelopeEvent.CANCELED) {
+                // Order was cancelled before driver could accept
+                emit(state.clearIncomingOrder());
+              }
+
+              if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
+                // Order no longer available (accepted by another driver)
+                emit(state.clearIncomingOrder());
+              }
+            } catch (e, st) {
+              logger.e(
+                '[DriverHomeCubit] - Error handling WebSocket message: $e',
+                error: e,
+                stackTrace: st,
+              );
             }
           }
 
-          if (envelope.e == OrderEnvelopeEvent.CANCELED) {
-            // Order was cancelled before driver could accept
-            emit(state.clearIncomingOrder());
-          }
+          await _webSocketService.connect(
+            driverPool,
+            '${UrlConstants.wsBaseUrl}/$driverPool',
+            onMessage: (msg) async {
+              final json = (msg as String).parseJson();
+              if (json is Map<String, dynamic>) await handleMessage(json);
+            },
+          );
 
-          if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
-            // Order no longer available (accepted by another driver)
-            emit(state.clearIncomingOrder());
-          }
+          logger.i('[DriverHomeCubit] - Connected to driver pool WebSocket');
         } catch (e, st) {
           logger.e(
-            '[DriverHomeCubit] - Error handling WebSocket message: $e',
+            '[DriverHomeCubit] - Error connecting to driver pool: $e',
             error: e,
             stackTrace: st,
           );
         }
-      }
-
-      await _webSocketService.connect(
-        driverPool,
-        '${UrlConstants.wsBaseUrl}/$driverPool',
-        onMessage: (msg) async {
-          final json = (msg as String).parseJson();
-          if (json is Map<String, dynamic>) await handleMessage(json);
-        },
-      );
-
-      logger.i('[DriverHomeCubit] - Connected to driver pool WebSocket');
-    } catch (e, st) {
-      logger.e(
-        '[DriverHomeCubit] - Error connecting to driver pool: $e',
-        error: e,
-        stackTrace: st,
-      );
-    }
-  }
+      });
 
   Future<void> _disconnectDriverPool() async {
     try {

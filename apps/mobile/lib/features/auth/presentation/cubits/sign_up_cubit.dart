@@ -20,7 +20,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String password,
     required String confirmPassword,
     required String? photoPath,
-  }) async {
+  }) async => await taskManager.execute('SC-sU1-$email', () async {
     try {
       emit(SignUpState.loading());
       final photo = photoPath != null
@@ -40,7 +40,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       logger.e('[SignUpCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(SignUpState.failure(e));
     }
-  }
+  });
 
   Future<void> signUpDriver({
     required String name,
@@ -57,7 +57,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
     required String vehicleCertificatePath,
     required BankProvider bankProvider,
     required int bankNumber,
-  }) async {
+  }) async => await taskManager.execute('SC-sD1-$email', () async {
     try {
       emit(SignUpState.loading());
       final photo = await MultipartFile.fromFile(photoPath);
@@ -83,7 +83,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       logger.e('[SignUpCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(SignUpState.failure(e));
     }
-  }
+  });
 
   Future<void> signUpMerchant({
     required String ownerName,
@@ -104,7 +104,7 @@ class SignUpCubit extends BaseCubit<SignUpState> {
 
     required String? photoPath,
     required String? documentPath,
-  }) async {
+  }) async => await taskManager.execute('SC-sM1-$ownerEmail', () async {
     try {
       emit(SignUpState.loading());
       final photo = photoPath != null
@@ -136,5 +136,5 @@ class SignUpCubit extends BaseCubit<SignUpState> {
       logger.e('[SignUpCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(SignUpState.failure(e));
     }
-  }
+  });
 }

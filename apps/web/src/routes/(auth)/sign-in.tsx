@@ -37,9 +37,8 @@ function RouteComponent() {
 	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 
-	const form = useForm<SignIn>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(SignInSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(SignInSchema),
 		defaultValues: { email: "", password: "" },
 	});
 

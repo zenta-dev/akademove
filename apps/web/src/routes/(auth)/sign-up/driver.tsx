@@ -110,8 +110,7 @@ function RouteComponent() {
 
 	const form = useForm({
 		disabled: mutation.isPending,
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(FlatSignUpDriverSchema) as any,
+		resolver: zodResolver(FlatSignUpDriverSchema),
 		defaultValues: {
 			name: "",
 			email: "",

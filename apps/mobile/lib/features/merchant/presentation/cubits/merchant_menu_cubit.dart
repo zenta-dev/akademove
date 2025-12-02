@@ -11,7 +11,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
   final MerchantRepository _merchantRepository;
 
   Future<void> init({required String merchantId}) async {
-    await taskManager.execute('init', () async {
+    await taskManager.execute('init-$merchantId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.getMenuList(
@@ -35,7 +35,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     int? limit,
     String? query,
   }) async {
-    await taskManager.execute('loadMenuList', () async {
+    await taskManager.execute('loadMenuList-$merchantId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.getMenuList(
@@ -60,7 +60,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     required String merchantId,
     required String menuId,
   }) async {
-    await taskManager.execute('getMenu', () async {
+    await taskManager.execute('getMenu-$merchantId-$menuId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.getMenu(
@@ -87,7 +87,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     String? category,
     MultipartFile? image,
   }) async {
-    await taskManager.execute('createMenu', () async {
+    await taskManager.execute('createMenu-$merchantId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.createMenu(
@@ -129,7 +129,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     String? category,
     MultipartFile? image,
   }) async {
-    await taskManager.execute('updateMenu', () async {
+    await taskManager.execute('updateMenu-$merchantId-$menuId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.updateMenu(
@@ -172,7 +172,7 @@ class MerchantMenuCubit extends BaseCubit<MerchantMenuState> {
     required String merchantId,
     required String menuId,
   }) async {
-    await taskManager.execute('deleteMenu', () async {
+    await taskManager.execute('deleteMenu-$merchantId-$menuId', () async {
       try {
         emit(state.toLoading());
         final res = await _merchantRepository.deleteMenu(

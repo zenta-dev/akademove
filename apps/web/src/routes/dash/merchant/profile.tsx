@@ -253,8 +253,7 @@ function EditMerchantProfile({
 	);
 
 	const form = useForm({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(FlatUpdateMerchantSchema) as any,
+		resolver: zodResolver(FlatUpdateMerchantSchema),
 		defaultValues: {
 			name: merchant.name || "",
 			email: merchant.email || "",

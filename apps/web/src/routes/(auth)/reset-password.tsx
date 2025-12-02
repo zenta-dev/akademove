@@ -54,9 +54,8 @@ function RouteComponent() {
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-	const form = useForm<ResetPassword>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(ResetPasswordSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(ResetPasswordSchema),
 		defaultValues: { newPassword: "", confirmPassword: "", token },
 	});
 

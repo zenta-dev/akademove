@@ -7,9 +7,7 @@ class MerchantCubit extends BaseCubit<MerchantState> {
       super(MerchantState());
   final MerchantRepository _merchantRepository;
 
-  Future<void> init() async {}
-
-  Future<void> getMine() async {
+  Future<void> getMine() async => await taskManager.execute('MC-gM1', () async {
     try {
       emit(state.toLoading());
       final res = await _merchantRepository.getMine();
@@ -22,7 +20,7 @@ class MerchantCubit extends BaseCubit<MerchantState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
   void reset() => emit(MerchantState());
 }

@@ -10,25 +10,23 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
 
   final DriverRepository _driverRepository;
 
-  Future<void> loadProfile() async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+  Future<void> loadProfile() async =>
+      await taskManager.execute('DPC-lP1', () async {
+        try {
+          emit(state.toLoading());
 
-      final res = await _driverRepository.getMine();
+          final res = await _driverRepository.getMine();
 
-      state.unAssignOperation(methodName);
-      emit(state.toSuccess(myDriver: res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverProfileCubit] - Error loading profile: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          emit(state.toSuccess(myDriver: res.data, message: res.message));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverProfileCubit] - Error loading profile: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
   Future<void> updateProfile({
     num? studentId,
@@ -37,59 +35,54 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
     DriverUpdateRequestBank? bank,
-  }) async {
-    final driver = state.myDriver;
-    if (driver == null) return;
+  }) async =>
+      await taskManager.execute('DPC-uP2-${state.myDriver?.id}', () async {
+        final driver = state.myDriver;
+        if (driver == null) return;
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+        try {
+          emit(state.toLoading());
 
-      final res = await _driverRepository.update(
-        driverId: driver.id,
-        studentId: studentId,
-        licensePlate: licensePlate,
-        studentCard: studentCard,
-        driverLicense: driverLicense,
-        vehicleCertificate: vehicleCertificate,
-        bank: bank,
-      );
+          final res = await _driverRepository.update(
+            driverId: driver.id,
+            studentId: studentId,
+            licensePlate: licensePlate,
+            studentCard: studentCard,
+            driverLicense: driverLicense,
+            vehicleCertificate: vehicleCertificate,
+            bank: bank,
+          );
 
-      state.unAssignOperation(methodName);
-      emit(state.toSuccess(myDriver: res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverProfileCubit] - Error updating profile: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          emit(state.toSuccess(myDriver: res.data, message: res.message));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverProfileCubit] - Error updating profile: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-  Future<List<DriverSchedule>> loadSchedules() async {
-    final driver = state.myDriver;
-    if (driver == null) return [];
+  Future<List<DriverSchedule>> loadSchedules() async =>
+      await taskManager.execute('DPC-lS1', () async {
+        final driver = state.myDriver;
+        if (driver == null) return [];
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return [];
+        try {
+          final res = await _driverRepository.listSchedules(driver.id);
 
-      final res = await _driverRepository.listSchedules(driver.id);
-
-      state.unAssignOperation(methodName);
-      return res.data;
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverProfileCubit] - Error loading schedules: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-      return [];
-    }
-  }
+          return res.data;
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverProfileCubit] - Error loading schedules: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+          return [];
+        }
+      });
 
   Future<void> createSchedule({
     required String name,
@@ -99,13 +92,11 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     bool? isRecurring,
     DateTime? specificDate,
     bool? isActive,
-  }) async {
+  }) async => await taskManager.execute('DPC-cS2-$name', () async {
     final driver = state.myDriver;
     if (driver == null) return;
 
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
       emit(state.toLoading());
 
       await _driverRepository.createSchedule(
@@ -122,7 +113,6 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
         ),
       );
 
-      state.unAssignOperation(methodName);
       emit(state.toSuccess(message: 'Schedule created successfully'));
     } on BaseError catch (e, st) {
       logger.e(
@@ -132,7 +122,7 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
   Future<void> updateSchedule({
     required String scheduleId,
@@ -143,13 +133,11 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     bool? isRecurring,
     DateTime? specificDate,
     bool? isActive,
-  }) async {
+  }) async => await taskManager.execute('DPC-uS3-$scheduleId', () async {
     final driver = state.myDriver;
     if (driver == null) return;
 
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
       emit(state.toLoading());
 
       await _driverRepository.updateSchedule(
@@ -166,7 +154,6 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
         ),
       );
 
-      state.unAssignOperation(methodName);
       emit(state.toSuccess(message: 'Schedule updated successfully'));
     } on BaseError catch (e, st) {
       logger.e(
@@ -176,31 +163,29 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
-  Future<void> deleteSchedule(String scheduleId) async {
-    final driver = state.myDriver;
-    if (driver == null) return;
+  Future<void> deleteSchedule(String scheduleId) async =>
+      await taskManager.execute('DPC-dS4-$scheduleId', () async {
+        final driver = state.myDriver;
+        if (driver == null) return;
 
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+        try {
+          emit(state.toLoading());
 
-      await _driverRepository.removeSchedule(
-        driverId: driver.id,
-        scheduleId: scheduleId,
-      );
+          await _driverRepository.removeSchedule(
+            driverId: driver.id,
+            scheduleId: scheduleId,
+          );
 
-      state.unAssignOperation(methodName);
-      emit(state.toSuccess(message: 'Schedule deleted successfully'));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[DriverProfileCubit] - Error deleting schedule: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          emit(state.toSuccess(message: 'Schedule deleted successfully'));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverProfileCubit] - Error deleting schedule: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 }

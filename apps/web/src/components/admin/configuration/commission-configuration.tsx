@@ -31,9 +31,8 @@ type CommissionFormData = z.infer<typeof CommissionConfigurationSchema>;
 const COMMISSION_CONFIG_KEY = "commission-rates";
 
 export function CommissionConfiguration() {
-	const form = useForm<CommissionFormData>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(CommissionConfigurationSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(CommissionConfigurationSchema),
 		defaultValues: {
 			rideCommissionRate: 0.15,
 			deliveryCommissionRate: 0.15,

@@ -7,20 +7,23 @@ class UserHomeCubit extends BaseCubit<UserHomeState> {
       super(UserHomeState());
   final MerchantRepository _merchantRepository;
 
-  Future<void> getPopulars() async {
-    try {
-      emit(state.toLoading());
-      final res = await _merchantRepository.getPopulars();
-      emit(state.toSuccess(popularMerchants: res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[MerchantCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+  Future<void> getPopulars() async => await taskManager.execute(
+    'UHC-gP1',
+    () async {
+      try {
+        emit(state.toLoading());
+        final res = await _merchantRepository.getPopulars();
+        emit(state.toSuccess(popularMerchants: res.data, message: res.message));
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[MerchantCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+        emit(state.toFailure(e));
+      }
+    },
+  );
 
   void reset() => emit(UserHomeState());
 }

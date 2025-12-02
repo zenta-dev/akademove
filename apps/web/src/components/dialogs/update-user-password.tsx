@@ -38,9 +38,8 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const [open, setOpen] = useState(false);
-	const form = useForm<UpdateUserPassword>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(UpdateUserPasswordSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(UpdateUserPasswordSchema),
 		defaultValues: {
 			oldPassword: "",
 			newPassword: "",

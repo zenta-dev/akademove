@@ -216,8 +216,7 @@ export function ConfigurationItem({
 	);
 
 	const form = useForm({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(PricingConfigurationSchema) as any,
+		resolver: zodResolver(PricingConfigurationSchema),
 		defaultValues: defaultValues,
 		values: pricing.data
 			? {

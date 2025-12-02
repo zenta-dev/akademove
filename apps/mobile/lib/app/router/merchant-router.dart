@@ -4,7 +4,7 @@ final merchantRouter = StatefulShellRoute.indexedStack(
   builder: (context, state, navigationShell) => MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
-      BlocProvider(create: (_) => sl<MerchantCubit>()..init()),
+      BlocProvider(create: (_) => sl<MerchantCubit>()),
       BlocProvider(create: (_) => sl<MerchantMenuCubit>()),
       BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
     ],
@@ -45,7 +45,7 @@ final merchantRouter = StatefulShellRoute.indexedStack(
           name: Routes.merchantOrder.name,
           path: Routes.merchantOrder.path,
           builder: (context, state) => BlocProvider.value(
-            value: BlocProvider.of<MerchantOrderCubit>(context)..init(),
+            value: BlocProvider.of<MerchantOrderCubit>(context),
             child: const MerchantOrderScreen(),
           ),
         ),

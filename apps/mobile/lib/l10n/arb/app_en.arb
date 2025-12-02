@@ -1,6 +1,5 @@
 {
 	"@@locale": "en",
-	
 	"hello": "Hello",
 	"light_mode": "Light Mode",
 	"dark_mode": "Dark Mode",
@@ -37,7 +36,7 @@
 	"destination": "Destination",
 	"special_instructions": "Special Instructions (Optional)",
 	"special_instructions_hint": "e.g., 'Please handle with care', 'Call before delivery'",
-	
+	"delivery_service": "Delivery Service",
 	"button_cancel": "Cancel",
 	"button_continue": "Continue",
 	"button_back": "Back",
@@ -58,7 +57,6 @@
 	"button_copy_qr_url": "Copy QR URL",
 	"button_top_up": "Top Up",
 	"button_retry": "Retry",
-	
 	"label_name": "Name",
 	"label_email": "Email",
 	"label_phone": "Phone",
@@ -140,7 +138,6 @@
 	"label_step_2": "Step 2",
 	"label_step_3": "Step 3",
 	"label_step_4": "Step 4",
-	
 	"placeholder_email": "john@gmail.com",
 	"placeholder_password": "********",
 	"placeholder_name": "John Doe",
@@ -155,7 +152,6 @@
 	"placeholder_search_location": "Search location (e.g., Monas Jakarta)",
 	"placeholder_share_experience": "Share your experience...",
 	"placeholder_emergency_description": "Describe the emergency situation...",
-	
 	"screen_title_sign_up_choice": "Start Your Journey with Us!",
 	"screen_title_driver_sign_up_step1": "Tell us a bit about yourself to get started!",
 	"screen_title_driver_sign_up_step2": "Upload your photo and documents to verify your account!",
@@ -188,7 +184,6 @@
 	"screen_title_trip_details": "Trip Details",
 	"screen_title_create_menu": "Create Menu",
 	"screen_title_edit_menu": "Edit Menu",
-	
 	"dialog_title_sign_up_success": "Sign Up Success",
 	"dialog_title_sign_up_failed": "Sign Up Failed",
 	"dialog_title_location_permission": "Location Permission",
@@ -221,16 +216,13 @@
 	"dialog_title_delete_schedule": "Delete Schedule",
 	"dialog_title_accept_order": "Accept Order",
 	"dialog_title_delete_menu": "Delete Menu",
-	
 	"description_user_role": "Enjoy a comfortable and safe journey to your destination.",
 	"description_driver_role": "Earn extra income by driving with us.",
 	"description_merchant_role": "Expand your business reach with our platform.",
 	"description_forgot_password": "Enter your email to receive password reset instructions",
 	"description_reset_password": "Enter your new password",
-	
 	"helper_outlet_category": "Select the main category for your outlet",
 	"helper_outlet_location": "Search for a location, tap on map, or drag the marker",
-	
 	"error_password_mismatch": "Passwords do not match",
 	"error_file_required": "File shouldn't be empty",
 	"error_photo_pick_failed": "Failed to pick photo",
@@ -258,7 +250,6 @@
 	"error_fill_all_fields": "Please fill all required fields correctly",
 	"error_enter_bank_account": "Please enter bank account number",
 	"error_select_bank_first": "Please select a bank provider first",
-	
 	"success_sign_up": "Successfully signed up",
 	"success_location_found": "Marker moved to searched location",
 	"success_review_submitted": "Review submitted successfully",
@@ -266,7 +257,6 @@
 	"success_qr_url_copied": "QR URL copied to clipboard",
 	"success_menu_updated": "Menu updated successfully",
 	"success_bank_verified": "Bank account verified successfully",
-	
 	"message_remember_password": "Remember your password?",
 	"message_location_default": "Using default location. You can drag the marker to set your outlet location.",
 	"message_location_permission_required": "Location permission is required to set your outlet location automatically.",
@@ -305,7 +295,6 @@
 	"message_confirm_accept_order": "Are you sure you want to accept this order?",
 	"message_confirm_delete_menu": "Are you sure want to delete this menu?",
 	"message_select_reject_reason": "Please select a reason for rejecting this order:",
-	
 	"status_dragging_marker": "Dragging...",
 	"status_welcome_back": "Welcome back!",
 	"status_license_plate": "License Plate: ",
@@ -354,7 +343,6 @@
 			}
 		}
 	},
-	
 	"action_take_photo": "Take a photo",
 	"action_choose_gallery": "Choose from gallery",
 	"action_remove_image": "Remove image"

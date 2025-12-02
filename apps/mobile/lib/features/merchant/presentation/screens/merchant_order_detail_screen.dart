@@ -247,7 +247,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 ),
                 SizedBox(height: 6.h),
                 Text(
-                  _currentOrder.userId, // TODO: Fetch user name
+                  _currentOrder.user?.name ?? _currentOrder.userId,
                   style: context.typography.small.copyWith(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
@@ -290,7 +290,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                driverId, // TODO: Fetch driver name
+                _currentOrder.driver?.user?.name ?? driverId,
                 style: context.typography.small.copyWith(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,

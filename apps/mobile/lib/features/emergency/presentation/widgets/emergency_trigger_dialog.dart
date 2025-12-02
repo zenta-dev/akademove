@@ -1,16 +1,20 @@
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Dialog for triggering an emergency during active trip
 /// Allows user/driver to select emergency type and provide description
 class EmergencyTriggerDialog extends StatefulWidget {
-  const EmergencyTriggerDialog({required this.onTrigger, super.key});
+  const EmergencyTriggerDialog({
+    required this.orderId,
+    required this.currentLocation,
+    super.key,
+  });
 
-  final void Function({
-    required EmergencyType type,
-    required String description,
-  })
-  onTrigger;
+  final String orderId;
+  final EmergencyLocation currentLocation;
 
   @override
   State<EmergencyTriggerDialog> createState() => _EmergencyTriggerDialogState();
@@ -68,9 +72,12 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
       return;
     }
 
-    widget.onTrigger(
+    final cubit = context.read<EmergencyCubit>();
+    cubit.trigger(
+      orderId: widget.orderId,
       type: _selectedType,
       description: _descriptionController.text.trim(),
+      location: widget.currentLocation,
     );
     Navigator.of(context).pop();
   }

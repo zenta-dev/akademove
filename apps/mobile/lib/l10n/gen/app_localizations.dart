@@ -313,6 +313,12 @@ abstract class AppLocalizations {
   /// **'e.g., \'Please handle with care\', \'Call before delivery\''**
   String get special_instructions_hint;
 
+  /// No description provided for @delivery_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Service'**
+  String get delivery_service;
+
   /// No description provided for @button_cancel.
   ///
   /// In en, this message translates to:

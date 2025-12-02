@@ -41,9 +41,8 @@ export const InviteUserDialog = () => {
 	const [open, setOpen] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-	const form = useForm<InsertUser>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(InsertUserSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(InsertUserSchema),
 		defaultValues: {
 			name: "",
 			email: "",

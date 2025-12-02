@@ -161,9 +161,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   Widget _buildFail({
     required String message,
     required List<OrderStatus> statuses,
-  }) => Container(
+  }) => SizedBox(
     width: double.infinity,
-    padding: EdgeInsets.only(top: 16.dg),
     child: OopsAlertWidget(
       message: message,
       onRefresh: () =>

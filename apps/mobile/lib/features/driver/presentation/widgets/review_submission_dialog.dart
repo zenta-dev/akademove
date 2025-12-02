@@ -41,7 +41,7 @@ class _ReviewSubmissionDialogState
 
     setState(() => _isSubmitting = true);
 
-    final reviewCubit = context.read<ReviewCubit>();
+    final reviewCubit = context.read<DriverReviewCubit>();
 
     await reviewCubit.submitReview(
       orderId: widget.orderId,

@@ -12,18 +12,21 @@ class AuthCubit extends BaseCubit<AuthState> {
     await authenticate();
   }
 
-  Future<void> authenticate() async {
-    try {
-      emit(AuthState.loading());
-      final res = await _authRepository.authenticate();
-      emit(AuthState.success(res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(AuthState.failure(e));
-    }
-  }
+  Future<void> authenticate() async => await taskManager.execute(
+    'AC-a1',
+    () async {
+      try {
+        emit(AuthState.loading());
+        final res = await _authRepository.authenticate();
+        emit(AuthState.success(res.data, message: res.message));
+      } on BaseError catch (e, st) {
+        logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
+        emit(AuthState.failure(e));
+      }
+    },
+  );
 
-  Future<void> signOut() async {
+  Future<void> signOut() async => await taskManager.execute('AC-sO1', () async {
     try {
       emit(AuthState.loading());
       final res = await _authRepository.signOut();
@@ -32,24 +35,27 @@ class AuthCubit extends BaseCubit<AuthState> {
       logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(AuthState.failure(e));
     }
-  }
+  });
 
-  Future<void> forgotPassword(String email) async {
-    try {
-      emit(AuthState.loading());
-      final res = await _authRepository.forgotPassword(email: email);
-      emit(AuthState.success(null, message: res.message));
-    } on BaseError catch (e, st) {
-      logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
-      emit(AuthState.failure(e));
-    }
-  }
+  Future<void> forgotPassword(String email) async => await taskManager.execute(
+    'AC-fP1',
+    () async {
+      try {
+        emit(AuthState.loading());
+        final res = await _authRepository.forgotPassword(email: email);
+        emit(AuthState.success(null, message: res.message));
+      } on BaseError catch (e, st) {
+        logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
+        emit(AuthState.failure(e));
+      }
+    },
+  );
 
   Future<void> resetPassword({
     required String token,
     required String newPassword,
     required String confirmPassword,
-  }) async {
+  }) async => await taskManager.execute('AC-rP1', () async {
     try {
       emit(AuthState.loading());
       final res = await _authRepository.resetPassword(
@@ -62,7 +68,7 @@ class AuthCubit extends BaseCubit<AuthState> {
       logger.e('[AuthCubit] - Error: ${e.message}', error: e, stackTrace: st);
       emit(AuthState.failure(e));
     }
-  }
+  });
 
   void reset() => emit(AuthState.initial());
 }

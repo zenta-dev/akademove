@@ -29,32 +29,30 @@ class UserWalletTopUpCubit extends BaseCubit<UserWalletTopUpState> {
     return super.close();
   }
 
-  Future<void> topUp(int amount, TopUpRequestMethodEnum method) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
-      final res = await _walletRepository.topUp(
-        TopUpRequest(
-          amount: amount,
-          provider: PaymentProvider.MIDTRANS,
-          method: method,
-        ),
-      );
+  Future<void> topUp(int amount, TopUpRequestMethodEnum method) async =>
+      await taskManager.execute('UWTPC-tU1', () async {
+        try {
+          emit(state.toLoading());
+          final res = await _walletRepository.topUp(
+            TopUpRequest(
+              amount: amount,
+              provider: PaymentProvider.MIDTRANS,
+              method: method,
+            ),
+          );
 
-      state.unAssignOperation(methodName);
-      _paymentId = res.data.id;
-      await _setupPaymentWebsocket(paymentId: res.data.id);
+          _paymentId = res.data.id;
+          await _setupPaymentWebsocket(paymentId: res.data.id);
 
-      emit(state.toSuccess(paymentResult: res.data));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-    }
-  }
+          emit(state.toSuccess(paymentResult: res.data));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserRideCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+        }
+      });
 
   Future<void> _setupPaymentWebsocket({required String paymentId}) async {
     _paymentId = paymentId;

@@ -44,9 +44,8 @@ export const BanUserDialog = ({ userId }: { userId: string }) => {
 	const [date, setDate] = useState<Date | undefined>(new Date());
 	const [time, setTime] = useState("10:30:00");
 
-	const form = useForm<BanUser>({
-		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-		resolver: zodResolver(BanUserSchema) as any,
+	const form = useForm({
+		resolver: zodResolver(BanUserSchema),
 		defaultValues: { banReason: "", banExpiresIn: undefined },
 	});
 

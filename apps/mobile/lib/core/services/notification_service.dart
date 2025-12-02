@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum _OperationType { check, request }
@@ -90,7 +94,7 @@ class NotificationService {
             presentSound: true,
           ),
         ),
-        payload: data?.toString(),
+        payload: data != null ? jsonEncode(data) : null,
       );
     } catch (e, st) {
       logger.e('Failed to show notification', error: e, stackTrace: st);
@@ -139,7 +143,98 @@ class NotificationService {
   // ──────────────────────────────────────────────────────────────
   void _onNotificationTap(NotificationResponse response) {
     logger.i('Notification tapped → ${response.payload}');
-    // TODO: Add deep-link or navigation handling here
+
+    final payload = response.payload;
+    if (payload == null || payload.isEmpty) {
+      logger.w('Empty notification payload, no navigation');
+      return;
+    }
+
+    try {
+      // Parse payload as JSON (sent from backend as data field)
+      final data = jsonDecode(payload) as Map<String, dynamic>;
+      _handleDeepLink(data);
+    } catch (e, st) {
+      logger.e(
+        'Failed to parse notification payload',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  void _handleDeepLink(Map<String, dynamic> data) {
+    // Extract common navigation parameters from notification data
+    final orderId = data['orderId'] as String?;
+    final type = data['type'] as String?;
+    final screen = data['screen'] as String?;
+    final route = data['route'] as String?;
+
+    logger.i(
+      'Deep link data: orderId=$orderId, type=$type, screen=$screen, route=$route',
+    );
+
+    // Priority 1: Use explicit route if provided
+    if (route != null && route.isNotEmpty) {
+      router.push(route);
+      return;
+    }
+
+    // Priority 2: Navigate based on screen parameter
+    if (screen != null) {
+      switch (screen.toLowerCase()) {
+        case 'wallet':
+          router.pushNamed(Routes.userWallet.name);
+        case 'orders':
+        case 'history':
+          router.pushNamed(Routes.userHistory.name);
+        case 'profile':
+          router.pushNamed(Routes.userProfile.name);
+        case 'home':
+          router.pushNamed(Routes.userHome.name);
+        default:
+          logger.w('Unknown screen: $screen');
+      }
+      return;
+    }
+
+    // Priority 3: Navigate based on orderId
+    if (orderId != null && orderId.isNotEmpty) {
+      // Navigate to order detail screen
+      // Use history detail route which works for all user types
+      router.pushNamed(
+        Routes.userHistoryDetail.name,
+        pathParameters: {'orderId': orderId},
+      );
+      return;
+    }
+
+    // Priority 4: Navigate based on notification type
+    if (type != null) {
+      switch (type.toLowerCase()) {
+        case 'order':
+        case 'order_update':
+        case 'order_completed':
+        case 'order_cancelled':
+          router.pushNamed(Routes.userHistory.name);
+        case 'payment':
+        case 'topup':
+        case 'wallet':
+          router.pushNamed(Routes.userWallet.name);
+        case 'promo':
+        case 'coupon':
+          router.pushNamed(Routes.userVoucher.name);
+        default:
+          // Default to home if type is unknown
+          logger.w('Unknown notification type: $type, navigating to home');
+          router.pushNamed(Routes.userHome.name);
+      }
+      return;
+    }
+
+    // Fallback: Navigate to home
+    logger.i('No specific navigation target, navigating to home');
+    router.pushNamed(Routes.userHome.name);
   }
 
   Future<bool> checkPermission() async {

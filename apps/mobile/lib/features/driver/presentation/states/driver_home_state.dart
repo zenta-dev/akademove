@@ -16,7 +16,6 @@ class DriverHomeState with DriverHomeStateMappable {
     this.isLoading = false,
     this.error,
     this.message,
-    this.ongoingOperations = const {},
   });
 
   final Driver? myDriver;
@@ -28,19 +27,9 @@ class DriverHomeState with DriverHomeStateMappable {
   final bool isLoading;
   final BaseError? error;
   final String? message;
-  final Set<String> ongoingOperations;
 
   bool get isSuccess => error == null && !isLoading;
   bool get isFailure => error != null;
-
-  bool checkAndAssignOperation(String operationName) {
-    if (ongoingOperations.contains(operationName)) return true;
-    return false;
-  }
-
-  void unAssignOperation(String operationName) {
-    ongoingOperations.remove(operationName);
-  }
 
   DriverHomeState toLoading() {
     return copyWith(isLoading: true, error: null, message: null);
