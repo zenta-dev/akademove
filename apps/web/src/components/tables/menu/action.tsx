@@ -42,6 +42,32 @@ export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [editDialogOpen, setEditDialogOpen] = useState(false);
 
+	const toggleStockMutation = useMutation(
+		orpcQuery.merchant.menu.update.mutationOptions({
+			onSuccess: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: ["merchant", "menu", val.merchantId],
+				});
+				toast.success(
+					val.stock > 0
+						? "Item marked as out of stock"
+						: "Item marked as available",
+				);
+			},
+			onError: async () => {
+				toast.error("Failed to update stock status");
+			},
+		}),
+	);
+
+	const handleToggleStock = async () => {
+		await toggleStockMutation.mutateAsync({
+			params: { id: val.id, merchantId: val.merchantId },
+			body: { stock: val.stock > 0 ? 0 : 999 }, // 0 = out of stock, 999 = available
+		});
+		setDropdownOpen(false);
+	};
+
 	return (
 		<DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
 			<DropdownMenuTrigger asChild>
@@ -54,6 +80,13 @@ export const MerchantMenuActionTable = ({ val }: { val: MerchantMenu }) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<DropdownMenuItem
+					onClick={handleToggleStock}
+					disabled={toggleStockMutation.isPending}
+				>
+					{val.stock > 0 ? "Mark Out of Stock" : "Mark Available"}
+				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
 					<Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -110,9 +143,7 @@ export const DeleteMerchantMenuDialog = ({
 		orpcQuery.merchant.menu.remove.mutationOptions({
 			onSuccess: async () => {
 				await queryClient.invalidateQueries({
-					queryKey: orpcQuery.merchant.menu.list.queryKey({
-						input: { params: { merchantId: val.merchantId }, query: {} },
-					}),
+					queryKey: ["merchant", "menu", val.merchantId],
 				});
 				toast.success(
 					m.success_placeholder({

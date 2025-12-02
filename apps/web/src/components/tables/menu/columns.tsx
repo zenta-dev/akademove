@@ -57,6 +57,21 @@ export const MERCHANT_MENU_COLUMNS = [
 		accessorKey: "stock",
 		enableHiding: false,
 		header: m.stock(),
+		cell: ({ row }) => {
+			const stock = row.getValue("stock") as number;
+			const isAvailable = stock > 0;
+
+			return (
+				<div className="flex items-center gap-2">
+					<span className={isAvailable ? "text-green-600" : "text-red-600"}>
+						{stock}
+					</span>
+					<span className="text-muted-foreground text-xs">
+						{isAvailable ? "Available" : "Out of Stock"}
+					</span>
+				</div>
+			);
+		},
 	},
 	{
 		id: "createdAt",
