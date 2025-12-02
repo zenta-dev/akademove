@@ -39,8 +39,13 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 
 	const [open, setOpen] = useState(false);
 	const form = useForm<UpdateUserPassword>({
-		resolver: zodResolver(UpdateUserPasswordSchema),
-		defaultValues: { password: "", confirmPassword: "" },
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(UpdateUserPasswordSchema) as any,
+		defaultValues: {
+			oldPassword: "",
+			newPassword: "",
+			confirmNewPassword: "",
+		},
 	});
 
 	const mutation = useMutation(
@@ -51,8 +56,9 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 					m.success_placeholder({ action: m.update_user_password() }),
 				);
 				setOpen(false);
-				form.setValue("password", "");
-				form.setValue("confirmPassword", "");
+				form.setValue("oldPassword", "");
+				form.setValue("newPassword", "");
+				form.setValue("confirmNewPassword", "");
 				form.clearErrors();
 			},
 			onError: (error: Error) => {
@@ -66,7 +72,7 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
-				form.setError("password", { message: error.message });
+				form.setError("oldPassword", { message: error.message });
 			},
 		}),
 	);
@@ -98,10 +104,10 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 					>
 						<FormField
 							control={form.control}
-							name="password"
+							name="oldPassword"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>{m.password()}</FormLabel>
+									<FormLabel>Current {m.password()}</FormLabel>
 									<FormControl>
 										<div className="relative">
 											<Input
@@ -124,7 +130,33 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="confirmPassword"
+							name="newPassword"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>New {m.password()}</FormLabel>
+									<FormControl>
+										<div className="relative">
+											<Input
+												placeholder="••••••••"
+												autoComplete="new-password"
+												type={showPassword ? "text" : "password"}
+												disabled={mutation.isPending}
+												{...field}
+											/>
+											<PasswordToggle
+												isVisible={showPassword}
+												setIsVisible={setShowPassword}
+												className="-translate-y-1/2 absolute top-1/2 right-0"
+											/>
+										</div>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="confirmNewPassword"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>{m.confirm_password()}</FormLabel>
@@ -132,7 +164,7 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 										<div className="relative">
 											<Input
 												placeholder="••••••••"
-												autoComplete="current-password"
+												autoComplete="new-password"
 												type={showConfirmPassword ? "text" : "password"}
 												disabled={mutation.isPending}
 												{...field}

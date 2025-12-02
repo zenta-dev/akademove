@@ -17,7 +17,7 @@ export const UserTable = ({ search, to }: Props) => {
 	const debouncedFilter = useDebounce(filter ?? search.query, 500);
 
 	const users = useQuery(
-		orpcQuery.user.list.queryOptions({
+		orpcQuery.user.admin.list.queryOptions({
 			input: {
 				query: {
 					...search,

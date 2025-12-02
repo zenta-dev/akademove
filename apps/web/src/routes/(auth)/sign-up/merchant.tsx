@@ -8,7 +8,6 @@ import {
 import type { CountryCode } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
 import { createDefaults } from "@repo/schema/default.helper";
-import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
@@ -70,7 +69,8 @@ function RouteComponent() {
 
 	const router = useRouter();
 	const form = useForm({
-		resolver: zodResolver(FlatSignUpMerchantSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(FlatSignUpMerchantSchema) as any,
 		defaultValues: {
 			...createDefaults(FlatSignUpMerchantSchema, {
 				overrides: {

@@ -25,7 +25,8 @@ export const UnbanUserDialog = ({ userId }: { userId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const form = useForm<UnbanUser>({
-		resolver: zodResolver(UnbanUserSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(UnbanUserSchema) as any,
 		defaultValues: { id: userId },
 	});
 

@@ -28,15 +28,18 @@ export const STATUS: Record<
 		icon: React.ElementType;
 	}
 > = {
-	requested: { name: m.requested(), icon: Clock },
-	matching: { name: m.matching(), icon: Search },
-	accepted: { name: m.accepted(), icon: CheckCircle2 },
-	arriving: { name: m.arriving(), icon: Navigation },
-	in_trip: { name: m.in_trip(), icon: Car },
-	completed: { name: m.completed(), icon: Flag },
-	cancelled_by_user: { name: m.cancelled_by_user(), icon: UserX },
-	cancelled_by_driver: { name: m.cancelled_by_driver(), icon: XOctagon },
-	cancelled_by_system: { name: m.cancelled_by_system(), icon: AlertTriangle },
+	REQUESTED: { name: m.requested(), icon: Clock },
+	MATCHING: { name: m.matching(), icon: Search },
+	ACCEPTED: { name: m.accepted(), icon: CheckCircle2 },
+	PREPARING: { name: "Preparing", icon: Clock },
+	READY_FOR_PICKUP: { name: "Ready for Pickup", icon: CheckCircle2 },
+	ARRIVING: { name: m.arriving(), icon: Navigation },
+	IN_TRIP: { name: m.in_trip(), icon: Car },
+	COMPLETED: { name: m.completed(), icon: Flag },
+	CANCELLED_BY_USER: { name: m.cancelled_by_user(), icon: UserX },
+	CANCELLED_BY_DRIVER: { name: m.cancelled_by_driver(), icon: XOctagon },
+	CANCELLED_BY_MERCHANT: { name: "Cancelled by Merchant", icon: XOctagon },
+	CANCELLED_BY_SYSTEM: { name: m.cancelled_by_system(), icon: AlertTriangle },
 };
 
 export const TYPES: Record<
@@ -46,37 +49,40 @@ export const TYPES: Record<
 		icon: React.ElementType;
 	}
 > = {
-	ride: { name: m.ride(), icon: BikeIcon },
-	delivery: { name: m.delivery(), icon: PackageIcon },
-	food: { name: m.food(), icon: PizzaIcon },
+	RIDE: { name: m.ride(), icon: BikeIcon },
+	DELIVERY: { name: m.delivery(), icon: PackageIcon },
+	FOOD: { name: m.food(), icon: PizzaIcon },
 };
 
 export const statusVariants = cva("", {
 	variants: {
 		intent: {
-			requested: "bg-blue-500/10 text-blue-500",
-			matching: "bg-indigo-500/10 text-indigo-500",
-			accepted: "bg-teal-500/10 text-teal-500",
-			arriving: "bg-yellow-500/10 text-yellow-500",
-			in_trip: "bg-purple-500/10 text-purple-500",
-			completed: "bg-green-500/10 text-green-500",
-			cancelled_by_user: "bg-red-500/10 text-red-500",
-			cancelled_by_driver: "bg-orange-500/10 text-orange-500",
-			cancelled_by_system: "bg-gray-500/10 text-gray-700 dark:text-gray-200",
+			REQUESTED: "bg-blue-500/10 text-blue-500",
+			MATCHING: "bg-indigo-500/10 text-indigo-500",
+			ACCEPTED: "bg-teal-500/10 text-teal-500",
+			PREPARING: "bg-cyan-500/10 text-cyan-500",
+			READY_FOR_PICKUP: "bg-sky-500/10 text-sky-500",
+			ARRIVING: "bg-yellow-500/10 text-yellow-500",
+			IN_TRIP: "bg-purple-500/10 text-purple-500",
+			COMPLETED: "bg-green-500/10 text-green-500",
+			CANCELLED_BY_USER: "bg-red-500/10 text-red-500",
+			CANCELLED_BY_DRIVER: "bg-orange-500/10 text-orange-500",
+			CANCELLED_BY_MERCHANT: "bg-pink-500/10 text-pink-500",
+			CANCELLED_BY_SYSTEM: "bg-gray-500/10 text-gray-700 dark:text-gray-200",
 		},
 	},
-	defaultVariants: { intent: "requested" },
+	defaultVariants: { intent: "REQUESTED" },
 });
 
 export const typeVariants = cva("", {
 	variants: {
 		intent: {
-			ride: "bg-blue-500/10 text-blue-500",
-			delivery: "bg-green-500/10 text-green-500",
-			food: "bg-yellow-500/10 text-yellow-500",
+			RIDE: "bg-blue-500/10 text-blue-500",
+			DELIVERY: "bg-green-500/10 text-green-500",
+			FOOD: "bg-yellow-500/10 text-yellow-500",
 		},
 	},
-	defaultVariants: { intent: "ride" },
+	defaultVariants: { intent: "RIDE" },
 });
 
 export const ORDER_COLUMNS = [

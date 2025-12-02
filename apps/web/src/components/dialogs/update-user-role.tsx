@@ -38,7 +38,8 @@ import { orpcQuery, queryClient } from "@/lib/orpc";
 export const UpdateUserRoleDialog = ({ userId }: { userId: string }) => {
 	const [open, setOpen] = useState(false);
 	const form = useForm<UpdateUserRole>({
-		resolver: zodResolver(UpdateUserRoleSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(UpdateUserRoleSchema) as any,
 		defaultValues: { role: "USER" },
 	});
 

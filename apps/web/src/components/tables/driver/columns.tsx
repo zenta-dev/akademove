@@ -26,26 +26,26 @@ export const STATUS_DICT: Record<
 		icon: React.ElementType;
 	}
 > = {
-	pending: { name: m.pending(), icon: Clock },
-	approved: { name: m.approved(), icon: CheckCircle },
-	rejected: { name: m.rejected(), icon: XCircle },
-	active: { name: m.active(), icon: PlayCircle },
-	inactive: { name: m.inactive(), icon: PauseCircle },
-	suspended: { name: m.suspended(), icon: Ban },
+	PENDING: { name: m.pending(), icon: Clock },
+	APPROVED: { name: m.approved(), icon: CheckCircle },
+	REJECTED: { name: m.rejected(), icon: XCircle },
+	ACTIVE: { name: m.active(), icon: PlayCircle },
+	INACTIVE: { name: m.inactive(), icon: PauseCircle },
+	SUSPENDED: { name: m.suspended(), icon: Ban },
 };
 export const statusVariants = cva("", {
 	variants: {
 		intent: {
-			pending: "bg-yellow-500/10 text-yellow-500",
-			approved: "bg-green-500/10 text-green-500",
-			rejected: "bg-red-500/10 text-red-500",
-			active: "bg-blue-500/10 text-blue-500",
-			inactive: "bg-gray-500/10 text-gray-500",
-			suspended: "bg-orange-500/10 text-orange-500",
+			PENDING: "bg-yellow-500/10 text-yellow-500",
+			APPROVED: "bg-green-500/10 text-green-500",
+			REJECTED: "bg-red-500/10 text-red-500",
+			ACTIVE: "bg-blue-500/10 text-blue-500",
+			INACTIVE: "bg-gray-500/10 text-gray-500",
+			SUSPENDED: "bg-orange-500/10 text-orange-500",
 		},
 	},
 	defaultVariants: {
-		intent: "inactive",
+		intent: "INACTIVE",
 	},
 });
 

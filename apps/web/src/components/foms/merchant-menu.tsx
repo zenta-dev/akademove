@@ -68,7 +68,7 @@ export const MerchantMenuForm = ({
 		async (kind: "insert" | "update") => {
 			await queryClient.invalidateQueries({
 				queryKey: orpcQuery.merchant.menu.list.queryKey({
-					input: { params: { merchantId }, query: {} },
+					input: { params: { merchantId }, query: { limit: 10 } },
 				}),
 			});
 			toast.success(

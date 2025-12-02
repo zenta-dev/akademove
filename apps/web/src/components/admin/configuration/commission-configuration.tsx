@@ -32,7 +32,8 @@ const COMMISSION_CONFIG_KEY = "commission-rates";
 
 export function CommissionConfiguration() {
 	const form = useForm<CommissionFormData>({
-		resolver: zodResolver(CommissionConfigurationSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(CommissionConfigurationSchema) as any,
 		defaultValues: {
 			rideCommissionRate: 0.15,
 			deliveryCommissionRate: 0.15,

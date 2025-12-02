@@ -52,42 +52,42 @@ import { cn } from "@/utils/cn";
 
 const GENERAL_RULE_TYPES: { id: GeneralRuleType; name: string }[] = [
 	{
-		id: "percentage",
+		id: "PERCENTAGE",
 		name: m.percentage(),
 	},
 	{
-		id: "fixed",
+		id: "FIXED",
 		name: m.fixed(),
 	},
 ] as const;
 
 const DAY_OF_WEEKS: { id: DayOfWeek; name: string }[] = [
 	{
-		id: "sunday",
+		id: "SUNDAY",
 		name: m.sunday(),
 	},
 	{
-		id: "monday",
+		id: "MONDAY",
 		name: m.monday(),
 	},
 	{
-		id: "tuesday",
+		id: "TUESDAY",
 		name: m.tuesday(),
 	},
 	{
-		id: "wednesday",
+		id: "WEDNESDAY",
 		name: m.wednesday(),
 	},
 	{
-		id: "thursday",
+		id: "THURSDAY",
 		name: m.thursday(),
 	},
 	{
-		id: "friday",
+		id: "FRIDAY",
 		name: m.friday(),
 	},
 	{
-		id: "saturday",
+		id: "SATURDAY",
 		name: m.saturday(),
 	},
 ] as const;
@@ -101,9 +101,11 @@ export const CouponForm = ({
 }) => {
 	const router = useRouter();
 	const form = useForm({
-		resolver: zodResolver(
-			kind === "new" ? InsertCouponSchema : UpdateCouponSchema,
-		),
+		resolver:
+			// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+			zodResolver(
+				kind === "new" ? InsertCouponSchema : UpdateCouponSchema,
+			) as any,
 		defaultValues:
 			kind === "edit" && coupon
 				? coupon
@@ -112,7 +114,7 @@ export const CouponForm = ({
 						code: "",
 						rules: {
 							general: {
-								type: "percentage" as const,
+								type: "PERCENTAGE" as const,
 								minOrderAmount: undefined,
 								maxDiscountAmount: undefined,
 							},
@@ -127,8 +129,8 @@ export const CouponForm = ({
 						discountAmount: 0,
 						discountPercentage: 0,
 						usageLimit: 1,
-						periodStart: Date.now(),
-						periodEnd: Date.now(),
+						periodStart: new Date(),
+						periodEnd: new Date(),
 						isActive: true,
 					},
 	});
@@ -147,7 +149,11 @@ export const CouponForm = ({
 				}),
 			);
 			form.reset();
-			await router.navigate({ to: "/dash/operator/coupons" });
+			await router.navigate({
+				to: "/dash/operator/coupons",
+				// @ts-expect-error - search params type mismatch
+				search: {},
+			});
 		},
 		[form.reset, router.navigate],
 	);

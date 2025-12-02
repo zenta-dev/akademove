@@ -6,7 +6,6 @@ import {
 	FlatSignUpDriverSchema,
 } from "@repo/schema/auth";
 import type { CountryCode } from "@repo/schema/common";
-import type { UserGender } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
@@ -111,7 +110,8 @@ function RouteComponent() {
 
 	const form = useForm({
 		disabled: mutation.isPending,
-		resolver: zodResolver(FlatSignUpDriverSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(FlatSignUpDriverSchema) as any,
 		defaultValues: {
 			name: "",
 			email: "",

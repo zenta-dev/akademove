@@ -10,7 +10,7 @@ export const DashboardNavigator = ({ role }: { role: UserRole }) => {
 		return localizeHref(`/dash/${role}`);
 	}, [role]);
 
-	if (role === "user") return;
+	if (role === "USER") return;
 
 	return (
 		<Link

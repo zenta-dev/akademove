@@ -85,7 +85,8 @@ function RidePricingForm() {
 	});
 
 	const form = useForm<RidePricing>({
-		resolver: zodResolver(RidePricingConfigurationSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(RidePricingConfigurationSchema) as any,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
@@ -355,7 +356,8 @@ function DeliveryPricingForm() {
 	});
 
 	const form = useForm<DeliveryPricing>({
-		resolver: zodResolver(DeliveryPricingConfigurationSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(DeliveryPricingConfigurationSchema) as any,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
@@ -658,7 +660,8 @@ function FoodPricingForm() {
 	});
 
 	const form = useForm<FoodPricing>({
-		resolver: zodResolver(FoodPricingConfigurationSchema),
+		// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
+		resolver: zodResolver(FoodPricingConfigurationSchema) as any,
 		defaultValues: {
 			baseFare: 0,
 			perKmRate: 0,
