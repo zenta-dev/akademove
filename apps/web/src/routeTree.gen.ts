@@ -45,6 +45,7 @@ import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/
 import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
 import { Route as DashOperatorMerchantsRouteImport } from './routes/dash/operator/merchants'
 import { Route as DashOperatorDriversRouteImport } from './routes/dash/operator/drivers'
+import { Route as DashMerchantWalletRouteImport } from './routes/dash/merchant/wallet'
 import { Route as DashMerchantSalesRouteImport } from './routes/dash/merchant/sales'
 import { Route as DashMerchantProfileRouteImport } from './routes/dash/merchant/profile'
 import { Route as DashMerchantOrdersRouteImport } from './routes/dash/merchant/orders'
@@ -245,6 +246,11 @@ const DashOperatorDriversRoute = DashOperatorDriversRouteImport.update({
   path: '/drivers',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashMerchantWalletRoute = DashMerchantWalletRouteImport.update({
+  id: '/wallet',
+  path: '/wallet',
+  getParentRoute: () => DashMerchantRouteRoute,
+} as any)
 const DashMerchantSalesRoute = DashMerchantSalesRouteImport.update({
   id: '/sales',
   path: '/sales',
@@ -387,6 +393,7 @@ export interface FileRoutesByFullPath {
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/merchant/wallet': typeof DashMerchantWalletRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -439,6 +446,7 @@ export interface FileRoutesByTo {
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/merchant/wallet': typeof DashMerchantWalletRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -498,6 +506,7 @@ export interface FileRoutesById {
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
+  '/dash/merchant/wallet': typeof DashMerchantWalletRoute
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -557,6 +566,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
+    | '/dash/merchant/wallet'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -609,6 +619,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
+    | '/dash/merchant/wallet'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -667,6 +678,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
+    | '/dash/merchant/wallet'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -961,6 +973,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashOperatorDriversRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
+    '/dash/merchant/wallet': {
+      id: '/dash/merchant/wallet'
+      path: '/wallet'
+      fullPath: '/dash/merchant/wallet'
+      preLoaderRoute: typeof DashMerchantWalletRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
+    }
     '/dash/merchant/sales': {
       id: '/dash/merchant/sales'
       path: '/sales'
@@ -1177,6 +1196,7 @@ interface DashMerchantRouteRouteChildren {
   DashMerchantOrdersRoute: typeof DashMerchantOrdersRoute
   DashMerchantProfileRoute: typeof DashMerchantProfileRoute
   DashMerchantSalesRoute: typeof DashMerchantSalesRoute
+  DashMerchantWalletRoute: typeof DashMerchantWalletRoute
   DashMerchantIndexRoute: typeof DashMerchantIndexRoute
 }
 
@@ -1185,6 +1205,7 @@ const DashMerchantRouteRouteChildren: DashMerchantRouteRouteChildren = {
   DashMerchantOrdersRoute: DashMerchantOrdersRoute,
   DashMerchantProfileRoute: DashMerchantProfileRoute,
   DashMerchantSalesRoute: DashMerchantSalesRoute,
+  DashMerchantWalletRoute: DashMerchantWalletRoute,
   DashMerchantIndexRoute: DashMerchantIndexRoute,
 }
 

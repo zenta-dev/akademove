@@ -103,10 +103,11 @@ function RouteComponent() {
 			name: "",
 			email: "",
 			gender: "MALE",
-			phone_countryCode: "ID",
+			phone_countryCode: "ID" as CountryCode,
 			phone_number: 0,
 			password: "",
 			confirmPassword: "",
+			photo: undefined,
 		},
 	});
 

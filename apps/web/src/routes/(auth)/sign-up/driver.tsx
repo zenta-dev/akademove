@@ -120,11 +120,14 @@ function RouteComponent() {
 			phone_number: 0,
 			password: "",
 			confirmPassword: "",
+			photo: undefined,
 			detail_studentId: 0,
 			detail_licensePlate: "",
 			detail_studentCard: undefined,
 			detail_driverLicense: undefined,
 			detail_vehicleCertificate: undefined,
+			detail_bank_number: 0,
+			detail_bank_provider: "BCA",
 		},
 	});
 
