@@ -1,4 +1,5 @@
 import * as z from "zod";
+import type { SchemaRegistries } from "./common.js";
 import { MerchantMenuSchema } from "./merchant.js";
 
 // Individual cart item
@@ -37,8 +38,8 @@ export const AddToCartSchema = z.object({
 export type AddToCart = z.infer<typeof AddToCartSchema>;
 
 // Registry for schema extraction
-export const cartSchemas = {
-	CartItemSchema,
-	CartSchema,
-	AddToCartSchema,
-} as const;
+export const CartSchemaRegistries = {
+	CartItem: { schema: CartItemSchema, strategy: "output" },
+	Cart: { schema: CartSchema, strategy: "output" },
+	AddToCart: { schema: AddToCartSchema, strategy: "input" },
+} satisfies SchemaRegistries;

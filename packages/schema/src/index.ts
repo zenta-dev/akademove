@@ -1,5 +1,6 @@
 import { AuthSchemaRegistries } from "./auth.js";
 import { BadgeSchemaRegistries } from "./badge.js";
+import { CartSchemaRegistries } from "./cart.js";
 import { ChatSchemaRegistries } from "./chat.js";
 import { CommonSchemaRegistries, type SchemaRegistries } from "./common.js";
 import { ConfigurationSchemaRegistries } from "./configuration.js";
@@ -25,6 +26,7 @@ export const AllSchemaRegistries = {
 	...CommonSchemaRegistries,
 	...AuthSchemaRegistries,
 	...BadgeSchemaRegistries,
+	...CartSchemaRegistries,
 	...ChatSchemaRegistries,
 	...ConfigurationSchemaRegistries,
 	...ContactSchemaRegistries,
