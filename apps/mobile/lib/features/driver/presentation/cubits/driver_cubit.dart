@@ -186,10 +186,9 @@ class DriverCubit extends BaseCubit<DriverState> {
   Future<num> _calculateDriverEarnings(List<Order> orders) async {
     if (orders.isEmpty) return 0;
 
-    // Get platform fee rate (cached after first fetch)
-    _platformFeeRate ??= await _configurationRepository.getPlatformFeeRate(
-      OrderType.RIDE,
-    );
+    // TODO: Implement platform fee rate fetching when ConfigurationRepository method is available
+    // For now, use a default driver share of 85% (15% platform fee)
+    _platformFeeRate ??= 0.15;
 
     final driverShare = 1.0 - _platformFeeRate!;
 

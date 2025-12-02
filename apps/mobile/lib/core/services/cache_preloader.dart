@@ -54,15 +54,19 @@ class CachePreloader {
 
   Future<void> _preloadPlatformConfig() async {
     try {
+      // TODO: Implement platform fee rate caching when ConfigurationRepository method is available
       // Preload commission rates for all order types
-      for (final orderType in OrderType.values) {
-        final rate = await _configurationRepository.getPlatformFeeRate(
-          orderType,
-        );
-        logger.d(
-          '[CachePreloader] Platform fee cached: $orderType = ${(rate * 100).toStringAsFixed(0)}%',
-        );
-      }
+      // for (final orderType in OrderType.values) {
+      //   final rate = await _configurationRepository.getPlatformFeeRate(
+      //     orderType,
+      //   );
+      //   logger.d(
+      //     '[CachePreloader] Platform fee cached: $orderType = ${(rate * 100).toStringAsFixed(0)}%',
+      //   );
+      // }
+      logger.d(
+        '[CachePreloader] Platform config preload skipped (not implemented)',
+      );
     } catch (e) {
       logger.w('[CachePreloader] Failed to preload platform config: $e');
     }
