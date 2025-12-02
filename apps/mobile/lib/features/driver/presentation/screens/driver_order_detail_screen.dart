@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,121 +52,151 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<DriverOrderCubit, DriverOrderState>(
-      listener: (context, state) {
-        // Show error messages
-        if (state.isFailure && state.error != null) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: 'Error',
-              message: state.error?.message ?? 'An error occurred',
-            ),
-          );
-        }
+    return BlocProvider(
+      create: (context) => sl<EmergencyCubit>(),
+      child: BlocConsumer<DriverOrderCubit, DriverOrderState>(
+        listener: (context, state) {
+          // Show error messages
+          if (state.isFailure && state.error != null) {
+            showToast(
+              context: context,
+              builder: (context, overlay) => context.buildToast(
+                title: 'Error',
+                message: state.error?.message ?? 'An error occurred',
+              ),
+            );
+          }
 
-        // Show success messages
-        final message = state.message;
-        if (message != null && message.isNotEmpty) {
-          showToast(
-            context: context,
-            builder: (context, overlay) =>
-                context.buildToast(title: 'Success', message: message),
-          );
-        }
+          // Show success messages
+          final message = state.message;
+          if (message != null && message.isNotEmpty) {
+            showToast(
+              context: context,
+              builder: (context, overlay) =>
+                  context.buildToast(title: 'Success', message: message),
+            );
+          }
 
-        // Navigate back when order is completed or cancelled
-        if (state.orderStatus == OrderStatus.COMPLETED ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_DRIVER ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_USER ||
-            state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
-          Future.delayed(const Duration(seconds: 2), () {
-            if (mounted) {
-              context.goNamed(Routes.driverHome.name);
-            }
-          });
-        }
+          // Navigate back when order is completed or cancelled
+          if (state.orderStatus == OrderStatus.COMPLETED ||
+              state.orderStatus == OrderStatus.CANCELLED_BY_DRIVER ||
+              state.orderStatus == OrderStatus.CANCELLED_BY_USER ||
+              state.orderStatus == OrderStatus.CANCELLED_BY_SYSTEM) {
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                context.goNamed(Routes.driverHome.name);
+              }
+            });
+          }
 
-        // Update map when order data changes
-        final currentOrder = state.currentOrder;
-        if (currentOrder != null) {
-          _updateMapWithOrderData(currentOrder);
-        }
-      },
-      builder: (context, state) {
-        if (state.currentOrder == null) {
-          return const MyScaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+          // Update map when order data changes
+          final currentOrder = state.currentOrder;
+          if (currentOrder != null) {
+            _updateMapWithOrderData(currentOrder);
+          }
+        },
+        builder: (context, state) {
+          if (state.currentOrder == null) {
+            return const MyScaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-        final order = state.currentOrder;
-        if (order == null) {
-          return const MyScaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-        final status = state.orderStatus;
+          final order = state.currentOrder;
+          if (order == null) {
+            return const MyScaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          final status = state.orderStatus;
 
-        return MyScaffold(
-          headers: [
-            AppBar(
-              leading: [
-                IconButton(
-                  icon: const Icon(LucideIcons.arrowLeft),
-                  onPressed: () => context.pop(),
-                  variance: ButtonVariance.ghost,
-                ),
-              ],
-              title: Text('Order #${order.id.substring(0, 8)}'),
-            ),
-          ],
-          body: Column(
-            children: [
-              // Map view
-              Expanded(flex: 2, child: _buildMap(order)),
-              // Order details and actions
-              Expanded(
-                flex: 3,
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16.dg),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 20.h,
-                    children: [
-                      if (status != null) _buildStatusIndicator(status),
-                      _buildOrderInfo(order),
-                      _buildCustomerInfo(order),
-                      _buildActionButtons(state, order),
-                    ],
+          return MyScaffold(
+            headers: [
+              AppBar(
+                leading: [
+                  IconButton(
+                    icon: const Icon(LucideIcons.arrowLeft),
+                    onPressed: () => context.pop(),
+                    variance: ButtonVariance.ghost,
                   ),
-                ),
+                ],
+                title: Text('Order #${order.id.substring(0, 8)}'),
               ),
             ],
-          ),
-        );
-      },
+            body: Column(
+              children: [
+                // Map view
+                Expanded(flex: 2, child: _buildMap(order)),
+                // Order details and actions
+                Expanded(
+                  flex: 3,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16.dg),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 20.h,
+                      children: [
+                        if (status != null) _buildStatusIndicator(status),
+                        _buildOrderInfo(order),
+                        _buildCustomerInfo(order),
+                        _buildActionButtons(state, order),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildMap(Order order) {
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(
-          order.pickupLocation.y.toDouble(),
-          order.pickupLocation.x.toDouble(),
+    return Stack(
+      children: [
+        GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: LatLng(
+              order.pickupLocation.y.toDouble(),
+              order.pickupLocation.x.toDouble(),
+            ),
+            zoom: 14,
+          ),
+          markers: _markers,
+          polylines: _polylines,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomControlsEnabled: false,
+          onMapCreated: (controller) {
+            _mapController = controller;
+            _updateMapWithOrderData(order);
+          },
         ),
-        zoom: 14,
-      ),
-      markers: _markers,
-      polylines: _polylines,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: true,
-      zoomControlsEnabled: false,
-      onMapCreated: (controller) {
-        _mapController = controller;
-        _updateMapWithOrderData(order);
-      },
+        // Emergency button - only show during IN_TRIP status
+        BlocBuilder<DriverOrderCubit, DriverOrderState>(
+          builder: (context, state) {
+            if (state.orderStatus != OrderStatus.IN_TRIP) {
+              return const SizedBox.shrink();
+            }
+
+            // Use pickup location as fallback for emergency location
+            final emergencyLocation = EmergencyLocation(
+              latitude: order.pickupLocation.y.toDouble(),
+              longitude: order.pickupLocation.x.toDouble(),
+            );
+
+            return Positioned(
+              bottom: 16,
+              right: 16,
+              child: EmergencyButton(
+                orderId: order.id,
+                currentLocation: emergencyLocation,
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 

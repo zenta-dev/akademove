@@ -21,39 +21,32 @@ class EmergencyContactConfiguration {
     required this.name,
     required this.phone,
     required this.type,
-    this.description,
-    this.isActive = true,
+     this.description,
+     this.isActive = true,
   });
 
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final String phone;
-
+  
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final EmergencyContactConfigurationTypeEnum type;
-
+  
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-
-  @JsonKey(
-    defaultValue: true,
-    name: r'isActive',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: true,name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is EmergencyContactConfiguration &&
-          other.name == name &&
-          other.phone == phone &&
-          other.type == type &&
-          other.description == description &&
-          other.isActive == isActive;
+  bool operator ==(Object other) => identical(this, other) || other is EmergencyContactConfiguration &&
+    other.name == name &&
+    other.phone == phone &&
+    other.type == type &&
+    other.description == description &&
+    other.isActive == isActive;
 
   @override
   int get hashCode =>
@@ -63,8 +56,7 @@ class EmergencyContactConfiguration {
       description.hashCode +
       isActive.hashCode;
 
-  factory EmergencyContactConfiguration.fromJson(Map<String, dynamic> json) =>
-      _$EmergencyContactConfigurationFromJson(json);
+  factory EmergencyContactConfiguration.fromJson(Map<String, dynamic> json) => _$EmergencyContactConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$EmergencyContactConfigurationToJson(this);
 
@@ -72,6 +64,7 @@ class EmergencyContactConfiguration {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum EmergencyContactConfigurationTypeEnum {
@@ -85,11 +78,13 @@ enum EmergencyContactConfigurationTypeEnum {
   FIRE_DEPT(r'FIRE_DEPT'),
   @JsonValue(r'OTHER')
   OTHER(r'OTHER');
-
+  
   const EmergencyContactConfigurationTypeEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+
+
