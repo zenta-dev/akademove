@@ -31,9 +31,14 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
         emit(state.toLoading());
       }
 
+      final orderId = _currentOrderId;
+      if (orderId == null) {
+        throw StateError('Order ID is null');
+      }
+
       final res = await _orderChatRepository.listMessages(
         ListOrderChatMessagesQuery(
-          orderId: _currentOrderId!,
+          orderId: orderId,
           limit: 50,
           cursor: loadMore ? state.nextCursor : null,
         ),
@@ -65,7 +70,8 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
   }
 
   Future<void> sendMessage(String message) async {
-    if (_currentOrderId == null) return;
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
     if (message.trim().isEmpty) return;
 
     try {
@@ -73,10 +79,7 @@ class OrderChatCubit extends BaseCubit<OrderChatState> {
       if (state.checkAndAssignOperation(methodName)) return;
 
       final res = await _orderChatRepository.sendMessage(
-        SendOrderChatMessageRequest(
-          orderId: _currentOrderId!,
-          message: message.trim(),
-        ),
+        SendOrderChatMessageRequest(orderId: orderId, message: message.trim()),
       );
 
       state.unAssignOperation(methodName);

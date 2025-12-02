@@ -268,8 +268,9 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
           );
 
           await _webSocketService.disconnect(driverPool);
-          if (_orderId != null) {
-            await _setupLiveOrderWebsocket(orderId: _orderId!);
+          final orderId = _orderId;
+          if (orderId != null) {
+            await _setupLiveOrderWebsocket(orderId: orderId);
           }
         }
       }
@@ -337,11 +338,13 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
 
   Future<void> teardownWebsocket() async {
     final futures = [_webSocketService.disconnect('driver-pool')];
-    if (_orderId != null) {
-      futures.add(_webSocketService.disconnect(_orderId!));
+    final orderId = _orderId;
+    if (orderId != null) {
+      futures.add(_webSocketService.disconnect(orderId));
     }
-    if (_paymentId != null) {
-      futures.add(_webSocketService.disconnect(_paymentId!));
+    final paymentId = _paymentId;
+    if (paymentId != null) {
+      futures.add(_webSocketService.disconnect(paymentId));
     }
 
     await Future.wait(futures);

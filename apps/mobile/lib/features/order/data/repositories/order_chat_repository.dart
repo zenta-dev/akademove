@@ -51,21 +51,22 @@ class OrderChatRepository extends BaseRepository {
         cursor: query.cursor,
       );
 
-      if (response.data == null) {
+      final responseData = response.data;
+      if (responseData == null) {
         throw const RepositoryError(
           'Failed to load chat messages',
           code: ErrorCode.internalServerError,
         );
       }
 
-      final data = response.data!.data;
+      final data = responseData.data;
       final result = OrderChatMessagesResponse(
         rows: data.rows,
         hasMore: data.hasMore,
         nextCursor: data.nextCursor,
       );
 
-      return SuccessResponse(data: result, message: response.data!.message);
+      return SuccessResponse(data: result, message: responseData.message);
     });
   }
 
@@ -81,7 +82,8 @@ class OrderChatRepository extends BaseRepository {
         ),
       );
 
-      if (response.data == null) {
+      final responseData = response.data;
+      if (responseData == null) {
         throw const RepositoryError(
           'Failed to send message',
           code: ErrorCode.internalServerError,
@@ -89,8 +91,8 @@ class OrderChatRepository extends BaseRepository {
       }
 
       return SuccessResponse(
-        data: response.data!.data,
-        message: response.data!.message,
+        data: responseData.data,
+        message: responseData.message,
       );
     });
   }
