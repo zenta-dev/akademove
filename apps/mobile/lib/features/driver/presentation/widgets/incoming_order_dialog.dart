@@ -345,16 +345,16 @@ class IncomingOrderListener extends StatelessWidget {
         BlocListener<DriverOrderCubit, DriverOrderState>(
           listenWhen: (previous, current) {
             // Navigate when order is successfully accepted
-            return previous.activeOrder == null &&
-                current.activeOrder != null &&
-                current.activeOrder!.status == OrderStatus.ACCEPTED;
+            return previous.currentOrder == null &&
+                current.currentOrder != null &&
+                current.currentOrder!.status == OrderStatus.ACCEPTED;
           },
           listener: (context, state) {
-            if (state.activeOrder != null) {
+            if (state.currentOrder != null) {
               // Navigate to order detail screen
               context.goNamed(
                 Routes.driverOrderDetail.name,
-                pathParameters: {'orderId': state.activeOrder!.id},
+                pathParameters: {'orderId': state.currentOrder!.id},
               );
             }
           },

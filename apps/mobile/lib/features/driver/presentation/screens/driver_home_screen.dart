@@ -2,7 +2,6 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
-import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,15 +51,18 @@ class _DriverHomeView extends StatelessWidget {
       },
       builder: (context, state) {
         return MyScaffold(
-          appBar: DefaultAppBar(
-            title: 'Driver Dashboard',
-            actions: [
-              IconButton(
-                icon: const Icon(material.Icons.person),
-                onPressed: () => context.push(Routes.driverProfile),
-              ),
-            ],
-          ),
+          headers: [
+            DefaultAppBar(
+              title: 'Driver Dashboard',
+              trailing: [
+                IconButton(
+                  icon: const Icon(material.Icons.person),
+                  variance: ButtonVariance.ghost,
+                  onPressed: () => context.push(Routes.driverProfile.path),
+                ),
+              ],
+            ),
+          ],
           body: SafeArea(
             child: material.RefreshIndicator(
               onRefresh: () => context.read<DriverCubit>().init(),
@@ -312,20 +314,21 @@ class _DriverHomeView extends StatelessWidget {
               context,
               icon: material.Icons.history,
               label: 'Order History',
-              onTap: () => context.push(Routes.driverHistory),
+              onTap: () => context.push(Routes.driverHistory.path),
             ),
             _buildActionButton(
               context,
               icon: material.Icons.calendar_today,
               label: 'Manage Schedule',
-              onTap: () => context.push(Routes.driverKrs),
+              onTap: () => context.push(Routes.driverKRS.path),
             ),
-            _buildActionButton(
-              context,
-              icon: material.Icons.star,
-              label: 'My Reviews',
-              onTap: () => context.push(Routes.driverReviews),
-            ),
+            // TODO: Add driverReviews route
+            // _buildActionButton(
+            //   context,
+            //   icon: material.Icons.star,
+            //   label: 'My Reviews',
+            //   onTap: () => context.push(Routes.driverReviews.path),
+            // ),
           ],
         ),
       ),
@@ -338,7 +341,7 @@ class _DriverHomeView extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    return material.InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8.r),
       child: Container(
@@ -350,7 +353,7 @@ class _DriverHomeView extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: context.typography.body.copyWith(fontSize: 14.sp),
+                style: context.typography.small.copyWith(fontSize: 14.sp),
               ),
             ),
             Icon(

@@ -16,6 +16,7 @@ class DriverCubit extends BaseCubit<DriverState> {
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
+  // ignore: unused_field
   final ConfigurationRepository _configurationRepository;
 
   String? _driverId;

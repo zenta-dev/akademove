@@ -7,11 +7,13 @@ import 'package:api_client/api_client.dart';
 class CachePreloader {
   CachePreloader({
     required DriverRepository driverRepository,
+    // ignore: unused_element
     required ConfigurationRepository configurationRepository,
   }) : _driverRepository = driverRepository,
        _configurationRepository = configurationRepository;
 
   final DriverRepository _driverRepository;
+  // ignore: unused_field
   final ConfigurationRepository _configurationRepository;
 
   /// Preload critical driver data

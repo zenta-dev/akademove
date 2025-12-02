@@ -21,6 +21,7 @@ class EmergencyCubit extends BaseCubit<EmergencyState> {
   /// Trigger emergency during active trip
   Future<void> trigger({
     required String orderId,
+    required String userId,
     required EmergencyType type,
     required String description,
     EmergencyLocation? location,
@@ -35,6 +36,7 @@ class EmergencyCubit extends BaseCubit<EmergencyState> {
       final res = await _repository.trigger(
         TriggerEmergencyQuery(
           orderId: orderId,
+          userId: userId,
           type: type,
           description: description,
           location: location,

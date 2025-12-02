@@ -7,6 +7,7 @@ class MerchantOrderRepository extends BaseRepository {
   const MerchantOrderRepository({required ApiClient apiClient})
     : _apiClient = apiClient;
 
+  // ignore: unused_field
   final ApiClient _apiClient;
 
   /// Accept an order
