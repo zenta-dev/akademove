@@ -34,6 +34,11 @@ final driverRouter = StatefulShellRoute.indexedStack(
               path: 'earnings',
               builder: (context, state) => const DriverEarningsScreen(),
             ),
+            GoRoute(
+              name: Routes.driverLeaderboard.name,
+              path: 'leaderboard',
+              builder: (context, state) => const LeaderboardScreen(),
+            ),
           ],
         ),
       ],

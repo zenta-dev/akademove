@@ -86,7 +86,11 @@ void _setupRepository() {
     ..registerLazySingleton(() => CouponRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => EmergencyRepository(apiClient: sl<ApiClient>()),
-    );
+    )
+    ..registerLazySingleton(
+      () => LeaderboardRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()));
 }
 
 void _setupCubit() {
@@ -192,5 +196,11 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => EmergencyCubit(repository: sl<EmergencyRepository>()),
+    )
+    ..registerFactory(
+      () => LeaderboardCubit(
+        leaderboardRepository: sl<LeaderboardRepository>(),
+        badgeRepository: sl<BadgeRepository>(),
+      ),
     );
 }

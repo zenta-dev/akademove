@@ -62,6 +62,7 @@ enum Routes {
   driverHome('/driver/home'),
   driverOrderDetail('/driver/order/:orderId'),
   driverEarnings('/driver/earnings'),
+  driverLeaderboard('/driver/leaderboard'),
   driverKRS('/driver/krs'),
   driverHistory('/driver/history'),
   driverProfile('/driver/profile'),

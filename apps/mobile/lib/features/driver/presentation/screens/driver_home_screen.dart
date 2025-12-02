@@ -332,6 +332,12 @@ class _DriverHomeView extends StatelessWidget {
               label: 'Manage Schedule',
               onTap: () => context.push(Routes.driverKRS.path),
             ),
+            _buildActionButton(
+              context,
+              icon: material.Icons.emoji_events,
+              label: 'Leaderboard & Badges',
+              onTap: () => context.push(Routes.driverLeaderboard.path),
+            ),
             // Note: Reviews feature - route and screen not yet implemented
             // Uncomment when driverReviews route is added to router
             // _buildActionButton(
