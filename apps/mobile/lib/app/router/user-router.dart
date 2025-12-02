@@ -60,7 +60,10 @@ final userRouter = StatefulShellRoute.indexedStack(
             GoRoute(
               name: Routes.userRideSummary.name,
               path: Routes.userRideSummary.path,
-              builder: (context, state) => const UserRideSummaryScreen(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<CouponCubit>(),
+                child: const UserRideSummaryScreen(),
+              ),
             ),
             GoRoute(
               name: Routes.userRidePayment.name,
@@ -93,35 +96,42 @@ final userRouter = StatefulShellRoute.indexedStack(
         ),
 
         //
-        GoRoute(
-          name: Routes.userDelivery.name,
-          path: Routes.userDelivery.path,
-          builder: (context, state) => const UserDeliveryScreen(),
-        ),
-        GoRoute(
-          name: Routes.userDeliveryPickup.name,
-          path: Routes.userDeliveryPickup.path,
-          builder: (context, state) => const UserDeliveryPickupScreen(),
-        ),
-        GoRoute(
-          name: Routes.userDeliveryDropoff.name,
-          path: Routes.userDeliveryDropoff.path,
-          builder: (context, state) => const UserDeliveryDropoffScreen(),
-        ),
-        GoRoute(
-          name: Routes.userDeliveryDetails.name,
-          path: Routes.userDeliveryDetails.path,
-          builder: (context, state) => const UserDeliveryDetailsScreen(),
-        ),
-        GoRoute(
-          name: Routes.userDeliverySummary.name,
-          path: Routes.userDeliverySummary.path,
-          builder: (context, state) => const UserDeliverySummaryScreen(),
-        ),
-        GoRoute(
-          name: Routes.userDeliveryPayment.name,
-          path: Routes.userDeliveryPayment.path,
-          builder: (context, state) => const UserDeliveryPaymentScreen(),
+        ShellRoute(
+          routes: [
+            GoRoute(
+              name: Routes.userDelivery.name,
+              path: Routes.userDelivery.path,
+              builder: (context, state) => const UserDeliveryScreen(),
+            ),
+            GoRoute(
+              name: Routes.userDeliveryPickup.name,
+              path: Routes.userDeliveryPickup.path,
+              builder: (context, state) => const UserDeliveryPickupScreen(),
+            ),
+            GoRoute(
+              name: Routes.userDeliveryDropoff.name,
+              path: Routes.userDeliveryDropoff.path,
+              builder: (context, state) => const UserDeliveryDropoffScreen(),
+            ),
+            GoRoute(
+              name: Routes.userDeliveryDetails.name,
+              path: Routes.userDeliveryDetails.path,
+              builder: (context, state) => const UserDeliveryDetailsScreen(),
+            ),
+            GoRoute(
+              name: Routes.userDeliverySummary.name,
+              path: Routes.userDeliverySummary.path,
+              builder: (context, state) => BlocProvider(
+                create: (_) => sl<CouponCubit>(),
+                child: const UserDeliverySummaryScreen(),
+              ),
+            ),
+            GoRoute(
+              name: Routes.userDeliveryPayment.name,
+              path: Routes.userDeliveryPayment.path,
+              builder: (context, state) => const UserDeliveryPaymentScreen(),
+            ),
+          ],
         ),
         GoRoute(
           name: Routes.userMart.name,

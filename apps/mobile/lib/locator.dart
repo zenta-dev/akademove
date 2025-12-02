@@ -82,7 +82,8 @@ void _setupRepository() {
         keyValueService: sl<KeyValueService>(),
       ),
     )
-    ..registerLazySingleton(() => UserRepository(apiClient: sl<ApiClient>()));
+    ..registerLazySingleton(() => UserRepository(apiClient: sl<ApiClient>()))
+    ..registerLazySingleton(() => CouponRepository(apiClient: sl<ApiClient>()));
 }
 
 void _setupCubit() {
@@ -122,6 +123,7 @@ void _setupCubit() {
     ..registerFactory(
       () => UserDeliveryCubit(
         orderRepository: sl<OrderRepository>(),
+        driverRepository: sl<DriverRepository>(),
         mapService: sl<MapService>(),
       ),
     )
@@ -172,6 +174,9 @@ void _setupCubit() {
       () => DriverProfileCubit(driverRepository: sl<DriverRepository>()),
     )
     ..registerFactory(
-      () => ReviewCubit(reviewRepository: sl<ReviewRepository>()),
+      () => DriverReviewCubit(reviewRepository: sl<ReviewRepository>()),
+    )
+    ..registerFactory(
+      () => CouponCubit(couponRepository: sl<CouponRepository>()),
     );
 }

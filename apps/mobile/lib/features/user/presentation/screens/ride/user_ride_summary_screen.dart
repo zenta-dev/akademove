@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' show showModalBottomSheet;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -18,10 +19,23 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   PaymentMethod method = PaymentMethod.QRIS;
   UserGender? gender;
   BankProvider? bankProvider;
+  Coupon? selectedCoupon;
+  num discountAmount = 0;
 
   @override
   void initState() {
     super.initState();
+    // Load eligible coupons when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orderState = context.read<UserOrderCubit>().state;
+      final totalAmount = orderState.estimateOrder?.summary.totalCost ?? 0;
+      if (totalAmount > 0) {
+        context.read<CouponCubit>().loadEligibleCoupons(
+          serviceType: OrderType.RIDE,
+          totalAmount: totalAmount,
+        );
+      }
+    });
   }
 
   @override
@@ -48,6 +62,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
       method,
       gender: gender,
       bankProvider: bankProvider,
+      couponCode: selectedCoupon?.code,
     );
 
     if (!mounted || !context.mounted) return;
@@ -161,6 +176,57 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
               );
             },
           ),
+          // Coupon selector
+          BlocBuilder<CouponCubit, CouponState>(
+            builder: (context, couponState) {
+              return OutlineButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<CouponCubit>(),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: CouponSelectorWidget(
+                          onCouponSelected: (coupon) {
+                            setState(() {
+                              selectedCoupon = coupon;
+                              if (coupon != null) {
+                                final cubit = context.read<CouponCubit>();
+                                discountAmount =
+                                    cubit.state.data?.bestDiscountAmount ?? 0;
+                              } else {
+                                discountAmount = 0;
+                              }
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedCoupon == null
+                            ? 'Apply Coupon'
+                            : 'Coupon: ${selectedCoupon!.code}',
+                      ),
+                    ),
+                    Icon(
+                      selectedCoupon == null
+                          ? LucideIcons.chevronRight
+                          : LucideIcons.check,
+                      size: 16,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           DefaultText(
             'Payment Summary',
             fontSize: 16.sp,
@@ -170,6 +236,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             builder: (context, state) {
               return RideSummaryWidget(
                 summary: state.estimateOrder?.summary,
+                discountAmount: discountAmount,
               ).asSkeleton(enabled: state.isLoading);
             },
           ),

@@ -1,13 +1,40 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' show showModalBottomSheet;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class UserDeliverySummaryScreen extends StatelessWidget {
+class UserDeliverySummaryScreen extends StatefulWidget {
   const UserDeliverySummaryScreen({super.key});
+
+  @override
+  State<UserDeliverySummaryScreen> createState() =>
+      _UserDeliverySummaryScreenState();
+}
+
+class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
+  Coupon? selectedCoupon;
+  num discountAmount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load eligible coupons when screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final deliveryState = context.read<UserDeliveryCubit>().state;
+      final totalAmount = deliveryState.estimate?.summary.totalCost ?? 0;
+      if (totalAmount > 0) {
+        context.read<CouponCubit>().loadEligibleCoupons(
+          serviceType: OrderType.DELIVERY,
+          totalAmount: totalAmount,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +118,61 @@ class UserDeliverySummaryScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Coupon selector
+                BlocBuilder<CouponCubit, CouponState>(
+                  builder: (context, couponState) {
+                    return OutlineButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (_) => BlocProvider.value(
+                            value: context.read<CouponCubit>(),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: CouponSelectorWidget(
+                                onCouponSelected: (coupon) {
+                                  setState(() {
+                                    selectedCoupon = coupon;
+                                    if (coupon != null) {
+                                      final cubit = context.read<CouponCubit>();
+                                      discountAmount =
+                                          cubit
+                                              .state
+                                              .data
+                                              ?.bestDiscountAmount ??
+                                          0;
+                                    } else {
+                                      discountAmount = 0;
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedCoupon == null
+                                  ? 'Apply Coupon'
+                                  : 'Coupon: ${selectedCoupon!.code}',
+                            ),
+                          ),
+                          Icon(
+                            selectedCoupon == null
+                                ? LucideIcons.chevronRight
+                                : LucideIcons.check,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 Card(
                   child: Padding(
                     padding: EdgeInsets.all(12.w),
@@ -121,8 +203,25 @@ class UserDeliverySummaryScreen extends StatelessWidget {
                         const Divider(),
                         _buildPriceRow(
                           context,
-                          'Total',
+                          'Subtotal',
                           context.formatCurrency(estimate.summary.totalCost),
+                        ),
+                        if (discountAmount > 0) ...[
+                          const Divider(),
+                          _buildPriceRow(
+                            context,
+                            'Discount',
+                            '- ${context.formatCurrency(discountAmount)}',
+                            isDiscount: true,
+                          ),
+                        ],
+                        const Divider(),
+                        _buildPriceRow(
+                          context,
+                          'Total',
+                          context.formatCurrency(
+                            estimate.summary.totalCost - discountAmount,
+                          ),
                           bold: true,
                         ),
                       ],
@@ -133,8 +232,15 @@ class UserDeliverySummaryScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: Button.primary(
-                    onPressed: () =>
-                        context.push(Routes.userDeliveryPayment.path),
+                    onPressed: () {
+                      // Store coupon in delivery cubit for payment screen
+                      if (selectedCoupon != null) {
+                        context.read<UserDeliveryCubit>().setSelectedCoupon(
+                          selectedCoupon!.code,
+                        );
+                      }
+                      context.push(Routes.userDeliveryPayment.path);
+                    },
                     child: const Text('Choose Payment Method'),
                   ),
                 ),
@@ -158,6 +264,7 @@ class UserDeliverySummaryScreen extends StatelessWidget {
     String label,
     String value, {
     bool bold = false,
+    bool isDiscount = false,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -171,6 +278,7 @@ class UserDeliverySummaryScreen extends StatelessWidget {
           value,
           fontSize: 14.sp,
           fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+          color: isDiscount ? const Color(0xFF10B981) : null,
         ),
       ],
     );

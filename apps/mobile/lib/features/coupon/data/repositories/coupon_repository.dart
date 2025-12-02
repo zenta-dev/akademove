@@ -12,6 +12,36 @@ class ListCouponQuery extends UnifiedQuery {
   });
 }
 
+/// Result from getEligibleCoupons API
+class EligibleCouponsResult {
+  const EligibleCouponsResult({
+    required this.coupons,
+    this.bestCoupon,
+    required this.bestDiscountAmount,
+  });
+
+  final List<Coupon> coupons;
+  final Coupon? bestCoupon;
+  final num bestDiscountAmount;
+}
+
+/// Result from validateCoupon API
+class CouponValidationResult {
+  const CouponValidationResult({
+    required this.valid,
+    this.coupon,
+    required this.discountAmount,
+    required this.finalAmount,
+    this.reason,
+  });
+
+  final bool valid;
+  final Coupon? coupon;
+  final num discountAmount;
+  final num finalAmount;
+  final String? reason;
+}
+
 class CouponRepository extends BaseRepository {
   CouponRepository({required ApiClient apiClient}) : _apiClient = apiClient;
 
@@ -37,6 +67,90 @@ class CouponRepository extends BaseRepository {
           ));
 
       return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
+  /// Get eligible coupons for an order with auto-selected best coupon
+  Future<BaseResponse<EligibleCouponsResult>> getEligibleCoupons({
+    required OrderType serviceType,
+    required num totalAmount,
+    String? merchantId,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getCouponApi().couponGetEligibleCoupons(
+        couponGetEligibleCouponsRequest: CouponGetEligibleCouponsRequest(
+          serviceType: serviceType,
+          totalAmount: totalAmount,
+          merchantId: merchantId,
+        ),
+      );
+
+      final responseData =
+          res.data ??
+          (throw const RepositoryError(
+            'Response data not found',
+            code: ErrorCode.notFound,
+          ));
+
+      final data =
+          responseData.data ??
+          (throw const RepositoryError(
+            'Eligible coupons not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(
+        message: responseData.message,
+        data: EligibleCouponsResult(
+          coupons: data.coupons,
+          bestCoupon: data.bestCoupon,
+          bestDiscountAmount: data.bestDiscountAmount,
+        ),
+      );
+    });
+  }
+
+  /// Validate a specific coupon code
+  Future<BaseResponse<CouponValidationResult>> validateCoupon({
+    required String code,
+    required num orderAmount,
+    OrderType? serviceType,
+    String? merchantId,
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getCouponApi().couponValidate(
+        couponValidateRequest: CouponValidateRequest(
+          code: code,
+          orderAmount: orderAmount,
+          serviceType: serviceType,
+          merchantId: merchantId,
+        ),
+      );
+
+      final responseData =
+          res.data ??
+          (throw const RepositoryError(
+            'Response data not found',
+            code: ErrorCode.notFound,
+          ));
+
+      final data =
+          responseData.data ??
+          (throw const RepositoryError(
+            'Validation data not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(
+        message: responseData.message,
+        data: CouponValidationResult(
+          valid: data.valid,
+          coupon: data.coupon,
+          discountAmount: data.discountAmount,
+          finalAmount: data.finalAmount,
+          reason: data.reason,
+        ),
+      );
     });
   }
 }

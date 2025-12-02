@@ -30,17 +30,14 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     return super.close();
   }
 
-  Future<void> list() async {
+  Future<void> list() async => await taskManager.execute('UOC-l1', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
       emit(state.toLoading());
 
       final res = await _orderRepository.list(
         const ListOrderQuery(statuses: OrderStatus.values),
       );
 
-      state.unAssignOperation(methodName);
       emit(state.toSuccess(orderHistories: res.data, message: res.message));
     } on BaseError catch (e, st) {
       logger.e(
@@ -50,77 +47,70 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
-  Future<void> maybeGet(String? id) async {
-    if (id == null) return;
+  Future<void> maybeGet(String? id) async =>
+      await taskManager.execute('UOC-mG1-$id', () async {
+        if (id == null) return;
 
-    final methodName = getMethodName();
-    if (state.checkAndAssignOperation(methodName)) return;
+        try {
+          emit(state.toLoading());
 
-    try {
-      emit(state.toLoading());
+          final local = state.orderHistories?.cast<Order?>().firstWhere(
+            (v) => v?.id == id,
+            orElse: () => null,
+          );
 
-      final local = state.orderHistories?.cast<Order?>().firstWhere(
-        (v) => v?.id == id,
-        orElse: () => null,
-      );
+          if (local != null) {
+            emit(state.toSuccess(selectedOrder: local));
+            return;
+          }
 
-      if (local != null) {
-        state.unAssignOperation(methodName);
-        emit(state.toSuccess(selectedOrder: local));
-        return;
-      }
+          // Fetch from API
+          final res = await _orderRepository.get(id);
 
-      // Fetch from API
-      final res = await _orderRepository.get(id);
+          emit(state.toSuccess(selectedOrder: res.data, message: res.message));
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserRideCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
-      state.unAssignOperation(methodName);
-      emit(state.toSuccess(selectedOrder: res.data, message: res.message));
-    } on BaseError catch (e, st) {
-      state.unAssignOperation(methodName);
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+  Future<void> estimate(Place pickup, Place dropoff) async => await taskManager
+      .execute('UOC-e1-${pickup.hashCode}-${dropoff.hashCode}', () async {
+        try {
+          emit(state.toLoading());
 
-  Future<void> estimate(Place pickup, Place dropoff) async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
+          final res = await _orderRepository.estimate(
+            EstimateOrderQuery(
+              type: OrderType.RIDE,
+              pickupLocation: pickup.toCoordinate(),
+              dropoffLocation: dropoff.toCoordinate(),
+            ),
+          );
 
-      final res = await _orderRepository.estimate(
-        EstimateOrderQuery(
-          type: OrderType.RIDE,
-          pickupLocation: pickup.toCoordinate(),
-          dropoffLocation: dropoff.toCoordinate(),
-        ),
-      );
-
-      state.unAssignOperation(methodName);
-      emit(
-        state.toSuccess(
-          estimateOrder: EstimateOrderResult(
-            summary: res.data,
-            pickup: pickup,
-            dropoff: dropoff,
-          ),
-        ),
-      );
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-      emit(state.toFailure(e));
-    }
-  }
+          emit(
+            state.toSuccess(
+              estimateOrder: EstimateOrderResult(
+                summary: res.data,
+                pickup: pickup,
+                dropoff: dropoff,
+              ),
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserRideCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
 
   Future<PlaceOrderResponse?> placeOrder(
     Place pickup,
@@ -129,18 +119,18 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
     PaymentMethod method, {
     UserGender? gender,
     BankProvider? bankProvider,
-  }) async {
+    String? couponCode,
+  }) async => await taskManager.execute('UOC-pO', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return null;
       emit(state.toLoading());
 
       final res = await _orderRepository.placeOrder(
         PlaceOrder(
-          type: type,
-          pickupLocation: pickup.toCoordinate(),
           dropoffLocation: dropoff.toCoordinate(),
+          pickupLocation: pickup.toCoordinate(),
+          type: type,
           gender: gender,
+          couponCode: couponCode,
           payment: PlaceOrderPayment(
             provider: PaymentProvider.MIDTRANS,
             method: method,
@@ -152,7 +142,6 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       _orderId = res.data.order.id;
       _paymentId = res.data.payment.id;
       await _setupPaymentWebsocket(paymentId: res.data.payment.id);
-      state.unAssignOperation(methodName);
       emit(
         state.toSuccess(
           currentOrder: res.data.order,
@@ -170,7 +159,7 @@ class UserOrderCubit extends BaseCubit<UserOrderState> {
       emit(state.toFailure(e));
       return null;
     }
-  }
+  });
 
   Future<void> _setupPaymentWebsocket({required String paymentId}) async {
     try {

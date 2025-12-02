@@ -7,15 +7,25 @@ import 'package:api_client/api_client.dart';
 class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
   UserDeliveryCubit({
     required OrderRepository orderRepository,
+    required DriverRepository driverRepository,
     required MapService mapService,
   }) : _orderRepository = orderRepository,
+       _driverRepository = driverRepository,
        _mapService = mapService,
        super(UserDeliveryState());
 
   final OrderRepository _orderRepository;
+  final DriverRepository _driverRepository;
   final MapService _mapService;
 
-  void reset() => emit(UserDeliveryState());
+  String? _selectedCouponCode;
+
+  String? get selectedCouponCode => _selectedCouponCode;
+
+  void reset() {
+    _selectedCouponCode = null;
+    emit(UserDeliveryState());
+  }
 
   void clearSearchPlaces() => emit(
     state.toSuccess(searchPlaces: const PageTokenPaginationResult(data: [])),
@@ -29,13 +39,15 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
     emit(state.toSuccess(dropoff: dropoff));
   }
 
+  void setSelectedCoupon(String? couponCode) {
+    _selectedCouponCode = couponCode;
+  }
+
   Future<void> getNearbyPlaces(
     Coordinate coord, {
     bool isRefresh = false,
-  }) async {
+  }) async => await taskManager.execute('UDC-gNP-${coord.hashCode}', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
       if (isRefresh && state.nearbyPlaces.token == null) {
         emit(state.toLoading());
       }
@@ -49,7 +61,6 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
           ? res.data
           : [...state.nearbyPlaces.data, ...res.data];
 
-      state.unAssignOperation(methodName);
       emit(
         state.toSuccess(
           nearbyPlaces: PageTokenPaginationResult(
@@ -66,17 +77,15 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
       );
       emit(state.toSuccess(nearbyPlaces: state.nearbyPlaces));
     }
-  }
+  });
 
   String? _searchQuery;
   Future<void> searchPlaces(
     String query, {
     Coordinate? coordinate,
     bool isRefresh = false,
-  }) async {
+  }) async => await taskManager.execute('UDC-sP-$query', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
       if (isRefresh && state.searchPlaces.token == null) {
         emit(state.toLoading());
       }
@@ -93,7 +102,6 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
           ? [...state.searchPlaces.data, ...res.data]
           : res.data;
 
-      state.unAssignOperation(methodName);
       emit(
         state.toSuccess(
           searchPlaces: PageTokenPaginationResult(
@@ -110,7 +118,7 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
       );
       emit(state.toSuccess(searchPlaces: state.searchPlaces));
     }
-  }
+  });
 
   void setDeliveryDetails(
     String description,
@@ -175,17 +183,13 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
     );
   }
 
-  Future<void> estimate() async {
+  Future<void> estimate() async => await taskManager.execute('UDC-e', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-
       final pickup = state.pickup;
       final dropoff = state.dropoff;
       final details = state.details;
 
       if (pickup == null || dropoff == null || details == null) {
-        state.unAssignOperation(methodName);
         emit(
           state.toFailure(
             const RepositoryError('Missing delivery information'),
@@ -205,7 +209,6 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
         ),
       );
 
-      state.unAssignOperation(methodName);
       emit(
         state.toSuccess(
           estimate: DeliveryEstimateResult(
@@ -224,19 +227,16 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
       );
       emit(state.toFailure(e));
     }
-  }
+  });
 
   Future<PlaceOrderResponse?> placeDeliveryOrder(
     PaymentMethod method, {
     BankProvider? bankProvider,
-  }) async {
+    String? couponCode,
+  }) async => await taskManager.execute('UDC-pDO-${method.hashCode}', () async {
     try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return null;
-
       final estimate = state.estimate;
       if (estimate == null) {
-        state.unAssignOperation(methodName);
         emit(
           state.toFailure(const RepositoryError('Please get estimate first')),
         );
@@ -247,14 +247,15 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
 
       final res = await _orderRepository.placeOrder(
         PlaceOrder(
-          type: OrderType.DELIVERY,
-          pickupLocation: estimate.pickup.toCoordinate(),
           dropoffLocation: estimate.dropoff.toCoordinate(),
+          pickupLocation: estimate.pickup.toCoordinate(),
+          type: OrderType.DELIVERY,
           note: OrderNote(
             pickup: 'Pickup: ${estimate.details.description}',
             dropoff: 'Weight: ${estimate.details.weight}kg',
             instructions: estimate.details.specialInstructions,
           ),
+          couponCode: couponCode,
           payment: PlaceOrderPayment(
             provider: PaymentProvider.MIDTRANS,
             method: method,
@@ -263,7 +264,6 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
         ),
       );
 
-      state.unAssignOperation(methodName);
       emit(state.toSuccess(message: res.message));
       return res.data;
     } on BaseError catch (e, st) {
@@ -274,6 +274,47 @@ class UserDeliveryCubit extends BaseCubit<UserDeliveryState> {
       );
       emit(state.toFailure(e));
       return null;
+    }
+  });
+
+  Future<void> getNearbyDrivers(GetDriverNearbyQuery req) async =>
+      await taskManager.execute('UDC-gND-${req.hashCode}', () async {
+        try {
+          emit(state.toLoading());
+
+          final res = await _driverRepository.getDriverNearby(req);
+
+          final mergedList = {
+            for (final item in state.nearbyDrivers) item.id: item,
+            for (final item in res.data) item.id: item,
+          }.values.toList();
+
+          emit(
+            state.toSuccess(nearbyDrivers: mergedList, message: res.message),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserRideCubit] - Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toSuccess(nearbyDrivers: state.nearbyDrivers));
+        }
+      });
+
+  Future<List<Coordinate>> getRoutes(
+    Coordinate origin,
+    Coordinate destination,
+  ) async {
+    try {
+      return await _mapService.getRoutes(origin, destination);
+    } on BaseError catch (e, st) {
+      logger.e(
+        '[UserRideCubit] - getRoutes error: ${e.message}',
+        error: e,
+        stackTrace: st,
+      );
+      return [];
     }
   }
 }

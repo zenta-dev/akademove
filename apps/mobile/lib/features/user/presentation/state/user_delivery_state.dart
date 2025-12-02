@@ -34,6 +34,7 @@ class DeliveryEstimateResult {
 )
 class UserDeliveryState extends BaseState2 with UserDeliveryStateMappable {
   UserDeliveryState({
+    this.nearbyDrivers = const [],
     this.pickup,
     this.dropoff,
     this.details,
@@ -51,6 +52,7 @@ class UserDeliveryState extends BaseState2 with UserDeliveryStateMappable {
   final DeliveryEstimateResult? estimate;
   final PageTokenPaginationResult<List<Place>> nearbyPlaces;
   final PageTokenPaginationResult<List<Place>> searchPlaces;
+  final List<Driver> nearbyDrivers;
 
   @override
   UserDeliveryState toInitial() =>
@@ -68,6 +70,7 @@ class UserDeliveryState extends BaseState2 with UserDeliveryStateMappable {
     DeliveryEstimateResult? estimate,
     PageTokenPaginationResult<List<Place>>? nearbyPlaces,
     PageTokenPaginationResult<List<Place>>? searchPlaces,
+    List<Driver>? nearbyDrivers,
     String? message,
   }) => copyWith(
     state: CubitState.success,
@@ -77,6 +80,7 @@ class UserDeliveryState extends BaseState2 with UserDeliveryStateMappable {
     estimate: estimate ?? this.estimate,
     nearbyPlaces: nearbyPlaces ?? this.nearbyPlaces,
     searchPlaces: searchPlaces ?? this.searchPlaces,
+    nearbyDrivers: nearbyDrivers ?? this.nearbyDrivers,
     message: message,
     error: null,
   );

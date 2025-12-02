@@ -81,12 +81,12 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                   child: Button.primary(
                     enabled: !deliveryState.isLoading,
                     onPressed: () async {
-                      final result = await context
-                          .read<UserDeliveryCubit>()
-                          .placeDeliveryOrder(
-                            method,
-                            bankProvider: bankProvider,
-                          );
+                      final cubit = context.read<UserDeliveryCubit>();
+                      final result = await cubit.placeDeliveryOrder(
+                        method,
+                        bankProvider: bankProvider,
+                        couponCode: cubit.selectedCouponCode,
+                      );
 
                       if (result != null && context.mounted) {
                         context.showMyToast(
