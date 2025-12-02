@@ -145,7 +145,8 @@ const systemRoles: UserRole[] = ["ADMIN", "OPERATOR"];
 export const requireRoles = (...roles: Roles[]) =>
 	base.middleware(async ({ context, next }) => {
 		const userRole = context.user?.role;
-
+		console.log("userRole", userRole);
+		console.log("requiredRoles", roles);
 		if (!userRole) {
 			throw new AuthError("Invalid session", {
 				code: "UNAUTHORIZED",

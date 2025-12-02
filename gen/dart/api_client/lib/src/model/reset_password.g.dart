@@ -20,7 +20,11 @@ abstract class _$ResetPasswordCWProxy {
   /// ```dart
   /// ResetPassword(...).copyWith(id: 12, name: "My name")
   /// ```
-  ResetPassword call({String token, String newPassword, String confirmPassword});
+  ResetPassword call({
+    String token,
+    String newPassword,
+    String confirmPassword,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -34,10 +38,12 @@ class _$ResetPasswordCWProxyImpl implements _$ResetPasswordCWProxy {
   ResetPassword token(String token) => call(token: token);
 
   @override
-  ResetPassword newPassword(String newPassword) => call(newPassword: newPassword);
+  ResetPassword newPassword(String newPassword) =>
+      call(newPassword: newPassword);
 
   @override
-  ResetPassword confirmPassword(String confirmPassword) => call(confirmPassword: confirmPassword);
+  ResetPassword confirmPassword(String confirmPassword) =>
+      call(confirmPassword: confirmPassword);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -57,11 +63,14 @@ class _$ResetPasswordCWProxyImpl implements _$ResetPasswordCWProxy {
           ? _value.token
           // ignore: cast_nullable_to_non_nullable
           : token as String,
-      newPassword: newPassword == const $CopyWithPlaceholder() || newPassword == null
+      newPassword:
+          newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
           : newPassword as String,
-      confirmPassword: confirmPassword == const $CopyWithPlaceholder() || confirmPassword == null
+      confirmPassword:
+          confirmPassword == const $CopyWithPlaceholder() ||
+              confirmPassword == null
           ? _value.confirmPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmPassword as String,
@@ -82,7 +91,10 @@ extension $ResetPasswordCopyWith on ResetPassword {
 
 ResetPassword _$ResetPasswordFromJson(Map<String, dynamic> json) =>
     $checkedCreate('ResetPassword', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['token', 'newPassword', 'confirmPassword']);
+      $checkKeys(
+        json,
+        requiredKeys: const ['token', 'newPassword', 'confirmPassword'],
+      );
       final val = ResetPassword(
         token: $checkedConvert('token', (v) => v as String),
         newPassword: $checkedConvert('newPassword', (v) => v as String),
@@ -91,8 +103,9 @@ ResetPassword _$ResetPasswordFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$ResetPasswordToJson(ResetPassword instance) => <String, dynamic>{
-  'token': instance.token,
-  'newPassword': instance.newPassword,
-  'confirmPassword': instance.confirmPassword,
-};
+Map<String, dynamic> _$ResetPasswordToJson(ResetPassword instance) =>
+    <String, dynamic>{
+      'token': instance.token,
+      'newPassword': instance.newPassword,
+      'confirmPassword': instance.confirmPassword,
+    };

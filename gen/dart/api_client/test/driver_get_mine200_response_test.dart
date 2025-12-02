@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverGetMine200Response
 void main() {
-  final DriverGetMine200Response? instance = /* DriverGetMine200Response(...) */ null;
+  final DriverGetMine200Response? instance = /* DriverGetMine200Response(...) */
+      null;
   // TODO add properties to the entity
 
   group(DriverGetMine200Response, () {

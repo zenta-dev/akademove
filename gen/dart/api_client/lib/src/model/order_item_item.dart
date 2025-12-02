@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_item_item.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderItemItem {
   /// Returns a new [OrderItemItem] instance.
   const OrderItemItem({
@@ -80,7 +85,8 @@ class OrderItemItem {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderItemItem.fromJson(Map<String, dynamic> json) => _$OrderItemItemFromJson(json);
+  factory OrderItemItem.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderItemItemToJson(this);
 

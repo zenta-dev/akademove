@@ -21,13 +21,17 @@ class BasicAuthInterceptor extends AuthInterceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final metadataAuthInfo = getAuthInfo(
       options,
-      (secure) => (secure['type'] == 'http' && secure['scheme']?.toLowerCase() == 'basic') || secure['type'] == 'basic',
+      (secure) =>
+          (secure['type'] == 'http' &&
+              secure['scheme']?.toLowerCase() == 'basic') ||
+          secure['type'] == 'basic',
     );
     for (final info in metadataAuthInfo) {
       final authName = info['name'] as String;
       final basicAuthInfo = authInfo[authName];
       if (basicAuthInfo != null) {
-        final basicAuth = 'Basic ${base64Encode(utf8.encode('${basicAuthInfo.username}:${basicAuthInfo.password}'))}';
+        final basicAuth =
+            'Basic ${base64Encode(utf8.encode('${basicAuthInfo.username}:${basicAuthInfo.password}'))}';
         options.headers['Authorization'] = basicAuth;
         break;
       }

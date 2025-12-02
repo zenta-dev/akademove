@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope_payload_done.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderEnvelopePayloadDone {
   /// Returns a new [OrderEnvelopePayloadDone] instance.
   const OrderEnvelopePayloadDone({
@@ -42,9 +47,14 @@ class OrderEnvelopePayloadDone {
           other.driverCurrentLocation == driverCurrentLocation;
 
   @override
-  int get hashCode => by.hashCode + orderId.hashCode + driverId.hashCode + driverCurrentLocation.hashCode;
+  int get hashCode =>
+      by.hashCode +
+      orderId.hashCode +
+      driverId.hashCode +
+      driverCurrentLocation.hashCode;
 
-  factory OrderEnvelopePayloadDone.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDoneFromJson(json);
+  factory OrderEnvelopePayloadDone.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadDoneFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDoneToJson(this);
 

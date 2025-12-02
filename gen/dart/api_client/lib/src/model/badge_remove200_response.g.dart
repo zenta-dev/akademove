@@ -22,12 +22,18 @@ abstract class _$BadgeRemove200ResponseCWProxy {
   /// ```dart
   /// BadgeRemove200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeRemove200Response call({String message, Object? data, PaginationResult? pagination, int? totalPages});
+  BadgeRemove200Response call({
+    String message,
+    Object? data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfBadgeRemove200Response.copyWith(...)` or call `instanceOfBadgeRemove200Response.copyWith.fieldName(value)` for a single field.
-class _$BadgeRemove200ResponseCWProxyImpl implements _$BadgeRemove200ResponseCWProxy {
+class _$BadgeRemove200ResponseCWProxyImpl
+    implements _$BadgeRemove200ResponseCWProxy {
   const _$BadgeRemove200ResponseCWProxyImpl(this._value);
 
   final BadgeRemove200Response _value;
@@ -39,10 +45,12 @@ class _$BadgeRemove200ResponseCWProxyImpl implements _$BadgeRemove200ResponseCWP
   BadgeRemove200Response data(Object? data) => call(data: data);
 
   @override
-  BadgeRemove200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  BadgeRemove200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  BadgeRemove200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  BadgeRemove200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,35 @@ extension $BadgeRemove200ResponseCopyWith on BadgeRemove200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBadgeRemove200Response.copyWith(...)` or `instanceOfBadgeRemove200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BadgeRemove200ResponseCWProxy get copyWith => _$BadgeRemove200ResponseCWProxyImpl(this);
+  _$BadgeRemove200ResponseCWProxy get copyWith =>
+      _$BadgeRemove200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BadgeRemove200Response _$BadgeRemove200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('BadgeRemove200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = BadgeRemove200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => v),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+BadgeRemove200Response _$BadgeRemove200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('BadgeRemove200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = BadgeRemove200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert('data', (v) => v),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$BadgeRemove200ResponseToJson(BadgeRemove200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$BadgeRemove200ResponseToJson(
+  BadgeRemove200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
   'pagination': ?instance.pagination?.toJson(),

@@ -22,12 +22,18 @@ abstract class _$LeaderboardGet200ResponseCWProxy {
   /// ```dart
   /// LeaderboardGet200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  LeaderboardGet200Response call({String message, Leaderboard data, PaginationResult? pagination, int? totalPages});
+  LeaderboardGet200Response call({
+    String message,
+    Leaderboard data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfLeaderboardGet200Response.copyWith(...)` or call `instanceOfLeaderboardGet200Response.copyWith.fieldName(value)` for a single field.
-class _$LeaderboardGet200ResponseCWProxyImpl implements _$LeaderboardGet200ResponseCWProxy {
+class _$LeaderboardGet200ResponseCWProxyImpl
+    implements _$LeaderboardGet200ResponseCWProxy {
   const _$LeaderboardGet200ResponseCWProxyImpl(this._value);
 
   final LeaderboardGet200Response _value;
@@ -39,10 +45,12 @@ class _$LeaderboardGet200ResponseCWProxyImpl implements _$LeaderboardGet200Respo
   LeaderboardGet200Response data(Leaderboard data) => call(data: data);
 
   @override
-  LeaderboardGet200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  LeaderboardGet200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  LeaderboardGet200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  LeaderboardGet200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $LeaderboardGet200ResponseCopyWith on LeaderboardGet200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfLeaderboardGet200Response.copyWith(...)` or `instanceOfLeaderboardGet200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$LeaderboardGet200ResponseCWProxy get copyWith => _$LeaderboardGet200ResponseCWProxyImpl(this);
+  _$LeaderboardGet200ResponseCWProxy get copyWith =>
+      _$LeaderboardGet200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LeaderboardGet200Response _$LeaderboardGet200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('LeaderboardGet200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = LeaderboardGet200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => Leaderboard.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+LeaderboardGet200Response _$LeaderboardGet200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('LeaderboardGet200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = LeaderboardGet200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Leaderboard.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$LeaderboardGet200ResponseToJson(LeaderboardGet200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$LeaderboardGet200ResponseToJson(
+  LeaderboardGet200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

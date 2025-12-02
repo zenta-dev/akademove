@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'notification_save_token_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class NotificationSaveTokenRequest {
   /// Returns a new [NotificationSaveTokenRequest] instance.
   const NotificationSaveTokenRequest({required this.token});
@@ -19,7 +24,8 @@ class NotificationSaveTokenRequest {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is NotificationSaveTokenRequest && other.token == token;
+      identical(this, other) ||
+      other is NotificationSaveTokenRequest && other.token == token;
 
   @override
   int get hashCode => token.hashCode;

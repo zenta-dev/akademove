@@ -92,7 +92,11 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ChatList200Response, ChatList200Response>(rawData, 'ChatList200Response', growable: true);
+          : deserialize<ChatList200Response, ChatList200Response>(
+              rawData,
+              'ChatList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -180,7 +184,11 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ChatSend200Response, ChatSend200Response>(rawData, 'ChatSend200Response', growable: true);
+          : deserialize<ChatSend200Response, ChatSend200Response>(
+              rawData,
+              'ChatSend200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -275,11 +283,10 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(
-              rawData,
-              'MerchantOrderAccept200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -475,11 +482,10 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(
-              rawData,
-              'MerchantOrderAccept200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -581,7 +587,11 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<OrderList200Response, OrderList200Response>(rawData, 'OrderList200Response', growable: true);
+          : deserialize<OrderList200Response, OrderList200Response>(
+              rawData,
+              'OrderList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -649,7 +659,10 @@ class OrderApi {
       validateStatus: validateStatus,
     );
 
-    final _queryParameters = <String, dynamic>{r'limit': limit, if (cursor != null) r'cursor': cursor};
+    final _queryParameters = <String, dynamic>{
+      r'limit': limit,
+      if (cursor != null) r'cursor': cursor,
+    };
 
     final _response = await _dio.request<Object>(
       _path,
@@ -666,7 +679,11 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ChatList200Response, ChatList200Response>(rawData, 'ChatList200Response', growable: true);
+          : deserialize<ChatList200Response, ChatList200Response>(
+              rawData,
+              'ChatList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -853,7 +870,11 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ChatSend200Response, ChatSend200Response>(rawData, 'ChatSend200Response', growable: true);
+          : deserialize<ChatSend200Response, ChatSend200Response>(
+              rawData,
+              'ChatSend200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -948,11 +969,10 @@ class OrderApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<MerchantOrderAccept200Response, MerchantOrderAccept200Response>(
-              rawData,
-              'MerchantOrderAccept200Response',
-              growable: true,
-            );
+          : deserialize<
+              MerchantOrderAccept200Response,
+              MerchantOrderAccept200Response
+            >(rawData, 'MerchantOrderAccept200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

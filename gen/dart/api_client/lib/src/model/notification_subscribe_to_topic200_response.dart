@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'notification_subscribe_to_topic200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class NotificationSubscribeToTopic200Response {
   /// Returns a new [NotificationSubscribeToTopic200Response] instance.
   const NotificationSubscribeToTopic200Response({
@@ -45,12 +50,18 @@ class NotificationSubscribeToTopic200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory NotificationSubscribeToTopic200Response.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSubscribeToTopic200ResponseFromJson(json);
+  factory NotificationSubscribeToTopic200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NotificationSubscribeToTopic200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$NotificationSubscribeToTopic200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$NotificationSubscribeToTopic200ResponseToJson(this);
 
   @override
   String toString() {

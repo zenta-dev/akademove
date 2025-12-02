@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_wallet.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateWallet {
   /// Returns a new [UpdateWallet] instance.
   const UpdateWallet({this.userId, this.balance, this.currency, this.isActive});
@@ -37,9 +42,14 @@ class UpdateWallet {
           other.isActive == isActive;
 
   @override
-  int get hashCode => userId.hashCode + balance.hashCode + currency.hashCode + isActive.hashCode;
+  int get hashCode =>
+      userId.hashCode +
+      balance.hashCode +
+      currency.hashCode +
+      isActive.hashCode;
 
-  factory UpdateWallet.fromJson(Map<String, dynamic> json) => _$UpdateWalletFromJson(json);
+  factory UpdateWallet.fromJson(Map<String, dynamic> json) =>
+      _$UpdateWalletFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateWalletToJson(this);
 

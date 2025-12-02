@@ -42,7 +42,10 @@ class _$TimeCWProxyImpl implements _$TimeCWProxy {
   /// ```dart
   /// Time(...).copyWith(id: 12, name: "My name")
   /// ```
-  Time call({Object? h = const $CopyWithPlaceholder(), Object? m = const $CopyWithPlaceholder()}) {
+  Time call({
+    Object? h = const $CopyWithPlaceholder(),
+    Object? m = const $CopyWithPlaceholder(),
+  }) {
     return Time(
       h: h == const $CopyWithPlaceholder() || h == null
           ? _value.h
@@ -67,10 +70,17 @@ extension $TimeCopyWith on Time {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Time _$TimeFromJson(Map<String, dynamic> json) => $checkedCreate('Time', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['h', 'm']);
-  final val = Time(h: $checkedConvert('h', (v) => v as num), m: $checkedConvert('m', (v) => v as num));
-  return val;
-});
+Time _$TimeFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Time', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['h', 'm']);
+      final val = Time(
+        h: $checkedConvert('h', (v) => v as num),
+        m: $checkedConvert('m', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$TimeToJson(Time instance) => <String, dynamic>{'h': instance.h, 'm': instance.m};
+Map<String, dynamic> _$TimeToJson(Time instance) => <String, dynamic>{
+  'h': instance.h,
+  'm': instance.m,
+};

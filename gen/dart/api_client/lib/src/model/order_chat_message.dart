@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_chat_message.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderChatMessage {
   /// Returns a new [OrderChatMessage] instance.
   const OrderChatMessage({
@@ -72,7 +77,8 @@ class OrderChatMessage {
       updatedAt.hashCode +
       sender.hashCode;
 
-  factory OrderChatMessage.fromJson(Map<String, dynamic> json) => _$OrderChatMessageFromJson(json);
+  factory OrderChatMessage.fromJson(Map<String, dynamic> json) =>
+      _$OrderChatMessageFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderChatMessageToJson(this);
 

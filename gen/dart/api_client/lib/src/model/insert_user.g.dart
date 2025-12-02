@@ -65,13 +65,15 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
   InsertUser phone(Phone phone) => call(phone: phone);
 
   @override
-  InsertUser userBadges(List<UserBadge> userBadges) => call(userBadges: userBadges);
+  InsertUser userBadges(List<UserBadge> userBadges) =>
+      call(userBadges: userBadges);
 
   @override
   InsertUser password(String password) => call(password: password);
 
   @override
-  InsertUser confirmPassword(String confirmPassword) => call(confirmPassword: confirmPassword);
+  InsertUser confirmPassword(String confirmPassword) =>
+      call(confirmPassword: confirmPassword);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -112,7 +114,8 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
           : phone as Phone,
-      userBadges: userBadges == const $CopyWithPlaceholder() || userBadges == null
+      userBadges:
+          userBadges == const $CopyWithPlaceholder() || userBadges == null
           ? _value.userBadges
           // ignore: cast_nullable_to_non_nullable
           : userBadges as List<UserBadge>,
@@ -120,7 +123,9 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
           ? _value.password
           // ignore: cast_nullable_to_non_nullable
           : password as String,
-      confirmPassword: confirmPassword == const $CopyWithPlaceholder() || confirmPassword == null
+      confirmPassword:
+          confirmPassword == const $CopyWithPlaceholder() ||
+              confirmPassword == null
           ? _value.confirmPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmPassword as String,
@@ -139,34 +144,55 @@ extension $InsertUserCopyWith on InsertUser {
 // JsonSerializableGenerator
 // **************************************************************************
 
-InsertUser _$InsertUserFromJson(Map<String, dynamic> json) => $checkedCreate('InsertUser', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['name', 'email', 'role', 'phone', 'userBadges', 'password', 'confirmPassword']);
-  final val = InsertUser(
-    name: $checkedConvert('name', (v) => v as String),
-    email: $checkedConvert('email', (v) => v as String),
-    role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
-    gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
-    phone: $checkedConvert('phone', (v) => Phone.fromJson(v as Map<String, dynamic>)),
-    userBadges: $checkedConvert(
-      'userBadges',
-      (v) => (v as List<dynamic>).map((e) => UserBadge.fromJson(e as Map<String, dynamic>)).toList(),
-    ),
-    password: $checkedConvert('password', (v) => v as String),
-    confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
-  );
-  return val;
-});
+InsertUser _$InsertUserFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('InsertUser', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'name',
+          'email',
+          'role',
+          'phone',
+          'userBadges',
+          'password',
+          'confirmPassword',
+        ],
+      );
+      final val = InsertUser(
+        name: $checkedConvert('name', (v) => v as String),
+        email: $checkedConvert('email', (v) => v as String),
+        role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
+        gender: $checkedConvert(
+          'gender',
+          (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+        ),
+        phone: $checkedConvert(
+          'phone',
+          (v) => Phone.fromJson(v as Map<String, dynamic>),
+        ),
+        userBadges: $checkedConvert(
+          'userBadges',
+          (v) => (v as List<dynamic>)
+              .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+        password: $checkedConvert('password', (v) => v as String),
+        confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$InsertUserToJson(InsertUser instance) => <String, dynamic>{
-  'name': instance.name,
-  'email': instance.email,
-  'role': _$UserRoleEnumMap[instance.role]!,
-  'gender': ?_$UserGenderEnumMap[instance.gender],
-  'phone': instance.phone.toJson(),
-  'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),
-  'password': instance.password,
-  'confirmPassword': instance.confirmPassword,
-};
+Map<String, dynamic> _$InsertUserToJson(InsertUser instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'email': instance.email,
+      'role': _$UserRoleEnumMap[instance.role]!,
+      'gender': ?_$UserGenderEnumMap[instance.gender],
+      'phone': instance.phone.toJson(),
+      'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),
+      'password': instance.password,
+      'confirmPassword': instance.confirmPassword,
+    };
 
 const _$UserRoleEnumMap = {
   UserRole.ADMIN: 'ADMIN',
@@ -176,4 +202,7 @@ const _$UserRoleEnumMap = {
   UserRole.USER: 'USER',
 };
 
-const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};
+const _$UserGenderEnumMap = {
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
+};

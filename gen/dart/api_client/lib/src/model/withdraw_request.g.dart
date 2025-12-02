@@ -22,7 +22,12 @@ abstract class _$WithdrawRequestCWProxy {
   /// ```dart
   /// WithdrawRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  WithdrawRequest call({num amount, BankProvider bankProvider, String accountNumber, String? accountName});
+  WithdrawRequest call({
+    num amount,
+    BankProvider bankProvider,
+    String accountNumber,
+    String? accountName,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -36,13 +41,16 @@ class _$WithdrawRequestCWProxyImpl implements _$WithdrawRequestCWProxy {
   WithdrawRequest amount(num amount) => call(amount: amount);
 
   @override
-  WithdrawRequest bankProvider(BankProvider bankProvider) => call(bankProvider: bankProvider);
+  WithdrawRequest bankProvider(BankProvider bankProvider) =>
+      call(bankProvider: bankProvider);
 
   @override
-  WithdrawRequest accountNumber(String accountNumber) => call(accountNumber: accountNumber);
+  WithdrawRequest accountNumber(String accountNumber) =>
+      call(accountNumber: accountNumber);
 
   @override
-  WithdrawRequest accountName(String? accountName) => call(accountName: accountName);
+  WithdrawRequest accountName(String? accountName) =>
+      call(accountName: accountName);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -63,11 +71,13 @@ class _$WithdrawRequestCWProxyImpl implements _$WithdrawRequestCWProxy {
           ? _value.amount
           // ignore: cast_nullable_to_non_nullable
           : amount as num,
-      bankProvider: bankProvider == const $CopyWithPlaceholder() || bankProvider == null
+      bankProvider:
+          bankProvider == const $CopyWithPlaceholder() || bankProvider == null
           ? _value.bankProvider
           // ignore: cast_nullable_to_non_nullable
           : bankProvider as BankProvider,
-      accountNumber: accountNumber == const $CopyWithPlaceholder() || accountNumber == null
+      accountNumber:
+          accountNumber == const $CopyWithPlaceholder() || accountNumber == null
           ? _value.accountNumber
           // ignore: cast_nullable_to_non_nullable
           : accountNumber as String,
@@ -92,22 +102,29 @@ extension $WithdrawRequestCopyWith on WithdrawRequest {
 
 WithdrawRequest _$WithdrawRequestFromJson(Map<String, dynamic> json) =>
     $checkedCreate('WithdrawRequest', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['amount', 'bankProvider', 'accountNumber']);
+      $checkKeys(
+        json,
+        requiredKeys: const ['amount', 'bankProvider', 'accountNumber'],
+      );
       final val = WithdrawRequest(
         amount: $checkedConvert('amount', (v) => v as num),
-        bankProvider: $checkedConvert('bankProvider', (v) => $enumDecode(_$BankProviderEnumMap, v)),
+        bankProvider: $checkedConvert(
+          'bankProvider',
+          (v) => $enumDecode(_$BankProviderEnumMap, v),
+        ),
         accountNumber: $checkedConvert('accountNumber', (v) => v as String),
         accountName: $checkedConvert('accountName', (v) => v as String?),
       );
       return val;
     });
 
-Map<String, dynamic> _$WithdrawRequestToJson(WithdrawRequest instance) => <String, dynamic>{
-  'amount': instance.amount,
-  'bankProvider': _$BankProviderEnumMap[instance.bankProvider]!,
-  'accountNumber': instance.accountNumber,
-  'accountName': ?instance.accountName,
-};
+Map<String, dynamic> _$WithdrawRequestToJson(WithdrawRequest instance) =>
+    <String, dynamic>{
+      'amount': instance.amount,
+      'bankProvider': _$BankProviderEnumMap[instance.bankProvider]!,
+      'accountNumber': instance.accountNumber,
+      'accountName': ?instance.accountName,
+    };
 
 const _$BankProviderEnumMap = {
   BankProvider.BCA: 'BCA',

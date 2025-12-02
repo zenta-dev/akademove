@@ -42,7 +42,10 @@ class _$GetSessionResponseCWProxyImpl implements _$GetSessionResponseCWProxy {
   /// ```dart
   /// GetSessionResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  GetSessionResponse call({Object? token = const $CopyWithPlaceholder(), Object? user = const $CopyWithPlaceholder()}) {
+  GetSessionResponse call({
+    Object? token = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+  }) {
     return GetSessionResponse(
       token: token == const $CopyWithPlaceholder()
           ? _value.token
@@ -60,7 +63,8 @@ extension $GetSessionResponseCopyWith on GetSessionResponse {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfGetSessionResponse.copyWith(...)` or `instanceOfGetSessionResponse.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$GetSessionResponseCWProxy get copyWith => _$GetSessionResponseCWProxyImpl(this);
+  _$GetSessionResponseCWProxy get copyWith =>
+      _$GetSessionResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -72,12 +76,13 @@ GetSessionResponse _$GetSessionResponseFromJson(Map<String, dynamic> json) =>
       $checkKeys(json, requiredKeys: const ['user']);
       final val = GetSessionResponse(
         token: $checkedConvert('token', (v) => v as String?),
-        user: $checkedConvert('user', (v) => User.fromJson(v as Map<String, dynamic>)),
+        user: $checkedConvert(
+          'user',
+          (v) => User.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$GetSessionResponseToJson(GetSessionResponse instance) => <String, dynamic>{
-  'token': ?instance.token,
-  'user': instance.user.toJson(),
-};
+Map<String, dynamic> _$GetSessionResponseToJson(GetSessionResponse instance) =>
+    <String, dynamic>{'token': ?instance.token, 'user': instance.user.toJson()};

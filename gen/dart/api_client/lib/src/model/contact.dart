@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'contact.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Contact {
   /// Returns a new [Contact] instance.
   const Contact({
@@ -96,7 +101,8 @@ class Contact {
       updatedAt.hashCode +
       respondedAt.hashCode;
 
-  factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
+  factory Contact.fromJson(Map<String, dynamic> json) =>
+      _$ContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContactToJson(this);
 

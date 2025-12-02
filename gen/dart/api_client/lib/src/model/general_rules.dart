@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'general_rules.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class GeneralRules {
   /// Returns a new [GeneralRules] instance.
   const GeneralRules({this.type, this.minOrderAmount, this.maxDiscountAmount});
@@ -35,9 +40,11 @@ class GeneralRules {
           other.maxDiscountAmount == maxDiscountAmount;
 
   @override
-  int get hashCode => type.hashCode + minOrderAmount.hashCode + maxDiscountAmount.hashCode;
+  int get hashCode =>
+      type.hashCode + minOrderAmount.hashCode + maxDiscountAmount.hashCode;
 
-  factory GeneralRules.fromJson(Map<String, dynamic> json) => _$GeneralRulesFromJson(json);
+  factory GeneralRules.fromJson(Map<String, dynamic> json) =>
+      _$GeneralRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$GeneralRulesToJson(this);
 

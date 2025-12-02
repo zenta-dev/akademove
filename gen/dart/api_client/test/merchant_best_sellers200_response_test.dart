@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantBestSellers200Response
 void main() {
-  final MerchantBestSellers200Response? instance = /* MerchantBestSellers200Response(...) */ null;
+  final MerchantBestSellers200Response?
+  instance = /* MerchantBestSellers200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantBestSellers200Response, () {

@@ -386,5 +386,20 @@
 	"menu_total_price": "Total Harga",
 	"menu_add_to_cart": "Tambah ke Keranjang",
 	"menu_added_to_cart": "Ditambahkan ke Keranjang",
-	"menu_item_added_to_cart": "Item telah ditambahkan ke keranjang Anda"
+	"menu_item_added_to_cart": "Item telah ditambahkan ke keranjang Anda",
+	"order_confirm_title": "Konfirmasi Pesanan",
+	"order_confirm_order_summary": "Ringkasan Pesanan",
+	"order_confirm_merchant": "Merchant",
+	"order_confirm_items_count": "{count} item",
+	"order_confirm_subtotal": "Subtotal",
+	"order_confirm_payment_method": "Metode Pembayaran",
+	"order_confirm_select_payment": "Pilih metode pembayaran",
+	"order_confirm_payment_wallet": "Dompet",
+	"order_confirm_payment_description": "Bayar menggunakan saldo dompet Akademove Anda",
+	"order_confirm_place_order": "Buat Pesanan",
+	"order_confirm_success": "Pesanan Berhasil Dibuat",
+	"order_confirm_success_message": "Pesanan Anda telah dibuat dan sedang diproses",
+	"order_confirm_failed": "Gagal Membuat Pesanan",
+	"order_confirm_processing": "Memproses Pesanan...",
+	"order_confirm_insufficient_balance": "Saldo dompet tidak mencukupi"
 }

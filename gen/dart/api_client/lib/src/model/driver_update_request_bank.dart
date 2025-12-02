@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_update_request_bank.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverUpdateRequestBank {
   /// Returns a new [DriverUpdateRequestBank] instance.
   const DriverUpdateRequestBank({required this.provider, required this.number});
@@ -23,12 +28,15 @@ class DriverUpdateRequestBank {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DriverUpdateRequestBank && other.provider == provider && other.number == number;
+      other is DriverUpdateRequestBank &&
+          other.provider == provider &&
+          other.number == number;
 
   @override
   int get hashCode => provider.hashCode + number.hashCode;
 
-  factory DriverUpdateRequestBank.fromJson(Map<String, dynamic> json) => _$DriverUpdateRequestBankFromJson(json);
+  factory DriverUpdateRequestBank.fromJson(Map<String, dynamic> json) =>
+      _$DriverUpdateRequestBankFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverUpdateRequestBankToJson(this);
 

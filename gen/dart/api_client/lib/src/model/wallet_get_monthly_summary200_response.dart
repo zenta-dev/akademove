@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'wallet_get_monthly_summary200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class WalletGetMonthlySummary200Response {
   /// Returns a new [WalletGetMonthlySummary200Response] instance.
   const WalletGetMonthlySummary200Response({
@@ -45,12 +50,18 @@ class WalletGetMonthlySummary200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory WalletGetMonthlySummary200Response.fromJson(Map<String, dynamic> json) =>
-      _$WalletGetMonthlySummary200ResponseFromJson(json);
+  factory WalletGetMonthlySummary200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$WalletGetMonthlySummary200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WalletGetMonthlySummary200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$WalletGetMonthlySummary200ResponseToJson(this);
 
   @override
   String toString() {

@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverScheduleCreate200Response
 void main() {
-  final DriverScheduleCreate200Response? instance = /* DriverScheduleCreate200Response(...) */ null;
+  final DriverScheduleCreate200Response?
+  instance = /* DriverScheduleCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(DriverScheduleCreate200Response, () {

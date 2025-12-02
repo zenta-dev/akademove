@@ -21,7 +21,8 @@ abstract class _$NotificationSaveTokenRequestCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfNotificationSaveTokenRequest.copyWith(...)` or call `instanceOfNotificationSaveTokenRequest.copyWith.fieldName(value)` for a single field.
-class _$NotificationSaveTokenRequestCWProxyImpl implements _$NotificationSaveTokenRequestCWProxy {
+class _$NotificationSaveTokenRequestCWProxyImpl
+    implements _$NotificationSaveTokenRequestCWProxy {
   const _$NotificationSaveTokenRequestCWProxyImpl(this._value);
 
   final NotificationSaveTokenRequest _value;
@@ -37,7 +38,9 @@ class _$NotificationSaveTokenRequestCWProxyImpl implements _$NotificationSaveTok
   /// ```dart
   /// NotificationSaveTokenRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  NotificationSaveTokenRequest call({Object? token = const $CopyWithPlaceholder()}) {
+  NotificationSaveTokenRequest call({
+    Object? token = const $CopyWithPlaceholder(),
+  }) {
     return NotificationSaveTokenRequest(
       token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
@@ -47,24 +50,29 @@ class _$NotificationSaveTokenRequestCWProxyImpl implements _$NotificationSaveTok
   }
 }
 
-extension $NotificationSaveTokenRequestCopyWith on NotificationSaveTokenRequest {
+extension $NotificationSaveTokenRequestCopyWith
+    on NotificationSaveTokenRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationSaveTokenRequest.copyWith(...)` or `instanceOfNotificationSaveTokenRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$NotificationSaveTokenRequestCWProxy get copyWith => _$NotificationSaveTokenRequestCWProxyImpl(this);
+  _$NotificationSaveTokenRequestCWProxy get copyWith =>
+      _$NotificationSaveTokenRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationSaveTokenRequest _$NotificationSaveTokenRequestFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('NotificationSaveTokenRequest', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['token']);
-      final val = NotificationSaveTokenRequest(token: $checkedConvert('token', (v) => v as String));
-      return val;
-    });
+NotificationSaveTokenRequest _$NotificationSaveTokenRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('NotificationSaveTokenRequest', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['token']);
+  final val = NotificationSaveTokenRequest(
+    token: $checkedConvert('token', (v) => v as String),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$NotificationSaveTokenRequestToJson(NotificationSaveTokenRequest instance) => <String, dynamic>{
-  'token': instance.token,
-};
+Map<String, dynamic> _$NotificationSaveTokenRequestToJson(
+  NotificationSaveTokenRequest instance,
+) => <String, dynamic>{'token': instance.token};

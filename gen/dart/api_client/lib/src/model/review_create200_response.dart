@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'review_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class ReviewCreate200Response {
   /// Returns a new [ReviewCreate200Response] instance.
-  const ReviewCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const ReviewCreate200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class ReviewCreate200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory ReviewCreate200Response.fromJson(Map<String, dynamic> json) => _$ReviewCreate200ResponseFromJson(json);
+  factory ReviewCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$ReviewCreate200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReviewCreate200ResponseToJson(this);
 

@@ -123,21 +123,25 @@ UpdateReview _$UpdateReviewFromJson(Map<String, dynamic> json) =>
         orderId: $checkedConvert('orderId', (v) => v as String?),
         fromUserId: $checkedConvert('fromUserId', (v) => v as String?),
         toUserId: $checkedConvert('toUserId', (v) => v as String?),
-        category: $checkedConvert('category', (v) => $enumDecodeNullable(_$ReviewCategoryEnumMap, v)),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecodeNullable(_$ReviewCategoryEnumMap, v),
+        ),
         score: $checkedConvert('score', (v) => v as num?),
         comment: $checkedConvert('comment', (v) => v as String? ?? ''),
       );
       return val;
     });
 
-Map<String, dynamic> _$UpdateReviewToJson(UpdateReview instance) => <String, dynamic>{
-  'orderId': ?instance.orderId,
-  'fromUserId': ?instance.fromUserId,
-  'toUserId': ?instance.toUserId,
-  'category': ?_$ReviewCategoryEnumMap[instance.category],
-  'score': ?instance.score,
-  'comment': ?instance.comment,
-};
+Map<String, dynamic> _$UpdateReviewToJson(UpdateReview instance) =>
+    <String, dynamic>{
+      'orderId': ?instance.orderId,
+      'fromUserId': ?instance.fromUserId,
+      'toUserId': ?instance.toUserId,
+      'category': ?_$ReviewCategoryEnumMap[instance.category],
+      'score': ?instance.score,
+      'comment': ?instance.comment,
+    };
 
 const _$ReviewCategoryEnumMap = {
   ReviewCategory.CLEANLINESS: 'CLEANLINESS',

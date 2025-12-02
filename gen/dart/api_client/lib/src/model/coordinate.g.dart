@@ -42,7 +42,10 @@ class _$CoordinateCWProxyImpl implements _$CoordinateCWProxy {
   /// ```dart
   /// Coordinate(...).copyWith(id: 12, name: "My name")
   /// ```
-  Coordinate call({Object? x = const $CopyWithPlaceholder(), Object? y = const $CopyWithPlaceholder()}) {
+  Coordinate call({
+    Object? x = const $CopyWithPlaceholder(),
+    Object? y = const $CopyWithPlaceholder(),
+  }) {
     return Coordinate(
       x: x == const $CopyWithPlaceholder() || x == null
           ? _value.x
@@ -67,10 +70,15 @@ extension $CoordinateCopyWith on Coordinate {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Coordinate _$CoordinateFromJson(Map<String, dynamic> json) => $checkedCreate('Coordinate', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['x', 'y']);
-  final val = Coordinate(x: $checkedConvert('x', (v) => v as num), y: $checkedConvert('y', (v) => v as num));
-  return val;
-});
+Coordinate _$CoordinateFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Coordinate', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['x', 'y']);
+      final val = Coordinate(
+        x: $checkedConvert('x', (v) => v as num),
+        y: $checkedConvert('y', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$CoordinateToJson(Coordinate instance) => <String, dynamic>{'x': instance.x, 'y': instance.y};
+Map<String, dynamic> _$CoordinateToJson(Coordinate instance) =>
+    <String, dynamic>{'x': instance.x, 'y': instance.y};

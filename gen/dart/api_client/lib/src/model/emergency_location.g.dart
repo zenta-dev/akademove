@@ -63,7 +63,8 @@ extension $EmergencyLocationCopyWith on EmergencyLocation {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfEmergencyLocation.copyWith(...)` or `instanceOfEmergencyLocation.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$EmergencyLocationCWProxy get copyWith => _$EmergencyLocationCWProxyImpl(this);
+  _$EmergencyLocationCWProxy get copyWith =>
+      _$EmergencyLocationCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -80,7 +81,8 @@ EmergencyLocation _$EmergencyLocationFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$EmergencyLocationToJson(EmergencyLocation instance) => <String, dynamic>{
-  'latitude': instance.latitude,
-  'longitude': instance.longitude,
-};
+Map<String, dynamic> _$EmergencyLocationToJson(EmergencyLocation instance) =>
+    <String, dynamic>{
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+    };

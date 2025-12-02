@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_user_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeUserCreate200Response {
   /// Returns a new [BadgeUserCreate200Response] instance.
-  const BadgeUserCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const BadgeUserCreate200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class BadgeUserCreate200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory BadgeUserCreate200Response.fromJson(Map<String, dynamic> json) => _$BadgeUserCreate200ResponseFromJson(json);
+  factory BadgeUserCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$BadgeUserCreate200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeUserCreate200ResponseToJson(this);
 

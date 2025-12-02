@@ -65,16 +65,19 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
   UpdateCoupon rules(CouponRules? rules) => call(rules: rules);
 
   @override
-  UpdateCoupon discountAmount(num? discountAmount) => call(discountAmount: discountAmount);
+  UpdateCoupon discountAmount(num? discountAmount) =>
+      call(discountAmount: discountAmount);
 
   @override
-  UpdateCoupon discountPercentage(num? discountPercentage) => call(discountPercentage: discountPercentage);
+  UpdateCoupon discountPercentage(num? discountPercentage) =>
+      call(discountPercentage: discountPercentage);
 
   @override
   UpdateCoupon usageLimit(num? usageLimit) => call(usageLimit: usageLimit);
 
   @override
-  UpdateCoupon periodStart(DateTime? periodStart) => call(periodStart: periodStart);
+  UpdateCoupon periodStart(DateTime? periodStart) =>
+      call(periodStart: periodStart);
 
   @override
   UpdateCoupon periodEnd(DateTime? periodEnd) => call(periodEnd: periodEnd);
@@ -161,32 +164,43 @@ extension $UpdateCouponCopyWith on UpdateCoupon {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UpdateCoupon _$UpdateCouponFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UpdateCoupon', json, ($checkedConvert) {
-      final val = UpdateCoupon(
-        name: $checkedConvert('name', (v) => v as String?),
-        code: $checkedConvert('code', (v) => v as String?),
-        rules: $checkedConvert('rules', (v) => v == null ? null : CouponRules.fromJson(v as Map<String, dynamic>)),
-        discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
-        discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),
-        usageLimit: $checkedConvert('usageLimit', (v) => v as num?),
-        periodStart: $checkedConvert('periodStart', (v) => v == null ? null : DateTime.parse(v as String)),
-        periodEnd: $checkedConvert('periodEnd', (v) => v == null ? null : DateTime.parse(v as String)),
-        isActive: $checkedConvert('isActive', (v) => v as bool?),
-        merchantId: $checkedConvert('merchantId', (v) => v as String?),
-      );
-      return val;
-    });
+UpdateCoupon _$UpdateCouponFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UpdateCoupon', json, ($checkedConvert) {
+  final val = UpdateCoupon(
+    name: $checkedConvert('name', (v) => v as String?),
+    code: $checkedConvert('code', (v) => v as String?),
+    rules: $checkedConvert(
+      'rules',
+      (v) => v == null ? null : CouponRules.fromJson(v as Map<String, dynamic>),
+    ),
+    discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
+    discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),
+    usageLimit: $checkedConvert('usageLimit', (v) => v as num?),
+    periodStart: $checkedConvert(
+      'periodStart',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    periodEnd: $checkedConvert(
+      'periodEnd',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
+    isActive: $checkedConvert('isActive', (v) => v as bool?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$UpdateCouponToJson(UpdateCoupon instance) => <String, dynamic>{
-  'name': ?instance.name,
-  'code': ?instance.code,
-  'rules': ?instance.rules?.toJson(),
-  'discountAmount': ?instance.discountAmount,
-  'discountPercentage': ?instance.discountPercentage,
-  'usageLimit': ?instance.usageLimit,
-  'periodStart': ?instance.periodStart?.toIso8601String(),
-  'periodEnd': ?instance.periodEnd?.toIso8601String(),
-  'isActive': ?instance.isActive,
-  'merchantId': ?instance.merchantId,
-};
+Map<String, dynamic> _$UpdateCouponToJson(UpdateCoupon instance) =>
+    <String, dynamic>{
+      'name': ?instance.name,
+      'code': ?instance.code,
+      'rules': ?instance.rules?.toJson(),
+      'discountAmount': ?instance.discountAmount,
+      'discountPercentage': ?instance.discountPercentage,
+      'usageLimit': ?instance.usageLimit,
+      'periodStart': ?instance.periodStart?.toIso8601String(),
+      'periodEnd': ?instance.periodEnd?.toIso8601String(),
+      'isActive': ?instance.isActive,
+      'merchantId': ?instance.merchantId,
+    };

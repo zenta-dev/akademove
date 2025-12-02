@@ -10,10 +10,22 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_review.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateReview {
   /// Returns a new [UpdateReview] instance.
-  const UpdateReview({this.orderId, this.fromUserId, this.toUserId, this.category, this.score, this.comment = ''});
+  const UpdateReview({
+    this.orderId,
+    this.fromUserId,
+    this.toUserId,
+    this.category,
+    this.score,
+    this.comment = '',
+  });
 
   @JsonKey(name: r'orderId', required: false, includeIfNull: false)
   final String? orderId;
@@ -30,7 +42,12 @@ class UpdateReview {
   @JsonKey(name: r'score', required: false, includeIfNull: false)
   final num? score;
 
-  @JsonKey(defaultValue: '', name: r'comment', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: '',
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
   final String? comment;
 
   @override
@@ -53,7 +70,8 @@ class UpdateReview {
       score.hashCode +
       comment.hashCode;
 
-  factory UpdateReview.fromJson(Map<String, dynamic> json) => _$UpdateReviewFromJson(json);
+  factory UpdateReview.fromJson(Map<String, dynamic> json) =>
+      _$UpdateReviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateReviewToJson(this);
 

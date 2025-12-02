@@ -14,7 +14,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'estimate_order.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class EstimateOrder {
   /// Returns a new [EstimateOrder] instance.
   const EstimateOrder({
@@ -83,7 +88,8 @@ class EstimateOrder {
       discountIds.hashCode +
       weight.hashCode;
 
-  factory EstimateOrder.fromJson(Map<String, dynamic> json) => _$EstimateOrderFromJson(json);
+  factory EstimateOrder.fromJson(Map<String, dynamic> json) =>
+      _$EstimateOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$EstimateOrderToJson(this);
 

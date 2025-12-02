@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'commission_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class CommissionConfiguration {
   /// Returns a new [CommissionConfiguration] instance.
   const CommissionConfiguration({
@@ -28,7 +33,11 @@ class CommissionConfiguration {
   /// Platform commission rate for DELIVERY orders (0-1, e.g., 0.15 for 15%)
   // minimum: 0
   // maximum: 1
-  @JsonKey(name: r'deliveryCommissionRate', required: true, includeIfNull: false)
+  @JsonKey(
+    name: r'deliveryCommissionRate',
+    required: true,
+    includeIfNull: false,
+  )
   final num deliveryCommissionRate;
 
   /// Platform commission rate for FOOD orders (0-1, e.g., 0.20 for 20%)
@@ -40,7 +49,11 @@ class CommissionConfiguration {
   /// Merchant commission rate on food orders (0-1, e.g., 0.10 for 10%)
   // minimum: 0
   // maximum: 1
-  @JsonKey(name: r'merchantCommissionRate', required: true, includeIfNull: false)
+  @JsonKey(
+    name: r'merchantCommissionRate',
+    required: true,
+    includeIfNull: false,
+  )
   final num merchantCommissionRate;
 
   @override
@@ -59,7 +72,8 @@ class CommissionConfiguration {
       foodCommissionRate.hashCode +
       merchantCommissionRate.hashCode;
 
-  factory CommissionConfiguration.fromJson(Map<String, dynamic> json) => _$CommissionConfigurationFromJson(json);
+  factory CommissionConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$CommissionConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$CommissionConfigurationToJson(this);
 

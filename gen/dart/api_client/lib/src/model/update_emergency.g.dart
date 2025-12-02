@@ -71,20 +71,24 @@ class _$UpdateEmergencyCWProxyImpl implements _$UpdateEmergencyCWProxy {
   UpdateEmergency status(EmergencyStatus? status) => call(status: status);
 
   @override
-  UpdateEmergency description(String? description) => call(description: description);
+  UpdateEmergency description(String? description) =>
+      call(description: description);
 
   @override
-  UpdateEmergency location(EmergencyLocation? location) => call(location: location);
+  UpdateEmergency location(EmergencyLocation? location) =>
+      call(location: location);
 
   @override
   UpdateEmergency contactedAuthorities(List<String>? contactedAuthorities) =>
       call(contactedAuthorities: contactedAuthorities);
 
   @override
-  UpdateEmergency respondedById(String? respondedById) => call(respondedById: respondedById);
+  UpdateEmergency respondedById(String? respondedById) =>
+      call(respondedById: respondedById);
 
   @override
-  UpdateEmergency resolution(String? resolution) => call(resolution: resolution);
+  UpdateEmergency resolution(String? resolution) =>
+      call(resolution: resolution);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -168,12 +172,20 @@ UpdateEmergency _$UpdateEmergencyFromJson(Map<String, dynamic> json) =>
         orderId: $checkedConvert('orderId', (v) => v as String?),
         userId: $checkedConvert('userId', (v) => v as String?),
         driverId: $checkedConvert('driverId', (v) => v as String?),
-        type: $checkedConvert('type', (v) => $enumDecodeNullable(_$EmergencyTypeEnumMap, v)),
-        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$EmergencyStatusEnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecodeNullable(_$EmergencyTypeEnumMap, v),
+        ),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecodeNullable(_$EmergencyStatusEnumMap, v),
+        ),
         description: $checkedConvert('description', (v) => v as String?),
         location: $checkedConvert(
           'location',
-          (v) => v == null ? null : EmergencyLocation.fromJson(v as Map<String, dynamic>),
+          (v) => v == null
+              ? null
+              : EmergencyLocation.fromJson(v as Map<String, dynamic>),
         ),
         contactedAuthorities: $checkedConvert(
           'contactedAuthorities',
@@ -185,18 +197,19 @@ UpdateEmergency _$UpdateEmergencyFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$UpdateEmergencyToJson(UpdateEmergency instance) => <String, dynamic>{
-  'orderId': ?instance.orderId,
-  'userId': ?instance.userId,
-  'driverId': ?instance.driverId,
-  'type': ?_$EmergencyTypeEnumMap[instance.type],
-  'status': ?_$EmergencyStatusEnumMap[instance.status],
-  'description': ?instance.description,
-  'location': ?instance.location?.toJson(),
-  'contactedAuthorities': ?instance.contactedAuthorities,
-  'respondedById': ?instance.respondedById,
-  'resolution': ?instance.resolution,
-};
+Map<String, dynamic> _$UpdateEmergencyToJson(UpdateEmergency instance) =>
+    <String, dynamic>{
+      'orderId': ?instance.orderId,
+      'userId': ?instance.userId,
+      'driverId': ?instance.driverId,
+      'type': ?_$EmergencyTypeEnumMap[instance.type],
+      'status': ?_$EmergencyStatusEnumMap[instance.status],
+      'description': ?instance.description,
+      'location': ?instance.location?.toJson(),
+      'contactedAuthorities': ?instance.contactedAuthorities,
+      'respondedById': ?instance.respondedById,
+      'resolution': ?instance.resolution,
+    };
 
 const _$EmergencyTypeEnumMap = {
   EmergencyType.ACCIDENT: 'ACCIDENT',

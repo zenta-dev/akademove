@@ -9,10 +9,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope_payload_driver_update_location.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderEnvelopePayloadDriverUpdateLocation {
   /// Returns a new [OrderEnvelopePayloadDriverUpdateLocation] instance.
-  const OrderEnvelopePayloadDriverUpdateLocation({required this.driverId, required this.x, required this.y});
+  const OrderEnvelopePayloadDriverUpdateLocation({
+    required this.driverId,
+    required this.x,
+    required this.y,
+  });
 
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
@@ -32,15 +41,20 @@ class OrderEnvelopePayloadDriverUpdateLocation {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderEnvelopePayloadDriverUpdateLocation && other.driverId == driverId && other.x == x && other.y == y;
+      other is OrderEnvelopePayloadDriverUpdateLocation &&
+          other.driverId == driverId &&
+          other.x == x &&
+          other.y == y;
 
   @override
   int get hashCode => driverId.hashCode + x.hashCode + y.hashCode;
 
-  factory OrderEnvelopePayloadDriverUpdateLocation.fromJson(Map<String, dynamic> json) =>
-      _$OrderEnvelopePayloadDriverUpdateLocationFromJson(json);
+  factory OrderEnvelopePayloadDriverUpdateLocation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$OrderEnvelopePayloadDriverUpdateLocationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDriverUpdateLocationToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$OrderEnvelopePayloadDriverUpdateLocationToJson(this);
 
   @override
   String toString() {

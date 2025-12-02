@@ -22,12 +22,18 @@ abstract class _$BadgeUserList200ResponseCWProxy {
   /// ```dart
   /// BadgeUserList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeUserList200Response call({String message, List<UserBadge> data, PaginationResult? pagination, int? totalPages});
+  BadgeUserList200Response call({
+    String message,
+    List<UserBadge> data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfBadgeUserList200Response.copyWith(...)` or call `instanceOfBadgeUserList200Response.copyWith.fieldName(value)` for a single field.
-class _$BadgeUserList200ResponseCWProxyImpl implements _$BadgeUserList200ResponseCWProxy {
+class _$BadgeUserList200ResponseCWProxyImpl
+    implements _$BadgeUserList200ResponseCWProxy {
   const _$BadgeUserList200ResponseCWProxyImpl(this._value);
 
   final BadgeUserList200Response _value;
@@ -39,10 +45,12 @@ class _$BadgeUserList200ResponseCWProxyImpl implements _$BadgeUserList200Respons
   BadgeUserList200Response data(List<UserBadge> data) => call(data: data);
 
   @override
-  BadgeUserList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  BadgeUserList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  BadgeUserList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  BadgeUserList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,32 +91,40 @@ extension $BadgeUserList200ResponseCopyWith on BadgeUserList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBadgeUserList200Response.copyWith(...)` or `instanceOfBadgeUserList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BadgeUserList200ResponseCWProxy get copyWith => _$BadgeUserList200ResponseCWProxyImpl(this);
+  _$BadgeUserList200ResponseCWProxy get copyWith =>
+      _$BadgeUserList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BadgeUserList200Response _$BadgeUserList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('BadgeUserList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = BadgeUserList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => UserBadge.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+BadgeUserList200Response _$BadgeUserList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('BadgeUserList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = BadgeUserList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$BadgeUserList200ResponseToJson(BadgeUserList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$BadgeUserList200ResponseToJson(
+  BadgeUserList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

@@ -65,7 +65,8 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
   final UpdatePayment _value;
 
   @override
-  UpdatePayment transactionId(String? transactionId) => call(transactionId: transactionId);
+  UpdatePayment transactionId(String? transactionId) =>
+      call(transactionId: transactionId);
 
   @override
   UpdatePayment provider(PaymentProvider? provider) => call(provider: provider);
@@ -74,7 +75,8 @@ class _$UpdatePaymentCWProxyImpl implements _$UpdatePaymentCWProxy {
   UpdatePayment method(PaymentMethod? method) => call(method: method);
 
   @override
-  UpdatePayment bankProvider(BankProvider? bankProvider) => call(bankProvider: bankProvider);
+  UpdatePayment bankProvider(BankProvider? bankProvider) =>
+      call(bankProvider: bankProvider);
 
   @override
   UpdatePayment amount(num? amount) => call(amount: amount);
@@ -198,39 +200,62 @@ UpdatePayment _$UpdatePaymentFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdatePayment', json, ($checkedConvert) {
       final val = UpdatePayment(
         transactionId: $checkedConvert('transactionId', (v) => v as String?),
-        provider: $checkedConvert('provider', (v) => $enumDecodeNullable(_$PaymentProviderEnumMap, v)),
-        method: $checkedConvert('method', (v) => $enumDecodeNullable(_$PaymentMethodEnumMap, v)),
-        bankProvider: $checkedConvert('bankProvider', (v) => $enumDecodeNullable(_$BankProviderEnumMap, v)),
+        provider: $checkedConvert(
+          'provider',
+          (v) => $enumDecodeNullable(_$PaymentProviderEnumMap, v),
+        ),
+        method: $checkedConvert(
+          'method',
+          (v) => $enumDecodeNullable(_$PaymentMethodEnumMap, v),
+        ),
+        bankProvider: $checkedConvert(
+          'bankProvider',
+          (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
+        ),
         amount: $checkedConvert('amount', (v) => v as num?),
-        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$TransactionStatusEnumMap, v)),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecodeNullable(_$TransactionStatusEnumMap, v),
+        ),
         externalId: $checkedConvert('externalId', (v) => v as String?),
         paymentUrl: $checkedConvert('paymentUrl', (v) => v as String?),
-        vaNumber: $checkedConvert('va_number', (v) => v == null ? null : VANumber.fromJson(v as Map<String, dynamic>)),
+        vaNumber: $checkedConvert(
+          'va_number',
+          (v) =>
+              v == null ? null : VANumber.fromJson(v as Map<String, dynamic>),
+        ),
         metadata: $checkedConvert('metadata', (v) => v),
-        expiresAt: $checkedConvert('expiresAt', (v) => v == null ? null : DateTime.parse(v as String)),
+        expiresAt: $checkedConvert(
+          'expiresAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
         payload: $checkedConvert('payload', (v) => v),
         response: $checkedConvert('response', (v) => v),
       );
       return val;
     }, fieldKeyMap: const {'vaNumber': 'va_number'});
 
-Map<String, dynamic> _$UpdatePaymentToJson(UpdatePayment instance) => <String, dynamic>{
-  'transactionId': ?instance.transactionId,
-  'provider': ?_$PaymentProviderEnumMap[instance.provider],
-  'method': ?_$PaymentMethodEnumMap[instance.method],
-  'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
-  'amount': ?instance.amount,
-  'status': ?_$TransactionStatusEnumMap[instance.status],
-  'externalId': ?instance.externalId,
-  'paymentUrl': ?instance.paymentUrl,
-  'va_number': ?instance.vaNumber?.toJson(),
-  'metadata': ?instance.metadata,
-  'expiresAt': ?instance.expiresAt?.toIso8601String(),
-  'payload': ?instance.payload,
-  'response': ?instance.response,
-};
+Map<String, dynamic> _$UpdatePaymentToJson(UpdatePayment instance) =>
+    <String, dynamic>{
+      'transactionId': ?instance.transactionId,
+      'provider': ?_$PaymentProviderEnumMap[instance.provider],
+      'method': ?_$PaymentMethodEnumMap[instance.method],
+      'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
+      'amount': ?instance.amount,
+      'status': ?_$TransactionStatusEnumMap[instance.status],
+      'externalId': ?instance.externalId,
+      'paymentUrl': ?instance.paymentUrl,
+      'va_number': ?instance.vaNumber?.toJson(),
+      'metadata': ?instance.metadata,
+      'expiresAt': ?instance.expiresAt?.toIso8601String(),
+      'payload': ?instance.payload,
+      'response': ?instance.response,
+    };
 
-const _$PaymentProviderEnumMap = {PaymentProvider.MIDTRANS: 'MIDTRANS', PaymentProvider.MANUAL: 'MANUAL'};
+const _$PaymentProviderEnumMap = {
+  PaymentProvider.MIDTRANS: 'MIDTRANS',
+  PaymentProvider.MANUAL: 'MANUAL',
+};
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',

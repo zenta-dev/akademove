@@ -32,7 +32,8 @@ abstract class _$LeaderboardList200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfLeaderboardList200Response.copyWith(...)` or call `instanceOfLeaderboardList200Response.copyWith.fieldName(value)` for a single field.
-class _$LeaderboardList200ResponseCWProxyImpl implements _$LeaderboardList200ResponseCWProxy {
+class _$LeaderboardList200ResponseCWProxyImpl
+    implements _$LeaderboardList200ResponseCWProxy {
   const _$LeaderboardList200ResponseCWProxyImpl(this._value);
 
   final LeaderboardList200Response _value;
@@ -44,10 +45,12 @@ class _$LeaderboardList200ResponseCWProxyImpl implements _$LeaderboardList200Res
   LeaderboardList200Response data(List<Leaderboard> data) => call(data: data);
 
   @override
-  LeaderboardList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  LeaderboardList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  LeaderboardList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  LeaderboardList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,32 +91,40 @@ extension $LeaderboardList200ResponseCopyWith on LeaderboardList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfLeaderboardList200Response.copyWith(...)` or `instanceOfLeaderboardList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$LeaderboardList200ResponseCWProxy get copyWith => _$LeaderboardList200ResponseCWProxyImpl(this);
+  _$LeaderboardList200ResponseCWProxy get copyWith =>
+      _$LeaderboardList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LeaderboardList200Response _$LeaderboardList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('LeaderboardList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = LeaderboardList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => Leaderboard.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+LeaderboardList200Response _$LeaderboardList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('LeaderboardList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = LeaderboardList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Leaderboard.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$LeaderboardList200ResponseToJson(LeaderboardList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$LeaderboardList200ResponseToJson(
+  LeaderboardList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

@@ -23,7 +23,8 @@ abstract class _$NotificationSubscribeToTopicRequestCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)` or call `instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(value)` for a single field.
-class _$NotificationSubscribeToTopicRequestCWProxyImpl implements _$NotificationSubscribeToTopicRequestCWProxy {
+class _$NotificationSubscribeToTopicRequestCWProxyImpl
+    implements _$NotificationSubscribeToTopicRequestCWProxy {
   const _$NotificationSubscribeToTopicRequestCWProxyImpl(this._value);
 
   final NotificationSubscribeToTopicRequest _value;
@@ -59,19 +60,24 @@ class _$NotificationSubscribeToTopicRequestCWProxyImpl implements _$Notification
   }
 }
 
-extension $NotificationSubscribeToTopicRequestCopyWith on NotificationSubscribeToTopicRequest {
+extension $NotificationSubscribeToTopicRequestCopyWith
+    on NotificationSubscribeToTopicRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationSubscribeToTopicRequest.copyWith(...)` or `instanceOfNotificationSubscribeToTopicRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$NotificationSubscribeToTopicRequestCWProxy get copyWith => _$NotificationSubscribeToTopicRequestCWProxyImpl(this);
+  _$NotificationSubscribeToTopicRequestCWProxy get copyWith =>
+      _$NotificationSubscribeToTopicRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationSubscribeToTopicRequest _$NotificationSubscribeToTopicRequestFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('NotificationSubscribeToTopicRequest', json, ($checkedConvert) {
+NotificationSubscribeToTopicRequest
+_$NotificationSubscribeToTopicRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('NotificationSubscribeToTopicRequest', json, (
+      $checkedConvert,
+    ) {
       $checkKeys(json, requiredKeys: const ['topic', 'token']);
       final val = NotificationSubscribeToTopicRequest(
         topic: $checkedConvert('topic', (v) => v as String),
@@ -80,5 +86,6 @@ NotificationSubscribeToTopicRequest _$NotificationSubscribeToTopicRequestFromJso
       return val;
     });
 
-Map<String, dynamic> _$NotificationSubscribeToTopicRequestToJson(NotificationSubscribeToTopicRequest instance) =>
-    <String, dynamic>{'topic': instance.topic, 'token': instance.token};
+Map<String, dynamic> _$NotificationSubscribeToTopicRequestToJson(
+  NotificationSubscribeToTopicRequest instance,
+) => <String, dynamic>{'topic': instance.topic, 'token': instance.token};

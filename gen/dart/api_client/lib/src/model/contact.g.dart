@@ -83,7 +83,8 @@ class _$ContactCWProxyImpl implements _$ContactCWProxy {
   Contact userId(String? userId) => call(userId: userId);
 
   @override
-  Contact respondedById(String? respondedById) => call(respondedById: respondedById);
+  Contact respondedById(String? respondedById) =>
+      call(respondedById: respondedById);
 
   @override
   Contact response(String? response) => call(response: response);
@@ -183,10 +184,21 @@ extension $ContactCopyWith on Contact {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Contact _$ContactFromJson(Map<String, dynamic> json) => $checkedCreate('Contact', json, ($checkedConvert) {
+Contact _$ContactFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Contact', json, ($checkedConvert) {
   $checkKeys(
     json,
-    requiredKeys: const ['id', 'name', 'email', 'subject', 'message', 'status', 'createdAt', 'updatedAt'],
+    requiredKeys: const [
+      'id',
+      'name',
+      'email',
+      'subject',
+      'message',
+      'status',
+      'createdAt',
+      'updatedAt',
+    ],
   );
   final val = Contact(
     id: $checkedConvert('id', (v) => v as String),
@@ -194,13 +206,19 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => $checkedCreate('Contact'
     email: $checkedConvert('email', (v) => v as String),
     subject: $checkedConvert('subject', (v) => v as String),
     message: $checkedConvert('message', (v) => v as String),
-    status: $checkedConvert('status', (v) => $enumDecode(_$ContactStatusEnumMap, v)),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecode(_$ContactStatusEnumMap, v),
+    ),
     userId: $checkedConvert('userId', (v) => v as String?),
     respondedById: $checkedConvert('respondedById', (v) => v as String?),
     response: $checkedConvert('response', (v) => v as String?),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    respondedAt: $checkedConvert('respondedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    respondedAt: $checkedConvert(
+      'respondedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
   );
   return val;
 });

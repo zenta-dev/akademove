@@ -48,12 +48,6 @@ class LeaderboardRepository extends BaseRepository {
           ));
 
       final leaderboard = data.data;
-      if (leaderboard == null) {
-        throw const RepositoryError(
-          'Leaderboard entry not found',
-          code: ErrorCode.notFound,
-        );
-      }
 
       return SuccessResponse(message: data.message, data: leaderboard);
     });

@@ -22,24 +22,32 @@ abstract class _$PaymentEnvelopePayloadCWProxy {
   /// ```dart
   /// PaymentEnvelopePayload(...).copyWith(id: 12, name: "My name")
   /// ```
-  PaymentEnvelopePayload call({String? failReason, Payment payment, Transaction transaction, Wallet? wallet});
+  PaymentEnvelopePayload call({
+    String? failReason,
+    Payment payment,
+    Transaction transaction,
+    Wallet? wallet,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfPaymentEnvelopePayload.copyWith(...)` or call `instanceOfPaymentEnvelopePayload.copyWith.fieldName(value)` for a single field.
-class _$PaymentEnvelopePayloadCWProxyImpl implements _$PaymentEnvelopePayloadCWProxy {
+class _$PaymentEnvelopePayloadCWProxyImpl
+    implements _$PaymentEnvelopePayloadCWProxy {
   const _$PaymentEnvelopePayloadCWProxyImpl(this._value);
 
   final PaymentEnvelopePayload _value;
 
   @override
-  PaymentEnvelopePayload failReason(String? failReason) => call(failReason: failReason);
+  PaymentEnvelopePayload failReason(String? failReason) =>
+      call(failReason: failReason);
 
   @override
   PaymentEnvelopePayload payment(Payment payment) => call(payment: payment);
 
   @override
-  PaymentEnvelopePayload transaction(Transaction transaction) => call(transaction: transaction);
+  PaymentEnvelopePayload transaction(Transaction transaction) =>
+      call(transaction: transaction);
 
   @override
   PaymentEnvelopePayload wallet(Wallet? wallet) => call(wallet: wallet);
@@ -67,7 +75,8 @@ class _$PaymentEnvelopePayloadCWProxyImpl implements _$PaymentEnvelopePayloadCWP
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
           : payment as Payment,
-      transaction: transaction == const $CopyWithPlaceholder() || transaction == null
+      transaction:
+          transaction == const $CopyWithPlaceholder() || transaction == null
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
           : transaction as Transaction,
@@ -83,26 +92,39 @@ extension $PaymentEnvelopePayloadCopyWith on PaymentEnvelopePayload {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfPaymentEnvelopePayload.copyWith(...)` or `instanceOfPaymentEnvelopePayload.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$PaymentEnvelopePayloadCWProxy get copyWith => _$PaymentEnvelopePayloadCWProxyImpl(this);
+  _$PaymentEnvelopePayloadCWProxy get copyWith =>
+      _$PaymentEnvelopePayloadCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PaymentEnvelopePayload _$PaymentEnvelopePayloadFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('PaymentEnvelopePayload', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['payment', 'transaction']);
-      final val = PaymentEnvelopePayload(
-        failReason: $checkedConvert('failReason', (v) => v as String?),
-        payment: $checkedConvert('payment', (v) => Payment.fromJson(v as Map<String, dynamic>)),
-        transaction: $checkedConvert('transaction', (v) => Transaction.fromJson(v as Map<String, dynamic>)),
-        wallet: $checkedConvert('wallet', (v) => v == null ? null : Wallet.fromJson(v as Map<String, dynamic>)),
-      );
-      return val;
-    });
+PaymentEnvelopePayload _$PaymentEnvelopePayloadFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('PaymentEnvelopePayload', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['payment', 'transaction']);
+  final val = PaymentEnvelopePayload(
+    failReason: $checkedConvert('failReason', (v) => v as String?),
+    payment: $checkedConvert(
+      'payment',
+      (v) => Payment.fromJson(v as Map<String, dynamic>),
+    ),
+    transaction: $checkedConvert(
+      'transaction',
+      (v) => Transaction.fromJson(v as Map<String, dynamic>),
+    ),
+    wallet: $checkedConvert(
+      'wallet',
+      (v) => v == null ? null : Wallet.fromJson(v as Map<String, dynamic>),
+    ),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$PaymentEnvelopePayloadToJson(PaymentEnvelopePayload instance) => <String, dynamic>{
+Map<String, dynamic> _$PaymentEnvelopePayloadToJson(
+  PaymentEnvelopePayload instance,
+) => <String, dynamic>{
   'failReason': ?instance.failReason,
   'payment': instance.payment.toJson(),
   'transaction': instance.transaction.toJson(),

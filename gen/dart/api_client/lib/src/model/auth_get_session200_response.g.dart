@@ -32,7 +32,8 @@ abstract class _$AuthGetSession200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthGetSession200Response.copyWith(...)` or call `instanceOfAuthGetSession200Response.copyWith.fieldName(value)` for a single field.
-class _$AuthGetSession200ResponseCWProxyImpl implements _$AuthGetSession200ResponseCWProxy {
+class _$AuthGetSession200ResponseCWProxyImpl
+    implements _$AuthGetSession200ResponseCWProxy {
   const _$AuthGetSession200ResponseCWProxyImpl(this._value);
 
   final AuthGetSession200Response _value;
@@ -44,10 +45,12 @@ class _$AuthGetSession200ResponseCWProxyImpl implements _$AuthGetSession200Respo
   AuthGetSession200Response data(GetSessionResponse? data) => call(data: data);
 
   @override
-  AuthGetSession200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  AuthGetSession200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  AuthGetSession200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  AuthGetSession200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,29 +91,40 @@ extension $AuthGetSession200ResponseCopyWith on AuthGetSession200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthGetSession200Response.copyWith(...)` or `instanceOfAuthGetSession200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthGetSession200ResponseCWProxy get copyWith => _$AuthGetSession200ResponseCWProxyImpl(this);
+  _$AuthGetSession200ResponseCWProxy get copyWith =>
+      _$AuthGetSession200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthGetSession200Response _$AuthGetSession200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('AuthGetSession200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = AuthGetSession200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => v == null ? null : GetSessionResponse.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+AuthGetSession200Response _$AuthGetSession200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('AuthGetSession200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = AuthGetSession200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => v == null
+          ? null
+          : GetSessionResponse.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$AuthGetSession200ResponseToJson(AuthGetSession200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$AuthGetSession200ResponseToJson(
+  AuthGetSession200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data?.toJson(),
   'pagination': ?instance.pagination?.toJson(),

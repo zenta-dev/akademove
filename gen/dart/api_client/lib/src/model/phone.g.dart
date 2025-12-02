@@ -42,9 +42,13 @@ class _$PhoneCWProxyImpl implements _$PhoneCWProxy {
   /// ```dart
   /// Phone(...).copyWith(id: 12, name: "My name")
   /// ```
-  Phone call({Object? countryCode = const $CopyWithPlaceholder(), Object? number = const $CopyWithPlaceholder()}) {
+  Phone call({
+    Object? countryCode = const $CopyWithPlaceholder(),
+    Object? number = const $CopyWithPlaceholder(),
+  }) {
     return Phone(
-      countryCode: countryCode == const $CopyWithPlaceholder() || countryCode == null
+      countryCode:
+          countryCode == const $CopyWithPlaceholder() || countryCode == null
           ? _value.countryCode
           // ignore: cast_nullable_to_non_nullable
           : countryCode as CountryCode,
@@ -67,14 +71,18 @@ extension $PhoneCopyWith on Phone {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Phone _$PhoneFromJson(Map<String, dynamic> json) => $checkedCreate('Phone', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['countryCode', 'number']);
-  final val = Phone(
-    countryCode: $checkedConvert('countryCode', (v) => $enumDecode(_$CountryCodeEnumMap, v)),
-    number: $checkedConvert('number', (v) => (v as num).toInt()),
-  );
-  return val;
-});
+Phone _$PhoneFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Phone', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['countryCode', 'number']);
+      final val = Phone(
+        countryCode: $checkedConvert(
+          'countryCode',
+          (v) => $enumDecode(_$CountryCodeEnumMap, v),
+        ),
+        number: $checkedConvert('number', (v) => (v as num).toInt()),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$PhoneToJson(Phone instance) => <String, dynamic>{
   'countryCode': _$CountryCodeEnumMap[instance.countryCode]!,

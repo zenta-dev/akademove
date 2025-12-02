@@ -9,10 +9,21 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_summary_breakdown.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderSummaryBreakdown {
   /// Returns a new [OrderSummaryBreakdown] instance.
-  const OrderSummaryBreakdown({this.distance, this.duration, this.perMinuteRate, this.weight, this.perKgRate});
+  const OrderSummaryBreakdown({
+    this.distance,
+    this.duration,
+    this.perMinuteRate,
+    this.weight,
+    this.perKgRate,
+  });
 
   @JsonKey(name: r'distance', required: false, includeIfNull: false)
   final num? distance;
@@ -41,9 +52,14 @@ class OrderSummaryBreakdown {
 
   @override
   int get hashCode =>
-      distance.hashCode + duration.hashCode + perMinuteRate.hashCode + weight.hashCode + perKgRate.hashCode;
+      distance.hashCode +
+      duration.hashCode +
+      perMinuteRate.hashCode +
+      weight.hashCode +
+      perKgRate.hashCode;
 
-  factory OrderSummaryBreakdown.fromJson(Map<String, dynamic> json) => _$OrderSummaryBreakdownFromJson(json);
+  factory OrderSummaryBreakdown.fromJson(Map<String, dynamic> json) =>
+      _$OrderSummaryBreakdownFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderSummaryBreakdownToJson(this);
 

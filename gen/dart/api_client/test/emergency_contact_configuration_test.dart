@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for EmergencyContactConfiguration
 void main() {
-  final EmergencyContactConfiguration? instance = /* EmergencyContactConfiguration(...) */ null;
+  final EmergencyContactConfiguration?
+  instance = /* EmergencyContactConfiguration(...) */ null;
   // TODO add properties to the entity
 
   group(EmergencyContactConfiguration, () {

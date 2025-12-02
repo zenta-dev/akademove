@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'bank.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Bank {
   /// Returns a new [Bank] instance.
   const Bank({required this.provider, required this.number});
@@ -23,7 +28,8 @@ class Bank {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Bank && other.provider == provider && other.number == number;
+      identical(this, other) ||
+      other is Bank && other.provider == provider && other.number == number;
 
   @override
   int get hashCode => provider.hashCode + number.hashCode;

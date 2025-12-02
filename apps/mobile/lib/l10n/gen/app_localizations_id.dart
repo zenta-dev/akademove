@@ -1188,4 +1188,51 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get menu_item_added_to_cart => 'Item telah ditambahkan ke keranjang Anda';
+
+  @override
+  String get order_confirm_title => 'Konfirmasi Pesanan';
+
+  @override
+  String get order_confirm_order_summary => 'Ringkasan Pesanan';
+
+  @override
+  String get order_confirm_merchant => 'Merchant';
+
+  @override
+  String order_confirm_items_count(int count) {
+    return '$count item';
+  }
+
+  @override
+  String get order_confirm_subtotal => 'Subtotal';
+
+  @override
+  String get order_confirm_payment_method => 'Metode Pembayaran';
+
+  @override
+  String get order_confirm_select_payment => 'Pilih metode pembayaran';
+
+  @override
+  String get order_confirm_payment_wallet => 'Dompet';
+
+  @override
+  String get order_confirm_payment_description => 'Bayar menggunakan saldo dompet Akademove Anda';
+
+  @override
+  String get order_confirm_place_order => 'Buat Pesanan';
+
+  @override
+  String get order_confirm_success => 'Pesanan Berhasil Dibuat';
+
+  @override
+  String get order_confirm_success_message => 'Pesanan Anda telah dibuat dan sedang diproses';
+
+  @override
+  String get order_confirm_failed => 'Gagal Membuat Pesanan';
+
+  @override
+  String get order_confirm_processing => 'Memproses Pesanan...';
+
+  @override
+  String get order_confirm_insufficient_balance => 'Saldo dompet tidak mencukupi';
 }

@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'ride_pricing_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class RidePricingConfiguration {
   /// Returns a new [RidePricingConfiguration] instance.
   const RidePricingConfiguration({
@@ -47,9 +52,14 @@ class RidePricingConfiguration {
 
   @override
   int get hashCode =>
-      baseFare.hashCode + perKmRate.hashCode + minimumFare.hashCode + platformFeeRate.hashCode + taxRate.hashCode;
+      baseFare.hashCode +
+      perKmRate.hashCode +
+      minimumFare.hashCode +
+      platformFeeRate.hashCode +
+      taxRate.hashCode;
 
-  factory RidePricingConfiguration.fromJson(Map<String, dynamic> json) => _$RidePricingConfigurationFromJson(json);
+  factory RidePricingConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$RidePricingConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$RidePricingConfigurationToJson(this);
 

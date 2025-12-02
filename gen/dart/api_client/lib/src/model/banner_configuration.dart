@@ -9,10 +9,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'banner_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BannerConfiguration {
   /// Returns a new [BannerConfiguration] instance.
-  const BannerConfiguration({required this.title, required this.description, required this.imageUrl});
+  const BannerConfiguration({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+  });
 
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
@@ -34,7 +43,8 @@ class BannerConfiguration {
   @override
   int get hashCode => title.hashCode + description.hashCode + imageUrl.hashCode;
 
-  factory BannerConfiguration.fromJson(Map<String, dynamic> json) => _$BannerConfigurationFromJson(json);
+  factory BannerConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$BannerConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$BannerConfigurationToJson(this);
 

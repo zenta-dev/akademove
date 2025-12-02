@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'auth_get_session200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class AuthGetSession200Response {
   /// Returns a new [AuthGetSession200Response] instance.
-  const AuthGetSession200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const AuthGetSession200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class AuthGetSession200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + (data == null ? 0 : data.hashCode) + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      (data == null ? 0 : data.hashCode) +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory AuthGetSession200Response.fromJson(Map<String, dynamic> json) => _$AuthGetSession200ResponseFromJson(json);
+  factory AuthGetSession200Response.fromJson(Map<String, dynamic> json) =>
+      _$AuthGetSession200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthGetSession200ResponseToJson(this);
 

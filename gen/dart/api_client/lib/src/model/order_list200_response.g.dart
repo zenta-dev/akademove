@@ -22,12 +22,18 @@ abstract class _$OrderList200ResponseCWProxy {
   /// ```dart
   /// OrderList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderList200Response call({String message, List<Order> data, PaginationResult? pagination, int? totalPages});
+  OrderList200Response call({
+    String message,
+    List<Order> data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderList200Response.copyWith(...)` or call `instanceOfOrderList200Response.copyWith.fieldName(value)` for a single field.
-class _$OrderList200ResponseCWProxyImpl implements _$OrderList200ResponseCWProxy {
+class _$OrderList200ResponseCWProxyImpl
+    implements _$OrderList200ResponseCWProxy {
   const _$OrderList200ResponseCWProxyImpl(this._value);
 
   final OrderList200Response _value;
@@ -39,10 +45,12 @@ class _$OrderList200ResponseCWProxyImpl implements _$OrderList200ResponseCWProxy
   OrderList200Response data(List<Order> data) => call(data: data);
 
   @override
-  OrderList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  OrderList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  OrderList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  OrderList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,32 +91,40 @@ extension $OrderList200ResponseCopyWith on OrderList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderList200Response.copyWith(...)` or `instanceOfOrderList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderList200ResponseCWProxy get copyWith => _$OrderList200ResponseCWProxyImpl(this);
+  _$OrderList200ResponseCWProxy get copyWith =>
+      _$OrderList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderList200Response _$OrderList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = OrderList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => Order.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+OrderList200Response _$OrderList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = OrderList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Order.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$OrderList200ResponseToJson(OrderList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$OrderList200ResponseToJson(
+  OrderList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
@@ -7,6 +8,7 @@ import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -534,14 +536,37 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 mounted &&
                 context.mounted) {
               // Navigate to rating/review screen
-              context.showMyToast('Trip completed!', type: ToastType.success);
+              final driver = state.currentAssignedDriver;
+              if (driver != null) {
+                final result = await context.pushNamed(
+                  Routes.userRating.name,
+                  extra: {
+                    'orderId': state.currentOrder!.id,
+                    'driverId': driver.userId,
+                    'driverName': driver.user?.name ?? 'Driver',
+                  },
+                );
+
+                // If rating was submitted successfully, show success message
+                if (result == true && mounted && context.mounted) {
+                  context.showMyToast(
+                    'Trip completed!',
+                    type: ToastType.success,
+                  );
+                  // Go back to home
+                  context.goNamed(Routes.userHome.name);
+                }
+              } else {
+                context.showMyToast('Trip completed!', type: ToastType.success);
+                context.goNamed(Routes.userHome.name);
+              }
             } else if ((state.currentOrder?.status ==
-                            OrderStatus.CANCELLED_BY_USER ||
-                        state.currentOrder?.status ==
-                            OrderStatus.CANCELLED_BY_DRIVER ||
-                        state.currentOrder?.status ==
-                            OrderStatus.CANCELLED_BY_SYSTEM) &
-                    mounted &&
+                        OrderStatus.CANCELLED_BY_USER ||
+                    state.currentOrder?.status ==
+                        OrderStatus.CANCELLED_BY_DRIVER ||
+                    state.currentOrder?.status ==
+                        OrderStatus.CANCELLED_BY_SYSTEM) &&
+                mounted &&
                 context.mounted) {
               context.showMyToast('Trip was canceled', type: ToastType.failed);
             }

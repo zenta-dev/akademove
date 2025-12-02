@@ -74,7 +74,8 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
   Leaderboard merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  Leaderboard category(LeaderboardCategoryEnum category) => call(category: category);
+  Leaderboard category(LeaderboardCategoryEnum category) =>
+      call(category: category);
 
   @override
   Leaderboard period(LeaderboardPeriodEnum period) => call(period: period);
@@ -86,7 +87,8 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
   Leaderboard score(int score) => call(score: score);
 
   @override
-  Leaderboard periodStart(DateTime periodStart) => call(periodStart: periodStart);
+  Leaderboard periodStart(DateTime periodStart) =>
+      call(periodStart: periodStart);
 
   @override
   Leaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
@@ -152,7 +154,8 @@ class _$LeaderboardCWProxyImpl implements _$LeaderboardCWProxy {
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart: periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
@@ -183,7 +186,9 @@ extension $LeaderboardCopyWith on Leaderboard {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Leaderboard _$LeaderboardFromJson(Map<String, dynamic> json) => $checkedCreate('Leaderboard', json, ($checkedConvert) {
+Leaderboard _$LeaderboardFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Leaderboard', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -204,11 +209,20 @@ Leaderboard _$LeaderboardFromJson(Map<String, dynamic> json) => $checkedCreate('
     userId: $checkedConvert('userId', (v) => v as String),
     driverId: $checkedConvert('driverId', (v) => v as String?),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
-    category: $checkedConvert('category', (v) => $enumDecode(_$LeaderboardCategoryEnumEnumMap, v)),
-    period: $checkedConvert('period', (v) => $enumDecode(_$LeaderboardPeriodEnumEnumMap, v)),
+    category: $checkedConvert(
+      'category',
+      (v) => $enumDecode(_$LeaderboardCategoryEnumEnumMap, v),
+    ),
+    period: $checkedConvert(
+      'period',
+      (v) => $enumDecode(_$LeaderboardPeriodEnumEnumMap, v),
+    ),
     rank: $checkedConvert('rank', (v) => (v as num).toInt()),
     score: $checkedConvert('score', (v) => (v as num).toInt()),
-    periodStart: $checkedConvert('periodStart', (v) => DateTime.parse(v as String)),
+    periodStart: $checkedConvert(
+      'periodStart',
+      (v) => DateTime.parse(v as String),
+    ),
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
@@ -216,20 +230,21 @@ Leaderboard _$LeaderboardFromJson(Map<String, dynamic> json) => $checkedCreate('
   return val;
 });
 
-Map<String, dynamic> _$LeaderboardToJson(Leaderboard instance) => <String, dynamic>{
-  'id': instance.id,
-  'userId': instance.userId,
-  'driverId': ?instance.driverId,
-  'merchantId': ?instance.merchantId,
-  'category': _$LeaderboardCategoryEnumEnumMap[instance.category]!,
-  'period': _$LeaderboardPeriodEnumEnumMap[instance.period]!,
-  'rank': instance.rank,
-  'score': instance.score,
-  'periodStart': instance.periodStart.toIso8601String(),
-  'periodEnd': instance.periodEnd.toIso8601String(),
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
-};
+Map<String, dynamic> _$LeaderboardToJson(Leaderboard instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'userId': instance.userId,
+      'driverId': ?instance.driverId,
+      'merchantId': ?instance.merchantId,
+      'category': _$LeaderboardCategoryEnumEnumMap[instance.category]!,
+      'period': _$LeaderboardPeriodEnumEnumMap[instance.period]!,
+      'rank': instance.rank,
+      'score': instance.score,
+      'periodStart': instance.periodStart.toIso8601String(),
+      'periodEnd': instance.periodEnd.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };
 
 const _$LeaderboardCategoryEnumEnumMap = {
   LeaderboardCategoryEnum.RATING: 'RATING',

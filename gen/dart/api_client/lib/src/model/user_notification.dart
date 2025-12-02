@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'user_notification.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UserNotification {
   /// Returns a new [UserNotification] instance.
   const UserNotification({
@@ -77,7 +82,8 @@ class UserNotification {
       createdAt.hashCode +
       readAt.hashCode;
 
-  factory UserNotification.fromJson(Map<String, dynamic> json) => _$UserNotificationFromJson(json);
+  factory UserNotification.fromJson(Map<String, dynamic> json) =>
+      _$UserNotificationFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserNotificationToJson(this);
 

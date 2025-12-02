@@ -74,11 +74,10 @@ class EmergencyApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
-              rawData,
-              'EmergencyTrigger200Response',
-              growable: true,
-            );
+          : deserialize<
+              EmergencyTrigger200Response,
+              EmergencyTrigger200Response
+            >(rawData, 'EmergencyTrigger200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -156,11 +155,10 @@ class EmergencyApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<EmergencyListByOrder200Response, EmergencyListByOrder200Response>(
-              rawData,
-              'EmergencyListByOrder200Response',
-              growable: true,
-            );
+          : deserialize<
+              EmergencyListByOrder200Response,
+              EmergencyListByOrder200Response
+            >(rawData, 'EmergencyListByOrder200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -248,11 +246,10 @@ class EmergencyApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
-              rawData,
-              'EmergencyTrigger200Response',
-              growable: true,
-            );
+          : deserialize<
+              EmergencyTrigger200Response,
+              EmergencyTrigger200Response
+            >(rawData, 'EmergencyTrigger200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -347,11 +344,10 @@ class EmergencyApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
-              rawData,
-              'EmergencyTrigger200Response',
-              growable: true,
-            );
+          : deserialize<
+              EmergencyTrigger200Response,
+              EmergencyTrigger200Response
+            >(rawData, 'EmergencyTrigger200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

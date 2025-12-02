@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for BadgeUserCreateRequest
 void main() {
-  final BadgeUserCreateRequest? instance = /* BadgeUserCreateRequest(...) */ null;
+  final BadgeUserCreateRequest? instance = /* BadgeUserCreateRequest(...) */
+      null;
   // TODO add properties to the entity
 
   group(BadgeUserCreateRequest, () {

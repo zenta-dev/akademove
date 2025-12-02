@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_benefits.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeBenefits {
   /// Returns a new [BadgeBenefits] instance.
   const BadgeBenefits({this.priorityBoost, this.commissionReduction});
@@ -34,7 +39,8 @@ class BadgeBenefits {
   @override
   int get hashCode => priorityBoost.hashCode + commissionReduction.hashCode;
 
-  factory BadgeBenefits.fromJson(Map<String, dynamic> json) => _$BadgeBenefitsFromJson(json);
+  factory BadgeBenefits.fromJson(Map<String, dynamic> json) =>
+      _$BadgeBenefitsFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeBenefitsToJson(this);
 

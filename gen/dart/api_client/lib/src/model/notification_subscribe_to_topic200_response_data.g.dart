@@ -20,7 +20,11 @@ abstract class _$NotificationSubscribeToTopic200ResponseDataCWProxy {
   /// ```dart
   /// NotificationSubscribeToTopic200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
-  NotificationSubscribeToTopic200ResponseData call({num successCount, num failureCount, Object? errors});
+  NotificationSubscribeToTopic200ResponseData call({
+    num successCount,
+    num failureCount,
+    Object? errors,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -32,13 +36,16 @@ class _$NotificationSubscribeToTopic200ResponseDataCWProxyImpl
   final NotificationSubscribeToTopic200ResponseData _value;
 
   @override
-  NotificationSubscribeToTopic200ResponseData successCount(num successCount) => call(successCount: successCount);
+  NotificationSubscribeToTopic200ResponseData successCount(num successCount) =>
+      call(successCount: successCount);
 
   @override
-  NotificationSubscribeToTopic200ResponseData failureCount(num failureCount) => call(failureCount: failureCount);
+  NotificationSubscribeToTopic200ResponseData failureCount(num failureCount) =>
+      call(failureCount: failureCount);
 
   @override
-  NotificationSubscribeToTopic200ResponseData errors(Object? errors) => call(errors: errors);
+  NotificationSubscribeToTopic200ResponseData errors(Object? errors) =>
+      call(errors: errors);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -54,11 +61,13 @@ class _$NotificationSubscribeToTopic200ResponseDataCWProxyImpl
     Object? errors = const $CopyWithPlaceholder(),
   }) {
     return NotificationSubscribeToTopic200ResponseData(
-      successCount: successCount == const $CopyWithPlaceholder() || successCount == null
+      successCount:
+          successCount == const $CopyWithPlaceholder() || successCount == null
           ? _value.successCount
           // ignore: cast_nullable_to_non_nullable
           : successCount as num,
-      failureCount: failureCount == const $CopyWithPlaceholder() || failureCount == null
+      failureCount:
+          failureCount == const $CopyWithPlaceholder() || failureCount == null
           ? _value.failureCount
           // ignore: cast_nullable_to_non_nullable
           : failureCount as num,
@@ -70,7 +79,8 @@ class _$NotificationSubscribeToTopic200ResponseDataCWProxyImpl
   }
 }
 
-extension $NotificationSubscribeToTopic200ResponseDataCopyWith on NotificationSubscribeToTopic200ResponseData {
+extension $NotificationSubscribeToTopic200ResponseDataCopyWith
+    on NotificationSubscribeToTopic200ResponseData {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationSubscribeToTopic200ResponseData.copyWith(...)` or `instanceOfNotificationSubscribeToTopic200ResponseData.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -82,9 +92,12 @@ extension $NotificationSubscribeToTopic200ResponseDataCopyWith on NotificationSu
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationSubscribeToTopic200ResponseData _$NotificationSubscribeToTopic200ResponseDataFromJson(
+NotificationSubscribeToTopic200ResponseData
+_$NotificationSubscribeToTopic200ResponseDataFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('NotificationSubscribeToTopic200ResponseData', json, ($checkedConvert) {
+) => $checkedCreate('NotificationSubscribeToTopic200ResponseData', json, (
+  $checkedConvert,
+) {
   $checkKeys(json, requiredKeys: const ['successCount', 'failureCount']);
   final val = NotificationSubscribeToTopic200ResponseData(
     successCount: $checkedConvert('successCount', (v) => v as num),

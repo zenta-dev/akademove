@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'insert_review.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class InsertReview {
   /// Returns a new [InsertReview] instance.
   const InsertReview({
@@ -37,7 +42,12 @@ class InsertReview {
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
 
-  @JsonKey(defaultValue: '', name: r'comment', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: '',
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
   final String? comment;
 
   @override
@@ -60,7 +70,8 @@ class InsertReview {
       score.hashCode +
       comment.hashCode;
 
-  factory InsertReview.fromJson(Map<String, dynamic> json) => _$InsertReviewFromJson(json);
+  factory InsertReview.fromJson(Map<String, dynamic> json) =>
+      _$InsertReviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertReviewToJson(this);
 

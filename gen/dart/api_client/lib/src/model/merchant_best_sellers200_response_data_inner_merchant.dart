@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_best_sellers200_response_data_inner_merchant.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantBestSellers200ResponseDataInnerMerchant {
   /// Returns a new [MerchantBestSellers200ResponseDataInnerMerchant] instance.
   const MerchantBestSellers200ResponseDataInnerMerchant({
@@ -41,12 +46,15 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
           other.rating == rating;
 
   @override
-  int get hashCode => id.hashCode + name.hashCode + image.hashCode + rating.hashCode;
+  int get hashCode =>
+      id.hashCode + name.hashCode + image.hashCode + rating.hashCode;
 
-  factory MerchantBestSellers200ResponseDataInnerMerchant.fromJson(Map<String, dynamic> json) =>
-      _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(json);
+  factory MerchantBestSellers200ResponseDataInnerMerchant.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantBestSellers200ResponseDataInnerMerchantToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantBestSellers200ResponseDataInnerMerchantToJson(this);
 
   @override
   String toString() {

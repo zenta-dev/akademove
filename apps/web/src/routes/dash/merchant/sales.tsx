@@ -264,62 +264,76 @@ function RouteComponent() {
 							<CardDescription>{m.daily_revenue_breakdown()}</CardDescription>
 						</CardHeader>
 						<CardContent className="h-[400px]">
-							<ResponsiveContainer width="100%" height="100%">
-								<AreaChart data={data.revenueByDay}>
-									<defs>
-										<linearGradient
-											id="colorRevenue"
-											x1="0"
-											y1="0"
-											x2="0"
-											y2="1"
-										>
-											<stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-											<stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-										</linearGradient>
-									</defs>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis
-										dataKey="date"
-										tick={{ fontSize: 12 }}
-										tickFormatter={(value) => {
-											const date = new Date(value);
-											return date.toLocaleDateString("id-ID", {
-												month: "short",
-												day: "numeric",
-											});
-										}}
-									/>
-									<YAxis
-										tick={{ fontSize: 12 }}
-										tickFormatter={(value) =>
-											`Rp ${(value / 1000).toFixed(0)}k`
-										}
-									/>
-									<Tooltip
-										formatter={(value: number) => [
-											formatCurrency(value),
-											m.revenue(),
-										]}
-										labelFormatter={(label) => {
-											const date = new Date(label);
-											return date.toLocaleDateString("id-ID", {
-												weekday: "long",
-												year: "numeric",
-												month: "long",
-												day: "numeric",
-											});
-										}}
-									/>
-									<Area
-										type="monotone"
-										dataKey="revenue"
-										stroke="#10b981"
-										fillOpacity={1}
-										fill="url(#colorRevenue)"
-									/>
-								</AreaChart>
-							</ResponsiveContainer>
+							{data.revenueByDay.length === 0 ? (
+								<div className="flex h-full items-center justify-center text-muted-foreground">
+									{m.no_data_available()}
+								</div>
+							) : (
+								<ResponsiveContainer width="100%" height="100%">
+									<AreaChart data={data.revenueByDay}>
+										<defs>
+											<linearGradient
+												id="colorRevenue"
+												x1="0"
+												y1="0"
+												x2="0"
+												y2="1"
+											>
+												<stop
+													offset="5%"
+													stopColor="#10b981"
+													stopOpacity={0.8}
+												/>
+												<stop
+													offset="95%"
+													stopColor="#10b981"
+													stopOpacity={0}
+												/>
+											</linearGradient>
+										</defs>
+										<CartesianGrid strokeDasharray="3 3" />
+										<XAxis
+											dataKey="date"
+											tick={{ fontSize: 12 }}
+											tickFormatter={(value) => {
+												const date = new Date(value);
+												return date.toLocaleDateString("id-ID", {
+													month: "short",
+													day: "numeric",
+												});
+											}}
+										/>
+										<YAxis
+											tick={{ fontSize: 12 }}
+											tickFormatter={(value) =>
+												`Rp ${(value / 1000).toFixed(0)}k`
+											}
+										/>
+										<Tooltip
+											formatter={(value: number) => [
+												formatCurrency(value),
+												m.revenue(),
+											]}
+											labelFormatter={(label) => {
+												const date = new Date(label);
+												return date.toLocaleDateString("id-ID", {
+													weekday: "long",
+													year: "numeric",
+													month: "long",
+													day: "numeric",
+												});
+											}}
+										/>
+										<Area
+											type="monotone"
+											dataKey="revenue"
+											stroke="#10b981"
+											fillOpacity={1}
+											fill="url(#colorRevenue)"
+										/>
+									</AreaChart>
+								</ResponsiveContainer>
+							)}
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -331,36 +345,46 @@ function RouteComponent() {
 							<CardDescription>{m.daily_orders_breakdown()}</CardDescription>
 						</CardHeader>
 						<CardContent className="h-[400px]">
-							<ResponsiveContainer width="100%" height="100%">
-								<BarChart data={data.revenueByDay}>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis
-										dataKey="date"
-										tick={{ fontSize: 12 }}
-										tickFormatter={(value) => {
-											const date = new Date(value);
-											return date.toLocaleDateString("id-ID", {
-												month: "short",
-												day: "numeric",
-											});
-										}}
-									/>
-									<YAxis tick={{ fontSize: 12 }} />
-									<Tooltip
-										formatter={(value: number) => [value, m.orders()]}
-										labelFormatter={(label) => {
-											const date = new Date(label);
-											return date.toLocaleDateString("id-ID", {
-												weekday: "long",
-												year: "numeric",
-												month: "long",
-												day: "numeric",
-											});
-										}}
-									/>
-									<Bar dataKey="orders" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-								</BarChart>
-							</ResponsiveContainer>
+							{data.revenueByDay.length === 0 ? (
+								<div className="flex h-full items-center justify-center text-muted-foreground">
+									{m.no_data_available()}
+								</div>
+							) : (
+								<ResponsiveContainer width="100%" height="100%">
+									<BarChart data={data.revenueByDay}>
+										<CartesianGrid strokeDasharray="3 3" />
+										<XAxis
+											dataKey="date"
+											tick={{ fontSize: 12 }}
+											tickFormatter={(value) => {
+												const date = new Date(value);
+												return date.toLocaleDateString("id-ID", {
+													month: "short",
+													day: "numeric",
+												});
+											}}
+										/>
+										<YAxis tick={{ fontSize: 12 }} />
+										<Tooltip
+											formatter={(value: number) => [value, m.orders()]}
+											labelFormatter={(label) => {
+												const date = new Date(label);
+												return date.toLocaleDateString("id-ID", {
+													weekday: "long",
+													year: "numeric",
+													month: "long",
+													day: "numeric",
+												});
+											}}
+										/>
+										<Bar
+											dataKey="orders"
+											fill="#3b82f6"
+											radius={[8, 8, 0, 0]}
+										/>
+									</BarChart>
+								</ResponsiveContainer>
+							)}
 						</CardContent>
 					</Card>
 				</TabsContent>

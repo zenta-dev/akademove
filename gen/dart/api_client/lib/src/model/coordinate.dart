@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'coordinate.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Coordinate {
   /// Returns a new [Coordinate] instance.
   const Coordinate({required this.x, required this.y});
@@ -27,12 +32,15 @@ class Coordinate {
   final num y;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Coordinate && other.x == x && other.y == y;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Coordinate && other.x == x && other.y == y;
 
   @override
   int get hashCode => x.hashCode + y.hashCode;
 
-  factory Coordinate.fromJson(Map<String, dynamic> json) => _$CoordinateFromJson(json);
+  factory Coordinate.fromJson(Map<String, dynamic> json) =>
+      _$CoordinateFromJson(json);
 
   Map<String, dynamic> toJson() => _$CoordinateToJson(this);
 

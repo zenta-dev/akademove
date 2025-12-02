@@ -177,11 +177,10 @@ class UserApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthHasPermission200Response, AuthHasPermission200Response>(
-              rawData,
-              'AuthHasPermission200Response',
-              growable: true,
-            );
+          : deserialize<
+              AuthHasPermission200Response,
+              AuthHasPermission200Response
+            >(rawData, 'AuthHasPermission200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

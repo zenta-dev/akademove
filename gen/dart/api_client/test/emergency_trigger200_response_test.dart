@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for EmergencyTrigger200Response
 void main() {
-  final EmergencyTrigger200Response? instance = /* EmergencyTrigger200Response(...) */ null;
+  final EmergencyTrigger200Response?
+  instance = /* EmergencyTrigger200Response(...) */ null;
   // TODO add properties to the entity
 
   group(EmergencyTrigger200Response, () {

@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'withdraw_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class WithdrawRequest {
   /// Returns a new [WithdrawRequest] instance.
   const WithdrawRequest({
@@ -42,9 +47,14 @@ class WithdrawRequest {
           other.accountName == accountName;
 
   @override
-  int get hashCode => amount.hashCode + bankProvider.hashCode + accountNumber.hashCode + accountName.hashCode;
+  int get hashCode =>
+      amount.hashCode +
+      bankProvider.hashCode +
+      accountNumber.hashCode +
+      accountName.hashCode;
 
-  factory WithdrawRequest.fromJson(Map<String, dynamic> json) => _$WithdrawRequestFromJson(json);
+  factory WithdrawRequest.fromJson(Map<String, dynamic> json) =>
+      _$WithdrawRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$WithdrawRequestToJson(this);
 

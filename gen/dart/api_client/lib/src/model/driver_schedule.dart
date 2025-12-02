@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_schedule.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverSchedule {
   /// Returns a new [DriverSchedule] instance.
   const DriverSchedule({
@@ -46,13 +51,23 @@ class DriverSchedule {
   @JsonKey(name: r'endTime', required: true, includeIfNull: false)
   final Time endTime;
 
-  @JsonKey(defaultValue: true, name: r'isRecurring', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isRecurring',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isRecurring;
 
   @JsonKey(name: r'specificDate', required: false, includeIfNull: false)
   final DateTime? specificDate;
 
-  @JsonKey(defaultValue: true, name: r'isActive', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isActive',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isActive;
 
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
@@ -91,7 +106,8 @@ class DriverSchedule {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory DriverSchedule.fromJson(Map<String, dynamic> json) => _$DriverScheduleFromJson(json);
+  factory DriverSchedule.fromJson(Map<String, dynamic> json) =>
+      _$DriverScheduleFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverScheduleToJson(this);
 

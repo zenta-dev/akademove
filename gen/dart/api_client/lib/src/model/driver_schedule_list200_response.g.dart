@@ -32,22 +32,27 @@ abstract class _$DriverScheduleList200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverScheduleList200Response.copyWith(...)` or call `instanceOfDriverScheduleList200Response.copyWith.fieldName(value)` for a single field.
-class _$DriverScheduleList200ResponseCWProxyImpl implements _$DriverScheduleList200ResponseCWProxy {
+class _$DriverScheduleList200ResponseCWProxyImpl
+    implements _$DriverScheduleList200ResponseCWProxy {
   const _$DriverScheduleList200ResponseCWProxyImpl(this._value);
 
   final DriverScheduleList200Response _value;
 
   @override
-  DriverScheduleList200Response message(String message) => call(message: message);
+  DriverScheduleList200Response message(String message) =>
+      call(message: message);
 
   @override
-  DriverScheduleList200Response data(List<DriverSchedule> data) => call(data: data);
+  DriverScheduleList200Response data(List<DriverSchedule> data) =>
+      call(data: data);
 
   @override
-  DriverScheduleList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  DriverScheduleList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  DriverScheduleList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  DriverScheduleList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,36 +89,45 @@ class _$DriverScheduleList200ResponseCWProxyImpl implements _$DriverScheduleList
   }
 }
 
-extension $DriverScheduleList200ResponseCopyWith on DriverScheduleList200Response {
+extension $DriverScheduleList200ResponseCopyWith
+    on DriverScheduleList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverScheduleList200Response.copyWith(...)` or `instanceOfDriverScheduleList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverScheduleList200ResponseCWProxy get copyWith => _$DriverScheduleList200ResponseCWProxyImpl(this);
+  _$DriverScheduleList200ResponseCWProxy get copyWith =>
+      _$DriverScheduleList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverScheduleList200Response _$DriverScheduleList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('DriverScheduleList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = DriverScheduleList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => DriverSchedule.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+DriverScheduleList200Response _$DriverScheduleList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('DriverScheduleList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = DriverScheduleList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => DriverSchedule.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$DriverScheduleList200ResponseToJson(DriverScheduleList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$DriverScheduleList200ResponseToJson(
+  DriverScheduleList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

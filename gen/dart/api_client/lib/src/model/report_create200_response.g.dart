@@ -22,12 +22,18 @@ abstract class _$ReportCreate200ResponseCWProxy {
   /// ```dart
   /// ReportCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  ReportCreate200Response call({String message, Report data, PaginationResult? pagination, int? totalPages});
+  ReportCreate200Response call({
+    String message,
+    Report data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfReportCreate200Response.copyWith(...)` or call `instanceOfReportCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$ReportCreate200ResponseCWProxyImpl implements _$ReportCreate200ResponseCWProxy {
+class _$ReportCreate200ResponseCWProxyImpl
+    implements _$ReportCreate200ResponseCWProxy {
   const _$ReportCreate200ResponseCWProxyImpl(this._value);
 
   final ReportCreate200Response _value;
@@ -39,10 +45,12 @@ class _$ReportCreate200ResponseCWProxyImpl implements _$ReportCreate200ResponseC
   ReportCreate200Response data(Report data) => call(data: data);
 
   @override
-  ReportCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  ReportCreate200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  ReportCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  ReportCreate200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $ReportCreate200ResponseCopyWith on ReportCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfReportCreate200Response.copyWith(...)` or `instanceOfReportCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ReportCreate200ResponseCWProxy get copyWith => _$ReportCreate200ResponseCWProxyImpl(this);
+  _$ReportCreate200ResponseCWProxy get copyWith =>
+      _$ReportCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReportCreate200Response _$ReportCreate200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('ReportCreate200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = ReportCreate200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => Report.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+ReportCreate200Response _$ReportCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ReportCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = ReportCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Report.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$ReportCreate200ResponseToJson(ReportCreate200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$ReportCreate200ResponseToJson(
+  ReportCreate200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

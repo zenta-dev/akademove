@@ -214,7 +214,8 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponGetEligibleCoupons200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponGetEligibleCoupons200Response>> couponGetEligibleCoupons({
+  Future<Response<CouponGetEligibleCoupons200Response>>
+  couponGetEligibleCoupons({
     required CouponGetEligibleCouponsRequest couponGetEligibleCouponsRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -265,11 +266,10 @@ class CouponApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<CouponGetEligibleCoupons200Response, CouponGetEligibleCoupons200Response>(
-              rawData,
-              'CouponGetEligibleCoupons200Response',
-              growable: true,
-            );
+          : deserialize<
+              CouponGetEligibleCoupons200Response,
+              CouponGetEligibleCoupons200Response
+            >(rawData, 'CouponGetEligibleCoupons200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -368,7 +368,11 @@ class CouponApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<CouponList200Response, CouponList200Response>(rawData, 'CouponList200Response', growable: true);
+          : deserialize<CouponList200Response, CouponList200Response>(
+              rawData,
+              'CouponList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

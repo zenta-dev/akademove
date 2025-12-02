@@ -92,7 +92,8 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
   OrderDriver studentId(num? studentId) => call(studentId: studentId);
 
   @override
-  OrderDriver licensePlate(String? licensePlate) => call(licensePlate: licensePlate);
+  OrderDriver licensePlate(String? licensePlate) =>
+      call(licensePlate: licensePlate);
 
   @override
   OrderDriver status(DriverStatus? status) => call(status: status);
@@ -101,34 +102,42 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
   OrderDriver rating(num? rating) => call(rating: rating);
 
   @override
-  OrderDriver isTakingOrder(bool? isTakingOrder) => call(isTakingOrder: isTakingOrder);
+  OrderDriver isTakingOrder(bool? isTakingOrder) =>
+      call(isTakingOrder: isTakingOrder);
 
   @override
   OrderDriver isOnline(bool? isOnline) => call(isOnline: isOnline);
 
   @override
-  OrderDriver currentLocation(Coordinate? currentLocation) => call(currentLocation: currentLocation);
+  OrderDriver currentLocation(Coordinate? currentLocation) =>
+      call(currentLocation: currentLocation);
 
   @override
-  OrderDriver lastLocationUpdate(DateTime? lastLocationUpdate) => call(lastLocationUpdate: lastLocationUpdate);
+  OrderDriver lastLocationUpdate(DateTime? lastLocationUpdate) =>
+      call(lastLocationUpdate: lastLocationUpdate);
 
   @override
-  OrderDriver cancellationCount(int? cancellationCount) => call(cancellationCount: cancellationCount);
+  OrderDriver cancellationCount(int? cancellationCount) =>
+      call(cancellationCount: cancellationCount);
 
   @override
-  OrderDriver lastCancellationDate(DateTime? lastCancellationDate) => call(lastCancellationDate: lastCancellationDate);
+  OrderDriver lastCancellationDate(DateTime? lastCancellationDate) =>
+      call(lastCancellationDate: lastCancellationDate);
 
   @override
   OrderDriver createdAt(DateTime? createdAt) => call(createdAt: createdAt);
 
   @override
-  OrderDriver studentCard(String? studentCard) => call(studentCard: studentCard);
+  OrderDriver studentCard(String? studentCard) =>
+      call(studentCard: studentCard);
 
   @override
-  OrderDriver driverLicense(String? driverLicense) => call(driverLicense: driverLicense);
+  OrderDriver driverLicense(String? driverLicense) =>
+      call(driverLicense: driverLicense);
 
   @override
-  OrderDriver vehicleCertificate(String? vehicleCertificate) => call(vehicleCertificate: vehicleCertificate);
+  OrderDriver vehicleCertificate(String? vehicleCertificate) =>
+      call(vehicleCertificate: vehicleCertificate);
 
   @override
   OrderDriver bank(Bank? bank) => call(bank: bank);
@@ -260,58 +269,83 @@ extension $OrderDriverCopyWith on OrderDriver {
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderDriver _$OrderDriverFromJson(Map<String, dynamic> json) => $checkedCreate('OrderDriver', json, ($checkedConvert) {
-  final val = OrderDriver(
-    id: $checkedConvert('id', (v) => v as String?),
-    userId: $checkedConvert('userId', (v) => v as String?),
-    studentId: $checkedConvert('studentId', (v) => v as num?),
-    licensePlate: $checkedConvert('licensePlate', (v) => v as String?),
-    status: $checkedConvert('status', (v) => $enumDecodeNullable(_$DriverStatusEnumMap, v)),
-    rating: $checkedConvert('rating', (v) => v as num?),
-    isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool?),
-    isOnline: $checkedConvert('isOnline', (v) => v as bool?),
-    currentLocation: $checkedConvert(
-      'currentLocation',
-      (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
-    ),
-    lastLocationUpdate: $checkedConvert('lastLocationUpdate', (v) => v == null ? null : DateTime.parse(v as String)),
-    cancellationCount: $checkedConvert('cancellationCount', (v) => (v as num?)?.toInt() ?? 0),
-    lastCancellationDate: $checkedConvert(
-      'lastCancellationDate',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    createdAt: $checkedConvert('createdAt', (v) => v == null ? null : DateTime.parse(v as String)),
-    studentCard: $checkedConvert('studentCard', (v) => v as String?),
-    driverLicense: $checkedConvert('driverLicense', (v) => v as String?),
-    vehicleCertificate: $checkedConvert('vehicleCertificate', (v) => v as String?),
-    bank: $checkedConvert('bank', (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>)),
-    user: $checkedConvert('user', (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>)),
-    distance: $checkedConvert('distance', (v) => v as num?),
-  );
-  return val;
-});
+OrderDriver _$OrderDriverFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderDriver', json, ($checkedConvert) {
+      final val = OrderDriver(
+        id: $checkedConvert('id', (v) => v as String?),
+        userId: $checkedConvert('userId', (v) => v as String?),
+        studentId: $checkedConvert('studentId', (v) => v as num?),
+        licensePlate: $checkedConvert('licensePlate', (v) => v as String?),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecodeNullable(_$DriverStatusEnumMap, v),
+        ),
+        rating: $checkedConvert('rating', (v) => v as num?),
+        isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool?),
+        isOnline: $checkedConvert('isOnline', (v) => v as bool?),
+        currentLocation: $checkedConvert(
+          'currentLocation',
+          (v) =>
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
+        ),
+        lastLocationUpdate: $checkedConvert(
+          'lastLocationUpdate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        cancellationCount: $checkedConvert(
+          'cancellationCount',
+          (v) => (v as num?)?.toInt() ?? 0,
+        ),
+        lastCancellationDate: $checkedConvert(
+          'lastCancellationDate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        studentCard: $checkedConvert('studentCard', (v) => v as String?),
+        driverLicense: $checkedConvert('driverLicense', (v) => v as String?),
+        vehicleCertificate: $checkedConvert(
+          'vehicleCertificate',
+          (v) => v as String?,
+        ),
+        bank: $checkedConvert(
+          'bank',
+          (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>),
+        ),
+        user: $checkedConvert(
+          'user',
+          (v) =>
+              v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
+        ),
+        distance: $checkedConvert('distance', (v) => v as num?),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$OrderDriverToJson(OrderDriver instance) => <String, dynamic>{
-  'id': ?instance.id,
-  'userId': ?instance.userId,
-  'studentId': ?instance.studentId,
-  'licensePlate': ?instance.licensePlate,
-  'status': ?_$DriverStatusEnumMap[instance.status],
-  'rating': ?instance.rating,
-  'isTakingOrder': ?instance.isTakingOrder,
-  'isOnline': ?instance.isOnline,
-  'currentLocation': ?instance.currentLocation?.toJson(),
-  'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
-  'cancellationCount': ?instance.cancellationCount,
-  'lastCancellationDate': ?instance.lastCancellationDate?.toIso8601String(),
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'studentCard': ?instance.studentCard,
-  'driverLicense': ?instance.driverLicense,
-  'vehicleCertificate': ?instance.vehicleCertificate,
-  'bank': ?instance.bank?.toJson(),
-  'user': ?instance.user?.toJson(),
-  'distance': ?instance.distance,
-};
+Map<String, dynamic> _$OrderDriverToJson(OrderDriver instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'userId': ?instance.userId,
+      'studentId': ?instance.studentId,
+      'licensePlate': ?instance.licensePlate,
+      'status': ?_$DriverStatusEnumMap[instance.status],
+      'rating': ?instance.rating,
+      'isTakingOrder': ?instance.isTakingOrder,
+      'isOnline': ?instance.isOnline,
+      'currentLocation': ?instance.currentLocation?.toJson(),
+      'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
+      'cancellationCount': ?instance.cancellationCount,
+      'lastCancellationDate': ?instance.lastCancellationDate?.toIso8601String(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'studentCard': ?instance.studentCard,
+      'driverLicense': ?instance.driverLicense,
+      'vehicleCertificate': ?instance.vehicleCertificate,
+      'bank': ?instance.bank?.toJson(),
+      'user': ?instance.user?.toJson(),
+      'distance': ?instance.distance,
+    };
 
 const _$DriverStatusEnumMap = {
   DriverStatus.PENDING: 'PENDING',

@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'time_rules.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class TimeRules {
   /// Returns a new [TimeRules] instance.
   const TimeRules({this.allowedDays, this.allowedHours});
@@ -24,12 +29,15 @@ class TimeRules {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TimeRules && other.allowedDays == allowedDays && other.allowedHours == allowedHours;
+      other is TimeRules &&
+          other.allowedDays == allowedDays &&
+          other.allowedHours == allowedHours;
 
   @override
   int get hashCode => allowedDays.hashCode + allowedHours.hashCode;
 
-  factory TimeRules.fromJson(Map<String, dynamic> json) => _$TimeRulesFromJson(json);
+  factory TimeRules.fromJson(Map<String, dynamic> json) =>
+      _$TimeRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$TimeRulesToJson(this);
 

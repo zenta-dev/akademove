@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'statements.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Statements {
   /// Returns a new [Statements] instance.
   const Statements({
@@ -107,7 +112,8 @@ class Statements {
       configurations.hashCode +
       emergency.hashCode;
 
-  factory Statements.fromJson(Map<String, dynamic> json) => _$StatementsFromJson(json);
+  factory Statements.fromJson(Map<String, dynamic> json) =>
+      _$StatementsFromJson(json);
 
   Map<String, dynamic> toJson() => _$StatementsToJson(this);
 

@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_item.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderItem {
   /// Returns a new [OrderItem] instance.
   const OrderItem({required this.quantity, required this.item});
@@ -23,12 +28,14 @@ class OrderItem {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is OrderItem && other.quantity == quantity && other.item == item;
+      identical(this, other) ||
+      other is OrderItem && other.quantity == quantity && other.item == item;
 
   @override
   int get hashCode => quantity.hashCode + item.hashCode;
 
-  factory OrderItem.fromJson(Map<String, dynamic> json) => _$OrderItemFromJson(json);
+  factory OrderItem.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 

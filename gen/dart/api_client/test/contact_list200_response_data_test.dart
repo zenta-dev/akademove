@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ContactList200ResponseData
 void main() {
-  final ContactList200ResponseData? instance = /* ContactList200ResponseData(...) */ null;
+  final ContactList200ResponseData?
+  instance = /* ContactList200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(ContactList200ResponseData, () {

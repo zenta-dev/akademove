@@ -9,10 +9,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'user_badge_metadata.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UserBadgeMetadata {
   /// Returns a new [UserBadgeMetadata] instance.
-  const UserBadgeMetadata({this.ordersCompleted, this.finalRating, this.streakDays});
+  const UserBadgeMetadata({
+    this.ordersCompleted,
+    this.finalRating,
+    this.streakDays,
+  });
 
   // minimum: 0
   // maximum: 9007199254740991
@@ -38,9 +47,11 @@ class UserBadgeMetadata {
           other.streakDays == streakDays;
 
   @override
-  int get hashCode => ordersCompleted.hashCode + finalRating.hashCode + streakDays.hashCode;
+  int get hashCode =>
+      ordersCompleted.hashCode + finalRating.hashCode + streakDays.hashCode;
 
-  factory UserBadgeMetadata.fromJson(Map<String, dynamic> json) => _$UserBadgeMetadataFromJson(json);
+  factory UserBadgeMetadata.fromJson(Map<String, dynamic> json) =>
+      _$UserBadgeMetadataFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserBadgeMetadataToJson(this);
 

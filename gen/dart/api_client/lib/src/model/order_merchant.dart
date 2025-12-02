@@ -13,7 +13,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_merchant.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderMerchant {
   /// Returns a new [OrderMerchant] instance.
   const OrderMerchant({
@@ -124,7 +129,8 @@ class OrderMerchant {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory OrderMerchant.fromJson(Map<String, dynamic> json) => _$OrderMerchantFromJson(json);
+  factory OrderMerchant.fromJson(Map<String, dynamic> json) =>
+      _$OrderMerchantFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderMerchantToJson(this);
 

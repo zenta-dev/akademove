@@ -23,7 +23,8 @@ abstract class _$OrderChatMessageSenderCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderChatMessageSender.copyWith(...)` or call `instanceOfOrderChatMessageSender.copyWith.fieldName(value)` for a single field.
-class _$OrderChatMessageSenderCWProxyImpl implements _$OrderChatMessageSenderCWProxy {
+class _$OrderChatMessageSenderCWProxyImpl
+    implements _$OrderChatMessageSenderCWProxy {
   const _$OrderChatMessageSenderCWProxyImpl(this._value);
 
   final OrderChatMessageSender _value;
@@ -63,24 +64,25 @@ extension $OrderChatMessageSenderCopyWith on OrderChatMessageSender {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderChatMessageSender.copyWith(...)` or `instanceOfOrderChatMessageSender.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderChatMessageSenderCWProxy get copyWith => _$OrderChatMessageSenderCWProxyImpl(this);
+  _$OrderChatMessageSenderCWProxy get copyWith =>
+      _$OrderChatMessageSenderCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderChatMessageSender _$OrderChatMessageSenderFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderChatMessageSender', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['name']);
-      final val = OrderChatMessageSender(
-        name: $checkedConvert('name', (v) => v as String),
-        image: $checkedConvert('image', (v) => v as String?),
-      );
-      return val;
-    });
+OrderChatMessageSender _$OrderChatMessageSenderFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderChatMessageSender', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['name']);
+  final val = OrderChatMessageSender(
+    name: $checkedConvert('name', (v) => v as String),
+    image: $checkedConvert('image', (v) => v as String?),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$OrderChatMessageSenderToJson(OrderChatMessageSender instance) => <String, dynamic>{
-  'name': instance.name,
-  'image': ?instance.image,
-};
+Map<String, dynamic> _$OrderChatMessageSenderToJson(
+  OrderChatMessageSender instance,
+) => <String, dynamic>{'name': instance.name, 'image': ?instance.image};

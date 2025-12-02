@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'user_badge.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UserBadge {
   /// Returns a new [UserBadge] instance.
   const UserBadge({
@@ -73,7 +78,8 @@ class UserBadge {
       updatedAt.hashCode +
       badge.hashCode;
 
-  factory UserBadge.fromJson(Map<String, dynamic> json) => _$UserBadgeFromJson(json);
+  factory UserBadge.fromJson(Map<String, dynamic> json) =>
+      _$UserBadgeFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserBadgeToJson(this);
 

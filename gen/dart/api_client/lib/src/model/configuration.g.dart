@@ -53,10 +53,12 @@ class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
   Configuration value(Object? value) => call(value: value);
 
   @override
-  Configuration description(String? description) => call(description: description);
+  Configuration description(String? description) =>
+      call(description: description);
 
   @override
-  Configuration updatedById(String updatedById) => call(updatedById: updatedById);
+  Configuration updatedById(String updatedById) =>
+      call(updatedById: updatedById);
 
   @override
   Configuration updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
@@ -94,7 +96,8 @@ class _$ConfigurationCWProxyImpl implements _$ConfigurationCWProxy {
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String?,
-      updatedById: updatedById == const $CopyWithPlaceholder() || updatedById == null
+      updatedById:
+          updatedById == const $CopyWithPlaceholder() || updatedById == null
           ? _value.updatedById
           // ignore: cast_nullable_to_non_nullable
           : updatedById as String,
@@ -119,23 +122,30 @@ extension $ConfigurationCopyWith on Configuration {
 
 Configuration _$ConfigurationFromJson(Map<String, dynamic> json) =>
     $checkedCreate('Configuration', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['key', 'name', 'updatedById', 'updatedAt']);
+      $checkKeys(
+        json,
+        requiredKeys: const ['key', 'name', 'updatedById', 'updatedAt'],
+      );
       final val = Configuration(
         key: $checkedConvert('key', (v) => v as String),
         name: $checkedConvert('name', (v) => v as String),
         value: $checkedConvert('value', (v) => v),
         description: $checkedConvert('description', (v) => v as String?),
         updatedById: $checkedConvert('updatedById', (v) => v as String),
-        updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => DateTime.parse(v as String),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$ConfigurationToJson(Configuration instance) => <String, dynamic>{
-  'key': instance.key,
-  'name': instance.name,
-  'value': ?instance.value,
-  'description': ?instance.description,
-  'updatedById': instance.updatedById,
-  'updatedAt': instance.updatedAt.toIso8601String(),
-};
+Map<String, dynamic> _$ConfigurationToJson(Configuration instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'name': instance.name,
+      'value': ?instance.value,
+      'description': ?instance.description,
+      'updatedById': instance.updatedById,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+    };

@@ -15,7 +15,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'place_order.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PlaceOrder {
   /// Returns a new [PlaceOrder] instance.
   const PlaceOrder({
@@ -77,7 +82,8 @@ class PlaceOrder {
       couponCode.hashCode +
       payment.hashCode;
 
-  factory PlaceOrder.fromJson(Map<String, dynamic> json) => _$PlaceOrderFromJson(json);
+  factory PlaceOrder.fromJson(Map<String, dynamic> json) =>
+      _$PlaceOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderToJson(this);
 

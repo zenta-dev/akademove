@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'time.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Time {
   /// Returns a new [Time] instance.
   const Time({required this.h, required this.m});
@@ -21,7 +26,8 @@ class Time {
   final num m;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Time && other.h == h && other.m == m;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Time && other.h == h && other.m == m;
 
   @override
   int get hashCode => h.hashCode + m.hashCode;

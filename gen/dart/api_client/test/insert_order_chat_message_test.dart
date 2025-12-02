@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for InsertOrderChatMessage
 void main() {
-  final InsertOrderChatMessage? instance = /* InsertOrderChatMessage(...) */ null;
+  final InsertOrderChatMessage? instance = /* InsertOrderChatMessage(...) */
+      null;
   // TODO add properties to the entity
 
   group(InsertOrderChatMessage, () {

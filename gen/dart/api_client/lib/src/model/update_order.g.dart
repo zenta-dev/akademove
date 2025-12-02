@@ -39,7 +39,9 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder gender(UserGender? gender);
 
-  UpdateOrder genderPreference(UpdateOrderGenderPreferenceEnum? genderPreference);
+  UpdateOrder genderPreference(
+    UpdateOrderGenderPreferenceEnum? genderPreference,
+  );
 
   UpdateOrder itemCount(num? itemCount);
 
@@ -113,13 +115,16 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   UpdateOrder totalPrice(num? totalPrice) => call(totalPrice: totalPrice);
 
   @override
-  UpdateOrder platformCommission(num? platformCommission) => call(platformCommission: platformCommission);
+  UpdateOrder platformCommission(num? platformCommission) =>
+      call(platformCommission: platformCommission);
 
   @override
-  UpdateOrder driverEarning(num? driverEarning) => call(driverEarning: driverEarning);
+  UpdateOrder driverEarning(num? driverEarning) =>
+      call(driverEarning: driverEarning);
 
   @override
-  UpdateOrder merchantCommission(num? merchantCommission) => call(merchantCommission: merchantCommission);
+  UpdateOrder merchantCommission(num? merchantCommission) =>
+      call(merchantCommission: merchantCommission);
 
   @override
   UpdateOrder couponId(String? couponId) => call(couponId: couponId);
@@ -128,20 +133,23 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   UpdateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
-  UpdateOrder discountAmount(num? discountAmount) => call(discountAmount: discountAmount);
+  UpdateOrder discountAmount(num? discountAmount) =>
+      call(discountAmount: discountAmount);
 
   @override
   UpdateOrder note(OrderNote? note) => call(note: note);
 
   @override
-  UpdateOrder cancelReason(String? cancelReason) => call(cancelReason: cancelReason);
+  UpdateOrder cancelReason(String? cancelReason) =>
+      call(cancelReason: cancelReason);
 
   @override
   UpdateOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
-  UpdateOrder genderPreference(UpdateOrderGenderPreferenceEnum? genderPreference) =>
-      call(genderPreference: genderPreference);
+  UpdateOrder genderPreference(
+    UpdateOrderGenderPreferenceEnum? genderPreference,
+  ) => call(genderPreference: genderPreference);
 
   @override
   UpdateOrder itemCount(num? itemCount) => call(itemCount: itemCount);
@@ -294,12 +302,20 @@ extension $UpdateOrderCopyWith on UpdateOrder {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UpdateOrder _$UpdateOrderFromJson(Map<String, dynamic> json) => $checkedCreate('UpdateOrder', json, ($checkedConvert) {
+UpdateOrder _$UpdateOrderFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UpdateOrder', json, ($checkedConvert) {
   final val = UpdateOrder(
     driverId: $checkedConvert('driverId', (v) => v as String?),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
-    type: $checkedConvert('type', (v) => $enumDecodeNullable(_$OrderTypeEnumMap, v)),
-    status: $checkedConvert('status', (v) => $enumDecodeNullable(_$OrderStatusEnumMap, v)),
+    type: $checkedConvert(
+      'type',
+      (v) => $enumDecodeNullable(_$OrderTypeEnumMap, v),
+    ),
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecodeNullable(_$OrderStatusEnumMap, v),
+    ),
     distanceKm: $checkedConvert('distanceKm', (v) => v as num?),
     tip: $checkedConvert('tip', (v) => v as num?),
     totalPrice: $checkedConvert('totalPrice', (v) => v as num?),
@@ -309,9 +325,15 @@ UpdateOrder _$UpdateOrderFromJson(Map<String, dynamic> json) => $checkedCreate('
     couponId: $checkedConvert('couponId', (v) => v as String?),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
-    note: $checkedConvert('note', (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>)),
+    note: $checkedConvert(
+      'note',
+      (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
+    ),
     cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
-    gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
+    gender: $checkedConvert(
+      'gender',
+      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+    ),
     genderPreference: $checkedConvert(
       'genderPreference',
       (v) => $enumDecodeNullable(_$UpdateOrderGenderPreferenceEnumEnumMap, v),
@@ -319,41 +341,59 @@ UpdateOrder _$UpdateOrderFromJson(Map<String, dynamic> json) => $checkedCreate('
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
       'items',
-      (v) => (v as List<dynamic>?)?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>)).toList(),
+      (v) => (v as List<dynamic>?)
+          ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
     ),
-    user: $checkedConvert('user', (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>)),
-    driver: $checkedConvert('driver', (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>)),
-    merchant: $checkedConvert('merchant', (v) => v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>)),
+    user: $checkedConvert(
+      'user',
+      (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
+    ),
+    driver: $checkedConvert(
+      'driver',
+      (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>),
+    ),
+    merchant: $checkedConvert(
+      'merchant',
+      (v) =>
+          v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
 
-Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) => <String, dynamic>{
-  'driverId': ?instance.driverId,
-  'merchantId': ?instance.merchantId,
-  'type': ?_$OrderTypeEnumMap[instance.type],
-  'status': ?_$OrderStatusEnumMap[instance.status],
-  'distanceKm': ?instance.distanceKm,
-  'tip': ?instance.tip,
-  'totalPrice': ?instance.totalPrice,
-  'platformCommission': ?instance.platformCommission,
-  'driverEarning': ?instance.driverEarning,
-  'merchantCommission': ?instance.merchantCommission,
-  'couponId': ?instance.couponId,
-  'couponCode': ?instance.couponCode,
-  'discountAmount': ?instance.discountAmount,
-  'note': ?instance.note?.toJson(),
-  'cancelReason': ?instance.cancelReason,
-  'gender': ?_$UserGenderEnumMap[instance.gender],
-  'genderPreference': ?_$UpdateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
-  'itemCount': ?instance.itemCount,
-  'items': ?instance.items?.map((e) => e.toJson()).toList(),
-  'user': ?instance.user?.toJson(),
-  'driver': ?instance.driver?.toJson(),
-  'merchant': ?instance.merchant?.toJson(),
-};
+Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
+    <String, dynamic>{
+      'driverId': ?instance.driverId,
+      'merchantId': ?instance.merchantId,
+      'type': ?_$OrderTypeEnumMap[instance.type],
+      'status': ?_$OrderStatusEnumMap[instance.status],
+      'distanceKm': ?instance.distanceKm,
+      'tip': ?instance.tip,
+      'totalPrice': ?instance.totalPrice,
+      'platformCommission': ?instance.platformCommission,
+      'driverEarning': ?instance.driverEarning,
+      'merchantCommission': ?instance.merchantCommission,
+      'couponId': ?instance.couponId,
+      'couponCode': ?instance.couponCode,
+      'discountAmount': ?instance.discountAmount,
+      'note': ?instance.note?.toJson(),
+      'cancelReason': ?instance.cancelReason,
+      'gender': ?_$UserGenderEnumMap[instance.gender],
+      'genderPreference':
+          ?_$UpdateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
+      'itemCount': ?instance.itemCount,
+      'items': ?instance.items?.map((e) => e.toJson()).toList(),
+      'user': ?instance.user?.toJson(),
+      'driver': ?instance.driver?.toJson(),
+      'merchant': ?instance.merchant?.toJson(),
+    };
 
-const _$OrderTypeEnumMap = {OrderType.RIDE: 'RIDE', OrderType.DELIVERY: 'DELIVERY', OrderType.FOOD: 'FOOD'};
+const _$OrderTypeEnumMap = {
+  OrderType.RIDE: 'RIDE',
+  OrderType.DELIVERY: 'DELIVERY',
+  OrderType.FOOD: 'FOOD',
+};
 
 const _$OrderStatusEnumMap = {
   OrderStatus.REQUESTED: 'REQUESTED',
@@ -370,7 +410,10 @@ const _$OrderStatusEnumMap = {
   OrderStatus.CANCELLED_BY_SYSTEM: 'CANCELLED_BY_SYSTEM',
 };
 
-const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};
+const _$UserGenderEnumMap = {
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
+};
 
 const _$UpdateOrderGenderPreferenceEnumEnumMap = {
   UpdateOrderGenderPreferenceEnum.SAME: 'SAME',

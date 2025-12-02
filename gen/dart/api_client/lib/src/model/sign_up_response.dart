@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'sign_up_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class SignUpResponse {
   /// Returns a new [SignUpResponse] instance.
   const SignUpResponse({required this.user});
@@ -19,12 +24,14 @@ class SignUpResponse {
   final User user;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is SignUpResponse && other.user == user;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is SignUpResponse && other.user == user;
 
   @override
   int get hashCode => user.hashCode;
 
-  factory SignUpResponse.fromJson(Map<String, dynamic> json) => _$SignUpResponseFromJson(json);
+  factory SignUpResponse.fromJson(Map<String, dynamic> json) =>
+      _$SignUpResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignUpResponseToJson(this);
 

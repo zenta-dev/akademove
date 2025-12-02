@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'leaderboard_get200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class LeaderboardGet200Response {
   /// Returns a new [LeaderboardGet200Response] instance.
-  const LeaderboardGet200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const LeaderboardGet200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class LeaderboardGet200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory LeaderboardGet200Response.fromJson(Map<String, dynamic> json) => _$LeaderboardGet200ResponseFromJson(json);
+  factory LeaderboardGet200Response.fromJson(Map<String, dynamic> json) =>
+      _$LeaderboardGet200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$LeaderboardGet200ResponseToJson(this);
 

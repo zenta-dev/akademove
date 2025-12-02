@@ -23,7 +23,8 @@ abstract class _$InsertOrderChatMessageCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfInsertOrderChatMessage.copyWith(...)` or call `instanceOfInsertOrderChatMessage.copyWith.fieldName(value)` for a single field.
-class _$InsertOrderChatMessageCWProxyImpl implements _$InsertOrderChatMessageCWProxy {
+class _$InsertOrderChatMessageCWProxyImpl
+    implements _$InsertOrderChatMessageCWProxy {
   const _$InsertOrderChatMessageCWProxyImpl(this._value);
 
   final InsertOrderChatMessage _value;
@@ -63,24 +64,28 @@ extension $InsertOrderChatMessageCopyWith on InsertOrderChatMessage {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfInsertOrderChatMessage.copyWith(...)` or `instanceOfInsertOrderChatMessage.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$InsertOrderChatMessageCWProxy get copyWith => _$InsertOrderChatMessageCWProxyImpl(this);
+  _$InsertOrderChatMessageCWProxy get copyWith =>
+      _$InsertOrderChatMessageCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-InsertOrderChatMessage _$InsertOrderChatMessageFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('InsertOrderChatMessage', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['orderId', 'message']);
-      final val = InsertOrderChatMessage(
-        orderId: $checkedConvert('orderId', (v) => v as String),
-        message: $checkedConvert('message', (v) => v as String),
-      );
-      return val;
-    });
+InsertOrderChatMessage _$InsertOrderChatMessageFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('InsertOrderChatMessage', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['orderId', 'message']);
+  final val = InsertOrderChatMessage(
+    orderId: $checkedConvert('orderId', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$InsertOrderChatMessageToJson(InsertOrderChatMessage instance) => <String, dynamic>{
+Map<String, dynamic> _$InsertOrderChatMessageToJson(
+  InsertOrderChatMessage instance,
+) => <String, dynamic>{
   'orderId': instance.orderId,
   'message': instance.message,
 };

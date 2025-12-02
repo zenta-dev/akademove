@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_list200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverList200Response {
   /// Returns a new [DriverList200Response] instance.
-  const DriverList200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const DriverList200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class DriverList200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory DriverList200Response.fromJson(Map<String, dynamic> json) => _$DriverList200ResponseFromJson(json);
+  factory DriverList200Response.fromJson(Map<String, dynamic> json) =>
+      _$DriverList200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverList200ResponseToJson(this);
 

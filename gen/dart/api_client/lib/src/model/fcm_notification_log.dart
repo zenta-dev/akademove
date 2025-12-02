@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'fcm_notification_log.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class FCMNotificationLog {
   /// Returns a new [FCMNotificationLog] instance.
   const FCMNotificationLog({
@@ -89,7 +94,8 @@ class FCMNotificationLog {
       error.hashCode +
       sentAt.hashCode;
 
-  factory FCMNotificationLog.fromJson(Map<String, dynamic> json) => _$FCMNotificationLogFromJson(json);
+  factory FCMNotificationLog.fromJson(Map<String, dynamic> json) =>
+      _$FCMNotificationLogFromJson(json);
 
   Map<String, dynamic> toJson() => _$FCMNotificationLogToJson(this);
 

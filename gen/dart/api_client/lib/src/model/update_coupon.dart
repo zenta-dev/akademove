@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_coupon.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateCoupon {
   /// Returns a new [UpdateCoupon] instance.
   const UpdateCoupon({
@@ -84,7 +89,8 @@ class UpdateCoupon {
       isActive.hashCode +
       (merchantId == null ? 0 : merchantId.hashCode);
 
-  factory UpdateCoupon.fromJson(Map<String, dynamic> json) => _$UpdateCouponFromJson(json);
+  factory UpdateCoupon.fromJson(Map<String, dynamic> json) =>
+      _$UpdateCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateCouponToJson(this);
 

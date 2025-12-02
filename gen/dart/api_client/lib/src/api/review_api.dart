@@ -272,7 +272,11 @@ class ReviewApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ReviewList200Response, ReviewList200Response>(rawData, 'ReviewList200Response', growable: true);
+          : deserialize<ReviewList200Response, ReviewList200Response>(
+              rawData,
+              'ReviewList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

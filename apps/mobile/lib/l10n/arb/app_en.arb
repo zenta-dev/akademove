@@ -456,5 +456,27 @@
 	"menu_total_price": "Total Price",
 	"menu_add_to_cart": "Add to Cart",
 	"menu_added_to_cart": "Added to Cart",
-	"menu_item_added_to_cart": "Item has been added to your cart"
+	"menu_item_added_to_cart": "Item has been added to your cart",
+	"order_confirm_title": "Confirm Order",
+	"order_confirm_order_summary": "Order Summary",
+	"order_confirm_merchant": "Merchant",
+	"order_confirm_items_count": "{count} item(s)",
+	"@order_confirm_items_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"order_confirm_subtotal": "Subtotal",
+	"order_confirm_payment_method": "Payment Method",
+	"order_confirm_select_payment": "Select payment method",
+	"order_confirm_payment_wallet": "Wallet",
+	"order_confirm_payment_description": "Pay using your Akademove wallet balance",
+	"order_confirm_place_order": "Place Order",
+	"order_confirm_success": "Order Placed Successfully",
+	"order_confirm_success_message": "Your order has been placed and is being processed",
+	"order_confirm_failed": "Failed to Place Order",
+	"order_confirm_processing": "Processing Order...",
+	"order_confirm_insufficient_balance": "Insufficient wallet balance"
 }

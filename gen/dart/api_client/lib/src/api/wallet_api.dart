@@ -70,7 +70,11 @@ class WalletApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<WalletGet200Response, WalletGet200Response>(rawData, 'WalletGet200Response', growable: true);
+          : deserialize<WalletGet200Response, WalletGet200Response>(
+              rawData,
+              'WalletGet200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -148,11 +152,10 @@ class WalletApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<WalletGetMonthlySummary200Response, WalletGetMonthlySummary200Response>(
-              rawData,
-              'WalletGetMonthlySummary200Response',
-              growable: true,
-            );
+          : deserialize<
+              WalletGetMonthlySummary200Response,
+              WalletGetMonthlySummary200Response
+            >(rawData, 'WalletGetMonthlySummary200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

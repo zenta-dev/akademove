@@ -12,7 +12,7 @@ const { priv } = createORPCRouter(MerchantMainSpec);
 export const MerchantMainHandler = priv.router({
 	getMine: priv.getMine
 		.use(hasPermission({ merchant: ["get"] }))
-		.use(requireRoles("DRIVER", "SYSTEM"))
+		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context }) => {
 			const result = await context.repo.merchant.main.getByUserId(
 				context.user.id,
@@ -100,7 +100,7 @@ export const MerchantMainHandler = priv.router({
 		}),
 	remove: priv.remove
 		.use(hasPermission({ merchant: ["update"] }))
-		.use(requireRoles("DRIVER", "SYSTEM"))
+		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.main.remove(params.id);
 

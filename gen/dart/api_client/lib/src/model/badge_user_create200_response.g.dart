@@ -22,12 +22,18 @@ abstract class _$BadgeUserCreate200ResponseCWProxy {
   /// ```dart
   /// BadgeUserCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeUserCreate200Response call({String message, UserBadge data, PaginationResult? pagination, int? totalPages});
+  BadgeUserCreate200Response call({
+    String message,
+    UserBadge data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfBadgeUserCreate200Response.copyWith(...)` or call `instanceOfBadgeUserCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$BadgeUserCreate200ResponseCWProxyImpl implements _$BadgeUserCreate200ResponseCWProxy {
+class _$BadgeUserCreate200ResponseCWProxyImpl
+    implements _$BadgeUserCreate200ResponseCWProxy {
   const _$BadgeUserCreate200ResponseCWProxyImpl(this._value);
 
   final BadgeUserCreate200Response _value;
@@ -39,10 +45,12 @@ class _$BadgeUserCreate200ResponseCWProxyImpl implements _$BadgeUserCreate200Res
   BadgeUserCreate200Response data(UserBadge data) => call(data: data);
 
   @override
-  BadgeUserCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  BadgeUserCreate200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  BadgeUserCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  BadgeUserCreate200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $BadgeUserCreate200ResponseCopyWith on BadgeUserCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBadgeUserCreate200Response.copyWith(...)` or `instanceOfBadgeUserCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BadgeUserCreate200ResponseCWProxy get copyWith => _$BadgeUserCreate200ResponseCWProxyImpl(this);
+  _$BadgeUserCreate200ResponseCWProxy get copyWith =>
+      _$BadgeUserCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BadgeUserCreate200Response _$BadgeUserCreate200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('BadgeUserCreate200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = BadgeUserCreate200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => UserBadge.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+BadgeUserCreate200Response _$BadgeUserCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('BadgeUserCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = BadgeUserCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => UserBadge.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$BadgeUserCreate200ResponseToJson(BadgeUserCreate200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$BadgeUserCreate200ResponseToJson(
+  BadgeUserCreate200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

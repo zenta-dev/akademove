@@ -59,10 +59,12 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
   OrderSummary baseFare(num baseFare) => call(baseFare: baseFare);
 
   @override
-  OrderSummary distanceFare(num distanceFare) => call(distanceFare: distanceFare);
+  OrderSummary distanceFare(num distanceFare) =>
+      call(distanceFare: distanceFare);
 
   @override
-  OrderSummary additionalFees(num additionalFees) => call(additionalFees: additionalFees);
+  OrderSummary additionalFees(num additionalFees) =>
+      call(additionalFees: additionalFees);
 
   @override
   OrderSummary subtotal(num subtotal) => call(subtotal: subtotal);
@@ -77,7 +79,8 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
   OrderSummary totalCost(num totalCost) => call(totalCost: totalCost);
 
   @override
-  OrderSummary breakdown(OrderSummaryBreakdown breakdown) => call(breakdown: breakdown);
+  OrderSummary breakdown(OrderSummaryBreakdown breakdown) =>
+      call(breakdown: breakdown);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -99,7 +102,8 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
     Object? breakdown = const $CopyWithPlaceholder(),
   }) {
     return OrderSummary(
-      distanceKm: distanceKm == const $CopyWithPlaceholder() || distanceKm == null
+      distanceKm:
+          distanceKm == const $CopyWithPlaceholder() || distanceKm == null
           ? _value.distanceKm
           // ignore: cast_nullable_to_non_nullable
           : distanceKm as num,
@@ -107,11 +111,14 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
           ? _value.baseFare
           // ignore: cast_nullable_to_non_nullable
           : baseFare as num,
-      distanceFare: distanceFare == const $CopyWithPlaceholder() || distanceFare == null
+      distanceFare:
+          distanceFare == const $CopyWithPlaceholder() || distanceFare == null
           ? _value.distanceFare
           // ignore: cast_nullable_to_non_nullable
           : distanceFare as num,
-      additionalFees: additionalFees == const $CopyWithPlaceholder() || additionalFees == null
+      additionalFees:
+          additionalFees == const $CopyWithPlaceholder() ||
+              additionalFees == null
           ? _value.additionalFees
           // ignore: cast_nullable_to_non_nullable
           : additionalFees as num,
@@ -119,7 +126,8 @@ class _$OrderSummaryCWProxyImpl implements _$OrderSummaryCWProxy {
           ? _value.subtotal
           // ignore: cast_nullable_to_non_nullable
           : subtotal as num,
-      platformFee: platformFee == const $CopyWithPlaceholder() || platformFee == null
+      platformFee:
+          platformFee == const $CopyWithPlaceholder() || platformFee == null
           ? _value.platformFee
           // ignore: cast_nullable_to_non_nullable
           : platformFee as num,
@@ -175,19 +183,23 @@ OrderSummary _$OrderSummaryFromJson(Map<String, dynamic> json) =>
         platformFee: $checkedConvert('platformFee', (v) => v as num),
         tax: $checkedConvert('tax', (v) => v as num),
         totalCost: $checkedConvert('totalCost', (v) => v as num),
-        breakdown: $checkedConvert('breakdown', (v) => OrderSummaryBreakdown.fromJson(v as Map<String, dynamic>)),
+        breakdown: $checkedConvert(
+          'breakdown',
+          (v) => OrderSummaryBreakdown.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$OrderSummaryToJson(OrderSummary instance) => <String, dynamic>{
-  'distanceKm': instance.distanceKm,
-  'baseFare': instance.baseFare,
-  'distanceFare': instance.distanceFare,
-  'additionalFees': instance.additionalFees,
-  'subtotal': instance.subtotal,
-  'platformFee': instance.platformFee,
-  'tax': instance.tax,
-  'totalCost': instance.totalCost,
-  'breakdown': instance.breakdown.toJson(),
-};
+Map<String, dynamic> _$OrderSummaryToJson(OrderSummary instance) =>
+    <String, dynamic>{
+      'distanceKm': instance.distanceKm,
+      'baseFare': instance.baseFare,
+      'distanceFare': instance.distanceFare,
+      'additionalFees': instance.additionalFees,
+      'subtotal': instance.subtotal,
+      'platformFee': instance.platformFee,
+      'tax': instance.tax,
+      'totalCost': instance.totalCost,
+      'breakdown': instance.breakdown.toJson(),
+    };

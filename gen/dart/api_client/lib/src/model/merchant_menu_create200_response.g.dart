@@ -32,22 +32,26 @@ abstract class _$MerchantMenuCreate200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantMenuCreate200Response.copyWith(...)` or call `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantMenuCreate200ResponseCWProxyImpl implements _$MerchantMenuCreate200ResponseCWProxy {
+class _$MerchantMenuCreate200ResponseCWProxyImpl
+    implements _$MerchantMenuCreate200ResponseCWProxy {
   const _$MerchantMenuCreate200ResponseCWProxyImpl(this._value);
 
   final MerchantMenuCreate200Response _value;
 
   @override
-  MerchantMenuCreate200Response message(String message) => call(message: message);
+  MerchantMenuCreate200Response message(String message) =>
+      call(message: message);
 
   @override
   MerchantMenuCreate200Response data(MerchantMenu data) => call(data: data);
 
   @override
-  MerchantMenuCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantMenuCreate200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantMenuCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantMenuCreate200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,33 +88,43 @@ class _$MerchantMenuCreate200ResponseCWProxyImpl implements _$MerchantMenuCreate
   }
 }
 
-extension $MerchantMenuCreate200ResponseCopyWith on MerchantMenuCreate200Response {
+extension $MerchantMenuCreate200ResponseCopyWith
+    on MerchantMenuCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantMenuCreate200Response.copyWith(...)` or `instanceOfMerchantMenuCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantMenuCreate200ResponseCWProxy get copyWith => _$MerchantMenuCreate200ResponseCWProxyImpl(this);
+  _$MerchantMenuCreate200ResponseCWProxy get copyWith =>
+      _$MerchantMenuCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantMenuCreate200Response _$MerchantMenuCreate200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantMenuCreate200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantMenuCreate200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => MerchantMenu.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantMenuCreate200Response _$MerchantMenuCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantMenuCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantMenuCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => MerchantMenu.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantMenuCreate200ResponseToJson(MerchantMenuCreate200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$MerchantMenuCreate200ResponseToJson(
+  MerchantMenuCreate200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

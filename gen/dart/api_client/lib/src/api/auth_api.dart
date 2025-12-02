@@ -73,11 +73,10 @@ class AuthApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthExchangeToken200Response, AuthExchangeToken200Response>(
-              rawData,
-              'AuthExchangeToken200Response',
-              growable: true,
-            );
+          : deserialize<
+              AuthExchangeToken200Response,
+              AuthExchangeToken200Response
+            >(rawData, 'AuthExchangeToken200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -332,11 +331,10 @@ class AuthApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthHasPermission200Response, AuthHasPermission200Response>(
-              rawData,
-              'AuthHasPermission200Response',
-              growable: true,
-            );
+          : deserialize<
+              AuthHasPermission200Response,
+              AuthHasPermission200Response
+            >(rawData, 'AuthHasPermission200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -516,7 +514,11 @@ class AuthApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<AuthSignIn200Response, AuthSignIn200Response>(rawData, 'AuthSignIn200Response', growable: true);
+          : deserialize<AuthSignIn200Response, AuthSignIn200Response>(
+              rawData,
+              'AuthSignIn200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

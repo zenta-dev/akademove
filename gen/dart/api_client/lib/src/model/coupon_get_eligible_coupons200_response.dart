@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'coupon_get_eligible_coupons200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class CouponGetEligibleCoupons200Response {
   /// Returns a new [CouponGetEligibleCoupons200Response] instance.
   const CouponGetEligibleCoupons200Response({
@@ -45,12 +50,18 @@ class CouponGetEligibleCoupons200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory CouponGetEligibleCoupons200Response.fromJson(Map<String, dynamic> json) =>
-      _$CouponGetEligibleCoupons200ResponseFromJson(json);
+  factory CouponGetEligibleCoupons200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$CouponGetEligibleCoupons200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CouponGetEligibleCoupons200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$CouponGetEligibleCoupons200ResponseToJson(this);
 
   @override
   String toString() {

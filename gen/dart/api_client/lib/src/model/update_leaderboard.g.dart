@@ -59,13 +59,16 @@ class _$UpdateLeaderboardCWProxyImpl implements _$UpdateLeaderboardCWProxy {
   UpdateLeaderboard driverId(String? driverId) => call(driverId: driverId);
 
   @override
-  UpdateLeaderboard merchantId(String? merchantId) => call(merchantId: merchantId);
+  UpdateLeaderboard merchantId(String? merchantId) =>
+      call(merchantId: merchantId);
 
   @override
-  UpdateLeaderboard category(UpdateLeaderboardCategoryEnum? category) => call(category: category);
+  UpdateLeaderboard category(UpdateLeaderboardCategoryEnum? category) =>
+      call(category: category);
 
   @override
-  UpdateLeaderboard period(UpdateLeaderboardPeriodEnum? period) => call(period: period);
+  UpdateLeaderboard period(UpdateLeaderboardPeriodEnum? period) =>
+      call(period: period);
 
   @override
   UpdateLeaderboard rank(int? rank) => call(rank: rank);
@@ -74,10 +77,12 @@ class _$UpdateLeaderboardCWProxyImpl implements _$UpdateLeaderboardCWProxy {
   UpdateLeaderboard score(int? score) => call(score: score);
 
   @override
-  UpdateLeaderboard periodStart(DateTime? periodStart) => call(periodStart: periodStart);
+  UpdateLeaderboard periodStart(DateTime? periodStart) =>
+      call(periodStart: periodStart);
 
   @override
-  UpdateLeaderboard periodEnd(DateTime? periodEnd) => call(periodEnd: periodEnd);
+  UpdateLeaderboard periodEnd(DateTime? periodEnd) =>
+      call(periodEnd: periodEnd);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -143,7 +148,8 @@ extension $UpdateLeaderboardCopyWith on UpdateLeaderboard {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUpdateLeaderboard.copyWith(...)` or `instanceOfUpdateLeaderboard.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UpdateLeaderboardCWProxy get copyWith => _$UpdateLeaderboardCWProxyImpl(this);
+  _$UpdateLeaderboardCWProxy get copyWith =>
+      _$UpdateLeaderboardCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -156,27 +162,40 @@ UpdateLeaderboard _$UpdateLeaderboardFromJson(Map<String, dynamic> json) =>
         userId: $checkedConvert('userId', (v) => v as String?),
         driverId: $checkedConvert('driverId', (v) => v as String?),
         merchantId: $checkedConvert('merchantId', (v) => v as String?),
-        category: $checkedConvert('category', (v) => $enumDecodeNullable(_$UpdateLeaderboardCategoryEnumEnumMap, v)),
-        period: $checkedConvert('period', (v) => $enumDecodeNullable(_$UpdateLeaderboardPeriodEnumEnumMap, v)),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecodeNullable(_$UpdateLeaderboardCategoryEnumEnumMap, v),
+        ),
+        period: $checkedConvert(
+          'period',
+          (v) => $enumDecodeNullable(_$UpdateLeaderboardPeriodEnumEnumMap, v),
+        ),
         rank: $checkedConvert('rank', (v) => (v as num?)?.toInt()),
         score: $checkedConvert('score', (v) => (v as num?)?.toInt()),
-        periodStart: $checkedConvert('periodStart', (v) => v == null ? null : DateTime.parse(v as String)),
-        periodEnd: $checkedConvert('periodEnd', (v) => v == null ? null : DateTime.parse(v as String)),
+        periodStart: $checkedConvert(
+          'periodStart',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        periodEnd: $checkedConvert(
+          'periodEnd',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$UpdateLeaderboardToJson(UpdateLeaderboard instance) => <String, dynamic>{
-  'userId': ?instance.userId,
-  'driverId': ?instance.driverId,
-  'merchantId': ?instance.merchantId,
-  'category': ?_$UpdateLeaderboardCategoryEnumEnumMap[instance.category],
-  'period': ?_$UpdateLeaderboardPeriodEnumEnumMap[instance.period],
-  'rank': ?instance.rank,
-  'score': ?instance.score,
-  'periodStart': ?instance.periodStart?.toIso8601String(),
-  'periodEnd': ?instance.periodEnd?.toIso8601String(),
-};
+Map<String, dynamic> _$UpdateLeaderboardToJson(UpdateLeaderboard instance) =>
+    <String, dynamic>{
+      'userId': ?instance.userId,
+      'driverId': ?instance.driverId,
+      'merchantId': ?instance.merchantId,
+      'category': ?_$UpdateLeaderboardCategoryEnumEnumMap[instance.category],
+      'period': ?_$UpdateLeaderboardPeriodEnumEnumMap[instance.period],
+      'rank': ?instance.rank,
+      'score': ?instance.score,
+      'periodStart': ?instance.periodStart?.toIso8601String(),
+      'periodEnd': ?instance.periodEnd?.toIso8601String(),
+    };
 
 const _$UpdateLeaderboardCategoryEnumEnumMap = {
   UpdateLeaderboardCategoryEnum.RATING: 'RATING',

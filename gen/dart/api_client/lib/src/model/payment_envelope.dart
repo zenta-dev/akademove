@@ -13,10 +13,22 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'payment_envelope.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PaymentEnvelope {
   /// Returns a new [PaymentEnvelope] instance.
-  const PaymentEnvelope({this.e, this.a, this.tg, required this.f, required this.t, required this.p});
+  const PaymentEnvelope({
+    this.e,
+    this.a,
+    this.tg,
+    required this.f,
+    required this.t,
+    required this.p,
+  });
 
   @JsonKey(name: r'e', required: false, includeIfNull: false)
   final PaymentEnvelopeEvent? e;
@@ -48,9 +60,16 @@ class PaymentEnvelope {
           other.p == p;
 
   @override
-  int get hashCode => e.hashCode + a.hashCode + tg.hashCode + f.hashCode + t.hashCode + p.hashCode;
+  int get hashCode =>
+      e.hashCode +
+      a.hashCode +
+      tg.hashCode +
+      f.hashCode +
+      t.hashCode +
+      p.hashCode;
 
-  factory PaymentEnvelope.fromJson(Map<String, dynamic> json) => _$PaymentEnvelopeFromJson(json);
+  factory PaymentEnvelope.fromJson(Map<String, dynamic> json) =>
+      _$PaymentEnvelopeFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaymentEnvelopeToJson(this);
 

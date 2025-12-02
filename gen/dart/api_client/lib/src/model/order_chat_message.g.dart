@@ -71,7 +71,8 @@ class _$OrderChatMessageCWProxyImpl implements _$OrderChatMessageCWProxy {
   OrderChatMessage updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  OrderChatMessage sender(OrderChatMessageSender? sender) => call(sender: sender);
+  OrderChatMessage sender(OrderChatMessageSender? sender) =>
+      call(sender: sender);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -139,10 +140,21 @@ extension $OrderChatMessageCopyWith on OrderChatMessage {
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderChatMessage _$OrderChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate('OrderChatMessage', json, (
-  $checkedConvert,
-) {
-  $checkKeys(json, requiredKeys: const ['id', 'orderId', 'senderId', 'message', 'sentAt', 'createdAt', 'updatedAt']);
+OrderChatMessage _$OrderChatMessageFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderChatMessage', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'orderId',
+      'senderId',
+      'message',
+      'sentAt',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
   final val = OrderChatMessage(
     id: $checkedConvert('id', (v) => v as String),
     orderId: $checkedConvert('orderId', (v) => v as String),
@@ -153,19 +165,22 @@ OrderChatMessage _$OrderChatMessageFromJson(Map<String, dynamic> json) => $check
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
     sender: $checkedConvert(
       'sender',
-      (v) => v == null ? null : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
+      (v) => v == null
+          ? null
+          : OrderChatMessageSender.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;
 });
 
-Map<String, dynamic> _$OrderChatMessageToJson(OrderChatMessage instance) => <String, dynamic>{
-  'id': instance.id,
-  'orderId': instance.orderId,
-  'senderId': instance.senderId,
-  'message': instance.message,
-  'sentAt': instance.sentAt.toIso8601String(),
-  'createdAt': instance.createdAt.toIso8601String(),
-  'updatedAt': instance.updatedAt.toIso8601String(),
-  'sender': ?instance.sender?.toJson(),
-};
+Map<String, dynamic> _$OrderChatMessageToJson(OrderChatMessage instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'orderId': instance.orderId,
+      'senderId': instance.senderId,
+      'message': instance.message,
+      'sentAt': instance.sentAt.toIso8601String(),
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'sender': ?instance.sender?.toJson(),
+    };

@@ -10,10 +10,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'emergency_update_status_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class EmergencyUpdateStatusRequest {
   /// Returns a new [EmergencyUpdateStatusRequest] instance.
-  const EmergencyUpdateStatusRequest({this.status, this.resolution, this.respondedById});
+  const EmergencyUpdateStatusRequest({
+    this.status,
+    this.resolution,
+    this.respondedById,
+  });
 
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final EmergencyStatus? status;
@@ -33,7 +42,8 @@ class EmergencyUpdateStatusRequest {
           other.respondedById == respondedById;
 
   @override
-  int get hashCode => status.hashCode + resolution.hashCode + respondedById.hashCode;
+  int get hashCode =>
+      status.hashCode + resolution.hashCode + respondedById.hashCode;
 
   factory EmergencyUpdateStatusRequest.fromJson(Map<String, dynamic> json) =>
       _$EmergencyUpdateStatusRequestFromJson(json);

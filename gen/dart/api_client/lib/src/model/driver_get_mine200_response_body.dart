@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_get_mine200_response_body.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverGetMine200ResponseBody {
   /// Returns a new [DriverGetMine200ResponseBody] instance.
-  const DriverGetMine200ResponseBody({required this.message, required this.data, this.pagination, this.totalPages});
+  const DriverGetMine200ResponseBody({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,7 +50,11 @@ class DriverGetMine200ResponseBody {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory DriverGetMine200ResponseBody.fromJson(Map<String, dynamic> json) =>
       _$DriverGetMine200ResponseBodyFromJson(json);

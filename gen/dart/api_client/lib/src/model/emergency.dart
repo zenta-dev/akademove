@@ -12,7 +12,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'emergency.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Emergency {
   /// Returns a new [Emergency] instance.
   const Emergency({
@@ -116,7 +121,8 @@ class Emergency {
       respondingAt.hashCode +
       resolvedAt.hashCode;
 
-  factory Emergency.fromJson(Map<String, dynamic> json) => _$EmergencyFromJson(json);
+  factory Emergency.fromJson(Map<String, dynamic> json) =>
+      _$EmergencyFromJson(json);
 
   Map<String, dynamic> toJson() => _$EmergencyToJson(this);
 

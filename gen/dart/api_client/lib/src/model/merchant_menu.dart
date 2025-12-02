@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_menu.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantMenu {
   /// Returns a new [MerchantMenu] instance.
   const MerchantMenu({
@@ -80,7 +85,8 @@ class MerchantMenu {
       createdAt.hashCode +
       updatedAt.hashCode;
 
-  factory MerchantMenu.fromJson(Map<String, dynamic> json) => _$MerchantMenuFromJson(json);
+  factory MerchantMenu.fromJson(Map<String, dynamic> json) =>
+      _$MerchantMenuFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantMenuToJson(this);
 

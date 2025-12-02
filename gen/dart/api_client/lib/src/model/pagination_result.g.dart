@@ -34,7 +34,8 @@ class _$PaginationResultCWProxyImpl implements _$PaginationResultCWProxy {
   PaginationResult totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
-  PaginationResult nextCursor(String? nextCursor) => call(nextCursor: nextCursor);
+  PaginationResult nextCursor(String? nextCursor) =>
+      call(nextCursor: nextCursor);
 
   @override
   PaginationResult hasMore(bool? hasMore) => call(hasMore: hasMore);
@@ -90,8 +91,9 @@ PaginationResult _$PaginationResultFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$PaginationResultToJson(PaginationResult instance) => <String, dynamic>{
-  'totalPages': ?instance.totalPages,
-  'nextCursor': ?instance.nextCursor,
-  'hasMore': ?instance.hasMore,
-};
+Map<String, dynamic> _$PaginationResultToJson(PaginationResult instance) =>
+    <String, dynamic>{
+      'totalPages': ?instance.totalPages,
+      'nextCursor': ?instance.nextCursor,
+      'hasMore': ?instance.hasMore,
+    };

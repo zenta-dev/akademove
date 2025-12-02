@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_menu_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantMenuCreate200Response {
   /// Returns a new [MerchantMenuCreate200Response] instance.
-  const MerchantMenuCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const MerchantMenuCreate200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,7 +50,11 @@ class MerchantMenuCreate200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory MerchantMenuCreate200Response.fromJson(Map<String, dynamic> json) =>
       _$MerchantMenuCreate200ResponseFromJson(json);

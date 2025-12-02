@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,16 +71,15 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
           _hasMore = response.data.length >= 20;
         });
       }
+    } on BaseError catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        context.showMyToast(e.message);
+      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to load orders: ${e.toString()}',
-          ),
-        );
+        context.showMyToast(context.l10n.failed_to_load_orders);
       }
     }
   }
@@ -142,7 +142,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     return MyScaffold(
       headers: [
         AppBar(
-          title: const Text('Order History'),
+          title: Text(context.l10n.screen_title_order_history),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.filterX),
@@ -169,11 +169,17 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
               child: Row(
                 spacing: 8.w,
                 children: [
-                  _buildStatusFilterChip('All', null),
-                  _buildStatusFilterChip('Completed', OrderStatus.COMPLETED),
-                  _buildStatusFilterChip('In Progress', OrderStatus.IN_TRIP),
+                  _buildStatusFilterChip(context.l10n.all, null),
                   _buildStatusFilterChip(
-                    'Cancelled',
+                    context.l10n.completed,
+                    OrderStatus.COMPLETED,
+                  ),
+                  _buildStatusFilterChip(
+                    context.l10n.in_progress,
+                    OrderStatus.IN_TRIP,
+                  ),
+                  _buildStatusFilterChip(
+                    context.l10n.cancelled,
                     OrderStatus.CANCELLED_BY_USER,
                   ),
                 ],
@@ -185,10 +191,19 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
               child: Row(
                 spacing: 8.w,
                 children: [
-                  _buildTypeFilterChip('All Types', null),
-                  _buildTypeFilterChip('Ride', OrderType.RIDE),
-                  _buildTypeFilterChip('Delivery', OrderType.DELIVERY),
-                  _buildTypeFilterChip('Food', OrderType.FOOD),
+                  _buildTypeFilterChip(context.l10n.all_types, null),
+                  _buildTypeFilterChip(
+                    context.l10n.label_service_ride,
+                    OrderType.RIDE,
+                  ),
+                  _buildTypeFilterChip(
+                    context.l10n.label_service_delivery,
+                    OrderType.DELIVERY,
+                  ),
+                  _buildTypeFilterChip(
+                    context.l10n.label_order_type_food,
+                    OrderType.FOOD,
+                  ),
                 ],
               ),
             ),
@@ -214,7 +229,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                             ),
                           );
                         }
-                        return _buildOrderCard(filteredOrders[index]);
+                        return _buildOrderCard(context, filteredOrders[index]);
                       },
                     ),
             ),
@@ -254,14 +269,14 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
             color: context.colorScheme.mutedForeground,
           ),
           Text(
-            'No orders found',
+            context.l10n.no_orders_found,
             style: context.typography.h3.copyWith(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            'Your completed and cancelled orders\nwill appear here',
+            context.l10n.your_completed_and_cancelled_orders_will_appear_here,
             textAlign: TextAlign.center,
             style: context.typography.p.copyWith(
               fontSize: 14.sp,
@@ -273,9 +288,9 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     );
   }
 
-  Widget _buildOrderCard(Order order) {
+  Widget _buildOrderCard(BuildContext context, Order order) {
     final statusColor = _getStatusColor(order.status);
-    final statusText = _getStatusText(order.status);
+    final statusText = _getStatusText(context, order.status);
 
     return Card(
       child: material.InkWell(
@@ -466,29 +481,29 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     }
   }
 
-  String _getStatusText(OrderStatus status) {
+  String _getStatusText(BuildContext context, OrderStatus status) {
     switch (status) {
       case OrderStatus.REQUESTED:
-        return 'Requested';
+        return context.l10n.requested;
       case OrderStatus.MATCHING:
-        return 'Matching';
+        return context.l10n.matching;
       case OrderStatus.PREPARING:
-        return 'Preparing';
+        return context.l10n.preparing;
       case OrderStatus.READY_FOR_PICKUP:
-        return 'Ready for Pickup';
+        return context.l10n.ready_for_pickup;
       case OrderStatus.ACCEPTED:
-        return 'Accepted';
+        return context.l10n.accepted;
       case OrderStatus.ARRIVING:
-        return 'Arriving';
+        return context.l10n.arriving;
       case OrderStatus.IN_TRIP:
-        return 'In Trip';
+        return context.l10n.in_trip;
       case OrderStatus.COMPLETED:
-        return 'Completed';
+        return context.l10n.completed;
       case OrderStatus.CANCELLED_BY_USER:
       case OrderStatus.CANCELLED_BY_DRIVER:
       case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
-        return 'Cancelled';
+        return context.l10n.cancelled;
     }
   }
 }

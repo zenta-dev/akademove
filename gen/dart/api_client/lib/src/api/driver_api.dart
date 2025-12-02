@@ -83,11 +83,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(
-              rawData,
-              'DriverGetMine200ResponseBody',
-              growable: true,
-            );
+          : deserialize<
+              DriverGetMine200ResponseBody,
+              DriverGetMine200ResponseBody
+            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -261,7 +260,11 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverList200Response, DriverList200Response>(rawData, 'DriverList200Response', growable: true);
+          : deserialize<DriverList200Response, DriverList200Response>(
+              rawData,
+              'DriverList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -351,7 +354,11 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverList200Response, DriverList200Response>(rawData, 'DriverList200Response', growable: true);
+          : deserialize<DriverList200Response, DriverList200Response>(
+              rawData,
+              'DriverList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -528,11 +535,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(
-              rawData,
-              'DriverScheduleCreate200Response',
-              growable: true,
-            );
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -619,11 +625,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(
-              rawData,
-              'DriverScheduleCreate200Response',
-              growable: true,
-            );
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -729,11 +734,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverScheduleList200Response, DriverScheduleList200Response>(
-              rawData,
-              'DriverScheduleList200Response',
-              growable: true,
-            );
+          : deserialize<
+              DriverScheduleList200Response,
+              DriverScheduleList200Response
+            >(rawData, 'DriverScheduleList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -928,11 +932,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverScheduleCreate200Response, DriverScheduleCreate200Response>(
-              rawData,
-              'DriverScheduleCreate200Response',
-              growable: true,
-            );
+          : deserialize<
+              DriverScheduleCreate200Response,
+              DriverScheduleCreate200Response
+            >(rawData, 'DriverScheduleCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1021,7 +1024,8 @@ class DriverApi {
         if (licensePlate != null) r'licensePlate': licensePlate,
         if (studentCard != null) r'studentCard': studentCard,
         if (driverLicense != null) r'driverLicense': driverLicense,
-        if (vehicleCertificate != null) r'vehicleCertificate': vehicleCertificate,
+        if (vehicleCertificate != null)
+          r'vehicleCertificate': vehicleCertificate,
         if (bank != null) r'bank': bank,
         if (isTakingOrder != null) r'isTakingOrder': isTakingOrder,
         if (currentLocation != null) r'currentLocation': currentLocation,
@@ -1050,11 +1054,10 @@ class DriverApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<DriverGetMine200ResponseBody, DriverGetMine200ResponseBody>(
-              rawData,
-              'DriverGetMine200ResponseBody',
-              growable: true,
-            );
+          : deserialize<
+              DriverGetMine200ResponseBody,
+              DriverGetMine200ResponseBody
+            >(rawData, 'DriverGetMine200ResponseBody', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

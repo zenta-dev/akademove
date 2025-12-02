@@ -138,7 +138,7 @@ export class ReviewRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertReview & { userId: string }): Promise<Review> {
+	async create(item: InsertReview): Promise<Review> {
 		try {
 			const [operation] = await this.db
 				.insert(tables.review)
@@ -190,6 +190,88 @@ export class ReviewRepository extends BaseRepository {
 			}
 		} catch (error) {
 			throw this.handleError(error, "remove");
+		}
+	}
+
+	async getByOrder(orderId: string): Promise<Review[]> {
+		try {
+			const results = await this.db.query.review.findMany({
+				where: (f, op) => op.eq(f.orderId, orderId),
+				with: {
+					fromUser: true,
+					toUser: true,
+				},
+			});
+
+			return results.map(ReviewRepository.composeEntity);
+		} catch (error) {
+			throw this.handleError(error, "get by order");
+		}
+	}
+
+	async checkUserReviewedOrder(
+		orderId: string,
+		userId: string,
+	): Promise<boolean> {
+		try {
+			const result = await this.db.query.review.findFirst({
+				where: (f, op) =>
+					op.and(op.eq(f.orderId, orderId), op.eq(f.fromUserId, userId)),
+			});
+
+			return !!result;
+		} catch (error) {
+			log.error(
+				{ orderId, userId, error },
+				"Failed to check if user reviewed order",
+			);
+			return false;
+		}
+	}
+
+	async getOrderReviewStatus(
+		orderId: string,
+		userId: string,
+	): Promise<{
+		canReview: boolean;
+		alreadyReviewed: boolean;
+		orderCompleted: boolean;
+	}> {
+		try {
+			// Check if order exists and is completed
+			const order = await this.db.query.order.findFirst({
+				where: (f, op) => op.eq(f.id, orderId),
+			});
+
+			const orderCompleted = order?.status === "COMPLETED";
+
+			// Check if user is part of this order (as user or driver)
+			const isUserInOrder =
+				order?.userId === userId || order?.driverId === userId;
+
+			// Check if user already reviewed this order
+			const alreadyReviewed = await this.checkUserReviewedOrder(
+				orderId,
+				userId,
+			);
+
+			const canReview = orderCompleted && isUserInOrder && !alreadyReviewed;
+
+			return {
+				canReview,
+				alreadyReviewed,
+				orderCompleted,
+			};
+		} catch (error) {
+			log.error(
+				{ orderId, userId, error },
+				"Failed to get order review status",
+			);
+			return {
+				canReview: false,
+				alreadyReviewed: false,
+				orderCompleted: false,
+			};
 		}
 	}
 }

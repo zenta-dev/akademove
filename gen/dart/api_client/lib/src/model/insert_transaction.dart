@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'insert_transaction.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class InsertTransaction {
   /// Returns a new [InsertTransaction] instance.
   const InsertTransaction({
@@ -79,7 +84,8 @@ class InsertTransaction {
       referenceId.hashCode +
       (metadata == null ? 0 : metadata.hashCode);
 
-  factory InsertTransaction.fromJson(Map<String, dynamic> json) => _$InsertTransactionFromJson(json);
+  factory InsertTransaction.fromJson(Map<String, dynamic> json) =>
+      _$InsertTransactionFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertTransactionToJson(this);
 

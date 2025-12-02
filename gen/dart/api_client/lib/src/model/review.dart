@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'review.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Review {
   /// Returns a new [Review] instance.
   const Review({
@@ -42,7 +47,12 @@ class Review {
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
 
-  @JsonKey(defaultValue: '', name: r'comment', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: '',
+    name: r'comment',
+    required: false,
+    includeIfNull: false,
+  )
   final String? comment;
 
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)

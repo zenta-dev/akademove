@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'emergency_list_by_order200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class EmergencyListByOrder200Response {
   /// Returns a new [EmergencyListByOrder200Response] instance.
-  const EmergencyListByOrder200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const EmergencyListByOrder200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,12 +50,17 @@ class EmergencyListByOrder200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory EmergencyListByOrder200Response.fromJson(Map<String, dynamic> json) =>
       _$EmergencyListByOrder200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$EmergencyListByOrder200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$EmergencyListByOrder200ResponseToJson(this);
 
   @override
   String toString() {

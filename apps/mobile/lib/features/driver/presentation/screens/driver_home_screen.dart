@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,30 +30,22 @@ class _DriverHomeView extends StatelessWidget {
       listener: (context, state) {
         // Show error messages
         if (state.isFailure && state.error != null) {
-          showToast(
-            context: context,
-            builder: (context, overlay) => context.buildToast(
-              title: 'Error',
-              message: state.error?.message ?? 'An error occurred',
-            ),
+          context.showMyToast(
+            state.error?.message ?? context.l10n.an_error_occurred,
+            type: ToastType.failed,
           );
         }
 
-        // Show success messages
         final message = state.message;
         if (state.isSuccess && message != null && message.isNotEmpty) {
-          showToast(
-            context: context,
-            builder: (context, overlay) =>
-                context.buildToast(title: 'Success', message: message),
-          );
+          context.showMyToast(message);
         }
       },
       builder: (context, state) {
         return MyScaffold(
           headers: [
             DefaultAppBar(
-              title: 'Driver Dashboard',
+              title: context.l10n.screen_title_driver_dashboard,
               trailing: [
                 IconButton(
                   icon: const Icon(material.Icons.person),
@@ -106,7 +99,7 @@ class _DriverHomeView extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Expanded(
                   child: Text(
-                    'Welcome back!',
+                    context.l10n.status_welcome_back,
                     style: context.typography.h4.copyWith(fontSize: 18.sp),
                   ),
                 ),
@@ -123,7 +116,7 @@ class _DriverHomeView extends StatelessWidget {
                     spacing: 8.h,
                     children: [
                       Text(
-                        'License Plate: ${driver.licensePlate}',
+                        '${context.l10n.status_license_plate} ${driver.licensePlate}',
                         style: context.typography.small.copyWith(
                           color: context.colorScheme.mutedForeground,
                         ),
@@ -171,11 +164,13 @@ class _DriverHomeView extends StatelessWidget {
                   spacing: 4.h,
                   children: [
                     Text(
-                      'Driver Status',
+                      context.l10n.status_driver_status,
                       style: context.typography.h4.copyWith(fontSize: 16.sp),
                     ),
                     Text(
-                      isOnline ? 'You are accepting orders' : 'You are offline',
+                      isOnline
+                          ? context.l10n.status_accepting_orders
+                          : context.l10n.status_offline,
                       style: context.typography.small.copyWith(
                         color: context.colorScheme.mutedForeground,
                       ),

@@ -32,7 +32,8 @@ abstract class _$MerchantPopulars200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantPopulars200Response.copyWith(...)` or call `instanceOfMerchantPopulars200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantPopulars200ResponseCWProxyImpl implements _$MerchantPopulars200ResponseCWProxy {
+class _$MerchantPopulars200ResponseCWProxyImpl
+    implements _$MerchantPopulars200ResponseCWProxy {
   const _$MerchantPopulars200ResponseCWProxyImpl(this._value);
 
   final MerchantPopulars200Response _value;
@@ -44,10 +45,12 @@ class _$MerchantPopulars200ResponseCWProxyImpl implements _$MerchantPopulars200R
   MerchantPopulars200Response data(List<Merchant> data) => call(data: data);
 
   @override
-  MerchantPopulars200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantPopulars200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantPopulars200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantPopulars200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,32 +91,40 @@ extension $MerchantPopulars200ResponseCopyWith on MerchantPopulars200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantPopulars200Response.copyWith(...)` or `instanceOfMerchantPopulars200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantPopulars200ResponseCWProxy get copyWith => _$MerchantPopulars200ResponseCWProxyImpl(this);
+  _$MerchantPopulars200ResponseCWProxy get copyWith =>
+      _$MerchantPopulars200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantPopulars200Response _$MerchantPopulars200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantPopulars200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantPopulars200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => Merchant.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantPopulars200Response _$MerchantPopulars200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantPopulars200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantPopulars200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Merchant.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantPopulars200ResponseToJson(MerchantPopulars200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$MerchantPopulars200ResponseToJson(
+  MerchantPopulars200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

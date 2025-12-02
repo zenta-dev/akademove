@@ -50,19 +50,23 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
   AdminUpdateUser role(UserRole role) => call(role: role);
 
   @override
-  AdminUpdateUser oldPassword(String oldPassword) => call(oldPassword: oldPassword);
+  AdminUpdateUser oldPassword(String oldPassword) =>
+      call(oldPassword: oldPassword);
 
   @override
-  AdminUpdateUser newPassword(String newPassword) => call(newPassword: newPassword);
+  AdminUpdateUser newPassword(String newPassword) =>
+      call(newPassword: newPassword);
 
   @override
-  AdminUpdateUser confirmNewPassword(String confirmNewPassword) => call(confirmNewPassword: confirmNewPassword);
+  AdminUpdateUser confirmNewPassword(String confirmNewPassword) =>
+      call(confirmNewPassword: confirmNewPassword);
 
   @override
   AdminUpdateUser banReason(String banReason) => call(banReason: banReason);
 
   @override
-  AdminUpdateUser banExpiresIn(num? banExpiresIn) => call(banExpiresIn: banExpiresIn);
+  AdminUpdateUser banExpiresIn(num? banExpiresIn) =>
+      call(banExpiresIn: banExpiresIn);
 
   @override
   AdminUpdateUser id(String id) => call(id: id);
@@ -89,15 +93,19 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
-      oldPassword: oldPassword == const $CopyWithPlaceholder() || oldPassword == null
+      oldPassword:
+          oldPassword == const $CopyWithPlaceholder() || oldPassword == null
           ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
           : oldPassword as String,
-      newPassword: newPassword == const $CopyWithPlaceholder() || newPassword == null
+      newPassword:
+          newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
           : newPassword as String,
-      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder() || confirmNewPassword == null
+      confirmNewPassword:
+          confirmNewPassword == const $CopyWithPlaceholder() ||
+              confirmNewPassword == null
           ? _value.confirmNewPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmNewPassword as String,
@@ -128,31 +136,44 @@ extension $AdminUpdateUserCopyWith on AdminUpdateUser {
 // JsonSerializableGenerator
 // **************************************************************************
 
-AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) => $checkedCreate('AdminUpdateUser', json, (
-  $checkedConvert,
-) {
-  $checkKeys(json, requiredKeys: const ['role', 'oldPassword', 'newPassword', 'confirmNewPassword', 'banReason', 'id']);
-  final val = AdminUpdateUser(
-    role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
-    oldPassword: $checkedConvert('oldPassword', (v) => v as String),
-    newPassword: $checkedConvert('newPassword', (v) => v as String),
-    confirmNewPassword: $checkedConvert('confirmNewPassword', (v) => v as String),
-    banReason: $checkedConvert('banReason', (v) => v as String),
-    banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
-    id: $checkedConvert('id', (v) => v as String),
-  );
-  return val;
-});
+AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AdminUpdateUser', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'role',
+          'oldPassword',
+          'newPassword',
+          'confirmNewPassword',
+          'banReason',
+          'id',
+        ],
+      );
+      final val = AdminUpdateUser(
+        role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
+        oldPassword: $checkedConvert('oldPassword', (v) => v as String),
+        newPassword: $checkedConvert('newPassword', (v) => v as String),
+        confirmNewPassword: $checkedConvert(
+          'confirmNewPassword',
+          (v) => v as String,
+        ),
+        banReason: $checkedConvert('banReason', (v) => v as String),
+        banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
+        id: $checkedConvert('id', (v) => v as String),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$AdminUpdateUserToJson(AdminUpdateUser instance) => <String, dynamic>{
-  'role': _$UserRoleEnumMap[instance.role]!,
-  'oldPassword': instance.oldPassword,
-  'newPassword': instance.newPassword,
-  'confirmNewPassword': instance.confirmNewPassword,
-  'banReason': instance.banReason,
-  'banExpiresIn': ?instance.banExpiresIn,
-  'id': instance.id,
-};
+Map<String, dynamic> _$AdminUpdateUserToJson(AdminUpdateUser instance) =>
+    <String, dynamic>{
+      'role': _$UserRoleEnumMap[instance.role]!,
+      'oldPassword': instance.oldPassword,
+      'newPassword': instance.newPassword,
+      'confirmNewPassword': instance.confirmNewPassword,
+      'banReason': instance.banReason,
+      'banExpiresIn': ?instance.banExpiresIn,
+      'id': instance.id,
+    };
 
 const _$UserRoleEnumMap = {
   UserRole.ADMIN: 'ADMIN',

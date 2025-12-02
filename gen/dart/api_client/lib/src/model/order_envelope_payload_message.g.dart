@@ -38,7 +38,8 @@ abstract class _$OrderEnvelopePayloadMessageCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderEnvelopePayloadMessage.copyWith(...)` or call `instanceOfOrderEnvelopePayloadMessage.copyWith.fieldName(value)` for a single field.
-class _$OrderEnvelopePayloadMessageCWProxyImpl implements _$OrderEnvelopePayloadMessageCWProxy {
+class _$OrderEnvelopePayloadMessageCWProxyImpl
+    implements _$OrderEnvelopePayloadMessageCWProxy {
   const _$OrderEnvelopePayloadMessageCWProxyImpl(this._value);
 
   final OrderEnvelopePayloadMessage _value;
@@ -50,10 +51,12 @@ class _$OrderEnvelopePayloadMessageCWProxyImpl implements _$OrderEnvelopePayload
   OrderEnvelopePayloadMessage orderId(String orderId) => call(orderId: orderId);
 
   @override
-  OrderEnvelopePayloadMessage senderId(String senderId) => call(senderId: senderId);
+  OrderEnvelopePayloadMessage senderId(String senderId) =>
+      call(senderId: senderId);
 
   @override
-  OrderEnvelopePayloadMessage senderName(String senderName) => call(senderName: senderName);
+  OrderEnvelopePayloadMessage senderName(String senderName) =>
+      call(senderName: senderName);
 
   @override
   OrderEnvelopePayloadMessage message(String message) => call(message: message);
@@ -90,7 +93,8 @@ class _$OrderEnvelopePayloadMessageCWProxyImpl implements _$OrderEnvelopePayload
           ? _value.senderId
           // ignore: cast_nullable_to_non_nullable
           : senderId as String,
-      senderName: senderName == const $CopyWithPlaceholder() || senderName == null
+      senderName:
+          senderName == const $CopyWithPlaceholder() || senderName == null
           ? _value.senderName
           // ignore: cast_nullable_to_non_nullable
           : senderName as String,
@@ -110,28 +114,42 @@ extension $OrderEnvelopePayloadMessageCopyWith on OrderEnvelopePayloadMessage {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderEnvelopePayloadMessage.copyWith(...)` or `instanceOfOrderEnvelopePayloadMessage.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderEnvelopePayloadMessageCWProxy get copyWith => _$OrderEnvelopePayloadMessageCWProxyImpl(this);
+  _$OrderEnvelopePayloadMessageCWProxy get copyWith =>
+      _$OrderEnvelopePayloadMessageCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderEnvelopePayloadMessage _$OrderEnvelopePayloadMessageFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderEnvelopePayloadMessage', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['id', 'orderId', 'senderId', 'senderName', 'message', 'sentAt']);
-      final val = OrderEnvelopePayloadMessage(
-        id: $checkedConvert('id', (v) => v as String),
-        orderId: $checkedConvert('orderId', (v) => v as String),
-        senderId: $checkedConvert('senderId', (v) => v as String),
-        senderName: $checkedConvert('senderName', (v) => v as String),
-        message: $checkedConvert('message', (v) => v as String),
-        sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
-      );
-      return val;
-    });
+OrderEnvelopePayloadMessage _$OrderEnvelopePayloadMessageFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('OrderEnvelopePayloadMessage', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'orderId',
+      'senderId',
+      'senderName',
+      'message',
+      'sentAt',
+    ],
+  );
+  final val = OrderEnvelopePayloadMessage(
+    id: $checkedConvert('id', (v) => v as String),
+    orderId: $checkedConvert('orderId', (v) => v as String),
+    senderId: $checkedConvert('senderId', (v) => v as String),
+    senderName: $checkedConvert('senderName', (v) => v as String),
+    message: $checkedConvert('message', (v) => v as String),
+    sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$OrderEnvelopePayloadMessageToJson(OrderEnvelopePayloadMessage instance) => <String, dynamic>{
+Map<String, dynamic> _$OrderEnvelopePayloadMessageToJson(
+  OrderEnvelopePayloadMessage instance,
+) => <String, dynamic>{
   'id': instance.id,
   'orderId': instance.orderId,
   'senderId': instance.senderId,

@@ -42,7 +42,10 @@ class _$PayRequestCWProxyImpl implements _$PayRequestCWProxy {
   /// ```dart
   /// PayRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  PayRequest call({Object? amount = const $CopyWithPlaceholder(), Object? referenceId = const $CopyWithPlaceholder()}) {
+  PayRequest call({
+    Object? amount = const $CopyWithPlaceholder(),
+    Object? referenceId = const $CopyWithPlaceholder(),
+  }) {
     return PayRequest(
       amount: amount == const $CopyWithPlaceholder() || amount == null
           ? _value.amount
@@ -67,16 +70,18 @@ extension $PayRequestCopyWith on PayRequest {
 // JsonSerializableGenerator
 // **************************************************************************
 
-PayRequest _$PayRequestFromJson(Map<String, dynamic> json) => $checkedCreate('PayRequest', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['amount']);
-  final val = PayRequest(
-    amount: $checkedConvert('amount', (v) => v as num),
-    referenceId: $checkedConvert('referenceId', (v) => v as String?),
-  );
-  return val;
-});
+PayRequest _$PayRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('PayRequest', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['amount']);
+      final val = PayRequest(
+        amount: $checkedConvert('amount', (v) => v as num),
+        referenceId: $checkedConvert('referenceId', (v) => v as String?),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$PayRequestToJson(PayRequest instance) => <String, dynamic>{
-  'amount': instance.amount,
-  'referenceId': ?instance.referenceId,
-};
+Map<String, dynamic> _$PayRequestToJson(PayRequest instance) =>
+    <String, dynamic>{
+      'amount': instance.amount,
+      'referenceId': ?instance.referenceId,
+    };

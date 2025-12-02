@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantMenuCreate200Response
 void main() {
-  final MerchantMenuCreate200Response? instance = /* MerchantMenuCreate200Response(...) */ null;
+  final MerchantMenuCreate200Response?
+  instance = /* MerchantMenuCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantMenuCreate200Response, () {

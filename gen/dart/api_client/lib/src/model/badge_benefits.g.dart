@@ -29,10 +29,12 @@ class _$BadgeBenefitsCWProxyImpl implements _$BadgeBenefitsCWProxy {
   final BadgeBenefits _value;
 
   @override
-  BadgeBenefits priorityBoost(int? priorityBoost) => call(priorityBoost: priorityBoost);
+  BadgeBenefits priorityBoost(int? priorityBoost) =>
+      call(priorityBoost: priorityBoost);
 
   @override
-  BadgeBenefits commissionReduction(num? commissionReduction) => call(commissionReduction: commissionReduction);
+  BadgeBenefits commissionReduction(num? commissionReduction) =>
+      call(commissionReduction: commissionReduction);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -73,13 +75,20 @@ extension $BadgeBenefitsCopyWith on BadgeBenefits {
 BadgeBenefits _$BadgeBenefitsFromJson(Map<String, dynamic> json) =>
     $checkedCreate('BadgeBenefits', json, ($checkedConvert) {
       final val = BadgeBenefits(
-        priorityBoost: $checkedConvert('priorityBoost', (v) => (v as num?)?.toInt()),
-        commissionReduction: $checkedConvert('commissionReduction', (v) => v as num?),
+        priorityBoost: $checkedConvert(
+          'priorityBoost',
+          (v) => (v as num?)?.toInt(),
+        ),
+        commissionReduction: $checkedConvert(
+          'commissionReduction',
+          (v) => v as num?,
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$BadgeBenefitsToJson(BadgeBenefits instance) => <String, dynamic>{
-  'priorityBoost': ?instance.priorityBoost,
-  'commissionReduction': ?instance.commissionReduction,
-};
+Map<String, dynamic> _$BadgeBenefitsToJson(BadgeBenefits instance) =>
+    <String, dynamic>{
+      'priorityBoost': ?instance.priorityBoost,
+      'commissionReduction': ?instance.commissionReduction,
+    };

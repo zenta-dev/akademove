@@ -9,10 +9,18 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'notification_subscribe_to_topic_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class NotificationSubscribeToTopicRequest {
   /// Returns a new [NotificationSubscribeToTopicRequest] instance.
-  const NotificationSubscribeToTopicRequest({required this.topic, required this.token});
+  const NotificationSubscribeToTopicRequest({
+    required this.topic,
+    required this.token,
+  });
 
   @JsonKey(name: r'topic', required: true, includeIfNull: false)
   final String topic;
@@ -23,15 +31,19 @@ class NotificationSubscribeToTopicRequest {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotificationSubscribeToTopicRequest && other.topic == topic && other.token == token;
+      other is NotificationSubscribeToTopicRequest &&
+          other.topic == topic &&
+          other.token == token;
 
   @override
   int get hashCode => topic.hashCode + token.hashCode;
 
-  factory NotificationSubscribeToTopicRequest.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSubscribeToTopicRequestFromJson(json);
+  factory NotificationSubscribeToTopicRequest.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NotificationSubscribeToTopicRequestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$NotificationSubscribeToTopicRequestToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$NotificationSubscribeToTopicRequestToJson(this);
 
   @override
   String toString() {

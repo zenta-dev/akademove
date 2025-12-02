@@ -508,14 +508,14 @@ export class MerchantMainRepository extends BaseRepository {
 				SELECT
 					COUNT(*)::int AS total_orders,
 					COALESCE(SUM(total_price), 0)::text AS total_revenue,
-					COALESCE(SUM(commission), 0)::text AS total_commission,
+					COALESCE(SUM(merchant_commission), 0)::text AS total_commission,
 					COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
 					COUNT(CASE WHEN status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM') THEN 1 END)::int AS cancelled_orders,
 					COALESCE(AVG(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS average_order_value
 				FROM am_orders
 				WHERE merchant_id = ${merchantId}
-					AND requested_at >= ${startDate}
-					AND requested_at <= ${endDate}
+					AND requested_at >= ${startDate.toISOString()}
+					AND requested_at <= ${endDate.toISOString()}
 			`);
 
 			// Get top selling items
@@ -527,19 +527,19 @@ export class MerchantMainRepository extends BaseRepository {
 				total_revenue: string;
 			}>(sql`
 				SELECT
-					oi.menu_id,
+					oi."menuId" AS menu_id,
 					mm.name AS menu_name,
 					mm.image AS menu_image,
 					COUNT(DISTINCT o.id)::int AS total_orders,
-					COALESCE(SUM(oi.price * oi.quantity), 0)::text AS total_revenue
+					COALESCE(SUM(oi.unit_price * oi.quantity), 0)::text AS total_revenue
 				FROM am_orders o
-				INNER JOIN am_order_items oi ON o.id = oi.order_id
-				INNER JOIN am_merchant_menus mm ON oi.menu_id = mm.id
+				INNER JOIN am_order_items oi ON o.id = oi."orderId"
+				INNER JOIN am_merchant_menus mm ON oi."menuId" = mm.id
 				WHERE o.merchant_id = ${merchantId}
 					AND o.status = 'COMPLETED'
-					AND o.requested_at >= ${startDate}
-					AND o.requested_at <= ${endDate}
-				GROUP BY oi.menu_id, mm.name, mm.image
+					AND o.requested_at >= ${startDate.toISOString()}
+					AND o.requested_at <= ${endDate.toISOString()}
+				GROUP BY oi."menuId", mm.name, mm.image
 				ORDER BY total_orders DESC
 				LIMIT 10
 			`);
@@ -551,16 +551,16 @@ export class MerchantMainRepository extends BaseRepository {
 				orders: number;
 			}>(sql`
 				SELECT
-					DATE(requested_at) AS date,
+					TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
 					COALESCE(SUM(total_price), 0)::text AS revenue,
 					COUNT(*)::int AS orders
 				FROM am_orders
 				WHERE merchant_id = ${merchantId}
 					AND status = 'COMPLETED'
-					AND requested_at >= ${startDate}
-					AND requested_at <= ${endDate}
+					AND requested_at >= ${startDate.toISOString()}
+					AND requested_at <= ${endDate.toISOString()}
 				GROUP BY DATE(requested_at)
-				ORDER BY date ASC
+				ORDER BY DATE(requested_at) ASC
 			`);
 
 			const stats = statsResult[0] ?? {

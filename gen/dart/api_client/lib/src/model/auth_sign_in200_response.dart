@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'auth_sign_in200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class AuthSignIn200Response {
   /// Returns a new [AuthSignIn200Response] instance.
-  const AuthSignIn200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const AuthSignIn200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class AuthSignIn200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory AuthSignIn200Response.fromJson(Map<String, dynamic> json) => _$AuthSignIn200ResponseFromJson(json);
+  factory AuthSignIn200Response.fromJson(Map<String, dynamic> json) =>
+      _$AuthSignIn200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthSignIn200ResponseToJson(this);
 

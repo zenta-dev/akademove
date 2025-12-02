@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_user_update_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeUserUpdateRequest {
   /// Returns a new [BadgeUserUpdateRequest] instance.
   const BadgeUserUpdateRequest({this.userId, this.badgeId, this.metadata});
@@ -35,7 +40,8 @@ class BadgeUserUpdateRequest {
   @override
   int get hashCode => userId.hashCode + badgeId.hashCode + metadata.hashCode;
 
-  factory BadgeUserUpdateRequest.fromJson(Map<String, dynamic> json) => _$BadgeUserUpdateRequestFromJson(json);
+  factory BadgeUserUpdateRequest.fromJson(Map<String, dynamic> json) =>
+      _$BadgeUserUpdateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeUserUpdateRequestToJson(this);
 

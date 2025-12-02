@@ -77,7 +77,8 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
   DriverUser email(String? email) => call(email: email);
 
   @override
-  DriverUser emailVerified(bool? emailVerified) => call(emailVerified: emailVerified);
+  DriverUser emailVerified(bool? emailVerified) =>
+      call(emailVerified: emailVerified);
 
   @override
   DriverUser image(String? image) => call(image: image);
@@ -107,7 +108,8 @@ class _$DriverUserCWProxyImpl implements _$DriverUserCWProxy {
   DriverUser updatedAt(DateTime? updatedAt) => call(updatedAt: updatedAt);
 
   @override
-  DriverUser userBadges(List<UserBadge>? userBadges) => call(userBadges: userBadges);
+  DriverUser userBadges(List<UserBadge>? userBadges) =>
+      call(userBadges: userBadges);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -205,45 +207,67 @@ extension $DriverUserCopyWith on DriverUser {
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverUser _$DriverUserFromJson(Map<String, dynamic> json) => $checkedCreate('DriverUser', json, ($checkedConvert) {
-  final val = DriverUser(
-    id: $checkedConvert('id', (v) => v as String?),
-    name: $checkedConvert('name', (v) => v as String?),
-    email: $checkedConvert('email', (v) => v as String?),
-    emailVerified: $checkedConvert('emailVerified', (v) => v as bool?),
-    image: $checkedConvert('image', (v) => v as String?),
-    role: $checkedConvert('role', (v) => $enumDecodeNullable(_$UserRoleEnumMap, v)),
-    banned: $checkedConvert('banned', (v) => v as bool?),
-    banReason: $checkedConvert('banReason', (v) => v as String?),
-    banExpires: $checkedConvert('banExpires', (v) => v == null ? null : DateTime.parse(v as String)),
-    gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
-    phone: $checkedConvert('phone', (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>)),
-    createdAt: $checkedConvert('createdAt', (v) => v == null ? null : DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => v == null ? null : DateTime.parse(v as String)),
-    userBadges: $checkedConvert(
-      'userBadges',
-      (v) => (v as List<dynamic>?)?.map((e) => UserBadge.fromJson(e as Map<String, dynamic>)).toList(),
-    ),
-  );
-  return val;
-});
+DriverUser _$DriverUserFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DriverUser', json, ($checkedConvert) {
+      final val = DriverUser(
+        id: $checkedConvert('id', (v) => v as String?),
+        name: $checkedConvert('name', (v) => v as String?),
+        email: $checkedConvert('email', (v) => v as String?),
+        emailVerified: $checkedConvert('emailVerified', (v) => v as bool?),
+        image: $checkedConvert('image', (v) => v as String?),
+        role: $checkedConvert(
+          'role',
+          (v) => $enumDecodeNullable(_$UserRoleEnumMap, v),
+        ),
+        banned: $checkedConvert('banned', (v) => v as bool?),
+        banReason: $checkedConvert('banReason', (v) => v as String?),
+        banExpires: $checkedConvert(
+          'banExpires',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        gender: $checkedConvert(
+          'gender',
+          (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+        ),
+        phone: $checkedConvert(
+          'phone',
+          (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        userBadges: $checkedConvert(
+          'userBadges',
+          (v) => (v as List<dynamic>?)
+              ?.map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DriverUserToJson(DriverUser instance) => <String, dynamic>{
-  'id': ?instance.id,
-  'name': ?instance.name,
-  'email': ?instance.email,
-  'emailVerified': ?instance.emailVerified,
-  'image': ?instance.image,
-  'role': ?_$UserRoleEnumMap[instance.role],
-  'banned': ?instance.banned,
-  'banReason': ?instance.banReason,
-  'banExpires': ?instance.banExpires?.toIso8601String(),
-  'gender': ?_$UserGenderEnumMap[instance.gender],
-  'phone': ?instance.phone?.toJson(),
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'updatedAt': ?instance.updatedAt?.toIso8601String(),
-  'userBadges': ?instance.userBadges?.map((e) => e.toJson()).toList(),
-};
+Map<String, dynamic> _$DriverUserToJson(DriverUser instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'name': ?instance.name,
+      'email': ?instance.email,
+      'emailVerified': ?instance.emailVerified,
+      'image': ?instance.image,
+      'role': ?_$UserRoleEnumMap[instance.role],
+      'banned': ?instance.banned,
+      'banReason': ?instance.banReason,
+      'banExpires': ?instance.banExpires?.toIso8601String(),
+      'gender': ?_$UserGenderEnumMap[instance.gender],
+      'phone': ?instance.phone?.toJson(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'updatedAt': ?instance.updatedAt?.toIso8601String(),
+      'userBadges': ?instance.userBadges?.map((e) => e.toJson()).toList(),
+    };
 
 const _$UserRoleEnumMap = {
   UserRole.ADMIN: 'ADMIN',
@@ -253,4 +277,7 @@ const _$UserRoleEnumMap = {
   UserRole.USER: 'USER',
 };
 
-const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};
+const _$UserGenderEnumMap = {
+  UserGender.MALE: 'MALE',
+  UserGender.FEMALE: 'FEMALE',
+};

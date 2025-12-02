@@ -196,7 +196,8 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as MerchantCategory,
-      categories: categories == const $CopyWithPlaceholder() || categories == null
+      categories:
+          categories == const $CopyWithPlaceholder() || categories == null
           ? _value.categories
           // ignore: cast_nullable_to_non_nullable
           : categories as List<String>,
@@ -227,7 +228,9 @@ extension $MerchantCopyWith on Merchant {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Merchant _$MerchantFromJson(Map<String, dynamic> json) => $checkedCreate('Merchant', json, ($checkedConvert) {
+Merchant _$MerchantFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Merchant', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -251,16 +254,31 @@ Merchant _$MerchantFromJson(Map<String, dynamic> json) => $checkedCreate('Mercha
     userId: $checkedConvert('userId', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     email: $checkedConvert('email', (v) => v as String),
-    phone: $checkedConvert('phone', (v) => Phone.fromJson(v as Map<String, dynamic>)),
+    phone: $checkedConvert(
+      'phone',
+      (v) => Phone.fromJson(v as Map<String, dynamic>),
+    ),
     address: $checkedConvert('address', (v) => v as String),
-    location: $checkedConvert('location', (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>)),
+    location: $checkedConvert(
+      'location',
+      (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
+    ),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     rating: $checkedConvert('rating', (v) => v as num),
     document: $checkedConvert('document', (v) => v as String?),
     image: $checkedConvert('image', (v) => v as String?),
-    category: $checkedConvert('category', (v) => $enumDecode(_$MerchantCategoryEnumMap, v)),
-    categories: $checkedConvert('categories', (v) => (v as List<dynamic>).map((e) => e as String).toList()),
-    bank: $checkedConvert('bank', (v) => Bank.fromJson(v as Map<String, dynamic>)),
+    category: $checkedConvert(
+      'category',
+      (v) => $enumDecode(_$MerchantCategoryEnumMap, v),
+    ),
+    categories: $checkedConvert(
+      'categories',
+      (v) => (v as List<dynamic>).map((e) => e as String).toList(),
+    ),
+    bank: $checkedConvert(
+      'bank',
+      (v) => Bank.fromJson(v as Map<String, dynamic>),
+    ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );

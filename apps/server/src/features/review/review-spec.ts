@@ -36,6 +36,40 @@ export const ReviewSpec = {
 		.output(
 			createSuccesSchema(ReviewSchema, "Successfully retrieved review data"),
 		),
+	getByOrder: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "GET",
+			path: "/order/{orderId}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ orderId: z.string() }) }))
+		.output(
+			createSuccesSchema(
+				z.array(ReviewSchema),
+				"Successfully retrieved order reviews",
+			),
+		),
+	checkCanReview: oc
+		.route({
+			tags: [FEATURE_TAGS.REVIEW],
+			method: "GET",
+			path: "/can-review/{orderId}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ orderId: z.string() }) }))
+		.output(
+			createSuccesSchema(
+				z.object({
+					canReview: z.boolean(),
+					alreadyReviewed: z.boolean(),
+					orderCompleted: z.boolean(),
+				}),
+				"Successfully checked review eligibility",
+			),
+		),
 	create: oc
 		.route({
 			tags: [FEATURE_TAGS.REVIEW],

@@ -62,19 +62,23 @@ class _$UpdateTransactionCWProxyImpl implements _$UpdateTransactionCWProxy {
   UpdateTransaction amount(num? amount) => call(amount: amount);
 
   @override
-  UpdateTransaction balanceBefore(num? balanceBefore) => call(balanceBefore: balanceBefore);
+  UpdateTransaction balanceBefore(num? balanceBefore) =>
+      call(balanceBefore: balanceBefore);
 
   @override
-  UpdateTransaction balanceAfter(num? balanceAfter) => call(balanceAfter: balanceAfter);
+  UpdateTransaction balanceAfter(num? balanceAfter) =>
+      call(balanceAfter: balanceAfter);
 
   @override
   UpdateTransaction status(TransactionStatus? status) => call(status: status);
 
   @override
-  UpdateTransaction description(String? description) => call(description: description);
+  UpdateTransaction description(String? description) =>
+      call(description: description);
 
   @override
-  UpdateTransaction referenceId(String? referenceId) => call(referenceId: referenceId);
+  UpdateTransaction referenceId(String? referenceId) =>
+      call(referenceId: referenceId);
 
   @override
   UpdateTransaction metadata(Object? metadata) => call(metadata: metadata);
@@ -143,7 +147,8 @@ extension $UpdateTransactionCopyWith on UpdateTransaction {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUpdateTransaction.copyWith(...)` or `instanceOfUpdateTransaction.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UpdateTransactionCWProxy get copyWith => _$UpdateTransactionCWProxyImpl(this);
+  _$UpdateTransactionCWProxy get copyWith =>
+      _$UpdateTransactionCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -154,11 +159,17 @@ UpdateTransaction _$UpdateTransactionFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateTransaction', json, ($checkedConvert) {
       final val = UpdateTransaction(
         walletId: $checkedConvert('walletId', (v) => v as String?),
-        type: $checkedConvert('type', (v) => $enumDecodeNullable(_$TransactionTypeEnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecodeNullable(_$TransactionTypeEnumMap, v),
+        ),
         amount: $checkedConvert('amount', (v) => v as num?),
         balanceBefore: $checkedConvert('balanceBefore', (v) => v as num?),
         balanceAfter: $checkedConvert('balanceAfter', (v) => v as num?),
-        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$TransactionStatusEnumMap, v)),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecodeNullable(_$TransactionStatusEnumMap, v),
+        ),
         description: $checkedConvert('description', (v) => v as String?),
         referenceId: $checkedConvert('referenceId', (v) => v as String?),
         metadata: $checkedConvert('metadata', (v) => v),
@@ -166,17 +177,18 @@ UpdateTransaction _$UpdateTransactionFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$UpdateTransactionToJson(UpdateTransaction instance) => <String, dynamic>{
-  'walletId': ?instance.walletId,
-  'type': ?_$TransactionTypeEnumMap[instance.type],
-  'amount': ?instance.amount,
-  'balanceBefore': ?instance.balanceBefore,
-  'balanceAfter': ?instance.balanceAfter,
-  'status': ?_$TransactionStatusEnumMap[instance.status],
-  'description': ?instance.description,
-  'referenceId': ?instance.referenceId,
-  'metadata': ?instance.metadata,
-};
+Map<String, dynamic> _$UpdateTransactionToJson(UpdateTransaction instance) =>
+    <String, dynamic>{
+      'walletId': ?instance.walletId,
+      'type': ?_$TransactionTypeEnumMap[instance.type],
+      'amount': ?instance.amount,
+      'balanceBefore': ?instance.balanceBefore,
+      'balanceAfter': ?instance.balanceAfter,
+      'status': ?_$TransactionStatusEnumMap[instance.status],
+      'description': ?instance.description,
+      'referenceId': ?instance.referenceId,
+      'metadata': ?instance.metadata,
+    };
 
 const _$TransactionTypeEnumMap = {
   TransactionType.TOPUP: 'TOPUP',

@@ -1188,4 +1188,51 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menu_item_added_to_cart => 'Item has been added to your cart';
+
+  @override
+  String get order_confirm_title => 'Confirm Order';
+
+  @override
+  String get order_confirm_order_summary => 'Order Summary';
+
+  @override
+  String get order_confirm_merchant => 'Merchant';
+
+  @override
+  String order_confirm_items_count(int count) {
+    return '$count item(s)';
+  }
+
+  @override
+  String get order_confirm_subtotal => 'Subtotal';
+
+  @override
+  String get order_confirm_payment_method => 'Payment Method';
+
+  @override
+  String get order_confirm_select_payment => 'Select payment method';
+
+  @override
+  String get order_confirm_payment_wallet => 'Wallet';
+
+  @override
+  String get order_confirm_payment_description => 'Pay using your Akademove wallet balance';
+
+  @override
+  String get order_confirm_place_order => 'Place Order';
+
+  @override
+  String get order_confirm_success => 'Order Placed Successfully';
+
+  @override
+  String get order_confirm_success_message => 'Your order has been placed and is being processed';
+
+  @override
+  String get order_confirm_failed => 'Failed to Place Order';
+
+  @override
+  String get order_confirm_processing => 'Processing Order...';
+
+  @override
+  String get order_confirm_insufficient_balance => 'Insufficient wallet balance';
 }

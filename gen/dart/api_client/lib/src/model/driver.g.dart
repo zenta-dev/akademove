@@ -101,22 +101,27 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver rating(num rating) => call(rating: rating);
 
   @override
-  Driver isTakingOrder(bool isTakingOrder) => call(isTakingOrder: isTakingOrder);
+  Driver isTakingOrder(bool isTakingOrder) =>
+      call(isTakingOrder: isTakingOrder);
 
   @override
   Driver isOnline(bool isOnline) => call(isOnline: isOnline);
 
   @override
-  Driver currentLocation(Coordinate? currentLocation) => call(currentLocation: currentLocation);
+  Driver currentLocation(Coordinate? currentLocation) =>
+      call(currentLocation: currentLocation);
 
   @override
-  Driver lastLocationUpdate(DateTime? lastLocationUpdate) => call(lastLocationUpdate: lastLocationUpdate);
+  Driver lastLocationUpdate(DateTime? lastLocationUpdate) =>
+      call(lastLocationUpdate: lastLocationUpdate);
 
   @override
-  Driver cancellationCount(int? cancellationCount) => call(cancellationCount: cancellationCount);
+  Driver cancellationCount(int? cancellationCount) =>
+      call(cancellationCount: cancellationCount);
 
   @override
-  Driver lastCancellationDate(DateTime? lastCancellationDate) => call(lastCancellationDate: lastCancellationDate);
+  Driver lastCancellationDate(DateTime? lastCancellationDate) =>
+      call(lastCancellationDate: lastCancellationDate);
 
   @override
   Driver createdAt(DateTime createdAt) => call(createdAt: createdAt);
@@ -125,10 +130,12 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
   Driver studentCard(String studentCard) => call(studentCard: studentCard);
 
   @override
-  Driver driverLicense(String driverLicense) => call(driverLicense: driverLicense);
+  Driver driverLicense(String driverLicense) =>
+      call(driverLicense: driverLicense);
 
   @override
-  Driver vehicleCertificate(String vehicleCertificate) => call(vehicleCertificate: vehicleCertificate);
+  Driver vehicleCertificate(String vehicleCertificate) =>
+      call(vehicleCertificate: vehicleCertificate);
 
   @override
   Driver bank(Bank bank) => call(bank: bank);
@@ -181,7 +188,8 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.studentId
           // ignore: cast_nullable_to_non_nullable
           : studentId as num,
-      licensePlate: licensePlate == const $CopyWithPlaceholder() || licensePlate == null
+      licensePlate:
+          licensePlate == const $CopyWithPlaceholder() || licensePlate == null
           ? _value.licensePlate
           // ignore: cast_nullable_to_non_nullable
           : licensePlate as String,
@@ -193,7 +201,8 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
           : rating as num,
-      isTakingOrder: isTakingOrder == const $CopyWithPlaceholder() || isTakingOrder == null
+      isTakingOrder:
+          isTakingOrder == const $CopyWithPlaceholder() || isTakingOrder == null
           ? _value.isTakingOrder
           // ignore: cast_nullable_to_non_nullable
           : isTakingOrder as bool,
@@ -221,15 +230,19 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
           : createdAt as DateTime,
-      studentCard: studentCard == const $CopyWithPlaceholder() || studentCard == null
+      studentCard:
+          studentCard == const $CopyWithPlaceholder() || studentCard == null
           ? _value.studentCard
           // ignore: cast_nullable_to_non_nullable
           : studentCard as String,
-      driverLicense: driverLicense == const $CopyWithPlaceholder() || driverLicense == null
+      driverLicense:
+          driverLicense == const $CopyWithPlaceholder() || driverLicense == null
           ? _value.driverLicense
           // ignore: cast_nullable_to_non_nullable
           : driverLicense as String,
-      vehicleCertificate: vehicleCertificate == const $CopyWithPlaceholder() || vehicleCertificate == null
+      vehicleCertificate:
+          vehicleCertificate == const $CopyWithPlaceholder() ||
+              vehicleCertificate == null
           ? _value.vehicleCertificate
           // ignore: cast_nullable_to_non_nullable
           : vehicleCertificate as String,
@@ -260,54 +273,78 @@ extension $DriverCopyWith on Driver {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Driver _$DriverFromJson(Map<String, dynamic> json) => $checkedCreate('Driver', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'userId',
-      'studentId',
-      'licensePlate',
-      'status',
-      'rating',
-      'isTakingOrder',
-      'isOnline',
-      'createdAt',
-      'studentCard',
-      'driverLicense',
-      'vehicleCertificate',
-      'bank',
-    ],
-  );
-  final val = Driver(
-    id: $checkedConvert('id', (v) => v as String),
-    userId: $checkedConvert('userId', (v) => v as String),
-    studentId: $checkedConvert('studentId', (v) => v as num),
-    licensePlate: $checkedConvert('licensePlate', (v) => v as String),
-    status: $checkedConvert('status', (v) => $enumDecode(_$DriverStatusEnumMap, v)),
-    rating: $checkedConvert('rating', (v) => v as num),
-    isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool),
-    isOnline: $checkedConvert('isOnline', (v) => v as bool),
-    currentLocation: $checkedConvert(
-      'currentLocation',
-      (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
-    ),
-    lastLocationUpdate: $checkedConvert('lastLocationUpdate', (v) => v == null ? null : DateTime.parse(v as String)),
-    cancellationCount: $checkedConvert('cancellationCount', (v) => (v as num?)?.toInt() ?? 0),
-    lastCancellationDate: $checkedConvert(
-      'lastCancellationDate',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    studentCard: $checkedConvert('studentCard', (v) => v as String),
-    driverLicense: $checkedConvert('driverLicense', (v) => v as String),
-    vehicleCertificate: $checkedConvert('vehicleCertificate', (v) => v as String),
-    bank: $checkedConvert('bank', (v) => Bank.fromJson(v as Map<String, dynamic>)),
-    user: $checkedConvert('user', (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>)),
-    distance: $checkedConvert('distance', (v) => v as num?),
-  );
-  return val;
-});
+Driver _$DriverFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('Driver', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'userId',
+          'studentId',
+          'licensePlate',
+          'status',
+          'rating',
+          'isTakingOrder',
+          'isOnline',
+          'createdAt',
+          'studentCard',
+          'driverLicense',
+          'vehicleCertificate',
+          'bank',
+        ],
+      );
+      final val = Driver(
+        id: $checkedConvert('id', (v) => v as String),
+        userId: $checkedConvert('userId', (v) => v as String),
+        studentId: $checkedConvert('studentId', (v) => v as num),
+        licensePlate: $checkedConvert('licensePlate', (v) => v as String),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$DriverStatusEnumMap, v),
+        ),
+        rating: $checkedConvert('rating', (v) => v as num),
+        isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool),
+        isOnline: $checkedConvert('isOnline', (v) => v as bool),
+        currentLocation: $checkedConvert(
+          'currentLocation',
+          (v) =>
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
+        ),
+        lastLocationUpdate: $checkedConvert(
+          'lastLocationUpdate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        cancellationCount: $checkedConvert(
+          'cancellationCount',
+          (v) => (v as num?)?.toInt() ?? 0,
+        ),
+        lastCancellationDate: $checkedConvert(
+          'lastCancellationDate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => DateTime.parse(v as String),
+        ),
+        studentCard: $checkedConvert('studentCard', (v) => v as String),
+        driverLicense: $checkedConvert('driverLicense', (v) => v as String),
+        vehicleCertificate: $checkedConvert(
+          'vehicleCertificate',
+          (v) => v as String,
+        ),
+        bank: $checkedConvert(
+          'bank',
+          (v) => Bank.fromJson(v as Map<String, dynamic>),
+        ),
+        user: $checkedConvert(
+          'user',
+          (v) =>
+              v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
+        ),
+        distance: $checkedConvert('distance', (v) => v as num?),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'id': instance.id,

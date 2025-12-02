@@ -22,12 +22,18 @@ abstract class _$CouponCreate200ResponseCWProxy {
   /// ```dart
   /// CouponCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  CouponCreate200Response call({String message, Coupon? data, PaginationResult? pagination, int? totalPages});
+  CouponCreate200Response call({
+    String message,
+    Coupon? data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponCreate200Response.copyWith(...)` or call `instanceOfCouponCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$CouponCreate200ResponseCWProxyImpl implements _$CouponCreate200ResponseCWProxy {
+class _$CouponCreate200ResponseCWProxyImpl
+    implements _$CouponCreate200ResponseCWProxy {
   const _$CouponCreate200ResponseCWProxyImpl(this._value);
 
   final CouponCreate200Response _value;
@@ -39,10 +45,12 @@ class _$CouponCreate200ResponseCWProxyImpl implements _$CouponCreate200ResponseC
   CouponCreate200Response data(Coupon? data) => call(data: data);
 
   @override
-  CouponCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  CouponCreate200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  CouponCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  CouponCreate200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $CouponCreate200ResponseCopyWith on CouponCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponCreate200Response.copyWith(...)` or `instanceOfCouponCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$CouponCreate200ResponseCWProxy get copyWith => _$CouponCreate200ResponseCWProxyImpl(this);
+  _$CouponCreate200ResponseCWProxy get copyWith =>
+      _$CouponCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponCreate200Response _$CouponCreate200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('CouponCreate200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = CouponCreate200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+CouponCreate200Response _$CouponCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('CouponCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = CouponCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$CouponCreate200ResponseToJson(CouponCreate200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$CouponCreate200ResponseToJson(
+  CouponCreate200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data?.toJson(),
   'pagination': ?instance.pagination?.toJson(),

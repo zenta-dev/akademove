@@ -14,7 +14,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Badge {
   /// Returns a new [Badge] instance.
   const Badge({
@@ -64,12 +69,22 @@ class Badge {
   @JsonKey(name: r'benefits', required: false, includeIfNull: false)
   final BadgeBenefits? benefits;
 
-  @JsonKey(defaultValue: true, name: r'isActive', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isActive',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isActive;
 
   // minimum: 0
   // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0, name: r'displayOrder', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: 0,
+    name: r'displayOrder',
+    required: false,
+    includeIfNull: false,
+  )
   final int? displayOrder;
 
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)

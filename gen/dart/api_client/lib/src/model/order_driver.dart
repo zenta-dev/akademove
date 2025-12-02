@@ -13,7 +13,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_driver.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderDriver {
   /// Returns a new [OrderDriver] instance.
   const OrderDriver({
@@ -70,7 +75,12 @@ class OrderDriver {
 
   // minimum: -9007199254740991
   // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0, name: r'cancellationCount', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: 0,
+    name: r'cancellationCount',
+    required: false,
+    includeIfNull: false,
+  )
   final int? cancellationCount;
 
   @JsonKey(name: r'lastCancellationDate', required: false, includeIfNull: false)
@@ -144,7 +154,8 @@ class OrderDriver {
       user.hashCode +
       distance.hashCode;
 
-  factory OrderDriver.fromJson(Map<String, dynamic> json) => _$OrderDriverFromJson(json);
+  factory OrderDriver.fromJson(Map<String, dynamic> json) =>
+      _$OrderDriverFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderDriverToJson(this);
 

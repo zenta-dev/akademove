@@ -32,7 +32,8 @@ abstract class _$NotificationList200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfNotificationList200Response.copyWith(...)` or call `instanceOfNotificationList200Response.copyWith.fieldName(value)` for a single field.
-class _$NotificationList200ResponseCWProxyImpl implements _$NotificationList200ResponseCWProxy {
+class _$NotificationList200ResponseCWProxyImpl
+    implements _$NotificationList200ResponseCWProxy {
   const _$NotificationList200ResponseCWProxyImpl(this._value);
 
   final NotificationList200Response _value;
@@ -41,13 +42,16 @@ class _$NotificationList200ResponseCWProxyImpl implements _$NotificationList200R
   NotificationList200Response message(String message) => call(message: message);
 
   @override
-  NotificationList200Response data(List<UserNotification> data) => call(data: data);
+  NotificationList200Response data(List<UserNotification> data) =>
+      call(data: data);
 
   @override
-  NotificationList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  NotificationList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  NotificationList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  NotificationList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,32 +92,40 @@ extension $NotificationList200ResponseCopyWith on NotificationList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationList200Response.copyWith(...)` or `instanceOfNotificationList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$NotificationList200ResponseCWProxy get copyWith => _$NotificationList200ResponseCWProxyImpl(this);
+  _$NotificationList200ResponseCWProxy get copyWith =>
+      _$NotificationList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationList200Response _$NotificationList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('NotificationList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = NotificationList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => UserNotification.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+NotificationList200Response _$NotificationList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('NotificationList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = NotificationList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => UserNotification.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$NotificationList200ResponseToJson(NotificationList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$NotificationList200ResponseToJson(
+  NotificationList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

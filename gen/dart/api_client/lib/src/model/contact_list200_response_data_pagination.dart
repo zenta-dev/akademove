@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'contact_list200_response_data_pagination.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class ContactList200ResponseDataPagination {
   /// Returns a new [ContactList200ResponseDataPagination] instance.
   const ContactList200ResponseDataPagination({required this.totalPages});
@@ -21,15 +26,19 @@ class ContactList200ResponseDataPagination {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is ContactList200ResponseDataPagination && other.totalPages == totalPages;
+      identical(this, other) ||
+      other is ContactList200ResponseDataPagination &&
+          other.totalPages == totalPages;
 
   @override
   int get hashCode => totalPages.hashCode;
 
-  factory ContactList200ResponseDataPagination.fromJson(Map<String, dynamic> json) =>
-      _$ContactList200ResponseDataPaginationFromJson(json);
+  factory ContactList200ResponseDataPagination.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ContactList200ResponseDataPaginationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ContactList200ResponseDataPaginationToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$ContactList200ResponseDataPaginationToJson(this);
 
   @override
   String toString() {

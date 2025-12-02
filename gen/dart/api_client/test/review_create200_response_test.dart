@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReviewCreate200Response
 void main() {
-  final ReviewCreate200Response? instance = /* ReviewCreate200Response(...) */ null;
+  final ReviewCreate200Response? instance = /* ReviewCreate200Response(...) */
+      null;
   // TODO add properties to the entity
 
   group(ReviewCreate200Response, () {

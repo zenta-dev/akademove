@@ -71,16 +71,19 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   Statements driver(List<StatementsDriverEnum>? driver) => call(driver: driver);
 
   @override
-  Statements merchant(List<StatementsMerchantEnum>? merchant) => call(merchant: merchant);
+  Statements merchant(List<StatementsMerchantEnum>? merchant) =>
+      call(merchant: merchant);
 
   @override
-  Statements merchantMenu(List<StatementsMerchantMenuEnum>? merchantMenu) => call(merchantMenu: merchantMenu);
+  Statements merchantMenu(List<StatementsMerchantMenuEnum>? merchantMenu) =>
+      call(merchantMenu: merchantMenu);
 
   @override
   Statements order(List<StatementsOrderEnum>? order) => call(order: order);
 
   @override
-  Statements schedule(List<StatementsScheduleEnum>? schedule) => call(schedule: schedule);
+  Statements schedule(List<StatementsScheduleEnum>? schedule) =>
+      call(schedule: schedule);
 
   @override
   Statements coupon(List<StatementsCouponEnum>? coupon) => call(coupon: coupon);
@@ -95,19 +98,25 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   Statements user(List<StatementsUserEnum>? user) => call(user: user);
 
   @override
-  Statements session(List<StatementsSessionEnum>? session) => call(session: session);
+  Statements session(List<StatementsSessionEnum>? session) =>
+      call(session: session);
 
   @override
-  Statements pricing(List<StatementsPricingEnum>? pricing) => call(pricing: pricing);
+  Statements pricing(List<StatementsPricingEnum>? pricing) =>
+      call(pricing: pricing);
 
   @override
-  Statements bookings(List<StatementsBookingsEnum>? bookings) => call(bookings: bookings);
+  Statements bookings(List<StatementsBookingsEnum>? bookings) =>
+      call(bookings: bookings);
 
   @override
-  Statements configurations(List<StatementsConfigurationsEnum>? configurations) => call(configurations: configurations);
+  Statements configurations(
+    List<StatementsConfigurationsEnum>? configurations,
+  ) => call(configurations: configurations);
 
   @override
-  Statements emergency(List<StatementsEmergencyEnum>? emergency) => call(emergency: emergency);
+  Statements emergency(List<StatementsEmergencyEnum>? emergency) =>
+      call(emergency: emergency);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -205,83 +214,143 @@ extension $StatementsCopyWith on Statements {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate('Statements', json, ($checkedConvert) {
-  final val = Statements(
-    driver: $checkedConvert(
-      'driver',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsDriverEnumEnumMap, e)).toList(),
-    ),
-    merchant: $checkedConvert(
-      'merchant',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsMerchantEnumEnumMap, e)).toList(),
-    ),
-    merchantMenu: $checkedConvert(
-      'merchantMenu',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsMerchantMenuEnumEnumMap, e)).toList(),
-    ),
-    order: $checkedConvert(
-      'order',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsOrderEnumEnumMap, e)).toList(),
-    ),
-    schedule: $checkedConvert(
-      'schedule',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsScheduleEnumEnumMap, e)).toList(),
-    ),
-    coupon: $checkedConvert(
-      'coupon',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsCouponEnumEnumMap, e)).toList(),
-    ),
-    report: $checkedConvert(
-      'report',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsReportEnumEnumMap, e)).toList(),
-    ),
-    review: $checkedConvert(
-      'review',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsReviewEnumEnumMap, e)).toList(),
-    ),
-    user: $checkedConvert(
-      'user',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsUserEnumEnumMap, e)).toList(),
-    ),
-    session: $checkedConvert(
-      'session',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsSessionEnumEnumMap, e)).toList(),
-    ),
-    pricing: $checkedConvert(
-      'pricing',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsPricingEnumEnumMap, e)).toList(),
-    ),
-    bookings: $checkedConvert(
-      'bookings',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsBookingsEnumEnumMap, e)).toList(),
-    ),
-    configurations: $checkedConvert(
-      'configurations',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsConfigurationsEnumEnumMap, e)).toList(),
-    ),
-    emergency: $checkedConvert(
-      'emergency',
-      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$StatementsEmergencyEnumEnumMap, e)).toList(),
-    ),
-  );
-  return val;
-});
+Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate(
+  'Statements',
+  json,
+  ($checkedConvert) {
+    final val = Statements(
+      driver: $checkedConvert(
+        'driver',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsDriverEnumEnumMap, e))
+            .toList(),
+      ),
+      merchant: $checkedConvert(
+        'merchant',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsMerchantEnumEnumMap, e))
+            .toList(),
+      ),
+      merchantMenu: $checkedConvert(
+        'merchantMenu',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsMerchantMenuEnumEnumMap, e))
+            .toList(),
+      ),
+      order: $checkedConvert(
+        'order',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsOrderEnumEnumMap, e))
+            .toList(),
+      ),
+      schedule: $checkedConvert(
+        'schedule',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsScheduleEnumEnumMap, e))
+            .toList(),
+      ),
+      coupon: $checkedConvert(
+        'coupon',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsCouponEnumEnumMap, e))
+            .toList(),
+      ),
+      report: $checkedConvert(
+        'report',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsReportEnumEnumMap, e))
+            .toList(),
+      ),
+      review: $checkedConvert(
+        'review',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsReviewEnumEnumMap, e))
+            .toList(),
+      ),
+      user: $checkedConvert(
+        'user',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsUserEnumEnumMap, e))
+            .toList(),
+      ),
+      session: $checkedConvert(
+        'session',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsSessionEnumEnumMap, e))
+            .toList(),
+      ),
+      pricing: $checkedConvert(
+        'pricing',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsPricingEnumEnumMap, e))
+            .toList(),
+      ),
+      bookings: $checkedConvert(
+        'bookings',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsBookingsEnumEnumMap, e))
+            .toList(),
+      ),
+      configurations: $checkedConvert(
+        'configurations',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsConfigurationsEnumEnumMap, e))
+            .toList(),
+      ),
+      emergency: $checkedConvert(
+        'emergency',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsEmergencyEnumEnumMap, e))
+            .toList(),
+      ),
+    );
+    return val;
+  },
+);
 
-Map<String, dynamic> _$StatementsToJson(Statements instance) => <String, dynamic>{
-  'driver': ?instance.driver?.map((e) => _$StatementsDriverEnumEnumMap[e]!).toList(),
-  'merchant': ?instance.merchant?.map((e) => _$StatementsMerchantEnumEnumMap[e]!).toList(),
-  'merchantMenu': ?instance.merchantMenu?.map((e) => _$StatementsMerchantMenuEnumEnumMap[e]!).toList(),
-  'order': ?instance.order?.map((e) => _$StatementsOrderEnumEnumMap[e]!).toList(),
-  'schedule': ?instance.schedule?.map((e) => _$StatementsScheduleEnumEnumMap[e]!).toList(),
-  'coupon': ?instance.coupon?.map((e) => _$StatementsCouponEnumEnumMap[e]!).toList(),
-  'report': ?instance.report?.map((e) => _$StatementsReportEnumEnumMap[e]!).toList(),
-  'review': ?instance.review?.map((e) => _$StatementsReviewEnumEnumMap[e]!).toList(),
+Map<String, dynamic> _$StatementsToJson(
+  Statements instance,
+) => <String, dynamic>{
+  'driver': ?instance.driver
+      ?.map((e) => _$StatementsDriverEnumEnumMap[e]!)
+      .toList(),
+  'merchant': ?instance.merchant
+      ?.map((e) => _$StatementsMerchantEnumEnumMap[e]!)
+      .toList(),
+  'merchantMenu': ?instance.merchantMenu
+      ?.map((e) => _$StatementsMerchantMenuEnumEnumMap[e]!)
+      .toList(),
+  'order': ?instance.order
+      ?.map((e) => _$StatementsOrderEnumEnumMap[e]!)
+      .toList(),
+  'schedule': ?instance.schedule
+      ?.map((e) => _$StatementsScheduleEnumEnumMap[e]!)
+      .toList(),
+  'coupon': ?instance.coupon
+      ?.map((e) => _$StatementsCouponEnumEnumMap[e]!)
+      .toList(),
+  'report': ?instance.report
+      ?.map((e) => _$StatementsReportEnumEnumMap[e]!)
+      .toList(),
+  'review': ?instance.review
+      ?.map((e) => _$StatementsReviewEnumEnumMap[e]!)
+      .toList(),
   'user': ?instance.user?.map((e) => _$StatementsUserEnumEnumMap[e]!).toList(),
-  'session': ?instance.session?.map((e) => _$StatementsSessionEnumEnumMap[e]!).toList(),
-  'pricing': ?instance.pricing?.map((e) => _$StatementsPricingEnumEnumMap[e]!).toList(),
-  'bookings': ?instance.bookings?.map((e) => _$StatementsBookingsEnumEnumMap[e]!).toList(),
-  'configurations': ?instance.configurations?.map((e) => _$StatementsConfigurationsEnumEnumMap[e]!).toList(),
-  'emergency': ?instance.emergency?.map((e) => _$StatementsEmergencyEnumEnumMap[e]!).toList(),
+  'session': ?instance.session
+      ?.map((e) => _$StatementsSessionEnumEnumMap[e]!)
+      .toList(),
+  'pricing': ?instance.pricing
+      ?.map((e) => _$StatementsPricingEnumEnumMap[e]!)
+      .toList(),
+  'bookings': ?instance.bookings
+      ?.map((e) => _$StatementsBookingsEnumEnumMap[e]!)
+      .toList(),
+  'configurations': ?instance.configurations
+      ?.map((e) => _$StatementsConfigurationsEnumEnumMap[e]!)
+      .toList(),
+  'emergency': ?instance.emergency
+      ?.map((e) => _$StatementsEmergencyEnumEnumMap[e]!)
+      .toList(),
 };
 
 const _$StatementsDriverEnumEnumMap = {

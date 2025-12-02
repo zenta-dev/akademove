@@ -42,7 +42,10 @@ class _$VANumberCWProxyImpl implements _$VANumberCWProxy {
   /// ```dart
   /// VANumber(...).copyWith(id: 12, name: "My name")
   /// ```
-  VANumber call({Object? bank = const $CopyWithPlaceholder(), Object? vaNumber = const $CopyWithPlaceholder()}) {
+  VANumber call({
+    Object? bank = const $CopyWithPlaceholder(),
+    Object? vaNumber = const $CopyWithPlaceholder(),
+  }) {
     return VANumber(
       bank: bank == const $CopyWithPlaceholder() || bank == null
           ? _value.bank
@@ -67,14 +70,15 @@ extension $VANumberCopyWith on VANumber {
 // JsonSerializableGenerator
 // **************************************************************************
 
-VANumber _$VANumberFromJson(Map<String, dynamic> json) => $checkedCreate('VANumber', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['bank', 'va_number']);
-  final val = VANumber(
-    bank: $checkedConvert('bank', (v) => v as String),
-    vaNumber: $checkedConvert('va_number', (v) => v as String),
-  );
-  return val;
-}, fieldKeyMap: const {'vaNumber': 'va_number'});
+VANumber _$VANumberFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('VANumber', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['bank', 'va_number']);
+      final val = VANumber(
+        bank: $checkedConvert('bank', (v) => v as String),
+        vaNumber: $checkedConvert('va_number', (v) => v as String),
+      );
+      return val;
+    }, fieldKeyMap: const {'vaNumber': 'va_number'});
 
 Map<String, dynamic> _$VANumberToJson(VANumber instance) => <String, dynamic>{
   'bank': instance.bank,

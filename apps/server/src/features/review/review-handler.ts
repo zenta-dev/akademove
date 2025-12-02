@@ -31,13 +31,59 @@ export const ReviewHandler = priv.router({
 				body: { message: "Successfully retrieved review data", data: result },
 			};
 		}),
+	getByOrder: priv.getByOrder
+		.use(hasPermission({ review: ["get"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.review.getByOrder(params.orderId);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved order reviews",
+					data: result,
+				},
+			};
+		}),
+	checkCanReview: priv.checkCanReview
+		.use(hasPermission({ review: ["get"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.review.getOrderReviewStatus(
+				params.orderId,
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully checked review eligibility",
+					data: result,
+				},
+			};
+		}),
 	create: priv.create
 		.use(hasPermission({ review: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const data = trimObjectValues(body);
+
+			// Validate that user can review this order
+			const reviewStatus = await context.repo.review.getOrderReviewStatus(
+				data.orderId,
+				context.user.id,
+			);
+
+			if (!reviewStatus.canReview) {
+				if (reviewStatus.alreadyReviewed) {
+					throw new Error("You have already reviewed this order");
+				}
+				if (!reviewStatus.orderCompleted) {
+					throw new Error("Order must be completed before reviewing");
+				}
+				throw new Error("You cannot review this order");
+			}
+
 			const result = await context.repo.review.create({
 				...data,
-				userId: context.user.id,
+				fromUserId: context.user.id,
 			});
 
 			return {

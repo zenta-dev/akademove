@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_contact.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateContact {
   /// Returns a new [UpdateContact] instance.
   const UpdateContact({
@@ -72,7 +77,8 @@ class UpdateContact {
       respondedById.hashCode +
       response.hashCode;
 
-  factory UpdateContact.fromJson(Map<String, dynamic> json) => _$UpdateContactFromJson(json);
+  factory UpdateContact.fromJson(Map<String, dynamic> json) =>
+      _$UpdateContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateContactToJson(this);
 

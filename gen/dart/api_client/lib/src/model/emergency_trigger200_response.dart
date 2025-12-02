@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'emergency_trigger200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class EmergencyTrigger200Response {
   /// Returns a new [EmergencyTrigger200Response] instance.
-  const EmergencyTrigger200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const EmergencyTrigger200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,7 +50,11 @@ class EmergencyTrigger200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory EmergencyTrigger200Response.fromJson(Map<String, dynamic> json) =>
       _$EmergencyTrigger200ResponseFromJson(json);

@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'get_session_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class GetSessionResponse {
   /// Returns a new [GetSessionResponse] instance.
   const GetSessionResponse({this.token, required this.user});
@@ -23,12 +28,14 @@ class GetSessionResponse {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is GetSessionResponse && other.token == token && other.user == user;
+      identical(this, other) ||
+      other is GetSessionResponse && other.token == token && other.user == user;
 
   @override
   int get hashCode => token.hashCode + user.hashCode;
 
-  factory GetSessionResponse.fromJson(Map<String, dynamic> json) => _$GetSessionResponseFromJson(json);
+  factory GetSessionResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetSessionResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetSessionResponseToJson(this);
 

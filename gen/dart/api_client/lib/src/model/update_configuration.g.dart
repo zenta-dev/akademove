@@ -37,7 +37,8 @@ class _$UpdateConfigurationCWProxyImpl implements _$UpdateConfigurationCWProxy {
   UpdateConfiguration value(Object? value) => call(value: value);
 
   @override
-  UpdateConfiguration description(String? description) => call(description: description);
+  UpdateConfiguration description(String? description) =>
+      call(description: description);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -73,7 +74,8 @@ extension $UpdateConfigurationCopyWith on UpdateConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUpdateConfiguration.copyWith(...)` or `instanceOfUpdateConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UpdateConfigurationCWProxy get copyWith => _$UpdateConfigurationCWProxyImpl(this);
+  _$UpdateConfigurationCWProxy get copyWith =>
+      _$UpdateConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -90,7 +92,9 @@ UpdateConfiguration _$UpdateConfigurationFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$UpdateConfigurationToJson(UpdateConfiguration instance) => <String, dynamic>{
+Map<String, dynamic> _$UpdateConfigurationToJson(
+  UpdateConfiguration instance,
+) => <String, dynamic>{
   'name': ?instance.name,
   'value': ?instance.value,
   'description': ?instance.description,

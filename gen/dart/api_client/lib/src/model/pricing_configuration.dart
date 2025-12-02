@@ -3,16 +3,18 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/delivery_pricing_configuration.dart';
-import 'package:api_client/src/model/ride_pricing_configuration.dart';
-import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'pricing_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PricingConfiguration {
   /// Returns a new [PricingConfiguration] instance.
   const PricingConfiguration({
@@ -62,7 +64,8 @@ class PricingConfiguration {
       taxRate.hashCode +
       perKgRate.hashCode;
 
-  factory PricingConfiguration.fromJson(Map<String, dynamic> json) => _$PricingConfigurationFromJson(json);
+  factory PricingConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$PricingConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$PricingConfigurationToJson(this);
 

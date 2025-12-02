@@ -20,7 +20,11 @@ abstract class _$PlaceOrderResponseCWProxy {
   /// ```dart
   /// PlaceOrderResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  PlaceOrderResponse call({Order order, Payment payment, Transaction transaction});
+  PlaceOrderResponse call({
+    Order order,
+    Payment payment,
+    Transaction transaction,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -37,7 +41,8 @@ class _$PlaceOrderResponseCWProxyImpl implements _$PlaceOrderResponseCWProxy {
   PlaceOrderResponse payment(Payment payment) => call(payment: payment);
 
   @override
-  PlaceOrderResponse transaction(Transaction transaction) => call(transaction: transaction);
+  PlaceOrderResponse transaction(Transaction transaction) =>
+      call(transaction: transaction);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -61,7 +66,8 @@ class _$PlaceOrderResponseCWProxyImpl implements _$PlaceOrderResponseCWProxy {
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
           : payment as Payment,
-      transaction: transaction == const $CopyWithPlaceholder() || transaction == null
+      transaction:
+          transaction == const $CopyWithPlaceholder() || transaction == null
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
           : transaction as Transaction,
@@ -73,7 +79,8 @@ extension $PlaceOrderResponseCopyWith on PlaceOrderResponse {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfPlaceOrderResponse.copyWith(...)` or `instanceOfPlaceOrderResponse.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$PlaceOrderResponseCWProxy get copyWith => _$PlaceOrderResponseCWProxyImpl(this);
+  _$PlaceOrderResponseCWProxy get copyWith =>
+      _$PlaceOrderResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -84,15 +91,25 @@ PlaceOrderResponse _$PlaceOrderResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('PlaceOrderResponse', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['order', 'payment', 'transaction']);
       final val = PlaceOrderResponse(
-        order: $checkedConvert('order', (v) => Order.fromJson(v as Map<String, dynamic>)),
-        payment: $checkedConvert('payment', (v) => Payment.fromJson(v as Map<String, dynamic>)),
-        transaction: $checkedConvert('transaction', (v) => Transaction.fromJson(v as Map<String, dynamic>)),
+        order: $checkedConvert(
+          'order',
+          (v) => Order.fromJson(v as Map<String, dynamic>),
+        ),
+        payment: $checkedConvert(
+          'payment',
+          (v) => Payment.fromJson(v as Map<String, dynamic>),
+        ),
+        transaction: $checkedConvert(
+          'transaction',
+          (v) => Transaction.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$PlaceOrderResponseToJson(PlaceOrderResponse instance) => <String, dynamic>{
-  'order': instance.order.toJson(),
-  'payment': instance.payment.toJson(),
-  'transaction': instance.transaction.toJson(),
-};
+Map<String, dynamic> _$PlaceOrderResponseToJson(PlaceOrderResponse instance) =>
+    <String, dynamic>{
+      'order': instance.order.toJson(),
+      'payment': instance.payment.toJson(),
+      'transaction': instance.transaction.toJson(),
+    };

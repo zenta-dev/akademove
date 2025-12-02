@@ -10,10 +10,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_user_create_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeUserCreateRequest {
   /// Returns a new [BadgeUserCreateRequest] instance.
-  const BadgeUserCreateRequest({required this.userId, required this.badgeId, this.metadata});
+  const BadgeUserCreateRequest({
+    required this.userId,
+    required this.badgeId,
+    this.metadata,
+  });
 
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
@@ -35,7 +44,8 @@ class BadgeUserCreateRequest {
   @override
   int get hashCode => userId.hashCode + badgeId.hashCode + metadata.hashCode;
 
-  factory BadgeUserCreateRequest.fromJson(Map<String, dynamic> json) => _$BadgeUserCreateRequestFromJson(json);
+  factory BadgeUserCreateRequest.fromJson(Map<String, dynamic> json) =>
+      _$BadgeUserCreateRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeUserCreateRequestToJson(this);
 

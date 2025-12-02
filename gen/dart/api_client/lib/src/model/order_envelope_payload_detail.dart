@@ -12,10 +12,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope_payload_detail.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderEnvelopePayloadDetail {
   /// Returns a new [OrderEnvelopePayloadDetail] instance.
-  const OrderEnvelopePayloadDetail({required this.order, required this.payment, required this.transaction});
+  const OrderEnvelopePayloadDetail({
+    required this.order,
+    required this.payment,
+    required this.transaction,
+  });
 
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
@@ -37,7 +46,8 @@ class OrderEnvelopePayloadDetail {
   @override
   int get hashCode => order.hashCode + payment.hashCode + transaction.hashCode;
 
-  factory OrderEnvelopePayloadDetail.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDetailFromJson(json);
+  factory OrderEnvelopePayloadDetail.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadDetailFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadDetailToJson(this);
 

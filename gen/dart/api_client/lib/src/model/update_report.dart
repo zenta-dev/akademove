@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_report.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateReport {
   /// Returns a new [UpdateReport] instance.
   const UpdateReport({
@@ -79,7 +84,8 @@ class UpdateReport {
       handledById.hashCode +
       resolution.hashCode;
 
-  factory UpdateReport.fromJson(Map<String, dynamic> json) => _$UpdateReportFromJson(json);
+  factory UpdateReport.fromJson(Map<String, dynamic> json) =>
+      _$UpdateReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateReportToJson(this);
 

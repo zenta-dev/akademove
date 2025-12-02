@@ -22,12 +22,18 @@ abstract class _$DriverList200ResponseCWProxy {
   /// ```dart
   /// DriverList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  DriverList200Response call({String message, List<Driver> data, PaginationResult? pagination, int? totalPages});
+  DriverList200Response call({
+    String message,
+    List<Driver> data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverList200Response.copyWith(...)` or call `instanceOfDriverList200Response.copyWith.fieldName(value)` for a single field.
-class _$DriverList200ResponseCWProxyImpl implements _$DriverList200ResponseCWProxy {
+class _$DriverList200ResponseCWProxyImpl
+    implements _$DriverList200ResponseCWProxy {
   const _$DriverList200ResponseCWProxyImpl(this._value);
 
   final DriverList200Response _value;
@@ -39,10 +45,12 @@ class _$DriverList200ResponseCWProxyImpl implements _$DriverList200ResponseCWPro
   DriverList200Response data(List<Driver> data) => call(data: data);
 
   @override
-  DriverList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  DriverList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  DriverList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  DriverList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,32 +91,40 @@ extension $DriverList200ResponseCopyWith on DriverList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverList200Response.copyWith(...)` or `instanceOfDriverList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverList200ResponseCWProxy get copyWith => _$DriverList200ResponseCWProxyImpl(this);
+  _$DriverList200ResponseCWProxy get copyWith =>
+      _$DriverList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverList200Response _$DriverList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('DriverList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = DriverList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => Driver.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+DriverList200Response _$DriverList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('DriverList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = DriverList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Driver.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$DriverList200ResponseToJson(DriverList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$DriverList200ResponseToJson(
+  DriverList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

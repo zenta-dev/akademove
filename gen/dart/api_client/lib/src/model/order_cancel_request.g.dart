@@ -51,7 +51,8 @@ extension $OrderCancelRequestCopyWith on OrderCancelRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderCancelRequest.copyWith(...)` or `instanceOfOrderCancelRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderCancelRequestCWProxy get copyWith => _$OrderCancelRequestCWProxyImpl(this);
+  _$OrderCancelRequestCWProxy get copyWith =>
+      _$OrderCancelRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -60,10 +61,11 @@ extension $OrderCancelRequestCopyWith on OrderCancelRequest {
 
 OrderCancelRequest _$OrderCancelRequestFromJson(Map<String, dynamic> json) =>
     $checkedCreate('OrderCancelRequest', json, ($checkedConvert) {
-      final val = OrderCancelRequest(reason: $checkedConvert('reason', (v) => v as String?));
+      final val = OrderCancelRequest(
+        reason: $checkedConvert('reason', (v) => v as String?),
+      );
       return val;
     });
 
-Map<String, dynamic> _$OrderCancelRequestToJson(OrderCancelRequest instance) => <String, dynamic>{
-  'reason': ?instance.reason,
-};
+Map<String, dynamic> _$OrderCancelRequestToJson(OrderCancelRequest instance) =>
+    <String, dynamic>{'reason': ?instance.reason};

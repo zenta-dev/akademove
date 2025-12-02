@@ -107,10 +107,12 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
   OrderMerchant image(String? image) => call(image: image);
 
   @override
-  OrderMerchant category(MerchantCategory? category) => call(category: category);
+  OrderMerchant category(MerchantCategory? category) =>
+      call(category: category);
 
   @override
-  OrderMerchant categories(List<String>? categories) => call(categories: categories);
+  OrderMerchant categories(List<String>? categories) =>
+      call(categories: categories);
 
   @override
   OrderMerchant bank(Bank? bank) => call(bank: bank);
@@ -234,40 +236,63 @@ OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
         userId: $checkedConvert('userId', (v) => v as String?),
         name: $checkedConvert('name', (v) => v as String?),
         email: $checkedConvert('email', (v) => v as String?),
-        phone: $checkedConvert('phone', (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>)),
+        phone: $checkedConvert(
+          'phone',
+          (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
+        ),
         address: $checkedConvert('address', (v) => v as String?),
-        location: $checkedConvert('location', (v) => v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>)),
+        location: $checkedConvert(
+          'location',
+          (v) =>
+              v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
+        ),
         isActive: $checkedConvert('isActive', (v) => v as bool?),
         rating: $checkedConvert('rating', (v) => v as num?),
         document: $checkedConvert('document', (v) => v as String?),
         image: $checkedConvert('image', (v) => v as String?),
-        category: $checkedConvert('category', (v) => $enumDecodeNullable(_$MerchantCategoryEnumMap, v)),
-        categories: $checkedConvert('categories', (v) => (v as List<dynamic>?)?.map((e) => e as String).toList()),
-        bank: $checkedConvert('bank', (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>)),
-        createdAt: $checkedConvert('createdAt', (v) => v == null ? null : DateTime.parse(v as String)),
-        updatedAt: $checkedConvert('updatedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecodeNullable(_$MerchantCategoryEnumMap, v),
+        ),
+        categories: $checkedConvert(
+          'categories',
+          (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+        ),
+        bank: $checkedConvert(
+          'bank',
+          (v) => v == null ? null : Bank.fromJson(v as Map<String, dynamic>),
+        ),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) => <String, dynamic>{
-  'id': ?instance.id,
-  'userId': ?instance.userId,
-  'name': ?instance.name,
-  'email': ?instance.email,
-  'phone': ?instance.phone?.toJson(),
-  'address': ?instance.address,
-  'location': ?instance.location?.toJson(),
-  'isActive': ?instance.isActive,
-  'rating': ?instance.rating,
-  'document': ?instance.document,
-  'image': ?instance.image,
-  'category': ?_$MerchantCategoryEnumMap[instance.category],
-  'categories': ?instance.categories,
-  'bank': ?instance.bank?.toJson(),
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'updatedAt': ?instance.updatedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'userId': ?instance.userId,
+      'name': ?instance.name,
+      'email': ?instance.email,
+      'phone': ?instance.phone?.toJson(),
+      'address': ?instance.address,
+      'location': ?instance.location?.toJson(),
+      'isActive': ?instance.isActive,
+      'rating': ?instance.rating,
+      'document': ?instance.document,
+      'image': ?instance.image,
+      'category': ?_$MerchantCategoryEnumMap[instance.category],
+      'categories': ?instance.categories,
+      'bank': ?instance.bank?.toJson(),
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'updatedAt': ?instance.updatedAt?.toIso8601String(),
+    };
 
 const _$MerchantCategoryEnumMap = {
   MerchantCategory.ATK: 'ATK',

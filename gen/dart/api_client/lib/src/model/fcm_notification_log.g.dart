@@ -83,7 +83,8 @@ class _$FCMNotificationLogCWProxyImpl implements _$FCMNotificationLogCWProxy {
   FCMNotificationLog messageId(String? messageId) => call(messageId: messageId);
 
   @override
-  FCMNotificationLog status(FCMNotificationLogStatusEnum status) => call(status: status);
+  FCMNotificationLog status(FCMNotificationLogStatusEnum status) =>
+      call(status: status);
 
   @override
   FCMNotificationLog error(String? error) => call(error: error);
@@ -165,7 +166,8 @@ extension $FCMNotificationLogCopyWith on FCMNotificationLog {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfFCMNotificationLog.copyWith(...)` or `instanceOfFCMNotificationLog.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FCMNotificationLogCWProxy get copyWith => _$FCMNotificationLogCWProxyImpl(this);
+  _$FCMNotificationLogCWProxy get copyWith =>
+      _$FCMNotificationLogCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -174,7 +176,17 @@ extension $FCMNotificationLogCopyWith on FCMNotificationLog {
 
 FCMNotificationLog _$FCMNotificationLogFromJson(Map<String, dynamic> json) =>
     $checkedCreate('FCMNotificationLog', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['id', 'userId', 'title', 'body', 'status', 'sentAt']);
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'id',
+          'userId',
+          'title',
+          'body',
+          'status',
+          'sentAt',
+        ],
+      );
       final val = FCMNotificationLog(
         id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
@@ -184,26 +196,30 @@ FCMNotificationLog _$FCMNotificationLogFromJson(Map<String, dynamic> json) =>
         body: $checkedConvert('body', (v) => v as String),
         data: $checkedConvert('data', (v) => v),
         messageId: $checkedConvert('messageId', (v) => v as String?),
-        status: $checkedConvert('status', (v) => $enumDecode(_$FCMNotificationLogStatusEnumEnumMap, v)),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$FCMNotificationLogStatusEnumEnumMap, v),
+        ),
         error: $checkedConvert('error', (v) => v as String?),
         sentAt: $checkedConvert('sentAt', (v) => DateTime.parse(v as String)),
       );
       return val;
     });
 
-Map<String, dynamic> _$FCMNotificationLogToJson(FCMNotificationLog instance) => <String, dynamic>{
-  'id': instance.id,
-  'userId': instance.userId,
-  'token': ?instance.token,
-  'topic': ?instance.topic,
-  'title': instance.title,
-  'body': instance.body,
-  'data': ?instance.data,
-  'messageId': ?instance.messageId,
-  'status': _$FCMNotificationLogStatusEnumEnumMap[instance.status]!,
-  'error': ?instance.error,
-  'sentAt': instance.sentAt.toIso8601String(),
-};
+Map<String, dynamic> _$FCMNotificationLogToJson(FCMNotificationLog instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'userId': instance.userId,
+      'token': ?instance.token,
+      'topic': ?instance.topic,
+      'title': instance.title,
+      'body': instance.body,
+      'data': ?instance.data,
+      'messageId': ?instance.messageId,
+      'status': _$FCMNotificationLogStatusEnumEnumMap[instance.status]!,
+      'error': ?instance.error,
+      'sentAt': instance.sentAt.toIso8601String(),
+    };
 
 const _$FCMNotificationLogStatusEnumEnumMap = {
   FCMNotificationLogStatusEnum.SUCCESS: 'SUCCESS',

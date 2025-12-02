@@ -71,12 +71,6 @@ class BadgeRepository extends BaseRepository {
       }
 
       final badge = data.data;
-      if (badge == null) {
-        throw const RepositoryError(
-          'Badge not found',
-          code: ErrorCode.notFound,
-        );
-      }
 
       return SuccessResponse(message: data.message, data: badge);
     });

@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'dashboard_stats.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DashboardStats {
   /// Returns a new [DashboardStats] instance.
   const DashboardStats({
@@ -89,7 +94,8 @@ class DashboardStats {
       todayOrders.hashCode +
       onlineDrivers.hashCode;
 
-  factory DashboardStats.fromJson(Map<String, dynamic> json) => _$DashboardStatsFromJson(json);
+  factory DashboardStats.fromJson(Map<String, dynamic> json) =>
+      _$DashboardStatsFromJson(json);
 
   Map<String, dynamic> toJson() => _$DashboardStatsToJson(this);
 

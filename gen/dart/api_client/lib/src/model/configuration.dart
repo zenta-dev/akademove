@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Configuration {
   /// Returns a new [Configuration] instance.
   const Configuration({
@@ -59,7 +64,8 @@ class Configuration {
       updatedById.hashCode +
       updatedAt.hashCode;
 
-  factory Configuration.fromJson(Map<String, dynamic> json) => _$ConfigurationFromJson(json);
+  factory Configuration.fromJson(Map<String, dynamic> json) =>
+      _$ConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$ConfigurationToJson(this);
 

@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_place_order200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderPlaceOrder200Response {
   /// Returns a new [OrderPlaceOrder200Response] instance.
-  const OrderPlaceOrder200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const OrderPlaceOrder200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class OrderPlaceOrder200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory OrderPlaceOrder200Response.fromJson(Map<String, dynamic> json) => _$OrderPlaceOrder200ResponseFromJson(json);
+  factory OrderPlaceOrder200Response.fromJson(Map<String, dynamic> json) =>
+      _$OrderPlaceOrder200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderPlaceOrder200ResponseToJson(this);
 

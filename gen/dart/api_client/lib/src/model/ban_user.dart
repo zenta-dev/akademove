@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'ban_user.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BanUser {
   /// Returns a new [BanUser] instance.
   const BanUser({required this.banReason, this.banExpiresIn});
@@ -22,12 +27,16 @@ class BanUser {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is BanUser && other.banReason == banReason && other.banExpiresIn == banExpiresIn;
+      identical(this, other) ||
+      other is BanUser &&
+          other.banReason == banReason &&
+          other.banExpiresIn == banExpiresIn;
 
   @override
   int get hashCode => banReason.hashCode + banExpiresIn.hashCode;
 
-  factory BanUser.fromJson(Map<String, dynamic> json) => _$BanUserFromJson(json);
+  factory BanUser.fromJson(Map<String, dynamic> json) =>
+      _$BanUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$BanUserToJson(this);
 

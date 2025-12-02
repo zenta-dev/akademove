@@ -22,27 +22,36 @@ abstract class _$AuthHasPermission200ResponseCWProxy {
   /// ```dart
   /// AuthHasPermission200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  AuthHasPermission200Response call({String message, bool data, PaginationResult? pagination, int? totalPages});
+  AuthHasPermission200Response call({
+    String message,
+    bool data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthHasPermission200Response.copyWith(...)` or call `instanceOfAuthHasPermission200Response.copyWith.fieldName(value)` for a single field.
-class _$AuthHasPermission200ResponseCWProxyImpl implements _$AuthHasPermission200ResponseCWProxy {
+class _$AuthHasPermission200ResponseCWProxyImpl
+    implements _$AuthHasPermission200ResponseCWProxy {
   const _$AuthHasPermission200ResponseCWProxyImpl(this._value);
 
   final AuthHasPermission200Response _value;
 
   @override
-  AuthHasPermission200Response message(String message) => call(message: message);
+  AuthHasPermission200Response message(String message) =>
+      call(message: message);
 
   @override
   AuthHasPermission200Response data(bool data) => call(data: data);
 
   @override
-  AuthHasPermission200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  AuthHasPermission200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  AuthHasPermission200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  AuthHasPermission200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -79,33 +88,40 @@ class _$AuthHasPermission200ResponseCWProxyImpl implements _$AuthHasPermission20
   }
 }
 
-extension $AuthHasPermission200ResponseCopyWith on AuthHasPermission200Response {
+extension $AuthHasPermission200ResponseCopyWith
+    on AuthHasPermission200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthHasPermission200Response.copyWith(...)` or `instanceOfAuthHasPermission200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthHasPermission200ResponseCWProxy get copyWith => _$AuthHasPermission200ResponseCWProxyImpl(this);
+  _$AuthHasPermission200ResponseCWProxy get copyWith =>
+      _$AuthHasPermission200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthHasPermission200Response _$AuthHasPermission200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('AuthHasPermission200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = AuthHasPermission200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => v as bool),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+AuthHasPermission200Response _$AuthHasPermission200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('AuthHasPermission200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = AuthHasPermission200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert('data', (v) => v as bool),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$AuthHasPermission200ResponseToJson(AuthHasPermission200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$AuthHasPermission200ResponseToJson(
+  AuthHasPermission200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
   'pagination': ?instance.pagination?.toJson(),

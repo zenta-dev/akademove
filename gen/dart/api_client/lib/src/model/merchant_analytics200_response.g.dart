@@ -32,22 +32,27 @@ abstract class _$MerchantAnalytics200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantAnalytics200Response.copyWith(...)` or call `instanceOfMerchantAnalytics200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantAnalytics200ResponseCWProxyImpl implements _$MerchantAnalytics200ResponseCWProxy {
+class _$MerchantAnalytics200ResponseCWProxyImpl
+    implements _$MerchantAnalytics200ResponseCWProxy {
   const _$MerchantAnalytics200ResponseCWProxyImpl(this._value);
 
   final MerchantAnalytics200Response _value;
 
   @override
-  MerchantAnalytics200Response message(String message) => call(message: message);
+  MerchantAnalytics200Response message(String message) =>
+      call(message: message);
 
   @override
-  MerchantAnalytics200Response data(MerchantAnalytics200ResponseData data) => call(data: data);
+  MerchantAnalytics200Response data(MerchantAnalytics200ResponseData data) =>
+      call(data: data);
 
   @override
-  MerchantAnalytics200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantAnalytics200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantAnalytics200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantAnalytics200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,33 +89,44 @@ class _$MerchantAnalytics200ResponseCWProxyImpl implements _$MerchantAnalytics20
   }
 }
 
-extension $MerchantAnalytics200ResponseCopyWith on MerchantAnalytics200Response {
+extension $MerchantAnalytics200ResponseCopyWith
+    on MerchantAnalytics200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantAnalytics200Response.copyWith(...)` or `instanceOfMerchantAnalytics200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantAnalytics200ResponseCWProxy get copyWith => _$MerchantAnalytics200ResponseCWProxyImpl(this);
+  _$MerchantAnalytics200ResponseCWProxy get copyWith =>
+      _$MerchantAnalytics200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantAnalytics200Response _$MerchantAnalytics200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantAnalytics200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantAnalytics200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => MerchantAnalytics200ResponseData.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantAnalytics200Response _$MerchantAnalytics200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantAnalytics200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantAnalytics200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) =>
+          MerchantAnalytics200ResponseData.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantAnalytics200ResponseToJson(MerchantAnalytics200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$MerchantAnalytics200ResponseToJson(
+  MerchantAnalytics200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

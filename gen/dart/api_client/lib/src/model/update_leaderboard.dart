@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_leaderboard.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateLeaderboard {
   /// Returns a new [UpdateLeaderboard] instance.
   const UpdateLeaderboard({
@@ -81,7 +86,8 @@ class UpdateLeaderboard {
       periodStart.hashCode +
       periodEnd.hashCode;
 
-  factory UpdateLeaderboard.fromJson(Map<String, dynamic> json) => _$UpdateLeaderboardFromJson(json);
+  factory UpdateLeaderboard.fromJson(Map<String, dynamic> json) =>
+      _$UpdateLeaderboardFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateLeaderboardToJson(this);
 

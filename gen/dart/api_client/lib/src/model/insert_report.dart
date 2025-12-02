@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'insert_report.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class InsertReport {
   /// Returns a new [InsertReport] instance.
   const InsertReport({
@@ -79,7 +84,8 @@ class InsertReport {
       handledById.hashCode +
       resolution.hashCode;
 
-  factory InsertReport.fromJson(Map<String, dynamic> json) => _$InsertReportFromJson(json);
+  factory InsertReport.fromJson(Map<String, dynamic> json) =>
+      _$InsertReportFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertReportToJson(this);
 

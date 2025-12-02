@@ -13,7 +13,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_user.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverUser {
   /// Returns a new [DriverUser] instance.
   const DriverUser({
@@ -111,7 +116,8 @@ class DriverUser {
       updatedAt.hashCode +
       userBadges.hashCode;
 
-  factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
+  factory DriverUser.fromJson(Map<String, dynamic> json) =>
+      _$DriverUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverUserToJson(this);
 

@@ -10,10 +10,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_remove200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeRemove200Response {
   /// Returns a new [BadgeRemove200Response] instance.
-  const BadgeRemove200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const BadgeRemove200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -39,9 +49,14 @@ class BadgeRemove200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + (data == null ? 0 : data.hashCode) + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      (data == null ? 0 : data.hashCode) +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory BadgeRemove200Response.fromJson(Map<String, dynamic> json) => _$BadgeRemove200ResponseFromJson(json);
+  factory BadgeRemove200Response.fromJson(Map<String, dynamic> json) =>
+      _$BadgeRemove200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeRemove200ResponseToJson(this);
 

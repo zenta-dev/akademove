@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_schedule_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverScheduleCreate200Response {
   /// Returns a new [DriverScheduleCreate200Response] instance.
-  const DriverScheduleCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const DriverScheduleCreate200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,12 +50,17 @@ class DriverScheduleCreate200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
   factory DriverScheduleCreate200Response.fromJson(Map<String, dynamic> json) =>
       _$DriverScheduleCreate200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverScheduleCreate200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DriverScheduleCreate200ResponseToJson(this);
 
   @override
   String toString() {

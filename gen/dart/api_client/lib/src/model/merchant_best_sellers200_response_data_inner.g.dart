@@ -7,9 +7,13 @@ part of 'merchant_best_sellers200_response_data_inner.dart';
 // **************************************************************************
 
 abstract class _$MerchantBestSellers200ResponseDataInnerCWProxy {
-  MerchantBestSellers200ResponseDataInner menu(MerchantBestSellers200ResponseDataInnerMenu menu);
+  MerchantBestSellers200ResponseDataInner menu(
+    MerchantBestSellers200ResponseDataInnerMenu menu,
+  );
 
-  MerchantBestSellers200ResponseDataInner merchant(MerchantBestSellers200ResponseDataInnerMerchant merchant);
+  MerchantBestSellers200ResponseDataInner merchant(
+    MerchantBestSellers200ResponseDataInnerMerchant merchant,
+  );
 
   MerchantBestSellers200ResponseDataInner orderCount(num orderCount);
 
@@ -29,20 +33,25 @@ abstract class _$MerchantBestSellers200ResponseDataInnerCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantBestSellers200ResponseDataInner.copyWith(...)` or call `instanceOfMerchantBestSellers200ResponseDataInner.copyWith.fieldName(value)` for a single field.
-class _$MerchantBestSellers200ResponseDataInnerCWProxyImpl implements _$MerchantBestSellers200ResponseDataInnerCWProxy {
+class _$MerchantBestSellers200ResponseDataInnerCWProxyImpl
+    implements _$MerchantBestSellers200ResponseDataInnerCWProxy {
   const _$MerchantBestSellers200ResponseDataInnerCWProxyImpl(this._value);
 
   final MerchantBestSellers200ResponseDataInner _value;
 
   @override
-  MerchantBestSellers200ResponseDataInner menu(MerchantBestSellers200ResponseDataInnerMenu menu) => call(menu: menu);
+  MerchantBestSellers200ResponseDataInner menu(
+    MerchantBestSellers200ResponseDataInnerMenu menu,
+  ) => call(menu: menu);
 
   @override
-  MerchantBestSellers200ResponseDataInner merchant(MerchantBestSellers200ResponseDataInnerMerchant merchant) =>
-      call(merchant: merchant);
+  MerchantBestSellers200ResponseDataInner merchant(
+    MerchantBestSellers200ResponseDataInnerMerchant merchant,
+  ) => call(merchant: merchant);
 
   @override
-  MerchantBestSellers200ResponseDataInner orderCount(num orderCount) => call(orderCount: orderCount);
+  MerchantBestSellers200ResponseDataInner orderCount(num orderCount) =>
+      call(orderCount: orderCount);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -66,7 +75,8 @@ class _$MerchantBestSellers200ResponseDataInnerCWProxyImpl implements _$Merchant
           ? _value.merchant
           // ignore: cast_nullable_to_non_nullable
           : merchant as MerchantBestSellers200ResponseDataInnerMerchant,
-      orderCount: orderCount == const $CopyWithPlaceholder() || orderCount == null
+      orderCount:
+          orderCount == const $CopyWithPlaceholder() || orderCount == null
           ? _value.orderCount
           // ignore: cast_nullable_to_non_nullable
           : orderCount as num,
@@ -74,7 +84,8 @@ class _$MerchantBestSellers200ResponseDataInnerCWProxyImpl implements _$Merchant
   }
 }
 
-extension $MerchantBestSellers200ResponseDataInnerCopyWith on MerchantBestSellers200ResponseDataInner {
+extension $MerchantBestSellers200ResponseDataInnerCopyWith
+    on MerchantBestSellers200ResponseDataInner {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantBestSellers200ResponseDataInner.copyWith(...)` or `instanceOfMerchantBestSellers200ResponseDataInner.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -86,17 +97,24 @@ extension $MerchantBestSellers200ResponseDataInnerCopyWith on MerchantBestSeller
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantBestSellers200ResponseDataInner _$MerchantBestSellers200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantBestSellers200ResponseDataInner', json, ($checkedConvert) {
+MerchantBestSellers200ResponseDataInner
+_$MerchantBestSellers200ResponseDataInnerFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('MerchantBestSellers200ResponseDataInner', json, (
+      $checkedConvert,
+    ) {
       $checkKeys(json, requiredKeys: const ['menu', 'merchant', 'orderCount']);
       final val = MerchantBestSellers200ResponseDataInner(
         menu: $checkedConvert(
           'menu',
-          (v) => MerchantBestSellers200ResponseDataInnerMenu.fromJson(v as Map<String, dynamic>),
+          (v) => MerchantBestSellers200ResponseDataInnerMenu.fromJson(
+            v as Map<String, dynamic>,
+          ),
         ),
         merchant: $checkedConvert(
           'merchant',
-          (v) => MerchantBestSellers200ResponseDataInnerMerchant.fromJson(v as Map<String, dynamic>),
+          (v) => MerchantBestSellers200ResponseDataInnerMerchant.fromJson(
+            v as Map<String, dynamic>,
+          ),
         ),
         orderCount: $checkedConvert('orderCount', (v) => v as num),
       );

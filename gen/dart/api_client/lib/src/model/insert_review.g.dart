@@ -82,7 +82,8 @@ class _$InsertReviewCWProxyImpl implements _$InsertReviewCWProxy {
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String,
-      fromUserId: fromUserId == const $CopyWithPlaceholder() || fromUserId == null
+      fromUserId:
+          fromUserId == const $CopyWithPlaceholder() || fromUserId == null
           ? _value.fromUserId
           // ignore: cast_nullable_to_non_nullable
           : fromUserId as String,
@@ -119,26 +120,39 @@ extension $InsertReviewCopyWith on InsertReview {
 
 InsertReview _$InsertReviewFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertReview', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['orderId', 'fromUserId', 'toUserId', 'category', 'score']);
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'orderId',
+          'fromUserId',
+          'toUserId',
+          'category',
+          'score',
+        ],
+      );
       final val = InsertReview(
         orderId: $checkedConvert('orderId', (v) => v as String),
         fromUserId: $checkedConvert('fromUserId', (v) => v as String),
         toUserId: $checkedConvert('toUserId', (v) => v as String),
-        category: $checkedConvert('category', (v) => $enumDecode(_$ReviewCategoryEnumMap, v)),
+        category: $checkedConvert(
+          'category',
+          (v) => $enumDecode(_$ReviewCategoryEnumMap, v),
+        ),
         score: $checkedConvert('score', (v) => v as num),
         comment: $checkedConvert('comment', (v) => v as String? ?? ''),
       );
       return val;
     });
 
-Map<String, dynamic> _$InsertReviewToJson(InsertReview instance) => <String, dynamic>{
-  'orderId': instance.orderId,
-  'fromUserId': instance.fromUserId,
-  'toUserId': instance.toUserId,
-  'category': _$ReviewCategoryEnumMap[instance.category]!,
-  'score': instance.score,
-  'comment': ?instance.comment,
-};
+Map<String, dynamic> _$InsertReviewToJson(InsertReview instance) =>
+    <String, dynamic>{
+      'orderId': instance.orderId,
+      'fromUserId': instance.fromUserId,
+      'toUserId': instance.toUserId,
+      'category': _$ReviewCategoryEnumMap[instance.category]!,
+      'score': instance.score,
+      'comment': ?instance.comment,
+    };
 
 const _$ReviewCategoryEnumMap = {
   ReviewCategory.CLEANLINESS: 'CLEANLINESS',

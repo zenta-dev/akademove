@@ -9,7 +9,9 @@ part of 'merchant_best_sellers200_response.dart';
 abstract class _$MerchantBestSellers200ResponseCWProxy {
   MerchantBestSellers200Response message(String message);
 
-  MerchantBestSellers200Response data(List<MerchantBestSellers200ResponseDataInner> data);
+  MerchantBestSellers200Response data(
+    List<MerchantBestSellers200ResponseDataInner> data,
+  );
 
   MerchantBestSellers200Response pagination(PaginationResult? pagination);
 
@@ -32,22 +34,28 @@ abstract class _$MerchantBestSellers200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantBestSellers200Response.copyWith(...)` or call `instanceOfMerchantBestSellers200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantBestSellers200ResponseCWProxyImpl implements _$MerchantBestSellers200ResponseCWProxy {
+class _$MerchantBestSellers200ResponseCWProxyImpl
+    implements _$MerchantBestSellers200ResponseCWProxy {
   const _$MerchantBestSellers200ResponseCWProxyImpl(this._value);
 
   final MerchantBestSellers200Response _value;
 
   @override
-  MerchantBestSellers200Response message(String message) => call(message: message);
+  MerchantBestSellers200Response message(String message) =>
+      call(message: message);
 
   @override
-  MerchantBestSellers200Response data(List<MerchantBestSellers200ResponseDataInner> data) => call(data: data);
+  MerchantBestSellers200Response data(
+    List<MerchantBestSellers200ResponseDataInner> data,
+  ) => call(data: data);
 
   @override
-  MerchantBestSellers200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantBestSellers200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantBestSellers200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantBestSellers200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,41 +92,51 @@ class _$MerchantBestSellers200ResponseCWProxyImpl implements _$MerchantBestSelle
   }
 }
 
-extension $MerchantBestSellers200ResponseCopyWith on MerchantBestSellers200Response {
+extension $MerchantBestSellers200ResponseCopyWith
+    on MerchantBestSellers200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantBestSellers200Response.copyWith(...)` or `instanceOfMerchantBestSellers200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantBestSellers200ResponseCWProxy get copyWith => _$MerchantBestSellers200ResponseCWProxyImpl(this);
+  _$MerchantBestSellers200ResponseCWProxy get copyWith =>
+      _$MerchantBestSellers200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantBestSellers200Response _$MerchantBestSellers200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantBestSellers200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantBestSellers200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>)
-              .map((e) => MerchantBestSellers200ResponseDataInner.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantBestSellers200Response _$MerchantBestSellers200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantBestSellers200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantBestSellers200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => MerchantBestSellers200ResponseDataInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantBestSellers200ResponseToJson(MerchantBestSellers200Response instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'data': instance.data.map((e) => e.toJson()).toList(),
-      'pagination': ?instance.pagination?.toJson(),
-      'totalPages': ?instance.totalPages,
-    };
+Map<String, dynamic> _$MerchantBestSellers200ResponseToJson(
+  MerchantBestSellers200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
+  'totalPages': ?instance.totalPages,
+};

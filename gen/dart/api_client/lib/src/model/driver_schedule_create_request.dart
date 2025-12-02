@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_schedule_create_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverScheduleCreateRequest {
   /// Returns a new [DriverScheduleCreateRequest] instance.
   const DriverScheduleCreateRequest({
@@ -40,13 +45,23 @@ class DriverScheduleCreateRequest {
   @JsonKey(name: r'endTime', required: true, includeIfNull: false)
   final Time endTime;
 
-  @JsonKey(defaultValue: true, name: r'isRecurring', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isRecurring',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isRecurring;
 
   @JsonKey(name: r'specificDate', required: false, includeIfNull: false)
   final DateTime? specificDate;
 
-  @JsonKey(defaultValue: true, name: r'isActive', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isActive',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isActive;
 
   @override

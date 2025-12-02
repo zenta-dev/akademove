@@ -24,7 +24,13 @@ abstract class _$InsertContactCWProxy {
   /// ```dart
   /// InsertContact(...).copyWith(id: 12, name: "My name")
   /// ```
-  InsertContact call({String name, String email, String subject, String message, String? userId});
+  InsertContact call({
+    String name,
+    String email,
+    String subject,
+    String message,
+    String? userId,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -102,7 +108,10 @@ extension $InsertContactCopyWith on InsertContact {
 
 InsertContact _$InsertContactFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertContact', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['name', 'email', 'subject', 'message']);
+      $checkKeys(
+        json,
+        requiredKeys: const ['name', 'email', 'subject', 'message'],
+      );
       final val = InsertContact(
         name: $checkedConvert('name', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
@@ -113,10 +122,11 @@ InsertContact _$InsertContactFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$InsertContactToJson(InsertContact instance) => <String, dynamic>{
-  'name': instance.name,
-  'email': instance.email,
-  'subject': instance.subject,
-  'message': instance.message,
-  'userId': ?instance.userId,
-};
+Map<String, dynamic> _$InsertContactToJson(InsertContact instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'email': instance.email,
+      'subject': instance.subject,
+      'message': instance.message,
+      'userId': ?instance.userId,
+    };

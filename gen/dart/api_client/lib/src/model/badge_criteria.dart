@@ -9,10 +9,21 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_criteria.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class BadgeCriteria {
   /// Returns a new [BadgeCriteria] instance.
-  const BadgeCriteria({this.minOrders, this.minRating, this.minOnTimeRate, this.minStreak, this.minEarnings});
+  const BadgeCriteria({
+    this.minOrders,
+    this.minRating,
+    this.minOnTimeRate,
+    this.minStreak,
+    this.minEarnings,
+  });
 
   // minimum: 0
   // maximum: 9007199254740991
@@ -50,9 +61,14 @@ class BadgeCriteria {
 
   @override
   int get hashCode =>
-      minOrders.hashCode + minRating.hashCode + minOnTimeRate.hashCode + minStreak.hashCode + minEarnings.hashCode;
+      minOrders.hashCode +
+      minRating.hashCode +
+      minOnTimeRate.hashCode +
+      minStreak.hashCode +
+      minEarnings.hashCode;
 
-  factory BadgeCriteria.fromJson(Map<String, dynamic> json) => _$BadgeCriteriaFromJson(json);
+  factory BadgeCriteria.fromJson(Map<String, dynamic> json) =>
+      _$BadgeCriteriaFromJson(json);
 
   Map<String, dynamic> toJson() => _$BadgeCriteriaToJson(this);
 

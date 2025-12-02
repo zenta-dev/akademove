@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponValidate200ResponseData
 void main() {
-  final CouponValidate200ResponseData? instance = /* CouponValidate200ResponseData(...) */ null;
+  final CouponValidate200ResponseData?
+  instance = /* CouponValidate200ResponseData(...) */ null;
   // TODO add properties to the entity
 
   group(CouponValidate200ResponseData, () {

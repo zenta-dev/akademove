@@ -9,10 +9,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'reset_password.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class ResetPassword {
   /// Returns a new [ResetPassword] instance.
-  const ResetPassword({required this.token, required this.newPassword, required this.confirmPassword});
+  const ResetPassword({
+    required this.token,
+    required this.newPassword,
+    required this.confirmPassword,
+  });
 
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
@@ -32,9 +41,11 @@ class ResetPassword {
           other.confirmPassword == confirmPassword;
 
   @override
-  int get hashCode => token.hashCode + newPassword.hashCode + confirmPassword.hashCode;
+  int get hashCode =>
+      token.hashCode + newPassword.hashCode + confirmPassword.hashCode;
 
-  factory ResetPassword.fromJson(Map<String, dynamic> json) => _$ResetPasswordFromJson(json);
+  factory ResetPassword.fromJson(Map<String, dynamic> json) =>
+      _$ResetPasswordFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResetPasswordToJson(this);
 

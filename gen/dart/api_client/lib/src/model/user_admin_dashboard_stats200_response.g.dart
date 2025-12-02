@@ -32,22 +32,27 @@ abstract class _$UserAdminDashboardStats200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfUserAdminDashboardStats200Response.copyWith(...)` or call `instanceOfUserAdminDashboardStats200Response.copyWith.fieldName(value)` for a single field.
-class _$UserAdminDashboardStats200ResponseCWProxyImpl implements _$UserAdminDashboardStats200ResponseCWProxy {
+class _$UserAdminDashboardStats200ResponseCWProxyImpl
+    implements _$UserAdminDashboardStats200ResponseCWProxy {
   const _$UserAdminDashboardStats200ResponseCWProxyImpl(this._value);
 
   final UserAdminDashboardStats200Response _value;
 
   @override
-  UserAdminDashboardStats200Response message(String message) => call(message: message);
+  UserAdminDashboardStats200Response message(String message) =>
+      call(message: message);
 
   @override
-  UserAdminDashboardStats200Response data(DashboardStats data) => call(data: data);
+  UserAdminDashboardStats200Response data(DashboardStats data) =>
+      call(data: data);
 
   @override
-  UserAdminDashboardStats200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  UserAdminDashboardStats200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  UserAdminDashboardStats200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  UserAdminDashboardStats200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,36 +89,47 @@ class _$UserAdminDashboardStats200ResponseCWProxyImpl implements _$UserAdminDash
   }
 }
 
-extension $UserAdminDashboardStats200ResponseCopyWith on UserAdminDashboardStats200Response {
+extension $UserAdminDashboardStats200ResponseCopyWith
+    on UserAdminDashboardStats200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUserAdminDashboardStats200Response.copyWith(...)` or `instanceOfUserAdminDashboardStats200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UserAdminDashboardStats200ResponseCWProxy get copyWith => _$UserAdminDashboardStats200ResponseCWProxyImpl(this);
+  _$UserAdminDashboardStats200ResponseCWProxy get copyWith =>
+      _$UserAdminDashboardStats200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserAdminDashboardStats200Response _$UserAdminDashboardStats200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UserAdminDashboardStats200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = UserAdminDashboardStats200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => DashboardStats.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+UserAdminDashboardStats200Response _$UserAdminDashboardStats200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('UserAdminDashboardStats200Response', json, (
+  $checkedConvert,
+) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = UserAdminDashboardStats200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => DashboardStats.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$UserAdminDashboardStats200ResponseToJson(UserAdminDashboardStats200Response instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'data': instance.data.toJson(),
-      'pagination': ?instance.pagination?.toJson(),
-      'totalPages': ?instance.totalPages,
-    };
+Map<String, dynamic> _$UserAdminDashboardStats200ResponseToJson(
+  UserAdminDashboardStats200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
+  'totalPages': ?instance.totalPages,
+};

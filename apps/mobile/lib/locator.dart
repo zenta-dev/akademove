@@ -65,6 +65,9 @@ void _setupRepository() {
     ..registerLazySingleton(() => DriverRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(() => ReviewRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
+      () => UserReviewRepository(apiClient: sl<ApiClient>()),
+    )
+    ..registerLazySingleton(
       () => ConfigurationRepository(apiClient: sl<ApiClient>()),
     )
     ..registerLazySingleton(() => OrderRepository(apiClient: sl<ApiClient>()))
@@ -193,6 +196,9 @@ void _setupCubit() {
     )
     ..registerFactory(
       () => DriverReviewCubit(reviewRepository: sl<ReviewRepository>()),
+    )
+    ..registerFactory(
+      () => UserReviewCubit(reviewRepository: sl<UserReviewRepository>()),
     )
     ..registerFactory(
       () => CouponCubit(couponRepository: sl<CouponRepository>()),

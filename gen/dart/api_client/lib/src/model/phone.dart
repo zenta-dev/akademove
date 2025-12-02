@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'phone.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Phone {
   /// Returns a new [Phone] instance.
   const Phone({required this.countryCode, required this.number});
@@ -25,7 +30,10 @@ class Phone {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Phone && other.countryCode == countryCode && other.number == number;
+      identical(this, other) ||
+      other is Phone &&
+          other.countryCode == countryCode &&
+          other.number == number;
 
   @override
   int get hashCode => countryCode.hashCode + number.hashCode;

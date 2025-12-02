@@ -160,20 +160,27 @@ OrderItemItem _$OrderItemItemFromJson(Map<String, dynamic> json) =>
         category: $checkedConvert('category', (v) => v as String?),
         price: $checkedConvert('price', (v) => v as num?),
         stock: $checkedConvert('stock', (v) => (v as num?)?.toInt()),
-        createdAt: $checkedConvert('createdAt', (v) => v == null ? null : DateTime.parse(v as String)),
-        updatedAt: $checkedConvert('updatedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+        createdAt: $checkedConvert(
+          'createdAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        updatedAt: $checkedConvert(
+          'updatedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$OrderItemItemToJson(OrderItemItem instance) => <String, dynamic>{
-  'id': ?instance.id,
-  'merchantId': ?instance.merchantId,
-  'name': ?instance.name,
-  'image': ?instance.image,
-  'category': ?instance.category,
-  'price': ?instance.price,
-  'stock': ?instance.stock,
-  'createdAt': ?instance.createdAt?.toIso8601String(),
-  'updatedAt': ?instance.updatedAt?.toIso8601String(),
-};
+Map<String, dynamic> _$OrderItemItemToJson(OrderItemItem instance) =>
+    <String, dynamic>{
+      'id': ?instance.id,
+      'merchantId': ?instance.merchantId,
+      'name': ?instance.name,
+      'image': ?instance.image,
+      'category': ?instance.category,
+      'price': ?instance.price,
+      'stock': ?instance.stock,
+      'createdAt': ?instance.createdAt?.toIso8601String(),
+      'updatedAt': ?instance.updatedAt?.toIso8601String(),
+    };

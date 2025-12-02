@@ -37,7 +37,8 @@ class _$OrderNoteCWProxyImpl implements _$OrderNoteCWProxy {
   OrderNote dropoff(String? dropoff) => call(dropoff: dropoff);
 
   @override
-  OrderNote instructions(String? instructions) => call(instructions: instructions);
+  OrderNote instructions(String? instructions) =>
+      call(instructions: instructions);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -80,14 +81,15 @@ extension $OrderNoteCopyWith on OrderNote {
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderNote _$OrderNoteFromJson(Map<String, dynamic> json) => $checkedCreate('OrderNote', json, ($checkedConvert) {
-  final val = OrderNote(
-    pickup: $checkedConvert('pickup', (v) => v as String?),
-    dropoff: $checkedConvert('dropoff', (v) => v as String?),
-    instructions: $checkedConvert('instructions', (v) => v as String?),
-  );
-  return val;
-});
+OrderNote _$OrderNoteFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderNote', json, ($checkedConvert) {
+      final val = OrderNote(
+        pickup: $checkedConvert('pickup', (v) => v as String?),
+        dropoff: $checkedConvert('dropoff', (v) => v as String?),
+        instructions: $checkedConvert('instructions', (v) => v as String?),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$OrderNoteToJson(OrderNote instance) => <String, dynamic>{
   'pickup': ?instance.pickup,

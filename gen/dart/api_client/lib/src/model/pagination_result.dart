@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'pagination_result.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PaginationResult {
   /// Returns a new [PaginationResult] instance.
   const PaginationResult({this.totalPages, this.nextCursor, this.hasMore});
@@ -37,9 +42,11 @@ class PaginationResult {
           other.hasMore == hasMore;
 
   @override
-  int get hashCode => totalPages.hashCode + nextCursor.hashCode + hasMore.hashCode;
+  int get hashCode =>
+      totalPages.hashCode + nextCursor.hashCode + hasMore.hashCode;
 
-  factory PaginationResult.fromJson(Map<String, dynamic> json) => _$PaginationResultFromJson(json);
+  factory PaginationResult.fromJson(Map<String, dynamic> json) =>
+      _$PaginationResultFromJson(json);
 
   Map<String, dynamic> toJson() => _$PaginationResultToJson(this);
 

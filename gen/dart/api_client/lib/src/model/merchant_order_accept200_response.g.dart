@@ -22,27 +22,36 @@ abstract class _$MerchantOrderAccept200ResponseCWProxy {
   /// ```dart
   /// MerchantOrderAccept200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  MerchantOrderAccept200Response call({String message, Order data, PaginationResult? pagination, int? totalPages});
+  MerchantOrderAccept200Response call({
+    String message,
+    Order data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantOrderAccept200Response.copyWith(...)` or call `instanceOfMerchantOrderAccept200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantOrderAccept200ResponseCWProxyImpl implements _$MerchantOrderAccept200ResponseCWProxy {
+class _$MerchantOrderAccept200ResponseCWProxyImpl
+    implements _$MerchantOrderAccept200ResponseCWProxy {
   const _$MerchantOrderAccept200ResponseCWProxyImpl(this._value);
 
   final MerchantOrderAccept200Response _value;
 
   @override
-  MerchantOrderAccept200Response message(String message) => call(message: message);
+  MerchantOrderAccept200Response message(String message) =>
+      call(message: message);
 
   @override
   MerchantOrderAccept200Response data(Order data) => call(data: data);
 
   @override
-  MerchantOrderAccept200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantOrderAccept200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantOrderAccept200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantOrderAccept200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -79,36 +88,45 @@ class _$MerchantOrderAccept200ResponseCWProxyImpl implements _$MerchantOrderAcce
   }
 }
 
-extension $MerchantOrderAccept200ResponseCopyWith on MerchantOrderAccept200Response {
+extension $MerchantOrderAccept200ResponseCopyWith
+    on MerchantOrderAccept200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantOrderAccept200Response.copyWith(...)` or `instanceOfMerchantOrderAccept200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantOrderAccept200ResponseCWProxy get copyWith => _$MerchantOrderAccept200ResponseCWProxyImpl(this);
+  _$MerchantOrderAccept200ResponseCWProxy get copyWith =>
+      _$MerchantOrderAccept200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantOrderAccept200Response _$MerchantOrderAccept200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantOrderAccept200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantOrderAccept200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => Order.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantOrderAccept200Response _$MerchantOrderAccept200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantOrderAccept200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantOrderAccept200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Order.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantOrderAccept200ResponseToJson(MerchantOrderAccept200Response instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'data': instance.data.toJson(),
-      'pagination': ?instance.pagination?.toJson(),
-      'totalPages': ?instance.totalPages,
-    };
+Map<String, dynamic> _$MerchantOrderAccept200ResponseToJson(
+  MerchantOrderAccept200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.toJson(),
+  'pagination': ?instance.pagination?.toJson(),
+  'totalPages': ?instance.totalPages,
+};

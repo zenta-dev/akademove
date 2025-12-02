@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'user_rules.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UserRules {
   /// Returns a new [UserRules] instance.
   const UserRules({this.newUserOnly, this.perUserLimit});
@@ -25,12 +30,15 @@ class UserRules {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserRules && other.newUserOnly == newUserOnly && other.perUserLimit == perUserLimit;
+      other is UserRules &&
+          other.newUserOnly == newUserOnly &&
+          other.perUserLimit == perUserLimit;
 
   @override
   int get hashCode => newUserOnly.hashCode + perUserLimit.hashCode;
 
-  factory UserRules.fromJson(Map<String, dynamic> json) => _$UserRulesFromJson(json);
+  factory UserRules.fromJson(Map<String, dynamic> json) =>
+      _$UserRulesFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRulesToJson(this);
 

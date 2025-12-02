@@ -14,10 +14,22 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderEnvelope {
   /// Returns a new [OrderEnvelope] instance.
-  const OrderEnvelope({this.e, this.a, this.tg, required this.f, required this.t, required this.p});
+  const OrderEnvelope({
+    this.e,
+    this.a,
+    this.tg,
+    required this.f,
+    required this.t,
+    required this.p,
+  });
 
   @JsonKey(name: r'e', required: false, includeIfNull: false)
   final OrderEnvelopeEvent? e;
@@ -49,9 +61,16 @@ class OrderEnvelope {
           other.p == p;
 
   @override
-  int get hashCode => e.hashCode + a.hashCode + tg.hashCode + f.hashCode + t.hashCode + p.hashCode;
+  int get hashCode =>
+      e.hashCode +
+      a.hashCode +
+      tg.hashCode +
+      f.hashCode +
+      t.hashCode +
+      p.hashCode;
 
-  factory OrderEnvelope.fromJson(Map<String, dynamic> json) => _$OrderEnvelopeFromJson(json);
+  factory OrderEnvelope.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopeFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopeToJson(this);
 

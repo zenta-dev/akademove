@@ -93,6 +93,25 @@ final userRouter = StatefulShellRoute.indexedStack(
               path: Routes.userRideOnTrip.path,
               builder: (context, state) => const UserRideOnTripScreen(),
             ),
+            GoRoute(
+              name: Routes.userRating.name,
+              path: Routes.userRating.path,
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final orderId = extra?['orderId'] as String? ?? '';
+                final driverId = extra?['driverId'] as String? ?? '';
+                final driverName = extra?['driverName'] as String? ?? 'Driver';
+
+                return BlocProvider(
+                  create: (context) => sl<UserReviewCubit>(),
+                  child: UserRatingScreen(
+                    orderId: orderId,
+                    driverId: driverId,
+                    driverName: driverName,
+                  ),
+                );
+              },
+            ),
           ],
         ),
 
@@ -166,6 +185,16 @@ final userRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => BlocProvider.value(
             value: BlocProvider.of<CartCubit>(context),
             child: const CartScreen(),
+          ),
+        ),
+        GoRoute(
+          name: Routes.userOrderConfirm.name,
+          path: Routes.userOrderConfirm.path,
+          builder: (context, state) => BlocProvider.value(
+            value: BlocProvider.of<CartCubit>(context),
+            child: OrderConfirmationScreen(
+              orderRepository: sl<OrderRepository>(),
+            ),
           ),
         ),
         GoRoute(

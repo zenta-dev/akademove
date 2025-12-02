@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateConfiguration {
   /// Returns a new [UpdateConfiguration] instance.
   const UpdateConfiguration({this.name, this.value, this.description});
@@ -26,12 +31,19 @@ class UpdateConfiguration {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UpdateConfiguration && other.name == name && other.value == value && other.description == description;
+      other is UpdateConfiguration &&
+          other.name == name &&
+          other.value == value &&
+          other.description == description;
 
   @override
-  int get hashCode => name.hashCode + (value == null ? 0 : value.hashCode) + description.hashCode;
+  int get hashCode =>
+      name.hashCode +
+      (value == null ? 0 : value.hashCode) +
+      description.hashCode;
 
-  factory UpdateConfiguration.fromJson(Map<String, dynamic> json) => _$UpdateConfigurationFromJson(json);
+  factory UpdateConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$UpdateConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateConfigurationToJson(this);
 

@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'coupon_validate200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class CouponValidate200Response {
   /// Returns a new [CouponValidate200Response] instance.
-  const CouponValidate200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const CouponValidate200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,9 +50,14 @@ class CouponValidate200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory CouponValidate200Response.fromJson(Map<String, dynamic> json) => _$CouponValidate200ResponseFromJson(json);
+  factory CouponValidate200Response.fromJson(Map<String, dynamic> json) =>
+      _$CouponValidate200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponValidate200ResponseToJson(this);
 

@@ -10,10 +10,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'chat_list200_response_data.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class ChatList200ResponseData {
   /// Returns a new [ChatList200ResponseData] instance.
-  const ChatList200ResponseData({required this.rows, required this.hasMore, this.nextCursor});
+  const ChatList200ResponseData({
+    required this.rows,
+    required this.hasMore,
+    this.nextCursor,
+  });
 
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<OrderChatMessage> rows;
@@ -35,7 +44,8 @@ class ChatList200ResponseData {
   @override
   int get hashCode => rows.hashCode + hasMore.hashCode + nextCursor.hashCode;
 
-  factory ChatList200ResponseData.fromJson(Map<String, dynamic> json) => _$ChatList200ResponseDataFromJson(json);
+  factory ChatList200ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$ChatList200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatList200ResponseDataToJson(this);
 

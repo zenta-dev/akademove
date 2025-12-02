@@ -521,11 +521,10 @@ class AdminApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<UserAdminDashboardStats200Response, UserAdminDashboardStats200Response>(
-              rawData,
-              'UserAdminDashboardStats200Response',
-              growable: true,
-            );
+          : deserialize<
+              UserAdminDashboardStats200Response,
+              UserAdminDashboardStats200Response
+            >(rawData, 'UserAdminDashboardStats200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

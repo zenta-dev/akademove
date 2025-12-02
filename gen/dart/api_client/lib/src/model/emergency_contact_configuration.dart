@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'emergency_contact_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class EmergencyContactConfiguration {
   /// Returns a new [EmergencyContactConfiguration] instance.
   const EmergencyContactConfiguration({
@@ -32,7 +37,12 @@ class EmergencyContactConfiguration {
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
 
-  @JsonKey(defaultValue: true, name: r'isActive', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: true,
+    name: r'isActive',
+    required: false,
+    includeIfNull: false,
+  )
   final bool? isActive;
 
   @override
@@ -46,7 +56,12 @@ class EmergencyContactConfiguration {
           other.isActive == isActive;
 
   @override
-  int get hashCode => name.hashCode + phone.hashCode + type.hashCode + description.hashCode + isActive.hashCode;
+  int get hashCode =>
+      name.hashCode +
+      phone.hashCode +
+      type.hashCode +
+      description.hashCode +
+      isActive.hashCode;
 
   factory EmergencyContactConfiguration.fromJson(Map<String, dynamic> json) =>
       _$EmergencyContactConfigurationFromJson(json);

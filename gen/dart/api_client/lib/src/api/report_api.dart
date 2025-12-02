@@ -272,7 +272,11 @@ class ReportApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ReportList200Response, ReportList200Response>(rawData, 'ReportList200Response', growable: true);
+          : deserialize<ReportList200Response, ReportList200Response>(
+              rawData,
+              'ReportList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

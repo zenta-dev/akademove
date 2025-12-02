@@ -2412,6 +2412,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Item has been added to your cart'**
   String get menu_item_added_to_cart;
+
+  /// No description provided for @order_confirm_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Order'**
+  String get order_confirm_title;
+
+  /// No description provided for @order_confirm_order_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get order_confirm_order_summary;
+
+  /// No description provided for @order_confirm_merchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant'**
+  String get order_confirm_merchant;
+
+  /// No description provided for @order_confirm_items_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item(s)'**
+  String order_confirm_items_count(int count);
+
+  /// No description provided for @order_confirm_subtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get order_confirm_subtotal;
+
+  /// No description provided for @order_confirm_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get order_confirm_payment_method;
+
+  /// No description provided for @order_confirm_select_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Select payment method'**
+  String get order_confirm_select_payment;
+
+  /// No description provided for @order_confirm_payment_wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get order_confirm_payment_wallet;
+
+  /// No description provided for @order_confirm_payment_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay using your Akademove wallet balance'**
+  String get order_confirm_payment_description;
+
+  /// No description provided for @order_confirm_place_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Place Order'**
+  String get order_confirm_place_order;
+
+  /// No description provided for @order_confirm_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Placed Successfully'**
+  String get order_confirm_success;
+
+  /// No description provided for @order_confirm_success_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order has been placed and is being processed'**
+  String get order_confirm_success_message;
+
+  /// No description provided for @order_confirm_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to Place Order'**
+  String get order_confirm_failed;
+
+  /// No description provided for @order_confirm_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing Order...'**
+  String get order_confirm_processing;
+
+  /// No description provided for @order_confirm_insufficient_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient wallet balance'**
+  String get order_confirm_insufficient_balance;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

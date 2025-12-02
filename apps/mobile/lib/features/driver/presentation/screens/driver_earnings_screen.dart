@@ -387,7 +387,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 spacing: 4.h,
                 children: [
                   Text(
-                    _getTransactionTypeText(transaction.type),
+                    _getTransactionTypeText(context, transaction.type),
                     style: context.typography.h4.copyWith(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -552,12 +552,12 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                     border: material.OutlineInputBorder(),
                   ),
                 ),
-                // Account name field (optional)
                 material.TextField(
                   controller: accountNameController,
                   decoration: material.InputDecoration(
-                    labelText: '${context.l10n.account_name} (Optional)',
-                    hintText: 'Enter account holder name',
+                    labelText:
+                        '${context.l10n.account_name} (${context.l10n.optional})',
+                    hintText: context.l10n.hint_account_name,
                     border: material.OutlineInputBorder(),
                   ),
                 ),
@@ -567,7 +567,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           actions: [
             material.TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.button_cancel),
             ),
             material.TextButton(
               onPressed: () async {
@@ -578,12 +578,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 // Validate amount
                 if (amountText.isEmpty) {
                   if (mounted) {
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Error',
-                        message: 'Please enter withdrawal amount',
-                      ),
+                    context.showMyToast(
+                      context.l10n.enter_withdrawal_amount,
+                      type: ToastType.failed,
                     );
                   }
                   return;
@@ -592,12 +589,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 final amount = num.tryParse(amountText);
                 if (amount == null || amount <= 0) {
                   if (mounted) {
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Error',
-                        message: 'Please enter a valid amount',
-                      ),
+                    context.showMyToast(
+                      context.l10n.invalid_amount,
+                      type: ToastType.failed,
                     );
                   }
                   return;
@@ -606,12 +600,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 final balance = _wallet?.balance ?? 0;
                 if (amount > balance) {
                   if (mounted) {
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Error',
-                        message: 'Insufficient balance',
-                      ),
+                    context.showMyToast(
+                      context.l10n.insufficient_balance,
+                      type: ToastType.failed,
                     );
                   }
                   return;
@@ -620,12 +611,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 // Validate account number
                 if (accountNumber.isEmpty) {
                   if (mounted) {
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Error',
-                        message: 'Please enter account number',
-                      ),
+                    context.showMyToast(
+                      context.l10n.please_enter_bank_account_number,
+                      type: ToastType.failed,
                     );
                   }
                   return;
@@ -639,7 +627,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   accountName: accountName.isEmpty ? null : accountName,
                 );
               },
-              child: const Text('Withdraw'),
+              child: Text(context.l10n.withdraw),
             ),
           ],
         ),
@@ -667,23 +655,16 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
 
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) =>
-              context.buildToast(title: 'Success', message: result.message),
-        );
+        context.showMyToast(result.message, type: ToastType.success);
         // Reload data to reflect new balance
         _loadData();
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to withdraw: ${e.toString()}',
-          ),
+        context.showMyToast(
+          context.l10n.failed_to_withdraw,
+          type: ToastType.failed,
         );
       }
     }
@@ -708,22 +689,22 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     }
   }
 
-  String _getTransactionTypeText(TransactionType type) {
+  String _getTransactionTypeText(BuildContext context, TransactionType type) {
     switch (type) {
       case TransactionType.TOPUP:
-        return 'Top Up';
+        return context.l10n.top_up;
       case TransactionType.WITHDRAW:
-        return 'Withdrawal';
+        return context.l10n.withdrawal;
       case TransactionType.PAYMENT:
-        return 'Payment';
+        return context.l10n.payment;
       case TransactionType.REFUND:
-        return 'Refund';
+        return context.l10n.refund;
       case TransactionType.ADJUSTMENT:
-        return 'Adjustment';
+        return context.l10n.adjustment;
       case TransactionType.COMMISSION:
-        return 'Commission';
+        return context.l10n.commission;
       case TransactionType.EARNING:
-        return 'Earning';
+        return context.l10n.earning;
     }
   }
 
@@ -827,7 +808,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                             ),
                           ),
                           title: material.Text(
-                            _getTransactionTypeText(transaction.type),
+                            _getTransactionTypeText(context, transaction.type),
                             style: material.TextStyle(
                               fontSize: 14.sp,
                               fontWeight: material.FontWeight.w600,

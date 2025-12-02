@@ -42,7 +42,10 @@ class _$SignInResponseCWProxyImpl implements _$SignInResponseCWProxy {
   /// ```dart
   /// SignInResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  SignInResponse call({Object? token = const $CopyWithPlaceholder(), Object? user = const $CopyWithPlaceholder()}) {
+  SignInResponse call({
+    Object? token = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+  }) {
     return SignInResponse(
       token: token == const $CopyWithPlaceholder() || token == null
           ? _value.token
@@ -72,12 +75,13 @@ SignInResponse _$SignInResponseFromJson(Map<String, dynamic> json) =>
       $checkKeys(json, requiredKeys: const ['token', 'user']);
       final val = SignInResponse(
         token: $checkedConvert('token', (v) => v as String),
-        user: $checkedConvert('user', (v) => User.fromJson(v as Map<String, dynamic>)),
+        user: $checkedConvert(
+          'user',
+          (v) => User.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
     });
 
-Map<String, dynamic> _$SignInResponseToJson(SignInResponse instance) => <String, dynamic>{
-  'token': instance.token,
-  'user': instance.user.toJson(),
-};
+Map<String, dynamic> _$SignInResponseToJson(SignInResponse instance) =>
+    <String, dynamic>{'token': instance.token, 'user': instance.user.toJson()};

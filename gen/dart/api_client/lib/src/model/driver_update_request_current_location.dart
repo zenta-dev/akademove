@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_update_request_current_location.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class DriverUpdateRequestCurrentLocation {
   /// Returns a new [DriverUpdateRequestCurrentLocation] instance.
   const DriverUpdateRequestCurrentLocation({required this.x, required this.y});
@@ -28,15 +33,20 @@ class DriverUpdateRequestCurrentLocation {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is DriverUpdateRequestCurrentLocation && other.x == x && other.y == y;
+      identical(this, other) ||
+      other is DriverUpdateRequestCurrentLocation &&
+          other.x == x &&
+          other.y == y;
 
   @override
   int get hashCode => x.hashCode + y.hashCode;
 
-  factory DriverUpdateRequestCurrentLocation.fromJson(Map<String, dynamic> json) =>
-      _$DriverUpdateRequestCurrentLocationFromJson(json);
+  factory DriverUpdateRequestCurrentLocation.fromJson(
+    Map<String, dynamic> json,
+  ) => _$DriverUpdateRequestCurrentLocationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$DriverUpdateRequestCurrentLocationToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$DriverUpdateRequestCurrentLocationToJson(this);
 
   @override
   String toString() {

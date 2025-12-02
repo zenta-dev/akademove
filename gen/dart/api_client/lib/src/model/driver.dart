@@ -13,7 +13,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class Driver {
   /// Returns a new [Driver] instance.
   const Driver({
@@ -70,7 +75,12 @@ class Driver {
 
   // minimum: -9007199254740991
   // maximum: 9007199254740991
-  @JsonKey(defaultValue: 0, name: r'cancellationCount', required: false, includeIfNull: false)
+  @JsonKey(
+    defaultValue: 0,
+    name: r'cancellationCount',
+    required: false,
+    includeIfNull: false,
+  )
   final int? cancellationCount;
 
   @JsonKey(name: r'lastCancellationDate', required: false, includeIfNull: false)

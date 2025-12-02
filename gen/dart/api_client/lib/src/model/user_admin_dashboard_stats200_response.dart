@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'user_admin_dashboard_stats200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UserAdminDashboardStats200Response {
   /// Returns a new [UserAdminDashboardStats200Response] instance.
   const UserAdminDashboardStats200Response({
@@ -45,12 +50,18 @@ class UserAdminDashboardStats200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory UserAdminDashboardStats200Response.fromJson(Map<String, dynamic> json) =>
-      _$UserAdminDashboardStats200ResponseFromJson(json);
+  factory UserAdminDashboardStats200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$UserAdminDashboardStats200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserAdminDashboardStats200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$UserAdminDashboardStats200ResponseToJson(this);
 
   @override
   String toString() {

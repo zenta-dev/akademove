@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'wallet_monthly_summary_query.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class WalletMonthlySummaryQuery {
   /// Returns a new [WalletMonthlySummaryQuery] instance.
   const WalletMonthlySummaryQuery({required this.year, required this.month});
@@ -22,12 +27,16 @@ class WalletMonthlySummaryQuery {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is WalletMonthlySummaryQuery && other.year == year && other.month == month;
+      identical(this, other) ||
+      other is WalletMonthlySummaryQuery &&
+          other.year == year &&
+          other.month == month;
 
   @override
   int get hashCode => year.hashCode + month.hashCode;
 
-  factory WalletMonthlySummaryQuery.fromJson(Map<String, dynamic> json) => _$WalletMonthlySummaryQueryFromJson(json);
+  factory WalletMonthlySummaryQuery.fromJson(Map<String, dynamic> json) =>
+      _$WalletMonthlySummaryQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$WalletMonthlySummaryQueryToJson(this);
 

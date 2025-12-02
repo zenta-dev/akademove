@@ -11,7 +11,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_analytics200_response_data.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantAnalytics200ResponseData {
   /// Returns a new [MerchantAnalytics200ResponseData] instance.
   const MerchantAnalytics200ResponseData({
@@ -44,7 +49,8 @@ class MerchantAnalytics200ResponseData {
   final num averageOrderValue;
 
   @JsonKey(name: r'topSellingItems', required: true, includeIfNull: false)
-  final List<MerchantAnalytics200ResponseDataTopSellingItemsInner> topSellingItems;
+  final List<MerchantAnalytics200ResponseDataTopSellingItemsInner>
+  topSellingItems;
 
   @JsonKey(name: r'revenueByDay', required: true, includeIfNull: false)
   final List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay;
@@ -73,10 +79,12 @@ class MerchantAnalytics200ResponseData {
       topSellingItems.hashCode +
       revenueByDay.hashCode;
 
-  factory MerchantAnalytics200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$MerchantAnalytics200ResponseDataFromJson(json);
+  factory MerchantAnalytics200ResponseData.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantAnalytics200ResponseDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantAnalytics200ResponseDataToJson(this);
 
   @override
   String toString() {

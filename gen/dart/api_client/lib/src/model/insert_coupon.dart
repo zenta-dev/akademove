@@ -10,7 +10,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'insert_coupon.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class InsertCoupon {
   /// Returns a new [InsertCoupon] instance.
   const InsertCoupon({
@@ -84,7 +89,8 @@ class InsertCoupon {
       isActive.hashCode +
       (merchantId == null ? 0 : merchantId.hashCode);
 
-  factory InsertCoupon.fromJson(Map<String, dynamic> json) => _$InsertCouponFromJson(json);
+  factory InsertCoupon.fromJson(Map<String, dynamic> json) =>
+      _$InsertCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertCouponToJson(this);
 

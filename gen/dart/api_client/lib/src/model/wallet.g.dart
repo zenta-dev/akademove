@@ -128,13 +128,29 @@ extension $WalletCopyWith on Wallet {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Wallet _$WalletFromJson(Map<String, dynamic> json) => $checkedCreate('Wallet', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['id', 'userId', 'balance', 'currency', 'isActive', 'createdAt', 'updatedAt']);
+Wallet _$WalletFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('Wallet', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'id',
+      'userId',
+      'balance',
+      'currency',
+      'isActive',
+      'createdAt',
+      'updatedAt',
+    ],
+  );
   final val = Wallet(
     id: $checkedConvert('id', (v) => v as String),
     userId: $checkedConvert('userId', (v) => v as String),
     balance: $checkedConvert('balance', (v) => v as num),
-    currency: $checkedConvert('currency', (v) => $enumDecode(_$CurrencyEnumMap, v)),
+    currency: $checkedConvert(
+      'currency',
+      (v) => $enumDecode(_$CurrencyEnumMap, v),
+    ),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),

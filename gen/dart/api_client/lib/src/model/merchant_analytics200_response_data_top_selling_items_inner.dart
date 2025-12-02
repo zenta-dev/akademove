@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_analytics200_response_data_top_selling_items_inner.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantAnalytics200ResponseDataTopSellingItemsInner {
   /// Returns a new [MerchantAnalytics200ResponseDataTopSellingItemsInner] instance.
   const MerchantAnalytics200ResponseDataTopSellingItemsInner({
@@ -47,12 +52,18 @@ class MerchantAnalytics200ResponseDataTopSellingItemsInner {
 
   @override
   int get hashCode =>
-      menuId.hashCode + menuName.hashCode + menuImage.hashCode + totalOrders.hashCode + totalRevenue.hashCode;
+      menuId.hashCode +
+      menuName.hashCode +
+      menuImage.hashCode +
+      totalOrders.hashCode +
+      totalRevenue.hashCode;
 
-  factory MerchantAnalytics200ResponseDataTopSellingItemsInner.fromJson(Map<String, dynamic> json) =>
-      _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(json);
+  factory MerchantAnalytics200ResponseDataTopSellingItemsInner.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataTopSellingItemsInnerToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantAnalytics200ResponseDataTopSellingItemsInnerToJson(this);
 
   @override
   String toString() {

@@ -101,11 +101,10 @@ class NotificationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<NotificationList200Response, NotificationList200Response>(
-              rawData,
-              'NotificationList200Response',
-              growable: true,
-            );
+          : deserialize<
+              NotificationList200Response,
+              NotificationList200Response
+            >(rawData, 'NotificationList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -183,11 +182,10 @@ class NotificationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<NotificationSaveToken200Response, NotificationSaveToken200Response>(
-              rawData,
-              'NotificationSaveToken200Response',
-              growable: true,
-            );
+          : deserialize<
+              NotificationSaveToken200Response,
+              NotificationSaveToken200Response
+            >(rawData, 'NotificationSaveToken200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -275,11 +273,10 @@ class NotificationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<NotificationSaveToken200Response, NotificationSaveToken200Response>(
-              rawData,
-              'NotificationSaveToken200Response',
-              growable: true,
-            );
+          : deserialize<
+              NotificationSaveToken200Response,
+              NotificationSaveToken200Response
+            >(rawData, 'NotificationSaveToken200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -316,8 +313,10 @@ class NotificationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSubscribeToTopic200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSubscribeToTopic200Response>> notificationSubscribeToTopic({
-    required NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest,
+  Future<Response<NotificationSubscribeToTopic200Response>>
+  notificationSubscribeToTopic({
+    required NotificationSubscribeToTopicRequest
+    notificationSubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -367,7 +366,10 @@ class NotificationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<NotificationSubscribeToTopic200Response, NotificationSubscribeToTopic200Response>(
+          : deserialize<
+              NotificationSubscribeToTopic200Response,
+              NotificationSubscribeToTopic200Response
+            >(
               rawData,
               'NotificationSubscribeToTopic200Response',
               growable: true,
@@ -408,8 +410,10 @@ class NotificationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSubscribeToTopic200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSubscribeToTopic200Response>> notificationUnsubscribeToTopic({
-    required NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest,
+  Future<Response<NotificationSubscribeToTopic200Response>>
+  notificationUnsubscribeToTopic({
+    required NotificationSubscribeToTopicRequest
+    notificationSubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -459,7 +463,10 @@ class NotificationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<NotificationSubscribeToTopic200Response, NotificationSubscribeToTopic200Response>(
+          : deserialize<
+              NotificationSubscribeToTopic200Response,
+              NotificationSubscribeToTopic200Response
+            >(
               rawData,
               'NotificationSubscribeToTopic200Response',
               growable: true,

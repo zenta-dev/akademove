@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope_payload_message.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class OrderEnvelopePayloadMessage {
   /// Returns a new [OrderEnvelopePayloadMessage] instance.
   const OrderEnvelopePayloadMessage({
@@ -52,7 +57,12 @@ class OrderEnvelopePayloadMessage {
 
   @override
   int get hashCode =>
-      id.hashCode + orderId.hashCode + senderId.hashCode + senderName.hashCode + message.hashCode + sentAt.hashCode;
+      id.hashCode +
+      orderId.hashCode +
+      senderId.hashCode +
+      senderName.hashCode +
+      message.hashCode +
+      sentAt.hashCode;
 
   factory OrderEnvelopePayloadMessage.fromJson(Map<String, dynamic> json) =>
       _$OrderEnvelopePayloadMessageFromJson(json);

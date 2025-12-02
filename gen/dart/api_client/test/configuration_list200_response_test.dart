@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for ConfigurationList200Response
 void main() {
-  final ConfigurationList200Response? instance = /* ConfigurationList200Response(...) */ null;
+  final ConfigurationList200Response?
+  instance = /* ConfigurationList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(ConfigurationList200Response, () {

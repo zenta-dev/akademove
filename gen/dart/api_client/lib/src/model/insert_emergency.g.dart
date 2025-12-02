@@ -71,20 +71,24 @@ class _$InsertEmergencyCWProxyImpl implements _$InsertEmergencyCWProxy {
   InsertEmergency status(EmergencyStatus status) => call(status: status);
 
   @override
-  InsertEmergency description(String description) => call(description: description);
+  InsertEmergency description(String description) =>
+      call(description: description);
 
   @override
-  InsertEmergency location(EmergencyLocation? location) => call(location: location);
+  InsertEmergency location(EmergencyLocation? location) =>
+      call(location: location);
 
   @override
   InsertEmergency contactedAuthorities(List<String>? contactedAuthorities) =>
       call(contactedAuthorities: contactedAuthorities);
 
   @override
-  InsertEmergency respondedById(String? respondedById) => call(respondedById: respondedById);
+  InsertEmergency respondedById(String? respondedById) =>
+      call(respondedById: respondedById);
 
   @override
-  InsertEmergency resolution(String? resolution) => call(resolution: resolution);
+  InsertEmergency resolution(String? resolution) =>
+      call(resolution: resolution);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -127,7 +131,8 @@ class _$InsertEmergencyCWProxyImpl implements _$InsertEmergencyCWProxy {
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as EmergencyStatus,
-      description: description == const $CopyWithPlaceholder() || description == null
+      description:
+          description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -164,17 +169,34 @@ extension $InsertEmergencyCopyWith on InsertEmergency {
 
 InsertEmergency _$InsertEmergencyFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertEmergency', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['orderId', 'userId', 'type', 'status', 'description']);
+      $checkKeys(
+        json,
+        requiredKeys: const [
+          'orderId',
+          'userId',
+          'type',
+          'status',
+          'description',
+        ],
+      );
       final val = InsertEmergency(
         orderId: $checkedConvert('orderId', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
         driverId: $checkedConvert('driverId', (v) => v as String?),
-        type: $checkedConvert('type', (v) => $enumDecode(_$EmergencyTypeEnumMap, v)),
-        status: $checkedConvert('status', (v) => $enumDecode(_$EmergencyStatusEnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$EmergencyTypeEnumMap, v),
+        ),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$EmergencyStatusEnumMap, v),
+        ),
         description: $checkedConvert('description', (v) => v as String),
         location: $checkedConvert(
           'location',
-          (v) => v == null ? null : EmergencyLocation.fromJson(v as Map<String, dynamic>),
+          (v) => v == null
+              ? null
+              : EmergencyLocation.fromJson(v as Map<String, dynamic>),
         ),
         contactedAuthorities: $checkedConvert(
           'contactedAuthorities',
@@ -186,18 +208,19 @@ InsertEmergency _$InsertEmergencyFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$InsertEmergencyToJson(InsertEmergency instance) => <String, dynamic>{
-  'orderId': instance.orderId,
-  'userId': instance.userId,
-  'driverId': ?instance.driverId,
-  'type': _$EmergencyTypeEnumMap[instance.type]!,
-  'status': _$EmergencyStatusEnumMap[instance.status]!,
-  'description': instance.description,
-  'location': ?instance.location?.toJson(),
-  'contactedAuthorities': ?instance.contactedAuthorities,
-  'respondedById': ?instance.respondedById,
-  'resolution': ?instance.resolution,
-};
+Map<String, dynamic> _$InsertEmergencyToJson(InsertEmergency instance) =>
+    <String, dynamic>{
+      'orderId': instance.orderId,
+      'userId': instance.userId,
+      'driverId': ?instance.driverId,
+      'type': _$EmergencyTypeEnumMap[instance.type]!,
+      'status': _$EmergencyStatusEnumMap[instance.status]!,
+      'description': instance.description,
+      'location': ?instance.location?.toJson(),
+      'contactedAuthorities': ?instance.contactedAuthorities,
+      'respondedById': ?instance.respondedById,
+      'resolution': ?instance.resolution,
+    };
 
 const _$EmergencyTypeEnumMap = {
   EmergencyType.ACCIDENT: 'ACCIDENT',

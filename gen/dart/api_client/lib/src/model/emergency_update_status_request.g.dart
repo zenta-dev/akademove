@@ -20,24 +20,32 @@ abstract class _$EmergencyUpdateStatusRequestCWProxy {
   /// ```dart
   /// EmergencyUpdateStatusRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  EmergencyUpdateStatusRequest call({EmergencyStatus? status, String? resolution, String? respondedById});
+  EmergencyUpdateStatusRequest call({
+    EmergencyStatus? status,
+    String? resolution,
+    String? respondedById,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfEmergencyUpdateStatusRequest.copyWith(...)` or call `instanceOfEmergencyUpdateStatusRequest.copyWith.fieldName(value)` for a single field.
-class _$EmergencyUpdateStatusRequestCWProxyImpl implements _$EmergencyUpdateStatusRequestCWProxy {
+class _$EmergencyUpdateStatusRequestCWProxyImpl
+    implements _$EmergencyUpdateStatusRequestCWProxy {
   const _$EmergencyUpdateStatusRequestCWProxyImpl(this._value);
 
   final EmergencyUpdateStatusRequest _value;
 
   @override
-  EmergencyUpdateStatusRequest status(EmergencyStatus? status) => call(status: status);
+  EmergencyUpdateStatusRequest status(EmergencyStatus? status) =>
+      call(status: status);
 
   @override
-  EmergencyUpdateStatusRequest resolution(String? resolution) => call(resolution: resolution);
+  EmergencyUpdateStatusRequest resolution(String? resolution) =>
+      call(resolution: resolution);
 
   @override
-  EmergencyUpdateStatusRequest respondedById(String? respondedById) => call(respondedById: respondedById);
+  EmergencyUpdateStatusRequest respondedById(String? respondedById) =>
+      call(respondedById: respondedById);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -69,28 +77,36 @@ class _$EmergencyUpdateStatusRequestCWProxyImpl implements _$EmergencyUpdateStat
   }
 }
 
-extension $EmergencyUpdateStatusRequestCopyWith on EmergencyUpdateStatusRequest {
+extension $EmergencyUpdateStatusRequestCopyWith
+    on EmergencyUpdateStatusRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfEmergencyUpdateStatusRequest.copyWith(...)` or `instanceOfEmergencyUpdateStatusRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$EmergencyUpdateStatusRequestCWProxy get copyWith => _$EmergencyUpdateStatusRequestCWProxyImpl(this);
+  _$EmergencyUpdateStatusRequestCWProxy get copyWith =>
+      _$EmergencyUpdateStatusRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EmergencyUpdateStatusRequest _$EmergencyUpdateStatusRequestFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('EmergencyUpdateStatusRequest', json, ($checkedConvert) {
-      final val = EmergencyUpdateStatusRequest(
-        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$EmergencyStatusEnumMap, v)),
-        resolution: $checkedConvert('resolution', (v) => v as String?),
-        respondedById: $checkedConvert('respondedById', (v) => v as String?),
-      );
-      return val;
-    });
+EmergencyUpdateStatusRequest _$EmergencyUpdateStatusRequestFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('EmergencyUpdateStatusRequest', json, ($checkedConvert) {
+  final val = EmergencyUpdateStatusRequest(
+    status: $checkedConvert(
+      'status',
+      (v) => $enumDecodeNullable(_$EmergencyStatusEnumMap, v),
+    ),
+    resolution: $checkedConvert('resolution', (v) => v as String?),
+    respondedById: $checkedConvert('respondedById', (v) => v as String?),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$EmergencyUpdateStatusRequestToJson(EmergencyUpdateStatusRequest instance) => <String, dynamic>{
+Map<String, dynamic> _$EmergencyUpdateStatusRequestToJson(
+  EmergencyUpdateStatusRequest instance,
+) => <String, dynamic>{
   'status': ?_$EmergencyStatusEnumMap[instance.status],
   'resolution': ?instance.resolution,
   'respondedById': ?instance.respondedById,

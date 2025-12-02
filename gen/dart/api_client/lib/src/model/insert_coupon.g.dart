@@ -65,16 +65,19 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
   InsertCoupon rules(CouponRules rules) => call(rules: rules);
 
   @override
-  InsertCoupon discountAmount(num? discountAmount) => call(discountAmount: discountAmount);
+  InsertCoupon discountAmount(num? discountAmount) =>
+      call(discountAmount: discountAmount);
 
   @override
-  InsertCoupon discountPercentage(num? discountPercentage) => call(discountPercentage: discountPercentage);
+  InsertCoupon discountPercentage(num? discountPercentage) =>
+      call(discountPercentage: discountPercentage);
 
   @override
   InsertCoupon usageLimit(num usageLimit) => call(usageLimit: usageLimit);
 
   @override
-  InsertCoupon periodStart(DateTime periodStart) => call(periodStart: periodStart);
+  InsertCoupon periodStart(DateTime periodStart) =>
+      call(periodStart: periodStart);
 
   @override
   InsertCoupon periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
@@ -126,11 +129,13 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
           ? _value.discountPercentage
           // ignore: cast_nullable_to_non_nullable
           : discountPercentage as num?,
-      usageLimit: usageLimit == const $CopyWithPlaceholder() || usageLimit == null
+      usageLimit:
+          usageLimit == const $CopyWithPlaceholder() || usageLimit == null
           ? _value.usageLimit
           // ignore: cast_nullable_to_non_nullable
           : usageLimit as num,
-      periodStart: periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart:
+          periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
@@ -161,18 +166,35 @@ extension $InsertCouponCopyWith on InsertCoupon {
 // JsonSerializableGenerator
 // **************************************************************************
 
-InsertCoupon _$InsertCouponFromJson(Map<String, dynamic> json) => $checkedCreate('InsertCoupon', json, (
-  $checkedConvert,
-) {
-  $checkKeys(json, requiredKeys: const ['name', 'code', 'rules', 'usageLimit', 'periodStart', 'periodEnd', 'isActive']);
+InsertCoupon _$InsertCouponFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('InsertCoupon', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'name',
+      'code',
+      'rules',
+      'usageLimit',
+      'periodStart',
+      'periodEnd',
+      'isActive',
+    ],
+  );
   final val = InsertCoupon(
     name: $checkedConvert('name', (v) => v as String),
     code: $checkedConvert('code', (v) => v as String),
-    rules: $checkedConvert('rules', (v) => CouponRules.fromJson(v as Map<String, dynamic>)),
+    rules: $checkedConvert(
+      'rules',
+      (v) => CouponRules.fromJson(v as Map<String, dynamic>),
+    ),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
     discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),
     usageLimit: $checkedConvert('usageLimit', (v) => v as num),
-    periodStart: $checkedConvert('periodStart', (v) => DateTime.parse(v as String)),
+    periodStart: $checkedConvert(
+      'periodStart',
+      (v) => DateTime.parse(v as String),
+    ),
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
@@ -180,15 +202,16 @@ InsertCoupon _$InsertCouponFromJson(Map<String, dynamic> json) => $checkedCreate
   return val;
 });
 
-Map<String, dynamic> _$InsertCouponToJson(InsertCoupon instance) => <String, dynamic>{
-  'name': instance.name,
-  'code': instance.code,
-  'rules': instance.rules.toJson(),
-  'discountAmount': ?instance.discountAmount,
-  'discountPercentage': ?instance.discountPercentage,
-  'usageLimit': instance.usageLimit,
-  'periodStart': instance.periodStart.toIso8601String(),
-  'periodEnd': instance.periodEnd.toIso8601String(),
-  'isActive': instance.isActive,
-  'merchantId': ?instance.merchantId,
-};
+Map<String, dynamic> _$InsertCouponToJson(InsertCoupon instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'code': instance.code,
+      'rules': instance.rules.toJson(),
+      'discountAmount': ?instance.discountAmount,
+      'discountPercentage': ?instance.discountPercentage,
+      'usageLimit': instance.usageLimit,
+      'periodStart': instance.periodStart.toIso8601String(),
+      'periodEnd': instance.periodEnd.toIso8601String(),
+      'isActive': instance.isActive,
+      'merchantId': ?instance.merchantId,
+    };

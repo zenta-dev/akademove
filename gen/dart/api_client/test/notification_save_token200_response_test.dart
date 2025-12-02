@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationSaveToken200Response
 void main() {
-  final NotificationSaveToken200Response? instance = /* NotificationSaveToken200Response(...) */ null;
+  final NotificationSaveToken200Response?
+  instance = /* NotificationSaveToken200Response(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationSaveToken200Response, () {

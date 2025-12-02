@@ -90,27 +90,9 @@ class LeaderboardStateMapper extends ClassMapperBase<LeaderboardState> {
 
   @override
   final Function instantiate = _instantiate;
-
-  static LeaderboardState fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<LeaderboardState>(map);
-  }
-
-  static LeaderboardState fromJson(String json) {
-    return ensureInitialized().decodeJson<LeaderboardState>(json);
-  }
 }
 
 mixin LeaderboardStateMappable {
-  String toJson() {
-    return LeaderboardStateMapper.ensureInitialized()
-        .encodeJson<LeaderboardState>(this as LeaderboardState);
-  }
-
-  Map<String, dynamic> toMap() {
-    return LeaderboardStateMapper.ensureInitialized()
-        .encodeMap<LeaderboardState>(this as LeaderboardState);
-  }
-
   LeaderboardStateCopyWith<LeaderboardState, LeaderboardState, LeaderboardState>
   get copyWith =>
       _LeaderboardStateCopyWithImpl<LeaderboardState, LeaderboardState>(

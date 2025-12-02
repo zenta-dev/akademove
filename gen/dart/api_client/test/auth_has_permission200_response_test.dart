@@ -3,7 +3,8 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthHasPermission200Response
 void main() {
-  final AuthHasPermission200Response? instance = /* AuthHasPermission200Response(...) */ null;
+  final AuthHasPermission200Response?
+  instance = /* AuthHasPermission200Response(...) */ null;
   // TODO add properties to the entity
 
   group(AuthHasPermission200Response, () {

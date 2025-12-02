@@ -22,12 +22,18 @@ abstract class _$AuthSignUpUser201ResponseCWProxy {
   /// ```dart
   /// AuthSignUpUser201Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  AuthSignUpUser201Response call({String message, SignUpResponse data, PaginationResult? pagination, int? totalPages});
+  AuthSignUpUser201Response call({
+    String message,
+    SignUpResponse data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthSignUpUser201Response.copyWith(...)` or call `instanceOfAuthSignUpUser201Response.copyWith.fieldName(value)` for a single field.
-class _$AuthSignUpUser201ResponseCWProxyImpl implements _$AuthSignUpUser201ResponseCWProxy {
+class _$AuthSignUpUser201ResponseCWProxyImpl
+    implements _$AuthSignUpUser201ResponseCWProxy {
   const _$AuthSignUpUser201ResponseCWProxyImpl(this._value);
 
   final AuthSignUpUser201Response _value;
@@ -39,10 +45,12 @@ class _$AuthSignUpUser201ResponseCWProxyImpl implements _$AuthSignUpUser201Respo
   AuthSignUpUser201Response data(SignUpResponse data) => call(data: data);
 
   @override
-  AuthSignUpUser201Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  AuthSignUpUser201Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  AuthSignUpUser201Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  AuthSignUpUser201Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $AuthSignUpUser201ResponseCopyWith on AuthSignUpUser201Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthSignUpUser201Response.copyWith(...)` or `instanceOfAuthSignUpUser201Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthSignUpUser201ResponseCWProxy get copyWith => _$AuthSignUpUser201ResponseCWProxyImpl(this);
+  _$AuthSignUpUser201ResponseCWProxy get copyWith =>
+      _$AuthSignUpUser201ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthSignUpUser201Response _$AuthSignUpUser201ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('AuthSignUpUser201Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = AuthSignUpUser201Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => SignUpResponse.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+AuthSignUpUser201Response _$AuthSignUpUser201ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('AuthSignUpUser201Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = AuthSignUpUser201Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => SignUpResponse.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$AuthSignUpUser201ResponseToJson(AuthSignUpUser201Response instance) => <String, dynamic>{
+Map<String, dynamic> _$AuthSignUpUser201ResponseToJson(
+  AuthSignUpUser201Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

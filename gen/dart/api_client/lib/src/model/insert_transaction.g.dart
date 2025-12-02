@@ -62,19 +62,23 @@ class _$InsertTransactionCWProxyImpl implements _$InsertTransactionCWProxy {
   InsertTransaction amount(num amount) => call(amount: amount);
 
   @override
-  InsertTransaction balanceBefore(num? balanceBefore) => call(balanceBefore: balanceBefore);
+  InsertTransaction balanceBefore(num? balanceBefore) =>
+      call(balanceBefore: balanceBefore);
 
   @override
-  InsertTransaction balanceAfter(num? balanceAfter) => call(balanceAfter: balanceAfter);
+  InsertTransaction balanceAfter(num? balanceAfter) =>
+      call(balanceAfter: balanceAfter);
 
   @override
   InsertTransaction status(TransactionStatus status) => call(status: status);
 
   @override
-  InsertTransaction description(String? description) => call(description: description);
+  InsertTransaction description(String? description) =>
+      call(description: description);
 
   @override
-  InsertTransaction referenceId(String? referenceId) => call(referenceId: referenceId);
+  InsertTransaction referenceId(String? referenceId) =>
+      call(referenceId: referenceId);
 
   @override
   InsertTransaction metadata(Object? metadata) => call(metadata: metadata);
@@ -143,7 +147,8 @@ extension $InsertTransactionCopyWith on InsertTransaction {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfInsertTransaction.copyWith(...)` or `instanceOfInsertTransaction.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$InsertTransactionCWProxy get copyWith => _$InsertTransactionCWProxyImpl(this);
+  _$InsertTransactionCWProxy get copyWith =>
+      _$InsertTransactionCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -152,14 +157,23 @@ extension $InsertTransactionCopyWith on InsertTransaction {
 
 InsertTransaction _$InsertTransactionFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertTransaction', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['walletId', 'type', 'amount', 'status']);
+      $checkKeys(
+        json,
+        requiredKeys: const ['walletId', 'type', 'amount', 'status'],
+      );
       final val = InsertTransaction(
         walletId: $checkedConvert('walletId', (v) => v as String),
-        type: $checkedConvert('type', (v) => $enumDecode(_$TransactionTypeEnumMap, v)),
+        type: $checkedConvert(
+          'type',
+          (v) => $enumDecode(_$TransactionTypeEnumMap, v),
+        ),
         amount: $checkedConvert('amount', (v) => v as num),
         balanceBefore: $checkedConvert('balanceBefore', (v) => v as num?),
         balanceAfter: $checkedConvert('balanceAfter', (v) => v as num?),
-        status: $checkedConvert('status', (v) => $enumDecode(_$TransactionStatusEnumMap, v)),
+        status: $checkedConvert(
+          'status',
+          (v) => $enumDecode(_$TransactionStatusEnumMap, v),
+        ),
         description: $checkedConvert('description', (v) => v as String?),
         referenceId: $checkedConvert('referenceId', (v) => v as String?),
         metadata: $checkedConvert('metadata', (v) => v),
@@ -167,17 +181,18 @@ InsertTransaction _$InsertTransactionFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$InsertTransactionToJson(InsertTransaction instance) => <String, dynamic>{
-  'walletId': instance.walletId,
-  'type': _$TransactionTypeEnumMap[instance.type]!,
-  'amount': instance.amount,
-  'balanceBefore': ?instance.balanceBefore,
-  'balanceAfter': ?instance.balanceAfter,
-  'status': _$TransactionStatusEnumMap[instance.status]!,
-  'description': ?instance.description,
-  'referenceId': ?instance.referenceId,
-  'metadata': ?instance.metadata,
-};
+Map<String, dynamic> _$InsertTransactionToJson(InsertTransaction instance) =>
+    <String, dynamic>{
+      'walletId': instance.walletId,
+      'type': _$TransactionTypeEnumMap[instance.type]!,
+      'amount': instance.amount,
+      'balanceBefore': ?instance.balanceBefore,
+      'balanceAfter': ?instance.balanceAfter,
+      'status': _$TransactionStatusEnumMap[instance.status]!,
+      'description': ?instance.description,
+      'referenceId': ?instance.referenceId,
+      'metadata': ?instance.metadata,
+    };
 
 const _$TransactionTypeEnumMap = {
   TransactionType.TOPUP: 'TOPUP',

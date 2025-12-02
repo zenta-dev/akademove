@@ -20,7 +20,11 @@ abstract class _$OrderEnvelopePayloadDriverUpdateLocationCWProxy {
   /// ```dart
   /// OrderEnvelopePayloadDriverUpdateLocation(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderEnvelopePayloadDriverUpdateLocation call({String driverId, num x, num y});
+  OrderEnvelopePayloadDriverUpdateLocation call({
+    String driverId,
+    num x,
+    num y,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -32,7 +36,8 @@ class _$OrderEnvelopePayloadDriverUpdateLocationCWProxyImpl
   final OrderEnvelopePayloadDriverUpdateLocation _value;
 
   @override
-  OrderEnvelopePayloadDriverUpdateLocation driverId(String driverId) => call(driverId: driverId);
+  OrderEnvelopePayloadDriverUpdateLocation driverId(String driverId) =>
+      call(driverId: driverId);
 
   @override
   OrderEnvelopePayloadDriverUpdateLocation x(num x) => call(x: x);
@@ -70,7 +75,8 @@ class _$OrderEnvelopePayloadDriverUpdateLocationCWProxyImpl
   }
 }
 
-extension $OrderEnvelopePayloadDriverUpdateLocationCopyWith on OrderEnvelopePayloadDriverUpdateLocation {
+extension $OrderEnvelopePayloadDriverUpdateLocationCopyWith
+    on OrderEnvelopePayloadDriverUpdateLocation {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderEnvelopePayloadDriverUpdateLocation.copyWith(...)` or `instanceOfOrderEnvelopePayloadDriverUpdateLocation.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -82,18 +88,24 @@ extension $OrderEnvelopePayloadDriverUpdateLocationCopyWith on OrderEnvelopePayl
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderEnvelopePayloadDriverUpdateLocation _$OrderEnvelopePayloadDriverUpdateLocationFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('OrderEnvelopePayloadDriverUpdateLocation', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['driverId', 'x', 'y']);
-  final val = OrderEnvelopePayloadDriverUpdateLocation(
-    driverId: $checkedConvert('driverId', (v) => v as String),
-    x: $checkedConvert('x', (v) => v as num),
-    y: $checkedConvert('y', (v) => v as num),
-  );
-  return val;
-});
+OrderEnvelopePayloadDriverUpdateLocation
+_$OrderEnvelopePayloadDriverUpdateLocationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderEnvelopePayloadDriverUpdateLocation', json, (
+      $checkedConvert,
+    ) {
+      $checkKeys(json, requiredKeys: const ['driverId', 'x', 'y']);
+      final val = OrderEnvelopePayloadDriverUpdateLocation(
+        driverId: $checkedConvert('driverId', (v) => v as String),
+        x: $checkedConvert('x', (v) => v as num),
+        y: $checkedConvert('y', (v) => v as num),
+      );
+      return val;
+    });
 
 Map<String, dynamic> _$OrderEnvelopePayloadDriverUpdateLocationToJson(
   OrderEnvelopePayloadDriverUpdateLocation instance,
-) => <String, dynamic>{'driverId': instance.driverId, 'x': instance.x, 'y': instance.y};
+) => <String, dynamic>{
+  'driverId': instance.driverId,
+  'x': instance.x,
+  'y': instance.y,
+};

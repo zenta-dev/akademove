@@ -7,7 +7,9 @@ part of 'driver_update_request_bank.dart';
 // **************************************************************************
 
 abstract class _$DriverUpdateRequestBankCWProxy {
-  DriverUpdateRequestBank provider(DriverUpdateRequestBankProviderEnum provider);
+  DriverUpdateRequestBank provider(
+    DriverUpdateRequestBankProviderEnum provider,
+  );
 
   DriverUpdateRequestBank number(num number);
 
@@ -18,18 +20,24 @@ abstract class _$DriverUpdateRequestBankCWProxy {
   /// ```dart
   /// DriverUpdateRequestBank(...).copyWith(id: 12, name: "My name")
   /// ```
-  DriverUpdateRequestBank call({DriverUpdateRequestBankProviderEnum provider, num number});
+  DriverUpdateRequestBank call({
+    DriverUpdateRequestBankProviderEnum provider,
+    num number,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverUpdateRequestBank.copyWith(...)` or call `instanceOfDriverUpdateRequestBank.copyWith.fieldName(value)` for a single field.
-class _$DriverUpdateRequestBankCWProxyImpl implements _$DriverUpdateRequestBankCWProxy {
+class _$DriverUpdateRequestBankCWProxyImpl
+    implements _$DriverUpdateRequestBankCWProxy {
   const _$DriverUpdateRequestBankCWProxyImpl(this._value);
 
   final DriverUpdateRequestBank _value;
 
   @override
-  DriverUpdateRequestBank provider(DriverUpdateRequestBankProviderEnum provider) => call(provider: provider);
+  DriverUpdateRequestBank provider(
+    DriverUpdateRequestBankProviderEnum provider,
+  ) => call(provider: provider);
 
   @override
   DriverUpdateRequestBank number(num number) => call(number: number);
@@ -63,24 +71,31 @@ extension $DriverUpdateRequestBankCopyWith on DriverUpdateRequestBank {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverUpdateRequestBank.copyWith(...)` or `instanceOfDriverUpdateRequestBank.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverUpdateRequestBankCWProxy get copyWith => _$DriverUpdateRequestBankCWProxyImpl(this);
+  _$DriverUpdateRequestBankCWProxy get copyWith =>
+      _$DriverUpdateRequestBankCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverUpdateRequestBank _$DriverUpdateRequestBankFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('DriverUpdateRequestBank', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['provider', 'number']);
-      final val = DriverUpdateRequestBank(
-        provider: $checkedConvert('provider', (v) => $enumDecode(_$DriverUpdateRequestBankProviderEnumEnumMap, v)),
-        number: $checkedConvert('number', (v) => v as num),
-      );
-      return val;
-    });
+DriverUpdateRequestBank _$DriverUpdateRequestBankFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('DriverUpdateRequestBank', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['provider', 'number']);
+  final val = DriverUpdateRequestBank(
+    provider: $checkedConvert(
+      'provider',
+      (v) => $enumDecode(_$DriverUpdateRequestBankProviderEnumEnumMap, v),
+    ),
+    number: $checkedConvert('number', (v) => v as num),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$DriverUpdateRequestBankToJson(DriverUpdateRequestBank instance) => <String, dynamic>{
+Map<String, dynamic> _$DriverUpdateRequestBankToJson(
+  DriverUpdateRequestBank instance,
+) => <String, dynamic>{
   'provider': _$DriverUpdateRequestBankProviderEnumEnumMap[instance.provider]!,
   'number': instance.number,
 };

@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'transfer_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class TransferRequest {
   /// Returns a new [TransferRequest] instance.
   const TransferRequest({required this.amount, required this.walletId});
@@ -22,12 +27,16 @@ class TransferRequest {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is TransferRequest && other.amount == amount && other.walletId == walletId;
+      identical(this, other) ||
+      other is TransferRequest &&
+          other.amount == amount &&
+          other.walletId == walletId;
 
   @override
   int get hashCode => amount.hashCode + walletId.hashCode;
 
-  factory TransferRequest.fromJson(Map<String, dynamic> json) => _$TransferRequestFromJson(json);
+  factory TransferRequest.fromJson(Map<String, dynamic> json) =>
+      _$TransferRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransferRequestToJson(this);
 

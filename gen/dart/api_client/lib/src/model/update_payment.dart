@@ -14,7 +14,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_payment.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdatePayment {
   /// Returns a new [UpdatePayment] instance.
   const UpdatePayment({
@@ -106,7 +111,8 @@ class UpdatePayment {
       (payload == null ? 0 : payload.hashCode) +
       (response == null ? 0 : response.hashCode);
 
-  factory UpdatePayment.fromJson(Map<String, dynamic> json) => _$UpdatePaymentFromJson(json);
+  factory UpdatePayment.fromJson(Map<String, dynamic> json) =>
+      _$UpdatePaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdatePaymentToJson(this);
 

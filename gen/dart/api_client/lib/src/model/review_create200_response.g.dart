@@ -22,12 +22,18 @@ abstract class _$ReviewCreate200ResponseCWProxy {
   /// ```dart
   /// ReviewCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  ReviewCreate200Response call({String message, Review data, PaginationResult? pagination, int? totalPages});
+  ReviewCreate200Response call({
+    String message,
+    Review data,
+    PaginationResult? pagination,
+    int? totalPages,
+  });
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfReviewCreate200Response.copyWith(...)` or call `instanceOfReviewCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$ReviewCreate200ResponseCWProxyImpl implements _$ReviewCreate200ResponseCWProxy {
+class _$ReviewCreate200ResponseCWProxyImpl
+    implements _$ReviewCreate200ResponseCWProxy {
   const _$ReviewCreate200ResponseCWProxyImpl(this._value);
 
   final ReviewCreate200Response _value;
@@ -39,10 +45,12 @@ class _$ReviewCreate200ResponseCWProxyImpl implements _$ReviewCreate200ResponseC
   ReviewCreate200Response data(Review data) => call(data: data);
 
   @override
-  ReviewCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  ReviewCreate200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  ReviewCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  ReviewCreate200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -83,29 +91,38 @@ extension $ReviewCreate200ResponseCopyWith on ReviewCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfReviewCreate200Response.copyWith(...)` or `instanceOfReviewCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ReviewCreate200ResponseCWProxy get copyWith => _$ReviewCreate200ResponseCWProxyImpl(this);
+  _$ReviewCreate200ResponseCWProxy get copyWith =>
+      _$ReviewCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReviewCreate200Response _$ReviewCreate200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('ReviewCreate200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = ReviewCreate200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert('data', (v) => Review.fromJson(v as Map<String, dynamic>)),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+ReviewCreate200Response _$ReviewCreate200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('ReviewCreate200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = ReviewCreate200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => Review.fromJson(v as Map<String, dynamic>),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$ReviewCreate200ResponseToJson(ReviewCreate200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$ReviewCreate200ResponseToJson(
+  ReviewCreate200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

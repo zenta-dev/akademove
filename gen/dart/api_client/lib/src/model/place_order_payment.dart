@@ -12,10 +12,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'place_order_payment.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PlaceOrderPayment {
   /// Returns a new [PlaceOrderPayment] instance.
-  const PlaceOrderPayment({required this.method, required this.provider, this.bankProvider});
+  const PlaceOrderPayment({
+    required this.method,
+    required this.provider,
+    this.bankProvider,
+  });
 
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final PaymentMethod method;
@@ -35,9 +44,11 @@ class PlaceOrderPayment {
           other.bankProvider == bankProvider;
 
   @override
-  int get hashCode => method.hashCode + provider.hashCode + bankProvider.hashCode;
+  int get hashCode =>
+      method.hashCode + provider.hashCode + bankProvider.hashCode;
 
-  factory PlaceOrderPayment.fromJson(Map<String, dynamic> json) => _$PlaceOrderPaymentFromJson(json);
+  factory PlaceOrderPayment.fromJson(Map<String, dynamic> json) =>
+      _$PlaceOrderPaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderPaymentToJson(this);
 

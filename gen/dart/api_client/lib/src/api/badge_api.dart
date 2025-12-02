@@ -103,11 +103,15 @@ class BadgeApi {
         r'targetRole': targetRole,
         if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
         if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
-        if (criteriaMinOnTimeRate != null) r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
         if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
-        if (criteriaMinEarnings != null) r'criteria_minEarnings': criteriaMinEarnings,
-        if (benefitsPriorityBoost != null) r'benefits_priorityBoost': benefitsPriorityBoost,
-        if (benefitsCommissionReduction != null) r'benefits_commissionReduction': benefitsCommissionReduction,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
         r'isActive': isActive,
         r'displayOrder': displayOrder,
         if (icon != null) r'icon': icon,
@@ -321,7 +325,11 @@ class BadgeApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<BadgeList200Response, BadgeList200Response>(rawData, 'BadgeList200Response', growable: true);
+          : deserialize<BadgeList200Response, BadgeList200Response>(
+              rawData,
+              'BadgeList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -512,11 +520,15 @@ class BadgeApi {
         if (targetRole != null) r'targetRole': targetRole,
         if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
         if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
-        if (criteriaMinOnTimeRate != null) r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
         if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
-        if (criteriaMinEarnings != null) r'criteria_minEarnings': criteriaMinEarnings,
-        if (benefitsPriorityBoost != null) r'benefits_priorityBoost': benefitsPriorityBoost,
-        if (benefitsCommissionReduction != null) r'benefits_commissionReduction': benefitsCommissionReduction,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
         if (isActive != null) r'isActive': isActive,
         if (displayOrder != null) r'displayOrder': displayOrder,
         if (icon != null) r'icon': icon,

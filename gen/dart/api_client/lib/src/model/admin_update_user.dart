@@ -3,18 +3,19 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/user_role.dart';
-import 'package:api_client/src/model/update_user_password.dart';
-import 'package:api_client/src/model/ban_user.dart';
-import 'package:api_client/src/model/update_user_role.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
 part 'admin_update_user.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class AdminUpdateUser {
   /// Returns a new [AdminUpdateUser] instance.
   const AdminUpdateUser({
@@ -70,7 +71,8 @@ class AdminUpdateUser {
       banExpiresIn.hashCode +
       id.hashCode;
 
-  factory AdminUpdateUser.fromJson(Map<String, dynamic> json) => _$AdminUpdateUserFromJson(json);
+  factory AdminUpdateUser.fromJson(Map<String, dynamic> json) =>
+      _$AdminUpdateUserFromJson(json);
 
   Map<String, dynamic> toJson() => _$AdminUpdateUserToJson(this);
 

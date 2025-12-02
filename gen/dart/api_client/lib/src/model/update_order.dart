@@ -17,7 +17,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'update_order.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class UpdateOrder {
   /// Returns a new [UpdateOrder] instance.
   const UpdateOrder({
@@ -163,7 +168,8 @@ class UpdateOrder {
       driver.hashCode +
       merchant.hashCode;
 
-  factory UpdateOrder.fromJson(Map<String, dynamic> json) => _$UpdateOrderFromJson(json);
+  factory UpdateOrder.fromJson(Map<String, dynamic> json) =>
+      _$UpdateOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateOrderToJson(this);
 

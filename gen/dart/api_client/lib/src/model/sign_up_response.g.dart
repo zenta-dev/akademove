@@ -61,10 +61,14 @@ extension $SignUpResponseCopyWith on SignUpResponse {
 SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('SignUpResponse', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['user']);
-      final val = SignUpResponse(user: $checkedConvert('user', (v) => User.fromJson(v as Map<String, dynamic>)));
+      final val = SignUpResponse(
+        user: $checkedConvert(
+          'user',
+          (v) => User.fromJson(v as Map<String, dynamic>),
+        ),
+      );
       return val;
     });
 
-Map<String, dynamic> _$SignUpResponseToJson(SignUpResponse instance) => <String, dynamic>{
-  'user': instance.user.toJson(),
-};
+Map<String, dynamic> _$SignUpResponseToJson(SignUpResponse instance) =>
+    <String, dynamic>{'user': instance.user.toJson()};

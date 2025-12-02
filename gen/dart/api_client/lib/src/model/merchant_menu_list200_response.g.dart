@@ -32,7 +32,8 @@ abstract class _$MerchantMenuList200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantMenuList200Response.copyWith(...)` or call `instanceOfMerchantMenuList200Response.copyWith.fieldName(value)` for a single field.
-class _$MerchantMenuList200ResponseCWProxyImpl implements _$MerchantMenuList200ResponseCWProxy {
+class _$MerchantMenuList200ResponseCWProxyImpl
+    implements _$MerchantMenuList200ResponseCWProxy {
   const _$MerchantMenuList200ResponseCWProxyImpl(this._value);
 
   final MerchantMenuList200Response _value;
@@ -44,10 +45,12 @@ class _$MerchantMenuList200ResponseCWProxyImpl implements _$MerchantMenuList200R
   MerchantMenuList200Response data(List<MerchantMenu> data) => call(data: data);
 
   @override
-  MerchantMenuList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  MerchantMenuList200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  MerchantMenuList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  MerchantMenuList200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,32 +91,40 @@ extension $MerchantMenuList200ResponseCopyWith on MerchantMenuList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantMenuList200Response.copyWith(...)` or `instanceOfMerchantMenuList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantMenuList200ResponseCWProxy get copyWith => _$MerchantMenuList200ResponseCWProxyImpl(this);
+  _$MerchantMenuList200ResponseCWProxy get copyWith =>
+      _$MerchantMenuList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantMenuList200Response _$MerchantMenuList200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('MerchantMenuList200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = MerchantMenuList200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => MerchantMenu.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+MerchantMenuList200Response _$MerchantMenuList200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('MerchantMenuList200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = MerchantMenuList200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => MerchantMenu.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$MerchantMenuList200ResponseToJson(MerchantMenuList200Response instance) => <String, dynamic>{
+Map<String, dynamic> _$MerchantMenuList200ResponseToJson(
+  MerchantMenuList200Response instance,
+) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

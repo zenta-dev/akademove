@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'insert_contact.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class InsertContact {
   /// Returns a new [InsertContact] instance.
   const InsertContact({
@@ -46,9 +51,15 @@ class InsertContact {
           other.userId == userId;
 
   @override
-  int get hashCode => name.hashCode + email.hashCode + subject.hashCode + message.hashCode + userId.hashCode;
+  int get hashCode =>
+      name.hashCode +
+      email.hashCode +
+      subject.hashCode +
+      message.hashCode +
+      userId.hashCode;
 
-  factory InsertContact.fromJson(Map<String, dynamic> json) => _$InsertContactFromJson(json);
+  factory InsertContact.fromJson(Map<String, dynamic> json) =>
+      _$InsertContactFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertContactToJson(this);
 

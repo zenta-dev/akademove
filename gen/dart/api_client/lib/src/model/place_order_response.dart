@@ -12,10 +12,19 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'place_order_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class PlaceOrderResponse {
   /// Returns a new [PlaceOrderResponse] instance.
-  const PlaceOrderResponse({required this.order, required this.payment, required this.transaction});
+  const PlaceOrderResponse({
+    required this.order,
+    required this.payment,
+    required this.transaction,
+  });
 
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
@@ -37,7 +46,8 @@ class PlaceOrderResponse {
   @override
   int get hashCode => order.hashCode + payment.hashCode + transaction.hashCode;
 
-  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) => _$PlaceOrderResponseFromJson(json);
+  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) =>
+      _$PlaceOrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderResponseToJson(this);
 

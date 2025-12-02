@@ -32,22 +32,27 @@ abstract class _$EmergencyListByOrder200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfEmergencyListByOrder200Response.copyWith(...)` or call `instanceOfEmergencyListByOrder200Response.copyWith.fieldName(value)` for a single field.
-class _$EmergencyListByOrder200ResponseCWProxyImpl implements _$EmergencyListByOrder200ResponseCWProxy {
+class _$EmergencyListByOrder200ResponseCWProxyImpl
+    implements _$EmergencyListByOrder200ResponseCWProxy {
   const _$EmergencyListByOrder200ResponseCWProxyImpl(this._value);
 
   final EmergencyListByOrder200Response _value;
 
   @override
-  EmergencyListByOrder200Response message(String message) => call(message: message);
+  EmergencyListByOrder200Response message(String message) =>
+      call(message: message);
 
   @override
-  EmergencyListByOrder200Response data(List<Emergency> data) => call(data: data);
+  EmergencyListByOrder200Response data(List<Emergency> data) =>
+      call(data: data);
 
   @override
-  EmergencyListByOrder200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
+  EmergencyListByOrder200Response pagination(PaginationResult? pagination) =>
+      call(pagination: pagination);
 
   @override
-  EmergencyListByOrder200Response totalPages(int? totalPages) => call(totalPages: totalPages);
+  EmergencyListByOrder200Response totalPages(int? totalPages) =>
+      call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -84,39 +89,47 @@ class _$EmergencyListByOrder200ResponseCWProxyImpl implements _$EmergencyListByO
   }
 }
 
-extension $EmergencyListByOrder200ResponseCopyWith on EmergencyListByOrder200Response {
+extension $EmergencyListByOrder200ResponseCopyWith
+    on EmergencyListByOrder200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfEmergencyListByOrder200Response.copyWith(...)` or `instanceOfEmergencyListByOrder200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$EmergencyListByOrder200ResponseCWProxy get copyWith => _$EmergencyListByOrder200ResponseCWProxyImpl(this);
+  _$EmergencyListByOrder200ResponseCWProxy get copyWith =>
+      _$EmergencyListByOrder200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EmergencyListByOrder200Response _$EmergencyListByOrder200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('EmergencyListByOrder200Response', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['message', 'data']);
-      final val = EmergencyListByOrder200Response(
-        message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => (v as List<dynamic>).map((e) => Emergency.fromJson(e as Map<String, dynamic>)).toList(),
-        ),
-        pagination: $checkedConvert(
-          'pagination',
-          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
-        ),
-        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-      );
-      return val;
-    });
+EmergencyListByOrder200Response _$EmergencyListByOrder200ResponseFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('EmergencyListByOrder200Response', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['message', 'data']);
+  final val = EmergencyListByOrder200Response(
+    message: $checkedConvert('message', (v) => v as String),
+    data: $checkedConvert(
+      'data',
+      (v) => (v as List<dynamic>)
+          .map((e) => Emergency.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    ),
+    pagination: $checkedConvert(
+      'pagination',
+      (v) => v == null
+          ? null
+          : PaginationResult.fromJson(v as Map<String, dynamic>),
+    ),
+    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$EmergencyListByOrder200ResponseToJson(EmergencyListByOrder200Response instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'data': instance.data.map((e) => e.toJson()).toList(),
-      'pagination': ?instance.pagination?.toJson(),
-      'totalPages': ?instance.totalPages,
-    };
+Map<String, dynamic> _$EmergencyListByOrder200ResponseToJson(
+  EmergencyListByOrder200Response instance,
+) => <String, dynamic>{
+  'message': instance.message,
+  'data': instance.data.map((e) => e.toJson()).toList(),
+  'pagination': ?instance.pagination?.toJson(),
+  'totalPages': ?instance.totalPages,
+};

@@ -11,10 +11,20 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'notification_save_token200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class NotificationSaveToken200Response {
   /// Returns a new [NotificationSaveToken200Response] instance.
-  const NotificationSaveToken200Response({required this.message, required this.data, this.pagination, this.totalPages});
+  const NotificationSaveToken200Response({
+    required this.message,
+    required this.data,
+    this.pagination,
+    this.totalPages,
+  });
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
@@ -40,12 +50,18 @@ class NotificationSaveToken200Response {
           other.totalPages == totalPages;
 
   @override
-  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+  int get hashCode =>
+      message.hashCode +
+      data.hashCode +
+      pagination.hashCode +
+      totalPages.hashCode;
 
-  factory NotificationSaveToken200Response.fromJson(Map<String, dynamic> json) =>
-      _$NotificationSaveToken200ResponseFromJson(json);
+  factory NotificationSaveToken200Response.fromJson(
+    Map<String, dynamic> json,
+  ) => _$NotificationSaveToken200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$NotificationSaveToken200ResponseToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$NotificationSaveToken200ResponseToJson(this);
 
   @override
   String toString() {

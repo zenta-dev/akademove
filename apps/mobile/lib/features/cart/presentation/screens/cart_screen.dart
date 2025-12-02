@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart';
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
@@ -240,16 +241,7 @@ class _CartScreenState extends State<CartScreen> {
                 Button(
                   style: const ButtonStyle.primary(),
                   onPressed: () {
-                    // TODO: Navigate to order confirmation screen
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: context.l10n.cart_coming_soon,
-                        message:
-                            context.l10n.cart_order_confirmation_coming_soon,
-                      ),
-                      location: ToastLocation.topCenter,
-                    );
+                    context.pushNamed(Routes.userOrderConfirm.name);
                   },
                   child: Text(context.l10n.cart_checkout),
                 ),

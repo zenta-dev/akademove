@@ -75,11 +75,10 @@ class ConfigurationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ConfigurationGet200Response, ConfigurationGet200Response>(
-              rawData,
-              'ConfigurationGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              ConfigurationGet200Response,
+              ConfigurationGet200Response
+            >(rawData, 'ConfigurationGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -178,11 +177,10 @@ class ConfigurationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ConfigurationList200Response, ConfigurationList200Response>(
-              rawData,
-              'ConfigurationList200Response',
-              growable: true,
-            );
+          : deserialize<
+              ConfigurationList200Response,
+              ConfigurationList200Response
+            >(rawData, 'ConfigurationList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -277,11 +275,10 @@ class ConfigurationApi {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<ConfigurationGet200Response, ConfigurationGet200Response>(
-              rawData,
-              'ConfigurationGet200Response',
-              growable: true,
-            );
+          : deserialize<
+              ConfigurationGet200Response,
+              ConfigurationGet200Response
+            >(rawData, 'ConfigurationGet200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,

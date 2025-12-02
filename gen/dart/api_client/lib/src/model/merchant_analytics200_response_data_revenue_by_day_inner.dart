@@ -9,7 +9,12 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_analytics200_response_data_revenue_by_day_inner.g.dart';
 
 @CopyWith()
-@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
+@JsonSerializable(
+  checked: true,
+  createToJson: true,
+  disallowUnrecognizedKeys: false,
+  explicitToJson: true,
+)
 class MerchantAnalytics200ResponseDataRevenueByDayInner {
   /// Returns a new [MerchantAnalytics200ResponseDataRevenueByDayInner] instance.
   const MerchantAnalytics200ResponseDataRevenueByDayInner({
@@ -38,10 +43,12 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
   @override
   int get hashCode => date.hashCode + revenue.hashCode + orders.hashCode;
 
-  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(Map<String, dynamic> json) =>
-      _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
+  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(
+    Map<String, dynamic> json,
+  ) => _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(this);
 
   @override
   String toString() {
