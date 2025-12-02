@@ -101,11 +101,10 @@ export const CouponForm = ({
 }) => {
 	const router = useRouter();
 	const form = useForm({
-		resolver:
+		resolver: zodResolver(
+			kind === "new" ? InsertCouponSchema : UpdateCouponSchema,
 			// biome-ignore lint/suspicious/noExplicitAny: Required for zodResolver type compatibility with z.coerce
-			zodResolver(
-				kind === "new" ? InsertCouponSchema : UpdateCouponSchema,
-			) as any,
+		) as any,
 		defaultValues:
 			kind === "edit" && coupon
 				? coupon

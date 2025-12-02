@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
 import type { CountryCode } from "@repo/schema/common";
 import { CONSTANTS } from "@repo/schema/constants";
-import { FlatUpdateMerchantSchema } from "@repo/schema/merchant";
+import { FlatUpdateMerchantSchema, type Merchant } from "@repo/schema/merchant";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
@@ -137,7 +137,7 @@ function RouteComponent() {
 	);
 }
 
-function ViewMerchantProfile({ merchant }: { merchant: any }) {
+function ViewMerchantProfile({ merchant }: { merchant: Merchant }) {
 	return (
 		<div className="grid gap-4 md:grid-cols-2">
 			<Card>
@@ -231,7 +231,6 @@ function ViewMerchantProfile({ merchant }: { merchant: any }) {
 								lng: merchant.location.x,
 							}}
 							onLocationChange={() => {}}
-							disabled
 						/>
 					</CardContent>
 				</Card>
@@ -245,7 +244,7 @@ function EditMerchantProfile({
 	onCancel,
 	onSuccess,
 }: {
-	merchant: any;
+	merchant: Merchant;
 	onCancel: () => void;
 	onSuccess: () => void;
 }) {
@@ -259,14 +258,14 @@ function EditMerchantProfile({
 		defaultValues: {
 			name: merchant.name || "",
 			email: merchant.email || "",
-			phone_countryCode: merchant.phone?.countryCode || "ID",
+			phone_countryCode: (merchant.phone?.countryCode || "ID") as CountryCode,
 			phone_number: merchant.phone?.number || 0,
 			address: merchant.address || "",
 			location_x: merchant.location?.x || 0,
 			location_y: merchant.location?.y || 0,
 			category: merchant.category || "FOOD",
-			bank_provider: merchant.bank?.provider || "",
-			bank_number: merchant.bank?.number || "",
+			bank_provider: merchant.bank?.provider || "BCA",
+			bank_number: merchant.bank?.number || 0,
 			image: undefined,
 		},
 	});
@@ -298,11 +297,14 @@ function EditMerchantProfile({
 	);
 
 	const onSubmit = useCallback(
-		async (values: any) => {
-			await mutation.mutateAsync({
-				params: { id: merchant.id },
-				body: values,
-			});
+		async (values: unknown) => {
+			const parsed = FlatUpdateMerchantSchema.safeParse(values);
+			if (parsed.success) {
+				await mutation.mutateAsync({
+					params: { id: merchant.id },
+					body: parsed.data,
+				});
+			}
 		},
 		[mutation, merchant.id],
 	);
