@@ -30,6 +30,24 @@ export const CouponHandler = priv.router({
 				body: { message: "Successfully retrieved coupon data", data: result },
 			};
 		}),
+	validate: priv.validate
+		.use(hasPermission({ coupon: ["get"] }))
+		.handler(async ({ context, input: { body } }) => {
+			const { code, orderAmount } = trimObjectValues(body);
+			const result = await context.repo.coupon.validateCoupon(
+				code,
+				orderAmount,
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: "Coupon validated successfully",
+					data: result,
+				},
+			};
+		}),
 	create: priv.create
 		.use(hasPermission({ coupon: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {

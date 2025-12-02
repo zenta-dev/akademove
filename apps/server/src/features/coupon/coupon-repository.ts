@@ -213,4 +213,167 @@ export class CouponRepository extends BaseRepository {
 			throw this.handleError(error, "delete");
 		}
 	}
+
+	async validateCoupon(
+		code: string,
+		orderAmount: number,
+		userId: string,
+	): Promise<{
+		valid: boolean;
+		coupon?: Coupon;
+		discountAmount: number;
+		reason?: string;
+	}> {
+		try {
+			// Find coupon by code
+			const couponData = await this.db.query.coupon.findFirst({
+				where: (f, op) => op.eq(f.code, code),
+			});
+
+			if (!couponData) {
+				return {
+					valid: false,
+					discountAmount: 0,
+					reason: "Coupon code not found",
+				};
+			}
+
+			const coupon = CouponRepository.composeEntity(couponData);
+
+			// Check if coupon is active
+			if (!coupon.isActive) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					reason: "Coupon is not active",
+				};
+			}
+
+			// Check date validity
+			const now = new Date();
+			const startDate = new Date(coupon.periodStart);
+			const endDate = new Date(coupon.periodEnd);
+
+			if (now < startDate) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					reason: "Coupon is not yet valid",
+				};
+			}
+
+			if (now > endDate) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					reason: "Coupon has expired",
+				};
+			}
+
+			// Check usage limit
+			if (coupon.usedCount >= coupon.usageLimit) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					reason: "Coupon usage limit reached",
+				};
+			}
+
+			// Check minimum order amount
+			const minOrderAmount = coupon.rules?.general?.minOrderAmount;
+			if (minOrderAmount !== undefined && orderAmount < minOrderAmount) {
+				return {
+					valid: false,
+					coupon,
+					discountAmount: 0,
+					reason: `Minimum order amount is ${minOrderAmount}`,
+				};
+			}
+
+			// Check time-based rules
+			if (coupon.rules?.time) {
+				const currentDay = [
+					"SUNDAY",
+					"MONDAY",
+					"TUESDAY",
+					"WEDNESDAY",
+					"THURSDAY",
+					"FRIDAY",
+					"SATURDAY",
+				][now.getDay()];
+				const currentHour = now.getHours();
+
+				if (
+					coupon.rules.time.allowedDays &&
+					coupon.rules.time.allowedDays.length > 0 &&
+					!coupon.rules.time.allowedDays.includes(
+						currentDay as
+							| "SUNDAY"
+							| "MONDAY"
+							| "TUESDAY"
+							| "WEDNESDAY"
+							| "THURSDAY"
+							| "FRIDAY"
+							| "SATURDAY",
+					)
+				) {
+					return {
+						valid: false,
+						coupon,
+						discountAmount: 0,
+						reason: "Coupon not valid on this day",
+					};
+				}
+
+				if (
+					coupon.rules.time.allowedHours &&
+					coupon.rules.time.allowedHours.length > 0 &&
+					!coupon.rules.time.allowedHours.includes(currentHour)
+				) {
+					return {
+						valid: false,
+						coupon,
+						discountAmount: 0,
+						reason: "Coupon not valid at this hour",
+					};
+				}
+			}
+
+			// Calculate discount
+			let discountAmount = 0;
+			if (coupon.discountAmount !== undefined && coupon.discountAmount > 0) {
+				discountAmount = coupon.discountAmount;
+			} else if (
+				coupon.discountPercentage !== undefined &&
+				coupon.discountPercentage > 0
+			) {
+				discountAmount = (orderAmount * coupon.discountPercentage) / 100;
+			}
+
+			// Apply max discount limit if set
+			const maxDiscountAmount = coupon.rules?.general?.maxDiscountAmount;
+			if (
+				maxDiscountAmount !== undefined &&
+				discountAmount > maxDiscountAmount
+			) {
+				discountAmount = maxDiscountAmount;
+			}
+
+			return {
+				valid: true,
+				coupon,
+				discountAmount,
+			};
+		} catch (error) {
+			log.error(
+				{ code, orderAmount, userId, error },
+				"Failed to validate coupon",
+			);
+			throw this.handleError(error, "validateCoupon");
+		}
+	}
 }

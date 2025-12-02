@@ -36,6 +36,33 @@ export const CouponSpec = {
 		.output(
 			createSuccesSchema(CouponSchema, "Successfully retrieved coupon data"),
 		),
+	validate: oc
+		.route({
+			tags: [FEATURE_TAGS.COUPON],
+			method: "POST",
+			path: "/validate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: z.object({
+					code: z.string(),
+					orderAmount: z.number(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					valid: z.boolean(),
+					coupon: CouponSchema.optional(),
+					discountAmount: z.number(),
+					reason: z.string().optional(),
+				}),
+				"Coupon validated successfully",
+			),
+		),
 	create: oc
 		.route({
 			tags: [FEATURE_TAGS.COUPON],
