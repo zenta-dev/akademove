@@ -77,6 +77,9 @@ export const [server, web] = await Promise.all([
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
 		},
+		triggers: {
+			crons: ["* * * * *"], // Run every 1 minute for auto-offline checks
+		},
 		dev: {
 			port: 3000,
 		},
