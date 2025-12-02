@@ -1,9 +1,11 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DriverProfileScreen extends StatefulWidget {
@@ -445,10 +447,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 8.w,
-              children: [
-                const Icon(LucideIcons.pencil),
-                const Text('Edit Profile'),
-              ],
+              children: [const Icon(LucideIcons.logOut), const Text('Logout')],
             ),
           ),
         ),
@@ -468,21 +467,54 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             child: const Text('Cancel'),
           ),
           material.TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(dialogContext).pop();
-              showToast(
-                context: context,
-                builder: (context, overlay) => context.buildToast(
-                  title: 'Logout',
-                  message: 'Logout feature coming soon',
-                ),
-              );
+              await _performLogout();
             },
             child: const Text('Logout'),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      setState(() => _isLoading = true);
+
+      // Call AuthCubit to sign out
+      await context.read<AuthCubit>().signOut();
+
+      if (mounted) {
+        setState(() => _isLoading = false);
+
+        // Clear all cached data
+        AppCaches.clearAll();
+
+        // Navigate to sign-in screen and clear navigation stack
+        context.go(Routes.authSignIn.path);
+
+        // Show success message
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Success',
+            message: 'Logged out successfully',
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Error',
+            message: 'Failed to logout: ${e.toString()}',
+          ),
+        );
+      }
+    }
   }
 
   material.Color _getStatusColor(DriverStatus status) {
