@@ -14,6 +14,7 @@ import { AcceptOrderDialog } from "@/components/dialogs/accept-order";
 import { MarkPreparingDialog } from "@/components/dialogs/mark-preparing";
 import { MarkReadyDialog } from "@/components/dialogs/mark-ready";
 import { RejectOrderDialog } from "@/components/dialogs/reject-order";
+import { OrderTrackingMap } from "@/components/order-tracking-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -324,6 +325,25 @@ export const OrderDetailDialog = ({
 								</span>
 							</div>
 						</div>
+					</div>
+
+					{/* Map View */}
+					<div className="space-y-3">
+						<h3 className="flex items-center gap-2 font-semibold text-sm">
+							<MapPin className="h-4 w-4" />
+							Map View
+						</h3>
+						<OrderTrackingMap
+							pickup={{
+								lat: order.pickupLocation.y,
+								lng: order.pickupLocation.x,
+							}}
+							delivery={{
+								lat: order.dropoffLocation.y,
+								lng: order.dropoffLocation.x,
+							}}
+							orderStatus={order.status}
+						/>
 					</div>
 
 					{/* Order Summary */}
