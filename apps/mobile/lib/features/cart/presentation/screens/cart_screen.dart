@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/models/cart_models.dart';
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class _CartScreenState extends State<CartScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Shopping Cart',
+            context.l10n.cart_shopping_cart,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -62,8 +63,8 @@ class _CartScreenState extends State<CartScreen> {
             showToast(
               context: context,
               builder: (context, overlay) => context.buildToast(
-                title: 'Error',
-                message: state.error!.message ?? 'An error occurred',
+                title: context.l10n.error,
+                message: state.error!.message ?? context.l10n.an_error_occurred,
               ),
               location: ToastLocation.topCenter,
             );
@@ -79,7 +80,7 @@ class _CartScreenState extends State<CartScreen> {
             },
             failure: (error) => Center(
               child: OopsAlertWidget(
-                message: error.message ?? 'Failed to load cart',
+                message: error.message ?? context.l10n.cart_failed_to_load,
                 onRefresh: () => context.read<CartCubit>().loadCart(),
               ),
             ),
@@ -106,7 +107,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             Gap(16.h),
             Text(
-              'Your cart is empty',
+              context.l10n.cart_your_cart_is_empty,
               style: context.typography.h3.copyWith(
                 fontSize: 20.sp,
                 color: mutedColor.withValues(alpha: 0.7),
@@ -114,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             Gap(8.h),
             Text(
-              'Add items from AMart to see them here',
+              context.l10n.cart_add_items_to_see_here,
               style: TextStyle(
                 fontSize: 14.sp,
                 color: mutedColor.withValues(alpha: 0.6),
@@ -125,7 +126,7 @@ class _CartScreenState extends State<CartScreen> {
             Button(
               style: const ButtonStyle.primary(),
               onPressed: () => context.pop(),
-              child: const Text('Browse AMart'),
+              child: Text(context.l10n.cart_browse_amart),
             ),
           ],
         ),
@@ -223,7 +224,7 @@ class _CartScreenState extends State<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total (${state.totalItems} items)',
+                      context.l10n.cart_total_items(state.totalItems),
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: mutedColor.withValues(alpha: 0.6),
@@ -243,13 +244,14 @@ class _CartScreenState extends State<CartScreen> {
                     showToast(
                       context: context,
                       builder: (context, overlay) => context.buildToast(
-                        title: 'Coming Soon',
-                        message: 'Order confirmation screen coming soon',
+                        title: context.l10n.cart_coming_soon,
+                        message:
+                            context.l10n.cart_order_confirmation_coming_soon,
                       ),
                       location: ToastLocation.topCenter,
                     );
                   },
-                  child: const Text('Checkout'),
+                  child: Text(context.l10n.cart_checkout),
                 ),
               ],
             ),
@@ -263,14 +265,12 @@ class _CartScreenState extends State<CartScreen> {
     showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Clear Cart?'),
-        content: const Text(
-          'Are you sure you want to remove all items from your cart?',
-        ),
+        title: Text(context.l10n.cart_clear_cart),
+        content: Text(context.l10n.cart_clear_cart_confirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.button_cancel),
           ),
           Button(
             onPressed: () {
@@ -278,7 +278,7 @@ class _CartScreenState extends State<CartScreen> {
               Navigator.of(dialogContext).pop();
             },
             style: ButtonStyle.destructive(),
-            child: const Text('Clear'),
+            child: Text(context.l10n.cart_clear),
           ),
         ],
       ),
@@ -355,7 +355,7 @@ class _CartItemCard extends StatelessWidget {
               if (item.notes != null && item.notes!.isNotEmpty) ...[
                 Gap(4.h),
                 Text(
-                  'Note: ${item.notes}',
+                  '${context.l10n.cart_note_prefix}${item.notes}',
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontStyle: FontStyle.italic,

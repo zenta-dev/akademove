@@ -1,5 +1,17 @@
 part of '_export.dart';
 
+/// Wrapper class to hold menu + merchant name for best sellers
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
+)
+class BestSellerItem with BestSellerItemMappable {
+  const BestSellerItem({required this.menu, required this.merchantName});
+
+  final MerchantMenu menu;
+  final String merchantName;
+}
+
 @MappableClass(
   generateMethods:
       GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
@@ -17,7 +29,7 @@ class UserMartState extends BaseState2 with UserMartStateMappable {
   });
 
   final List<String> categories;
-  final List<MerchantMenu> bestSellers;
+  final List<BestSellerItem> bestSellers;
   final List<Order> recentOrders;
   final List<Merchant> categoryMerchants;
   final String? selectedCategory;
@@ -33,7 +45,7 @@ class UserMartState extends BaseState2 with UserMartStateMappable {
   @override
   UserMartState toSuccess({
     List<String>? categories,
-    List<MerchantMenu>? bestSellers,
+    List<BestSellerItem>? bestSellers,
     List<Order>? recentOrders,
     List<Merchant>? categoryMerchants,
     String? selectedCategory,

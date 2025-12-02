@@ -1,4 +1,5 @@
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +23,7 @@ class MerchantConflictDialog extends StatelessWidget {
         children: [
           Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 24.sp),
           SizedBox(width: 12.w),
-          const Text('Replace Cart Items?'),
+          Text(context.l10n.cart_replace_cart_items),
         ],
       ),
       content: SingleChildScrollView(
@@ -31,12 +32,16 @@ class MerchantConflictDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your cart contains items from $currentMerchantName.',
-              style: TextStyle(fontSize: 14.sp),
+              context.l10n.cart_current_cart_will_be_cleared,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: Colors.orange.shade800,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             SizedBox(height: 8.h),
             Text(
-              'Do you want to discard those items and add items from $newMerchantName instead?',
+              context.l10n.cart_discard_and_add_from(newMerchantName),
               style: TextStyle(fontSize: 14.sp),
             ),
             SizedBox(height: 16.h),
@@ -73,7 +78,7 @@ class MerchantConflictDialog extends StatelessWidget {
             context.read<CartCubit>().cancelReplaceCart();
             Navigator.of(context).pop();
           },
-          child: const Text('Cancel'),
+          child: Text(context.l10n.button_cancel),
         ),
         ElevatedButton(
           onPressed: () {
@@ -84,7 +89,7 @@ class MerchantConflictDialog extends StatelessWidget {
             backgroundColor: Colors.orange,
             foregroundColor: Colors.white,
           ),
-          child: const Text('Replace Cart'),
+          child: Text(context.l10n.cart_replace_cart),
         ),
       ],
     );

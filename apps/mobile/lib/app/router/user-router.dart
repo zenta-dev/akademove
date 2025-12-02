@@ -148,9 +148,16 @@ final userRouter = StatefulShellRoute.indexedStack(
           name: Routes.userMenuDetail.name,
           path: Routes.userMenuDetail.path,
           builder: (context, state) {
-            final menuId = state.pathParameters['menuId'] ?? '';
-            // TODO: Create UserMenuDetailScreen
-            return const UserMartScreen();
+            final extra = state.extra as Map<String, dynamic>?;
+            final menu = extra?['menu'] as MerchantMenu?;
+            final merchantName = extra?['merchantName'] as String?;
+
+            if (menu == null || merchantName == null) {
+              // Fallback if data not passed correctly
+              return const UserMartScreen();
+            }
+
+            return UserMenuDetailScreen(menu: menu, merchantName: merchantName);
           },
         ),
         GoRoute(

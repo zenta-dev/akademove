@@ -20,20 +20,22 @@ class UserMartCubit extends BaseCubit<UserMartState> {
         limit: 20,
       );
 
-      // Convert best seller menu items to MerchantMenu
-      // The types have the same structure, so we create MerchantMenu instances
+      // Convert best seller items to BestSellerItem (menu + merchant name)
       final bestSellers = bestSellersRes.data.map((item) {
         final menu = item.menu;
-        return MerchantMenu(
-          id: menu.id,
-          merchantId: menu.merchantId,
-          name: menu.name,
-          image: menu.image,
-          category: menu.category,
-          price: menu.price,
-          stock: menu.stock.toInt(),
-          createdAt: menu.createdAt,
-          updatedAt: menu.updatedAt,
+        return BestSellerItem(
+          menu: MerchantMenu(
+            id: menu.id,
+            merchantId: menu.merchantId,
+            name: menu.name,
+            image: menu.image,
+            category: menu.category,
+            price: menu.price,
+            stock: menu.stock.toInt(),
+            createdAt: menu.createdAt,
+            updatedAt: menu.updatedAt,
+          ),
+          merchantName: item.merchant.name,
         );
       }).toList();
 

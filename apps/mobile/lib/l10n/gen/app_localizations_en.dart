@@ -12,6 +12,93 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get requested => 'Requested';
+
+  @override
+  String get matching => 'Matching';
+
+  @override
+  String get preparing => 'Preparing';
+
+  @override
+  String get ready_for_pickup => 'Ready for Pickup';
+
+  @override
+  String get accepted => 'Accepted';
+
+  @override
+  String get arriving => 'Arriving';
+
+  @override
+  String get in_trip => 'In Trip';
+
+  @override
+  String get your_completed_and_cancelled_orders_will_appear_here => 'Your completed and cancelled orders will appear here';
+
+  @override
+  String get no_orders_found => 'No orders found';
+
+  @override
+  String get all_types => 'All types';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get in_progress => 'In Progress';
+
+  @override
+  String get cancelled => 'Cancelled';
+
+  @override
+  String get failed_to_load_orders => 'Failed to load orders';
+
+  @override
+  String get top_up => 'Top Up';
+
+  @override
+  String get withdrawal => 'Withdrawal';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get refund => 'Refund';
+
+  @override
+  String get adjustment => 'Adjustment';
+
+  @override
+  String get commission => 'Commission';
+
+  @override
+  String get earning => 'Earning';
+
+  @override
+  String get failed_to_withdraw => 'Failed to withdraw ';
+
+  @override
+  String get withdraw => 'Withdraw';
+
+  @override
+  String get please_enter_withdrawal_amount => 'Please enter withdrawal amount';
+
+  @override
+  String get please_enter_account_number => 'Please enter account number';
+
+  @override
+  String get insufficient_balance => 'Insufficient balance';
+
+  @override
+  String get hint_account_name => 'Enter the account holder\'s name';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
   String get account_name => 'Account Name';
 
   @override
@@ -1012,4 +1099,93 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enter_withdrawal_amount => 'Enter withdrawal amount';
+
+  @override
+  String get cart_shopping_cart => 'Shopping Cart';
+
+  @override
+  String get cart_your_cart_is_empty => 'Your cart is empty';
+
+  @override
+  String get cart_add_items_to_see_here => 'Add items from AMart to see them here';
+
+  @override
+  String get cart_browse_amart => 'Browse AMart';
+
+  @override
+  String cart_total_items(int count) {
+    return 'Total ($count items)';
+  }
+
+  @override
+  String get cart_checkout => 'Checkout';
+
+  @override
+  String get cart_coming_soon => 'Coming Soon';
+
+  @override
+  String get cart_order_confirmation_coming_soon => 'Order confirmation screen coming soon';
+
+  @override
+  String get cart_clear_cart => 'Clear Cart?';
+
+  @override
+  String get cart_clear_cart_confirmation => 'Are you sure you want to remove all items from your cart?';
+
+  @override
+  String get cart_clear => 'Clear';
+
+  @override
+  String get cart_failed_to_load => 'Failed to load cart';
+
+  @override
+  String get cart_note_prefix => 'Note: ';
+
+  @override
+  String get cart_replace_cart_items => 'Replace Cart Items?';
+
+  @override
+  String cart_contains_items_from(String merchantName) {
+    return 'Your cart contains items from $merchantName.';
+  }
+
+  @override
+  String cart_discard_and_add_from(String merchantName) {
+    return 'Do you want to discard those items and add items from $merchantName instead?';
+  }
+
+  @override
+  String get cart_current_cart_will_be_cleared => 'Your current cart will be cleared';
+
+  @override
+  String get cart_replace_cart => 'Replace Cart';
+
+  @override
+  String get menu_details => 'Menu Details';
+
+  @override
+  String menu_in_stock(int count) {
+    return 'In Stock ($count available)';
+  }
+
+  @override
+  String get menu_out_of_stock => 'Out of Stock';
+
+  @override
+  String get menu_quantity => 'Quantity';
+
+  @override
+  String get menu_special_notes_optional => 'Special Notes (Optional)';
+
+  @override
+  String get menu_total_price => 'Total Price';
+
+  @override
+  String get menu_add_to_cart => 'Add to Cart';
+
+  @override
+  String get menu_added_to_cart => 'Added to Cart';
+
+  @override
+  String get menu_item_added_to_cart => 'Item has been added to your cart';
 }

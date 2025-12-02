@@ -178,7 +178,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
 
   Widget _buildBestSellers(
     BuildContext context,
-    List<MerchantMenu> bestSellers,
+    List<BestSellerItem> bestSellers,
   ) {
     if (bestSellers.isEmpty) return const SizedBox.shrink();
 
@@ -199,8 +199,8 @@ class _UserMartScreenState extends State<UserMartScreen> {
               itemCount: bestSellers.length,
               separatorBuilder: (context, index) => Gap(12.w),
               itemBuilder: (context, index) {
-                final menu = bestSellers[index];
-                return _BestSellerItem(menu: menu);
+                final item = bestSellers[index];
+                return _BestSellerItem(item: item);
               },
             ),
           ),
@@ -329,9 +329,9 @@ class _RecentOrderCard extends StatelessWidget {
 }
 
 class _BestSellerItem extends StatelessWidget {
-  const _BestSellerItem({required this.menu});
+  const _BestSellerItem({required this.item});
 
-  final MerchantMenu menu;
+  final BestSellerItem item;
 
   @override
   Widget build(BuildContext context) {
@@ -340,7 +340,8 @@ class _BestSellerItem extends StatelessWidget {
       onPressed: () {
         context.pushNamed(
           Routes.userMenuDetail.name,
-          pathParameters: {'menuId': menu.id},
+          pathParameters: {'menuId': item.menu.id},
+          extra: {'menu': item.menu, 'merchantName': item.merchantName},
         );
       },
       child: SizedBox(
@@ -350,7 +351,7 @@ class _BestSellerItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (menu.image case final image?) ...[
+              if (item.menu.image case final image?) ...[
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(12.r),
@@ -373,7 +374,7 @@ class _BestSellerItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      menu.name,
+                      item.menu.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: context.typography.h4.copyWith(
@@ -383,7 +384,7 @@ class _BestSellerItem extends StatelessWidget {
                     ),
                     Gap(4.h),
                     Text(
-                      'Rp ${menu.price}',
+                      'Rp ${item.menu.price}',
                       style: context.typography.small.copyWith(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.bold,

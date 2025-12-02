@@ -12,6 +12,93 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get requested => 'Dalam antrean';
+
+  @override
+  String get matching => 'Mencocokkan';
+
+  @override
+  String get preparing => 'Mempersiapkan';
+
+  @override
+  String get ready_for_pickup => 'Siap diambil';
+
+  @override
+  String get accepted => 'Diterima';
+
+  @override
+  String get arriving => 'Akan datang';
+
+  @override
+  String get in_trip => 'Sedang dalam perjalanan';
+
+  @override
+  String get your_completed_and_cancelled_orders_will_appear_here => 'Pesanan yang selesai dan dibatalkan akan muncul di sini';
+
+  @override
+  String get no_orders_found => 'Tidak ada pesanan ditemukan';
+
+  @override
+  String get all_types => 'Semua Jenis';
+
+  @override
+  String get all => 'Semua';
+
+  @override
+  String get completed => 'Selesai';
+
+  @override
+  String get in_progress => 'Dalam Proses';
+
+  @override
+  String get cancelled => 'Dibatalkan';
+
+  @override
+  String get failed_to_load_orders => 'Gagal memuat pesanan';
+
+  @override
+  String get top_up => 'Top up';
+
+  @override
+  String get withdrawal => 'Penarikan';
+
+  @override
+  String get payment => 'Pembayaran';
+
+  @override
+  String get refund => 'Pengembalian Dana';
+
+  @override
+  String get adjustment => 'Penyesuaian';
+
+  @override
+  String get commission => 'Komisi';
+
+  @override
+  String get earning => 'Penghasilan';
+
+  @override
+  String get failed_to_withdraw => 'Gagal menarik dana';
+
+  @override
+  String get withdraw => 'Tarik';
+
+  @override
+  String get please_enter_withdrawal_amount => 'Tolong masukkan jumlah penarikan';
+
+  @override
+  String get please_enter_account_number => 'Please enter account number';
+
+  @override
+  String get insufficient_balance => 'Saldo tidak mencukupi';
+
+  @override
+  String get hint_account_name => 'Masukkan nama pemilik rekening bank';
+
+  @override
+  String get optional => 'Opsional';
+
+  @override
   String get account_name => 'Nama Akun';
 
   @override
@@ -1012,4 +1099,93 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get enter_withdrawal_amount => 'Masukkan jumlah penarikan';
+
+  @override
+  String get cart_shopping_cart => 'Keranjang Belanja';
+
+  @override
+  String get cart_your_cart_is_empty => 'Keranjang Anda kosong';
+
+  @override
+  String get cart_add_items_to_see_here => 'Tambahkan item dari AMart untuk melihatnya di sini';
+
+  @override
+  String get cart_browse_amart => 'Jelajahi AMart';
+
+  @override
+  String cart_total_items(int count) {
+    return 'Total ($count item)';
+  }
+
+  @override
+  String get cart_checkout => 'Checkout';
+
+  @override
+  String get cart_coming_soon => 'Segera Hadir';
+
+  @override
+  String get cart_order_confirmation_coming_soon => 'Layar konfirmasi pesanan segera hadir';
+
+  @override
+  String get cart_clear_cart => 'Kosongkan Keranjang?';
+
+  @override
+  String get cart_clear_cart_confirmation => 'Apakah Anda yakin ingin menghapus semua item dari keranjang Anda?';
+
+  @override
+  String get cart_clear => 'Kosongkan';
+
+  @override
+  String get cart_failed_to_load => 'Gagal memuat keranjang';
+
+  @override
+  String get cart_note_prefix => 'Catatan: ';
+
+  @override
+  String get cart_replace_cart_items => 'Ganti Item Keranjang?';
+
+  @override
+  String cart_contains_items_from(String merchantName) {
+    return 'Keranjang Anda berisi item dari $merchantName.';
+  }
+
+  @override
+  String cart_discard_and_add_from(String merchantName) {
+    return 'Apakah Anda ingin membuang item tersebut dan menambahkan item dari $merchantName?';
+  }
+
+  @override
+  String get cart_current_cart_will_be_cleared => 'Keranjang Anda saat ini akan dikosongkan';
+
+  @override
+  String get cart_replace_cart => 'Ganti Keranjang';
+
+  @override
+  String get menu_details => 'Detail Menu';
+
+  @override
+  String menu_in_stock(int count) {
+    return 'Tersedia ($count stok)';
+  }
+
+  @override
+  String get menu_out_of_stock => 'Stok Habis';
+
+  @override
+  String get menu_quantity => 'Jumlah';
+
+  @override
+  String get menu_special_notes_optional => 'Catatan Khusus (Opsional)';
+
+  @override
+  String get menu_total_price => 'Total Harga';
+
+  @override
+  String get menu_add_to_cart => 'Tambah ke Keranjang';
+
+  @override
+  String get menu_added_to_cart => 'Ditambahkan ke Keranjang';
+
+  @override
+  String get menu_item_added_to_cart => 'Item telah ditambahkan ke keranjang Anda';
 }

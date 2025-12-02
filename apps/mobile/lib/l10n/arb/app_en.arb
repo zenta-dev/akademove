@@ -1,5 +1,35 @@
 {
 	"@@locale": "en",
+  "requested":"Requested",
+  "matching":"Matching",
+  "preparing":"Preparing",
+  "ready_for_pickup":"Ready for Pickup",
+  "accepted":"Accepted",
+  "arriving":"Arriving",
+  "in_trip":"In Trip",
+
+  "your_completed_and_cancelled_orders_will_appear_here": "Your completed and cancelled orders will appear here",
+"no_orders_found": "No orders found",
+"all_types": "All types",
+  "all":"All",
+  "completed":"Completed",
+  "in_progress":"In Progress",
+  "cancelled":"Cancelled",
+  "failed_to_load_orders": "Failed to load orders",
+  "top_up": "Top Up",
+  "withdrawal": "Withdrawal",
+  "payment":"Payment",
+  "refund":"Refund",
+  "adjustment":"Adjustment",
+  "commission":"Commission",
+  "earning":"Earning",
+  "failed_to_withdraw": "Failed to withdraw ",
+  "withdraw": "Withdraw",
+  "please_enter_withdrawal_amount": "Please enter withdrawal amount",
+  "please_enter_account_number": "Please enter account number",
+  "insufficient_balance": "Insufficient balance",
+  "hint_account_name": "Enter the account holder's name",
+  "optional": "Optional",
     "account_name": "Account Name",
   "hint_bank_account_number": "Enter your bank account number",
 "withdraw_earnings": "Withdraw Earnings",
@@ -371,5 +401,60 @@
 	"action_take_photo": "Take a photo",
 	"action_choose_gallery": "Choose from gallery",
 	"action_remove_image": "Remove image",
-	"enter_withdrawal_amount": "Enter withdrawal amount"
+	"enter_withdrawal_amount": "Enter withdrawal amount",
+	"cart_shopping_cart": "Shopping Cart",
+	"cart_your_cart_is_empty": "Your cart is empty",
+	"cart_add_items_to_see_here": "Add items from AMart to see them here",
+	"cart_browse_amart": "Browse AMart",
+	"cart_total_items": "Total ({count} items)",
+	"@cart_total_items": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"cart_checkout": "Checkout",
+	"cart_coming_soon": "Coming Soon",
+	"cart_order_confirmation_coming_soon": "Order confirmation screen coming soon",
+	"cart_clear_cart": "Clear Cart?",
+	"cart_clear_cart_confirmation": "Are you sure you want to remove all items from your cart?",
+	"cart_clear": "Clear",
+	"cart_failed_to_load": "Failed to load cart",
+	"cart_note_prefix": "Note: ",
+	"cart_replace_cart_items": "Replace Cart Items?",
+	"cart_contains_items_from": "Your cart contains items from {merchantName}.",
+	"@cart_contains_items_from": {
+		"placeholders": {
+			"merchantName": {
+				"type": "String"
+			}
+		}
+	},
+	"cart_discard_and_add_from": "Do you want to discard those items and add items from {merchantName} instead?",
+	"@cart_discard_and_add_from": {
+		"placeholders": {
+			"merchantName": {
+				"type": "String"
+			}
+		}
+	},
+	"cart_current_cart_will_be_cleared": "Your current cart will be cleared",
+	"cart_replace_cart": "Replace Cart",
+	"menu_details": "Menu Details",
+	"menu_in_stock": "In Stock ({count} available)",
+	"@menu_in_stock": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"menu_out_of_stock": "Out of Stock",
+	"menu_quantity": "Quantity",
+	"menu_special_notes_optional": "Special Notes (Optional)",
+	"menu_total_price": "Total Price",
+	"menu_add_to_cart": "Add to Cart",
+	"menu_added_to_cart": "Added to Cart",
+	"menu_item_added_to_cart": "Item has been added to your cart"
 }

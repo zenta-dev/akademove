@@ -97,6 +97,180 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @requested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get requested;
+
+  /// No description provided for @matching.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching'**
+  String get matching;
+
+  /// No description provided for @preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get preparing;
+
+  /// No description provided for @ready_for_pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Pickup'**
+  String get ready_for_pickup;
+
+  /// No description provided for @accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get accepted;
+
+  /// No description provided for @arriving.
+  ///
+  /// In en, this message translates to:
+  /// **'Arriving'**
+  String get arriving;
+
+  /// No description provided for @in_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'In Trip'**
+  String get in_trip;
+
+  /// No description provided for @your_completed_and_cancelled_orders_will_appear_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Your completed and cancelled orders will appear here'**
+  String get your_completed_and_cancelled_orders_will_appear_here;
+
+  /// No description provided for @no_orders_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders found'**
+  String get no_orders_found;
+
+  /// No description provided for @all_types.
+  ///
+  /// In en, this message translates to:
+  /// **'All types'**
+  String get all_types;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get in_progress;
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelled;
+
+  /// No description provided for @failed_to_load_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load orders'**
+  String get failed_to_load_orders;
+
+  /// No description provided for @top_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Up'**
+  String get top_up;
+
+  /// No description provided for @withdrawal.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal'**
+  String get withdrawal;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get refund;
+
+  /// No description provided for @adjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjustment'**
+  String get adjustment;
+
+  /// No description provided for @commission.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission'**
+  String get commission;
+
+  /// No description provided for @earning.
+  ///
+  /// In en, this message translates to:
+  /// **'Earning'**
+  String get earning;
+
+  /// No description provided for @failed_to_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to withdraw '**
+  String get failed_to_withdraw;
+
+  /// No description provided for @withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get withdraw;
+
+  /// No description provided for @please_enter_withdrawal_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter withdrawal amount'**
+  String get please_enter_withdrawal_amount;
+
+  /// No description provided for @please_enter_account_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter account number'**
+  String get please_enter_account_number;
+
+  /// No description provided for @insufficient_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient balance'**
+  String get insufficient_balance;
+
+  /// No description provided for @hint_account_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the account holder\'s name'**
+  String get hint_account_name;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
   /// No description provided for @account_name.
   ///
   /// In en, this message translates to:
@@ -2076,6 +2250,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter withdrawal amount'**
   String get enter_withdrawal_amount;
+
+  /// No description provided for @cart_shopping_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping Cart'**
+  String get cart_shopping_cart;
+
+  /// No description provided for @cart_your_cart_is_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get cart_your_cart_is_empty;
+
+  /// No description provided for @cart_add_items_to_see_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items from AMart to see them here'**
+  String get cart_add_items_to_see_here;
+
+  /// No description provided for @cart_browse_amart.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse AMart'**
+  String get cart_browse_amart;
+
+  /// No description provided for @cart_total_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Total ({count} items)'**
+  String cart_total_items(int count);
+
+  /// No description provided for @cart_checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get cart_checkout;
+
+  /// No description provided for @cart_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get cart_coming_soon;
+
+  /// No description provided for @cart_order_confirmation_coming_soon.
+  ///
+  /// In en, this message translates to:
+  /// **'Order confirmation screen coming soon'**
+  String get cart_order_confirmation_coming_soon;
+
+  /// No description provided for @cart_clear_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Cart?'**
+  String get cart_clear_cart;
+
+  /// No description provided for @cart_clear_cart_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove all items from your cart?'**
+  String get cart_clear_cart_confirmation;
+
+  /// No description provided for @cart_clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get cart_clear;
+
+  /// No description provided for @cart_failed_to_load.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load cart'**
+  String get cart_failed_to_load;
+
+  /// No description provided for @cart_note_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: '**
+  String get cart_note_prefix;
+
+  /// No description provided for @cart_replace_cart_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace Cart Items?'**
+  String get cart_replace_cart_items;
+
+  /// No description provided for @cart_contains_items_from.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart contains items from {merchantName}.'**
+  String cart_contains_items_from(String merchantName);
+
+  /// No description provided for @cart_discard_and_add_from.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to discard those items and add items from {merchantName} instead?'**
+  String cart_discard_and_add_from(String merchantName);
+
+  /// No description provided for @cart_current_cart_will_be_cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current cart will be cleared'**
+  String get cart_current_cart_will_be_cleared;
+
+  /// No description provided for @cart_replace_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace Cart'**
+  String get cart_replace_cart;
+
+  /// No description provided for @menu_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Details'**
+  String get menu_details;
+
+  /// No description provided for @menu_in_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'In Stock ({count} available)'**
+  String menu_in_stock(int count);
+
+  /// No description provided for @menu_out_of_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get menu_out_of_stock;
+
+  /// No description provided for @menu_quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get menu_quantity;
+
+  /// No description provided for @menu_special_notes_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Special Notes (Optional)'**
+  String get menu_special_notes_optional;
+
+  /// No description provided for @menu_total_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get menu_total_price;
+
+  /// No description provided for @menu_add_to_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Cart'**
+  String get menu_add_to_cart;
+
+  /// No description provided for @menu_added_to_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to Cart'**
+  String get menu_added_to_cart;
+
+  /// No description provided for @menu_item_added_to_cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Item has been added to your cart'**
+  String get menu_item_added_to_cart;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
