@@ -12,7 +12,7 @@
 **Lint/Format**: `bun run check` (Biome auto-fix). **Type Check**: `turbo check-types`. **Build All**: `turbo build`. **Dev All**: `bun run dev` (alchemy + i18n). **Dev Server**: `turbo -F server dev` or `bun run dev:server`. **Dev Web**: `turbo -F web dev` or `bun run dev:web`. **Flutter Test (Single)**: `cd apps/mobile && flutter test test/path/to/test_file.dart`. **Flutter Test (All)**: `cd apps/mobile && flutter test`. **DB Push**: `turbo -F server db:push` or `bun run db:push`. **DB Studio**: `bun run db:studio`. **DB Generate Migration**: `turbo -F server db:generate`. **DB Migrate**: `turbo -F server db:migrate`. **DB Seed**: `bun run db:seed`. **DB Reset**: `bun run db:reset`. **Generate Dart API Client**: (1) `bun run dev` (start server, may take time), (2) `make gen` (generates client from OpenAPI spec at `http://localhost:3000/api/spec.json`), (3) `melos generate` (runs build_runner for json_serializable). All commands run from project root.
 
 ## 📝 Code Style
-**Formatting**: Tabs (indentStyle), double quotes (Biome enforced). **Imports**: Auto-organize imports (Biome). Use `@/*` path aliases (e.g., `@/core/services/db`). Import from `@repo/schema`, `@repo/shared`, `@repo/i18n`. **Types**: NEVER use `any` (TypeScript) or `dynamic` (Dart) - use `unknown` instead. Enable strict mode. **Naming**: camelCase for TS/JS variables, PascalCase for classes/components, snake_case for Dart/database columns. **File Naming**: kebab-case for all files (e.g., `order-handler.ts`, `order_cubit.dart`).
+**Formatting**: Tabs (indentStyle), double quotes (Biome enforced). **Imports**: Auto-organize imports (Biome). Use `@/*` path aliases (e.g., `@/core/services/db`). Import from `@repo/schema`, `@repo/shared`, `@repo/i18n`. **Types**: NEVER use `any` (TypeScript) or `dynamic` (Dart) - use `unknown` instead. NEVER use null assertion operators (`!.` in TypeScript/Dart) - always check for null/undefined explicitly. Enable strict mode. **Naming**: camelCase for TS/JS variables, PascalCase for classes/components, snake_case for Dart/database columns. **File Naming**: kebab-case for all files (e.g., `order-handler.ts`, `order_cubit.dart`).
 
 ## 🔧 TypeScript/Server Patterns
 
@@ -317,20 +317,22 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 1. ❌ Forgetting `db.transaction()` for write operations
 2. ❌ Not passing `{ tx }` to repository methods inside transactions
 3. ❌ Using `any`/`dynamic` types instead of `unknown`
-4. ❌ Forgetting to invalidate queries after mutations
-5. ❌ Not handling errors with try-catch
-6. ❌ Missing cache invalidation after updates
-7. ❌ Not logging errors with context
-8. ❌ Forgetting to trim input values with `trimObjectValues()`
-9. ❌ Not using `toNumberSafe()`/`toStringNumberSafe()` for decimals
-10. ❌ Missing indexes on filtered/sorted database columns
-11. ❌ Not respecting gender preference in driver matching
-12. ❌ Forgetting to check driver availability/schedule before assignment
-13. ❌ Not calculating commission correctly on order completion
-14. ❌ Missing WebSocket updates for real-time order status changes
+4. ❌ Using null assertion operators (`!.`, `!`) instead of proper null checks
+5. ❌ Forgetting to invalidate queries after mutations
+6. ❌ Not handling errors with try-catch
+7. ❌ Missing cache invalidation after updates
+8. ❌ Not logging errors with context
+9. ❌ Forgetting to trim input values with `trimObjectValues()`
+10. ❌ Not using `toNumberSafe()`/`toStringNumberSafe()` for decimals
+11. ❌ Missing indexes on filtered/sorted database columns
+12. ❌ Not respecting gender preference in driver matching
+13. ❌ Forgetting to check driver availability/schedule before assignment
+14. ❌ Not calculating commission correctly on order completion
+15. ❌ Missing WebSocket updates for real-time order status changes
 
 ## 🚨 Critical Rules
 - **NEVER** use `any` (TS) or `dynamic` (Dart)
+- **NEVER** use null assertion operators (`!.`, `!`, `as Type!`) - always check for null/undefined explicitly
 - **ALWAYS** wrap multi-step mutations in `db.transaction()`
 - **ALWAYS** invalidate queries after mutations
 - **ALWAYS** validate input with Zod schemas
@@ -338,7 +340,7 @@ export const UpdateOrderSchema = InsertOrderSchema.partial();
 - **ALWAYS** use structured logging with context
 - **ALWAYS** pass `opts?: PartialWithTx` to repository methods
 - **ALWAYS** use `v7()` for generating UUIDs
-- **ALWAYS** check for null/undefined before accessing properties
+- **ALWAYS** check for null/undefined before accessing properties (use `?.`, `??`, conditionals)
 - **ALWAYS** respect user gender preferences in driver matching
 - **ALWAYS** verify driver is online/available before assignment
 - **ALWAYS** calculate and record commission on order completion
