@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
@@ -58,23 +59,16 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         listener: (context, state) {
           // Show error messages
           if (state.isFailure && state.error != null) {
-            showToast(
-              context: context,
-              builder: (context, overlay) => context.buildToast(
-                title: 'Error',
-                message: state.error?.message ?? 'An error occurred',
-              ),
+            context.showMyToast(
+              state.error?.message ?? context.l10n.an_error_occurred,
+              type: ToastType.failed,
             );
           }
 
           // Show success messages
           final message = state.message;
           if (message != null && message.isNotEmpty) {
-            showToast(
-              context: context,
-              builder: (context, overlay) =>
-                  context.buildToast(title: 'Success', message: message),
-            );
+            context.showMyToast(message, type: ToastType.success);
           }
 
           // Navigate back when order is completed or cancelled
@@ -136,7 +130,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 20.h,
                       children: [
-                        if (status != null) _buildStatusIndicator(status),
+                        if (status != null)
+                          _buildStatusIndicator(context, status),
                         _buildOrderInfo(order),
                         _buildCustomerInfo(order),
                         _buildActionButtons(state, order),
@@ -214,7 +209,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           icon: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
           ),
-          infoWindow: const InfoWindow(title: 'Pickup Location'),
+          infoWindow: InfoWindow(title: context.l10n.pickup_location),
         ),
       )
       ..add(
@@ -222,7 +217,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           markerId: const MarkerId('dropoff'),
           position: LatLng(dropoffLat, dropoffLng),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          infoWindow: const InfoWindow(title: 'Dropoff Location'),
+          infoWindow: InfoWindow(title: context.l10n.dropoff_location),
         ),
       );
 
@@ -251,40 +246,46 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     }
   }
 
-  Widget _buildStatusIndicator(OrderStatus status) {
+  Widget _buildStatusIndicator(BuildContext context, OrderStatus status) {
     String statusText;
     material.Color statusColor;
 
     switch (status) {
       case OrderStatus.REQUESTED:
-        statusText = 'Requested';
+        statusText = context.l10n.requested;
         statusColor = material.Colors.orange;
       case OrderStatus.MATCHING:
-        statusText = 'Finding Driver';
+        statusText = context.l10n.finding_driver;
         statusColor = material.Colors.blue;
       case OrderStatus.PREPARING:
-        statusText = 'Preparing';
+        statusText = context.l10n.preparing_order;
         statusColor = material.Colors.orange;
       case OrderStatus.READY_FOR_PICKUP:
-        statusText = 'Ready for Pickup';
+        statusText = context.l10n.ready_for_pickup;
         statusColor = material.Colors.green;
       case OrderStatus.ACCEPTED:
-        statusText = 'Order Accepted';
+        statusText = context.l10n.accepted;
         statusColor = material.Colors.green;
       case OrderStatus.ARRIVING:
-        statusText = 'On the Way to Pickup';
+        statusText = context.l10n.arriving;
         statusColor = material.Colors.blue;
       case OrderStatus.IN_TRIP:
-        statusText = 'Trip in Progress';
+        statusText = context.l10n.in_trip;
         statusColor = material.Colors.purple;
       case OrderStatus.COMPLETED:
-        statusText = 'Completed';
+        statusText = context.l10n.completed;
         statusColor = material.Colors.green;
       case OrderStatus.CANCELLED_BY_USER:
+        statusText = context.l10n.cancelled_by_user;
+        statusColor = material.Colors.red;
       case OrderStatus.CANCELLED_BY_DRIVER:
+        statusText = context.l10n.cancelled_by_driver;
+        statusColor = material.Colors.red;
       case OrderStatus.CANCELLED_BY_MERCHANT:
+        statusText = context.l10n.cancelled_by_merchant;
+        statusColor = material.Colors.red;
       case OrderStatus.CANCELLED_BY_SYSTEM:
-        statusText = 'Cancelled';
+        statusText = context.l10n.cancelled_by_system;
         statusColor = material.Colors.red;
     }
 
@@ -337,25 +338,29 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               ),
             ),
             const Divider(),
-            _buildInfoRow(LucideIcons.package, 'Type', order.type.name),
+            _buildInfoRow(
+              LucideIcons.package,
+              context.l10n.service,
+              order.type.name,
+            ),
             _buildInfoRow(
               LucideIcons.mapPin,
-              'Pickup',
+              context.l10n.pickup_location,
               '${order.pickupLocation.y.toStringAsFixed(4)}, ${order.pickupLocation.x.toStringAsFixed(4)}',
             ),
             _buildInfoRow(
               LucideIcons.navigation,
-              'Dropoff',
+              context.l10n.dropoff_location,
               '${order.dropoffLocation.y.toStringAsFixed(4)}, ${order.dropoffLocation.x.toStringAsFixed(4)}',
             ),
             _buildInfoRow(
               LucideIcons.ruler,
-              'Distance',
+              context.l10n.distance,
               '${order.distanceKm.toStringAsFixed(2)} km',
             ),
             _buildInfoRow(
               LucideIcons.dollarSign,
-              'Fare',
+              context.l10n.fare,
               context.formatCurrency(order.totalPrice),
             ),
             if (order.note?.instructions != null)
@@ -391,7 +396,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           spacing: 12.h,
           children: [
             Text(
-              'Customer Information',
+              context.l10n.customer_info,
               style: context.typography.h3.copyWith(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -444,12 +449,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     if (phone != null) {
                       _showCallDialog(context, phone);
                     } else {
-                      showToast(
-                        context: context,
-                        builder: (context, overlay) => context.buildToast(
-                          title: 'No Phone Number',
-                          message: 'Customer phone number not available',
-                        ),
+                      context.showMyToast(
+                        context.l10n.customer_phone_number_not_available,
+                        type: ToastType.warning,
                       );
                     }
                   },
@@ -486,7 +488,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                 onPressed: isLoading
                     ? null
                     : () => _showRejectDialog(context, order.id),
-                child: const Text('Reject'),
+                child: Text(context.l10n.reject_order),
               ),
             ),
           ),
@@ -500,8 +502,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                         order.id,
                       ),
                 child: isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text('Accept Order'),
+                    ? CircularProgressIndicator()
+                    : Text(context.l10n.accept_order),
               ),
             ),
           ),
@@ -522,7 +524,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   : () => context.read<DriverOrderCubit>().markArrived(),
               child: isLoading
                   ? const CircularProgressIndicator()
-                  : const Text('Mark as Arrived'),
+                  : Text(context.l10n.mark_as_arrived),
             ),
           ),
           SizedBox(
@@ -531,7 +533,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               onPressed: isLoading
                   ? null
                   : () => _showCancelDialog(context, order.id),
-              child: const Text('Cancel Order'),
+              child: Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -551,7 +553,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   : () => context.read<DriverOrderCubit>().startTrip(),
               child: isLoading
                   ? const CircularProgressIndicator()
-                  : const Text('Start Trip'),
+                  : Text(context.l10n.start_trip),
             ),
           ),
           SizedBox(
@@ -560,7 +562,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               onPressed: isLoading
                   ? null
                   : () => _showCancelDialog(context, order.id),
-              child: const Text('Cancel Order'),
+              child: Text(context.l10n.cancel_order),
             ),
           ),
         ],
@@ -577,7 +579,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               : () => context.read<DriverOrderCubit>().completeTrip(),
           child: isLoading
               ? const CircularProgressIndicator()
-              : const Text('Complete Trip'),
+              : Text(context.l10n.complete_trip),
         ),
       );
     }
@@ -598,14 +600,14 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   toUserName: order.user?.name ?? 'Customer',
                 );
               },
-              child: const Text('Rate Customer'),
+              child: Text(context.l10n.rate_customer),
             ),
           ),
           SizedBox(
             width: double.infinity,
             child: OutlineButton(
               onPressed: () => context.goNamed(Routes.driverHome.name),
-              child: const Text('Back to Home'),
+              child: Text(context.l10n.back_to_home),
             ),
           ),
         ],
@@ -617,7 +619,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       width: double.infinity,
       child: PrimaryButton(
         onPressed: () => context.goNamed(Routes.driverHome.name),
-        child: const Text('Back to Home'),
+        child: Text(context.l10n.back_to_home),
       ),
     );
   }
@@ -662,21 +664,19 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Reject Order'),
-        content: const Text(
-          'Are you sure you want to reject this order? This action cannot be undone.',
-        ),
+        title: Text(context.l10n.reject_order),
+        content: Text(context.l10n.are_you_sure_you_want_to_reject_this_order),
         actions: [
           material.TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           material.TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<DriverOrderCubit>().rejectOrder(orderId);
             },
-            child: const Text('Reject'),
+            child: Text(context.l10n.reject_order),
           ),
         ],
       ),
@@ -687,21 +687,19 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Cancel Order'),
-        content: const Text(
-          'Are you sure you want to cancel this order? The customer will be notified.',
-        ),
+        title: Text(context.l10n.cancel_order),
+        content: Text(context.l10n.are_you_sure_you_want_to_cancel_this_order),
         actions: [
           material.TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('No'),
+            child: Text(context.l10n.no),
           ),
           material.TextButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<DriverOrderCubit>().cancelOrder();
             },
-            child: const Text('Yes, Cancel'),
+            child: Text(context.l10n.yes_cancel),
           ),
         ],
       ),
@@ -719,7 +717,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           mainAxisSize: material.MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Customer phone number:'),
+            Text(context.l10n.customer_phone_number),
             material.SizedBox(height: 8.h),
             material.SelectableText(
               phoneNumber,
@@ -730,7 +728,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             ),
             material.SizedBox(height: 16.h),
             Text(
-              'Tap the phone number to copy it, then use your phone app to call.',
+              context
+                  .l10n
+                  .tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call,
               style: material.TextStyle(
                 fontSize: 12.sp,
                 color: material.Colors.grey,
@@ -741,7 +741,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         actions: [
           material.TextButton(
             onPressed: () => material.Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
+            child: Text(context.l10n.close),
           ),
         ],
       ),
@@ -781,7 +781,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
                   children: [
                     material.Text(
-                      'Chat with Customer',
+                      context.l10n.chat_with_customer,
                       style: material.TextStyle(
                         fontSize: 18.sp,
                         fontWeight: material.FontWeight.bold,

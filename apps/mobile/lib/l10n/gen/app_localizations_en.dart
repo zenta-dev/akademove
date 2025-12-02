@@ -12,6 +12,248 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get logged_out_successfully => 'Logged out successfully';
+
+  @override
+  String get are_you_sure_you_want_to_logout => 'Are you sure you want to logout?';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get bank_account => 'Bank Account';
+
+  @override
+  String get uploaded => 'Uploaded';
+
+  @override
+  String get missing => 'Missing';
+
+  @override
+  String get student_card => 'Student Card (KTM)';
+
+  @override
+  String get driver_license => 'Driver License (SIM)';
+
+  @override
+  String get vehicle_certificate => 'Vehicle Certificate (STNK)';
+
+  @override
+  String get taking_orders => 'Taking Orders';
+
+  @override
+  String get not_taking_orders => 'Not Taking Orders';
+
+  @override
+  String get license_plate => 'License Plate';
+
+  @override
+  String get failed_to_load_profile => 'Failed to load profile';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get chat_with_customer => 'Chat with Customer';
+
+  @override
+  String get tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call => 'Ketuk nomor telepon untuk menyalinnya, lalu gunakan aplikasi telepon Anda untuk menelepon.';
+
+  @override
+  String get customer_phone_number => 'Customer Phone Number';
+
+  @override
+  String get mark_as_arrived => 'Mark as Arrived';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get yes_cancel => 'Yes, Cancel';
+
+  @override
+  String get are_you_sure_you_want_to_cancel_this_order => 'Are you sure you want to cancel this order? The customer will be notified.';
+
+  @override
+  String get cancel_order => 'Cancel Order';
+
+  @override
+  String get start_trip => 'Start Trip';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get are_you_sure_you_want_to_reject_this_order => 'Are you sure you want to reject this order? This action cannot be undone.';
+
+  @override
+  String get rate_customer => 'Rate Customer';
+
+  @override
+  String get back_to_home => 'Back to Home';
+
+  @override
+  String get complete_trip => 'Complete Trip';
+
+  @override
+  String get reject_order => 'Reject Order';
+
+  @override
+  String get accept_order => 'Accept Order';
+
+  @override
+  String get customer_phone_number_not_available => 'Customer phone number not available';
+
+  @override
+  String get warning => 'Warning';
+
+  @override
+  String get customer_info => 'Customer Info';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get fare => 'Fare';
+
+  @override
+  String get service => 'Service';
+
+  @override
+  String get cancelled_by_user => 'Cancelled by User';
+
+  @override
+  String get cancelled_by_driver => 'Cancelled by Driver';
+
+  @override
+  String get cancelled_by_merchant => 'Cancelled by Merchant';
+
+  @override
+  String get cancelled_by_system => 'Cancelled by System';
+
+  @override
+  String get preparing_order => 'Preparing Order';
+
+  @override
+  String get finding_driver => 'Finding Driver';
+
+  @override
+  String get pickup_location => 'Pickup Location';
+
+  @override
+  String get dropoff_location => 'Dropoff Location';
+
+  @override
+  String get schedule_added_successfully => 'Schedule added successfully';
+
+  @override
+  String get schedule_updated_successfully => 'Schedule updated successfully';
+
+  @override
+  String get delete_schedule => 'Delete Schedule';
+
+  @override
+  String are_you_sure_you_want_to_delete_schedule(Object name) {
+    return 'Are you sure you want to delete \"$name\"? This action cannot be undone.';
+  }
+
+  @override
+  String get sunday => 'Sunday';
+
+  @override
+  String get monday => 'Monday';
+
+  @override
+  String get tuesday => 'Tuesday';
+
+  @override
+  String get wednesday => 'Wednesday';
+
+  @override
+  String get thursday => 'Thursday';
+
+  @override
+  String get friday => 'Friday';
+
+  @override
+  String get saturday => 'Saturday';
+
+  @override
+  String get failed_to_add_schedule => 'Failed to add schedule';
+
+  @override
+  String get failed_to_update_schedule => 'Failed to update schedule';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get please_enter_a_schedule_name => 'Please enter a schedule name';
+
+  @override
+  String get disable_orders_during_this_time => 'Disable orders during this time';
+
+  @override
+  String get repeat_every_week => 'Repeat every week';
+
+  @override
+  String get start_time => 'Start Time';
+
+  @override
+  String get end_time => 'End Time';
+
+  @override
+  String get day_of_week => 'Day of Week';
+
+  @override
+  String get schedule_name => 'Schedule Name';
+
+  @override
+  String get recurring => 'Recurring';
+
+  @override
+  String get add_your_class_schedule_to_automatically_disable_order_acceptance_during_class_time => 'Add your class schedule to automatically disable order acceptance during class time';
+
+  @override
+  String get my_schedule => 'My Schedule (KRS)';
+
+  @override
+  String get no_schedules_found => 'No schedules found';
+
+  @override
+  String get no_schedules_yet => 'No schedules yet';
+
+  @override
+  String get schedule_deleted_successfully => 'Schedule deleted successfully';
+
+  @override
+  String get failed_to_delete_schedule => 'Failed to delete schedule';
+
+  @override
+  String get manage_schedule => 'Manage Schedule';
+
+  @override
+  String get leadeboard_and_badges => 'Leaderboard & Badges';
+
+  @override
+  String get label_trips => 'Trips';
+
+  @override
+  String get ready_to_accept_new_orders => 'Ready to accept new orders';
+
+  @override
+  String get toggle_on_to_start_receiving_orders => 'Toggle on to start receiving orders';
+
+  @override
   String get requested => 'Requested';
 
   @override
@@ -87,7 +329,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_enter_withdrawal_amount => 'Please enter withdrawal amount';
 
   @override
-  String get please_enter_account_number => 'Please enter account number';
+  String get please_enter_bank_account_number => 'Please enter bank account number';
 
   @override
   String get insufficient_balance => 'Insufficient balance';
@@ -1235,4 +1477,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get order_confirm_insufficient_balance => 'Insufficient wallet balance';
+
+  @override
+  String get rate_your_experience => 'Rate Your Experience';
+
+  @override
+  String get overall_rating => 'Overall Rating';
+
+  @override
+  String get cleanliness_rating => 'Cleanliness';
+
+  @override
+  String get courtesy_rating => 'Courtesy';
+
+  @override
+  String get other_rating => 'Other';
+
+  @override
+  String get add_comment_optional => 'Add Comment (Optional)';
+
+  @override
+  String get submit_review => 'Submit Review';
+
+  @override
+  String get review_submitted_successfully => 'Review submitted successfully';
+
+  @override
+  String get review_submission_failed => 'Failed to submit review';
+
+  @override
+  String get you_already_reviewed_order => 'You already reviewed this order';
+
+  @override
+  String get order_must_be_completed_first => 'Order must be completed first';
+
+  @override
+  String get rating_required => 'Please provide a rating';
 }

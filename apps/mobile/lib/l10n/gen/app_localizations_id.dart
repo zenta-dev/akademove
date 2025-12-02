@@ -12,6 +12,248 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get logged_out_successfully => 'Berhasil keluar';
+
+  @override
+  String get are_you_sure_you_want_to_logout => 'Apakah Anda yakin ingin keluar?';
+
+  @override
+  String get logout => 'Keluar';
+
+  @override
+  String get bank_account => 'Rekening Bank';
+
+  @override
+  String get uploaded => 'Diunggah';
+
+  @override
+  String get missing => 'Hilangan';
+
+  @override
+  String get student_card => 'Kartu Mahasiswa (KTM)';
+
+  @override
+  String get driver_license => 'SIM';
+
+  @override
+  String get vehicle_certificate => 'Sertifikat Kendaraan (STNK)';
+
+  @override
+  String get taking_orders => 'Menerima Pesanan';
+
+  @override
+  String get not_taking_orders => 'Tidak Menerima Pesanan';
+
+  @override
+  String get license_plate => 'Plat Nomor';
+
+  @override
+  String get failed_to_load_profile => 'Gagal memuat profil';
+
+  @override
+  String get retry => 'Coba Lagi';
+
+  @override
+  String get close => 'Tutup';
+
+  @override
+  String get chat_with_customer => 'Chat dengan Pelanggan';
+
+  @override
+  String get tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call => 'Ketuk nomor telepon untuk menyalinnya, lalu gunakan aplikasi telepon Anda untuk menelepon.';
+
+  @override
+  String get customer_phone_number => 'Nomor Telepon Pelanggan';
+
+  @override
+  String get mark_as_arrived => 'Tandai sebagai Tiba';
+
+  @override
+  String get no => 'Tidak';
+
+  @override
+  String get yes_cancel => 'Ya, Batalkan';
+
+  @override
+  String get are_you_sure_you_want_to_cancel_this_order => 'Apakah Anda yakin ingin membatalkan pesanan ini? Pelanggan akan diberitahu.';
+
+  @override
+  String get cancel_order => 'Batalkan Pesanan';
+
+  @override
+  String get start_trip => 'Mulai Perjalanan';
+
+  @override
+  String get cancel => 'Batalkan';
+
+  @override
+  String get are_you_sure_you_want_to_reject_this_order => 'Apakah Anda yakin ingin menolak pesanan ini? Tindakan ini tidak dapat dibatalkan.';
+
+  @override
+  String get rate_customer => 'Beri Rating Pelanggan';
+
+  @override
+  String get back_to_home => 'Kembali ke Beranda';
+
+  @override
+  String get complete_trip => 'Selesaikan Perjalanan';
+
+  @override
+  String get reject_order => 'Tolak Pesanan';
+
+  @override
+  String get accept_order => 'Terima Pesanan';
+
+  @override
+  String get customer_phone_number_not_available => 'Nomor telepon pelanggan tidak tersedia';
+
+  @override
+  String get warning => 'Peringatan';
+
+  @override
+  String get customer_info => 'Info Pelanggan';
+
+  @override
+  String get distance => 'Jarak';
+
+  @override
+  String get fare => 'Tarif';
+
+  @override
+  String get service => 'Layanan';
+
+  @override
+  String get cancelled_by_user => 'Dibatalkan oleh Pengguna';
+
+  @override
+  String get cancelled_by_driver => 'Dibatalkan oleh Driver';
+
+  @override
+  String get cancelled_by_merchant => 'Dibatalkan oleh Mitra';
+
+  @override
+  String get cancelled_by_system => 'Dibatalkan oleh Sistem';
+
+  @override
+  String get preparing_order => 'Mempersiapkan Pesanan';
+
+  @override
+  String get finding_driver => 'Mencari Driver';
+
+  @override
+  String get pickup_location => 'Lokasi Penjemputan';
+
+  @override
+  String get dropoff_location => 'Lokasi Tujuan';
+
+  @override
+  String get schedule_added_successfully => 'Jadwal berhasil ditambahkan';
+
+  @override
+  String get schedule_updated_successfully => 'Jadwal berhasil diperbarui';
+
+  @override
+  String get delete_schedule => 'Hapus Jadwal';
+
+  @override
+  String are_you_sure_you_want_to_delete_schedule(Object name) {
+    return 'Apakah Anda yakin ingin menghapus \"$name\"? Tindakan ini tidak dapat dibatalkan.';
+  }
+
+  @override
+  String get sunday => 'Minggu';
+
+  @override
+  String get monday => 'Senin';
+
+  @override
+  String get tuesday => 'Selasa';
+
+  @override
+  String get wednesday => 'Rabu';
+
+  @override
+  String get thursday => 'Kamis';
+
+  @override
+  String get friday => 'Jumat';
+
+  @override
+  String get saturday => 'Sabtu';
+
+  @override
+  String get failed_to_add_schedule => ' Gagal menambahkan jadwal';
+
+  @override
+  String get failed_to_update_schedule => 'Gagal memperbarui jadwal';
+
+  @override
+  String get update => 'Perbarui';
+
+  @override
+  String get delete => 'Hapus';
+
+  @override
+  String get add => 'Tambah';
+
+  @override
+  String get please_enter_a_schedule_name => 'Tolong masukkan nama jadwal';
+
+  @override
+  String get disable_orders_during_this_time => 'Nonaktifkan pesanan selama waktu ini';
+
+  @override
+  String get repeat_every_week => 'Ulangi setiap minggu';
+
+  @override
+  String get start_time => 'Waktu Mulai';
+
+  @override
+  String get end_time => 'Waktu Selesai';
+
+  @override
+  String get day_of_week => 'Hari dalam Seminggu';
+
+  @override
+  String get schedule_name => 'Nama Jadwal';
+
+  @override
+  String get recurring => 'Berulang';
+
+  @override
+  String get add_your_class_schedule_to_automatically_disable_order_acceptance_during_class_time => 'Tambahkan jadwal kuliah Anda untuk menonaktifkan penerimaan pesanan secara otomatis selama jam kuliah';
+
+  @override
+  String get my_schedule => 'Jadwal Saya (KRS)';
+
+  @override
+  String get no_schedules_found => 'Tidak ada jadwal ditemukan';
+
+  @override
+  String get no_schedules_yet => 'Belum ada jadwal';
+
+  @override
+  String get schedule_deleted_successfully => 'Jadwal berhasil dihapus';
+
+  @override
+  String get failed_to_delete_schedule => 'Gagal menghapus jadwal';
+
+  @override
+  String get manage_schedule => 'Kelola Jadwal';
+
+  @override
+  String get leadeboard_and_badges => 'Papan Peringkat & Lencana';
+
+  @override
+  String get label_trips => 'Perjalanan';
+
+  @override
+  String get ready_to_accept_new_orders => 'Siap menerima pesanan baru';
+
+  @override
+  String get toggle_on_to_start_receiving_orders => 'Aktifkan untuk mulai menerima pesanan';
+
+  @override
   String get requested => 'Dalam antrean';
 
   @override
@@ -87,7 +329,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get please_enter_withdrawal_amount => 'Tolong masukkan jumlah penarikan';
 
   @override
-  String get please_enter_account_number => 'Please enter account number';
+  String get please_enter_bank_account_number => 'Tolong masukkan nomor rekening bank';
 
   @override
   String get insufficient_balance => 'Saldo tidak mencukupi';
@@ -1235,4 +1477,40 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get order_confirm_insufficient_balance => 'Saldo dompet tidak mencukupi';
+
+  @override
+  String get rate_your_experience => 'Beri Rating Pengalaman Anda';
+
+  @override
+  String get overall_rating => 'Rating Keseluruhan';
+
+  @override
+  String get cleanliness_rating => 'Kebersihan';
+
+  @override
+  String get courtesy_rating => 'Kesopanan';
+
+  @override
+  String get other_rating => 'Lainnya';
+
+  @override
+  String get add_comment_optional => 'Tambahkan Komentar (Opsional)';
+
+  @override
+  String get submit_review => 'Kirim Ulasan';
+
+  @override
+  String get review_submitted_successfully => 'Ulasan berhasil dikirim';
+
+  @override
+  String get review_submission_failed => 'Gagal mengirim ulasan';
+
+  @override
+  String get you_already_reviewed_order => 'Anda sudah memberi ulasan untuk pesanan ini';
+
+  @override
+  String get order_must_be_completed_first => 'Pesanan harus diselesaikan terlebih dahulu';
+
+  @override
+  String get rating_required => 'Mohon berikan rating';
 }

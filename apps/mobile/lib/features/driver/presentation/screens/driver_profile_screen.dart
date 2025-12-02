@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +60,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     return MyScaffold(
       headers: [
         AppBar(
-          title: const Text('Profile'),
+          title: Text(context.l10n.profile),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.settings),
@@ -111,10 +112,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             color: material.Colors.red,
           ),
           Text(
-            'Failed to load profile',
+            context.l10n.failed_to_load_profile,
             style: context.typography.h3.copyWith(fontSize: 20.sp),
           ),
-          PrimaryButton(onPressed: _loadProfile, child: const Text('Retry')),
+          PrimaryButton(
+            onPressed: _loadProfile,
+            child: Text(context.l10n.retry),
+          ),
         ],
       ),
     );
@@ -202,7 +206,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 Expanded(
                   child: _buildInfoItem(
                     LucideIcons.car,
-                    'License Plate',
+                    context.l10n.license_plate,
                     driver.licensePlate,
                   ),
                 ),
@@ -256,7 +260,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         Expanded(
           child: _buildStatCard(
             LucideIcons.circleCheck,
-            driver.isTakingOrder ? 'Taking Orders' : 'Not Taking Orders',
+            driver.isTakingOrder
+                ? context.l10n.taking_orders
+                : context.l10n.not_taking_orders,
             driver.isTakingOrder ? material.Colors.green : material.Colors.grey,
           ),
         ),
@@ -311,15 +317,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ),
             const Divider(),
             _buildDocumentItem(
-              'Student Card (KTM)',
+              context.l10n.student_card,
               driver.studentCard.isNotEmpty,
             ),
             _buildDocumentItem(
-              'Driver License (SIM)',
+              context.l10n.driver_license,
               driver.driverLicense.isNotEmpty,
             ),
             _buildDocumentItem(
-              'Vehicle Certificate (STNK)',
+              context.l10n.vehicle_certificate,
               driver.vehicleCertificate.isNotEmpty,
             ),
           ],
@@ -344,7 +350,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           ),
         ),
         Text(
-          isUploaded ? 'Uploaded' : 'Missing',
+          isUploaded ? context.l10n.uploaded : context.l10n.missing,
           style: context.typography.small.copyWith(
             fontSize: 12.sp,
             color: isUploaded ? material.Colors.green : material.Colors.red,
@@ -364,7 +370,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           spacing: 12.h,
           children: [
             Text(
-              'Bank Account',
+              context.l10n.bank_account,
               style: context.typography.h4.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
@@ -422,7 +428,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 8.w,
-              children: const [Icon(LucideIcons.pencil), Text('Edit Profile')],
+              children: [
+                Icon(LucideIcons.pencil),
+                Text(context.l10n.edit_profile),
+              ],
             ),
           ),
         ),
@@ -435,7 +444,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 8.w,
-              children: [const Icon(LucideIcons.logOut), const Text('Logout')],
+              children: [
+                const Icon(LucideIcons.logOut),
+                Text(context.l10n.logout),
+              ],
             ),
           ),
         ),
@@ -447,19 +459,19 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(context.l10n.logout),
+        content: Text(context.l10n.are_you_sure_you_want_to_logout),
         actions: [
           material.TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           material.TextButton(
             onPressed: () async {
               Navigator.of(dialogContext).pop();
               await _performLogout();
             },
-            child: const Text('Logout'),
+            child: Text(context.l10n.logout),
           ),
         ],
       ),
@@ -483,23 +495,22 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         context.go(Routes.authSignIn.path);
 
         // Show success message
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Success',
-            message: 'Logged out successfully',
-          ),
+        context.showMyToast(
+          context.l10n.logged_out_successfully,
+          type: ToastType.success,
         );
+      }
+    } on BaseError catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        context.showMyToast(e.message, type: ToastType.failed);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to logout: ${e.toString()}',
-          ),
+        context.showMyToast(
+          context.l10n.an_error_occurred,
+          type: ToastType.failed,
         );
       }
     }
@@ -516,13 +527,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Edit Profile'),
+        title: Text(context.l10n.edit_profile),
         content: material.Column(
           mainAxisSize: material.MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Update your profile information',
+              context.l10n.update_your_license_plate,
               style: context.typography.small.copyWith(
                 fontSize: 12.sp,
                 color: context.colorScheme.mutedForeground,
@@ -531,9 +542,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             SizedBox(height: 16.h),
             material.TextField(
               controller: licensePlateController,
-              decoration: const material.InputDecoration(
-                labelText: 'License Plate',
-                hintText: 'Enter license plate',
+              decoration: material.InputDecoration(
+                labelText: context.l10n.license_plate,
+                hintText: context.l10n.enter_license_plate,
                 border: material.OutlineInputBorder(),
               ),
             ),

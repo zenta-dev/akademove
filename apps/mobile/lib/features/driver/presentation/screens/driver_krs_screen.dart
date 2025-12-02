@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,15 +44,20 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
           _isLoading = false;
         });
       }
+    } on BaseError catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        context.showMyToast(
+          e.message ?? context.l10n.an_error_occurred,
+          type: ToastType.failed,
+        );
+      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to load schedules: ${e.toString()}',
-          ),
+        context.showMyToast(
+          context.l10n.an_error_occurred,
+          type: ToastType.failed,
         );
       }
     }
@@ -72,23 +78,24 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       );
 
       if (mounted) {
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Success',
-            message: 'Schedule deleted successfully',
-          ),
+        context.showMyToast(
+          context.l10n.schedule_deleted_successfully,
+          type: ToastType.success,
         );
         _loadDriverAndSchedules();
       }
+    } on BaseError catch (e) {
+      if (mounted) {
+        context.showMyToast(
+          e.message ?? context.l10n.failed_to_delete_schedule,
+          type: ToastType.failed,
+        );
+      }
     } catch (e) {
       if (mounted) {
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to delete schedule: ${e.toString()}',
-          ),
+        context.showMyToast(
+          context.l10n.failed_to_delete_schedule,
+          type: ToastType.failed,
         );
       }
     }
@@ -99,7 +106,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     return MyScaffold(
       headers: [
         AppBar(
-          title: const Text('My Schedule (KRS)'),
+          title: Text(context.l10n.my_schedule),
           trailing: [
             IconButton(
               icon: const Icon(LucideIcons.plus),
@@ -142,14 +149,16 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
             color: context.colorScheme.mutedForeground,
           ),
           Text(
-            'No schedules yet',
+            context.l10n.no_schedules_yet,
             style: context.typography.h3.copyWith(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            'Add your class schedule to automatically\ndisable order acceptance during class time',
+            context
+                .l10n
+                .add_your_class_schedule_to_automatically_disable_order_acceptance_during_class_time,
             textAlign: TextAlign.center,
             style: context.typography.p.copyWith(
               fontSize: 14.sp,
@@ -247,7 +256,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
-                      'Recurring',
+                      context.l10n.recurring,
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
@@ -351,8 +360,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // Name field
                 material.TextField(
                   controller: nameController,
-                  decoration: const material.InputDecoration(
-                    labelText: 'Schedule Name',
+                  decoration: material.InputDecoration(
+                    labelText: context.l10n.schedule_name,
                     hintText: 'e.g., Mobile Programming',
                     border: material.OutlineInputBorder(),
                   ),
@@ -360,14 +369,14 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // Day of week dropdown
                 material.DropdownButtonFormField<DayOfWeek>(
                   initialValue: selectedDay,
-                  decoration: const material.InputDecoration(
-                    labelText: 'Day of Week',
+                  decoration: material.InputDecoration(
+                    labelText: context.l10n.day_of_week,
                     border: material.OutlineInputBorder(),
                   ),
                   items: DayOfWeek.values.map((day) {
                     return material.DropdownMenuItem(
                       value: day,
-                      child: Text(_getDayFullText(day)),
+                      child: Text(_getDayFullText(context, day)),
                     );
                   }).toList(),
                   onChanged: (value) {
@@ -379,7 +388,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // Start time
                 material.ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Start Time'),
+                  title: Text(context.l10n.start_time),
                   subtitle: Text(_formatTimeOfDay(startTime)),
                   trailing: const Icon(LucideIcons.clock),
                   onTap: () async {
@@ -395,7 +404,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // End time
                 material.ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('End Time'),
+                  title: Text(context.l10n.end_time),
                   subtitle: Text(_formatTimeOfDay(endTime)),
                   trailing: const Icon(LucideIcons.clock),
                   onTap: () async {
@@ -411,8 +420,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // Recurring toggle
                 material.SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Recurring'),
-                  subtitle: const Text('Repeats every week'),
+                  title: Text(context.l10n.recurring),
+                  subtitle: Text(context.l10n.repeat_every_week),
                   value: isRecurring,
                   onChanged: (value) {
                     setState(() => isRecurring = value);
@@ -421,8 +430,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 // Active toggle
                 material.SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Active'),
-                  subtitle: const Text('Disable orders during this time'),
+                  title: Text(context.l10n.active),
+                  subtitle: Text(context.l10n.disable_orders_during_this_time),
                   value: isActive,
                   onChanged: (value) {
                     setState(() => isActive = value);
@@ -434,19 +443,16 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
           actions: [
             material.TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: Text(context.l10n.button_cancel),
             ),
             material.TextButton(
               onPressed: () async {
                 final name = nameController.text.trim();
                 if (name.isEmpty) {
                   if (mounted) {
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Error',
-                        message: 'Please enter a schedule name',
-                      ),
+                    context.showMyToast(
+                      context.l10n.please_enter_a_schedule_name,
+                      type: ToastType.failed,
                     );
                   }
                   return;
@@ -463,7 +469,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   scheduleId: schedule?.id,
                 );
               },
-              child: Text(isEditing ? 'Update' : 'Add'),
+              child: Text(isEditing ? context.l10n.update : context.l10n.add),
             ),
           ],
         ),
@@ -520,27 +526,31 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
       }
 
       if (mounted) {
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Success',
-            message: isEditing
-                ? 'Schedule updated successfully'
-                : 'Schedule added successfully',
-          ),
+        context.showMyToast(
+          isEditing
+              ? context.l10n.schedule_updated_successfully
+              : context.l10n.schedule_added_successfully,
+          type: ToastType.success,
         );
         _loadDriverAndSchedules();
       }
+    } on BaseError catch (e) {
+      if (mounted) {
+        context.showMyToast(
+          e.message ??
+              (isEditing
+                  ? context.l10n.failed_to_update_schedule
+                  : context.l10n.failed_to_add_schedule),
+          type: ToastType.failed,
+        );
+      }
     } catch (e) {
       if (mounted) {
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: isEditing
-                ? 'Failed to update schedule: ${e.toString()}'
-                : 'Failed to add schedule: ${e.toString()}',
-          ),
+        context.showMyToast(
+          isEditing
+              ? context.l10n.failed_to_update_schedule
+              : context.l10n.failed_to_add_schedule,
+          type: ToastType.failed,
         );
       }
     }
@@ -552,22 +562,22 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     return '$hour:$minute';
   }
 
-  String _getDayFullText(DayOfWeek day) {
+  String _getDayFullText(BuildContext context, DayOfWeek day) {
     switch (day) {
       case DayOfWeek.MONDAY:
-        return 'Monday';
+        return context.l10n.monday;
       case DayOfWeek.TUESDAY:
-        return 'Tuesday';
+        return context.l10n.tuesday;
       case DayOfWeek.WEDNESDAY:
-        return 'Wednesday';
+        return context.l10n.wednesday;
       case DayOfWeek.THURSDAY:
-        return 'Thursday';
+        return context.l10n.thursday;
       case DayOfWeek.FRIDAY:
-        return 'Friday';
+        return context.l10n.friday;
       case DayOfWeek.SATURDAY:
-        return 'Saturday';
+        return context.l10n.saturday;
       case DayOfWeek.SUNDAY:
-        return 'Sunday';
+        return context.l10n.sunday;
     }
   }
 
@@ -575,9 +585,9 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     material.showDialog(
       context: context,
       builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Delete Schedule'),
+        title: Text(context.l10n.delete_schedule),
         content: Text(
-          'Are you sure you want to delete "${schedule.name}"? This action cannot be undone.',
+          context.l10n.are_you_sure_you_want_to_delete_schedule(schedule.name),
         ),
         actions: [
           material.TextButton(

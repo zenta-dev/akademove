@@ -107,6 +107,9 @@ class _ReviewSubmissionDialogState
                   final label = switch (category) {
                     ReviewCategory.CLEANLINESS => 'Cleanliness',
                     ReviewCategory.COURTESY => 'Courtesy',
+                    ReviewCategory.PUNCTUALITY => 'Punctuality',
+                    ReviewCategory.SAFETY => 'Safety',
+                    ReviewCategory.COMMUNICATION => 'Communication',
                     ReviewCategory.OTHER => 'Other',
                   };
                   return OutlineButton(

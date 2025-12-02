@@ -1,1 +1,1 @@
-// Widgets will be added as needed
+// Widgets will be added here

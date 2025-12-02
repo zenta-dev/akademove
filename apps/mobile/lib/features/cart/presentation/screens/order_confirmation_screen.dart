@@ -1,10 +1,11 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/cart/data/models/cart_models.dart';
+import 'package:akademove/features/cart/data/models/cart_models.dart'
+    show Cart, CartItem;
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/features/cart/presentation/states/_export.dart';
 import 'package:akademove/features/order/data/repositories/order_repository.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:api_client/api_client.dart';
+import 'package:api_client/api_client.dart' hide Cart, CartItem;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -208,8 +208,8 @@ class _DriverHomeView extends StatelessWidget {
                   Expanded(
                     child: Text(
                       isOnline
-                          ? 'Ready to accept new orders'
-                          : 'Toggle on to start receiving orders',
+                          ? context.l10n.ready_to_accept_new_orders
+                          : context.l10n.toggle_on_to_start_receiving_orders,
                       style: context.typography.small.copyWith(
                         color: isOnline
                             ? context.colorScheme.primary
@@ -244,7 +244,7 @@ class _DriverHomeView extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     icon: material.Icons.attach_money,
-                    label: 'Earnings',
+                    label: context.l10n.label_earnings,
                     value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
                     color: material.Colors.green,
                   ),
@@ -254,7 +254,7 @@ class _DriverHomeView extends StatelessWidget {
                   child: _buildStatItem(
                     context,
                     icon: material.Icons.local_shipping,
-                    label: 'Trips',
+                    label: context.l10n.label_trips,
                     value: '${state.todayTrips ?? 0}',
                     color: material.Colors.blue,
                   ),
@@ -318,19 +318,19 @@ class _DriverHomeView extends StatelessWidget {
             _buildActionButton(
               context,
               icon: material.Icons.history,
-              label: 'Order History',
+              label: context.l10n.screen_title_order_history,
               onTap: () => context.push(Routes.driverHistory.path),
             ),
             _buildActionButton(
               context,
               icon: material.Icons.calendar_today,
-              label: 'Manage Schedule',
+              label: context.l10n.manage_schedule,
               onTap: () => context.push(Routes.driverKRS.path),
             ),
             _buildActionButton(
               context,
               icon: material.Icons.emoji_events,
-              label: 'Leaderboard & Badges',
+              label: context.l10n.leadeboard_and_badges,
               onTap: () => context.push(Routes.driverLeaderboard.path),
             ),
             // Note: Reviews feature - route and screen not yet implemented

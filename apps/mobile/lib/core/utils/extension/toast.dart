@@ -7,7 +7,8 @@ enum ToastType {
   info,
   loading,
   success,
-  failed;
+  failed,
+  warning;
 
   Color get color {
     return switch (this) {
@@ -15,6 +16,7 @@ enum ToastType {
       ToastType.loading => Colors.transparent,
       ToastType.success => Colors.green,
       ToastType.failed => Colors.red,
+      ToastType.warning => Colors.orange,
     };
   }
 
@@ -24,6 +26,7 @@ enum ToastType {
       ToastType.loading => context.l10n.loading,
       ToastType.success => context.l10n.success,
       ToastType.failed => context.l10n.failed,
+      ToastType.warning => context.l10n.warning,
     };
   }
 
@@ -33,6 +36,7 @@ enum ToastType {
       ToastType.loading => LucideIcons.loader,
       ToastType.success => LucideIcons.check,
       ToastType.failed => LucideIcons.x,
+      ToastType.warning => LucideIcons.info,
     };
   }
 }

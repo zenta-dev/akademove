@@ -1,7 +1,8 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/data/_export.dart';
+import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
 import 'package:akademove/features/cart/presentation/states/_export.dart';
-import 'package:api_client/api_client.dart';
+import 'package:api_client/api_client.dart' hide Cart, CartItem;
 
 class CartCubit extends BaseCubit<CartState> {
   CartCubit({required CartRepository cartRepository})
@@ -52,7 +53,7 @@ class CartCubit extends BaseCubit<CartState> {
           // Check if it's a merchant conflict error
           if (code == ErrorCode.conflict) {
             // Extract pending item for conflict dialog
-            final item = CartItem(
+            final item = models.CartItem(
               menuId: menu.id,
               merchantId: menu.merchantId,
               merchantName: merchantName,

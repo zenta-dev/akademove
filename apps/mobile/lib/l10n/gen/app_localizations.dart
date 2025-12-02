@@ -97,6 +97,486 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @logged_out_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged out successfully'**
+  String get logged_out_successfully;
+
+  /// No description provided for @are_you_sure_you_want_to_logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get are_you_sure_you_want_to_logout;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @bank_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Account'**
+  String get bank_account;
+
+  /// No description provided for @uploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploaded'**
+  String get uploaded;
+
+  /// No description provided for @missing.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing'**
+  String get missing;
+
+  /// No description provided for @student_card.
+  ///
+  /// In en, this message translates to:
+  /// **'Student Card (KTM)'**
+  String get student_card;
+
+  /// No description provided for @driver_license.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver License (SIM)'**
+  String get driver_license;
+
+  /// No description provided for @vehicle_certificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Certificate (STNK)'**
+  String get vehicle_certificate;
+
+  /// No description provided for @taking_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking Orders'**
+  String get taking_orders;
+
+  /// No description provided for @not_taking_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Taking Orders'**
+  String get not_taking_orders;
+
+  /// No description provided for @license_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate'**
+  String get license_plate;
+
+  /// No description provided for @failed_to_load_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile'**
+  String get failed_to_load_profile;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @chat_with_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with Customer'**
+  String get chat_with_customer;
+
+  /// No description provided for @tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call.
+  ///
+  /// In en, this message translates to:
+  /// **'Ketuk nomor telepon untuk menyalinnya, lalu gunakan aplikasi telepon Anda untuk menelepon.'**
+  String get tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call;
+
+  /// No description provided for @customer_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Phone Number'**
+  String get customer_phone_number;
+
+  /// No description provided for @mark_as_arrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Arrived'**
+  String get mark_as_arrived;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @yes_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, Cancel'**
+  String get yes_cancel;
+
+  /// No description provided for @are_you_sure_you_want_to_cancel_this_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this order? The customer will be notified.'**
+  String get are_you_sure_you_want_to_cancel_this_order;
+
+  /// No description provided for @cancel_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order'**
+  String get cancel_order;
+
+  /// No description provided for @start_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Trip'**
+  String get start_trip;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @are_you_sure_you_want_to_reject_this_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to reject this order? This action cannot be undone.'**
+  String get are_you_sure_you_want_to_reject_this_order;
+
+  /// No description provided for @rate_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Customer'**
+  String get rate_customer;
+
+  /// No description provided for @back_to_home.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get back_to_home;
+
+  /// No description provided for @complete_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Trip'**
+  String get complete_trip;
+
+  /// No description provided for @reject_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Order'**
+  String get reject_order;
+
+  /// No description provided for @accept_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Order'**
+  String get accept_order;
+
+  /// No description provided for @customer_phone_number_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer phone number not available'**
+  String get customer_phone_number_not_available;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// No description provided for @customer_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Info'**
+  String get customer_info;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Fare'**
+  String get fare;
+
+  /// No description provided for @service.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get service;
+
+  /// No description provided for @cancelled_by_user.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by User'**
+  String get cancelled_by_user;
+
+  /// No description provided for @cancelled_by_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by Driver'**
+  String get cancelled_by_driver;
+
+  /// No description provided for @cancelled_by_merchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by Merchant'**
+  String get cancelled_by_merchant;
+
+  /// No description provided for @cancelled_by_system.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by System'**
+  String get cancelled_by_system;
+
+  /// No description provided for @preparing_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing Order'**
+  String get preparing_order;
+
+  /// No description provided for @finding_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding Driver'**
+  String get finding_driver;
+
+  /// No description provided for @pickup_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Location'**
+  String get pickup_location;
+
+  /// No description provided for @dropoff_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff Location'**
+  String get dropoff_location;
+
+  /// No description provided for @schedule_added_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule added successfully'**
+  String get schedule_added_successfully;
+
+  /// No description provided for @schedule_updated_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule updated successfully'**
+  String get schedule_updated_successfully;
+
+  /// No description provided for @delete_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Schedule'**
+  String get delete_schedule;
+
+  /// No description provided for @are_you_sure_you_want_to_delete_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"? This action cannot be undone.'**
+  String are_you_sure_you_want_to_delete_schedule(Object name);
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get sunday;
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get saturday;
+
+  /// No description provided for @failed_to_add_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add schedule'**
+  String get failed_to_add_schedule;
+
+  /// No description provided for @failed_to_update_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update schedule'**
+  String get failed_to_update_schedule;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @please_enter_a_schedule_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a schedule name'**
+  String get please_enter_a_schedule_name;
+
+  /// No description provided for @disable_orders_during_this_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable orders during this time'**
+  String get disable_orders_during_this_time;
+
+  /// No description provided for @repeat_every_week.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat every week'**
+  String get repeat_every_week;
+
+  /// No description provided for @start_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get start_time;
+
+  /// No description provided for @end_time.
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get end_time;
+
+  /// No description provided for @day_of_week.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Week'**
+  String get day_of_week;
+
+  /// No description provided for @schedule_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Name'**
+  String get schedule_name;
+
+  /// No description provided for @recurring.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring'**
+  String get recurring;
+
+  /// No description provided for @add_your_class_schedule_to_automatically_disable_order_acceptance_during_class_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your class schedule to automatically disable order acceptance during class time'**
+  String get add_your_class_schedule_to_automatically_disable_order_acceptance_during_class_time;
+
+  /// No description provided for @my_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'My Schedule (KRS)'**
+  String get my_schedule;
+
+  /// No description provided for @no_schedules_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules found'**
+  String get no_schedules_found;
+
+  /// No description provided for @no_schedules_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No schedules yet'**
+  String get no_schedules_yet;
+
+  /// No description provided for @schedule_deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule deleted successfully'**
+  String get schedule_deleted_successfully;
+
+  /// No description provided for @failed_to_delete_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete schedule'**
+  String get failed_to_delete_schedule;
+
+  /// No description provided for @manage_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Schedule'**
+  String get manage_schedule;
+
+  /// No description provided for @leadeboard_and_badges.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard & Badges'**
+  String get leadeboard_and_badges;
+
+  /// No description provided for @label_trips.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get label_trips;
+
+  /// No description provided for @ready_to_accept_new_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to accept new orders'**
+  String get ready_to_accept_new_orders;
+
+  /// No description provided for @toggle_on_to_start_receiving_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle on to start receiving orders'**
+  String get toggle_on_to_start_receiving_orders;
+
   /// No description provided for @requested.
   ///
   /// In en, this message translates to:
@@ -247,11 +727,11 @@ abstract class AppLocalizations {
   /// **'Please enter withdrawal amount'**
   String get please_enter_withdrawal_amount;
 
-  /// No description provided for @please_enter_account_number.
+  /// No description provided for @please_enter_bank_account_number.
   ///
   /// In en, this message translates to:
-  /// **'Please enter account number'**
-  String get please_enter_account_number;
+  /// **'Please enter bank account number'**
+  String get please_enter_bank_account_number;
 
   /// No description provided for @insufficient_balance.
   ///
@@ -2502,6 +2982,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insufficient wallet balance'**
   String get order_confirm_insufficient_balance;
+
+  /// No description provided for @rate_your_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Experience'**
+  String get rate_your_experience;
+
+  /// No description provided for @overall_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Rating'**
+  String get overall_rating;
+
+  /// No description provided for @cleanliness_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanliness'**
+  String get cleanliness_rating;
+
+  /// No description provided for @courtesy_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Courtesy'**
+  String get courtesy_rating;
+
+  /// No description provided for @other_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other_rating;
+
+  /// No description provided for @add_comment_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Comment (Optional)'**
+  String get add_comment_optional;
+
+  /// No description provided for @submit_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Review'**
+  String get submit_review;
+
+  /// No description provided for @review_submitted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Review submitted successfully'**
+  String get review_submitted_successfully;
+
+  /// No description provided for @review_submission_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit review'**
+  String get review_submission_failed;
+
+  /// No description provided for @you_already_reviewed_order.
+  ///
+  /// In en, this message translates to:
+  /// **'You already reviewed this order'**
+  String get you_already_reviewed_order;
+
+  /// No description provided for @order_must_be_completed_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Order must be completed first'**
+  String get order_must_be_completed_first;
+
+  /// No description provided for @rating_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide a rating'**
+  String get rating_required;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

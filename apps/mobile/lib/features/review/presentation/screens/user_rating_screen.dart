@@ -345,6 +345,12 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         return material.Icons.cleaning_services_rounded;
       case ReviewCategory.COURTESY:
         return material.Icons.favorite_rounded;
+      case ReviewCategory.PUNCTUALITY:
+        return material.Icons.schedule_rounded;
+      case ReviewCategory.SAFETY:
+        return material.Icons.security_rounded;
+      case ReviewCategory.COMMUNICATION:
+        return material.Icons.chat_bubble_rounded;
       case ReviewCategory.OTHER:
         return material.Icons.star_rounded;
     }
@@ -356,6 +362,12 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         return 'Cleanliness';
       case ReviewCategory.COURTESY:
         return 'Courtesy';
+      case ReviewCategory.PUNCTUALITY:
+        return 'Punctuality';
+      case ReviewCategory.SAFETY:
+        return 'Safety';
+      case ReviewCategory.COMMUNICATION:
+        return 'Communication';
       case ReviewCategory.OTHER:
         return 'Overall';
     }
@@ -367,6 +379,12 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
         return 'How clean was the vehicle and the driver\'s appearance?';
       case ReviewCategory.COURTESY:
         return 'How polite and respectful was the driver?';
+      case ReviewCategory.PUNCTUALITY:
+        return 'Was the driver on time for pickup?';
+      case ReviewCategory.SAFETY:
+        return 'Did you feel safe during the trip?';
+      case ReviewCategory.COMMUNICATION:
+        return 'How well did the driver communicate?';
       case ReviewCategory.OTHER:
         return 'Rate your overall experience with this driver';
     }

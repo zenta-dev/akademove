@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/cart/data/models/cart_models.dart';
-import 'package:api_client/api_client.dart';
+import 'package:akademove/features/cart/data/models/cart_models.dart' as models;
+import 'package:api_client/api_client.dart' hide Cart, CartItem;
 
 /// Repository for managing shopping cart with single-merchant constraint
 class CartRepository extends BaseRepository {
@@ -12,18 +12,18 @@ class CartRepository extends BaseRepository {
   final KeyValueService _keyValueService;
 
   /// Get current cart from storage
-  Future<Cart?> getCart() async {
+  Future<models.Cart?> getCart() async {
     return guard(() async {
       final cartJson = await _keyValueService.get<String>(KeyValueKeys.cart);
       if (cartJson == null || cartJson.isEmpty) return null;
 
       final cartMap = jsonDecode(cartJson) as Map<String, dynamic>;
-      return Cart.fromJson(cartMap);
+      return models.Cart.fromJson(cartMap);
     });
   }
 
   /// Save cart to storage
-  Future<void> _saveCart(Cart cart) async {
+  Future<void> _saveCart(models.Cart cart) async {
     return guard(() async {
       final cartJson = jsonEncode(cart.toJson());
       await _keyValueService.set(KeyValueKeys.cart, cartJson);
@@ -32,7 +32,7 @@ class CartRepository extends BaseRepository {
 
   /// Add item to cart (or update quantity if exists)
   /// Validates single-merchant constraint
-  Future<BaseResponse<Cart>> addItem({
+  Future<BaseResponse<models.Cart>> addItem({
     required MerchantMenu menu,
     required String merchantName,
     int quantity = 1,
@@ -42,7 +42,7 @@ class CartRepository extends BaseRepository {
       final currentCart = await getCart();
 
       // Create new cart item
-      final newItem = CartItem(
+      final newItem = models.CartItem(
         menuId: menu.id,
         merchantId: menu.merchantId,
         merchantName: merchantName,
@@ -53,11 +53,11 @@ class CartRepository extends BaseRepository {
         notes: notes,
       );
 
-      Cart updatedCart;
+      models.Cart updatedCart;
 
       if (currentCart == null || currentCart.items.isEmpty) {
         // Create new cart
-        updatedCart = Cart(
+        updatedCart = models.Cart(
           merchantId: newItem.merchantId,
           merchantName: newItem.merchantName,
           items: [newItem],
@@ -80,10 +80,10 @@ class CartRepository extends BaseRepository {
           (item) => item.menuId == newItem.menuId,
         );
 
-        List<CartItem> updatedItems;
+        List<models.CartItem> updatedItems;
         if (existingIndex >= 0) {
           // Update existing item quantity
-          updatedItems = List<CartItem>.from(currentCart.items);
+          updatedItems = List<models.CartItem>.from(currentCart.items);
           final existing = updatedItems[existingIndex];
           updatedItems[existingIndex] = existing.copyWith(
             quantity: existing.quantity + quantity,
@@ -104,7 +104,7 @@ class CartRepository extends BaseRepository {
           (sum, item) => sum + (item.unitPrice * item.quantity),
         );
 
-        updatedCart = Cart(
+        updatedCart = models.Cart(
           merchantId: currentCart.merchantId,
           merchantName: currentCart.merchantName,
           items: updatedItems,
@@ -120,7 +120,7 @@ class CartRepository extends BaseRepository {
   }
 
   /// Update item quantity in cart
-  Future<BaseResponse<Cart?>> updateItemQuantity({
+  Future<BaseResponse<models.Cart?>> updateItemQuantity({
     required String menuId,
     required int quantity,
   }) async {
@@ -141,7 +141,7 @@ class CartRepository extends BaseRepository {
         );
       }
 
-      final updatedItems = List<CartItem>.from(currentCart.items);
+      final updatedItems = List<models.CartItem>.from(currentCart.items);
 
       if (quantity <= 0) {
         // Remove item if quantity is 0 or less
@@ -169,7 +169,7 @@ class CartRepository extends BaseRepository {
         (sum, item) => sum + (item.unitPrice * item.quantity),
       );
 
-      final updatedCart = Cart(
+      final updatedCart = models.Cart(
         merchantId: currentCart.merchantId,
         merchantName: currentCart.merchantName,
         items: updatedItems,
@@ -184,7 +184,7 @@ class CartRepository extends BaseRepository {
   }
 
   /// Remove item from cart
-  Future<BaseResponse<Cart?>> removeItem(String menuId) async {
+  Future<BaseResponse<models.Cart?>> removeItem(String menuId) async {
     return guard(() async {
       final currentCart = await getCart();
       if (currentCart == null) {
@@ -210,7 +210,7 @@ class CartRepository extends BaseRepository {
         (sum, item) => sum + (item.unitPrice * item.quantity),
       );
 
-      final updatedCart = Cart(
+      final updatedCart = models.Cart(
         merchantId: currentCart.merchantId,
         merchantName: currentCart.merchantName,
         items: updatedItems,
@@ -236,7 +236,7 @@ class CartRepository extends BaseRepository {
 
   /// Replace cart with new merchant items
   /// Used when user confirms merchant replacement
-  Future<BaseResponse<Cart>> replaceCart({
+  Future<BaseResponse<models.Cart>> replaceCart({
     required MerchantMenu menu,
     required String merchantName,
     int quantity = 1,
