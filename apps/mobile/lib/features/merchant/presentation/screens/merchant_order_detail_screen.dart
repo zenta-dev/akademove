@@ -38,11 +38,27 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Future<void> _loadMerchantId() async {
-    // TODO: Get merchant ID from auth state or merchant cubit
-    // For now, use order's merchantId
-    setState(() {
-      _merchantId = _currentOrder.merchantId;
-    });
+    try {
+      // Get merchant ID from MerchantCubit
+      final merchantState = context.read<MerchantCubit>().state;
+      final currentMerchant = merchantState.mine;
+
+      if (currentMerchant != null) {
+        setState(() {
+          _merchantId = currentMerchant.id;
+        });
+      } else {
+        // Fallback to order's merchantId if cubit state is empty
+        setState(() {
+          _merchantId = _currentOrder.merchantId;
+        });
+      }
+    } catch (e) {
+      // Fallback to order's merchantId on error
+      setState(() {
+        _merchantId = _currentOrder.merchantId;
+      });
+    }
   }
 
   Future<void> _subscribeToOrderUpdates() async {
