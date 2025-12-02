@@ -1,4 +1,5 @@
 export 'package:akademove/features/auth/_export.dart';
+export 'package:akademove/features/cart/_export.dart';
 export 'package:akademove/features/configuration/_export.dart';
 export 'package:akademove/features/coupon/_export.dart';
 export 'package:akademove/features/driver/_export.dart';

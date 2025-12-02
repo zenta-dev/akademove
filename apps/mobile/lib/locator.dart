@@ -90,7 +90,10 @@ void _setupRepository() {
     ..registerLazySingleton(
       () => LeaderboardRepository(apiClient: sl<ApiClient>()),
     )
-    ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()));
+    ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()))
+    ..registerLazySingleton(
+      () => CartRepository(keyValueService: sl<KeyValueService>()),
+    );
 }
 
 void _setupCubit() {
@@ -202,5 +205,6 @@ void _setupCubit() {
         leaderboardRepository: sl<LeaderboardRepository>(),
         badgeRepository: sl<BadgeRepository>(),
       ),
-    );
+    )
+    ..registerFactory(() => CartCubit(cartRepository: sl<CartRepository>()));
 }
