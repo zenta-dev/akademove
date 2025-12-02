@@ -10,6 +10,8 @@ import {
 	TrendingUp,
 	Wallet as WalletIcon,
 } from "lucide-react";
+import { useState } from "react";
+import { WithdrawDialog } from "@/components/dialogs/withdraw-wallet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +59,7 @@ function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
 	const search = Route.useSearch();
+	const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
 	// Fetch wallet data
 	const { data: wallet, isLoading: walletLoading } = useQuery({
@@ -235,7 +238,9 @@ function RouteComponent() {
 								View all your earnings and expenses
 							</CardDescription>
 						</div>
-						<Button disabled>Request Withdrawal</Button>
+						<Button onClick={() => setWithdrawDialogOpen(true)}>
+							Request Withdrawal
+						</Button>
 					</div>
 				</CardHeader>
 				<CardContent>
@@ -321,6 +326,12 @@ function RouteComponent() {
 					)}
 				</CardContent>
 			</Card>
+
+			<WithdrawDialog
+				open={withdrawDialogOpen}
+				onOpenChange={setWithdrawDialogOpen}
+				availableBalance={wallet?.balance || 0}
+			/>
 		</>
 	);
 }

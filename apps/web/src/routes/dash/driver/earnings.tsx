@@ -12,6 +12,7 @@ import {
 	Wallet as WalletIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { WithdrawDialog } from "@/components/dialogs/withdraw-wallet";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +64,7 @@ function RouteComponent() {
 	const [selectedPeriod, setSelectedPeriod] = useState<
 		"week" | "month" | "all"
 	>("month");
+	const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false);
 
 	if (!allowed) navigate({ to: "/" });
 
@@ -301,7 +303,10 @@ function RouteComponent() {
 								You have {formatPrice(wallet.balance)} available for withdrawal
 							</p>
 						</div>
-						<Button variant="default" disabled>
+						<Button
+							variant="default"
+							onClick={() => setWithdrawDialogOpen(true)}
+						>
 							Request Withdrawal
 						</Button>
 					</CardContent>
@@ -398,6 +403,12 @@ function RouteComponent() {
 					)}
 				</CardContent>
 			</Card>
+
+			<WithdrawDialog
+				open={withdrawDialogOpen}
+				onOpenChange={setWithdrawDialogOpen}
+				availableBalance={wallet?.balance || 0}
+			/>
 		</>
 	);
 }
