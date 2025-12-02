@@ -65,7 +65,8 @@ class MerchantOrderCubit extends BaseCubit<MerchantOrderState> {
     logger.d('[MerchantOrderCubit] - Received WebSocket update: ${envelope.e}');
 
     // Extract updated order from envelope payload
-    final updatedOrder = envelope.p.detail?.order;
+    final detail = envelope.p.detail;
+    final updatedOrder = detail?.order;
     if (updatedOrder == null) {
       logger.w('[MerchantOrderCubit] - No order data in envelope');
       return;

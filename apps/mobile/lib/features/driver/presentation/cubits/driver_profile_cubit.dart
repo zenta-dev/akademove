@@ -38,7 +38,8 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     MultipartFile? vehicleCertificate,
     DriverUpdateRequestBank? bank,
   }) async {
-    if (state.myDriver == null) return;
+    final driver = state.myDriver;
+    if (driver == null) return;
 
     try {
       final methodName = getMethodName();
@@ -46,7 +47,7 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       emit(state.toLoading());
 
       final res = await _driverRepository.update(
-        driverId: state.myDriver!.id,
+        driverId: driver.id,
         studentId: studentId,
         licensePlate: licensePlate,
         studentCard: studentCard,
@@ -68,13 +69,14 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   }
 
   Future<List<DriverSchedule>> loadSchedules() async {
-    if (state.myDriver == null) return [];
+    final driver = state.myDriver;
+    if (driver == null) return [];
 
     try {
       final methodName = getMethodName();
       if (state.checkAndAssignOperation(methodName)) return [];
 
-      final res = await _driverRepository.listSchedules(state.myDriver!.id);
+      final res = await _driverRepository.listSchedules(driver.id);
 
       state.unAssignOperation(methodName);
       return res.data;
@@ -98,7 +100,8 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     DateTime? specificDate,
     bool? isActive,
   }) async {
-    if (state.myDriver == null) return;
+    final driver = state.myDriver;
+    if (driver == null) return;
 
     try {
       final methodName = getMethodName();
@@ -106,10 +109,10 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       emit(state.toLoading());
 
       await _driverRepository.createSchedule(
-        driverId: state.myDriver!.id,
+        driverId: driver.id,
         request: DriverScheduleCreateRequest(
           name: name,
-          driverId: state.myDriver!.id,
+          driverId: driver.id,
           dayOfWeek: dayOfWeek,
           startTime: startTime,
           endTime: endTime,
@@ -141,7 +144,8 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
     DateTime? specificDate,
     bool? isActive,
   }) async {
-    if (state.myDriver == null) return;
+    final driver = state.myDriver;
+    if (driver == null) return;
 
     try {
       final methodName = getMethodName();
@@ -149,7 +153,7 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       emit(state.toLoading());
 
       await _driverRepository.updateSchedule(
-        driverId: state.myDriver!.id,
+        driverId: driver.id,
         scheduleId: scheduleId,
         request: DriverScheduleUpdateRequest(
           name: name,
@@ -175,7 +179,8 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   }
 
   Future<void> deleteSchedule(String scheduleId) async {
-    if (state.myDriver == null) return;
+    final driver = state.myDriver;
+    if (driver == null) return;
 
     try {
       final methodName = getMethodName();
@@ -183,7 +188,7 @@ class DriverProfileCubit extends BaseCubit<DriverProfileState> {
       emit(state.toLoading());
 
       await _driverRepository.removeSchedule(
-        driverId: state.myDriver!.id,
+        driverId: driver.id,
         scheduleId: scheduleId,
       );
 

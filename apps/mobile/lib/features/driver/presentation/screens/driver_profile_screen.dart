@@ -81,18 +81,23 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               onRefresh: _onRefresh,
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(16.dg),
-                child: _driver == null
-                    ? _buildErrorState()
-                    : Column(
-                        spacing: 16.h,
-                        children: [
-                          _buildProfileHeader(_driver!),
-                          _buildStatsCards(_driver!),
-                          _buildDocumentSection(_driver!),
-                          _buildBankSection(_driver!),
-                          _buildActionButtons(),
-                        ],
-                      ),
+                child: Builder(
+                  builder: (context) {
+                    final driver = _driver;
+                    if (driver == null) return _buildErrorState();
+
+                    return Column(
+                      spacing: 16.h,
+                      children: [
+                        _buildProfileHeader(driver),
+                        _buildStatsCards(driver),
+                        _buildDocumentSection(driver),
+                        _buildBankSection(driver),
+                        _buildActionButtons(),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
     );

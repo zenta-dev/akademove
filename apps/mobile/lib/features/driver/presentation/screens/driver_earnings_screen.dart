@@ -103,10 +103,21 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 child: Column(
                   spacing: 16.h,
                   children: [
-                    if (_wallet != null) _buildWalletBalanceCard(_wallet!),
+                    Builder(
+                      builder: (context) {
+                        final wallet = _wallet;
+                        if (wallet == null) return const SizedBox.shrink();
+                        return _buildWalletBalanceCard(wallet);
+                      },
+                    ),
                     if (_monthlySummary != null) _buildMonthSelector(),
-                    if (_monthlySummary != null)
-                      _buildEarningsSummary(_monthlySummary!),
+                    Builder(
+                      builder: (context) {
+                        final summary = _monthlySummary;
+                        if (summary == null) return const SizedBox.shrink();
+                        return _buildEarningsSummary(summary);
+                      },
+                    ),
                     _buildRecentTransactions(),
                     _buildWithdrawButton(),
                   ],
@@ -382,16 +393,22 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (transaction.description != null)
-                    Text(
-                      transaction.description!,
-                      style: context.typography.small.copyWith(
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Builder(
+                    builder: (context) {
+                      final description = transaction.description;
+                      if (description == null) return const SizedBox.shrink();
+
+                      return Text(
+                        description,
+                        style: context.typography.small.copyWith(
+                          fontSize: 12.sp,
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    },
+                  ),
                   Text(
                     DateFormat(
                       'MMM dd, yyyy HH:mm',

@@ -99,8 +99,9 @@ class _UserRideScreenState extends State<UserRideScreen> {
     final bounds = <LatLng>[];
 
     // Add pickup marker
-    if (pickup != null) {
-      final pickupLatLng = LatLng(pickup!.lat, pickup!.lng);
+    final pickupLocation = pickup;
+    if (pickupLocation != null) {
+      final pickupLatLng = LatLng(pickupLocation.lat, pickupLocation.lng);
       bounds.add(pickupLatLng);
 
       newMarkers.add(
@@ -110,14 +111,18 @@ class _UserRideScreenState extends State<UserRideScreen> {
           icon: BitmapDescriptor.defaultMarkerWithHue(
             BitmapDescriptor.hueGreen,
           ),
-          infoWindow: InfoWindow(title: 'Pickup', snippet: pickup!.vicinity),
+          infoWindow: InfoWindow(
+            title: 'Pickup',
+            snippet: pickupLocation.vicinity,
+          ),
         ),
       );
     }
 
     // Add dropoff marker
-    if (dropoff != null) {
-      final dropoffLatLng = LatLng(dropoff!.lat, dropoff!.lng);
+    final dropoffLocation = dropoff;
+    if (dropoffLocation != null) {
+      final dropoffLatLng = LatLng(dropoffLocation.lat, dropoffLocation.lng);
       bounds.add(dropoffLatLng);
 
       newMarkers.add(
@@ -125,28 +130,34 @@ class _UserRideScreenState extends State<UserRideScreen> {
           markerId: const MarkerId('dropoff'),
           position: dropoffLatLng,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          infoWindow: InfoWindow(title: 'Dropoff', snippet: dropoff!.vicinity),
+          infoWindow: InfoWindow(
+            title: 'Dropoff',
+            snippet: dropoffLocation.vicinity,
+          ),
         ),
       );
     }
 
     // Add polyline if both locations are selected
     _polylines.clear();
-    if (pickup != null && dropoff != null) {
+    final pickupLoc = pickup;
+    final dropoffLoc = dropoff;
+    if (pickupLoc != null && dropoffLoc != null) {
       try {
         // Create cache key from pickup and dropoff coordinates
         final routeKey =
-            '${pickup!.lat},${pickup!.lng}-${dropoff!.lat},${dropoff!.lng}';
+            '${pickupLoc.lat},${pickupLoc.lng}-${dropoffLoc.lat},${dropoffLoc.lng}';
 
         // Use cached route if available
         List<Coordinate> routeCoordinates;
-        if (_cachedRouteKey == routeKey && _cachedRoute != null) {
-          routeCoordinates = _cachedRoute!;
+        final cachedRoute = _cachedRoute;
+        if (_cachedRouteKey == routeKey && cachedRoute != null) {
+          routeCoordinates = cachedRoute;
         } else {
           // Get actual route from MapService via cubit
           routeCoordinates = await context.read<UserRideCubit>().getRoutes(
-            pickup!.toCoordinate(),
-            dropoff!.toCoordinate(),
+            pickupLoc.toCoordinate(),
+            dropoffLoc.toCoordinate(),
           );
           // Cache the route
           _cachedRoute = routeCoordinates;
@@ -174,8 +185,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
             Polyline(
               polylineId: const PolylineId('route'),
               points: [
-                LatLng(pickup!.lat, pickup!.lng),
-                LatLng(dropoff!.lat, dropoff!.lng),
+                LatLng(pickupLoc.lat, pickupLoc.lng),
+                LatLng(dropoffLoc.lat, dropoffLoc.lng),
               ],
               color: context.colorScheme.primary,
               width: 4,
@@ -191,8 +202,8 @@ class _UserRideScreenState extends State<UserRideScreen> {
           Polyline(
             polylineId: const PolylineId('route'),
             points: [
-              LatLng(pickup!.lat, pickup!.lng),
-              LatLng(dropoff!.lat, dropoff!.lng),
+              LatLng(pickupLoc.lat, pickupLoc.lng),
+              LatLng(dropoffLoc.lat, dropoffLoc.lng),
             ],
             color: context.colorScheme.primary,
             width: 4,
@@ -321,11 +332,13 @@ class _UserRideScreenState extends State<UserRideScreen> {
                     enabled: !state.isLoading && canProceed,
                     onPressed: canProceed
                         ? () async {
-                            if (pickup == null || dropoff == null) return;
+                            final pickupLoc = pickup;
+                            final dropoffLoc = dropoff;
+                            if (pickupLoc == null || dropoffLoc == null) return;
 
                             await context.read<UserOrderCubit>().estimate(
-                              pickup!,
-                              dropoff!,
+                              pickupLoc,
+                              dropoffLoc,
                             );
 
                             if (context.mounted) {

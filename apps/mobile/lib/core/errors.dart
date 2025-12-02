@@ -29,8 +29,7 @@ enum ErrorCode {
   };
 
   static final Map<int, ErrorCode> _byCode = {
-    for (final e in ErrorCode.values)
-      if (e.code case final code?) code: e,
+    for (final e in ErrorCode.values) ?e.code: e,
   };
 
   static ErrorCode? fromString(String? str) => _byName[str?.toUpperCase()];

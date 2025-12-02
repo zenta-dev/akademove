@@ -41,9 +41,10 @@ class UserMartCategoryScreen extends StatelessWidget {
               child: OopsAlertWidget(
                 message: error.message ?? 'Failed to load merchants',
                 onRefresh: () {
-                  if (state.selectedCategory != null) {
+                  final category = state.selectedCategory;
+                  if (category != null) {
                     context.read<UserMartCubit>().loadCategoryMerchants(
-                      category: state.selectedCategory!,
+                      category: category,
                     );
                   }
                 },
@@ -119,14 +120,18 @@ class _MerchantCard extends StatelessWidget {
               child: SizedBox(
                 width: 100.w,
                 height: 100.h,
-                child: merchant.image != null
-                    ? CachedNetworkImage(
-                        imageUrl: merchant.image!,
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) =>
-                            Assets.images.noImage.svg(),
-                      )
-                    : Assets.images.noImage.svg(),
+                child: () {
+                  final image = merchant.image;
+                  if (image != null) {
+                    return CachedNetworkImage(
+                      imageUrl: image,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          Assets.images.noImage.svg(),
+                    );
+                  }
+                  return Assets.images.noImage.svg();
+                }(),
               ),
             ),
             Gap(12.w),

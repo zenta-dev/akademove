@@ -112,7 +112,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
     final newMarkers = drivers
         .where((driver) => driver.currentLocation != null)
         .map((driver) {
-          final loc = driver.currentLocation!;
+          final loc = driver.currentLocation;
+          if (loc == null) return null;
+
           return Marker(
             markerId: MarkerId('driver_${driver.id}'),
             position: LatLng(loc.y.toDouble(), loc.x.toDouble()),
@@ -125,6 +127,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
             icon: _driverIcon,
           );
         })
+        .whereType<Marker>()
         .toSet();
 
     setState(() {
@@ -135,10 +138,11 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
   }
 
   Future<void> _onCameraIdle() async {
-    if (_currentCameraPosition == null) return;
+    final cameraPosition = _currentCameraPosition;
+    if (cameraPosition == null) return;
 
-    final newZoom = _currentCameraPosition!.zoom;
-    final newCenter = _currentCameraPosition!.target;
+    final newZoom = cameraPosition.zoom;
+    final newCenter = cameraPosition.target;
 
     final radiusKm = zoomToRadiusKm(
       zoom: newZoom,
@@ -152,8 +156,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       shouldFetch = true;
     }
 
-    if (_lastCenter != null) {
-      final movedKm = _distanceBetweenKm(_lastCenter!, newCenter);
+    final lastCenter = _lastCenter;
+    if (lastCenter != null) {
+      final movedKm = _distanceBetweenKm(lastCenter, newCenter);
       if (movedKm > radiusKm * 0.3) {
         shouldFetch = true;
       }

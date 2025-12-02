@@ -133,7 +133,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ? Colors.neutral.shade700
                     : Colors.neutral.shade400,
               ),
-              image: hasImage && selectedImage != null
+              image: hasImage
                   ? DecorationImage(
                       image: FileImage(selectedImage),
                       fit: BoxFit.cover,

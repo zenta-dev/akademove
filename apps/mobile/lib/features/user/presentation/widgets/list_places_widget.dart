@@ -40,7 +40,7 @@ class ListPlacesWidget extends StatelessWidget {
 
   Widget _buildCard(BuildContext context, Place place) => Button(
     style: const ButtonStyle.ghost(density: ButtonDensity.compact),
-    onPressed: onItemTap != null ? () => onItemTap!(place) : null,
+    onPressed: onItemTap != null ? () => onItemTap?.call(place) : null,
     child: Card(
       padding: EdgeInsets.all(8.dg),
       child: Row(

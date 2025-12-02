@@ -51,8 +51,13 @@ final merchantRouter = StatefulShellRoute.indexedStack(
         GoRoute(
           name: Routes.merchantOrderDetail.name,
           path: Routes.merchantOrderDetail.path,
-          builder: (context, state) =>
-              MerchantOrderDetailScreen(order: state.extra! as Order),
+          builder: (context, state) {
+            final order = state.extra as Order?;
+            if (order == null) {
+              throw Exception('Order is required for merchant order detail');
+            }
+            return MerchantOrderDetailScreen(order: order);
+          },
         ),
       ],
     ),

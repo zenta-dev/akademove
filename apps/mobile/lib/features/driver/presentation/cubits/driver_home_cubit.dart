@@ -113,7 +113,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   Future<void> toggleOnlineStatus() async {
-    if (_driverId == null) return;
+    final driverId = _driverId;
+    if (driverId == null) return;
 
     try {
       final methodName = getMethodName();
@@ -123,7 +124,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       emit(state.toLoading());
 
       final res = await _driverRepository.updateOnlineStatus(
-        driverId: _driverId!,
+        driverId: driverId,
         isOnline: newStatus,
       );
 
@@ -171,7 +172,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   Future<void> _updateLocation() async {
-    if (_driverId == null || !state.isOnline) return;
+    final driverId = _driverId;
+    if (driverId == null || !state.isOnline) return;
 
     try {
       // Check permission
@@ -191,7 +193,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
       // Update location on server
       await _driverRepository.updateLocation(
-        driverId: _driverId!,
+        driverId: driverId,
         location: UpdateDriverLocationRequest(
           x: position.longitude,
           y: position.latitude,

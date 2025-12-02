@@ -18,8 +18,9 @@ class PickLocationParameters {
   final String? text;
 
   bool get disabled {
-    if (enabled == null) return true;
-    return !enabled!;
+    final isEnabled = enabled;
+    if (isEnabled == null) return true;
+    return !isEnabled;
   }
 }
 
@@ -77,8 +78,9 @@ class PickLocationCardWidget extends StatelessWidget {
     bool isPickup,
   ) {
     // If text is provided directly (display mode), create a temporary controller
-    final effectiveController = param?.text != null
-        ? TextEditingController(text: param!.text)
+    final text = param?.text;
+    final effectiveController = text != null
+        ? TextEditingController(text: text)
         : param?.controller;
 
     return Button(

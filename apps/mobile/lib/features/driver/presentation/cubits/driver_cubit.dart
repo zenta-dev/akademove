@@ -94,8 +94,13 @@ class DriverCubit extends BaseCubit<DriverState> {
       // Optimistic update
       emit(state.copyWith(isOnline: newStatus));
 
+      final driverId = _driverId;
+      if (driverId == null) {
+        throw Exception('Driver ID not initialized');
+      }
+
       final res = await _driverRepository.updateOnlineStatus(
-        driverId: _driverId!,
+        driverId: driverId,
         isOnline: newStatus,
       );
 
@@ -119,8 +124,11 @@ class DriverCubit extends BaseCubit<DriverState> {
         error: e,
         stackTrace: st,
       );
-      // Revert optimistic update
-      emit(state.copyWith(isOnline: !state.isOnline!));
+      // Revert optimistic update to previous status
+      final previousStatus = state.isOnline;
+      if (previousStatus != null) {
+        emit(state.copyWith(isOnline: !previousStatus));
+      }
       emit(state.toFailure(e));
     }
   }
@@ -191,7 +199,8 @@ class DriverCubit extends BaseCubit<DriverState> {
     // For now, use a default driver share of 85% (15% platform fee)
     _platformFeeRate ??= 0.15;
 
-    final driverShare = 1.0 - _platformFeeRate!;
+    final platformFeeRate = _platformFeeRate ?? 0.15;
+    final driverShare = 1.0 - platformFeeRate;
 
     return orders.fold<num>(
       0,

@@ -133,43 +133,56 @@ class IncomingOrderDialog extends StatelessWidget {
             ],
 
             // Note if provided
-            if (order.note != null && _hasNoteContent(order.note!)) ...[
-              SizedBox(height: 12.h),
-              Container(
-                padding: EdgeInsets.all(12.dg),
-                decoration: BoxDecoration(
-                  color: context.colorScheme.muted,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          material.Icons.note,
-                          size: 16.sp,
-                          color: context.colorScheme.mutedForeground,
+            if (order.note != null) ...[
+              Builder(
+                builder: (context) {
+                  final note = order.note;
+                  if (note == null || !_hasNoteContent(note)) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return Column(
+                    children: [
+                      SizedBox(height: 12.h),
+                      Container(
+                        padding: EdgeInsets.all(12.dg),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.muted,
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          'Note:',
-                          style: context.typography.small.copyWith(
-                            color: context.colorScheme.mutedForeground,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  material.Icons.note,
+                                  size: 16.sp,
+                                  color: context.colorScheme.mutedForeground,
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  'Note:',
+                                  style: context.typography.small.copyWith(
+                                    color: context.colorScheme.mutedForeground,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              _getNoteText(note),
+                              style: context.typography.small.copyWith(
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      _getNoteText(order.note!),
-                      style: context.typography.small.copyWith(
-                        color: context.colorScheme.mutedForeground,
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                },
               ),
             ],
 
@@ -267,21 +280,29 @@ class IncomingOrderDialog extends StatelessWidget {
   }
 
   bool _hasNoteContent(OrderNote note) {
-    return (note.pickup != null && note.pickup!.isNotEmpty) ||
-        (note.dropoff != null && note.dropoff!.isNotEmpty) ||
-        (note.instructions != null && note.instructions!.isNotEmpty);
+    final pickup = note.pickup;
+    final dropoff = note.dropoff;
+    final instructions = note.instructions;
+
+    return (pickup != null && pickup.isNotEmpty) ||
+        (dropoff != null && dropoff.isNotEmpty) ||
+        (instructions != null && instructions.isNotEmpty);
   }
 
   String _getNoteText(OrderNote note) {
     final parts = <String>[];
-    if (note.pickup != null && note.pickup!.isNotEmpty) {
-      parts.add('Pickup: ${note.pickup}');
+    final pickup = note.pickup;
+    final dropoff = note.dropoff;
+    final instructions = note.instructions;
+
+    if (pickup != null && pickup.isNotEmpty) {
+      parts.add('Pickup: $pickup');
     }
-    if (note.dropoff != null && note.dropoff!.isNotEmpty) {
-      parts.add('Dropoff: ${note.dropoff}');
+    if (dropoff != null && dropoff.isNotEmpty) {
+      parts.add('Dropoff: $dropoff');
     }
-    if (note.instructions != null && note.instructions!.isNotEmpty) {
-      parts.add('Instructions: ${note.instructions}');
+    if (instructions != null && instructions.isNotEmpty) {
+      parts.add('Instructions: $instructions');
     }
     return parts.join('\n');
   }
@@ -336,8 +357,9 @@ class IncomingOrderListener extends StatelessWidget {
                 current.incomingOrder != null;
           },
           listener: (context, state) {
-            if (state.incomingOrder != null) {
-              _showIncomingOrderDialog(context, state.incomingOrder!);
+            final incomingOrder = state.incomingOrder;
+            if (incomingOrder != null) {
+              _showIncomingOrderDialog(context, incomingOrder);
             }
           },
         ),
@@ -345,16 +367,19 @@ class IncomingOrderListener extends StatelessWidget {
         BlocListener<DriverOrderCubit, DriverOrderState>(
           listenWhen: (previous, current) {
             // Navigate when order is successfully accepted
-            return previous.currentOrder == null &&
-                current.currentOrder != null &&
-                current.currentOrder!.status == OrderStatus.ACCEPTED;
+            final prevOrder = previous.currentOrder;
+            final currOrder = current.currentOrder;
+            return prevOrder == null &&
+                currOrder != null &&
+                currOrder.status == OrderStatus.ACCEPTED;
           },
           listener: (context, state) {
-            if (state.currentOrder != null) {
+            final currentOrder = state.currentOrder;
+            if (currentOrder != null) {
               // Navigate to order detail screen
               context.goNamed(
                 Routes.driverOrderDetail.name,
-                pathParameters: {'orderId': state.currentOrder!.id},
+                pathParameters: {'orderId': currentOrder.id},
               );
             }
           },

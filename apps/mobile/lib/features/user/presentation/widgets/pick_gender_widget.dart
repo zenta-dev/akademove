@@ -68,10 +68,7 @@ class PickGenderWidget extends StatelessWidget {
                 if (value == UserGender.FEMALE)
                   Icon(LucideIcons.venus, size: 16.sp, color: Colors.pink),
                 if (value == null) Icon(LucideIcons.nonBinary, size: 16.sp),
-                DefaultText(
-                  value == null ? 'Mixed' : value!.name,
-                  fontSize: 14.sp,
-                ),
+                DefaultText(value?.name ?? 'Mixed', fontSize: 14.sp),
               ],
             ),
           ),

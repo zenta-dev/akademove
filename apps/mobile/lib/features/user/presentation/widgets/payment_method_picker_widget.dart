@@ -112,12 +112,18 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const DefaultText('Bank Transfer'),
-                    if (bankProvider != null)
-                      DefaultText(
-                        bankProvider!.value,
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final provider = bankProvider;
+                        if (provider == null) return const SizedBox.shrink();
+
+                        return DefaultText(
+                          provider.value,
+                          fontSize: 12.sp,
+                          color: context.colorScheme.mutedForeground,
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const Spacer(),

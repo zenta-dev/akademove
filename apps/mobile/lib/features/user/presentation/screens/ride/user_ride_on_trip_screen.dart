@@ -93,9 +93,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       );
 
     // Add driver marker if available
-    if (driver?.currentLocation != null) {
-      final driverLat = driver!.currentLocation!.y.toDouble();
-      final driverLng = driver.currentLocation!.x.toDouble();
+    final driverLocation = driver?.currentLocation;
+    if (driver != null && driverLocation != null) {
+      final driverLat = driverLocation.y.toDouble();
+      final driverLng = driverLocation.x.toDouble();
 
       newMarkers.add(
         Marker(
@@ -372,9 +373,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             Avatar(
               size: 48.w,
               initials: Avatar.getInitials(driver.user?.name ?? 'Driver'),
-              provider: driver.user?.image != null
-                  ? CachedNetworkImageProvider(driver.user!.image!)
-                  : null,
+              provider: () {
+                final image = driver.user?.image;
+                return image != null ? CachedNetworkImageProvider(image) : null;
+              }(),
             ),
             SizedBox(width: 12.w),
             Expanded(

@@ -42,10 +42,14 @@ class EmergencyRepository extends BaseRepository {
       );
 
       if (res.statusCode == 200 && res.data != null) {
-        return SuccessResponse(
-          message: res.data!.message,
-          data: res.data!.data,
-        );
+        final data = res.data;
+        if (data == null) {
+          throw const RepositoryError(
+            'No data received from emergency trigger',
+            code: ErrorCode.internalServerError,
+          );
+        }
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(
@@ -63,10 +67,14 @@ class EmergencyRepository extends BaseRepository {
       );
 
       if (res.statusCode == 200 && res.data != null) {
-        return SuccessResponse(
-          message: res.data!.message,
-          data: res.data!.data,
-        );
+        final data = res.data;
+        if (data == null) {
+          throw const RepositoryError(
+            'No data received from emergency list',
+            code: ErrorCode.internalServerError,
+          );
+        }
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(
@@ -82,10 +90,14 @@ class EmergencyRepository extends BaseRepository {
       final res = await _apiClient.getEmergencyApi().emergencyGet(id: id);
 
       if (res.statusCode == 200 && res.data != null) {
-        return SuccessResponse(
-          message: res.data!.message,
-          data: res.data!.data,
-        );
+        final data = res.data;
+        if (data == null) {
+          throw const RepositoryError(
+            'No data received from emergency get',
+            code: ErrorCode.internalServerError,
+          );
+        }
+        return SuccessResponse(message: data.message, data: data.data);
       }
 
       throw const RepositoryError(

@@ -78,12 +78,13 @@ class UserDeliverySummaryScreen extends StatelessWidget {
                           'Weight',
                           '${estimate.details.weight}kg',
                         ),
-                        if (estimate.details.specialInstructions != null) ...[
+                        if (estimate.details.specialInstructions
+                            case final instructions?) ...[
                           const Divider(),
                           _buildDetailRow(
                             context,
                             'Instructions',
-                            estimate.details.specialInstructions!,
+                            instructions,
                           ),
                         ],
                       ],

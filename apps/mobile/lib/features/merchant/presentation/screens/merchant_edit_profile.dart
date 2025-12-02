@@ -944,9 +944,10 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                                             ),
                                         maxLines: 1,
                                       ),
-                                      if (suggestion.country != null)
+                                      if (suggestion.country
+                                          case final country?)
                                         Text(
-                                          suggestion.country!,
+                                          country,
                                           style: context.theme.typography.xSmall
                                               .copyWith(
                                                 color: context
@@ -995,8 +996,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       onMapCreated: (controller) {
                         _mapController = controller;
                         Future.delayed(const Duration(milliseconds: 300), () {
-                          if (_mapController != null && mounted) {
-                            _mapController!.animateCamera(
+                          final controller = _mapController;
+                          if (controller != null && mounted) {
+                            controller.animateCamera(
                               CameraUpdate.newLatLngZoom(
                                 LatLng(
                                   _outletLocation.y.toDouble(),

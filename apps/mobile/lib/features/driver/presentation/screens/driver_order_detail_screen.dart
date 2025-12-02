@@ -65,11 +65,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         }
 
         // Show success messages
-        if (state.message != null && state.message!.isNotEmpty) {
+        final message = state.message;
+        if (message != null && message.isNotEmpty) {
           showToast(
             context: context,
             builder: (context, overlay) =>
-                context.buildToast(title: 'Success', message: state.message!),
+                context.buildToast(title: 'Success', message: message),
           );
         }
 
@@ -86,8 +87,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         }
 
         // Update map when order data changes
-        if (state.currentOrder != null) {
-          _updateMapWithOrderData(state.currentOrder!);
+        final currentOrder = state.currentOrder;
+        if (currentOrder != null) {
+          _updateMapWithOrderData(currentOrder);
         }
       },
       builder: (context, state) {
@@ -97,7 +99,12 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           );
         }
 
-        final order = state.currentOrder!;
+        final order = state.currentOrder;
+        if (order == null) {
+          return const MyScaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
         final status = state.orderStatus;
 
         return MyScaffold(
@@ -195,7 +202,8 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
     });
 
     // Fit bounds to show both markers
-    if (_mapController != null) {
+    final mapController = _mapController;
+    if (mapController != null) {
       final bounds = LatLngBounds(
         southwest: LatLng(
           pickupLat < dropoffLat ? pickupLat : dropoffLat,
@@ -206,7 +214,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
           pickupLng > dropoffLng ? pickupLng : dropoffLng,
         ),
       );
-      await _mapController!.animateCamera(
+      await mapController.animateCamera(
         CameraUpdate.newLatLngBounds(bounds, 100),
       );
     }
@@ -319,14 +327,24 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               'Fare',
               context.formatCurrency(order.totalPrice),
             ),
-            if (order.note?.instructions != null) ...[
-              const Divider(),
-              _buildInfoRow(
-                LucideIcons.messageSquare,
-                'Notes',
-                order.note!.instructions!,
+            if (order.note?.instructions != null)
+              Builder(
+                builder: (context) {
+                  final instructions = order.note?.instructions;
+                  if (instructions == null) return const SizedBox.shrink();
+
+                  return Column(
+                    children: [
+                      const Divider(),
+                      _buildInfoRow(
+                        LucideIcons.messageSquare,
+                        'Notes',
+                        instructions,
+                      ),
+                    ],
+                  );
+                },
               ),
-            ],
           ],
         ),
       ),
@@ -371,14 +389,20 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      if (order.user?.phone != null)
-                        Text(
-                          _formatPhone(order.user!.phone!),
-                          style: context.typography.small.copyWith(
-                            fontSize: 14.sp,
-                            color: context.colorScheme.mutedForeground,
-                          ),
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final phone = order.user?.phone;
+                          if (phone == null) return const SizedBox.shrink();
+
+                          return Text(
+                            _formatPhone(phone),
+                            style: context.typography.small.copyWith(
+                              fontSize: 14.sp,
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

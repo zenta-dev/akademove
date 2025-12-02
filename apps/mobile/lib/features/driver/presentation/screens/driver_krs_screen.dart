@@ -62,11 +62,12 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   }
 
   Future<void> _deleteSchedule(String scheduleId) async {
-    if (_driverId == null) return;
+    final driverId = _driverId;
+    if (driverId == null) return;
 
     try {
       await context.read<DriverRepository>().removeSchedule(
-        driverId: _driverId!,
+        driverId: driverId,
         scheduleId: scheduleId,
       );
 

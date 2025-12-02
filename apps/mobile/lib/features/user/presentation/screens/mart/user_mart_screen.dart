@@ -339,13 +339,13 @@ class _BestSellerItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (menu.image != null) ...[
+              if (menu.image case final image?) ...[
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(12.r),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: menu.image!,
+                    imageUrl: image,
                     width: 150.w,
                     height: 100.h,
                     fit: BoxFit.cover,

@@ -54,9 +54,10 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     });
 
     try {
+      final selectedStatus = _selectedStatus;
       final response = await context.read<OrderRepository>().list(
         ListOrderQuery(
-          statuses: _selectedStatus != null ? [_selectedStatus!] : [],
+          statuses: selectedStatus != null ? [selectedStatus] : [],
           limit: 20,
           cursor: null,
         ),
@@ -95,9 +96,10 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
         return;
       }
 
+      final selectedStatus = _selectedStatus;
       final response = await context.read<OrderRepository>().list(
         ListOrderQuery(
-          statuses: _selectedStatus != null ? [_selectedStatus!] : [],
+          statuses: selectedStatus != null ? [selectedStatus] : [],
           limit: 20,
           cursor: lastOrder.id,
         ),

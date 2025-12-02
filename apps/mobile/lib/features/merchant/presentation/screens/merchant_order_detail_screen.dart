@@ -56,7 +56,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   Future<void> _handleAcceptOrder() async {
     if (_isProcessing) return;
 
-    if (_merchantId == null) {
+    final merchantId = _merchantId;
+    if (merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
@@ -83,7 +84,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       setState(() => _isProcessing = true);
 
       await context.read<MerchantOrderCubit>().acceptOrder(
-        merchantId: _merchantId!,
+        merchantId: merchantId,
         orderId: _currentOrder.id,
       );
 
@@ -92,8 +93,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
         final cubitState = context.read<MerchantOrderCubit>().state;
         if (cubitState.isSuccess) {
-          if (cubitState.selected != null) {
-            setState(() => _currentOrder = cubitState.selected!);
+          final selected = cubitState.selected;
+          if (selected != null) {
+            setState(() => _currentOrder = selected);
             context.showMyToast(
               cubitState.message ?? 'Order accepted successfully',
               type: ToastType.success,
@@ -112,7 +114,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   Future<void> _handleRejectOrder() async {
     if (_isProcessing) return;
 
-    if (_merchantId == null) {
+    final merchantId = _merchantId;
+    if (merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
@@ -123,7 +126,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
       setState(() => _isProcessing = true);
 
       await context.read<MerchantOrderCubit>().rejectOrder(
-        merchantId: _merchantId!,
+        merchantId: merchantId,
         orderId: _currentOrder.id,
         reason: result['reason'] as String,
         note: result['note'] as String?,
@@ -152,7 +155,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   Future<void> _handleMarkPreparing() async {
     if (_isProcessing) return;
 
-    if (_merchantId == null) {
+    final merchantId = _merchantId;
+    if (merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
@@ -160,7 +164,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     setState(() => _isProcessing = true);
 
     await context.read<MerchantOrderCubit>().markPreparing(
-      merchantId: _merchantId!,
+      merchantId: merchantId,
       orderId: _currentOrder.id,
     );
 
@@ -169,8 +173,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
       final cubitState = context.read<MerchantOrderCubit>().state;
       if (cubitState.isSuccess) {
-        if (cubitState.selected != null) {
-          setState(() => _currentOrder = cubitState.selected!);
+        final selected = cubitState.selected;
+        if (selected != null) {
+          setState(() => _currentOrder = selected);
           context.showMyToast(
             cubitState.message ?? 'Order marked as preparing',
             type: ToastType.success,
@@ -188,7 +193,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   Future<void> _handleMarkReady() async {
     if (_isProcessing) return;
 
-    if (_merchantId == null) {
+    final merchantId = _merchantId;
+    if (merchantId == null) {
       context.showMyToast('Merchant ID not found', type: ToastType.failed);
       return;
     }
@@ -196,7 +202,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     setState(() => _isProcessing = true);
 
     await context.read<MerchantOrderCubit>().markReady(
-      merchantId: _merchantId!,
+      merchantId: merchantId,
       orderId: _currentOrder.id,
     );
 
@@ -205,8 +211,9 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
       final cubitState = context.read<MerchantOrderCubit>().state;
       if (cubitState.isSuccess) {
-        if (cubitState.selected != null) {
-          setState(() => _currentOrder = cubitState.selected!);
+        final selected = cubitState.selected;
+        if (selected != null) {
+          setState(() => _currentOrder = selected);
           context.showMyToast(
             cubitState.message ?? 'Order marked as ready for pickup',
             type: ToastType.success,
@@ -262,7 +269,8 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
   }
 
   Widget _buildDriverInfo(BuildContext context) {
-    if (_currentOrder.driverId == null) {
+    final driverId = _currentOrder.driverId;
+    if (driverId == null) {
       return const SizedBox.shrink();
     }
 
@@ -282,7 +290,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _currentOrder.driverId!, // TODO: Fetch driver name
+                driverId, // TODO: Fetch driver name
                 style: context.typography.small.copyWith(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
@@ -338,7 +346,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               ],
             ),
           ),
-          if (_currentOrder.note != null) ...[
+          if (_currentOrder.note case final note?) ...[
             Gap(8.h),
             Container(
               width: double.infinity,
@@ -353,7 +361,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   const Icon(Icons.menu_book_rounded),
                   Expanded(
                     child: Text(
-                      _currentOrder.note?.instructions ?? '',
+                      note.instructions ?? '',
                       style: context.typography.small.copyWith(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
@@ -634,14 +642,16 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
     return BlocListener<MerchantOrderCubit, MerchantOrderState>(
       listener: (context, state) {
         // Update current order when state changes (from WebSocket or actions)
-        if (state.selected != null && state.selected!.id == _currentOrder.id) {
+        final selectedOrder = state.selected;
+        if (selectedOrder != null && selectedOrder.id == _currentOrder.id) {
           setState(() {
-            _currentOrder = state.selected!;
+            _currentOrder = selectedOrder;
           });
 
           // Show toast for important events
-          if (state.message != null && state.message!.isNotEmpty) {
-            context.showMyToast(state.message!, type: ToastType.success);
+          final message = state.message;
+          if (message != null && message.isNotEmpty) {
+            context.showMyToast(message, type: ToastType.success);
           }
         }
       },

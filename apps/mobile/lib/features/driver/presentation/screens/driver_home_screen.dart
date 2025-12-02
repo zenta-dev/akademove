@@ -39,13 +39,12 @@ class _DriverHomeView extends StatelessWidget {
         }
 
         // Show success messages
-        if (state.isSuccess &&
-            state.message != null &&
-            state.message!.isNotEmpty) {
+        final message = state.message;
+        if (state.isSuccess && message != null && message.isNotEmpty) {
           showToast(
             context: context,
             builder: (context, overlay) =>
-                context.buildToast(title: 'Success', message: state.message!),
+                context.buildToast(title: 'Success', message: message),
           );
         }
       },
@@ -113,28 +112,40 @@ class _DriverHomeView extends StatelessWidget {
                 ),
               ],
             ),
-            if (state.driver != null) ...[
-              Text(
-                'License Plate: ${state.driver!.licensePlate}',
-                style: context.typography.small.copyWith(
-                  color: context.colorScheme.mutedForeground,
-                ),
+            if (state.driver != null)
+              Builder(
+                builder: (context) {
+                  final driver = state.driver;
+                  if (driver == null) return const SizedBox.shrink();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.h,
+                    children: [
+                      Text(
+                        'License Plate: ${driver.licensePlate}',
+                        style: context.typography.small.copyWith(
+                          color: context.colorScheme.mutedForeground,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(
+                            material.Icons.star,
+                            size: 16.sp,
+                            color: material.Colors.amber,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${driver.rating.toStringAsFixed(1)} rating',
+                            style: context.typography.small,
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
               ),
-              Row(
-                children: [
-                  Icon(
-                    material.Icons.star,
-                    size: 16.sp,
-                    color: material.Colors.amber,
-                  ),
-                  SizedBox(width: 4.w),
-                  Text(
-                    '${state.driver!.rating.toStringAsFixed(1)} rating',
-                    style: context.typography.small,
-                  ),
-                ],
-              ),
-            ],
           ],
         ),
       ),

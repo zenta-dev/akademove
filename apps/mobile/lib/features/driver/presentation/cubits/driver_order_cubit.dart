@@ -102,7 +102,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   Future<void> updateOrderStatus(OrderStatus newStatus) async {
-    if (_currentOrderId == null) return;
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
 
     try {
       final methodName = getMethodName();
@@ -110,7 +111,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       emit(state.toLoading());
 
       final res = await _orderRepository.update(
-        _currentOrderId!,
+        orderId,
         UpdateOrder(status: newStatus),
       );
 
@@ -154,8 +155,9 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   Future<void> cancelOrder({String? reason}) async {
-    if (_currentOrderId == null) return;
-    await rejectOrder(_currentOrderId!, reason: reason);
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
+    await rejectOrder(orderId, reason: reason);
   }
 
   void _startLocationTracking() {
@@ -175,7 +177,8 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   Future<void> _updateLocation() async {
-    if (_currentOrderId == null) return;
+    final orderId = _currentOrderId;
+    if (orderId == null) return;
 
     try {
       // Check permission
@@ -227,12 +230,11 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
           logger.d('[DriverOrderCubit] - Order WebSocket Message: $envelope');
 
           // Handle order updates
-          if (envelope.p.detail?.order != null) {
+          final detail = envelope.p.detail;
+          final order = detail?.order;
+          if (order != null) {
             emit(
-              state.toSuccess(
-                currentOrder: envelope.p.detail!.order,
-                orderStatus: envelope.p.detail!.order.status,
-              ),
+              state.toSuccess(currentOrder: order, orderStatus: order.status),
             );
           }
 
@@ -275,11 +277,12 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }
 
   Future<void> teardownWebSocket() async {
-    if (_currentOrderId != null) {
+    final orderId = _currentOrderId;
+    if (orderId != null) {
       try {
-        await _webSocketService.disconnect(_currentOrderId!);
+        await _webSocketService.disconnect(orderId);
         logger.i(
-          '[DriverOrderCubit] - Disconnected from order WebSocket: $_currentOrderId',
+          '[DriverOrderCubit] - Disconnected from order WebSocket: $orderId',
         );
       } catch (e, st) {
         logger.e(
