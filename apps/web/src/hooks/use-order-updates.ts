@@ -1,21 +1,39 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 
+interface UseOrderUpdatesOptions {
+	enabled?: boolean;
+	interval?: number;
+	onNewOrder?: (order: unknown) => void;
+}
+
+interface UseOrderUpdatesReturn {
+	isConnected: boolean;
+}
+
 /**
  * Hook to subscribe to real-time order updates for merchants
  *
  * Current Implementation: Uses polling with query invalidation
  * Future: Will be upgraded to WebSocket connections (see WEBSOCKET_TODO.md)
  *
- * @param enabled - Whether to enable real-time updates
- * @param interval - Polling interval in milliseconds (default: 10000ms = 10s)
+ * Features:
+ * - Automatic query invalidation for order lists
+ * - New order detection for notifications
+ * - Configurable polling interval
+ *
+ * @param options - Configuration options
+ * @param options.enabled - Whether to enable real-time updates (default: true)
+ * @param options.interval - Polling interval in milliseconds (default: 10000ms = 10s)
+ * @param options.onNewOrder - Callback when a new order is detected
  */
 export const useOrderUpdates = (
-	enabled = true,
-	interval = 10000,
-): { isConnected: boolean } => {
+	options: UseOrderUpdatesOptions = {},
+): UseOrderUpdatesReturn => {
+	const { enabled = true, interval = 10000, onNewOrder } = options;
 	const queryClient = useQueryClient();
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
+	const previousOrdersRef = useRef<Set<string>>(new Set());
 
 	useEffect(() => {
 		if (!enabled) {
@@ -27,11 +45,42 @@ export const useOrderUpdates = (
 		}
 
 		// Poll for order updates by invalidating queries
-		intervalRef.current = setInterval(() => {
+		intervalRef.current = setInterval(async () => {
+			// Get current orders from cache before invalidation
+			const currentOrders = queryClient.getQueryData<{
+				data?: Array<{ id: string }>;
+			}>(["orders"]);
+
 			// Invalidate order list queries to trigger refetch
-			queryClient.invalidateQueries({ queryKey: ["orders"] });
+			await queryClient.invalidateQueries({ queryKey: ["orders"] });
 			// Invalidate merchant analytics
-			queryClient.invalidateQueries({ queryKey: ["merchant", "analytics"] });
+			await queryClient.invalidateQueries({
+				queryKey: ["merchant", "analytics"],
+			});
+
+			// Check for new orders after a short delay to let queries refetch
+			if (onNewOrder) {
+				setTimeout(() => {
+					const updatedOrders = queryClient.getQueryData<{
+						data?: Array<{ id: string }>;
+					}>(["orders"]);
+
+					if (currentOrders?.data && updatedOrders?.data) {
+						const currentIds = new Set(currentOrders.data.map((o) => o.id));
+						const newOrders = updatedOrders.data.filter(
+							(order) =>
+								!currentIds.has(order.id) &&
+								!previousOrdersRef.current.has(order.id),
+						);
+
+						// Notify about new orders
+						for (const order of newOrders) {
+							onNewOrder(order);
+							previousOrdersRef.current.add(order.id);
+						}
+					}
+				}, 500);
+			}
 		}, interval);
 
 		return () => {
@@ -40,7 +89,7 @@ export const useOrderUpdates = (
 				intervalRef.current = null;
 			}
 		};
-	}, [enabled, interval, queryClient]);
+	}, [enabled, interval, queryClient, onNewOrder]);
 
 	// Always return connected as true for polling (no actual connection state)
 	return { isConnected: enabled };
