@@ -48,7 +48,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-// import { hasAccess } from "@/lib/actions";
+import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
@@ -61,8 +61,9 @@ export const Route = createFileRoute("/dash/user/wallet")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.WALLET }] }),
 	beforeLoad: async () => {
-		// TODO: Add proper wallet permission check
-		const ok = true;
+		const ok = await hasAccess({
+			user: ["get"],
+		});
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
