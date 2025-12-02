@@ -56,19 +56,58 @@ class CachePreloader {
 
   Future<void> _preloadPlatformConfig() async {
     try {
-      // TODO: Implement platform fee rate caching when ConfigurationRepository method is available
-      // Preload commission rates for all order types
-      // for (final orderType in OrderType.values) {
-      //   final rate = await _configurationRepository.getPlatformFeeRate(
-      //     orderType,
-      //   );
-      //   logger.d(
-      //     '[CachePreloader] Platform fee cached: $orderType = ${(rate * 100).toStringAsFixed(0)}%',
-      //   );
-      // }
-      logger.d(
-        '[CachePreloader] Platform config preload skipped (not implemented)',
-      );
+      // Fetch commission configuration from API
+      final configRes = await _configurationRepository.get('commission');
+      final commissionConfig = configRes.data.value;
+
+      // Parse and cache commission rates by order type
+      if (commissionConfig is Map<String, Object?>) {
+        final rideRate = commissionConfig['rideCommissionRate'];
+        final deliveryRate = commissionConfig['deliveryCommissionRate'];
+        final foodRate = commissionConfig['foodCommissionRate'];
+
+        // Cache ride commission rate
+        if (rideRate is num) {
+          AppCaches.configuration.put(
+            'commission.ride',
+            rideRate.toDouble(),
+            duration: const Duration(hours: 24),
+          );
+          logger.d(
+            '[CachePreloader] Ride commission cached: ${(rideRate * 100).toStringAsFixed(0)}%',
+          );
+        }
+
+        // Cache delivery commission rate
+        if (deliveryRate is num) {
+          AppCaches.configuration.put(
+            'commission.delivery',
+            deliveryRate.toDouble(),
+            duration: const Duration(hours: 24),
+          );
+          logger.d(
+            '[CachePreloader] Delivery commission cached: ${(deliveryRate * 100).toStringAsFixed(0)}%',
+          );
+        }
+
+        // Cache food commission rate
+        if (foodRate is num) {
+          AppCaches.configuration.put(
+            'commission.food',
+            foodRate.toDouble(),
+            duration: const Duration(hours: 24),
+          );
+          logger.d(
+            '[CachePreloader] Food commission cached: ${(foodRate * 100).toStringAsFixed(0)}%',
+          );
+        }
+
+        logger.d('[CachePreloader] Platform config preload completed');
+      } else {
+        logger.w(
+          '[CachePreloader] Invalid commission config format: ${commissionConfig.runtimeType}',
+        );
+      }
     } catch (e) {
       logger.w('[CachePreloader] Failed to preload platform config: $e');
     }

@@ -174,10 +174,16 @@ class AppCaches {
     maxSize: 20,
   );
 
+  static final configuration = CacheManager<Object>(
+    defaultTTL: const Duration(hours: 24),
+    maxSize: 50,
+  );
+
   static void clearAll() {
     orders.clear();
     driver.clear();
     earnings.clear();
+    configuration.clear();
     logger.i('[AppCaches] All caches cleared');
   }
 
@@ -185,5 +191,6 @@ class AppCaches {
     orders.removeExpired();
     driver.removeExpired();
     earnings.removeExpired();
+    configuration.removeExpired();
   }
 }

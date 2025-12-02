@@ -1,4 +1,6 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: since data is static i didnt provide array index as key */
+
+import { m } from "@repo/i18n";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
@@ -35,21 +37,21 @@ type Trouble = {
 	imageUrl: string;
 };
 
-const TROUBLES: Trouble[] = [
+const getTroubles = (): Trouble[] => [
 	{
-		desc: "Jalan kaki jauh antar fakultas.",
+		desc: m.landing_trouble_1(),
 		imageUrl: char1,
 	},
 	{
-		desc: "Susah cari driver aman di sekitar kampus.",
+		desc: m.landing_trouble_2(),
 		imageUrl: char2,
 	},
 	{
-		desc: "Pesanan makanan antri lama di kantin.",
+		desc: m.landing_trouble_3(),
 		imageUrl: char3,
 	},
 	{
-		desc: "Kurir eksternal sering mahal & telat.",
+		desc: m.landing_trouble_4(),
 		imageUrl: char4,
 	},
 ];
@@ -60,24 +62,24 @@ type Solution = {
 	icon: LucideIcon;
 };
 
-const SOLUTIONS: Solution[] = [
+const getSolutions = (): Solution[] => [
 	{
-		desc: "Driver mahasiswa terverifikasi, Bisa pilih gender",
+		desc: m.landing_solution_1(),
 		color: "blue",
 		icon: VerifiedIcon,
 	},
 	{
-		desc: "Pesan makanan & barang langsung via aplikasi",
+		desc: m.landing_solution_2(),
 		color: "green",
 		icon: PhoneIcon,
 	},
 	{
-		desc: "Tarif lebih transparan & lebih hemat",
+		desc: m.landing_solution_3(),
 		color: "yellow",
 		icon: BadgeCentIcon,
 	},
 	{
-		desc: "Integrasi jadwal kuliah untuk driver lebih fleksibel.",
+		desc: m.landing_solution_4(),
 		color: "red",
 		icon: BlocksIcon,
 	},
@@ -89,54 +91,51 @@ type Feature = {
 	icon: string;
 };
 
-const FEATURES: Feature[] = [
+const getFeatures = (): Feature[] => [
 	{
-		title: "Tranportasi Kampus",
-		desc: "Antar jemput fleksibel, driver mahasiswa, tarif per km transparan.",
+		title: m.landing_feature_1_title(),
+		desc: m.landing_feature_1_desc(),
 		icon: "🚗",
 	},
 	{
-		title: "Food & Goods Delivery",
-		desc: "Pesan makanan, laundry, dokumen, atau paket dengan sekali klik.",
+		title: m.landing_feature_2_title(),
+		desc: m.landing_feature_2_desc(),
 		icon: "🍔",
 	},
 	{
-		title: "Keamanan & Privasi",
-		desc: "Filter gender, tombol darurat, chat tanpa nomor telepon.",
+		title: m.landing_feature_3_title(),
+		desc: m.landing_feature_3_desc(),
 		icon: "🛡",
 	},
 ];
 
-const STATS = [
+const getStats = () => [
 	{
-		title: "2000+",
-		desc: "Perjalanan dalam 1 minggu pertama",
+		title: m.landing_stat_1_title(),
+		desc: m.landing_stat_1_desc(),
 	},
 	{
-		title: "95%",
-		desc: "Pengguna puas dengan layanan",
+		title: m.landing_stat_2_title(),
+		desc: m.landing_stat_2_desc(),
 	},
 	{
-		title: "100+",
-		desc: "Merchant kampus sudah bergabung",
+		title: m.landing_stat_3_title(),
+		desc: m.landing_stat_3_desc(),
 	},
 ];
 
-const TESTIMONIALS = [
+const getTestimonials = () => [
 	{
-		quote:
-			"Lebih aman karena driver juga mahasiswa. Saya bisa pilih driver perempuan.",
-		by: "Rani, Mahasiswi",
+		quote: m.landing_testimonial_1_quote(),
+		by: m.landing_testimonial_1_by(),
 	},
 	{
-		quote:
-			"Lumayan banget buat tambahan uang jajan, jadwal kuliah tetap bisa diatur.",
-		by: "Bima, Driver",
+		quote: m.landing_testimonial_2_quote(),
+		by: m.landing_testimonial_2_by(),
 	},
 	{
-		quote:
-			"Warung saya lebih rame, karena anak-anak dapat memesan online lewat aplikasi.",
-		by: "Bu Sari, Merchant",
+		quote: m.landing_testimonial_3_quote(),
+		by: m.landing_testimonial_3_by(),
 	},
 ];
 
@@ -150,6 +149,12 @@ function HomeComponent() {
 	const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
 	const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 	const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+	const troubles = getTroubles();
+	const solutions = getSolutions();
+	const features = getFeatures();
+	const stats = getStats();
+	const testimonials = getTestimonials();
 
 	return (
 		<div className="h-full">
@@ -247,7 +252,7 @@ function HomeComponent() {
 							transition={{ duration: 0.6, delay: 0.7 }}
 							className="font-bold text-2xl leading-tight sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
 						>
-							Mobilitas & Delivery Khusus Kampus
+							{m.landing_hero_title()}
 						</motion.h1>
 						<motion.p
 							initial={{ opacity: 0, y: 20 }}
@@ -255,8 +260,7 @@ function HomeComponent() {
 							transition={{ duration: 0.6, delay: 0.8 }}
 							className="text-muted-foreground text-sm sm:text-base md:text-lg lg:text-xl"
 						>
-							Dari mahasiswa untuk mahasiswa: transportasi, pesan makanan, dan
-							antar paket jadi lebih mudah, aman, dan nyaman.
+							{m.landing_hero_subtitle()}
 						</motion.p>
 						<motion.div
 							initial={{ opacity: 0, scale: 0.9 }}
@@ -265,7 +269,7 @@ function HomeComponent() {
 						>
 							<SignUpDialog asChild>
 								<Button className="mx-auto mt-2 w-full max-w-xs bg-white p-6 text-black text-lg transition-transform hover:scale-105 sm:max-w-sm md:text-xl lg:mx-0 lg:max-w-xs">
-									Get started
+									{m.landing_hero_cta()}
 								</Button>
 							</SignUpDialog>
 						</motion.div>
@@ -298,15 +302,15 @@ function HomeComponent() {
 
 			{/* Troubles & Solutions Section */}
 			<section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-16 lg:py-24">
-				<AnimatedTitle>Masalah Sehari-hari Mahasiswa</AnimatedTitle>
+				<AnimatedTitle>{m.landing_troubles_title()}</AnimatedTitle>
 				<div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8">
-					{TROUBLES.map((trouble, index) => (
+					{troubles.map((trouble, index) => (
 						<TroubleCard key={index} index={index} {...trouble} />
 					))}
 				</div>
-				<AnimatedTitle delay={0.2}>Solusi dari AkadeMove</AnimatedTitle>
+				<AnimatedTitle delay={0.2}>{m.landing_solutions_title()}</AnimatedTitle>
 				<div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-8">
-					{SOLUTIONS.map((solution, index) => (
+					{solutions.map((solution, index) => (
 						<SolutionCard key={index} index={index} {...solution} />
 					))}
 				</div>
@@ -315,9 +319,9 @@ function HomeComponent() {
 			{/* Features Section */}
 			<section className="bg-secondary/30">
 				<div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-16 lg:py-24">
-					<AnimatedTitle>Fitur Unggulan</AnimatedTitle>
+					<AnimatedTitle>{m.landing_features_title()}</AnimatedTitle>
 					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-						{FEATURES.map((feature, index) => (
+						{features.map((feature, index) => (
 							<FeatureCard key={index} index={index} {...feature} />
 						))}
 					</div>
@@ -326,9 +330,9 @@ function HomeComponent() {
 
 			{/* Stats Section */}
 			<section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-16 lg:py-24">
-				<AnimatedTitle>Dampak Nyata</AnimatedTitle>
+				<AnimatedTitle>{m.landing_stats_title()}</AnimatedTitle>
 				<div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
-					{STATS.map((stat, index) => (
+					{stats.map((stat, index) => (
 						<StatCard key={index} index={index} {...stat} />
 					))}
 				</div>
@@ -337,9 +341,9 @@ function HomeComponent() {
 			{/* Testimonials Section */}
 			<section className="bg-secondary/30">
 				<div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:px-16 lg:py-24">
-					<AnimatedTitle>Kata Mereka</AnimatedTitle>
+					<AnimatedTitle>{m.landing_testimonials_title()}</AnimatedTitle>
 					<div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-						{TESTIMONIALS.map((testimonial, index) => (
+						{testimonials.map((testimonial, index) => (
 							<TestimonialCard key={index} index={index} {...testimonial} />
 						))}
 					</div>
@@ -559,7 +563,7 @@ function AnimatedCTA() {
 				transition={{ duration: 0.6, delay: 0.2 }}
 				className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl"
 			>
-				Siap untuk Pengalaman Kampus yang Lebih Baik?
+				{m.landing_cta_title()}
 			</motion.h2>
 			<motion.p
 				initial={{ opacity: 0 }}
@@ -567,8 +571,7 @@ function AnimatedCTA() {
 				transition={{ duration: 0.6, delay: 0.4 }}
 				className="max-w-2xl text-muted-foreground text-sm sm:text-base md:text-lg"
 			>
-				Bergabunglah dengan ribuan mahasiswa yang sudah merasakan kemudahan
-				mobilitas dan delivery di kampus.
+				{m.landing_cta_subtitle()}
 			</motion.p>
 			<motion.div
 				initial={{ opacity: 0, y: 20 }}
@@ -577,7 +580,7 @@ function AnimatedCTA() {
 			>
 				<SignUpDialog asChild>
 					<Button className="bg-primary p-6 text-lg text-primary-foreground transition-transform hover:scale-105 sm:text-xl">
-						Daftar Sekarang
+						{m.landing_cta_button()}
 					</Button>
 				</SignUpDialog>
 			</motion.div>
