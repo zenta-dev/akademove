@@ -7,12 +7,15 @@ class DriverCubit extends BaseCubit<DriverState> {
     required DriverRepository driverRepository,
     required OrderRepository orderRepository,
     required WebSocketService webSocketService,
+    required ConfigurationRepository configurationRepository,
   }) : _driverRepository = driverRepository,
        _orderRepository = orderRepository,
+       _configurationRepository = configurationRepository,
        super(DriverState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
+  final ConfigurationRepository _configurationRepository;
 
   String? _driverId;
   double? _platformFeeRate;
@@ -194,10 +197,30 @@ class DriverCubit extends BaseCubit<DriverState> {
   Future<num> _calculateDriverEarnings(List<Order> orders) async {
     if (orders.isEmpty) return 0;
 
-    // TODO: Implement platform fee rate fetching when ConfigurationRepository method is available
-    // For now, use a default driver share of 85% (15% platform fee)
-    _platformFeeRate ??= 0.15;
+    // Fetch platform fee rate from configuration if not already cached
+    if (_platformFeeRate == null) {
+      try {
+        final configRes = await _configurationRepository.get('commission');
+        final commissionConfig = configRes.data.value;
 
+        // Parse the commission configuration JSON
+        if (commissionConfig is Map<String, Object?>) {
+          // Use rideCommissionRate as the default platform fee
+          // Different order types can have different commission rates
+          final rideCommissionRate = commissionConfig['rideCommissionRate'];
+          if (rideCommissionRate is num) {
+            _platformFeeRate = rideCommissionRate.toDouble();
+          }
+        }
+      } catch (e) {
+        logger.w(
+          '[DriverCubit] Failed to fetch platform fee rate, using default 15%',
+          error: e,
+        );
+      }
+    }
+
+    // Fallback to 15% if configuration fetch failed
     final platformFeeRate = _platformFeeRate ?? 0.15;
     final driverShare = 1.0 - platformFeeRate;
 

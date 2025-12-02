@@ -160,6 +160,14 @@ void _setupCubit() {
       ),
     )
     ..registerFactory(
+      () => DriverCubit(
+        driverRepository: sl<DriverRepository>(),
+        orderRepository: sl<OrderRepository>(),
+        webSocketService: sl<WebSocketService>(),
+        configurationRepository: sl<ConfigurationRepository>(),
+      ),
+    )
+    ..registerFactory(
       () => DriverHomeCubit(
         driverRepository: sl<DriverRepository>(),
         orderRepository: sl<OrderRepository>(),
