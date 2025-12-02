@@ -619,6 +619,15 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       return;
     }
 
+    final category = _selectedCategory;
+    final bankProvider = _selectedBankProvider;
+    final document = _step2Docs[_Step2Docs.governmentDocument];
+
+    if (category == null || bankProvider == null || document == null) {
+      _showToast(context, 'Error', 'Please fill all required fields');
+      return;
+    }
+
     cubit.signUpMerchant(
       ownerName: formData['ownerName']!,
       ownerEmail: formData['ownerEmail']!,
@@ -636,11 +645,11 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       ),
       outletLocation: _outletLocation,
       outletAddress: _outletAddress,
-      category: _selectedCategory!,
-      bankProvider: _selectedBankProvider!,
+      category: category,
+      bankProvider: bankProvider,
       bankNumber: int.parse(formData['bankNumber']!),
       photoPath: null,
-      documentPath: _step2Docs[_Step2Docs.governmentDocument]!.path,
+      documentPath: document.path,
     );
   }
 
@@ -665,7 +674,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       return null;
     }
 
-    return data.map((k, v) => MapEntry(k, v!));
+    return data.map((k, v) {
+      if (v == null) {
+        throw Exception('Form field $k is null');
+      }
+      return MapEntry(k, v);
+    });
   }
 
   void _handleStepNavigation({
@@ -998,9 +1012,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            if (suggestion.country != null)
+                                            if (suggestion.country
+                                                case final country?)
                                               Text(
-                                                suggestion.country!,
+                                                country,
                                                 style: context
                                                     .theme
                                                     .typography
@@ -1057,8 +1072,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                               Future.delayed(
                                 const Duration(milliseconds: 300),
                                 () {
-                                  if (_mapController != null && mounted) {
-                                    _mapController!.animateCamera(
+                                  final controller = _mapController;
+                                  if (controller != null && mounted) {
+                                    controller.animateCamera(
                                       CameraUpdate.newLatLngZoom(
                                         LatLng(
                                           _outletLocation.y.toDouble(),
@@ -1366,7 +1382,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               spacing: 8.w,
               children: [
                 Icon(categoryIcons[item], size: 16.sp),
-                Text(categoryLabels[item] ?? item.value),
+                Text(categoryLabels[item] ?? item.name),
               ],
             ),
             value: _selectedCategory,
@@ -1382,7 +1398,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                           spacing: 8.w,
                           children: [
                             Icon(categoryIcons[e], size: 16.sp),
-                            Text(categoryLabels[e] ?? e.value),
+                            Text(categoryLabels[e] ?? e.name),
                           ],
                         ),
                       ),

@@ -107,7 +107,8 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   @override
   Widget build(BuildContext context) {
     final previewUrl = widget.previewUrl;
-    final hasImage = _selectedImage != null && _selectedImage!.existsSync();
+    final selectedImage = _selectedImage;
+    final hasImage = selectedImage != null && selectedImage.existsSync();
 
     const placeholder = Center(
       child: Icon(LucideIcons.camera, color: Colors.neutral, size: 36),
@@ -132,9 +133,9 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     ? Colors.neutral.shade700
                     : Colors.neutral.shade400,
               ),
-              image: hasImage
+              image: hasImage && selectedImage != null
                   ? DecorationImage(
-                      image: FileImage(_selectedImage!),
+                      image: FileImage(selectedImage),
                       fit: BoxFit.cover,
                     )
                   : null,

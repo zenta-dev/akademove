@@ -58,7 +58,10 @@ class WebSocketService {
       var uri = Uri.parse(config.url);
       final existingParams = Map<String, String>.from(uri.queryParameters);
 
-      if (sessionToken != null) existingParams['session-token'] = sessionToken!;
+      final token = sessionToken;
+      if (token != null) {
+        existingParams['session-token'] = token;
+      }
       uri = uri.replace(queryParameters: existingParams);
 
       _logInfo(key, 'Connecting → $uri');

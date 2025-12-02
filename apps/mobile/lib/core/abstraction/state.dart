@@ -66,7 +66,11 @@ abstract class BaseState2 {
       case CubitState.success:
         return success(message: message);
       case CubitState.failure:
-        return failure(error: error!);
+        final err = error;
+        if (err == null) {
+          throw StateError('Error is null in failure state');
+        }
+        return failure(error: err);
     }
   }
 
@@ -85,7 +89,11 @@ abstract class BaseState2 {
       case CubitState.success:
         return success?.call(message) ?? orElse();
       case CubitState.failure:
-        return failure?.call(error!) ?? orElse();
+        final err = error;
+        if (err != null && failure != null) {
+          return failure(err);
+        }
+        return orElse();
     }
   }
 
@@ -151,7 +159,11 @@ abstract class BaseState3<T> {
       case CubitState.success:
         return success(list: list, selected: selected, message: message);
       case CubitState.failure:
-        return failure(error: error!);
+        final err = error;
+        if (err == null) {
+          throw StateError('Error is null in failure state');
+        }
+        return failure(error: err);
     }
   }
 
@@ -170,7 +182,11 @@ abstract class BaseState3<T> {
       case CubitState.success:
         return success?.call(list, selected, message) ?? orElse();
       case CubitState.failure:
-        return failure?.call(error!) ?? orElse();
+        final err = error;
+        if (err != null && failure != null) {
+          return failure(err);
+        }
+        return orElse();
     }
   }
 }

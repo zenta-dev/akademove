@@ -117,7 +117,8 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.token == null || widget.token!.isEmpty) {
+    final token = widget.token;
+    if (token == null || token.isEmpty) {
       return Column(
         children: [
           Icon(LucideIcons.triangleAlert, size: 48.w, color: Colors.red),
@@ -156,7 +157,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
             }
 
             await context.read<AuthCubit>().resetPassword(
-              token: widget.token!,
+              token: token,
               newPassword: newPassword,
               confirmPassword: confirmPassword,
             );

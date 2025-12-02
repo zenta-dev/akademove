@@ -175,6 +175,20 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     final formData = _extractFormData(values);
     if (formData == null) return;
 
+    final photo = _step2Docs[Step2Docs.photo];
+    final studentCard = _step2Docs[Step2Docs.studentCard];
+    final driverLicense = _step2Docs[Step2Docs.driverLicense];
+    final vehicleCertificate = _step3Docs[Step3Docs.vehicleRegistration];
+    final bankProvider = _selectedBankProvider;
+
+    if (photo == null ||
+        studentCard == null ||
+        driverLicense == null ||
+        vehicleCertificate == null ||
+        bankProvider == null) {
+      return;
+    }
+
     cubit.signUpDriver(
       name: formData['name']!,
       email: formData['email']!,
@@ -185,13 +199,13 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       gender: _selectedGender,
       password: formData['password']!,
       confirmPassword: formData['confirmPassword']!,
-      photoPath: _step2Docs[Step2Docs.photo]!.path,
+      photoPath: photo.path,
       studentId: int.parse(formData['studentId']!),
       licensePlate: formData['licensePlate']!,
-      studentCardPath: _step2Docs[Step2Docs.studentCard]!.path,
-      driverLicensePath: _step2Docs[Step2Docs.driverLicense]!.path,
-      vehicleCertificatePath: _step3Docs[Step3Docs.vehicleRegistration]!.path,
-      bankProvider: _selectedBankProvider!,
+      studentCardPath: studentCard.path,
+      driverLicensePath: driverLicense.path,
+      vehicleCertificatePath: vehicleCertificate.path,
+      bankProvider: bankProvider,
       bankNumber: int.parse(formData['bankNumber']!),
     );
   }

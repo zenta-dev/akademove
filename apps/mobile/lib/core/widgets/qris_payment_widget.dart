@@ -101,7 +101,10 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
       final byteData = await finalImage.toByteData(
         format: ui.ImageByteFormat.png,
       );
-      final pngBytes = byteData!.buffer.asUint8List();
+      if (byteData == null) {
+        throw Exception('Failed to convert image to bytes');
+      }
+      final pngBytes = byteData.buffer.asUint8List();
 
       // Generate filename
       final timestamp =
