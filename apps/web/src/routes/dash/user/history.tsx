@@ -17,6 +17,7 @@ import {
 	XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { RateOrderDialog } from "@/components/dialogs/rate-order";
 import { ReportUserDialog } from "@/components/dialogs/report-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -61,6 +62,7 @@ function RouteComponent() {
 		"active" | "completed" | "cancelled" | "all"
 	>("active");
 	const [reportDialogOpen, setReportDialogOpen] = useState(false);
+	const [rateDialogOpen, setRateDialogOpen] = useState(false);
 	const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
 	if (!allowed) navigate({ to: "/" });
@@ -355,10 +357,20 @@ function RouteComponent() {
 										)}
 										{order.status === "COMPLETED" && (
 											<>
-												<Button variant="outline" size="sm" className="flex-1">
-													<Star className="mr-2 h-4 w-4" />
-													Rate Order
-												</Button>
+												{order.driver && (
+													<Button
+														variant="outline"
+														size="sm"
+														className="flex-1"
+														onClick={() => {
+															setSelectedOrder(order);
+															setRateDialogOpen(true);
+														}}
+													>
+														<Star className="mr-2 h-4 w-4" />
+														Rate Order
+													</Button>
+												)}
 												{order.driver && (
 													<Button
 														variant="outline"
@@ -384,6 +396,17 @@ function RouteComponent() {
 					})
 				)}
 			</div>
+
+			{/* Rate Dialog */}
+			{selectedOrder?.driver?.userId && (
+				<RateOrderDialog
+					open={rateDialogOpen}
+					onOpenChange={setRateDialogOpen}
+					orderId={selectedOrder.id}
+					driverId={selectedOrder.driver.userId}
+					driverName={selectedOrder.driver.user?.name}
+				/>
+			)}
 
 			{/* Report Dialog */}
 			{selectedOrder?.driver?.userId && (
