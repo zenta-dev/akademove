@@ -506,10 +506,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   void _showEditProfileDialog() {
-    if (_driver == null) return;
+    final driver = _driver;
+    if (driver == null) return;
 
     final licensePlateController = material.TextEditingController(
-      text: _driver!.licensePlate,
+      text: driver.licensePlate,
     );
 
     material.showDialog(
@@ -570,7 +571,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 setState(() => _isLoading = true);
 
                 final response = await context.read<DriverRepository>().update(
-                  driverId: _driver!.id,
+                  driverId: driver.id,
                   licensePlate: newLicensePlate,
                 );
 

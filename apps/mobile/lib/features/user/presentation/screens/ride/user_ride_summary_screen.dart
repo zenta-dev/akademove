@@ -213,7 +213,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                       child: Text(
                         selectedCoupon == null
                             ? 'Apply Coupon'
-                            : 'Coupon: ${selectedCoupon!.code}',
+                            : 'Coupon: ${selectedCoupon?.code ?? ""}',
                       ),
                     ),
                     Icon(

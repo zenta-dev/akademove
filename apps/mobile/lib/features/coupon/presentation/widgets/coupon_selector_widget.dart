@@ -111,7 +111,7 @@ class CouponSelectorWidget extends material.StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Save ${_formatCurrency(data.bestDiscountAmount)} with ${data.bestCoupon!.code}',
+                            'Save ${_formatCurrency(data.bestDiscountAmount)} with ${data.bestCoupon?.code ?? ""}',
                             style: const TextStyle(fontSize: 12),
                           ),
                         ],
@@ -357,7 +357,7 @@ class CouponDetailDialog extends material.StatelessWidget {
               const SizedBox(height: 12),
               _buildInfoRow(
                 'Minimum Order',
-                _formatCurrency(coupon.rules.general!.minOrderAmount!),
+                _formatCurrency(coupon.rules.general?.minOrderAmount ?? 0),
               ),
             ],
             if (coupon.usageLimit > 0) ...[

@@ -98,8 +98,9 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     // Try to match category
     if (menu.category != null) {
       try {
+        final categoryLower = menu.category?.toLowerCase() ?? '';
         _selectedMenuCategory = MenuCategoryEnumEdit.values.firstWhere(
-          (e) => e.name.toLowerCase() == menu.category!.toLowerCase(),
+          (e) => e.name.toLowerCase() == categoryLower,
         );
       } catch (e) {
         _selectedMenuCategory = null;
@@ -168,6 +169,9 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     final image = imageFile != null && imageFile.existsSync()
         ? await MultipartFile.fromFile(imageFile.path)
         : null;
+
+    // Check if mounted before navigating
+    if (!mounted) return;
 
     // Update menu
     final menuCubit = context.read<MerchantMenuCubit>();

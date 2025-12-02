@@ -159,7 +159,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                             child: Text(
                               selectedCoupon == null
                                   ? 'Apply Coupon'
-                                  : 'Coupon: ${selectedCoupon!.code}',
+                                  : 'Coupon: ${selectedCoupon?.code ?? ""}',
                             ),
                           ),
                           Icon(
@@ -234,9 +234,10 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                   child: Button.primary(
                     onPressed: () {
                       // Store coupon in delivery cubit for payment screen
-                      if (selectedCoupon != null) {
+                      final coupon = selectedCoupon;
+                      if (coupon != null) {
                         context.read<UserDeliveryCubit>().setSelectedCoupon(
-                          selectedCoupon!.code,
+                          coupon.code,
                         );
                       }
                       context.push(Routes.userDeliveryPayment.path);
