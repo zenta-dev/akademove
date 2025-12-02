@@ -2,16 +2,15 @@ import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
-import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-enum MenuPhotosEdit { menuPhoto }
+enum MenuPhotos { menuPhoto }
 
-enum MenuCategoryEnumEdit {
+enum MenuCategoryEnum {
   appetizer,
   mainCourse,
   dessert,
@@ -35,94 +34,51 @@ enum MenuCategoryEnumEdit {
 }
 
 abstract class _FormKeys {
-  static const FormKey<MenuCategoryEnumEdit> menuCategory =
-      SelectKey<MenuCategoryEnumEdit>('menu-category');
+  static const FormKey<MenuCategoryEnum> menuCategory =
+      SelectKey<MenuCategoryEnum>('menu-category');
   static const FormKey<String> menuName = TextFieldKey('menu-name');
   static const FormKey<String> menuPrice = TextFieldKey('menu-price');
   static const FormKey<String> menuStock = TextFieldKey('menu-stock');
 }
 
-class MerchantEditMenuScreen extends StatefulWidget {
-  const MerchantEditMenuScreen({super.key});
+class MerchantCreateMenuScreen extends StatefulWidget {
+  const MerchantCreateMenuScreen({super.key});
 
   @override
-  State<MerchantEditMenuScreen> createState() => _MerchantEditMenuScreenState();
+  State<MerchantCreateMenuScreen> createState() =>
+      _MerchantCreateMenuScreenState();
 }
 
-class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
+class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
   late final FormController _formController;
-  late final TextEditingController _nameController;
-  late final TextEditingController _priceController;
   late final TextEditingController _stockController;
 
-  MenuCategoryEnumEdit? _selectedMenuCategory;
+  MenuCategoryEnum? _selectedMenuCategory;
   int _stock = 0;
-  MerchantMenu? _menu;
 
-  final Map<MenuPhotosEdit, File?> _menuPhoto = {
-    for (final doc in MenuPhotosEdit.values) doc: null,
+  final Map<MenuPhotos, File?> _menuPhoto = {
+    for (final doc in MenuPhotos.values) doc: null,
   };
 
-  final Map<MenuPhotosEdit, String?> _menuPhotosErrors = {
-    for (final doc in MenuPhotosEdit.values) doc: null,
+  final Map<MenuPhotos, String?> _menuPhotosErrors = {
+    for (final doc in MenuPhotos.values) doc: null,
   };
 
   @override
   void initState() {
     super.initState();
     _formController = FormController();
-    _nameController = TextEditingController();
-    _priceController = TextEditingController();
-    _stockController = TextEditingController();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // Get menu from route params
-    if (_menu == null) {
-      _menu = GoRouterState.of(context).extra as MerchantMenu?;
-      if (_menu != null) {
-        _initializeFormWithMenu(_menu!);
-      }
-    }
-  }
-
-  void _initializeFormWithMenu(MerchantMenu menu) {
-    _nameController.text = menu.name;
-    _priceController.text = menu.price.toString();
-    _stock = menu.stock;
-    _stockController.text = menu.stock.toString();
-
-    // Try to match category
-    if (menu.category != null) {
-      try {
-        _selectedMenuCategory = MenuCategoryEnumEdit.values.firstWhere(
-          (e) => e.name.toLowerCase() == menu.category!.toLowerCase(),
-        );
-      } catch (e) {
-        _selectedMenuCategory = null;
-      }
-    }
+    _stockController = TextEditingController(text: _stock.toString());
   }
 
   @override
   void dispose() {
     _formController.dispose();
-    _nameController.dispose();
-    _priceController.dispose();
     _stockController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSaveChanges() async {
-    final menu = _menu;
-    if (menu == null) {
-      _showToast('Error', 'Menu information not found');
-      return;
-    }
-
+  Future<void> _handleCreateMenu() async {
     final isValid = _formController.errors.isEmpty;
 
     if (!isValid) {
@@ -134,16 +90,18 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     }
 
     // Get form values
-    final name = _nameController.text.trim();
-    final priceStr = _priceController.text.trim();
+    final values = _formController.values;
+    final name = _FormKeys.menuName[values];
+    final priceStr = _FormKeys.menuPrice[values];
+    final stockStr = _FormKeys.menuStock[values];
     final category = _selectedMenuCategory;
 
-    if (name.isEmpty) {
+    if (name == null || name.isEmpty) {
       _showToast('Validation Error', 'Menu name is required');
       return;
     }
 
-    if (priceStr.isEmpty) {
+    if (priceStr == null || priceStr.isEmpty) {
       _showToast('Validation Error', 'Menu price is required');
       return;
     }
@@ -153,6 +111,8 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
       _showToast('Validation Error', 'Please enter a valid price');
       return;
     }
+
+    final stock = int.tryParse(stockStr ?? '0') ?? 0;
 
     // Get merchant ID
     final merchantCubit = context.read<MerchantCubit>();
@@ -164,19 +124,18 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     }
 
     // Get image file and convert to MultipartFile
-    final imageFile = _menuPhoto[MenuPhotosEdit.menuPhoto];
+    final imageFile = _menuPhoto[MenuPhotos.menuPhoto];
     final image = imageFile != null && imageFile.existsSync()
         ? await MultipartFile.fromFile(imageFile.path)
         : null;
 
-    // Update menu
+    // Create menu
     final menuCubit = context.read<MerchantMenuCubit>();
-    await menuCubit.updateMenu(
+    await menuCubit.createMenu(
       merchantId: merchantId,
-      menuId: menu.id,
       name: name,
       price: price,
-      stock: _stock,
+      stock: stock,
       category: category?.name,
       image: image,
     );
@@ -192,12 +151,12 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: 'Success',
-          message: state.message ?? 'Menu updated successfully',
+          message: state.message ?? 'Menu created successfully',
         ),
         location: ToastLocation.topCenter,
       );
 
-      // Navigate back
+      // Navigate back to list
       context.pop();
     } else if (state.isFailure) {
       // Show error message
@@ -205,7 +164,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         context: context,
         builder: (context, overlay) => context.buildToast(
           title: 'Error',
-          message: state.error?.message ?? 'Failed to update menu',
+          message: state.error?.message ?? 'Failed to create menu',
         ),
         location: ToastLocation.topCenter,
       );
@@ -239,16 +198,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final menu = _menu;
-
-    if (menu == null) {
-      return MyScaffold(
-        safeArea: true,
-        headers: const [DefaultAppBar(title: 'Edit Menu')],
-        body: const Center(child: Text('Menu not found')),
-      );
-    }
-
     return BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
       builder: (context, state) {
         final isLoading = state.isLoading;
@@ -257,7 +206,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
           children: [
             MyScaffold(
               safeArea: true,
-              headers: const [DefaultAppBar(title: 'Edit Menu')],
+              headers: const [DefaultAppBar(title: 'Create Menu')],
               body: Form(
                 controller: _formController,
                 child: SingleChildScrollView(
@@ -266,29 +215,27 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 16.h,
                     children: [
-                      _buildEnumSelect<MenuCategoryEnumEdit>(
+                      _buildEnumSelect<MenuCategoryEnum>(
                         label: 'Menu Category',
                         key: _FormKeys.menuCategory,
                         placeholder: 'Select category',
                         icon: LucideIcons.store,
                         value: _selectedMenuCategory,
-                        items: MenuCategoryEnumEdit.values,
+                        items: MenuCategoryEnum.values,
                         enabled: !isLoading,
                         onChanged: (value) =>
                             setState(() => _selectedMenuCategory = value),
                       ),
                       _buildImagePicker(
                         "Menu Photo",
-                        MenuPhotosEdit.menuPhoto,
+                        MenuPhotos.menuPhoto,
                         _menuPhoto,
                         _menuPhotosErrors,
                         context,
                         isOptional: true,
-                        previewUrl: menu.image,
                       ),
                       _buildTextField(
                         key: _FormKeys.menuName,
-                        controller: _nameController,
                         label: "Menu Name",
                         placeholder: 'e.g., Butterscotch Milk',
                         icon: LucideIcons.coffee,
@@ -298,7 +245,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                       ),
                       _buildTextField(
                         key: _FormKeys.menuPrice,
-                        controller: _priceController,
                         label: "Menu Price",
                         placeholder: 'e.g., 30000',
                         icon: LucideIcons.dollarSign,
@@ -326,7 +272,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Button.primary(
-                      onPressed: isLoading ? null : _handleSaveChanges,
+                      onPressed: isLoading ? null : _handleCreateMenu,
                       child: isLoading
                           ? const SizedBox(
                               height: 20,
@@ -334,7 +280,7 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(
-                              'Save Changes',
+                              'Create Menu',
                               style: context.typography.small.copyWith(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.normal,
@@ -353,7 +299,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
 
   Widget _buildTextField({
     required FormKey<String> key,
-    required TextEditingController controller,
     required String label,
     required String placeholder,
     required IconData icon,
@@ -378,7 +323,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         FormValidationMode.submitted,
       },
       child: TextField(
-        controller: controller,
         placeholder: Text(
           placeholder,
           style: context.typography.small.copyWith(
@@ -402,7 +346,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
     Map<T, String?> errors,
     BuildContext context, {
     bool isOptional = false,
-    String? previewUrl,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -417,8 +360,6 @@ class _MerchantEditMenuScreenState extends State<MerchantEditMenuScreen> {
         ),
         ImagePickerWidget(
           size: Size(double.infinity, 64.h),
-          previewUrl: previewUrl,
-          value: docs[key],
           onValueChanged: (file) => setState(() => docs[key] = file),
         ),
         if (!isOptional && errors[key] != null)

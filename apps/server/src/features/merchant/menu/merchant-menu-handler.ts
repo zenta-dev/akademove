@@ -9,8 +9,11 @@ const { priv } = createORPCRouter(MerchantMenuSpec);
 export const MerchantMenuHandler = priv.router({
 	list: priv.list
 		.use(hasPermission({ merchantMenu: ["list"] }))
-		.handler(async ({ context, input: { query } }) => {
-			const { rows, totalPages } = await context.repo.merchant.menu.list(query);
+		.handler(async ({ context, input: { query, params } }) => {
+			const { rows, totalPages } = await context.repo.merchant.menu.list({
+				...query,
+				merchantId: params.merchantId,
+			});
 			return {
 				status: 200,
 				body: {

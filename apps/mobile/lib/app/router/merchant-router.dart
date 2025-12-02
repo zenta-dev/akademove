@@ -5,6 +5,7 @@ final merchantRouter = StatefulShellRoute.indexedStack(
     providers: [
       BlocProvider(create: (_) => sl<BottomNavBarCubit>()),
       BlocProvider(create: (_) => sl<MerchantCubit>()..init()),
+      BlocProvider(create: (_) => sl<MerchantMenuCubit>()),
       BlocProvider(create: (_) => sl<MerchantOrderCubit>()),
     ],
     child: BottomNavbar(

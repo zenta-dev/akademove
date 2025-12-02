@@ -96,6 +96,9 @@ void _setupCubit() {
       () => MerchantCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
+      () => MerchantMenuCubit(merchantRepository: sl<MerchantRepository>()),
+    )
+    ..registerFactory(
       () => MerchantOrderCubit(
         orderRepository: sl<OrderRepository>(),
         merchantOrderRepository: sl<MerchantOrderRepository>(),

@@ -1,5 +1,9 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
+import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -19,6 +23,29 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initializeMenu());
+  }
+
+  Future<void> _initializeMenu() async {
+    if (!mounted) return;
+
+    final merchantCubit = context.read<MerchantCubit>();
+    final menuCubit = context.read<MerchantMenuCubit>();
+
+    // Get merchant data if not already loaded
+    if (merchantCubit.state.mine == null) {
+      await merchantCubit.getMine();
+    }
+
+    if (!mounted) return;
+
+    final merchantId = merchantCubit.state.mine?.id;
+
+    if (merchantId != null) {
+      await menuCubit.init(merchantId: merchantId);
+    } else {
+      logger.e('[MerchantMenuScreen] - No merchant ID found');
+    }
   }
 
   @override
@@ -29,11 +56,6 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final menu = List.generate(12, (index) => 'Butterscotch Milk');
-    final filteredMenu = menu
-        .where((menu) => menu.toLowerCase().contains(_query.toLowerCase()))
-        .toList();
-
     final width = MediaQuery.of(context).size.width;
 
     return MyScaffold(
@@ -65,60 +87,169 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: filteredMenu.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 12.h,
-                crossAxisSpacing: 12.w,
-                childAspectRatio: (width / 2) / (120.h + 58.h),
-              ),
-              itemBuilder: (context, index) {
-                final menu = filteredMenu[index];
-                return Card(
-                  padding: EdgeInsets.zero,
-                  child: Button.ghost(
-                    onPressed: () =>
-                        context.pushNamed(Routes.merchantMenuDetail.name),
+            child: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(
+                    child: material.CircularProgressIndicator(),
+                  );
+                }
+
+                if (state.isFailure) {
+                  return Center(
                     child: Column(
-                      spacing: 8.h,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12.r),
-                          child: Image.asset(
-                            'assets/images/item_photo.png',
-                            width: double.infinity,
-                            height: 95.h,
-                            fit: BoxFit.cover,
-                          ),
+                        Text(
+                          'Error: ${state.error?.message ?? "Unknown error"}',
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                menu,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: context.typography.small.copyWith(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            Icon(LucideIcons.chevronRight, size: 16.sp),
-                          ],
+                        const SizedBox(height: 16),
+                        PrimaryButton(
+                          onPressed: _initializeMenu,
+                          child: const Text('Retry'),
                         ),
                       ],
                     ),
+                  );
+                }
+
+                // Filter menus based on search query
+                final filteredMenus = _query.isEmpty
+                    ? state.list
+                    : state.list
+                          .where(
+                            (menu) => menu.name.toLowerCase().contains(
+                              _query.toLowerCase(),
+                            ),
+                          )
+                          .toList();
+
+                if (filteredMenus.isEmpty) {
+                  return Center(
+                    child: Text(
+                      _query.isEmpty
+                          ? 'No menu items yet. Tap + to add your first item.'
+                          : 'No menu items found for "$_query"',
+                    ),
+                  );
+                }
+
+                return GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filteredMenus.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12.h,
+                    crossAxisSpacing: 12.w,
+                    childAspectRatio: (width / 2) / (120.h + 58.h),
                   ),
+                  itemBuilder: (context, index) {
+                    final menu = filteredMenus[index];
+                    return _MenuCard(menu: menu);
+                  },
                 );
               },
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MenuCard extends StatelessWidget {
+  const _MenuCard({required this.menu});
+
+  final MerchantMenu menu;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      padding: EdgeInsets.zero,
+      child: Button.ghost(
+        onPressed: () {
+          context.read<MerchantMenuCubit>().selectMenu(menu);
+          context.pushNamed(Routes.merchantMenuDetail.name, extra: menu);
+        },
+        child: Column(
+          spacing: 8.h,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: menu.image != null
+                  ? Image.network(
+                      menu.image!,
+                      width: double.infinity,
+                      height: 95.h,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: double.infinity,
+                          height: 95.h,
+                          color: material.Colors.grey[300],
+                          child: const Icon(LucideIcons.image, size: 32),
+                        );
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          width: double.infinity,
+                          height: 95.h,
+                          color: material.Colors.grey[200],
+                          child: const Center(
+                            child: material.CircularProgressIndicator(),
+                          ),
+                        );
+                      },
+                    )
+                  : Container(
+                      width: double.infinity,
+                      height: 95.h,
+                      color: material.Colors.grey[300],
+                      child: const Icon(LucideIcons.image, size: 32),
+                    ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        menu.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.typography.small.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        'Rp ${menu.price.toStringAsFixed(0)}',
+                        style: context.typography.small.copyWith(
+                          fontSize: 12.sp,
+                          color: material.Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        'Stock: ${menu.stock}',
+                        style: context.typography.small.copyWith(
+                          fontSize: 11.sp,
+                          color: menu.stock > 0
+                              ? material.Colors.green
+                              : material.Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(LucideIcons.chevronRight, size: 16.sp),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

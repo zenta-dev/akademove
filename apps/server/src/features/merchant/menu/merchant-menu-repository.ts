@@ -107,12 +107,31 @@ export class MerchantMenuRepository extends BaseRepository {
 		}
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
+	async #getMerchantMenuCount(merchantId: string): Promise<number> {
 		try {
 			const [dbResult] = await this.db
 				.select({ count: count(tables.merchantMenu.id) })
 				.from(tables.merchantMenu)
-				.where(ilike(tables.merchantMenu.name, `%${query}%`));
+				.where(eq(tables.merchantMenu.merchantId, merchantId));
+
+			return dbResult?.count ?? 0;
+		} catch (error) {
+			log.error({ merchantId, error }, "Failed to get merchant menu count");
+			return 0;
+		}
+	}
+
+	async #getQueryCount(query: string, merchantId?: string): Promise<number> {
+		try {
+			const clauses: SQL[] = [ilike(tables.merchantMenu.name, `%${query}%`)];
+			if (merchantId) {
+				clauses.push(eq(tables.merchantMenu.merchantId, merchantId));
+			}
+
+			const [dbResult] = await this.db
+				.select({ count: count(tables.merchantMenu.id) })
+				.from(tables.merchantMenu)
+				.where(and(...clauses));
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
@@ -122,7 +141,7 @@ export class MerchantMenuRepository extends BaseRepository {
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery,
+		query?: UnifiedPaginationQuery & { merchantId?: string },
 	): Promise<ListResult<MerchantMenu>> {
 		try {
 			const {
@@ -132,6 +151,7 @@ export class MerchantMenuRepository extends BaseRepository {
 				query: search,
 				sortBy,
 				order = "asc",
+				merchantId,
 			} = query ?? {};
 
 			const orderBy = (
@@ -147,6 +167,11 @@ export class MerchantMenuRepository extends BaseRepository {
 			};
 
 			const clauses: SQL[] = [];
+
+			// CRITICAL: Filter by merchantId if provided
+			if (merchantId) {
+				clauses.push(eq(tables.merchantMenu.merchantId, merchantId));
+			}
 
 			if (search) clauses.push(ilike(tables.merchantMenu.name, `%${search}%`));
 
@@ -184,8 +209,10 @@ export class MerchantMenuRepository extends BaseRepository {
 				);
 
 				const totalCount = search
-					? await this.#getQueryCount(search)
-					: await this.#getTotalRow();
+					? await this.#getQueryCount(search, merchantId)
+					: merchantId
+						? await this.#getMerchantMenuCount(merchantId)
+						: await this.#getTotalRow();
 
 				const totalPages = Math.ceil(totalCount / limit);
 
