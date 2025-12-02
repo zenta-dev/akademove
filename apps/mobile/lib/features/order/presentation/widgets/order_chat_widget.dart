@@ -123,29 +123,42 @@ class _ChatMessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Determine if message is from current user
-    // For now, we'll just show all messages aligned to the left
+    // Determine if message is from current user
+    final currentUser = context.select<AuthCubit, User?>(
+      (cubit) => cubit.state.data,
+    );
+    final isCurrentUser = currentUser?.id == message.senderId;
     final senderName = message.sender?.name ?? 'Unknown';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: isCurrentUser
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
-          Text(
-            senderName,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
+          if (!isCurrentUser)
+            Text(
+              senderName,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
           const SizedBox(height: 4),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: isCurrentUser
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey[200],
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(message.message),
+            child: Text(
+              message.message,
+              style: TextStyle(
+                color: isCurrentUser ? Colors.white : Colors.black,
+              ),
+            ),
           ),
           const SizedBox(height: 4),
           Text(
