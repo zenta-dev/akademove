@@ -153,6 +153,7 @@ export class UserBadgeRepository extends BaseRepository {
 					.values({
 						...item,
 						id: v7(),
+						earnedAt: new Date(),
 						createdAt: new Date(),
 					})
 					.returning()
