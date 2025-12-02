@@ -141,7 +141,7 @@ export class ReportRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertReport & { userId: string }): Promise<Report> {
+	async create(item: InsertReport): Promise<Report> {
 		try {
 			const [operation] = await this.db
 				.insert(tables.report)

@@ -204,7 +204,7 @@ extension BuildContextExt on BuildContext {
                           );
 
                           final repo = sl<NotificationRepository>();
-                          await repo.syncToken();
+                          await safeAsync(() => repo.syncToken());
                         }
 
                         if (context.mounted) Navigator.of(context).pop(granted);
@@ -222,7 +222,7 @@ extension BuildContextExt on BuildContext {
     if (!await ntfSvc.checkPermission()) return showPermissionDialog();
 
     final repo = sl<NotificationRepository>();
-    await repo.syncToken();
+    await safeAsync(() => repo.syncToken());
     repo.onMessage((msg) async {
       logger.i('[NotificationRepository] - onMessage: ${msg.messageId}');
       final title = msg.notification?.title ?? 'Akademove';
@@ -230,7 +230,7 @@ extension BuildContextExt on BuildContext {
       final data = msg.data;
 
       logger.f('📨 Foreground FCM: ${msg.toMap()}');
-      await ntfSvc.show(title: title, body: body, data: data);
+      await safeAsync(() => ntfSvc.show(title: title, body: body, data: data));
     });
   }
 }

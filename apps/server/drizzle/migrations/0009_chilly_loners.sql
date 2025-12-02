@@ -1,1 +1,0 @@
-ALTER TABLE "am_emergencies" ALTER COLUMN "driver_id" SET DATA TYPE uuid;

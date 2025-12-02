@@ -2,13 +2,9 @@ import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/router";
 import {
-	createFileRoute,
-	Link,
-	redirect,
-	useNavigate,
-} from "@tanstack/react-router";
-import {
+	AlertTriangle,
 	Calendar,
 	Car,
 	CheckCircle2,
@@ -21,6 +17,7 @@ import {
 	XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { ReportUserDialog } from "@/components/dialogs/report-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +60,8 @@ function RouteComponent() {
 	const [filterStatus, setFilterStatus] = useState<
 		"active" | "completed" | "cancelled" | "all"
 	>("active");
+	const [reportDialogOpen, setReportDialogOpen] = useState(false);
+	const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
 	if (!allowed) navigate({ to: "/" });
 
@@ -355,10 +354,25 @@ function RouteComponent() {
 											</Button>
 										)}
 										{order.status === "COMPLETED" && (
-											<Button variant="outline" size="sm" className="flex-1">
-												<Star className="mr-2 h-4 w-4" />
-												Rate Order
-											</Button>
+											<>
+												<Button variant="outline" size="sm" className="flex-1">
+													<Star className="mr-2 h-4 w-4" />
+													Rate Order
+												</Button>
+												{order.driver && (
+													<Button
+														variant="outline"
+														size="sm"
+														onClick={() => {
+															setSelectedOrder(order);
+															setReportDialogOpen(true);
+														}}
+													>
+														<AlertTriangle className="mr-2 h-4 w-4" />
+														Report
+													</Button>
+												)}
+											</>
 										)}
 										<Button variant="ghost" size="sm">
 											View Details
@@ -370,6 +384,17 @@ function RouteComponent() {
 					})
 				)}
 			</div>
+
+			{/* Report Dialog */}
+			{selectedOrder?.driver?.userId && (
+				<ReportUserDialog
+					open={reportDialogOpen}
+					onOpenChange={setReportDialogOpen}
+					targetUserId={selectedOrder.driver.userId}
+					targetUserName={selectedOrder.driver.user?.name}
+					orderId={selectedOrder.id}
+				/>
+			)}
 		</>
 	);
 }

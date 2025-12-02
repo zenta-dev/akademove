@@ -37,7 +37,7 @@ export const ReportHandler = priv.router({
 			const data = trimObjectValues(body);
 			const result = await context.repo.report.create({
 				...data,
-				userId: context.user.id,
+				reporterId: context.user.id,
 			});
 
 			return {

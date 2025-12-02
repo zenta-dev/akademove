@@ -6,10 +6,13 @@ CREATE TYPE "public"."am_allowed_logged_table" AS ENUM('configurations', 'coupon
 CREATE TYPE "public"."am_operation" AS ENUM('INSERT', 'UPDATE', 'DELETE');--> statement-breakpoint
 CREATE TYPE "public"."am_day_of_week" AS ENUM('SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY');--> statement-breakpoint
 CREATE TYPE "public"."am_driver_status" AS ENUM('PENDING', 'APPROVED', 'REJECTED', 'ACTIVE', 'INACTIVE', 'SUSPENDED');--> statement-breakpoint
+CREATE TYPE "public"."am_emergency_status" AS ENUM('REPORTED', 'ACKNOWLEDGED', 'RESPONDING', 'RESOLVED');--> statement-breakpoint
+CREATE TYPE "public"."am_emergency_type" AS ENUM('ACCIDENT', 'HARASSMENT', 'THEFT', 'MEDICAL', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."am_leaderboard_category" AS ENUM('RATING', 'VOLUME', 'EARNINGS', 'STREAK', 'ON-TIME', 'COMPLETION-RATE');--> statement-breakpoint
 CREATE TYPE "public"."am_leaderboard_period" AS ENUM('DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'YEARLY', 'ALL-TIME');--> statement-breakpoint
+CREATE TYPE "public"."am_merchant_category" AS ENUM('ATK', 'Printing', 'Food');--> statement-breakpoint
 CREATE TYPE "public"."am_status" AS ENUM('SUCCESS', 'FAILED');--> statement-breakpoint
-CREATE TYPE "public"."am_order_status" AS ENUM('REQUESTED', 'MATCHING', 'ACCEPTED', 'ARRIVING', 'IN_TRIP', 'COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM');--> statement-breakpoint
+CREATE TYPE "public"."am_order_status" AS ENUM('REQUESTED', 'MATCHING', 'ACCEPTED', 'PREPARING', 'READY_FOR_PICKUP', 'ARRIVING', 'IN_TRIP', 'COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM');--> statement-breakpoint
 CREATE TYPE "public"."am_order_type" AS ENUM('RIDE', 'DELIVERY', 'FOOD');--> statement-breakpoint
 CREATE TYPE "public"."am_bank_provider" AS ENUM('BCA', 'BNI', 'BRI', 'MANDIRI', 'PERMATA');--> statement-breakpoint
 CREATE TYPE "public"."am_payment_method" AS ENUM('QRIS', 'BANK_TRANSFER', 'WALLET');--> statement-breakpoint
@@ -18,7 +21,7 @@ CREATE TYPE "public"."am_report_category" AS ENUM('BEHAVIOR', 'SAFETY', 'FRAUD',
 CREATE TYPE "public"."am_report_status" AS ENUM('PENDING', 'INVESTIGATING', 'RESOLVED', 'DISMISSED');--> statement-breakpoint
 CREATE TYPE "public"."am_review_category" AS ENUM('CLEANLINESS', 'COURTESY', 'OTHER');--> statement-breakpoint
 CREATE TYPE "public"."am_transaction_status" AS ENUM('PENDING', 'SUCCESS', 'FAILED', 'CANCELLED', 'EXPIRED', 'REFUNDED');--> statement-breakpoint
-CREATE TYPE "public"."am_transaction_type" AS ENUM('TOPUP', 'WITHDRAW', 'PAYMENT', 'REFUND', 'ADJUSTMENT');--> statement-breakpoint
+CREATE TYPE "public"."am_transaction_type" AS ENUM('TOPUP', 'WITHDRAW', 'PAYMENT', 'REFUND', 'ADJUSTMENT', 'COMMISSION', 'EARNING');--> statement-breakpoint
 CREATE TYPE "public"."am_wallet_currency" AS ENUM('IDR');--> statement-breakpoint
 CREATE TABLE "am_accounts" (
 	"id" text PRIMARY KEY NOT NULL,
@@ -88,6 +91,16 @@ CREATE TABLE "am_user_badges" (
 	"badge_id" uuid NOT NULL,
 	"earned_at" timestamp NOT NULL,
 	"metadata" jsonb,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "am_order_chat_messages" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"order_id" uuid NOT NULL,
+	"sender_id" text NOT NULL,
+	"message" text NOT NULL,
+	"sent_at" timestamp NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
 );
@@ -165,6 +178,8 @@ CREATE TABLE "am_drivers" (
 	"student_card" text NOT NULL,
 	"driver_license" text NOT NULL,
 	"vehicle_certificate" text NOT NULL,
+	"cancellation_count" integer DEFAULT 0 NOT NULL,
+	"last_cancellation_date" timestamp,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL,
 	CONSTRAINT "am_drivers_user_id_unique" UNIQUE("user_id"),
@@ -184,6 +199,24 @@ CREATE TABLE "am_driver_schedules" (
 	"is_active" boolean DEFAULT true NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "am_emergencies" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"order_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
+	"driver_id" uuid,
+	"type" "am_emergency_type" DEFAULT 'OTHER' NOT NULL,
+	"status" "am_emergency_status" DEFAULT 'REPORTED' NOT NULL,
+	"description" text NOT NULL,
+	"location" geometry(point),
+	"contacted_authorities" jsonb DEFAULT '[]'::jsonb,
+	"responded_by_id" text,
+	"resolution" text,
+	"reported_at" timestamp NOT NULL,
+	"acknowledged_at" timestamp,
+	"responding_at" timestamp,
+	"resolved_at" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE "am_leaderboards" (
@@ -210,6 +243,7 @@ CREATE TABLE "am_merchants" (
 	"address" text NOT NULL,
 	"location" geometry(point),
 	"bank" jsonb NOT NULL,
+	"category" "am_merchant_category" NOT NULL,
 	"categories" text[],
 	"is_active" boolean DEFAULT true NOT NULL,
 	"rating" numeric(2, 1) DEFAULT 0 NOT NULL,
@@ -290,14 +324,20 @@ CREATE TABLE "am_orders" (
 	"base_price" numeric(18, 2) NOT NULL,
 	"tip" numeric(18, 2),
 	"total_price" numeric(18, 2) NOT NULL,
+	"platform_commission" numeric(18, 2),
+	"driver_earning" numeric(18, 2),
+	"merchant_commission" numeric(18, 2),
 	"note" jsonb,
 	"requested_at" timestamp NOT NULL,
 	"accepted_at" timestamp,
+	"prepared_at" timestamp,
+	"ready_at" timestamp,
 	"arrived_at" timestamp,
 	"cancelReason" text,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL,
-	"gender" "am_user_gender"
+	"gender" "am_user_gender",
+	"gender_preference" text
 );
 --> statement-breakpoint
 CREATE TABLE "am_order_items" (
@@ -394,6 +434,8 @@ CREATE TABLE "am_wallets" (
 ALTER TABLE "am_accounts" ADD CONSTRAINT "am_accounts_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_user_badges" ADD CONSTRAINT "am_user_badges_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_user_badges" ADD CONSTRAINT "am_user_badges_badge_id_am_badges_id_fk" FOREIGN KEY ("badge_id") REFERENCES "public"."am_badges"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_order_chat_messages" ADD CONSTRAINT "am_order_chat_messages_order_id_am_orders_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."am_orders"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_order_chat_messages" ADD CONSTRAINT "am_order_chat_messages_sender_id_am_users_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."am_users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_configurations" ADD CONSTRAINT "am_configurations_updated_by_id_am_users_id_fk" FOREIGN KEY ("updated_by_id") REFERENCES "public"."am_users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_coupons" ADD CONSTRAINT "am_coupons_created_by_id_am_users_id_fk" FOREIGN KEY ("created_by_id") REFERENCES "public"."am_users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_coupon_usages" ADD CONSTRAINT "am_coupon_usages_coupon_id_am_coupons_id_fk" FOREIGN KEY ("coupon_id") REFERENCES "public"."am_coupons"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -401,6 +443,10 @@ ALTER TABLE "am_coupon_usages" ADD CONSTRAINT "am_coupon_usages_order_id_am_orde
 ALTER TABLE "am_coupon_usages" ADD CONSTRAINT "am_coupon_usages_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_drivers" ADD CONSTRAINT "am_drivers_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_driver_schedules" ADD CONSTRAINT "am_driver_schedules_driver_id_am_drivers_id_fk" FOREIGN KEY ("driver_id") REFERENCES "public"."am_drivers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_emergencies" ADD CONSTRAINT "am_emergencies_order_id_am_orders_id_fk" FOREIGN KEY ("order_id") REFERENCES "public"."am_orders"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_emergencies" ADD CONSTRAINT "am_emergencies_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_emergencies" ADD CONSTRAINT "am_emergencies_driver_id_am_drivers_id_fk" FOREIGN KEY ("driver_id") REFERENCES "public"."am_drivers"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "am_emergencies" ADD CONSTRAINT "am_emergencies_responded_by_id_am_users_id_fk" FOREIGN KEY ("responded_by_id") REFERENCES "public"."am_users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_leaderboards" ADD CONSTRAINT "am_leaderboards_user_id_am_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."am_users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_leaderboards" ADD CONSTRAINT "am_leaderboards_driver_id_am_drivers_id_fk" FOREIGN KEY ("driver_id") REFERENCES "public"."am_drivers"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "am_leaderboards" ADD CONSTRAINT "am_leaderboards_merchant_id_am_merchants_id_fk" FOREIGN KEY ("merchant_id") REFERENCES "public"."am_merchants"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -429,6 +475,8 @@ CREATE INDEX "am_account_user_id_idx" ON "am_accounts" USING btree ("user_id");-
 CREATE INDEX "am_account_provider_idx" ON "am_accounts" USING btree ("provider_id","account_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_user_email_idx" ON "am_users" USING btree ("email");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_user_phone_idx" ON "am_users" USING btree ("phone");--> statement-breakpoint
+CREATE INDEX "am_user_name_text_idx" ON "am_users" USING btree ("name" text_pattern_ops);--> statement-breakpoint
+CREATE INDEX "am_user_role_idx" ON "am_users" USING btree ("role");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_verification_identifier_idx" ON "am_verifications" USING btree ("identifier");--> statement-breakpoint
 CREATE INDEX "am_verification_expires_at_idx" ON "am_verifications" USING btree ("expires_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_badge_code_idx" ON "am_badges" USING btree ("code");--> statement-breakpoint
@@ -440,6 +488,10 @@ CREATE UNIQUE INDEX "am_user_badge_unique_idx" ON "am_user_badges" USING btree (
 CREATE INDEX "am_user_badge_user_id_idx" ON "am_user_badges" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "am_user_badge_badge_id_idx" ON "am_user_badges" USING btree ("badge_id");--> statement-breakpoint
 CREATE INDEX "am_user_badge_earned_at_idx" ON "am_user_badges" USING btree ("earned_at");--> statement-breakpoint
+CREATE INDEX "am_chat_order_id_idx" ON "am_order_chat_messages" USING btree ("order_id");--> statement-breakpoint
+CREATE INDEX "am_chat_sender_id_idx" ON "am_order_chat_messages" USING btree ("sender_id");--> statement-breakpoint
+CREATE INDEX "am_chat_order_sent_idx" ON "am_order_chat_messages" USING btree ("order_id","sent_at");--> statement-breakpoint
+CREATE INDEX "am_chat_sent_at_idx" ON "am_order_chat_messages" USING btree ("sent_at");--> statement-breakpoint
 CREATE INDEX "am_configurations_audit_record_idx" ON "am___configurations_audit_log" USING btree ("record_id");--> statement-breakpoint
 CREATE INDEX "am_configurations_audit_updated_at_idx" ON "am___configurations_audit_log" USING btree ("updated_at");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_coupon_code_idx" ON "am_coupons" USING btree ("code");--> statement-breakpoint
@@ -464,6 +516,7 @@ CREATE INDEX "am_driver_rating_idx" ON "am_drivers" USING btree ("rating");--> s
 CREATE INDEX "am_driver_status_online_idx" ON "am_drivers" USING btree ("status","is_online");--> statement-breakpoint
 CREATE INDEX "am_driver_current_location_idx" ON "am_drivers" USING gist ("current_location");--> statement-breakpoint
 CREATE INDEX "am_driver_online_location_idx" ON "am_drivers" USING gist ("current_location") WHERE is_online = true;--> statement-breakpoint
+CREATE INDEX "am_driver_cancellation_idx" ON "am_drivers" USING btree ("last_cancellation_date");--> statement-breakpoint
 CREATE INDEX "am_schedule_driver_id_idx" ON "am_driver_schedules" USING btree ("driver_id");--> statement-breakpoint
 CREATE INDEX "am_schedule_day_of_week_idx" ON "am_driver_schedules" USING btree ("dayOfWeek");--> statement-breakpoint
 CREATE INDEX "am_schedule_is_active_idx" ON "am_driver_schedules" USING btree ("is_active");--> statement-breakpoint
@@ -474,6 +527,16 @@ CREATE INDEX "am_schedule_driver_day_idx" ON "am_driver_schedules" USING btree (
 CREATE INDEX "am_schedule_driver_day_active_idx" ON "am_driver_schedules" USING btree ("driver_id","dayOfWeek","is_active");--> statement-breakpoint
 CREATE INDEX "am_schedule_driver_recurring_idx" ON "am_driver_schedules" USING btree ("driver_id","is_recurring");--> statement-breakpoint
 CREATE INDEX "am_schedule_created_at_idx" ON "am_driver_schedules" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "am_emergency_order_id_idx" ON "am_emergencies" USING btree ("order_id");--> statement-breakpoint
+CREATE INDEX "am_emergency_user_id_idx" ON "am_emergencies" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "am_emergency_driver_id_idx" ON "am_emergencies" USING btree ("driver_id");--> statement-breakpoint
+CREATE INDEX "am_emergency_type_idx" ON "am_emergencies" USING btree ("type");--> statement-breakpoint
+CREATE INDEX "am_emergency_status_idx" ON "am_emergencies" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "am_emergency_responded_by_id_idx" ON "am_emergencies" USING btree ("responded_by_id");--> statement-breakpoint
+CREATE INDEX "am_emergency_status_type_idx" ON "am_emergencies" USING btree ("status","type");--> statement-breakpoint
+CREATE INDEX "am_emergency_reported_at_idx" ON "am_emergencies" USING btree ("reported_at");--> statement-breakpoint
+CREATE INDEX "am_emergency_status_reported_at_idx" ON "am_emergencies" USING btree ("status","reported_at");--> statement-breakpoint
+CREATE INDEX "am_emergency_location_idx" ON "am_emergencies" USING gist ("location");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_leaderboard_unique_idx" ON "am_leaderboards" USING btree ("user_id","category","period","period_start");--> statement-breakpoint
 CREATE INDEX "am_leaderboard_category_period_idx" ON "am_leaderboards" USING btree ("category","period");--> statement-breakpoint
 CREATE INDEX "am_leaderboard_rank_idx" ON "am_leaderboards" USING btree ("rank");--> statement-breakpoint
@@ -481,6 +544,7 @@ CREATE INDEX "am_leaderboard_period_dates_idx" ON "am_leaderboards" USING btree 
 CREATE UNIQUE INDEX "am_merchant_user_id_idx" ON "am_merchants" USING btree ("user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_merchant_email_idx" ON "am_merchants" USING btree ("email");--> statement-breakpoint
 CREATE UNIQUE INDEX "am_merchant_phone_idx" ON "am_merchants" USING btree ("phone");--> statement-breakpoint
+CREATE INDEX "am_merchant_name_text_idx" ON "am_merchants" USING btree ("name" text_pattern_ops);--> statement-breakpoint
 CREATE INDEX "am_merchant_is_active_idx" ON "am_merchants" USING btree ("is_active");--> statement-breakpoint
 CREATE INDEX "am_merchant_rating_idx" ON "am_merchants" USING btree ("rating");--> statement-breakpoint
 CREATE INDEX "am_merchant_created_at_idx" ON "am_merchants" USING btree ("created_at");--> statement-breakpoint
@@ -503,7 +567,21 @@ CREATE INDEX "user_notifications_created_at_idx" ON "am_user_notifications" USIN
 CREATE INDEX "am_order_user_id_idx" ON "am_orders" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "am_order_driver_id_idx" ON "am_orders" USING btree ("driver_id");--> statement-breakpoint
 CREATE INDEX "am_order_merchant_id_idx" ON "am_orders" USING btree ("merchant_id");--> statement-breakpoint
+CREATE INDEX "am_order_status_idx" ON "am_orders" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "am_order_user_status_idx" ON "am_orders" USING btree ("user_id","status");--> statement-breakpoint
+CREATE INDEX "am_order_driver_status_idx" ON "am_orders" USING btree ("driver_id","status");--> statement-breakpoint
+CREATE INDEX "am_order_merchant_status_idx" ON "am_orders" USING btree ("merchant_id","status");--> statement-breakpoint
+CREATE INDEX "am_order_created_at_idx" ON "am_orders" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "am_order_requested_at_idx" ON "am_orders" USING btree ("requested_at");--> statement-breakpoint
+CREATE INDEX "am_order_type_idx" ON "am_orders" USING btree ("type");--> statement-breakpoint
+CREATE INDEX "am_order_id_created_at_idx" ON "am_orders" USING btree ("id","created_at");--> statement-breakpoint
 CREATE INDEX "am_payment_external_id_idx" ON "am_payments" USING btree ("external_id");--> statement-breakpoint
+CREATE INDEX "am_payment_transaction_id_idx" ON "am_payments" USING btree ("transaction_id");--> statement-breakpoint
+CREATE INDEX "am_payment_status_idx" ON "am_payments" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "am_payment_method_idx" ON "am_payments" USING btree ("method");--> statement-breakpoint
+CREATE INDEX "am_payment_provider_idx" ON "am_payments" USING btree ("provider");--> statement-breakpoint
+CREATE INDEX "am_payment_created_at_idx" ON "am_payments" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "am_payment_expires_at_idx" ON "am_payments" USING btree ("expires_at");--> statement-breakpoint
 CREATE INDEX "am_report_order_id_idx" ON "am_reports" USING btree ("order_id");--> statement-breakpoint
 CREATE INDEX "am_report_reporter_id_idx" ON "am_reports" USING btree ("reporter_id");--> statement-breakpoint
 CREATE INDEX "am_report_target_user_id_idx" ON "am_reports" USING btree ("target_user_id");--> statement-breakpoint
@@ -528,4 +606,9 @@ CREATE INDEX "am_review_to_user_score_idx" ON "am_reviews" USING btree ("to_user
 CREATE INDEX "am_review_to_user_category_idx" ON "am_reviews" USING btree ("to_user_id","category");--> statement-breakpoint
 CREATE INDEX "am_review_created_at_idx" ON "am_reviews" USING btree ("created_at");--> statement-breakpoint
 CREATE INDEX "am_review_to_user_created_at_idx" ON "am_reviews" USING btree ("to_user_id","created_at");--> statement-breakpoint
-CREATE INDEX "am_transaction_wallet_id_idx" ON "am_transactions" USING btree ("wallet_id");
+CREATE INDEX "am_transaction_wallet_id_idx" ON "am_transactions" USING btree ("wallet_id");--> statement-breakpoint
+CREATE INDEX "am_transaction_status_idx" ON "am_transactions" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "am_transaction_wallet_status_idx" ON "am_transactions" USING btree ("wallet_id","status");--> statement-breakpoint
+CREATE INDEX "am_transaction_wallet_status_date_idx" ON "am_transactions" USING btree ("wallet_id","status","created_at");--> statement-breakpoint
+CREATE INDEX "am_transaction_created_at_idx" ON "am_transactions" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "am_transaction_reference_id_idx" ON "am_transactions" USING btree ("reference_id");

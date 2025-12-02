@@ -1,1 +1,0 @@
-ALTER TABLE "am_orders" ADD COLUMN "gender_preference" text;
