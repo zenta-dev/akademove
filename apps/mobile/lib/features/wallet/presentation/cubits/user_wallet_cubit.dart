@@ -19,66 +19,54 @@ class UserWalletCubit extends BaseCubit<UserWalletState> {
   void reset() {}
 
   Future<void> getMine() async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-
-      emit(state.toLoading());
-      final res = await _walletRepository.getWallet();
-
-      state.unAssignOperation(methodName);
-
-      emit(state.toSuccess(myWallet: res.data));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-    }
+    await taskManager.execute('getMine', () async {
+      try {
+        emit(state.toLoading());
+        final res = await _walletRepository.getWallet();
+        emit(state.toSuccess(myWallet: res.data));
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserWalletCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
   }
 
   Future<void> getTransactionsMine() async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-
-      emit(state.toLoading());
-      final res = await _transactionRepository.list();
-
-      state.unAssignOperation(methodName);
-
-      emit(state.toSuccess(myTransactions: res.data));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-    }
+    await taskManager.execute('getTransactionsMine', () async {
+      try {
+        emit(state.toLoading());
+        final res = await _transactionRepository.list();
+        emit(state.toSuccess(myTransactions: res.data));
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserRideCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
   }
 
   Future<void> getMonthlySummary() async {
-    try {
-      final methodName = getMethodName();
-      if (state.checkAndAssignOperation(methodName)) return;
-      emit(state.toLoading());
-      final now = DateTime.now();
-      final res = await _walletRepository.getMonthlySummary(
-        month: now.month,
-
-        year: now.year,
-      );
-
-      state.unAssignOperation(methodName);
-
-      emit(state.toSuccess(thisMonthSummary: res.data));
-    } on BaseError catch (e, st) {
-      logger.e(
-        '[UserRideCubit] - Error: ${e.message}',
-        error: e,
-        stackTrace: st,
-      );
-    }
+    await taskManager.execute('getMonthlySummary', () async {
+      try {
+        emit(state.toLoading());
+        final now = DateTime.now();
+        final res = await _walletRepository.getMonthlySummary(
+          month: now.month,
+          year: now.year,
+        );
+        emit(state.toSuccess(thisMonthSummary: res.data));
+      } on BaseError catch (e, st) {
+        logger.e(
+          '[UserRideCubit] - Error: ${e.message}',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    });
   }
 }

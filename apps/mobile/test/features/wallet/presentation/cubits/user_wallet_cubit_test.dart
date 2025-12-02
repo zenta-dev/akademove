@@ -181,7 +181,6 @@ void main() {
         },
         act: (cubit) => cubit.getMine(),
         expect: () => [
-          isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
           // Error is logged but state remains in loading
           isA<UserWalletState>().having((s) => s.isLoading, 'isLoading', true),
         ],
