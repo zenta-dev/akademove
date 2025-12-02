@@ -70,4 +70,17 @@ export const UserAdminHandler = priv.router({
 				body: { message: "User deleted successfully", data: null },
 			};
 		}),
+	dashboardStats: priv.dashboardStats
+		.use(hasPermission({ user: ["list"] }))
+		.handler(async ({ context }) => {
+			const result = await context.repo.user.admin.getDashboardStats();
+
+			return {
+				status: 200,
+				body: {
+					message: "Successfully retrieved dashboard statistics",
+					data: result,
+				},
+			};
+		}),
 });

@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { UnderDevelopment } from "@/components/misc/under-development";
+import { CommissionConfiguration } from "@/components/admin/configuration/commission-configuration";
+import { PricingConfiguration } from "@/components/admin/configuration/pricing-configuration";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
@@ -8,24 +9,7 @@ export const Route = createFileRoute("/dash/admin/configurations")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.CONFIGURATIONS }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
-			driver: ["get", "update", "ban", "approve"],
-			merchant: ["get", "update", "delete", "approve"],
-			order: ["get", "update", "delete", "cancel", "assign"],
-			schedule: ["get", "update", "delete"],
-			coupon: ["create", "get", "update", "delete", "approve"],
-			report: ["create", "get", "update", "delete", "export"],
-			review: ["get", "update", "delete"],
-			user: [
-				"invite",
-				"list",
-				"get",
-				"update",
-				"delete",
-				"verify",
-				"set-role",
-				"set-password",
-				"ban",
-			],
+			configurations: ["get", "update"],
 		});
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
@@ -45,9 +29,15 @@ function RouteComponent() {
 		<>
 			<div>
 				<h2 className="font-medium text-xl">{m.configurations()}</h2>
-				<p className="text-muted-foreground">{m.admin_dash_desc()}</p>
+				<p className="text-muted-foreground">
+					Manage platform commission rates and service pricing configurations
+				</p>
 			</div>
-			<UnderDevelopment />
+
+			<div className="space-y-6">
+				<CommissionConfiguration />
+				<PricingConfiguration />
+			</div>
 		</>
 	);
 }

@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import {
 	type AdminUpdateUser,
@@ -6,6 +7,7 @@ import {
 	UserKeySchema,
 } from "@repo/schema/user";
 import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
+import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
 import type {
@@ -25,14 +27,17 @@ const BUCKET = "user";
 
 export class UserAdminRepository extends BaseRepository {
 	#storage: StorageService;
+	#pw?: typeof import("@/utils/password").PasswordManager.prototype;
 
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
 		storage: StorageService,
+		pw?: typeof import("@/utils/password").PasswordManager.prototype,
 	) {
 		super("user", kv, db);
 		this.#storage = storage;
+		this.#pw = pw;
 	}
 
 	static async composeEntity(
@@ -193,92 +198,264 @@ export class UserAdminRepository extends BaseRepository {
 		}
 	}
 
-	async create(_item: InsertUser): Promise<User & { password: string }> {
-		throw new Error("UNIMPLEMETED");
-		// try {
-		// 	const { user } = await this.#auth.api.createUser({ body: item });
+	async create(item: InsertUser): Promise<User & { password: string }> {
+		try {
+			// Check if user already exists
+			const existingUser = await this.db.query.user.findFirst({
+				columns: { email: true, phone: true },
+				where: (f, op) =>
+					op.or(op.eq(f.email, item.email), op.eq(f.phone, item.phone)),
+			});
 
-		// 	const result = UserRepository.composeEntity({,this.#storage
-		// 		...user,
-		// 		role: (user.role ?? "user") as UserRole,
-		// 		image: user.image ?? null,
-		// 		banned: user.banned ?? false,
-		// 		banReason: user.banReason ?? null,
-		// 		banExpires: user.banExpires ?? null,
-		// 	});
+			if (existingUser) {
+				throw new RepositoryError("Email or phone already registered", {
+					code: "CONFLICT",
+				});
+			}
 
-		// 	return { ...result, password: item.password };
-		// } catch (error) {
-		// 	if (error instanceof BaseError)
-		// 		throw new RepositoryError(error.message, { code: error.code });
-		// 	throw new RepositoryError("Failed to create user");
-		// }
+			const userId = this.#generateId();
+
+			// Create user with role, no image for admin-created users
+			const [user] = await this.db
+				.insert(tables.user)
+				.values({
+					id: userId,
+					name: item.name,
+					email: item.email,
+					phone: item.phone,
+					role: item.role,
+					gender: item.gender,
+					image: null,
+					emailVerified: false,
+					banned: false,
+					banReason: null,
+					banExpires: null,
+				})
+				.returning();
+
+			// Create account with hashed password
+			if (!this.#pw) {
+				throw new RepositoryError("Password manager not available", {
+					code: "INTERNAL_SERVER_ERROR",
+				});
+			}
+			const hashedPassword = this.#pw.hash(item.password);
+
+			await this.db.insert(tables.account).values({
+				id: this.#generateId(),
+				accountId: this.#generateId(),
+				userId: user.id,
+				providerId: "credentials",
+				password: hashedPassword,
+			});
+
+			// Create wallet
+			await this.db.insert(tables.wallet).values({
+				id: v7(),
+				userId: user.id,
+				balance: "0",
+			});
+
+			const composedUser = await UserAdminRepository.composeEntity(
+				{ ...user, userBadges: [] },
+				this.#storage,
+			);
+
+			log.info(
+				{ userId: user.id, email: user.email, role: user.role },
+				"[UserAdminRepository] User created successfully",
+			);
+
+			return { ...composedUser, password: item.password };
+		} catch (error) {
+			log.error({ error }, "[UserAdminRepository] Failed to create user");
+			throw this.handleError(error, "create");
+		}
+	}
+
+	#generateId(): string {
+		return randomBytes(32).toString("hex");
 	}
 
 	async update(
-		_id: string,
-		_item: AdminUpdateUser,
-		_opts: PartialWithTx,
+		id: string,
+		item: AdminUpdateUser,
+		opts: PartialWithTx,
 		_header: Headers,
 	): Promise<User> {
-		throw new Error("UNIMPLEMETED");
-		// try {
-		// 	const existing = await this.#getFromDB(id);
-		// 	if (!existing)
-		// 		throw new RepositoryError(`User with id "${id}" not found`);
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError(`User with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
 
-		// 	let result = existing;
+			return await (opts.tx ?? this.db).transaction(async (tx) => {
+				let updatedUser = existing;
 
-		// 	// Handle role updates
-		// 	if ("role" in item) {
-		// 		const { user } = await this.#auth.api.setRole({
-		// 			body: { userId: id, role: item.role },
-		// 			headers,
-		// 		});
-		// 		result = UserRepository.composeEntity({,this.#storage
-		// 			...user,
-		// 			role: (user.role ?? "user") as UserRole,
-		// 			image: user.image ?? null,
-		// 			banned: user.banned ?? false,
-		// 			banReason: user.banReason ?? null,
-		// 			banExpires: user.banExpires ?? null,
-		// 		});
-		// 	}
+				// Handle role updates
+				if ("role" in item) {
+					const [updated] = await tx
+						.update(tables.user)
+						.set({ role: item.role })
+						.where(eq(tables.user.id, id))
+						.returning();
 
-		// 	if ("password" in item) {
-		// 		const { status } = await this.#auth.api.setUserPassword({
-		// 			body: { userId: id, newPassword: item.password },
-		// 			headers,
-		// 		});
-		// 		if (!status)
-		// 			throw new RepositoryError("Failed to update user password");
-		// 	}
+					if (!updated) {
+						throw new RepositoryError("Failed to update user role", {
+							code: "INTERNAL_SERVER_ERROR",
+						});
+					}
 
-		// 	if ("banReason" in item) {
-		// 		await this.#auth.api.banUser({
-		// 			body: { userId: id, ...item },
-		// 			headers,
-		// 		});
-		// 		result.banned = true;
-		// 		result.banReason = item.banReason;
-		// 		if (item.banExpiresIn)
-		// 			result.banExpires = new Date(Date.now() + item.banExpiresIn);
-		// 	} else if (item.unban === true) {
-		// 		await this.#auth.api.unbanUser({ body: { userId: id }, headers });
-		// 		result.banned = false;
-		// 		result.banReason = undefined;
-		// 		result.banExpires = undefined;
-		// 	}
+					const refreshed = await tx.query.user.findFirst({
+						with: { userBadges: { with: { badge: true } } },
+						where: (f, op) => op.eq(f.id, id),
+					});
+					if (!refreshed) {
+						throw new RepositoryError("Failed to fetch updated user");
+					}
+					updatedUser = await UserAdminRepository.composeEntity(
+						refreshed,
+						this.#storage,
+					);
 
-		// 	await this.#auth.api.revokeUserSessions({
-		// 		body: { userId: id },
-		// 		headers,
-		// 	});
-		// 	return result;
-		// } catch (error) {
-		// 	log.error(error);
-		// 	throw new RepositoryError(`Failed to update user with id "${id}"`);
-		// }
+					log.info(
+						{ userId: id, newRole: item.role },
+						"[UserAdminRepository] User role updated",
+					);
+				}
+
+				// Handle password updates
+				if ("newPassword" in item) {
+					if (!this.#pw) {
+						throw new RepositoryError("Password manager not available", {
+							code: "INTERNAL_SERVER_ERROR",
+						});
+					}
+
+					// Get account to verify old password
+					const account = await tx.query.account.findFirst({
+						where: (f, op) =>
+							op.and(op.eq(f.userId, id), op.eq(f.providerId, "credentials")),
+					});
+
+					if (!account) {
+						throw new RepositoryError("User account not found", {
+							code: "NOT_FOUND",
+						});
+					}
+
+					// Verify old password
+					const isValid = this.#pw.verify(
+						account.password ?? "",
+						item.oldPassword,
+					);
+					if (!isValid) {
+						throw new RepositoryError("Invalid old password", {
+							code: "UNAUTHORIZED",
+						});
+					}
+
+					// Hash and update new password
+					const hashedPassword = this.#pw.hash(item.newPassword);
+					await tx
+						.update(tables.account)
+						.set({ password: hashedPassword })
+						.where(eq(tables.account.id, account.id));
+
+					log.info(
+						{ userId: id },
+						"[UserAdminRepository] User password updated",
+					);
+				}
+
+				// Handle ban
+				if ("banReason" in item) {
+					const banExpires = item.banExpiresIn
+						? new Date(Date.now() + item.banExpiresIn)
+						: null;
+
+					const [updated] = await tx
+						.update(tables.user)
+						.set({
+							banned: true,
+							banReason: item.banReason,
+							banExpires,
+						})
+						.where(eq(tables.user.id, id))
+						.returning();
+
+					if (!updated) {
+						throw new RepositoryError("Failed to ban user", {
+							code: "INTERNAL_SERVER_ERROR",
+						});
+					}
+
+					const refreshed = await tx.query.user.findFirst({
+						with: { userBadges: { with: { badge: true } } },
+						where: (f, op) => op.eq(f.id, id),
+					});
+					if (!refreshed) {
+						throw new RepositoryError("Failed to fetch updated user");
+					}
+					updatedUser = await UserAdminRepository.composeEntity(
+						refreshed,
+						this.#storage,
+					);
+
+					log.info(
+						{ userId: id, banReason: item.banReason },
+						"[UserAdminRepository] User banned",
+					);
+				}
+
+				// Handle unban
+				if ("id" in item && Object.keys(item).length === 1) {
+					// UnbanUserSchema only has 'id' field
+					const [updated] = await tx
+						.update(tables.user)
+						.set({
+							banned: false,
+							banReason: null,
+							banExpires: null,
+						})
+						.where(eq(tables.user.id, id))
+						.returning();
+
+					if (!updated) {
+						throw new RepositoryError("Failed to unban user", {
+							code: "INTERNAL_SERVER_ERROR",
+						});
+					}
+
+					const refreshed = await tx.query.user.findFirst({
+						with: { userBadges: { with: { badge: true } } },
+						where: (f, op) => op.eq(f.id, id),
+					});
+					if (!refreshed) {
+						throw new RepositoryError("Failed to fetch updated user");
+					}
+					updatedUser = await UserAdminRepository.composeEntity(
+						refreshed,
+						this.#storage,
+					);
+
+					log.info({ userId: id }, "[UserAdminRepository] User unbanned");
+				}
+
+				// Invalidate cache
+				await this.deleteCache(id);
+
+				return updatedUser;
+			});
+		} catch (error) {
+			log.error(
+				{ error, userId: id },
+				"[UserAdminRepository] Failed to update user",
+			);
+			throw this.handleError(error, "update");
+		}
 	}
 
 	async remove(id: string): Promise<void> {
@@ -293,6 +470,91 @@ export class UserAdminRepository extends BaseRepository {
 			}
 		} catch (error) {
 			throw this.handleError(error, "remove");
+		}
+	}
+
+	async getDashboardStats(): Promise<{
+		totalUsers: number;
+		totalDrivers: number;
+		totalMerchants: number;
+		activeOrders: number;
+		totalOrders: number;
+		completedOrders: number;
+		cancelledOrders: number;
+		totalRevenue: number;
+		todayRevenue: number;
+		todayOrders: number;
+		onlineDrivers: number;
+	}> {
+		try {
+			const cacheKey = "dashboard-stats";
+			const fallback = async () => {
+				const today = new Date();
+				today.setHours(0, 0, 0, 0);
+
+				const result = await this.db.execute<{
+					total_users: number;
+					total_drivers: number;
+					total_merchants: number;
+					active_orders: number;
+					total_orders: number;
+					completed_orders: number;
+					cancelled_orders: number;
+					total_revenue: string;
+					today_revenue: string;
+					today_orders: number;
+					online_drivers: number;
+				}>(/* sql */ `
+					SELECT
+						(SELECT COUNT(*)::int FROM am_users WHERE role = 'USER') AS total_users,
+						(SELECT COUNT(*)::int FROM am_drivers) AS total_drivers,
+						(SELECT COUNT(*)::int FROM am_merchants) AS total_merchants,
+						(SELECT COUNT(*)::int FROM am_orders WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS active_orders,
+						(SELECT COUNT(*)::int FROM am_orders) AS total_orders,
+						(SELECT COUNT(*)::int FROM am_orders WHERE status = 'COMPLETED') AS completed_orders,
+						(SELECT COUNT(*)::int FROM am_orders WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
+						(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED') AS total_revenue,
+						(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED' AND created_at >= '${today.toISOString()}') AS today_revenue,
+						(SELECT COUNT(*)::int FROM am_orders WHERE created_at >= '${today.toISOString()}') AS today_orders,
+						(SELECT COUNT(*)::int FROM am_drivers WHERE is_online = true) AS online_drivers
+				`);
+
+				const row = result[0];
+				if (!row) {
+					throw new RepositoryError("Failed to get dashboard stats", {
+						code: "NOT_FOUND",
+					});
+				}
+
+				const stats = {
+					totalUsers: row.total_users,
+					totalDrivers: row.total_drivers,
+					totalMerchants: row.total_merchants,
+					activeOrders: row.active_orders,
+					totalOrders: row.total_orders,
+					completedOrders: row.completed_orders,
+					cancelledOrders: row.cancelled_orders,
+					totalRevenue: Number.parseFloat(row.total_revenue),
+					todayRevenue: Number.parseFloat(row.today_revenue),
+					todayOrders: row.today_orders,
+					onlineDrivers: row.online_drivers,
+				};
+
+				// Cache for 5 minutes
+				await this.setCache(cacheKey, stats, {
+					expirationTtl: 300,
+				});
+
+				return stats;
+			};
+
+			return await this.getCache(cacheKey, { fallback });
+		} catch (error) {
+			log.error(
+				{ error },
+				"[UserAdminRepository] Failed to get dashboard stats",
+			);
+			throw this.handleError(error, "get dashboard stats");
 		}
 	}
 }

@@ -1,7 +1,7 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 const _BasePricingConfigurationSchema = z.object({
 	baseFare: z.coerce.number().positive(),

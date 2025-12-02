@@ -1,10 +1,10 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { UserBadgeSchema } from "./badge.ts";
-import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { flattenZodObject } from "./flatten.helper.ts";
+import { UserBadgeSchema } from "./badge.js";
+import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { flattenZodObject } from "./flatten.helper.js";
 
 export const UserRoleSchema = z.enum(CONSTANTS.USER_ROLES);
 export type UserRole = z.infer<typeof UserRoleSchema>;
@@ -117,6 +117,21 @@ export const UpdateUserSchema = UserSchema.pick({
 export type UpdateUser = z.infer<typeof UpdateUserSchema>;
 export const FlatUpdateUserSchema = flattenZodObject(UpdateUserSchema);
 
+export const DashboardStatsSchema = z.object({
+	totalUsers: z.number(),
+	totalDrivers: z.number(),
+	totalMerchants: z.number(),
+	activeOrders: z.number(),
+	totalOrders: z.number(),
+	completedOrders: z.number(),
+	cancelledOrders: z.number(),
+	totalRevenue: z.number(),
+	todayRevenue: z.number(),
+	todayOrders: z.number(),
+	onlineDrivers: z.number(),
+});
+export type DashboardStats = z.infer<typeof DashboardStatsSchema>;
+
 export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
 	UserGender: { schema: UserGenderSchema, strategy: "output" },
@@ -128,4 +143,5 @@ export const UserSchemaRegistries = {
 	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
 	AdminUpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },
 	UserKey: { schema: UserKeySchema, strategy: "input" },
+	DashboardStats: { schema: DashboardStatsSchema, strategy: "output" },
 } satisfies SchemaRegistries;

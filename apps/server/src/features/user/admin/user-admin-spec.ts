@@ -2,6 +2,7 @@ import { oc } from "@orpc/contract";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
 	AdminUpdateUserSchema,
+	DashboardStatsSchema,
 	InsertUserSchema,
 	UserSchema,
 } from "@repo/schema/user";
@@ -69,4 +70,19 @@ export const UserAdminSpec = {
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(createSuccesSchema(z.null(), "User deleted successfully")),
+	dashboardStats: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "GET",
+			path: "/dashboard-stats",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			createSuccesSchema(
+				DashboardStatsSchema,
+				"Successfully retrieved dashboard statistics",
+			),
+		),
 };
