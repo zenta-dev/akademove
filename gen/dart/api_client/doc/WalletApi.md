@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**walletPay**](WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [**walletTopUp**](WalletApi.md#wallettopup) | **POST** /wallets/topup | 
 [**walletTransfer**](WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
+[**walletWithdraw**](WalletApi.md#walletwithdraw) | **POST** /wallets/withdraw | 
 
 
 # **walletGet**
@@ -203,6 +204,47 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **transferRequest** | [**TransferRequest**](TransferRequest.md)|  | 
+
+### Return type
+
+[**WalletTopUp200Response**](WalletTopUp200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **walletWithdraw**
+> WalletTopUp200Response walletWithdraw(withdrawRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getWalletApi();
+final WithdrawRequest withdrawRequest = ; // WithdrawRequest | 
+
+try {
+    final response = api.walletWithdraw(withdrawRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling WalletApi->walletWithdraw: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **withdrawRequest** | [**WithdrawRequest**](WithdrawRequest.md)|  | 
 
 ### Return type
 

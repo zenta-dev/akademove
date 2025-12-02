@@ -21,31 +21,31 @@ class ChatList200ResponseData {
   const ChatList200ResponseData({
     required this.rows,
     required this.hasMore,
-    this.nextCursor,
+     this.nextCursor,
   });
 
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<OrderChatMessage> rows;
-
+  
   @JsonKey(name: r'hasMore', required: true, includeIfNull: false)
   final bool hasMore;
-
+  
   @JsonKey(name: r'nextCursor', required: false, includeIfNull: false)
   final String? nextCursor;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is ChatList200ResponseData &&
+    other.rows == rows &&
+    other.hasMore == hasMore &&
+    other.nextCursor == nextCursor;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ChatList200ResponseData &&
-          other.rows == rows &&
-          other.hasMore == hasMore &&
-          other.nextCursor == nextCursor;
+  int get hashCode =>
+      rows.hashCode +
+      hasMore.hashCode +
+      nextCursor.hashCode;
 
-  @override
-  int get hashCode => rows.hashCode + hasMore.hashCode + nextCursor.hashCode;
-
-  factory ChatList200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$ChatList200ResponseDataFromJson(json);
+  factory ChatList200ResponseData.fromJson(Map<String, dynamic> json) => _$ChatList200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatList200ResponseDataToJson(this);
 
@@ -53,4 +53,6 @@ class ChatList200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

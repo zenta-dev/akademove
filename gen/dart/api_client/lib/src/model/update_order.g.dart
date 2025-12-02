@@ -27,6 +27,12 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder merchantCommission(num? merchantCommission);
 
+  UpdateOrder couponId(String? couponId);
+
+  UpdateOrder couponCode(String? couponCode);
+
+  UpdateOrder discountAmount(num? discountAmount);
+
   UpdateOrder note(OrderNote? note);
 
   UpdateOrder cancelReason(String? cancelReason);
@@ -65,6 +71,9 @@ abstract class _$UpdateOrderCWProxy {
     num? platformCommission,
     num? driverEarning,
     num? merchantCommission,
+    String? couponId,
+    String? couponCode,
+    num? discountAmount,
     OrderNote? note,
     String? cancelReason,
     UserGender? gender,
@@ -118,6 +127,16 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
       call(merchantCommission: merchantCommission);
 
   @override
+  UpdateOrder couponId(String? couponId) => call(couponId: couponId);
+
+  @override
+  UpdateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
+
+  @override
+  UpdateOrder discountAmount(num? discountAmount) =>
+      call(discountAmount: discountAmount);
+
+  @override
   UpdateOrder note(OrderNote? note) => call(note: note);
 
   @override
@@ -166,6 +185,9 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? platformCommission = const $CopyWithPlaceholder(),
     Object? driverEarning = const $CopyWithPlaceholder(),
     Object? merchantCommission = const $CopyWithPlaceholder(),
+    Object? couponId = const $CopyWithPlaceholder(),
+    Object? couponCode = const $CopyWithPlaceholder(),
+    Object? discountAmount = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
@@ -217,6 +239,18 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.merchantCommission
           // ignore: cast_nullable_to_non_nullable
           : merchantCommission as num?,
+      couponId: couponId == const $CopyWithPlaceholder()
+          ? _value.couponId
+          // ignore: cast_nullable_to_non_nullable
+          : couponId as String?,
+      couponCode: couponCode == const $CopyWithPlaceholder()
+          ? _value.couponCode
+          // ignore: cast_nullable_to_non_nullable
+          : couponCode as String?,
+      discountAmount: discountAmount == const $CopyWithPlaceholder()
+          ? _value.discountAmount
+          // ignore: cast_nullable_to_non_nullable
+          : discountAmount as num?,
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
@@ -288,6 +322,9 @@ UpdateOrder _$UpdateOrderFromJson(
     platformCommission: $checkedConvert('platformCommission', (v) => v as num?),
     driverEarning: $checkedConvert('driverEarning', (v) => v as num?),
     merchantCommission: $checkedConvert('merchantCommission', (v) => v as num?),
+    couponId: $checkedConvert('couponId', (v) => v as String?),
+    couponCode: $checkedConvert('couponCode', (v) => v as String?),
+    discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
     note: $checkedConvert(
       'note',
       (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
@@ -337,6 +374,9 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'platformCommission': ?instance.platformCommission,
       'driverEarning': ?instance.driverEarning,
       'merchantCommission': ?instance.merchantCommission,
+      'couponId': ?instance.couponId,
+      'couponCode': ?instance.couponCode,
+      'discountAmount': ?instance.discountAmount,
       'note': ?instance.note?.toJson(),
       'cancelReason': ?instance.cancelReason,
       'gender': ?_$UserGenderEnumMap[instance.gender],

@@ -29,6 +29,8 @@ abstract class _$CouponCWProxy {
 
   Coupon isActive(bool isActive);
 
+  Coupon merchantId(String? merchantId);
+
   Coupon createdById(String createdById);
 
   Coupon createdAt(DateTime createdAt);
@@ -52,6 +54,7 @@ abstract class _$CouponCWProxy {
     DateTime periodStart,
     DateTime periodEnd,
     bool isActive,
+    String? merchantId,
     String createdById,
     DateTime createdAt,
   });
@@ -100,6 +103,9 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
   Coupon isActive(bool isActive) => call(isActive: isActive);
 
   @override
+  Coupon merchantId(String? merchantId) => call(merchantId: merchantId);
+
+  @override
   Coupon createdById(String createdById) => call(createdById: createdById);
 
   @override
@@ -125,6 +131,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
     Object? periodStart = const $CopyWithPlaceholder(),
     Object? periodEnd = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
+    Object? merchantId = const $CopyWithPlaceholder(),
     Object? createdById = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
   }) {
@@ -175,6 +182,10 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool,
+      merchantId: merchantId == const $CopyWithPlaceholder()
+          ? _value.merchantId
+          // ignore: cast_nullable_to_non_nullable
+          : merchantId as String?,
       createdById:
           createdById == const $CopyWithPlaceholder() || createdById == null
           ? _value.createdById
@@ -236,6 +247,7 @@ Coupon _$CouponFromJson(
     ),
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     isActive: $checkedConvert('isActive', (v) => v as bool),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
     createdById: $checkedConvert('createdById', (v) => v as String),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
   );
@@ -254,6 +266,7 @@ Map<String, dynamic> _$CouponToJson(Coupon instance) => <String, dynamic>{
   'periodStart': instance.periodStart.toIso8601String(),
   'periodEnd': instance.periodEnd.toIso8601String(),
   'isActive': instance.isActive,
+  'merchantId': ?instance.merchantId,
   'createdById': instance.createdById,
   'createdAt': instance.createdAt.toIso8601String(),
 };

@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **periodStart** | [**DateTime**](DateTime.md) |  | 
 **periodEnd** | [**DateTime**](DateTime.md) |  | 
 **isActive** | **bool** |  | 
+**merchantId** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

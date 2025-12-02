@@ -8,6 +8,7 @@ export 'package:api_client/src/auth/basic_auth.dart';
 export 'package:api_client/src/auth/bearer_auth.dart';
 export 'package:api_client/src/auth/oauth.dart';
 
+
 export 'package:api_client/src/api/admin_api.dart';
 export 'package:api_client/src/api/auth_api.dart';
 export 'package:api_client/src/api/badge_api.dart';
@@ -64,9 +65,15 @@ export 'package:api_client/src/model/coordinate.dart';
 export 'package:api_client/src/model/country_code.dart';
 export 'package:api_client/src/model/coupon.dart';
 export 'package:api_client/src/model/coupon_create200_response.dart';
+export 'package:api_client/src/model/coupon_get_eligible_coupons200_response.dart';
+export 'package:api_client/src/model/coupon_get_eligible_coupons200_response_data.dart';
+export 'package:api_client/src/model/coupon_get_eligible_coupons_request.dart';
 export 'package:api_client/src/model/coupon_key.dart';
 export 'package:api_client/src/model/coupon_list200_response.dart';
 export 'package:api_client/src/model/coupon_rules.dart';
+export 'package:api_client/src/model/coupon_validate200_response.dart';
+export 'package:api_client/src/model/coupon_validate200_response_data.dart';
+export 'package:api_client/src/model/coupon_validate_request.dart';
 export 'package:api_client/src/model/currency.dart';
 export 'package:api_client/src/model/dashboard_stats.dart';
 export 'package:api_client/src/model/day_of_week.dart';
@@ -246,3 +253,5 @@ export 'package:api_client/src/model/wallet_key.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_query.dart';
 export 'package:api_client/src/model/wallet_monthly_summary_response.dart';
 export 'package:api_client/src/model/wallet_top_up200_response.dart';
+export 'package:api_client/src/model/withdraw_request.dart';
+

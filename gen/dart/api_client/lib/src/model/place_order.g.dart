@@ -19,6 +19,8 @@ abstract class _$PlaceOrderCWProxy {
 
   PlaceOrder gender(UserGender? gender);
 
+  PlaceOrder couponCode(String? couponCode);
+
   PlaceOrder payment(PlaceOrderPayment payment);
 
   /// Creates a new instance with the provided field values.
@@ -35,6 +37,7 @@ abstract class _$PlaceOrderCWProxy {
     OrderType type,
     List<OrderItem>? items,
     UserGender? gender,
+    String? couponCode,
     PlaceOrderPayment payment,
   });
 }
@@ -67,6 +70,9 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
   PlaceOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
+  PlaceOrder couponCode(String? couponCode) => call(couponCode: couponCode);
+
+  @override
   PlaceOrder payment(PlaceOrderPayment payment) => call(payment: payment);
 
   @override
@@ -84,6 +90,7 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? couponCode = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
   }) {
     return PlaceOrder(
@@ -115,6 +122,10 @@ class _$PlaceOrderCWProxyImpl implements _$PlaceOrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      couponCode: couponCode == const $CopyWithPlaceholder()
+          ? _value.couponCode
+          // ignore: cast_nullable_to_non_nullable
+          : couponCode as String?,
       payment: payment == const $CopyWithPlaceholder() || payment == null
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
@@ -171,6 +182,7 @@ PlaceOrder _$PlaceOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         'gender',
         (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
       ),
+      couponCode: $checkedConvert('couponCode', (v) => v as String?),
       payment: $checkedConvert(
         'payment',
         (v) => PlaceOrderPayment.fromJson(v as Map<String, dynamic>),
@@ -188,6 +200,7 @@ Map<String, dynamic> _$PlaceOrderToJson(PlaceOrder instance) =>
       'type': _$OrderTypeEnumMap[instance.type]!,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'gender': ?_$UserGenderEnumMap[instance.gender],
+      'couponCode': ?instance.couponCode,
       'payment': instance.payment.toJson(),
     };
 

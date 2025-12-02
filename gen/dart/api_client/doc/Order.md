@@ -23,6 +23,9 @@ Name | Type | Description | Notes
 **platformCommission** | **num** |  | [optional] 
 **driverEarning** | **num** |  | [optional] 
 **merchantCommission** | **num** |  | [optional] 
+**couponId** | **String** |  | [optional] 
+**couponCode** | **String** |  | [optional] 
+**discountAmount** | **num** |  | [optional] 
 **note** | [**OrderNote**](OrderNote.md) |  | [optional] 
 **requestedAt** | [**DateTime**](DateTime.md) |  | 
 **acceptedAt** | [**DateTime**](DateTime.md) |  | [optional] 

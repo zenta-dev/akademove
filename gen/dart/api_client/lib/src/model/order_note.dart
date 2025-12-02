@@ -17,31 +17,34 @@ part 'order_note.g.dart';
 )
 class OrderNote {
   /// Returns a new [OrderNote] instance.
-  const OrderNote({this.pickup, this.dropoff, this.instructions});
+  const OrderNote({
+     this.pickup,
+     this.dropoff,
+     this.instructions,
+  });
 
   @JsonKey(name: r'pickup', required: false, includeIfNull: false)
   final String? pickup;
-
+  
   @JsonKey(name: r'dropoff', required: false, includeIfNull: false)
   final String? dropoff;
-
+  
   @JsonKey(name: r'instructions', required: false, includeIfNull: false)
   final String? instructions;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is OrderNote &&
-          other.pickup == pickup &&
-          other.dropoff == dropoff &&
-          other.instructions == instructions;
+  bool operator ==(Object other) => identical(this, other) || other is OrderNote &&
+    other.pickup == pickup &&
+    other.dropoff == dropoff &&
+    other.instructions == instructions;
 
   @override
   int get hashCode =>
-      pickup.hashCode + dropoff.hashCode + instructions.hashCode;
+      pickup.hashCode +
+      dropoff.hashCode +
+      instructions.hashCode;
 
-  factory OrderNote.fromJson(Map<String, dynamic> json) =>
-      _$OrderNoteFromJson(json);
+  factory OrderNote.fromJson(Map<String, dynamic> json) => _$OrderNoteFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderNoteToJson(this);
 
@@ -49,4 +52,6 @@ class OrderNote {
   String toString() {
     return toJson().toString();
   }
+
 }
+

@@ -19,6 +19,8 @@ abstract class _$EstimateOrderCWProxy {
 
   EstimateOrder gender(UserGender? gender);
 
+  EstimateOrder couponCode(String? couponCode);
+
   EstimateOrder discountIds(List<num>? discountIds);
 
   EstimateOrder weight(num? weight);
@@ -37,6 +39,7 @@ abstract class _$EstimateOrderCWProxy {
     OrderType type,
     List<OrderItem>? items,
     UserGender? gender,
+    String? couponCode,
     List<num>? discountIds,
     num? weight,
   });
@@ -70,6 +73,9 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   EstimateOrder gender(UserGender? gender) => call(gender: gender);
 
   @override
+  EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
+
+  @override
   EstimateOrder discountIds(List<num>? discountIds) =>
       call(discountIds: discountIds);
 
@@ -91,6 +97,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? type = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? couponCode = const $CopyWithPlaceholder(),
     Object? discountIds = const $CopyWithPlaceholder(),
     Object? weight = const $CopyWithPlaceholder(),
   }) {
@@ -123,6 +130,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      couponCode: couponCode == const $CopyWithPlaceholder()
+          ? _value.couponCode
+          // ignore: cast_nullable_to_non_nullable
+          : couponCode as String?,
       discountIds: discountIds == const $CopyWithPlaceholder()
           ? _value.discountIds
           // ignore: cast_nullable_to_non_nullable
@@ -180,6 +191,7 @@ EstimateOrder _$EstimateOrderFromJson(Map<String, dynamic> json) =>
           'gender',
           (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
         ),
+        couponCode: $checkedConvert('couponCode', (v) => v as String?),
         discountIds: $checkedConvert(
           'discountIds',
           (v) => (v as List<dynamic>?)?.map((e) => e as num).toList(),
@@ -197,6 +209,7 @@ Map<String, dynamic> _$EstimateOrderToJson(EstimateOrder instance) =>
       'type': _$OrderTypeEnumMap[instance.type]!,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'gender': ?_$UserGenderEnumMap[instance.gender],
+      'couponCode': ?instance.couponCode,
       'discountIds': ?instance.discountIds,
       'weight': ?instance.weight,
     };

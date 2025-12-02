@@ -151,7 +151,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderEstimate**
-> OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, discountIds, weight)
+> OrderEstimate200Response orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, couponCode, discountIds, weight)
 
 
 
@@ -170,11 +170,12 @@ final String noteDropoff = noteDropoff_example; // String |
 final String noteInstructions = noteInstructions_example; // String | 
 final List<OrderItem> items = ; // List<OrderItem> | 
 final UserGender gender = ; // UserGender | 
+final String couponCode = couponCode_example; // String | 
 final List<num> discountIds = ; // List<num> | 
 final num weight = 8.14; // num | 
 
 try {
-    final response = api.orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, discountIds, weight);
+    final response = api.orderEstimate(dropoffLocationX, dropoffLocationY, pickupLocationX, pickupLocationY, type, notePickup, noteDropoff, noteInstructions, items, gender, couponCode, discountIds, weight);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderEstimate: $e\n');
@@ -195,6 +196,7 @@ Name | Type | Description  | Notes
  **noteInstructions** | **String**|  | [optional] 
  **items** | [**List&lt;OrderItem&gt;**](OrderItem.md)|  | [optional] 
  **gender** | [**UserGender**](.md)|  | [optional] 
+ **couponCode** | **String**|  | [optional] 
  **discountIds** | [**List&lt;num&gt;**](num.md)|  | [optional] 
  **weight** | **num**|  | [optional] 
 

@@ -25,6 +25,8 @@ abstract class _$UpdateCouponCWProxy {
 
   UpdateCoupon isActive(bool? isActive);
 
+  UpdateCoupon merchantId(String? merchantId);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateCoupon(...).copyWith.fieldName(value)`.
   ///
@@ -42,6 +44,7 @@ abstract class _$UpdateCouponCWProxy {
     DateTime? periodStart,
     DateTime? periodEnd,
     bool? isActive,
+    String? merchantId,
   });
 }
 
@@ -83,6 +86,9 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
   UpdateCoupon isActive(bool? isActive) => call(isActive: isActive);
 
   @override
+  UpdateCoupon merchantId(String? merchantId) => call(merchantId: merchantId);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `UpdateCoupon(...).copyWith.fieldName(value)`.
   ///
@@ -100,6 +106,7 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
     Object? periodStart = const $CopyWithPlaceholder(),
     Object? periodEnd = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
+    Object? merchantId = const $CopyWithPlaceholder(),
   }) {
     return UpdateCoupon(
       name: name == const $CopyWithPlaceholder()
@@ -138,6 +145,10 @@ class _$UpdateCouponCWProxyImpl implements _$UpdateCouponCWProxy {
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool?,
+      merchantId: merchantId == const $CopyWithPlaceholder()
+          ? _value.merchantId
+          // ignore: cast_nullable_to_non_nullable
+          : merchantId as String?,
     );
   }
 }
@@ -175,6 +186,7 @@ UpdateCoupon _$UpdateCouponFromJson(
       (v) => v == null ? null : DateTime.parse(v as String),
     ),
     isActive: $checkedConvert('isActive', (v) => v as bool?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
   );
   return val;
 });
@@ -190,4 +202,5 @@ Map<String, dynamic> _$UpdateCouponToJson(UpdateCoupon instance) =>
       'periodStart': ?instance.periodStart?.toIso8601String(),
       'periodEnd': ?instance.periodEnd?.toIso8601String(),
       'isActive': ?instance.isActive,
+      'merchantId': ?instance.merchantId,
     };

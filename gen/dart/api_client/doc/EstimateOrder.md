@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **type** | [**OrderType**](OrderType.md) |  | 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
+**couponCode** | **String** |  | [optional] 
 **discountIds** | **List&lt;num&gt;** |  | [optional] 
 **weight** | **num** |  | [optional] 
 

@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **periodStart** | [**DateTime**](DateTime.md) |  | 
 **periodEnd** | [**DateTime**](DateTime.md) |  | 
 **isActive** | **bool** |  | 
+**merchantId** | **String** |  | [optional] 
 **createdById** | **String** |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 

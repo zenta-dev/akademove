@@ -9,7 +9,7 @@ part of 'coupon_create200_response.dart';
 abstract class _$CouponCreate200ResponseCWProxy {
   CouponCreate200Response message(String message);
 
-  CouponCreate200Response data(Coupon data);
+  CouponCreate200Response data(Coupon? data);
 
   CouponCreate200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +24,7 @@ abstract class _$CouponCreate200ResponseCWProxy {
   /// ```
   CouponCreate200Response call({
     String message,
-    Coupon data,
+    Coupon? data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,7 +42,7 @@ class _$CouponCreate200ResponseCWProxyImpl
   CouponCreate200Response message(String message) => call(message: message);
 
   @override
-  CouponCreate200Response data(Coupon data) => call(data: data);
+  CouponCreate200Response data(Coupon? data) => call(data: data);
 
   @override
   CouponCreate200Response pagination(PaginationResult? pagination) =>
@@ -71,10 +71,10 @@ class _$CouponCreate200ResponseCWProxyImpl
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as String,
-      data: data == const $CopyWithPlaceholder() || data == null
+      data: data == const $CopyWithPlaceholder()
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as Coupon,
+          : data as Coupon?,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ CouponCreate200Response _$CouponCreate200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => Coupon.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>),
     ),
     pagination: $checkedConvert(
       'pagination',
@@ -124,7 +124,7 @@ Map<String, dynamic> _$CouponCreate200ResponseToJson(
   CouponCreate200Response instance,
 ) => <String, dynamic>{
   'message': instance.message,
-  'data': instance.data.toJson(),
+  'data': instance.data?.toJson(),
   'pagination': ?instance.pagination?.toJson(),
   'totalPages': ?instance.totalPages,
 };

@@ -23,60 +23,58 @@ class InsertEmergency {
   const InsertEmergency({
     required this.orderId,
     required this.userId,
-    this.driverId,
+     this.driverId,
     required this.type,
     required this.status,
     required this.description,
-    this.location,
-    this.contactedAuthorities,
-    this.respondedById,
-    this.resolution,
+     this.location,
+     this.contactedAuthorities,
+     this.respondedById,
+     this.resolution,
   });
 
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-
+  
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-
+  
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final EmergencyType type;
-
+  
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final EmergencyStatus status;
-
+  
   @JsonKey(name: r'description', required: true, includeIfNull: false)
   final String description;
-
+  
   @JsonKey(name: r'location', required: false, includeIfNull: false)
   final EmergencyLocation? location;
-
+  
   @JsonKey(name: r'contactedAuthorities', required: false, includeIfNull: false)
   final List<String>? contactedAuthorities;
-
+  
   @JsonKey(name: r'respondedById', required: false, includeIfNull: false)
   final String? respondedById;
-
+  
   @JsonKey(name: r'resolution', required: false, includeIfNull: false)
   final String? resolution;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertEmergency &&
-          other.orderId == orderId &&
-          other.userId == userId &&
-          other.driverId == driverId &&
-          other.type == type &&
-          other.status == status &&
-          other.description == description &&
-          other.location == location &&
-          other.contactedAuthorities == contactedAuthorities &&
-          other.respondedById == respondedById &&
-          other.resolution == resolution;
+  bool operator ==(Object other) => identical(this, other) || other is InsertEmergency &&
+    other.orderId == orderId &&
+    other.userId == userId &&
+    other.driverId == driverId &&
+    other.type == type &&
+    other.status == status &&
+    other.description == description &&
+    other.location == location &&
+    other.contactedAuthorities == contactedAuthorities &&
+    other.respondedById == respondedById &&
+    other.resolution == resolution;
 
   @override
   int get hashCode =>
@@ -91,8 +89,7 @@ class InsertEmergency {
       respondedById.hashCode +
       resolution.hashCode;
 
-  factory InsertEmergency.fromJson(Map<String, dynamic> json) =>
-      _$InsertEmergencyFromJson(json);
+  factory InsertEmergency.fromJson(Map<String, dynamic> json) => _$InsertEmergencyFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertEmergencyToJson(this);
 
@@ -100,4 +97,6 @@ class InsertEmergency {
   String toString() {
     return toJson().toString();
   }
+
 }
+

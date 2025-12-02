@@ -97,9 +97,11 @@ Class | Method | HTTP request | Description
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponCreate**](doc/CouponApi.md#couponcreate) | **POST** /coupons | 
 [*CouponApi*](doc/CouponApi.md) | [**couponGet**](doc/CouponApi.md#couponget) | **GET** /coupons/{id} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponGetEligibleCoupons**](doc/CouponApi.md#coupongeteligiblecoupons) | **POST** /coupons/eligible | 
 [*CouponApi*](doc/CouponApi.md) | [**couponList**](doc/CouponApi.md#couponlist) | **GET** /coupons | 
 [*CouponApi*](doc/CouponApi.md) | [**couponRemove**](doc/CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponUpdate**](doc/CouponApi.md#couponupdate) | **PUT** /coupons/{id} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponValidate**](doc/CouponApi.md#couponvalidate) | **POST** /coupons/validate | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
@@ -169,6 +171,7 @@ Class | Method | HTTP request | Description
 [*WalletApi*](doc/WalletApi.md) | [**walletPay**](doc/WalletApi.md#walletpay) | **POST** /wallets/pay | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTopUp**](doc/WalletApi.md#wallettopup) | **POST** /wallets/topup | 
 [*WalletApi*](doc/WalletApi.md) | [**walletTransfer**](doc/WalletApi.md#wallettransfer) | **POST** /wallets/transfer | 
+[*WalletApi*](doc/WalletApi.md) | [**walletWithdraw**](doc/WalletApi.md#walletwithdraw) | **POST** /wallets/withdraw | 
 
 
 ## Documentation For Models
@@ -211,9 +214,15 @@ Class | Method | HTTP request | Description
  - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
  - [CouponCreate200Response](doc/CouponCreate200Response.md)
+ - [CouponGetEligibleCoupons200Response](doc/CouponGetEligibleCoupons200Response.md)
+ - [CouponGetEligibleCoupons200ResponseData](doc/CouponGetEligibleCoupons200ResponseData.md)
+ - [CouponGetEligibleCouponsRequest](doc/CouponGetEligibleCouponsRequest.md)
  - [CouponKey](doc/CouponKey.md)
  - [CouponList200Response](doc/CouponList200Response.md)
  - [CouponRules](doc/CouponRules.md)
+ - [CouponValidate200Response](doc/CouponValidate200Response.md)
+ - [CouponValidate200ResponseData](doc/CouponValidate200ResponseData.md)
+ - [CouponValidateRequest](doc/CouponValidateRequest.md)
  - [Currency](doc/Currency.md)
  - [DashboardStats](doc/DashboardStats.md)
  - [DayOfWeek](doc/DayOfWeek.md)
@@ -393,6 +402,7 @@ Class | Method | HTTP request | Description
  - [WalletMonthlySummaryQuery](doc/WalletMonthlySummaryQuery.md)
  - [WalletMonthlySummaryResponse](doc/WalletMonthlySummaryResponse.md)
  - [WalletTopUp200Response](doc/WalletTopUp200Response.md)
+ - [WithdrawRequest](doc/WithdrawRequest.md)
 
 
 ## Documentation For Authorization

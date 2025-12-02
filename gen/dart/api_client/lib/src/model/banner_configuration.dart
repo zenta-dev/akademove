@@ -25,26 +25,26 @@ class BannerConfiguration {
 
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
-
+  
   @JsonKey(name: r'description', required: true, includeIfNull: false)
   final String description;
-
+  
   @JsonKey(name: r'imageUrl', required: true, includeIfNull: false)
   final String imageUrl;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is BannerConfiguration &&
+    other.title == title &&
+    other.description == description &&
+    other.imageUrl == imageUrl;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BannerConfiguration &&
-          other.title == title &&
-          other.description == description &&
-          other.imageUrl == imageUrl;
+  int get hashCode =>
+      title.hashCode +
+      description.hashCode +
+      imageUrl.hashCode;
 
-  @override
-  int get hashCode => title.hashCode + description.hashCode + imageUrl.hashCode;
-
-  factory BannerConfiguration.fromJson(Map<String, dynamic> json) =>
-      _$BannerConfigurationFromJson(json);
+  factory BannerConfiguration.fromJson(Map<String, dynamic> json) => _$BannerConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$BannerConfigurationToJson(this);
 
@@ -52,4 +52,6 @@ class BannerConfiguration {
   String toString() {
     return toJson().toString();
   }
+
 }
+

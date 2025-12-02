@@ -17,26 +17,28 @@ part 'driver_update_request_bank.g.dart';
 )
 class DriverUpdateRequestBank {
   /// Returns a new [DriverUpdateRequestBank] instance.
-  const DriverUpdateRequestBank({required this.provider, required this.number});
+  const DriverUpdateRequestBank({
+    required this.provider,
+    required this.number,
+  });
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final DriverUpdateRequestBankProviderEnum provider;
-
+  
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is DriverUpdateRequestBank &&
+    other.provider == provider &&
+    other.number == number;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is DriverUpdateRequestBank &&
-          other.provider == provider &&
-          other.number == number;
+  int get hashCode =>
+      provider.hashCode +
+      number.hashCode;
 
-  @override
-  int get hashCode => provider.hashCode + number.hashCode;
-
-  factory DriverUpdateRequestBank.fromJson(Map<String, dynamic> json) =>
-      _$DriverUpdateRequestBankFromJson(json);
+  factory DriverUpdateRequestBank.fromJson(Map<String, dynamic> json) => _$DriverUpdateRequestBankFromJson(json);
 
   Map<String, dynamic> toJson() => _$DriverUpdateRequestBankToJson(this);
 
@@ -44,6 +46,7 @@ class DriverUpdateRequestBank {
   String toString() {
     return toJson().toString();
   }
+
 }
 
 enum DriverUpdateRequestBankProviderEnum {
@@ -57,11 +60,13 @@ enum DriverUpdateRequestBankProviderEnum {
   MANDIRI(r'MANDIRI'),
   @JsonValue(r'PERMATA')
   PERMATA(r'PERMATA');
-
+  
   const DriverUpdateRequestBankProviderEnum(this.value);
-
+  
   final String value;
-
+  
   @override
   String toString() => value;
 }
+
+

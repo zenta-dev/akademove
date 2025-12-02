@@ -24,46 +24,36 @@ class CommissionConfiguration {
     required this.merchantCommissionRate,
   });
 
-  /// Platform commission rate for RIDE orders (0-1, e.g., 0.15 for 15%)
-  // minimum: 0
-  // maximum: 1
+      /// Platform commission rate for RIDE orders (0-1, e.g., 0.15 for 15%)
+          // minimum: 0
+          // maximum: 1
   @JsonKey(name: r'rideCommissionRate', required: true, includeIfNull: false)
   final num rideCommissionRate;
-
-  /// Platform commission rate for DELIVERY orders (0-1, e.g., 0.15 for 15%)
-  // minimum: 0
-  // maximum: 1
-  @JsonKey(
-    name: r'deliveryCommissionRate',
-    required: true,
-    includeIfNull: false,
-  )
+  
+      /// Platform commission rate for DELIVERY orders (0-1, e.g., 0.15 for 15%)
+          // minimum: 0
+          // maximum: 1
+  @JsonKey(name: r'deliveryCommissionRate', required: true, includeIfNull: false)
   final num deliveryCommissionRate;
-
-  /// Platform commission rate for FOOD orders (0-1, e.g., 0.20 for 20%)
-  // minimum: 0
-  // maximum: 1
+  
+      /// Platform commission rate for FOOD orders (0-1, e.g., 0.20 for 20%)
+          // minimum: 0
+          // maximum: 1
   @JsonKey(name: r'foodCommissionRate', required: true, includeIfNull: false)
   final num foodCommissionRate;
-
-  /// Merchant commission rate on food orders (0-1, e.g., 0.10 for 10%)
-  // minimum: 0
-  // maximum: 1
-  @JsonKey(
-    name: r'merchantCommissionRate',
-    required: true,
-    includeIfNull: false,
-  )
+  
+      /// Merchant commission rate on food orders (0-1, e.g., 0.10 for 10%)
+          // minimum: 0
+          // maximum: 1
+  @JsonKey(name: r'merchantCommissionRate', required: true, includeIfNull: false)
   final num merchantCommissionRate;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CommissionConfiguration &&
-          other.rideCommissionRate == rideCommissionRate &&
-          other.deliveryCommissionRate == deliveryCommissionRate &&
-          other.foodCommissionRate == foodCommissionRate &&
-          other.merchantCommissionRate == merchantCommissionRate;
+  bool operator ==(Object other) => identical(this, other) || other is CommissionConfiguration &&
+    other.rideCommissionRate == rideCommissionRate &&
+    other.deliveryCommissionRate == deliveryCommissionRate &&
+    other.foodCommissionRate == foodCommissionRate &&
+    other.merchantCommissionRate == merchantCommissionRate;
 
   @override
   int get hashCode =>
@@ -72,8 +62,7 @@ class CommissionConfiguration {
       foodCommissionRate.hashCode +
       merchantCommissionRate.hashCode;
 
-  factory CommissionConfiguration.fromJson(Map<String, dynamic> json) =>
-      _$CommissionConfigurationFromJson(json);
+  factory CommissionConfiguration.fromJson(Map<String, dynamic> json) => _$CommissionConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$CommissionConfigurationToJson(this);
 
@@ -81,4 +70,6 @@ class CommissionConfiguration {
   String toString() {
     return toJson().toString();
   }
+
 }
+
