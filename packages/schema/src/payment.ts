@@ -3,10 +3,10 @@ import {
 	BankProviderSchema,
 	DateSchema,
 	type SchemaRegistries,
-} from "./common.ts";
-import { PAYMENT_METHOD, PAYMENT_PROVIDER } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { TransactionStatusSchema } from "./transaction.ts";
+} from "./common.js";
+import { PAYMENT_METHOD, PAYMENT_PROVIDER } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { TransactionStatusSchema } from "./transaction.js";
 
 export const PaymentProviderSchema = z.enum(PAYMENT_PROVIDER);
 export type PaymentProvider = z.infer<typeof PaymentProviderSchema>;

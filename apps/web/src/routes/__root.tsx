@@ -7,7 +7,6 @@ import {
 	Scripts,
 	useRouterState,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ThemeProvider } from "@/components/providers/theme";
 import { Toaster } from "@/components/ui/sonner";
@@ -103,7 +102,7 @@ function RootDocument() {
 						<Outlet />
 						<Toaster richColors />
 					</ThemeProvider>
-					<TanStackRouterDevtools position="bottom-left" />
+					{/* 					<TanStackRouterDevtools position="bottom-left" /> */}
 					<ReactQueryDevtools />
 					<Scripts />
 				</ErrorBoundary>

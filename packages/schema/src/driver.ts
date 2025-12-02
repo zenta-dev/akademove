@@ -5,11 +5,11 @@ import {
 	DayOfWeekSchema,
 	type SchemaRegistries,
 	TimeSchema,
-} from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { CoordinateSchema } from "./position.ts";
-import { UserSchema } from "./user.ts";
+} from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { CoordinateSchema } from "./position.js";
+import { UserSchema } from "./user.js";
 
 export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;

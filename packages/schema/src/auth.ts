@@ -1,10 +1,10 @@
 import { m } from "@repo/i18n";
 import * as z from "zod";
-import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.ts";
-import { InsertDriverSchema } from "./driver.ts";
-import { flattenZodObject } from "./flatten.helper.ts";
-import { InsertMerchantSchema } from "./merchant.ts";
-import { UserGenderSchema, UserSchema } from "./user.ts";
+import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.js";
+import { InsertDriverSchema } from "./driver.js";
+import { flattenZodObject } from "./flatten.helper.js";
+import { InsertMerchantSchema } from "./merchant.js";
+import { UserGenderSchema, UserSchema } from "./user.js";
 
 export const SessionSchema = z.object({
 	id: z.string(),

@@ -47,6 +47,7 @@ export const CONFIGURATION_KEYS = {
 	RIDE_SERVICE_PRICING: "ride-service-pricing",
 	DELIVERY_SERVICE_PRICING: "delivery-service-pricing",
 	FOOD_SERVICE_PRICING: "food-service-pricing",
+	COMMISSION_RATES: "commission-rates",
 } as const;
 export const createSuccesSchema = <
 	TSchema,

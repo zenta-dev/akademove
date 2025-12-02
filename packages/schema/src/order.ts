@@ -3,20 +3,20 @@ import {
 	BankProviderSchema,
 	DateSchema,
 	type SchemaRegistries,
-} from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { DriverSchema } from "./driver.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { flattenZodObject } from "./flatten.helper.ts";
-import { MerchantMenuSchema, MerchantSchema } from "./merchant.ts";
+} from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { DriverSchema } from "./driver.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { flattenZodObject } from "./flatten.helper.js";
+import { MerchantMenuSchema, MerchantSchema } from "./merchant.js";
 import {
 	PaymentMethodSchema,
 	PaymentProviderSchema,
 	PaymentSchema,
-} from "./payment.ts";
-import { CoordinateSchema } from "./position.ts";
-import { TransactionSchema } from "./transaction.ts";
-import { UserGenderSchema, UserSchema } from "./user.ts";
+} from "./payment.js";
+import { CoordinateSchema } from "./position.js";
+import { TransactionSchema } from "./transaction.js";
+import { UserGenderSchema, UserSchema } from "./user.js";
 
 export const OrderStatusSchema = z.enum(CONSTANTS.ORDER_STATUSES);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;

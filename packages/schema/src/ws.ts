@@ -1,12 +1,12 @@
 import * as z from "zod";
-import type { SchemaRegistries } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { DriverSchema } from "./driver.ts";
-import { OrderSchema } from "./order.ts";
-import { PaymentSchema } from "./payment.ts";
-import { CoordinateSchema } from "./position.ts";
-import { TransactionSchema } from "./transaction.ts";
-import { WalletSchema } from "./wallet.ts";
+import type { SchemaRegistries } from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { DriverSchema } from "./driver.js";
+import { OrderSchema } from "./order.js";
+import { PaymentSchema } from "./payment.js";
+import { CoordinateSchema } from "./position.js";
+import { TransactionSchema } from "./transaction.js";
+import { WalletSchema } from "./wallet.js";
 
 export const EnvelopeSenderSchema = z
 	.enum(["s", "c"])

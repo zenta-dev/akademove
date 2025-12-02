@@ -1,7 +1,7 @@
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { ZodObject, ZodRawShape } from "zod";
 import * as z from "zod";
-import { CONSTANTS } from "./constants.ts";
+import { CONSTANTS } from "./constants.js";
 
 export const TimeSchema = z.object({
 	h: z.number(),

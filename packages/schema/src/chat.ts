@@ -1,7 +1,7 @@
 import * as z from "zod";
-import type { SchemaRegistries } from "./common.ts";
-import { DateSchema } from "./common.ts";
-import { UserSchema } from "./user.ts";
+import type { SchemaRegistries } from "./common.js";
+import { DateSchema } from "./common.js";
+import { UserSchema } from "./user.js";
 
 export const OrderChatMessageSchema = z.object({
 	id: z.uuid(),

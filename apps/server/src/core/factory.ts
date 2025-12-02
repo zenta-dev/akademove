@@ -126,7 +126,7 @@ export function getRepositories(
 		review: new ReviewRepository(svc.db, svc.kv),
 		wallet,
 		user: {
-			admin: new UserAdminRepository(svc.db, svc.kv, svc.storage),
+			admin: new UserAdminRepository(svc.db, svc.kv, svc.storage, manager.pw),
 			me: new UserMeRepository(svc.db, svc.kv, svc.storage, manager.pw),
 		},
 		transaction,

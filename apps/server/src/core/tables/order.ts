@@ -73,14 +73,17 @@ export const order = pgTable(
 		platformCommission: numeric("platform_commission", {
 			precision: 18,
 			scale: 2,
+			mode: "number",
 		}),
 		driverEarning: numeric("driver_earning", {
 			precision: 18,
 			scale: 2,
+			mode: "number",
 		}),
 		merchantCommission: numeric("merchant_commission", {
 			precision: 18,
 			scale: 2,
+			mode: "number",
 		}),
 		note: jsonb().$type<OrderNote>(),
 		requestedAt: timestamp("requested_at").notNull().$defaultFn(nowFn),

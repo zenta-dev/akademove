@@ -1,5 +1,5 @@
 import * as z from "zod";
-import type { SchemaRegistries } from "./common.ts";
+import type { SchemaRegistries } from "./common.js";
 
 export const LocationSchema = z.object({
 	lat: z.coerce.number(),

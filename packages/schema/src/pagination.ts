@@ -1,17 +1,17 @@
 import * as z from "zod";
-import type { SchemaRegistries } from "./common.ts";
-import { ConfigurationKeySchema } from "./configuration.ts";
-import { CouponKeySchema } from "./coupon.ts";
-import { DriverKeySchema, DriverScheduleKeySchema } from "./driver.ts";
-import { mergeEnums } from "./enum.helper.ts";
-import { MerchantKeySchema, MerchantMenuKeySchema } from "./merchant.ts";
-import { OrderKeySchema } from "./order.ts";
-import { PaymentKeySchema } from "./payment.ts";
-import { ReportKeySchema } from "./report.ts";
-import { ReviewKeySchema } from "./review.ts";
-import { TransactionKeySchema } from "./transaction.ts";
-import { UserKeySchema } from "./user.ts";
-import { WalletKeySchema } from "./wallet.ts";
+import type { SchemaRegistries } from "./common.js";
+import { ConfigurationKeySchema } from "./configuration.js";
+import { CouponKeySchema } from "./coupon.js";
+import { DriverKeySchema, DriverScheduleKeySchema } from "./driver.js";
+import { mergeEnums } from "./enum.helper.js";
+import { MerchantKeySchema, MerchantMenuKeySchema } from "./merchant.js";
+import { OrderKeySchema } from "./order.js";
+import { PaymentKeySchema } from "./payment.js";
+import { ReportKeySchema } from "./report.js";
+import { ReviewKeySchema } from "./review.js";
+import { TransactionKeySchema } from "./transaction.js";
+import { UserKeySchema } from "./user.js";
+import { WalletKeySchema } from "./wallet.js";
 
 const MAX_LIMIT = 100;
 

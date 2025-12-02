@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const FCMTokenSchema = z.object({
 	id: z.uuid(),

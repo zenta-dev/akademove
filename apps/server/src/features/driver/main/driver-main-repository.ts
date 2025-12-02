@@ -81,6 +81,7 @@ export class DriverMainRepository extends BaseRepository {
 			user,
 			currentLocation: item.currentLocation ?? undefined,
 			lastLocationUpdate: item.lastLocationUpdate ?? undefined,
+			lastCancellationDate: item.lastCancellationDate ?? undefined,
 			studentCardId: item.studentCard,
 			driverLicenseId: item.driverLicense,
 			vehicleCertificateId: item.vehicleCertificate,

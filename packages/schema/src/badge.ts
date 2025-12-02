@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { BADGE_LEVELS, BADGE_TARGET_ROLES, BADGE_TYPES } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { flattenZodObject } from "./flatten.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { BADGE_LEVELS, BADGE_TARGET_ROLES, BADGE_TYPES } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { flattenZodObject } from "./flatten.helper.js";
 
 export const BadgeCriteriaSchema = z.object({
 	minOrders: z.number().int().min(0).optional(),

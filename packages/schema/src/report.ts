@@ -1,7 +1,7 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const ReportCategorySchema = z.enum(CONSTANTS.REPORT_CATEGORIES);
 export type ReportCategory = z.infer<typeof ReportCategorySchema>;

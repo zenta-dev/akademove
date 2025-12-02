@@ -1,7 +1,7 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { CURRENCY } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { CURRENCY } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const CurrencySchema = z.enum(CURRENCY);
 

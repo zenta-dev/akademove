@@ -5,11 +5,11 @@ import {
 	DateSchema,
 	PhoneSchema,
 	type SchemaRegistries,
-} from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
-import { flattenZodObject } from "./flatten.helper.ts";
-import { CoordinateSchema } from "./position.ts";
+} from "./common.js";
+import { CONSTANTS } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { flattenZodObject } from "./flatten.helper.js";
+import { CoordinateSchema } from "./position.js";
 
 export const MerchantCategorySchema = z
 	.enum(CONSTANTS.MERCHANT_CATEGORIES)

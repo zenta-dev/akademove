@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { LEADERBOARD_CATEGORIES, LEADERBOARD_PERIODS } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { LEADERBOARD_CATEGORIES, LEADERBOARD_PERIODS } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const LeaderboardSchema = z.object({
 	id: z.uuid(),

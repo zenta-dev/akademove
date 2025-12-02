@@ -3,6 +3,7 @@ import {
 	type ConfigurationValue,
 	DeliveryPricingConfigurationSchema,
 	FoodPricingConfigurationSchema,
+	type PricingConfiguration,
 	RidePricingConfigurationSchema,
 } from "@repo/schema/configuration";
 import type { Driver } from "@repo/schema/driver";
@@ -132,12 +133,16 @@ export class OrderRepository extends BaseRepository {
 			basePrice: toNumberSafe(item.basePrice),
 			totalPrice: toNumberSafe(item.totalPrice),
 			tip: item.tip ? toNumberSafe(item.tip) : undefined,
+			platformCommission: item.platformCommission ?? undefined,
+			driverEarning: item.driverEarning ?? undefined,
+			merchantCommission: item.merchantCommission ?? undefined,
 			acceptedAt: item.acceptedAt ?? undefined,
 			preparedAt: item.preparedAt ?? undefined,
 			readyAt: item.readyAt ?? undefined,
 			arrivedAt: item.arrivedAt ?? undefined,
 			cancelReason: item.cancelReason ?? undefined,
 			gender: item.gender ?? undefined,
+			genderPreference: item.genderPreference ?? undefined,
 		};
 	}
 
@@ -340,7 +345,7 @@ export class OrderRepository extends BaseRepository {
 	async #getPricingConfiguration(
 		params: { type: OrderType },
 		opts?: WithTx,
-	): Promise<ConfigurationValue | undefined> {
+	): Promise<PricingConfiguration | undefined> {
 		let key = "";
 		switch (params.type) {
 			case "RIDE":
@@ -359,7 +364,7 @@ export class OrderRepository extends BaseRepository {
 		// PERFORMANCE: Check in-memory cache first (99% faster, zero DB load)
 		const cached = OrderRepository.#pricingConfigCache.get(key);
 		if (cached) {
-			return cached;
+			return cached as PricingConfiguration;
 		}
 
 		// Cache miss - load from DB and populate memory cache
@@ -385,13 +390,18 @@ export class OrderRepository extends BaseRepository {
 
 		const res = await safeAsync(this.getCache(key, { fallback }));
 
-		return res.data;
+		return res.data as PricingConfiguration | undefined;
 	}
 
 	async estimate(
-		params: EstimateOrder,
+		params: Pick<
+			EstimateOrder,
+			"type" | "pickupLocation" | "dropoffLocation"
+		> & {
+			weight?: number;
+		},
 		opts?: WithTx,
-	): Promise<OrderSummary & { config: ConfigurationValue }> {
+	): Promise<OrderSummary & { config: PricingConfiguration }> {
 		try {
 			// Create cache key based on parameters (rounded to 4 decimal places for coordinate precision)
 			const pickup = `${params.pickupLocation.x.toFixed(4)},${params.pickupLocation.y.toFixed(4)}`;
@@ -401,7 +411,7 @@ export class OrderRepository extends BaseRepository {
 
 			// Try to get cached estimate (24 hour TTL - reduces Google Maps API costs)
 			const cached = await this.getCache<
-				OrderSummary & { config: ConfigurationValue }
+				OrderSummary & { config: PricingConfiguration }
 			>(cacheKey);
 			if (cached) {
 				log.debug({ cacheKey }, "[OrderRepository] Returning cached estimate");

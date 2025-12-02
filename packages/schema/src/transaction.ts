@@ -1,7 +1,7 @@
 import * as z from "zod";
-import { DateSchema, type SchemaRegistries } from "./common.ts";
-import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "./constants.ts";
-import { extractSchemaKeysAsEnum } from "./enum.helper.ts";
+import { DateSchema, type SchemaRegistries } from "./common.js";
+import { TRANSACTION_STATUS, TRANSACTION_TYPE } from "./constants.js";
+import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const TransactionTypeSchema = z.enum(TRANSACTION_TYPE);
 export type TransactionType = z.infer<typeof TransactionTypeSchema>;

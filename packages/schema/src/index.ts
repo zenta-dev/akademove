@@ -1,24 +1,24 @@
-import { AuthSchemaRegistries } from "./auth.ts";
-import { BadgeSchemaRegistries } from "./badge.ts";
-import { ChatSchemaRegistries } from "./chat.ts";
-import { CommonSchemaRegistries, type SchemaRegistries } from "./common.ts";
-import { ConfigurationSchemaRegistries } from "./configuration.ts";
-import { CouponSchemaRegistries } from "./coupon.ts";
-import { DriverSchemaRegistries } from "./driver.ts";
-import { EmergencySchemaRegistries } from "./emergency.ts";
-import { LeaderboardSchemaRegistries } from "./leaderboard.ts";
-import { MerchantSchemaRegistries } from "./merchant.ts";
-import { NotificationSchemaRegistries } from "./notification.ts";
-import { OrderSchemaRegistries } from "./order.ts";
-import { PaginationSchemaRegistries } from "./pagination.ts";
-import { PaymentSchemaRegistries } from "./payment.ts";
-import { PositionSchemaRegistries } from "./position.ts";
-import { ReportSchemaRegistries } from "./report.ts";
-import { ReviewSchemaRegistries } from "./review.ts";
-import { TransactionSchemaRegistries } from "./transaction.ts";
-import { UserSchemaRegistries } from "./user.ts";
-import { WalletSchemaRegistries } from "./wallet.ts";
-import { WSSchemaRegistries } from "./ws.ts";
+import { AuthSchemaRegistries } from "./auth.js";
+import { BadgeSchemaRegistries } from "./badge.js";
+import { ChatSchemaRegistries } from "./chat.js";
+import { CommonSchemaRegistries, type SchemaRegistries } from "./common.js";
+import { ConfigurationSchemaRegistries } from "./configuration.js";
+import { CouponSchemaRegistries } from "./coupon.js";
+import { DriverSchemaRegistries } from "./driver.js";
+import { EmergencySchemaRegistries } from "./emergency.js";
+import { LeaderboardSchemaRegistries } from "./leaderboard.js";
+import { MerchantSchemaRegistries } from "./merchant.js";
+import { NotificationSchemaRegistries } from "./notification.js";
+import { OrderSchemaRegistries } from "./order.js";
+import { PaginationSchemaRegistries } from "./pagination.js";
+import { PaymentSchemaRegistries } from "./payment.js";
+import { PositionSchemaRegistries } from "./position.js";
+import { ReportSchemaRegistries } from "./report.js";
+import { ReviewSchemaRegistries } from "./review.js";
+import { TransactionSchemaRegistries } from "./transaction.js";
+import { UserSchemaRegistries } from "./user.js";
+import { WalletSchemaRegistries } from "./wallet.js";
+import { WSSchemaRegistries } from "./ws.js";
 
 export const AllSchemaRegistries = {
 	...CommonSchemaRegistries,

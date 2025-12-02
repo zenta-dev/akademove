@@ -4,8 +4,8 @@ import {
 	DateSchema,
 	DayOfWeekSchema,
 	type SchemaRegistries,
-} from "./common.ts";
-import { CONSTANTS } from "./constants.ts";
+} from "./common.js";
+import { CONSTANTS } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 const GeneralRuleTypeSchema = z.enum(CONSTANTS.GENERAL_RULE_TYPES);
