@@ -51,8 +51,37 @@ export const EmergencyHandler = priv.router({
 					"[EmergencyHandler] Emergency triggered",
 				);
 
-				// TODO: Send notification to campus security/operators
-				// This could be implemented as a separate notification service call
+				// Send emergency notification to operators and campus security
+				try {
+					await context.repo.notification.sendToTopic(
+						{
+							topic: "OPERATOR",
+							title: `🚨 Emergency Alert: ${result.type}`,
+							body: `Order #${result.orderId.substring(0, 8)} - ${result.description || "Emergency triggered"}`,
+							data: {
+								type: "EMERGENCY",
+								emergencyId: result.id,
+								orderId: result.orderId,
+								emergencyType: result.type,
+								userId: result.userId,
+								location: JSON.stringify(result.location),
+							},
+							userId: context.user.id,
+						},
+						{ tx },
+					);
+
+					log.info(
+						{ emergencyId: result.id },
+						"[EmergencyHandler] Emergency notification sent to operators",
+					);
+				} catch (notifError) {
+					// Log error but don't fail the emergency trigger
+					log.error(
+						{ error: notifError, emergencyId: result.id },
+						"[EmergencyHandler] Failed to send emergency notification",
+					);
+				}
 
 				return {
 					status: 200,
