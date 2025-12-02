@@ -32,8 +32,7 @@ abstract class _$ContactList200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfContactList200Response.copyWith(...)` or call `instanceOfContactList200Response.copyWith.fieldName(value)` for a single field.
-class _$ContactList200ResponseCWProxyImpl
-    implements _$ContactList200ResponseCWProxy {
+class _$ContactList200ResponseCWProxyImpl implements _$ContactList200ResponseCWProxy {
   const _$ContactList200ResponseCWProxyImpl(this._value);
 
   final ContactList200Response _value;
@@ -42,16 +41,13 @@ class _$ContactList200ResponseCWProxyImpl
   ContactList200Response message(String message) => call(message: message);
 
   @override
-  ContactList200Response data(ContactList200ResponseData data) =>
-      call(data: data);
+  ContactList200Response data(ContactList200ResponseData data) => call(data: data);
 
   @override
-  ContactList200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  ContactList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  ContactList200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  ContactList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -92,38 +88,29 @@ extension $ContactList200ResponseCopyWith on ContactList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfContactList200Response.copyWith(...)` or `instanceOfContactList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ContactList200ResponseCWProxy get copyWith =>
-      _$ContactList200ResponseCWProxyImpl(this);
+  _$ContactList200ResponseCWProxy get copyWith => _$ContactList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ContactList200Response _$ContactList200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('ContactList200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = ContactList200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => ContactList200ResponseData.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+ContactList200Response _$ContactList200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ContactList200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = ContactList200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => ContactList200ResponseData.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$ContactList200ResponseToJson(
-  ContactList200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$ContactList200ResponseToJson(ContactList200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

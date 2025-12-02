@@ -103,8 +103,7 @@ class _$MerchantMenuCWProxyImpl implements _$MerchantMenuCWProxy {
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+      merchantId: merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String,
@@ -151,44 +150,31 @@ extension $MerchantMenuCopyWith on MerchantMenu {
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantMenu _$MerchantMenuFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('MerchantMenu', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'merchantId',
-      'name',
-      'price',
-      'stock',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
-  final val = MerchantMenu(
-    id: $checkedConvert('id', (v) => v as String),
-    merchantId: $checkedConvert('merchantId', (v) => v as String),
-    name: $checkedConvert('name', (v) => v as String),
-    image: $checkedConvert('image', (v) => v as String?),
-    category: $checkedConvert('category', (v) => v as String?),
-    price: $checkedConvert('price', (v) => v as num),
-    stock: $checkedConvert('stock', (v) => (v as num).toInt()),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-  );
-  return val;
-});
+MerchantMenu _$MerchantMenuFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('MerchantMenu', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['id', 'merchantId', 'name', 'price', 'stock', 'createdAt', 'updatedAt']);
+      final val = MerchantMenu(
+        id: $checkedConvert('id', (v) => v as String),
+        merchantId: $checkedConvert('merchantId', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String),
+        image: $checkedConvert('image', (v) => v as String?),
+        category: $checkedConvert('category', (v) => v as String?),
+        price: $checkedConvert('price', (v) => v as num),
+        stock: $checkedConvert('stock', (v) => (v as num).toInt()),
+        createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+        updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$MerchantMenuToJson(MerchantMenu instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'merchantId': instance.merchantId,
-      'name': instance.name,
-      'image': ?instance.image,
-      'category': ?instance.category,
-      'price': instance.price,
-      'stock': instance.stock,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
-    };
+Map<String, dynamic> _$MerchantMenuToJson(MerchantMenu instance) => <String, dynamic>{
+  'id': instance.id,
+  'merchantId': instance.merchantId,
+  'name': instance.name,
+  'image': ?instance.image,
+  'category': ?instance.category,
+  'price': instance.price,
+  'stock': instance.stock,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};

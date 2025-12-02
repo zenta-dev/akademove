@@ -22,18 +22,12 @@ abstract class _$AuthSignOut200ResponseCWProxy {
   /// ```dart
   /// AuthSignOut200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  AuthSignOut200Response call({
-    String message,
-    Object? data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  AuthSignOut200Response call({String message, Object? data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthSignOut200Response.copyWith(...)` or call `instanceOfAuthSignOut200Response.copyWith.fieldName(value)` for a single field.
-class _$AuthSignOut200ResponseCWProxyImpl
-    implements _$AuthSignOut200ResponseCWProxy {
+class _$AuthSignOut200ResponseCWProxyImpl implements _$AuthSignOut200ResponseCWProxy {
   const _$AuthSignOut200ResponseCWProxyImpl(this._value);
 
   final AuthSignOut200Response _value;
@@ -45,12 +39,10 @@ class _$AuthSignOut200ResponseCWProxyImpl
   AuthSignOut200Response data(Object? data) => call(data: data);
 
   @override
-  AuthSignOut200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  AuthSignOut200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  AuthSignOut200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  AuthSignOut200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,35 +83,29 @@ extension $AuthSignOut200ResponseCopyWith on AuthSignOut200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthSignOut200Response.copyWith(...)` or `instanceOfAuthSignOut200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthSignOut200ResponseCWProxy get copyWith =>
-      _$AuthSignOut200ResponseCWProxyImpl(this);
+  _$AuthSignOut200ResponseCWProxy get copyWith => _$AuthSignOut200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthSignOut200Response _$AuthSignOut200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('AuthSignOut200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = AuthSignOut200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert('data', (v) => v),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+AuthSignOut200Response _$AuthSignOut200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AuthSignOut200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = AuthSignOut200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => v),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$AuthSignOut200ResponseToJson(
-  AuthSignOut200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$AuthSignOut200ResponseToJson(AuthSignOut200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
   'pagination': ?instance.pagination?.toJson(),

@@ -57,36 +57,28 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
   MerchantBestSellers200ResponseDataInnerMenu id(String id) => call(id: id);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId) =>
-      call(merchantId: merchantId);
+  MerchantBestSellers200ResponseDataInnerMenu merchantId(String merchantId) => call(merchantId: merchantId);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu name(String name) =>
-      call(name: name);
+  MerchantBestSellers200ResponseDataInnerMenu name(String name) => call(name: name);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu image(String? image) =>
-      call(image: image);
+  MerchantBestSellers200ResponseDataInnerMenu image(String? image) => call(image: image);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu category(String? category) =>
-      call(category: category);
+  MerchantBestSellers200ResponseDataInnerMenu category(String? category) => call(category: category);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu price(num price) =>
-      call(price: price);
+  MerchantBestSellers200ResponseDataInnerMenu price(num price) => call(price: price);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu stock(num stock) =>
-      call(stock: stock);
+  MerchantBestSellers200ResponseDataInnerMenu stock(num stock) => call(stock: stock);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime createdAt) =>
-      call(createdAt: createdAt);
+  MerchantBestSellers200ResponseDataInnerMenu createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime updatedAt) =>
-      call(updatedAt: updatedAt);
+  MerchantBestSellers200ResponseDataInnerMenu updatedAt(DateTime updatedAt) => call(updatedAt: updatedAt);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -112,8 +104,7 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      merchantId:
-          merchantId == const $CopyWithPlaceholder() || merchantId == null
+      merchantId: merchantId == const $CopyWithPlaceholder() || merchantId == null
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String,
@@ -149,8 +140,7 @@ class _$MerchantBestSellers200ResponseDataInnerMenuCWProxyImpl
   }
 }
 
-extension $MerchantBestSellers200ResponseDataInnerMenuCopyWith
-    on MerchantBestSellers200ResponseDataInnerMenu {
+extension $MerchantBestSellers200ResponseDataInnerMenuCopyWith on MerchantBestSellers200ResponseDataInnerMenu {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantBestSellers200ResponseDataInnerMenu.copyWith(...)` or `instanceOfMerchantBestSellers200ResponseDataInnerMenu.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -162,24 +152,10 @@ extension $MerchantBestSellers200ResponseDataInnerMenuCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantBestSellers200ResponseDataInnerMenu
-_$MerchantBestSellers200ResponseDataInnerMenuFromJson(
+MerchantBestSellers200ResponseDataInnerMenu _$MerchantBestSellers200ResponseDataInnerMenuFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('MerchantBestSellers200ResponseDataInnerMenu', json, (
-  $checkedConvert,
-) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'merchantId',
-      'name',
-      'price',
-      'stock',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
+) => $checkedCreate('MerchantBestSellers200ResponseDataInnerMenu', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id', 'merchantId', 'name', 'price', 'stock', 'createdAt', 'updatedAt']);
   final val = MerchantBestSellers200ResponseDataInnerMenu(
     id: $checkedConvert('id', (v) => v as String),
     merchantId: $checkedConvert('merchantId', (v) => v as String),

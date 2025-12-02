@@ -80,32 +80,17 @@ extension $CouponRulesCopyWith on CouponRules {
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponRules _$CouponRulesFromJson(Map<String, dynamic> json) => $checkedCreate(
-  'CouponRules',
-  json,
-  ($checkedConvert) {
-    final val = CouponRules(
-      general: $checkedConvert(
-        'general',
-        (v) =>
-            v == null ? null : GeneralRules.fromJson(v as Map<String, dynamic>),
-      ),
-      user: $checkedConvert(
-        'user',
-        (v) => v == null ? null : UserRules.fromJson(v as Map<String, dynamic>),
-      ),
-      time: $checkedConvert(
-        'time',
-        (v) => v == null ? null : TimeRules.fromJson(v as Map<String, dynamic>),
-      ),
-    );
-    return val;
-  },
-);
+CouponRules _$CouponRulesFromJson(Map<String, dynamic> json) => $checkedCreate('CouponRules', json, ($checkedConvert) {
+  final val = CouponRules(
+    general: $checkedConvert('general', (v) => v == null ? null : GeneralRules.fromJson(v as Map<String, dynamic>)),
+    user: $checkedConvert('user', (v) => v == null ? null : UserRules.fromJson(v as Map<String, dynamic>)),
+    time: $checkedConvert('time', (v) => v == null ? null : TimeRules.fromJson(v as Map<String, dynamic>)),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$CouponRulesToJson(CouponRules instance) =>
-    <String, dynamic>{
-      'general': ?instance.general?.toJson(),
-      'user': ?instance.user?.toJson(),
-      'time': ?instance.time?.toJson(),
-    };
+Map<String, dynamic> _$CouponRulesToJson(CouponRules instance) => <String, dynamic>{
+  'general': ?instance.general?.toJson(),
+  'user': ?instance.user?.toJson(),
+  'time': ?instance.time?.toJson(),
+};

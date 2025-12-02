@@ -146,12 +146,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order status(OrderStatus status) => call(status: status);
 
   @override
-  Order pickupLocation(Coordinate pickupLocation) =>
-      call(pickupLocation: pickupLocation);
+  Order pickupLocation(Coordinate pickupLocation) => call(pickupLocation: pickupLocation);
 
   @override
-  Order dropoffLocation(Coordinate dropoffLocation) =>
-      call(dropoffLocation: dropoffLocation);
+  Order dropoffLocation(Coordinate dropoffLocation) => call(dropoffLocation: dropoffLocation);
 
   @override
   Order distanceKm(num distanceKm) => call(distanceKm: distanceKm);
@@ -166,15 +164,13 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order totalPrice(num totalPrice) => call(totalPrice: totalPrice);
 
   @override
-  Order platformCommission(num? platformCommission) =>
-      call(platformCommission: platformCommission);
+  Order platformCommission(num? platformCommission) => call(platformCommission: platformCommission);
 
   @override
   Order driverEarning(num? driverEarning) => call(driverEarning: driverEarning);
 
   @override
-  Order merchantCommission(num? merchantCommission) =>
-      call(merchantCommission: merchantCommission);
+  Order merchantCommission(num? merchantCommission) => call(merchantCommission: merchantCommission);
 
   @override
   Order couponId(String? couponId) => call(couponId: couponId);
@@ -183,8 +179,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
-  Order discountAmount(num? discountAmount) =>
-      call(discountAmount: discountAmount);
+  Order discountAmount(num? discountAmount) => call(discountAmount: discountAmount);
 
   @override
   Order note(OrderNote? note) => call(note: note);
@@ -217,8 +212,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order gender(UserGender? gender) => call(gender: gender);
 
   @override
-  Order genderPreference(OrderGenderPreferenceEnum? genderPreference) =>
-      call(genderPreference: genderPreference);
+  Order genderPreference(OrderGenderPreferenceEnum? genderPreference) => call(genderPreference: genderPreference);
 
   @override
   Order itemCount(num? itemCount) => call(itemCount: itemCount);
@@ -304,20 +298,15 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as OrderStatus,
-      pickupLocation:
-          pickupLocation == const $CopyWithPlaceholder() ||
-              pickupLocation == null
+      pickupLocation: pickupLocation == const $CopyWithPlaceholder() || pickupLocation == null
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
-      dropoffLocation:
-          dropoffLocation == const $CopyWithPlaceholder() ||
-              dropoffLocation == null
+      dropoffLocation: dropoffLocation == const $CopyWithPlaceholder() || dropoffLocation == null
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
           : dropoffLocation as Coordinate,
-      distanceKm:
-          distanceKm == const $CopyWithPlaceholder() || distanceKm == null
+      distanceKm: distanceKm == const $CopyWithPlaceholder() || distanceKm == null
           ? _value.distanceKm
           // ignore: cast_nullable_to_non_nullable
           : distanceKm as num,
@@ -329,8 +318,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.tip
           // ignore: cast_nullable_to_non_nullable
           : tip as num?,
-      totalPrice:
-          totalPrice == const $CopyWithPlaceholder() || totalPrice == null
+      totalPrice: totalPrice == const $CopyWithPlaceholder() || totalPrice == null
           ? _value.totalPrice
           // ignore: cast_nullable_to_non_nullable
           : totalPrice as num,
@@ -362,8 +350,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
           : note as OrderNote?,
-      requestedAt:
-          requestedAt == const $CopyWithPlaceholder() || requestedAt == null
+      requestedAt: requestedAt == const $CopyWithPlaceholder() || requestedAt == null
           ? _value.requestedAt
           // ignore: cast_nullable_to_non_nullable
           : requestedAt as DateTime,
@@ -438,9 +425,7 @@ extension $OrderCopyWith on Order {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Order _$OrderFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Order', json, ($checkedConvert) {
+Order _$OrderFromJson(Map<String, dynamic> json) => $checkedCreate('Order', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -464,18 +449,9 @@ Order _$OrderFromJson(
     driverId: $checkedConvert('driverId', (v) => v as String?),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
     type: $checkedConvert('type', (v) => $enumDecode(_$OrderTypeEnumMap, v)),
-    status: $checkedConvert(
-      'status',
-      (v) => $enumDecode(_$OrderStatusEnumMap, v),
-    ),
-    pickupLocation: $checkedConvert(
-      'pickupLocation',
-      (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-    ),
-    dropoffLocation: $checkedConvert(
-      'dropoffLocation',
-      (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-    ),
+    status: $checkedConvert('status', (v) => $enumDecode(_$OrderStatusEnumMap, v)),
+    pickupLocation: $checkedConvert('pickupLocation', (v) => Coordinate.fromJson(v as Map<String, dynamic>)),
+    dropoffLocation: $checkedConvert('dropoffLocation', (v) => Coordinate.fromJson(v as Map<String, dynamic>)),
     distanceKm: $checkedConvert('distanceKm', (v) => v as num),
     basePrice: $checkedConvert('basePrice', (v) => v as num),
     tip: $checkedConvert('tip', (v) => v as num?),
@@ -486,37 +462,16 @@ Order _$OrderFromJson(
     couponId: $checkedConvert('couponId', (v) => v as String?),
     couponCode: $checkedConvert('couponCode', (v) => v as String?),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
-    note: $checkedConvert(
-      'note',
-      (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
-    ),
-    requestedAt: $checkedConvert(
-      'requestedAt',
-      (v) => DateTime.parse(v as String),
-    ),
-    acceptedAt: $checkedConvert(
-      'acceptedAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    preparedAt: $checkedConvert(
-      'preparedAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    readyAt: $checkedConvert(
-      'readyAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    arrivedAt: $checkedConvert(
-      'arrivedAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
+    note: $checkedConvert('note', (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>)),
+    requestedAt: $checkedConvert('requestedAt', (v) => DateTime.parse(v as String)),
+    acceptedAt: $checkedConvert('acceptedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    preparedAt: $checkedConvert('preparedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    readyAt: $checkedConvert('readyAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    arrivedAt: $checkedConvert('arrivedAt', (v) => v == null ? null : DateTime.parse(v as String)),
     cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    gender: $checkedConvert(
-      'gender',
-      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
-    ),
+    gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
     genderPreference: $checkedConvert(
       'genderPreference',
       (v) => $enumDecodeNullable(_$OrderGenderPreferenceEnumEnumMap, v),
@@ -524,23 +479,11 @@ Order _$OrderFromJson(
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
       'items',
-      (v) => (v as List<dynamic>?)
-          ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      (v) => (v as List<dynamic>?)?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>)).toList(),
     ),
-    user: $checkedConvert(
-      'user',
-      (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>),
-    ),
-    driver: $checkedConvert(
-      'driver',
-      (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>),
-    ),
-    merchant: $checkedConvert(
-      'merchant',
-      (v) =>
-          v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>),
-    ),
+    user: $checkedConvert('user', (v) => v == null ? null : DriverUser.fromJson(v as Map<String, dynamic>)),
+    driver: $checkedConvert('driver', (v) => v == null ? null : OrderDriver.fromJson(v as Map<String, dynamic>)),
+    merchant: $checkedConvert('merchant', (v) => v == null ? null : OrderMerchant.fromJson(v as Map<String, dynamic>)),
   );
   return val;
 });
@@ -574,8 +517,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
   'gender': ?_$UserGenderEnumMap[instance.gender],
-  'genderPreference':
-      ?_$OrderGenderPreferenceEnumEnumMap[instance.genderPreference],
+  'genderPreference': ?_$OrderGenderPreferenceEnumEnumMap[instance.genderPreference],
   'itemCount': ?instance.itemCount,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),
   'user': ?instance.user?.toJson(),
@@ -583,11 +525,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'merchant': ?instance.merchant?.toJson(),
 };
 
-const _$OrderTypeEnumMap = {
-  OrderType.RIDE: 'RIDE',
-  OrderType.DELIVERY: 'DELIVERY',
-  OrderType.FOOD: 'FOOD',
-};
+const _$OrderTypeEnumMap = {OrderType.RIDE: 'RIDE', OrderType.DELIVERY: 'DELIVERY', OrderType.FOOD: 'FOOD'};
 
 const _$OrderStatusEnumMap = {
   OrderStatus.REQUESTED: 'REQUESTED',
@@ -604,10 +542,7 @@ const _$OrderStatusEnumMap = {
   OrderStatus.CANCELLED_BY_SYSTEM: 'CANCELLED_BY_SYSTEM',
 };
 
-const _$UserGenderEnumMap = {
-  UserGender.MALE: 'MALE',
-  UserGender.FEMALE: 'FEMALE',
-};
+const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};
 
 const _$OrderGenderPreferenceEnumEnumMap = {
   OrderGenderPreferenceEnum.SAME: 'SAME',

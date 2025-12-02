@@ -20,11 +20,7 @@ abstract class _$TopUpRequestCWProxy {
   /// ```dart
   /// TopUpRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  TopUpRequest call({
-    num amount,
-    PaymentProvider provider,
-    TopUpRequestMethodEnum method,
-  });
+  TopUpRequest call({num amount, PaymentProvider provider, TopUpRequestMethodEnum method});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -89,29 +85,19 @@ TopUpRequest _$TopUpRequestFromJson(Map<String, dynamic> json) =>
       $checkKeys(json, requiredKeys: const ['amount', 'provider', 'method']);
       final val = TopUpRequest(
         amount: $checkedConvert('amount', (v) => v as num),
-        provider: $checkedConvert(
-          'provider',
-          (v) => $enumDecode(_$PaymentProviderEnumMap, v),
-        ),
-        method: $checkedConvert(
-          'method',
-          (v) => $enumDecode(_$TopUpRequestMethodEnumEnumMap, v),
-        ),
+        provider: $checkedConvert('provider', (v) => $enumDecode(_$PaymentProviderEnumMap, v)),
+        method: $checkedConvert('method', (v) => $enumDecode(_$TopUpRequestMethodEnumEnumMap, v)),
       );
       return val;
     });
 
-Map<String, dynamic> _$TopUpRequestToJson(TopUpRequest instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'provider': _$PaymentProviderEnumMap[instance.provider]!,
-      'method': _$TopUpRequestMethodEnumEnumMap[instance.method]!,
-    };
-
-const _$PaymentProviderEnumMap = {
-  PaymentProvider.MIDTRANS: 'MIDTRANS',
-  PaymentProvider.MANUAL: 'MANUAL',
+Map<String, dynamic> _$TopUpRequestToJson(TopUpRequest instance) => <String, dynamic>{
+  'amount': instance.amount,
+  'provider': _$PaymentProviderEnumMap[instance.provider]!,
+  'method': _$TopUpRequestMethodEnumEnumMap[instance.method]!,
 };
+
+const _$PaymentProviderEnumMap = {PaymentProvider.MIDTRANS: 'MIDTRANS', PaymentProvider.MANUAL: 'MANUAL'};
 
 const _$TopUpRequestMethodEnumEnumMap = {
   TopUpRequestMethodEnum.QRIS: 'QRIS',

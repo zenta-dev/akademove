@@ -11,9 +11,7 @@ abstract class _$CouponGetEligibleCoupons200ResponseDataCWProxy {
 
   CouponGetEligibleCoupons200ResponseData bestCoupon(Coupon? bestCoupon);
 
-  CouponGetEligibleCoupons200ResponseData bestDiscountAmount(
-    num bestDiscountAmount,
-  );
+  CouponGetEligibleCoupons200ResponseData bestDiscountAmount(num bestDiscountAmount);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `CouponGetEligibleCoupons200ResponseData(...).copyWith.fieldName(value)`.
@@ -22,33 +20,25 @@ abstract class _$CouponGetEligibleCoupons200ResponseDataCWProxy {
   /// ```dart
   /// CouponGetEligibleCoupons200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
-  CouponGetEligibleCoupons200ResponseData call({
-    List<Coupon> coupons,
-    Coupon? bestCoupon,
-    num bestDiscountAmount,
-  });
+  CouponGetEligibleCoupons200ResponseData call({List<Coupon> coupons, Coupon? bestCoupon, num bestDiscountAmount});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponGetEligibleCoupons200ResponseData.copyWith(...)` or call `instanceOfCouponGetEligibleCoupons200ResponseData.copyWith.fieldName(value)` for a single field.
-class _$CouponGetEligibleCoupons200ResponseDataCWProxyImpl
-    implements _$CouponGetEligibleCoupons200ResponseDataCWProxy {
+class _$CouponGetEligibleCoupons200ResponseDataCWProxyImpl implements _$CouponGetEligibleCoupons200ResponseDataCWProxy {
   const _$CouponGetEligibleCoupons200ResponseDataCWProxyImpl(this._value);
 
   final CouponGetEligibleCoupons200ResponseData _value;
 
   @override
-  CouponGetEligibleCoupons200ResponseData coupons(List<Coupon> coupons) =>
-      call(coupons: coupons);
+  CouponGetEligibleCoupons200ResponseData coupons(List<Coupon> coupons) => call(coupons: coupons);
 
   @override
-  CouponGetEligibleCoupons200ResponseData bestCoupon(Coupon? bestCoupon) =>
-      call(bestCoupon: bestCoupon);
+  CouponGetEligibleCoupons200ResponseData bestCoupon(Coupon? bestCoupon) => call(bestCoupon: bestCoupon);
 
   @override
-  CouponGetEligibleCoupons200ResponseData bestDiscountAmount(
-    num bestDiscountAmount,
-  ) => call(bestDiscountAmount: bestDiscountAmount);
+  CouponGetEligibleCoupons200ResponseData bestDiscountAmount(num bestDiscountAmount) =>
+      call(bestDiscountAmount: bestDiscountAmount);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -72,9 +62,7 @@ class _$CouponGetEligibleCoupons200ResponseDataCWProxyImpl
           ? _value.bestCoupon
           // ignore: cast_nullable_to_non_nullable
           : bestCoupon as Coupon?,
-      bestDiscountAmount:
-          bestDiscountAmount == const $CopyWithPlaceholder() ||
-              bestDiscountAmount == null
+      bestDiscountAmount: bestDiscountAmount == const $CopyWithPlaceholder() || bestDiscountAmount == null
           ? _value.bestDiscountAmount
           // ignore: cast_nullable_to_non_nullable
           : bestDiscountAmount as num,
@@ -82,8 +70,7 @@ class _$CouponGetEligibleCoupons200ResponseDataCWProxyImpl
   }
 }
 
-extension $CouponGetEligibleCoupons200ResponseDataCopyWith
-    on CouponGetEligibleCoupons200ResponseData {
+extension $CouponGetEligibleCoupons200ResponseDataCopyWith on CouponGetEligibleCoupons200ResponseData {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponGetEligibleCoupons200ResponseData.copyWith(...)` or `instanceOfCouponGetEligibleCoupons200ResponseData.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -95,30 +82,16 @@ extension $CouponGetEligibleCoupons200ResponseDataCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponGetEligibleCoupons200ResponseData
-_$CouponGetEligibleCoupons200ResponseDataFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('CouponGetEligibleCoupons200ResponseData', json, (
-      $checkedConvert,
-    ) {
-      $checkKeys(
-        json,
-        requiredKeys: const ['coupons', 'bestCoupon', 'bestDiscountAmount'],
-      );
+CouponGetEligibleCoupons200ResponseData _$CouponGetEligibleCoupons200ResponseDataFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('CouponGetEligibleCoupons200ResponseData', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['coupons', 'bestCoupon', 'bestDiscountAmount']);
       final val = CouponGetEligibleCoupons200ResponseData(
         coupons: $checkedConvert(
           'coupons',
-          (v) => (v as List<dynamic>)
-              .map((e) => Coupon.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          (v) => (v as List<dynamic>).map((e) => Coupon.fromJson(e as Map<String, dynamic>)).toList(),
         ),
-        bestCoupon: $checkedConvert(
-          'bestCoupon',
-          (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>),
-        ),
-        bestDiscountAmount: $checkedConvert(
-          'bestDiscountAmount',
-          (v) => v as num,
-        ),
+        bestCoupon: $checkedConvert('bestCoupon', (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>)),
+        bestDiscountAmount: $checkedConvert('bestDiscountAmount', (v) => v as num),
       );
       return val;
     });

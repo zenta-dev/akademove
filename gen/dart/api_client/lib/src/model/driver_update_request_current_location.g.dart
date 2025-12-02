@@ -23,8 +23,7 @@ abstract class _$DriverUpdateRequestCurrentLocationCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverUpdateRequestCurrentLocation.copyWith(...)` or call `instanceOfDriverUpdateRequestCurrentLocation.copyWith.fieldName(value)` for a single field.
-class _$DriverUpdateRequestCurrentLocationCWProxyImpl
-    implements _$DriverUpdateRequestCurrentLocationCWProxy {
+class _$DriverUpdateRequestCurrentLocationCWProxyImpl implements _$DriverUpdateRequestCurrentLocationCWProxy {
   const _$DriverUpdateRequestCurrentLocationCWProxyImpl(this._value);
 
   final DriverUpdateRequestCurrentLocation _value;
@@ -60,32 +59,26 @@ class _$DriverUpdateRequestCurrentLocationCWProxyImpl
   }
 }
 
-extension $DriverUpdateRequestCurrentLocationCopyWith
-    on DriverUpdateRequestCurrentLocation {
+extension $DriverUpdateRequestCurrentLocationCopyWith on DriverUpdateRequestCurrentLocation {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverUpdateRequestCurrentLocation.copyWith(...)` or `instanceOfDriverUpdateRequestCurrentLocation.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverUpdateRequestCurrentLocationCWProxy get copyWith =>
-      _$DriverUpdateRequestCurrentLocationCWProxyImpl(this);
+  _$DriverUpdateRequestCurrentLocationCWProxy get copyWith => _$DriverUpdateRequestCurrentLocationCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverUpdateRequestCurrentLocation _$DriverUpdateRequestCurrentLocationFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('DriverUpdateRequestCurrentLocation', json, (
-  $checkedConvert,
-) {
-  $checkKeys(json, requiredKeys: const ['x', 'y']);
-  final val = DriverUpdateRequestCurrentLocation(
-    x: $checkedConvert('x', (v) => v as num),
-    y: $checkedConvert('y', (v) => v as num),
-  );
-  return val;
-});
+DriverUpdateRequestCurrentLocation _$DriverUpdateRequestCurrentLocationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DriverUpdateRequestCurrentLocation', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['x', 'y']);
+      final val = DriverUpdateRequestCurrentLocation(
+        x: $checkedConvert('x', (v) => v as num),
+        y: $checkedConvert('y', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DriverUpdateRequestCurrentLocationToJson(
-  DriverUpdateRequestCurrentLocation instance,
-) => <String, dynamic>{'x': instance.x, 'y': instance.y};
+Map<String, dynamic> _$DriverUpdateRequestCurrentLocationToJson(DriverUpdateRequestCurrentLocation instance) =>
+    <String, dynamic>{'x': instance.x, 'y': instance.y};

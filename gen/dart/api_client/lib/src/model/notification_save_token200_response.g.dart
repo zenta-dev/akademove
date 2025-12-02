@@ -9,9 +9,7 @@ part of 'notification_save_token200_response.dart';
 abstract class _$NotificationSaveToken200ResponseCWProxy {
   NotificationSaveToken200Response message(String message);
 
-  NotificationSaveToken200Response data(
-    NotificationSaveToken200ResponseData data,
-  );
+  NotificationSaveToken200Response data(NotificationSaveToken200ResponseData data);
 
   NotificationSaveToken200Response pagination(PaginationResult? pagination);
 
@@ -34,28 +32,22 @@ abstract class _$NotificationSaveToken200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfNotificationSaveToken200Response.copyWith(...)` or call `instanceOfNotificationSaveToken200Response.copyWith.fieldName(value)` for a single field.
-class _$NotificationSaveToken200ResponseCWProxyImpl
-    implements _$NotificationSaveToken200ResponseCWProxy {
+class _$NotificationSaveToken200ResponseCWProxyImpl implements _$NotificationSaveToken200ResponseCWProxy {
   const _$NotificationSaveToken200ResponseCWProxyImpl(this._value);
 
   final NotificationSaveToken200Response _value;
 
   @override
-  NotificationSaveToken200Response message(String message) =>
-      call(message: message);
+  NotificationSaveToken200Response message(String message) => call(message: message);
 
   @override
-  NotificationSaveToken200Response data(
-    NotificationSaveToken200ResponseData data,
-  ) => call(data: data);
+  NotificationSaveToken200Response data(NotificationSaveToken200ResponseData data) => call(data: data);
 
   @override
-  NotificationSaveToken200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  NotificationSaveToken200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  NotificationSaveToken200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  NotificationSaveToken200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -92,48 +84,36 @@ class _$NotificationSaveToken200ResponseCWProxyImpl
   }
 }
 
-extension $NotificationSaveToken200ResponseCopyWith
-    on NotificationSaveToken200Response {
+extension $NotificationSaveToken200ResponseCopyWith on NotificationSaveToken200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationSaveToken200Response.copyWith(...)` or `instanceOfNotificationSaveToken200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$NotificationSaveToken200ResponseCWProxy get copyWith =>
-      _$NotificationSaveToken200ResponseCWProxyImpl(this);
+  _$NotificationSaveToken200ResponseCWProxy get copyWith => _$NotificationSaveToken200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationSaveToken200Response _$NotificationSaveToken200ResponseFromJson(
-  Map<String, dynamic> json,
-) =>
+NotificationSaveToken200Response _$NotificationSaveToken200ResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('NotificationSaveToken200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = NotificationSaveToken200Response(
         message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => NotificationSaveToken200ResponseData.fromJson(
-            v as Map<String, dynamic>,
-          ),
-        ),
+        data: $checkedConvert('data', (v) => NotificationSaveToken200ResponseData.fromJson(v as Map<String, dynamic>)),
         pagination: $checkedConvert(
           'pagination',
-          (v) => v == null
-              ? null
-              : PaginationResult.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
         ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
     });
 
-Map<String, dynamic> _$NotificationSaveToken200ResponseToJson(
-  NotificationSaveToken200Response instance,
-) => <String, dynamic>{
-  'message': instance.message,
-  'data': instance.data.toJson(),
-  'pagination': ?instance.pagination?.toJson(),
-  'totalPages': ?instance.totalPages,
-};
+Map<String, dynamic> _$NotificationSaveToken200ResponseToJson(NotificationSaveToken200Response instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'data': instance.data.toJson(),
+      'pagination': ?instance.pagination?.toJson(),
+      'totalPages': ?instance.totalPages,
+    };

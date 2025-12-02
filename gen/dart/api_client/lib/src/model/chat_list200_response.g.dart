@@ -44,12 +44,10 @@ class _$ChatList200ResponseCWProxyImpl implements _$ChatList200ResponseCWProxy {
   ChatList200Response data(ChatList200ResponseData data) => call(data: data);
 
   @override
-  ChatList200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  ChatList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  ChatList200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  ChatList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -90,8 +88,7 @@ extension $ChatList200ResponseCopyWith on ChatList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfChatList200Response.copyWith(...)` or `instanceOfChatList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ChatList200ResponseCWProxy get copyWith =>
-      _$ChatList200ResponseCWProxyImpl(this);
+  _$ChatList200ResponseCWProxy get copyWith => _$ChatList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -103,24 +100,17 @@ ChatList200Response _$ChatList200ResponseFromJson(Map<String, dynamic> json) =>
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = ChatList200Response(
         message: $checkedConvert('message', (v) => v as String),
-        data: $checkedConvert(
-          'data',
-          (v) => ChatList200ResponseData.fromJson(v as Map<String, dynamic>),
-        ),
+        data: $checkedConvert('data', (v) => ChatList200ResponseData.fromJson(v as Map<String, dynamic>)),
         pagination: $checkedConvert(
           'pagination',
-          (v) => v == null
-              ? null
-              : PaginationResult.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
         ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
     });
 
-Map<String, dynamic> _$ChatList200ResponseToJson(
-  ChatList200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$ChatList200ResponseToJson(ChatList200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

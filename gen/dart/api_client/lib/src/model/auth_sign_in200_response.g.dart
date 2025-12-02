@@ -22,18 +22,12 @@ abstract class _$AuthSignIn200ResponseCWProxy {
   /// ```dart
   /// AuthSignIn200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  AuthSignIn200Response call({
-    String message,
-    SignInResponse data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  AuthSignIn200Response call({String message, SignInResponse data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthSignIn200Response.copyWith(...)` or call `instanceOfAuthSignIn200Response.copyWith.fieldName(value)` for a single field.
-class _$AuthSignIn200ResponseCWProxyImpl
-    implements _$AuthSignIn200ResponseCWProxy {
+class _$AuthSignIn200ResponseCWProxyImpl implements _$AuthSignIn200ResponseCWProxy {
   const _$AuthSignIn200ResponseCWProxyImpl(this._value);
 
   final AuthSignIn200Response _value;
@@ -45,12 +39,10 @@ class _$AuthSignIn200ResponseCWProxyImpl
   AuthSignIn200Response data(SignInResponse data) => call(data: data);
 
   @override
-  AuthSignIn200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  AuthSignIn200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  AuthSignIn200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  AuthSignIn200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $AuthSignIn200ResponseCopyWith on AuthSignIn200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthSignIn200Response.copyWith(...)` or `instanceOfAuthSignIn200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthSignIn200ResponseCWProxy get copyWith =>
-      _$AuthSignIn200ResponseCWProxyImpl(this);
+  _$AuthSignIn200ResponseCWProxy get copyWith => _$AuthSignIn200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthSignIn200Response _$AuthSignIn200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('AuthSignIn200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = AuthSignIn200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => SignInResponse.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+AuthSignIn200Response _$AuthSignIn200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AuthSignIn200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = AuthSignIn200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => SignInResponse.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$AuthSignIn200ResponseToJson(
-  AuthSignIn200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$AuthSignIn200ResponseToJson(AuthSignIn200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

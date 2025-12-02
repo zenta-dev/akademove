@@ -10,12 +10,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'review.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class Review {
   /// Returns a new [Review] instance.
   const Review({
@@ -25,44 +20,46 @@ class Review {
     required this.toUserId,
     required this.category,
     required this.score,
-     this.comment = '',
+    this.comment = '',
     required this.createdAt,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
   final String fromUserId;
-  
+
   @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
   final String toUserId;
-  
+
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final ReviewCategory category;
-  
+
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
-  
-  @JsonKey(defaultValue: '',name: r'comment', required: false, includeIfNull: false)
+
+  @JsonKey(defaultValue: '', name: r'comment', required: false, includeIfNull: false)
   final String? comment;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Review &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.fromUserId == fromUserId &&
-    other.toUserId == toUserId &&
-    other.category == category &&
-    other.score == score &&
-    other.comment == comment &&
-    other.createdAt == createdAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Review &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.fromUserId == fromUserId &&
+          other.toUserId == toUserId &&
+          other.category == category &&
+          other.score == score &&
+          other.comment == comment &&
+          other.createdAt == createdAt;
 
   @override
   int get hashCode =>
@@ -83,6 +80,4 @@ class Review {
   String toString() {
     return toJson().toString();
   }
-
 }
-

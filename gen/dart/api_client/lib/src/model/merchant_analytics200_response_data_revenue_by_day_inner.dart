@@ -9,12 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_analytics200_response_data_revenue_by_day_inner.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class MerchantAnalytics200ResponseDataRevenueByDayInner {
   /// Returns a new [MerchantAnalytics200ResponseDataRevenueByDayInner] instance.
   const MerchantAnalytics200ResponseDataRevenueByDayInner({
@@ -25,26 +20,26 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
 
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
-  
+
   @JsonKey(name: r'revenue', required: true, includeIfNull: false)
   final num revenue;
-  
+
   @JsonKey(name: r'orders', required: true, includeIfNull: false)
   final num orders;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantAnalytics200ResponseDataRevenueByDayInner &&
-    other.date == date &&
-    other.revenue == revenue &&
-    other.orders == orders;
 
   @override
-  int get hashCode =>
-      date.hashCode +
-      revenue.hashCode +
-      orders.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantAnalytics200ResponseDataRevenueByDayInner &&
+          other.date == date &&
+          other.revenue == revenue &&
+          other.orders == orders;
 
-  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(Map<String, dynamic> json) => _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
+  @override
+  int get hashCode => date.hashCode + revenue.hashCode + orders.hashCode;
+
+  factory MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(Map<String, dynamic> json) =>
+      _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(this);
 
@@ -52,6 +47,4 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
   String toString() {
     return toJson().toString();
   }
-
 }
-

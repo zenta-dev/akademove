@@ -80,5 +80,7 @@ TransferRequest _$TransferRequestFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$TransferRequestToJson(TransferRequest instance) =>
-    <String, dynamic>{'amount': instance.amount, 'walletId': instance.walletId};
+Map<String, dynamic> _$TransferRequestToJson(TransferRequest instance) => <String, dynamic>{
+  'amount': instance.amount,
+  'walletId': instance.walletId,
+};

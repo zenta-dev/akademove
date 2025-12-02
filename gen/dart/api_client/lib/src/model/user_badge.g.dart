@@ -139,21 +139,8 @@ extension $UserBadgeCopyWith on UserBadge {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserBadge _$UserBadgeFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('UserBadge', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'userId',
-      'badgeId',
-      'earnedAt',
-      'createdAt',
-      'updatedAt',
-      'badge',
-    ],
-  );
+UserBadge _$UserBadgeFromJson(Map<String, dynamic> json) => $checkedCreate('UserBadge', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id', 'userId', 'badgeId', 'earnedAt', 'createdAt', 'updatedAt', 'badge']);
   final val = UserBadge(
     id: $checkedConvert('id', (v) => v as String),
     userId: $checkedConvert('userId', (v) => v as String),
@@ -161,16 +148,11 @@ UserBadge _$UserBadgeFromJson(
     earnedAt: $checkedConvert('earnedAt', (v) => DateTime.parse(v as String)),
     metadata: $checkedConvert(
       'metadata',
-      (v) => v == null
-          ? null
-          : UserBadgeMetadata.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : UserBadgeMetadata.fromJson(v as Map<String, dynamic>),
     ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-    badge: $checkedConvert(
-      'badge',
-      (v) => Badge.fromJson(v as Map<String, dynamic>),
-    ),
+    badge: $checkedConvert('badge', (v) => Badge.fromJson(v as Map<String, dynamic>)),
   );
   return val;
 });

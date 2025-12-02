@@ -32,8 +32,7 @@ abstract class _$CouponValidate200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponValidate200Response.copyWith(...)` or call `instanceOfCouponValidate200Response.copyWith.fieldName(value)` for a single field.
-class _$CouponValidate200ResponseCWProxyImpl
-    implements _$CouponValidate200ResponseCWProxy {
+class _$CouponValidate200ResponseCWProxyImpl implements _$CouponValidate200ResponseCWProxy {
   const _$CouponValidate200ResponseCWProxyImpl(this._value);
 
   final CouponValidate200Response _value;
@@ -42,16 +41,13 @@ class _$CouponValidate200ResponseCWProxyImpl
   CouponValidate200Response message(String message) => call(message: message);
 
   @override
-  CouponValidate200Response data(CouponValidate200ResponseData data) =>
-      call(data: data);
+  CouponValidate200Response data(CouponValidate200ResponseData data) => call(data: data);
 
   @override
-  CouponValidate200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  CouponValidate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  CouponValidate200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  CouponValidate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -92,38 +88,29 @@ extension $CouponValidate200ResponseCopyWith on CouponValidate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponValidate200Response.copyWith(...)` or `instanceOfCouponValidate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$CouponValidate200ResponseCWProxy get copyWith =>
-      _$CouponValidate200ResponseCWProxyImpl(this);
+  _$CouponValidate200ResponseCWProxy get copyWith => _$CouponValidate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponValidate200Response _$CouponValidate200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('CouponValidate200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = CouponValidate200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => CouponValidate200ResponseData.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+CouponValidate200Response _$CouponValidate200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('CouponValidate200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = CouponValidate200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => CouponValidate200ResponseData.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$CouponValidate200ResponseToJson(
-  CouponValidate200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$CouponValidate200ResponseToJson(CouponValidate200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

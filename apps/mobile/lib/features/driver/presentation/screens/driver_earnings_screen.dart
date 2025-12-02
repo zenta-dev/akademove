@@ -546,17 +546,17 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 material.TextField(
                   controller: accountNumberController,
                   keyboardType: TextInputType.number,
-                  decoration: const material.InputDecoration(
-                    labelText: 'Account Number',
-                    hintText: 'Enter your account number',
+                  decoration: material.InputDecoration(
+                    labelText: context.l10n.label_bank_account_number,
+                    hintText: context.l10n.hint_bank_account_number,
                     border: material.OutlineInputBorder(),
                   ),
                 ),
                 // Account name field (optional)
                 material.TextField(
                   controller: accountNameController,
-                  decoration: const material.InputDecoration(
-                    labelText: 'Account Name (Optional)',
+                  decoration: material.InputDecoration(
+                    labelText: '${context.l10n.account_name} (Optional)',
                     hintText: 'Enter account holder name',
                     border: material.OutlineInputBorder(),
                   ),

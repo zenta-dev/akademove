@@ -70,15 +70,14 @@ extension $BanUserCopyWith on BanUser {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BanUser _$BanUserFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('BanUser', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['banReason']);
-      final val = BanUser(
-        banReason: $checkedConvert('banReason', (v) => v as String),
-        banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
-      );
-      return val;
-    });
+BanUser _$BanUserFromJson(Map<String, dynamic> json) => $checkedCreate('BanUser', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['banReason']);
+  final val = BanUser(
+    banReason: $checkedConvert('banReason', (v) => v as String),
+    banExpiresIn: $checkedConvert('banExpiresIn', (v) => v as num?),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$BanUserToJson(BanUser instance) => <String, dynamic>{
   'banReason': instance.banReason,

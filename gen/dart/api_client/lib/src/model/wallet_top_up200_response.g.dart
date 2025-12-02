@@ -22,18 +22,12 @@ abstract class _$WalletTopUp200ResponseCWProxy {
   /// ```dart
   /// WalletTopUp200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  WalletTopUp200Response call({
-    String message,
-    Payment data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  WalletTopUp200Response call({String message, Payment data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfWalletTopUp200Response.copyWith(...)` or call `instanceOfWalletTopUp200Response.copyWith.fieldName(value)` for a single field.
-class _$WalletTopUp200ResponseCWProxyImpl
-    implements _$WalletTopUp200ResponseCWProxy {
+class _$WalletTopUp200ResponseCWProxyImpl implements _$WalletTopUp200ResponseCWProxy {
   const _$WalletTopUp200ResponseCWProxyImpl(this._value);
 
   final WalletTopUp200Response _value;
@@ -45,12 +39,10 @@ class _$WalletTopUp200ResponseCWProxyImpl
   WalletTopUp200Response data(Payment data) => call(data: data);
 
   @override
-  WalletTopUp200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  WalletTopUp200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  WalletTopUp200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  WalletTopUp200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $WalletTopUp200ResponseCopyWith on WalletTopUp200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfWalletTopUp200Response.copyWith(...)` or `instanceOfWalletTopUp200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$WalletTopUp200ResponseCWProxy get copyWith =>
-      _$WalletTopUp200ResponseCWProxyImpl(this);
+  _$WalletTopUp200ResponseCWProxy get copyWith => _$WalletTopUp200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WalletTopUp200Response _$WalletTopUp200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('WalletTopUp200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = WalletTopUp200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => Payment.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+WalletTopUp200Response _$WalletTopUp200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WalletTopUp200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = WalletTopUp200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => Payment.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$WalletTopUp200ResponseToJson(
-  WalletTopUp200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$WalletTopUp200ResponseToJson(WalletTopUp200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

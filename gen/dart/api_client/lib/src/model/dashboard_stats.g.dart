@@ -62,42 +62,34 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
   DashboardStats totalUsers(num totalUsers) => call(totalUsers: totalUsers);
 
   @override
-  DashboardStats totalDrivers(num totalDrivers) =>
-      call(totalDrivers: totalDrivers);
+  DashboardStats totalDrivers(num totalDrivers) => call(totalDrivers: totalDrivers);
 
   @override
-  DashboardStats totalMerchants(num totalMerchants) =>
-      call(totalMerchants: totalMerchants);
+  DashboardStats totalMerchants(num totalMerchants) => call(totalMerchants: totalMerchants);
 
   @override
-  DashboardStats activeOrders(num activeOrders) =>
-      call(activeOrders: activeOrders);
+  DashboardStats activeOrders(num activeOrders) => call(activeOrders: activeOrders);
 
   @override
   DashboardStats totalOrders(num totalOrders) => call(totalOrders: totalOrders);
 
   @override
-  DashboardStats completedOrders(num completedOrders) =>
-      call(completedOrders: completedOrders);
+  DashboardStats completedOrders(num completedOrders) => call(completedOrders: completedOrders);
 
   @override
-  DashboardStats cancelledOrders(num cancelledOrders) =>
-      call(cancelledOrders: cancelledOrders);
+  DashboardStats cancelledOrders(num cancelledOrders) => call(cancelledOrders: cancelledOrders);
 
   @override
-  DashboardStats totalRevenue(num totalRevenue) =>
-      call(totalRevenue: totalRevenue);
+  DashboardStats totalRevenue(num totalRevenue) => call(totalRevenue: totalRevenue);
 
   @override
-  DashboardStats todayRevenue(num todayRevenue) =>
-      call(todayRevenue: todayRevenue);
+  DashboardStats todayRevenue(num todayRevenue) => call(todayRevenue: todayRevenue);
 
   @override
   DashboardStats todayOrders(num todayOrders) => call(todayOrders: todayOrders);
 
   @override
-  DashboardStats onlineDrivers(num onlineDrivers) =>
-      call(onlineDrivers: onlineDrivers);
+  DashboardStats onlineDrivers(num onlineDrivers) => call(onlineDrivers: onlineDrivers);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -121,61 +113,47 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
     Object? onlineDrivers = const $CopyWithPlaceholder(),
   }) {
     return DashboardStats(
-      totalUsers:
-          totalUsers == const $CopyWithPlaceholder() || totalUsers == null
+      totalUsers: totalUsers == const $CopyWithPlaceholder() || totalUsers == null
           ? _value.totalUsers
           // ignore: cast_nullable_to_non_nullable
           : totalUsers as num,
-      totalDrivers:
-          totalDrivers == const $CopyWithPlaceholder() || totalDrivers == null
+      totalDrivers: totalDrivers == const $CopyWithPlaceholder() || totalDrivers == null
           ? _value.totalDrivers
           // ignore: cast_nullable_to_non_nullable
           : totalDrivers as num,
-      totalMerchants:
-          totalMerchants == const $CopyWithPlaceholder() ||
-              totalMerchants == null
+      totalMerchants: totalMerchants == const $CopyWithPlaceholder() || totalMerchants == null
           ? _value.totalMerchants
           // ignore: cast_nullable_to_non_nullable
           : totalMerchants as num,
-      activeOrders:
-          activeOrders == const $CopyWithPlaceholder() || activeOrders == null
+      activeOrders: activeOrders == const $CopyWithPlaceholder() || activeOrders == null
           ? _value.activeOrders
           // ignore: cast_nullable_to_non_nullable
           : activeOrders as num,
-      totalOrders:
-          totalOrders == const $CopyWithPlaceholder() || totalOrders == null
+      totalOrders: totalOrders == const $CopyWithPlaceholder() || totalOrders == null
           ? _value.totalOrders
           // ignore: cast_nullable_to_non_nullable
           : totalOrders as num,
-      completedOrders:
-          completedOrders == const $CopyWithPlaceholder() ||
-              completedOrders == null
+      completedOrders: completedOrders == const $CopyWithPlaceholder() || completedOrders == null
           ? _value.completedOrders
           // ignore: cast_nullable_to_non_nullable
           : completedOrders as num,
-      cancelledOrders:
-          cancelledOrders == const $CopyWithPlaceholder() ||
-              cancelledOrders == null
+      cancelledOrders: cancelledOrders == const $CopyWithPlaceholder() || cancelledOrders == null
           ? _value.cancelledOrders
           // ignore: cast_nullable_to_non_nullable
           : cancelledOrders as num,
-      totalRevenue:
-          totalRevenue == const $CopyWithPlaceholder() || totalRevenue == null
+      totalRevenue: totalRevenue == const $CopyWithPlaceholder() || totalRevenue == null
           ? _value.totalRevenue
           // ignore: cast_nullable_to_non_nullable
           : totalRevenue as num,
-      todayRevenue:
-          todayRevenue == const $CopyWithPlaceholder() || todayRevenue == null
+      todayRevenue: todayRevenue == const $CopyWithPlaceholder() || todayRevenue == null
           ? _value.todayRevenue
           // ignore: cast_nullable_to_non_nullable
           : todayRevenue as num,
-      todayOrders:
-          todayOrders == const $CopyWithPlaceholder() || todayOrders == null
+      todayOrders: todayOrders == const $CopyWithPlaceholder() || todayOrders == null
           ? _value.todayOrders
           // ignore: cast_nullable_to_non_nullable
           : todayOrders as num,
-      onlineDrivers:
-          onlineDrivers == const $CopyWithPlaceholder() || onlineDrivers == null
+      onlineDrivers: onlineDrivers == const $CopyWithPlaceholder() || onlineDrivers == null
           ? _value.onlineDrivers
           // ignore: cast_nullable_to_non_nullable
           : onlineDrivers as num,
@@ -228,17 +206,16 @@ DashboardStats _$DashboardStatsFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$DashboardStatsToJson(DashboardStats instance) =>
-    <String, dynamic>{
-      'totalUsers': instance.totalUsers,
-      'totalDrivers': instance.totalDrivers,
-      'totalMerchants': instance.totalMerchants,
-      'activeOrders': instance.activeOrders,
-      'totalOrders': instance.totalOrders,
-      'completedOrders': instance.completedOrders,
-      'cancelledOrders': instance.cancelledOrders,
-      'totalRevenue': instance.totalRevenue,
-      'todayRevenue': instance.todayRevenue,
-      'todayOrders': instance.todayOrders,
-      'onlineDrivers': instance.onlineDrivers,
-    };
+Map<String, dynamic> _$DashboardStatsToJson(DashboardStats instance) => <String, dynamic>{
+  'totalUsers': instance.totalUsers,
+  'totalDrivers': instance.totalDrivers,
+  'totalMerchants': instance.totalMerchants,
+  'activeOrders': instance.activeOrders,
+  'totalOrders': instance.totalOrders,
+  'completedOrders': instance.completedOrders,
+  'cancelledOrders': instance.cancelledOrders,
+  'totalRevenue': instance.totalRevenue,
+  'todayRevenue': instance.todayRevenue,
+  'todayOrders': instance.todayOrders,
+  'onlineDrivers': instance.onlineDrivers,
+};

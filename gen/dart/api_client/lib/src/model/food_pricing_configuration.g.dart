@@ -24,19 +24,12 @@ abstract class _$FoodPricingConfigurationCWProxy {
   /// ```dart
   /// FoodPricingConfiguration(...).copyWith(id: 12, name: "My name")
   /// ```
-  FoodPricingConfiguration call({
-    num baseFare,
-    num perKmRate,
-    num minimumFare,
-    num platformFeeRate,
-    num taxRate,
-  });
+  FoodPricingConfiguration call({num baseFare, num perKmRate, num minimumFare, num platformFeeRate, num taxRate});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfFoodPricingConfiguration.copyWith(...)` or call `instanceOfFoodPricingConfiguration.copyWith.fieldName(value)` for a single field.
-class _$FoodPricingConfigurationCWProxyImpl
-    implements _$FoodPricingConfigurationCWProxy {
+class _$FoodPricingConfigurationCWProxyImpl implements _$FoodPricingConfigurationCWProxy {
   const _$FoodPricingConfigurationCWProxyImpl(this._value);
 
   final FoodPricingConfiguration _value;
@@ -45,16 +38,13 @@ class _$FoodPricingConfigurationCWProxyImpl
   FoodPricingConfiguration baseFare(num baseFare) => call(baseFare: baseFare);
 
   @override
-  FoodPricingConfiguration perKmRate(num perKmRate) =>
-      call(perKmRate: perKmRate);
+  FoodPricingConfiguration perKmRate(num perKmRate) => call(perKmRate: perKmRate);
 
   @override
-  FoodPricingConfiguration minimumFare(num minimumFare) =>
-      call(minimumFare: minimumFare);
+  FoodPricingConfiguration minimumFare(num minimumFare) => call(minimumFare: minimumFare);
 
   @override
-  FoodPricingConfiguration platformFeeRate(num platformFeeRate) =>
-      call(platformFeeRate: platformFeeRate);
+  FoodPricingConfiguration platformFeeRate(num platformFeeRate) => call(platformFeeRate: platformFeeRate);
 
   @override
   FoodPricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
@@ -83,14 +73,11 @@ class _$FoodPricingConfigurationCWProxyImpl
           ? _value.perKmRate
           // ignore: cast_nullable_to_non_nullable
           : perKmRate as num,
-      minimumFare:
-          minimumFare == const $CopyWithPlaceholder() || minimumFare == null
+      minimumFare: minimumFare == const $CopyWithPlaceholder() || minimumFare == null
           ? _value.minimumFare
           // ignore: cast_nullable_to_non_nullable
           : minimumFare as num,
-      platformFeeRate:
-          platformFeeRate == const $CopyWithPlaceholder() ||
-              platformFeeRate == null
+      platformFeeRate: platformFeeRate == const $CopyWithPlaceholder() || platformFeeRate == null
           ? _value.platformFeeRate
           // ignore: cast_nullable_to_non_nullable
           : platformFeeRate as num,
@@ -106,40 +93,27 @@ extension $FoodPricingConfigurationCopyWith on FoodPricingConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfFoodPricingConfiguration.copyWith(...)` or `instanceOfFoodPricingConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FoodPricingConfigurationCWProxy get copyWith =>
-      _$FoodPricingConfigurationCWProxyImpl(this);
+  _$FoodPricingConfigurationCWProxy get copyWith => _$FoodPricingConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-FoodPricingConfiguration _$FoodPricingConfigurationFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('FoodPricingConfiguration', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'baseFare',
-      'perKmRate',
-      'minimumFare',
-      'platformFeeRate',
-      'taxRate',
-    ],
-  );
-  final val = FoodPricingConfiguration(
-    baseFare: $checkedConvert('baseFare', (v) => v as num),
-    perKmRate: $checkedConvert('perKmRate', (v) => v as num),
-    minimumFare: $checkedConvert('minimumFare', (v) => v as num),
-    platformFeeRate: $checkedConvert('platformFeeRate', (v) => v as num),
-    taxRate: $checkedConvert('taxRate', (v) => v as num),
-  );
-  return val;
-});
+FoodPricingConfiguration _$FoodPricingConfigurationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('FoodPricingConfiguration', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['baseFare', 'perKmRate', 'minimumFare', 'platformFeeRate', 'taxRate']);
+      final val = FoodPricingConfiguration(
+        baseFare: $checkedConvert('baseFare', (v) => v as num),
+        perKmRate: $checkedConvert('perKmRate', (v) => v as num),
+        minimumFare: $checkedConvert('minimumFare', (v) => v as num),
+        platformFeeRate: $checkedConvert('platformFeeRate', (v) => v as num),
+        taxRate: $checkedConvert('taxRate', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$FoodPricingConfigurationToJson(
-  FoodPricingConfiguration instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$FoodPricingConfigurationToJson(FoodPricingConfiguration instance) => <String, dynamic>{
   'baseFare': instance.baseFare,
   'perKmRate': instance.perKmRate,
   'minimumFare': instance.minimumFare,

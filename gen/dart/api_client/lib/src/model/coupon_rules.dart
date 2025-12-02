@@ -12,40 +12,27 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'coupon_rules.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class CouponRules {
   /// Returns a new [CouponRules] instance.
-  const CouponRules({
-     this.general,
-     this.user,
-     this.time,
-  });
+  const CouponRules({this.general, this.user, this.time});
 
   @JsonKey(name: r'general', required: false, includeIfNull: false)
   final GeneralRules? general;
-  
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final UserRules? user;
-  
+
   @JsonKey(name: r'time', required: false, includeIfNull: false)
   final TimeRules? time;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CouponRules &&
-    other.general == general &&
-    other.user == user &&
-    other.time == time;
 
   @override
-  int get hashCode =>
-      general.hashCode +
-      user.hashCode +
-      time.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponRules && other.general == general && other.user == user && other.time == time;
+
+  @override
+  int get hashCode => general.hashCode + user.hashCode + time.hashCode;
 
   factory CouponRules.fromJson(Map<String, dynamic> json) => _$CouponRulesFromJson(json);
 
@@ -55,6 +42,4 @@ class CouponRules {
   String toString() {
     return toJson().toString();
   }
-
 }
-

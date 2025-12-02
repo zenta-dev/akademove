@@ -22,36 +22,27 @@ abstract class _$AuthExchangeToken200ResponseCWProxy {
   /// ```dart
   /// AuthExchangeToken200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  AuthExchangeToken200Response call({
-    String message,
-    String data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  AuthExchangeToken200Response call({String message, String data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfAuthExchangeToken200Response.copyWith(...)` or call `instanceOfAuthExchangeToken200Response.copyWith.fieldName(value)` for a single field.
-class _$AuthExchangeToken200ResponseCWProxyImpl
-    implements _$AuthExchangeToken200ResponseCWProxy {
+class _$AuthExchangeToken200ResponseCWProxyImpl implements _$AuthExchangeToken200ResponseCWProxy {
   const _$AuthExchangeToken200ResponseCWProxyImpl(this._value);
 
   final AuthExchangeToken200Response _value;
 
   @override
-  AuthExchangeToken200Response message(String message) =>
-      call(message: message);
+  AuthExchangeToken200Response message(String message) => call(message: message);
 
   @override
   AuthExchangeToken200Response data(String data) => call(data: data);
 
   @override
-  AuthExchangeToken200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  AuthExchangeToken200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  AuthExchangeToken200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  AuthExchangeToken200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,40 +79,33 @@ class _$AuthExchangeToken200ResponseCWProxyImpl
   }
 }
 
-extension $AuthExchangeToken200ResponseCopyWith
-    on AuthExchangeToken200Response {
+extension $AuthExchangeToken200ResponseCopyWith on AuthExchangeToken200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfAuthExchangeToken200Response.copyWith(...)` or `instanceOfAuthExchangeToken200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$AuthExchangeToken200ResponseCWProxy get copyWith =>
-      _$AuthExchangeToken200ResponseCWProxyImpl(this);
+  _$AuthExchangeToken200ResponseCWProxy get copyWith => _$AuthExchangeToken200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-AuthExchangeToken200Response _$AuthExchangeToken200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('AuthExchangeToken200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = AuthExchangeToken200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert('data', (v) => v as String),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+AuthExchangeToken200Response _$AuthExchangeToken200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AuthExchangeToken200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = AuthExchangeToken200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => v as String),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$AuthExchangeToken200ResponseToJson(
-  AuthExchangeToken200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$AuthExchangeToken200ResponseToJson(AuthExchangeToken200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data,
   'pagination': ?instance.pagination?.toJson(),

@@ -20,11 +20,7 @@ abstract class _$UpdateUserPasswordCWProxy {
   /// ```dart
   /// UpdateUserPassword(...).copyWith(id: 12, name: "My name")
   /// ```
-  UpdateUserPassword call({
-    String oldPassword,
-    String newPassword,
-    String confirmNewPassword,
-  });
+  UpdateUserPassword call({String oldPassword, String newPassword, String confirmNewPassword});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -35,16 +31,13 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
   final UpdateUserPassword _value;
 
   @override
-  UpdateUserPassword oldPassword(String oldPassword) =>
-      call(oldPassword: oldPassword);
+  UpdateUserPassword oldPassword(String oldPassword) => call(oldPassword: oldPassword);
 
   @override
-  UpdateUserPassword newPassword(String newPassword) =>
-      call(newPassword: newPassword);
+  UpdateUserPassword newPassword(String newPassword) => call(newPassword: newPassword);
 
   @override
-  UpdateUserPassword confirmNewPassword(String confirmNewPassword) =>
-      call(confirmNewPassword: confirmNewPassword);
+  UpdateUserPassword confirmNewPassword(String confirmNewPassword) => call(confirmNewPassword: confirmNewPassword);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -60,19 +53,15 @@ class _$UpdateUserPasswordCWProxyImpl implements _$UpdateUserPasswordCWProxy {
     Object? confirmNewPassword = const $CopyWithPlaceholder(),
   }) {
     return UpdateUserPassword(
-      oldPassword:
-          oldPassword == const $CopyWithPlaceholder() || oldPassword == null
+      oldPassword: oldPassword == const $CopyWithPlaceholder() || oldPassword == null
           ? _value.oldPassword
           // ignore: cast_nullable_to_non_nullable
           : oldPassword as String,
-      newPassword:
-          newPassword == const $CopyWithPlaceholder() || newPassword == null
+      newPassword: newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
           // ignore: cast_nullable_to_non_nullable
           : newPassword as String,
-      confirmNewPassword:
-          confirmNewPassword == const $CopyWithPlaceholder() ||
-              confirmNewPassword == null
+      confirmNewPassword: confirmNewPassword == const $CopyWithPlaceholder() || confirmNewPassword == null
           ? _value.confirmNewPassword
           // ignore: cast_nullable_to_non_nullable
           : confirmNewPassword as String,
@@ -84,8 +73,7 @@ extension $UpdateUserPasswordCopyWith on UpdateUserPassword {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUpdateUserPassword.copyWith(...)` or `instanceOfUpdateUserPassword.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UpdateUserPasswordCWProxy get copyWith =>
-      _$UpdateUserPasswordCWProxyImpl(this);
+  _$UpdateUserPasswordCWProxy get copyWith => _$UpdateUserPasswordCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -94,28 +82,17 @@ extension $UpdateUserPasswordCopyWith on UpdateUserPassword {
 
 UpdateUserPassword _$UpdateUserPasswordFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateUserPassword', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'oldPassword',
-          'newPassword',
-          'confirmNewPassword',
-        ],
-      );
+      $checkKeys(json, requiredKeys: const ['oldPassword', 'newPassword', 'confirmNewPassword']);
       final val = UpdateUserPassword(
         oldPassword: $checkedConvert('oldPassword', (v) => v as String),
         newPassword: $checkedConvert('newPassword', (v) => v as String),
-        confirmNewPassword: $checkedConvert(
-          'confirmNewPassword',
-          (v) => v as String,
-        ),
+        confirmNewPassword: $checkedConvert('confirmNewPassword', (v) => v as String),
       );
       return val;
     });
 
-Map<String, dynamic> _$UpdateUserPasswordToJson(UpdateUserPassword instance) =>
-    <String, dynamic>{
-      'oldPassword': instance.oldPassword,
-      'newPassword': instance.newPassword,
-      'confirmNewPassword': instance.confirmNewPassword,
-    };
+Map<String, dynamic> _$UpdateUserPasswordToJson(UpdateUserPassword instance) => <String, dynamic>{
+  'oldPassword': instance.oldPassword,
+  'newPassword': instance.newPassword,
+  'confirmNewPassword': instance.confirmNewPassword,
+};

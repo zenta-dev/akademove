@@ -1,5 +1,7 @@
 {
   "@@locale": "id",
+  "account_name": "Nama Akun",
+    "hint_bank_account_number": "Masukkan nomor rekening bank Anda",
   "withdraw_earnings": "Tarik Penghasilan",
   "no_transactions_yet": "Belum ada transaksi",
     "view_all": "Lihat Semua",

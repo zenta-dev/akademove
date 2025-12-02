@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverScheduleCreateRequest
 void main() {
-  final DriverScheduleCreateRequest?
-  instance = /* DriverScheduleCreateRequest(...) */ null;
+  final DriverScheduleCreateRequest? instance = /* DriverScheduleCreateRequest(...) */ null;
   // TODO add properties to the entity
 
   group(DriverScheduleCreateRequest, () {

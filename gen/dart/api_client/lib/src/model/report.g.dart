@@ -128,13 +128,11 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String?,
-      reporterId:
-          reporterId == const $CopyWithPlaceholder() || reporterId == null
+      reporterId: reporterId == const $CopyWithPlaceholder() || reporterId == null
           ? _value.reporterId
           // ignore: cast_nullable_to_non_nullable
           : reporterId as String,
-      targetUserId:
-          targetUserId == const $CopyWithPlaceholder() || targetUserId == null
+      targetUserId: targetUserId == const $CopyWithPlaceholder() || targetUserId == null
           ? _value.targetUserId
           // ignore: cast_nullable_to_non_nullable
           : targetUserId as String,
@@ -142,8 +140,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as ReportCategory,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+      description: description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -163,8 +160,7 @@ class _$ReportCWProxyImpl implements _$ReportCWProxy {
           ? _value.resolution
           // ignore: cast_nullable_to_non_nullable
           : resolution as String?,
-      reportedAt:
-          reportedAt == const $CopyWithPlaceholder() || reportedAt == null
+      reportedAt: reportedAt == const $CopyWithPlaceholder() || reportedAt == null
           ? _value.reportedAt
           // ignore: cast_nullable_to_non_nullable
           : reportedAt as DateTime,
@@ -187,48 +183,27 @@ extension $ReportCopyWith on Report {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Report _$ReportFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Report', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'reporterId',
-          'targetUserId',
-          'category',
-          'description',
-          'status',
-          'reportedAt',
-        ],
-      );
-      final val = Report(
-        id: $checkedConvert('id', (v) => v as String),
-        orderId: $checkedConvert('orderId', (v) => v as String?),
-        reporterId: $checkedConvert('reporterId', (v) => v as String),
-        targetUserId: $checkedConvert('targetUserId', (v) => v as String),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$ReportCategoryEnumMap, v),
-        ),
-        description: $checkedConvert('description', (v) => v as String),
-        evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecode(_$ReportStatusEnumMap, v),
-        ),
-        handledById: $checkedConvert('handledById', (v) => v as String?),
-        resolution: $checkedConvert('resolution', (v) => v as String?),
-        reportedAt: $checkedConvert(
-          'reportedAt',
-          (v) => DateTime.parse(v as String),
-        ),
-        resolvedAt: $checkedConvert(
-          'resolvedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    });
+Report _$ReportFromJson(Map<String, dynamic> json) => $checkedCreate('Report', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const ['id', 'reporterId', 'targetUserId', 'category', 'description', 'status', 'reportedAt'],
+  );
+  final val = Report(
+    id: $checkedConvert('id', (v) => v as String),
+    orderId: $checkedConvert('orderId', (v) => v as String?),
+    reporterId: $checkedConvert('reporterId', (v) => v as String),
+    targetUserId: $checkedConvert('targetUserId', (v) => v as String),
+    category: $checkedConvert('category', (v) => $enumDecode(_$ReportCategoryEnumMap, v)),
+    description: $checkedConvert('description', (v) => v as String),
+    evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
+    status: $checkedConvert('status', (v) => $enumDecode(_$ReportStatusEnumMap, v)),
+    handledById: $checkedConvert('handledById', (v) => v as String?),
+    resolution: $checkedConvert('resolution', (v) => v as String?),
+    reportedAt: $checkedConvert('reportedAt', (v) => DateTime.parse(v as String)),
+    resolvedAt: $checkedConvert('resolvedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$ReportToJson(Report instance) => <String, dynamic>{
   'id': instance.id,

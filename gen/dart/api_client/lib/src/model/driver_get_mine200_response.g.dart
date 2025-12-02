@@ -18,16 +18,12 @@ abstract class _$DriverGetMine200ResponseCWProxy {
   /// ```dart
   /// DriverGetMine200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  DriverGetMine200Response call({
-    Object? status,
-    DriverGetMine200ResponseBody body,
-  });
+  DriverGetMine200Response call({Object? status, DriverGetMine200ResponseBody body});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverGetMine200Response.copyWith(...)` or call `instanceOfDriverGetMine200Response.copyWith.fieldName(value)` for a single field.
-class _$DriverGetMine200ResponseCWProxyImpl
-    implements _$DriverGetMine200ResponseCWProxy {
+class _$DriverGetMine200ResponseCWProxyImpl implements _$DriverGetMine200ResponseCWProxy {
   const _$DriverGetMine200ResponseCWProxyImpl(this._value);
 
   final DriverGetMine200Response _value;
@@ -36,8 +32,7 @@ class _$DriverGetMine200ResponseCWProxyImpl
   DriverGetMine200Response status(Object? status) => call(status: status);
 
   @override
-  DriverGetMine200Response body(DriverGetMine200ResponseBody body) =>
-      call(body: body);
+  DriverGetMine200Response body(DriverGetMine200ResponseBody body) => call(body: body);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -68,31 +63,24 @@ extension $DriverGetMine200ResponseCopyWith on DriverGetMine200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverGetMine200Response.copyWith(...)` or `instanceOfDriverGetMine200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverGetMine200ResponseCWProxy get copyWith =>
-      _$DriverGetMine200ResponseCWProxyImpl(this);
+  _$DriverGetMine200ResponseCWProxy get copyWith => _$DriverGetMine200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverGetMine200Response _$DriverGetMine200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('DriverGetMine200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['status', 'body']);
-  final val = DriverGetMine200Response(
-    status: $checkedConvert('status', (v) => v),
-    body: $checkedConvert(
-      'body',
-      (v) => DriverGetMine200ResponseBody.fromJson(v as Map<String, dynamic>),
-    ),
-  );
-  return val;
-});
+DriverGetMine200Response _$DriverGetMine200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DriverGetMine200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['status', 'body']);
+      final val = DriverGetMine200Response(
+        status: $checkedConvert('status', (v) => v),
+        body: $checkedConvert('body', (v) => DriverGetMine200ResponseBody.fromJson(v as Map<String, dynamic>)),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DriverGetMine200ResponseToJson(
-  DriverGetMine200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$DriverGetMine200ResponseToJson(DriverGetMine200Response instance) => <String, dynamic>{
   'status': instance.status,
   'body': instance.body.toJson(),
 };

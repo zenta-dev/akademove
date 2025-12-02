@@ -24,13 +24,7 @@ abstract class _$BadgeCriteriaCWProxy {
   /// ```dart
   /// BadgeCriteria(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeCriteria call({
-    int? minOrders,
-    num? minRating,
-    num? minOnTimeRate,
-    int? minStreak,
-    num? minEarnings,
-  });
+  BadgeCriteria call({int? minOrders, num? minRating, num? minOnTimeRate, int? minStreak, num? minEarnings});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -47,8 +41,7 @@ class _$BadgeCriteriaCWProxyImpl implements _$BadgeCriteriaCWProxy {
   BadgeCriteria minRating(num? minRating) => call(minRating: minRating);
 
   @override
-  BadgeCriteria minOnTimeRate(num? minOnTimeRate) =>
-      call(minOnTimeRate: minOnTimeRate);
+  BadgeCriteria minOnTimeRate(num? minOnTimeRate) => call(minOnTimeRate: minOnTimeRate);
 
   @override
   BadgeCriteria minStreak(int? minStreak) => call(minStreak: minStreak);
@@ -119,11 +112,10 @@ BadgeCriteria _$BadgeCriteriaFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$BadgeCriteriaToJson(BadgeCriteria instance) =>
-    <String, dynamic>{
-      'minOrders': ?instance.minOrders,
-      'minRating': ?instance.minRating,
-      'minOnTimeRate': ?instance.minOnTimeRate,
-      'minStreak': ?instance.minStreak,
-      'minEarnings': ?instance.minEarnings,
-    };
+Map<String, dynamic> _$BadgeCriteriaToJson(BadgeCriteria instance) => <String, dynamic>{
+  'minOrders': ?instance.minOrders,
+  'minRating': ?instance.minRating,
+  'minOnTimeRate': ?instance.minOnTimeRate,
+  'minStreak': ?instance.minStreak,
+  'minEarnings': ?instance.minEarnings,
+};

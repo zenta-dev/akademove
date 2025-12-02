@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderSendMessageRequest
 void main() {
-  final OrderSendMessageRequest? instance = /* OrderSendMessageRequest(...) */
-      null;
+  final OrderSendMessageRequest? instance = /* OrderSendMessageRequest(...) */ null;
   // TODO add properties to the entity
 
   group(OrderSendMessageRequest, () {

@@ -9,12 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'delivery_pricing_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class DeliveryPricingConfiguration {
   /// Returns a new [DeliveryPricingConfiguration] instance.
   const DeliveryPricingConfiguration({
@@ -28,30 +23,32 @@ class DeliveryPricingConfiguration {
 
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
-  
+
   @JsonKey(name: r'perKmRate', required: true, includeIfNull: false)
   final num perKmRate;
-  
+
   @JsonKey(name: r'minimumFare', required: true, includeIfNull: false)
   final num minimumFare;
-  
+
   @JsonKey(name: r'platformFeeRate', required: true, includeIfNull: false)
   final num platformFeeRate;
-  
+
   @JsonKey(name: r'taxRate', required: true, includeIfNull: false)
   final num taxRate;
-  
+
   @JsonKey(name: r'perKgRate', required: true, includeIfNull: false)
   final num perKgRate;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DeliveryPricingConfiguration &&
-    other.baseFare == baseFare &&
-    other.perKmRate == perKmRate &&
-    other.minimumFare == minimumFare &&
-    other.platformFeeRate == platformFeeRate &&
-    other.taxRate == taxRate &&
-    other.perKgRate == perKgRate;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DeliveryPricingConfiguration &&
+          other.baseFare == baseFare &&
+          other.perKmRate == perKmRate &&
+          other.minimumFare == minimumFare &&
+          other.platformFeeRate == platformFeeRate &&
+          other.taxRate == taxRate &&
+          other.perKgRate == perKgRate;
 
   @override
   int get hashCode =>
@@ -62,7 +59,8 @@ class DeliveryPricingConfiguration {
       taxRate.hashCode +
       perKgRate.hashCode;
 
-  factory DeliveryPricingConfiguration.fromJson(Map<String, dynamic> json) => _$DeliveryPricingConfigurationFromJson(json);
+  factory DeliveryPricingConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$DeliveryPricingConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$DeliveryPricingConfigurationToJson(this);
 
@@ -70,6 +68,4 @@ class DeliveryPricingConfiguration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for AuthSignOut200Response
 void main() {
-  final AuthSignOut200Response? instance = /* AuthSignOut200Response(...) */
-      null;
+  final AuthSignOut200Response? instance = /* AuthSignOut200Response(...) */ null;
   // TODO add properties to the entity
 
   group(AuthSignOut200Response, () {

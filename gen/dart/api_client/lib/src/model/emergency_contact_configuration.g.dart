@@ -11,9 +11,7 @@ abstract class _$EmergencyContactConfigurationCWProxy {
 
   EmergencyContactConfiguration phone(String phone);
 
-  EmergencyContactConfiguration type(
-    EmergencyContactConfigurationTypeEnum type,
-  );
+  EmergencyContactConfiguration type(EmergencyContactConfigurationTypeEnum type);
 
   EmergencyContactConfiguration description(String? description);
 
@@ -37,8 +35,7 @@ abstract class _$EmergencyContactConfigurationCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfEmergencyContactConfiguration.copyWith(...)` or call `instanceOfEmergencyContactConfiguration.copyWith.fieldName(value)` for a single field.
-class _$EmergencyContactConfigurationCWProxyImpl
-    implements _$EmergencyContactConfigurationCWProxy {
+class _$EmergencyContactConfigurationCWProxyImpl implements _$EmergencyContactConfigurationCWProxy {
   const _$EmergencyContactConfigurationCWProxyImpl(this._value);
 
   final EmergencyContactConfiguration _value;
@@ -50,17 +47,13 @@ class _$EmergencyContactConfigurationCWProxyImpl
   EmergencyContactConfiguration phone(String phone) => call(phone: phone);
 
   @override
-  EmergencyContactConfiguration type(
-    EmergencyContactConfigurationTypeEnum type,
-  ) => call(type: type);
+  EmergencyContactConfiguration type(EmergencyContactConfigurationTypeEnum type) => call(type: type);
 
   @override
-  EmergencyContactConfiguration description(String? description) =>
-      call(description: description);
+  EmergencyContactConfiguration description(String? description) => call(description: description);
 
   @override
-  EmergencyContactConfiguration isActive(bool? isActive) =>
-      call(isActive: isActive);
+  EmergencyContactConfiguration isActive(bool? isActive) => call(isActive: isActive);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -102,39 +95,31 @@ class _$EmergencyContactConfigurationCWProxyImpl
   }
 }
 
-extension $EmergencyContactConfigurationCopyWith
-    on EmergencyContactConfiguration {
+extension $EmergencyContactConfigurationCopyWith on EmergencyContactConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfEmergencyContactConfiguration.copyWith(...)` or `instanceOfEmergencyContactConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$EmergencyContactConfigurationCWProxy get copyWith =>
-      _$EmergencyContactConfigurationCWProxyImpl(this);
+  _$EmergencyContactConfigurationCWProxy get copyWith => _$EmergencyContactConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EmergencyContactConfiguration _$EmergencyContactConfigurationFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('EmergencyContactConfiguration', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['name', 'phone', 'type']);
-  final val = EmergencyContactConfiguration(
-    name: $checkedConvert('name', (v) => v as String),
-    phone: $checkedConvert('phone', (v) => v as String),
-    type: $checkedConvert(
-      'type',
-      (v) => $enumDecode(_$EmergencyContactConfigurationTypeEnumEnumMap, v),
-    ),
-    description: $checkedConvert('description', (v) => v as String?),
-    isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
-  );
-  return val;
-});
+EmergencyContactConfiguration _$EmergencyContactConfigurationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('EmergencyContactConfiguration', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['name', 'phone', 'type']);
+      final val = EmergencyContactConfiguration(
+        name: $checkedConvert('name', (v) => v as String),
+        phone: $checkedConvert('phone', (v) => v as String),
+        type: $checkedConvert('type', (v) => $enumDecode(_$EmergencyContactConfigurationTypeEnumEnumMap, v)),
+        description: $checkedConvert('description', (v) => v as String?),
+        isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$EmergencyContactConfigurationToJson(
-  EmergencyContactConfiguration instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$EmergencyContactConfigurationToJson(EmergencyContactConfiguration instance) => <String, dynamic>{
   'name': instance.name,
   'phone': instance.phone,
   'type': _$EmergencyContactConfigurationTypeEnumEnumMap[instance.type]!,

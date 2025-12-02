@@ -20,34 +20,25 @@ abstract class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxy {
   /// ```dart
   /// MerchantAnalytics200ResponseDataRevenueByDayInner(...).copyWith(id: 12, name: "My name")
   /// ```
-  MerchantAnalytics200ResponseDataRevenueByDayInner call({
-    String date,
-    num revenue,
-    num orders,
-  });
+  MerchantAnalytics200ResponseDataRevenueByDayInner call({String date, num revenue, num orders});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantAnalytics200ResponseDataRevenueByDayInner.copyWith(...)` or call `instanceOfMerchantAnalytics200ResponseDataRevenueByDayInner.copyWith.fieldName(value)` for a single field.
 class _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxyImpl
     implements _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxy {
-  const _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxyImpl(
-    this._value,
-  );
+  const _$MerchantAnalytics200ResponseDataRevenueByDayInnerCWProxyImpl(this._value);
 
   final MerchantAnalytics200ResponseDataRevenueByDayInner _value;
 
   @override
-  MerchantAnalytics200ResponseDataRevenueByDayInner date(String date) =>
-      call(date: date);
+  MerchantAnalytics200ResponseDataRevenueByDayInner date(String date) => call(date: date);
 
   @override
-  MerchantAnalytics200ResponseDataRevenueByDayInner revenue(num revenue) =>
-      call(revenue: revenue);
+  MerchantAnalytics200ResponseDataRevenueByDayInner revenue(num revenue) => call(revenue: revenue);
 
   @override
-  MerchantAnalytics200ResponseDataRevenueByDayInner orders(num orders) =>
-      call(orders: orders);
+  MerchantAnalytics200ResponseDataRevenueByDayInner orders(num orders) => call(orders: orders);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -92,12 +83,9 @@ extension $MerchantAnalytics200ResponseDataRevenueByDayInnerCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantAnalytics200ResponseDataRevenueByDayInner
-_$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(
+MerchantAnalytics200ResponseDataRevenueByDayInner _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('MerchantAnalytics200ResponseDataRevenueByDayInner', json, (
-  $checkedConvert,
-) {
+) => $checkedCreate('MerchantAnalytics200ResponseDataRevenueByDayInner', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['date', 'revenue', 'orders']);
   final val = MerchantAnalytics200ResponseDataRevenueByDayInner(
     date: $checkedConvert('date', (v) => v as String),
@@ -109,8 +97,4 @@ _$MerchantAnalytics200ResponseDataRevenueByDayInnerFromJson(
 
 Map<String, dynamic> _$MerchantAnalytics200ResponseDataRevenueByDayInnerToJson(
   MerchantAnalytics200ResponseDataRevenueByDayInner instance,
-) => <String, dynamic>{
-  'date': instance.date,
-  'revenue': instance.revenue,
-  'orders': instance.orders,
-};
+) => <String, dynamic>{'date': instance.date, 'revenue': instance.revenue, 'orders': instance.orders};

@@ -22,18 +22,12 @@ abstract class _$UserAdminCreate200ResponseCWProxy {
   /// ```dart
   /// UserAdminCreate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  UserAdminCreate200Response call({
-    String message,
-    User data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  UserAdminCreate200Response call({String message, User data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfUserAdminCreate200Response.copyWith(...)` or call `instanceOfUserAdminCreate200Response.copyWith.fieldName(value)` for a single field.
-class _$UserAdminCreate200ResponseCWProxyImpl
-    implements _$UserAdminCreate200ResponseCWProxy {
+class _$UserAdminCreate200ResponseCWProxyImpl implements _$UserAdminCreate200ResponseCWProxy {
   const _$UserAdminCreate200ResponseCWProxyImpl(this._value);
 
   final UserAdminCreate200Response _value;
@@ -45,12 +39,10 @@ class _$UserAdminCreate200ResponseCWProxyImpl
   UserAdminCreate200Response data(User data) => call(data: data);
 
   @override
-  UserAdminCreate200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  UserAdminCreate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  UserAdminCreate200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  UserAdminCreate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $UserAdminCreate200ResponseCopyWith on UserAdminCreate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUserAdminCreate200Response.copyWith(...)` or `instanceOfUserAdminCreate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UserAdminCreate200ResponseCWProxy get copyWith =>
-      _$UserAdminCreate200ResponseCWProxyImpl(this);
+  _$UserAdminCreate200ResponseCWProxy get copyWith => _$UserAdminCreate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserAdminCreate200Response _$UserAdminCreate200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('UserAdminCreate200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = UserAdminCreate200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => User.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+UserAdminCreate200Response _$UserAdminCreate200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('UserAdminCreate200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = UserAdminCreate200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => User.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$UserAdminCreate200ResponseToJson(
-  UserAdminCreate200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$UserAdminCreate200ResponseToJson(UserAdminCreate200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

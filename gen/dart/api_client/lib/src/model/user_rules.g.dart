@@ -70,17 +70,13 @@ extension $UserRulesCopyWith on UserRules {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserRules _$UserRulesFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UserRules', json, ($checkedConvert) {
-      final val = UserRules(
-        newUserOnly: $checkedConvert('newUserOnly', (v) => v as bool?),
-        perUserLimit: $checkedConvert(
-          'perUserLimit',
-          (v) => (v as num?)?.toInt(),
-        ),
-      );
-      return val;
-    });
+UserRules _$UserRulesFromJson(Map<String, dynamic> json) => $checkedCreate('UserRules', json, ($checkedConvert) {
+  final val = UserRules(
+    newUserOnly: $checkedConvert('newUserOnly', (v) => v as bool?),
+    perUserLimit: $checkedConvert('perUserLimit', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$UserRulesToJson(UserRules instance) => <String, dynamic>{
   'newUserOnly': ?instance.newUserOnly,

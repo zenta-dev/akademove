@@ -13,12 +13,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class Merchant {
   /// Returns a new [Merchant] instance.
   const Merchant({
@@ -28,11 +23,11 @@ class Merchant {
     required this.email,
     required this.phone,
     required this.address,
-     this.location,
+    this.location,
     required this.isActive,
     required this.rating,
-     this.document,
-     this.image,
+    this.document,
+    this.image,
     required this.category,
     required this.categories,
     required this.bank,
@@ -42,71 +37,73 @@ class Merchant {
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-  
+
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
+
   @JsonKey(name: r'phone', required: true, includeIfNull: false)
   final Phone phone;
-  
+
   @JsonKey(name: r'address', required: true, includeIfNull: false)
   final String address;
-  
+
   @JsonKey(name: r'location', required: false, includeIfNull: false)
   final Coordinate? location;
-  
+
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
-  
+
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
-  
+
   @JsonKey(name: r'document', required: false, includeIfNull: false)
   final String? document;
-  
+
   @JsonKey(name: r'image', required: false, includeIfNull: false)
   final String? image;
-  
+
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final MerchantCategory category;
-  
-      /// List of merchant item categories
+
+  /// List of merchant item categories
   @JsonKey(name: r'categories', required: true, includeIfNull: false)
   final List<String> categories;
-  
+
   @JsonKey(name: r'bank', required: true, includeIfNull: false)
   final Bank bank;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Merchant &&
-    other.id == id &&
-    other.userId == userId &&
-    other.name == name &&
-    other.email == email &&
-    other.phone == phone &&
-    other.address == address &&
-    other.location == location &&
-    other.isActive == isActive &&
-    other.rating == rating &&
-    other.document == document &&
-    other.image == image &&
-    other.category == category &&
-    other.categories == categories &&
-    other.bank == bank &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Merchant &&
+          other.id == id &&
+          other.userId == userId &&
+          other.name == name &&
+          other.email == email &&
+          other.phone == phone &&
+          other.address == address &&
+          other.location == location &&
+          other.isActive == isActive &&
+          other.rating == rating &&
+          other.document == document &&
+          other.image == image &&
+          other.category == category &&
+          other.categories == categories &&
+          other.bank == bank &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -135,6 +132,4 @@ class Merchant {
   String toString() {
     return toJson().toString();
   }
-
 }
-

@@ -10,12 +10,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_envelope_payload_done.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class OrderEnvelopePayloadDone {
   /// Returns a new [OrderEnvelopePayloadDone] instance.
   const OrderEnvelopePayloadDone({
@@ -27,29 +22,27 @@ class OrderEnvelopePayloadDone {
 
   @JsonKey(name: r'by', required: true, includeIfNull: false)
   final OrderEnvelopePayloadDoneByEnum by;
-  
+
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
-  
+
   @JsonKey(name: r'driverCurrentLocation', required: true, includeIfNull: false)
   final Coordinate driverCurrentLocation;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadDone &&
-    other.by == by &&
-    other.orderId == orderId &&
-    other.driverId == driverId &&
-    other.driverCurrentLocation == driverCurrentLocation;
 
   @override
-  int get hashCode =>
-      by.hashCode +
-      orderId.hashCode +
-      driverId.hashCode +
-      driverCurrentLocation.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadDone &&
+          other.by == by &&
+          other.orderId == orderId &&
+          other.driverId == driverId &&
+          other.driverCurrentLocation == driverCurrentLocation;
+
+  @override
+  int get hashCode => by.hashCode + orderId.hashCode + driverId.hashCode + driverCurrentLocation.hashCode;
 
   factory OrderEnvelopePayloadDone.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadDoneFromJson(json);
 
@@ -59,7 +52,6 @@ class OrderEnvelopePayloadDone {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum OrderEnvelopePayloadDoneByEnum {
@@ -67,13 +59,11 @@ enum OrderEnvelopePayloadDoneByEnum {
   USER(r'USER'),
   @JsonValue(r'DRIVER')
   DRIVER(r'DRIVER');
-  
+
   const OrderEnvelopePayloadDoneByEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-
-

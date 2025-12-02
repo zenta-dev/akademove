@@ -25,8 +25,7 @@ abstract class _$OrderChatMessageListQueryCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderChatMessageListQuery.copyWith(...)` or call `instanceOfOrderChatMessageListQuery.copyWith.fieldName(value)` for a single field.
-class _$OrderChatMessageListQueryCWProxyImpl
-    implements _$OrderChatMessageListQueryCWProxy {
+class _$OrderChatMessageListQueryCWProxyImpl implements _$OrderChatMessageListQueryCWProxy {
   const _$OrderChatMessageListQueryCWProxyImpl(this._value);
 
   final OrderChatMessageListQuery _value;
@@ -74,29 +73,25 @@ extension $OrderChatMessageListQueryCopyWith on OrderChatMessageListQuery {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderChatMessageListQuery.copyWith(...)` or `instanceOfOrderChatMessageListQuery.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderChatMessageListQueryCWProxy get copyWith =>
-      _$OrderChatMessageListQueryCWProxyImpl(this);
+  _$OrderChatMessageListQueryCWProxy get copyWith => _$OrderChatMessageListQueryCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderChatMessageListQuery _$OrderChatMessageListQueryFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('OrderChatMessageListQuery', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['orderId', 'limit']);
-  final val = OrderChatMessageListQuery(
-    orderId: $checkedConvert('orderId', (v) => v as String),
-    limit: $checkedConvert('limit', (v) => (v as num).toInt()),
-    cursor: $checkedConvert('cursor', (v) => v as String?),
-  );
-  return val;
-});
+OrderChatMessageListQuery _$OrderChatMessageListQueryFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderChatMessageListQuery', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['orderId', 'limit']);
+      final val = OrderChatMessageListQuery(
+        orderId: $checkedConvert('orderId', (v) => v as String),
+        limit: $checkedConvert('limit', (v) => (v as num).toInt()),
+        cursor: $checkedConvert('cursor', (v) => v as String?),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$OrderChatMessageListQueryToJson(
-  OrderChatMessageListQuery instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$OrderChatMessageListQueryToJson(OrderChatMessageListQuery instance) => <String, dynamic>{
   'orderId': instance.orderId,
   'limit': instance.limit,
   'cursor': ?instance.cursor,

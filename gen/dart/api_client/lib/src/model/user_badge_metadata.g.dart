@@ -20,11 +20,7 @@ abstract class _$UserBadgeMetadataCWProxy {
   /// ```dart
   /// UserBadgeMetadata(...).copyWith(id: 12, name: "My name")
   /// ```
-  UserBadgeMetadata call({
-    int? ordersCompleted,
-    num? finalRating,
-    int? streakDays,
-  });
+  UserBadgeMetadata call({int? ordersCompleted, num? finalRating, int? streakDays});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -35,12 +31,10 @@ class _$UserBadgeMetadataCWProxyImpl implements _$UserBadgeMetadataCWProxy {
   final UserBadgeMetadata _value;
 
   @override
-  UserBadgeMetadata ordersCompleted(int? ordersCompleted) =>
-      call(ordersCompleted: ordersCompleted);
+  UserBadgeMetadata ordersCompleted(int? ordersCompleted) => call(ordersCompleted: ordersCompleted);
 
   @override
-  UserBadgeMetadata finalRating(num? finalRating) =>
-      call(finalRating: finalRating);
+  UserBadgeMetadata finalRating(num? finalRating) => call(finalRating: finalRating);
 
   @override
   UserBadgeMetadata streakDays(int? streakDays) => call(streakDays: streakDays);
@@ -79,8 +73,7 @@ extension $UserBadgeMetadataCopyWith on UserBadgeMetadata {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfUserBadgeMetadata.copyWith(...)` or `instanceOfUserBadgeMetadata.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UserBadgeMetadataCWProxy get copyWith =>
-      _$UserBadgeMetadataCWProxyImpl(this);
+  _$UserBadgeMetadataCWProxy get copyWith => _$UserBadgeMetadataCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -90,19 +83,15 @@ extension $UserBadgeMetadataCopyWith on UserBadgeMetadata {
 UserBadgeMetadata _$UserBadgeMetadataFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UserBadgeMetadata', json, ($checkedConvert) {
       final val = UserBadgeMetadata(
-        ordersCompleted: $checkedConvert(
-          'ordersCompleted',
-          (v) => (v as num?)?.toInt(),
-        ),
+        ordersCompleted: $checkedConvert('ordersCompleted', (v) => (v as num?)?.toInt()),
         finalRating: $checkedConvert('finalRating', (v) => v as num?),
         streakDays: $checkedConvert('streakDays', (v) => (v as num?)?.toInt()),
       );
       return val;
     });
 
-Map<String, dynamic> _$UserBadgeMetadataToJson(UserBadgeMetadata instance) =>
-    <String, dynamic>{
-      'ordersCompleted': ?instance.ordersCompleted,
-      'finalRating': ?instance.finalRating,
-      'streakDays': ?instance.streakDays,
-    };
+Map<String, dynamic> _$UserBadgeMetadataToJson(UserBadgeMetadata instance) => <String, dynamic>{
+  'ordersCompleted': ?instance.ordersCompleted,
+  'finalRating': ?instance.finalRating,
+  'streakDays': ?instance.streakDays,
+};

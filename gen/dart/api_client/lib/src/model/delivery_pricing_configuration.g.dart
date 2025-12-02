@@ -38,34 +38,28 @@ abstract class _$DeliveryPricingConfigurationCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDeliveryPricingConfiguration.copyWith(...)` or call `instanceOfDeliveryPricingConfiguration.copyWith.fieldName(value)` for a single field.
-class _$DeliveryPricingConfigurationCWProxyImpl
-    implements _$DeliveryPricingConfigurationCWProxy {
+class _$DeliveryPricingConfigurationCWProxyImpl implements _$DeliveryPricingConfigurationCWProxy {
   const _$DeliveryPricingConfigurationCWProxyImpl(this._value);
 
   final DeliveryPricingConfiguration _value;
 
   @override
-  DeliveryPricingConfiguration baseFare(num baseFare) =>
-      call(baseFare: baseFare);
+  DeliveryPricingConfiguration baseFare(num baseFare) => call(baseFare: baseFare);
 
   @override
-  DeliveryPricingConfiguration perKmRate(num perKmRate) =>
-      call(perKmRate: perKmRate);
+  DeliveryPricingConfiguration perKmRate(num perKmRate) => call(perKmRate: perKmRate);
 
   @override
-  DeliveryPricingConfiguration minimumFare(num minimumFare) =>
-      call(minimumFare: minimumFare);
+  DeliveryPricingConfiguration minimumFare(num minimumFare) => call(minimumFare: minimumFare);
 
   @override
-  DeliveryPricingConfiguration platformFeeRate(num platformFeeRate) =>
-      call(platformFeeRate: platformFeeRate);
+  DeliveryPricingConfiguration platformFeeRate(num platformFeeRate) => call(platformFeeRate: platformFeeRate);
 
   @override
   DeliveryPricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
 
   @override
-  DeliveryPricingConfiguration perKgRate(num perKgRate) =>
-      call(perKgRate: perKgRate);
+  DeliveryPricingConfiguration perKgRate(num perKgRate) => call(perKgRate: perKgRate);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -92,14 +86,11 @@ class _$DeliveryPricingConfigurationCWProxyImpl
           ? _value.perKmRate
           // ignore: cast_nullable_to_non_nullable
           : perKmRate as num,
-      minimumFare:
-          minimumFare == const $CopyWithPlaceholder() || minimumFare == null
+      minimumFare: minimumFare == const $CopyWithPlaceholder() || minimumFare == null
           ? _value.minimumFare
           // ignore: cast_nullable_to_non_nullable
           : minimumFare as num,
-      platformFeeRate:
-          platformFeeRate == const $CopyWithPlaceholder() ||
-              platformFeeRate == null
+      platformFeeRate: platformFeeRate == const $CopyWithPlaceholder() || platformFeeRate == null
           ? _value.platformFeeRate
           // ignore: cast_nullable_to_non_nullable
           : platformFeeRate as num,
@@ -115,47 +106,35 @@ class _$DeliveryPricingConfigurationCWProxyImpl
   }
 }
 
-extension $DeliveryPricingConfigurationCopyWith
-    on DeliveryPricingConfiguration {
+extension $DeliveryPricingConfigurationCopyWith on DeliveryPricingConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDeliveryPricingConfiguration.copyWith(...)` or `instanceOfDeliveryPricingConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DeliveryPricingConfigurationCWProxy get copyWith =>
-      _$DeliveryPricingConfigurationCWProxyImpl(this);
+  _$DeliveryPricingConfigurationCWProxy get copyWith => _$DeliveryPricingConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DeliveryPricingConfiguration _$DeliveryPricingConfigurationFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('DeliveryPricingConfiguration', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'baseFare',
-      'perKmRate',
-      'minimumFare',
-      'platformFeeRate',
-      'taxRate',
-      'perKgRate',
-    ],
-  );
-  final val = DeliveryPricingConfiguration(
-    baseFare: $checkedConvert('baseFare', (v) => v as num),
-    perKmRate: $checkedConvert('perKmRate', (v) => v as num),
-    minimumFare: $checkedConvert('minimumFare', (v) => v as num),
-    platformFeeRate: $checkedConvert('platformFeeRate', (v) => v as num),
-    taxRate: $checkedConvert('taxRate', (v) => v as num),
-    perKgRate: $checkedConvert('perKgRate', (v) => v as num),
-  );
-  return val;
-});
+DeliveryPricingConfiguration _$DeliveryPricingConfigurationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DeliveryPricingConfiguration', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const ['baseFare', 'perKmRate', 'minimumFare', 'platformFeeRate', 'taxRate', 'perKgRate'],
+      );
+      final val = DeliveryPricingConfiguration(
+        baseFare: $checkedConvert('baseFare', (v) => v as num),
+        perKmRate: $checkedConvert('perKmRate', (v) => v as num),
+        minimumFare: $checkedConvert('minimumFare', (v) => v as num),
+        platformFeeRate: $checkedConvert('platformFeeRate', (v) => v as num),
+        taxRate: $checkedConvert('taxRate', (v) => v as num),
+        perKgRate: $checkedConvert('perKgRate', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DeliveryPricingConfigurationToJson(
-  DeliveryPricingConfiguration instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$DeliveryPricingConfigurationToJson(DeliveryPricingConfiguration instance) => <String, dynamic>{
   'baseFare': instance.baseFare,
   'perKmRate': instance.perKmRate,
   'minimumFare': instance.minimumFare,

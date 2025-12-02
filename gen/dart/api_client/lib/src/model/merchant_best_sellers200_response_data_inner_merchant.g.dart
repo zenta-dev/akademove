@@ -22,21 +22,14 @@ abstract class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxy {
   /// ```dart
   /// MerchantBestSellers200ResponseDataInnerMerchant(...).copyWith(id: 12, name: "My name")
   /// ```
-  MerchantBestSellers200ResponseDataInnerMerchant call({
-    String id,
-    String name,
-    String? image,
-    num rating,
-  });
+  MerchantBestSellers200ResponseDataInnerMerchant call({String id, String name, String? image, num rating});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantBestSellers200ResponseDataInnerMerchant.copyWith(...)` or call `instanceOfMerchantBestSellers200ResponseDataInnerMerchant.copyWith.fieldName(value)` for a single field.
 class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl
     implements _$MerchantBestSellers200ResponseDataInnerMerchantCWProxy {
-  const _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl(
-    this._value,
-  );
+  const _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl(this._value);
 
   final MerchantBestSellers200ResponseDataInnerMerchant _value;
 
@@ -44,16 +37,13 @@ class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl
   MerchantBestSellers200ResponseDataInnerMerchant id(String id) => call(id: id);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMerchant name(String name) =>
-      call(name: name);
+  MerchantBestSellers200ResponseDataInnerMerchant name(String name) => call(name: name);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMerchant image(String? image) =>
-      call(image: image);
+  MerchantBestSellers200ResponseDataInnerMerchant image(String? image) => call(image: image);
 
   @override
-  MerchantBestSellers200ResponseDataInnerMerchant rating(num rating) =>
-      call(rating: rating);
+  MerchantBestSellers200ResponseDataInnerMerchant rating(num rating) => call(rating: rating);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -90,8 +80,7 @@ class _$MerchantBestSellers200ResponseDataInnerMerchantCWProxyImpl
   }
 }
 
-extension $MerchantBestSellers200ResponseDataInnerMerchantCopyWith
-    on MerchantBestSellers200ResponseDataInnerMerchant {
+extension $MerchantBestSellers200ResponseDataInnerMerchantCopyWith on MerchantBestSellers200ResponseDataInnerMerchant {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantBestSellers200ResponseDataInnerMerchant.copyWith(...)` or `instanceOfMerchantBestSellers200ResponseDataInnerMerchant.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -103,12 +92,9 @@ extension $MerchantBestSellers200ResponseDataInnerMerchantCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantBestSellers200ResponseDataInnerMerchant
-_$MerchantBestSellers200ResponseDataInnerMerchantFromJson(
+MerchantBestSellers200ResponseDataInnerMerchant _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate('MerchantBestSellers200ResponseDataInnerMerchant', json, (
-  $checkedConvert,
-) {
+) => $checkedCreate('MerchantBestSellers200ResponseDataInnerMerchant', json, ($checkedConvert) {
   $checkKeys(json, requiredKeys: const ['id', 'name', 'rating']);
   final val = MerchantBestSellers200ResponseDataInnerMerchant(
     id: $checkedConvert('id', (v) => v as String),
@@ -121,9 +107,4 @@ _$MerchantBestSellers200ResponseDataInnerMerchantFromJson(
 
 Map<String, dynamic> _$MerchantBestSellers200ResponseDataInnerMerchantToJson(
   MerchantBestSellers200ResponseDataInnerMerchant instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'image': ?instance.image,
-  'rating': instance.rating,
-};
+) => <String, dynamic>{'id': instance.id, 'name': instance.name, 'image': ?instance.image, 'rating': instance.rating};

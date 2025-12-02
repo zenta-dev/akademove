@@ -9,54 +9,48 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_analytics200_response_data_top_selling_items_inner.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class MerchantAnalytics200ResponseDataTopSellingItemsInner {
   /// Returns a new [MerchantAnalytics200ResponseDataTopSellingItemsInner] instance.
   const MerchantAnalytics200ResponseDataTopSellingItemsInner({
     required this.menuId,
     required this.menuName,
-     this.menuImage,
+    this.menuImage,
     required this.totalOrders,
     required this.totalRevenue,
   });
 
   @JsonKey(name: r'menuId', required: true, includeIfNull: false)
   final String menuId;
-  
+
   @JsonKey(name: r'menuName', required: true, includeIfNull: false)
   final String menuName;
-  
+
   @JsonKey(name: r'menuImage', required: false, includeIfNull: false)
   final String? menuImage;
-  
+
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
-  
+
   @JsonKey(name: r'totalRevenue', required: true, includeIfNull: false)
   final num totalRevenue;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantAnalytics200ResponseDataTopSellingItemsInner &&
-    other.menuId == menuId &&
-    other.menuName == menuName &&
-    other.menuImage == menuImage &&
-    other.totalOrders == totalOrders &&
-    other.totalRevenue == totalRevenue;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantAnalytics200ResponseDataTopSellingItemsInner &&
+          other.menuId == menuId &&
+          other.menuName == menuName &&
+          other.menuImage == menuImage &&
+          other.totalOrders == totalOrders &&
+          other.totalRevenue == totalRevenue;
 
   @override
   int get hashCode =>
-      menuId.hashCode +
-      menuName.hashCode +
-      menuImage.hashCode +
-      totalOrders.hashCode +
-      totalRevenue.hashCode;
+      menuId.hashCode + menuName.hashCode + menuImage.hashCode + totalOrders.hashCode + totalRevenue.hashCode;
 
-  factory MerchantAnalytics200ResponseDataTopSellingItemsInner.fromJson(Map<String, dynamic> json) => _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(json);
+  factory MerchantAnalytics200ResponseDataTopSellingItemsInner.fromJson(Map<String, dynamic> json) =>
+      _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseDataTopSellingItemsInnerToJson(this);
 
@@ -64,6 +58,4 @@ class MerchantAnalytics200ResponseDataTopSellingItemsInner {
   String toString() {
     return toJson().toString();
   }
-
 }
-

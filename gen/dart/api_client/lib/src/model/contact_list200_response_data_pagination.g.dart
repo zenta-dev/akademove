@@ -21,15 +21,13 @@ abstract class _$ContactList200ResponseDataPaginationCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfContactList200ResponseDataPagination.copyWith(...)` or call `instanceOfContactList200ResponseDataPagination.copyWith.fieldName(value)` for a single field.
-class _$ContactList200ResponseDataPaginationCWProxyImpl
-    implements _$ContactList200ResponseDataPaginationCWProxy {
+class _$ContactList200ResponseDataPaginationCWProxyImpl implements _$ContactList200ResponseDataPaginationCWProxy {
   const _$ContactList200ResponseDataPaginationCWProxyImpl(this._value);
 
   final ContactList200ResponseDataPagination _value;
 
   @override
-  ContactList200ResponseDataPagination totalPages(int totalPages) =>
-      call(totalPages: totalPages);
+  ContactList200ResponseDataPagination totalPages(int totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -39,12 +37,9 @@ class _$ContactList200ResponseDataPaginationCWProxyImpl
   /// ```dart
   /// ContactList200ResponseDataPagination(...).copyWith(id: 12, name: "My name")
   /// ```
-  ContactList200ResponseDataPagination call({
-    Object? totalPages = const $CopyWithPlaceholder(),
-  }) {
+  ContactList200ResponseDataPagination call({Object? totalPages = const $CopyWithPlaceholder()}) {
     return ContactList200ResponseDataPagination(
-      totalPages:
-          totalPages == const $CopyWithPlaceholder() || totalPages == null
+      totalPages: totalPages == const $CopyWithPlaceholder() || totalPages == null
           ? _value.totalPages
           // ignore: cast_nullable_to_non_nullable
           : totalPages as int,
@@ -52,24 +47,19 @@ class _$ContactList200ResponseDataPaginationCWProxyImpl
   }
 }
 
-extension $ContactList200ResponseDataPaginationCopyWith
-    on ContactList200ResponseDataPagination {
+extension $ContactList200ResponseDataPaginationCopyWith on ContactList200ResponseDataPagination {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfContactList200ResponseDataPagination.copyWith(...)` or `instanceOfContactList200ResponseDataPagination.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ContactList200ResponseDataPaginationCWProxy get copyWith =>
-      _$ContactList200ResponseDataPaginationCWProxyImpl(this);
+  _$ContactList200ResponseDataPaginationCWProxy get copyWith => _$ContactList200ResponseDataPaginationCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ContactList200ResponseDataPagination
-_$ContactList200ResponseDataPaginationFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('ContactList200ResponseDataPagination', json, (
-      $checkedConvert,
-    ) {
+ContactList200ResponseDataPagination _$ContactList200ResponseDataPaginationFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ContactList200ResponseDataPagination', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['totalPages']);
       final val = ContactList200ResponseDataPagination(
         totalPages: $checkedConvert('totalPages', (v) => (v as num).toInt()),
@@ -77,6 +67,5 @@ _$ContactList200ResponseDataPaginationFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$ContactList200ResponseDataPaginationToJson(
-  ContactList200ResponseDataPagination instance,
-) => <String, dynamic>{'totalPages': instance.totalPages};
+Map<String, dynamic> _$ContactList200ResponseDataPaginationToJson(ContactList200ResponseDataPagination instance) =>
+    <String, dynamic>{'totalPages': instance.totalPages};

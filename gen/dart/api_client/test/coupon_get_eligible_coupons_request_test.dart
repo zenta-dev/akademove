@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for CouponGetEligibleCouponsRequest
 void main() {
-  final CouponGetEligibleCouponsRequest?
-  instance = /* CouponGetEligibleCouponsRequest(...) */ null;
+  final CouponGetEligibleCouponsRequest? instance = /* CouponGetEligibleCouponsRequest(...) */ null;
   // TODO add properties to the entity
 
   group(CouponGetEligibleCouponsRequest, () {

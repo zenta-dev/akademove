@@ -20,11 +20,7 @@ abstract class _$PlaceOrderPaymentCWProxy {
   /// ```dart
   /// PlaceOrderPayment(...).copyWith(id: 12, name: "My name")
   /// ```
-  PlaceOrderPayment call({
-    PaymentMethod method,
-    PaymentProvider provider,
-    BankProvider? bankProvider,
-  });
+  PlaceOrderPayment call({PaymentMethod method, PaymentProvider provider, BankProvider? bankProvider});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -38,12 +34,10 @@ class _$PlaceOrderPaymentCWProxyImpl implements _$PlaceOrderPaymentCWProxy {
   PlaceOrderPayment method(PaymentMethod method) => call(method: method);
 
   @override
-  PlaceOrderPayment provider(PaymentProvider provider) =>
-      call(provider: provider);
+  PlaceOrderPayment provider(PaymentProvider provider) => call(provider: provider);
 
   @override
-  PlaceOrderPayment bankProvider(BankProvider? bankProvider) =>
-      call(bankProvider: bankProvider);
+  PlaceOrderPayment bankProvider(BankProvider? bankProvider) => call(bankProvider: bankProvider);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -79,8 +73,7 @@ extension $PlaceOrderPaymentCopyWith on PlaceOrderPayment {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfPlaceOrderPayment.copyWith(...)` or `instanceOfPlaceOrderPayment.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$PlaceOrderPaymentCWProxy get copyWith =>
-      _$PlaceOrderPaymentCWProxyImpl(this);
+  _$PlaceOrderPaymentCWProxy get copyWith => _$PlaceOrderPaymentCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -91,28 +84,18 @@ PlaceOrderPayment _$PlaceOrderPaymentFromJson(Map<String, dynamic> json) =>
     $checkedCreate('PlaceOrderPayment', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['method', 'provider']);
       final val = PlaceOrderPayment(
-        method: $checkedConvert(
-          'method',
-          (v) => $enumDecode(_$PaymentMethodEnumMap, v),
-        ),
-        provider: $checkedConvert(
-          'provider',
-          (v) => $enumDecode(_$PaymentProviderEnumMap, v),
-        ),
-        bankProvider: $checkedConvert(
-          'bankProvider',
-          (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
-        ),
+        method: $checkedConvert('method', (v) => $enumDecode(_$PaymentMethodEnumMap, v)),
+        provider: $checkedConvert('provider', (v) => $enumDecode(_$PaymentProviderEnumMap, v)),
+        bankProvider: $checkedConvert('bankProvider', (v) => $enumDecodeNullable(_$BankProviderEnumMap, v)),
       );
       return val;
     });
 
-Map<String, dynamic> _$PlaceOrderPaymentToJson(PlaceOrderPayment instance) =>
-    <String, dynamic>{
-      'method': _$PaymentMethodEnumMap[instance.method]!,
-      'provider': _$PaymentProviderEnumMap[instance.provider]!,
-      'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
-    };
+Map<String, dynamic> _$PlaceOrderPaymentToJson(PlaceOrderPayment instance) => <String, dynamic>{
+  'method': _$PaymentMethodEnumMap[instance.method]!,
+  'provider': _$PaymentProviderEnumMap[instance.provider]!,
+  'bankProvider': ?_$BankProviderEnumMap[instance.bankProvider],
+};
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',
@@ -120,10 +103,7 @@ const _$PaymentMethodEnumMap = {
   PaymentMethod.WALLET: 'WALLET',
 };
 
-const _$PaymentProviderEnumMap = {
-  PaymentProvider.MIDTRANS: 'MIDTRANS',
-  PaymentProvider.MANUAL: 'MANUAL',
-};
+const _$PaymentProviderEnumMap = {PaymentProvider.MIDTRANS: 'MIDTRANS', PaymentProvider.MANUAL: 'MANUAL'};
 
 const _$BankProviderEnumMap = {
   BankProvider.BCA: 'BCA',

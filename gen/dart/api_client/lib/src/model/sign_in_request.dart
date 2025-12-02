@@ -9,34 +9,23 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'sign_in_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class SignInRequest {
   /// Returns a new [SignInRequest] instance.
-  const SignInRequest({
-    required this.email,
-    required this.password,
-  });
+  const SignInRequest({required this.email, required this.password});
 
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
-  
+
   @JsonKey(name: r'password', required: true, includeIfNull: false)
   final String password;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is SignInRequest &&
-    other.email == email &&
-    other.password == password;
 
   @override
-  int get hashCode =>
-      email.hashCode +
-      password.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is SignInRequest && other.email == email && other.password == password;
+
+  @override
+  int get hashCode => email.hashCode + password.hashCode;
 
   factory SignInRequest.fromJson(Map<String, dynamic> json) => _$SignInRequestFromJson(json);
 
@@ -46,6 +35,4 @@ class SignInRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

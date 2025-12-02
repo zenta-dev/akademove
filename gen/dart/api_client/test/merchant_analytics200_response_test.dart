@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for MerchantAnalytics200Response
 void main() {
-  final MerchantAnalytics200Response?
-  instance = /* MerchantAnalytics200Response(...) */ null;
+  final MerchantAnalytics200Response? instance = /* MerchantAnalytics200Response(...) */ null;
   // TODO add properties to the entity
 
   group(MerchantAnalytics200Response, () {

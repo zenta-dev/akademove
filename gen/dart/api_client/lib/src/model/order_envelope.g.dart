@@ -121,37 +121,24 @@ OrderEnvelope _$OrderEnvelopeFromJson(Map<String, dynamic> json) =>
     $checkedCreate('OrderEnvelope', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['f', 't', 'p']);
       final val = OrderEnvelope(
-        e: $checkedConvert(
-          'e',
-          (v) => $enumDecodeNullable(_$OrderEnvelopeEventEnumMap, v),
-        ),
-        a: $checkedConvert(
-          'a',
-          (v) => $enumDecodeNullable(_$OrderEnvelopeActionEnumMap, v),
-        ),
-        tg: $checkedConvert(
-          'tg',
-          (v) => $enumDecodeNullable(_$EnvelopeTargetEnumMap, v),
-        ),
+        e: $checkedConvert('e', (v) => $enumDecodeNullable(_$OrderEnvelopeEventEnumMap, v)),
+        a: $checkedConvert('a', (v) => $enumDecodeNullable(_$OrderEnvelopeActionEnumMap, v)),
+        tg: $checkedConvert('tg', (v) => $enumDecodeNullable(_$EnvelopeTargetEnumMap, v)),
         f: $checkedConvert('f', (v) => $enumDecode(_$EnvelopeSenderEnumMap, v)),
         t: $checkedConvert('t', (v) => $enumDecode(_$EnvelopeSenderEnumMap, v)),
-        p: $checkedConvert(
-          'p',
-          (v) => OrderEnvelopePayload.fromJson(v as Map<String, dynamic>),
-        ),
+        p: $checkedConvert('p', (v) => OrderEnvelopePayload.fromJson(v as Map<String, dynamic>)),
       );
       return val;
     });
 
-Map<String, dynamic> _$OrderEnvelopeToJson(OrderEnvelope instance) =>
-    <String, dynamic>{
-      'e': ?_$OrderEnvelopeEventEnumMap[instance.e],
-      'a': ?_$OrderEnvelopeActionEnumMap[instance.a],
-      'tg': ?_$EnvelopeTargetEnumMap[instance.tg],
-      'f': _$EnvelopeSenderEnumMap[instance.f]!,
-      't': _$EnvelopeSenderEnumMap[instance.t]!,
-      'p': instance.p.toJson(),
-    };
+Map<String, dynamic> _$OrderEnvelopeToJson(OrderEnvelope instance) => <String, dynamic>{
+  'e': ?_$OrderEnvelopeEventEnumMap[instance.e],
+  'a': ?_$OrderEnvelopeActionEnumMap[instance.a],
+  'tg': ?_$EnvelopeTargetEnumMap[instance.tg],
+  'f': _$EnvelopeSenderEnumMap[instance.f]!,
+  't': _$EnvelopeSenderEnumMap[instance.t]!,
+  'p': instance.p.toJson(),
+};
 
 const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.CANCELED: 'CANCELED',

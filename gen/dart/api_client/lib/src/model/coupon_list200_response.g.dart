@@ -22,18 +22,12 @@ abstract class _$CouponList200ResponseCWProxy {
   /// ```dart
   /// CouponList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  CouponList200Response call({
-    String message,
-    List<Coupon> data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  CouponList200Response call({String message, List<Coupon> data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponList200Response.copyWith(...)` or call `instanceOfCouponList200Response.copyWith.fieldName(value)` for a single field.
-class _$CouponList200ResponseCWProxyImpl
-    implements _$CouponList200ResponseCWProxy {
+class _$CouponList200ResponseCWProxyImpl implements _$CouponList200ResponseCWProxy {
   const _$CouponList200ResponseCWProxyImpl(this._value);
 
   final CouponList200Response _value;
@@ -45,12 +39,10 @@ class _$CouponList200ResponseCWProxyImpl
   CouponList200Response data(List<Coupon> data) => call(data: data);
 
   @override
-  CouponList200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  CouponList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  CouponList200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  CouponList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,40 +83,32 @@ extension $CouponList200ResponseCopyWith on CouponList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponList200Response.copyWith(...)` or `instanceOfCouponList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$CouponList200ResponseCWProxy get copyWith =>
-      _$CouponList200ResponseCWProxyImpl(this);
+  _$CouponList200ResponseCWProxy get copyWith => _$CouponList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponList200Response _$CouponList200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('CouponList200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = CouponList200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => (v as List<dynamic>)
-          .map((e) => Coupon.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+CouponList200Response _$CouponList200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('CouponList200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = CouponList200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert(
+          'data',
+          (v) => (v as List<dynamic>).map((e) => Coupon.fromJson(e as Map<String, dynamic>)).toList(),
+        ),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$CouponList200ResponseToJson(
-  CouponList200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$CouponList200ResponseToJson(CouponList200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

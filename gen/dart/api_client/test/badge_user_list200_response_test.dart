@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for BadgeUserList200Response
 void main() {
-  final BadgeUserList200Response? instance = /* BadgeUserList200Response(...) */
-      null;
+  final BadgeUserList200Response? instance = /* BadgeUserList200Response(...) */ null;
   // TODO add properties to the entity
 
   group(BadgeUserList200Response, () {

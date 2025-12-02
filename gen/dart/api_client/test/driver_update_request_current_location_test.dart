@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverUpdateRequestCurrentLocation
 void main() {
-  final DriverUpdateRequestCurrentLocation?
-  instance = /* DriverUpdateRequestCurrentLocation(...) */ null;
+  final DriverUpdateRequestCurrentLocation? instance = /* DriverUpdateRequestCurrentLocation(...) */ null;
   // TODO add properties to the entity
 
   group(DriverUpdateRequestCurrentLocation, () {

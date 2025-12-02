@@ -100,8 +100,7 @@ class _$ReviewCWProxyImpl implements _$ReviewCWProxy {
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String,
-      fromUserId:
-          fromUserId == const $CopyWithPlaceholder() || fromUserId == null
+      fromUserId: fromUserId == const $CopyWithPlaceholder() || fromUserId == null
           ? _value.fromUserId
           // ignore: cast_nullable_to_non_nullable
           : fromUserId as String,
@@ -140,38 +139,20 @@ extension $ReviewCopyWith on Review {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Review _$ReviewFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Review', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'orderId',
-          'fromUserId',
-          'toUserId',
-          'category',
-          'score',
-          'createdAt',
-        ],
-      );
-      final val = Review(
-        id: $checkedConvert('id', (v) => v as String),
-        orderId: $checkedConvert('orderId', (v) => v as String),
-        fromUserId: $checkedConvert('fromUserId', (v) => v as String),
-        toUserId: $checkedConvert('toUserId', (v) => v as String),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$ReviewCategoryEnumMap, v),
-        ),
-        score: $checkedConvert('score', (v) => v as num),
-        comment: $checkedConvert('comment', (v) => v as String? ?? ''),
-        createdAt: $checkedConvert(
-          'createdAt',
-          (v) => DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    });
+Review _$ReviewFromJson(Map<String, dynamic> json) => $checkedCreate('Review', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id', 'orderId', 'fromUserId', 'toUserId', 'category', 'score', 'createdAt']);
+  final val = Review(
+    id: $checkedConvert('id', (v) => v as String),
+    orderId: $checkedConvert('orderId', (v) => v as String),
+    fromUserId: $checkedConvert('fromUserId', (v) => v as String),
+    toUserId: $checkedConvert('toUserId', (v) => v as String),
+    category: $checkedConvert('category', (v) => $enumDecode(_$ReviewCategoryEnumMap, v)),
+    score: $checkedConvert('score', (v) => v as num),
+    comment: $checkedConvert('comment', (v) => v as String? ?? ''),
+    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{
   'id': instance.id,

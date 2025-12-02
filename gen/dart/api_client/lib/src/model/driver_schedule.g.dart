@@ -77,12 +77,10 @@ class _$DriverScheduleCWProxyImpl implements _$DriverScheduleCWProxy {
   DriverSchedule endTime(Time endTime) => call(endTime: endTime);
 
   @override
-  DriverSchedule isRecurring(bool? isRecurring) =>
-      call(isRecurring: isRecurring);
+  DriverSchedule isRecurring(bool? isRecurring) => call(isRecurring: isRecurring);
 
   @override
-  DriverSchedule specificDate(DateTime? specificDate) =>
-      call(specificDate: specificDate);
+  DriverSchedule specificDate(DateTime? specificDate) => call(specificDate: specificDate);
 
   @override
   DriverSchedule isActive(bool? isActive) => call(isActive: isActive);
@@ -174,64 +172,41 @@ extension $DriverScheduleCopyWith on DriverSchedule {
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverSchedule _$DriverScheduleFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('DriverSchedule', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'name',
-      'driverId',
-      'dayOfWeek',
-      'startTime',
-      'endTime',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
-  final val = DriverSchedule(
-    id: $checkedConvert('id', (v) => v as String),
-    name: $checkedConvert('name', (v) => v as String),
-    driverId: $checkedConvert('driverId', (v) => v as String),
-    dayOfWeek: $checkedConvert(
-      'dayOfWeek',
-      (v) => $enumDecode(_$DayOfWeekEnumMap, v),
-    ),
-    startTime: $checkedConvert(
-      'startTime',
-      (v) => Time.fromJson(v as Map<String, dynamic>),
-    ),
-    endTime: $checkedConvert(
-      'endTime',
-      (v) => Time.fromJson(v as Map<String, dynamic>),
-    ),
-    isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
-    specificDate: $checkedConvert(
-      'specificDate',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
-    createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
-    updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
-  );
-  return val;
-});
+DriverSchedule _$DriverScheduleFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DriverSchedule', json, ($checkedConvert) {
+      $checkKeys(
+        json,
+        requiredKeys: const ['id', 'name', 'driverId', 'dayOfWeek', 'startTime', 'endTime', 'createdAt', 'updatedAt'],
+      );
+      final val = DriverSchedule(
+        id: $checkedConvert('id', (v) => v as String),
+        name: $checkedConvert('name', (v) => v as String),
+        driverId: $checkedConvert('driverId', (v) => v as String),
+        dayOfWeek: $checkedConvert('dayOfWeek', (v) => $enumDecode(_$DayOfWeekEnumMap, v)),
+        startTime: $checkedConvert('startTime', (v) => Time.fromJson(v as Map<String, dynamic>)),
+        endTime: $checkedConvert('endTime', (v) => Time.fromJson(v as Map<String, dynamic>)),
+        isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
+        specificDate: $checkedConvert('specificDate', (v) => v == null ? null : DateTime.parse(v as String)),
+        isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
+        createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+        updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DriverScheduleToJson(DriverSchedule instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'driverId': instance.driverId,
-      'dayOfWeek': _$DayOfWeekEnumMap[instance.dayOfWeek]!,
-      'startTime': instance.startTime.toJson(),
-      'endTime': instance.endTime.toJson(),
-      'isRecurring': ?instance.isRecurring,
-      'specificDate': ?instance.specificDate?.toIso8601String(),
-      'isActive': ?instance.isActive,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
-    };
+Map<String, dynamic> _$DriverScheduleToJson(DriverSchedule instance) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'driverId': instance.driverId,
+  'dayOfWeek': _$DayOfWeekEnumMap[instance.dayOfWeek]!,
+  'startTime': instance.startTime.toJson(),
+  'endTime': instance.endTime.toJson(),
+  'isRecurring': ?instance.isRecurring,
+  'specificDate': ?instance.specificDate?.toIso8601String(),
+  'isActive': ?instance.isActive,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'updatedAt': instance.updatedAt.toIso8601String(),
+};
 
 const _$DayOfWeekEnumMap = {
   DayOfWeek.SUNDAY: 'SUNDAY',

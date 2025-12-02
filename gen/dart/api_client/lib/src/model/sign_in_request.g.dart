@@ -42,10 +42,7 @@ class _$SignInRequestCWProxyImpl implements _$SignInRequestCWProxy {
   /// ```dart
   /// SignInRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  SignInRequest call({
-    Object? email = const $CopyWithPlaceholder(),
-    Object? password = const $CopyWithPlaceholder(),
-  }) {
+  SignInRequest call({Object? email = const $CopyWithPlaceholder(), Object? password = const $CopyWithPlaceholder()}) {
     return SignInRequest(
       email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
@@ -80,5 +77,7 @@ SignInRequest _$SignInRequestFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$SignInRequestToJson(SignInRequest instance) =>
-    <String, dynamic>{'email': instance.email, 'password': instance.password};
+Map<String, dynamic> _$SignInRequestToJson(SignInRequest instance) => <String, dynamic>{
+  'email': instance.email,
+  'password': instance.password,
+};

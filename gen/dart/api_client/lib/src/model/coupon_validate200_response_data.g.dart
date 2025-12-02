@@ -24,19 +24,12 @@ abstract class _$CouponValidate200ResponseDataCWProxy {
   /// ```dart
   /// CouponValidate200ResponseData(...).copyWith(id: 12, name: "My name")
   /// ```
-  CouponValidate200ResponseData call({
-    bool valid,
-    Coupon? coupon,
-    num discountAmount,
-    num finalAmount,
-    String? reason,
-  });
+  CouponValidate200ResponseData call({bool valid, Coupon? coupon, num discountAmount, num finalAmount, String? reason});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponValidate200ResponseData.copyWith(...)` or call `instanceOfCouponValidate200ResponseData.copyWith.fieldName(value)` for a single field.
-class _$CouponValidate200ResponseDataCWProxyImpl
-    implements _$CouponValidate200ResponseDataCWProxy {
+class _$CouponValidate200ResponseDataCWProxyImpl implements _$CouponValidate200ResponseDataCWProxy {
   const _$CouponValidate200ResponseDataCWProxyImpl(this._value);
 
   final CouponValidate200ResponseData _value;
@@ -48,12 +41,10 @@ class _$CouponValidate200ResponseDataCWProxyImpl
   CouponValidate200ResponseData coupon(Coupon? coupon) => call(coupon: coupon);
 
   @override
-  CouponValidate200ResponseData discountAmount(num discountAmount) =>
-      call(discountAmount: discountAmount);
+  CouponValidate200ResponseData discountAmount(num discountAmount) => call(discountAmount: discountAmount);
 
   @override
-  CouponValidate200ResponseData finalAmount(num finalAmount) =>
-      call(finalAmount: finalAmount);
+  CouponValidate200ResponseData finalAmount(num finalAmount) => call(finalAmount: finalAmount);
 
   @override
   CouponValidate200ResponseData reason(String? reason) => call(reason: reason);
@@ -82,14 +73,11 @@ class _$CouponValidate200ResponseDataCWProxyImpl
           ? _value.coupon
           // ignore: cast_nullable_to_non_nullable
           : coupon as Coupon?,
-      discountAmount:
-          discountAmount == const $CopyWithPlaceholder() ||
-              discountAmount == null
+      discountAmount: discountAmount == const $CopyWithPlaceholder() || discountAmount == null
           ? _value.discountAmount
           // ignore: cast_nullable_to_non_nullable
           : discountAmount as num,
-      finalAmount:
-          finalAmount == const $CopyWithPlaceholder() || finalAmount == null
+      finalAmount: finalAmount == const $CopyWithPlaceholder() || finalAmount == null
           ? _value.finalAmount
           // ignore: cast_nullable_to_non_nullable
           : finalAmount as num,
@@ -101,42 +89,31 @@ class _$CouponValidate200ResponseDataCWProxyImpl
   }
 }
 
-extension $CouponValidate200ResponseDataCopyWith
-    on CouponValidate200ResponseData {
+extension $CouponValidate200ResponseDataCopyWith on CouponValidate200ResponseData {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponValidate200ResponseData.copyWith(...)` or `instanceOfCouponValidate200ResponseData.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$CouponValidate200ResponseDataCWProxy get copyWith =>
-      _$CouponValidate200ResponseDataCWProxyImpl(this);
+  _$CouponValidate200ResponseDataCWProxy get copyWith => _$CouponValidate200ResponseDataCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponValidate200ResponseData _$CouponValidate200ResponseDataFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('CouponValidate200ResponseData', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const ['valid', 'discountAmount', 'finalAmount'],
-  );
-  final val = CouponValidate200ResponseData(
-    valid: $checkedConvert('valid', (v) => v as bool),
-    coupon: $checkedConvert(
-      'coupon',
-      (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>),
-    ),
-    discountAmount: $checkedConvert('discountAmount', (v) => v as num),
-    finalAmount: $checkedConvert('finalAmount', (v) => v as num),
-    reason: $checkedConvert('reason', (v) => v as String?),
-  );
-  return val;
-});
+CouponValidate200ResponseData _$CouponValidate200ResponseDataFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('CouponValidate200ResponseData', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['valid', 'discountAmount', 'finalAmount']);
+      final val = CouponValidate200ResponseData(
+        valid: $checkedConvert('valid', (v) => v as bool),
+        coupon: $checkedConvert('coupon', (v) => v == null ? null : Coupon.fromJson(v as Map<String, dynamic>)),
+        discountAmount: $checkedConvert('discountAmount', (v) => v as num),
+        finalAmount: $checkedConvert('finalAmount', (v) => v as num),
+        reason: $checkedConvert('reason', (v) => v as String?),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$CouponValidate200ResponseDataToJson(
-  CouponValidate200ResponseData instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$CouponValidate200ResponseDataToJson(CouponValidate200ResponseData instance) => <String, dynamic>{
   'valid': instance.valid,
   'coupon': ?instance.coupon?.toJson(),
   'discountAmount': instance.discountAmount,

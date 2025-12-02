@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for CommissionConfiguration
 void main() {
-  final CommissionConfiguration? instance = /* CommissionConfiguration(...) */
-      null;
+  final CommissionConfiguration? instance = /* CommissionConfiguration(...) */ null;
   // TODO add properties to the entity
 
   group(CommissionConfiguration, () {

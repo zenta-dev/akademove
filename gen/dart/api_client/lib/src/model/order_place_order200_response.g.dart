@@ -32,8 +32,7 @@ abstract class _$OrderPlaceOrder200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderPlaceOrder200Response.copyWith(...)` or call `instanceOfOrderPlaceOrder200Response.copyWith.fieldName(value)` for a single field.
-class _$OrderPlaceOrder200ResponseCWProxyImpl
-    implements _$OrderPlaceOrder200ResponseCWProxy {
+class _$OrderPlaceOrder200ResponseCWProxyImpl implements _$OrderPlaceOrder200ResponseCWProxy {
   const _$OrderPlaceOrder200ResponseCWProxyImpl(this._value);
 
   final OrderPlaceOrder200Response _value;
@@ -45,12 +44,10 @@ class _$OrderPlaceOrder200ResponseCWProxyImpl
   OrderPlaceOrder200Response data(PlaceOrderResponse data) => call(data: data);
 
   @override
-  OrderPlaceOrder200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  OrderPlaceOrder200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  OrderPlaceOrder200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  OrderPlaceOrder200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +88,29 @@ extension $OrderPlaceOrder200ResponseCopyWith on OrderPlaceOrder200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderPlaceOrder200Response.copyWith(...)` or `instanceOfOrderPlaceOrder200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderPlaceOrder200ResponseCWProxy get copyWith =>
-      _$OrderPlaceOrder200ResponseCWProxyImpl(this);
+  _$OrderPlaceOrder200ResponseCWProxy get copyWith => _$OrderPlaceOrder200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderPlaceOrder200Response _$OrderPlaceOrder200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('OrderPlaceOrder200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = OrderPlaceOrder200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => PlaceOrderResponse.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+OrderPlaceOrder200Response _$OrderPlaceOrder200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderPlaceOrder200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = OrderPlaceOrder200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => PlaceOrderResponse.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$OrderPlaceOrder200ResponseToJson(
-  OrderPlaceOrder200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$OrderPlaceOrder200ResponseToJson(OrderPlaceOrder200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

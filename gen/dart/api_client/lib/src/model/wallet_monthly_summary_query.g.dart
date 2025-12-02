@@ -23,8 +23,7 @@ abstract class _$WalletMonthlySummaryQueryCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfWalletMonthlySummaryQuery.copyWith(...)` or call `instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(value)` for a single field.
-class _$WalletMonthlySummaryQueryCWProxyImpl
-    implements _$WalletMonthlySummaryQueryCWProxy {
+class _$WalletMonthlySummaryQueryCWProxyImpl implements _$WalletMonthlySummaryQueryCWProxy {
   const _$WalletMonthlySummaryQueryCWProxyImpl(this._value);
 
   final WalletMonthlySummaryQuery _value;
@@ -64,25 +63,24 @@ extension $WalletMonthlySummaryQueryCopyWith on WalletMonthlySummaryQuery {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfWalletMonthlySummaryQuery.copyWith(...)` or `instanceOfWalletMonthlySummaryQuery.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$WalletMonthlySummaryQueryCWProxy get copyWith =>
-      _$WalletMonthlySummaryQueryCWProxyImpl(this);
+  _$WalletMonthlySummaryQueryCWProxy get copyWith => _$WalletMonthlySummaryQueryCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WalletMonthlySummaryQuery _$WalletMonthlySummaryQueryFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('WalletMonthlySummaryQuery', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['year', 'month']);
-  final val = WalletMonthlySummaryQuery(
-    year: $checkedConvert('year', (v) => v as num),
-    month: $checkedConvert('month', (v) => v as num),
-  );
-  return val;
-});
+WalletMonthlySummaryQuery _$WalletMonthlySummaryQueryFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('WalletMonthlySummaryQuery', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['year', 'month']);
+      final val = WalletMonthlySummaryQuery(
+        year: $checkedConvert('year', (v) => v as num),
+        month: $checkedConvert('month', (v) => v as num),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$WalletMonthlySummaryQueryToJson(
-  WalletMonthlySummaryQuery instance,
-) => <String, dynamic>{'year': instance.year, 'month': instance.month};
+Map<String, dynamic> _$WalletMonthlySummaryQueryToJson(WalletMonthlySummaryQuery instance) => <String, dynamic>{
+  'year': instance.year,
+  'month': instance.month,
+};

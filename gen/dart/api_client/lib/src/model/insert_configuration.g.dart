@@ -37,8 +37,7 @@ class _$InsertConfigurationCWProxyImpl implements _$InsertConfigurationCWProxy {
   InsertConfiguration value(Object? value) => call(value: value);
 
   @override
-  InsertConfiguration description(String? description) =>
-      call(description: description);
+  InsertConfiguration description(String? description) => call(description: description);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -74,8 +73,7 @@ extension $InsertConfigurationCopyWith on InsertConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfInsertConfiguration.copyWith(...)` or `instanceOfInsertConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$InsertConfigurationCWProxy get copyWith =>
-      _$InsertConfigurationCWProxyImpl(this);
+  _$InsertConfigurationCWProxy get copyWith => _$InsertConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -93,9 +91,7 @@ InsertConfiguration _$InsertConfigurationFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$InsertConfigurationToJson(
-  InsertConfiguration instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$InsertConfigurationToJson(InsertConfiguration instance) => <String, dynamic>{
   'name': instance.name,
   'value': ?instance.value,
   'description': ?instance.description,

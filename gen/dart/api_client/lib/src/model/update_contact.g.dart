@@ -68,8 +68,7 @@ class _$UpdateContactCWProxyImpl implements _$UpdateContactCWProxy {
   UpdateContact userId(String? userId) => call(userId: userId);
 
   @override
-  UpdateContact respondedById(String? respondedById) =>
-      call(respondedById: respondedById);
+  UpdateContact respondedById(String? respondedById) => call(respondedById: respondedById);
 
   @override
   UpdateContact response(String? response) => call(response: response);
@@ -147,10 +146,7 @@ UpdateContact _$UpdateContactFromJson(Map<String, dynamic> json) =>
         email: $checkedConvert('email', (v) => v as String?),
         subject: $checkedConvert('subject', (v) => v as String?),
         message: $checkedConvert('message', (v) => v as String?),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecodeNullable(_$ContactStatusEnumMap, v),
-        ),
+        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$ContactStatusEnumMap, v)),
         userId: $checkedConvert('userId', (v) => v as String?),
         respondedById: $checkedConvert('respondedById', (v) => v as String?),
         response: $checkedConvert('response', (v) => v as String?),
@@ -158,17 +154,16 @@ UpdateContact _$UpdateContactFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$UpdateContactToJson(UpdateContact instance) =>
-    <String, dynamic>{
-      'name': ?instance.name,
-      'email': ?instance.email,
-      'subject': ?instance.subject,
-      'message': ?instance.message,
-      'status': ?_$ContactStatusEnumMap[instance.status],
-      'userId': ?instance.userId,
-      'respondedById': ?instance.respondedById,
-      'response': ?instance.response,
-    };
+Map<String, dynamic> _$UpdateContactToJson(UpdateContact instance) => <String, dynamic>{
+  'name': ?instance.name,
+  'email': ?instance.email,
+  'subject': ?instance.subject,
+  'message': ?instance.message,
+  'status': ?_$ContactStatusEnumMap[instance.status],
+  'userId': ?instance.userId,
+  'respondedById': ?instance.respondedById,
+  'response': ?instance.response,
+};
 
 const _$ContactStatusEnumMap = {
   ContactStatus.PENDING: 'PENDING',

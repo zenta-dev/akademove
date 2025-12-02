@@ -9,13 +9,9 @@ part of 'notification_subscribe_to_topic200_response.dart';
 abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
   NotificationSubscribeToTopic200Response message(String message);
 
-  NotificationSubscribeToTopic200Response data(
-    NotificationSubscribeToTopic200ResponseData data,
-  );
+  NotificationSubscribeToTopic200Response data(NotificationSubscribeToTopic200ResponseData data);
 
-  NotificationSubscribeToTopic200Response pagination(
-    PaginationResult? pagination,
-  );
+  NotificationSubscribeToTopic200Response pagination(PaginationResult? pagination);
 
   NotificationSubscribeToTopic200Response totalPages(int? totalPages);
 
@@ -36,29 +32,22 @@ abstract class _$NotificationSubscribeToTopic200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)` or call `instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(value)` for a single field.
-class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
-    implements _$NotificationSubscribeToTopic200ResponseCWProxy {
+class _$NotificationSubscribeToTopic200ResponseCWProxyImpl implements _$NotificationSubscribeToTopic200ResponseCWProxy {
   const _$NotificationSubscribeToTopic200ResponseCWProxyImpl(this._value);
 
   final NotificationSubscribeToTopic200Response _value;
 
   @override
-  NotificationSubscribeToTopic200Response message(String message) =>
-      call(message: message);
+  NotificationSubscribeToTopic200Response message(String message) => call(message: message);
 
   @override
-  NotificationSubscribeToTopic200Response data(
-    NotificationSubscribeToTopic200ResponseData data,
-  ) => call(data: data);
+  NotificationSubscribeToTopic200Response data(NotificationSubscribeToTopic200ResponseData data) => call(data: data);
 
   @override
-  NotificationSubscribeToTopic200Response pagination(
-    PaginationResult? pagination,
-  ) => call(pagination: pagination);
+  NotificationSubscribeToTopic200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  NotificationSubscribeToTopic200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  NotificationSubscribeToTopic200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -95,8 +84,7 @@ class _$NotificationSubscribeToTopic200ResponseCWProxyImpl
   }
 }
 
-extension $NotificationSubscribeToTopic200ResponseCopyWith
-    on NotificationSubscribeToTopic200Response {
+extension $NotificationSubscribeToTopic200ResponseCopyWith on NotificationSubscribeToTopic200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfNotificationSubscribeToTopic200Response.copyWith(...)` or `instanceOfNotificationSubscribeToTopic200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
@@ -108,25 +96,18 @@ extension $NotificationSubscribeToTopic200ResponseCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-NotificationSubscribeToTopic200Response
-_$NotificationSubscribeToTopic200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('NotificationSubscribeToTopic200Response', json, (
-      $checkedConvert,
-    ) {
+NotificationSubscribeToTopic200Response _$NotificationSubscribeToTopic200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('NotificationSubscribeToTopic200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = NotificationSubscribeToTopic200Response(
         message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
-          (v) => NotificationSubscribeToTopic200ResponseData.fromJson(
-            v as Map<String, dynamic>,
-          ),
+          (v) => NotificationSubscribeToTopic200ResponseData.fromJson(v as Map<String, dynamic>),
         ),
         pagination: $checkedConvert(
           'pagination',
-          (v) => v == null
-              ? null
-              : PaginationResult.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
         ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );

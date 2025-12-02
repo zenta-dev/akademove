@@ -12,6 +12,12 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get account_name => 'Account Name';
+
+  @override
+  String get hint_bank_account_number => 'Enter your bank account number';
+
+  @override
   String get withdraw_earnings => 'Withdraw Earnings';
 
   @override

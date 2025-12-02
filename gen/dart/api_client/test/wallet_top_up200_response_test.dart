@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for WalletTopUp200Response
 void main() {
-  final WalletTopUp200Response? instance = /* WalletTopUp200Response(...) */
-      null;
+  final WalletTopUp200Response? instance = /* WalletTopUp200Response(...) */ null;
   // TODO add properties to the entity
 
   group(WalletTopUp200Response, () {

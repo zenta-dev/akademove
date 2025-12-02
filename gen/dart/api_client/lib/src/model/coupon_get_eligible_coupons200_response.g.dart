@@ -9,9 +9,7 @@ part of 'coupon_get_eligible_coupons200_response.dart';
 abstract class _$CouponGetEligibleCoupons200ResponseCWProxy {
   CouponGetEligibleCoupons200Response message(String message);
 
-  CouponGetEligibleCoupons200Response data(
-    CouponGetEligibleCoupons200ResponseData data,
-  );
+  CouponGetEligibleCoupons200Response data(CouponGetEligibleCoupons200ResponseData data);
 
   CouponGetEligibleCoupons200Response pagination(PaginationResult? pagination);
 
@@ -34,29 +32,22 @@ abstract class _$CouponGetEligibleCoupons200ResponseCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfCouponGetEligibleCoupons200Response.copyWith(...)` or call `instanceOfCouponGetEligibleCoupons200Response.copyWith.fieldName(value)` for a single field.
-class _$CouponGetEligibleCoupons200ResponseCWProxyImpl
-    implements _$CouponGetEligibleCoupons200ResponseCWProxy {
+class _$CouponGetEligibleCoupons200ResponseCWProxyImpl implements _$CouponGetEligibleCoupons200ResponseCWProxy {
   const _$CouponGetEligibleCoupons200ResponseCWProxyImpl(this._value);
 
   final CouponGetEligibleCoupons200Response _value;
 
   @override
-  CouponGetEligibleCoupons200Response message(String message) =>
-      call(message: message);
+  CouponGetEligibleCoupons200Response message(String message) => call(message: message);
 
   @override
-  CouponGetEligibleCoupons200Response data(
-    CouponGetEligibleCoupons200ResponseData data,
-  ) => call(data: data);
+  CouponGetEligibleCoupons200Response data(CouponGetEligibleCoupons200ResponseData data) => call(data: data);
 
   @override
-  CouponGetEligibleCoupons200Response pagination(
-    PaginationResult? pagination,
-  ) => call(pagination: pagination);
+  CouponGetEligibleCoupons200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  CouponGetEligibleCoupons200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  CouponGetEligibleCoupons200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -93,49 +84,39 @@ class _$CouponGetEligibleCoupons200ResponseCWProxyImpl
   }
 }
 
-extension $CouponGetEligibleCoupons200ResponseCopyWith
-    on CouponGetEligibleCoupons200Response {
+extension $CouponGetEligibleCoupons200ResponseCopyWith on CouponGetEligibleCoupons200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfCouponGetEligibleCoupons200Response.copyWith(...)` or `instanceOfCouponGetEligibleCoupons200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$CouponGetEligibleCoupons200ResponseCWProxy get copyWith =>
-      _$CouponGetEligibleCoupons200ResponseCWProxyImpl(this);
+  _$CouponGetEligibleCoupons200ResponseCWProxy get copyWith => _$CouponGetEligibleCoupons200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CouponGetEligibleCoupons200Response
-_$CouponGetEligibleCoupons200ResponseFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('CouponGetEligibleCoupons200Response', json, (
-      $checkedConvert,
-    ) {
+CouponGetEligibleCoupons200Response _$CouponGetEligibleCoupons200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('CouponGetEligibleCoupons200Response', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['message', 'data']);
       final val = CouponGetEligibleCoupons200Response(
         message: $checkedConvert('message', (v) => v as String),
         data: $checkedConvert(
           'data',
-          (v) => CouponGetEligibleCoupons200ResponseData.fromJson(
-            v as Map<String, dynamic>,
-          ),
+          (v) => CouponGetEligibleCoupons200ResponseData.fromJson(v as Map<String, dynamic>),
         ),
         pagination: $checkedConvert(
           'pagination',
-          (v) => v == null
-              ? null
-              : PaginationResult.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
         ),
         totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
       );
       return val;
     });
 
-Map<String, dynamic> _$CouponGetEligibleCoupons200ResponseToJson(
-  CouponGetEligibleCoupons200Response instance,
-) => <String, dynamic>{
-  'message': instance.message,
-  'data': instance.data.toJson(),
-  'pagination': ?instance.pagination?.toJson(),
-  'totalPages': ?instance.totalPages,
-};
+Map<String, dynamic> _$CouponGetEligibleCoupons200ResponseToJson(CouponGetEligibleCoupons200Response instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'data': instance.data.toJson(),
+      'pagination': ?instance.pagination?.toJson(),
+      'totalPages': ?instance.totalPages,
+    };

@@ -15,16 +15,15 @@ import 'package:api_client/src/model/emergency_update_status_request.dart';
 import 'package:api_client/src/model/insert_emergency.dart';
 
 class EmergencyApi {
-
   final Dio _dio;
 
   const EmergencyApi(this._dio);
 
   /// emergencyGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -34,7 +33,7 @@ class EmergencyApi {
   ///
   /// Returns a [Future] containing a [Response] with a [EmergencyTrigger200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyTrigger200Response>> emergencyGet({ 
+  Future<Response<EmergencyTrigger200Response>> emergencyGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -43,19 +42,18 @@ class EmergencyApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/emergencies/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/emergencies/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -74,7 +72,13 @@ class EmergencyApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(rawData, 'EmergencyTrigger200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
+              rawData,
+              'EmergencyTrigger200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -98,10 +102,10 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
   }
 
   /// emergencyListByOrder
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [orderId] 
+  /// * [orderId]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -111,7 +115,7 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
   ///
   /// Returns a [Future] containing a [Response] with a [EmergencyListByOrder200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyListByOrder200Response>> emergencyListByOrder({ 
+  Future<Response<EmergencyListByOrder200Response>> emergencyListByOrder({
     required String orderId,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -120,19 +124,18 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/emergencies/order/{orderId}'.replaceAll('{' r'orderId' '}', orderId.toString());
+    final _path = r'/emergencies/order/{orderId}'.replaceAll(
+      '{'
+      r'orderId'
+      '}',
+      orderId.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -151,7 +154,13 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Response, EmergencyListByOrder200Response>(rawData, 'EmergencyListByOrder200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<EmergencyListByOrder200Response, EmergencyListByOrder200Response>(
+              rawData,
+              'EmergencyListByOrder200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -175,10 +184,10 @@ _responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Resp
   }
 
   /// emergencyTrigger
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [insertEmergency] 
+  /// * [insertEmergency]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -188,7 +197,7 @@ _responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Resp
   ///
   /// Returns a [Future] containing a [Response] with a [EmergencyTrigger200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyTrigger200Response>> emergencyTrigger({ 
+  Future<Response<EmergencyTrigger200Response>> emergencyTrigger({
     required InsertEmergency insertEmergency,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -200,16 +209,10 @@ _responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Resp
     final _path = r'/emergencies';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -220,13 +223,10 @@ _responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Resp
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(insertEmergency);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(insertEmergency);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -246,7 +246,13 @@ _responseData = rawData == null ? null : deserialize<EmergencyListByOrder200Resp
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(rawData, 'EmergencyTrigger200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
+              rawData,
+              'EmergencyTrigger200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -270,11 +276,11 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
   }
 
   /// emergencyUpdateStatus
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [emergencyUpdateStatusRequest] 
+  /// * [id]
+  /// * [emergencyUpdateStatusRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -284,7 +290,7 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
   ///
   /// Returns a [Future] containing a [Response] with a [EmergencyTrigger200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<EmergencyTrigger200Response>> emergencyUpdateStatus({ 
+  Future<Response<EmergencyTrigger200Response>> emergencyUpdateStatus({
     required String id,
     required EmergencyUpdateStatusRequest emergencyUpdateStatusRequest,
     CancelToken? cancelToken,
@@ -294,19 +300,18 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/emergencies/{id}/status'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/emergencies/{id}/status'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PATCH',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -317,13 +322,10 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(emergencyUpdateStatusRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(emergencyUpdateStatusRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -343,7 +345,13 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(rawData, 'EmergencyTrigger200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<EmergencyTrigger200Response, EmergencyTrigger200Response>(
+              rawData,
+              'EmergencyTrigger200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -365,5 +373,4 @@ _responseData = rawData == null ? null : deserialize<EmergencyTrigger200Response
       extra: _response.extra,
     );
   }
-
 }

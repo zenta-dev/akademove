@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for WalletMonthlySummaryResponse
 void main() {
-  final WalletMonthlySummaryResponse?
-  instance = /* WalletMonthlySummaryResponse(...) */ null;
+  final WalletMonthlySummaryResponse? instance = /* WalletMonthlySummaryResponse(...) */ null;
   // TODO add properties to the entity
 
   group(WalletMonthlySummaryResponse, () {

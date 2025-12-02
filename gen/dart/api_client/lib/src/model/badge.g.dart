@@ -146,8 +146,7 @@ class _$BadgeCWProxyImpl implements _$BadgeCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+      description: description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -159,8 +158,7 @@ class _$BadgeCWProxyImpl implements _$BadgeCWProxy {
           ? _value.level
           // ignore: cast_nullable_to_non_nullable
           : level as BadgeLevel,
-      targetRole:
-          targetRole == const $CopyWithPlaceholder() || targetRole == null
+      targetRole: targetRole == const $CopyWithPlaceholder() || targetRole == null
           ? _value.targetRole
           // ignore: cast_nullable_to_non_nullable
           : targetRole as BadgeTargetRole,
@@ -207,9 +205,7 @@ extension $BadgeCopyWith on Badge {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Badge _$BadgeFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Badge', json, ($checkedConvert) {
+Badge _$BadgeFromJson(Map<String, dynamic> json) => $checkedCreate('Badge', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -232,25 +228,12 @@ Badge _$BadgeFromJson(
     description: $checkedConvert('description', (v) => v as String),
     type: $checkedConvert('type', (v) => $enumDecode(_$BadgeTypeEnumMap, v)),
     level: $checkedConvert('level', (v) => $enumDecode(_$BadgeLevelEnumMap, v)),
-    targetRole: $checkedConvert(
-      'targetRole',
-      (v) => $enumDecode(_$BadgeTargetRoleEnumMap, v),
-    ),
+    targetRole: $checkedConvert('targetRole', (v) => $enumDecode(_$BadgeTargetRoleEnumMap, v)),
     icon: $checkedConvert('icon', (v) => v as String?),
-    criteria: $checkedConvert(
-      'criteria',
-      (v) => BadgeCriteria.fromJson(v as Map<String, dynamic>),
-    ),
-    benefits: $checkedConvert(
-      'benefits',
-      (v) =>
-          v == null ? null : BadgeBenefits.fromJson(v as Map<String, dynamic>),
-    ),
+    criteria: $checkedConvert('criteria', (v) => BadgeCriteria.fromJson(v as Map<String, dynamic>)),
+    benefits: $checkedConvert('benefits', (v) => v == null ? null : BadgeBenefits.fromJson(v as Map<String, dynamic>)),
     isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
-    displayOrder: $checkedConvert(
-      'displayOrder',
-      (v) => (v as num?)?.toInt() ?? 0,
-    ),
+    displayOrder: $checkedConvert('displayOrder', (v) => (v as num?)?.toInt() ?? 0),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
   );

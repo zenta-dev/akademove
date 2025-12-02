@@ -80,12 +80,10 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
   Coupon rules(CouponRules rules) => call(rules: rules);
 
   @override
-  Coupon discountAmount(num? discountAmount) =>
-      call(discountAmount: discountAmount);
+  Coupon discountAmount(num? discountAmount) => call(discountAmount: discountAmount);
 
   @override
-  Coupon discountPercentage(num? discountPercentage) =>
-      call(discountPercentage: discountPercentage);
+  Coupon discountPercentage(num? discountPercentage) => call(discountPercentage: discountPercentage);
 
   @override
   Coupon usageLimit(num usageLimit) => call(usageLimit: usageLimit);
@@ -160,8 +158,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.discountPercentage
           // ignore: cast_nullable_to_non_nullable
           : discountPercentage as num?,
-      usageLimit:
-          usageLimit == const $CopyWithPlaceholder() || usageLimit == null
+      usageLimit: usageLimit == const $CopyWithPlaceholder() || usageLimit == null
           ? _value.usageLimit
           // ignore: cast_nullable_to_non_nullable
           : usageLimit as num,
@@ -169,8 +166,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.usedCount
           // ignore: cast_nullable_to_non_nullable
           : usedCount as num,
-      periodStart:
-          periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart: periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
@@ -186,8 +182,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
-      createdById:
-          createdById == const $CopyWithPlaceholder() || createdById == null
+      createdById: createdById == const $CopyWithPlaceholder() || createdById == null
           ? _value.createdById
           // ignore: cast_nullable_to_non_nullable
           : createdById as String,
@@ -210,9 +205,7 @@ extension $CouponCopyWith on Coupon {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Coupon _$CouponFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Coupon', json, ($checkedConvert) {
+Coupon _$CouponFromJson(Map<String, dynamic> json) => $checkedCreate('Coupon', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -233,18 +226,12 @@ Coupon _$CouponFromJson(
     id: $checkedConvert('id', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     code: $checkedConvert('code', (v) => v as String),
-    rules: $checkedConvert(
-      'rules',
-      (v) => CouponRules.fromJson(v as Map<String, dynamic>),
-    ),
+    rules: $checkedConvert('rules', (v) => CouponRules.fromJson(v as Map<String, dynamic>)),
     discountAmount: $checkedConvert('discountAmount', (v) => v as num?),
     discountPercentage: $checkedConvert('discountPercentage', (v) => v as num?),
     usageLimit: $checkedConvert('usageLimit', (v) => v as num),
     usedCount: $checkedConvert('usedCount', (v) => v as num),
-    periodStart: $checkedConvert(
-      'periodStart',
-      (v) => DateTime.parse(v as String),
-    ),
+    periodStart: $checkedConvert('periodStart', (v) => DateTime.parse(v as String)),
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),

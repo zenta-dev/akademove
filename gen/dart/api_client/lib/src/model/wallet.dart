@@ -10,12 +10,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'wallet.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class Wallet {
   /// Returns a new [Wallet] instance.
   const Wallet({
@@ -30,34 +25,36 @@ class Wallet {
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-  
+
   @JsonKey(name: r'balance', required: true, includeIfNull: false)
   final num balance;
-  
+
   @JsonKey(name: r'currency', required: true, includeIfNull: false)
   final Currency currency;
-  
+
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Wallet &&
-    other.id == id &&
-    other.userId == userId &&
-    other.balance == balance &&
-    other.currency == currency &&
-    other.isActive == isActive &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Wallet &&
+          other.id == id &&
+          other.userId == userId &&
+          other.balance == balance &&
+          other.currency == currency &&
+          other.isActive == isActive &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -77,6 +74,4 @@ class Wallet {
   String toString() {
     return toJson().toString();
   }
-
 }
-

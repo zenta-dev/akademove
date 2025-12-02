@@ -42,10 +42,7 @@ class _$OrderItemCWProxyImpl implements _$OrderItemCWProxy {
   /// ```dart
   /// OrderItem(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderItem call({
-    Object? quantity = const $CopyWithPlaceholder(),
-    Object? item = const $CopyWithPlaceholder(),
-  }) {
+  OrderItem call({Object? quantity = const $CopyWithPlaceholder(), Object? item = const $CopyWithPlaceholder()}) {
     return OrderItem(
       quantity: quantity == const $CopyWithPlaceholder() || quantity == null
           ? _value.quantity
@@ -70,18 +67,14 @@ extension $OrderItemCopyWith on OrderItem {
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderItem _$OrderItemFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderItem', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['quantity', 'item']);
-      final val = OrderItem(
-        quantity: $checkedConvert('quantity', (v) => v as num),
-        item: $checkedConvert(
-          'item',
-          (v) => OrderItemItem.fromJson(v as Map<String, dynamic>),
-        ),
-      );
-      return val;
-    });
+OrderItem _$OrderItemFromJson(Map<String, dynamic> json) => $checkedCreate('OrderItem', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['quantity', 'item']);
+  final val = OrderItem(
+    quantity: $checkedConvert('quantity', (v) => v as num),
+    item: $checkedConvert('item', (v) => OrderItemItem.fromJson(v as Map<String, dynamic>)),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$OrderItemToJson(OrderItem instance) => <String, dynamic>{
   'quantity': instance.quantity,

@@ -139,20 +139,8 @@ extension $SessionCopyWith on Session {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Session _$SessionFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Session', json, ($checkedConvert) {
-  $checkKeys(
-    json,
-    requiredKeys: const [
-      'id',
-      'expiresAt',
-      'token',
-      'userId',
-      'createdAt',
-      'updatedAt',
-    ],
-  );
+Session _$SessionFromJson(Map<String, dynamic> json) => $checkedCreate('Session', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id', 'expiresAt', 'token', 'userId', 'createdAt', 'updatedAt']);
   final val = Session(
     id: $checkedConvert('id', (v) => v as String),
     expiresAt: $checkedConvert('expiresAt', (v) => DateTime.parse(v as String)),

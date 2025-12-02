@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEnvelopePayloadMessage
 void main() {
-  final OrderEnvelopePayloadMessage?
-  instance = /* OrderEnvelopePayloadMessage(...) */ null;
+  final OrderEnvelopePayloadMessage? instance = /* OrderEnvelopePayloadMessage(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEnvelopePayloadMessage, () {

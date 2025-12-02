@@ -22,36 +22,27 @@ abstract class _$MerchantGetMine200ResponseBodyCWProxy {
   /// ```dart
   /// MerchantGetMine200ResponseBody(...).copyWith(id: 12, name: "My name")
   /// ```
-  MerchantGetMine200ResponseBody call({
-    String message,
-    Merchant data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  MerchantGetMine200ResponseBody call({String message, Merchant data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfMerchantGetMine200ResponseBody.copyWith(...)` or call `instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(value)` for a single field.
-class _$MerchantGetMine200ResponseBodyCWProxyImpl
-    implements _$MerchantGetMine200ResponseBodyCWProxy {
+class _$MerchantGetMine200ResponseBodyCWProxyImpl implements _$MerchantGetMine200ResponseBodyCWProxy {
   const _$MerchantGetMine200ResponseBodyCWProxyImpl(this._value);
 
   final MerchantGetMine200ResponseBody _value;
 
   @override
-  MerchantGetMine200ResponseBody message(String message) =>
-      call(message: message);
+  MerchantGetMine200ResponseBody message(String message) => call(message: message);
 
   @override
   MerchantGetMine200ResponseBody data(Merchant data) => call(data: data);
 
   @override
-  MerchantGetMine200ResponseBody pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  MerchantGetMine200ResponseBody pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  MerchantGetMine200ResponseBody totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  MerchantGetMine200ResponseBody totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -88,45 +79,36 @@ class _$MerchantGetMine200ResponseBodyCWProxyImpl
   }
 }
 
-extension $MerchantGetMine200ResponseBodyCopyWith
-    on MerchantGetMine200ResponseBody {
+extension $MerchantGetMine200ResponseBodyCopyWith on MerchantGetMine200ResponseBody {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfMerchantGetMine200ResponseBody.copyWith(...)` or `instanceOfMerchantGetMine200ResponseBody.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$MerchantGetMine200ResponseBodyCWProxy get copyWith =>
-      _$MerchantGetMine200ResponseBodyCWProxyImpl(this);
+  _$MerchantGetMine200ResponseBodyCWProxy get copyWith => _$MerchantGetMine200ResponseBodyCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantGetMine200ResponseBody _$MerchantGetMine200ResponseBodyFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('MerchantGetMine200ResponseBody', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = MerchantGetMine200ResponseBody(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => Merchant.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+MerchantGetMine200ResponseBody _$MerchantGetMine200ResponseBodyFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('MerchantGetMine200ResponseBody', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = MerchantGetMine200ResponseBody(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => Merchant.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$MerchantGetMine200ResponseBodyToJson(
-  MerchantGetMine200ResponseBody instance,
-) => <String, dynamic>{
-  'message': instance.message,
-  'data': instance.data.toJson(),
-  'pagination': ?instance.pagination?.toJson(),
-  'totalPages': ?instance.totalPages,
-};
+Map<String, dynamic> _$MerchantGetMine200ResponseBodyToJson(MerchantGetMine200ResponseBody instance) =>
+    <String, dynamic>{
+      'message': instance.message,
+      'data': instance.data.toJson(),
+      'pagination': ?instance.pagination?.toJson(),
+      'totalPages': ?instance.totalPages,
+    };

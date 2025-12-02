@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for DriverUpdateRequestBank
 void main() {
-  final DriverUpdateRequestBank? instance = /* DriverUpdateRequestBank(...) */
-      null;
+  final DriverUpdateRequestBank? instance = /* DriverUpdateRequestBank(...) */ null;
   // TODO add properties to the entity
 
   group(DriverUpdateRequestBank, () {

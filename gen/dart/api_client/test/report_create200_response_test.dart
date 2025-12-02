@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for ReportCreate200Response
 void main() {
-  final ReportCreate200Response? instance = /* ReportCreate200Response(...) */
-      null;
+  final ReportCreate200Response? instance = /* ReportCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(ReportCreate200Response, () {

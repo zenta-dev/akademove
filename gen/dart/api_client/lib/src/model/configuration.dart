@@ -9,49 +9,46 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class Configuration {
   /// Returns a new [Configuration] instance.
   const Configuration({
     required this.key,
     required this.name,
-     this.value,
-     this.description,
+    this.value,
+    this.description,
     required this.updatedById,
     required this.updatedAt,
   });
 
   @JsonKey(name: r'key', required: true, includeIfNull: false)
   final String key;
-  
+
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-  
+
   @JsonKey(name: r'value', required: false, includeIfNull: false)
   final Object? value;
-  
+
   @JsonKey(name: r'description', required: false, includeIfNull: false)
   final String? description;
-  
+
   @JsonKey(name: r'updatedById', required: true, includeIfNull: false)
   final String updatedById;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Configuration &&
-    other.key == key &&
-    other.name == name &&
-    other.value == value &&
-    other.description == description &&
-    other.updatedById == updatedById &&
-    other.updatedAt == updatedAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Configuration &&
+          other.key == key &&
+          other.name == name &&
+          other.value == value &&
+          other.description == description &&
+          other.updatedById == updatedById &&
+          other.updatedAt == updatedAt;
 
   @override
   int get hashCode =>
@@ -70,6 +67,4 @@ class Configuration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

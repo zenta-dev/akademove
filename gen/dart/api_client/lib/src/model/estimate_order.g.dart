@@ -53,12 +53,10 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   final EstimateOrder _value;
 
   @override
-  EstimateOrder dropoffLocation(Coordinate dropoffLocation) =>
-      call(dropoffLocation: dropoffLocation);
+  EstimateOrder dropoffLocation(Coordinate dropoffLocation) => call(dropoffLocation: dropoffLocation);
 
   @override
-  EstimateOrder pickupLocation(Coordinate pickupLocation) =>
-      call(pickupLocation: pickupLocation);
+  EstimateOrder pickupLocation(Coordinate pickupLocation) => call(pickupLocation: pickupLocation);
 
   @override
   EstimateOrder note(OrderNote? note) => call(note: note);
@@ -76,8 +74,7 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
   EstimateOrder couponCode(String? couponCode) => call(couponCode: couponCode);
 
   @override
-  EstimateOrder discountIds(List<num>? discountIds) =>
-      call(discountIds: discountIds);
+  EstimateOrder discountIds(List<num>? discountIds) => call(discountIds: discountIds);
 
   @override
   EstimateOrder weight(num? weight) => call(weight: weight);
@@ -102,15 +99,11 @@ class _$EstimateOrderCWProxyImpl implements _$EstimateOrderCWProxy {
     Object? weight = const $CopyWithPlaceholder(),
   }) {
     return EstimateOrder(
-      dropoffLocation:
-          dropoffLocation == const $CopyWithPlaceholder() ||
-              dropoffLocation == null
+      dropoffLocation: dropoffLocation == const $CopyWithPlaceholder() || dropoffLocation == null
           ? _value.dropoffLocation
           // ignore: cast_nullable_to_non_nullable
           : dropoffLocation as Coordinate,
-      pickupLocation:
-          pickupLocation == const $CopyWithPlaceholder() ||
-              pickupLocation == null
+      pickupLocation: pickupLocation == const $CopyWithPlaceholder() || pickupLocation == null
           ? _value.pickupLocation
           // ignore: cast_nullable_to_non_nullable
           : pickupLocation as Coordinate,
@@ -159,68 +152,36 @@ extension $EstimateOrderCopyWith on EstimateOrder {
 
 EstimateOrder _$EstimateOrderFromJson(Map<String, dynamic> json) =>
     $checkedCreate('EstimateOrder', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const ['dropoffLocation', 'pickupLocation', 'type'],
-      );
+      $checkKeys(json, requiredKeys: const ['dropoffLocation', 'pickupLocation', 'type']);
       final val = EstimateOrder(
-        dropoffLocation: $checkedConvert(
-          'dropoffLocation',
-          (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-        ),
-        pickupLocation: $checkedConvert(
-          'pickupLocation',
-          (v) => Coordinate.fromJson(v as Map<String, dynamic>),
-        ),
-        note: $checkedConvert(
-          'note',
-          (v) =>
-              v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
-        ),
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecode(_$OrderTypeEnumMap, v),
-        ),
+        dropoffLocation: $checkedConvert('dropoffLocation', (v) => Coordinate.fromJson(v as Map<String, dynamic>)),
+        pickupLocation: $checkedConvert('pickupLocation', (v) => Coordinate.fromJson(v as Map<String, dynamic>)),
+        note: $checkedConvert('note', (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>)),
+        type: $checkedConvert('type', (v) => $enumDecode(_$OrderTypeEnumMap, v)),
         items: $checkedConvert(
           'items',
-          (v) => (v as List<dynamic>?)
-              ?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
-              .toList(),
+          (v) => (v as List<dynamic>?)?.map((e) => OrderItem.fromJson(e as Map<String, dynamic>)).toList(),
         ),
-        gender: $checkedConvert(
-          'gender',
-          (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
-        ),
+        gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
         couponCode: $checkedConvert('couponCode', (v) => v as String?),
-        discountIds: $checkedConvert(
-          'discountIds',
-          (v) => (v as List<dynamic>?)?.map((e) => e as num).toList(),
-        ),
+        discountIds: $checkedConvert('discountIds', (v) => (v as List<dynamic>?)?.map((e) => e as num).toList()),
         weight: $checkedConvert('weight', (v) => v as num?),
       );
       return val;
     });
 
-Map<String, dynamic> _$EstimateOrderToJson(EstimateOrder instance) =>
-    <String, dynamic>{
-      'dropoffLocation': instance.dropoffLocation.toJson(),
-      'pickupLocation': instance.pickupLocation.toJson(),
-      'note': ?instance.note?.toJson(),
-      'type': _$OrderTypeEnumMap[instance.type]!,
-      'items': ?instance.items?.map((e) => e.toJson()).toList(),
-      'gender': ?_$UserGenderEnumMap[instance.gender],
-      'couponCode': ?instance.couponCode,
-      'discountIds': ?instance.discountIds,
-      'weight': ?instance.weight,
-    };
-
-const _$OrderTypeEnumMap = {
-  OrderType.RIDE: 'RIDE',
-  OrderType.DELIVERY: 'DELIVERY',
-  OrderType.FOOD: 'FOOD',
+Map<String, dynamic> _$EstimateOrderToJson(EstimateOrder instance) => <String, dynamic>{
+  'dropoffLocation': instance.dropoffLocation.toJson(),
+  'pickupLocation': instance.pickupLocation.toJson(),
+  'note': ?instance.note?.toJson(),
+  'type': _$OrderTypeEnumMap[instance.type]!,
+  'items': ?instance.items?.map((e) => e.toJson()).toList(),
+  'gender': ?_$UserGenderEnumMap[instance.gender],
+  'couponCode': ?instance.couponCode,
+  'discountIds': ?instance.discountIds,
+  'weight': ?instance.weight,
 };
 
-const _$UserGenderEnumMap = {
-  UserGender.MALE: 'MALE',
-  UserGender.FEMALE: 'FEMALE',
-};
+const _$OrderTypeEnumMap = {OrderType.RIDE: 'RIDE', OrderType.DELIVERY: 'DELIVERY', OrderType.FOOD: 'FOOD'};
+
+const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};

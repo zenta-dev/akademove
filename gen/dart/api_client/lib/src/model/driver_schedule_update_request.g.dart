@@ -41,8 +41,7 @@ abstract class _$DriverScheduleUpdateRequestCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfDriverScheduleUpdateRequest.copyWith(...)` or call `instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(value)` for a single field.
-class _$DriverScheduleUpdateRequestCWProxyImpl
-    implements _$DriverScheduleUpdateRequestCWProxy {
+class _$DriverScheduleUpdateRequestCWProxyImpl implements _$DriverScheduleUpdateRequestCWProxy {
   const _$DriverScheduleUpdateRequestCWProxyImpl(this._value);
 
   final DriverScheduleUpdateRequest _value;
@@ -51,27 +50,22 @@ class _$DriverScheduleUpdateRequestCWProxyImpl
   DriverScheduleUpdateRequest name(String? name) => call(name: name);
 
   @override
-  DriverScheduleUpdateRequest dayOfWeek(DayOfWeek? dayOfWeek) =>
-      call(dayOfWeek: dayOfWeek);
+  DriverScheduleUpdateRequest dayOfWeek(DayOfWeek? dayOfWeek) => call(dayOfWeek: dayOfWeek);
 
   @override
-  DriverScheduleUpdateRequest startTime(Time? startTime) =>
-      call(startTime: startTime);
+  DriverScheduleUpdateRequest startTime(Time? startTime) => call(startTime: startTime);
 
   @override
   DriverScheduleUpdateRequest endTime(Time? endTime) => call(endTime: endTime);
 
   @override
-  DriverScheduleUpdateRequest isRecurring(bool? isRecurring) =>
-      call(isRecurring: isRecurring);
+  DriverScheduleUpdateRequest isRecurring(bool? isRecurring) => call(isRecurring: isRecurring);
 
   @override
-  DriverScheduleUpdateRequest specificDate(DateTime? specificDate) =>
-      call(specificDate: specificDate);
+  DriverScheduleUpdateRequest specificDate(DateTime? specificDate) => call(specificDate: specificDate);
 
   @override
-  DriverScheduleUpdateRequest isActive(bool? isActive) =>
-      call(isActive: isActive);
+  DriverScheduleUpdateRequest isActive(bool? isActive) => call(isActive: isActive);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -127,44 +121,28 @@ extension $DriverScheduleUpdateRequestCopyWith on DriverScheduleUpdateRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfDriverScheduleUpdateRequest.copyWith(...)` or `instanceOfDriverScheduleUpdateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DriverScheduleUpdateRequestCWProxy get copyWith =>
-      _$DriverScheduleUpdateRequestCWProxyImpl(this);
+  _$DriverScheduleUpdateRequestCWProxy get copyWith => _$DriverScheduleUpdateRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-DriverScheduleUpdateRequest _$DriverScheduleUpdateRequestFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('DriverScheduleUpdateRequest', json, ($checkedConvert) {
-  final val = DriverScheduleUpdateRequest(
-    name: $checkedConvert('name', (v) => v as String?),
-    dayOfWeek: $checkedConvert(
-      'dayOfWeek',
-      (v) => $enumDecodeNullable(_$DayOfWeekEnumMap, v),
-    ),
-    startTime: $checkedConvert(
-      'startTime',
-      (v) => v == null ? null : Time.fromJson(v as Map<String, dynamic>),
-    ),
-    endTime: $checkedConvert(
-      'endTime',
-      (v) => v == null ? null : Time.fromJson(v as Map<String, dynamic>),
-    ),
-    isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
-    specificDate: $checkedConvert(
-      'specificDate',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
-  );
-  return val;
-});
+DriverScheduleUpdateRequest _$DriverScheduleUpdateRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('DriverScheduleUpdateRequest', json, ($checkedConvert) {
+      final val = DriverScheduleUpdateRequest(
+        name: $checkedConvert('name', (v) => v as String?),
+        dayOfWeek: $checkedConvert('dayOfWeek', (v) => $enumDecodeNullable(_$DayOfWeekEnumMap, v)),
+        startTime: $checkedConvert('startTime', (v) => v == null ? null : Time.fromJson(v as Map<String, dynamic>)),
+        endTime: $checkedConvert('endTime', (v) => v == null ? null : Time.fromJson(v as Map<String, dynamic>)),
+        isRecurring: $checkedConvert('isRecurring', (v) => v as bool? ?? true),
+        specificDate: $checkedConvert('specificDate', (v) => v == null ? null : DateTime.parse(v as String)),
+        isActive: $checkedConvert('isActive', (v) => v as bool? ?? true),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$DriverScheduleUpdateRequestToJson(
-  DriverScheduleUpdateRequest instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$DriverScheduleUpdateRequestToJson(DriverScheduleUpdateRequest instance) => <String, dynamic>{
   'name': ?instance.name,
   'dayOfWeek': ?_$DayOfWeekEnumMap[instance.dayOfWeek],
   'startTime': ?instance.startTime?.toJson(),

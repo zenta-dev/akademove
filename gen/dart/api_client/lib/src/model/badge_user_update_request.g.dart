@@ -20,17 +20,12 @@ abstract class _$BadgeUserUpdateRequestCWProxy {
   /// ```dart
   /// BadgeUserUpdateRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeUserUpdateRequest call({
-    String? userId,
-    String? badgeId,
-    UserBadgeMetadata? metadata,
-  });
+  BadgeUserUpdateRequest call({String? userId, String? badgeId, UserBadgeMetadata? metadata});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfBadgeUserUpdateRequest.copyWith(...)` or call `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(value)` for a single field.
-class _$BadgeUserUpdateRequestCWProxyImpl
-    implements _$BadgeUserUpdateRequestCWProxy {
+class _$BadgeUserUpdateRequestCWProxyImpl implements _$BadgeUserUpdateRequestCWProxy {
   const _$BadgeUserUpdateRequestCWProxyImpl(this._value);
 
   final BadgeUserUpdateRequest _value;
@@ -42,8 +37,7 @@ class _$BadgeUserUpdateRequestCWProxyImpl
   BadgeUserUpdateRequest badgeId(String? badgeId) => call(badgeId: badgeId);
 
   @override
-  BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata) =>
-      call(metadata: metadata);
+  BadgeUserUpdateRequest metadata(UserBadgeMetadata? metadata) => call(metadata: metadata);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -79,33 +73,27 @@ extension $BadgeUserUpdateRequestCopyWith on BadgeUserUpdateRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBadgeUserUpdateRequest.copyWith(...)` or `instanceOfBadgeUserUpdateRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BadgeUserUpdateRequestCWProxy get copyWith =>
-      _$BadgeUserUpdateRequestCWProxyImpl(this);
+  _$BadgeUserUpdateRequestCWProxy get copyWith => _$BadgeUserUpdateRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BadgeUserUpdateRequest _$BadgeUserUpdateRequestFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('BadgeUserUpdateRequest', json, ($checkedConvert) {
-  final val = BadgeUserUpdateRequest(
-    userId: $checkedConvert('userId', (v) => v as String?),
-    badgeId: $checkedConvert('badgeId', (v) => v as String?),
-    metadata: $checkedConvert(
-      'metadata',
-      (v) => v == null
-          ? null
-          : UserBadgeMetadata.fromJson(v as Map<String, dynamic>),
-    ),
-  );
-  return val;
-});
+BadgeUserUpdateRequest _$BadgeUserUpdateRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('BadgeUserUpdateRequest', json, ($checkedConvert) {
+      final val = BadgeUserUpdateRequest(
+        userId: $checkedConvert('userId', (v) => v as String?),
+        badgeId: $checkedConvert('badgeId', (v) => v as String?),
+        metadata: $checkedConvert(
+          'metadata',
+          (v) => v == null ? null : UserBadgeMetadata.fromJson(v as Map<String, dynamic>),
+        ),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$BadgeUserUpdateRequestToJson(
-  BadgeUserUpdateRequest instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$BadgeUserUpdateRequestToJson(BadgeUserUpdateRequest instance) => <String, dynamic>{
   'userId': ?instance.userId,
   'badgeId': ?instance.badgeId,
   'metadata': ?instance.metadata?.toJson(),

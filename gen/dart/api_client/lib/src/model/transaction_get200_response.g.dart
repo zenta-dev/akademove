@@ -22,18 +22,12 @@ abstract class _$TransactionGet200ResponseCWProxy {
   /// ```dart
   /// TransactionGet200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  TransactionGet200Response call({
-    String message,
-    Transaction data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  TransactionGet200Response call({String message, Transaction data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfTransactionGet200Response.copyWith(...)` or call `instanceOfTransactionGet200Response.copyWith.fieldName(value)` for a single field.
-class _$TransactionGet200ResponseCWProxyImpl
-    implements _$TransactionGet200ResponseCWProxy {
+class _$TransactionGet200ResponseCWProxyImpl implements _$TransactionGet200ResponseCWProxy {
   const _$TransactionGet200ResponseCWProxyImpl(this._value);
 
   final TransactionGet200Response _value;
@@ -45,12 +39,10 @@ class _$TransactionGet200ResponseCWProxyImpl
   TransactionGet200Response data(Transaction data) => call(data: data);
 
   @override
-  TransactionGet200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  TransactionGet200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  TransactionGet200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  TransactionGet200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $TransactionGet200ResponseCopyWith on TransactionGet200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfTransactionGet200Response.copyWith(...)` or `instanceOfTransactionGet200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$TransactionGet200ResponseCWProxy get copyWith =>
-      _$TransactionGet200ResponseCWProxyImpl(this);
+  _$TransactionGet200ResponseCWProxy get copyWith => _$TransactionGet200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TransactionGet200Response _$TransactionGet200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('TransactionGet200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = TransactionGet200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => Transaction.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+TransactionGet200Response _$TransactionGet200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('TransactionGet200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = TransactionGet200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => Transaction.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$TransactionGet200ResponseToJson(
-  TransactionGet200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$TransactionGet200ResponseToJson(TransactionGet200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

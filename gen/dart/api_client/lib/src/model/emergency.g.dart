@@ -99,8 +99,7 @@ class _$EmergencyCWProxyImpl implements _$EmergencyCWProxy {
       call(contactedAuthorities: contactedAuthorities);
 
   @override
-  Emergency respondedById(String? respondedById) =>
-      call(respondedById: respondedById);
+  Emergency respondedById(String? respondedById) => call(respondedById: respondedById);
 
   @override
   Emergency resolution(String? resolution) => call(resolution: resolution);
@@ -109,12 +108,10 @@ class _$EmergencyCWProxyImpl implements _$EmergencyCWProxy {
   Emergency reportedAt(DateTime reportedAt) => call(reportedAt: reportedAt);
 
   @override
-  Emergency acknowledgedAt(DateTime? acknowledgedAt) =>
-      call(acknowledgedAt: acknowledgedAt);
+  Emergency acknowledgedAt(DateTime? acknowledgedAt) => call(acknowledgedAt: acknowledgedAt);
 
   @override
-  Emergency respondingAt(DateTime? respondingAt) =>
-      call(respondingAt: respondingAt);
+  Emergency respondingAt(DateTime? respondingAt) => call(respondingAt: respondingAt);
 
   @override
   Emergency resolvedAt(DateTime? resolvedAt) => call(resolvedAt: resolvedAt);
@@ -169,8 +166,7 @@ class _$EmergencyCWProxyImpl implements _$EmergencyCWProxy {
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as EmergencyStatus,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+      description: description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -190,8 +186,7 @@ class _$EmergencyCWProxyImpl implements _$EmergencyCWProxy {
           ? _value.resolution
           // ignore: cast_nullable_to_non_nullable
           : resolution as String?,
-      reportedAt:
-          reportedAt == const $CopyWithPlaceholder() || reportedAt == null
+      reportedAt: reportedAt == const $CopyWithPlaceholder() || reportedAt == null
           ? _value.reportedAt
           // ignore: cast_nullable_to_non_nullable
           : reportedAt as DateTime,
@@ -222,65 +217,33 @@ extension $EmergencyCopyWith on Emergency {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Emergency _$EmergencyFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Emergency', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'orderId',
-          'userId',
-          'type',
-          'status',
-          'description',
-          'reportedAt',
-        ],
-      );
-      final val = Emergency(
-        id: $checkedConvert('id', (v) => v as String),
-        orderId: $checkedConvert('orderId', (v) => v as String),
-        userId: $checkedConvert('userId', (v) => v as String),
-        driverId: $checkedConvert('driverId', (v) => v as String?),
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecode(_$EmergencyTypeEnumMap, v),
-        ),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecode(_$EmergencyStatusEnumMap, v),
-        ),
-        description: $checkedConvert('description', (v) => v as String),
-        location: $checkedConvert(
-          'location',
-          (v) => v == null
-              ? null
-              : EmergencyLocation.fromJson(v as Map<String, dynamic>),
-        ),
-        contactedAuthorities: $checkedConvert(
-          'contactedAuthorities',
-          (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
-        ),
-        respondedById: $checkedConvert('respondedById', (v) => v as String?),
-        resolution: $checkedConvert('resolution', (v) => v as String?),
-        reportedAt: $checkedConvert(
-          'reportedAt',
-          (v) => DateTime.parse(v as String),
-        ),
-        acknowledgedAt: $checkedConvert(
-          'acknowledgedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        respondingAt: $checkedConvert(
-          'respondingAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-        resolvedAt: $checkedConvert(
-          'resolvedAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    });
+Emergency _$EmergencyFromJson(Map<String, dynamic> json) => $checkedCreate('Emergency', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id', 'orderId', 'userId', 'type', 'status', 'description', 'reportedAt']);
+  final val = Emergency(
+    id: $checkedConvert('id', (v) => v as String),
+    orderId: $checkedConvert('orderId', (v) => v as String),
+    userId: $checkedConvert('userId', (v) => v as String),
+    driverId: $checkedConvert('driverId', (v) => v as String?),
+    type: $checkedConvert('type', (v) => $enumDecode(_$EmergencyTypeEnumMap, v)),
+    status: $checkedConvert('status', (v) => $enumDecode(_$EmergencyStatusEnumMap, v)),
+    description: $checkedConvert('description', (v) => v as String),
+    location: $checkedConvert(
+      'location',
+      (v) => v == null ? null : EmergencyLocation.fromJson(v as Map<String, dynamic>),
+    ),
+    contactedAuthorities: $checkedConvert(
+      'contactedAuthorities',
+      (v) => (v as List<dynamic>?)?.map((e) => e as String).toList(),
+    ),
+    respondedById: $checkedConvert('respondedById', (v) => v as String?),
+    resolution: $checkedConvert('resolution', (v) => v as String?),
+    reportedAt: $checkedConvert('reportedAt', (v) => DateTime.parse(v as String)),
+    acknowledgedAt: $checkedConvert('acknowledgedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    respondingAt: $checkedConvert('respondingAt', (v) => v == null ? null : DateTime.parse(v as String)),
+    resolvedAt: $checkedConvert('resolvedAt', (v) => v == null ? null : DateTime.parse(v as String)),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$EmergencyToJson(Emergency instance) => <String, dynamic>{
   'id': instance.id,

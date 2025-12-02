@@ -12,6 +12,12 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get account_name => 'Nama Akun';
+
+  @override
+  String get hint_bank_account_number => 'Masukkan nomor rekening bank Anda';
+
+  @override
   String get withdraw_earnings => 'Tarik Penghasilan';
 
   @override

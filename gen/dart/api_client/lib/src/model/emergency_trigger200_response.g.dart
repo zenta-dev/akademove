@@ -22,18 +22,12 @@ abstract class _$EmergencyTrigger200ResponseCWProxy {
   /// ```dart
   /// EmergencyTrigger200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  EmergencyTrigger200Response call({
-    String message,
-    Emergency data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  EmergencyTrigger200Response call({String message, Emergency data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfEmergencyTrigger200Response.copyWith(...)` or call `instanceOfEmergencyTrigger200Response.copyWith.fieldName(value)` for a single field.
-class _$EmergencyTrigger200ResponseCWProxyImpl
-    implements _$EmergencyTrigger200ResponseCWProxy {
+class _$EmergencyTrigger200ResponseCWProxyImpl implements _$EmergencyTrigger200ResponseCWProxy {
   const _$EmergencyTrigger200ResponseCWProxyImpl(this._value);
 
   final EmergencyTrigger200Response _value;
@@ -45,12 +39,10 @@ class _$EmergencyTrigger200ResponseCWProxyImpl
   EmergencyTrigger200Response data(Emergency data) => call(data: data);
 
   @override
-  EmergencyTrigger200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  EmergencyTrigger200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  EmergencyTrigger200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  EmergencyTrigger200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $EmergencyTrigger200ResponseCopyWith on EmergencyTrigger200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfEmergencyTrigger200Response.copyWith(...)` or `instanceOfEmergencyTrigger200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$EmergencyTrigger200ResponseCWProxy get copyWith =>
-      _$EmergencyTrigger200ResponseCWProxyImpl(this);
+  _$EmergencyTrigger200ResponseCWProxy get copyWith => _$EmergencyTrigger200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EmergencyTrigger200Response _$EmergencyTrigger200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('EmergencyTrigger200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = EmergencyTrigger200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => Emergency.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+EmergencyTrigger200Response _$EmergencyTrigger200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('EmergencyTrigger200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = EmergencyTrigger200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => Emergency.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$EmergencyTrigger200ResponseToJson(
-  EmergencyTrigger200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$EmergencyTrigger200ResponseToJson(EmergencyTrigger200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for OrderEstimate200Response
 void main() {
-  final OrderEstimate200Response? instance = /* OrderEstimate200Response(...) */
-      null;
+  final OrderEstimate200Response? instance = /* OrderEstimate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(OrderEstimate200Response, () {

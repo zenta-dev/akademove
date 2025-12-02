@@ -22,18 +22,12 @@ abstract class _$OrderEstimate200ResponseCWProxy {
   /// ```dart
   /// OrderEstimate200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderEstimate200Response call({
-    String message,
-    OrderSummary data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  OrderEstimate200Response call({String message, OrderSummary data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderEstimate200Response.copyWith(...)` or call `instanceOfOrderEstimate200Response.copyWith.fieldName(value)` for a single field.
-class _$OrderEstimate200ResponseCWProxyImpl
-    implements _$OrderEstimate200ResponseCWProxy {
+class _$OrderEstimate200ResponseCWProxyImpl implements _$OrderEstimate200ResponseCWProxy {
   const _$OrderEstimate200ResponseCWProxyImpl(this._value);
 
   final OrderEstimate200Response _value;
@@ -45,12 +39,10 @@ class _$OrderEstimate200ResponseCWProxyImpl
   OrderEstimate200Response data(OrderSummary data) => call(data: data);
 
   @override
-  OrderEstimate200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  OrderEstimate200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  OrderEstimate200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  OrderEstimate200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $OrderEstimate200ResponseCopyWith on OrderEstimate200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderEstimate200Response.copyWith(...)` or `instanceOfOrderEstimate200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderEstimate200ResponseCWProxy get copyWith =>
-      _$OrderEstimate200ResponseCWProxyImpl(this);
+  _$OrderEstimate200ResponseCWProxy get copyWith => _$OrderEstimate200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderEstimate200Response _$OrderEstimate200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('OrderEstimate200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = OrderEstimate200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => OrderSummary.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+OrderEstimate200Response _$OrderEstimate200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderEstimate200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = OrderEstimate200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => OrderSummary.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$OrderEstimate200ResponseToJson(
-  OrderEstimate200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$OrderEstimate200ResponseToJson(OrderEstimate200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

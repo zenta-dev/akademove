@@ -11,48 +11,36 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'badge_user_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class BadgeUserCreate200Response {
   /// Returns a new [BadgeUserCreate200Response] instance.
-  const BadgeUserCreate200Response({
-    required this.message,
-    required this.data,
-     this.pagination,
-     this.totalPages,
-  });
+  const BadgeUserCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final UserBadge data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is BadgeUserCreate200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
 
   @override
-  int get hashCode =>
-      message.hashCode +
-      data.hashCode +
-      pagination.hashCode +
-      totalPages.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BadgeUserCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
+
+  @override
+  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
 
   factory BadgeUserCreate200Response.fromJson(Map<String, dynamic> json) => _$BadgeUserCreate200ResponseFromJson(json);
 
@@ -62,6 +50,4 @@ class BadgeUserCreate200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

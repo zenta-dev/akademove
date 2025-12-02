@@ -77,8 +77,7 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
   Payment id(String id) => call(id: id);
 
   @override
-  Payment transactionId(String transactionId) =>
-      call(transactionId: transactionId);
+  Payment transactionId(String transactionId) => call(transactionId: transactionId);
 
   @override
   Payment provider(PaymentProvider provider) => call(provider: provider);
@@ -87,8 +86,7 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
   Payment method(PaymentMethod method) => call(method: method);
 
   @override
-  Payment bankProvider(BankProvider? bankProvider) =>
-      call(bankProvider: bankProvider);
+  Payment bankProvider(BankProvider? bankProvider) => call(bankProvider: bankProvider);
 
   @override
   Payment amount(num amount) => call(amount: amount);
@@ -154,8 +152,7 @@ class _$PaymentCWProxyImpl implements _$PaymentCWProxy {
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
-      transactionId:
-          transactionId == const $CopyWithPlaceholder() || transactionId == null
+      transactionId: transactionId == const $CopyWithPlaceholder() || transactionId == null
           ? _value.transactionId
           // ignore: cast_nullable_to_non_nullable
           : transactionId as String,
@@ -230,53 +227,24 @@ extension $PaymentCopyWith on Payment {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Payment _$PaymentFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('Payment', json, ($checkedConvert) {
+Payment _$PaymentFromJson(Map<String, dynamic> json) => $checkedCreate('Payment', json, ($checkedConvert) {
   $checkKeys(
     json,
-    requiredKeys: const [
-      'id',
-      'transactionId',
-      'provider',
-      'method',
-      'amount',
-      'status',
-      'createdAt',
-      'updatedAt',
-    ],
+    requiredKeys: const ['id', 'transactionId', 'provider', 'method', 'amount', 'status', 'createdAt', 'updatedAt'],
   );
   final val = Payment(
     id: $checkedConvert('id', (v) => v as String),
     transactionId: $checkedConvert('transactionId', (v) => v as String),
-    provider: $checkedConvert(
-      'provider',
-      (v) => $enumDecode(_$PaymentProviderEnumMap, v),
-    ),
-    method: $checkedConvert(
-      'method',
-      (v) => $enumDecode(_$PaymentMethodEnumMap, v),
-    ),
-    bankProvider: $checkedConvert(
-      'bankProvider',
-      (v) => $enumDecodeNullable(_$BankProviderEnumMap, v),
-    ),
+    provider: $checkedConvert('provider', (v) => $enumDecode(_$PaymentProviderEnumMap, v)),
+    method: $checkedConvert('method', (v) => $enumDecode(_$PaymentMethodEnumMap, v)),
+    bankProvider: $checkedConvert('bankProvider', (v) => $enumDecodeNullable(_$BankProviderEnumMap, v)),
     amount: $checkedConvert('amount', (v) => v as num),
-    status: $checkedConvert(
-      'status',
-      (v) => $enumDecode(_$TransactionStatusEnumMap, v),
-    ),
+    status: $checkedConvert('status', (v) => $enumDecode(_$TransactionStatusEnumMap, v)),
     externalId: $checkedConvert('externalId', (v) => v as String?),
     paymentUrl: $checkedConvert('paymentUrl', (v) => v as String?),
-    vaNumber: $checkedConvert(
-      'va_number',
-      (v) => v == null ? null : VANumber.fromJson(v as Map<String, dynamic>),
-    ),
+    vaNumber: $checkedConvert('va_number', (v) => v == null ? null : VANumber.fromJson(v as Map<String, dynamic>)),
     metadata: $checkedConvert('metadata', (v) => v),
-    expiresAt: $checkedConvert(
-      'expiresAt',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
+    expiresAt: $checkedConvert('expiresAt', (v) => v == null ? null : DateTime.parse(v as String)),
     payload: $checkedConvert('payload', (v) => v),
     response: $checkedConvert('response', (v) => v),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
@@ -304,10 +272,7 @@ Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
   'updatedAt': instance.updatedAt.toIso8601String(),
 };
 
-const _$PaymentProviderEnumMap = {
-  PaymentProvider.MIDTRANS: 'MIDTRANS',
-  PaymentProvider.MANUAL: 'MANUAL',
-};
+const _$PaymentProviderEnumMap = {PaymentProvider.MIDTRANS: 'MIDTRANS', PaymentProvider.MANUAL: 'MANUAL'};
 
 const _$PaymentMethodEnumMap = {
   PaymentMethod.QRIS: 'QRIS',

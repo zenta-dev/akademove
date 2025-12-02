@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for RidePricingConfiguration
 void main() {
-  final RidePricingConfiguration? instance = /* RidePricingConfiguration(...) */
-      null;
+  final RidePricingConfiguration? instance = /* RidePricingConfiguration(...) */ null;
   // TODO add properties to the entity
 
   group(RidePricingConfiguration, () {

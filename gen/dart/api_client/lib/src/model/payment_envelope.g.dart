@@ -121,34 +121,24 @@ PaymentEnvelope _$PaymentEnvelopeFromJson(Map<String, dynamic> json) =>
     $checkedCreate('PaymentEnvelope', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['f', 't', 'p']);
       final val = PaymentEnvelope(
-        e: $checkedConvert(
-          'e',
-          (v) => $enumDecodeNullable(_$PaymentEnvelopeEventEnumMap, v),
-        ),
+        e: $checkedConvert('e', (v) => $enumDecodeNullable(_$PaymentEnvelopeEventEnumMap, v)),
         a: $checkedConvert('a', (v) => v as String?),
-        tg: $checkedConvert(
-          'tg',
-          (v) => $enumDecodeNullable(_$EnvelopeTargetEnumMap, v),
-        ),
+        tg: $checkedConvert('tg', (v) => $enumDecodeNullable(_$EnvelopeTargetEnumMap, v)),
         f: $checkedConvert('f', (v) => $enumDecode(_$EnvelopeSenderEnumMap, v)),
         t: $checkedConvert('t', (v) => $enumDecode(_$EnvelopeSenderEnumMap, v)),
-        p: $checkedConvert(
-          'p',
-          (v) => PaymentEnvelopePayload.fromJson(v as Map<String, dynamic>),
-        ),
+        p: $checkedConvert('p', (v) => PaymentEnvelopePayload.fromJson(v as Map<String, dynamic>)),
       );
       return val;
     });
 
-Map<String, dynamic> _$PaymentEnvelopeToJson(PaymentEnvelope instance) =>
-    <String, dynamic>{
-      'e': ?_$PaymentEnvelopeEventEnumMap[instance.e],
-      'a': ?instance.a,
-      'tg': ?_$EnvelopeTargetEnumMap[instance.tg],
-      'f': _$EnvelopeSenderEnumMap[instance.f]!,
-      't': _$EnvelopeSenderEnumMap[instance.t]!,
-      'p': instance.p.toJson(),
-    };
+Map<String, dynamic> _$PaymentEnvelopeToJson(PaymentEnvelope instance) => <String, dynamic>{
+  'e': ?_$PaymentEnvelopeEventEnumMap[instance.e],
+  'a': ?instance.a,
+  'tg': ?_$EnvelopeTargetEnumMap[instance.tg],
+  'f': _$EnvelopeSenderEnumMap[instance.f]!,
+  't': _$EnvelopeSenderEnumMap[instance.t]!,
+  'p': instance.p.toJson(),
+};
 
 const _$PaymentEnvelopeEventEnumMap = {
   PaymentEnvelopeEvent.TOP_UP_SUCCESS: 'TOP_UP_SUCCESS',

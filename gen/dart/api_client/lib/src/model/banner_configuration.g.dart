@@ -34,8 +34,7 @@ class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
   BannerConfiguration title(String title) => call(title: title);
 
   @override
-  BannerConfiguration description(String description) =>
-      call(description: description);
+  BannerConfiguration description(String description) => call(description: description);
 
   @override
   BannerConfiguration imageUrl(String imageUrl) => call(imageUrl: imageUrl);
@@ -58,8 +57,7 @@ class _$BannerConfigurationCWProxyImpl implements _$BannerConfigurationCWProxy {
           ? _value.title
           // ignore: cast_nullable_to_non_nullable
           : title as String,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+      description: description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -75,8 +73,7 @@ extension $BannerConfigurationCopyWith on BannerConfiguration {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBannerConfiguration.copyWith(...)` or `instanceOfBannerConfiguration.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BannerConfigurationCWProxy get copyWith =>
-      _$BannerConfigurationCWProxyImpl(this);
+  _$BannerConfigurationCWProxy get copyWith => _$BannerConfigurationCWProxyImpl(this);
 }
 
 // **************************************************************************
@@ -85,10 +82,7 @@ extension $BannerConfigurationCopyWith on BannerConfiguration {
 
 BannerConfiguration _$BannerConfigurationFromJson(Map<String, dynamic> json) =>
     $checkedCreate('BannerConfiguration', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const ['title', 'description', 'imageUrl'],
-      );
+      $checkKeys(json, requiredKeys: const ['title', 'description', 'imageUrl']);
       final val = BannerConfiguration(
         title: $checkedConvert('title', (v) => v as String),
         description: $checkedConvert('description', (v) => v as String),
@@ -97,9 +91,7 @@ BannerConfiguration _$BannerConfigurationFromJson(Map<String, dynamic> json) =>
       return val;
     });
 
-Map<String, dynamic> _$BannerConfigurationToJson(
-  BannerConfiguration instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$BannerConfigurationToJson(BannerConfiguration instance) => <String, dynamic>{
   'title': instance.title,
   'description': instance.description,
   'imageUrl': instance.imageUrl,

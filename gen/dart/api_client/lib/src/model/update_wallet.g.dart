@@ -22,12 +22,7 @@ abstract class _$UpdateWalletCWProxy {
   /// ```dart
   /// UpdateWallet(...).copyWith(id: 12, name: "My name")
   /// ```
-  UpdateWallet call({
-    String? userId,
-    num? balance,
-    Currency? currency,
-    bool? isActive,
-  });
+  UpdateWallet call({String? userId, num? balance, Currency? currency, bool? isActive});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -100,21 +95,17 @@ UpdateWallet _$UpdateWalletFromJson(Map<String, dynamic> json) =>
       final val = UpdateWallet(
         userId: $checkedConvert('userId', (v) => v as String?),
         balance: $checkedConvert('balance', (v) => v as num?),
-        currency: $checkedConvert(
-          'currency',
-          (v) => $enumDecodeNullable(_$CurrencyEnumMap, v),
-        ),
+        currency: $checkedConvert('currency', (v) => $enumDecodeNullable(_$CurrencyEnumMap, v)),
         isActive: $checkedConvert('isActive', (v) => v as bool?),
       );
       return val;
     });
 
-Map<String, dynamic> _$UpdateWalletToJson(UpdateWallet instance) =>
-    <String, dynamic>{
-      'userId': ?instance.userId,
-      'balance': ?instance.balance,
-      'currency': ?_$CurrencyEnumMap[instance.currency],
-      'isActive': ?instance.isActive,
-    };
+Map<String, dynamic> _$UpdateWalletToJson(UpdateWallet instance) => <String, dynamic>{
+  'userId': ?instance.userId,
+  'balance': ?instance.balance,
+  'currency': ?_$CurrencyEnumMap[instance.currency],
+  'isActive': ?instance.isActive,
+};
 
 const _$CurrencyEnumMap = {Currency.IDR: 'IDR'};

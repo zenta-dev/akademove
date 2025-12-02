@@ -22,18 +22,12 @@ abstract class _$BadgeList200ResponseCWProxy {
   /// ```dart
   /// BadgeList200Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  BadgeList200Response call({
-    String message,
-    List<Badge> data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  BadgeList200Response call({String message, List<Badge> data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfBadgeList200Response.copyWith(...)` or call `instanceOfBadgeList200Response.copyWith.fieldName(value)` for a single field.
-class _$BadgeList200ResponseCWProxyImpl
-    implements _$BadgeList200ResponseCWProxy {
+class _$BadgeList200ResponseCWProxyImpl implements _$BadgeList200ResponseCWProxy {
   const _$BadgeList200ResponseCWProxyImpl(this._value);
 
   final BadgeList200Response _value;
@@ -45,12 +39,10 @@ class _$BadgeList200ResponseCWProxyImpl
   BadgeList200Response data(List<Badge> data) => call(data: data);
 
   @override
-  BadgeList200Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  BadgeList200Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  BadgeList200Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  BadgeList200Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,40 +83,32 @@ extension $BadgeList200ResponseCopyWith on BadgeList200Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfBadgeList200Response.copyWith(...)` or `instanceOfBadgeList200Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$BadgeList200ResponseCWProxy get copyWith =>
-      _$BadgeList200ResponseCWProxyImpl(this);
+  _$BadgeList200ResponseCWProxy get copyWith => _$BadgeList200ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BadgeList200Response _$BadgeList200ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('BadgeList200Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = BadgeList200Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => (v as List<dynamic>)
-          .map((e) => Badge.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+BadgeList200Response _$BadgeList200ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('BadgeList200Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = BadgeList200Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert(
+          'data',
+          (v) => (v as List<dynamic>).map((e) => Badge.fromJson(e as Map<String, dynamic>)).toList(),
+        ),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$BadgeList200ResponseToJson(
-  BadgeList200Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$BadgeList200ResponseToJson(BadgeList200Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.map((e) => e.toJson()).toList(),
   'pagination': ?instance.pagination?.toJson(),

@@ -21,8 +21,7 @@ abstract class _$OrderSendMessageRequestCWProxy {
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfOrderSendMessageRequest.copyWith(...)` or call `instanceOfOrderSendMessageRequest.copyWith.fieldName(value)` for a single field.
-class _$OrderSendMessageRequestCWProxyImpl
-    implements _$OrderSendMessageRequestCWProxy {
+class _$OrderSendMessageRequestCWProxyImpl implements _$OrderSendMessageRequestCWProxy {
   const _$OrderSendMessageRequestCWProxyImpl(this._value);
 
   final OrderSendMessageRequest _value;
@@ -38,9 +37,7 @@ class _$OrderSendMessageRequestCWProxyImpl
   /// ```dart
   /// OrderSendMessageRequest(...).copyWith(id: 12, name: "My name")
   /// ```
-  OrderSendMessageRequest call({
-    Object? message = const $CopyWithPlaceholder(),
-  }) {
+  OrderSendMessageRequest call({Object? message = const $CopyWithPlaceholder()}) {
     return OrderSendMessageRequest(
       message: message == const $CopyWithPlaceholder() || message == null
           ? _value.message
@@ -54,24 +51,20 @@ extension $OrderSendMessageRequestCopyWith on OrderSendMessageRequest {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfOrderSendMessageRequest.copyWith(...)` or `instanceOfOrderSendMessageRequest.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$OrderSendMessageRequestCWProxy get copyWith =>
-      _$OrderSendMessageRequestCWProxyImpl(this);
+  _$OrderSendMessageRequestCWProxy get copyWith => _$OrderSendMessageRequestCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OrderSendMessageRequest _$OrderSendMessageRequestFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('OrderSendMessageRequest', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message']);
-  final val = OrderSendMessageRequest(
-    message: $checkedConvert('message', (v) => v as String),
-  );
-  return val;
-});
+OrderSendMessageRequest _$OrderSendMessageRequestFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderSendMessageRequest', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message']);
+      final val = OrderSendMessageRequest(message: $checkedConvert('message', (v) => v as String));
+      return val;
+    });
 
-Map<String, dynamic> _$OrderSendMessageRequestToJson(
-  OrderSendMessageRequest instance,
-) => <String, dynamic>{'message': instance.message};
+Map<String, dynamic> _$OrderSendMessageRequestToJson(OrderSendMessageRequest instance) => <String, dynamic>{
+  'message': instance.message,
+};

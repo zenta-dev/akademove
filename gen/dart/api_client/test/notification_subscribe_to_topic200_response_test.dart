@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for NotificationSubscribeToTopic200Response
 void main() {
-  final NotificationSubscribeToTopic200Response?
-  instance = /* NotificationSubscribeToTopic200Response(...) */ null;
+  final NotificationSubscribeToTopic200Response? instance = /* NotificationSubscribeToTopic200Response(...) */ null;
   // TODO add properties to the entity
 
   group(NotificationSubscribeToTopic200Response, () {

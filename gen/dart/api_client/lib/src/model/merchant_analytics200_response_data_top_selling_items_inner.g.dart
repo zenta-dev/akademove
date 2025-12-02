@@ -9,21 +9,13 @@ part of 'merchant_analytics200_response_data_top_selling_items_inner.dart';
 abstract class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxy {
   MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String menuId);
 
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(
-    String menuName,
-  );
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(String menuName);
 
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuImage(
-    String? menuImage,
-  );
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuImage(String? menuImage);
 
-  MerchantAnalytics200ResponseDataTopSellingItemsInner totalOrders(
-    num totalOrders,
-  );
+  MerchantAnalytics200ResponseDataTopSellingItemsInner totalOrders(num totalOrders);
 
-  MerchantAnalytics200ResponseDataTopSellingItemsInner totalRevenue(
-    num totalRevenue,
-  );
+  MerchantAnalytics200ResponseDataTopSellingItemsInner totalRevenue(num totalRevenue);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `MerchantAnalytics200ResponseDataTopSellingItemsInner(...).copyWith.fieldName(value)`.
@@ -45,35 +37,25 @@ abstract class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxy {
 /// Use as `instanceOfMerchantAnalytics200ResponseDataTopSellingItemsInner.copyWith(...)` or call `instanceOfMerchantAnalytics200ResponseDataTopSellingItemsInner.copyWith.fieldName(value)` for a single field.
 class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl
     implements _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxy {
-  const _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl(
-    this._value,
-  );
+  const _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl(this._value);
 
   final MerchantAnalytics200ResponseDataTopSellingItemsInner _value;
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String menuId) =>
-      call(menuId: menuId);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuId(String menuId) => call(menuId: menuId);
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(
-    String menuName,
-  ) => call(menuName: menuName);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuName(String menuName) => call(menuName: menuName);
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner menuImage(
-    String? menuImage,
-  ) => call(menuImage: menuImage);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner menuImage(String? menuImage) => call(menuImage: menuImage);
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner totalOrders(
-    num totalOrders,
-  ) => call(totalOrders: totalOrders);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner totalOrders(num totalOrders) => call(totalOrders: totalOrders);
 
   @override
-  MerchantAnalytics200ResponseDataTopSellingItemsInner totalRevenue(
-    num totalRevenue,
-  ) => call(totalRevenue: totalRevenue);
+  MerchantAnalytics200ResponseDataTopSellingItemsInner totalRevenue(num totalRevenue) =>
+      call(totalRevenue: totalRevenue);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -103,13 +85,11 @@ class _$MerchantAnalytics200ResponseDataTopSellingItemsInnerCWProxyImpl
           ? _value.menuImage
           // ignore: cast_nullable_to_non_nullable
           : menuImage as String?,
-      totalOrders:
-          totalOrders == const $CopyWithPlaceholder() || totalOrders == null
+      totalOrders: totalOrders == const $CopyWithPlaceholder() || totalOrders == null
           ? _value.totalOrders
           // ignore: cast_nullable_to_non_nullable
           : totalOrders as num,
-      totalRevenue:
-          totalRevenue == const $CopyWithPlaceholder() || totalRevenue == null
+      totalRevenue: totalRevenue == const $CopyWithPlaceholder() || totalRevenue == null
           ? _value.totalRevenue
           // ignore: cast_nullable_to_non_nullable
           : totalRevenue as num,
@@ -130,30 +110,21 @@ extension $MerchantAnalytics200ResponseDataTopSellingItemsInnerCopyWith
 // JsonSerializableGenerator
 // **************************************************************************
 
-MerchantAnalytics200ResponseDataTopSellingItemsInner
-_$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(
+MerchantAnalytics200ResponseDataTopSellingItemsInner _$MerchantAnalytics200ResponseDataTopSellingItemsInnerFromJson(
   Map<String, dynamic> json,
-) => $checkedCreate(
-  'MerchantAnalytics200ResponseDataTopSellingItemsInner',
-  json,
-  ($checkedConvert) {
-    $checkKeys(
-      json,
-      requiredKeys: const ['menuId', 'menuName', 'totalOrders', 'totalRevenue'],
-    );
-    final val = MerchantAnalytics200ResponseDataTopSellingItemsInner(
-      menuId: $checkedConvert('menuId', (v) => v as String),
-      menuName: $checkedConvert('menuName', (v) => v as String),
-      menuImage: $checkedConvert('menuImage', (v) => v as String?),
-      totalOrders: $checkedConvert('totalOrders', (v) => v as num),
-      totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),
-    );
-    return val;
-  },
-);
+) => $checkedCreate('MerchantAnalytics200ResponseDataTopSellingItemsInner', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['menuId', 'menuName', 'totalOrders', 'totalRevenue']);
+  final val = MerchantAnalytics200ResponseDataTopSellingItemsInner(
+    menuId: $checkedConvert('menuId', (v) => v as String),
+    menuName: $checkedConvert('menuName', (v) => v as String),
+    menuImage: $checkedConvert('menuImage', (v) => v as String?),
+    totalOrders: $checkedConvert('totalOrders', (v) => v as num),
+    totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),
+  );
+  return val;
+});
 
-Map<String, dynamic>
-_$MerchantAnalytics200ResponseDataTopSellingItemsInnerToJson(
+Map<String, dynamic> _$MerchantAnalytics200ResponseDataTopSellingItemsInnerToJson(
   MerchantAnalytics200ResponseDataTopSellingItemsInner instance,
 ) => <String, dynamic>{
   'menuId': instance.menuId,

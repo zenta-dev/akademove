@@ -97,6 +97,18 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @account_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Name'**
+  String get account_name;
+
+  /// No description provided for @hint_bank_account_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your bank account number'**
+  String get hint_bank_account_number;
+
   /// No description provided for @withdraw_earnings.
   ///
   /// In en, this message translates to:

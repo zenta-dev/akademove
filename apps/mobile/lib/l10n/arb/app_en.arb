@@ -1,6 +1,7 @@
 {
 	"@@locale": "en",
-  
+    "account_name": "Account Name",
+  "hint_bank_account_number": "Enter your bank account number",
 "withdraw_earnings": "Withdraw Earnings",
   "no_transactions_yet": "No transactions yet",
     "view_all": "View all",

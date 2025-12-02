@@ -9,74 +9,71 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'fcm_notification_log.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class FCMNotificationLog {
   /// Returns a new [FCMNotificationLog] instance.
   const FCMNotificationLog({
     required this.id,
     required this.userId,
-     this.token,
-     this.topic,
+    this.token,
+    this.topic,
     required this.title,
     required this.body,
-     this.data,
-     this.messageId,
+    this.data,
+    this.messageId,
     required this.status,
-     this.error,
+    this.error,
     required this.sentAt,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
-  
+
   @JsonKey(name: r'token', required: false, includeIfNull: false)
   final String? token;
-  
+
   @JsonKey(name: r'topic', required: false, includeIfNull: false)
   final String? topic;
-  
+
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
-  
+
   @JsonKey(name: r'body', required: true, includeIfNull: false)
   final String body;
-  
+
   @JsonKey(name: r'data', required: false, includeIfNull: false)
   final Object? data;
-  
+
   @JsonKey(name: r'messageId', required: false, includeIfNull: false)
   final String? messageId;
-  
+
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final FCMNotificationLogStatusEnum status;
-  
+
   @JsonKey(name: r'error', required: false, includeIfNull: false)
   final String? error;
-  
+
   @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
   final DateTime sentAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FCMNotificationLog &&
-    other.id == id &&
-    other.userId == userId &&
-    other.token == token &&
-    other.topic == topic &&
-    other.title == title &&
-    other.body == body &&
-    other.data == data &&
-    other.messageId == messageId &&
-    other.status == status &&
-    other.error == error &&
-    other.sentAt == sentAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FCMNotificationLog &&
+          other.id == id &&
+          other.userId == userId &&
+          other.token == token &&
+          other.topic == topic &&
+          other.title == title &&
+          other.body == body &&
+          other.data == data &&
+          other.messageId == messageId &&
+          other.status == status &&
+          other.error == error &&
+          other.sentAt == sentAt;
 
   @override
   int get hashCode =>
@@ -100,7 +97,6 @@ class FCMNotificationLog {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum FCMNotificationLogStatusEnum {
@@ -108,13 +104,11 @@ enum FCMNotificationLogStatusEnum {
   SUCCESS(r'SUCCESS'),
   @JsonValue(r'FAILED')
   FAILED(r'FAILED');
-  
+
   const FCMNotificationLogStatusEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-
-

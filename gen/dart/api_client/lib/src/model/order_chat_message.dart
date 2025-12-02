@@ -10,12 +10,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_chat_message.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class OrderChatMessage {
   /// Returns a new [OrderChatMessage] instance.
   const OrderChatMessage({
@@ -26,43 +21,45 @@ class OrderChatMessage {
     required this.sentAt,
     required this.createdAt,
     required this.updatedAt,
-     this.sender,
+    this.sender,
   });
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'senderId', required: true, includeIfNull: false)
   final String senderId;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
   final DateTime sentAt;
-  
+
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;
-  
+
   @JsonKey(name: r'updatedAt', required: true, includeIfNull: false)
   final DateTime updatedAt;
-  
+
   @JsonKey(name: r'sender', required: false, includeIfNull: false)
   final OrderChatMessageSender? sender;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderChatMessage &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.senderId == senderId &&
-    other.message == message &&
-    other.sentAt == sentAt &&
-    other.createdAt == createdAt &&
-    other.updatedAt == updatedAt &&
-    other.sender == sender;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderChatMessage &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.senderId == senderId &&
+          other.message == message &&
+          other.sentAt == sentAt &&
+          other.createdAt == createdAt &&
+          other.updatedAt == updatedAt &&
+          other.sender == sender;
 
   @override
   int get hashCode =>
@@ -83,6 +80,4 @@ class OrderChatMessage {
   String toString() {
     return toJson().toString();
   }
-
 }
-

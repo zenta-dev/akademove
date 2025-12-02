@@ -42,10 +42,7 @@ class _$BankCWProxyImpl implements _$BankCWProxy {
   /// ```dart
   /// Bank(...).copyWith(id: 12, name: "My name")
   /// ```
-  Bank call({
-    Object? provider = const $CopyWithPlaceholder(),
-    Object? number = const $CopyWithPlaceholder(),
-  }) {
+  Bank call({Object? provider = const $CopyWithPlaceholder(), Object? number = const $CopyWithPlaceholder()}) {
     return Bank(
       provider: provider == const $CopyWithPlaceholder() || provider == null
           ? _value.provider
@@ -70,18 +67,14 @@ extension $BankCopyWith on Bank {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Bank _$BankFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Bank', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['provider', 'number']);
-      final val = Bank(
-        provider: $checkedConvert(
-          'provider',
-          (v) => $enumDecode(_$BankProviderEnumMap, v),
-        ),
-        number: $checkedConvert('number', (v) => v as num),
-      );
-      return val;
-    });
+Bank _$BankFromJson(Map<String, dynamic> json) => $checkedCreate('Bank', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['provider', 'number']);
+  final val = Bank(
+    provider: $checkedConvert('provider', (v) => $enumDecode(_$BankProviderEnumMap, v)),
+    number: $checkedConvert('number', (v) => v as num),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$BankToJson(Bank instance) => <String, dynamic>{
   'provider': _$BankProviderEnumMap[instance.provider]!,

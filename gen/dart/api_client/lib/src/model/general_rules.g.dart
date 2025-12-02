@@ -20,11 +20,7 @@ abstract class _$GeneralRulesCWProxy {
   /// ```dart
   /// GeneralRules(...).copyWith(id: 12, name: "My name")
   /// ```
-  GeneralRules call({
-    GeneralRuleType? type,
-    num? minOrderAmount,
-    num? maxDiscountAmount,
-  });
+  GeneralRules call({GeneralRuleType? type, num? minOrderAmount, num? maxDiscountAmount});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -38,12 +34,10 @@ class _$GeneralRulesCWProxyImpl implements _$GeneralRulesCWProxy {
   GeneralRules type(GeneralRuleType? type) => call(type: type);
 
   @override
-  GeneralRules minOrderAmount(num? minOrderAmount) =>
-      call(minOrderAmount: minOrderAmount);
+  GeneralRules minOrderAmount(num? minOrderAmount) => call(minOrderAmount: minOrderAmount);
 
   @override
-  GeneralRules maxDiscountAmount(num? maxDiscountAmount) =>
-      call(maxDiscountAmount: maxDiscountAmount);
+  GeneralRules maxDiscountAmount(num? maxDiscountAmount) => call(maxDiscountAmount: maxDiscountAmount);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -89,27 +83,17 @@ extension $GeneralRulesCopyWith on GeneralRules {
 GeneralRules _$GeneralRulesFromJson(Map<String, dynamic> json) =>
     $checkedCreate('GeneralRules', json, ($checkedConvert) {
       final val = GeneralRules(
-        type: $checkedConvert(
-          'type',
-          (v) => $enumDecodeNullable(_$GeneralRuleTypeEnumMap, v),
-        ),
+        type: $checkedConvert('type', (v) => $enumDecodeNullable(_$GeneralRuleTypeEnumMap, v)),
         minOrderAmount: $checkedConvert('minOrderAmount', (v) => v as num?),
-        maxDiscountAmount: $checkedConvert(
-          'maxDiscountAmount',
-          (v) => v as num?,
-        ),
+        maxDiscountAmount: $checkedConvert('maxDiscountAmount', (v) => v as num?),
       );
       return val;
     });
 
-Map<String, dynamic> _$GeneralRulesToJson(GeneralRules instance) =>
-    <String, dynamic>{
-      'type': ?_$GeneralRuleTypeEnumMap[instance.type],
-      'minOrderAmount': ?instance.minOrderAmount,
-      'maxDiscountAmount': ?instance.maxDiscountAmount,
-    };
-
-const _$GeneralRuleTypeEnumMap = {
-  GeneralRuleType.PERCENTAGE: 'PERCENTAGE',
-  GeneralRuleType.FIXED: 'FIXED',
+Map<String, dynamic> _$GeneralRulesToJson(GeneralRules instance) => <String, dynamic>{
+  'type': ?_$GeneralRuleTypeEnumMap[instance.type],
+  'minOrderAmount': ?instance.minOrderAmount,
+  'maxDiscountAmount': ?instance.maxDiscountAmount,
 };
+
+const _$GeneralRuleTypeEnumMap = {GeneralRuleType.PERCENTAGE: 'PERCENTAGE', GeneralRuleType.FIXED: 'FIXED'};

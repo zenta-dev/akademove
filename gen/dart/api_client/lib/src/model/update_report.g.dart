@@ -59,26 +59,22 @@ class _$UpdateReportCWProxyImpl implements _$UpdateReportCWProxy {
   UpdateReport reporterId(String? reporterId) => call(reporterId: reporterId);
 
   @override
-  UpdateReport targetUserId(String? targetUserId) =>
-      call(targetUserId: targetUserId);
+  UpdateReport targetUserId(String? targetUserId) => call(targetUserId: targetUserId);
 
   @override
   UpdateReport category(ReportCategory? category) => call(category: category);
 
   @override
-  UpdateReport description(String? description) =>
-      call(description: description);
+  UpdateReport description(String? description) => call(description: description);
 
   @override
-  UpdateReport evidenceUrl(String? evidenceUrl) =>
-      call(evidenceUrl: evidenceUrl);
+  UpdateReport evidenceUrl(String? evidenceUrl) => call(evidenceUrl: evidenceUrl);
 
   @override
   UpdateReport status(ReportStatus? status) => call(status: status);
 
   @override
-  UpdateReport handledById(String? handledById) =>
-      call(handledById: handledById);
+  UpdateReport handledById(String? handledById) => call(handledById: handledById);
 
   @override
   UpdateReport resolution(String? resolution) => call(resolution: resolution);
@@ -160,34 +156,27 @@ UpdateReport _$UpdateReportFromJson(Map<String, dynamic> json) =>
         orderId: $checkedConvert('orderId', (v) => v as String?),
         reporterId: $checkedConvert('reporterId', (v) => v as String?),
         targetUserId: $checkedConvert('targetUserId', (v) => v as String?),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecodeNullable(_$ReportCategoryEnumMap, v),
-        ),
+        category: $checkedConvert('category', (v) => $enumDecodeNullable(_$ReportCategoryEnumMap, v)),
         description: $checkedConvert('description', (v) => v as String?),
         evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecodeNullable(_$ReportStatusEnumMap, v),
-        ),
+        status: $checkedConvert('status', (v) => $enumDecodeNullable(_$ReportStatusEnumMap, v)),
         handledById: $checkedConvert('handledById', (v) => v as String?),
         resolution: $checkedConvert('resolution', (v) => v as String?),
       );
       return val;
     });
 
-Map<String, dynamic> _$UpdateReportToJson(UpdateReport instance) =>
-    <String, dynamic>{
-      'orderId': ?instance.orderId,
-      'reporterId': ?instance.reporterId,
-      'targetUserId': ?instance.targetUserId,
-      'category': ?_$ReportCategoryEnumMap[instance.category],
-      'description': ?instance.description,
-      'evidenceUrl': ?instance.evidenceUrl,
-      'status': ?_$ReportStatusEnumMap[instance.status],
-      'handledById': ?instance.handledById,
-      'resolution': ?instance.resolution,
-    };
+Map<String, dynamic> _$UpdateReportToJson(UpdateReport instance) => <String, dynamic>{
+  'orderId': ?instance.orderId,
+  'reporterId': ?instance.reporterId,
+  'targetUserId': ?instance.targetUserId,
+  'category': ?_$ReportCategoryEnumMap[instance.category],
+  'description': ?instance.description,
+  'evidenceUrl': ?instance.evidenceUrl,
+  'status': ?_$ReportStatusEnumMap[instance.status],
+  'handledById': ?instance.handledById,
+  'resolution': ?instance.resolution,
+};
 
 const _$ReportCategoryEnumMap = {
   ReportCategory.BEHAVIOR: 'BEHAVIOR',

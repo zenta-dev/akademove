@@ -22,18 +22,12 @@ abstract class _$ContactSubmit201ResponseCWProxy {
   /// ```dart
   /// ContactSubmit201Response(...).copyWith(id: 12, name: "My name")
   /// ```
-  ContactSubmit201Response call({
-    String message,
-    Contact data,
-    PaginationResult? pagination,
-    int? totalPages,
-  });
+  ContactSubmit201Response call({String message, Contact data, PaginationResult? pagination, int? totalPages});
 }
 
 /// Callable proxy for `copyWith` functionality.
 /// Use as `instanceOfContactSubmit201Response.copyWith(...)` or call `instanceOfContactSubmit201Response.copyWith.fieldName(value)` for a single field.
-class _$ContactSubmit201ResponseCWProxyImpl
-    implements _$ContactSubmit201ResponseCWProxy {
+class _$ContactSubmit201ResponseCWProxyImpl implements _$ContactSubmit201ResponseCWProxy {
   const _$ContactSubmit201ResponseCWProxyImpl(this._value);
 
   final ContactSubmit201Response _value;
@@ -45,12 +39,10 @@ class _$ContactSubmit201ResponseCWProxyImpl
   ContactSubmit201Response data(Contact data) => call(data: data);
 
   @override
-  ContactSubmit201Response pagination(PaginationResult? pagination) =>
-      call(pagination: pagination);
+  ContactSubmit201Response pagination(PaginationResult? pagination) => call(pagination: pagination);
 
   @override
-  ContactSubmit201Response totalPages(int? totalPages) =>
-      call(totalPages: totalPages);
+  ContactSubmit201Response totalPages(int? totalPages) => call(totalPages: totalPages);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -91,38 +83,29 @@ extension $ContactSubmit201ResponseCopyWith on ContactSubmit201Response {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfContactSubmit201Response.copyWith(...)` or `instanceOfContactSubmit201Response.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ContactSubmit201ResponseCWProxy get copyWith =>
-      _$ContactSubmit201ResponseCWProxyImpl(this);
+  _$ContactSubmit201ResponseCWProxy get copyWith => _$ContactSubmit201ResponseCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ContactSubmit201Response _$ContactSubmit201ResponseFromJson(
-  Map<String, dynamic> json,
-) => $checkedCreate('ContactSubmit201Response', json, ($checkedConvert) {
-  $checkKeys(json, requiredKeys: const ['message', 'data']);
-  final val = ContactSubmit201Response(
-    message: $checkedConvert('message', (v) => v as String),
-    data: $checkedConvert(
-      'data',
-      (v) => Contact.fromJson(v as Map<String, dynamic>),
-    ),
-    pagination: $checkedConvert(
-      'pagination',
-      (v) => v == null
-          ? null
-          : PaginationResult.fromJson(v as Map<String, dynamic>),
-    ),
-    totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
-  );
-  return val;
-});
+ContactSubmit201Response _$ContactSubmit201ResponseFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('ContactSubmit201Response', json, ($checkedConvert) {
+      $checkKeys(json, requiredKeys: const ['message', 'data']);
+      final val = ContactSubmit201Response(
+        message: $checkedConvert('message', (v) => v as String),
+        data: $checkedConvert('data', (v) => Contact.fromJson(v as Map<String, dynamic>)),
+        pagination: $checkedConvert(
+          'pagination',
+          (v) => v == null ? null : PaginationResult.fromJson(v as Map<String, dynamic>),
+        ),
+        totalPages: $checkedConvert('totalPages', (v) => (v as num?)?.toInt()),
+      );
+      return val;
+    });
 
-Map<String, dynamic> _$ContactSubmit201ResponseToJson(
-  ContactSubmit201Response instance,
-) => <String, dynamic>{
+Map<String, dynamic> _$ContactSubmit201ResponseToJson(ContactSubmit201Response instance) => <String, dynamic>{
   'message': instance.message,
   'data': instance.data.toJson(),
   'pagination': ?instance.pagination?.toJson(),

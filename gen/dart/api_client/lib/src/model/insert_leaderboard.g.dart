@@ -59,16 +59,13 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   InsertLeaderboard driverId(String? driverId) => call(driverId: driverId);
 
   @override
-  InsertLeaderboard merchantId(String? merchantId) =>
-      call(merchantId: merchantId);
+  InsertLeaderboard merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
-  InsertLeaderboard category(InsertLeaderboardCategoryEnum category) =>
-      call(category: category);
+  InsertLeaderboard category(InsertLeaderboardCategoryEnum category) => call(category: category);
 
   @override
-  InsertLeaderboard period(InsertLeaderboardPeriodEnum period) =>
-      call(period: period);
+  InsertLeaderboard period(InsertLeaderboardPeriodEnum period) => call(period: period);
 
   @override
   InsertLeaderboard rank(int rank) => call(rank: rank);
@@ -77,8 +74,7 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
   InsertLeaderboard score(int score) => call(score: score);
 
   @override
-  InsertLeaderboard periodStart(DateTime periodStart) =>
-      call(periodStart: periodStart);
+  InsertLeaderboard periodStart(DateTime periodStart) => call(periodStart: periodStart);
 
   @override
   InsertLeaderboard periodEnd(DateTime periodEnd) => call(periodEnd: periodEnd);
@@ -131,8 +127,7 @@ class _$InsertLeaderboardCWProxyImpl implements _$InsertLeaderboardCWProxy {
           ? _value.score
           // ignore: cast_nullable_to_non_nullable
           : score as int,
-      periodStart:
-          periodStart == const $CopyWithPlaceholder() || periodStart == null
+      periodStart: periodStart == const $CopyWithPlaceholder() || periodStart == null
           ? _value.periodStart
           // ignore: cast_nullable_to_non_nullable
           : periodStart as DateTime,
@@ -148,66 +143,42 @@ extension $InsertLeaderboardCopyWith on InsertLeaderboard {
   /// Returns a callable class used to build a new instance with modified fields.
   /// Example: `instanceOfInsertLeaderboard.copyWith(...)` or `instanceOfInsertLeaderboard.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$InsertLeaderboardCWProxy get copyWith =>
-      _$InsertLeaderboardCWProxyImpl(this);
+  _$InsertLeaderboardCWProxy get copyWith => _$InsertLeaderboardCWProxyImpl(this);
 }
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('InsertLeaderboard', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'userId',
-          'category',
-          'period',
-          'rank',
-          'score',
-          'periodStart',
-          'periodEnd',
-        ],
-      );
-      final val = InsertLeaderboard(
-        userId: $checkedConvert('userId', (v) => v as String),
-        driverId: $checkedConvert('driverId', (v) => v as String?),
-        merchantId: $checkedConvert('merchantId', (v) => v as String?),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$InsertLeaderboardCategoryEnumEnumMap, v),
-        ),
-        period: $checkedConvert(
-          'period',
-          (v) => $enumDecode(_$InsertLeaderboardPeriodEnumEnumMap, v),
-        ),
-        rank: $checkedConvert('rank', (v) => (v as num).toInt()),
-        score: $checkedConvert('score', (v) => (v as num).toInt()),
-        periodStart: $checkedConvert(
-          'periodStart',
-          (v) => DateTime.parse(v as String),
-        ),
-        periodEnd: $checkedConvert(
-          'periodEnd',
-          (v) => DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    });
+InsertLeaderboard _$InsertLeaderboardFromJson(Map<String, dynamic> json) => $checkedCreate('InsertLeaderboard', json, (
+  $checkedConvert,
+) {
+  $checkKeys(json, requiredKeys: const ['userId', 'category', 'period', 'rank', 'score', 'periodStart', 'periodEnd']);
+  final val = InsertLeaderboard(
+    userId: $checkedConvert('userId', (v) => v as String),
+    driverId: $checkedConvert('driverId', (v) => v as String?),
+    merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    category: $checkedConvert('category', (v) => $enumDecode(_$InsertLeaderboardCategoryEnumEnumMap, v)),
+    period: $checkedConvert('period', (v) => $enumDecode(_$InsertLeaderboardPeriodEnumEnumMap, v)),
+    rank: $checkedConvert('rank', (v) => (v as num).toInt()),
+    score: $checkedConvert('score', (v) => (v as num).toInt()),
+    periodStart: $checkedConvert('periodStart', (v) => DateTime.parse(v as String)),
+    periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
+  );
+  return val;
+});
 
-Map<String, dynamic> _$InsertLeaderboardToJson(InsertLeaderboard instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
-      'driverId': ?instance.driverId,
-      'merchantId': ?instance.merchantId,
-      'category': _$InsertLeaderboardCategoryEnumEnumMap[instance.category]!,
-      'period': _$InsertLeaderboardPeriodEnumEnumMap[instance.period]!,
-      'rank': instance.rank,
-      'score': instance.score,
-      'periodStart': instance.periodStart.toIso8601String(),
-      'periodEnd': instance.periodEnd.toIso8601String(),
-    };
+Map<String, dynamic> _$InsertLeaderboardToJson(InsertLeaderboard instance) => <String, dynamic>{
+  'userId': instance.userId,
+  'driverId': ?instance.driverId,
+  'merchantId': ?instance.merchantId,
+  'category': _$InsertLeaderboardCategoryEnumEnumMap[instance.category]!,
+  'period': _$InsertLeaderboardPeriodEnumEnumMap[instance.period]!,
+  'rank': instance.rank,
+  'score': instance.score,
+  'periodStart': instance.periodStart.toIso8601String(),
+  'periodEnd': instance.periodEnd.toIso8601String(),
+};
 
 const _$InsertLeaderboardCategoryEnumEnumMap = {
   InsertLeaderboardCategoryEnum.RATING: 'RATING',

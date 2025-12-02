@@ -9,12 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'food_pricing_configuration.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class FoodPricingConfiguration {
   /// Returns a new [FoodPricingConfiguration] instance.
   const FoodPricingConfiguration({
@@ -27,34 +22,32 @@ class FoodPricingConfiguration {
 
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
-  
+
   @JsonKey(name: r'perKmRate', required: true, includeIfNull: false)
   final num perKmRate;
-  
+
   @JsonKey(name: r'minimumFare', required: true, includeIfNull: false)
   final num minimumFare;
-  
+
   @JsonKey(name: r'platformFeeRate', required: true, includeIfNull: false)
   final num platformFeeRate;
-  
+
   @JsonKey(name: r'taxRate', required: true, includeIfNull: false)
   final num taxRate;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is FoodPricingConfiguration &&
-    other.baseFare == baseFare &&
-    other.perKmRate == perKmRate &&
-    other.minimumFare == minimumFare &&
-    other.platformFeeRate == platformFeeRate &&
-    other.taxRate == taxRate;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FoodPricingConfiguration &&
+          other.baseFare == baseFare &&
+          other.perKmRate == perKmRate &&
+          other.minimumFare == minimumFare &&
+          other.platformFeeRate == platformFeeRate &&
+          other.taxRate == taxRate;
 
   @override
   int get hashCode =>
-      baseFare.hashCode +
-      perKmRate.hashCode +
-      minimumFare.hashCode +
-      platformFeeRate.hashCode +
-      taxRate.hashCode;
+      baseFare.hashCode + perKmRate.hashCode + minimumFare.hashCode + platformFeeRate.hashCode + taxRate.hashCode;
 
   factory FoodPricingConfiguration.fromJson(Map<String, dynamic> json) => _$FoodPricingConfigurationFromJson(json);
 
@@ -64,6 +57,4 @@ class FoodPricingConfiguration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

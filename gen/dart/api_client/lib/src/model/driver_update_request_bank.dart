@@ -9,34 +9,24 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'driver_update_request_bank.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class DriverUpdateRequestBank {
   /// Returns a new [DriverUpdateRequestBank] instance.
-  const DriverUpdateRequestBank({
-    required this.provider,
-    required this.number,
-  });
+  const DriverUpdateRequestBank({required this.provider, required this.number});
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final DriverUpdateRequestBankProviderEnum provider;
-  
+
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is DriverUpdateRequestBank &&
-    other.provider == provider &&
-    other.number == number;
 
   @override
-  int get hashCode =>
-      provider.hashCode +
-      number.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DriverUpdateRequestBank && other.provider == provider && other.number == number;
+
+  @override
+  int get hashCode => provider.hashCode + number.hashCode;
 
   factory DriverUpdateRequestBank.fromJson(Map<String, dynamic> json) => _$DriverUpdateRequestBankFromJson(json);
 
@@ -46,7 +36,6 @@ class DriverUpdateRequestBank {
   String toString() {
     return toJson().toString();
   }
-
 }
 
 enum DriverUpdateRequestBankProviderEnum {
@@ -60,13 +49,11 @@ enum DriverUpdateRequestBankProviderEnum {
   MANDIRI(r'MANDIRI'),
   @JsonValue(r'PERMATA')
   PERMATA(r'PERMATA');
-  
+
   const DriverUpdateRequestBankProviderEnum(this.value);
-  
+
   final String value;
-  
+
   @override
   String toString() => value;
 }
-
-

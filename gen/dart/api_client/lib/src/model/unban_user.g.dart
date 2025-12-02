@@ -58,13 +58,10 @@ extension $UnbanUserCopyWith on UnbanUser {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UnbanUser _$UnbanUserFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('UnbanUser', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['id']);
-      final val = UnbanUser(id: $checkedConvert('id', (v) => v as String));
-      return val;
-    });
+UnbanUser _$UnbanUserFromJson(Map<String, dynamic> json) => $checkedCreate('UnbanUser', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['id']);
+  final val = UnbanUser(id: $checkedConvert('id', (v) => v as String));
+  return val;
+});
 
-Map<String, dynamic> _$UnbanUserToJson(UnbanUser instance) => <String, dynamic>{
-  'id': instance.id,
-};
+Map<String, dynamic> _$UnbanUserToJson(UnbanUser instance) => <String, dynamic>{'id': instance.id};

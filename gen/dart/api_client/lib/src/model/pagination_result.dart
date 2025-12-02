@@ -9,45 +9,35 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'pagination_result.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class PaginationResult {
   /// Returns a new [PaginationResult] instance.
-  const PaginationResult({
-     this.totalPages,
-     this.nextCursor,
-     this.hasMore,
-  });
+  const PaginationResult({this.totalPages, this.nextCursor, this.hasMore});
 
-      /// offset
-          // minimum: 0
-          // maximum: 9007199254740991
+  /// offset
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
-      /// cursor
+
+  /// cursor
   @JsonKey(name: r'nextCursor', required: false, includeIfNull: false)
   final String? nextCursor;
-  
-      /// cursor
+
+  /// cursor
   @JsonKey(name: r'hasMore', required: false, includeIfNull: false)
   final bool? hasMore;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is PaginationResult &&
-    other.totalPages == totalPages &&
-    other.nextCursor == nextCursor &&
-    other.hasMore == hasMore;
 
   @override
-  int get hashCode =>
-      totalPages.hashCode +
-      nextCursor.hashCode +
-      hasMore.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaginationResult &&
+          other.totalPages == totalPages &&
+          other.nextCursor == nextCursor &&
+          other.hasMore == hasMore;
+
+  @override
+  int get hashCode => totalPages.hashCode + nextCursor.hashCode + hasMore.hashCode;
 
   factory PaginationResult.fromJson(Map<String, dynamic> json) => _$PaginationResultFromJson(json);
 
@@ -57,6 +47,4 @@ class PaginationResult {
   String toString() {
     return toJson().toString();
   }
-
 }
-

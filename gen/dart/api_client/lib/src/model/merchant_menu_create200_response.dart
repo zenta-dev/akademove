@@ -11,50 +11,39 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'merchant_menu_create200_response.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class MerchantMenuCreate200Response {
   /// Returns a new [MerchantMenuCreate200Response] instance.
-  const MerchantMenuCreate200Response({
-    required this.message,
-    required this.data,
-     this.pagination,
-     this.totalPages,
-  });
+  const MerchantMenuCreate200Response({required this.message, required this.data, this.pagination, this.totalPages});
 
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'data', required: true, includeIfNull: false)
   final MerchantMenu data;
-  
+
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
-  
-          // minimum: 0
-          // maximum: 9007199254740991
+
+  // minimum: 0
+  // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: false, includeIfNull: false)
   final int? totalPages;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is MerchantMenuCreate200Response &&
-    other.message == message &&
-    other.data == data &&
-    other.pagination == pagination &&
-    other.totalPages == totalPages;
 
   @override
-  int get hashCode =>
-      message.hashCode +
-      data.hashCode +
-      pagination.hashCode +
-      totalPages.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MerchantMenuCreate200Response &&
+          other.message == message &&
+          other.data == data &&
+          other.pagination == pagination &&
+          other.totalPages == totalPages;
 
-  factory MerchantMenuCreate200Response.fromJson(Map<String, dynamic> json) => _$MerchantMenuCreate200ResponseFromJson(json);
+  @override
+  int get hashCode => message.hashCode + data.hashCode + pagination.hashCode + totalPages.hashCode;
+
+  factory MerchantMenuCreate200Response.fromJson(Map<String, dynamic> json) =>
+      _$MerchantMenuCreate200ResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$MerchantMenuCreate200ResponseToJson(this);
 
@@ -62,6 +51,4 @@ class MerchantMenuCreate200Response {
   String toString() {
     return toJson().toString();
   }
-
 }
-

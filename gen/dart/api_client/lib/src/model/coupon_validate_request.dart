@@ -10,46 +10,34 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'coupon_validate_request.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class CouponValidateRequest {
   /// Returns a new [CouponValidateRequest] instance.
-  const CouponValidateRequest({
-    required this.code,
-    required this.orderAmount,
-     this.serviceType,
-     this.merchantId,
-  });
+  const CouponValidateRequest({required this.code, required this.orderAmount, this.serviceType, this.merchantId});
 
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
-  
+
   @JsonKey(name: r'orderAmount', required: true, includeIfNull: false)
   final num orderAmount;
-  
+
   @JsonKey(name: r'serviceType', required: false, includeIfNull: false)
   final OrderType? serviceType;
-  
+
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is CouponValidateRequest &&
-    other.code == code &&
-    other.orderAmount == orderAmount &&
-    other.serviceType == serviceType &&
-    other.merchantId == merchantId;
 
   @override
-  int get hashCode =>
-      code.hashCode +
-      orderAmount.hashCode +
-      serviceType.hashCode +
-      merchantId.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CouponValidateRequest &&
+          other.code == code &&
+          other.orderAmount == orderAmount &&
+          other.serviceType == serviceType &&
+          other.merchantId == merchantId;
+
+  @override
+  int get hashCode => code.hashCode + orderAmount.hashCode + serviceType.hashCode + merchantId.hashCode;
 
   factory CouponValidateRequest.fromJson(Map<String, dynamic> json) => _$CouponValidateRequestFromJson(json);
 
@@ -59,6 +47,4 @@ class CouponValidateRequest {
   String toString() {
     return toJson().toString();
   }
-
 }
-

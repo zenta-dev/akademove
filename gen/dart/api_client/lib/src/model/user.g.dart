@@ -146,8 +146,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
-      emailVerified:
-          emailVerified == const $CopyWithPlaceholder() || emailVerified == null
+      emailVerified: emailVerified == const $CopyWithPlaceholder() || emailVerified == null
           ? _value.emailVerified
           // ignore: cast_nullable_to_non_nullable
           : emailVerified as bool,
@@ -187,8 +186,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.updatedAt
           // ignore: cast_nullable_to_non_nullable
           : updatedAt as DateTime,
-      userBadges:
-          userBadges == const $CopyWithPlaceholder() || userBadges == null
+      userBadges: userBadges == const $CopyWithPlaceholder() || userBadges == null
           ? _value.userBadges
           // ignore: cast_nullable_to_non_nullable
           : userBadges as List<UserBadge>,
@@ -207,9 +205,7 @@ extension $UserCopyWith on User {
 // JsonSerializableGenerator
 // **************************************************************************
 
-User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
-  $checkedConvert,
-) {
+User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, ($checkedConvert) {
   $checkKeys(
     json,
     requiredKeys: const [
@@ -234,25 +230,14 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
     banned: $checkedConvert('banned', (v) => v as bool),
     banReason: $checkedConvert('banReason', (v) => v as String?),
-    banExpires: $checkedConvert(
-      'banExpires',
-      (v) => v == null ? null : DateTime.parse(v as String),
-    ),
-    gender: $checkedConvert(
-      'gender',
-      (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
-    ),
-    phone: $checkedConvert(
-      'phone',
-      (v) => Phone.fromJson(v as Map<String, dynamic>),
-    ),
+    banExpires: $checkedConvert('banExpires', (v) => v == null ? null : DateTime.parse(v as String)),
+    gender: $checkedConvert('gender', (v) => $enumDecodeNullable(_$UserGenderEnumMap, v)),
+    phone: $checkedConvert('phone', (v) => Phone.fromJson(v as Map<String, dynamic>)),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
     userBadges: $checkedConvert(
       'userBadges',
-      (v) => (v as List<dynamic>)
-          .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      (v) => (v as List<dynamic>).map((e) => UserBadge.fromJson(e as Map<String, dynamic>)).toList(),
     ),
   );
   return val;
@@ -283,7 +268,4 @@ const _$UserRoleEnumMap = {
   UserRole.USER: 'USER',
 };
 
-const _$UserGenderEnumMap = {
-  UserGender.MALE: 'MALE',
-  UserGender.FEMALE: 'FEMALE',
-};
+const _$UserGenderEnumMap = {UserGender.MALE: 'MALE', UserGender.FEMALE: 'FEMALE'};

@@ -9,40 +9,27 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'order_note.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class OrderNote {
   /// Returns a new [OrderNote] instance.
-  const OrderNote({
-     this.pickup,
-     this.dropoff,
-     this.instructions,
-  });
+  const OrderNote({this.pickup, this.dropoff, this.instructions});
 
   @JsonKey(name: r'pickup', required: false, includeIfNull: false)
   final String? pickup;
-  
+
   @JsonKey(name: r'dropoff', required: false, includeIfNull: false)
   final String? dropoff;
-  
+
   @JsonKey(name: r'instructions', required: false, includeIfNull: false)
   final String? instructions;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderNote &&
-    other.pickup == pickup &&
-    other.dropoff == dropoff &&
-    other.instructions == instructions;
 
   @override
-  int get hashCode =>
-      pickup.hashCode +
-      dropoff.hashCode +
-      instructions.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderNote && other.pickup == pickup && other.dropoff == dropoff && other.instructions == instructions;
+
+  @override
+  int get hashCode => pickup.hashCode + dropoff.hashCode + instructions.hashCode;
 
   factory OrderNote.fromJson(Map<String, dynamic> json) => _$OrderNoteFromJson(json);
 
@@ -52,6 +39,4 @@ class OrderNote {
   String toString() {
     return toJson().toString();
   }
-
 }
-

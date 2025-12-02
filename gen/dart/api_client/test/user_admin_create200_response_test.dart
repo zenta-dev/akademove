@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for UserAdminCreate200Response
 void main() {
-  final UserAdminCreate200Response?
-  instance = /* UserAdminCreate200Response(...) */ null;
+  final UserAdminCreate200Response? instance = /* UserAdminCreate200Response(...) */ null;
   // TODO add properties to the entity
 
   group(UserAdminCreate200Response, () {

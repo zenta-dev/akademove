@@ -61,14 +61,13 @@ extension $UpdateUserRoleCopyWith on UpdateUserRole {
 UpdateUserRole _$UpdateUserRoleFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UpdateUserRole', json, ($checkedConvert) {
       $checkKeys(json, requiredKeys: const ['role']);
-      final val = UpdateUserRole(
-        role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
-      );
+      final val = UpdateUserRole(role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)));
       return val;
     });
 
-Map<String, dynamic> _$UpdateUserRoleToJson(UpdateUserRole instance) =>
-    <String, dynamic>{'role': _$UserRoleEnumMap[instance.role]!};
+Map<String, dynamic> _$UpdateUserRoleToJson(UpdateUserRole instance) => <String, dynamic>{
+  'role': _$UserRoleEnumMap[instance.role]!,
+};
 
 const _$UserRoleEnumMap = {
   UserRole.ADMIN: 'ADMIN',

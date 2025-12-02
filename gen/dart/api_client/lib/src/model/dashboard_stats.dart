@@ -9,12 +9,7 @@ import 'package:copy_with_extension/copy_with_extension.dart';
 part 'dashboard_stats.g.dart';
 
 @CopyWith()
-@JsonSerializable(
-  checked: true,
-  createToJson: true,
-  disallowUnrecognizedKeys: false,
-  explicitToJson: true,
-)
+@JsonSerializable(checked: true, createToJson: true, disallowUnrecognizedKeys: false, explicitToJson: true)
 class DashboardStats {
   /// Returns a new [DashboardStats] instance.
   const DashboardStats({
@@ -33,50 +28,52 @@ class DashboardStats {
 
   @JsonKey(name: r'totalUsers', required: true, includeIfNull: false)
   final num totalUsers;
-  
+
   @JsonKey(name: r'totalDrivers', required: true, includeIfNull: false)
   final num totalDrivers;
-  
+
   @JsonKey(name: r'totalMerchants', required: true, includeIfNull: false)
   final num totalMerchants;
-  
+
   @JsonKey(name: r'activeOrders', required: true, includeIfNull: false)
   final num activeOrders;
-  
+
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
-  
+
   @JsonKey(name: r'completedOrders', required: true, includeIfNull: false)
   final num completedOrders;
-  
+
   @JsonKey(name: r'cancelledOrders', required: true, includeIfNull: false)
   final num cancelledOrders;
-  
+
   @JsonKey(name: r'totalRevenue', required: true, includeIfNull: false)
   final num totalRevenue;
-  
+
   @JsonKey(name: r'todayRevenue', required: true, includeIfNull: false)
   final num todayRevenue;
-  
+
   @JsonKey(name: r'todayOrders', required: true, includeIfNull: false)
   final num todayOrders;
-  
+
   @JsonKey(name: r'onlineDrivers', required: true, includeIfNull: false)
   final num onlineDrivers;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is DashboardStats &&
-    other.totalUsers == totalUsers &&
-    other.totalDrivers == totalDrivers &&
-    other.totalMerchants == totalMerchants &&
-    other.activeOrders == activeOrders &&
-    other.totalOrders == totalOrders &&
-    other.completedOrders == completedOrders &&
-    other.cancelledOrders == cancelledOrders &&
-    other.totalRevenue == totalRevenue &&
-    other.todayRevenue == todayRevenue &&
-    other.todayOrders == todayOrders &&
-    other.onlineDrivers == onlineDrivers;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is DashboardStats &&
+          other.totalUsers == totalUsers &&
+          other.totalDrivers == totalDrivers &&
+          other.totalMerchants == totalMerchants &&
+          other.activeOrders == activeOrders &&
+          other.totalOrders == totalOrders &&
+          other.completedOrders == completedOrders &&
+          other.cancelledOrders == cancelledOrders &&
+          other.totalRevenue == totalRevenue &&
+          other.todayRevenue == todayRevenue &&
+          other.todayOrders == todayOrders &&
+          other.onlineDrivers == onlineDrivers;
 
   @override
   int get hashCode =>
@@ -100,6 +97,4 @@ class DashboardStats {
   String toString() {
     return toJson().toString();
   }
-
 }
-

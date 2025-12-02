@@ -42,10 +42,7 @@ class _$LocationCWProxyImpl implements _$LocationCWProxy {
   /// ```dart
   /// Location(...).copyWith(id: 12, name: "My name")
   /// ```
-  Location call({
-    Object? lat = const $CopyWithPlaceholder(),
-    Object? lng = const $CopyWithPlaceholder(),
-  }) {
+  Location call({Object? lat = const $CopyWithPlaceholder(), Object? lng = const $CopyWithPlaceholder()}) {
     return Location(
       lat: lat == const $CopyWithPlaceholder() || lat == null
           ? _value.lat
@@ -70,17 +67,10 @@ extension $LocationCopyWith on Location {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Location _$LocationFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('Location', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['lat', 'lng']);
-      final val = Location(
-        lat: $checkedConvert('lat', (v) => v as num),
-        lng: $checkedConvert('lng', (v) => v as num),
-      );
-      return val;
-    });
+Location _$LocationFromJson(Map<String, dynamic> json) => $checkedCreate('Location', json, ($checkedConvert) {
+  $checkKeys(json, requiredKeys: const ['lat', 'lng']);
+  final val = Location(lat: $checkedConvert('lat', (v) => v as num), lng: $checkedConvert('lng', (v) => v as num));
+  return val;
+});
 
-Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
-  'lat': instance.lat,
-  'lng': instance.lng,
-};
+Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{'lat': instance.lat, 'lng': instance.lng};

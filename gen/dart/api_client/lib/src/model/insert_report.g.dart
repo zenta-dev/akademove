@@ -59,26 +59,22 @@ class _$InsertReportCWProxyImpl implements _$InsertReportCWProxy {
   InsertReport reporterId(String reporterId) => call(reporterId: reporterId);
 
   @override
-  InsertReport targetUserId(String targetUserId) =>
-      call(targetUserId: targetUserId);
+  InsertReport targetUserId(String targetUserId) => call(targetUserId: targetUserId);
 
   @override
   InsertReport category(ReportCategory category) => call(category: category);
 
   @override
-  InsertReport description(String description) =>
-      call(description: description);
+  InsertReport description(String description) => call(description: description);
 
   @override
-  InsertReport evidenceUrl(String? evidenceUrl) =>
-      call(evidenceUrl: evidenceUrl);
+  InsertReport evidenceUrl(String? evidenceUrl) => call(evidenceUrl: evidenceUrl);
 
   @override
   InsertReport status(ReportStatus status) => call(status: status);
 
   @override
-  InsertReport handledById(String? handledById) =>
-      call(handledById: handledById);
+  InsertReport handledById(String? handledById) => call(handledById: handledById);
 
   @override
   InsertReport resolution(String? resolution) => call(resolution: resolution);
@@ -107,13 +103,11 @@ class _$InsertReportCWProxyImpl implements _$InsertReportCWProxy {
           ? _value.orderId
           // ignore: cast_nullable_to_non_nullable
           : orderId as String?,
-      reporterId:
-          reporterId == const $CopyWithPlaceholder() || reporterId == null
+      reporterId: reporterId == const $CopyWithPlaceholder() || reporterId == null
           ? _value.reporterId
           // ignore: cast_nullable_to_non_nullable
           : reporterId as String,
-      targetUserId:
-          targetUserId == const $CopyWithPlaceholder() || targetUserId == null
+      targetUserId: targetUserId == const $CopyWithPlaceholder() || targetUserId == null
           ? _value.targetUserId
           // ignore: cast_nullable_to_non_nullable
           : targetUserId as String,
@@ -121,8 +115,7 @@ class _$InsertReportCWProxyImpl implements _$InsertReportCWProxy {
           ? _value.category
           // ignore: cast_nullable_to_non_nullable
           : category as ReportCategory,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
+      description: description == const $CopyWithPlaceholder() || description == null
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
           : description as String,
@@ -159,48 +152,32 @@ extension $InsertReportCopyWith on InsertReport {
 
 InsertReport _$InsertReportFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertReport', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'reporterId',
-          'targetUserId',
-          'category',
-          'description',
-          'status',
-        ],
-      );
+      $checkKeys(json, requiredKeys: const ['reporterId', 'targetUserId', 'category', 'description', 'status']);
       final val = InsertReport(
         orderId: $checkedConvert('orderId', (v) => v as String?),
         reporterId: $checkedConvert('reporterId', (v) => v as String),
         targetUserId: $checkedConvert('targetUserId', (v) => v as String),
-        category: $checkedConvert(
-          'category',
-          (v) => $enumDecode(_$ReportCategoryEnumMap, v),
-        ),
+        category: $checkedConvert('category', (v) => $enumDecode(_$ReportCategoryEnumMap, v)),
         description: $checkedConvert('description', (v) => v as String),
         evidenceUrl: $checkedConvert('evidenceUrl', (v) => v as String?),
-        status: $checkedConvert(
-          'status',
-          (v) => $enumDecode(_$ReportStatusEnumMap, v),
-        ),
+        status: $checkedConvert('status', (v) => $enumDecode(_$ReportStatusEnumMap, v)),
         handledById: $checkedConvert('handledById', (v) => v as String?),
         resolution: $checkedConvert('resolution', (v) => v as String?),
       );
       return val;
     });
 
-Map<String, dynamic> _$InsertReportToJson(InsertReport instance) =>
-    <String, dynamic>{
-      'orderId': ?instance.orderId,
-      'reporterId': instance.reporterId,
-      'targetUserId': instance.targetUserId,
-      'category': _$ReportCategoryEnumMap[instance.category]!,
-      'description': instance.description,
-      'evidenceUrl': ?instance.evidenceUrl,
-      'status': _$ReportStatusEnumMap[instance.status]!,
-      'handledById': ?instance.handledById,
-      'resolution': ?instance.resolution,
-    };
+Map<String, dynamic> _$InsertReportToJson(InsertReport instance) => <String, dynamic>{
+  'orderId': ?instance.orderId,
+  'reporterId': instance.reporterId,
+  'targetUserId': instance.targetUserId,
+  'category': _$ReportCategoryEnumMap[instance.category]!,
+  'description': instance.description,
+  'evidenceUrl': ?instance.evidenceUrl,
+  'status': _$ReportStatusEnumMap[instance.status]!,
+  'handledById': ?instance.handledById,
+  'resolution': ?instance.resolution,
+};
 
 const _$ReportCategoryEnumMap = {
   ReportCategory.BEHAVIOR: 'BEHAVIOR',

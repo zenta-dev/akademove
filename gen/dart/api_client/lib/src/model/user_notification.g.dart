@@ -152,17 +152,7 @@ extension $UserNotificationCopyWith on UserNotification {
 
 UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) =>
     $checkedCreate('UserNotification', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'id',
-          'userId',
-          'title',
-          'body',
-          'isRead',
-          'createdAt',
-        ],
-      );
+      $checkKeys(json, requiredKeys: const ['id', 'userId', 'title', 'body', 'isRead', 'createdAt']);
       final val = UserNotification(
         id: $checkedConvert('id', (v) => v as String),
         userId: $checkedConvert('userId', (v) => v as String),
@@ -171,27 +161,20 @@ UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) =>
         data: $checkedConvert('data', (v) => v),
         messageId: $checkedConvert('messageId', (v) => v as String?),
         isRead: $checkedConvert('isRead', (v) => v as bool),
-        createdAt: $checkedConvert(
-          'createdAt',
-          (v) => DateTime.parse(v as String),
-        ),
-        readAt: $checkedConvert(
-          'readAt',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
+        createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
+        readAt: $checkedConvert('readAt', (v) => v == null ? null : DateTime.parse(v as String)),
       );
       return val;
     });
 
-Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'title': instance.title,
-      'body': instance.body,
-      'data': ?instance.data,
-      'messageId': ?instance.messageId,
-      'isRead': instance.isRead,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'readAt': ?instance.readAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'title': instance.title,
+  'body': instance.body,
+  'data': ?instance.data,
+  'messageId': ?instance.messageId,
+  'isRead': instance.isRead,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'readAt': ?instance.readAt?.toIso8601String(),
+};

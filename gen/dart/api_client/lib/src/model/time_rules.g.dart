@@ -29,12 +29,10 @@ class _$TimeRulesCWProxyImpl implements _$TimeRulesCWProxy {
   final TimeRules _value;
 
   @override
-  TimeRules allowedDays(List<DayOfWeek>? allowedDays) =>
-      call(allowedDays: allowedDays);
+  TimeRules allowedDays(List<DayOfWeek>? allowedDays) => call(allowedDays: allowedDays);
 
   @override
-  TimeRules allowedHours(List<int>? allowedHours) =>
-      call(allowedHours: allowedHours);
+  TimeRules allowedHours(List<int>? allowedHours) => call(allowedHours: allowedHours);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -72,27 +70,22 @@ extension $TimeRulesCopyWith on TimeRules {
 // JsonSerializableGenerator
 // **************************************************************************
 
-TimeRules _$TimeRulesFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('TimeRules', json, ($checkedConvert) {
-      final val = TimeRules(
-        allowedDays: $checkedConvert(
-          'allowedDays',
-          (v) => (v as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$DayOfWeekEnumMap, e))
-              .toList(),
-        ),
-        allowedHours: $checkedConvert(
-          'allowedHours',
-          (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
-        ),
-      );
-      return val;
-    });
+TimeRules _$TimeRulesFromJson(Map<String, dynamic> json) => $checkedCreate('TimeRules', json, ($checkedConvert) {
+  final val = TimeRules(
+    allowedDays: $checkedConvert(
+      'allowedDays',
+      (v) => (v as List<dynamic>?)?.map((e) => $enumDecode(_$DayOfWeekEnumMap, e)).toList(),
+    ),
+    allowedHours: $checkedConvert(
+      'allowedHours',
+      (v) => (v as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$TimeRulesToJson(TimeRules instance) => <String, dynamic>{
-  'allowedDays': ?instance.allowedDays
-      ?.map((e) => _$DayOfWeekEnumMap[e]!)
-      .toList(),
+  'allowedDays': ?instance.allowedDays?.map((e) => _$DayOfWeekEnumMap[e]!).toList(),
   'allowedHours': ?instance.allowedHours,
 };
 

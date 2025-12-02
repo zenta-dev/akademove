@@ -3,8 +3,7 @@ import 'package:api_client/api_client.dart';
 
 // tests for TransactionGet200Response
 void main() {
-  final TransactionGet200Response?
-  instance = /* TransactionGet200Response(...) */ null;
+  final TransactionGet200Response? instance = /* TransactionGet200Response(...) */ null;
   // TODO add properties to the entity
 
   group(TransactionGet200Response, () {
