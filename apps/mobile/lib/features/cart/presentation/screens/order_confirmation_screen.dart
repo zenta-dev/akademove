@@ -502,7 +502,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
           );
         }
 
-        // Navigate back to home or order history
+        // For food orders, navigate to home for now
+        // TODO: Consider adding order tracking screen for food orders
+        // by updating UserOrderCubit state and navigating to userRideOnTrip
         if (mounted) {
           context.go('/user/home');
         }

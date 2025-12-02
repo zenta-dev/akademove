@@ -89,12 +89,26 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                       );
 
                       if (result != null && context.mounted) {
-                        context.showMyToast(
-                          'Delivery order placed successfully',
-                          type: ToastType.success,
-                        );
-                        // Pop back to home
-                        context.go(Routes.userHome.path);
+                        // For wallet payment, navigate to trip tracking screen
+                        if (method == PaymentMethod.WALLET &&
+                            result.payment.status ==
+                                TransactionStatus.SUCCESS) {
+                          context
+                            ..showMyToast(
+                              'Delivery order placed successfully',
+                              type: ToastType.success,
+                            )
+                            ..pushReplacementNamed(Routes.userRideOnTrip.name);
+                        } else {
+                          // For other payment methods, navigate to home
+                          // (payment flow will be handled by payment provider)
+                          context
+                            ..showMyToast(
+                              'Delivery order placed successfully',
+                              type: ToastType.success,
+                            )
+                            ..go(Routes.userHome.path);
+                        }
                       }
                     },
                     child: deliveryState.isLoading
