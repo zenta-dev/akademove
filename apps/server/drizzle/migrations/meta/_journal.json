@@ -29,6 +29,13 @@
 			"when": 1764658265813,
 			"tag": "0003_merge_all_migrations",
 			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1764669204364,
+			"tag": "0004_plain_tiger_shark",
+			"breakpoints": true
 		}
 	]
 }

@@ -5,6 +5,7 @@ import * as auth from "@/core/tables/auth";
 import * as badge from "@/core/tables/badge";
 import * as chat from "@/core/tables/chat";
 import * as configuration from "@/core/tables/configuration";
+import * as contact from "@/core/tables/contact";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
 import * as emergency from "@/core/tables/emergency";
@@ -24,6 +25,7 @@ export const tables = {
 	...badge,
 	...chat,
 	...configuration,
+	...contact,
 	...coupon,
 	...driver,
 	...emergency,

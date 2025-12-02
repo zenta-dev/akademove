@@ -3,6 +3,7 @@ import { BadgeSchemaRegistries } from "./badge.js";
 import { ChatSchemaRegistries } from "./chat.js";
 import { CommonSchemaRegistries, type SchemaRegistries } from "./common.js";
 import { ConfigurationSchemaRegistries } from "./configuration.js";
+import { ContactSchemaRegistries } from "./contact.js";
 import { CouponSchemaRegistries } from "./coupon.js";
 import { DriverSchemaRegistries } from "./driver.js";
 import { EmergencySchemaRegistries } from "./emergency.js";
@@ -26,6 +27,7 @@ export const AllSchemaRegistries = {
 	...BadgeSchemaRegistries,
 	...ChatSchemaRegistries,
 	...ConfigurationSchemaRegistries,
+	...ContactSchemaRegistries,
 	...CouponSchemaRegistries,
 	...DriverSchemaRegistries,
 	...EmergencySchemaRegistries,

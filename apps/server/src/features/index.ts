@@ -9,6 +9,8 @@ import { ChatHandler } from "./chat/chat-handler";
 import { ChatSpec } from "./chat/chat-spec";
 import { ConfigurationHandler } from "./configuration/configuration-handler";
 import { ConfigurationSpec } from "./configuration/configuration-spec";
+import { ContactHandler } from "./contact/contact-handler";
+import { ContactSpec } from "./contact/contact-spec";
 import { CouponHandler } from "./coupon/coupon-handler";
 import { CouponSpec } from "./coupon/coupon-spec";
 import { DriverHandler } from "./driver/driver-handler";
@@ -41,6 +43,7 @@ export const FetchServerSpec = oc.router({
 	badge: oc.prefix("/badges").router(BadgeSpec),
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
+	contact: oc.prefix("/contacts").router(ContactSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
 	emergency: oc.prefix("/emergencies").router(EmergencySpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
@@ -62,6 +65,7 @@ export const FetchServerRouter = os.router({
 	badge: BadgeHandler,
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
+	contact: ContactHandler,
 	driver: DriverHandler,
 	emergency: EmergencyHandler,
 	leaderboard: LeaderboardHandler,

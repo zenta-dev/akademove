@@ -9,6 +9,7 @@ import type { BadgeRepository } from "@/features/badge/main/badge-main-repositor
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import type { ChatRepository } from "@/features/chat/chat-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
+import type { ContactRepository } from "@/features/contact/contact-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
@@ -56,6 +57,7 @@ export interface RepositoryContext {
 	};
 	chat: ChatRepository;
 	configuration: ConfigurationRepository;
+	contact: ContactRepository;
 	driver: {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;

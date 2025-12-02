@@ -41,6 +41,7 @@ export const index = (name?: string) =>
 
 export const allowedLoggedTables = pgEnum("allowed_logged_table", [
 	"configurations",
+	"contact",
 	"coupon",
 	"report",
 ]);
