@@ -92,12 +92,7 @@ class CouponRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      final data =
-          responseData.data ??
-          (throw const RepositoryError(
-            'Eligible coupons not found',
-            code: ErrorCode.notFound,
-          ));
+      final data = responseData.data;
 
       return SuccessResponse(
         message: responseData.message,
@@ -134,12 +129,7 @@ class CouponRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      final data =
-          responseData.data ??
-          (throw const RepositoryError(
-            'Validation data not found',
-            code: ErrorCode.notFound,
-          ));
+      final data = responseData.data;
 
       return SuccessResponse(
         message: responseData.message,

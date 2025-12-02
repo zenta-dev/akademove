@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +60,7 @@ class _UserWalletTopUpInsertAmountScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 4.h,
             children: [
-              Label(child: DefaultText('Amount', fontSize: 14.sp)),
+              Label(child: DefaultText(context.l10n.amount, fontSize: 14.sp)),
               TextField(
                 controller: amountController,
                 onChanged: (value) {
@@ -119,23 +120,10 @@ class _UserWalletTopUpInsertAmountScreenState
                               amount = 0;
                             }
                           });
-                          if (parsed == null) {
-                            showToast(
-                              context: context,
-                              builder: (context, overlay) => context.buildToast(
-                                title: 'Invalid amount',
-                                message: 'Top up amount atleast Rp 10,000',
-                              ),
-                            );
-                            return;
-                          }
-                          if (amount < 10_000) {
-                            showToast(
-                              context: context,
-                              builder: (context, overlay) => context.buildToast(
-                                title: 'Invalid amount',
-                                message: 'Top up amount atleast Rp 10,000',
-                              ),
+                          if (parsed == null || amount < 10_000) {
+                            context.showMyToast(
+                              context.l10n.error_top_up_minimum,
+                              type: ToastType.failed,
                             );
                             return;
                           }
@@ -159,7 +147,7 @@ class _UserWalletTopUpInsertAmountScreenState
                         },
                   child: state.isLoading
                       ? const Submiting()
-                      : const DefaultText('Next'),
+                      : DefaultText(context.l10n.button_next),
                 ),
               );
             },

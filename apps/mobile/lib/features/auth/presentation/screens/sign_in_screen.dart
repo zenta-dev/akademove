@@ -111,7 +111,7 @@ class _SignInFormViewState extends State<_SignInFormView> {
           case UserRole.OPERATOR:
           case null:
             context.showMyToast(
-              'Invalid user role, please use website to access admin features.',
+              context.l10n.unsupported_role_desc,
               type: ToastType.failed,
             );
         }

@@ -97,11 +97,149 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @withdraw_earnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw Earnings'**
+  String get withdraw_earnings;
+
+  /// No description provided for @no_transactions_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get no_transactions_yet;
+
+  /// No description provided for @view_all.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get view_all;
+
+  /// No description provided for @recent_transactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Transactions'**
+  String get recent_transactions;
+
+  /// No description provided for @net_earnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Earnings'**
+  String get net_earnings;
+
+  /// No description provided for @total_earnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Earnings'**
+  String get total_earnings;
+
+  /// No description provided for @total_income.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Income'**
+  String get total_income;
+
+  /// No description provided for @total_expenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Expenses'**
+  String get total_expenses;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @available_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Balance'**
+  String get available_balance;
+
+  /// No description provided for @earnings_wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings & Wallet'**
+  String get earnings_wallet;
+
+  /// No description provided for @failed_to_load_earnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load earnings'**
+  String get failed_to_load_earnings;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @unsupported_role_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'This user role is not supported in the mobile app, please use web app'**
+  String get unsupported_role_desc;
+
+  /// No description provided for @invalid_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid amount'**
+  String get invalid_amount;
+
+  /// No description provided for @top_up_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Top up successful'**
+  String get top_up_success;
+
+  /// No description provided for @qr_code_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'The QR code has expired'**
+  String get qr_code_expired;
+
   /// No description provided for @hello.
   ///
   /// In en, this message translates to:
   /// **'Hello'**
   String get hello;
+
+  /// No description provided for @payment_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Expired'**
+  String get payment_expired;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @e_wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'E-Wallet'**
+  String get e_wallet;
+
+  /// No description provided for @my_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'My Balance'**
+  String get my_balance;
+
+  /// No description provided for @success_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully signed in'**
+  String get success_sign_in;
 
   /// No description provided for @light_mode.
   ///
@@ -1920,6 +2058,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Remove image'**
   String get action_remove_image;
+
+  /// No description provided for @enter_withdrawal_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter withdrawal amount'**
+  String get enter_withdrawal_amount;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

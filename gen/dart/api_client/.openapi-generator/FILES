@@ -40,6 +40,13 @@ doc/ConfigurationApi.md
 doc/ConfigurationGet200Response.md
 doc/ConfigurationKey.md
 doc/ConfigurationList200Response.md
+doc/Contact.md
+doc/ContactKey.md
+doc/ContactList200Response.md
+doc/ContactList200ResponseData.md
+doc/ContactList200ResponseDataPagination.md
+doc/ContactStatus.md
+doc/ContactSubmit201Response.md
 doc/Coordinate.md
 doc/CountryCode.md
 doc/Coupon.md
@@ -93,6 +100,7 @@ doc/GeneralRuleType.md
 doc/GeneralRules.md
 doc/GetSessionResponse.md
 doc/InsertConfiguration.md
+doc/InsertContact.md
 doc/InsertCoupon.md
 doc/InsertEmergency.md
 doc/InsertLeaderboard.md
@@ -213,6 +221,7 @@ doc/TransactionType.md
 doc/TransferRequest.md
 doc/UnbanUser.md
 doc/UpdateConfiguration.md
+doc/UpdateContact.md
 doc/UpdateCoupon.md
 doc/UpdateEmergency.md
 doc/UpdateLeaderboard.md
@@ -305,6 +314,13 @@ lib/src/model/configuration.dart
 lib/src/model/configuration_get200_response.dart
 lib/src/model/configuration_key.dart
 lib/src/model/configuration_list200_response.dart
+lib/src/model/contact.dart
+lib/src/model/contact_key.dart
+lib/src/model/contact_list200_response.dart
+lib/src/model/contact_list200_response_data.dart
+lib/src/model/contact_list200_response_data_pagination.dart
+lib/src/model/contact_status.dart
+lib/src/model/contact_submit201_response.dart
 lib/src/model/coordinate.dart
 lib/src/model/country_code.dart
 lib/src/model/coupon.dart
@@ -355,6 +371,7 @@ lib/src/model/general_rule_type.dart
 lib/src/model/general_rules.dart
 lib/src/model/get_session_response.dart
 lib/src/model/insert_configuration.dart
+lib/src/model/insert_contact.dart
 lib/src/model/insert_coupon.dart
 lib/src/model/insert_emergency.dart
 lib/src/model/insert_leaderboard.dart
@@ -467,6 +484,7 @@ lib/src/model/transaction_type.dart
 lib/src/model/transfer_request.dart
 lib/src/model/unban_user.dart
 lib/src/model/update_configuration.dart
+lib/src/model/update_contact.dart
 lib/src/model/update_coupon.dart
 lib/src/model/update_emergency.dart
 lib/src/model/update_leaderboard.dart
@@ -499,3 +517,12 @@ lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 lib/src/model/withdraw_request.dart
 pubspec.yaml
+test/contact_key_test.dart
+test/contact_list200_response_data_pagination_test.dart
+test/contact_list200_response_data_test.dart
+test/contact_list200_response_test.dart
+test/contact_status_test.dart
+test/contact_submit201_response_test.dart
+test/contact_test.dart
+test/insert_contact_test.dart
+test/update_contact_test.dart

@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +17,7 @@ class UserWalletScreen extends StatelessWidget {
       headers: [
         AppBar(
           title: Text(
-            'E-Wallet',
+            context.l10n.e_wallet,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -107,7 +108,11 @@ class WalletBalanceCardWidget extends StatelessWidget {
       child: Column(
         spacing: 8.h,
         children: [
-          DefaultText('My Balance', fontSize: 12.sp, color: Colors.white),
+          DefaultText(
+            context.l10n.my_balance,
+            fontSize: 12.sp,
+            color: Colors.white,
+          ),
           DefaultText(
             context.formatCurrency(balance),
             fontSize: 24.sp,

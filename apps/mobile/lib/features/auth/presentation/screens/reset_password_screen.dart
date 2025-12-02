@@ -39,12 +39,12 @@ class ResetPasswordScreen extends StatelessWidget {
                     children: [
                       Assets.icons.brand.svg(width: 48.w),
                       DefaultText(
-                        'Reset Password',
+                        context.l10n.screen_title_reset_password,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                       ),
                       Text(
-                        'Enter your new password',
+                        context.l10n.description_reset_password,
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: context.colorScheme.mutedForeground,
@@ -124,7 +124,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
           Icon(LucideIcons.triangleAlert, size: 48.w, color: Colors.red),
           Gap(16.h),
           DefaultText(
-            'Invalid or missing reset token',
+            context.l10n.error_invalid_reset_token,
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -132,7 +132,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
           Button(
             style: const ButtonStyle.primary(),
             onPressed: () => context.goNamed(Routes.authSignIn.name),
-            child: const Text('Back to Sign In'),
+            child: Text(context.l10n.button_back_to_sign_in),
           ),
         ],
       ).gap(8.h);
@@ -150,7 +150,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
 
             if (newPassword != confirmPassword) {
               context.showMyToast(
-                'Passwords do not match',
+                context.l10n.error_password_mismatch,
                 type: ToastType.failed,
               );
               return;
@@ -192,7 +192,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                   FormField(
                     key: _confirmPasswordKey,
                     label: DefaultText(
-                      'Confirm Password',
+                      context.l10n.label_confirm_password,
                       fontWeight: FontWeight.w500,
                     ),
                     validator: const LengthValidator(min: 8),
@@ -224,7 +224,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                         child: isLoading
                             ? const Submiting()
                             : DefaultText(
-                                'Reset Password',
+                                context.l10n.button_reset_password,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),
@@ -236,7 +236,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                     spacing: 4.w,
                     children: [
                       DefaultText(
-                        'Remember your password?',
+                        context.l10n.message_remember_password,
                         fontSize: 14.sp,
                         color: context.colorScheme.mutedForeground,
                       ),

@@ -37,12 +37,12 @@ class ForgotPasswordScreen extends StatelessWidget {
                     children: [
                       Assets.icons.brand.svg(width: 48.w),
                       DefaultText(
-                        'Forgot Password',
+                        context.l10n.screen_title_forgot_password,
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                       ),
                       Text(
-                        'Enter your email to receive password reset instructions',
+                        context.l10n.description_forgot_password,
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: context.colorScheme.mutedForeground,
@@ -163,7 +163,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                         child: isLoading
                             ? const Submiting()
                             : DefaultText(
-                                'Send Reset Link',
+                                context.l10n.button_send_reset_link,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white,
                               ),
@@ -175,7 +175,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                     spacing: 4.w,
                     children: [
                       DefaultText(
-                        'Remember your password?',
+                        context.l10n.message_remember_password,
                         fontSize: 14.sp,
                         color: context.colorScheme.mutedForeground,
                       ),

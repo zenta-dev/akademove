@@ -432,9 +432,6 @@ class IncomingOrderListener extends StatelessWidget {
                 // Clear incoming order from state
                 context.read<DriverHomeCubit>().clearIncomingOrder();
 
-                // Reject the order
-                await context.read<DriverOrderCubit>().rejectOrder(order.id);
-
                 showToast(
                   context: context,
                   builder: (context, overlay) => context.buildToast(
@@ -442,6 +439,8 @@ class IncomingOrderListener extends StatelessWidget {
                     message: 'You rejected the order',
                   ),
                 );
+
+                await context.read<DriverOrderCubit>().rejectOrder(order.id);
               },
             ),
           ),

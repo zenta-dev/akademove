@@ -22,15 +22,16 @@ import 'package:api_client/src/model/pagination_order.dart';
 import 'package:api_client/src/model/update_coupon.dart';
 
 class CouponApi {
+
   final Dio _dio;
 
   const CouponApi(this._dio);
 
   /// couponCreate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [insertCoupon]
+  /// * [insertCoupon] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -40,7 +41,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponCreate200Response>> couponCreate({
+  Future<Response<CouponCreate200Response>> couponCreate({ 
     required InsertCoupon insertCoupon,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -52,10 +53,16 @@ class CouponApi {
     final _path = r'/coupons';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -66,10 +73,13 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(insertCoupon);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(insertCoupon);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -89,13 +99,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<CouponCreate200Response, CouponCreate200Response>(
-              rawData,
-              'CouponCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<CouponCreate200Response, CouponCreate200Response>(rawData, 'CouponCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -119,10 +123,10 @@ class CouponApi {
   }
 
   /// couponGet
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -132,7 +136,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponCreate200Response>> couponGet({
+  Future<Response<CouponCreate200Response>> couponGet({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -141,18 +145,19 @@ class CouponApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/coupons/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/coupons/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -171,13 +176,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<CouponCreate200Response, CouponCreate200Response>(
-              rawData,
-              'CouponCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<CouponCreate200Response, CouponCreate200Response>(rawData, 'CouponCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -201,10 +200,10 @@ class CouponApi {
   }
 
   /// couponGetEligibleCoupons
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [couponGetEligibleCouponsRequest]
+  /// * [couponGetEligibleCouponsRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -214,8 +213,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponGetEligibleCoupons200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponGetEligibleCoupons200Response>>
-  couponGetEligibleCoupons({
+  Future<Response<CouponGetEligibleCoupons200Response>> couponGetEligibleCoupons({ 
     required CouponGetEligibleCouponsRequest couponGetEligibleCouponsRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -227,10 +225,16 @@ class CouponApi {
     final _path = r'/coupons/eligible';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -241,10 +245,13 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(couponGetEligibleCouponsRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(couponGetEligibleCouponsRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -264,12 +271,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<
-              CouponGetEligibleCoupons200Response,
-              CouponGetEligibleCoupons200Response
-            >(rawData, 'CouponGetEligibleCoupons200Response', growable: true);
+_responseData = rawData == null ? null : deserialize<CouponGetEligibleCoupons200Response, CouponGetEligibleCoupons200Response>(rawData, 'CouponGetEligibleCoupons200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -293,17 +295,17 @@ class CouponApi {
   }
 
   /// couponList
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [cursor]
-  /// * [limit]
-  /// * [direction]
-  /// * [page]
-  /// * [query]
-  /// * [sortBy]
-  /// * [order]
-  /// * [mode]
+  /// * [cursor] 
+  /// * [limit] 
+  /// * [direction] 
+  /// * [page] 
+  /// * [query] 
+  /// * [sortBy] 
+  /// * [order] 
+  /// * [mode] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -313,7 +315,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponList200Response>> couponList({
+  Future<Response<CouponList200Response>> couponList({ 
     String? cursor,
     Object? limit,
     String? direction,
@@ -332,10 +334,16 @@ class CouponApi {
     final _path = r'/coupons';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -366,13 +374,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<CouponList200Response, CouponList200Response>(
-              rawData,
-              'CouponList200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<CouponList200Response, CouponList200Response>(rawData, 'CouponList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -396,10 +398,10 @@ class CouponApi {
   }
 
   /// couponRemove
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
+  /// * [id] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -409,7 +411,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> couponRemove({
+  Future<Response<BadgeRemove200Response>> couponRemove({ 
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -418,18 +420,19 @@ class CouponApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/coupons/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/coupons/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -448,13 +451,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
-              rawData,
-              'BadgeRemove200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -478,11 +475,11 @@ class CouponApi {
   }
 
   /// couponUpdate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [id]
-  /// * [updateCoupon]
+  /// * [id] 
+  /// * [updateCoupon] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -492,7 +489,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponCreate200Response>> couponUpdate({
+  Future<Response<CouponCreate200Response>> couponUpdate({ 
     required String id,
     required UpdateCoupon updateCoupon,
     CancelToken? cancelToken,
@@ -502,18 +499,19 @@ class CouponApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/coupons/{id}'.replaceAll(
-      '{'
-      r'id'
-      '}',
-      id.toString(),
-    );
+    final _path = r'/coupons/{id}'.replaceAll('{' r'id' '}', id.toString());
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -524,10 +522,13 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateCoupon);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(updateCoupon);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -547,13 +548,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<CouponCreate200Response, CouponCreate200Response>(
-              rawData,
-              'CouponCreate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<CouponCreate200Response, CouponCreate200Response>(rawData, 'CouponCreate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -577,10 +572,10 @@ class CouponApi {
   }
 
   /// couponValidate
-  ///
+  /// 
   ///
   /// Parameters:
-  /// * [couponValidateRequest]
+  /// * [couponValidateRequest] 
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -590,7 +585,7 @@ class CouponApi {
   ///
   /// Returns a [Future] containing a [Response] with a [CouponValidate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<CouponValidate200Response>> couponValidate({
+  Future<Response<CouponValidate200Response>> couponValidate({ 
     required CouponValidateRequest couponValidateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -602,10 +597,16 @@ class CouponApi {
     final _path = r'/coupons/validate';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{...?headers},
+      headers: <String, dynamic>{
+        ...?headers,
+      },
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+          {
+            'type': 'http',
+            'scheme': 'bearer',
+            'name': 'bearer_auth',
+          },
         ],
         ...?extra,
       },
@@ -616,10 +617,13 @@ class CouponApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(couponValidateRequest);
-    } catch (error, stackTrace) {
+        _bodyData=jsonEncode(couponValidateRequest);
+    } catch(error, stackTrace) {
       throw DioException(
-        requestOptions: _options.compose(_dio.options, _path),
+         requestOptions: _options.compose(
+          _dio.options,
+          _path,
+        ),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -639,13 +643,7 @@ class CouponApi {
 
     try {
       final rawData = _response.data;
-      _responseData = rawData == null
-          ? null
-          : deserialize<CouponValidate200Response, CouponValidate200Response>(
-              rawData,
-              'CouponValidate200Response',
-              growable: true,
-            );
+_responseData = rawData == null ? null : deserialize<CouponValidate200Response, CouponValidate200Response>(rawData, 'CouponValidate200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -667,4 +665,5 @@ class CouponApi {
       extra: _response.extra,
     );
   }
+
 }

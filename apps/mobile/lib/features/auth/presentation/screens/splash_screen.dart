@@ -29,9 +29,13 @@ class SplashScreen extends StatelessWidget {
                 context.pushReplacementNamed(Routes.driverHome.name);
               case UserRole.ADMIN:
               case UserRole.OPERATOR:
-                throw UnimplementedError();
               case null:
-                throw UnimplementedError();
+                context.showMyToast(
+                  "Unsupported role: ${state.data?.role}, Please use the web application instead.",
+                  type: ToastType.failed,
+                );
+                delay(const Duration(seconds: 2));
+                context.pushReplacementNamed(Routes.authSignIn.name);
             }
           }
         },

@@ -129,6 +129,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
         ? await MultipartFile.fromFile(imageFile.path)
         : null;
 
+    // Check if mounted before navigating
+    if (!mounted) return;
     // Create menu
     final menuCubit = context.read<MerchantMenuCubit>();
     await menuCubit.createMenu(
@@ -140,10 +142,10 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       image: image,
     );
 
+    final state = menuCubit.state;
+
     // Check if mounted before navigating
     if (!mounted) return;
-
-    final state = menuCubit.state;
 
     if (state.isSuccess) {
       // Show success message

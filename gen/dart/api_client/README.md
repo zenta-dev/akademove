@@ -49,13 +49,13 @@ import 'package:api_client/api_client.dart';
 
 
 final api = ApiClient().getAdminApi();
-final InsertUser insertUser = ; // InsertUser | 
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 
 try {
-    final response = await api.userAdminCreate(insertUser);
+    final response = await api.contactDelete(id);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling AdminApi->userAdminCreate: $e\n");
+    print("Exception when calling AdminApi->contactDelete: $e\n");
 }
 
 ```
@@ -66,6 +66,10 @@ All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AdminApi*](doc/AdminApi.md) | [**contactDelete**](doc/AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**contactGetById**](doc/AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**contactList**](doc/AdminApi.md#contactlist) | **GET** /contacts | 
+[*AdminApi*](doc/AdminApi.md) | [**contactUpdate**](doc/AdminApi.md#contactupdate) | **PUT** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminCreate**](doc/AdminApi.md#useradmincreate) | **POST** /users/admin | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminDashboardStats**](doc/AdminApi.md#useradmindashboardstats) | **GET** /users/admin/dashboard-stats | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminGet**](doc/AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
@@ -164,6 +168,7 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionGet**](doc/TransactionApi.md#transactionget) | **GET** /transactions/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
+[*UserApi*](doc/UserApi.md) | [**contactSubmit**](doc/UserApi.md#contactsubmit) | **POST** /contacts/submit | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
 [*WalletApi*](doc/WalletApi.md) | [**walletGet**](doc/WalletApi.md#walletget) | **GET** /wallets | 
@@ -210,6 +215,13 @@ Class | Method | HTTP request | Description
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
  - [ConfigurationKey](doc/ConfigurationKey.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
+ - [Contact](doc/Contact.md)
+ - [ContactKey](doc/ContactKey.md)
+ - [ContactList200Response](doc/ContactList200Response.md)
+ - [ContactList200ResponseData](doc/ContactList200ResponseData.md)
+ - [ContactList200ResponseDataPagination](doc/ContactList200ResponseDataPagination.md)
+ - [ContactStatus](doc/ContactStatus.md)
+ - [ContactSubmit201Response](doc/ContactSubmit201Response.md)
  - [Coordinate](doc/Coordinate.md)
  - [CountryCode](doc/CountryCode.md)
  - [Coupon](doc/Coupon.md)
@@ -260,6 +272,7 @@ Class | Method | HTTP request | Description
  - [GeneralRules](doc/GeneralRules.md)
  - [GetSessionResponse](doc/GetSessionResponse.md)
  - [InsertConfiguration](doc/InsertConfiguration.md)
+ - [InsertContact](doc/InsertContact.md)
  - [InsertCoupon](doc/InsertCoupon.md)
  - [InsertEmergency](doc/InsertEmergency.md)
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
@@ -372,6 +385,7 @@ Class | Method | HTTP request | Description
  - [TransferRequest](doc/TransferRequest.md)
  - [UnbanUser](doc/UnbanUser.md)
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
+ - [UpdateContact](doc/UpdateContact.md)
  - [UpdateCoupon](doc/UpdateCoupon.md)
  - [UpdateEmergency](doc/UpdateEmergency.md)
  - [UpdateLeaderboard](doc/UpdateLeaderboard.md)

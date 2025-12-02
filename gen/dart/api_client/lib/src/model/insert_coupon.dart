@@ -22,59 +22,57 @@ class InsertCoupon {
     required this.name,
     required this.code,
     required this.rules,
-    this.discountAmount,
-    this.discountPercentage,
+     this.discountAmount,
+     this.discountPercentage,
     required this.usageLimit,
     required this.periodStart,
     required this.periodEnd,
     required this.isActive,
-    this.merchantId,
+     this.merchantId,
   });
 
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
-
+  
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
-
+  
   @JsonKey(name: r'rules', required: true, includeIfNull: false)
   final CouponRules rules;
-
+  
   @JsonKey(name: r'discountAmount', required: false, includeIfNull: false)
   final num? discountAmount;
-
+  
   @JsonKey(name: r'discountPercentage', required: false, includeIfNull: false)
   final num? discountPercentage;
-
+  
   @JsonKey(name: r'usageLimit', required: true, includeIfNull: false)
   final num usageLimit;
-
+  
   @JsonKey(name: r'periodStart', required: true, includeIfNull: false)
   final DateTime periodStart;
-
+  
   @JsonKey(name: r'periodEnd', required: true, includeIfNull: false)
   final DateTime periodEnd;
-
+  
   @JsonKey(name: r'isActive', required: true, includeIfNull: false)
   final bool isActive;
-
+  
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertCoupon &&
-          other.name == name &&
-          other.code == code &&
-          other.rules == rules &&
-          other.discountAmount == discountAmount &&
-          other.discountPercentage == discountPercentage &&
-          other.usageLimit == usageLimit &&
-          other.periodStart == periodStart &&
-          other.periodEnd == periodEnd &&
-          other.isActive == isActive &&
-          other.merchantId == merchantId;
+  bool operator ==(Object other) => identical(this, other) || other is InsertCoupon &&
+    other.name == name &&
+    other.code == code &&
+    other.rules == rules &&
+    other.discountAmount == discountAmount &&
+    other.discountPercentage == discountPercentage &&
+    other.usageLimit == usageLimit &&
+    other.periodStart == periodStart &&
+    other.periodEnd == periodEnd &&
+    other.isActive == isActive &&
+    other.merchantId == merchantId;
 
   @override
   int get hashCode =>
@@ -89,8 +87,7 @@ class InsertCoupon {
       isActive.hashCode +
       (merchantId == null ? 0 : merchantId.hashCode);
 
-  factory InsertCoupon.fromJson(Map<String, dynamic> json) =>
-      _$InsertCouponFromJson(json);
+  factory InsertCoupon.fromJson(Map<String, dynamic> json) => _$InsertCouponFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertCouponToJson(this);
 
@@ -98,4 +95,6 @@ class InsertCoupon {
   String toString() {
     return toJson().toString();
   }
+
 }
+

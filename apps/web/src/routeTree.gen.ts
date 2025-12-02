@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as supportRouteRouteImport } from './routes/(support)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as supportStatusRouteImport } from './routes/(support)/status'
@@ -67,6 +68,10 @@ import { Route as authSignUpDriverRouteImport } from './routes/(auth)/sign-up/dr
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 
+const supportRouteRoute = supportRouteRouteImport.update({
+  id: '/(support)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authRouteRoute = authRouteRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
@@ -77,24 +82,24 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const supportStatusRoute = supportStatusRouteImport.update({
-  id: '/(support)/status',
+  id: '/status',
   path: '/status',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => supportRouteRoute,
 } as any)
 const supportHelpRoute = supportHelpRouteImport.update({
-  id: '/(support)/help',
+  id: '/help',
   path: '/help',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => supportRouteRoute,
 } as any)
 const supportFaqRoute = supportFaqRouteImport.update({
-  id: '/(support)/faq',
+  id: '/faq',
   path: '/faq',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => supportRouteRoute,
 } as any)
 const supportContactRoute = supportContactRouteImport.update({
-  id: '/(support)/contact',
+  id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => supportRouteRoute,
 } as any)
 const productTransportRoute = productTransportRouteImport.update({
   id: '/(product)/transport',
@@ -468,6 +473,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/(auth)': typeof authRouteRouteWithChildren
+  '/(support)': typeof supportRouteRouteWithChildren
   '/dash/admin': typeof DashAdminRouteRouteWithChildren
   '/dash/driver': typeof DashDriverRouteRouteWithChildren
   '/dash/merchant': typeof DashMerchantRouteRouteWithChildren
@@ -640,6 +646,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/(auth)'
+    | '/(support)'
     | '/dash/admin'
     | '/dash/driver'
     | '/dash/merchant'
@@ -700,6 +707,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   authRouteRoute: typeof authRouteRouteWithChildren
+  supportRouteRoute: typeof supportRouteRouteWithChildren
   DashAdminRouteRoute: typeof DashAdminRouteRouteWithChildren
   DashDriverRouteRoute: typeof DashDriverRouteRouteWithChildren
   DashMerchantRouteRoute: typeof DashMerchantRouteRouteWithChildren
@@ -713,14 +721,17 @@ export interface RootRouteChildren {
   productFoodRoute: typeof productFoodRoute
   productGoodsRoute: typeof productGoodsRoute
   productTransportRoute: typeof productTransportRoute
-  supportContactRoute: typeof supportContactRoute
-  supportFaqRoute: typeof supportFaqRoute
-  supportHelpRoute: typeof supportHelpRoute
-  supportStatusRoute: typeof supportStatusRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/(support)': {
+      id: '/(support)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof supportRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)': {
       id: '/(auth)'
       path: ''
@@ -740,28 +751,28 @@ declare module '@tanstack/react-router' {
       path: '/status'
       fullPath: '/status'
       preLoaderRoute: typeof supportStatusRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof supportRouteRoute
     }
     '/(support)/help': {
       id: '/(support)/help'
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof supportHelpRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof supportRouteRoute
     }
     '/(support)/faq': {
       id: '/(support)/faq'
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof supportFaqRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof supportRouteRoute
     }
     '/(support)/contact': {
       id: '/(support)/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof supportContactRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof supportRouteRoute
     }
     '/(product)/transport': {
       id: '/(product)/transport'
@@ -1145,6 +1156,24 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
+interface supportRouteRouteChildren {
+  supportContactRoute: typeof supportContactRoute
+  supportFaqRoute: typeof supportFaqRoute
+  supportHelpRoute: typeof supportHelpRoute
+  supportStatusRoute: typeof supportStatusRoute
+}
+
+const supportRouteRouteChildren: supportRouteRouteChildren = {
+  supportContactRoute: supportContactRoute,
+  supportFaqRoute: supportFaqRoute,
+  supportHelpRoute: supportHelpRoute,
+  supportStatusRoute: supportStatusRoute,
+}
+
+const supportRouteRouteWithChildren = supportRouteRoute._addFileChildren(
+  supportRouteRouteChildren,
+)
+
 interface DashAdminRouteRouteChildren {
   DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
   DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
@@ -1260,6 +1289,7 @@ const DashUserRouteRouteWithChildren = DashUserRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   authRouteRoute: authRouteRouteWithChildren,
+  supportRouteRoute: supportRouteRouteWithChildren,
   DashAdminRouteRoute: DashAdminRouteRouteWithChildren,
   DashDriverRouteRoute: DashDriverRouteRouteWithChildren,
   DashMerchantRouteRoute: DashMerchantRouteRouteWithChildren,
@@ -1273,10 +1303,6 @@ const rootRouteChildren: RootRouteChildren = {
   productFoodRoute: productFoodRoute,
   productGoodsRoute: productGoodsRoute,
   productTransportRoute: productTransportRoute,
-  supportContactRoute: supportContactRoute,
-  supportFaqRoute: supportFaqRoute,
-  supportHelpRoute: supportHelpRoute,
-  supportStatusRoute: supportStatusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

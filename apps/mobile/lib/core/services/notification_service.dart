@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum _OperationType { check, request }

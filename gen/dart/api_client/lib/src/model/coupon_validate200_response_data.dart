@@ -20,36 +20,34 @@ class CouponValidate200ResponseData {
   /// Returns a new [CouponValidate200ResponseData] instance.
   const CouponValidate200ResponseData({
     required this.valid,
-    this.coupon,
+     this.coupon,
     required this.discountAmount,
     required this.finalAmount,
-    this.reason,
+     this.reason,
   });
 
   @JsonKey(name: r'valid', required: true, includeIfNull: false)
   final bool valid;
-
+  
   @JsonKey(name: r'coupon', required: false, includeIfNull: false)
   final Coupon? coupon;
-
+  
   @JsonKey(name: r'discountAmount', required: true, includeIfNull: false)
   final num discountAmount;
-
+  
   @JsonKey(name: r'finalAmount', required: true, includeIfNull: false)
   final num finalAmount;
-
+  
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is CouponValidate200ResponseData &&
-          other.valid == valid &&
-          other.coupon == coupon &&
-          other.discountAmount == discountAmount &&
-          other.finalAmount == finalAmount &&
-          other.reason == reason;
+  bool operator ==(Object other) => identical(this, other) || other is CouponValidate200ResponseData &&
+    other.valid == valid &&
+    other.coupon == coupon &&
+    other.discountAmount == discountAmount &&
+    other.finalAmount == finalAmount &&
+    other.reason == reason;
 
   @override
   int get hashCode =>
@@ -59,8 +57,7 @@ class CouponValidate200ResponseData {
       finalAmount.hashCode +
       reason.hashCode;
 
-  factory CouponValidate200ResponseData.fromJson(Map<String, dynamic> json) =>
-      _$CouponValidate200ResponseDataFromJson(json);
+  factory CouponValidate200ResponseData.fromJson(Map<String, dynamic> json) => _$CouponValidate200ResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$CouponValidate200ResponseDataToJson(this);
 
@@ -68,4 +65,6 @@ class CouponValidate200ResponseData {
   String toString() {
     return toJson().toString();
   }
+
 }
+

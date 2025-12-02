@@ -12,7 +12,76 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get withdraw_earnings => 'Withdraw Earnings';
+
+  @override
+  String get no_transactions_yet => 'No transactions yet';
+
+  @override
+  String get view_all => 'View all';
+
+  @override
+  String get recent_transactions => 'Recent Transactions';
+
+  @override
+  String get net_earnings => 'Net Earnings';
+
+  @override
+  String get total_earnings => 'Total Earnings';
+
+  @override
+  String get total_income => 'Total Income';
+
+  @override
+  String get total_expenses => 'Total Expenses';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get available_balance => 'Available Balance';
+
+  @override
+  String get earnings_wallet => 'Earnings & Wallet';
+
+  @override
+  String get failed_to_load_earnings => 'Failed to load earnings';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get unsupported_role_desc => 'This user role is not supported in the mobile app, please use web app';
+
+  @override
+  String get invalid_amount => 'Invalid amount';
+
+  @override
+  String get top_up_success => 'Top up successful';
+
+  @override
+  String get qr_code_expired => 'The QR code has expired';
+
+  @override
   String get hello => 'Hello';
+
+  @override
+  String get payment_expired => 'Payment Expired';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get e_wallet => 'E-Wallet';
+
+  @override
+  String get my_balance => 'My Balance';
+
+  @override
+  String get success_sign_in => 'Successfully signed in';
 
   @override
   String get light_mode => 'Light Mode';
@@ -934,4 +1003,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get action_remove_image => 'Remove image';
+
+  @override
+  String get enter_withdrawal_amount => 'Enter withdrawal amount';
 }

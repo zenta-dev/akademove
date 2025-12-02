@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,10 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                   state.transactionResult != null &&
                   state.transactionResult?.status ==
                       TransactionStatus.SUCCESS) {
-                context.showMyToast('Top up success', type: ToastType.success);
+                context.showMyToast(
+                  context.l10n.top_up_success,
+                  type: ToastType.success,
+                );
                 await Future.delayed(const Duration(seconds: 3), () {
                   if (!context.mounted) return;
                   context.read<UserWalletTopUpCubit>().teardownWebsocket();
@@ -36,7 +40,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
               }
               if (state.isFailure && context.mounted) {
                 context.showMyToast(
-                  state.error?.message ?? 'Payment expired',
+                  state.error?.message ?? context.l10n.payment_expired,
                   type: ToastType.failed,
                 );
               }
@@ -47,7 +51,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                 transactionType: TransactionType.TOPUP,
                 onExpired: () async {
                   context.showMyToast(
-                    'This QR code has expired. Please generate a new one.',
+                    context.l10n.qr_code_expired,
                     type: ToastType.failed,
                   );
                   await Future.delayed(const Duration(seconds: 3), () {
@@ -65,7 +69,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const DefaultText('Total'),
+                    DefaultText(context.l10n.total),
                     BlocBuilder<UserWalletTopUpCubit, UserWalletTopUpState>(
                       builder: (context, state) {
                         return DefaultText(

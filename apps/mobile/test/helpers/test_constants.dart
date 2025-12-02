@@ -8,6 +8,7 @@ class TestConstants {
   static const testUserEmail = 'test@example.com';
   static const testUserName = 'Test User';
   static const testUserPhone = '+628123456789';
+  static const testUserPhoneNumber = 628123456789;
 
   static const testDriverId = 'test-driver-id-123';
   static const testDriverName = 'Test Driver';

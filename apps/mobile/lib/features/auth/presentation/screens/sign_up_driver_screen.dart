@@ -4,6 +4,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -102,7 +103,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   bool _validateDocuments<T>(Map<T, File?> docs, Map<T, String?> errors) {
     errors.updateAll((key, value) => null);
     docs.forEach((key, file) {
-      if (file == null) errors[key] = "File shouldn't be empty";
+      if (file == null) errors[key] = context.l10n.error_file_required;
     });
     return !errors.values.any((error) => error != null);
   }
@@ -145,23 +146,19 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     );
   }
 
-  void _showToast(BuildContext context, String title, String message) {
-    showToast(
-      context: context,
-      builder: (context, overlay) =>
-          context.buildToast(title: title, message: message),
-      location: ToastLocation.topCenter,
-    );
-  }
-
   void _handleSignUpSuccess(BuildContext context, String? message) {
-    _showToast(context, 'Sign Up Success', message ?? 'Successfully signed up');
+    context.showMyToast(
+      message ?? context.l10n.dialog_title_sign_up_success,
+      type: ToastType.success,
+    );
     context.read<SignUpCubit>().reset();
     context.pushReplacementNamed(Routes.authSignIn.name);
   }
 
   void _handleSignUpFailure(BuildContext context, String? error) {
-    _showToast(context, 'Sign Up Failed', error ?? 'Unknown error');
+    context.showMyToast(error ?? context.l10n.an_error_occurred);
+    delay(Duration(seconds: 5));
+    context.read<SignUpCubit>().reset();
   }
 
   void _handleFormSubmit<T>(
@@ -298,14 +295,14 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Step _buildStep1(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 1'),
+      title: Text(context.l10n.label_step_1),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpDriver1.image(height: 200.h),
-        title: 'Tell us a bit about yourself to get started!',
+        title: context.l10n.screen_title_driver_sign_up_step1,
         content: [
           _buildTextField(
             key: _FormKeys.step1Name,
-            label: 'Name',
+            label: context.l10n.label_name,
             placeholder: 'John Doe',
             icon: LucideIcons.user,
             validator: const LengthValidator(min: 3),
@@ -313,7 +310,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           ),
           _buildTextField(
             key: _FormKeys.step1Email,
-            label: 'Email',
+            label: context.l10n.label_email,
             placeholder: 'john@gmail.com',
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
@@ -333,7 +330,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           _buildPhoneField(context, state),
           _buildTextField(
             key: _FormKeys.step1Password,
-            label: 'Password',
+            label: context.l10n.label_password,
             placeholder: '*******',
             icon: LucideIcons.key,
             validator: const SafePasswordValidator(),
@@ -342,13 +339,13 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           ),
           _buildTextField(
             key: _FormKeys.step1ConfirmPassword,
-            label: 'Confirm Password',
+            label: context.l10n.label_confirm_password,
             placeholder: '*******',
             icon: LucideIcons.key,
             // validator: null,
-            validator: const CompareWith.equal(
+            validator: CompareWith.equal(
               _FormKeys.step1Password,
-              message: 'Confirm password not same',
+              message: context.l10n.error_password_mismatch,
             ),
             enabled: !state.isLoading,
             isPassword: true,
@@ -357,12 +354,12 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         actions: [
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
-            label: 'Back',
+            label: context.l10n.button_back,
             onPressed: () => context.pop(),
           ),
           _buildActionButton(
             icon: LucideIcons.arrowRight,
-            label: 'Next',
+            label: context.l10n.button_next,
             isPrimary: true,
             isTrailing: true,
             onPressed: () => _handleStepNavigation(
@@ -377,27 +374,27 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Step _buildStep2(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 2'),
+      title: Text(context.l10n.label_step_2),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpDriver2.image(height: 200.h),
-        title: 'Upload your photo and documents to verify your account!',
+        title: context.l10n.screen_title_driver_sign_up_step2,
         content: [
           _buildImagePicker(
-            'Photo',
+            context.l10n.label_photo,
             Step2Docs.photo,
             _step2Docs,
             _step2DocsErrors,
             context,
           ),
           _buildImagePicker(
-            'Student Card (KTM)',
+            context.l10n.label_student_card,
             Step2Docs.studentCard,
             _step2Docs,
             _step2DocsErrors,
             context,
           ),
           _buildImagePicker(
-            'Driver License (SIM)',
+            context.l10n.label_driver_license,
             Step2Docs.driverLicense,
             _step2Docs,
             _step2DocsErrors,
@@ -411,21 +408,21 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Step _buildStep3(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 3'),
+      title: Text(context.l10n.label_step_3),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpDriver3.image(height: 200.h),
-        title: 'Enter your vehicle details so we can set you up on the road!',
+        title: context.l10n.screen_title_driver_sign_up_step3,
         content: [
           _buildTextField(
             key: _FormKeys.step3LicensePlate,
-            label: 'License Plate',
-            placeholder: 'B 1234 AM',
+            label: context.l10n.label_license_plate,
+            placeholder: 'L 1234 AM',
             icon: LucideIcons.user,
             validator: const LengthValidator(min: 6),
             enabled: !state.isLoading,
           ),
           _buildImagePicker(
-            'Vehicle Registration (STNK)',
+            context.l10n.label_vehicle_registration,
             Step3Docs.vehicleRegistration,
             _step3Docs,
             _step3DocsErrors,
@@ -439,15 +436,15 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Step _buildStep4(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 4'),
+      title: Text(context.l10n.label_step_4),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpDriver4.image(height: 200.h),
-        title: 'Add your bank account to receive your earnings securely!',
+        title: context.l10n.screen_title_driver_sign_up_step4,
         content: [
           _buildBankProviderSelect(state),
           _buildTextField(
             key: _FormKeys.step4BankNumber,
-            label: 'Bank Account',
+            label: context.l10n.label_bank_account_number,
             placeholder: '11223344',
             keyboardType: TextInputType.number,
             icon: LucideIcons.wallet,
@@ -458,7 +455,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
         actions: [
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
-            label: 'Back',
+            label: context.l10n.button_back,
             onPressed: () =>
                 _handleStepNavigation(isNext: false, validator: () => true),
           ),
@@ -531,13 +528,13 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     return [
       _buildActionButton(
         icon: LucideIcons.arrowLeft,
-        label: 'Back',
+        label: context.l10n.button_back,
         onPressed: () =>
             _handleStepNavigation(isNext: false, validator: () => true),
       ),
       _buildActionButton(
         icon: LucideIcons.arrowRight,
-        label: 'Next',
+        label: context.l10n.button_next,
         isPrimary: true,
         isTrailing: true,
         onPressed: () =>
@@ -563,7 +560,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
             child: isLoading
                 ? const Submiting(simpleText: true)
                 : Text(
-                    'Sign Up',
+                    context.l10n.button_submit,
                     style: context.theme.typography.medium.copyWith(
                       color: Colors.white,
                     ),
@@ -607,8 +604,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   Widget _buildGenderSelect(SignUpState state) {
     return _buildEnumSelect<UserGender>(
       key: _FormKeys.step1Gender,
-      label: 'Gender',
-      placeholder: 'Pick your gender',
+      label: context.l10n.label_gender,
+      placeholder: context.l10n.placeholder_gender,
       value: _selectedGender,
       items: UserGender.values,
       enabled: !state.isLoading,
@@ -623,8 +620,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   Widget _buildBankProviderSelect(SignUpState state) {
     return _buildEnumSelect<BankProvider>(
       key: _FormKeys.step4BankProvider,
-      label: 'Bank Provider',
-      placeholder: 'Pick your bank provider',
+      label: context.l10n.label_bank_provider,
+      placeholder: context.l10n.placeholder_bank_provider,
       value: _selectedBankProvider,
       items: BankProvider.values,
       enabled: !state.isLoading,
@@ -672,7 +669,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   Widget _buildPhoneField(BuildContext context, SignUpState state) {
     return FormField(
       key: _FormKeys.step1PhoneNumber,
-      label: const Text('Phone'),
+      label: Text(context.l10n.label_phone),
       validator: const LengthValidator(min: 10, max: 15),
       showErrors: const {
         FormValidationMode.changed,
@@ -718,7 +715,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           DefaultTextStyle.merge(
             style: TextStyle(color: context.theme.colorScheme.destructive),
             child: Text(
-              errors[key] ?? 'Failed to pick photo',
+              errors[key] ?? context.l10n.error_photo_pick_failed,
             ).xSmall().medium(),
           ),
       ],

@@ -5,7 +5,6 @@ import { Car, Heart, MessageSquare, Star } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,

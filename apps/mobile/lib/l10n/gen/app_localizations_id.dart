@@ -12,7 +12,76 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get withdraw_earnings => 'Tarik Penghasilan';
+
+  @override
+  String get no_transactions_yet => 'Belum ada transaksi';
+
+  @override
+  String get view_all => 'Lihat Semua';
+
+  @override
+  String get recent_transactions => 'Transaksi Terbaru';
+
+  @override
+  String get net_earnings => 'Pendapatan Bersih';
+
+  @override
+  String get total_earnings => 'Total Penghasilan';
+
+  @override
+  String get total_income => 'Total Pemasukan';
+
+  @override
+  String get total_expenses => 'Total Pengeluaran';
+
+  @override
+  String get active => 'Aktif';
+
+  @override
+  String get inactive => 'Tidak aktif';
+
+  @override
+  String get available_balance => 'Saldo Tersedia';
+
+  @override
+  String get earnings_wallet => 'Dompet dan Penghasilan';
+
+  @override
+  String get failed_to_load_earnings => 'Gagal memuat penghasilan';
+
+  @override
+  String get amount => 'Jumlah';
+
+  @override
+  String get unsupported_role_desc => 'Role tidak didukung di aplikasi ini. Silakan gunakan aplikasi web untuk mengakses akun Anda.';
+
+  @override
+  String get invalid_amount => 'Jumlah tidak valid';
+
+  @override
+  String get top_up_success => 'Top up berhasil';
+
+  @override
+  String get qr_code_expired => 'Kode QR telah kedaluwarsa';
+
+  @override
   String get hello => 'Halo';
+
+  @override
+  String get payment_expired => 'Pembayaran telah kedaluwarsa';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get e_wallet => 'Dompet Digital';
+
+  @override
+  String get my_balance => 'Saldo Saya';
+
+  @override
+  String get success_sign_in => 'Masuk berhasil';
 
   @override
   String get light_mode => 'Mode Terang';
@@ -934,4 +1003,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get action_remove_image => 'Hapus gambar';
+
+  @override
+  String get enter_withdrawal_amount => 'Masukkan jumlah penarikan';
 }

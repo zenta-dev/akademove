@@ -24,42 +24,35 @@ class InsertReview {
     required this.toUserId,
     required this.category,
     required this.score,
-    this.comment = '',
+     this.comment = '',
   });
 
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-
+  
   @JsonKey(name: r'fromUserId', required: true, includeIfNull: false)
   final String fromUserId;
-
+  
   @JsonKey(name: r'toUserId', required: true, includeIfNull: false)
   final String toUserId;
-
+  
   @JsonKey(name: r'category', required: true, includeIfNull: false)
   final ReviewCategory category;
-
+  
   @JsonKey(name: r'score', required: true, includeIfNull: false)
   final num score;
-
-  @JsonKey(
-    defaultValue: '',
-    name: r'comment',
-    required: false,
-    includeIfNull: false,
-  )
+  
+  @JsonKey(defaultValue: '',name: r'comment', required: false, includeIfNull: false)
   final String? comment;
-
+  
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InsertReview &&
-          other.orderId == orderId &&
-          other.fromUserId == fromUserId &&
-          other.toUserId == toUserId &&
-          other.category == category &&
-          other.score == score &&
-          other.comment == comment;
+  bool operator ==(Object other) => identical(this, other) || other is InsertReview &&
+    other.orderId == orderId &&
+    other.fromUserId == fromUserId &&
+    other.toUserId == toUserId &&
+    other.category == category &&
+    other.score == score &&
+    other.comment == comment;
 
   @override
   int get hashCode =>
@@ -70,8 +63,7 @@ class InsertReview {
       score.hashCode +
       comment.hashCode;
 
-  factory InsertReview.fromJson(Map<String, dynamic> json) =>
-      _$InsertReviewFromJson(json);
+  factory InsertReview.fromJson(Map<String, dynamic> json) => _$InsertReviewFromJson(json);
 
   Map<String, dynamic> toJson() => _$InsertReviewToJson(this);
 
@@ -79,4 +71,6 @@ class InsertReview {
   String toString() {
     return toJson().toString();
   }
+
 }
+

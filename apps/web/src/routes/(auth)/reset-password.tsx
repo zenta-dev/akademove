@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { localizeHref, m } from "@repo/i18n";
 import { type ResetPassword, ResetPasswordSchema } from "@repo/schema/auth";
+import { createDefaults } from "@repo/schema/default.helper";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
@@ -56,7 +57,7 @@ function RouteComponent() {
 
 	const form = useForm({
 		resolver: zodResolver(ResetPasswordSchema),
-		defaultValues: { newPassword: "", confirmPassword: "", token },
+		defaultValues: createDefaults(ResetPasswordSchema) as const,
 	});
 
 	const mutation = useMutation(

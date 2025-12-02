@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,15 +52,20 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           _isLoading = false;
         });
       }
+    } on BaseError catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        context.showMyToast(
+          e.message ?? context.l10n.failed_to_load_earnings,
+          type: ToastType.failed,
+        );
+      }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        showToast(
-          context: context,
-          builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to load earnings: ${e.toString()}',
-          ),
+        context.showMyToast(
+          context.l10n.failed_to_load_earnings,
+          type: ToastType.failed,
         );
       }
     }
@@ -84,7 +90,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     return MyScaffold(
       headers: [
         AppBar(
-          title: const Text('Earnings & Wallet'),
+          title: Text(context.l10n.earnings_wallet),
           leading: [
             IconButton(
               icon: const Icon(LucideIcons.arrowLeft),
@@ -143,7 +149,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 ),
                 SizedBox(width: 12.w),
                 Text(
-                  'Available Balance',
+                  context.l10n.available_balance,
                   style: context.typography.h4.copyWith(
                     fontSize: 16.sp,
                     color: context.colorScheme.mutedForeground,
@@ -173,7 +179,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 ),
               ),
               child: Text(
-                wallet.isActive ? 'Active' : 'Inactive',
+                wallet.isActive ? context.l10n.active : context.l10n.inactive,
                 style: context.typography.small.copyWith(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
@@ -231,7 +237,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           children: [
             Expanded(
               child: _buildSummaryCard(
-                'Total Income',
+                context.l10n.total_income,
                 summary.totalIncome,
                 LucideIcons.trendingUp,
                 material.Colors.green,
@@ -239,7 +245,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
             ),
             Expanded(
               child: _buildSummaryCard(
-                'Total Expense',
+                context.l10n.total_expenses,
                 summary.totalExpense,
                 LucideIcons.trendingDown,
                 material.Colors.red,
@@ -248,7 +254,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           ],
         ),
         _buildSummaryCard(
-          'Net Earnings',
+          context.l10n.net_earnings,
           summary.net,
           LucideIcons.dollarSign,
           summary.net >= 0 ? material.Colors.blue : material.Colors.red,
@@ -309,7 +315,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         Row(
           children: [
             Text(
-              'Recent Transactions',
+              context.l10n.recent_transactions,
               style: context.typography.h3.copyWith(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -320,7 +326,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               onPressed: () {
                 _showAllTransactionsDialog(recentTransactions);
               },
-              child: const Text('View All'),
+              child: Text(context.l10n.view_all),
             ),
           ],
         ),
@@ -338,7 +344,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       color: context.colorScheme.mutedForeground,
                     ),
                     Text(
-                      'No transactions yet',
+                      context.l10n.no_transactions_yet,
                       style: context.typography.p.copyWith(
                         color: context.colorScheme.mutedForeground,
                       ),
@@ -434,10 +440,13 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
       width: double.infinity,
       child: PrimaryButton(
         onPressed: (_wallet?.balance ?? 0) > 0 ? _showWithdrawDialog : null,
-        child: const Row(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
-          children: [Icon(LucideIcons.banknote), Text('Withdraw Earnings')],
+          children: [
+            const Icon(LucideIcons.banknote),
+            Text(context.l10n.withdraw_earnings),
+          ],
         ),
       ),
     );
@@ -453,7 +462,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setState) => material.AlertDialog(
-          title: const Text('Withdraw Earnings'),
+          title: Text(context.l10n.withdraw_earnings),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -482,7 +491,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                           spacing: 4.h,
                           children: [
                             Text(
-                              'Available Balance',
+                              context.l10n.available_balance,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
@@ -508,8 +517,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   controller: amountController,
                   keyboardType: TextInputType.number,
                   decoration: material.InputDecoration(
-                    labelText: 'Amount',
-                    hintText: 'Enter withdrawal amount',
+                    labelText: context.l10n.amount,
+                    hintText: context.l10n.enter_withdrawal_amount,
                     border: const material.OutlineInputBorder(),
                     prefixText: 'Rp ',
                   ),

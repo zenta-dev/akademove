@@ -602,7 +602,7 @@ function RouteComponent() {
 											<Input
 												disabled={mutation.isPending}
 												{...field}
-												value={field.value}
+												value={field.value as number | string}
 											/>
 										</FormControl>
 										<FormMessage />

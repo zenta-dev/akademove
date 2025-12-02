@@ -28,26 +28,26 @@ class PlaceOrderResponse {
 
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
-
+  
   @JsonKey(name: r'payment', required: true, includeIfNull: false)
   final Payment payment;
-
+  
   @JsonKey(name: r'transaction', required: true, includeIfNull: false)
   final Transaction transaction;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is PlaceOrderResponse &&
+    other.order == order &&
+    other.payment == payment &&
+    other.transaction == transaction;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PlaceOrderResponse &&
-          other.order == order &&
-          other.payment == payment &&
-          other.transaction == transaction;
+  int get hashCode =>
+      order.hashCode +
+      payment.hashCode +
+      transaction.hashCode;
 
-  @override
-  int get hashCode => order.hashCode + payment.hashCode + transaction.hashCode;
-
-  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) =>
-      _$PlaceOrderResponseFromJson(json);
+  factory PlaceOrderResponse.fromJson(Map<String, dynamic> json) => _$PlaceOrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$PlaceOrderResponseToJson(this);
 
@@ -55,4 +55,6 @@ class PlaceOrderResponse {
   String toString() {
     return toJson().toString();
   }
+
 }
+

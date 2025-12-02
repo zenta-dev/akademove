@@ -17,26 +17,28 @@ part 'pay_request.g.dart';
 )
 class PayRequest {
   /// Returns a new [PayRequest] instance.
-  const PayRequest({required this.amount, this.referenceId});
+  const PayRequest({
+    required this.amount,
+     this.referenceId,
+  });
 
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
-
+  
   @JsonKey(name: r'referenceId', required: false, includeIfNull: false)
   final String? referenceId;
+  
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is PayRequest &&
+    other.amount == amount &&
+    other.referenceId == referenceId;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PayRequest &&
-          other.amount == amount &&
-          other.referenceId == referenceId;
+  int get hashCode =>
+      amount.hashCode +
+      referenceId.hashCode;
 
-  @override
-  int get hashCode => amount.hashCode + referenceId.hashCode;
-
-  factory PayRequest.fromJson(Map<String, dynamic> json) =>
-      _$PayRequestFromJson(json);
+  factory PayRequest.fromJson(Map<String, dynamic> json) => _$PayRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$PayRequestToJson(this);
 
@@ -44,4 +46,6 @@ class PayRequest {
   String toString() {
     return toJson().toString();
   }
+
 }
+

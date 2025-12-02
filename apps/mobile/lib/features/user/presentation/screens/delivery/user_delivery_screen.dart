@@ -248,7 +248,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Ride',
+            'Delivery',
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
