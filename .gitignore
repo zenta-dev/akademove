@@ -125,3 +125,7 @@ lib/l10n/gen/
 /CLAUDE.md
 /CLAUDE.md.bak
 # END Ruler Generated Files
+
+# Alchemy build artifacts
+alchemy.run.d.ts
+alchemy.run.js
