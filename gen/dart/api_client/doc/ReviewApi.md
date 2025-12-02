@@ -9,12 +9,55 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**reviewCheckCanReview**](ReviewApi.md#reviewcheckcanreview) | **GET** /reviews/can-review/{orderId} | 
 [**reviewCreate**](ReviewApi.md#reviewcreate) | **POST** /reviews | 
 [**reviewGet**](ReviewApi.md#reviewget) | **GET** /reviews/{id} | 
+[**reviewGetByOrder**](ReviewApi.md#reviewgetbyorder) | **GET** /reviews/order/{orderId} | 
 [**reviewList**](ReviewApi.md#reviewlist) | **GET** /reviews | 
 [**reviewRemove**](ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
 [**reviewUpdate**](ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
 
+
+# **reviewCheckCanReview**
+> ReviewCheckCanReview200Response reviewCheckCanReview(orderId)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getReviewApi();
+final String orderId = orderId_example; // String | 
+
+try {
+    final response = api.reviewCheckCanReview(orderId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ReviewApi->reviewCheckCanReview: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **orderId** | **String**|  | 
+
+### Return type
+
+[**ReviewCheckCanReview200Response**](ReviewCheckCanReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **reviewCreate**
 > ReviewCreate200Response reviewCreate(insertReview)
@@ -86,6 +129,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ReviewCreate200Response**](ReviewCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **reviewGetByOrder**
+> ReviewList200Response reviewGetByOrder(orderId)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getReviewApi();
+final String orderId = orderId_example; // String | 
+
+try {
+    final response = api.reviewGetByOrder(orderId);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ReviewApi->reviewGetByOrder: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **orderId** | **String**|  | 
+
+### Return type
+
+[**ReviewList200Response**](ReviewList200Response.md)
 
 ### Authorization
 

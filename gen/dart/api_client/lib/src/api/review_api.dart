@@ -13,6 +13,7 @@ import 'package:api_client/src/model/badge_remove200_response.dart';
 import 'package:api_client/src/model/insert_review.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
+import 'package:api_client/src/model/review_check_can_review200_response.dart';
 import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/update_review.dart';
@@ -21,6 +22,87 @@ class ReviewApi {
   final Dio _dio;
 
   const ReviewApi(this._dio);
+
+  /// reviewCheckCanReview
+  ///
+  ///
+  /// Parameters:
+  /// * [orderId]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [ReviewCheckCanReview200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<ReviewCheckCanReview200Response>> reviewCheckCanReview({
+    required String orderId,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/reviews/can-review/{orderId}'.replaceAll(
+      '{'
+      r'orderId'
+      '}',
+      orderId.toString(),
+    );
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    ReviewCheckCanReview200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              ReviewCheckCanReview200Response,
+              ReviewCheckCanReview200Response
+            >(rawData, 'ReviewCheckCanReview200Response', growable: true);
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<ReviewCheckCanReview200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
 
   /// reviewCreate
   ///
@@ -185,6 +267,88 @@ class ReviewApi {
     }
 
     return Response<ReviewCreate200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
+
+  /// reviewGetByOrder
+  ///
+  ///
+  /// Parameters:
+  /// * [orderId]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [ReviewList200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<ReviewList200Response>> reviewGetByOrder({
+    required String orderId,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/reviews/order/{orderId}'.replaceAll(
+      '{'
+      r'orderId'
+      '}',
+      orderId.toString(),
+    );
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    ReviewList200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<ReviewList200Response, ReviewList200Response>(
+              rawData,
+              'ReviewList200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<ReviewList200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

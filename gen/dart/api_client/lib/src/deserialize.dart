@@ -1,3 +1,4 @@
+import 'package:api_client/src/model/add_to_cart.dart';
 import 'package:api_client/src/model/admin_update_user.dart';
 import 'package:api_client/src/model/auth_exchange_token200_response.dart';
 import 'package:api_client/src/model/auth_forgot_password_request.dart';
@@ -20,6 +21,8 @@ import 'package:api_client/src/model/badge_user_update_request.dart';
 import 'package:api_client/src/model/ban_user.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/banner_configuration.dart';
+import 'package:api_client/src/model/cart.dart';
+import 'package:api_client/src/model/cart_item.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
 import 'package:api_client/src/model/chat_list200_response_data.dart';
 import 'package:api_client/src/model/chat_send200_response.dart';
@@ -143,6 +146,8 @@ import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
 import 'package:api_client/src/model/reset_password.dart';
 import 'package:api_client/src/model/review.dart';
+import 'package:api_client/src/model/review_check_can_review200_response.dart';
+import 'package:api_client/src/model/review_check_can_review200_response_data.dart';
 import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/ride_pricing_configuration.dart';
@@ -211,6 +216,8 @@ ReturnType deserialize<ReturnType, BaseType>(
       return (valueString == 'true' || valueString == '1') as ReturnType;
     case 'double':
       return (value is double ? value : double.parse('$value')) as ReturnType;
+    case 'AddToCart':
+      return AddToCart.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'AdminUpdateUser':
       return AdminUpdateUser.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -282,6 +289,10 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BannerConfiguration':
       return BannerConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'Cart':
+      return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'CartItem':
+      return CartItem.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ChatList200Response':
       return ChatList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -722,6 +733,16 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'Review':
       return Review.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReviewCategory':
+    case 'ReviewCheckCanReview200Response':
+      return ReviewCheckCanReview200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'ReviewCheckCanReview200ResponseData':
+      return ReviewCheckCanReview200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'ReviewCreate200Response':
       return ReviewCreate200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;

@@ -161,8 +161,10 @@ Class | Method | HTTP request | Description
 [*ReportApi*](doc/ReportApi.md) | [**reportList**](doc/ReportApi.md#reportlist) | **GET** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportRemove**](doc/ReportApi.md#reportremove) | **DELETE** /reports/{id} | 
 [*ReportApi*](doc/ReportApi.md) | [**reportUpdate**](doc/ReportApi.md#reportupdate) | **PUT** /reports/{id} | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewCheckCanReview**](doc/ReviewApi.md#reviewcheckcanreview) | **GET** /reviews/can-review/{orderId} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewCreate**](doc/ReviewApi.md#reviewcreate) | **POST** /reviews | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewGet**](doc/ReviewApi.md#reviewget) | **GET** /reviews/{id} | 
+[*ReviewApi*](doc/ReviewApi.md) | [**reviewGetByOrder**](doc/ReviewApi.md#reviewgetbyorder) | **GET** /reviews/order/{orderId} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewList**](doc/ReviewApi.md#reviewlist) | **GET** /reviews | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewRemove**](doc/ReviewApi.md#reviewremove) | **DELETE** /reviews/{id} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
@@ -181,6 +183,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AddToCart](doc/AddToCart.md)
  - [AdminUpdateUser](doc/AdminUpdateUser.md)
  - [AuthExchangeToken200Response](doc/AuthExchangeToken200Response.md)
  - [AuthForgotPasswordRequest](doc/AuthForgotPasswordRequest.md)
@@ -207,6 +210,8 @@ Class | Method | HTTP request | Description
  - [Bank](doc/Bank.md)
  - [BankProvider](doc/BankProvider.md)
  - [BannerConfiguration](doc/BannerConfiguration.md)
+ - [Cart](doc/Cart.md)
+ - [CartItem](doc/CartItem.md)
  - [ChatList200Response](doc/ChatList200Response.md)
  - [ChatList200ResponseData](doc/ChatList200ResponseData.md)
  - [ChatSend200Response](doc/ChatSend200Response.md)
@@ -364,6 +369,8 @@ Class | Method | HTTP request | Description
  - [ResetPassword](doc/ResetPassword.md)
  - [Review](doc/Review.md)
  - [ReviewCategory](doc/ReviewCategory.md)
+ - [ReviewCheckCanReview200Response](doc/ReviewCheckCanReview200Response.md)
+ - [ReviewCheckCanReview200ResponseData](doc/ReviewCheckCanReview200ResponseData.md)
  - [ReviewCreate200Response](doc/ReviewCreate200Response.md)
  - [ReviewKeySchema](doc/ReviewKeySchema.md)
  - [ReviewList200Response](doc/ReviewList200Response.md)

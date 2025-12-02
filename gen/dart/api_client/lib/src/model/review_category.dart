@@ -10,6 +10,12 @@ enum ReviewCategory {
   CLEANLINESS(r'CLEANLINESS'),
   @JsonValue(r'COURTESY')
   COURTESY(r'COURTESY'),
+  @JsonValue(r'PUNCTUALITY')
+  PUNCTUALITY(r'PUNCTUALITY'),
+  @JsonValue(r'SAFETY')
+  SAFETY(r'SAFETY'),
+  @JsonValue(r'COMMUNICATION')
+  COMMUNICATION(r'COMMUNICATION'),
   @JsonValue(r'OTHER')
   OTHER(r'OTHER');
 

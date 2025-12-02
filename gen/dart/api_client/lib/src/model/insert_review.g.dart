@@ -157,5 +157,8 @@ Map<String, dynamic> _$InsertReviewToJson(InsertReview instance) =>
 const _$ReviewCategoryEnumMap = {
   ReviewCategory.CLEANLINESS: 'CLEANLINESS',
   ReviewCategory.COURTESY: 'COURTESY',
+  ReviewCategory.PUNCTUALITY: 'PUNCTUALITY',
+  ReviewCategory.SAFETY: 'SAFETY',
+  ReviewCategory.COMMUNICATION: 'COMMUNICATION',
   ReviewCategory.OTHER: 'OTHER',
 };
