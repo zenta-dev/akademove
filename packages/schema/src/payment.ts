@@ -70,9 +70,18 @@ export type PayRequest = z.infer<typeof PayRequestSchema>;
 export const TransferRequestSchema = PaymentSchema.pick({
 	amount: true,
 }).extend({ walletId: z.uuid() });
-export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
+export type TransferRequest = z.infer<typeof TransferRequestSchema>;
+
+export const WithdrawRequestSchema = z.object({
+	amount: z.number().positive(),
+	bankProvider: BankProviderSchema,
+	accountNumber: z.string(),
+	accountName: z.string().optional(),
+});
+export type WithdrawRequest = z.infer<typeof WithdrawRequestSchema>;
 
 export const WebhookRequestSchema = z.record(z.string(), z.any());
+export type WebhookRequest = z.infer<typeof WebhookRequestSchema>;
 
 export const PaymentSchemaRegistries = {
 	PaymentProvider: { schema: PaymentProviderSchema, strategy: "output" },
@@ -84,6 +93,7 @@ export const PaymentSchemaRegistries = {
 	TopUpRequest: { schema: TopUpRequestSchema, strategy: "input" },
 	PayRequest: { schema: PayRequestSchema, strategy: "input" },
 	TransferRequest: { schema: TransferRequestSchema, strategy: "input" },
+	WithdrawRequest: { schema: WithdrawRequestSchema, strategy: "input" },
 	WebhookRequest: { schema: WebhookRequestSchema, strategy: "input" },
 	PaymentKey: { schema: PaymentKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

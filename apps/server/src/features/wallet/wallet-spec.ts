@@ -4,6 +4,7 @@ import {
 	PayRequestSchema,
 	TopUpRequestSchema,
 	TransferRequestSchema,
+	WithdrawRequestSchema,
 } from "@repo/schema/payment";
 import {
 	WalletMonthlySummaryQuerySchema,
@@ -89,4 +90,18 @@ export const WalletSpec = {
 		.output(
 			createSuccesSchema(PaymentSchema, "Successfully retrieved users data"),
 		),
+	withdraw: oc
+		.route({
+			tags: [FEATURE_TAGS.WALLET],
+			method: "POST",
+			path: "/withdraw",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				body: WithdrawRequestSchema,
+			}),
+		)
+		.output(createSuccesSchema(PaymentSchema, "Withdrawal request submitted")),
 };
