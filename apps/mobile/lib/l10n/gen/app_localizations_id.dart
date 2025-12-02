@@ -761,6 +761,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get success_bank_verified => 'Rekening bank berhasil diverifikasi';
 
   @override
+  String get message_remember_password => 'Ingat kata sandi Anda?';
+
+  @override
   String get message_location_default => 'Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.';
 
   @override

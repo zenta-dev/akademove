@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
@@ -94,7 +95,7 @@ export const MerchantMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Merchant updated successfully", data: result },
+				body: { message: m.server_merchant_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -105,7 +106,7 @@ export const MerchantMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Merchant deleted successfully", data: null },
+				body: { message: m.server_merchant_deleted(), data: null },
 			};
 		}),
 	bestSellers: priv.bestSellers

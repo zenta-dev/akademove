@@ -25,6 +25,8 @@ import 'package:mocktail/mocktail.dart';
 
 class MockApiClient extends Mock implements ApiClient {}
 
+class MockEmergencyApi extends Mock implements EmergencyApi {}
+
 // ============================================================================
 // Repository Mocks
 // ============================================================================

@@ -260,6 +260,7 @@
 	"success_menu_updated": "Menu berhasil diperbarui",
 	"success_bank_verified": "Rekening bank berhasil diverifikasi",
 	
+	"message_remember_password": "Ingat kata sandi Anda?",
 	"message_location_default": "Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.",
 	"message_location_permission_required": "Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.",
 	"message_location_permission_explanation": "Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda di peta secara otomatis. Ini membantu pelanggan menemukan bisnis Anda dengan mudah.\n\nAnda juga dapat mengatur lokasi secara manual dengan menggeser penanda.",

@@ -267,6 +267,7 @@
 	"success_menu_updated": "Menu updated successfully",
 	"success_bank_verified": "Bank account verified successfully",
 	
+	"message_remember_password": "Remember your password?",
 	"message_location_default": "Using default location. You can drag the marker to set your outlet location.",
 	"message_location_permission_required": "Location permission is required to set your outlet location automatically.",
 	"message_location_permission_explanation": "We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily.\n\nYou can also manually set the location by dragging the marker.",

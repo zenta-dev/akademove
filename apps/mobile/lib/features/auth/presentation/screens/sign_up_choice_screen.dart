@@ -1,5 +1,6 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter/material.dart' show InkWell;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -23,29 +24,30 @@ class _SignUpRoutes {
 class SignUpChoiceScreen extends StatelessWidget {
   const SignUpChoiceScreen({super.key});
 
-  static final List<_SignUpRoutes> routes = [
+  List<_SignUpRoutes> _getRoutes(BuildContext context) => [
     _SignUpRoutes(
-      name: 'User',
+      name: context.l10n.label_user_role,
       icon: Assets.images.character.user,
       route: Routes.authSignUpUser,
-      description: 'Enjoy a comfortable and safe journey to your destination.',
+      description: context.l10n.description_user_role,
     ),
     _SignUpRoutes(
-      name: 'Driver',
+      name: context.l10n.label_driver_role,
       icon: Assets.images.character.driver,
       route: Routes.authSignUpDriver,
-      description: 'Earn extra income by driving with us.',
+      description: context.l10n.description_driver_role,
     ),
     _SignUpRoutes(
-      name: 'Merchant',
+      name: context.l10n.label_merchant_role,
       icon: Assets.images.character.merchant,
       route: Routes.authSignUpMerchant,
-      description: 'Expand your business reach with our platform.',
+      description: context.l10n.description_merchant_role,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final routes = _getRoutes(context);
     return Scaffold(
       child: Center(
         child: SingleChildScrollView(
@@ -55,7 +57,7 @@ class SignUpChoiceScreen extends StatelessWidget {
             children: [
               Assets.images.brand.svg(height: 80.h),
               Text(
-                'Start Your Journey with Us!',
+                context.l10n.screen_title_sign_up_choice,
                 style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
                 textAlign: TextAlign.center,
               ),

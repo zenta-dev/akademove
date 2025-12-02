@@ -55,7 +55,7 @@ export const AuthHandler = pub.router({
 				return {
 					status: 201,
 					body: {
-						message: "User account created successfully.",
+						message: m.server_user_created(),
 						data: nullToUndefined(result),
 					},
 				} as const;
@@ -100,7 +100,7 @@ export const AuthHandler = pub.router({
 					return {
 						status: 201,
 						body: {
-							message: "Driver account registered successfully.",
+							message: m.server_driver_registered(),
 							data: nullToUndefined(result),
 						},
 					} as const;
@@ -147,7 +147,7 @@ export const AuthHandler = pub.router({
 					return {
 						status: 201,
 						body: {
-							message: "Merchant account registered successfully.",
+							message: m.server_merchant_registered(),
 							data: nullToUndefined(result),
 						},
 					} as const;
@@ -184,7 +184,7 @@ export const AuthHandler = pub.router({
 		return {
 			status: 200,
 			body: {
-				message: "User signed out successfully.",
+				message: m.server_signout(),
 				data: true,
 			},
 		} as const;
@@ -211,7 +211,7 @@ export const AuthHandler = pub.router({
 		return {
 			status: 200,
 			body: {
-				message: "Session retrieved successfully.",
+				message: m.server_session_retrieved(),
 				data: nullToUndefined(result),
 			},
 		} as const;
@@ -223,7 +223,7 @@ export const AuthHandler = pub.router({
 			return {
 				status: 202,
 				body: {
-					message: "Password reset instructions sent to the registered email.",
+					message: m.server_password_reset_requested(),
 					data: true,
 				},
 			};
@@ -236,7 +236,7 @@ export const AuthHandler = pub.router({
 			return {
 				status: 200,
 				body: {
-					message: "Password has been reset successfully.",
+					message: m.server_password_reset(),
 					data: true,
 				},
 			} as const;

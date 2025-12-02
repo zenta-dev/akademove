@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { m } from "@repo/i18n";
 import {
 	type ConfigurationValue,
 	DeliveryPricingConfigurationSchema,
@@ -673,7 +674,7 @@ export class OrderRepository extends BaseRepository {
 					method: params.payment.method,
 					status: order.status,
 				},
-				"[OrderRepository] Order placed successfully",
+				m.server_order_placed(),
 			);
 
 			return { order, payment, transaction };
@@ -994,7 +995,7 @@ export class OrderRepository extends BaseRepository {
 							refundAmount: toNumberSafe(refundAmount),
 							penaltyAmount: toNumberSafe(penaltyAmount),
 						},
-						"[OrderRepository] Refund processed successfully",
+						m.server_refund_processed(),
 					);
 				}
 			}
@@ -1016,7 +1017,7 @@ export class OrderRepository extends BaseRepository {
 					role: userRole,
 					refundAmount: toNumberSafe(refundAmount),
 				},
-				"[OrderRepository] Order cancelled successfully",
+				m.server_order_cancelled(),
 			);
 
 			return updatedOrder;

@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { m } from "@repo/i18n";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import {
 	type AdminUpdateUser,
@@ -263,7 +264,7 @@ export class UserAdminRepository extends BaseRepository {
 
 			log.info(
 				{ userId: user.id, email: user.email, role: user.role },
-				"[UserAdminRepository] User created successfully",
+				m.server_user_created(),
 			);
 
 			return { ...composedUser, password: item.password };

@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -41,7 +42,7 @@ export const ReportHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Report created successfully", data: result },
+				body: { message: m.server_report_created(), data: result },
 			};
 		}),
 	update: priv.update
@@ -52,7 +53,7 @@ export const ReportHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Report updated successfully", data: result },
+				body: { message: m.server_report_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -62,7 +63,7 @@ export const ReportHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Report deleted successfully", data: null },
+				body: { message: m.server_report_deleted(), data: null },
 			};
 		}),
 });

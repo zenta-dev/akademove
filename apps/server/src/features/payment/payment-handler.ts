@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { createHash } from "node:crypto";
+import { m } from "@repo/i18n";
 import { RepositoryError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
 import { log } from "@/utils";
@@ -73,7 +74,7 @@ export const PaymentHandler = pub.router({
 
 				return {
 					status: 200,
-					body: { message: "Webhook processed successfully", data: null },
+					body: { message: m.server_webhook_processed(), data: null },
 				};
 			});
 		},

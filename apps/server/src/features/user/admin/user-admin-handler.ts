@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -17,7 +18,7 @@ export const UserAdminHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved users data",
+					message: m.server_users_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -30,7 +31,7 @@ export const UserAdminHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved user data", data: result },
+				body: { message: m.server_user_retrieved(), data: result },
 			};
 		}),
 	create: priv.create
@@ -41,7 +42,7 @@ export const UserAdminHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "User created successfully", data: result },
+				body: { message: m.server_user_created(), data: result },
 			};
 		}),
 	update: priv.update
@@ -57,7 +58,7 @@ export const UserAdminHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "User updated successfully", data: result },
+				body: { message: m.server_user_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -67,7 +68,7 @@ export const UserAdminHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "User deleted successfully", data: null },
+				body: { message: m.server_user_deleted(), data: null },
 			};
 		}),
 	dashboardStats: priv.dashboardStats
@@ -78,7 +79,7 @@ export const UserAdminHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved dashboard statistics",
+					message: m.server_users_retrieved(),
 					data: result,
 				},
 			};

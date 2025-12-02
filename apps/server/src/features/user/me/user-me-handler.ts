@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -19,7 +20,7 @@ export const UserMeHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "success", data: res },
+				body: { message: m.server_user_updated(), data: res },
 			};
 		});
 	}),
@@ -37,7 +38,7 @@ export const UserMeHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "success", data: res },
+					body: { message: m.server_user_updated(), data: res },
 				};
 			});
 		},

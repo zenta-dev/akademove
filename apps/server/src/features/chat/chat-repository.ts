@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type {
 	InsertOrderChatMessage,
 	OrderChatMessage,
@@ -152,7 +153,7 @@ export class ChatRepository extends BaseRepository {
 					orderId: params.orderId,
 					userId: params.userId,
 				},
-				"[ChatRepository] Message created successfully",
+				m.server_message_created(),
 			);
 
 			return message;

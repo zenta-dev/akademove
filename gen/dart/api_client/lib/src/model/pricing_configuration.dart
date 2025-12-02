@@ -31,30 +31,32 @@ class PricingConfiguration {
 
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
-  
+
   @JsonKey(name: r'perKmRate', required: true, includeIfNull: false)
   final num perKmRate;
-  
+
   @JsonKey(name: r'minimumFare', required: true, includeIfNull: false)
   final num minimumFare;
-  
+
   @JsonKey(name: r'platformFeeRate', required: true, includeIfNull: false)
   final num platformFeeRate;
-  
+
   @JsonKey(name: r'taxRate', required: true, includeIfNull: false)
   final num taxRate;
-  
+
   @JsonKey(name: r'perKgRate', required: true, includeIfNull: false)
   final num perKgRate;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is PricingConfiguration &&
-    other.baseFare == baseFare &&
-    other.perKmRate == perKmRate &&
-    other.minimumFare == minimumFare &&
-    other.platformFeeRate == platformFeeRate &&
-    other.taxRate == taxRate &&
-    other.perKgRate == perKgRate;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PricingConfiguration &&
+          other.baseFare == baseFare &&
+          other.perKmRate == perKmRate &&
+          other.minimumFare == minimumFare &&
+          other.platformFeeRate == platformFeeRate &&
+          other.taxRate == taxRate &&
+          other.perKgRate == perKgRate;
 
   @override
   int get hashCode =>
@@ -65,7 +67,8 @@ class PricingConfiguration {
       taxRate.hashCode +
       perKgRate.hashCode;
 
-  factory PricingConfiguration.fromJson(Map<String, dynamic> json) => _$PricingConfigurationFromJson(json);
+  factory PricingConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$PricingConfigurationFromJson(json);
 
   Map<String, dynamic> toJson() => _$PricingConfigurationToJson(this);
 
@@ -73,6 +76,4 @@ class PricingConfiguration {
   String toString() {
     return toJson().toString();
   }
-
 }
-

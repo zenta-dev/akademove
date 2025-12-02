@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
 import { requireRoles } from "@/core/middlewares/auth";
@@ -36,7 +37,7 @@ export const BadgeMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Badge created successfully", data: result },
+				body: { message: m.server_badge_created(), data: result },
 			};
 		}),
 	update: priv.update
@@ -47,7 +48,7 @@ export const BadgeMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Badge updated successfully", data: result },
+				body: { message: m.server_badge_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -57,7 +58,7 @@ export const BadgeMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Badge deleted successfully", data: null },
+				body: { message: m.server_badge_deleted(), data: null },
 			};
 		}),
 });

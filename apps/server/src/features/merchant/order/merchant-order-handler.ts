@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -23,7 +24,7 @@ export const MerchantOrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Order accepted successfully", data: result },
+					body: { message: m.server_order_accepted(), data: result },
 				};
 			});
 		}),
@@ -49,7 +50,7 @@ export const MerchantOrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Order rejected successfully", data: result },
+					body: { message: m.server_order_rejected(), data: result },
 				};
 			});
 		}),
@@ -72,7 +73,7 @@ export const MerchantOrderHandler = priv.router({
 				return {
 					status: 200,
 					body: {
-						message: "Order marked as preparing successfully",
+						message: m.server_order_preparing(),
 						data: result,
 					},
 				};
@@ -97,7 +98,7 @@ export const MerchantOrderHandler = priv.router({
 				return {
 					status: 200,
 					body: {
-						message: "Order marked as ready for pickup successfully",
+						message: m.server_order_ready(),
 						data: result,
 					},
 				};

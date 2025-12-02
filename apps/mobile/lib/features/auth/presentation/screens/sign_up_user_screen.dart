@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,7 @@ class SignUpUserScreen extends StatelessWidget {
         children: [
           Assets.images.hero.signUpUser.svg(height: 200.h),
           Text(
-            'Sign up now — your next ride or meal is just a tap away 🚴‍♂️🍔',
+            context.l10n.screen_title_user_sign_up,
             textAlign: TextAlign.center,
             style: context.theme.typography.h3.copyWith(fontSize: 20.sp),
           ),
@@ -58,8 +59,8 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
-              title: 'Sign Up Failed',
-              message: state.error?.message ?? 'Unknown error',
+              title: context.l10n.dialog_title_sign_up_failed,
+              message: state.error?.message ?? context.l10n.error_unknown,
             ),
             location: ToastLocation.topCenter,
           );
@@ -68,8 +69,8 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
           showToast(
             context: context,
             builder: (context, overlay) => context.buildToast(
-              title: 'Sign Up Success',
-              message: state.message ?? 'Successfully signed up',
+              title: context.l10n.dialog_title_sign_up_success,
+              message: state.message ?? context.l10n.success_sign_up,
             ),
             location: ToastLocation.topCenter,
           );
@@ -114,14 +115,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             children: [
               FormField(
                 key: _nameKey,
-                label: const Text('Name'),
+                label: Text(context.l10n.label_name),
                 validator: const LengthValidator(min: 3),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: const Text('John Doe'),
+                  placeholder: Text(context.l10n.placeholder_name),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.user)),
@@ -130,14 +131,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _emailKey,
-                label: const Text('Email'),
+                label: Text(context.l10n.email),
                 validator: const EmailValidator(),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: const Text('john@gmail.com'),
+                  placeholder: Text(context.l10n.placeholder_email),
                   enabled: !state.isLoading,
                   keyboardType: TextInputType.emailAddress,
                   features: const [
@@ -147,7 +148,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _genderKey,
-                label: const Text('Gender'),
+                label: Text(context.l10n.label_gender),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
@@ -184,7 +185,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _phoneNumberKey,
-                label: const Text('Phone'),
+                label: Text(context.l10n.label_phone),
                 validator: const LengthValidator(min: 10),
                 showErrors: const {
                   FormValidationMode.changed,
@@ -210,14 +211,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _passwordKey,
-                label: const Text('Password'),
+                label: Text(context.l10n.password),
                 validator: const SafePasswordValidator(),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: const Text('*******'),
+                  placeholder: Text(context.l10n.placeholder_password),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
@@ -227,14 +228,14 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               ),
               FormField(
                 key: _confirmPasswordKey,
-                label: const Text('Confirm Password'),
+                label: Text(context.l10n.label_confirm_password),
                 // validator: const CompareWith<String>.equal(_passwordKey),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: const Text('*******'),
+                  placeholder: Text(context.l10n.placeholder_password),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
@@ -257,7 +258,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     child: isLoading
                         ? const Submiting()
                         : Text(
-                            'Sign Up',
+                            context.l10n.sign_up,
                             style: context.theme.typography.medium.copyWith(
                               color: Colors.white,
                             ),

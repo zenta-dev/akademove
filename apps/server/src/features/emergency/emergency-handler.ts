@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -56,7 +57,7 @@ export const EmergencyHandler = priv.router({
 				return {
 					status: 200,
 					body: {
-						message: "Emergency triggered successfully",
+						message: m.server_emergency_triggered(),
 						data: result,
 					},
 				};
@@ -150,7 +151,7 @@ export const EmergencyHandler = priv.router({
 				return {
 					status: 200,
 					body: {
-						message: "Emergency status updated successfully",
+						message: m.server_emergency_updated(),
 						data: result,
 					},
 				};

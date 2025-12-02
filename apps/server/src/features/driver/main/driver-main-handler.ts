@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { hasPermission } from "@/core/middlewares/auth";
@@ -71,7 +72,7 @@ export const DriverMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Driver updated successfully", data: result },
+				body: { message: m.server_driver_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -81,7 +82,7 @@ export const DriverMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Driver deleted successfully", data: null },
+				body: { message: m.server_driver_deleted(), data: null },
 			};
 		}),
 });

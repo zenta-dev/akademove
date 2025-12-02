@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { UserBadgeSpec } from "./user-badge-spec";
@@ -36,7 +37,7 @@ export const UserBadgeHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "UserBadge created successfully", data: result },
+			body: { message: m.server_user_badge_created(), data: result },
 		};
 	}),
 	update: priv.update.handler(async ({ context, input: { params, body } }) => {
@@ -45,7 +46,7 @@ export const UserBadgeHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "UserBadge updated successfully", data: result },
+			body: { message: m.server_user_badge_updated(), data: result },
 		};
 	}),
 	remove: priv.remove.handler(async ({ context, input: { params } }) => {
@@ -53,7 +54,7 @@ export const UserBadgeHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "UserBadge deleted successfully", data: null },
+			body: { message: m.server_user_badge_deleted(), data: null },
 		};
 	}),
 });

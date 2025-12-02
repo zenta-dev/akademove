@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -40,7 +41,7 @@ export const CouponHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Coupon created successfully", data: result },
+				body: { message: m.server_coupon_created(), data: result },
 			};
 		}),
 	update: priv.update
@@ -51,7 +52,7 @@ export const CouponHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Coupon updated successfully", data: result },
+				body: { message: m.server_coupon_updated(), data: result },
 			};
 		}),
 	remove: priv.remove
@@ -61,7 +62,7 @@ export const CouponHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Coupon deleted successfully", data: null },
+				body: { message: m.server_coupon_deleted(), data: null },
 			};
 		}),
 });

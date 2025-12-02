@@ -135,12 +135,10 @@ void main() {
           createdAt: TestConstants.testCreatedAt,
           updatedAt: TestConstants.testUpdatedAt,
         );
-        when(() => mockWalletRepository.getWallet()).thenAnswer(
-          (_) async {
-            await Future<void>.delayed(const Duration(milliseconds: 50));
-            return SuccessResponse(message: 'Success', data: wallet);
-          },
-        );
+        when(() => mockWalletRepository.getWallet()).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          return SuccessResponse(message: 'Success', data: wallet);
+        });
 
         // Act - fire multiple calls without awaiting
         cubit.getMine();
@@ -151,33 +149,22 @@ void main() {
         verify(() => mockWalletRepository.getWallet()).called(1);
       });
 
-      test('handles error gracefully (logs but does not emit failure)', () async {
-        // Arrange
-        when(() => mockWalletRepository.getWallet()).thenThrow(
-          const RepositoryError('Failed to get wallet', code: ErrorCode.internalServerError),
-        );
+      test(
+        'handles error gracefully (logs but does not emit failure)',
+        () async {
+          // Arrange
+          when(() => mockWalletRepository.getWallet()).thenThrow(
+            const RepositoryError(
+              'Failed to get wallet',
+              code: ErrorCode.internalServerError,
+            ),
+          );
 
-        // Act
-        await cubit.getMine();
-
-        // Assert - error is caught and logged, wallet remains null
-        expect(cubit.state.myWallet, isNull);
-      });
-          when(() => mockWalletRepository.getWallet()).thenAnswer((_) async {
-            await Future<void>.delayed(const Duration(milliseconds: 100));
-            return SuccessResponse(message: 'Success', data: wallet);
-          });
-          return cubit;
-        },
-        act: (cubit) async {
-          // Fire multiple calls without awaiting
-          cubit.getMine();
-          cubit.getMine();
+          // Act
           await cubit.getMine();
-        },
-        verify: (_) {
-          // Should only call repository once due to operation deduplication
-          verify(() => mockWalletRepository.getWallet()).called(1);
+
+          // Assert - error is caught and logged, wallet remains null
+          expect(cubit.state.myWallet, isNull);
         },
       );
 

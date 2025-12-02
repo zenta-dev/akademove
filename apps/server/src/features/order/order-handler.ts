@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { hasPermission } from "@/core/middlewares/auth";
@@ -44,7 +45,7 @@ export const OrderHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved orders data",
+					message: m.server_orders_retrieved(),
 					data: rows,
 					totalPages: pagination?.totalPages,
 					pagination,
@@ -67,7 +68,7 @@ export const OrderHandler = priv.router({
 		});
 		return {
 			status: 200,
-			body: { message: "Successfully estimate pricing", data: res },
+			body: { message: m.server_order_retrieved(), data: res },
 		} as const;
 	}),
 	get: priv.get
@@ -77,7 +78,7 @@ export const OrderHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved order data", data: result },
+				body: { message: m.server_order_retrieved(), data: result },
 			};
 		}),
 	placeOrder: priv.placeOrder
@@ -92,7 +93,7 @@ export const OrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Successfully place order", data: result },
+					body: { message: m.server_order_placed(), data: result },
 				} as const;
 			});
 		}),
@@ -145,7 +146,7 @@ export const OrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Order updated successfully", data: result },
+					body: { message: m.server_order_updated(), data: result },
 				};
 			});
 		}),
@@ -160,7 +161,7 @@ export const OrderHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved chat messages",
+					message: m.server_orders_retrieved(),
 					data: result,
 				},
 			};
@@ -181,7 +182,7 @@ export const OrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Message sent successfully", data: result },
+					body: { message: m.server_message_sent(), data: result },
 				};
 			});
 		}),
@@ -199,7 +200,7 @@ export const OrderHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Order cancelled successfully", data: result },
+					body: { message: m.server_order_cancelled(), data: result },
 				};
 			});
 		}),

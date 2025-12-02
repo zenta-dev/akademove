@@ -1591,6 +1591,12 @@ abstract class AppLocalizations {
   /// **'Bank account verified successfully'**
   String get success_bank_verified;
 
+  /// No description provided for @message_remember_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember your password?'**
+  String get message_remember_password;
+
   /// No description provided for @message_location_default.
   ///
   /// In en, this message translates to:

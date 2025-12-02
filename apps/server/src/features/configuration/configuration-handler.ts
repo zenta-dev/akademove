@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -40,7 +41,7 @@ export const ConfigurationHandler = priv.router({
 			});
 			return {
 				status: 200,
-				body: { message: "Configuration updated successfully", data: result },
+				body: { message: m.server_configuration_updated(), data: result },
 			};
 		}),
 });

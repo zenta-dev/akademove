@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -31,7 +32,7 @@ export const ChatHandler = priv.router({
 
 				return {
 					status: 200,
-					body: { message: "Message sent successfully", data: result },
+					body: { message: m.server_message_sent(), data: result },
 				};
 			});
 		}),

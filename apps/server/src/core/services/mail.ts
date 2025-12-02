@@ -46,7 +46,6 @@ export interface MailService {
 	sendInvitation(props: SendInvitationProps): Promise<void>;
 }
 
-// TODO: Replace with actual domain
 export const MAIL_FROMS = {
 	DEFAULT: "Akademove <no-reply@mail.akademove.com>",
 	SECURITY: "Akademove Security <security@mail.akademove.com>",

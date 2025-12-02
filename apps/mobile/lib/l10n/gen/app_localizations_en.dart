@@ -761,6 +761,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get success_bank_verified => 'Bank account verified successfully';
 
   @override
+  String get message_remember_password => 'Remember your password?';
+
+  @override
   String get message_location_default => 'Using default location. You can drag the marker to set your outlet location.';
 
   @override
