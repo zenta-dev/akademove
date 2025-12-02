@@ -450,13 +450,240 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
   }
 
   void _showWithdrawDialog() {
-    showToast(
+    final amountController = TextEditingController();
+    final accountNumberController = TextEditingController();
+    final accountNameController = TextEditingController();
+    BankProvider selectedBank = BankProvider.BCA;
+
+    material.showDialog(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: 'Withdraw',
-        message: 'Withdrawal feature coming soon',
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => material.AlertDialog(
+          title: const Text('Withdraw Earnings'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                // Available balance info
+                Container(
+                  padding: EdgeInsets.all(12.dg),
+                  decoration: BoxDecoration(
+                    color: material.Colors.blue.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: material.Colors.blue),
+                  ),
+                  child: Row(
+                    spacing: 8.w,
+                    children: [
+                      Icon(
+                        LucideIcons.info,
+                        size: 20.sp,
+                        color: material.Colors.blue,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 4.h,
+                          children: [
+                            Text(
+                              'Available Balance',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: material.Colors.blue,
+                              ),
+                            ),
+                            Text(
+                              context.formatCurrency(_wallet?.balance ?? 0),
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: material.Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Amount field
+                material.TextField(
+                  controller: amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: material.InputDecoration(
+                    labelText: 'Amount',
+                    hintText: 'Enter withdrawal amount',
+                    border: const material.OutlineInputBorder(),
+                    prefixText: 'Rp ',
+                  ),
+                ),
+                // Bank provider dropdown
+                material.DropdownButtonFormField<BankProvider>(
+                  initialValue: selectedBank,
+                  decoration: const material.InputDecoration(
+                    labelText: 'Bank',
+                    border: material.OutlineInputBorder(),
+                  ),
+                  items: BankProvider.values.map((bank) {
+                    return material.DropdownMenuItem(
+                      value: bank,
+                      child: Text(bank.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => selectedBank = value);
+                    }
+                  },
+                ),
+                // Account number field
+                material.TextField(
+                  controller: accountNumberController,
+                  keyboardType: TextInputType.number,
+                  decoration: const material.InputDecoration(
+                    labelText: 'Account Number',
+                    hintText: 'Enter your account number',
+                    border: material.OutlineInputBorder(),
+                  ),
+                ),
+                // Account name field (optional)
+                material.TextField(
+                  controller: accountNameController,
+                  decoration: const material.InputDecoration(
+                    labelText: 'Account Name (Optional)',
+                    hintText: 'Enter account holder name',
+                    border: material.OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            material.TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            material.TextButton(
+              onPressed: () async {
+                final amountText = amountController.text.trim();
+                final accountNumber = accountNumberController.text.trim();
+                final accountName = accountNameController.text.trim();
+
+                // Validate amount
+                if (amountText.isEmpty) {
+                  if (mounted) {
+                    showToast(
+                      context: context,
+                      builder: (context, overlay) => context.buildToast(
+                        title: 'Error',
+                        message: 'Please enter withdrawal amount',
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                final amount = num.tryParse(amountText);
+                if (amount == null || amount <= 0) {
+                  if (mounted) {
+                    showToast(
+                      context: context,
+                      builder: (context, overlay) => context.buildToast(
+                        title: 'Error',
+                        message: 'Please enter a valid amount',
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                final balance = _wallet?.balance ?? 0;
+                if (amount > balance) {
+                  if (mounted) {
+                    showToast(
+                      context: context,
+                      builder: (context, overlay) => context.buildToast(
+                        title: 'Error',
+                        message: 'Insufficient balance',
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                // Validate account number
+                if (accountNumber.isEmpty) {
+                  if (mounted) {
+                    showToast(
+                      context: context,
+                      builder: (context, overlay) => context.buildToast(
+                        title: 'Error',
+                        message: 'Please enter account number',
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                Navigator.of(dialogContext).pop();
+                await _processWithdrawal(
+                  amount: amount,
+                  bankProvider: selectedBank,
+                  accountNumber: accountNumber,
+                  accountName: accountName.isEmpty ? null : accountName,
+                );
+              },
+              child: const Text('Withdraw'),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _processWithdrawal({
+    required num amount,
+    required BankProvider bankProvider,
+    required String accountNumber,
+    String? accountName,
+  }) async {
+    try {
+      setState(() => _isLoading = true);
+
+      final request = WithdrawRequest(
+        amount: amount,
+        bankProvider: bankProvider,
+        accountNumber: accountNumber,
+        accountName: accountName,
+      );
+
+      final result = await context.read<WalletRepository>().withdraw(request);
+
+      if (mounted) {
+        setState(() => _isLoading = false);
+        showToast(
+          context: context,
+          builder: (context, overlay) =>
+              context.buildToast(title: 'Success', message: result.message),
+        );
+        // Reload data to reflect new balance
+        _loadData();
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Error',
+            message: 'Failed to withdraw: ${e.toString()}',
+          ),
+        );
+      }
+    }
   }
 
   IconData _getTransactionIcon(TransactionType type) {

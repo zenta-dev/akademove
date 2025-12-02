@@ -52,4 +52,19 @@ class WalletRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
+  Future<BaseResponse<Payment>> withdraw(WithdrawRequest req) {
+    return guard(() async {
+      final res = await _apiClient.getWalletApi().walletWithdraw(
+        withdrawRequest: req,
+      );
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Failed to withdraw',
+            code: ErrorCode.unknown,
+          ));
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
 }
