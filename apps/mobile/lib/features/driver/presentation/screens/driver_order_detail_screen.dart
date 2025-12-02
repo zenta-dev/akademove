@@ -409,14 +409,18 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                 IconButton(
                   icon: const Icon(LucideIcons.phone),
                   onPressed: () {
-                    // TODO: Implement call functionality
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Call Customer',
-                        message: 'Phone: ${order.user?.phone ?? "N/A"}',
-                      ),
-                    );
+                    final phone = order.user?.phone;
+                    if (phone != null) {
+                      _showCallDialog(context, phone);
+                    } else {
+                      showToast(
+                        context: context,
+                        builder: (context, overlay) => context.buildToast(
+                          title: 'No Phone Number',
+                          message: 'Customer phone number not available',
+                        ),
+                      );
+                    }
                   },
                   variance: ButtonVariance.ghost,
                 ),
@@ -667,6 +671,46 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
               context.read<DriverOrderCubit>().cancelOrder();
             },
             child: const Text('Yes, Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCallDialog(BuildContext context, Phone phone) {
+    final phoneNumber = '+${phone.countryCode.value}${phone.number}';
+
+    material.showDialog(
+      context: context,
+      builder: (dialogContext) => material.AlertDialog(
+        title: const Text('Call Customer'),
+        content: material.Column(
+          mainAxisSize: material.MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Customer phone number:'),
+            material.SizedBox(height: 8.h),
+            material.SelectableText(
+              phoneNumber,
+              style: material.TextStyle(
+                fontSize: 18.sp,
+                fontWeight: material.FontWeight.bold,
+              ),
+            ),
+            material.SizedBox(height: 16.h),
+            Text(
+              'Tap the phone number to copy it, then use your phone app to call.',
+              style: material.TextStyle(
+                fontSize: 12.sp,
+                color: material.Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          material.TextButton(
+            onPressed: () => material.Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
           ),
         ],
       ),
