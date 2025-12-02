@@ -3,12 +3,12 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/merchant_analytics200_response_data.dart';
 import 'package:api_client/src/model/pagination_result.dart';
-import 'package:api_client/src/model/order.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
-part 'order_get200_response.g.dart';
+part 'merchant_analytics200_response.g.dart';
 
 @CopyWith()
 @JsonSerializable(
@@ -17,9 +17,9 @@ part 'order_get200_response.g.dart';
   disallowUnrecognizedKeys: false,
   explicitToJson: true,
 )
-class OrderGet200Response {
-  /// Returns a new [OrderGet200Response] instance.
-  const OrderGet200Response({
+class MerchantAnalytics200Response {
+  /// Returns a new [MerchantAnalytics200Response] instance.
+  const MerchantAnalytics200Response({
     required this.message,
     required this.data,
     this.pagination,
@@ -30,7 +30,7 @@ class OrderGet200Response {
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final Order data;
+  final MerchantAnalytics200ResponseData data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;
@@ -43,7 +43,7 @@ class OrderGet200Response {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OrderGet200Response &&
+      other is MerchantAnalytics200Response &&
           other.message == message &&
           other.data == data &&
           other.pagination == pagination &&
@@ -56,10 +56,10 @@ class OrderGet200Response {
       pagination.hashCode +
       totalPages.hashCode;
 
-  factory OrderGet200Response.fromJson(Map<String, dynamic> json) =>
-      _$OrderGet200ResponseFromJson(json);
+  factory MerchantAnalytics200Response.fromJson(Map<String, dynamic> json) =>
+      _$MerchantAnalytics200ResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$OrderGet200ResponseToJson(this);
+  Map<String, dynamic> toJson() => _$MerchantAnalytics200ResponseToJson(this);
 
   @override
   String toString() {

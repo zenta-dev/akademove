@@ -20,31 +20,30 @@ import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
 class BadgeApi {
-
   final Dio _dio;
 
   const BadgeApi(this._dio);
 
   /// badgeCreate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [code] 
-  /// * [name] 
-  /// * [description] 
-  /// * [type] 
-  /// * [level] 
-  /// * [targetRole] 
-  /// * [isActive] 
-  /// * [displayOrder] 
-  /// * [criteriaMinOrders] 
-  /// * [criteriaMinRating] 
-  /// * [criteriaMinOnTimeRate] 
-  /// * [criteriaMinStreak] 
-  /// * [criteriaMinEarnings] 
-  /// * [benefitsPriorityBoost] 
-  /// * [benefitsCommissionReduction] 
-  /// * [icon] 
+  /// * [code]
+  /// * [name]
+  /// * [description]
+  /// * [type]
+  /// * [level]
+  /// * [targetRole]
+  /// * [isActive]
+  /// * [displayOrder]
+  /// * [criteriaMinOrders]
+  /// * [criteriaMinRating]
+  /// * [criteriaMinOnTimeRate]
+  /// * [criteriaMinStreak]
+  /// * [criteriaMinEarnings]
+  /// * [benefitsPriorityBoost]
+  /// * [benefitsCommissionReduction]
+  /// * [icon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -54,7 +53,7 @@ class BadgeApi {
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeCreate200Response>> badgeCreate({ 
+  Future<Response<BadgeCreate200Response>> badgeCreate({
     required String code,
     required String name,
     required String description,
@@ -81,16 +80,10 @@ class BadgeApi {
     final _path = r'/badges';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -101,31 +94,31 @@ class BadgeApi {
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    r'code': code,
-    r'name': name,
-    r'description': description,
-    r'type': type,
-    r'level': level,
-    r'targetRole': targetRole,
-    if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
-    if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
-    if (criteriaMinOnTimeRate != null) r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
-    if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
-    if (criteriaMinEarnings != null) r'criteria_minEarnings': criteriaMinEarnings,
-    if (benefitsPriorityBoost != null) r'benefits_priorityBoost': benefitsPriorityBoost,
-    if (benefitsCommissionReduction != null) r'benefits_commissionReduction': benefitsCommissionReduction,
-    r'isActive': isActive,
-    r'displayOrder': displayOrder,
-    if (icon != null) r'icon':  icon ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        r'code': code,
+        r'name': name,
+        r'description': description,
+        r'type': type,
+        r'level': level,
+        r'targetRole': targetRole,
+        if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
+        if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
+        r'isActive': isActive,
+        r'displayOrder': displayOrder,
+        if (icon != null) r'icon': icon,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -145,7 +138,13 @@ class BadgeApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeCreate200Response, BadgeCreate200Response>(rawData, 'BadgeCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeCreate200Response, BadgeCreate200Response>(
+              rawData,
+              'BadgeCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -169,10 +168,10 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   }
 
   /// badgeGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -182,7 +181,7 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeCreate200Response>> badgeGet({ 
+  Future<Response<BadgeCreate200Response>> badgeGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -191,19 +190,18 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -222,7 +220,13 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeCreate200Response, BadgeCreate200Response>(rawData, 'BadgeCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeCreate200Response, BadgeCreate200Response>(
+              rawData,
+              'BadgeCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -246,17 +250,17 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   }
 
   /// badgeList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -266,7 +270,7 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeList200Response>> badgeList({ 
+  Future<Response<BadgeList200Response>> badgeList({
     String? cursor,
     Object? limit,
     String? direction,
@@ -285,16 +289,10 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
     final _path = r'/badges';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -325,7 +323,13 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeList200Response, BadgeList200Response>(rawData, 'BadgeList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeList200Response, BadgeList200Response>(
+              rawData,
+              'BadgeList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -349,10 +353,10 @@ _responseData = rawData == null ? null : deserialize<BadgeList200Response, Badge
   }
 
   /// badgeRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -362,7 +366,7 @@ _responseData = rawData == null ? null : deserialize<BadgeList200Response, Badge
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> badgeRemove({ 
+  Future<Response<BadgeRemove200Response>> badgeRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -371,19 +375,18 @@ _responseData = rawData == null ? null : deserialize<BadgeList200Response, Badge
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -402,7 +405,13 @@ _responseData = rawData == null ? null : deserialize<BadgeList200Response, Badge
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -426,26 +435,26 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// badgeUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [code] 
-  /// * [name] 
-  /// * [description] 
-  /// * [type] 
-  /// * [level] 
-  /// * [targetRole] 
-  /// * [criteriaMinOrders] 
-  /// * [criteriaMinRating] 
-  /// * [criteriaMinOnTimeRate] 
-  /// * [criteriaMinStreak] 
-  /// * [criteriaMinEarnings] 
-  /// * [benefitsPriorityBoost] 
-  /// * [benefitsCommissionReduction] 
-  /// * [isActive] 
-  /// * [displayOrder] 
-  /// * [icon] 
+  /// * [id]
+  /// * [code]
+  /// * [name]
+  /// * [description]
+  /// * [type]
+  /// * [level]
+  /// * [targetRole]
+  /// * [criteriaMinOrders]
+  /// * [criteriaMinRating]
+  /// * [criteriaMinOnTimeRate]
+  /// * [criteriaMinStreak]
+  /// * [criteriaMinEarnings]
+  /// * [benefitsPriorityBoost]
+  /// * [benefitsCommissionReduction]
+  /// * [isActive]
+  /// * [displayOrder]
+  /// * [icon]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -455,7 +464,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeCreate200Response>> badgeUpdate({ 
+  Future<Response<BadgeCreate200Response>> badgeUpdate({
     required String id,
     String? code,
     String? name,
@@ -480,19 +489,18 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -503,31 +511,31 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData = FormData.fromMap(<String, dynamic>{
-    if (code != null) r'code': code,
-    if (name != null) r'name': name,
-    if (description != null) r'description': description,
-    if (type != null) r'type': type,
-    if (level != null) r'level': level,
-    if (targetRole != null) r'targetRole': targetRole,
-    if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
-    if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
-    if (criteriaMinOnTimeRate != null) r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
-    if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
-    if (criteriaMinEarnings != null) r'criteria_minEarnings': criteriaMinEarnings,
-    if (benefitsPriorityBoost != null) r'benefits_priorityBoost': benefitsPriorityBoost,
-    if (benefitsCommissionReduction != null) r'benefits_commissionReduction': benefitsCommissionReduction,
-    if (isActive != null) r'isActive': isActive,
-    if (displayOrder != null) r'displayOrder': displayOrder,
-    if (icon != null) r'icon':  icon ,
-  });
-  
-    } catch(error, stackTrace) {
+      _bodyData = FormData.fromMap(<String, dynamic>{
+        if (code != null) r'code': code,
+        if (name != null) r'name': name,
+        if (description != null) r'description': description,
+        if (type != null) r'type': type,
+        if (level != null) r'level': level,
+        if (targetRole != null) r'targetRole': targetRole,
+        if (criteriaMinOrders != null) r'criteria_minOrders': criteriaMinOrders,
+        if (criteriaMinRating != null) r'criteria_minRating': criteriaMinRating,
+        if (criteriaMinOnTimeRate != null)
+          r'criteria_minOnTimeRate': criteriaMinOnTimeRate,
+        if (criteriaMinStreak != null) r'criteria_minStreak': criteriaMinStreak,
+        if (criteriaMinEarnings != null)
+          r'criteria_minEarnings': criteriaMinEarnings,
+        if (benefitsPriorityBoost != null)
+          r'benefits_priorityBoost': benefitsPriorityBoost,
+        if (benefitsCommissionReduction != null)
+          r'benefits_commissionReduction': benefitsCommissionReduction,
+        if (isActive != null) r'isActive': isActive,
+        if (displayOrder != null) r'displayOrder': displayOrder,
+        if (icon != null) r'icon': icon,
+      });
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -547,7 +555,13 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeCreate200Response, BadgeCreate200Response>(rawData, 'BadgeCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeCreate200Response, BadgeCreate200Response>(
+              rawData,
+              'BadgeCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -571,10 +585,10 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   }
 
   /// badgeUserCreate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [badgeUserCreateRequest] 
+  /// * [badgeUserCreateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -584,7 +598,7 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeUserCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeUserCreate200Response>> badgeUserCreate({ 
+  Future<Response<BadgeUserCreate200Response>> badgeUserCreate({
     required BadgeUserCreateRequest badgeUserCreateRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -596,16 +610,10 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
     final _path = r'/badges/user';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -616,13 +624,10 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(badgeUserCreateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(badgeUserCreateRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -642,7 +647,13 @@ _responseData = rawData == null ? null : deserialize<BadgeCreate200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(rawData, 'BadgeUserCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(
+              rawData,
+              'BadgeUserCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -666,10 +677,10 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
   }
 
   /// badgeUserGet
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -679,7 +690,7 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeUserCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeUserCreate200Response>> badgeUserGet({ 
+  Future<Response<BadgeUserCreate200Response>> badgeUserGet({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -688,19 +699,18 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/user/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/user/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -719,7 +729,13 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(rawData, 'BadgeUserCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(
+              rawData,
+              'BadgeUserCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -743,17 +759,17 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
   }
 
   /// badgeUserList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -763,7 +779,7 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeUserList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeUserList200Response>> badgeUserList({ 
+  Future<Response<BadgeUserList200Response>> badgeUserList({
     String? cursor,
     Object? limit,
     String? direction,
@@ -782,16 +798,10 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
     final _path = r'/badges/user';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -822,7 +832,13 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeUserList200Response, BadgeUserList200Response>(rawData, 'BadgeUserList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeUserList200Response, BadgeUserList200Response>(
+              rawData,
+              'BadgeUserList200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -846,10 +862,10 @@ _responseData = rawData == null ? null : deserialize<BadgeUserList200Response, B
   }
 
   /// badgeUserRemove
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
+  /// * [id]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -859,7 +875,7 @@ _responseData = rawData == null ? null : deserialize<BadgeUserList200Response, B
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeRemove200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeRemove200Response>> badgeUserRemove({ 
+  Future<Response<BadgeRemove200Response>> badgeUserRemove({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -868,19 +884,18 @@ _responseData = rawData == null ? null : deserialize<BadgeUserList200Response, B
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/user/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/user/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -899,7 +914,13 @@ _responseData = rawData == null ? null : deserialize<BadgeUserList200Response, B
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeRemove200Response, BadgeRemove200Response>(rawData, 'BadgeRemove200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeRemove200Response, BadgeRemove200Response>(
+              rawData,
+              'BadgeRemove200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -923,11 +944,11 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   }
 
   /// badgeUserUpdate
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [id] 
-  /// * [badgeUserUpdateRequest] 
+  /// * [id]
+  /// * [badgeUserUpdateRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -937,7 +958,7 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
   ///
   /// Returns a [Future] containing a [Response] with a [BadgeUserCreate200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<BadgeUserCreate200Response>> badgeUserUpdate({ 
+  Future<Response<BadgeUserCreate200Response>> badgeUserUpdate({
     required String id,
     required BadgeUserUpdateRequest badgeUserUpdateRequest,
     CancelToken? cancelToken,
@@ -947,19 +968,18 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/badges/user/{id}'.replaceAll('{' r'id' '}', id.toString());
+    final _path = r'/badges/user/{id}'.replaceAll(
+      '{'
+      r'id'
+      '}',
+      id.toString(),
+    );
     final _options = Options(
       method: r'PUT',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -970,13 +990,10 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(badgeUserUpdateRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(badgeUserUpdateRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -996,7 +1013,13 @@ _responseData = rawData == null ? null : deserialize<BadgeRemove200Response, Bad
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(rawData, 'BadgeUserCreate200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<BadgeUserCreate200Response, BadgeUserCreate200Response>(
+              rawData,
+              'BadgeUserCreate200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -1018,5 +1041,4 @@ _responseData = rawData == null ? null : deserialize<BadgeUserCreate200Response,
       extra: _response.extra,
     );
   }
-
 }

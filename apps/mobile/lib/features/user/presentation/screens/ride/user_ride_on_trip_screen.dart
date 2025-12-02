@@ -132,14 +132,13 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
     // Add polyline between pickup and dropoff with actual route
     _polylines.clear();
 
-    Color color = Colors.blue;
-    if (context.mounted && mounted) {
-      color = context.colorScheme.primary;
-    }
+    if (!mounted) return;
+    final color = context.colorScheme.primary;
+    final rideCubit = context.read<UserRideCubit>();
 
     try {
       // Get actual route from MapService via cubit
-      final routeCoordinates = await context.read<UserRideCubit>().getRoutes(
+      final routeCoordinates = await rideCubit.getRoutes(
         order.pickupLocation,
         order.dropoffLocation,
       );

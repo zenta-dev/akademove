@@ -20,6 +20,9 @@ Name | Type | Description | Notes
 **basePrice** | **num** |  | 
 **tip** | **num** |  | [optional] 
 **totalPrice** | **num** |  | 
+**platformCommission** | **num** |  | [optional] 
+**driverEarning** | **num** |  | [optional] 
+**merchantCommission** | **num** |  | [optional] 
 **note** | [**OrderNote**](OrderNote.md) |  | [optional] 
 **requestedAt** | [**DateTime**](DateTime.md) |  | 
 **acceptedAt** | [**DateTime**](DateTime.md) |  | [optional] 
@@ -30,6 +33,7 @@ Name | Type | Description | Notes
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 **updatedAt** | [**DateTime**](DateTime.md) |  | 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
+**genderPreference** | **String** |  | [optional] 
 **itemCount** | **num** |  | [optional] 
 **items** | [**List&lt;OrderItem&gt;**](OrderItem.md) |  | [optional] 
 **user** | [**DriverUser**](DriverUser.md) |  | [optional] 

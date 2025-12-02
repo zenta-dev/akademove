@@ -6,12 +6,27 @@ void main() {
   final instance = ApiClient().getOrderApi();
 
   group(OrderApi, () {
-    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, List<OrderItem> items, UserGender gender, List<num> discountIds, num weight }) async
+    //Future<ChatList200Response> chatList(String orderId, int limit, { String cursor }) async
+    test('test chatList', () async {
+      // TODO
+    });
+
+    //Future<ChatSend200Response> chatSend(InsertOrderChatMessage insertOrderChatMessage) async
+    test('test chatSend', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> orderCancel(String id, OrderCancelRequest orderCancelRequest) async
+    test('test orderCancel', () async {
+      // TODO
+    });
+
+    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, List<num> discountIds, num weight }) async
     test('test orderEstimate', () async {
       // TODO
     });
 
-    //Future<OrderGet200Response> orderGet(String id) async
+    //Future<MerchantOrderAccept200Response> orderGet(String id) async
     test('test orderGet', () async {
       // TODO
     });
@@ -21,12 +36,22 @@ void main() {
       // TODO
     });
 
+    //Future<ChatList200Response> orderListMessages(String id, int limit, { String cursor }) async
+    test('test orderListMessages', () async {
+      // TODO
+    });
+
     //Future<OrderPlaceOrder200Response> orderPlaceOrder(PlaceOrder placeOrder) async
     test('test orderPlaceOrder', () async {
       // TODO
     });
 
-    //Future<OrderGet200Response> orderUpdate(String id, UpdateOrder updateOrder) async
+    //Future<ChatSend200Response> orderSendMessage(String id, OrderSendMessageRequest orderSendMessageRequest) async
+    test('test orderSendMessage', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> orderUpdate(String id, UpdateOrder updateOrder) async
     test('test orderUpdate', () async {
       // TODO
     });

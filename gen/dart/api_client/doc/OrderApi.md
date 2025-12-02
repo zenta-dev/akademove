@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**chatList**](OrderApi.md#chatlist) | **GET** /chat | 
 [**chatSend**](OrderApi.md#chatsend) | **POST** /chat | 
+[**orderCancel**](OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
 [**orderEstimate**](OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [**orderGet**](OrderApi.md#orderget) | **GET** /orders/{id} | 
 [**orderList**](OrderApi.md#orderlist) | **GET** /orders | 
@@ -94,6 +95,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ChatSend200Response**](ChatSend200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderCancel**
+> MerchantOrderAccept200Response orderCancel(id, orderCancelRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderCancelRequest orderCancelRequest = ; // OrderCancelRequest | 
+
+try {
+    final response = api.orderCancel(id, orderCancelRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderCancel: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderCancelRequest** | [**OrderCancelRequest**](OrderCancelRequest.md)|  | 
+
+### Return type
+
+[**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
 
 ### Authorization
 

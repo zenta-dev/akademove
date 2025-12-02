@@ -370,11 +370,13 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         final location = locations.first;
         await _moveToLocation(location.latitude, location.longitude);
 
-        _showToast(
-          context,
-          'Location Found',
-          'Marker moved to searched location',
-        );
+        if (mounted) {
+          _showToast(
+            context,
+            'Location Found',
+            'Marker moved to searched location',
+          );
+        }
       } else {
         if (mounted) {
           setState(() => _isSearching = false);

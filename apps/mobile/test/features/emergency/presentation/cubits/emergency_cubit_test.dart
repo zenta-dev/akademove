@@ -170,6 +170,7 @@ void main() {
         // when emit() creates new state object between checkAndAssignOperation
         // and emit(state.toLoading()). This works in wallet but not emergency cubit.
         return;
+        /*
         // Arrange
         final emergency = Emergency(
           id: TestConstants.testEmergencyId,
@@ -216,6 +217,7 @@ void main() {
 
         // Assert - should only call repository once due to operation deduplication
         verify(() => mockEmergencyRepository.trigger(any())).called(1);
+        */
       });
     });
 

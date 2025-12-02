@@ -11,6 +11,11 @@ void main() {
       // TODO
     });
 
+    //Future<UserAdminDashboardStats200Response> userAdminDashboardStats() async
+    test('test userAdminDashboardStats', () async {
+      // TODO
+    });
+
     //Future<UserAdminCreate200Response> userAdminGet(String id) async
     test('test userAdminGet', () async {
       // TODO

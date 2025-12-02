@@ -28,30 +28,32 @@ class OrderEnvelopePayloadMessage {
 
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
-  
+
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
-  
+
   @JsonKey(name: r'senderId', required: true, includeIfNull: false)
   final String senderId;
-  
+
   @JsonKey(name: r'senderName', required: true, includeIfNull: false)
   final String senderName;
-  
+
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
-  
+
   @JsonKey(name: r'sentAt', required: true, includeIfNull: false)
   final DateTime sentAt;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is OrderEnvelopePayloadMessage &&
-    other.id == id &&
-    other.orderId == orderId &&
-    other.senderId == senderId &&
-    other.senderName == senderName &&
-    other.message == message &&
-    other.sentAt == sentAt;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OrderEnvelopePayloadMessage &&
+          other.id == id &&
+          other.orderId == orderId &&
+          other.senderId == senderId &&
+          other.senderName == senderName &&
+          other.message == message &&
+          other.sentAt == sentAt;
 
   @override
   int get hashCode =>
@@ -62,7 +64,8 @@ class OrderEnvelopePayloadMessage {
       message.hashCode +
       sentAt.hashCode;
 
-  factory OrderEnvelopePayloadMessage.fromJson(Map<String, dynamic> json) => _$OrderEnvelopePayloadMessageFromJson(json);
+  factory OrderEnvelopePayloadMessage.fromJson(Map<String, dynamic> json) =>
+      _$OrderEnvelopePayloadMessageFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderEnvelopePayloadMessageToJson(this);
 
@@ -70,6 +73,4 @@ class OrderEnvelopePayloadMessage {
   String toString() {
     return toJson().toString();
   }
-
 }
-

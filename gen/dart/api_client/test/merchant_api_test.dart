@@ -6,6 +6,16 @@ void main() {
   final instance = ApiClient().getMerchantApi();
 
   group(MerchantApi, () {
+    //Future<MerchantAnalytics200Response> merchantAnalytics(String id, { String period, DateTime startDate, DateTime endDate }) async
+    test('test merchantAnalytics', () async {
+      // TODO
+    });
+
+    //Future<MerchantBestSellers200Response> merchantBestSellers(num limit, { String category }) async
+    test('test merchantBestSellers', () async {
+      // TODO
+    });
+
     //Future<MerchantGetMine200ResponseBody> merchantGet(String id) async
     test('test merchantGet', () async {
       // TODO
@@ -16,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, String category }) async
     test('test merchantList', () async {
       // TODO
     });
@@ -46,6 +56,26 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantOrderAccept200Response> merchantOrderAccept(String merchantId, String id) async
+    test('test merchantOrderAccept', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> merchantOrderMarkPreparing(String merchantId, String id) async
+    test('test merchantOrderMarkPreparing', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> merchantOrderMarkReady(String merchantId, String id) async
+    test('test merchantOrderMarkReady', () async {
+      // TODO
+    });
+
+    //Future<MerchantOrderAccept200Response> merchantOrderReject(String merchantId, String id, String reason, { String note }) async
+    test('test merchantOrderReject', () async {
+      // TODO
+    });
+
     //Future<MerchantPopulars200Response> merchantPopulars({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test merchantPopulars', () async {
       // TODO
@@ -56,7 +86,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, int phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, MultipartFile document, MultipartFile image }) async
+    //Future<MerchantGetMine200ResponseBody> merchantUpdate(String id, String phoneCountryCode, int phoneNumber, num locationX, num locationY, String bankProvider, num bankNumber, { String name, String email, String address, String category, MultipartFile document, MultipartFile image }) async
     test('test merchantUpdate', () async {
       // TODO
     });

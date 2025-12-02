@@ -27,6 +27,10 @@ abstract class _$DriverCWProxy {
 
   Driver lastLocationUpdate(DateTime? lastLocationUpdate);
 
+  Driver cancellationCount(int? cancellationCount);
+
+  Driver lastCancellationDate(DateTime? lastCancellationDate);
+
   Driver createdAt(DateTime createdAt);
 
   Driver studentCard(String studentCard);
@@ -59,6 +63,8 @@ abstract class _$DriverCWProxy {
     bool isOnline,
     Coordinate? currentLocation,
     DateTime? lastLocationUpdate,
+    int? cancellationCount,
+    DateTime? lastCancellationDate,
     DateTime createdAt,
     String studentCard,
     String driverLicense,
@@ -110,6 +116,14 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
       call(lastLocationUpdate: lastLocationUpdate);
 
   @override
+  Driver cancellationCount(int? cancellationCount) =>
+      call(cancellationCount: cancellationCount);
+
+  @override
+  Driver lastCancellationDate(DateTime? lastCancellationDate) =>
+      call(lastCancellationDate: lastCancellationDate);
+
+  @override
   Driver createdAt(DateTime createdAt) => call(createdAt: createdAt);
 
   @override
@@ -151,6 +165,8 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
     Object? isOnline = const $CopyWithPlaceholder(),
     Object? currentLocation = const $CopyWithPlaceholder(),
     Object? lastLocationUpdate = const $CopyWithPlaceholder(),
+    Object? cancellationCount = const $CopyWithPlaceholder(),
+    Object? lastCancellationDate = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? studentCard = const $CopyWithPlaceholder(),
     Object? driverLicense = const $CopyWithPlaceholder(),
@@ -202,6 +218,14 @@ class _$DriverCWProxyImpl implements _$DriverCWProxy {
           ? _value.lastLocationUpdate
           // ignore: cast_nullable_to_non_nullable
           : lastLocationUpdate as DateTime?,
+      cancellationCount: cancellationCount == const $CopyWithPlaceholder()
+          ? _value.cancellationCount
+          // ignore: cast_nullable_to_non_nullable
+          : cancellationCount as int?,
+      lastCancellationDate: lastCancellationDate == const $CopyWithPlaceholder()
+          ? _value.lastCancellationDate
+          // ignore: cast_nullable_to_non_nullable
+          : lastCancellationDate as DateTime?,
       createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -290,6 +314,14 @@ Driver _$DriverFromJson(Map<String, dynamic> json) =>
           'lastLocationUpdate',
           (v) => v == null ? null : DateTime.parse(v as String),
         ),
+        cancellationCount: $checkedConvert(
+          'cancellationCount',
+          (v) => (v as num?)?.toInt() ?? 0,
+        ),
+        lastCancellationDate: $checkedConvert(
+          'lastCancellationDate',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
         createdAt: $checkedConvert(
           'createdAt',
           (v) => DateTime.parse(v as String),
@@ -325,6 +357,8 @@ Map<String, dynamic> _$DriverToJson(Driver instance) => <String, dynamic>{
   'isOnline': instance.isOnline,
   'currentLocation': ?instance.currentLocation?.toJson(),
   'lastLocationUpdate': ?instance.lastLocationUpdate?.toIso8601String(),
+  'cancellationCount': ?instance.cancellationCount,
+  'lastCancellationDate': ?instance.lastCancellationDate?.toIso8601String(),
   'createdAt': instance.createdAt.toIso8601String(),
   'studentCard': instance.studentCard,
   'driverLicense': instance.driverLicense,

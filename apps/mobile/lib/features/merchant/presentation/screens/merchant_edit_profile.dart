@@ -354,11 +354,13 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         final location = locations.first;
         await _moveToLocation(location.latitude, location.longitude);
 
-        _showToast(
-          context,
-          'Location Found',
-          'Marker moved to searched location',
-        );
+        if (mounted) {
+          _showToast(
+            context,
+            'Location Found',
+            'Marker moved to searched location',
+          );
+        }
       } else {
         if (mounted) {
           setState(() => _isSearching = false);

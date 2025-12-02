@@ -71,5 +71,10 @@ void main() {
     test('to test the property `configurations`', () async {
       // TODO
     });
+
+    // List<String> emergency
+    test('to test the property `emergency`', () async {
+      // TODO
+    });
   });
 }

@@ -21,11 +21,21 @@ abstract class _$UpdateOrderCWProxy {
 
   UpdateOrder totalPrice(num? totalPrice);
 
+  UpdateOrder platformCommission(num? platformCommission);
+
+  UpdateOrder driverEarning(num? driverEarning);
+
+  UpdateOrder merchantCommission(num? merchantCommission);
+
   UpdateOrder note(OrderNote? note);
 
   UpdateOrder cancelReason(String? cancelReason);
 
   UpdateOrder gender(UserGender? gender);
+
+  UpdateOrder genderPreference(
+    UpdateOrderGenderPreferenceEnum? genderPreference,
+  );
 
   UpdateOrder itemCount(num? itemCount);
 
@@ -52,9 +62,13 @@ abstract class _$UpdateOrderCWProxy {
     num? distanceKm,
     num? tip,
     num? totalPrice,
+    num? platformCommission,
+    num? driverEarning,
+    num? merchantCommission,
     OrderNote? note,
     String? cancelReason,
     UserGender? gender,
+    UpdateOrderGenderPreferenceEnum? genderPreference,
     num? itemCount,
     List<OrderItem>? items,
     DriverUser? user,
@@ -92,6 +106,18 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   UpdateOrder totalPrice(num? totalPrice) => call(totalPrice: totalPrice);
 
   @override
+  UpdateOrder platformCommission(num? platformCommission) =>
+      call(platformCommission: platformCommission);
+
+  @override
+  UpdateOrder driverEarning(num? driverEarning) =>
+      call(driverEarning: driverEarning);
+
+  @override
+  UpdateOrder merchantCommission(num? merchantCommission) =>
+      call(merchantCommission: merchantCommission);
+
+  @override
   UpdateOrder note(OrderNote? note) => call(note: note);
 
   @override
@@ -100,6 +126,11 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
 
   @override
   UpdateOrder gender(UserGender? gender) => call(gender: gender);
+
+  @override
+  UpdateOrder genderPreference(
+    UpdateOrderGenderPreferenceEnum? genderPreference,
+  ) => call(genderPreference: genderPreference);
 
   @override
   UpdateOrder itemCount(num? itemCount) => call(itemCount: itemCount);
@@ -132,9 +163,13 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? distanceKm = const $CopyWithPlaceholder(),
     Object? tip = const $CopyWithPlaceholder(),
     Object? totalPrice = const $CopyWithPlaceholder(),
+    Object? platformCommission = const $CopyWithPlaceholder(),
+    Object? driverEarning = const $CopyWithPlaceholder(),
+    Object? merchantCommission = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? genderPreference = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -170,6 +205,18 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.totalPrice
           // ignore: cast_nullable_to_non_nullable
           : totalPrice as num?,
+      platformCommission: platformCommission == const $CopyWithPlaceholder()
+          ? _value.platformCommission
+          // ignore: cast_nullable_to_non_nullable
+          : platformCommission as num?,
+      driverEarning: driverEarning == const $CopyWithPlaceholder()
+          ? _value.driverEarning
+          // ignore: cast_nullable_to_non_nullable
+          : driverEarning as num?,
+      merchantCommission: merchantCommission == const $CopyWithPlaceholder()
+          ? _value.merchantCommission
+          // ignore: cast_nullable_to_non_nullable
+          : merchantCommission as num?,
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
@@ -182,6 +229,10 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      genderPreference: genderPreference == const $CopyWithPlaceholder()
+          ? _value.genderPreference
+          // ignore: cast_nullable_to_non_nullable
+          : genderPreference as UpdateOrderGenderPreferenceEnum?,
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
@@ -234,6 +285,9 @@ UpdateOrder _$UpdateOrderFromJson(
     distanceKm: $checkedConvert('distanceKm', (v) => v as num?),
     tip: $checkedConvert('tip', (v) => v as num?),
     totalPrice: $checkedConvert('totalPrice', (v) => v as num?),
+    platformCommission: $checkedConvert('platformCommission', (v) => v as num?),
+    driverEarning: $checkedConvert('driverEarning', (v) => v as num?),
+    merchantCommission: $checkedConvert('merchantCommission', (v) => v as num?),
     note: $checkedConvert(
       'note',
       (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
@@ -242,6 +296,10 @@ UpdateOrder _$UpdateOrderFromJson(
     gender: $checkedConvert(
       'gender',
       (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+    ),
+    genderPreference: $checkedConvert(
+      'genderPreference',
+      (v) => $enumDecodeNullable(_$UpdateOrderGenderPreferenceEnumEnumMap, v),
     ),
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
@@ -276,9 +334,14 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'distanceKm': ?instance.distanceKm,
       'tip': ?instance.tip,
       'totalPrice': ?instance.totalPrice,
+      'platformCommission': ?instance.platformCommission,
+      'driverEarning': ?instance.driverEarning,
+      'merchantCommission': ?instance.merchantCommission,
       'note': ?instance.note?.toJson(),
       'cancelReason': ?instance.cancelReason,
       'gender': ?_$UserGenderEnumMap[instance.gender],
+      'genderPreference':
+          ?_$UpdateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
       'itemCount': ?instance.itemCount,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'user': ?instance.user?.toJson(),
@@ -310,4 +373,9 @@ const _$OrderStatusEnumMap = {
 const _$UserGenderEnumMap = {
   UserGender.MALE: 'MALE',
   UserGender.FEMALE: 'FEMALE',
+};
+
+const _$UpdateOrderGenderPreferenceEnumEnumMap = {
+  UpdateOrderGenderPreferenceEnum.SAME: 'SAME',
+  UpdateOrderGenderPreferenceEnum.ANY: 'ANY',
 };

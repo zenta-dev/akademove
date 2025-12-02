@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**merchantAnalytics**](MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [**merchantBestSellers**](MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
@@ -26,6 +27,53 @@ Method | HTTP request | Description
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 
+
+# **merchantAnalytics**
+> MerchantAnalytics200Response merchantAnalytics(id, period, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final String period = period_example; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.merchantAnalytics(id, period, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantAnalytics: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **period** | **String**|  | [optional] 
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**MerchantAnalytics200Response**](MerchantAnalytics200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantBestSellers**
 > MerchantBestSellers200Response merchantBestSellers(limit, category)

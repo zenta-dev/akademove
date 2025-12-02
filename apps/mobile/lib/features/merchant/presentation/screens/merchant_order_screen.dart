@@ -196,8 +196,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
 
               return ListView.separated(
                 itemCount: filtered.length,
-                separatorBuilder: (_, __) => Gap(16.h),
-                itemBuilder: (_, index) {
+                separatorBuilder: (context, index) => Gap(16.h),
+                itemBuilder: (context, index) {
                   final order = filtered[index];
                   return MerchantOrderCardWidget(
                     order: order,
@@ -221,8 +221,8 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
             ),
             orElse: () => ListView.separated(
               itemCount: 5,
-              separatorBuilder: (_, __) => Gap(16.h),
-              itemBuilder: (_, _) =>
+              separatorBuilder: (context, index) => Gap(16.h),
+              itemBuilder: (context, index) =>
                   const MerchantOrderCardWidget(order: dummyOrder).asSkeleton(),
             ),
           ),

@@ -115,26 +115,25 @@ class _DriverHomeView extends StatelessWidget {
             ),
             if (state.driver != null) ...[
               Text(
-                'License Plate: ${state.driver!.licensePlate ?? "Not set"}',
+                'License Plate: ${state.driver!.licensePlate}',
                 style: context.typography.small.copyWith(
                   color: context.colorScheme.mutedForeground,
                 ),
               ),
-              if (state.driver!.rating != null)
-                Row(
-                  children: [
-                    Icon(
-                      material.Icons.star,
-                      size: 16.sp,
-                      color: material.Colors.amber,
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      '${state.driver!.rating?.toStringAsFixed(1) ?? "0.0"} rating',
-                      style: context.typography.small,
-                    ),
-                  ],
-                ),
+              Row(
+                children: [
+                  Icon(
+                    material.Icons.star,
+                    size: 16.sp,
+                    color: material.Colors.amber,
+                  ),
+                  SizedBox(width: 4.w),
+                  Text(
+                    '${state.driver!.rating.toStringAsFixed(1)} rating',
+                    style: context.typography.small,
+                  ),
+                ],
+              ),
             ],
           ],
         ),

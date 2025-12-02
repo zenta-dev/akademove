@@ -67,6 +67,21 @@ void main() {
       // TODO
     });
 
+    // num platformCommission
+    test('to test the property `platformCommission`', () async {
+      // TODO
+    });
+
+    // num driverEarning
+    test('to test the property `driverEarning`', () async {
+      // TODO
+    });
+
+    // num merchantCommission
+    test('to test the property `merchantCommission`', () async {
+      // TODO
+    });
+
     // OrderNote note
     test('to test the property `note`', () async {
       // TODO
@@ -79,6 +94,16 @@ void main() {
 
     // DateTime acceptedAt
     test('to test the property `acceptedAt`', () async {
+      // TODO
+    });
+
+    // DateTime preparedAt
+    test('to test the property `preparedAt`', () async {
+      // TODO
+    });
+
+    // DateTime readyAt
+    test('to test the property `readyAt`', () async {
       // TODO
     });
 
@@ -104,6 +129,11 @@ void main() {
 
     // UserGender gender
     test('to test the property `gender`', () async {
+      // TODO
+    });
+
+    // String genderPreference
+    test('to test the property `genderPreference`', () async {
       // TODO
     });
 

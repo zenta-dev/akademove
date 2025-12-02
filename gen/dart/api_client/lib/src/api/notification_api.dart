@@ -18,24 +18,23 @@ import 'package:api_client/src/model/pagination_mode.dart';
 import 'package:api_client/src/model/pagination_order.dart';
 
 class NotificationApi {
-
   final Dio _dio;
 
   const NotificationApi(this._dio);
 
   /// notificationList
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [read] 
-  /// * [cursor] 
-  /// * [limit] 
-  /// * [direction] 
-  /// * [page] 
-  /// * [query] 
-  /// * [sortBy] 
-  /// * [order] 
-  /// * [mode] 
+  /// * [read]
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -45,7 +44,7 @@ class NotificationApi {
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationList200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationList200Response>> notificationList({ 
+  Future<Response<NotificationList200Response>> notificationList({
     required String read,
     String? cursor,
     Object? limit,
@@ -65,16 +64,10 @@ class NotificationApi {
     final _path = r'/notifications';
     final _options = Options(
       method: r'GET',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -106,7 +99,12 @@ class NotificationApi {
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<NotificationList200Response, NotificationList200Response>(rawData, 'NotificationList200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              NotificationList200Response,
+              NotificationList200Response
+            >(rawData, 'NotificationList200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -130,10 +128,10 @@ _responseData = rawData == null ? null : deserialize<NotificationList200Response
   }
 
   /// notificationRemoveToken
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [token] 
+  /// * [token]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -143,7 +141,7 @@ _responseData = rawData == null ? null : deserialize<NotificationList200Response
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSaveToken200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSaveToken200Response>> notificationRemoveToken({ 
+  Future<Response<NotificationSaveToken200Response>> notificationRemoveToken({
     required String token,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -152,19 +150,18 @@ _responseData = rawData == null ? null : deserialize<NotificationList200Response
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/notifications/token/{token}'.replaceAll('{' r'token' '}', token.toString());
+    final _path = r'/notifications/token/{token}'.replaceAll(
+      '{'
+      r'token'
+      '}',
+      token.toString(),
+    );
     final _options = Options(
       method: r'DELETE',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -183,7 +180,12 @@ _responseData = rawData == null ? null : deserialize<NotificationList200Response
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<NotificationSaveToken200Response, NotificationSaveToken200Response>(rawData, 'NotificationSaveToken200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              NotificationSaveToken200Response,
+              NotificationSaveToken200Response
+            >(rawData, 'NotificationSaveToken200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -207,10 +209,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
   }
 
   /// notificationSaveToken
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [notificationSaveTokenRequest] 
+  /// * [notificationSaveTokenRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -220,7 +222,7 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSaveToken200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSaveToken200Response>> notificationSaveToken({ 
+  Future<Response<NotificationSaveToken200Response>> notificationSaveToken({
     required NotificationSaveTokenRequest notificationSaveTokenRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -232,16 +234,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
     final _path = r'/notifications/token';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -252,13 +248,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(notificationSaveTokenRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(notificationSaveTokenRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -278,7 +271,12 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<NotificationSaveToken200Response, NotificationSaveToken200Response>(rawData, 'NotificationSaveToken200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              NotificationSaveToken200Response,
+              NotificationSaveToken200Response
+            >(rawData, 'NotificationSaveToken200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -302,10 +300,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
   }
 
   /// notificationSubscribeToTopic
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [notificationSubscribeToTopicRequest] 
+  /// * [notificationSubscribeToTopicRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -315,8 +313,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSubscribeToTopic200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSubscribeToTopic200Response>> notificationSubscribeToTopic({ 
-    required NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest,
+  Future<Response<NotificationSubscribeToTopic200Response>>
+  notificationSubscribeToTopic({
+    required NotificationSubscribeToTopicRequest
+    notificationSubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -327,16 +327,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
     final _path = r'/notifications/subscribe';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -347,13 +341,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(notificationSubscribeToTopicRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(notificationSubscribeToTopicRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -373,7 +364,16 @@ _responseData = rawData == null ? null : deserialize<NotificationSaveToken200Res
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopic200Response, NotificationSubscribeToTopic200Response>(rawData, 'NotificationSubscribeToTopic200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              NotificationSubscribeToTopic200Response,
+              NotificationSubscribeToTopic200Response
+            >(
+              rawData,
+              'NotificationSubscribeToTopic200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -397,10 +397,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
   }
 
   /// notificationUnsubscribeToTopic
-  /// 
+  ///
   ///
   /// Parameters:
-  /// * [notificationSubscribeToTopicRequest] 
+  /// * [notificationSubscribeToTopicRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -410,8 +410,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
   ///
   /// Returns a [Future] containing a [Response] with a [NotificationSubscribeToTopic200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<NotificationSubscribeToTopic200Response>> notificationUnsubscribeToTopic({ 
-    required NotificationSubscribeToTopicRequest notificationSubscribeToTopicRequest,
+  Future<Response<NotificationSubscribeToTopic200Response>>
+  notificationUnsubscribeToTopic({
+    required NotificationSubscribeToTopicRequest
+    notificationSubscribeToTopicRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -422,16 +424,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
     final _path = r'/notifications/unsubscribe';
     final _options = Options(
       method: r'POST',
-      headers: <String, dynamic>{
-        ...?headers,
-      },
+      headers: <String, dynamic>{...?headers},
       extra: <String, dynamic>{
         'secure': <Map<String, String>>[
-          {
-            'type': 'http',
-            'scheme': 'bearer',
-            'name': 'bearer_auth',
-          },
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
         ],
         ...?extra,
       },
@@ -442,13 +438,10 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
     dynamic _bodyData;
 
     try {
-        _bodyData=jsonEncode(notificationSubscribeToTopicRequest);
-    } catch(error, stackTrace) {
+      _bodyData = jsonEncode(notificationSubscribeToTopicRequest);
+    } catch (error, stackTrace) {
       throw DioException(
-         requestOptions: _options.compose(
-          _dio.options,
-          _path,
-        ),
+        requestOptions: _options.compose(_dio.options, _path),
         type: DioExceptionType.unknown,
         error: error,
         stackTrace: stackTrace,
@@ -468,7 +461,16 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
 
     try {
       final rawData = _response.data;
-_responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopic200Response, NotificationSubscribeToTopic200Response>(rawData, 'NotificationSubscribeToTopic200Response', growable: true);
+      _responseData = rawData == null
+          ? null
+          : deserialize<
+              NotificationSubscribeToTopic200Response,
+              NotificationSubscribeToTopic200Response
+            >(
+              rawData,
+              'NotificationSubscribeToTopic200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -490,5 +492,4 @@ _responseData = rawData == null ? null : deserialize<NotificationSubscribeToTopi
       extra: _response.extra,
     );
   }
-
 }

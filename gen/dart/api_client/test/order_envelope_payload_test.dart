@@ -27,6 +27,11 @@ void main() {
       // TODO
     });
 
+    // OrderEnvelopePayloadMessage message
+    test('to test the property `message`', () async {
+      // TODO
+    });
+
     // String cancelReason
     test('to test the property `cancelReason`', () async {
       // TODO

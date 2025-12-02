@@ -610,6 +610,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         return const SizedBox.shrink();
     }
 
+    // At this point, primaryButton is guaranteed to be non-null
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -624,7 +625,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                 Expanded(child: secondaryButton),
               ],
             )
-          : primaryButton ?? const SizedBox.shrink(),
+          : primaryButton,
     );
   }
 

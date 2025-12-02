@@ -22,7 +22,7 @@ class App extends StatelessWidget {
       child: ScreenUtilInit(
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (_, __) => BlocConsumer<AppCubit, AppState>(
+        builder: (_, child) => BlocConsumer<AppCubit, AppState>(
           listener: (context, state) {
             final identifier = state.data?.timeZone?.identifier;
 

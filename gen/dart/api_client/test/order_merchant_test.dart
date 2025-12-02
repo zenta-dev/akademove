@@ -62,6 +62,12 @@ void main() {
       // TODO
     });
 
+    // MerchantCategory category
+    test('to test the property `category`', () async {
+      // TODO
+    });
+
+    // List of merchant item categories
     // List<String> categories
     test('to test the property `categories`', () async {
       // TODO

@@ -10,6 +10,7 @@ All URIs are relative to *http://localhost:3000/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**userAdminCreate**](AdminApi.md#useradmincreate) | **POST** /users/admin | 
+[**userAdminDashboardStats**](AdminApi.md#useradmindashboardstats) | **GET** /users/admin/dashboard-stats | 
 [**userAdminGet**](AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
 [**userAdminList**](AdminApi.md#useradminlist) | **GET** /users/admin | 
 [**userAdminRemove**](AdminApi.md#useradminremove) | **DELETE** /users/admin/{id} | 
@@ -53,6 +54,43 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **userAdminDashboardStats**
+> UserAdminDashboardStats200Response userAdminDashboardStats()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+
+try {
+    final response = api.userAdminDashboardStats();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->userAdminDashboardStats: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**UserAdminDashboardStats200Response**](UserAdminDashboardStats200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

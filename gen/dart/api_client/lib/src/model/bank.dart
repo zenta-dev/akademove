@@ -18,26 +18,21 @@ part 'bank.g.dart';
 )
 class Bank {
   /// Returns a new [Bank] instance.
-  const Bank({
-    required this.provider,
-    required this.number,
-  });
+  const Bank({required this.provider, required this.number});
 
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final BankProvider provider;
-  
+
   @JsonKey(name: r'number', required: true, includeIfNull: false)
   final num number;
-  
-  @override
-  bool operator ==(Object other) => identical(this, other) || other is Bank &&
-    other.provider == provider &&
-    other.number == number;
 
   @override
-  int get hashCode =>
-      provider.hashCode +
-      number.hashCode;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Bank && other.provider == provider && other.number == number;
+
+  @override
+  int get hashCode => provider.hashCode + number.hashCode;
 
   factory Bank.fromJson(Map<String, dynamic> json) => _$BankFromJson(json);
 
@@ -47,6 +42,4 @@ class Bank {
   String toString() {
     return toJson().toString();
   }
-
 }
-

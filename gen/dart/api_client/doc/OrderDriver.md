@@ -18,6 +18,8 @@ Name | Type | Description | Notes
 **isOnline** | **bool** |  | [optional] 
 **currentLocation** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **lastLocationUpdate** | [**DateTime**](DateTime.md) |  | [optional] 
+**cancellationCount** | **int** |  | [optional] [default to 0]
+**lastCancellationDate** | [**DateTime**](DateTime.md) |  | [optional] 
 **createdAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **studentCard** | **String** |  | [optional] 
 **driverLicense** | **String** |  | [optional] 

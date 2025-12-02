@@ -31,6 +31,12 @@ abstract class _$OrderCWProxy {
 
   Order totalPrice(num totalPrice);
 
+  Order platformCommission(num? platformCommission);
+
+  Order driverEarning(num? driverEarning);
+
+  Order merchantCommission(num? merchantCommission);
+
   Order note(OrderNote? note);
 
   Order requestedAt(DateTime requestedAt);
@@ -50,6 +56,8 @@ abstract class _$OrderCWProxy {
   Order updatedAt(DateTime updatedAt);
 
   Order gender(UserGender? gender);
+
+  Order genderPreference(OrderGenderPreferenceEnum? genderPreference);
 
   Order itemCount(num? itemCount);
 
@@ -81,6 +89,9 @@ abstract class _$OrderCWProxy {
     num basePrice,
     num? tip,
     num totalPrice,
+    num? platformCommission,
+    num? driverEarning,
+    num? merchantCommission,
     OrderNote? note,
     DateTime requestedAt,
     DateTime? acceptedAt,
@@ -91,6 +102,7 @@ abstract class _$OrderCWProxy {
     DateTime createdAt,
     DateTime updatedAt,
     UserGender? gender,
+    OrderGenderPreferenceEnum? genderPreference,
     num? itemCount,
     List<OrderItem>? items,
     DriverUser? user,
@@ -145,6 +157,17 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
   Order totalPrice(num totalPrice) => call(totalPrice: totalPrice);
 
   @override
+  Order platformCommission(num? platformCommission) =>
+      call(platformCommission: platformCommission);
+
+  @override
+  Order driverEarning(num? driverEarning) => call(driverEarning: driverEarning);
+
+  @override
+  Order merchantCommission(num? merchantCommission) =>
+      call(merchantCommission: merchantCommission);
+
+  @override
   Order note(OrderNote? note) => call(note: note);
 
   @override
@@ -173,6 +196,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
 
   @override
   Order gender(UserGender? gender) => call(gender: gender);
+
+  @override
+  Order genderPreference(OrderGenderPreferenceEnum? genderPreference) =>
+      call(genderPreference: genderPreference);
 
   @override
   Order itemCount(num? itemCount) => call(itemCount: itemCount);
@@ -210,6 +237,9 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? basePrice = const $CopyWithPlaceholder(),
     Object? tip = const $CopyWithPlaceholder(),
     Object? totalPrice = const $CopyWithPlaceholder(),
+    Object? platformCommission = const $CopyWithPlaceholder(),
+    Object? driverEarning = const $CopyWithPlaceholder(),
+    Object? merchantCommission = const $CopyWithPlaceholder(),
     Object? note = const $CopyWithPlaceholder(),
     Object? requestedAt = const $CopyWithPlaceholder(),
     Object? acceptedAt = const $CopyWithPlaceholder(),
@@ -220,6 +250,7 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
     Object? createdAt = const $CopyWithPlaceholder(),
     Object? updatedAt = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
+    Object? genderPreference = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -281,6 +312,18 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.totalPrice
           // ignore: cast_nullable_to_non_nullable
           : totalPrice as num,
+      platformCommission: platformCommission == const $CopyWithPlaceholder()
+          ? _value.platformCommission
+          // ignore: cast_nullable_to_non_nullable
+          : platformCommission as num?,
+      driverEarning: driverEarning == const $CopyWithPlaceholder()
+          ? _value.driverEarning
+          // ignore: cast_nullable_to_non_nullable
+          : driverEarning as num?,
+      merchantCommission: merchantCommission == const $CopyWithPlaceholder()
+          ? _value.merchantCommission
+          // ignore: cast_nullable_to_non_nullable
+          : merchantCommission as num?,
       note: note == const $CopyWithPlaceholder()
           ? _value.note
           // ignore: cast_nullable_to_non_nullable
@@ -322,6 +365,10 @@ class _$OrderCWProxyImpl implements _$OrderCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
+      genderPreference: genderPreference == const $CopyWithPlaceholder()
+          ? _value.genderPreference
+          // ignore: cast_nullable_to_non_nullable
+          : genderPreference as OrderGenderPreferenceEnum?,
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
@@ -399,6 +446,9 @@ Order _$OrderFromJson(
     basePrice: $checkedConvert('basePrice', (v) => v as num),
     tip: $checkedConvert('tip', (v) => v as num?),
     totalPrice: $checkedConvert('totalPrice', (v) => v as num),
+    platformCommission: $checkedConvert('platformCommission', (v) => v as num?),
+    driverEarning: $checkedConvert('driverEarning', (v) => v as num?),
+    merchantCommission: $checkedConvert('merchantCommission', (v) => v as num?),
     note: $checkedConvert(
       'note',
       (v) => v == null ? null : OrderNote.fromJson(v as Map<String, dynamic>),
@@ -429,6 +479,10 @@ Order _$OrderFromJson(
     gender: $checkedConvert(
       'gender',
       (v) => $enumDecodeNullable(_$UserGenderEnumMap, v),
+    ),
+    genderPreference: $checkedConvert(
+      'genderPreference',
+      (v) => $enumDecodeNullable(_$OrderGenderPreferenceEnumEnumMap, v),
     ),
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
@@ -467,6 +521,9 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'basePrice': instance.basePrice,
   'tip': ?instance.tip,
   'totalPrice': instance.totalPrice,
+  'platformCommission': ?instance.platformCommission,
+  'driverEarning': ?instance.driverEarning,
+  'merchantCommission': ?instance.merchantCommission,
   'note': ?instance.note?.toJson(),
   'requestedAt': instance.requestedAt.toIso8601String(),
   'acceptedAt': ?instance.acceptedAt?.toIso8601String(),
@@ -477,6 +534,8 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
   'gender': ?_$UserGenderEnumMap[instance.gender],
+  'genderPreference':
+      ?_$OrderGenderPreferenceEnumEnumMap[instance.genderPreference],
   'itemCount': ?instance.itemCount,
   'items': ?instance.items?.map((e) => e.toJson()).toList(),
   'user': ?instance.user?.toJson(),
@@ -508,4 +567,9 @@ const _$OrderStatusEnumMap = {
 const _$UserGenderEnumMap = {
   UserGender.MALE: 'MALE',
   UserGender.FEMALE: 'FEMALE',
+};
+
+const _$OrderGenderPreferenceEnumEnumMap = {
+  OrderGenderPreferenceEnum.SAME: 'SAME',
+  OrderGenderPreferenceEnum.ANY: 'ANY',
 };

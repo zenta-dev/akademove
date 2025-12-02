@@ -145,7 +145,7 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
                       ),
                       borderRadius: BorderRadius.circular(8),
                       color: isSelected
-                          ? Colors.red.withOpacity(0.1)
+                          ? Colors.red.withValues(alpha: 0.1)
                           : Colors.transparent,
                     ),
                     child: Row(

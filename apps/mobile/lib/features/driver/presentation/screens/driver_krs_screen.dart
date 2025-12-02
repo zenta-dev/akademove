@@ -29,13 +29,12 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
 
     try {
       // Get driver ID first
-      final driverResponse = await context.read<DriverRepository>().getMine();
+      final driverRepo = context.read<DriverRepository>();
+      final driverResponse = await driverRepo.getMine();
       final driverId = driverResponse.data.id;
 
       // Load schedules
-      final scheduleResponse = await context
-          .read<DriverRepository>()
-          .listSchedules(driverId);
+      final scheduleResponse = await driverRepo.listSchedules(driverId);
 
       if (mounted) {
         setState(() {
@@ -120,7 +119,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   : ListView.separated(
                       padding: EdgeInsets.all(16.dg),
                       itemCount: _schedules.length,
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12.h),
                       itemBuilder: (context, index) {
                         return _buildScheduleCard(_schedules[index]);
                       },

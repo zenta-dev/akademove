@@ -67,6 +67,7 @@ All URIs are relative to *http://localhost:3000/api*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 [*AdminApi*](doc/AdminApi.md) | [**userAdminCreate**](doc/AdminApi.md#useradmincreate) | **POST** /users/admin | 
+[*AdminApi*](doc/AdminApi.md) | [**userAdminDashboardStats**](doc/AdminApi.md#useradmindashboardstats) | **GET** /users/admin/dashboard-stats | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminGet**](doc/AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminList**](doc/AdminApi.md#useradminlist) | **GET** /users/admin | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminRemove**](doc/AdminApi.md#useradminremove) | **DELETE** /users/admin/{id} | 
@@ -116,6 +117,7 @@ Class | Method | HTTP request | Description
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyUpdateStatus**](doc/EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantAnalytics**](doc/MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
@@ -139,6 +141,7 @@ Class | Method | HTTP request | Description
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationUnsubscribeToTopic**](doc/NotificationApi.md#notificationunsubscribetotopic) | **POST** /notifications/unsubscribe | 
 [*OrderApi*](doc/OrderApi.md) | [**chatList**](doc/OrderApi.md#chatlist) | **GET** /chat | 
 [*OrderApi*](doc/OrderApi.md) | [**chatSend**](doc/OrderApi.md#chatsend) | **POST** /chat | 
+[*OrderApi*](doc/OrderApi.md) | [**orderCancel**](doc/OrderApi.md#ordercancel) | **POST** /orders/{id}/cancel | 
 [*OrderApi*](doc/OrderApi.md) | [**orderEstimate**](doc/OrderApi.md#orderestimate) | **GET** /orders/estimate | 
 [*OrderApi*](doc/OrderApi.md) | [**orderGet**](doc/OrderApi.md#orderget) | **GET** /orders/{id} | 
 [*OrderApi*](doc/OrderApi.md) | [**orderList**](doc/OrderApi.md#orderlist) | **GET** /orders | 
@@ -199,6 +202,7 @@ Class | Method | HTTP request | Description
  - [ChatList200Response](doc/ChatList200Response.md)
  - [ChatList200ResponseData](doc/ChatList200ResponseData.md)
  - [ChatSend200Response](doc/ChatSend200Response.md)
+ - [CommissionConfiguration](doc/CommissionConfiguration.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
  - [ConfigurationKey](doc/ConfigurationKey.md)
@@ -211,6 +215,7 @@ Class | Method | HTTP request | Description
  - [CouponList200Response](doc/CouponList200Response.md)
  - [CouponRules](doc/CouponRules.md)
  - [Currency](doc/Currency.md)
+ - [DashboardStats](doc/DashboardStats.md)
  - [DayOfWeek](doc/DayOfWeek.md)
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
  - [Driver](doc/Driver.md)
@@ -260,6 +265,10 @@ Class | Method | HTTP request | Description
  - [LeaderboardList200Response](doc/LeaderboardList200Response.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
+ - [MerchantAnalytics200Response](doc/MerchantAnalytics200Response.md)
+ - [MerchantAnalytics200ResponseData](doc/MerchantAnalytics200ResponseData.md)
+ - [MerchantAnalytics200ResponseDataRevenueByDayInner](doc/MerchantAnalytics200ResponseDataRevenueByDayInner.md)
+ - [MerchantAnalytics200ResponseDataTopSellingItemsInner](doc/MerchantAnalytics200ResponseDataTopSellingItemsInner.md)
  - [MerchantBestSellers200Response](doc/MerchantBestSellers200Response.md)
  - [MerchantBestSellers200ResponseDataInner](doc/MerchantBestSellers200ResponseDataInner.md)
  - [MerchantBestSellers200ResponseDataInnerMenu](doc/MerchantBestSellers200ResponseDataInnerMenu.md)
@@ -282,6 +291,7 @@ Class | Method | HTTP request | Description
  - [NotificationSubscribeToTopic200ResponseData](doc/NotificationSubscribeToTopic200ResponseData.md)
  - [NotificationSubscribeToTopicRequest](doc/NotificationSubscribeToTopicRequest.md)
  - [Order](doc/Order.md)
+ - [OrderCancelRequest](doc/OrderCancelRequest.md)
  - [OrderChatMessage](doc/OrderChatMessage.md)
  - [OrderChatMessageListQuery](doc/OrderChatMessageListQuery.md)
  - [OrderChatMessageSender](doc/OrderChatMessageSender.md)
@@ -366,6 +376,7 @@ Class | Method | HTTP request | Description
  - [UpdateWallet](doc/UpdateWallet.md)
  - [User](doc/User.md)
  - [UserAdminCreate200Response](doc/UserAdminCreate200Response.md)
+ - [UserAdminDashboardStats200Response](doc/UserAdminDashboardStats200Response.md)
  - [UserAdminList200Response](doc/UserAdminList200Response.md)
  - [UserBadge](doc/UserBadge.md)
  - [UserBadgeMetadata](doc/UserBadgeMetadata.md)

@@ -3,11 +3,7 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/unban_user.dart';
 import 'package:api_client/src/model/user_role.dart';
-import 'package:api_client/src/model/update_user_password.dart';
-import 'package:api_client/src/model/ban_user.dart';
-import 'package:api_client/src/model/update_user_role.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 

@@ -16,5 +16,10 @@ void main() {
     test('to test the property `dropoff`', () async {
       // TODO
     });
+
+    // String instructions
+    test('to test the property `instructions`', () async {
+      // TODO
+    });
   });
 }

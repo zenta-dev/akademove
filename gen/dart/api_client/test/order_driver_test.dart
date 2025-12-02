@@ -57,6 +57,16 @@ void main() {
       // TODO
     });
 
+    // int cancellationCount (default value: 0)
+    test('to test the property `cancellationCount`', () async {
+      // TODO
+    });
+
+    // DateTime lastCancellationDate
+    test('to test the property `lastCancellationDate`', () async {
+      // TODO
+    });
+
     // DateTime createdAt
     test('to test the property `createdAt`', () async {
       // TODO

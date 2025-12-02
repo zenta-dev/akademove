@@ -247,9 +247,11 @@ class WalletListTransactionWidget extends StatelessWidget {
     switch (type) {
       case TransactionType.TOPUP:
       case TransactionType.REFUND:
+      case TransactionType.EARNING:
         return LucideIcons.arrowDown;
       case TransactionType.PAYMENT:
       case TransactionType.WITHDRAW:
+      case TransactionType.COMMISSION:
         return LucideIcons.arrowUp;
       case TransactionType.ADJUSTMENT:
         return LucideIcons.circle;
@@ -272,9 +274,11 @@ class WalletListTransactionWidget extends StatelessWidget {
       switch (type) {
         case TransactionType.TOPUP:
         case TransactionType.REFUND:
+        case TransactionType.EARNING:
           return '+';
         case TransactionType.PAYMENT:
         case TransactionType.WITHDRAW:
+        case TransactionType.COMMISSION:
           return '-';
         case TransactionType.ADJUSTMENT:
           return '';

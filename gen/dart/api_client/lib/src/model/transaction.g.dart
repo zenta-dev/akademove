@@ -247,6 +247,8 @@ const _$TransactionTypeEnumMap = {
   TransactionType.PAYMENT: 'PAYMENT',
   TransactionType.REFUND: 'REFUND',
   TransactionType.ADJUSTMENT: 'ADJUSTMENT',
+  TransactionType.COMMISSION: 'COMMISSION',
+  TransactionType.EARNING: 'EARNING',
 };
 
 const _$TransactionStatusEnumMap = {

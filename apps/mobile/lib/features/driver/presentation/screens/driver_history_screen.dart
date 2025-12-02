@@ -201,7 +201,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                       controller: _scrollController,
                       padding: EdgeInsets.all(16.dg),
                       itemCount: filteredOrders.length + (_hasMore ? 1 : 0),
-                      separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 12.h),
                       itemBuilder: (context, index) {
                         if (index >= filteredOrders.length) {
                           return const Center(

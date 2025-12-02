@@ -26,85 +26,107 @@ part 'update_order.g.dart';
 class UpdateOrder {
   /// Returns a new [UpdateOrder] instance.
   const UpdateOrder({
-     this.driverId,
-     this.merchantId,
-     this.type,
-     this.status,
-     this.distanceKm,
-     this.tip,
-     this.totalPrice,
-     this.note,
-     this.cancelReason,
-     this.gender,
-     this.itemCount,
-     this.items,
-     this.user,
-     this.driver,
-     this.merchant,
+    this.driverId,
+    this.merchantId,
+    this.type,
+    this.status,
+    this.distanceKm,
+    this.tip,
+    this.totalPrice,
+    this.platformCommission,
+    this.driverEarning,
+    this.merchantCommission,
+    this.note,
+    this.cancelReason,
+    this.gender,
+    this.genderPreference,
+    this.itemCount,
+    this.items,
+    this.user,
+    this.driver,
+    this.merchant,
   });
 
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
-  
+
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
-  
+
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final OrderType? type;
-  
+
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final OrderStatus? status;
-  
+
   @JsonKey(name: r'distanceKm', required: false, includeIfNull: false)
   final num? distanceKm;
-  
+
   @JsonKey(name: r'tip', required: false, includeIfNull: false)
   final num? tip;
-  
+
   @JsonKey(name: r'totalPrice', required: false, includeIfNull: false)
   final num? totalPrice;
-  
+
+  @JsonKey(name: r'platformCommission', required: false, includeIfNull: false)
+  final num? platformCommission;
+
+  @JsonKey(name: r'driverEarning', required: false, includeIfNull: false)
+  final num? driverEarning;
+
+  @JsonKey(name: r'merchantCommission', required: false, includeIfNull: false)
+  final num? merchantCommission;
+
   @JsonKey(name: r'note', required: false, includeIfNull: false)
   final OrderNote? note;
-  
+
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
-  
+
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
-  
+
+  @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
+  final UpdateOrderGenderPreferenceEnum? genderPreference;
+
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
   final num? itemCount;
-  
+
   @JsonKey(name: r'items', required: false, includeIfNull: false)
   final List<OrderItem>? items;
-  
+
   @JsonKey(name: r'user', required: false, includeIfNull: false)
   final DriverUser? user;
-  
+
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
   final OrderDriver? driver;
-  
+
   @JsonKey(name: r'merchant', required: false, includeIfNull: false)
   final OrderMerchant? merchant;
-  
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is UpdateOrder &&
-    other.driverId == driverId &&
-    other.merchantId == merchantId &&
-    other.type == type &&
-    other.status == status &&
-    other.distanceKm == distanceKm &&
-    other.tip == tip &&
-    other.totalPrice == totalPrice &&
-    other.note == note &&
-    other.cancelReason == cancelReason &&
-    other.gender == gender &&
-    other.itemCount == itemCount &&
-    other.items == items &&
-    other.user == user &&
-    other.driver == driver &&
-    other.merchant == merchant;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpdateOrder &&
+          other.driverId == driverId &&
+          other.merchantId == merchantId &&
+          other.type == type &&
+          other.status == status &&
+          other.distanceKm == distanceKm &&
+          other.tip == tip &&
+          other.totalPrice == totalPrice &&
+          other.platformCommission == platformCommission &&
+          other.driverEarning == driverEarning &&
+          other.merchantCommission == merchantCommission &&
+          other.note == note &&
+          other.cancelReason == cancelReason &&
+          other.gender == gender &&
+          other.genderPreference == genderPreference &&
+          other.itemCount == itemCount &&
+          other.items == items &&
+          other.user == user &&
+          other.driver == driver &&
+          other.merchant == merchant;
 
   @override
   int get hashCode =>
@@ -115,16 +137,21 @@ class UpdateOrder {
       distanceKm.hashCode +
       tip.hashCode +
       totalPrice.hashCode +
+      platformCommission.hashCode +
+      driverEarning.hashCode +
+      merchantCommission.hashCode +
       note.hashCode +
       cancelReason.hashCode +
       gender.hashCode +
+      genderPreference.hashCode +
       itemCount.hashCode +
       items.hashCode +
       user.hashCode +
       driver.hashCode +
       merchant.hashCode;
 
-  factory UpdateOrder.fromJson(Map<String, dynamic> json) => _$UpdateOrderFromJson(json);
+  factory UpdateOrder.fromJson(Map<String, dynamic> json) =>
+      _$UpdateOrderFromJson(json);
 
   Map<String, dynamic> toJson() => _$UpdateOrderToJson(this);
 
@@ -132,6 +159,18 @@ class UpdateOrder {
   String toString() {
     return toJson().toString();
   }
-
 }
 
+enum UpdateOrderGenderPreferenceEnum {
+  @JsonValue(r'SAME')
+  SAME(r'SAME'),
+  @JsonValue(r'ANY')
+  ANY(r'ANY');
+
+  const UpdateOrderGenderPreferenceEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}

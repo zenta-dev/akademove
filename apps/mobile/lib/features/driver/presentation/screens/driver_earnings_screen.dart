@@ -454,6 +454,10 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         return LucideIcons.undo2;
       case TransactionType.ADJUSTMENT:
         return LucideIcons.settings;
+      case TransactionType.COMMISSION:
+        return LucideIcons.percent;
+      case TransactionType.EARNING:
+        return LucideIcons.coins;
     }
   }
 
@@ -469,6 +473,10 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         return 'Refund';
       case TransactionType.ADJUSTMENT:
         return 'Adjustment';
+      case TransactionType.COMMISSION:
+        return 'Commission';
+      case TransactionType.EARNING:
+        return 'Earning';
     }
   }
 }

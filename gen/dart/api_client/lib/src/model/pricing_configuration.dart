@@ -3,9 +3,6 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/delivery_pricing_configuration.dart';
-import 'package:api_client/src/model/ride_pricing_configuration.dart';
-import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
