@@ -9,6 +9,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { useOrderUpdates } from "@/hooks/use-order-updates";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
@@ -34,6 +35,10 @@ export const Route = createFileRoute("/dash/merchant/")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
+
+	// Enable real-time order updates on dashboard
+	useOrderUpdates(true, 10000);
+
 	if (!allowed) navigate({ to: "/" });
 
 	return (
