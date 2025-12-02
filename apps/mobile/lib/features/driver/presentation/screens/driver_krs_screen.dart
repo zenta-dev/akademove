@@ -311,23 +311,264 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   }
 
   void _showAddScheduleDialog() {
-    showToast(
+    _showScheduleDialog();
+  }
+
+  void _showEditScheduleDialog(DriverSchedule schedule) {
+    _showScheduleDialog(schedule: schedule);
+  }
+
+  void _showScheduleDialog({DriverSchedule? schedule}) {
+    final isEditing = schedule != null;
+    final nameController = TextEditingController(text: schedule?.name);
+    DayOfWeek selectedDay = schedule?.dayOfWeek ?? DayOfWeek.MONDAY;
+    material.TimeOfDay startTime = schedule != null
+        ? material.TimeOfDay(
+            hour: schedule.startTime.h.toInt(),
+            minute: schedule.startTime.m.toInt(),
+          )
+        : const material.TimeOfDay(hour: 8, minute: 0);
+    material.TimeOfDay endTime = schedule != null
+        ? material.TimeOfDay(
+            hour: schedule.endTime.h.toInt(),
+            minute: schedule.endTime.m.toInt(),
+          )
+        : const material.TimeOfDay(hour: 10, minute: 0);
+    bool isRecurring = schedule?.isRecurring ?? true;
+    bool isActive = schedule?.isActive ?? true;
+
+    material.showDialog(
       context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: 'Add Schedule',
-        message: 'Add schedule feature coming soon',
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setState) => material.AlertDialog(
+          title: Text(isEditing ? 'Edit Schedule' : 'Add Schedule'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 16.h,
+              children: [
+                // Name field
+                material.TextField(
+                  controller: nameController,
+                  decoration: const material.InputDecoration(
+                    labelText: 'Schedule Name',
+                    hintText: 'e.g., Mobile Programming',
+                    border: material.OutlineInputBorder(),
+                  ),
+                ),
+                // Day of week dropdown
+                material.DropdownButtonFormField<DayOfWeek>(
+                  initialValue: selectedDay,
+                  decoration: const material.InputDecoration(
+                    labelText: 'Day of Week',
+                    border: material.OutlineInputBorder(),
+                  ),
+                  items: DayOfWeek.values.map((day) {
+                    return material.DropdownMenuItem(
+                      value: day,
+                      child: Text(_getDayFullText(day)),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => selectedDay = value);
+                    }
+                  },
+                ),
+                // Start time
+                material.ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Start Time'),
+                  subtitle: Text(_formatTimeOfDay(startTime)),
+                  trailing: const Icon(LucideIcons.clock),
+                  onTap: () async {
+                    final picked = await material.showTimePicker(
+                      context: context,
+                      initialTime: startTime,
+                    );
+                    if (picked != null) {
+                      setState(() => startTime = picked);
+                    }
+                  },
+                ),
+                // End time
+                material.ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('End Time'),
+                  subtitle: Text(_formatTimeOfDay(endTime)),
+                  trailing: const Icon(LucideIcons.clock),
+                  onTap: () async {
+                    final picked = await material.showTimePicker(
+                      context: context,
+                      initialTime: endTime,
+                    );
+                    if (picked != null) {
+                      setState(() => endTime = picked);
+                    }
+                  },
+                ),
+                // Recurring toggle
+                material.SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Recurring'),
+                  subtitle: const Text('Repeats every week'),
+                  value: isRecurring,
+                  onChanged: (value) {
+                    setState(() => isRecurring = value);
+                  },
+                ),
+                // Active toggle
+                material.SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Active'),
+                  subtitle: const Text('Disable orders during this time'),
+                  value: isActive,
+                  onChanged: (value) {
+                    setState(() => isActive = value);
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            material.TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            material.TextButton(
+              onPressed: () async {
+                final name = nameController.text.trim();
+                if (name.isEmpty) {
+                  if (mounted) {
+                    showToast(
+                      context: context,
+                      builder: (context, overlay) => context.buildToast(
+                        title: 'Error',
+                        message: 'Please enter a schedule name',
+                      ),
+                    );
+                  }
+                  return;
+                }
+
+                Navigator.of(dialogContext).pop();
+                await _saveSchedule(
+                  name: name,
+                  dayOfWeek: selectedDay,
+                  startTime: startTime,
+                  endTime: endTime,
+                  isRecurring: isRecurring,
+                  isActive: isActive,
+                  scheduleId: schedule?.id,
+                );
+              },
+              child: Text(isEditing ? 'Update' : 'Add'),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _showEditScheduleDialog(DriverSchedule schedule) {
-    showToast(
-      context: context,
-      builder: (context, overlay) => context.buildToast(
-        title: 'Edit Schedule',
-        message: 'Edit schedule feature coming soon',
-      ),
-    );
+  Future<void> _saveSchedule({
+    required String name,
+    required DayOfWeek dayOfWeek,
+    required material.TimeOfDay startTime,
+    required material.TimeOfDay endTime,
+    required bool isRecurring,
+    required bool isActive,
+    String? scheduleId,
+  }) async {
+    final driverId = _driverId;
+    if (driverId == null) return;
+
+    final isEditing = scheduleId != null;
+
+    try {
+      final timeStart = Time(h: startTime.hour, m: startTime.minute);
+      final timeEnd = Time(h: endTime.hour, m: endTime.minute);
+
+      if (isEditing) {
+        // Update existing schedule
+        await context.read<DriverRepository>().updateSchedule(
+          driverId: driverId,
+          scheduleId: scheduleId,
+          request: DriverScheduleUpdateRequest(
+            name: name,
+            dayOfWeek: dayOfWeek,
+            startTime: timeStart,
+            endTime: timeEnd,
+            isRecurring: isRecurring,
+            isActive: isActive,
+          ),
+        );
+      } else {
+        // Create new schedule
+        await context.read<DriverRepository>().createSchedule(
+          driverId: driverId,
+          request: DriverScheduleCreateRequest(
+            name: name,
+            driverId: driverId,
+            dayOfWeek: dayOfWeek,
+            startTime: timeStart,
+            endTime: timeEnd,
+            isRecurring: isRecurring,
+            isActive: isActive,
+          ),
+        );
+      }
+
+      if (mounted) {
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Success',
+            message: isEditing
+                ? 'Schedule updated successfully'
+                : 'Schedule added successfully',
+          ),
+        );
+        _loadDriverAndSchedules();
+      }
+    } catch (e) {
+      if (mounted) {
+        showToast(
+          context: context,
+          builder: (context, overlay) => context.buildToast(
+            title: 'Error',
+            message: isEditing
+                ? 'Failed to update schedule: ${e.toString()}'
+                : 'Failed to add schedule: ${e.toString()}',
+          ),
+        );
+      }
+    }
+  }
+
+  String _formatTimeOfDay(material.TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  String _getDayFullText(DayOfWeek day) {
+    switch (day) {
+      case DayOfWeek.MONDAY:
+        return 'Monday';
+      case DayOfWeek.TUESDAY:
+        return 'Tuesday';
+      case DayOfWeek.WEDNESDAY:
+        return 'Wednesday';
+      case DayOfWeek.THURSDAY:
+        return 'Thursday';
+      case DayOfWeek.FRIDAY:
+        return 'Friday';
+      case DayOfWeek.SATURDAY:
+        return 'Saturday';
+      case DayOfWeek.SUNDAY:
+        return 'Sunday';
+    }
   }
 
   void _showDeleteConfirmation(DriverSchedule schedule) {
