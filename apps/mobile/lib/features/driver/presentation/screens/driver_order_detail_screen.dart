@@ -423,14 +423,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                 IconButton(
                   icon: const Icon(LucideIcons.messageCircle),
                   onPressed: () {
-                    // TODO: Navigate to chat
-                    showToast(
-                      context: context,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Chat',
-                        message: 'Chat feature coming soon',
-                      ),
-                    );
+                    _showChatDialog(context, order.id);
                   },
                   variance: ButtonVariance.ghost,
                 ),
@@ -676,6 +669,61 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             child: const Text('Yes, Cancel'),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showChatDialog(BuildContext context, String orderId) {
+    material.showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (bottomSheetContext) => material.DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => material.Container(
+          decoration: material.BoxDecoration(
+            color: material.Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const material.BorderRadius.only(
+              topLeft: material.Radius.circular(16),
+              topRight: material.Radius.circular(16),
+            ),
+          ),
+          child: material.Column(
+            children: [
+              material.Container(
+                padding: material.EdgeInsets.all(16.w),
+                decoration: material.BoxDecoration(
+                  border: material.Border(
+                    bottom: material.BorderSide(
+                      color: material.Colors.grey.shade300,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: material.Row(
+                  mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                  children: [
+                    material.Text(
+                      'Chat with Customer',
+                      style: material.TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: material.FontWeight.bold,
+                      ),
+                    ),
+                    material.IconButton(
+                      icon: const material.Icon(material.Icons.close),
+                      onPressed: () =>
+                          material.Navigator.of(bottomSheetContext).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              material.Expanded(child: OrderChatWidget(orderId: orderId)),
+            ],
+          ),
+        ),
       ),
     );
   }
