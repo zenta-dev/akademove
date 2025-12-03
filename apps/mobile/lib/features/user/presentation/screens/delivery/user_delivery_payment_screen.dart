@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +27,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Payment Method',
+            context.l10n.title_payment_method,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -42,7 +43,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
         listener: (context, state) {
           if (state.isFailure && state.error != null) {
             context.showMyToast(
-              state.error?.message ?? 'Failed to place order',
+              state.error?.message ?? context.l10n.toast_failed_place_order,
               type: ToastType.failed,
             );
           }
@@ -55,7 +56,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
               spacing: 16.h,
               children: [
                 DefaultText(
-                  'Payment Method',
+                  context.l10n.title_payment_method,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
@@ -95,7 +96,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                                 TransactionStatus.SUCCESS) {
                           context
                             ..showMyToast(
-                              'Delivery order placed successfully',
+                              context.l10n.toast_delivery_order_placed,
                               type: ToastType.success,
                             )
                             ..pushReplacementNamed(Routes.userRideOnTrip.name);
@@ -104,7 +105,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                           // (payment flow will be handled by payment provider)
                           context
                             ..showMyToast(
-                              'Delivery order placed successfully',
+                              context.l10n.toast_delivery_order_placed,
                               type: ToastType.success,
                             )
                             ..go(Routes.userHome.path);
@@ -113,7 +114,7 @@ class _UserDeliveryPaymentScreenState extends State<UserDeliveryPaymentScreen> {
                     },
                     child: deliveryState.isLoading
                         ? const Submiting()
-                        : const Text('Place Order'),
+                        : Text(context.l10n.button_place_order),
                   ),
                 ),
               ],

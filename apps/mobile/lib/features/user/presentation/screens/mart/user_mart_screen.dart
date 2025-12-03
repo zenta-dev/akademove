@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,8 @@ class _UserMartScreenState extends State<UserMartScreen> {
             success: (_) => _buildContent(context, state),
             failure: (error) => Center(
               child: OopsAlertWidget(
-                message: error.message ?? 'Failed to load mart data',
+                message:
+                    error.message ?? context.l10n.toast_failed_load_mart_data,
                 onRefresh: () => context.read<UserMartCubit>().loadMartHome(),
               ),
             ),
@@ -94,7 +96,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Categories',
+            context.l10n.label_categories,
             style: context.typography.h4.copyWith(fontSize: 16.sp),
           ),
           Gap(12.h),
@@ -135,7 +137,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Recent Orders',
+                context.l10n.label_recent_orders,
                 style: context.typography.h4.copyWith(fontSize: 16.sp),
               ),
               Button(
@@ -148,7 +150,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'View All',
+                      context.l10n.button_view_all,
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w500,
@@ -188,7 +190,7 @@ class _UserMartScreenState extends State<UserMartScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Best Sellers',
+            context.l10n.label_best_sellers,
             style: context.typography.h4.copyWith(fontSize: 16.sp),
           ),
           Gap(12.h),
@@ -303,7 +305,7 @@ class _RecentOrderCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Order #${order.id.substring(0, 8)}',
+                    '${context.l10n.order_id}${order.id.substring(0, 8)}',
                     style: context.typography.h4.copyWith(fontSize: 14.sp),
                   ),
                   Gap(4.h),

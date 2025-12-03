@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,9 +56,9 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
   @override
   Widget build(BuildContext context) {
     final tabs = [
-      const _TabItem(label: 'On process'),
-      const _TabItem(label: 'Completed'),
-      const _TabItem(label: 'Canceled'),
+      _TabItem(label: context.l10n.tab_on_process),
+      _TabItem(label: context.l10n.tab_completed),
+      _TabItem(label: context.l10n.tab_canceled),
     ];
 
     return MyScaffold(
@@ -188,7 +189,10 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
               if (filtered.isEmpty) {
                 return ListView(
                   children: [
-                    _buildFail(message: 'No orders found', statuses: statuses),
+                    _buildFail(
+                      message: context.l10n.no_orders_found,
+                      statuses: statuses,
+                    ),
                   ],
                 );
               }
@@ -213,7 +217,7 @@ class _MerchantOrderScreenState extends State<MerchantOrderScreen> {
             failure: (error) => ListView(
               children: [
                 _buildFail(
-                  message: error.message ?? 'An unexpected error occurred',
+                  message: error.message ?? context.l10n.an_error_occurred,
                   statuses: statuses,
                 ),
               ],

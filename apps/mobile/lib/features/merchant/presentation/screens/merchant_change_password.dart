@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +12,7 @@ class MerchantChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Change Password')],
+      headers: [DefaultAppBar(title: context.l10n.title_change_password)],
       body: Card(
         padding: EdgeInsets.all(8.dg),
         child: SizedBox(
@@ -71,7 +71,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
             children: [
               FormField(
                 key: _oldPasswordKey,
-                label: const Text('Old Password'),
+                label: Text(context.l10n.label_old_password),
                 validator: const LengthValidator(min: 8),
                 showErrors: const {
                   FormValidationMode.changed,
@@ -79,7 +79,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
                 },
                 child: TextField(
                   focusNode: _oldPasswordFn,
-                  placeholder: const Text('Enter your old password'),
+                  placeholder: Text(context.l10n.placeholder_old_password),
                   textInputAction: TextInputAction.next,
                   onSubmitted: (_) => _newPasswordFn.requestFocus(),
                   features: const [
@@ -90,7 +90,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
               ),
               FormField(
                 key: _newPasswordKey,
-                label: const Text('New Password'),
+                label: Text(context.l10n.label_new_password),
                 validator: const LengthValidator(min: 8),
                 showErrors: const {
                   FormValidationMode.changed,
@@ -98,7 +98,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
                 },
                 child: TextField(
                   focusNode: _newPasswordFn,
-                  placeholder: const Text('Enter your new password'),
+                  placeholder: Text(context.l10n.placeholder_new_password),
                   textInputAction: TextInputAction.next,
                   onSubmitted: (_) => _confirmPasswordFn.requestFocus(),
                   features: const [
@@ -109,7 +109,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
               ),
               FormField(
                 key: _confirmPasswordKey,
-                label: const Text('Confirm Password'),
+                label: Text(context.l10n.label_confirm_password),
                 validator: const LengthValidator(min: 8),
                 showErrors: const {
                   FormValidationMode.changed,
@@ -117,7 +117,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
                 },
                 child: TextField(
                   focusNode: _confirmPasswordFn,
-                  placeholder: const Text('Confirm your new password'),
+                  placeholder: Text(context.l10n.placeholder_confirm_password),
                   textInputAction: TextInputAction.done,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),
@@ -131,7 +131,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
           Button.primary(
             onPressed: () {},
             child: Text(
-              'Save changes',
+              context.l10n.save_changes,
               style: context.typography.small.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,

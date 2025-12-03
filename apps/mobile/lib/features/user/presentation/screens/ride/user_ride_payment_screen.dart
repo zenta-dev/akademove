@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,11 +23,11 @@ class UserRidePaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Ride Payment')],
+      headers: [DefaultAppBar(title: context.l10n.title_ride_payment)],
       body: Column(
         spacing: 8.h,
         children: [
-          const Text('Total Fare'),
+          Text(context.l10n.label_total_fare),
           BlocBuilder<UserOrderCubit, UserOrderState>(
             builder: (context, state) {
               return Text(
@@ -46,11 +47,17 @@ class UserRidePaymentScreen extends StatelessWidget {
               if (state.isSuccess &&
                   payment.status == TransactionStatus.SUCCESS) {
                 context
-                  ..showMyToast('Payment successful', type: ToastType.success)
+                  ..showMyToast(
+                    context.l10n.text_payment_successful,
+                    type: ToastType.success,
+                  )
                   ..pushReplacementNamed(Routes.userRideOnTrip.name);
               } else if (state.isFailure ||
                   payment.status == TransactionStatus.FAILED) {
-                context.showMyToast('Payment failed', type: ToastType.failed);
+                context.showMyToast(
+                  context.l10n.text_payment_failed,
+                  type: ToastType.failed,
+                );
               }
             },
             builder: (context, state) {
@@ -72,10 +79,10 @@ class UserRidePaymentScreen extends StatelessWidget {
                   },
                 ).asSkeleton(enabled: state.isLoading);
               }
-              return const Alert.destructive(
-                title: Text('Unsupported payment method'),
+              return Alert.destructive(
+                title: Text(context.l10n.text_unsupported_payment_method),
                 content: Text(
-                  'The selected payment method is not supported. Please choose a different method.',
+                  context.l10n.text_unsupported_payment_method_description,
                 ),
               );
             },
@@ -99,7 +106,10 @@ class BankTransferPaymentWidget extends StatelessWidget {
 
   Future<void> _copyVaNumber(BuildContext context, VANumber? vaNumber) async {
     if (vaNumber == null || vaNumber.vaNumber.isEmpty) {
-      context.showMyToast('VA Number is not available', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_va_number_not_available,
+        type: ToastType.failed,
+      );
       return;
     }
 
@@ -107,7 +117,7 @@ class BankTransferPaymentWidget extends StatelessWidget {
 
     if (context.mounted) {
       context.showMyToast(
-        'VA Number copied to clipboard',
+        context.l10n.toast_va_number_copied,
         type: ToastType.success,
       );
     }
@@ -145,7 +155,9 @@ class BankTransferPaymentWidget extends StatelessWidget {
                     spacing: 8.w,
                     mainAxisAlignment: .center,
                     children: [
-                      const Text('Provider :').muted(fontSize: 14.sp),
+                      Text(
+                        context.l10n.text_provider_label,
+                      ).muted(fontSize: 14.sp),
                       SizedBox(
                         width: 24.sp,
                         height: 24.sp,
@@ -159,7 +171,7 @@ class BankTransferPaymentWidget extends StatelessWidget {
                     ],
                   ),
                 ],
-                const Text('VA Number :').muted(fontSize: 14.sp),
+                Text(context.l10n.text_va_number_label).muted(fontSize: 14.sp),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Text(
@@ -185,12 +197,16 @@ class BankTransferPaymentWidget extends StatelessWidget {
             child: Column(
               spacing: 8.h,
               children: [
-                Text('Valid until $dateStr').muted(fontSize: 14.sp),
+                Text(
+                  context.l10n.text_valid_until_with_date(dateStr),
+                ).muted(fontSize: 14.sp),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 4.w,
                   children: [
-                    const Text('Remaining Time :').muted(fontSize: 14.sp),
+                    Text(
+                      context.l10n.label_remaining_time,
+                    ).muted(fontSize: 14.sp),
                     TimeTickerWidget(
                       expiresAt: expiresAt,
                       onExpired: onExpired,
@@ -210,7 +226,7 @@ class BankTransferPaymentWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.copy, size: 16.sp),
-                const Text('Copy VA Number').small,
+                Text(context.l10n.button_copy_va_number).small,
               ],
             ),
           ),

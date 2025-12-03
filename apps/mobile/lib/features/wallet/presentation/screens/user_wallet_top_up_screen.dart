@@ -4,6 +4,7 @@ import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:akademove/l10n/l10n.dart';
 
 class _Option {
   const _Option(this.name, this.method);
@@ -21,7 +22,7 @@ class UserWalletTopUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [DefaultAppBar(title: 'Top Up')],
+      headers: [DefaultAppBar(title: context.l10n.top_up)],
       body: ListView.separated(
         padding: EdgeInsets.zero,
         itemCount: _options.length,

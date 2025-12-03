@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -112,7 +113,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
             BitmapDescriptor.hueGreen,
           ),
           infoWindow: InfoWindow(
-            title: 'Pickup',
+            title: context.l10n.marker_pickup,
             snippet: pickupLocation.vicinity,
           ),
         ),
@@ -131,7 +132,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
           position: dropoffLatLng,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
-            title: 'Dropoff',
+            title: context.l10n.marker_dropoff,
             snippet: dropoffLocation.vicinity,
           ),
         ),
@@ -248,7 +249,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Delivery',
+            context.l10n.title_delivery,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -264,7 +265,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
         listener: (context, state) {
           if (state.isFailure && state.error != null) {
             context.showMyToast(
-              state.error?.message ?? 'Failed to estimate order',
+              state.error?.message ?? context.l10n.toast_failed_estimate_order,
               type: ToastType.failed,
             );
           }
@@ -273,7 +274,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
           spacing: 16.h,
           children: [
             Text(
-              'Choose your pick-up and destination point!',
+              context.l10n.text_choose_pickup_destination,
               style: context.typography.h4.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -356,7 +357,7 @@ class _UserDeliveryScreenState extends State<UserDeliveryScreen> {
                         : null,
                     child: state.isLoading
                         ? const Submiting()
-                        : const DefaultText('Proceed'),
+                        : DefaultText(context.l10n.button_proceed),
                   ),
                 );
               },
@@ -446,7 +447,7 @@ class _UserDeliveryPickupScreenState extends State<UserDeliveryPickupScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [DefaultAppBar(title: 'Where you at?')],
+      headers: [DefaultAppBar(title: context.l10n.title_where_you_at)],
       body: PickLocationWidget(
         type: LocationType.pickup,
         pickupController: pickupController,
@@ -488,7 +489,7 @@ class _UserDeliveryDropoffScreenState extends State<UserDeliveryDropoffScreen> {
   Widget build(BuildContext context) {
     return MyScaffold(
       scrollable: false,
-      headers: const [DefaultAppBar(title: 'Where are you going?')],
+      headers: [DefaultAppBar(title: context.l10n.title_where_are_you_going)],
       body: PickLocationWidget(
         type: LocationType.dropoff,
         pickupController: pickupController,

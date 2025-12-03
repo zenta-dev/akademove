@@ -1,8 +1,11 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/auth/presentation/cubits/auth_cubit.dart';
 import 'package:akademove/features/emergency/presentation/cubits/emergency_cubit.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Dialog for triggering an emergency during active trip
 /// Allows user/driver to select emergency type and provide description
@@ -31,43 +34,41 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     super.dispose();
   }
 
-  String _getTypeLabel(EmergencyType type) {
+  String _getTypeLabel(BuildContext context, EmergencyType type) {
     switch (type) {
       case EmergencyType.ACCIDENT:
-        return 'Accident';
+        return context.l10n.accident;
       case EmergencyType.HARASSMENT:
-        return 'Harassment';
+        return context.l10n.harassment;
       case EmergencyType.THEFT:
-        return 'Theft';
+        return context.l10n.theft;
       case EmergencyType.MEDICAL:
-        return 'Medical Emergency';
+        return context.l10n.medical;
       case EmergencyType.OTHER:
-        return 'Other';
+        return context.l10n.other;
     }
   }
 
   IconData _getTypeIcon(EmergencyType type) {
     switch (type) {
       case EmergencyType.ACCIDENT:
-        return Icons.car_crash_rounded;
+        return LucideIcons.car;
       case EmergencyType.HARASSMENT:
-        return Icons.person_off_rounded;
+        return LucideIcons.userX;
       case EmergencyType.THEFT:
-        return Icons.report_problem_rounded;
+        return LucideIcons.triangleAlert;
       case EmergencyType.MEDICAL:
-        return Icons.medical_services_rounded;
+        return LucideIcons.heartPulse;
       case EmergencyType.OTHER:
-        return Icons.warning_amber_rounded;
+        return LucideIcons.triangleAlert;
     }
   }
 
   void _handleTrigger() {
     if (_descriptionController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please provide a description'),
-          backgroundColor: Colors.red,
-        ),
+      context.showMyToast(
+        context.l10n.error_description_required,
+        type: ToastType.failed,
       );
       return;
     }
@@ -76,12 +77,7 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
     final userId = context.read<AuthCubit>().state.data?.id;
 
     if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User not authenticated'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      context.showMyToast('User not authenticated', type: ToastType.failed);
       return;
     }
 
@@ -99,129 +95,114 @@ class _EmergencyTriggerDialogState extends State<EmergencyTriggerDialog> {
   Widget build(BuildContext context) {
     if (!_confirmed) {
       return AlertDialog(
-        title: const Row(
+        title: Row(
+          spacing: 12.w,
           children: [
-            Icon(Icons.warning_rounded, color: Colors.red, size: 28),
-            SizedBox(width: 12),
-            Text('Emergency Alert'),
+            Icon(
+              LucideIcons.triangleAlert,
+              color: context.colorScheme.destructive,
+              size: 28.sp,
+            ),
+            Text(context.l10n.emergency_alert_title),
           ],
         ),
-        content: const Text(
-          'This will send an emergency alert to campus authorities and '
-          'notify emergency contacts. Are you sure you want to continue?',
-          style: TextStyle(fontSize: 16),
+        content: Text(
+          context.l10n.message_confirmation,
+          style: context.typography.p.copyWith(fontSize: 16.sp),
         ),
         actions: [
-          TextButton(
+          OutlineButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
-          ElevatedButton(
+          DestructiveButton(
             onPressed: () {
               setState(() {
                 _confirmed = true;
               });
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Continue'),
+            child: Text(context.l10n.button_continue),
           ),
         ],
       );
     }
 
     return AlertDialog(
-      title: const Text('Report Emergency'),
+      title: Text(context.l10n.emergency_report_title),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 8.h,
           children: [
-            const Text(
-              'Select emergency type:',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            Text(
+              context.l10n.emergency_select_type,
+              style: context.typography.semiBold.copyWith(fontSize: 16.sp),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 4.h),
             // Emergency type selector
             ...EmergencyType.values.map((type) {
               final isSelected = _selectedType == type;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _selectedType = type;
-                    });
-                  },
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isSelected ? Colors.red : Colors.grey.shade300,
-                        width: isSelected ? 2 : 1,
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedType = type;
+                  });
+                },
+                child: Card(
+                  padding: EdgeInsets.all(12.dg),
+                  borderWidth: isSelected ? 2 : 1,
+                  borderColor: isSelected
+                      ? context.colorScheme.destructive
+                      : context.colorScheme.border,
+                  child: Row(
+                    spacing: 12.w,
+                    children: [
+                      Icon(
+                        _getTypeIcon(type),
+                        color: isSelected
+                            ? context.colorScheme.destructive
+                            : context.colorScheme.mutedForeground,
                       ),
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? Colors.red.withValues(alpha: 0.1)
-                          : Colors.transparent,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          _getTypeIcon(type),
-                          color: isSelected ? Colors.red : Colors.grey.shade700,
+                      Text(
+                        _getTypeLabel(context, type),
+                        style: context.typography.base.copyWith(
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          color: isSelected
+                              ? context.colorScheme.destructive
+                              : context.colorScheme.foreground,
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          _getTypeLabel(type),
-                          style: TextStyle(
-                            fontWeight: isSelected
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                            color: isSelected ? Colors.red : Colors.black87,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );
             }),
-            const SizedBox(height: 16),
-            const Text(
-              'Description:',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+            SizedBox(height: 8.h),
+            Text(
+              context.l10n.description,
+              style: context.typography.semiBold.copyWith(fontSize: 16.sp),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 4.h),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                hintText: 'Describe the emergency situation...',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.all(12),
-              ),
+              placeholder: Text(context.l10n.emergency_describe_situation),
               maxLines: 4,
               maxLength: 500,
-              autofocus: false,
             ),
           ],
         ),
       ),
       actions: [
-        TextButton(
+        OutlineButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(context.l10n.cancel),
         ),
-        ElevatedButton(
+        DestructiveButton(
           onPressed: _handleTrigger,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: const Text('Send Alert'),
+          child: Text(context.l10n.emergency_send_alert),
         ),
       ],
     );

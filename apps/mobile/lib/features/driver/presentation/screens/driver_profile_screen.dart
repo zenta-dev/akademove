@@ -43,8 +43,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         showToast(
           context: context,
           builder: (context, overlay) => context.buildToast(
-            title: 'Error',
-            message: 'Failed to load profile: ${e.toString()}',
+            title: context.l10n.error,
+            message: context.l10n.text_failed_to_load_profile(e.toString()),
           ),
         );
       }
@@ -109,7 +109,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           Icon(
             LucideIcons.triangleAlert,
             size: 64.sp,
-            color: material.Colors.red,
+            color: context.colorScheme.destructive,
           ),
           Text(
             context.l10n.failed_to_load_profile,
@@ -139,11 +139,25 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             Row(
               spacing: 16.w,
               children: [
-                material.CircleAvatar(
-                  radius: 40.r,
-                  child: Text(
-                    user?.name?.substring(0, 1).toUpperCase() ?? 'D',
-                    style: context.typography.h1.copyWith(fontSize: 32.sp),
+                Container(
+                  width: 80.r,
+                  height: 80.r,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: context.colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      user?.name?.substring(0, 1).toUpperCase() ?? 'D',
+                      style: context.typography.h1.copyWith(
+                        fontSize: 32.sp,
+                        color: context.colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -164,7 +178,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                           Icon(
                             LucideIcons.star,
                             size: 16.sp,
-                            color: material.Colors.amber,
+                            color: const Color(0xFFFFC107),
                           ),
                           Text(
                             driver.rating.toStringAsFixed(1),
@@ -263,21 +277,25 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             driver.isTakingOrder
                 ? context.l10n.taking_orders
                 : context.l10n.not_taking_orders,
-            driver.isTakingOrder ? material.Colors.green : material.Colors.grey,
+            driver.isTakingOrder
+                ? const Color(0xFF4CAF50)
+                : context.colorScheme.mutedForeground,
           ),
         ),
         Expanded(
           child: _buildStatCard(
             LucideIcons.wifi,
             driver.isOnline ? 'Online' : 'Offline',
-            driver.isOnline ? material.Colors.green : material.Colors.grey,
+            driver.isOnline
+                ? const Color(0xFF4CAF50)
+                : context.colorScheme.mutedForeground,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(IconData icon, String label, material.Color color) {
+  Widget _buildStatCard(IconData icon, String label, Color color) {
     return Card(
       child: Padding(
         padding: EdgeInsets.all(12.dg),
@@ -340,7 +358,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         Icon(
           isUploaded ? LucideIcons.circleCheck : LucideIcons.circleX,
           size: 20.sp,
-          color: isUploaded ? material.Colors.green : material.Colors.red,
+          color: isUploaded
+              ? const Color(0xFF4CAF50)
+              : context.colorScheme.destructive,
         ),
         SizedBox(width: 12.w),
         Expanded(
@@ -353,7 +373,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           isUploaded ? context.l10n.uploaded : context.l10n.missing,
           style: context.typography.small.copyWith(
             fontSize: 12.sp,
-            color: isUploaded ? material.Colors.green : material.Colors.red,
+            color: isUploaded
+                ? const Color(0xFF4CAF50)
+                : context.colorScheme.destructive,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -456,17 +478,17 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   }
 
   void _showLogoutDialog() {
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.logout),
         content: Text(context.l10n.are_you_sure_you_want_to_logout),
         actions: [
-          material.TextButton(
+          OutlineButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.cancel),
           ),
-          material.TextButton(
+          DestructiveButton(
             onPressed: () async {
               Navigator.of(dialogContext).pop();
               await _performLogout();
@@ -520,17 +542,18 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     final driver = _driver;
     if (driver == null) return;
 
-    final licensePlateController = material.TextEditingController(
+    final licensePlateController = TextEditingController(
       text: driver.licensePlate,
     );
 
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.edit_profile),
-        content: material.Column(
-          mainAxisSize: material.MainAxisSize.min,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.h,
           children: [
             Text(
               context.l10n.update_your_license_plate,
@@ -539,37 +562,25 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 color: context.colorScheme.mutedForeground,
               ),
             ),
-            SizedBox(height: 16.h),
-            material.TextField(
+            TextField(
               controller: licensePlateController,
-              decoration: material.InputDecoration(
-                labelText: context.l10n.license_plate,
-                hintText: context.l10n.enter_license_plate,
-                border: material.OutlineInputBorder(),
-              ),
+              placeholder: Text(context.l10n.enter_license_plate),
             ),
           ],
         ),
         actions: [
-          material.TextButton(
+          OutlineButton(
             onPressed: () {
               licensePlateController.dispose();
               Navigator.of(dialogContext).pop();
             },
             child: Text(context.l10n.cancel),
           ),
-          material.TextButton(
+          PrimaryButton(
             onPressed: () async {
               final newLicensePlate = licensePlateController.text.trim();
 
               if (newLicensePlate.isEmpty) {
-                showToast(
-                  context: context,
-                  builder: (context, overlay) => context.buildToast(
-                    title: 'Validation Error',
-                    message: 'License plate cannot be empty',
-                  ),
-                );
                 context.showMyToast(
                   context.l10n.license_plate_cannot_be_empty,
                   type: ToastType.warning,
@@ -626,13 +637,14 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   void _showSettingsDialog() {
     if (_driver == null) return;
 
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.settings),
-        content: material.Column(
-          mainAxisSize: material.MainAxisSize.min,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.h,
           children: [
             Text(
               context.l10n.driver_preferences_and_settings,
@@ -641,40 +653,47 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 color: context.colorScheme.mutedForeground,
               ),
             ),
-            SizedBox(height: 16.h),
-            material.ListTile(
-              leading: Icon(LucideIcons.bell, size: 24.sp),
-              title: Text(context.l10n.notifications),
-              subtitle: Text(context.l10n.manage_notification_preferences),
-              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+            GestureDetector(
               onTap: () {
                 Navigator.of(dialogContext).pop();
                 context.ensureNotification();
               },
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(12.dg),
+                  child: Row(
+                    spacing: 12.w,
+                    children: [
+                      Icon(LucideIcons.bell, size: 24.sp),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 4.h,
+                          children: [
+                            Text(
+                              context.l10n.notifications,
+                              style: context.typography.p.copyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              context.l10n.manage_notification_preferences,
+                              style: context.typography.small.copyWith(
+                                fontSize: 12.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(LucideIcons.chevronRight, size: 20.sp),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            // const Divider(),
-            // material.ListTile(
-            //   leading: Icon(LucideIcons.shield, size: 24.sp),
-            //   title: const Text('Privacy'),
-            //   subtitle: const Text('Control your privacy settings'),
-            //   trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
-            //   onTap: () {
-            //     Navigator.of(dialogContext).pop();
-            //     showToast(
-            //       context: context,
-            //       builder: (context, overlay) => context.buildToast(
-            //         title: 'Privacy',
-            //         message: 'Privacy settings coming soon',
-            //       ),
-            //     );
-            //   },
-            // ),
-            const Divider(),
-            material.ListTile(
-              leading: Icon(LucideIcons.info, size: 24.sp),
-              title: Text(context.l10n.about),
-              subtitle: Text(context.l10n.app_version_information),
-              trailing: Icon(LucideIcons.chevronRight, size: 20.sp),
+            GestureDetector(
               onTap: () {
                 Navigator.of(dialogContext).pop();
                 showToast(
@@ -685,11 +704,45 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   ),
                 );
               },
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(12.dg),
+                  child: Row(
+                    spacing: 12.w,
+                    children: [
+                      Icon(LucideIcons.info, size: 24.sp),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 4.h,
+                          children: [
+                            Text(
+                              context.l10n.about,
+                              style: context.typography.p.copyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              context.l10n.app_version_information,
+                              style: context.typography.small.copyWith(
+                                fontSize: 12.sp,
+                                color: context.colorScheme.mutedForeground,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Icon(LucideIcons.chevronRight, size: 20.sp),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
         actions: [
-          material.TextButton(
+          PrimaryButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.close),
           ),
@@ -698,18 +751,18 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     );
   }
 
-  material.Color _getStatusColor(DriverStatus status) {
+  Color _getStatusColor(DriverStatus status) {
     switch (status) {
       case DriverStatus.PENDING:
-        return material.Colors.orange;
+        return const Color(0xFFFF9800);
       case DriverStatus.ACTIVE:
       case DriverStatus.APPROVED:
-        return material.Colors.green;
+        return const Color(0xFF4CAF50);
       case DriverStatus.REJECTED:
-        return material.Colors.red;
+        return const Color(0xFFF44336);
       case DriverStatus.INACTIVE:
       case DriverStatus.SUSPENDED:
-        return material.Colors.grey;
+        return const Color(0xFF9E9E9E);
     }
   }
 

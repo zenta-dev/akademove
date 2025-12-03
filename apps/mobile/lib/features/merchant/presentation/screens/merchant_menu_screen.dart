@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,9 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    placeholder: const Text('Search menu...'),
+                    placeholder: Text(
+                      context.l10n.placeholder_search_menu_hint,
+                    ),
                     onChanged: (value) {
                       setState(() => _query = value);
                     },
@@ -101,12 +104,12 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Error: ${state.error?.message ?? "Unknown error"}',
+                          '${context.l10n.error}: ${state.error?.message ?? context.l10n.an_error_occurred}',
                         ),
                         const SizedBox(height: 16),
                         PrimaryButton(
                           onPressed: _initializeMenu,
-                          child: const Text('Retry'),
+                          child: Text(context.l10n.retry),
                         ),
                       ],
                     ),
@@ -128,8 +131,8 @@ class _MerchantMenuScreenState extends State<MerchantMenuScreen> {
                   return Center(
                     child: Text(
                       _query.isEmpty
-                          ? 'No menu items yet. Tap + to add your first item.'
-                          : 'No menu items found for "$_query"',
+                          ? context.l10n.no_menu_items_yet
+                          : context.l10n.no_menu_items_found(_query),
                     ),
                   );
                 }
@@ -187,7 +190,7 @@ class _MenuCard extends StatelessWidget {
                         return Container(
                           width: double.infinity,
                           height: 95.h,
-                          color: material.Colors.grey[300],
+                          color: const Color(0xFFE0E0E0),
                           child: const Icon(LucideIcons.image, size: 32),
                         );
                       },
@@ -196,7 +199,7 @@ class _MenuCard extends StatelessWidget {
                         return Container(
                           width: double.infinity,
                           height: 95.h,
-                          color: material.Colors.grey[200],
+                          color: const Color(0xFFEEEEEE),
                           child: const Center(
                             child: material.CircularProgressIndicator(),
                           ),
@@ -206,7 +209,7 @@ class _MenuCard extends StatelessWidget {
                   : Container(
                       width: double.infinity,
                       height: 95.h,
-                      color: material.Colors.grey[300],
+                      color: const Color(0xFFE0E0E0),
                       child: const Icon(LucideIcons.image, size: 32),
                     ),
             ),
@@ -230,16 +233,16 @@ class _MenuCard extends StatelessWidget {
                         'Rp ${menu.price.toStringAsFixed(0)}',
                         style: context.typography.small.copyWith(
                           fontSize: 12.sp,
-                          color: material.Colors.grey[600],
+                          color: context.colorScheme.mutedForeground,
                         ),
                       ),
                       Text(
-                        'Stock: ${menu.stock}',
+                        '${context.l10n.label_stock}: ${menu.stock}',
                         style: context.typography.small.copyWith(
                           fontSize: 11.sp,
                           color: menu.stock > 0
-                              ? material.Colors.green
-                              : material.Colors.red,
+                              ? const Color(0xFF4CAF50)
+                              : const Color(0xFFF44336),
                         ),
                       ),
                     ],

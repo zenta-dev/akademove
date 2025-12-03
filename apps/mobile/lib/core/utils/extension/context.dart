@@ -59,47 +59,49 @@ extension BuildContextExt on BuildContext {
       await showDialog<bool>(
         context: this,
         builder: (context) {
-          return AlertDialog(
-            title: const Text('Location Permission'),
-            content: const Text(
-              'This app requires location access to function properly. Please grant location permission.',
-            ),
-            actions: [
-              OutlineButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        Navigator.of(context).pop(false);
-                      },
-                child: const Text('Cancel'),
-              ),
-              PrimaryButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        isLoading = true;
-                        final granted = await svc.requestPermission();
-                        isLoading = false;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Location Permission'),
+                content: const Text(
+                  'This app requires location access to function properly. Please grant location permission.',
+                ),
+                actions: [
+                  OutlineButton(
+                    enabled: !isLoading,
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  PrimaryButton(
+                    enabled: !isLoading,
+                    onPressed: () async {
+                      setState(() => isLoading = true);
+                      final granted = await svc.requestPermission();
+                      setState(() => isLoading = false);
 
-                        if (!granted) {
-                          showMyToast(
-                            'Location permission is required for this feature.',
-                            type: ToastType.failed,
-                          );
-                        } else {
-                          showMyToast(
-                            'Location permission granted.',
-                            type: ToastType.success,
-                          );
-                        }
+                      if (!granted) {
+                        showMyToast(
+                          'Location permission is required for this feature.',
+                          type: ToastType.failed,
+                        );
+                      } else {
+                        showMyToast(
+                          'Location permission granted.',
+                          type: ToastType.success,
+                        );
+                      }
 
-                        if (context.mounted) Navigator.of(context).pop(granted);
-                      },
-                child: isLoading
-                    ? const Submiting()
-                    : const Text('Grant Permission'),
-              ),
-            ],
+                      if (context.mounted) Navigator.of(context).pop(granted);
+                    },
+                    child: isLoading
+                        ? const Submiting()
+                        : const Text('Grant Permission'),
+                  ),
+                ],
+              );
+            },
           );
         },
       );
@@ -111,45 +113,47 @@ extension BuildContextExt on BuildContext {
       await showDialog<bool>(
         context: this,
         builder: (context) {
-          return AlertDialog(
-            title: const Text('Enable Location Services'),
-            content: const Text(
-              'Location services are disabled. Please enable them to continue.',
-            ),
-            actions: [
-              OutlineButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        Navigator.of(context).pop(false);
-                      },
-                child: const Text('Cancel'),
-              ),
-              PrimaryButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        isLoading = true;
-                        final enabled = await svc.enable();
-                        isLoading = false;
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Enable Location Services'),
+                content: const Text(
+                  'Location services are disabled. Please enable them to continue.',
+                ),
+                actions: [
+                  OutlineButton(
+                    enabled: !isLoading,
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  PrimaryButton(
+                    enabled: !isLoading,
+                    onPressed: () async {
+                      setState(() => isLoading = true);
+                      final enabled = await svc.enable();
+                      setState(() => isLoading = false);
 
-                        if (!enabled) {
-                          showMyToast(
-                            'Location services need to be enabled for this feature.',
-                            type: ToastType.failed,
-                          );
-                        } else {
-                          showMyToast(
-                            'Location services enabled.',
-                            type: ToastType.success,
-                          );
-                        }
+                      if (!enabled) {
+                        showMyToast(
+                          'Location services need to be enabled for this feature.',
+                          type: ToastType.failed,
+                        );
+                      } else {
+                        showMyToast(
+                          'Location services enabled.',
+                          type: ToastType.success,
+                        );
+                      }
 
-                        if (context.mounted) Navigator.of(context).pop(enabled);
-                      },
-                child: isLoading ? const Submiting() : const Text('Enable'),
-              ),
-            ],
+                      if (context.mounted) Navigator.of(context).pop(enabled);
+                    },
+                    child: isLoading ? const Submiting() : const Text('Enable'),
+                  ),
+                ],
+              );
+            },
           );
         },
       );
@@ -168,52 +172,54 @@ extension BuildContextExt on BuildContext {
       await showDialog<bool>(
         context: this,
         builder: (context) {
-          return AlertDialog(
-            title: const Text('Notification Permission'),
-            content: const Text(
-              'This app requires notification access to function properly. Please grant notification permission.',
-            ),
-            actions: [
-              OutlineButton(
-                onPressed: isLoading
-                    ? null
-                    : () {
-                        Navigator.of(context).pop(false);
-                      },
-                child: const Text('Cancel'),
-              ),
-              PrimaryButton(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        isLoading = true;
-                        final granted = await ntfSvc.requestPermission(
-                          sl<FirebaseService>(),
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text('Notification Permission'),
+                content: const Text(
+                  'This app requires notification access to function properly. Please grant notification permission.',
+                ),
+                actions: [
+                  OutlineButton(
+                    enabled: !isLoading,
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  PrimaryButton(
+                    enabled: !isLoading,
+                    onPressed: () async {
+                      setState(() => isLoading = true);
+                      final granted = await ntfSvc.requestPermission(
+                        sl<FirebaseService>(),
+                      );
+                      setState(() => isLoading = false);
+
+                      if (!granted) {
+                        showMyToast(
+                          'Notification permission is required for this feature.',
+                          type: ToastType.failed,
                         );
-                        isLoading = false;
+                      } else {
+                        showMyToast(
+                          'Notification permission granted.',
+                          type: ToastType.success,
+                        );
 
-                        if (!granted) {
-                          showMyToast(
-                            'Notification permission is required for this feature.',
-                            type: ToastType.failed,
-                          );
-                        } else {
-                          showMyToast(
-                            'Notification permission granted.',
-                            type: ToastType.success,
-                          );
+                        final repo = sl<NotificationRepository>();
+                        await safeAsync(() => repo.syncToken());
+                      }
 
-                          final repo = sl<NotificationRepository>();
-                          await safeAsync(() => repo.syncToken());
-                        }
-
-                        if (context.mounted) Navigator.of(context).pop(granted);
-                      },
-                child: isLoading
-                    ? const Submiting()
-                    : const Text('Grant Permission'),
-              ),
-            ],
+                      if (context.mounted) Navigator.of(context).pop(granted);
+                    },
+                    child: isLoading
+                        ? const Submiting()
+                        : const Text('Grant Permission'),
+                  ),
+                ],
+              );
+            },
           );
         },
       );

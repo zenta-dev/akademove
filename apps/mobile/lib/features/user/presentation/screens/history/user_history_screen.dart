@@ -45,7 +45,10 @@ class UserHistoryScreen extends StatelessWidget {
               final orders = state.orderHistories;
 
               if (orders == null || orders.isEmpty) {
-                return _buildFail(context, message: 'No order history found');
+                return _buildFail(
+                  context,
+                  message: context.l10n.text_no_order_history,
+                );
               }
 
               return ListView.separated(

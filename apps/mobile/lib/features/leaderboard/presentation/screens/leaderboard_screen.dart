@@ -1,4 +1,5 @@
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart' as api_client;
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _LeaderboardViewState extends State<_LeaderboardView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leaderboard'),
+        title: Text(context.l10n.leaderboard_title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
@@ -69,7 +70,7 @@ class _LeaderboardViewState extends State<_LeaderboardView>
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => context.read<LeaderboardCubit>().init(),
-                    child: const Text('Retry'),
+                    child: Text(context.l10n.retry),
                   ),
                 ],
               ),
@@ -83,9 +84,9 @@ class _LeaderboardViewState extends State<_LeaderboardView>
                 // Tab Bar
                 TabBar(
                   controller: _tabController,
-                  tabs: const [
-                    Tab(text: 'Rankings'),
-                    Tab(text: 'Badges'),
+                  tabs: [
+                    Tab(text: context.l10n.tab_rankings),
+                    Tab(text: context.l10n.tab_badges),
                   ],
                 ),
 
@@ -109,7 +110,7 @@ class _LeaderboardViewState extends State<_LeaderboardView>
 
   Widget _buildLeaderboardTab(LeaderboardState state) {
     if (state.leaderboards.isEmpty) {
-      return const Center(child: Text('No rankings yet'));
+      return Center(child: Text(context.l10n.text_no_rankings_yet));
     }
 
     return ListView.builder(
@@ -124,7 +125,7 @@ class _LeaderboardViewState extends State<_LeaderboardView>
 
   Widget _buildBadgesTab(LeaderboardState state) {
     if (state.badges.isEmpty) {
-      return const Center(child: Text('No badges available'));
+      return Center(child: Text(context.l10n.leaderboard_no_badges));
     }
 
     return GridView.builder(
@@ -168,19 +169,23 @@ class _LeaderboardCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'User ${leaderboard.userId.substring(0, 8)}',
+                    context.l10n.text_user_id(
+                      leaderboard.userId.substring(0, 8),
+                    ),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Category: ${leaderboard.category.value}',
+                    context.l10n.text_category_value(
+                      leaderboard.category.value,
+                    ),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Period: ${leaderboard.period.value}',
+                    context.l10n.text_period_value(leaderboard.period.value),
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -198,7 +203,10 @@ class _LeaderboardCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                Text('pts', style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  context.l10n.leaderboard_pts,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
             ),
           ],
@@ -334,7 +342,7 @@ class _BadgeCard extends StatelessWidget {
                     Icon(Icons.check, size: 12.sp, color: Colors.green),
                     SizedBox(width: 4.w),
                     Text(
-                      'Earned',
+                      context.l10n.text_earned,
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,

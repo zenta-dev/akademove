@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/emergency/presentation/cubits/_export.dart';
 import 'package:akademove/features/emergency/presentation/states/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,10 +26,10 @@ class EmergencyButton extends StatelessWidget {
       listener: (context, state) {
         if (state.state == CubitState.success && state.triggered != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Emergency alert sent successfully'),
+            SnackBar(
+              content: Text(context.l10n.emergency_alert_sent_successfully),
               backgroundColor: Colors.green,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         } else if (state.state == CubitState.failure) {

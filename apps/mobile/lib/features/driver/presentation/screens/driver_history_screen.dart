@@ -330,7 +330,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                       Icon(
                         LucideIcons.mapPin,
                         size: 16.sp,
-                        color: material.Colors.green,
+                        color: const Color(0xFF4CAF50),
                       ),
                       Container(
                         width: 2.w,
@@ -340,7 +340,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
                       Icon(
                         LucideIcons.navigation,
                         size: 16.sp,
-                        color: material.Colors.red,
+                        color: const Color(0xFFF44336),
                       ),
                     ],
                   ),
@@ -396,18 +396,18 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
   }
 
   Widget _buildTypeBadge(OrderType type) {
-    material.Color color;
+    Color color;
     IconData icon;
 
     switch (type) {
       case OrderType.RIDE:
-        color = material.Colors.blue;
+        color = const Color(0xFF2196F3);
         icon = LucideIcons.car;
       case OrderType.DELIVERY:
-        color = material.Colors.orange;
+        color = const Color(0xFFFF9800);
         icon = LucideIcons.package;
       case OrderType.FOOD:
-        color = material.Colors.green;
+        color = const Color(0xFF4CAF50);
         icon = LucideIcons.utensils;
     }
 
@@ -436,7 +436,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     );
   }
 
-  Widget _buildStatusBadge(String text, material.Color color) {
+  Widget _buildStatusBadge(String text, Color color) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
@@ -455,26 +455,26 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
     );
   }
 
-  material.Color _getStatusColor(OrderStatus status) {
+  Color _getStatusColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.REQUESTED:
       case OrderStatus.MATCHING:
-        return material.Colors.orange;
+        return const Color(0xFFFF9800);
       case OrderStatus.PREPARING:
       case OrderStatus.READY_FOR_PICKUP:
-        return material.Colors.orange;
+        return const Color(0xFFFF9800);
       case OrderStatus.ACCEPTED:
       case OrderStatus.ARRIVING:
-        return material.Colors.blue;
+        return const Color(0xFF2196F3);
       case OrderStatus.IN_TRIP:
-        return material.Colors.purple;
+        return const Color(0xFF9C27B0);
       case OrderStatus.COMPLETED:
-        return material.Colors.green;
+        return const Color(0xFF4CAF50);
       case OrderStatus.CANCELLED_BY_USER:
       case OrderStatus.CANCELLED_BY_DRIVER:
       case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
-        return material.Colors.red;
+        return const Color(0xFFF44336);
     }
   }
 

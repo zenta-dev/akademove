@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,19 +65,19 @@ class UserDetailHistoryScreen extends StatelessWidget {
                           extra: {
                             'orderId': order.id,
                             'driverId': order.driverId!,
-                            'driverName': 'Driver',
+                            'driverName': context.l10n.text_driver,
                           },
                         );
 
                         // Refresh order details if rating was submitted
                         if (result == true && context.mounted) {
                           context.showMyToast(
-                            'Thank you for your rating!',
+                            context.l10n.text_thank_you_rating,
                             type: ToastType.success,
                           );
                         }
                       },
-                      child: const Text('Rate this order'),
+                      child: Text(context.l10n.text_rate_this_order),
                     ),
                   ),
                 ),

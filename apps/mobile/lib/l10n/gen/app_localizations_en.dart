@@ -96,7 +96,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get not_taking_orders => 'Not Taking Orders';
 
   @override
-  String get license_plate => 'License Plate';
+  String get license_plate => 'License Plate: ';
 
   @override
   String get failed_to_load_profile => 'Failed to load profile';
@@ -452,7 +452,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get qr_code_expired => 'The QR code has expired';
 
   @override
-  String get hello => 'Hello';
+  String hello(String name) {
+    return 'Hello, $name';
+  }
 
   @override
   String get payment_expired => 'Payment Expired';
@@ -1190,9 +1192,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome_back => 'Welcome back!';
 
   @override
-  String get license_plate => 'License Plate: ';
-
-  @override
   String rating(String rating) {
     return '$rating rating';
   }
@@ -1216,18 +1215,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get today_performance => 'Today\'s Performance';
 
   @override
-  String get trips => 'Trips';
-
-  @override
   String get quick_actions => 'Quick Actions';
-
-  @override
-  String get manage_schedule => 'Manage Schedule';
-
-  @override
-  String hello(String name) {
-    return 'Hello, $name';
-  }
 
   @override
   String get open_today => 'Open Today';
@@ -1453,4 +1441,1566 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rating_required => 'Please provide a rating';
+
+  @override
+  String get coupon_no_coupons_available => 'No coupons available';
+
+  @override
+  String get coupon_select_coupon => 'Select Coupon';
+
+  @override
+  String get coupon_remove_coupon => 'Remove Coupon';
+
+  @override
+  String get payment_method_wallet => 'Wallet';
+
+  @override
+  String get payment_method_bank_transfer => 'Bank Transfer';
+
+  @override
+  String get emergency_alert_sent_successfully => 'Emergency alert sent successfully';
+
+  @override
+  String get emergency_alert_title => 'Emergency Alert';
+
+  @override
+  String get emergency_report_title => 'Report Emergency';
+
+  @override
+  String get emergency_select_type => 'Select emergency type:';
+
+  @override
+  String get emergency_describe_situation => 'Describe the emergency situation...';
+
+  @override
+  String get emergency_send_alert => 'Send Alert';
+
+  @override
+  String get button_continue => 'Continue';
+
+  @override
+  String get leaderboard_title => 'Leaderboard';
+
+  @override
+  String get leaderboard_no_rankings => 'No rankings yet';
+
+  @override
+  String get leaderboard_no_badges => 'No badges available';
+
+  @override
+  String get leaderboard_pts => 'pts';
+
+  @override
+  String get chat_no_messages => 'No messages yet';
+
+  @override
+  String get merchant_order_accept => 'Accept';
+
+  @override
+  String get merchant_order_time_remaining => '01:00';
+
+  @override
+  String get gender_label => 'Gender:';
+
+  @override
+  String get top_up_qris => 'Top Up QRIS';
+
+  @override
+  String get rate_your_driver => 'Rate Your Driver';
+
+  @override
+  String get placeholder_name => 'John Doe';
+
+  @override
+  String get placeholder_email => 'john@gmail.com';
+
+  @override
+  String get placeholder_password => '********';
+
+  @override
+  String get dialog_location_permission => 'Location Permission';
+
+  @override
+  String get dialog_location_services_disabled => 'Location Services Disabled';
+
+  @override
+  String get dialog_location_permission_required => 'Location Permission Required';
+
+  @override
+  String get drag_to_adjust => 'Drag to adjust position';
+
+  @override
+  String get error_enter_location_to_search => 'Please enter a location to search';
+
+  @override
+  String get success_signed_up => 'Successfully signed up';
+
+  @override
+  String get error_fill_all_required_fields => 'Please fill all required fields correctly';
+
+  @override
+  String get error_complete_all_required_fields => 'Please complete all required fields';
+
+  @override
+  String get error_passwords_not_match => 'Passwords do not match';
+
+  @override
+  String get merchant_step_1_description => 'Tell us about yourself to kickstart your merchant journey!';
+
+  @override
+  String get merchant_step_2_description => 'Share your outlet details and location so customers can find you easily!';
+
+  @override
+  String get merchant_step_3_description => 'Add your bank account to receive payments securely!';
+
+  @override
+  String get placeholder_outlet_name => 'Enter outlet name';
+
+  @override
+  String get label_outlet_location => 'Outlet\'s Location';
+
+  @override
+  String get label_bank_provider => 'Bank Provider';
+
+  @override
+  String get label_outlet_category => 'Outlet Category';
+
+  @override
+  String get helper_outlet_category_select => 'Select the main category for your outlet';
+
+  @override
+  String get placeholder_select_outlet_category => 'Select outlet category';
+
+  @override
+  String get label_phone => 'Phone';
+
+  @override
+  String get dialog_accept_order => 'Accept Order';
+
+  @override
+  String get dialog_accept_order_confirm => 'Are you sure you want to accept this order?';
+
+  @override
+  String get toast_validation_error => 'Validation Error';
+
+  @override
+  String get error_menu_name_required => 'Menu name is required';
+
+  @override
+  String get error_menu_price_required => 'Menu price is required';
+
+  @override
+  String get error_valid_price_required => 'Please enter a valid price';
+
+  @override
+  String get error_merchant_info_not_found => 'Merchant information not found';
+
+  @override
+  String get success_menu_created => 'Menu created successfully';
+
+  @override
+  String get error_failed_create_menu => 'Failed to create menu';
+
+  @override
+  String get title_create_menu => 'Create Menu';
+
+  @override
+  String get placeholder_zero => '0';
+
+  @override
+  String get error_menu_info_not_found => 'Menu information not found';
+
+  @override
+  String get title_edit_menu => 'Edit Menu';
+
+  @override
+  String get error_menu_not_found => 'Menu not found';
+
+  @override
+  String get placeholder_search_menu => 'Search menu...';
+
+  @override
+  String get title_menu_detail => 'Menu Detail';
+
+  @override
+  String get dialog_delete_menu => 'Delete Menu';
+
+  @override
+  String dialog_delete_menu_confirm(String name) {
+    return 'Are you sure you want to delete \"$name\"?';
+  }
+
+  @override
+  String get success_menu_deleted => 'Menu deleted successfully';
+
+  @override
+  String get error_failed_delete_menu => 'Failed to delete menu';
+
+  @override
+  String get label_old_password => 'Old Password';
+
+  @override
+  String get placeholder_enter_old_password => 'Enter your old password';
+
+  @override
+  String get label_new_password => 'New Password';
+
+  @override
+  String get placeholder_enter_new_password => 'Enter your new password';
+
+  @override
+  String get label_confirm_password => 'Confirm Password';
+
+  @override
+  String get placeholder_confirm_new_password => 'Confirm your new password';
+
+  @override
+  String get error_failed_verify_bank => 'Failed to verify bank account';
+
+  @override
+  String get loading_map => 'Loading map...';
+
+  @override
+  String get success_set_up_merchant => 'Success set up merchant';
+
+  @override
+  String get title_set_up_outlet => 'Set Up Outlet';
+
+  @override
+  String get placeholder_time_start => '10:00';
+
+  @override
+  String get placeholder_time_end => '22:00';
+
+  @override
+  String get title_sales_report => 'Sales Report';
+
+  @override
+  String get tab_weekly_sales => 'Weekly Sales';
+
+  @override
+  String get tab_monthly_sales => 'Monthly Sales';
+
+  @override
+  String get title_commission_report => 'Commission Report';
+
+  @override
+  String get title_order_detail => 'Order Detail';
+
+  @override
+  String get button_add_schedule => 'Add Schedule';
+
+  @override
+  String get button_edit => 'Edit';
+
+  @override
+  String get placeholder_class_name => 'e.g., Mobile Programming';
+
+  @override
+  String get dialog_call_customer => 'Call Customer';
+
+  @override
+  String get section_today_performance => 'Today\'s Performance';
+
+  @override
+  String get section_quick_actions => 'Quick Actions';
+
+  @override
+  String get label_rating_suffix => 'rating';
+
+  @override
+  String get dialog_rate_customer => 'Rate Customer';
+
+  @override
+  String get label_review_category => 'Review Category';
+
+  @override
+  String get label_comment_optional => 'Comment (Optional)';
+
+  @override
+  String get placeholder_share_experience => 'Share your experience...';
+
+  @override
+  String get button_submit => 'Submit';
+
+  @override
+  String dialog_new_order(String type) {
+    return 'New $type Order';
+  }
+
+  @override
+  String get label_order_id_prefix => 'Order #';
+
+  @override
+  String get label_pickup => 'Pickup';
+
+  @override
+  String get label_dropoff => 'Dropoff';
+
+  @override
+  String get label_distance => 'Distance';
+
+  @override
+  String get label_earnings => 'Earnings';
+
+  @override
+  String label_gender_preference(String gender) {
+    return 'Gender preference: $gender';
+  }
+
+  @override
+  String get label_note => 'Note:';
+
+  @override
+  String label_pickup_prefix(String location) {
+    return 'Pickup: $location';
+  }
+
+  @override
+  String label_dropoff_prefix(String location) {
+    return 'Dropoff: $location';
+  }
+
+  @override
+  String label_instructions_prefix(String instructions) {
+    return 'Instructions: $instructions';
+  }
+
+  @override
+  String get order_type_ride_label => 'Ride';
+
+  @override
+  String get order_type_delivery_label => 'Delivery';
+
+  @override
+  String get order_type_food_label => 'Food';
+
+  @override
+  String get toast_order_unavailable => 'Order Unavailable';
+
+  @override
+  String get toast_order_unavailable_message => 'This order was cancelled or accepted by another driver';
+
+  @override
+  String get toast_order_rejected => 'Order Rejected';
+
+  @override
+  String get toast_order_rejected_message => 'You rejected the order';
+
+  @override
+  String get label_total_fare => 'Total Fare';
+
+  @override
+  String get dialog_unsupported_payment => 'Unsupported payment method';
+
+  @override
+  String get dialog_unsupported_payment_message => 'The selected payment method is not supported. Please choose a different method.';
+
+  @override
+  String get label_provider => 'Provider :';
+
+  @override
+  String get label_va_number => 'VA Number :';
+
+  @override
+  String label_valid_until(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get label_remaining_time => 'Remaining Time :';
+
+  @override
+  String get button_copy_va_number => 'Copy VA Number';
+
+  @override
+  String get label_no_rating_yet => 'No rating yet';
+
+  @override
+  String get message_wait_for_driver => 'Please wait while we match you with a driver';
+
+  @override
+  String get label_license_plate => 'License plate';
+
+  @override
+  String get status_finding_driver => 'Finding driver';
+
+  @override
+  String get status_your_driver => 'Your driver';
+
+  @override
+  String get instruction_choose_pickup_destination => 'Choose your pick-up and destination point!';
+
+  @override
+  String get button_proceed => 'Proceed';
+
+  @override
+  String get placeholder_what_sending => 'What are you sending?';
+
+  @override
+  String get placeholder_enter_weight => 'Enter weight in kg (max 20kg)';
+
+  @override
+  String get helper_special_instructions => 'Add any special handling or delivery instructions';
+
+  @override
+  String get helper_add_photos => 'Add up to 3 photos of the item';
+
+  @override
+  String get error_provide_item_description => 'Please provide item description';
+
+  @override
+  String get error_no_estimate_available => 'No estimate available';
+
+  @override
+  String get button_choose_payment_method => 'Choose Payment Method';
+
+  @override
+  String get button_place_order => 'Place Order';
+
+  @override
+  String get label_photo_profile => 'Photo Profile';
+
+  @override
+  String get label_name => 'Name';
+
+  @override
+  String get label_email => 'Email';
+
+  @override
+  String get section_achievements => 'Achievements';
+
+  @override
+  String get button_rate_this_order => 'Rate this order';
+
+  @override
+  String get empty_no_order_history => 'No order history found';
+
+  @override
+  String get label_your_current_location => 'Your current location';
+
+  @override
+  String label_drivers_around(int count) {
+    return 'There are $count drivers around you';
+  }
+
+  @override
+  String get error_failed_load_mart => 'Failed to load mart data';
+
+  @override
+  String get error_failed_load_merchants => 'Failed to load merchants';
+
+  @override
+  String get empty_no_merchants_found => 'No merchants found';
+
+  @override
+  String get button_select_via_map => 'Select via map';
+
+  @override
+  String get error_no_place_found => 'No place found';
+
+  @override
+  String get title_select_bank_provider => 'Select Bank Provider';
+
+  @override
+  String get payment_akademove_pay => 'Akademove Pay';
+
+  @override
+  String get button_download_qr => 'Download QR';
+
+  @override
+  String get button_copy_qr_url => 'Copy QR URL';
+
+  @override
+  String get separator_colon => ':';
+
+  @override
+  String get placeholder_type_message => 'Type a message...';
+
+  @override
+  String get tab_on_process => 'On process';
+
+  @override
+  String get tab_completed => 'Completed';
+
+  @override
+  String get tab_canceled => 'Canceled';
+
+  @override
+  String get start_preparing => 'Start Preparing';
+
+  @override
+  String get order_ready => 'Order Ready';
+
+  @override
+  String get waiting_for_driver_pickup => 'Waiting for driver to pickup...';
+
+  @override
+  String get no_menu_items_yet => 'No menu items yet. Tap + to add your first item.';
+
+  @override
+  String no_menu_items_found(String query) {
+    return 'No menu items found for \"$query\"';
+  }
+
+  @override
+  String get placeholder_search_menu_hint => 'Search menu...';
+
+  @override
+  String get label_menu_name => 'Menu Name';
+
+  @override
+  String get label_menu_price => 'Menu Price';
+
+  @override
+  String get label_menu_stock => 'Menu Stock';
+
+  @override
+  String get label_menu_category => 'Menu Category';
+
+  @override
+  String get label_menu_photo => 'Menu Photo';
+
+  @override
+  String get placeholder_menu_name => 'Enter menu name';
+
+  @override
+  String get placeholder_menu_price => 'Enter price';
+
+  @override
+  String get label_category => 'Category';
+
+  @override
+  String get label_price => 'Price';
+
+  @override
+  String get label_stock => 'Stock';
+
+  @override
+  String get label_created => 'Created';
+
+  @override
+  String get label_updated => 'Updated';
+
+  @override
+  String get placeholder_select_category => 'Select category';
+
+  @override
+  String get error_validation => 'Validation Error';
+
+  @override
+  String get title_privacy_policies => 'Privacy Policies';
+
+  @override
+  String get ordered_by => 'Ordered by';
+
+  @override
+  String get driver_assigned => 'Driver assigned';
+
+  @override
+  String get order_items => 'Order Items';
+
+  @override
+  String get base_price => 'Base Price';
+
+  @override
+  String get order_time => 'Order Time';
+
+  @override
+  String get order_chat => 'Order Chat';
+
+  @override
+  String get toast_order_accepted => 'Order accepted successfully';
+
+  @override
+  String get toast_order_rejected_success => 'Order rejected successfully';
+
+  @override
+  String get toast_order_marked_preparing => 'Order marked as preparing';
+
+  @override
+  String get toast_order_marked_ready => 'Order marked as ready for pickup';
+
+  @override
+  String get toast_failed_accept_order => 'Failed to accept order';
+
+  @override
+  String get toast_failed_reject_order => 'Failed to reject order';
+
+  @override
+  String get toast_failed_update_order => 'Failed to update order';
+
+  @override
+  String get toast_merchant_id_not_found => 'Merchant ID not found';
+
+  @override
+  String get unknown_item => 'Unknown Item';
+
+  @override
+  String get label_status => 'Status';
+
+  @override
+  String get label_wib => 'WIB';
+
+  @override
+  String get error_valid_price => 'Please enter a valid price';
+
+  @override
+  String get toast_menu_created_success => 'Menu created successfully';
+
+  @override
+  String get toast_failed_create_menu => 'Failed to create menu';
+
+  @override
+  String get toast_menu_updated_success => 'Menu updated successfully';
+
+  @override
+  String get toast_failed_update_menu => 'Failed to update menu';
+
+  @override
+  String get button_create_menu => 'Create Menu';
+
+  @override
+  String get button_create => 'Create';
+
+  @override
+  String get label_menu_description => 'Menu Description';
+
+  @override
+  String get placeholder_menu_description => 'Combined coffee and brown sugar';
+
+  @override
+  String get placeholder_menu_category => 'Drink';
+
+  @override
+  String get label_menu_photo_optional => 'Menu Photo (Optional)';
+
+  @override
+  String get title_edit_profile => 'Edit Profile';
+
+  @override
+  String get label_owner_name => 'Owner\'s Name';
+
+  @override
+  String get placeholder_owner_name => 'Enter owner name';
+
+  @override
+  String get label_owner_email => 'Owner\'s Email';
+
+  @override
+  String get placeholder_owner_email => 'Enter owner email';
+
+  @override
+  String get label_owner_phone => 'Owner\'s Phone Number';
+
+  @override
+  String get label_outlet_name => 'Outlet\'s Name';
+
+  @override
+  String get label_outlet_phone => 'Outlet\'s Phone Number';
+
+  @override
+  String get label_outlet_email => 'Outlet\'s Email';
+
+  @override
+  String get placeholder_outlet_email => 'Enter outlet email';
+
+  @override
+  String get label_outlet_document => 'Outlet\'s Document (Optional)';
+
+  @override
+  String get label_choose_bank => 'Choose bank';
+
+  @override
+  String get placeholder_select_bank_provider => 'Select bank provider';
+
+  @override
+  String get label_bank_account => 'Bank Account';
+
+  @override
+  String get placeholder_bank_account => '********1234';
+
+  @override
+  String get toast_location_permission => 'Location Permission';
+
+  @override
+  String get toast_using_default_location => 'Using default location. You can drag the marker to set your outlet location.';
+
+  @override
+  String get dialog_location_permission_title => 'Location Permission';
+
+  @override
+  String get dialog_location_permission_message => 'We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily. You can also manually set the location by dragging the marker.';
+
+  @override
+  String get dialog_location_services_disabled_title => 'Location Services Disabled';
+
+  @override
+  String get dialog_location_services_disabled_message => 'Location services are currently disabled on your device. Please enable them to automatically detect your outlet location.';
+
+  @override
+  String get dialog_location_permission_required_title => 'Location Permission Required';
+
+  @override
+  String get dialog_location_permission_required_message => 'Location permission has been permanently denied. To use automatic location detection, please enable it in your app settings.\n\nYou can still manually set your outlet location by dragging the marker on the map.';
+
+  @override
+  String get label_outlet_location_description => 'Make sure the location point on the map is correct to meet the registration requirements.';
+
+  @override
+  String get placeholder_search_location => 'Search location';
+
+  @override
+  String get label_dragging => 'Dragging...';
+
+  @override
+  String get toast_location_found => 'Location Found';
+
+  @override
+  String get toast_marker_moved => 'Marker moved to searched location';
+
+  @override
+  String get toast_not_found => 'Not Found';
+
+  @override
+  String get toast_location_not_found => 'Location not found. Please try a different search.';
+
+  @override
+  String get toast_search_error => 'Search Error';
+
+  @override
+  String get toast_search_error_message => 'Unable to search location. Please check your internet connection.';
+
+  @override
+  String get toast_enter_location => 'Please enter a location to search';
+
+  @override
+  String get label_benchmark_optional => 'Benchmark (Optional)';
+
+  @override
+  String get placeholder_benchmark => 'Next to the Uniqlo store.';
+
+  @override
+  String get toast_bank_account_verified => 'Bank account verified successfully';
+
+  @override
+  String get toast_failed_verify_bank => 'Failed to verify bank account';
+
+  @override
+  String get toast_enter_bank_account => 'Please enter bank account number';
+
+  @override
+  String get toast_bank_account_min_digits => 'Bank account number must be at least 5 digits';
+
+  @override
+  String get toast_select_bank_first => 'Please select a bank provider first';
+
+  @override
+  String get label_bank_account_number => 'Bank Account Number';
+
+  @override
+  String get label_account_holder_name => 'Account Holder\'s Name';
+
+  @override
+  String get label_owner_bank_name => 'Owner\'s Name';
+
+  @override
+  String get label_unable_get_address => 'Unable to get address';
+
+  @override
+  String get label_step_1 => 'Step 1';
+
+  @override
+  String get label_step_2 => 'Step 2';
+
+  @override
+  String get label_step_3 => 'Step 3';
+
+  @override
+  String get label_outlet_photo_profile => 'Outlet Photo Profile';
+
+  @override
+  String get placeholder_outlet_category => 'Pick your outlet category';
+
+  @override
+  String get label_outlet_operating_hours => 'Outlet Operating Hours';
+
+  @override
+  String get label_24_hours => '24 Hours';
+
+  @override
+  String get toast_success_set_up => 'Success set up merchant';
+
+  @override
+  String get toast_complete_required_fields => 'Please complete all required fields';
+
+  @override
+  String get error_outlet_photo_required => 'Outlet photo is required';
+
+  @override
+  String get error_menu_photo_required => 'Menu photo is required';
+
+  @override
+  String get label_weekly_sales => 'Weekly Sales';
+
+  @override
+  String get label_monthly_sales => 'Monthly Sales';
+
+  @override
+  String get label_earns => 'Earns';
+
+  @override
+  String get label_top_ordered_categories => 'Top Ordered Categories';
+
+  @override
+  String get label_top_ordered_products => 'Top Ordered Products';
+
+  @override
+  String get button_export_pdf => 'Export to PDF';
+
+  @override
+  String get category_junk_food => 'Junk Food';
+
+  @override
+  String get category_drinks => 'Drinks';
+
+  @override
+  String get category_snack => 'Snack';
+
+  @override
+  String get product_fried_chicken => 'Fried Chicken';
+
+  @override
+  String get product_coffee_latte => 'Coffee Latte';
+
+  @override
+  String get product_laundry_express => 'Laundry Express';
+
+  @override
+  String get label_incoming_balance => 'Incoming Balance';
+
+  @override
+  String get label_outgoing_balance => 'Outgoing Balance';
+
+  @override
+  String get label_balance_detail => 'Balance Detail';
+
+  @override
+  String get label_gross_sales => 'Gross Sales';
+
+  @override
+  String get label_platform_commission => 'Platform Commission (20%)';
+
+  @override
+  String get label_net_income => 'Net Income';
+
+  @override
+  String get label_nett_income => 'Nett Income';
+
+  @override
+  String get title_change_password => 'Change Password';
+
+  @override
+  String get placeholder_old_password => 'Enter your old password';
+
+  @override
+  String get placeholder_new_password => 'Enter your new password';
+
+  @override
+  String get placeholder_confirm_password => '********';
+
+  @override
+  String get button_next => 'Next';
+
+  @override
+  String get button_back => 'Back';
+
+  @override
+  String get button_save => 'Save';
+
+  @override
+  String get label_start => 'Start';
+
+  @override
+  String get label_end => 'End';
+
+  @override
+  String get placeholder_start_time => '10:00';
+
+  @override
+  String get placeholder_end_time => '22:00';
+
+  @override
+  String get day_monday => 'Monday';
+
+  @override
+  String get day_tuesday => 'Tuesday';
+
+  @override
+  String get day_wednesday => 'Wednesday';
+
+  @override
+  String get day_thursday => 'Thursday';
+
+  @override
+  String get day_friday => 'Friday';
+
+  @override
+  String get day_saturday => 'Saturday';
+
+  @override
+  String get day_sunday => 'Sunday';
+
+  @override
+  String get toast_success => 'Success';
+
+  @override
+  String get toast_success_set_up_merchant => 'Success set up merchant';
+
+  @override
+  String get outlet_category_restaurant => 'Restaurant';
+
+  @override
+  String get outlet_category_cafe => 'Cafe';
+
+  @override
+  String get outlet_category_fast_food => 'Fast Food';
+
+  @override
+  String get outlet_category_bakery => 'Bakery';
+
+  @override
+  String get outlet_category_street_food => 'Street Food';
+
+  @override
+  String get outlet_category_food_truck => 'Food Truck';
+
+  @override
+  String get outlet_category_bar => 'Bar';
+
+  @override
+  String get outlet_category_coffeeshop => 'Coffee Shop';
+
+  @override
+  String get outlet_category_dessert_shop => 'Dessert Shop';
+
+  @override
+  String get outlet_category_juice_bar => 'Juice Bar';
+
+  @override
+  String get menu_category_appetizer => 'Appetizer';
+
+  @override
+  String get menu_category_main_course => 'Main Course';
+
+  @override
+  String get menu_category_dessert => 'Dessert';
+
+  @override
+  String get menu_category_beverage => 'Beverage';
+
+  @override
+  String get menu_category_snack => 'Snack';
+
+  @override
+  String get menu_category_breakfast => 'Breakfast';
+
+  @override
+  String get menu_category_lunch => 'Lunch';
+
+  @override
+  String get menu_category_dinner => 'Dinner';
+
+  @override
+  String get menu_category_salad => 'Salad';
+
+  @override
+  String get menu_category_soup => 'Soup';
+
+  @override
+  String get menu_category_seafood => 'Seafood';
+
+  @override
+  String get menu_category_vegetarian => 'Vegetarian';
+
+  @override
+  String get menu_category_vegan => 'Vegan';
+
+  @override
+  String get menu_category_pasta => 'Pasta';
+
+  @override
+  String get menu_category_pizza => 'Pizza';
+
+  @override
+  String get menu_category_burger => 'Burger';
+
+  @override
+  String get menu_category_sandwich => 'Sandwich';
+
+  @override
+  String get menu_category_rice => 'Rice';
+
+  @override
+  String get menu_category_noodle => 'Noodle';
+
+  @override
+  String get menu_category_grill => 'Grill';
+
+  @override
+  String get title_delivery => 'Delivery';
+
+  @override
+  String get title_where_you_at => 'Where you at?';
+
+  @override
+  String get title_where_are_you_going => 'Where are you going?';
+
+  @override
+  String get text_choose_pickup_destination => 'Choose your pick-up and destination point!';
+
+  @override
+  String get toast_failed_estimate_order => 'Failed to estimate order';
+
+  @override
+  String get marker_pickup => 'Pickup';
+
+  @override
+  String get marker_dropoff => 'Dropoff';
+
+  @override
+  String get title_order_summary => 'Order Summary';
+
+  @override
+  String get text_no_estimate_available => 'No estimate available';
+
+  @override
+  String get label_delivery_details => 'Delivery Details';
+
+  @override
+  String get label_from => 'From';
+
+  @override
+  String get label_to => 'To';
+
+  @override
+  String get label_item => 'Item';
+
+  @override
+  String get label_weight => 'Weight';
+
+  @override
+  String get label_instructions => 'Instructions';
+
+  @override
+  String get button_apply_coupon => 'Apply Coupon';
+
+  @override
+  String get text_coupon => 'Coupon';
+
+  @override
+  String get label_price_breakdown => 'Price Breakdown';
+
+  @override
+  String get label_base_fare => 'Base Fare';
+
+  @override
+  String get label_distance_fare => 'Distance Fare';
+
+  @override
+  String get label_subtotal => 'Subtotal';
+
+  @override
+  String get label_discount => 'Discount';
+
+  @override
+  String get label_total => 'Total';
+
+  @override
+  String get title_payment_method => 'Payment Method';
+
+  @override
+  String get toast_failed_place_order => 'Failed to place order';
+
+  @override
+  String get toast_delivery_order_placed => 'Delivery order placed successfully';
+
+  @override
+  String get title_ride => 'Ride';
+
+  @override
+  String get title_trip_details => 'Trip Details';
+
+  @override
+  String get toast_wallet_payment_failed => 'Wallet payment failed';
+
+  @override
+  String get title_ride_payment => 'Ride Payment';
+
+  @override
+  String get text_unsupported_payment_method => 'Unsupported payment method';
+
+  @override
+  String get text_valid_until => 'Valid until';
+
+  @override
+  String get label_confirm_new_password => 'Confirm New Password';
+
+  @override
+  String get text_rate_this_order => 'Rate this order';
+
+  @override
+  String get text_driver => 'Driver';
+
+  @override
+  String get button_save_changes => 'Save Changes';
+
+  @override
+  String get text_thank_you_rating => 'Thank you for your rating!';
+
+  @override
+  String get label_achievements => 'Achievements';
+
+  @override
+  String get text_earned_at => 'Earned at';
+
+  @override
+  String get text_all => 'All';
+
+  @override
+  String get toast_failed_load_merchants => 'Failed to load merchants';
+
+  @override
+  String get text_no_merchants_found => 'No merchants found';
+
+  @override
+  String get text_try_different_category => 'Try selecting a different category';
+
+  @override
+  String get text_open => 'Open';
+
+  @override
+  String get text_closed => 'Closed';
+
+  @override
+  String get toast_failed_load_mart_data => 'Failed to load mart data';
+
+  @override
+  String get label_categories => 'Categories';
+
+  @override
+  String get label_recent_orders => 'Recent Orders';
+
+  @override
+  String get button_view_all => 'View All';
+
+  @override
+  String get label_best_sellers => 'Best Sellers';
+
+  @override
+  String get text_rating => 'Rating';
+
+  @override
+  String get text_no_rating_yet => 'No rating yet';
+
+  @override
+  String get label_nearby_drivers => 'Nearby drivers';
+
+  @override
+  String get text_your_current_location => 'Your current location';
+
+  @override
+  String item_count(Object count) {
+    return '$count item(s)';
+  }
+
+  @override
+  String get button_accept => 'Accept';
+
+  @override
+  String get how_was_your_experience => 'How was your experience?';
+
+  @override
+  String get mixed => 'Mixed';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get toast_app_state_corrupted => 'App state corrupted, please restart';
+
+  @override
+  String get toast_payment_info_not_available => 'Payment information not available';
+
+  @override
+  String get text_apply_coupon => 'Apply Coupon';
+
+  @override
+  String text_coupon_applied(String code) {
+    return 'Coupon: $code';
+  }
+
+  @override
+  String get label_payment_method => 'Payment Method';
+
+  @override
+  String get label_payment_summary => 'Payment Summary';
+
+  @override
+  String get text_payment_successful => 'Payment successful';
+
+  @override
+  String get text_payment_failed => 'Payment failed';
+
+  @override
+  String get text_unsupported_payment_method_description => 'The selected payment method is not supported. Please choose a different method.';
+
+  @override
+  String get toast_va_number_not_available => 'VA Number is not available';
+
+  @override
+  String get toast_va_number_copied => 'VA Number copied to clipboard';
+
+  @override
+  String get text_provider_label => 'Provider :';
+
+  @override
+  String get text_va_number_label => 'VA Number :';
+
+  @override
+  String text_valid_until_with_date(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get text_on_trip => 'On Trip';
+
+  @override
+  String get text_license_plate => 'License plate';
+
+  @override
+  String get text_finding_driver => 'Finding your driver...';
+
+  @override
+  String get text_finding_driver_message => 'Please wait while we match you with a driver';
+
+  @override
+  String get status_searching => 'Searching';
+
+  @override
+  String get status_driver_found => 'Driver found';
+
+  @override
+  String get status_on_the_way => 'On the way';
+
+  @override
+  String get text_pickup_location => 'Pickup location';
+
+  @override
+  String get text_dropoff_location => 'Dropoff location';
+
+  @override
+  String get label_payment_method_lower => 'Payment Method';
+
+  @override
+  String get label_total_price => 'Total Price';
+
+  @override
+  String get text_order_details => 'Order Details';
+
+  @override
+  String get text_finding_driver_title => 'Finding driver';
+
+  @override
+  String get text_your_driver_title => 'Your driver';
+
+  @override
+  String get text_trip_completed => 'Trip completed!';
+
+  @override
+  String get text_trip_canceled => 'Trip was canceled';
+
+  @override
+  String get title_delivery_details => 'Delivery Details';
+
+  @override
+  String get label_item_description => 'Item Description';
+
+  @override
+  String get placeholder_item_description => 'What are you sending?';
+
+  @override
+  String get label_weight_kg => 'Weight (kg)';
+
+  @override
+  String get placeholder_weight_kg => 'Enter weight in kg (max 20kg)';
+
+  @override
+  String get text_maximum_weight => 'Maximum weight: 20kg';
+
+  @override
+  String get text_special_handling_instructions => 'Add any special handling or delivery instructions';
+
+  @override
+  String get label_item_photos_optional => 'Item Photos (Optional)';
+
+  @override
+  String get text_add_up_to_3_photos => 'Add up to 3 photos of the item';
+
+  @override
+  String get toast_provide_item_description => 'Please provide item description';
+
+  @override
+  String get toast_weight_must_be_valid => 'Weight must be between 0.1kg and 20kg';
+
+  @override
+  String get text_thank_you_for_review => 'Thank you for your review!';
+
+  @override
+  String get toast_failed_submit_review => 'Failed to submit review';
+
+  @override
+  String get text_rate_by_category => 'Rate by category';
+
+  @override
+  String get category_cleanliness => 'Cleanliness';
+
+  @override
+  String get category_courtesy => 'Courtesy';
+
+  @override
+  String get category_punctuality => 'Punctuality';
+
+  @override
+  String get category_safety => 'Safety';
+
+  @override
+  String get category_communication => 'Communication';
+
+  @override
+  String get category_overall => 'Overall';
+
+  @override
+  String get category_desc_cleanliness => 'How clean was the vehicle and the driver\'s appearance?';
+
+  @override
+  String get category_desc_courtesy => 'How polite and respectful was the driver?';
+
+  @override
+  String get category_desc_punctuality => 'Was the driver on time for pickup?';
+
+  @override
+  String get category_desc_safety => 'Did you feel safe during the trip?';
+
+  @override
+  String get category_desc_communication => 'How well did the driver communicate?';
+
+  @override
+  String get category_desc_overall => 'Rate your overall experience with this driver';
+
+  @override
+  String get rating_poor => 'Poor';
+
+  @override
+  String get rating_below_average => 'Below Average';
+
+  @override
+  String get rating_average => 'Average';
+
+  @override
+  String get rating_good => 'Good';
+
+  @override
+  String get rating_excellent => 'Excellent';
+
+  @override
+  String get label_additional_comments => 'Additional comments (optional)';
+
+  @override
+  String get placeholder_additional_comments => 'Tell us more about your experience...';
+
+  @override
+  String get button_submit_review => 'Submit Review';
+
+  @override
+  String toast_please_rate_category(String category) {
+    return 'Please rate $category';
+  }
+
+  @override
+  String text_drivers_around_you(int count) {
+    return 'There are $count drivers around you';
+  }
+
+  @override
+  String get text_no_order_history => 'No order history found';
+
+  @override
+  String text_order_id_short(String id) {
+    return 'Order #$id';
+  }
+
+  @override
+  String get label_notes => 'Notes';
+
+  @override
+  String get text_unknown_user => 'Unknown User';
+
+  @override
+  String get text_customer => 'Customer';
+
+  @override
+  String get button_call_customer => 'Call Customer';
+
+  @override
+  String get button_delete => 'Delete';
+
+  @override
+  String get title_edit_schedule => 'Edit Schedule';
+
+  @override
+  String get title_add_schedule => 'Add Schedule';
+
+  @override
+  String get placeholder_course_name => 'e.g., Mobile Programming';
+
+  @override
+  String get button_cancel => 'Cancel';
+
+  @override
+  String get placeholder_full_name => 'John Doe';
+
+  @override
+  String get placeholder_stock => '0';
+
+  @override
+  String text_failed_to_load_profile(String error) {
+    return 'Failed to load profile: $error';
+  }
+
+  @override
+  String get text_no_rankings_yet => 'No rankings yet';
+
+  @override
+  String get title_where_going => 'Where are you going?';
+
+  @override
+  String get tab_rankings => 'Rankings';
+
+  @override
+  String get tab_badges => 'Badges';
+
+  @override
+  String text_user_id(String id) {
+    return 'User $id';
+  }
+
+  @override
+  String text_category_value(String category) {
+    return 'Category: $category';
+  }
+
+  @override
+  String text_period_value(String period) {
+    return 'Period: $period';
+  }
+
+  @override
+  String get text_earned => 'Earned';
+
+  @override
+  String text_balance_with_amount(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String get button_top_up => 'Top Up';
+
+  @override
+  String get text_select_via_map => 'Select via map';
+
+  @override
+  String get text_no_place_found => 'No place found';
+
+  @override
+  String get title_location_permission_required => 'Location Permission Required';
+
+  @override
+  String get text_location_permission_denied => 'Location permission was previously denied. To go online and accept orders, you need to enable location access in your device settings.';
+
+  @override
+  String get text_location_permission_request => 'To accept ride and delivery orders, drivers must share their location in real-time. This helps:';
+
+  @override
+  String get text_location_benefit_match_orders => 'Match you with nearby orders';
+
+  @override
+  String get text_location_benefit_track_arrival => 'Let customers track your arrival';
+
+  @override
+  String get text_location_benefit_safety => 'Ensure safety and accountability';
+
+  @override
+  String get text_location_redirect_settings => 'You will be redirected to app settings to enable location access.';
+
+  @override
+  String get button_open_settings => 'Open Settings';
+
+  @override
+  String get button_grant_permission => 'Grant Permission';
+
+  @override
+  String get title_rate_customer => 'Rate Customer';
+
+  @override
+  String text_experience_with_user(String name) {
+    return 'How was your experience with $name?';
+  }
+
+  @override
+  String get category_other => 'Other';
+
+  @override
+  String label_rating_score(String score) {
+    return 'Rating: $score / 5.0';
+  }
+
+  @override
+  String get toast_review_submitted => 'Review submitted successfully';
+
+  @override
+  String get toast_review_failed => 'Failed to submit review';
+
+  @override
+  String get title_reject_order => 'Reject Order';
+
+  @override
+  String get text_select_rejection_reason => 'Please select a reason for rejecting this order:';
+
+  @override
+  String get rejection_reason_out_of_stock => 'Out of Stock';
+
+  @override
+  String get rejection_reason_too_busy => 'Too Busy / High Order Volume';
+
+  @override
+  String get rejection_reason_ingredient_unavailable => 'Ingredient Unavailable';
+
+  @override
+  String get rejection_reason_closed => 'Store Closed / Closing Soon';
+
+  @override
+  String get rejection_reason_other => 'Other';
+
+  @override
+  String get label_additional_note_optional => 'Additional Note (Optional)';
+
+  @override
+  String get placeholder_rejection_note => 'e.g., \"We ran out of chicken, will restock tomorrow\"';
+
+  @override
+  String get button_reject_order => 'Reject Order';
 }

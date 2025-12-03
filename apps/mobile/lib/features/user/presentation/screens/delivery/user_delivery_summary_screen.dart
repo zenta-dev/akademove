@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' show showModalBottomSheet;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +44,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Order Summary',
+            context.l10n.title_order_summary,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -64,7 +65,10 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
           final estimate = state.estimate;
           if (estimate == null) {
             return Center(
-              child: DefaultText('No estimate available', fontSize: 14.sp),
+              child: DefaultText(
+                context.l10n.text_no_estimate_available,
+                fontSize: 14.sp,
+              ),
             );
           }
 
@@ -81,28 +85,28 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                       spacing: 12.h,
                       children: [
                         DefaultText(
-                          'Delivery Details',
+                          context.l10n.label_delivery_details,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),
                         _buildDetailRow(
                           context,
-                          'From',
+                          context.l10n.label_from,
                           estimate.pickup.vicinity,
                         ),
                         _buildDetailRow(
                           context,
-                          'To',
+                          context.l10n.label_to,
                           estimate.dropoff.vicinity,
                         ),
                         _buildDetailRow(
                           context,
-                          'Item',
+                          context.l10n.label_item,
                           estimate.details.description,
                         ),
                         _buildDetailRow(
                           context,
-                          'Weight',
+                          context.l10n.label_weight,
                           '${estimate.details.weight}kg',
                         ),
                         if (estimate.details.specialInstructions
@@ -110,7 +114,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                           const Divider(),
                           _buildDetailRow(
                             context,
-                            'Instructions',
+                            context.l10n.label_instructions,
                             instructions,
                           ),
                         ],
@@ -158,8 +162,8 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                           Expanded(
                             child: Text(
                               selectedCoupon == null
-                                  ? 'Apply Coupon'
-                                  : 'Coupon: ${selectedCoupon?.code ?? ""}',
+                                  ? context.l10n.button_apply_coupon
+                                  : '${context.l10n.text_coupon}: ${selectedCoupon?.code ?? ""}',
                             ),
                           ),
                           Icon(
@@ -181,36 +185,36 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                       spacing: 12.h,
                       children: [
                         DefaultText(
-                          'Price Breakdown',
+                          context.l10n.label_price_breakdown,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),
                         _buildPriceRow(
                           context,
-                          'Distance',
+                          context.l10n.label_distance,
                           '${estimate.summary.distanceKm}km',
                         ),
                         _buildPriceRow(
                           context,
-                          'Base Fare',
+                          context.l10n.label_base_fare,
                           context.formatCurrency(estimate.summary.baseFare),
                         ),
                         _buildPriceRow(
                           context,
-                          'Distance Fare',
+                          context.l10n.label_distance_fare,
                           context.formatCurrency(estimate.summary.distanceFare),
                         ),
                         const Divider(),
                         _buildPriceRow(
                           context,
-                          'Subtotal',
+                          context.l10n.label_subtotal,
                           context.formatCurrency(estimate.summary.totalCost),
                         ),
                         if (discountAmount > 0) ...[
                           const Divider(),
                           _buildPriceRow(
                             context,
-                            'Discount',
+                            context.l10n.label_discount,
                             '- ${context.formatCurrency(discountAmount)}',
                             isDiscount: true,
                           ),
@@ -218,7 +222,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                         const Divider(),
                         _buildPriceRow(
                           context,
-                          'Total',
+                          context.l10n.label_total,
                           context.formatCurrency(
                             estimate.summary.totalCost - discountAmount,
                           ),
@@ -242,7 +246,7 @@ class _UserDeliverySummaryScreenState extends State<UserDeliverySummaryScreen> {
                       }
                       context.push(Routes.userDeliveryPayment.path);
                     },
-                    child: const Text('Choose Payment Method'),
+                    child: Text(context.l10n.button_choose_payment_method),
                   ),
                 ),
               ],

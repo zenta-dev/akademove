@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -149,7 +150,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
             children: [
               Icon(LucideIcons.map, size: 16.sp),
               DefaultText(
-                'Select via map',
+                context.l10n.text_select_via_map,
                 fontSize: 14.sp,
                 color: context.colorScheme.mutedForeground,
               ),
@@ -179,7 +180,7 @@ class _PickLocationWidgetState extends State<PickLocationWidget> {
               return SizedBox(
                 width: double.infinity,
                 child: Alert.destructive(
-                  content: const Text('No place found'),
+                  content: Text(context.l10n.text_no_place_found),
                   leading: const Icon(LucideIcons.info),
                   trailing: IconButton(
                     icon: const Icon(LucideIcons.refreshCcw),

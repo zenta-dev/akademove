@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,14 +21,14 @@ class MerchantMenuDetailScreen extends StatelessWidget {
     if (menu == null) {
       return MyScaffold(
         safeArea: true,
-        headers: const [DefaultAppBar(title: 'Menu Detail')],
-        body: const Center(child: Text('Menu not found')),
+        headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
+        body: Center(child: Text(context.l10n.error_menu_not_found)),
       );
     }
 
     return MyScaffold(
       safeArea: true,
-      headers: const [DefaultAppBar(title: 'Menu Detail')],
+      headers: [DefaultAppBar(title: context.l10n.title_menu_detail)],
       body: BlocBuilder<MerchantMenuCubit, MerchantMenuState>(
         builder: (context, state) {
           // Use selected menu from state if available, otherwise use passed menu
@@ -52,7 +53,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                             return Container(
                               width: double.infinity,
                               height: 200.h,
-                              color: material.Colors.grey[300],
+                              color: const Color(0xFFE0E0E0),
                               child: const Icon(LucideIcons.image, size: 64),
                             );
                           },
@@ -61,7 +62,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                             return Container(
                               width: double.infinity,
                               height: 200.h,
-                              color: material.Colors.grey[200],
+                              color: const Color(0xFFEEEEEE),
                               child: const Center(
                                 child: material.CircularProgressIndicator(),
                               ),
@@ -71,7 +72,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                       : Container(
                           width: double.infinity,
                           height: 200.h,
-                          color: material.Colors.grey[300],
+                          color: const Color(0xFFE0E0E0),
                           child: const Icon(LucideIcons.image, size: 64),
                         ),
                 ),
@@ -84,36 +85,40 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                       spacing: 12.h,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildDetailRow(context, 'Name:', displayMenu.name),
+                        _buildDetailRow(
+                          context,
+                          '${context.l10n.label_name}:',
+                          displayMenu.name,
+                        ),
                         if (displayMenu.category != null)
                           _buildDetailRow(
                             context,
-                            'Category:',
+                            '${context.l10n.label_category}:',
                             displayMenu.category!,
                           ),
                         _buildDetailRow(
                           context,
-                          'Price:',
+                          '${context.l10n.label_price}:',
                           'Rp ${NumberFormat('#,###', 'id_ID').format(displayMenu.price)}',
                         ),
                         _buildDetailRow(
                           context,
-                          'Stock:',
+                          '${context.l10n.label_stock}:',
                           '${displayMenu.stock}',
                           valueColor: displayMenu.stock > 0
-                              ? material.Colors.green
-                              : material.Colors.red,
+                              ? const Color(0xFF4CAF50)
+                              : const Color(0xFFF44336),
                         ),
                         _buildDetailRow(
                           context,
-                          'Created:',
+                          '${context.l10n.label_created}:',
                           DateFormat(
                             'dd MMM yyyy, HH:mm',
                           ).format(displayMenu.createdAt),
                         ),
                         _buildDetailRow(
                           context,
-                          'Updated:',
+                          '${context.l10n.label_updated}:',
                           DateFormat(
                             'dd MMM yyyy, HH:mm',
                           ).format(displayMenu.updatedAt),
@@ -139,7 +144,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            'Edit Menu',
+                            context.l10n.edit_menu,
                             style: context.typography.small.copyWith(
                               fontSize: 16.sp,
                             ),
@@ -151,7 +156,7 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                           onPressed: () =>
                               _showDeleteConfirmation(context, displayMenu),
                           child: Text(
-                            'Delete Menu',
+                            context.l10n.delete_menu,
                             style: context.typography.small.copyWith(
                               fontSize: 16.sp,
                             ),
@@ -167,8 +172,8 @@ class MerchantMenuDetailScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        state.error?.message ?? 'An error occurred',
-                        style: TextStyle(color: material.Colors.red),
+                        state.error?.message ?? context.l10n.an_error_occurred,
+                        style: const TextStyle(color: Color(0xFFF44336)),
                       ),
                     ),
                   ),
@@ -184,19 +189,19 @@ class MerchantMenuDetailScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Menu'),
-        content: Text('Are you sure you want to delete "${menu.name}"?'),
+        title: Text(context.l10n.delete_menu),
+        content: Text(context.l10n.dialog_delete_menu_confirm(menu.name)),
         actions: [
           Button.ghost(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           Button.destructive(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               _deleteMenu(context, menu);
             },
-            child: const Text('Delete'),
+            child: Text(context.l10n.delete),
           ),
         ],
       ),
@@ -227,8 +232,8 @@ class MerchantMenuDetailScreen extends StatelessWidget {
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
-          title: 'Success',
-          message: state.message ?? 'Menu deleted successfully',
+          title: context.l10n.success,
+          message: state.message ?? context.l10n.success_menu_deleted,
         ),
         location: ToastLocation.topCenter,
       );
@@ -240,8 +245,9 @@ class MerchantMenuDetailScreen extends StatelessWidget {
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
-          title: 'Error',
-          message: state.error?.message ?? 'Failed to delete menu',
+          title: context.l10n.error,
+          message:
+              state.error?.message ?? context.l10n.error_failed_delete_menu,
         ),
         location: ToastLocation.topCenter,
       );

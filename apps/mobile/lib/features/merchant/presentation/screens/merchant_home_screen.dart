@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       BlocBuilder<MerchantCubit, MerchantState>(
                         builder: (context, state) {
                           return Text(
-                            'Hello, ${state.mine?.name ?? "Folks"}',
+                            context.l10n.hello(state.mine?.name ?? "Folks"),
                             style: context.typography.h1.copyWith(
                               fontSize: 20.sp,
                             ),
@@ -62,7 +63,7 @@ class MerchantHomeScreen extends StatelessWidget {
                     children: [
                       Icon(LucideIcons.alarmClock, size: 20.sp),
                       Text(
-                        'Open Today',
+                        context.l10n.open_today,
                         style: context.typography.h4.copyWith(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -71,7 +72,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       Gap(4.w),
                       Chip(
                         child: Text(
-                          '10.00 - 22.00 WIB',
+                          '10.00 - 22.00 ${context.l10n.label_wib}',
                           style: context.typography.h4.copyWith(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
@@ -84,7 +85,7 @@ class MerchantHomeScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'Sales Recap',
+              context.l10n.sales_recap,
               style: context.typography.h2.copyWith(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -102,7 +103,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       children: [
                         Icon(LucideIcons.shoppingCart, size: 32.sp),
                         Text(
-                          'Today’s transaction',
+                          context.l10n.today_transaction,
                           style: context.typography.p.copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
@@ -127,7 +128,7 @@ class MerchantHomeScreen extends StatelessWidget {
                       children: [
                         Icon(LucideIcons.circleDollarSign, size: 32.sp),
                         Text(
-                          "Today's gross sales",
+                          context.l10n.today_gross_sales,
                           style: context.typography.p.copyWith(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
@@ -166,7 +167,7 @@ class MerchantHomeScreen extends StatelessWidget {
                         children: [
                           Icon(LucideIcons.chartArea, size: 32.sp),
                           Text(
-                            'Sales Report',
+                            context.l10n.sales_report,
                             style: context.typography.p.copyWith(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
@@ -181,7 +182,7 @@ class MerchantHomeScreen extends StatelessWidget {
                                 spacing: 4.w,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text('See detail').xSmall,
+                                  Text(context.l10n.see_detail).xSmall,
                                   Icon(LucideIcons.chevronRight, size: 16.sp),
                                 ],
                               ),
@@ -210,7 +211,7 @@ class MerchantHomeScreen extends StatelessWidget {
                         children: [
                           Icon(LucideIcons.badgeDollarSign, size: 32.sp),
                           Text(
-                            'Commission Report',
+                            context.l10n.commission_report,
                             style: context.typography.p.copyWith(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
@@ -225,7 +226,7 @@ class MerchantHomeScreen extends StatelessWidget {
                                 spacing: 4.w,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text('See detail').xSmall,
+                                  Text(context.l10n.see_detail).xSmall,
                                   Icon(LucideIcons.chevronRight, size: 16.sp),
                                 ],
                               ),

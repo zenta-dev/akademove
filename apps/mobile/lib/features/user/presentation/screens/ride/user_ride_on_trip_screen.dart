@@ -76,7 +76,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
           infoWindow: InfoWindow(
             title: context.l10n.origin,
-            snippet: 'Pickup location',
+            snippet: context.l10n.text_pickup_location,
           ),
         ),
       )
@@ -90,7 +90,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           infoWindow: InfoWindow(
             title: context.l10n.destination,
-            snippet: 'Dropoff location',
+            snippet: context.l10n.text_dropoff_location,
           ),
         ),
       );
@@ -266,12 +266,12 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                     spacing: 4.h,
                     children: [
                       DefaultText(
-                        'Finding your driver...',
+                        context.l10n.text_finding_driver,
                         fontWeight: FontWeight.w600,
                         fontSize: 16.sp,
                       ),
                       DefaultText(
-                        'Please wait while we match you with a driver',
+                        context.l10n.text_finding_driver_message,
                         fontSize: 12.sp,
                         color: context.colorScheme.mutedForeground,
                       ),
@@ -284,9 +284,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatusIndicator('Searching', true),
-                _buildStatusIndicator('Driver found', false),
-                _buildStatusIndicator('On the way', false),
+                _buildStatusIndicator(context.l10n.status_searching, true),
+                _buildStatusIndicator(context.l10n.status_driver_found, false),
+                _buildStatusIndicator(context.l10n.status_on_the_way, false),
               ],
             ),
           ],
@@ -358,7 +358,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
                     ).asSkeleton(),
-                    DefaultText('License plate', fontSize: 12.sp).asSkeleton(),
+                    DefaultText(
+                      context.l10n.text_license_plate,
+                      fontSize: 12.sp,
+                    ).asSkeleton(),
                   ],
                 ),
               ),
@@ -462,7 +465,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DefaultText(
-          'Order details',
+          context.l10n.text_order_details,
           fontWeight: FontWeight.w600,
           fontSize: 16.sp,
         ),
@@ -480,18 +483,21 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
               ),
               const Divider(),
               _buildCell(
-                'Distance',
+                context.l10n.label_distance,
                 order != null ? '${order.distanceKm} Km' : '-',
               ),
               const Divider(),
-              _buildCell('Payment Method', getPaymentMethodDisplay()),
+              _buildCell(
+                context.l10n.label_payment_method_lower,
+                getPaymentMethodDisplay(),
+              ),
               const Divider(),
               _buildCell(
-                'Total Price',
+                context.l10n.label_total_price,
                 order != null ? context.formatCurrency(order.totalPrice) : '-',
               ),
               const Divider(),
-              _buildCell('Status', order?.status.name ?? '-'),
+              _buildCell(context.l10n.label_status, order?.status.name ?? '-'),
             ],
           ),
         ).asSkeleton(enabled: order == null),
@@ -510,7 +516,9 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DefaultText(
-          isSearching ? 'Finding driver' : 'Your driver',
+          isSearching
+              ? context.l10n.text_finding_driver_title
+              : context.l10n.text_your_driver_title,
           fontWeight: FontWeight.w600,
           fontSize: 16.sp,
         ),
@@ -527,7 +535,7 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
       child: MyScaffold(
         scrollable: false,
         padding: EdgeInsets.zero,
-        headers: const [DefaultAppBar(title: 'On Trip')],
+        headers: [DefaultAppBar(title: context.l10n.text_on_trip)],
         body: BlocListener<UserOrderCubit, UserOrderState>(
           listener: (context, state) async {
             await _updateMapWithOrderData(state);
@@ -550,14 +558,17 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                 // If rating was submitted successfully, show success message
                 if (result == true && mounted && context.mounted) {
                   context.showMyToast(
-                    'Trip completed!',
+                    context.l10n.text_trip_completed,
                     type: ToastType.success,
                   );
                   // Go back to home
                   context.goNamed(Routes.userHome.name);
                 }
               } else {
-                context.showMyToast('Trip completed!', type: ToastType.success);
+                context.showMyToast(
+                  context.l10n.text_trip_completed,
+                  type: ToastType.success,
+                );
                 context.goNamed(Routes.userHome.name);
               }
             } else if ((state.currentOrder?.status ==
@@ -568,7 +579,10 @@ class _UserRideOnTripScreenState extends State<UserRideOnTripScreen> {
                         OrderStatus.CANCELLED_BY_SYSTEM) &&
                 mounted &&
                 context.mounted) {
-              context.showMyToast('Trip was canceled', type: ToastType.failed);
+              context.showMyToast(
+                context.l10n.text_trip_canceled,
+                type: ToastType.failed,
+              );
             }
           },
           child: Column(

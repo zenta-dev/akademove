@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +32,7 @@ class SplashScreen extends StatelessWidget {
               case UserRole.OPERATOR:
               case null:
                 context.showMyToast(
-                  "Unsupported role: ${state.data?.role}, Please use the web application instead.",
+                  context.l10n.unsupported_role_desc,
                   type: ToastType.failed,
                 );
                 delay(const Duration(seconds: 2));

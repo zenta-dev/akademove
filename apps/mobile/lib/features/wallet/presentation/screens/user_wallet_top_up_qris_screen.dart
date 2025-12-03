@@ -15,7 +15,7 @@ class UserWalletTopUpQRISScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Top Up QRIS')],
+      headers: [DefaultAppBar(title: context.l10n.top_up_qris)],
       body: Column(
         spacing: 16.h,
         children: [

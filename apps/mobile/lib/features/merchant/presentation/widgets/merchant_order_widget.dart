@@ -2,6 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:akademove/l10n/l10n.dart';
 
 class MerchantOrderCardWidget extends StatelessWidget {
   const MerchantOrderCardWidget({
@@ -43,7 +44,7 @@ class MerchantOrderCardWidget extends StatelessWidget {
                     spacing: 4.w,
                     children: [
                       Text(
-                        '${order.itemCount ?? 0} items',
+                        context.l10n.item_count(order.itemCount ?? 0),
                         style: context.typography.textMuted.copyWith(
                           fontSize: 12.sp,
                           color: context.colorScheme.mutedForeground,
@@ -88,7 +89,7 @@ class MerchantOrderCardWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Accept'),
+                      Text(context.l10n.button_accept),
                       Row(
                         spacing: 4.w,
                         children: [

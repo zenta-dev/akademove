@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart'
@@ -55,7 +56,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         showToast(
           context: context,
           builder: (context, overlay) => context.buildToast(
-            title: 'Failed to pick image',
+            title: context.l10n.error_photo_pick_failed,
             message: e.toString(),
           ),
         );
@@ -69,12 +70,12 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (_) => SafeArea(
+      builder: (builderContext) => SafeArea(
         child: Wrap(
           children: [
             material.ListTile(
               leading: const Icon(Icons.photo_camera),
-              title: const Text('Take a photo'),
+              title: Text(context.l10n.action_take_photo),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.camera);
@@ -82,7 +83,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             ),
             material.ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from gallery'),
+              title: Text(context.l10n.action_choose_gallery),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.gallery);
@@ -91,7 +92,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             if (_selectedImage != null)
               material.ListTile(
                 leading: const Icon(Icons.delete),
-                title: const Text('Remove image'),
+                title: Text(context.l10n.action_remove_image),
                 onTap: () {
                   Navigator.pop(context);
                   setState(() => _selectedImage = null);

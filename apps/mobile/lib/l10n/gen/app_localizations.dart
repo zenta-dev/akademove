@@ -268,7 +268,7 @@ abstract class AppLocalizations {
   /// No description provided for @license_plate.
   ///
   /// In en, this message translates to:
-  /// **'License Plate'**
+  /// **'License Plate: '**
   String get license_plate;
 
   /// No description provided for @failed_to_load_profile.
@@ -976,8 +976,8 @@ abstract class AppLocalizations {
   /// No description provided for @hello.
   ///
   /// In en, this message translates to:
-  /// **'Hello'**
-  String get hello;
+  /// **'Hello, {name}'**
+  String hello(String name);
 
   /// No description provided for @payment_expired.
   ///
@@ -2437,12 +2437,6 @@ abstract class AppLocalizations {
   /// **'Welcome back!'**
   String get welcome_back;
 
-  /// No description provided for @license_plate.
-  ///
-  /// In en, this message translates to:
-  /// **'License Plate: '**
-  String get license_plate;
-
   /// No description provided for @rating.
   ///
   /// In en, this message translates to:
@@ -2485,29 +2479,11 @@ abstract class AppLocalizations {
   /// **'Today\'s Performance'**
   String get today_performance;
 
-  /// No description provided for @trips.
-  ///
-  /// In en, this message translates to:
-  /// **'Trips'**
-  String get trips;
-
   /// No description provided for @quick_actions.
   ///
   /// In en, this message translates to:
   /// **'Quick Actions'**
   String get quick_actions;
-
-  /// No description provided for @manage_schedule.
-  ///
-  /// In en, this message translates to:
-  /// **'Manage Schedule'**
-  String get manage_schedule;
-
-  /// No description provided for @hello.
-  ///
-  /// In en, this message translates to:
-  /// **'Hello, {name}'**
-  String hello(String name);
 
   /// No description provided for @open_today.
   ///
@@ -2934,6 +2910,3042 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please provide a rating'**
   String get rating_required;
+
+  /// No description provided for @coupon_no_coupons_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No coupons available'**
+  String get coupon_no_coupons_available;
+
+  /// No description provided for @coupon_select_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Coupon'**
+  String get coupon_select_coupon;
+
+  /// No description provided for @coupon_remove_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Coupon'**
+  String get coupon_remove_coupon;
+
+  /// No description provided for @payment_method_wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get payment_method_wallet;
+
+  /// No description provided for @payment_method_bank_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Transfer'**
+  String get payment_method_bank_transfer;
+
+  /// No description provided for @emergency_alert_sent_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency alert sent successfully'**
+  String get emergency_alert_sent_successfully;
+
+  /// No description provided for @emergency_alert_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Alert'**
+  String get emergency_alert_title;
+
+  /// No description provided for @emergency_report_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Emergency'**
+  String get emergency_report_title;
+
+  /// No description provided for @emergency_select_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Select emergency type:'**
+  String get emergency_select_type;
+
+  /// No description provided for @emergency_describe_situation.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the emergency situation...'**
+  String get emergency_describe_situation;
+
+  /// No description provided for @emergency_send_alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Alert'**
+  String get emergency_send_alert;
+
+  /// No description provided for @button_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get button_continue;
+
+  /// No description provided for @leaderboard_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboard'**
+  String get leaderboard_title;
+
+  /// No description provided for @leaderboard_no_rankings.
+  ///
+  /// In en, this message translates to:
+  /// **'No rankings yet'**
+  String get leaderboard_no_rankings;
+
+  /// No description provided for @leaderboard_no_badges.
+  ///
+  /// In en, this message translates to:
+  /// **'No badges available'**
+  String get leaderboard_no_badges;
+
+  /// No description provided for @leaderboard_pts.
+  ///
+  /// In en, this message translates to:
+  /// **'pts'**
+  String get leaderboard_pts;
+
+  /// No description provided for @chat_no_messages.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get chat_no_messages;
+
+  /// No description provided for @merchant_order_accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get merchant_order_accept;
+
+  /// No description provided for @merchant_order_time_remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'01:00'**
+  String get merchant_order_time_remaining;
+
+  /// No description provided for @gender_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender:'**
+  String get gender_label;
+
+  /// No description provided for @top_up_qris.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Up QRIS'**
+  String get top_up_qris;
+
+  /// No description provided for @rate_your_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Your Driver'**
+  String get rate_your_driver;
+
+  /// No description provided for @placeholder_name.
+  ///
+  /// In en, this message translates to:
+  /// **'John Doe'**
+  String get placeholder_name;
+
+  /// No description provided for @placeholder_email.
+  ///
+  /// In en, this message translates to:
+  /// **'john@gmail.com'**
+  String get placeholder_email;
+
+  /// No description provided for @placeholder_password.
+  ///
+  /// In en, this message translates to:
+  /// **'********'**
+  String get placeholder_password;
+
+  /// No description provided for @dialog_location_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission'**
+  String get dialog_location_permission;
+
+  /// No description provided for @dialog_location_services_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Services Disabled'**
+  String get dialog_location_services_disabled;
+
+  /// No description provided for @dialog_location_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get dialog_location_permission_required;
+
+  /// No description provided for @drag_to_adjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to adjust position'**
+  String get drag_to_adjust;
+
+  /// No description provided for @error_enter_location_to_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a location to search'**
+  String get error_enter_location_to_search;
+
+  /// No description provided for @success_signed_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Successfully signed up'**
+  String get success_signed_up;
+
+  /// No description provided for @error_fill_all_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all required fields correctly'**
+  String get error_fill_all_required_fields;
+
+  /// No description provided for @error_complete_all_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all required fields'**
+  String get error_complete_all_required_fields;
+
+  /// No description provided for @error_passwords_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get error_passwords_not_match;
+
+  /// No description provided for @merchant_step_1_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about yourself to kickstart your merchant journey!'**
+  String get merchant_step_1_description;
+
+  /// No description provided for @merchant_step_2_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your outlet details and location so customers can find you easily!'**
+  String get merchant_step_2_description;
+
+  /// No description provided for @merchant_step_3_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your bank account to receive payments securely!'**
+  String get merchant_step_3_description;
+
+  /// No description provided for @placeholder_outlet_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter outlet name'**
+  String get placeholder_outlet_name;
+
+  /// No description provided for @label_outlet_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s Location'**
+  String get label_outlet_location;
+
+  /// No description provided for @label_bank_provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Provider'**
+  String get label_bank_provider;
+
+  /// No description provided for @label_outlet_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet Category'**
+  String get label_outlet_category;
+
+  /// No description provided for @helper_outlet_category_select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the main category for your outlet'**
+  String get helper_outlet_category_select;
+
+  /// No description provided for @placeholder_select_outlet_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select outlet category'**
+  String get placeholder_select_outlet_category;
+
+  /// No description provided for @label_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get label_phone;
+
+  /// No description provided for @dialog_accept_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Order'**
+  String get dialog_accept_order;
+
+  /// No description provided for @dialog_accept_order_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to accept this order?'**
+  String get dialog_accept_order_confirm;
+
+  /// No description provided for @toast_validation_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Error'**
+  String get toast_validation_error;
+
+  /// No description provided for @error_menu_name_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu name is required'**
+  String get error_menu_name_required;
+
+  /// No description provided for @error_menu_price_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu price is required'**
+  String get error_menu_price_required;
+
+  /// No description provided for @error_valid_price_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid price'**
+  String get error_valid_price_required;
+
+  /// No description provided for @error_merchant_info_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant information not found'**
+  String get error_merchant_info_not_found;
+
+  /// No description provided for @success_menu_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu created successfully'**
+  String get success_menu_created;
+
+  /// No description provided for @error_failed_create_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create menu'**
+  String get error_failed_create_menu;
+
+  /// No description provided for @title_create_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Menu'**
+  String get title_create_menu;
+
+  /// No description provided for @placeholder_zero.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get placeholder_zero;
+
+  /// No description provided for @error_menu_info_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu information not found'**
+  String get error_menu_info_not_found;
+
+  /// No description provided for @title_edit_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Menu'**
+  String get title_edit_menu;
+
+  /// No description provided for @error_menu_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu not found'**
+  String get error_menu_not_found;
+
+  /// No description provided for @placeholder_search_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Search menu...'**
+  String get placeholder_search_menu;
+
+  /// No description provided for @title_menu_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Detail'**
+  String get title_menu_detail;
+
+  /// No description provided for @dialog_delete_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Menu'**
+  String get dialog_delete_menu;
+
+  /// No description provided for @dialog_delete_menu_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{name}\"?'**
+  String dialog_delete_menu_confirm(String name);
+
+  /// No description provided for @success_menu_deleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu deleted successfully'**
+  String get success_menu_deleted;
+
+  /// No description provided for @error_failed_delete_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete menu'**
+  String get error_failed_delete_menu;
+
+  /// No description provided for @label_old_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Old Password'**
+  String get label_old_password;
+
+  /// No description provided for @placeholder_enter_old_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your old password'**
+  String get placeholder_enter_old_password;
+
+  /// No description provided for @label_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get label_new_password;
+
+  /// No description provided for @placeholder_enter_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password'**
+  String get placeholder_enter_new_password;
+
+  /// No description provided for @label_confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get label_confirm_password;
+
+  /// No description provided for @placeholder_confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your new password'**
+  String get placeholder_confirm_new_password;
+
+  /// No description provided for @error_failed_verify_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify bank account'**
+  String get error_failed_verify_bank;
+
+  /// No description provided for @loading_map.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading map...'**
+  String get loading_map;
+
+  /// No description provided for @success_set_up_merchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Success set up merchant'**
+  String get success_set_up_merchant;
+
+  /// No description provided for @title_set_up_outlet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Up Outlet'**
+  String get title_set_up_outlet;
+
+  /// No description provided for @placeholder_time_start.
+  ///
+  /// In en, this message translates to:
+  /// **'10:00'**
+  String get placeholder_time_start;
+
+  /// No description provided for @placeholder_time_end.
+  ///
+  /// In en, this message translates to:
+  /// **'22:00'**
+  String get placeholder_time_end;
+
+  /// No description provided for @title_sales_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Sales Report'**
+  String get title_sales_report;
+
+  /// No description provided for @tab_weekly_sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Sales'**
+  String get tab_weekly_sales;
+
+  /// No description provided for @tab_monthly_sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Sales'**
+  String get tab_monthly_sales;
+
+  /// No description provided for @title_commission_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission Report'**
+  String get title_commission_report;
+
+  /// No description provided for @title_order_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Detail'**
+  String get title_order_detail;
+
+  /// No description provided for @button_add_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Schedule'**
+  String get button_add_schedule;
+
+  /// No description provided for @button_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get button_edit;
+
+  /// No description provided for @placeholder_class_name.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Mobile Programming'**
+  String get placeholder_class_name;
+
+  /// No description provided for @dialog_call_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Customer'**
+  String get dialog_call_customer;
+
+  /// No description provided for @section_today_performance.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Performance'**
+  String get section_today_performance;
+
+  /// No description provided for @section_quick_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get section_quick_actions;
+
+  /// No description provided for @label_rating_suffix.
+  ///
+  /// In en, this message translates to:
+  /// **'rating'**
+  String get label_rating_suffix;
+
+  /// No description provided for @dialog_rate_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Customer'**
+  String get dialog_rate_customer;
+
+  /// No description provided for @label_review_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Review Category'**
+  String get label_review_category;
+
+  /// No description provided for @label_comment_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment (Optional)'**
+  String get label_comment_optional;
+
+  /// No description provided for @placeholder_share_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your experience...'**
+  String get placeholder_share_experience;
+
+  /// No description provided for @button_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get button_submit;
+
+  /// No description provided for @dialog_new_order.
+  ///
+  /// In en, this message translates to:
+  /// **'New {type} Order'**
+  String dialog_new_order(String type);
+
+  /// No description provided for @label_order_id_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #'**
+  String get label_order_id_prefix;
+
+  /// No description provided for @label_pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup'**
+  String get label_pickup;
+
+  /// No description provided for @label_dropoff.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff'**
+  String get label_dropoff;
+
+  /// No description provided for @label_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get label_distance;
+
+  /// No description provided for @label_earnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Earnings'**
+  String get label_earnings;
+
+  /// No description provided for @label_gender_preference.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender preference: {gender}'**
+  String label_gender_preference(String gender);
+
+  /// No description provided for @label_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note:'**
+  String get label_note;
+
+  /// No description provided for @label_pickup_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup: {location}'**
+  String label_pickup_prefix(String location);
+
+  /// No description provided for @label_dropoff_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff: {location}'**
+  String label_dropoff_prefix(String location);
+
+  /// No description provided for @label_instructions_prefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions: {instructions}'**
+  String label_instructions_prefix(String instructions);
+
+  /// No description provided for @order_type_ride_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride'**
+  String get order_type_ride_label;
+
+  /// No description provided for @order_type_delivery_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get order_type_delivery_label;
+
+  /// No description provided for @order_type_food_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get order_type_food_label;
+
+  /// No description provided for @toast_order_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Unavailable'**
+  String get toast_order_unavailable;
+
+  /// No description provided for @toast_order_unavailable_message.
+  ///
+  /// In en, this message translates to:
+  /// **'This order was cancelled or accepted by another driver'**
+  String get toast_order_unavailable_message;
+
+  /// No description provided for @toast_order_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Rejected'**
+  String get toast_order_rejected;
+
+  /// No description provided for @toast_order_rejected_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You rejected the order'**
+  String get toast_order_rejected_message;
+
+  /// No description provided for @label_total_fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Fare'**
+  String get label_total_fare;
+
+  /// No description provided for @dialog_unsupported_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported payment method'**
+  String get dialog_unsupported_payment;
+
+  /// No description provided for @dialog_unsupported_payment_message.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected payment method is not supported. Please choose a different method.'**
+  String get dialog_unsupported_payment_message;
+
+  /// No description provided for @label_provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider :'**
+  String get label_provider;
+
+  /// No description provided for @label_va_number.
+  ///
+  /// In en, this message translates to:
+  /// **'VA Number :'**
+  String get label_va_number;
+
+  /// No description provided for @label_valid_until.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String label_valid_until(String date);
+
+  /// No description provided for @label_remaining_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining Time :'**
+  String get label_remaining_time;
+
+  /// No description provided for @button_copy_va_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy VA Number'**
+  String get button_copy_va_number;
+
+  /// No description provided for @label_no_rating_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No rating yet'**
+  String get label_no_rating_yet;
+
+  /// No description provided for @message_wait_for_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while we match you with a driver'**
+  String get message_wait_for_driver;
+
+  /// No description provided for @label_license_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate'**
+  String get label_license_plate;
+
+  /// No description provided for @status_finding_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding driver'**
+  String get status_finding_driver;
+
+  /// No description provided for @status_your_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Your driver'**
+  String get status_your_driver;
+
+  /// No description provided for @instruction_choose_pickup_destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your pick-up and destination point!'**
+  String get instruction_choose_pickup_destination;
+
+  /// No description provided for @button_proceed.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed'**
+  String get button_proceed;
+
+  /// No description provided for @placeholder_what_sending.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you sending?'**
+  String get placeholder_what_sending;
+
+  /// No description provided for @placeholder_enter_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter weight in kg (max 20kg)'**
+  String get placeholder_enter_weight;
+
+  /// No description provided for @helper_special_instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Add any special handling or delivery instructions'**
+  String get helper_special_instructions;
+
+  /// No description provided for @helper_add_photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add up to 3 photos of the item'**
+  String get helper_add_photos;
+
+  /// No description provided for @error_provide_item_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide item description'**
+  String get error_provide_item_description;
+
+  /// No description provided for @error_no_estimate_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No estimate available'**
+  String get error_no_estimate_available;
+
+  /// No description provided for @button_choose_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Payment Method'**
+  String get button_choose_payment_method;
+
+  /// No description provided for @button_place_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Place Order'**
+  String get button_place_order;
+
+  /// No description provided for @label_photo_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Profile'**
+  String get label_photo_profile;
+
+  /// No description provided for @label_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get label_name;
+
+  /// No description provided for @label_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get label_email;
+
+  /// No description provided for @section_achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get section_achievements;
+
+  /// No description provided for @button_rate_this_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this order'**
+  String get button_rate_this_order;
+
+  /// No description provided for @empty_no_order_history.
+  ///
+  /// In en, this message translates to:
+  /// **'No order history found'**
+  String get empty_no_order_history;
+
+  /// No description provided for @label_your_current_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current location'**
+  String get label_your_current_location;
+
+  /// No description provided for @label_drivers_around.
+  ///
+  /// In en, this message translates to:
+  /// **'There are {count} drivers around you'**
+  String label_drivers_around(int count);
+
+  /// No description provided for @error_failed_load_mart.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load mart data'**
+  String get error_failed_load_mart;
+
+  /// No description provided for @error_failed_load_merchants.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load merchants'**
+  String get error_failed_load_merchants;
+
+  /// No description provided for @empty_no_merchants_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No merchants found'**
+  String get empty_no_merchants_found;
+
+  /// No description provided for @button_select_via_map.
+  ///
+  /// In en, this message translates to:
+  /// **'Select via map'**
+  String get button_select_via_map;
+
+  /// No description provided for @error_no_place_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found'**
+  String get error_no_place_found;
+
+  /// No description provided for @title_select_bank_provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Bank Provider'**
+  String get title_select_bank_provider;
+
+  /// No description provided for @payment_akademove_pay.
+  ///
+  /// In en, this message translates to:
+  /// **'Akademove Pay'**
+  String get payment_akademove_pay;
+
+  /// No description provided for @button_download_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Download QR'**
+  String get button_download_qr;
+
+  /// No description provided for @button_copy_qr_url.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy QR URL'**
+  String get button_copy_qr_url;
+
+  /// No description provided for @separator_colon.
+  ///
+  /// In en, this message translates to:
+  /// **':'**
+  String get separator_colon;
+
+  /// No description provided for @placeholder_type_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get placeholder_type_message;
+
+  /// No description provided for @tab_on_process.
+  ///
+  /// In en, this message translates to:
+  /// **'On process'**
+  String get tab_on_process;
+
+  /// No description provided for @tab_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get tab_completed;
+
+  /// No description provided for @tab_canceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Canceled'**
+  String get tab_canceled;
+
+  /// No description provided for @start_preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Preparing'**
+  String get start_preparing;
+
+  /// No description provided for @order_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Ready'**
+  String get order_ready;
+
+  /// No description provided for @waiting_for_driver_pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for driver to pickup...'**
+  String get waiting_for_driver_pickup;
+
+  /// No description provided for @no_menu_items_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No menu items yet. Tap + to add your first item.'**
+  String get no_menu_items_yet;
+
+  /// No description provided for @no_menu_items_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No menu items found for \"{query}\"'**
+  String no_menu_items_found(String query);
+
+  /// No description provided for @placeholder_search_menu_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search menu...'**
+  String get placeholder_search_menu_hint;
+
+  /// No description provided for @label_menu_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Name'**
+  String get label_menu_name;
+
+  /// No description provided for @label_menu_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Price'**
+  String get label_menu_price;
+
+  /// No description provided for @label_menu_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Stock'**
+  String get label_menu_stock;
+
+  /// No description provided for @label_menu_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Category'**
+  String get label_menu_category;
+
+  /// No description provided for @label_menu_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Photo'**
+  String get label_menu_photo;
+
+  /// No description provided for @placeholder_menu_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter menu name'**
+  String get placeholder_menu_name;
+
+  /// No description provided for @placeholder_menu_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter price'**
+  String get placeholder_menu_price;
+
+  /// No description provided for @label_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get label_category;
+
+  /// No description provided for @label_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get label_price;
+
+  /// No description provided for @label_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get label_stock;
+
+  /// No description provided for @label_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get label_created;
+
+  /// No description provided for @label_updated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get label_updated;
+
+  /// No description provided for @placeholder_select_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select category'**
+  String get placeholder_select_category;
+
+  /// No description provided for @error_validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation Error'**
+  String get error_validation;
+
+  /// No description provided for @title_privacy_policies.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policies'**
+  String get title_privacy_policies;
+
+  /// No description provided for @ordered_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Ordered by'**
+  String get ordered_by;
+
+  /// No description provided for @driver_assigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver assigned'**
+  String get driver_assigned;
+
+  /// No description provided for @order_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Items'**
+  String get order_items;
+
+  /// No description provided for @base_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Price'**
+  String get base_price;
+
+  /// No description provided for @order_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Time'**
+  String get order_time;
+
+  /// No description provided for @order_chat.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Chat'**
+  String get order_chat;
+
+  /// No description provided for @toast_order_accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Order accepted successfully'**
+  String get toast_order_accepted;
+
+  /// No description provided for @toast_order_rejected_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Order rejected successfully'**
+  String get toast_order_rejected_success;
+
+  /// No description provided for @toast_order_marked_preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Order marked as preparing'**
+  String get toast_order_marked_preparing;
+
+  /// No description provided for @toast_order_marked_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Order marked as ready for pickup'**
+  String get toast_order_marked_ready;
+
+  /// No description provided for @toast_failed_accept_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to accept order'**
+  String get toast_failed_accept_order;
+
+  /// No description provided for @toast_failed_reject_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to reject order'**
+  String get toast_failed_reject_order;
+
+  /// No description provided for @toast_failed_update_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update order'**
+  String get toast_failed_update_order;
+
+  /// No description provided for @toast_merchant_id_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant ID not found'**
+  String get toast_merchant_id_not_found;
+
+  /// No description provided for @unknown_item.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Item'**
+  String get unknown_item;
+
+  /// No description provided for @label_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get label_status;
+
+  /// No description provided for @label_wib.
+  ///
+  /// In en, this message translates to:
+  /// **'WIB'**
+  String get label_wib;
+
+  /// No description provided for @error_valid_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid price'**
+  String get error_valid_price;
+
+  /// No description provided for @toast_menu_created_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu created successfully'**
+  String get toast_menu_created_success;
+
+  /// No description provided for @toast_failed_create_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create menu'**
+  String get toast_failed_create_menu;
+
+  /// No description provided for @toast_menu_updated_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu updated successfully'**
+  String get toast_menu_updated_success;
+
+  /// No description provided for @toast_failed_update_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update menu'**
+  String get toast_failed_update_menu;
+
+  /// No description provided for @button_create_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Menu'**
+  String get button_create_menu;
+
+  /// No description provided for @button_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get button_create;
+
+  /// No description provided for @label_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Description'**
+  String get label_menu_description;
+
+  /// No description provided for @placeholder_menu_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Combined coffee and brown sugar'**
+  String get placeholder_menu_description;
+
+  /// No description provided for @placeholder_menu_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink'**
+  String get placeholder_menu_category;
+
+  /// No description provided for @label_menu_photo_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu Photo (Optional)'**
+  String get label_menu_photo_optional;
+
+  /// No description provided for @title_edit_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get title_edit_profile;
+
+  /// No description provided for @label_owner_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s Name'**
+  String get label_owner_name;
+
+  /// No description provided for @placeholder_owner_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter owner name'**
+  String get placeholder_owner_name;
+
+  /// No description provided for @label_owner_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s Email'**
+  String get label_owner_email;
+
+  /// No description provided for @placeholder_owner_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter owner email'**
+  String get placeholder_owner_email;
+
+  /// No description provided for @label_owner_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s Phone Number'**
+  String get label_owner_phone;
+
+  /// No description provided for @label_outlet_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s Name'**
+  String get label_outlet_name;
+
+  /// No description provided for @label_outlet_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s Phone Number'**
+  String get label_outlet_phone;
+
+  /// No description provided for @label_outlet_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s Email'**
+  String get label_outlet_email;
+
+  /// No description provided for @placeholder_outlet_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter outlet email'**
+  String get placeholder_outlet_email;
+
+  /// No description provided for @label_outlet_document.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet\'s Document (Optional)'**
+  String get label_outlet_document;
+
+  /// No description provided for @label_choose_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose bank'**
+  String get label_choose_bank;
+
+  /// No description provided for @placeholder_select_bank_provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Select bank provider'**
+  String get placeholder_select_bank_provider;
+
+  /// No description provided for @label_bank_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Account'**
+  String get label_bank_account;
+
+  /// No description provided for @placeholder_bank_account.
+  ///
+  /// In en, this message translates to:
+  /// **'********1234'**
+  String get placeholder_bank_account;
+
+  /// No description provided for @toast_location_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission'**
+  String get toast_location_permission;
+
+  /// No description provided for @toast_using_default_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Using default location. You can drag the marker to set your outlet location.'**
+  String get toast_using_default_location;
+
+  /// No description provided for @dialog_location_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission'**
+  String get dialog_location_permission_title;
+
+  /// No description provided for @dialog_location_permission_message.
+  ///
+  /// In en, this message translates to:
+  /// **'We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily. You can also manually set the location by dragging the marker.'**
+  String get dialog_location_permission_message;
+
+  /// No description provided for @dialog_location_services_disabled_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Services Disabled'**
+  String get dialog_location_services_disabled_title;
+
+  /// No description provided for @dialog_location_services_disabled_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Location services are currently disabled on your device. Please enable them to automatically detect your outlet location.'**
+  String get dialog_location_services_disabled_message;
+
+  /// No description provided for @dialog_location_permission_required_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get dialog_location_permission_required_title;
+
+  /// No description provided for @dialog_location_permission_required_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission has been permanently denied. To use automatic location detection, please enable it in your app settings.\n\nYou can still manually set your outlet location by dragging the marker on the map.'**
+  String get dialog_location_permission_required_message;
+
+  /// No description provided for @label_outlet_location_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Make sure the location point on the map is correct to meet the registration requirements.'**
+  String get label_outlet_location_description;
+
+  /// No description provided for @placeholder_search_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Search location'**
+  String get placeholder_search_location;
+
+  /// No description provided for @label_dragging.
+  ///
+  /// In en, this message translates to:
+  /// **'Dragging...'**
+  String get label_dragging;
+
+  /// No description provided for @toast_location_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Found'**
+  String get toast_location_found;
+
+  /// No description provided for @toast_marker_moved.
+  ///
+  /// In en, this message translates to:
+  /// **'Marker moved to searched location'**
+  String get toast_marker_moved;
+
+  /// No description provided for @toast_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Found'**
+  String get toast_not_found;
+
+  /// No description provided for @toast_location_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Location not found. Please try a different search.'**
+  String get toast_location_not_found;
+
+  /// No description provided for @toast_search_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Error'**
+  String get toast_search_error;
+
+  /// No description provided for @toast_search_error_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to search location. Please check your internet connection.'**
+  String get toast_search_error_message;
+
+  /// No description provided for @toast_enter_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a location to search'**
+  String get toast_enter_location;
+
+  /// No description provided for @label_benchmark_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Benchmark (Optional)'**
+  String get label_benchmark_optional;
+
+  /// No description provided for @placeholder_benchmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Next to the Uniqlo store.'**
+  String get placeholder_benchmark;
+
+  /// No description provided for @toast_bank_account_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account verified successfully'**
+  String get toast_bank_account_verified;
+
+  /// No description provided for @toast_failed_verify_bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to verify bank account'**
+  String get toast_failed_verify_bank;
+
+  /// No description provided for @toast_enter_bank_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter bank account number'**
+  String get toast_enter_bank_account;
+
+  /// No description provided for @toast_bank_account_min_digits.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account number must be at least 5 digits'**
+  String get toast_bank_account_min_digits;
+
+  /// No description provided for @toast_select_bank_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a bank provider first'**
+  String get toast_select_bank_first;
+
+  /// No description provided for @label_bank_account_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Account Number'**
+  String get label_bank_account_number;
+
+  /// No description provided for @label_account_holder_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Holder\'s Name'**
+  String get label_account_holder_name;
+
+  /// No description provided for @label_owner_bank_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner\'s Name'**
+  String get label_owner_bank_name;
+
+  /// No description provided for @label_unable_get_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to get address'**
+  String get label_unable_get_address;
+
+  /// No description provided for @label_step_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1'**
+  String get label_step_1;
+
+  /// No description provided for @label_step_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2'**
+  String get label_step_2;
+
+  /// No description provided for @label_step_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 3'**
+  String get label_step_3;
+
+  /// No description provided for @label_outlet_photo_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet Photo Profile'**
+  String get label_outlet_photo_profile;
+
+  /// No description provided for @placeholder_outlet_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick your outlet category'**
+  String get placeholder_outlet_category;
+
+  /// No description provided for @label_outlet_operating_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet Operating Hours'**
+  String get label_outlet_operating_hours;
+
+  /// No description provided for @label_24_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'24 Hours'**
+  String get label_24_hours;
+
+  /// No description provided for @toast_success_set_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Success set up merchant'**
+  String get toast_success_set_up;
+
+  /// No description provided for @toast_complete_required_fields.
+  ///
+  /// In en, this message translates to:
+  /// **'Please complete all required fields'**
+  String get toast_complete_required_fields;
+
+  /// No description provided for @error_outlet_photo_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Outlet photo is required'**
+  String get error_outlet_photo_required;
+
+  /// No description provided for @error_menu_photo_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu photo is required'**
+  String get error_menu_photo_required;
+
+  /// No description provided for @label_weekly_sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Sales'**
+  String get label_weekly_sales;
+
+  /// No description provided for @label_monthly_sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Sales'**
+  String get label_monthly_sales;
+
+  /// No description provided for @label_earns.
+  ///
+  /// In en, this message translates to:
+  /// **'Earns'**
+  String get label_earns;
+
+  /// No description provided for @label_top_ordered_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Ordered Categories'**
+  String get label_top_ordered_categories;
+
+  /// No description provided for @label_top_ordered_products.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Ordered Products'**
+  String get label_top_ordered_products;
+
+  /// No description provided for @button_export_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Export to PDF'**
+  String get button_export_pdf;
+
+  /// No description provided for @category_junk_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Junk Food'**
+  String get category_junk_food;
+
+  /// No description provided for @category_drinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinks'**
+  String get category_drinks;
+
+  /// No description provided for @category_snack.
+  ///
+  /// In en, this message translates to:
+  /// **'Snack'**
+  String get category_snack;
+
+  /// No description provided for @product_fried_chicken.
+  ///
+  /// In en, this message translates to:
+  /// **'Fried Chicken'**
+  String get product_fried_chicken;
+
+  /// No description provided for @product_coffee_latte.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee Latte'**
+  String get product_coffee_latte;
+
+  /// No description provided for @product_laundry_express.
+  ///
+  /// In en, this message translates to:
+  /// **'Laundry Express'**
+  String get product_laundry_express;
+
+  /// No description provided for @label_incoming_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Balance'**
+  String get label_incoming_balance;
+
+  /// No description provided for @label_outgoing_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Outgoing Balance'**
+  String get label_outgoing_balance;
+
+  /// No description provided for @label_balance_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance Detail'**
+  String get label_balance_detail;
+
+  /// No description provided for @label_gross_sales.
+  ///
+  /// In en, this message translates to:
+  /// **'Gross Sales'**
+  String get label_gross_sales;
+
+  /// No description provided for @label_platform_commission.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform Commission (20%)'**
+  String get label_platform_commission;
+
+  /// No description provided for @label_net_income.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Income'**
+  String get label_net_income;
+
+  /// No description provided for @label_nett_income.
+  ///
+  /// In en, this message translates to:
+  /// **'Nett Income'**
+  String get label_nett_income;
+
+  /// No description provided for @title_change_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get title_change_password;
+
+  /// No description provided for @placeholder_old_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your old password'**
+  String get placeholder_old_password;
+
+  /// No description provided for @placeholder_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your new password'**
+  String get placeholder_new_password;
+
+  /// No description provided for @placeholder_confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'********'**
+  String get placeholder_confirm_password;
+
+  /// No description provided for @button_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get button_next;
+
+  /// No description provided for @button_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get button_back;
+
+  /// No description provided for @button_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get button_save;
+
+  /// No description provided for @label_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get label_start;
+
+  /// No description provided for @label_end.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get label_end;
+
+  /// No description provided for @placeholder_start_time.
+  ///
+  /// In en, this message translates to:
+  /// **'10:00'**
+  String get placeholder_start_time;
+
+  /// No description provided for @placeholder_end_time.
+  ///
+  /// In en, this message translates to:
+  /// **'22:00'**
+  String get placeholder_end_time;
+
+  /// No description provided for @day_monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get day_monday;
+
+  /// No description provided for @day_tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get day_tuesday;
+
+  /// No description provided for @day_wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get day_wednesday;
+
+  /// No description provided for @day_thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get day_thursday;
+
+  /// No description provided for @day_friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get day_friday;
+
+  /// No description provided for @day_saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get day_saturday;
+
+  /// No description provided for @day_sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get day_sunday;
+
+  /// No description provided for @toast_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get toast_success;
+
+  /// No description provided for @toast_success_set_up_merchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Success set up merchant'**
+  String get toast_success_set_up_merchant;
+
+  /// No description provided for @outlet_category_restaurant.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant'**
+  String get outlet_category_restaurant;
+
+  /// No description provided for @outlet_category_cafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Cafe'**
+  String get outlet_category_cafe;
+
+  /// No description provided for @outlet_category_fast_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast Food'**
+  String get outlet_category_fast_food;
+
+  /// No description provided for @outlet_category_bakery.
+  ///
+  /// In en, this message translates to:
+  /// **'Bakery'**
+  String get outlet_category_bakery;
+
+  /// No description provided for @outlet_category_street_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Street Food'**
+  String get outlet_category_street_food;
+
+  /// No description provided for @outlet_category_food_truck.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Truck'**
+  String get outlet_category_food_truck;
+
+  /// No description provided for @outlet_category_bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Bar'**
+  String get outlet_category_bar;
+
+  /// No description provided for @outlet_category_coffeeshop.
+  ///
+  /// In en, this message translates to:
+  /// **'Coffee Shop'**
+  String get outlet_category_coffeeshop;
+
+  /// No description provided for @outlet_category_dessert_shop.
+  ///
+  /// In en, this message translates to:
+  /// **'Dessert Shop'**
+  String get outlet_category_dessert_shop;
+
+  /// No description provided for @outlet_category_juice_bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Juice Bar'**
+  String get outlet_category_juice_bar;
+
+  /// No description provided for @menu_category_appetizer.
+  ///
+  /// In en, this message translates to:
+  /// **'Appetizer'**
+  String get menu_category_appetizer;
+
+  /// No description provided for @menu_category_main_course.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Course'**
+  String get menu_category_main_course;
+
+  /// No description provided for @menu_category_dessert.
+  ///
+  /// In en, this message translates to:
+  /// **'Dessert'**
+  String get menu_category_dessert;
+
+  /// No description provided for @menu_category_beverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Beverage'**
+  String get menu_category_beverage;
+
+  /// No description provided for @menu_category_snack.
+  ///
+  /// In en, this message translates to:
+  /// **'Snack'**
+  String get menu_category_snack;
+
+  /// No description provided for @menu_category_breakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get menu_category_breakfast;
+
+  /// No description provided for @menu_category_lunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get menu_category_lunch;
+
+  /// No description provided for @menu_category_dinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get menu_category_dinner;
+
+  /// No description provided for @menu_category_salad.
+  ///
+  /// In en, this message translates to:
+  /// **'Salad'**
+  String get menu_category_salad;
+
+  /// No description provided for @menu_category_soup.
+  ///
+  /// In en, this message translates to:
+  /// **'Soup'**
+  String get menu_category_soup;
+
+  /// No description provided for @menu_category_seafood.
+  ///
+  /// In en, this message translates to:
+  /// **'Seafood'**
+  String get menu_category_seafood;
+
+  /// No description provided for @menu_category_vegetarian.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegetarian'**
+  String get menu_category_vegetarian;
+
+  /// No description provided for @menu_category_vegan.
+  ///
+  /// In en, this message translates to:
+  /// **'Vegan'**
+  String get menu_category_vegan;
+
+  /// No description provided for @menu_category_pasta.
+  ///
+  /// In en, this message translates to:
+  /// **'Pasta'**
+  String get menu_category_pasta;
+
+  /// No description provided for @menu_category_pizza.
+  ///
+  /// In en, this message translates to:
+  /// **'Pizza'**
+  String get menu_category_pizza;
+
+  /// No description provided for @menu_category_burger.
+  ///
+  /// In en, this message translates to:
+  /// **'Burger'**
+  String get menu_category_burger;
+
+  /// No description provided for @menu_category_sandwich.
+  ///
+  /// In en, this message translates to:
+  /// **'Sandwich'**
+  String get menu_category_sandwich;
+
+  /// No description provided for @menu_category_rice.
+  ///
+  /// In en, this message translates to:
+  /// **'Rice'**
+  String get menu_category_rice;
+
+  /// No description provided for @menu_category_noodle.
+  ///
+  /// In en, this message translates to:
+  /// **'Noodle'**
+  String get menu_category_noodle;
+
+  /// No description provided for @menu_category_grill.
+  ///
+  /// In en, this message translates to:
+  /// **'Grill'**
+  String get menu_category_grill;
+
+  /// No description provided for @title_delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get title_delivery;
+
+  /// No description provided for @title_where_you_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you at?'**
+  String get title_where_you_at;
+
+  /// No description provided for @title_where_are_you_going.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you going?'**
+  String get title_where_are_you_going;
+
+  /// No description provided for @text_choose_pickup_destination.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your pick-up and destination point!'**
+  String get text_choose_pickup_destination;
+
+  /// No description provided for @toast_failed_estimate_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to estimate order'**
+  String get toast_failed_estimate_order;
+
+  /// No description provided for @marker_pickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup'**
+  String get marker_pickup;
+
+  /// No description provided for @marker_dropoff.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff'**
+  String get marker_dropoff;
+
+  /// No description provided for @title_order_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get title_order_summary;
+
+  /// No description provided for @text_no_estimate_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No estimate available'**
+  String get text_no_estimate_available;
+
+  /// No description provided for @label_delivery_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Details'**
+  String get label_delivery_details;
+
+  /// No description provided for @label_from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get label_from;
+
+  /// No description provided for @label_to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get label_to;
+
+  /// No description provided for @label_item.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get label_item;
+
+  /// No description provided for @label_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get label_weight;
+
+  /// No description provided for @label_instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get label_instructions;
+
+  /// No description provided for @button_apply_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Coupon'**
+  String get button_apply_coupon;
+
+  /// No description provided for @text_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon'**
+  String get text_coupon;
+
+  /// No description provided for @label_price_breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Breakdown'**
+  String get label_price_breakdown;
+
+  /// No description provided for @label_base_fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Fare'**
+  String get label_base_fare;
+
+  /// No description provided for @label_distance_fare.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Fare'**
+  String get label_distance_fare;
+
+  /// No description provided for @label_subtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get label_subtotal;
+
+  /// No description provided for @label_discount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get label_discount;
+
+  /// No description provided for @label_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get label_total;
+
+  /// No description provided for @title_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get title_payment_method;
+
+  /// No description provided for @toast_failed_place_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to place order'**
+  String get toast_failed_place_order;
+
+  /// No description provided for @toast_delivery_order_placed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery order placed successfully'**
+  String get toast_delivery_order_placed;
+
+  /// No description provided for @title_ride.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride'**
+  String get title_ride;
+
+  /// No description provided for @title_trip_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Details'**
+  String get title_trip_details;
+
+  /// No description provided for @toast_wallet_payment_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet payment failed'**
+  String get toast_wallet_payment_failed;
+
+  /// No description provided for @title_ride_payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride Payment'**
+  String get title_ride_payment;
+
+  /// No description provided for @text_unsupported_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported payment method'**
+  String get text_unsupported_payment_method;
+
+  /// No description provided for @text_valid_until.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until'**
+  String get text_valid_until;
+
+  /// No description provided for @label_confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm New Password'**
+  String get label_confirm_new_password;
+
+  /// No description provided for @text_rate_this_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this order'**
+  String get text_rate_this_order;
+
+  /// No description provided for @text_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get text_driver;
+
+  /// No description provided for @button_save_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get button_save_changes;
+
+  /// No description provided for @text_thank_you_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your rating!'**
+  String get text_thank_you_rating;
+
+  /// No description provided for @label_achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get label_achievements;
+
+  /// No description provided for @text_earned_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned at'**
+  String get text_earned_at;
+
+  /// No description provided for @text_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get text_all;
+
+  /// No description provided for @toast_failed_load_merchants.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load merchants'**
+  String get toast_failed_load_merchants;
+
+  /// No description provided for @text_no_merchants_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No merchants found'**
+  String get text_no_merchants_found;
+
+  /// No description provided for @text_try_different_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Try selecting a different category'**
+  String get text_try_different_category;
+
+  /// No description provided for @text_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get text_open;
+
+  /// No description provided for @text_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get text_closed;
+
+  /// No description provided for @toast_failed_load_mart_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load mart data'**
+  String get toast_failed_load_mart_data;
+
+  /// No description provided for @label_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get label_categories;
+
+  /// No description provided for @label_recent_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Orders'**
+  String get label_recent_orders;
+
+  /// No description provided for @button_view_all.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get button_view_all;
+
+  /// No description provided for @label_best_sellers.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Sellers'**
+  String get label_best_sellers;
+
+  /// No description provided for @text_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get text_rating;
+
+  /// No description provided for @text_no_rating_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No rating yet'**
+  String get text_no_rating_yet;
+
+  /// No description provided for @label_nearby_drivers.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby drivers'**
+  String get label_nearby_drivers;
+
+  /// No description provided for @text_your_current_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current location'**
+  String get text_your_current_location;
+
+  /// No description provided for @item_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item(s)'**
+  String item_count(Object count);
+
+  /// No description provided for @button_accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get button_accept;
+
+  /// No description provided for @how_was_your_experience.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your experience?'**
+  String get how_was_your_experience;
+
+  /// No description provided for @mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get mixed;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @toast_app_state_corrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'App state corrupted, please restart'**
+  String get toast_app_state_corrupted;
+
+  /// No description provided for @toast_payment_info_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment information not available'**
+  String get toast_payment_info_not_available;
+
+  /// No description provided for @text_apply_coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Coupon'**
+  String get text_apply_coupon;
+
+  /// No description provided for @text_coupon_applied.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon: {code}'**
+  String text_coupon_applied(String code);
+
+  /// No description provided for @label_payment_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get label_payment_method;
+
+  /// No description provided for @label_payment_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Summary'**
+  String get label_payment_summary;
+
+  /// No description provided for @text_payment_successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment successful'**
+  String get text_payment_successful;
+
+  /// No description provided for @text_payment_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment failed'**
+  String get text_payment_failed;
+
+  /// No description provided for @text_unsupported_payment_method_description.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected payment method is not supported. Please choose a different method.'**
+  String get text_unsupported_payment_method_description;
+
+  /// No description provided for @toast_va_number_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'VA Number is not available'**
+  String get toast_va_number_not_available;
+
+  /// No description provided for @toast_va_number_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'VA Number copied to clipboard'**
+  String get toast_va_number_copied;
+
+  /// No description provided for @text_provider_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider :'**
+  String get text_provider_label;
+
+  /// No description provided for @text_va_number_label.
+  ///
+  /// In en, this message translates to:
+  /// **'VA Number :'**
+  String get text_va_number_label;
+
+  /// No description provided for @text_valid_until_with_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String text_valid_until_with_date(String date);
+
+  /// No description provided for @text_on_trip.
+  ///
+  /// In en, this message translates to:
+  /// **'On Trip'**
+  String get text_on_trip;
+
+  /// No description provided for @text_license_plate.
+  ///
+  /// In en, this message translates to:
+  /// **'License plate'**
+  String get text_license_plate;
+
+  /// No description provided for @text_finding_driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your driver...'**
+  String get text_finding_driver;
+
+  /// No description provided for @text_finding_driver_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait while we match you with a driver'**
+  String get text_finding_driver_message;
+
+  /// No description provided for @status_searching.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching'**
+  String get status_searching;
+
+  /// No description provided for @status_driver_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver found'**
+  String get status_driver_found;
+
+  /// No description provided for @status_on_the_way.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get status_on_the_way;
+
+  /// No description provided for @text_pickup_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup location'**
+  String get text_pickup_location;
+
+  /// No description provided for @text_dropoff_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropoff location'**
+  String get text_dropoff_location;
+
+  /// No description provided for @label_payment_method_lower.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get label_payment_method_lower;
+
+  /// No description provided for @label_total_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get label_total_price;
+
+  /// No description provided for @text_order_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Details'**
+  String get text_order_details;
+
+  /// No description provided for @text_finding_driver_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding driver'**
+  String get text_finding_driver_title;
+
+  /// No description provided for @text_your_driver_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your driver'**
+  String get text_your_driver_title;
+
+  /// No description provided for @text_trip_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip completed!'**
+  String get text_trip_completed;
+
+  /// No description provided for @text_trip_canceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip was canceled'**
+  String get text_trip_canceled;
+
+  /// No description provided for @title_delivery_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery Details'**
+  String get title_delivery_details;
+
+  /// No description provided for @label_item_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Description'**
+  String get label_item_description;
+
+  /// No description provided for @placeholder_item_description.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you sending?'**
+  String get placeholder_item_description;
+
+  /// No description provided for @label_weight_kg.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get label_weight_kg;
+
+  /// No description provided for @placeholder_weight_kg.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter weight in kg (max 20kg)'**
+  String get placeholder_weight_kg;
+
+  /// No description provided for @text_maximum_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum weight: 20kg'**
+  String get text_maximum_weight;
+
+  /// No description provided for @text_special_handling_instructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Add any special handling or delivery instructions'**
+  String get text_special_handling_instructions;
+
+  /// No description provided for @label_item_photos_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Photos (Optional)'**
+  String get label_item_photos_optional;
+
+  /// No description provided for @text_add_up_to_3_photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Add up to 3 photos of the item'**
+  String get text_add_up_to_3_photos;
+
+  /// No description provided for @toast_provide_item_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide item description'**
+  String get toast_provide_item_description;
+
+  /// No description provided for @toast_weight_must_be_valid.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight must be between 0.1kg and 20kg'**
+  String get toast_weight_must_be_valid;
+
+  /// No description provided for @text_thank_you_for_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your review!'**
+  String get text_thank_you_for_review;
+
+  /// No description provided for @toast_failed_submit_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit review'**
+  String get toast_failed_submit_review;
+
+  /// No description provided for @text_rate_by_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate by category'**
+  String get text_rate_by_category;
+
+  /// No description provided for @category_cleanliness.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanliness'**
+  String get category_cleanliness;
+
+  /// No description provided for @category_courtesy.
+  ///
+  /// In en, this message translates to:
+  /// **'Courtesy'**
+  String get category_courtesy;
+
+  /// No description provided for @category_punctuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Punctuality'**
+  String get category_punctuality;
+
+  /// No description provided for @category_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety'**
+  String get category_safety;
+
+  /// No description provided for @category_communication.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get category_communication;
+
+  /// No description provided for @category_overall.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall'**
+  String get category_overall;
+
+  /// No description provided for @category_desc_cleanliness.
+  ///
+  /// In en, this message translates to:
+  /// **'How clean was the vehicle and the driver\'s appearance?'**
+  String get category_desc_cleanliness;
+
+  /// No description provided for @category_desc_courtesy.
+  ///
+  /// In en, this message translates to:
+  /// **'How polite and respectful was the driver?'**
+  String get category_desc_courtesy;
+
+  /// No description provided for @category_desc_punctuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Was the driver on time for pickup?'**
+  String get category_desc_punctuality;
+
+  /// No description provided for @category_desc_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you feel safe during the trip?'**
+  String get category_desc_safety;
+
+  /// No description provided for @category_desc_communication.
+  ///
+  /// In en, this message translates to:
+  /// **'How well did the driver communicate?'**
+  String get category_desc_communication;
+
+  /// No description provided for @category_desc_overall.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your overall experience with this driver'**
+  String get category_desc_overall;
+
+  /// No description provided for @rating_poor.
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get rating_poor;
+
+  /// No description provided for @rating_below_average.
+  ///
+  /// In en, this message translates to:
+  /// **'Below Average'**
+  String get rating_below_average;
+
+  /// No description provided for @rating_average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get rating_average;
+
+  /// No description provided for @rating_good.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get rating_good;
+
+  /// No description provided for @rating_excellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get rating_excellent;
+
+  /// No description provided for @label_additional_comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional comments (optional)'**
+  String get label_additional_comments;
+
+  /// No description provided for @placeholder_additional_comments.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us more about your experience...'**
+  String get placeholder_additional_comments;
+
+  /// No description provided for @button_submit_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Review'**
+  String get button_submit_review;
+
+  /// No description provided for @toast_please_rate_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Please rate {category}'**
+  String toast_please_rate_category(String category);
+
+  /// No description provided for @text_drivers_around_you.
+  ///
+  /// In en, this message translates to:
+  /// **'There are {count} drivers around you'**
+  String text_drivers_around_you(int count);
+
+  /// No description provided for @text_no_order_history.
+  ///
+  /// In en, this message translates to:
+  /// **'No order history found'**
+  String get text_no_order_history;
+
+  /// No description provided for @text_order_id_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id}'**
+  String text_order_id_short(String id);
+
+  /// No description provided for @label_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get label_notes;
+
+  /// No description provided for @text_unknown_user.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown User'**
+  String get text_unknown_user;
+
+  /// No description provided for @text_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get text_customer;
+
+  /// No description provided for @button_call_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Customer'**
+  String get button_call_customer;
+
+  /// No description provided for @button_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get button_delete;
+
+  /// No description provided for @title_edit_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Schedule'**
+  String get title_edit_schedule;
+
+  /// No description provided for @title_add_schedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Schedule'**
+  String get title_add_schedule;
+
+  /// No description provided for @placeholder_course_name.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Mobile Programming'**
+  String get placeholder_course_name;
+
+  /// No description provided for @button_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get button_cancel;
+
+  /// No description provided for @placeholder_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'John Doe'**
+  String get placeholder_full_name;
+
+  /// No description provided for @placeholder_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'0'**
+  String get placeholder_stock;
+
+  /// No description provided for @text_failed_to_load_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load profile: {error}'**
+  String text_failed_to_load_profile(String error);
+
+  /// No description provided for @text_no_rankings_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No rankings yet'**
+  String get text_no_rankings_yet;
+
+  /// No description provided for @title_where_going.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you going?'**
+  String get title_where_going;
+
+  /// No description provided for @tab_rankings.
+  ///
+  /// In en, this message translates to:
+  /// **'Rankings'**
+  String get tab_rankings;
+
+  /// No description provided for @tab_badges.
+  ///
+  /// In en, this message translates to:
+  /// **'Badges'**
+  String get tab_badges;
+
+  /// No description provided for @text_user_id.
+  ///
+  /// In en, this message translates to:
+  /// **'User {id}'**
+  String text_user_id(String id);
+
+  /// No description provided for @text_category_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Category: {category}'**
+  String text_category_value(String category);
+
+  /// No description provided for @text_period_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Period: {period}'**
+  String text_period_value(String period);
+
+  /// No description provided for @text_earned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned'**
+  String get text_earned;
+
+  /// No description provided for @text_balance_with_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance: {amount}'**
+  String text_balance_with_amount(String amount);
+
+  /// No description provided for @button_top_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Up'**
+  String get button_top_up;
+
+  /// No description provided for @text_select_via_map.
+  ///
+  /// In en, this message translates to:
+  /// **'Select via map'**
+  String get text_select_via_map;
+
+  /// No description provided for @text_no_place_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No place found'**
+  String get text_no_place_found;
+
+  /// No description provided for @title_location_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Location Permission Required'**
+  String get title_location_permission_required;
+
+  /// No description provided for @text_location_permission_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission was previously denied. To go online and accept orders, you need to enable location access in your device settings.'**
+  String get text_location_permission_denied;
+
+  /// No description provided for @text_location_permission_request.
+  ///
+  /// In en, this message translates to:
+  /// **'To accept ride and delivery orders, drivers must share their location in real-time. This helps:'**
+  String get text_location_permission_request;
+
+  /// No description provided for @text_location_benefit_match_orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Match you with nearby orders'**
+  String get text_location_benefit_match_orders;
+
+  /// No description provided for @text_location_benefit_track_arrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Let customers track your arrival'**
+  String get text_location_benefit_track_arrival;
+
+  /// No description provided for @text_location_benefit_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Ensure safety and accountability'**
+  String get text_location_benefit_safety;
+
+  /// No description provided for @text_location_redirect_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be redirected to app settings to enable location access.'**
+  String get text_location_redirect_settings;
+
+  /// No description provided for @button_open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get button_open_settings;
+
+  /// No description provided for @button_grant_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Permission'**
+  String get button_grant_permission;
+
+  /// No description provided for @title_rate_customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Customer'**
+  String get title_rate_customer;
+
+  /// No description provided for @text_experience_with_user.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your experience with {name}?'**
+  String text_experience_with_user(String name);
+
+  /// No description provided for @category_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get category_other;
+
+  /// No description provided for @label_rating_score.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating: {score} / 5.0'**
+  String label_rating_score(String score);
+
+  /// No description provided for @toast_review_submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Review submitted successfully'**
+  String get toast_review_submitted;
+
+  /// No description provided for @toast_review_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit review'**
+  String get toast_review_failed;
+
+  /// No description provided for @title_reject_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Order'**
+  String get title_reject_order;
+
+  /// No description provided for @text_select_rejection_reason.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a reason for rejecting this order:'**
+  String get text_select_rejection_reason;
+
+  /// No description provided for @rejection_reason_out_of_stock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get rejection_reason_out_of_stock;
+
+  /// No description provided for @rejection_reason_too_busy.
+  ///
+  /// In en, this message translates to:
+  /// **'Too Busy / High Order Volume'**
+  String get rejection_reason_too_busy;
+
+  /// No description provided for @rejection_reason_ingredient_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient Unavailable'**
+  String get rejection_reason_ingredient_unavailable;
+
+  /// No description provided for @rejection_reason_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Store Closed / Closing Soon'**
+  String get rejection_reason_closed;
+
+  /// No description provided for @rejection_reason_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get rejection_reason_other;
+
+  /// No description provided for @label_additional_note_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional Note (Optional)'**
+  String get label_additional_note_optional;
+
+  /// No description provided for @placeholder_rejection_note.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., \"We ran out of chicken, will restock tomorrow\"'**
+  String get placeholder_rejection_note;
+
+  /// No description provided for @button_reject_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject Order'**
+  String get button_reject_order;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

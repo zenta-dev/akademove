@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,8 +84,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
 
     if (!isValid) {
       _showToast(
-        'Validation Error',
-        'Please fill all required fields correctly',
+        context.l10n.error_validation,
+        context.l10n.error_fill_all_required_fields,
       );
       return;
     }
@@ -97,18 +98,24 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
     final category = _selectedMenuCategory;
 
     if (name == null || name.isEmpty) {
-      _showToast('Validation Error', 'Menu name is required');
+      _showToast(
+        context.l10n.error_validation,
+        context.l10n.error_menu_name_required,
+      );
       return;
     }
 
     if (priceStr == null || priceStr.isEmpty) {
-      _showToast('Validation Error', 'Menu price is required');
+      _showToast(
+        context.l10n.error_validation,
+        context.l10n.error_menu_price_required,
+      );
       return;
     }
 
     final price = int.tryParse(priceStr.replaceAll(RegExp('[^0-9]'), ''));
     if (price == null || price <= 0) {
-      _showToast('Validation Error', 'Please enter a valid price');
+      _showToast(context.l10n.error_validation, context.l10n.error_valid_price);
       return;
     }
 
@@ -119,7 +126,10 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
     final merchantId = merchantCubit.state.mine?.id;
 
     if (merchantId == null) {
-      _showToast('Error', 'Merchant information not found');
+      _showToast(
+        context.l10n.error,
+        context.l10n.error_merchant_info_not_found,
+      );
       return;
     }
 
@@ -152,8 +162,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
-          title: 'Success',
-          message: state.message ?? 'Menu created successfully',
+          title: context.l10n.success,
+          message: state.message ?? context.l10n.toast_menu_created_success,
         ),
         location: ToastLocation.topCenter,
       );
@@ -165,8 +175,9 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
       showToast(
         context: context,
         builder: (context, overlay) => context.buildToast(
-          title: 'Error',
-          message: state.error?.message ?? 'Failed to create menu',
+          title: context.l10n.error,
+          message:
+              state.error?.message ?? context.l10n.toast_failed_create_menu,
         ),
         location: ToastLocation.topCenter,
       );
@@ -208,7 +219,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
           children: [
             MyScaffold(
               safeArea: true,
-              headers: const [DefaultAppBar(title: 'Create Menu')],
+              headers: [DefaultAppBar(title: context.l10n.title_create_menu)],
               body: Form(
                 controller: _formController,
                 child: SingleChildScrollView(
@@ -218,9 +229,9 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                     spacing: 16.h,
                     children: [
                       _buildEnumSelect<MenuCategoryEnum>(
-                        label: 'Menu Category',
+                        label: context.l10n.label_menu_category,
                         key: _FormKeys.menuCategory,
-                        placeholder: 'Select category',
+                        placeholder: context.l10n.placeholder_select_category,
                         icon: LucideIcons.store,
                         value: _selectedMenuCategory,
                         items: MenuCategoryEnum.values,
@@ -229,7 +240,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                             setState(() => _selectedMenuCategory = value),
                       ),
                       _buildImagePicker(
-                        "Menu Photo",
+                        context.l10n.label_menu_photo,
                         MenuPhotos.menuPhoto,
                         _menuPhoto,
                         _menuPhotosErrors,
@@ -238,8 +249,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                       ),
                       _buildTextField(
                         key: _FormKeys.menuName,
-                        label: "Menu Name",
-                        placeholder: 'e.g., Butterscotch Milk',
+                        label: context.l10n.label_menu_name,
+                        placeholder: context.l10n.placeholder_menu_name,
                         icon: LucideIcons.coffee,
                         validator: const LengthValidator(min: 3),
                         enabled: !isLoading,
@@ -247,8 +258,8 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                       ),
                       _buildTextField(
                         key: _FormKeys.menuPrice,
-                        label: "Menu Price",
-                        placeholder: 'e.g., 30000',
+                        label: context.l10n.label_menu_price,
+                        placeholder: context.l10n.placeholder_menu_price,
                         icon: LucideIcons.dollarSign,
                         validator: const LengthValidator(min: 1),
                         enabled: !isLoading,
@@ -282,7 +293,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Text(
-                              'Create Menu',
+                              context.l10n.button_create_menu,
                               style: context.typography.small.copyWith(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.normal,
@@ -425,7 +436,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
           child: FormField(
             key: _FormKeys.menuStock,
             label: Text(
-              "Menu Stock",
+              context.l10n.label_menu_stock,
               style: context.typography.p.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -438,7 +449,7 @@ class _MerchantCreateMenuScreenState extends State<MerchantCreateMenuScreen> {
             },
             child: TextField(
               controller: _stockController,
-              placeholder: const Text('0'),
+              placeholder: Text(context.l10n.placeholder_stock),
               enabled: !isLoading,
               keyboardType: TextInputType.number,
               features: const [InputFeature.leading(Icon(LucideIcons.package))],

@@ -172,7 +172,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                   FormField(
                     key: _newPasswordKey,
                     label: DefaultText(
-                      'New Password',
+                      context.l10n.new_password,
                       fontWeight: FontWeight.w500,
                     ),
                     validator: const LengthValidator(min: 8),
@@ -182,7 +182,7 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                     },
                     child: TextField(
                       focusNode: _newPasswordFn,
-                      placeholder: const Text('********'),
+                      placeholder: Text(context.l10n.placeholder_password),
                       features: const [
                         InputFeature.leading(Icon(LucideIcons.key)),
                         InputFeature.passwordToggle(),
@@ -202,7 +202,9 @@ class _ResetPasswordFormViewState extends State<_ResetPasswordFormView> {
                     },
                     child: TextField(
                       focusNode: _confirmPasswordFn,
-                      placeholder: const Text('********'),
+                      placeholder: Text(
+                        context.l10n.placeholder_confirm_password,
+                      ),
                       features: const [
                         InputFeature.leading(Icon(LucideIcons.key)),
                         InputFeature.passwordToggle(),

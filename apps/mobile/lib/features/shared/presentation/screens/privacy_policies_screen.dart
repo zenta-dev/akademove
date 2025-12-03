@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
@@ -169,7 +170,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
     return Stack(
       children: [
         MyScaffold(
-          headers: const [DefaultAppBar(title: 'Privacy Policies')],
+          headers: [DefaultAppBar(title: context.l10n.title_privacy_policies)],
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16.h,
@@ -236,7 +237,7 @@ class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
           child: Button.primary(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              'Accept all cookies',
+              context.l10n.close,
               style: context.typography.small.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,

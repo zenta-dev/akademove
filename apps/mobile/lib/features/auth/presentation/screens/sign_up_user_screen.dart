@@ -122,7 +122,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text("John Doe"),
+                  placeholder: Text(context.l10n.placeholder_password),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.user)),
@@ -138,7 +138,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text("john@gmail.com"),
+                  placeholder: Text(context.l10n.placeholder_email),
                   enabled: !state.isLoading,
                   keyboardType: TextInputType.emailAddress,
                   features: const [
@@ -235,7 +235,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text("********"),
+                  placeholder: Text(context.l10n.placeholder_confirm_password),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.key)),

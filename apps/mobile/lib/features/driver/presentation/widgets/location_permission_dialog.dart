@@ -1,5 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -14,21 +14,18 @@ class LocationPermissionDialog extends StatelessWidget {
     final isPermanentlyDenied =
         permissionStatus == LocationPermission.deniedForever;
 
-    return material.AlertDialog(
-      shape: material.RoundedRectangleBorder(
-        borderRadius: material.BorderRadius.circular(12.r),
-      ),
+    return AlertDialog(
       title: Row(
+        spacing: 12.w,
         children: [
           Icon(
             LucideIcons.mapPin,
             size: 28.sp,
             color: context.colorScheme.primary,
           ),
-          SizedBox(width: 12.w),
           Expanded(
             child: Text(
-              'Location Permission Required',
+              context.l10n.title_location_permission_required,
               style: context.typography.h4.copyWith(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
@@ -37,67 +34,43 @@ class LocationPermissionDialog extends StatelessWidget {
           ),
         ],
       ),
-      content: material.SingleChildScrollView(
-        child: material.Column(
-          mainAxisSize: material.MainAxisSize.min,
-          crossAxisAlignment: material.CrossAxisAlignment.start,
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
           children: [
             Text(
               isPermanentlyDenied
-                  ? 'Location permission was previously denied. To go online and accept orders, you need to enable location access in your device settings.'
-                  : 'To accept ride and delivery orders, drivers must share their location in real-time. This helps:',
+                  ? context.l10n.text_location_permission_denied
+                  : context.l10n.text_location_permission_request,
               style: context.typography.p.copyWith(fontSize: 14.sp),
             ),
             if (!isPermanentlyDenied) ...[
-              SizedBox(height: 16.h),
+              SizedBox(height: 8.h),
               _buildBenefitItem(
                 context,
                 LucideIcons.navigation,
-                'Match you with nearby orders',
+                context.l10n.text_location_benefit_match_orders,
               ),
-              SizedBox(height: 8.h),
               _buildBenefitItem(
                 context,
                 LucideIcons.users,
-                'Let customers track your arrival',
+                context.l10n.text_location_benefit_track_arrival,
               ),
-              SizedBox(height: 8.h),
               _buildBenefitItem(
                 context,
                 LucideIcons.shieldCheck,
-                'Ensure safety and accountability',
+                context.l10n.text_location_benefit_safety,
               ),
             ],
             if (isPermanentlyDenied) ...[
-              SizedBox(height: 16.h),
-              material.Container(
-                padding: EdgeInsets.all(12.dg),
-                decoration: material.BoxDecoration(
-                  color: context.colorScheme.destructive.withValues(alpha: 0.1),
-                  borderRadius: material.BorderRadius.circular(8.r),
-                  border: material.Border.all(
-                    color: context.colorScheme.destructive.withValues(
-                      alpha: 0.3,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      LucideIcons.info,
-                      size: 20.sp,
-                      color: context.colorScheme.destructive,
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Text(
-                        'You will be redirected to app settings to enable location access.',
-                        style: context.typography.small.copyWith(
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ),
-                  ],
+              SizedBox(height: 8.h),
+              Alert.destructive(
+                leading: Icon(LucideIcons.info, size: 20.sp),
+                content: Text(
+                  context.l10n.text_location_redirect_settings,
+                  style: context.typography.small.copyWith(fontSize: 12.sp),
                 ),
               ),
             ],
@@ -105,17 +78,17 @@ class LocationPermissionDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        material.TextButton(
-          onPressed: () => material.Navigator.of(context).pop(false),
-          child: const Text('Cancel'),
+        OutlineButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(context.l10n.button_cancel),
         ),
-        material.ElevatedButton(
+        PrimaryButton(
           onPressed: () async {
             if (isPermanentlyDenied) {
               // Open app settings
               await Geolocator.openAppSettings();
               if (context.mounted) {
-                material.Navigator.of(context).pop(false);
+                Navigator.of(context).pop(false);
               }
             } else {
               // Request permission
@@ -124,16 +97,14 @@ class LocationPermissionDialog extends StatelessWidget {
                   permission == LocationPermission.always ||
                   permission == LocationPermission.whileInUse;
               if (context.mounted) {
-                material.Navigator.of(context).pop(granted);
+                Navigator.of(context).pop(granted);
               }
             }
           },
-          style: material.ElevatedButton.styleFrom(
-            backgroundColor: context.colorScheme.primary,
-            foregroundColor: context.colorScheme.primaryForeground,
-          ),
           child: Text(
-            isPermanentlyDenied ? 'Open Settings' : 'Grant Permission',
+            isPermanentlyDenied
+                ? context.l10n.button_open_settings
+                : context.l10n.button_grant_permission,
           ),
         ),
       ],
@@ -169,7 +140,7 @@ Future<bool> showLocationPermissionDialog(
   BuildContext context,
   LocationPermission permissionStatus,
 ) async {
-  final result = await material.showDialog<bool>(
+  final result = await showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (context) =>

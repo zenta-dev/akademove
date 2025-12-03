@@ -5,6 +5,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,8 +122,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           });
           _showToast(
             context,
-            'Location Permission',
-            'Using default location. You can drag the marker to set your outlet location.',
+            context.l10n.toast_location_permission,
+            context.l10n.toast_using_default_location,
           );
         }
         return;
@@ -185,8 +186,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         if (mounted) {
           _showToast(
             context,
-            'Permission Denied',
-            'Location permission is required to set your outlet location automatically.',
+            context.l10n.permission_denied,
+            context.l10n.message_leocation_permission_required,
           );
         }
         return false;
@@ -212,18 +213,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Permission'),
-        content: const Text(
-          'We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily.\n\nYou can also manually set the location by dragging the marker.',
-        ),
+        title: Text(context.l10n.dialog_location_permission_title),
+        content: Text(context.l10n.dialog_location_permission_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Allow'),
+            child: Text(context.l10n.allow),
           ),
         ],
       ),
@@ -236,18 +235,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Services Disabled'),
-        content: const Text(
-          'Location services are currently disabled on your device. Please enable them to automatically detect your outlet location.',
-        ),
+        title: Text(context.l10n.dialog_location_services_disabled_title),
+        content: Text(context.l10n.dialog_location_services_disabled_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Open Settings'),
+            child: Text(context.l10n.open_settings),
           ),
         ],
       ),
@@ -260,18 +257,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Permission Required'),
-        content: const Text(
-          'Location permission has been permanently denied. To use automatic location detection, please enable it in your app settings.\n\nYou can still manually set your outlet location by dragging the marker on the map.',
-        ),
+        title: Text(context.l10n.dialog_location_permission_required_title),
+        content: Text(context.l10n.dialog_location_permission_required_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Open Settings'),
+            child: Text(context.l10n.open_settings),
           ),
         ],
       ),
@@ -285,9 +280,9 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       Marker(
         markerId: const MarkerId('outletLocation'),
         position: LatLng(location.y.toDouble(), location.x.toDouble()),
-        infoWindow: const InfoWindow(
-          title: 'Outlet Location',
-          snippet: 'Drag to adjust position',
+        infoWindow: InfoWindow(
+          title: context.l10n.label_outlet_location,
+          snippet: context.l10n.drag_to_adjust,
         ),
         draggable: true,
         consumeTapEvents: true,
@@ -350,14 +345,18 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     } catch (e) {
       debugPrint('Error getting address: $e');
       if (mounted) {
-        setState(() => _outletAddress = 'Unable to get address');
+        setState(() => _outletAddress = context.l10n.label_unable_get_address);
       }
     }
   }
 
   Future<void> _searchLocation(String query) async {
     if (query.trim().isEmpty) {
-      _showToast(context, 'Search Error', 'Please enter a location to search');
+      _showToast(
+        context,
+        context.l10n.toast_search_error,
+        context.l10n.toast_enter_location,
+      );
       return;
     }
 
@@ -373,8 +372,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         if (mounted) {
           _showToast(
             context,
-            'Location Found',
-            'Marker moved to searched location',
+            context.l10n.toast_location_found,
+            context.l10n.toast_marker_moved,
           );
         }
       } else {
@@ -382,8 +381,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           setState(() => _isSearching = false);
           _showToast(
             context,
-            'Not Found',
-            'Location not found. Please try a different search.',
+            context.l10n.toast_not_found,
+            context.l10n.toast_location_not_found,
           );
         }
       }
@@ -393,8 +392,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         setState(() => _isSearching = false);
         _showToast(
           context,
-          'Search Error',
-          'Unable to search location. Please check your internet connection.',
+          context.l10n.toast_search_error,
+          context.l10n.toast_search_error_message,
         );
       }
     }
@@ -542,7 +541,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
     docs.forEach((key, file) {
       if (file == null) {
-        errors[key] = "File shouldn't be empty";
+        errors[key] = context.l10n.error_file_required;
         isValid = false;
       }
     });
@@ -595,13 +594,21 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   }
 
   void _handleSignUpSuccess(BuildContext context, String? message) {
-    _showToast(context, 'Sign Up Success', message ?? 'Successfully signed up');
+    _showToast(
+      context,
+      context.l10n.sign_up_success,
+      message ?? context.l10n.success_signed_up,
+    );
     context.read<SignUpCubit>().reset();
     context.pushReplacementNamed(Routes.authSignIn.name);
   }
 
   void _handleSignUpFailure(BuildContext context, String? error) {
-    _showToast(context, 'Sign Up Failed', error ?? 'Unknown error');
+    _showToast(
+      context,
+      context.l10n.sign_up_failed,
+      error ?? context.l10n.error_unknown,
+    );
   }
 
   void _handleFormSubmit<T>(
@@ -615,7 +622,11 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
     final formData = _extractFormData(values);
     if (formData == null) {
-      _showToast(context, 'Error', 'Please fill all required fields');
+      _showToast(
+        context,
+        context.l10n.error,
+        context.l10n.error_fill_all_required_fields,
+      );
       return;
     }
 
@@ -624,7 +635,11 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     final document = _step2Docs[_Step2Docs.governmentDocument];
 
     if (category == null || bankProvider == null || document == null) {
-      _showToast(context, 'Error', 'Please fill all required fields');
+      _showToast(
+        context,
+        context.l10n.error,
+        context.l10n.error_fill_all_required_fields,
+      );
       return;
     }
 
@@ -693,8 +708,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       } else {
         _showToast(
           context,
-          'Validation Error',
-          'Please complete all required fields',
+          context.l10n.toast_validation_error,
+          context.l10n.toast_complete_required_fields,
         );
       }
     } else {
@@ -752,23 +767,23 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Step _buildStep1(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 1'),
+      title: Text(context.l10n.step_1),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpMerchant1.image(height: 200.h),
-        title: 'Tell us about yourself to kickstart your merchant journey!',
+        title: context.l10n.merchant_step_1_description,
         content: [
           _buildTextField(
             key: _FormKeys.step1OwnerName,
-            label: 'Owner Name',
-            placeholder: 'John Doe',
+            label: context.l10n.label_owner_name,
+            placeholder: context.l10n.placeholder_name,
             icon: LucideIcons.user,
             validator: const LengthValidator(min: 3),
             enabled: !state.isLoading,
           ),
           _buildTextField(
             key: _FormKeys.step1OwnerEmail,
-            label: 'Email',
-            placeholder: 'john@gmail.com',
+            label: context.l10n.label_email,
+            placeholder: context.l10n.placeholder_email,
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
             keyboardType: TextInputType.emailAddress,
@@ -783,8 +798,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           }),
           _buildTextField(
             key: _FormKeys.step1OwnerPassword,
-            label: 'Password',
-            placeholder: '*******',
+            label: context.l10n.password,
+            placeholder: context.l10n.placeholder_password,
             icon: LucideIcons.key,
             validator: const SafePasswordValidator(),
             enabled: !state.isLoading,
@@ -792,12 +807,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
           ),
           _buildTextField(
             key: _FormKeys.step1OwnerConfirmPassword,
-            label: 'Confirm Password',
-            placeholder: '*******',
+            label: context.l10n.label_confirm_password,
+            placeholder: context.l10n.placeholder_password,
             icon: LucideIcons.key,
-            validator: const CompareWith.equal(
+            validator: CompareWith.equal(
               _FormKeys.step1OwnerPassword,
-              message: 'Passwords do not match',
+              message: context.l10n.error_passwords_not_match,
             ),
             enabled: !state.isLoading,
             isPassword: true,
@@ -806,12 +821,12 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         actions: [
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
-            label: 'Back',
+            label: context.l10n.back,
             onPressed: () => context.pop(),
           ),
           _buildActionButton(
             icon: LucideIcons.arrowRight,
-            label: 'Next',
+            label: context.l10n.next,
             isPrimary: true,
             isTrailing: true,
             onPressed: () => _handleStepNavigation(
@@ -826,24 +841,23 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Step _buildStep2(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 2'),
+      title: Text(context.l10n.step_2),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpMerchant2.image(height: 200.h),
-        title:
-            'Share your outlet details and location so customers can find you easily!',
+        title: context.l10n.merchant_step_2_description,
         content: [
           _buildTextField(
             key: _FormKeys.step2OutletName,
-            label: 'Outlet Name',
-            placeholder: 'Your Outlet Name',
+            label: context.l10n.label_outlet_name,
+            placeholder: context.l10n.placeholder_outlet_name,
             icon: LucideIcons.store,
             validator: const LengthValidator(min: 3),
             enabled: !state.isLoading,
           ),
           _buildTextField(
             key: _FormKeys.step2OutletEmail,
-            label: 'Email',
-            placeholder: 'outlet@example.com',
+            label: context.l10n.label_email,
+            placeholder: context.l10n.placeholder_outlet_email,
             icon: LucideIcons.mail,
             validator: const EmailValidator(),
             enabled: !state.isLoading,
@@ -863,7 +877,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Outlet Location'),
+                  Text(context.l10n.label_outlet_location),
                   if (_isDraggingMarker)
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -885,7 +899,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                             color: context.theme.colorScheme.primary,
                           ),
                           Text(
-                            'Dragging...',
+                            context.l10n.label_dragging,
                             style: context.theme.typography.small.copyWith(
                               color: context.theme.colorScheme.primary,
                             ),
@@ -896,7 +910,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                 ],
               ),
               Text(
-                'Search for a location, tap on map, or drag the marker',
+                context.l10n.helper_outlet_location,
                 style: context.theme.typography.small,
               ).muted(),
               // Search bar with suggestions
@@ -910,8 +924,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
                           Expanded(
                             child: TextField(
                               controller: _searchController,
-                              placeholder: const Text(
-                                'Search location (e.g., Monas Jakarta)',
+                              placeholder: Text(
+                                context.l10n.placeholder_search_location,
                               ),
                               enabled: !state.isLoading,
                               onChanged: _onSearchChanged,
@@ -1153,7 +1167,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             ],
           ),
           _buildImagePicker(
-            'Government Document',
+            context.l10n.government_document,
             _Step2Docs.governmentDocument,
             _step2Docs,
             _step2DocsErrors,
@@ -1169,16 +1183,16 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
 
   Step _buildStep3(BuildContext context, SignUpState state) {
     return Step(
-      title: const Text('Step 3'),
+      title: Text(context.l10n.step_3),
       contentBuilder: (context) => _buildStepContainer(
         heroImage: Assets.images.hero.signUpMerchant3.image(height: 200.h),
-        title: 'Add your bank account to receive payments securely!',
+        title: context.l10n.merchant_step_3_description,
         content: [
           _buildBankProviderSelect(state),
           _buildTextField(
             key: _FormKeys.step3BankNumber,
-            label: 'Bank Account Number',
-            placeholder: '11223344',
+            label: context.l10n.label_bank_account_number,
+            placeholder: context.l10n.placeholder_bank_account,
             keyboardType: TextInputType.number,
             icon: LucideIcons.wallet,
             validator: const LengthValidator(min: 5),
@@ -1188,7 +1202,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         actions: [
           _buildActionButton(
             icon: LucideIcons.arrowLeft,
-            label: 'Back',
+            label: context.l10n.back,
             onPressed: () =>
                 _handleStepNavigation(isNext: false, validator: () => true),
           ),
@@ -1261,13 +1275,13 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     return [
       _buildActionButton(
         icon: LucideIcons.arrowLeft,
-        label: 'Back',
+        label: context.l10n.back,
         onPressed: () =>
             _handleStepNavigation(isNext: false, validator: () => true),
       ),
       _buildActionButton(
         icon: LucideIcons.arrowRight,
-        label: 'Next',
+        label: context.l10n.next,
         isPrimary: true,
         isTrailing: true,
         onPressed: () =>
@@ -1293,7 +1307,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             child: isLoading
                 ? const Submiting(simpleText: true)
                 : Text(
-                    'Sign Up',
+                    context.l10n.sign_up,
                     style: context.theme.typography.medium.copyWith(
                       color: Colors.white,
                     ),
@@ -1339,10 +1353,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4.h,
       children: [
-        const Text('Bank Provider'),
+        Text(context.l10n.label_bank_provider),
         _buildEnumSelect<BankProvider>(
           key: _FormKeys.step3BankProvider,
-          placeholder: 'Pick your bank provider',
+          placeholder: context.l10n.hint_bank_provider,
           value: _selectedBankProvider,
           items: BankProvider.values,
           enabled: !state.isLoading,
@@ -1360,18 +1374,18 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       MerchantCategory.food: LucideIcons.utensils,
     };
     final categoryLabels = {
-      MerchantCategory.ATK: 'ATK (Stationery)',
-      MerchantCategory.printing: 'Printing',
-      MerchantCategory.food: 'Food & Beverages',
+      MerchantCategory.ATK: context.l10n.atk,
+      MerchantCategory.printing: context.l10n.printing,
+      MerchantCategory.food: context.l10n.food,
     };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4.h,
       children: [
-        const Text('Outlet Category'),
+        Text(context.l10n.label_outlet_category),
         Text(
-          'Select the main category for your outlet',
+          context.l10n.helper_outlet_category_select,
           style: context.theme.typography.small,
         ).muted(),
         SizedBox(
@@ -1386,7 +1400,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               ],
             ),
             value: _selectedCategory,
-            placeholder: const Text('Select outlet category'),
+            placeholder: Text(context.l10n.placeholder_select_outlet_category),
             onChanged: (value) => setState(() => _selectedCategory = value),
             popup: SelectPopup<MerchantCategory>(
               items: SelectItemList(
@@ -1447,7 +1461,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   ) {
     return FormField(
       key: key,
-      label: const Text('Phone'),
+      label: Text(context.l10n.label_phone),
       validator: const LengthValidator(min: 10, max: 15),
       showErrors: const {
         FormValidationMode.changed,

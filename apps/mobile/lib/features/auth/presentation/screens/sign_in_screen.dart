@@ -154,7 +154,7 @@ class _SignInFormViewState extends State<_SignInFormView> {
                     },
                     child: TextField(
                       focusNode: _emailFn,
-                      placeholder: const Text('john@gmail.com'),
+                      placeholder: Text(context.l10n.placeholder_email),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       onSubmitted: (value) {
@@ -202,7 +202,7 @@ class _SignInFormViewState extends State<_SignInFormView> {
                     },
                     child: TextField(
                       focusNode: _passwordFn,
-                      placeholder: const Text('********'),
+                      placeholder: Text(context.l10n.placeholder_password),
                       textInputAction: TextInputAction.done,
                       features: const [
                         InputFeature.leading(Icon(LucideIcons.key)),

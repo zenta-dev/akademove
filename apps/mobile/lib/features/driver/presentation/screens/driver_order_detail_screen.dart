@@ -114,7 +114,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     variance: ButtonVariance.ghost,
                   ),
                 ],
-                title: Text('Order #${order.id.substring(0, 8)}'),
+                title: Text(
+                  context.l10n.text_order_id_short(order.id.substring(0, 8)),
+                ),
               ),
             ],
             body: Column(
@@ -248,45 +250,45 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   Widget _buildStatusIndicator(BuildContext context, OrderStatus status) {
     String statusText;
-    material.Color statusColor;
+    Color statusColor;
 
     switch (status) {
       case OrderStatus.REQUESTED:
         statusText = context.l10n.requested;
-        statusColor = material.Colors.orange;
+        statusColor = const Color(0xFFFF9800);
       case OrderStatus.MATCHING:
         statusText = context.l10n.finding_driver;
-        statusColor = material.Colors.blue;
+        statusColor = const Color(0xFF2196F3);
       case OrderStatus.PREPARING:
         statusText = context.l10n.preparing_order;
-        statusColor = material.Colors.orange;
+        statusColor = const Color(0xFFFF9800);
       case OrderStatus.READY_FOR_PICKUP:
         statusText = context.l10n.ready_for_pickup;
-        statusColor = material.Colors.green;
+        statusColor = const Color(0xFF4CAF50);
       case OrderStatus.ACCEPTED:
         statusText = context.l10n.accepted;
-        statusColor = material.Colors.green;
+        statusColor = const Color(0xFF4CAF50);
       case OrderStatus.ARRIVING:
         statusText = context.l10n.arriving;
-        statusColor = material.Colors.blue;
+        statusColor = const Color(0xFF2196F3);
       case OrderStatus.IN_TRIP:
         statusText = context.l10n.in_trip;
-        statusColor = material.Colors.purple;
+        statusColor = const Color(0xFF9C27B0);
       case OrderStatus.COMPLETED:
         statusText = context.l10n.completed;
-        statusColor = material.Colors.green;
+        statusColor = const Color(0xFF4CAF50);
       case OrderStatus.CANCELLED_BY_USER:
         statusText = context.l10n.cancelled_by_user;
-        statusColor = material.Colors.red;
+        statusColor = const Color(0xFFF44336);
       case OrderStatus.CANCELLED_BY_DRIVER:
         statusText = context.l10n.cancelled_by_driver;
-        statusColor = material.Colors.red;
+        statusColor = const Color(0xFFF44336);
       case OrderStatus.CANCELLED_BY_MERCHANT:
         statusText = context.l10n.cancelled_by_merchant;
-        statusColor = material.Colors.red;
+        statusColor = const Color(0xFFF44336);
       case OrderStatus.CANCELLED_BY_SYSTEM:
         statusText = context.l10n.cancelled_by_system;
-        statusColor = material.Colors.red;
+        statusColor = const Color(0xFFF44336);
     }
 
     return Container(
@@ -374,7 +376,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                       const Divider(),
                       _buildInfoRow(
                         LucideIcons.messageSquare,
-                        'Notes',
+                        context.l10n.label_notes,
                         instructions,
                       ),
                     ],
@@ -406,11 +408,25 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
             Row(
               spacing: 12.w,
               children: [
-                material.CircleAvatar(
-                  radius: 24.r,
-                  child: Text(
-                    order.user?.name?.substring(0, 1).toUpperCase() ?? 'U',
-                    style: context.typography.h3.copyWith(fontSize: 20.sp),
+                Container(
+                  width: 48.r,
+                  height: 48.r,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
+                    border: Border.all(
+                      color: context.colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      order.user?.name?.substring(0, 1).toUpperCase() ?? 'U',
+                      style: context.typography.h3.copyWith(
+                        fontSize: 20.sp,
+                        color: context.colorScheme.primary,
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -419,7 +435,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                     spacing: 4.h,
                     children: [
                       Text(
-                        order.user?.name ?? 'Unknown User',
+                        order.user?.name ?? context.l10n.text_unknown_user,
                         style: context.typography.h4.copyWith(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.bold,
@@ -597,7 +613,7 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
                   context: context,
                   orderId: order.id,
                   toUserId: order.userId,
-                  toUserName: order.user?.name ?? 'Customer',
+                  toUserName: order.user?.name ?? context.l10n.text_customer,
                 );
               },
               child: Text(context.l10n.rate_customer),
@@ -661,17 +677,17 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   }
 
   void _showRejectDialog(BuildContext context, String orderId) {
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.reject_order),
         content: Text(context.l10n.are_you_sure_you_want_to_reject_this_order),
         actions: [
-          material.TextButton(
+          OutlineButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.cancel),
           ),
-          material.TextButton(
+          DestructiveButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<DriverOrderCubit>().rejectOrder(orderId);
@@ -684,17 +700,17 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   }
 
   void _showCancelDialog(BuildContext context, String orderId) {
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.cancel_order),
         content: Text(context.l10n.are_you_sure_you_want_to_cancel_this_order),
         actions: [
-          material.TextButton(
+          OutlineButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.no),
           ),
-          material.TextButton(
+          DestructiveButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.read<DriverOrderCubit>().cancelOrder();
@@ -709,38 +725,40 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
   void _showCallDialog(BuildContext context, Phone phone) {
     final phoneNumber = '+${phone.countryCode.value}${phone.number}';
 
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
-        title: const Text('Call Customer'),
-        content: material.Column(
-          mainAxisSize: material.MainAxisSize.min,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(context.l10n.button_call_customer),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.h,
           children: [
-            Text(context.l10n.customer_phone_number),
-            material.SizedBox(height: 8.h),
+            Text(
+              context.l10n.customer_phone_number,
+              style: context.typography.p.copyWith(fontSize: 14.sp),
+            ),
             material.SelectableText(
               phoneNumber,
-              style: material.TextStyle(
+              style: context.typography.h3.copyWith(
                 fontSize: 18.sp,
-                fontWeight: material.FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            material.SizedBox(height: 16.h),
             Text(
               context
                   .l10n
                   .tap_the_phone_number_to_copy_it_then_use_your_phone_app_to_call,
-              style: material.TextStyle(
+              style: context.typography.small.copyWith(
                 fontSize: 12.sp,
-                color: material.Colors.grey,
+                color: context.colorScheme.mutedForeground,
               ),
             ),
           ],
         ),
         actions: [
-          material.TextButton(
-            onPressed: () => material.Navigator.of(dialogContext).pop(),
+          PrimaryButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(context.l10n.close),
           ),
         ],
@@ -757,45 +775,45 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (context, scrollController) => material.Container(
-          decoration: material.BoxDecoration(
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
             color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const material.BorderRadius.only(
-              topLeft: material.Radius.circular(16),
-              topRight: material.Radius.circular(16),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
           ),
-          child: material.Column(
+          child: Column(
             children: [
-              material.Container(
-                padding: material.EdgeInsets.all(16.w),
-                decoration: material.BoxDecoration(
-                  border: material.Border(
-                    bottom: material.BorderSide(
-                      color: material.Colors.grey.shade300,
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: context.colorScheme.border,
                       width: 1,
                     ),
                   ),
                 ),
-                child: material.Row(
-                  mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    material.Text(
+                    Text(
                       context.l10n.chat_with_customer,
-                      style: material.TextStyle(
+                      style: TextStyle(
                         fontSize: 18.sp,
-                        fontWeight: material.FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    material.IconButton(
-                      icon: const material.Icon(material.Icons.close),
-                      onPressed: () =>
-                          material.Navigator.of(bottomSheetContext).pop(),
+                    IconButton(
+                      icon: const Icon(material.Icons.close),
+                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
+                      variance: ButtonVariance.ghost,
                     ),
                   ],
                 ),
               ),
-              material.Expanded(child: OrderChatWidget(orderId: orderId)),
+              Expanded(child: OrderChatWidget(orderId: orderId)),
             ],
           ),
         ),

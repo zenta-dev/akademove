@@ -1,12 +1,14 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/driver/presentation/cubits/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart' as material show Slider;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Dialog for submitting a review after completing an order
-class ReviewSubmissionDialog extends material.StatefulWidget {
+class ReviewSubmissionDialog extends StatefulWidget {
   const ReviewSubmissionDialog({
     required this.orderId,
     required this.toUserId,
@@ -19,15 +21,13 @@ class ReviewSubmissionDialog extends material.StatefulWidget {
   final String toUserName;
 
   @override
-  material.State<ReviewSubmissionDialog> createState() =>
-      _ReviewSubmissionDialogState();
+  State<ReviewSubmissionDialog> createState() => _ReviewSubmissionDialogState();
 }
 
-class _ReviewSubmissionDialogState
-    extends material.State<ReviewSubmissionDialog> {
+class _ReviewSubmissionDialogState extends State<ReviewSubmissionDialog> {
   ReviewCategory _selectedCategory = ReviewCategory.COURTESY;
   double _score = 5.0;
-  final _commentController = material.TextEditingController();
+  final _commentController = TextEditingController();
   bool _isSubmitting = false;
 
   @override
@@ -58,81 +58,91 @@ class _ReviewSubmissionDialogState
     final state = reviewCubit.state;
 
     if (state.isSuccess && state.submitted != null) {
-      material.Navigator.of(context).pop(true);
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: 'Success',
-          message: state.message ?? 'Review submitted successfully',
-        ),
+      Navigator.of(context).pop(true);
+      context.showMyToast(
+        state.message ?? context.l10n.toast_review_submitted,
+        type: ToastType.success,
       );
     } else if (state.isFailure) {
       setState(() => _isSubmitting = false);
-      showToast(
-        context: context,
-        builder: (context, overlay) => context.buildToast(
-          title: 'Error',
-          message: state.error?.message ?? 'Failed to submit review',
-        ),
+      context.showMyToast(
+        state.error?.message ?? context.l10n.toast_review_failed,
+        type: ToastType.failed,
       );
     }
   }
 
   @override
-  material.Widget build(material.BuildContext context) {
-    final theme = Theme.of(context);
-
+  Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Rate Customer'),
-      content: material.SingleChildScrollView(
-        child: material.SizedBox(
-          width: material.MediaQuery.of(context).size.width * 0.8,
-          child: material.Column(
-            mainAxisSize: material.MainAxisSize.min,
-            crossAxisAlignment: material.CrossAxisAlignment.start,
+      title: Text(context.l10n.title_rate_customer),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: context.mediaQuerySize.width * 0.8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 16.h,
             children: [
               // Customer name
               Text(
-                'How was your experience with ${widget.toUserName}?',
-                style: theme.typography.small,
+                context.l10n.text_experience_with_user(widget.toUserName),
+                style: context.typography.small,
               ),
-              const material.SizedBox(height: 24),
+              SizedBox(height: 8.h),
 
               // Category selector
-              Text('Review Category', style: theme.typography.semiBold),
-              const material.SizedBox(height: 8),
-              material.Wrap(
-                spacing: 8,
+              Text(
+                context.l10n.label_review_category,
+                style: context.typography.semiBold,
+              ),
+              SizedBox(height: 4.h),
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
                 children: ReviewCategory.values.map((category) {
+                  final isSelected = _selectedCategory == category;
                   final label = switch (category) {
-                    ReviewCategory.CLEANLINESS => 'Cleanliness',
-                    ReviewCategory.COURTESY => 'Courtesy',
-                    ReviewCategory.PUNCTUALITY => 'Punctuality',
-                    ReviewCategory.SAFETY => 'Safety',
-                    ReviewCategory.COMMUNICATION => 'Communication',
-                    ReviewCategory.OTHER => 'Other',
+                    ReviewCategory.CLEANLINESS =>
+                      context.l10n.category_cleanliness,
+                    ReviewCategory.COURTESY => context.l10n.category_courtesy,
+                    ReviewCategory.PUNCTUALITY =>
+                      context.l10n.category_punctuality,
+                    ReviewCategory.SAFETY => context.l10n.category_safety,
+                    ReviewCategory.COMMUNICATION =>
+                      context.l10n.category_communication,
+                    ReviewCategory.OTHER => context.l10n.category_other,
                   };
-                  return OutlineButton(
-                    size: ButtonSize.small,
-                    onPressed: () {
-                      setState(() => _selectedCategory = category);
-                    },
-                    child: Text(label),
-                  );
+                  return isSelected
+                      ? PrimaryButton(
+                          size: ButtonSize.small,
+                          onPressed: () {
+                            setState(() => _selectedCategory = category);
+                          },
+                          child: Text(label),
+                        )
+                      : OutlineButton(
+                          size: ButtonSize.small,
+                          onPressed: () {
+                            setState(() => _selectedCategory = category);
+                          },
+                          child: Text(label),
+                        );
                 }).toList(),
               ),
-              const material.SizedBox(height: 24),
+              SizedBox(height: 8.h),
 
               // Score slider
               Text(
-                'Rating: ${_score.toStringAsFixed(1)} / 5.0',
-                style: theme.typography.semiBold,
+                context.l10n.label_rating_score(_score.toStringAsFixed(1)),
+                style: context.typography.semiBold,
               ),
-              const material.SizedBox(height: 8),
-              material.Row(
+              SizedBox(height: 4.h),
+              Row(
+                spacing: 8.w,
                 children: [
-                  const Icon(LucideIcons.star, size: 16),
-                  material.Expanded(
+                  Icon(LucideIcons.star, size: 16.sp),
+                  Expanded(
                     child: material.Slider(
                       value: _score,
                       min: 1.0,
@@ -144,22 +154,22 @@ class _ReviewSubmissionDialogState
                       },
                     ),
                   ),
-                  const Icon(LucideIcons.star, size: 20),
+                  Icon(LucideIcons.star, size: 20.sp),
                 ],
               ),
-              const material.SizedBox(height: 24),
+              SizedBox(height: 8.h),
 
               // Comment field
-              Text('Comment (Optional)', style: theme.typography.semiBold),
-              const material.SizedBox(height: 8),
-              material.TextField(
+              Text(
+                context.l10n.label_comment_optional,
+                style: context.typography.semiBold,
+              ),
+              SizedBox(height: 4.h),
+              TextField(
                 controller: _commentController,
                 maxLines: 3,
                 maxLength: 500,
-                decoration: const material.InputDecoration(
-                  hintText: 'Share your experience...',
-                  border: material.OutlineInputBorder(),
-                ),
+                placeholder: Text(context.l10n.placeholder_share_experience),
               ),
             ],
           ),
@@ -167,28 +177,18 @@ class _ReviewSubmissionDialogState
       ),
       actions: [
         OutlineButton(
-          onPressed: _isSubmitting
-              ? null
-              : () => material.Navigator.of(context).pop(false),
-          child: const Text('Cancel'),
+          enabled: !_isSubmitting,
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text(context.l10n.button_cancel),
         ),
-        material.SizedBox(
-          width: 120,
+        SizedBox(
+          width: 120.w,
           child: PrimaryButton(
-            onPressed: _isSubmitting ? null : _submitReview,
+            enabled: !_isSubmitting,
+            onPressed: _submitReview,
             child: _isSubmitting
-                ? const material.SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: material.CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor:
-                          material.AlwaysStoppedAnimation<material.Color>(
-                            material.Colors.white,
-                          ),
-                    ),
-                  )
-                : const Text('Submit'),
+                ? const Submiting()
+                : Text(context.l10n.button_submit),
           ),
         ),
       ],
@@ -198,12 +198,12 @@ class _ReviewSubmissionDialogState
 
 /// Helper function to show the review dialog
 Future<bool?> showReviewDialog({
-  required material.BuildContext context,
+  required BuildContext context,
   required String orderId,
   required String toUserId,
   required String toUserName,
 }) {
-  return material.showDialog<bool>(
+  return showDialog<bool>(
     context: context,
     barrierDismissible: false,
     builder: (context) => ReviewSubmissionDialog(

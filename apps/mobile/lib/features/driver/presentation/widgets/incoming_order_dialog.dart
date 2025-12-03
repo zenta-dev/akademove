@@ -26,7 +26,7 @@ class IncomingOrderDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return material.Dialog(
       shape: material.RoundedRectangleBorder(
-        borderRadius: material.BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Container(
         constraints: BoxConstraints(maxWidth: 400.w),
@@ -192,22 +192,11 @@ class IncomingOrderDialog extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: material.OutlinedButton(
+                  child: DestructiveButton(
                     onPressed: onReject,
-                    style: material.OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      shape: material.RoundedRectangleBorder(
-                        borderRadius: material.BorderRadius.circular(8.r),
-                      ),
-                      side: material.BorderSide(
-                        color: material.Colors.red,
-                        width: 1.5,
-                      ),
-                    ),
                     child: Text(
                       'Reject',
                       style: context.typography.p.copyWith(
-                        color: material.Colors.red,
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                       ),
@@ -216,16 +205,8 @@ class IncomingOrderDialog extends StatelessWidget {
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: material.ElevatedButton(
+                  child: PrimaryButton(
                     onPressed: onAccept,
-                    style: material.ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      backgroundColor: context.colorScheme.primary,
-                      foregroundColor: context.colorScheme.primaryForeground,
-                      shape: material.RoundedRectangleBorder(
-                        borderRadius: material.BorderRadius.circular(8.r),
-                      ),
-                    ),
                     child: Text(
                       'Accept',
                       style: context.typography.p.copyWith(

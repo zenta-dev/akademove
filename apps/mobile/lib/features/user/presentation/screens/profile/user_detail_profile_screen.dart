@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,93 +24,149 @@ class UserDetailProfileScreen extends StatelessWidget {
     );
   }
 
-  SingleChildScrollView _buildDetail() {
+  Widget _buildDetail() {
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.dg),
-      child: Column(
-        spacing: 16.h,
-        children: [
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              final user = state.data ?? dummyUser;
-              return DefaultText(
-                user.name,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-              ).asSkeleton(enabled: state.isLoading);
-            },
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Card(
-              child: BlocBuilder<AuthCubit, AuthState>(
+      child: Builder(
+        builder: (context) {
+          return Column(
+            spacing: 16.h,
+            children: [
+              BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, state) {
                   final user = state.data ?? dummyUser;
-                  return Column(
-                    spacing: 12.h,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DefaultText('Email', fontSize: 14.sp),
-                          DefaultText(user.email, fontSize: 14.sp),
-                        ],
-                      ),
-                      const Divider(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DefaultText('Phone', fontSize: 14.sp),
-                          DefaultText(
-                            user.phone.toPhoneNumber().toString(),
-                            fontSize: 14.sp,
-                          ),
-                        ],
-                      ),
-                    ],
+                  return DefaultText(
+                    user.name,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w600,
                   ).asSkeleton(enabled: state.isLoading);
                 },
               ),
-            ),
-          ),
-          const DefaultText('Achievements', fontWeight: FontWeight.w500),
-          SizedBox(
-            width: double.infinity,
-            height: 0.3.sh,
-            child: BlocBuilder<AuthCubit, AuthState>(
-              builder: (context, state) {
-                final user = state.data ?? dummyUser;
-                return ListView.builder(
-                  itemCount: user.userBadges.length,
-                  padding: EdgeInsets.zero,
-                  itemBuilder: (context, index) {
-                    final userBadge = user.userBadges[index];
-                    final badge = userBadge.badge;
-                    return Basic(
-                      leading: CachedNetworkImage(
-                        imageUrl: badge.icon ?? randomBadgeImage,
-                        width: 42,
-                        height: 42,
-                        placeholder: (context, url) => Container(
-                          color: context.colorScheme.mutedForeground,
-                        ),
-                        errorWidget: (context, url, error) => const Center(
-                          child: Icon(LucideIcons.info, color: Colors.red),
-                        ),
-                      ),
-                      title: DefaultText(badge.name),
-                      subtitle: DefaultText(
-                        'Earned at ${userBadge.earnedAt.format('dd MMMM yyyy')}',
-                        fontSize: 12.sp,
-                        color: context.colorScheme.mutedForeground,
-                      ),
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final user = state.data ?? dummyUser;
+                      return Column(
+                        spacing: 12.h,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DefaultText(
+                                context.l10n.label_email,
+                                fontSize: 14.sp,
+                              ),
+                              DefaultText(user.email, fontSize: 14.sp),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DefaultText(
+                                context.l10n.label_phone,
+                                fontSize: 14.sp,
+                              ),
+                              DefaultText(
+                                user.phone.toPhoneNumber().toString(),
+                                fontSize: 14.sp,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ).asSkeleton(enabled: state.isLoading);
+                    },
+                  ),
+                ),
+              ),
+              DefaultText(
+                context.l10n.label_achievements,
+                fontWeight: FontWeight.w500,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      final user = state.data ?? dummyUser;
+                      return Column(
+                        spacing: 12.h,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DefaultText(
+                                context.l10n.label_email,
+                                fontSize: 14.sp,
+                              ),
+                              DefaultText(user.email, fontSize: 14.sp),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DefaultText(
+                                context.l10n.label_phone,
+                                fontSize: 14.sp,
+                              ),
+                              DefaultText(
+                                user.phone.toPhoneNumber().toString(),
+                                fontSize: 14.sp,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ).asSkeleton(enabled: state.isLoading);
+                    },
+                  ),
+                ),
+              ),
+              DefaultText(
+                context.l10n.label_achievements,
+                fontWeight: FontWeight.w500,
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 0.3.sh,
+                child: BlocBuilder<AuthCubit, AuthState>(
+                  builder: (context, state) {
+                    final user = state.data ?? dummyUser;
+                    return ListView.builder(
+                      itemCount: user.userBadges.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        final userBadge = user.userBadges[index];
+                        final badge = userBadge.badge;
+                        return Basic(
+                          leading: CachedNetworkImage(
+                            imageUrl: badge.icon ?? randomBadgeImage,
+                            width: 42,
+                            height: 42,
+                            placeholder: (context, url) => Container(
+                              color: context.colorScheme.mutedForeground,
+                            ),
+                            errorWidget: (context, url, error) => const Center(
+                              child: Icon(LucideIcons.info, color: Colors.red),
+                            ),
+                          ),
+                          title: DefaultText(badge.name),
+                          subtitle: DefaultText(
+                            '${context.l10n.text_earned_at} ${userBadge.earnedAt.format('dd MMMM yyyy')}',
+                            fontSize: 12.sp,
+                            color: context.colorScheme.mutedForeground,
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -109,9 +109,9 @@ class WalletBalanceCardWidget extends StatelessWidget {
         spacing: 8.h,
         children: [
           DefaultText(
-            context.l10n.my_balance,
+            context.l10n.expenses,
             fontSize: 12.sp,
-            color: Colors.white,
+            fontWeight: FontWeight.w600,
           ),
           DefaultText(
             context.formatCurrency(balance),
@@ -133,7 +133,7 @@ class WalletBalanceCardWidget extends StatelessWidget {
               children: [
                 const Icon(LucideIcons.plus, color: Colors.black),
                 Text(
-                  'Top Up',
+                  context.l10n.top_up,
                   // color: Colors.black,
                   style: context.typography.small.copyWith(color: Colors.black),
                 ),
@@ -155,8 +155,16 @@ class WalletMonthlySummaryCardWidget extends StatelessWidget {
     return Column(
       spacing: 8.h,
       children: [
-        _buildContainer(context, 'Expenses', summary.totalExpense.toDouble()),
-        _buildContainer(context, 'Income', summary.totalIncome.toDouble()),
+        _buildContainer(
+          context,
+          context.l10n.expenses,
+          summary.totalExpense.toDouble(),
+        ),
+        _buildContainer(
+          context,
+          context.l10n.income,
+          summary.totalIncome.toDouble(),
+        ),
       ],
     );
   }
@@ -180,7 +188,7 @@ class WalletMonthlySummaryCardWidget extends StatelessWidget {
             ],
           ),
           DefaultText(context.formatCurrency(amount), fontSize: 20.sp),
-          DefaultText('This month', fontSize: 12.sp),
+          DefaultText(context.l10n.this_month, fontSize: 12.sp),
         ],
       ),
     );

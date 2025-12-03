@@ -169,13 +169,15 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
                 color: wallet.isActive
-                    ? material.Colors.green.withValues(alpha: 0.1)
-                    : material.Colors.grey.withValues(alpha: 0.1),
+                    ? const Color(0xFF4CAF50).withValues(alpha: 0.1)
+                    : context.colorScheme.mutedForeground.withValues(
+                        alpha: 0.1,
+                      ),
                 borderRadius: BorderRadius.circular(4.r),
                 border: Border.all(
                   color: wallet.isActive
-                      ? material.Colors.green
-                      : material.Colors.grey,
+                      ? const Color(0xFF4CAF50)
+                      : context.colorScheme.mutedForeground,
                 ),
               ),
               child: Text(
@@ -184,8 +186,8 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
                   color: wallet.isActive
-                      ? material.Colors.green
-                      : material.Colors.grey,
+                      ? const Color(0xFF4CAF50)
+                      : context.colorScheme.mutedForeground,
                 ),
               ),
             ),
@@ -240,7 +242,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 context.l10n.total_income,
                 summary.totalIncome,
                 LucideIcons.trendingUp,
-                material.Colors.green,
+                const Color(0xFF4CAF50),
               ),
             ),
             Expanded(
@@ -248,7 +250,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 context.l10n.total_expenses,
                 summary.totalExpense,
                 LucideIcons.trendingDown,
-                material.Colors.red,
+                const Color(0xFFF44336),
               ),
             ),
           ],
@@ -257,7 +259,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
           context.l10n.net_earnings,
           summary.net,
           LucideIcons.dollarSign,
-          summary.net >= 0 ? material.Colors.blue : material.Colors.red,
+          summary.net >= 0
+              ? context.colorScheme.primary
+              : const Color(0xFFF44336),
           isLarge: true,
         ),
       ],
@@ -268,7 +272,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     String label,
     num amount,
     IconData icon,
-    material.Color color, {
+    Color color, {
     bool isLarge = false,
   }) {
     return Card(
@@ -364,7 +368,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     final isIncome =
         transaction.type == TransactionType.TOPUP ||
         transaction.type == TransactionType.REFUND;
-    final color = isIncome ? material.Colors.green : material.Colors.red;
+    final color = isIncome ? const Color(0xFF4CAF50) : const Color(0xFFF44336);
     final icon = _getTransactionIcon(transaction.type);
 
     return Card(
@@ -458,10 +462,10 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
     final accountNameController = TextEditingController();
     BankProvider selectedBank = BankProvider.BCA;
 
-    material.showDialog(
+    showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => material.AlertDialog(
+        builder: (context, setState) => AlertDialog(
           title: Text(context.l10n.withdraw_earnings),
           content: SingleChildScrollView(
             child: Column(
@@ -473,9 +477,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                 Container(
                   padding: EdgeInsets.all(12.dg),
                   decoration: BoxDecoration(
-                    color: material.Colors.blue.withValues(alpha: 0.1),
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: material.Colors.blue),
+                    border: Border.all(color: context.colorScheme.primary),
                   ),
                   child: Row(
                     spacing: 8.w,
@@ -483,7 +487,7 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                       Icon(
                         LucideIcons.info,
                         size: 20.sp,
-                        color: material.Colors.blue,
+                        color: context.colorScheme.primary,
                       ),
                       Expanded(
                         child: Column(
@@ -492,18 +496,18 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                           children: [
                             Text(
                               context.l10n.available_balance,
-                              style: TextStyle(
+                              style: context.typography.small.copyWith(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
-                                color: material.Colors.blue,
+                                color: context.colorScheme.primary,
                               ),
                             ),
                             Text(
                               context.formatCurrency(_wallet?.balance ?? 0),
-                              style: TextStyle(
-                                fontSize: 16.sp,
+                              style: context.typography.h3.copyWith(
+                                fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
-                                color: material.Colors.blue,
+                                color: context.colorScheme.primary,
                               ),
                             ),
                           ],
@@ -513,15 +517,9 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   ),
                 ),
                 // Amount field
-                material.TextField(
+                TextField(
                   controller: amountController,
-                  keyboardType: TextInputType.number,
-                  decoration: material.InputDecoration(
-                    labelText: context.l10n.amount,
-                    hintText: context.l10n.enter_withdrawal_amount,
-                    border: const material.OutlineInputBorder(),
-                    prefixText: 'Rp ',
-                  ),
+                  placeholder: Text(context.l10n.enter_withdrawal_amount),
                 ),
                 // Bank provider dropdown
                 material.DropdownButtonFormField<BankProvider>(
@@ -543,33 +541,23 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   },
                 ),
                 // Account number field
-                material.TextField(
+                TextField(
                   controller: accountNumberController,
-                  keyboardType: TextInputType.number,
-                  decoration: material.InputDecoration(
-                    labelText: context.l10n.bank_account_number,
-                    hintText: context.l10n.hint_bank_account_number,
-                    border: material.OutlineInputBorder(),
-                  ),
+                  placeholder: Text(context.l10n.hint_bank_account_number),
                 ),
-                material.TextField(
+                TextField(
                   controller: accountNameController,
-                  decoration: material.InputDecoration(
-                    labelText:
-                        '${context.l10n.account_name} (${context.l10n.optional})',
-                    hintText: context.l10n.hint_account_name,
-                    border: material.OutlineInputBorder(),
-                  ),
+                  placeholder: Text(context.l10n.hint_account_name),
                 ),
               ],
             ),
           ),
           actions: [
-            material.TextButton(
+            OutlineButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(context.l10n.cancel),
             ),
-            material.TextButton(
+            PrimaryButton(
               onPressed: () async {
                 final amountText = amountController.text.trim();
                 final accountNumber = accountNumberController.text.trim();
@@ -717,61 +705,57 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (context, scrollController) => material.Container(
-          decoration: material.BoxDecoration(
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
             color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const material.BorderRadius.only(
-              topLeft: material.Radius.circular(16),
-              topRight: material.Radius.circular(16),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
           ),
-          child: material.Column(
+          child: Column(
             children: [
-              material.Container(
-                padding: material.EdgeInsets.all(16.w),
-                decoration: material.BoxDecoration(
-                  border: material.Border(
-                    bottom: material.BorderSide(
-                      color: material.Colors.grey.shade300,
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: context.colorScheme.border,
                       width: 1,
                     ),
                   ),
                 ),
-                child: material.Row(
-                  mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    material.Text(
+                    Text(
                       'All Transactions',
-                      style: material.TextStyle(
+                      style: TextStyle(
                         fontSize: 18.sp,
-                        fontWeight: material.FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    material.IconButton(
-                      icon: const material.Icon(material.Icons.close),
-                      onPressed: () =>
-                          material.Navigator.of(bottomSheetContext).pop(),
+                    IconButton(
+                      icon: const Icon(material.Icons.close),
+                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
+                      variance: ButtonVariance.ghost,
                     ),
                   ],
                 ),
               ),
               if (transactions.isEmpty)
-                material.Expanded(
-                  child: material.Center(
-                    child: material.Column(
-                      mainAxisAlignment: material.MainAxisAlignment.center,
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        material.Icon(
-                          material.Icons.receipt_long,
-                          size: 64.sp,
-                          color: material.Colors.grey,
-                        ),
-                        material.SizedBox(height: 16.h),
-                        material.Text(
+                        Icon(LucideIcons.receipt, size: 64.sp),
+                        SizedBox(height: 16.h),
+                        Text(
                           'No transactions found',
-                          style: material.TextStyle(
+                          style: TextStyle(
                             fontSize: 16.sp,
-                            color: material.Colors.grey,
+                            color: context.colorScheme.mutedForeground,
                           ),
                         ),
                       ],
@@ -779,13 +763,13 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                   ),
                 )
               else
-                material.Expanded(
-                  child: material.ListView.separated(
+                Expanded(
+                  child: ListView.separated(
                     controller: scrollController,
-                    padding: material.EdgeInsets.all(16.w),
+                    padding: EdgeInsets.all(16.w),
                     itemCount: transactions.length,
                     separatorBuilder: (context, index) =>
-                        material.SizedBox(height: 12.h),
+                        SizedBox(height: 12.h),
                     itemBuilder: (context, index) {
                       final transaction = transactions[index];
                       final isIncome =
@@ -793,58 +777,57 @@ class _DriverEarningsScreenState extends State<DriverEarningsScreen> {
                           transaction.type == TransactionType.REFUND ||
                           transaction.type == TransactionType.EARNING;
                       final amountColor = isIncome
-                          ? material.Colors.green
-                          : material.Colors.red;
+                          ? const Color(0xFF4CAF50)
+                          : const Color(0xFFF44336);
                       final amountPrefix = isIncome ? '+' : '-';
 
                       return material.Card(
                         child: material.ListTile(
                           leading: material.CircleAvatar(
                             backgroundColor: amountColor.withValues(alpha: 0.1),
-                            child: material.Icon(
+                            child: Icon(
                               _getTransactionIcon(transaction.type),
                               color: amountColor,
                               size: 20.sp,
                             ),
                           ),
-                          title: material.Text(
+                          title: Text(
                             _getTransactionTypeText(context, transaction.type),
-                            style: material.TextStyle(
+                            style: TextStyle(
                               fontSize: 14.sp,
-                              fontWeight: material.FontWeight.w600,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          subtitle: material.Column(
-                            crossAxisAlignment:
-                                material.CrossAxisAlignment.start,
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              material.SizedBox(height: 4.h),
+                              SizedBox(height: 4.h),
                               if (transaction.description != null)
-                                material.Text(
+                                Text(
                                   transaction.description!,
-                                  style: material.TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12.sp,
-                                    color: material.Colors.grey,
+                                    color: context.colorScheme.mutedForeground,
                                   ),
                                 ),
-                              material.SizedBox(height: 4.h),
-                              material.Text(
+                              SizedBox(height: 4.h),
+                              Text(
                                 DateFormat(
                                   'MMM dd, yyyy HH:mm',
                                 ).format(transaction.createdAt),
-                                style: material.TextStyle(
+                                style: TextStyle(
                                   fontSize: 11.sp,
-                                  color: material.Colors.grey.shade600,
+                                  color: context.colorScheme.mutedForeground,
                                 ),
                               ),
                             ],
                           ),
                           trailing: Builder(
-                            builder: (context) => material.Text(
+                            builder: (context) => Text(
                               '$amountPrefix${context.formatCurrency(transaction.amount)}',
-                              style: material.TextStyle(
+                              style: TextStyle(
                                 fontSize: 16.sp,
-                                fontWeight: material.FontWeight.bold,
+                                fontWeight: FontWeight.bold,
                                 color: amountColor,
                               ),
                             ),

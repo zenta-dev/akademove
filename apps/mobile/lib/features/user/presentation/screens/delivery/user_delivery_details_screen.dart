@@ -44,7 +44,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Delivery Details',
+            context.l10n.title_delivery_details,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -66,13 +66,13 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
               spacing: 8.h,
               children: [
                 DefaultText(
-                  'Item Description',
+                  context.l10n.label_item_description,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
                 TextField(
                   controller: descriptionController,
-                  placeholder: const Text('What are you sending?'),
+                  placeholder: Text(context.l10n.placeholder_item_description),
                   maxLines: 3,
                   minLines: 3,
                 ),
@@ -83,13 +83,13 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
               spacing: 8.h,
               children: [
                 DefaultText(
-                  'Weight (kg)',
+                  context.l10n.label_weight_kg,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
                 TextField(
                   controller: weightController,
-                  placeholder: const Text('Enter weight in kg (max 20kg)'),
+                  placeholder: Text(context.l10n.placeholder_weight_kg),
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                     signed: false,
@@ -104,7 +104,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   },
                 ),
                 Text(
-                  'Maximum weight: 20kg',
+                  context.l10n.text_maximum_weight,
                   style: context.typography.small.copyWith(
                     color: context.colorScheme.mutedForeground,
                   ),
@@ -127,7 +127,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   minLines: 2,
                 ),
                 Text(
-                  'Add any special handling or delivery instructions',
+                  context.l10n.text_special_handling_instructions,
                   style: context.typography.small.copyWith(
                     color: context.colorScheme.mutedForeground,
                   ),
@@ -142,7 +142,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   spacing: 8.h,
                   children: [
                     DefaultText(
-                      'Item Photos (Optional)',
+                      context.l10n.label_item_photos_optional,
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                     ),
@@ -203,7 +203,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                       ],
                     ),
                     Text(
-                      'Add up to 3 photos of the item',
+                      context.l10n.text_add_up_to_3_photos,
                       style: context.typography.small.copyWith(
                         color: context.colorScheme.mutedForeground,
                       ),
@@ -220,14 +220,14 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   final description = descriptionController.text.trim();
                   if (description.isEmpty) {
                     context.showMyToast(
-                      'Please provide item description',
+                      context.l10n.toast_provide_item_description,
                       type: ToastType.failed,
                     );
                     return;
                   }
                   if (weight <= 0 || weight > 20) {
                     context.showMyToast(
-                      'Weight must be between 0.1kg and 20kg',
+                      context.l10n.toast_weight_must_be_valid,
                       type: ToastType.failed,
                     );
                     return;
@@ -248,7 +248,7 @@ class _UserDeliveryDetailsScreenState extends State<UserDeliveryDetailsScreen> {
                   context.read<UserDeliveryCubit>().estimate();
                   context.push(Routes.userDeliverySummary.path);
                 },
-                child: const Text('Continue'),
+                child: Text(context.l10n.button_continue),
               ),
             ),
           ],

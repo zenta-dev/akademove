@@ -141,7 +141,7 @@ class _ForgotPasswordFormViewState extends State<_ForgotPasswordFormView> {
                     },
                     child: TextField(
                       focusNode: _emailFn,
-                      placeholder: const Text('john@gmail.com'),
+                      placeholder: Text(context.l10n.placeholder_email),
                       keyboardType: TextInputType.emailAddress,
                       features: const [
                         InputFeature.leading(Icon(LucideIcons.mail)),

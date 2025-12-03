@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
@@ -106,8 +107,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           });
           _showToast(
             context,
-            'Location Permission',
-            'Using default location. You can drag the marker to set your outlet location.',
+            context.l10n.toast_location_permission,
+            context.l10n.toast_using_default_location,
           );
         }
         return;
@@ -170,8 +171,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         if (mounted) {
           _showToast(
             context,
-            'Permission Denied',
-            'Location permission is required to set your outlet location automatically.',
+            context.l10n.reject,
+            context.l10n.toast_location_permission,
           );
         }
         return false;
@@ -197,18 +198,16 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Permission'),
-        content: const Text(
-          'We need access to your location to automatically set your outlet location on the map. This helps customers find your business easily. You can also manually set the location by dragging the marker.',
-        ),
+        title: Text(context.l10n.dialog_location_permission_title),
+        content: Text(context.l10n.dialog_location_permission_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Allow'),
+            child: Text(context.l10n.allow),
           ),
         ],
       ),
@@ -221,18 +220,16 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Services Disabled'),
-        content: const Text(
-          'Location services are currently disabled on your device. Please enable them to automatically detect your outlet location.',
-        ),
+        title: Text(context.l10n.dialog_location_services_disabled_title),
+        content: Text(context.l10n.dialog_location_services_disabled_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Open Settings'),
+            child: Text(context.l10n.open_settings),
           ),
         ],
       ),
@@ -245,18 +242,16 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Location Permission Required'),
-        content: const Text(
-          'Location permission has been permanently denied. To use automatic location detection, please enable it in your app settings.\n\nYou can still manually set your outlet location by dragging the marker on the map.',
-        ),
+        title: Text(context.l10n.dialog_location_permission_required_title),
+        content: Text(context.l10n.dialog_location_permission_required_message),
         actions: [
           OutlineButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Open Settings'),
+            child: Text(context.l10n.open_settings),
           ),
         ],
       ),
@@ -270,9 +265,9 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       Marker(
         markerId: const MarkerId('outletLocation'),
         position: LatLng(location.y.toDouble(), location.x.toDouble()),
-        infoWindow: const InfoWindow(
-          title: 'Outlet Location',
-          snippet: 'Drag to adjust position',
+        infoWindow: InfoWindow(
+          title: context.l10n.label_outlet_location,
+          snippet: context.l10n.drag_marker,
         ),
         draggable: true,
         consumeTapEvents: true,
@@ -334,14 +329,18 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     } catch (e) {
       debugPrint('Error getting address: $e');
       if (mounted) {
-        setState(() => _outletAddress = 'Unable to get address');
+        setState(() => _outletAddress = context.l10n.label_unable_get_address);
       }
     }
   }
 
   Future<void> _searchLocation(String query) async {
     if (query.trim().isEmpty) {
-      _showToast(context, 'Search Error', 'Please enter a location to search');
+      _showToast(
+        context,
+        context.l10n.toast_search_error,
+        context.l10n.toast_enter_location,
+      );
       return;
     }
 
@@ -357,8 +356,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         if (mounted) {
           _showToast(
             context,
-            'Location Found',
-            'Marker moved to searched location',
+            context.l10n.toast_location_found,
+            context.l10n.toast_marker_moved,
           );
         }
       } else {
@@ -366,8 +365,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           setState(() => _isSearching = false);
           _showToast(
             context,
-            'Not Found',
-            'Location not found. Please try a different search.',
+            context.l10n.toast_not_found,
+            context.l10n.toast_location_not_found,
           );
         }
       }
@@ -377,8 +376,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         setState(() => _isSearching = false);
         _showToast(
           context,
-          'Search Error',
-          'Unable to search location. Please check your internet connection.',
+          context.l10n.toast_search_error,
+          context.l10n.toast_search_error_message,
         );
       }
     }
@@ -533,8 +532,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     if (accountNumber.isEmpty) {
       _showToast(
         context,
-        'Validation Error',
-        'Please enter bank account number',
+        context.l10n.error_validation,
+        context.l10n.toast_enter_bank_account,
       );
       return;
     }
@@ -542,8 +541,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     if (accountNumber.length < 5) {
       _showToast(
         context,
-        'Validation Error',
-        'Bank account number must be at least 5 digits',
+        context.l10n.error_validation,
+        context.l10n.toast_bank_account_min_digits,
       );
       return;
     }
@@ -551,8 +550,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     if (_selectedBankProvider == null) {
       _showToast(
         context,
-        'Validation Error',
-        'Please select a bank provider first',
+        context.l10n.error_validation,
+        context.l10n.toast_select_bank_first,
       );
       return;
     }
@@ -576,12 +575,20 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           _isLoading = false;
         });
 
-        _showToast(context, 'Success', 'Bank account verified successfully');
+        _showToast(
+          context,
+          context.l10n.success,
+          context.l10n.toast_bank_account_verified,
+        );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showToast(context, 'Error', 'Failed to verify bank account');
+        _showToast(
+          context,
+          context.l10n.error,
+          context.l10n.toast_failed_verify_bank,
+        );
       }
     }
   }
@@ -592,7 +599,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       children: [
         MyScaffold(
           controller: _scrollController,
-          headers: const [DefaultAppBar(title: 'Edit Profile')],
+          headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
           body: NotificationListener<ScrollNotification>(
             onNotification: (notification) {
               if (_isDraggingMarker) {
@@ -610,16 +617,16 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                   children: [
                     _buildTextField(
                       key: _FormKeys.ownerName,
-                      label: "Owner's Name",
-                      placeholder: 'Enter owner name',
+                      label: context.l10n.label_owner_name,
+                      placeholder: context.l10n.placeholder_owner_name,
                       icon: LucideIcons.user,
                       validator: const LengthValidator(min: 3),
                       enabled: !_isLoading,
                     ),
                     _buildTextField(
                       key: _FormKeys.ownerEmail,
-                      label: "Owner's Email",
-                      placeholder: 'Enter owner email',
+                      label: context.l10n.label_owner_email,
+                      placeholder: context.l10n.placeholder_owner_email,
                       icon: LucideIcons.mail,
                       validator: const EmailValidator(),
                       keyboardType: TextInputType.emailAddress,
@@ -628,15 +635,15 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                     _buildPhoneField(
                       context,
                       _FormKeys.ownerPhoneNumber,
-                      "Owner's Phone Number",
+                      context.l10n.label_owner_phone,
                       (val) {
                         // Phone number change callback
                       },
                     ),
                     _buildTextField(
                       key: _FormKeys.outletName,
-                      label: "Outlet's Name",
-                      placeholder: 'Enter outlet name',
+                      label: context.l10n.label_outlet_name,
+                      placeholder: context.l10n.placeholder_outlet_name,
                       icon: LucideIcons.store,
                       validator: const LengthValidator(min: 3),
                       enabled: !_isLoading,
@@ -645,22 +652,22 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                     _buildPhoneField(
                       context,
                       _FormKeys.outletPhoneNumber,
-                      "Outlet's Phone Number",
+                      context.l10n.label_outlet_phone,
                       (val) {
                         // Phone number change callback
                       },
                     ),
                     _buildTextField(
                       key: _FormKeys.outletEmail,
-                      label: "Outlet's Email",
-                      placeholder: 'Enter outlet email',
+                      label: context.l10n.label_outlet_email,
+                      placeholder: context.l10n.placeholder_outlet_email,
                       icon: LucideIcons.mail,
                       validator: const EmailValidator(),
                       keyboardType: TextInputType.emailAddress,
                       enabled: !_isLoading,
                     ),
                     _buildImagePicker(
-                      "Outlet's Document (Optional)",
+                      context.l10n.label_outlet_document,
                       _Documents.outletDocument,
                       _documents,
                       _documentsErrors,
@@ -691,7 +698,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                 child: Button.primary(
                   onPressed: () {},
                   child: Text(
-                    'Save changes',
+                    context.l10n.save_changes,
                     style: context.typography.small.copyWith(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.normal,
@@ -787,7 +794,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Outlet's Location",
+              context.l10n.label_outlet_location,
               style: context.typography.small.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
@@ -811,7 +818,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       color: context.theme.colorScheme.primary,
                     ),
                     Text(
-                      'Dragging...',
+                      context.l10n.label_dragging,
                       style: context.typography.small.copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
@@ -824,7 +831,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           ],
         ),
         Text(
-          'Make sure the location point on the map is correct to meet the registration requirements.',
+          context.l10n.label_outlet_location_description,
           style: context.typography.small.copyWith(
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
@@ -841,7 +848,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                       child: TextField(
                         controller: _searchController,
                         placeholder: Text(
-                          'Search location',
+                          context.l10n.placeholder_search_location,
                           style: context.typography.small.copyWith(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.normal,
@@ -1050,7 +1057,10 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                           size: 32.sp,
                           color: context.theme.colorScheme.primary,
                         ),
-                        Text('Loading map...', style: context.typography.small),
+                        Text(
+                          context.l10n.loading,
+                          style: context.typography.small,
+                        ),
                       ],
                     ),
                   ),
@@ -1088,7 +1098,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
         FormField(
           key: _FormKeys.outletBenchmark,
           label: Text(
-            'Benchmark (Optional)',
+            context.l10n.label_benchmark_optional,
             style: context.theme.typography.small.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w500,
@@ -1096,7 +1106,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
           ),
           child: TextField(
             placeholder: Text(
-              'Next to the Uniqlo store.',
+              context.l10n.placeholder_benchmark,
               style: context.theme.typography.small.copyWith(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.normal,
@@ -1116,7 +1126,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
       spacing: 4.h,
       children: [
         Text(
-          'Choose bank',
+          context.l10n.label_choose_bank,
           style: context.theme.typography.small.copyWith(
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
@@ -1216,7 +1226,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
               child: FormField(
                 key: _FormKeys.bankAccount,
                 label: Text(
-                  'Bank Account',
+                  context.l10n.label_bank_account,
                   style: context.typography.p.copyWith(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
@@ -1230,7 +1240,7 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                 child: TextField(
                   controller: _bankAccountController,
                   placeholder: Text(
-                    '********1234',
+                    context.l10n.placeholder_bank_account,
                     style: context.typography.small.copyWith(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.normal,
@@ -1338,14 +1348,17 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                 ),
 
                 _buildBankDetailRow(
-                  'Bank Account Number',
+                  context.l10n.label_bank_account_number,
                   _verifiedBankAccountNumber ?? '',
                 ),
                 _buildBankDetailRow(
-                  "Account Holder's Name",
+                  context.l10n.label_account_holder_name,
                   _accountHolderName ?? '',
                 ),
-                _buildBankDetailRow("Owner's Name", _ownerBankName ?? ''),
+                _buildBankDetailRow(
+                  context.l10n.label_owner_bank_name,
+                  _ownerBankName ?? '',
+                ),
               ],
             ),
           ),

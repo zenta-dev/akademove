@@ -3,6 +3,7 @@ import 'package:akademove/gen/assets.gen.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:akademove/l10n/l10n.dart';
 
 class PickGenderWidget extends StatelessWidget {
   const PickGenderWidget({
@@ -20,7 +21,7 @@ class PickGenderWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const DefaultText('Gender:'),
+          DefaultText(context.l10n.gender),
           Button(
             style: const ButtonStyle.outline(size: ButtonSize.small).copyWith(
               decoration: (context, states, value) =>
@@ -68,7 +69,14 @@ class PickGenderWidget extends StatelessWidget {
                 if (value == UserGender.FEMALE)
                   Icon(LucideIcons.venus, size: 16.sp, color: Colors.pink),
                 if (value == null) Icon(LucideIcons.nonBinary, size: 16.sp),
-                DefaultText(value?.name ?? 'Mixed', fontSize: 14.sp),
+                DefaultText(
+                  value == null
+                      ? context.l10n.mixed
+                      : value == UserGender.MALE
+                      ? context.l10n.male
+                      : context.l10n.female,
+                  fontSize: 14.sp,
+                ),
               ],
             ),
           ),
@@ -78,33 +86,38 @@ class PickGenderWidget extends StatelessWidget {
   }
 
   Widget _buildGenderButton(UserGender? gender, void Function() onPresesed) {
-    return Button(
-      style: const ButtonStyle.outline().copyWith(
-        decoration: (context, states, value) => value.copyWithIfBoxDecoration(
-          borderRadius: BorderRadius.circular(32.r),
-        ),
-        padding: (context, states, value) => EdgeInsetsGeometry.all(24.dg),
-      ),
-      onPressed: onPresesed,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 8.h,
-        children: [
-          if (gender == UserGender.MALE)
-            Assets.icons.male.svg(width: 64.w, height: 64.w),
-          if (gender == UserGender.FEMALE)
-            Assets.icons.female.svg(width: 64.w, height: 64.w),
-          if (gender == null) Icon(LucideIcons.nonBinary, size: 64.sp),
-          DefaultText(
-            gender == null
-                ? 'Mixed'
-                : gender == UserGender.MALE
-                ? 'Male'
-                : 'Female',
-            fontWeight: FontWeight.w500,
+    return Builder(
+      builder: (context) {
+        return Button(
+          style: const ButtonStyle.outline().copyWith(
+            decoration: (context, states, value) =>
+                value.copyWithIfBoxDecoration(
+                  borderRadius: BorderRadius.circular(32.r),
+                ),
+            padding: (context, states, value) => EdgeInsetsGeometry.all(24.dg),
           ),
-        ],
-      ),
+          onPressed: onPresesed,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8.h,
+            children: [
+              if (gender == UserGender.MALE)
+                Assets.icons.male.svg(width: 64.w, height: 64.w),
+              if (gender == UserGender.FEMALE)
+                Assets.icons.female.svg(width: 64.w, height: 64.w),
+              if (gender == null) Icon(LucideIcons.nonBinary, size: 64.sp),
+              DefaultText(
+                gender == null
+                    ? context.l10n.mixed
+                    : gender == UserGender.MALE
+                    ? context.l10n.male
+                    : context.l10n.female,
+                fontWeight: FontWeight.w500,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

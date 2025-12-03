@@ -28,7 +28,7 @@
 	"vehicle_certificate": "Sertifikat Kendaraan (STNK)",
 	"taking_orders": "Menerima Pesanan",
 	"not_taking_orders": "Tidak Menerima Pesanan",
-	"license_plate": "Plat Nomor",
+	"license_plate": "Nomor Kendaraan: ",
 	"failed_to_load_profile": "Gagal memuat profil",
 	"retry": "Coba Lagi",
 	"close": "Tutup",
@@ -38,7 +38,7 @@
 	"no": "Tidak",
 	"yes_cancel": "Ya, Batalkan",
 	"are_you_sure_you_want_to_cancel_this_order": "Apakah Anda yakin ingin membatalkan pesanan ini? Pelanggan akan diberitahu.",
-	"cancel": "Batalkan",
+	"cancel": "Batal",
 	"are_you_sure_you_want_to_reject_this_order": "Apakah Anda yakin ingin menolak pesanan ini? Tindakan ini tidak dapat dibatalkan.",
 	"rate_customer": "Beri Rating Pelanggan",
 	"back_to_home": "Kembali ke Beranda",
@@ -118,7 +118,7 @@
 	"in_progress": "Dalam Proses",
 	"cancelled": "Dibatalkan",
 	"failed_to_load_orders": "Gagal memuat pesanan",
-	"top_up": "Top up",
+	"top_up": "Isi Ulang",
 	"withdrawal": "Penarikan",
 	"payment": "Pembayaran",
 	"refund": "Pengembalian Dana",
@@ -145,12 +145,12 @@
 	"active": "Aktif",
 	"inactive": "Tidak aktif",
 	"available_balance": "Saldo Tersedia",
-	"earnings_wallet": "Dompet dan Penghasilan",
+	"earnings_wallet": "Penghasilan & Dompet",
 	"failed_to_load_earnings": "Gagal memuat penghasilan",
 	"amount": "Jumlah",
 	"invalid_amount": "Jumlah tidak valid",
 	"top_up_success": "Top up berhasil",
-	"hello": "Halo",
+	"hello": "Halo, {name}",
 	"qr_code_expired": "Kode QR telah kedaluwarsa",
 	"payment_expired": "Pembayaran telah kedaluwarsa",
 	"light_mode": "Mode Terang",
@@ -192,7 +192,6 @@
 	"special_instructions": "Instruksi Khusus (Opsional)",
 	"special_instructions_hint": "mis., 'Harap tangani dengan hati-hati', 'Telepon sebelum mengantarkan'",
 	"delivery_service": "Layanan Pengiriman",
-	"cancel": "Batal",
 	"continue": "Lanjutkan",
 	"back": "Kembali",
 	"next": "Lanjut",
@@ -200,7 +199,6 @@
 	"save_changes": "Simpan Perubahan",
 	"allow": "Izinkan",
 	"open_settings": "Buka Pengaturan",
-	"view_all": "Lihat Semua",
 	"send_reset_link": "Kirim Tautan Reset",
 	"back_to_sign_in": "Kembali ke Masuk",
 	"reset_password": "Atur Ulang Kata Sandi",
@@ -210,12 +208,8 @@
 	"send_alert": "Kirim Peringatan",
 	"download_qr": "Unduh QR",
 	"copy_qr_url": "Salin URL QR",
-	"top_up": "Isi Ulang",
-	"retry": "Coba Lagi",
 	"name": "Nama",
-	"email": "Email",
 	"phone": "Telepon",
-	"password": "Kata Sandi",
 	"gender": "Jenis Kelamin",
 	"photo": "Foto",
 	"address": "Alamat",
@@ -226,12 +220,8 @@
 	"merchant_role": "Mitra",
 	"student_id": "NIM",
 	"confirm_password": "Konfirmasi Kata Sandi",
-	"student_card": "Kartu Mahasiswa (KTM)",
-	"driver_license": "SIM",
-	"license_plate": "Nomor Kendaraan",
 	"vehicle_registration": "STNK",
 	"bank_provider": "Bank",
-	"bank_account": "Rekening Bank",
 	"owner_name": "Nama Pemilik",
 	"outlet_name": "Nama Outlet",
 	"outlet_category": "Kategori Outlet",
@@ -249,7 +239,6 @@
 	"old_password": "Kata Sandi Lama",
 	"new_password": "Kata Sandi Baru",
 	"confirm_new_password": "Konfirmasi Kata Sandi Baru",
-	"my_balance": "Saldo Saya",
 	"this_month": "Bulan ini",
 	"expenses": "Pengeluaran",
 	"income": "Pemasukan",
@@ -257,7 +246,6 @@
 	"order_id": "Pesanan #",
 	"pickup": "Penjemputan",
 	"dropoff": "Tujuan",
-	"distance": "Jarak",
 	"earnings": "Penghasilan",
 	"gender_preference": "Preferensi gender: ",
 	"note": "Catatan:",
@@ -280,7 +268,6 @@
 	"harassment": "Pelecehan",
 	"theft": "Pencurian",
 	"medical": "Darurat Medis",
-	"other": "Lainnya",
 	"description": "Deskripsi:",
 	"akademove_pay": "Akademove Pay",
 	"valid_until": "Berlaku sampai ",
@@ -308,15 +295,8 @@
 	"merchant_sign_up_step2": "Bagikan detail dan lokasi outlet agar pelanggan mudah menemukan Anda!",
 	"merchant_sign_up_step3": "Tambahkan rekening bank untuk menerima pembayaran dengan aman!",
 	"forgot_password": "Lupa Kata Sandi",
-	"reset_password": "Atur Ulang Kata Sandi",
-	"edit_profile": "Sunting Profil",
-	"change_password": "Ganti Kata Sandi",
-	"wallet": "E-wallet",
-	"top_up": "Isi Ulang",
 	"driver_dashboard": "Beranda Driver",
-	"earnings_wallet": "Penghasilan & Dompet",
 	"order_history": "Riwayat Pesanan",
-	"my_schedule": "Jadwal Saya (KRS)",
 	"merchant_edit_profile": "Sunting Profil",
 	"setup_outlet": "Atur Outlet",
 	"order_detail": "Detail Pesanan",
@@ -340,20 +320,20 @@
 	"location_found": "Lokasi Ditemukan",
 	"not_found": "Tidak Ditemukan",
 	"validation_error": "Kesalahan Validasi",
-	"error": "Kesalahan",
 	"oops": "Ups...",
 	"new_order": "Pesanan {type} Baru",
+	"@new_order": {
+		"placeholders": {
+			"type": {
+				"type": "String"
+			}
+		}
+	},
 	"order_unavailable": "Pesanan Tidak Tersedia",
 	"order_rejected": "Pesanan Ditolak",
-	"rate_customer": "Beri Rating Pelanggan",
-	"success": "Berhasil",
 	"alert": "Peringatan Darurat",
 	"report_emergency": "Laporkan Darurat",
 	"confirm_logout": "Keluar",
-	"reject_order": "Tolak Pesanan",
-	"cancel_order": "Batalkan Pesanan",
-	"delete_schedule": "Hapus Jadwal",
-	"accept_order": "Terima Pesanan",
 	"delete_menu": "Hapus Menu",
 	"description_user_role": "Nikmati perjalanan yang nyaman dan aman ke tujuan Anda.",
 	"description_driver_role": "Dapatkan penghasilan tambahan dengan mengemudi bersama kami.",
@@ -400,7 +380,7 @@
 	"success_bank_verified": "Rekening bank berhasil diverifikasi",
 	"message_remember_password": "Ingat kata sandi Anda?",
 	"message_location_default": "Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.",
-	"message_location_permission_required": "Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.",
+	"message_leocation_permission_required": "Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.",
 	"message_location_permission_explanation": "Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda di peta secara otomatis. Ini membantu pelanggan menemukan bisnis Anda dengan mudah.\n\nAnda juga dapat mengatur lokasi secara manual dengan menggeser penanda.",
 	"message_location_services_disabled": "Layanan lokasi saat ini dinonaktifkan di perangkat Anda. Mohon aktifkan untuk mendeteksi lokasi outlet Anda secara otomatis.",
 	"message_location_permission_denied_forever": "Izin lokasi telah ditolak secara permanen. Untuk menggunakan deteksi lokasi otomatis, mohon aktifkan di pengaturan aplikasi.\n\nAnda masih dapat mengatur lokasi outlet Anda secara manual dengan menggeser penanda di peta.",
@@ -410,6 +390,13 @@
 	"message_location_permission_explanation_driver": "Untuk menerima pesanan perjalanan dan pengiriman, driver harus membagikan lokasi mereka secara real-time. Ini membantu:",
 	"message_redirect_settings": "Anda akan diarahkan ke pengaturan aplikasi untuk mengaktifkan akses lokasi.",
 	"message_rate_experience": "Bagaimana pengalaman Anda dengan {name}?",
+	"@message_rate_experience": {
+		"placeholders": {
+			"name": {
+				"type": "String"
+			}
+		}
+	},
 	"message_confirmation": "Ini akan mengirim peringatan darurat ke otoritas kampus dan memberi tahu kontak darurat. Apakah Anda yakin ingin melanjutkan?",
 	"message_settings_coming_soon": "Fitur pengaturan akan segera hadir",
 	"message_failed_load_profile": "Gagal memuat profil: ",
@@ -418,24 +405,41 @@
 	"message_confirm_reject_order": "Apakah Anda yakin ingin menolak pesanan ini? Tindakan ini tidak dapat dibatalkan.",
 	"message_confirm_cancel_order": "Apakah Anda yakin ingin membatalkan pesanan ini? Pelanggan akan diberitahu.",
 	"message_confirm_delete_schedule": "Apakah Anda yakin ingin menghapus \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
+	"@message_confirm_delete_schedule": {
+		"placeholders": {
+			"name": {
+				"type": "String"
+			}
+		}
+	},
 	"message_confirm_logout": "Apakah Anda yakin ingin keluar?",
 	"message_confirm_accept_order": "Apakah Anda yakin ingin menerima pesanan ini?",
 	"message_confirm_delete_menu": "Apakah Anda yakin ingin menghapus menu ini?",
 	"message_select_reject_reason": "Mohon pilih alasan untuk menolak pesanan ini:",
 	"dragging_marker": "Menggeser...",
 	"welcome_back": "Selamat datang kembali!",
-	"license_plate": "Nomor Kendaraan: ",
 	"rating": "Rating {rating}",
+	"@rating": {
+		"placeholders": {
+			"rating": {
+				"type": "String"
+			}
+		}
+	},
 	"driver_status": "Status Driver",
 	"accepting_orders": "Anda menerima pesanan",
 	"offline": "Anda offline",
 	"ready_accept": "Siap menerima pesanan baru",
 	"toggle_receive": "Aktifkan untuk mulai menerima pesanan",
 	"today_performance": "Performa Hari Ini",
-	"trips": "Perjalanan",
 	"quick_actions": "Aksi Cepat",
-	"manage_schedule": "Kelola Jadwal",
-	"hello": "Halo, {name}",
+	"@hello": {
+		"placeholders": {
+			"name": {
+				"type": "String"
+			}
+		}
+	},
 	"open_today": "Buka Hari Ini",
 	"operating_hours": "10.00 - 22.00 WIB",
 	"sales_recap": "Rekap Penjualan",
@@ -449,6 +453,13 @@
 	"start_delivery": "Mulai Pengiriman",
 	"choose_pickup_destination": "Pilih titik penjemputan dan tujuan Anda!",
 	"rating_score": "Rating: {score} / 5.0",
+	"@rating_score": {
+		"placeholders": {
+			"score": {
+				"type": "String"
+			}
+		}
+	},
 	"action_take_photo": "Ambil foto",
 	"action_choose_gallery": "Pilih dari galeri",
 	"action_remove_image": "Hapus gambar",
@@ -458,6 +469,13 @@
 	"cart_add_items_to_see_here": "Tambahkan item dari AMart untuk melihatnya di sini",
 	"cart_browse_amart": "Jelajahi AMart",
 	"cart_total_items": "Total ({count} item)",
+	"@cart_total_items": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
 	"cart_checkout": "Checkout",
 	"cart_coming_soon": "Segera Hadir",
 	"cart_order_confirmation_coming_soon": "Layar konfirmasi pesanan segera hadir",
@@ -468,11 +486,32 @@
 	"cart_note_prefix": "Catatan: ",
 	"cart_replace_cart_items": "Ganti Item Keranjang?",
 	"cart_contains_items_from": "Keranjang Anda berisi item dari {merchantName}.",
+	"@cart_contains_items_from": {
+		"placeholders": {
+			"merchantName": {
+				"type": "String"
+			}
+		}
+	},
 	"cart_discard_and_add_from": "Apakah Anda ingin membuang item tersebut dan menambahkan item dari {merchantName}?",
+	"@cart_discard_and_add_from": {
+		"placeholders": {
+			"merchantName": {
+				"type": "String"
+			}
+		}
+	},
 	"cart_current_cart_will_be_cleared": "Keranjang Anda saat ini akan dikosongkan",
 	"cart_replace_cart": "Ganti Keranjang",
 	"menu_details": "Detail Menu",
 	"menu_in_stock": "Tersedia ({count} stok)",
+	"@menu_in_stock": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
 	"menu_out_of_stock": "Stok Habis",
 	"menu_quantity": "Jumlah",
 	"menu_special_notes_optional": "Catatan Khusus (Opsional)",
@@ -484,6 +523,13 @@
 	"order_confirm_order_summary": "Ringkasan Pesanan",
 	"order_confirm_merchant": "Merchant",
 	"order_confirm_items_count": "{count} item",
+	"@order_confirm_items_count": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
 	"order_confirm_subtotal": "Subtotal",
 	"order_confirm_payment_method": "Metode Pembayaran",
 	"order_confirm_select_payment": "Pilih metode pembayaran",
@@ -506,5 +552,723 @@
 	"review_submission_failed": "Gagal mengirim ulasan",
 	"you_already_reviewed_order": "Anda sudah memberi ulasan untuk pesanan ini",
 	"order_must_be_completed_first": "Pesanan harus diselesaikan terlebih dahulu",
-	"rating_required": "Mohon berikan rating"
+	"rating_required": "Mohon berikan rating",
+	"coupon_no_coupons_available": "Tidak ada kupon tersedia",
+	"coupon_select_coupon": "Pilih Kupon",
+	"coupon_remove_coupon": "Hapus Kupon",
+	"payment_method_wallet": "Dompet",
+	"payment_method_bank_transfer": "Transfer Bank",
+	"emergency_alert_sent_successfully": "Peringatan darurat berhasil dikirim",
+	"emergency_alert_title": "Peringatan Darurat",
+	"emergency_report_title": "Laporkan Darurat",
+	"emergency_select_type": "Pilih jenis darurat:",
+	"emergency_describe_situation": "Jelaskan situasi darurat...",
+	"emergency_send_alert": "Kirim Peringatan",
+	"button_continue": "Lanjutkan",
+	"leaderboard_title": "Papan Peringkat",
+	"leaderboard_no_rankings": "Belum ada peringkat",
+	"leaderboard_no_badges": "Tidak ada lencana tersedia",
+	"leaderboard_pts": "poin",
+	"chat_no_messages": "Belum ada pesan",
+	"merchant_order_accept": "Terima",
+	"merchant_order_time_remaining": "01:00",
+	"gender_label": "Jenis Kelamin:",
+	"top_up_qris": "Isi Ulang QRIS",
+	"rate_your_driver": "Beri Rating Driver Anda",
+	"placeholder_name": "John Doe",
+	"placeholder_email": "john@gmail.com",
+	"placeholder_password": "********",
+	"dialog_location_permission": "Izin Lokasi",
+	"dialog_location_services_disabled": "Layanan Lokasi Dinonaktifkan",
+	"dialog_location_permission_required": "Izin Lokasi Diperlukan",
+	"drag_to_adjust": "Geser untuk mengatur posisi",
+	"error_enter_location_to_search": "Mohon masukkan lokasi untuk dicari",
+	"success_signed_up": "Pendaftaran berhasil",
+	"error_fill_all_required_fields": "Mohon isi semua kolom yang diperlukan dengan benar",
+	"error_complete_all_required_fields": "Mohon lengkapi semua kolom yang wajib diisi",
+	"error_passwords_not_match": "Kata sandi tidak cocok",
+	"merchant_step_1_description": "Ceritakan tentang diri Anda untuk memulai perjalanan mitra!",
+	"merchant_step_2_description": "Bagikan detail dan lokasi outlet agar pelanggan mudah menemukan Anda!",
+	"merchant_step_3_description": "Tambahkan rekening bank untuk menerima pembayaran dengan aman!",
+	"placeholder_outlet_name": "Nama Outlet Anda",
+	"label_outlet_location": "Lokasi Outlet",
+	"label_bank_provider": "Bank",
+	"label_outlet_category": "Kategori Outlet",
+	"helper_outlet_category_select": "Pilih kategori utama untuk outlet Anda",
+	"placeholder_select_outlet_category": "Pilih kategori outlet",
+	"label_phone": "Telepon",
+	"dialog_accept_order": "Terima Pesanan",
+	"dialog_accept_order_confirm": "Apakah Anda yakin ingin menerima pesanan ini?",
+	"toast_validation_error": "Kesalahan Validasi",
+	"error_menu_name_required": "Nama menu wajib diisi",
+	"error_menu_price_required": "Harga menu wajib diisi",
+	"error_valid_price_required": "Mohon masukkan harga yang valid",
+	"error_merchant_info_not_found": "Informasi merchant tidak ditemukan",
+	"success_menu_created": "Menu berhasil dibuat",
+	"error_failed_create_menu": "Gagal membuat menu",
+	"title_create_menu": "Buat Menu",
+	"placeholder_zero": "0",
+	"error_menu_info_not_found": "Informasi menu tidak ditemukan",
+	"title_edit_menu": "Sunting Menu",
+	"error_menu_not_found": "Menu tidak ditemukan",
+	"placeholder_search_menu": "Cari menu...",
+	"title_menu_detail": "Detail Menu",
+	"dialog_delete_menu": "Hapus Menu",
+	"dialog_delete_menu_confirm": "Apakah Anda yakin ingin menghapus \"{name}\"?",
+	"@dialog_delete_menu_confirm": {
+		"placeholders": {
+			"name": {
+				"type": "String"
+			}
+		}
+	},
+	"success_menu_deleted": "Menu berhasil dihapus",
+	"error_failed_delete_menu": "Gagal menghapus menu",
+	"label_old_password": "Kata Sandi Lama",
+	"placeholder_enter_old_password": "Masukkan kata sandi lama Anda",
+	"label_new_password": "Kata Sandi Baru",
+	"placeholder_enter_new_password": "Masukkan kata sandi baru Anda",
+	"label_confirm_password": "Konfirmasi Kata Sandi",
+	"placeholder_confirm_new_password": "Konfirmasi kata sandi baru Anda",
+	"error_failed_verify_bank": "Gagal memverifikasi rekening bank",
+	"loading_map": "Memuat peta...",
+	"success_set_up_merchant": "Berhasil menyiapkan merchant",
+	"title_set_up_outlet": "Atur Outlet",
+	"placeholder_time_start": "10:00",
+	"placeholder_time_end": "22:00",
+	"title_sales_report": "Laporan Penjualan",
+	"tab_weekly_sales": "Penjualan Mingguan",
+	"tab_monthly_sales": "Penjualan Bulanan",
+	"title_commission_report": "Laporan Komisi",
+	"title_order_detail": "Detail Pesanan",
+	"button_add_schedule": "Tambah Jadwal",
+	"button_edit": "Sunting",
+	"placeholder_class_name": "mis., Pemrograman Mobile",
+	"dialog_call_customer": "Telepon Pelanggan",
+	"section_today_performance": "Performa Hari Ini",
+	"section_quick_actions": "Aksi Cepat",
+	"label_rating_suffix": "rating",
+	"dialog_rate_customer": "Beri Rating Pelanggan",
+	"label_review_category": "Kategori Ulasan",
+	"label_comment_optional": "Komentar (Opsional)",
+	"placeholder_share_experience": "Bagikan pengalaman Anda...",
+	"button_submit": "Kirim",
+	"dialog_new_order": "Pesanan {type} Baru",
+	"@dialog_new_order": {
+		"placeholders": {
+			"type": {
+				"type": "String"
+			}
+		}
+	},
+	"label_order_id_prefix": "Pesanan #",
+	"label_pickup": "Penjemputan",
+	"label_dropoff": "Tujuan",
+	"label_distance": "Jarak",
+	"label_earnings": "Penghasilan",
+	"label_gender_preference": "Preferensi gender: {gender}",
+	"@label_gender_preference": {
+		"placeholders": {
+			"gender": {
+				"type": "String"
+			}
+		}
+	},
+	"label_note": "Catatan:",
+	"label_pickup_prefix": "Penjemputan: {location}",
+	"@label_pickup_prefix": {
+		"placeholders": {
+			"location": {
+				"type": "String"
+			}
+		}
+	},
+	"label_dropoff_prefix": "Tujuan: {location}",
+	"@label_dropoff_prefix": {
+		"placeholders": {
+			"location": {
+				"type": "String"
+			}
+		}
+	},
+	"label_instructions_prefix": "Instruksi: {instructions}",
+	"@label_instructions_prefix": {
+		"placeholders": {
+			"instructions": {
+				"type": "String"
+			}
+		}
+	},
+	"order_type_ride_label": "Perjalanan",
+	"order_type_delivery_label": "Pengiriman",
+	"order_type_food_label": "Makanan",
+	"toast_order_unavailable": "Pesanan Tidak Tersedia",
+	"toast_order_unavailable_message": "Pesanan ini dibatalkan atau diterima oleh driver lain",
+	"toast_order_rejected": "Pesanan Ditolak",
+	"toast_order_rejected_message": "Anda menolak pesanan",
+	"label_total_fare": "Total Tarif",
+	"dialog_unsupported_payment": "Metode pembayaran tidak didukung",
+	"dialog_unsupported_payment_message": "Metode pembayaran yang dipilih tidak didukung. Silakan pilih metode lain.",
+	"label_provider": "Penyedia :",
+	"label_va_number": "Nomor VA :",
+	"label_valid_until": "Berlaku sampai {date}",
+	"@label_valid_until": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"label_remaining_time": "Waktu Tersisa :",
+	"button_copy_va_number": "Salin Nomor VA",
+	"label_no_rating_yet": "Belum ada rating",
+	"message_wait_for_driver": "Mohon tunggu sementara kami mencocokkan Anda dengan driver",
+	"label_license_plate": "Plat nomor",
+	"status_finding_driver": "Mencari driver",
+	"status_your_driver": "Driver Anda",
+	"instruction_choose_pickup_destination": "Pilih titik penjemputan dan tujuan Anda!",
+	"button_proceed": "Lanjutkan",
+	"placeholder_what_sending": "Apa yang Anda kirim?",
+	"placeholder_enter_weight": "Masukkan berat dalam kg (maks 20kg)",
+	"helper_special_instructions": "Tambahkan instruksi penanganan atau pengiriman khusus",
+	"helper_add_photos": "Tambahkan hingga 3 foto item",
+	"error_provide_item_description": "Mohon berikan deskripsi item",
+	"error_no_estimate_available": "Tidak ada perkiraan tersedia",
+	"button_choose_payment_method": "Pilih Metode Pembayaran",
+	"button_place_order": "Buat Pesanan",
+	"label_photo_profile": "Foto Profil",
+	"label_name": "Nama",
+	"label_email": "Email",
+	"section_achievements": "Pencapaian",
+	"button_rate_this_order": "Beri rating pesanan ini",
+	"empty_no_order_history": "Tidak ada riwayat pesanan",
+	"label_your_current_location": "Lokasi Anda saat ini",
+	"label_drivers_around": "Ada {count} driver di sekitar Anda",
+	"@label_drivers_around": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"error_failed_load_mart": "Gagal memuat data mart",
+	"error_failed_load_merchants": "Gagal memuat merchant",
+	"empty_no_merchants_found": "Tidak ada merchant ditemukan",
+	"button_select_via_map": "Pilih melalui peta",
+	"error_no_place_found": "Tidak ada tempat ditemukan",
+	"title_select_bank_provider": "Pilih Bank",
+	"payment_akademove_pay": "Akademove Pay",
+	"button_download_qr": "Unduh QR",
+	"button_copy_qr_url": "Salin URL QR",
+	"separator_colon": ":",
+	"placeholder_type_message": "Ketik pesan...",
+	"tab_on_process": "Dalam proses",
+	"tab_completed": "Selesai",
+	"tab_canceled": "Dibatalkan",
+	"start_preparing": "Mulai Siapkan",
+	"order_ready": "Pesanan Siap",
+	"waiting_for_driver_pickup": "Menunggu driver untuk mengambil...",
+	"no_menu_items_yet": "Belum ada menu. Ketuk + untuk menambahkan menu pertama Anda.",
+	"no_menu_items_found": "Tidak ada menu ditemukan untuk \"{query}\"",
+	"@no_menu_items_found": {
+		"placeholders": {
+			"query": {
+				"type": "String"
+			}
+		}
+	},
+	"placeholder_search_menu_hint": "Cari menu...",
+	"label_menu_name": "Nama Menu",
+	"label_menu_price": "Harga Menu",
+	"label_menu_stock": "Stok Menu",
+	"label_menu_category": "Kategori Menu",
+	"label_menu_photo": "Foto Menu",
+	"placeholder_menu_name": "contoh: Susu Butterscotch",
+	"placeholder_menu_price": "contoh: 30000",
+	"label_category": "Kategori",
+	"label_price": "Harga",
+	"label_stock": "Stok",
+	"label_created": "Dibuat",
+	"label_updated": "Diperbarui",
+	"placeholder_select_category": "Pilih kategori",
+	"error_validation": "Kesalahan Validasi",
+	"title_privacy_policies": "Kebijakan Privasi",
+	"ordered_by": "Dipesan oleh",
+	"driver_assigned": "Driver ditugaskan",
+	"order_items": "Item Pesanan",
+	"base_price": "Harga Dasar",
+	"order_time": "Waktu Pesanan",
+	"order_chat": "Chat Pesanan",
+	"toast_order_accepted": "Pesanan berhasil diterima",
+	"toast_order_rejected_success": "Pesanan berhasil ditolak",
+	"toast_order_marked_preparing": "Pesanan ditandai sedang disiapkan",
+	"toast_order_marked_ready": "Pesanan ditandai siap diambil",
+	"toast_failed_accept_order": "Gagal menerima pesanan",
+	"toast_failed_reject_order": "Gagal menolak pesanan",
+	"toast_failed_update_order": "Gagal memperbarui pesanan",
+	"toast_merchant_id_not_found": "ID Merchant tidak ditemukan",
+	"unknown_item": "Item Tidak Diketahui",
+	"label_status": "Status",
+	"label_wib": "WIB",
+	"title_create_menu": "Buat Menu",
+	"title_edit_menu": "Edit Menu",
+	"error_fill_all_required_fields": "Mohon isi semua kolom yang diperlukan dengan benar",
+	"error_menu_name_required": "Nama menu wajib diisi",
+	"error_menu_price_required": "Harga menu wajib diisi",
+	"error_valid_price": "Mohon masukkan harga yang valid",
+	"error_menu_info_not_found": "Informasi menu tidak ditemukan",
+	"error_merchant_info_not_found": "Informasi merchant tidak ditemukan",
+	"toast_menu_created_success": "Menu berhasil dibuat",
+	"toast_failed_create_menu": "Gagal membuat menu",
+	"toast_menu_updated_success": "Menu berhasil diperbarui",
+	"toast_failed_update_menu": "Gagal memperbarui menu",
+	"button_create_menu": "Buat Menu",
+	"button_create": "Buat",
+	"label_menu_description": "Deskripsi Menu",
+	"placeholder_menu_description": "Kopi dengan gula merah",
+	"placeholder_menu_category": "Minuman",
+	"label_menu_photo_optional": "Foto Menu (Opsional)",
+	"title_edit_profile": "Edit Profil",
+	"label_owner_name": "Nama Pemilik",
+	"placeholder_owner_name": "Masukkan nama pemilik",
+	"label_owner_email": "Email Pemilik",
+	"placeholder_owner_email": "Masukkan email pemilik",
+	"label_owner_phone": "Nomor Telepon Pemilik",
+	"label_outlet_name": "Nama Outlet",
+	"placeholder_outlet_name": "Masukkan nama outlet",
+	"label_outlet_location": "Lokasi Outlet",
+	"label_outlet_phone": "Nomor Telepon Outlet",
+	"label_outlet_email": "Email Outlet",
+	"placeholder_outlet_email": "Masukkan email outlet",
+	"label_outlet_document": "Dokumen Outlet (Opsional)",
+	"label_choose_bank": "Pilih bank",
+	"placeholder_select_bank_provider": "Pilih provider bank",
+	"label_bank_account": "Rekening Bank",
+	"placeholder_bank_account": "********1234",
+	"toast_location_permission": "Izin Lokasi",
+	"toast_using_default_location": "Menggunakan lokasi default. Anda dapat menyeret penanda untuk mengatur lokasi outlet Anda.",
+	"dialog_location_permission_title": "Izin Lokasi",
+	"dialog_location_permission_message": "Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda secara otomatis di peta. Ini membantu pelanggan menemukan bisnis Anda dengan mudah. Anda juga dapat mengatur lokasi secara manual dengan menyeret penanda.",
+	"dialog_location_services_disabled_title": "Layanan Lokasi Dinonaktifkan",
+	"dialog_location_services_disabled_message": "Layanan lokasi saat ini dinonaktifkan di perangkat Anda. Mohon aktifkan untuk mendeteksi lokasi outlet Anda secara otomatis.",
+	"dialog_location_permission_required_title": "Izin Lokasi Diperlukan",
+	"dialog_location_permission_required_message": "Izin lokasi telah ditolak secara permanen. Untuk menggunakan deteksi lokasi otomatis, mohon aktifkan di pengaturan aplikasi Anda.\n\nAnda masih dapat mengatur lokasi outlet Anda secara manual dengan menyeret penanda di peta.",
+	"label_outlet_location_description": "Pastikan titik lokasi di peta sudah benar untuk memenuhi persyaratan pendaftaran.",
+	"placeholder_search_location": "Cari lokasi",
+	"label_dragging": "Menyeret...",
+	"toast_location_found": "Lokasi Ditemukan",
+	"toast_marker_moved": "Penanda dipindahkan ke lokasi yang dicari",
+	"toast_not_found": "Tidak Ditemukan",
+	"toast_location_not_found": "Lokasi tidak ditemukan. Silakan coba pencarian lain.",
+	"toast_search_error": "Kesalahan Pencarian",
+	"toast_search_error_message": "Tidak dapat mencari lokasi. Mohon periksa koneksi internet Anda.",
+	"toast_enter_location": "Mohon masukkan lokasi untuk dicari",
+	"label_benchmark_optional": "Patokan (Opsional)",
+	"placeholder_benchmark": "Samping toko Uniqlo.",
+	"toast_bank_account_verified": "Rekening bank berhasil diverifikasi",
+	"toast_failed_verify_bank": "Gagal memverifikasi rekening bank",
+	"toast_enter_bank_account": "Mohon masukkan nomor rekening bank",
+	"toast_bank_account_min_digits": "Nomor rekening bank minimal 5 digit",
+	"toast_select_bank_first": "Mohon pilih provider bank terlebih dahulu",
+	"label_bank_account_number": "Nomor Rekening Bank",
+	"label_account_holder_name": "Nama Pemegang Rekening",
+	"label_owner_bank_name": "Nama Pemilik",
+	"label_unable_get_address": "Tidak dapat mendapatkan alamat",
+	"title_set_up_outlet": "Atur Outlet",
+	"label_step_1": "Langkah 1",
+	"label_step_2": "Langkah 2",
+	"label_step_3": "Langkah 3",
+	"label_outlet_photo_profile": "Foto Profil Outlet",
+	"label_outlet_category": "Kategori Outlet",
+	"placeholder_outlet_category": "Pilih kategori outlet Anda",
+	"label_outlet_operating_hours": "Jam Operasional Outlet",
+	"label_24_hours": "24 Jam",
+	"toast_success_set_up": "Berhasil mengatur merchant",
+	"toast_complete_required_fields": "Mohon lengkapi semua kolom yang diperlukan",
+	"error_outlet_photo_required": "Foto outlet wajib diisi",
+	"error_menu_photo_required": "Foto menu wajib diisi",
+	"title_sales_report": "Laporan Penjualan",
+	"label_weekly_sales": "Penjualan Mingguan",
+	"label_monthly_sales": "Penjualan Bulanan",
+	"label_earns": "Penghasilan",
+	"label_top_ordered_categories": "Kategori Terlaris",
+	"label_top_ordered_products": "Produk Terlaris",
+	"button_export_pdf": "Ekspor ke PDF",
+	"category_junk_food": "Junk Food",
+	"category_drinks": "Minuman",
+	"category_snack": "Camilan",
+	"product_fried_chicken": "Ayam Goreng",
+	"product_coffee_latte": "Kopi Latte",
+	"product_laundry_express": "Laundry Express",
+	"title_commission_report": "Laporan Komisi",
+	"label_incoming_balance": "Saldo Masuk",
+	"label_outgoing_balance": "Saldo Keluar",
+	"label_balance_detail": "Detail Saldo",
+	"label_gross_sales": "Penjualan Kotor",
+	"label_platform_commission": "Komisi Platform (20%)",
+	"label_net_income": "Pendapatan Bersih",
+	"label_nett_income": "Pendapatan Nett",
+	"title_change_password": "Ubah Kata Sandi",
+	"label_old_password": "Kata Sandi Lama",
+	"placeholder_old_password": "Masukkan kata sandi lama Anda",
+	"label_new_password": "Kata Sandi Baru",
+	"placeholder_new_password": "Masukkan kata sandi baru Anda",
+	"label_confirm_password": "Konfirmasi Kata Sandi",
+	"placeholder_confirm_password": "Konfirmasi kata sandi baru Anda",
+	"label_name": "Nama",
+	"title_set_up_outlet": "Atur Outlet",
+	"step_1": "Langkah 1",
+	"step_2": "Langkah 2",
+	"step_3": "Langkah 3",
+	"label_outlet_photo_profile": "Foto Profil Outlet",
+	"error_outlet_photo_required": "Foto outlet wajib diisi",
+	"label_outlet_category": "Kategori Outlet",
+	"placeholder_outlet_category": "Pilih kategori outlet Anda",
+	"button_next": "Lanjut",
+	"button_back": "Kembali",
+	"button_save": "Simpan",
+	"label_outlet_operating_hours": "Jam Operasional Outlet",
+	"label_start": "Mulai",
+	"label_end": "Selesai",
+	"placeholder_start_time": "10:00",
+	"placeholder_end_time": "22:00",
+	"label_24_hours": "24 Jam",
+	"day_monday": "Senin",
+	"day_tuesday": "Selasa",
+	"day_wednesday": "Rabu",
+	"day_thursday": "Kamis",
+	"day_friday": "Jumat",
+	"day_saturday": "Sabtu",
+	"day_sunday": "Minggu",
+	"label_menu_photo": "Foto Menu",
+	"error_menu_photo_required": "Foto menu wajib diisi",
+	"placeholder_menu_name": "Masukkan nama menu",
+	"placeholder_menu_price": "Masukkan harga",
+	"toast_validation_error": "Kesalahan Validasi",
+	"toast_complete_required_fields": "Mohon lengkapi semua field yang wajib diisi",
+	"toast_success": "Berhasil",
+	"toast_success_set_up_merchant": "Berhasil mengatur merchant",
+	"outlet_category_restaurant": "Restoran",
+	"outlet_category_cafe": "Kafe",
+	"outlet_category_fast_food": "Makanan Cepat Saji",
+	"outlet_category_bakery": "Toko Roti",
+	"outlet_category_street_food": "Makanan Jalanan",
+	"outlet_category_food_truck": "Food Truck",
+	"outlet_category_bar": "Bar",
+	"outlet_category_coffeeshop": "Kedai Kopi",
+	"outlet_category_dessert_shop": "Toko Dessert",
+	"outlet_category_juice_bar": "Kedai Jus",
+	"menu_category_appetizer": "Pembuka",
+	"menu_category_main_course": "Hidangan Utama",
+	"menu_category_dessert": "Penutup",
+	"menu_category_beverage": "Minuman",
+	"menu_category_snack": "Camilan",
+	"menu_category_breakfast": "Sarapan",
+	"menu_category_lunch": "Makan Siang",
+	"menu_category_dinner": "Makan Malam",
+	"menu_category_salad": "Salad",
+	"menu_category_soup": "Sup",
+	"menu_category_seafood": "Makanan Laut",
+	"menu_category_vegetarian": "Vegetarian",
+	"menu_category_vegan": "Vegan",
+	"menu_category_pasta": "Pasta",
+	"menu_category_pizza": "Pizza",
+	"menu_category_burger": "Burger",
+	"menu_category_sandwich": "Sandwich",
+	"menu_category_rice": "Nasi",
+	"menu_category_noodle": "Mi",
+	"menu_category_grill": "Panggang",
+	"title_delivery": "Pengiriman",
+	"title_where_you_at": "Di mana lokasi Anda?",
+	"title_where_are_you_going": "Mau ke mana?",
+	"text_choose_pickup_destination": "Pilih titik jemput dan tujuan Anda!",
+	"toast_failed_estimate_order": "Gagal menghitung estimasi pesanan",
+	"button_proceed": "Lanjutkan",
+	"marker_pickup": "Jemput",
+	"marker_dropoff": "Tujuan",
+	"title_order_summary": "Ringkasan Pesanan",
+	"text_no_estimate_available": "Estimasi tidak tersedia",
+	"label_delivery_details": "Detail Pengiriman",
+	"label_from": "Dari",
+	"label_to": "Ke",
+	"label_item": "Barang",
+	"label_weight": "Berat",
+	"label_instructions": "Instruksi",
+	"button_apply_coupon": "Gunakan Kupon",
+	"text_coupon": "Kupon",
+	"label_price_breakdown": "Rincian Harga",
+	"label_distance": "Jarak",
+	"label_base_fare": "Tarif Dasar",
+	"label_distance_fare": "Tarif Jarak",
+	"label_subtotal": "Subtotal",
+	"label_discount": "Diskon",
+	"label_total": "Total",
+	"button_choose_payment_method": "Pilih Metode Pembayaran",
+	"title_payment_method": "Metode Pembayaran",
+	"toast_failed_place_order": "Gagal membuat pesanan",
+	"toast_delivery_order_placed": "Pesanan pengiriman berhasil dibuat",
+	"button_place_order": "Buat Pesanan",
+	"title_ride": "Tumpangan",
+	"title_trip_details": "Detail Perjalanan",
+	"toast_wallet_payment_failed": "Pembayaran wallet gagal",
+	"title_ride_payment": "Pembayaran Tumpangan",
+	"label_total_fare": "Total Biaya",
+	"text_unsupported_payment_method": "Metode pembayaran tidak didukung",
+	"label_provider": "Penyedia :",
+	"label_va_number": "Nomor VA :",
+	"text_valid_until": "Berlaku hingga",
+	"label_remaining_time": "Waktu Tersisa :",
+	"button_copy_va_number": "Salin Nomor VA",
+	"label_confirm_new_password": "Konfirmasi Password Baru",
+	"label_photo_profile": "Foto Profil",
+	"label_email": "Email",
+	"label_phone": "Telepon",
+	"text_rate_this_order": "Beri rating pesanan ini",
+	"text_driver": "Driver",
+	"button_save_changes": "Simpan Perubahan",
+	"text_thank_you_rating": "Terima kasih atas penilaian Anda!",
+	"label_achievements": "Pencapaian",
+	"text_earned_at": "Diperoleh pada",
+	"text_all": "Semua",
+	"toast_failed_load_merchants": "Gagal memuat merchant",
+	"text_no_merchants_found": "Merchant tidak ditemukan",
+	"text_try_different_category": "Coba pilih kategori lain",
+	"text_open": "Buka",
+	"text_closed": "Tutup",
+	"toast_failed_load_mart_data": "Gagal memuat data mart",
+	"label_categories": "Kategori",
+	"label_recent_orders": "Pesanan Terbaru",
+	"button_view_all": "Lihat Semua",
+	"label_best_sellers": "Terlaris",
+	"text_rating": "Rating",
+	"text_no_rating_yet": "Belum ada rating",
+	"label_nearby_drivers": "Driver terdekat",
+	"text_your_current_location": "Lokasi Anda saat ini",
+	"item_count": "{count} item",
+	"button_accept": "Terima",
+	"how_was_your_experience": "Bagaimana pengalaman Anda?",
+	"mixed": "Campuran",
+	"male": "Laki-laki",
+	"female": "Perempuan",
+	"toast_app_state_corrupted": "State aplikasi rusak, silakan restart",
+	"toast_payment_info_not_available": "Informasi pembayaran tidak tersedia",
+	"text_apply_coupon": "Gunakan Kupon",
+	"text_coupon_applied": "Kupon: {code}",
+	"@text_coupon_applied": {
+		"placeholders": {
+			"code": {
+				"type": "String"
+			}
+		}
+	},
+	"label_payment_method": "Metode Pembayaran",
+	"label_payment_summary": "Ringkasan Pembayaran",
+	"text_payment_successful": "Pembayaran berhasil",
+	"text_payment_failed": "Pembayaran gagal",
+	"text_unsupported_payment_method_description": "Metode pembayaran yang dipilih tidak didukung. Silakan pilih metode lain.",
+	"toast_va_number_not_available": "Nomor VA tidak tersedia",
+	"toast_va_number_copied": "Nomor VA disalin ke clipboard",
+	"text_provider_label": "Penyedia :",
+	"text_va_number_label": "Nomor VA :",
+	"text_valid_until_with_date": "Berlaku hingga {date}",
+	"@text_valid_until_with_date": {
+		"placeholders": {
+			"date": {
+				"type": "String"
+			}
+		}
+	},
+	"text_on_trip": "Dalam Perjalanan",
+	"text_license_plate": "Plat nomor",
+	"text_finding_driver": "Mencari driver Anda...",
+	"text_finding_driver_message": "Mohon tunggu sementara kami mencarikan driver untuk Anda",
+	"status_searching": "Mencari",
+	"status_driver_found": "Driver ditemukan",
+	"status_on_the_way": "Dalam perjalanan",
+	"text_pickup_location": "Lokasi penjemputan",
+	"text_dropoff_location": "Lokasi tujuan",
+	"label_distance": "Jarak",
+	"label_payment_method_lower": "Metode Pembayaran",
+	"label_total_price": "Total Harga",
+	"label_status": "Status",
+	"text_order_details": "Detail pesanan",
+	"text_finding_driver_title": "Mencari driver",
+	"text_your_driver_title": "Driver Anda",
+	"text_trip_completed": "Perjalanan selesai!",
+	"text_trip_canceled": "Perjalanan dibatalkan",
+	"title_delivery_details": "Detail Pengiriman",
+	"label_item_description": "Deskripsi Barang",
+	"placeholder_item_description": "Apa yang akan Anda kirim?",
+	"label_weight_kg": "Berat (kg)",
+	"placeholder_weight_kg": "Masukkan berat dalam kg (maks 20kg)",
+	"text_maximum_weight": "Berat maksimum: 20kg",
+	"text_special_handling_instructions": "Tambahkan instruksi penanganan atau pengiriman khusus",
+	"label_item_photos_optional": "Foto Barang (Opsional)",
+	"text_add_up_to_3_photos": "Tambahkan hingga 3 foto barang",
+	"toast_provide_item_description": "Harap berikan deskripsi barang",
+	"toast_weight_must_be_valid": "Berat harus antara 0,1kg dan 20kg",
+	"button_continue": "Lanjutkan",
+	"text_thank_you_for_review": "Terima kasih atas ulasan Anda!",
+	"toast_failed_submit_review": "Gagal mengirim ulasan",
+	"text_rate_by_category": "Beri nilai berdasarkan kategori",
+	"category_cleanliness": "Kebersihan",
+	"category_courtesy": "Kesopanan",
+	"category_punctuality": "Ketepatan Waktu",
+	"category_safety": "Keamanan",
+	"category_communication": "Komunikasi",
+	"category_overall": "Keseluruhan",
+	"category_desc_cleanliness": "Seberapa bersih kendaraan dan penampilan driver?",
+	"category_desc_courtesy": "Seberapa sopan dan hormat driver?",
+	"category_desc_punctuality": "Apakah driver tepat waktu untuk penjemputan?",
+	"category_desc_safety": "Apakah Anda merasa aman selama perjalanan?",
+	"category_desc_communication": "Seberapa baik driver berkomunikasi?",
+	"category_desc_overall": "Beri nilai pengalaman Anda secara keseluruhan dengan driver ini",
+	"rating_poor": "Buruk",
+	"rating_below_average": "Di Bawah Rata-rata",
+	"rating_average": "Rata-rata",
+	"rating_good": "Baik",
+	"rating_excellent": "Sangat Baik",
+	"label_additional_comments": "Komentar tambahan (opsional)",
+	"placeholder_additional_comments": "Ceritakan lebih banyak tentang pengalaman Anda...",
+	"button_submit_review": "Kirim Ulasan",
+	"toast_please_rate_category": "Harap beri nilai {category}",
+	"@toast_please_rate_category": {
+		"placeholders": {
+			"category": {
+				"type": "String"
+			}
+		}
+	},
+	"text_drivers_around_you": "Ada {count} driver di sekitar Anda",
+	"@text_drivers_around_you": {
+		"placeholders": {
+			"count": {
+				"type": "int"
+			}
+		}
+	},
+	"text_no_order_history": "Tidak ada riwayat pesanan",
+	"text_order_id_short": "Pesanan #{id}",
+	"@text_order_id_short": {
+		"placeholders": {
+			"id": {
+				"type": "String"
+			}
+		}
+	},
+	"text_order_details": "Detail Pesanan",
+	"label_notes": "Catatan",
+	"text_unknown_user": "Pengguna Tidak Dikenal",
+	"text_customer": "Pelanggan",
+	"button_call_customer": "Hubungi Pelanggan",
+	"button_add_schedule": "Tambah Jadwal",
+	"button_edit": "Edit",
+	"button_delete": "Hapus",
+	"title_edit_schedule": "Edit Jadwal",
+	"title_add_schedule": "Tambah Jadwal",
+	"placeholder_course_name": "contoh: Pemrograman Mobile",
+	"button_cancel": "Batal",
+	"placeholder_full_name": "John Doe",
+	"placeholder_email": "john@gmail.com",
+	"placeholder_password": "********",
+	"placeholder_confirm_password": "********",
+	"placeholder_stock": "0",
+	"text_failed_to_load_profile": "Gagal memuat profil: {error}",
+	"@text_failed_to_load_profile": {
+		"placeholders": {
+			"error": {
+				"type": "String"
+			}
+		}
+	},
+	"text_no_rankings_yet": "Belum ada peringkat",
+	"title_where_you_at": "Di mana Anda?",
+	"title_where_going": "Mau ke mana?",
+	"tab_rankings": "Peringkat",
+	"tab_badges": "Lencana",
+	"text_user_id": "Pengguna {id}",
+	"@text_user_id": {
+		"placeholders": {
+			"id": {
+				"type": "String"
+			}
+		}
+	},
+	"text_category_value": "Kategori: {category}",
+	"@text_category_value": {
+		"placeholders": {
+			"category": {
+				"type": "String"
+			}
+		}
+	},
+	"text_period_value": "Periode: {period}",
+	"@text_period_value": {
+		"placeholders": {
+			"period": {
+				"type": "String"
+			}
+		}
+	},
+	"text_earned": "Diperoleh",
+	"text_balance_with_amount": "Saldo: {amount}",
+	"@text_balance_with_amount": {
+		"placeholders": {
+			"amount": {
+				"type": "String"
+			}
+		}
+	},
+	"button_top_up": "Isi Saldo",
+	"payment_method_qris": "QRIS",
+	"text_select_via_map": "Pilih via peta",
+	"text_no_place_found": "Tidak ada tempat ditemukan",
+	"title_location_permission_required": "Izin Lokasi Diperlukan",
+	"text_location_permission_denied": "Izin lokasi sebelumnya ditolak. Untuk online dan menerima pesanan, Anda perlu mengaktifkan akses lokasi di pengaturan perangkat.",
+	"text_location_permission_request": "Untuk menerima pesanan ride dan delivery, driver harus membagikan lokasi mereka secara real-time. Ini membantu:",
+	"text_location_benefit_match_orders": "Mencocokkan Anda dengan pesanan terdekat",
+	"text_location_benefit_track_arrival": "Biarkan pelanggan melacak kedatangan Anda",
+	"text_location_benefit_safety": "Memastikan keamanan dan akuntabilitas",
+	"text_location_redirect_settings": "Anda akan diarahkan ke pengaturan aplikasi untuk mengaktifkan akses lokasi.",
+	"button_open_settings": "Buka Pengaturan",
+	"button_grant_permission": "Berikan Izin",
+	"title_rate_customer": "Beri Rating Pelanggan",
+	"text_experience_with_user": "Bagaimana pengalaman Anda dengan {name}?",
+	"@text_experience_with_user": {
+		"placeholders": {
+			"name": {
+				"type": "String"
+			}
+		}
+	},
+	"label_review_category": "Kategori Ulasan",
+	"category_cleanliness": "Kebersihan",
+	"category_courtesy": "Kesopanan",
+	"category_punctuality": "Ketepatan Waktu",
+	"category_safety": "Keamanan",
+	"category_communication": "Komunikasi",
+	"category_other": "Lainnya",
+	"label_rating_score": "Rating: {score} / 5.0",
+	"@label_rating_score": {
+		"placeholders": {
+			"score": {
+				"type": "String"
+			}
+		}
+	},
+	"label_comment_optional": "Komentar (Opsional)",
+	"placeholder_share_experience": "Bagikan pengalaman Anda...",
+	"button_submit": "Kirim",
+	"toast_review_submitted": "Ulasan berhasil dikirim",
+	"toast_review_failed": "Gagal mengirim ulasan",
+	"title_reject_order": "Tolak Pesanan",
+	"text_select_rejection_reason": "Silakan pilih alasan penolakan pesanan ini:",
+	"rejection_reason_out_of_stock": "Stok Habis",
+	"rejection_reason_too_busy": "Terlalu Sibuk / Volume Pesanan Tinggi",
+	"rejection_reason_ingredient_unavailable": "Bahan Tidak Tersedia",
+	"rejection_reason_closed": "Toko Tutup / Akan Tutup",
+	"rejection_reason_other": "Lainnya",
+	"label_additional_note_optional": "Catatan Tambahan (Opsional)",
+	"placeholder_rejection_note": "contoh: \"Ayam habis, akan restok besok\"",
+	"button_reject_order": "Tolak Pesanan"
 }

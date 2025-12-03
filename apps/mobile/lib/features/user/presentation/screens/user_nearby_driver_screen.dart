@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -119,10 +120,10 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
             markerId: MarkerId('driver_${driver.id}'),
             position: LatLng(loc.y.toDouble(), loc.x.toDouble()),
             infoWindow: InfoWindow(
-              title: driver.user?.name ?? 'Driver',
+              title: driver.user?.name ?? context.l10n.text_driver,
               snippet: driver.rating != 0
-                  ? 'Rating: ${driver.rating.toStringAsFixed(1)}'
-                  : 'No rating yet',
+                  ? '${context.l10n.text_rating}: ${driver.rating.toStringAsFixed(1)}'
+                  : context.l10n.text_no_rating_yet,
             ),
             icon: _driverIcon,
           );
@@ -216,7 +217,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
         AppBar(
           padding: EdgeInsets.all(4.dg),
           title: Text(
-            'Nearby drivers',
+            context.l10n.label_nearby_drivers,
             style: context.typography.h4.copyWith(fontSize: 18.sp),
           ),
           leading: [
@@ -262,7 +263,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
               spacing: 8.h,
               children: [
                 Text(
-                  'Your current location',
+                  context.l10n.text_your_current_location,
                   style: context.typography.small.copyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
@@ -285,7 +286,7 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
                 BlocBuilder<UserRideCubit, UserRideState>(
                   builder: (context, state) {
                     return Text(
-                      'There are ${_markers.length} drivers around you',
+                      context.l10n.text_drivers_around_you(_markers.length),
                       style: context.typography.small.copyWith(
                         fontSize: 12.sp,
                         color: context.colorScheme.mutedForeground,

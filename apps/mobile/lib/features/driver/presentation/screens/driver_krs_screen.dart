@@ -170,10 +170,13 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
             onPressed: _driverId == null
                 ? null
                 : () => _showAddScheduleDialog(),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               spacing: 8,
-              children: [Icon(LucideIcons.plus), Text('Add Schedule')],
+              children: [
+                const Icon(LucideIcons.plus),
+                Text(context.l10n.button_add_schedule),
+              ],
             ),
           ),
         ],
@@ -225,8 +228,8 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   isActive ? LucideIcons.circleCheck : LucideIcons.circleX,
                   size: 20.sp,
                   color: isActive
-                      ? material.Colors.green
-                      : material.Colors.grey,
+                      ? const Color(0xFF4CAF50)
+                      : context.colorScheme.mutedForeground,
                 ),
               ],
             ),
@@ -252,7 +255,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       vertical: 2.h,
                     ),
                     decoration: BoxDecoration(
-                      color: material.Colors.blue.withValues(alpha: 0.1),
+                      color: context.colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4.r),
                     ),
                     child: Text(
@@ -260,7 +263,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       style: context.typography.small.copyWith(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
-                        color: material.Colors.blue,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -273,13 +276,13 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                 Expanded(
                   child: OutlineButton(
                     onPressed: () => _showEditScheduleDialog(schedule),
-                    child: const Text('Edit'),
+                    child: Text(context.l10n.button_edit),
                   ),
                 ),
                 Expanded(
                   child: DestructiveButton(
                     onPressed: () => _showDeleteConfirmation(schedule),
-                    child: const Text('Delete'),
+                    child: Text(context.l10n.button_delete),
                   ),
                 ),
               ],
@@ -290,22 +293,22 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     );
   }
 
-  material.Color _getDayColor(DayOfWeek day) {
+  Color _getDayColor(DayOfWeek day) {
     switch (day) {
       case DayOfWeek.MONDAY:
-        return material.Colors.red;
+        return const Color(0xFFF44336);
       case DayOfWeek.TUESDAY:
-        return material.Colors.orange;
+        return const Color(0xFFFF9800);
       case DayOfWeek.WEDNESDAY:
-        return material.Colors.yellow;
+        return const Color(0xFFFFEB3B);
       case DayOfWeek.THURSDAY:
-        return material.Colors.green;
+        return const Color(0xFF4CAF50);
       case DayOfWeek.FRIDAY:
-        return material.Colors.blue;
+        return const Color(0xFF2196F3);
       case DayOfWeek.SATURDAY:
-        return material.Colors.purple;
+        return const Color(0xFF9C27B0);
       case DayOfWeek.SUNDAY:
-        return material.Colors.pink;
+        return const Color(0xFFE91E63);
     }
   }
 
@@ -346,11 +349,15 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
     bool isRecurring = schedule?.isRecurring ?? true;
     bool isActive = schedule?.isActive ?? true;
 
-    material.showDialog(
+    showDialog(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
-        builder: (context, setState) => material.AlertDialog(
-          title: Text(isEditing ? 'Edit Schedule' : 'Add Schedule'),
+        builder: (context, setState) => AlertDialog(
+          title: Text(
+            isEditing
+                ? context.l10n.title_edit_schedule
+                : context.l10n.title_add_schedule,
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -358,20 +365,16 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
               spacing: 16.h,
               children: [
                 // Name field
-                material.TextField(
+                TextField(
                   controller: nameController,
-                  decoration: material.InputDecoration(
-                    labelText: context.l10n.schedule_name,
-                    hintText: 'e.g., Mobile Programming',
-                    border: material.OutlineInputBorder(),
-                  ),
+                  placeholder: Text(context.l10n.placeholder_course_name),
                 ),
                 // Day of week dropdown
                 material.DropdownButtonFormField<DayOfWeek>(
                   initialValue: selectedDay,
                   decoration: material.InputDecoration(
                     labelText: context.l10n.day_of_week,
-                    border: material.OutlineInputBorder(),
+                    border: const material.OutlineInputBorder(),
                   ),
                   items: DayOfWeek.values.map((day) {
                     return material.DropdownMenuItem(
@@ -386,11 +389,7 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                   },
                 ),
                 // Start time
-                material.ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(context.l10n.start_time),
-                  subtitle: Text(_formatTimeOfDay(startTime)),
-                  trailing: const Icon(LucideIcons.clock),
+                GestureDetector(
                   onTap: () async {
                     final picked = await material.showTimePicker(
                       context: context,
@@ -400,13 +399,41 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       setState(() => startTime = picked);
                     }
                   },
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.dg),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 4.h,
+                              children: [
+                                Text(
+                                  context.l10n.start_time,
+                                  style: context.typography.p.copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  _formatTimeOfDay(startTime),
+                                  style: context.typography.small.copyWith(
+                                    fontSize: 12.sp,
+                                    color: context.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(LucideIcons.clock),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 // End time
-                material.ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(context.l10n.end_time),
-                  subtitle: Text(_formatTimeOfDay(endTime)),
-                  trailing: const Icon(LucideIcons.clock),
+                GestureDetector(
                   onTap: () async {
                     final picked = await material.showTimePicker(
                       context: context,
@@ -416,6 +443,38 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
                       setState(() => endTime = picked);
                     }
                   },
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.dg),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 4.h,
+                              children: [
+                                Text(
+                                  context.l10n.end_time,
+                                  style: context.typography.p.copyWith(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  _formatTimeOfDay(endTime),
+                                  style: context.typography.small.copyWith(
+                                    fontSize: 12.sp,
+                                    color: context.colorScheme.mutedForeground,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(LucideIcons.clock),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 // Recurring toggle
                 material.SwitchListTile(
@@ -441,11 +500,11 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
             ),
           ),
           actions: [
-            material.TextButton(
+            OutlineButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(context.l10n.cancel),
             ),
-            material.TextButton(
+            PrimaryButton(
               onPressed: () async {
                 final name = nameController.text.trim();
                 if (name.isEmpty) {
@@ -582,24 +641,24 @@ class _DriverKrsScreenState extends State<DriverKrsScreen> {
   }
 
   void _showDeleteConfirmation(DriverSchedule schedule) {
-    material.showDialog(
+    showDialog(
       context: context,
-      builder: (dialogContext) => material.AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text(context.l10n.delete_schedule),
         content: Text(
           context.l10n.are_you_sure_you_want_to_delete_schedule(schedule.name),
         ),
         actions: [
-          material.TextButton(
+          OutlineButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.button_cancel),
           ),
-          material.TextButton(
+          DestructiveButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               _deleteSchedule(schedule.id);
             },
-            child: const Text('Delete'),
+            child: Text(context.l10n.button_delete),
           ),
         ],
       ),

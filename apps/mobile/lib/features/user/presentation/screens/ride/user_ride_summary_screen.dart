@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' show showModalBottomSheet;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +49,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     final dropoff = state.estimateOrder?.dropoff;
     if (pickup == null || dropoff == null) {
       context.showMyToast(
-        'App state corrupted, please restart',
+        context.l10n.toast_app_state_corrupted,
         type: ToastType.failed,
       );
       return;
@@ -71,7 +72,10 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     final payment = orderCubit.state.currentPayment;
 
     if (order == null) {
-      context.showMyToast('Failed to place order', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_failed_place_order,
+        type: ToastType.failed,
+      );
       return;
     }
 
@@ -83,7 +87,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
     // Navigate based on payment method
     if (payment == null) {
       context.showMyToast(
-        'Payment information not available',
+        context.l10n.toast_payment_info_not_available,
         type: ToastType.failed,
       );
       return;
@@ -108,7 +112,10 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
         if (payment.status == TransactionStatus.SUCCESS) {
           context.pushReplacementNamed(Routes.userRideOnTrip.name);
         } else {
-          context.showMyToast('wallet payment failed', type: ToastType.failed);
+          context.showMyToast(
+            context.l10n.toast_wallet_payment_failed,
+            type: ToastType.failed,
+          );
         }
     }
   }
@@ -116,7 +123,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Trip Details')],
+      headers: [DefaultAppBar(title: context.l10n.title_trip_details)],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.h,
@@ -142,7 +149,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             }),
           ),
           DefaultText(
-            'Payment Method',
+            context.l10n.label_payment_method,
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -212,8 +219,10 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                     Expanded(
                       child: Text(
                         selectedCoupon == null
-                            ? 'Apply Coupon'
-                            : 'Coupon: ${selectedCoupon?.code ?? ""}',
+                            ? context.l10n.text_apply_coupon
+                            : context.l10n.text_coupon_applied(
+                                selectedCoupon?.code ?? "",
+                              ),
                       ),
                     ),
                     Icon(
@@ -228,7 +237,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
             },
           ),
           DefaultText(
-            'Payment Summary',
+            context.l10n.label_payment_summary,
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -255,7 +264,7 @@ class _UserRideSummaryScreenState extends State<UserRideSummaryScreen> {
                   onPressed: canProceed ? () => placeOrder(state) : null,
                   child: state.isLoading
                       ? const Submiting()
-                      : const Text('Proceed'),
+                      : Text(context.l10n.button_proceed),
                 ),
               );
             },

@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as charts;
@@ -69,7 +70,7 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
               spacing: 8.h,
               children: [
                 Text(
-                  'Earns',
+                  context.l10n.label_earns,
                   style: context.typography.p.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -104,7 +105,7 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
           spacing: 16.h,
           children: [
             Text(
-              'Top Ordered Categories',
+              context.l10n.label_top_ordered_categories,
               style: context.typography.p.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
@@ -175,7 +176,7 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Top Ordered Products',
+              context.l10n.label_top_ordered_products,
               style: context.typography.p.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
@@ -236,7 +237,7 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
     return Stack(
       children: [
         MyScaffold(
-          headers: const [DefaultAppBar(title: 'Sales Report')],
+          headers: [DefaultAppBar(title: context.l10n.title_sales_report)],
           padding: EdgeInsets.all(16.w),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -246,13 +247,13 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
                 children: [
                   _buildSalesGauge(
                     context: context,
-                    title: 'Weekly Sales',
+                    title: context.l10n.label_weekly_sales,
                     value: 70,
                     amount: 'Rp 1.500.000',
                   ),
                   _buildSalesGauge(
                     context: context,
-                    title: 'Monthly Sales',
+                    title: context.l10n.label_monthly_sales,
                     value: 85,
                     amount: 'Rp 6.800.000',
                   ),
@@ -280,7 +281,7 @@ class MerchantSalesReportDetailScreen extends StatelessWidget {
                 child: Button.primary(
                   onPressed: () {},
                   child: Text(
-                    'Export to PDF',
+                    context.l10n.button_export_pdf,
                     style: context.typography.small.copyWith(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.normal,

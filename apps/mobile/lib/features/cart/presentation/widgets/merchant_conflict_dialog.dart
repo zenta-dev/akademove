@@ -1,8 +1,9 @@
+import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/cart/presentation/cubits/cart_cubit.dart';
 import 'package:akademove/l10n/l10n.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Dialog shown when user tries to add item from different merchant
 /// Requires confirmation to replace cart with new merchant's items
@@ -20,9 +21,13 @@ class MerchantConflictDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
+        spacing: 12.w,
         children: [
-          Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 24.sp),
-          SizedBox(width: 12.w),
+          Icon(
+            LucideIcons.triangleAlert,
+            color: context.colorScheme.primary,
+            size: 24.sp,
+          ),
           Text(context.l10n.cart_replace_cart_items),
         ],
       ),
@@ -30,65 +35,46 @@ class MerchantConflictDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8.h,
           children: [
             Text(
               context.l10n.cart_current_cart_will_be_cleared,
-              style: TextStyle(
+              style: context.typography.small.copyWith(
                 fontSize: 12.sp,
-                color: Colors.orange.shade800,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 8.h),
             Text(
               context.l10n.cart_discard_and_add_from(newMerchantName),
-              style: TextStyle(fontSize: 14.sp),
+              style: context.typography.p.copyWith(fontSize: 14.sp),
             ),
-            SizedBox(height: 16.h),
-            Container(
-              padding: EdgeInsets.all(12.dg),
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, size: 16.sp, color: Colors.orange),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      'Your current cart will be cleared',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.orange.shade800,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+            SizedBox(height: 8.h),
+            Alert(
+              leading: Icon(LucideIcons.info, size: 16.sp),
+              content: Text(
+                context.l10n.cart_current_cart_will_be_cleared,
+                style: context.typography.small.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],
         ),
       ),
       actions: [
-        TextButton(
+        OutlineButton(
           onPressed: () {
             context.read<CartCubit>().cancelReplaceCart();
             Navigator.of(context).pop();
           },
           child: Text(context.l10n.cancel),
         ),
-        ElevatedButton(
+        PrimaryButton(
           onPressed: () {
             context.read<CartCubit>().confirmReplaceCart();
             Navigator.of(context).pop();
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.orange,
-            foregroundColor: Colors.white,
-          ),
           child: Text(context.l10n.cart_replace_cart),
         ),
       ],

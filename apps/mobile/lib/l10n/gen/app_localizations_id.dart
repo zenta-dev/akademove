@@ -96,7 +96,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get not_taking_orders => 'Tidak Menerima Pesanan';
 
   @override
-  String get license_plate => 'Nomor Kendaraan';
+  String get license_plate => 'Nomor Kendaraan: ';
 
   @override
   String get failed_to_load_profile => 'Gagal memuat profil';
@@ -452,7 +452,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get qr_code_expired => 'Kode QR telah kedaluwarsa';
 
   @override
-  String get hello => 'Halo';
+  String hello(String name) {
+    return 'Halo, $name';
+  }
 
   @override
   String get payment_expired => 'Pembayaran telah kedaluwarsa';
@@ -1114,7 +1116,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get message_location_default => 'Menggunakan lokasi default. Anda dapat menggeser penanda untuk mengatur lokasi outlet Anda.';
 
   @override
-  String get message_leocation_permission_required => 'Location permission is required to set your outlet location automatically.';
+  String get message_leocation_permission_required => 'Izin lokasi diperlukan untuk mengatur lokasi outlet Anda secara otomatis.';
 
   @override
   String get message_location_permission_explanation => 'Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda di peta secara otomatis. Ini membantu pelanggan menemukan bisnis Anda dengan mudah.\n\nAnda juga dapat mengatur lokasi secara manual dengan menggeser penanda.';
@@ -1190,9 +1192,6 @@ class AppLocalizationsId extends AppLocalizations {
   String get welcome_back => 'Selamat datang kembali!';
 
   @override
-  String get license_plate => 'Nomor Kendaraan: ';
-
-  @override
   String rating(String rating) {
     return 'Rating $rating';
   }
@@ -1216,18 +1215,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get today_performance => 'Performa Hari Ini';
 
   @override
-  String get trips => 'Perjalanan';
-
-  @override
   String get quick_actions => 'Aksi Cepat';
-
-  @override
-  String get manage_schedule => 'Kelola Jadwal';
-
-  @override
-  String hello(String name) {
-    return 'Halo, $name';
-  }
 
   @override
   String get open_today => 'Buka Hari Ini';
@@ -1453,4 +1441,1566 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get rating_required => 'Mohon berikan rating';
+
+  @override
+  String get coupon_no_coupons_available => 'Tidak ada kupon tersedia';
+
+  @override
+  String get coupon_select_coupon => 'Pilih Kupon';
+
+  @override
+  String get coupon_remove_coupon => 'Hapus Kupon';
+
+  @override
+  String get payment_method_wallet => 'Dompet';
+
+  @override
+  String get payment_method_bank_transfer => 'Transfer Bank';
+
+  @override
+  String get emergency_alert_sent_successfully => 'Peringatan darurat berhasil dikirim';
+
+  @override
+  String get emergency_alert_title => 'Peringatan Darurat';
+
+  @override
+  String get emergency_report_title => 'Laporkan Darurat';
+
+  @override
+  String get emergency_select_type => 'Pilih jenis darurat:';
+
+  @override
+  String get emergency_describe_situation => 'Jelaskan situasi darurat...';
+
+  @override
+  String get emergency_send_alert => 'Kirim Peringatan';
+
+  @override
+  String get button_continue => 'Lanjutkan';
+
+  @override
+  String get leaderboard_title => 'Papan Peringkat';
+
+  @override
+  String get leaderboard_no_rankings => 'Belum ada peringkat';
+
+  @override
+  String get leaderboard_no_badges => 'Tidak ada lencana tersedia';
+
+  @override
+  String get leaderboard_pts => 'poin';
+
+  @override
+  String get chat_no_messages => 'Belum ada pesan';
+
+  @override
+  String get merchant_order_accept => 'Terima';
+
+  @override
+  String get merchant_order_time_remaining => '01:00';
+
+  @override
+  String get gender_label => 'Jenis Kelamin:';
+
+  @override
+  String get top_up_qris => 'Isi Ulang QRIS';
+
+  @override
+  String get rate_your_driver => 'Beri Rating Driver Anda';
+
+  @override
+  String get placeholder_name => 'John Doe';
+
+  @override
+  String get placeholder_email => 'john@gmail.com';
+
+  @override
+  String get placeholder_password => '********';
+
+  @override
+  String get dialog_location_permission => 'Izin Lokasi';
+
+  @override
+  String get dialog_location_services_disabled => 'Layanan Lokasi Dinonaktifkan';
+
+  @override
+  String get dialog_location_permission_required => 'Izin Lokasi Diperlukan';
+
+  @override
+  String get drag_to_adjust => 'Geser untuk mengatur posisi';
+
+  @override
+  String get error_enter_location_to_search => 'Mohon masukkan lokasi untuk dicari';
+
+  @override
+  String get success_signed_up => 'Pendaftaran berhasil';
+
+  @override
+  String get error_fill_all_required_fields => 'Mohon isi semua kolom yang diperlukan dengan benar';
+
+  @override
+  String get error_complete_all_required_fields => 'Mohon lengkapi semua kolom yang wajib diisi';
+
+  @override
+  String get error_passwords_not_match => 'Kata sandi tidak cocok';
+
+  @override
+  String get merchant_step_1_description => 'Ceritakan tentang diri Anda untuk memulai perjalanan mitra!';
+
+  @override
+  String get merchant_step_2_description => 'Bagikan detail dan lokasi outlet agar pelanggan mudah menemukan Anda!';
+
+  @override
+  String get merchant_step_3_description => 'Tambahkan rekening bank untuk menerima pembayaran dengan aman!';
+
+  @override
+  String get placeholder_outlet_name => 'Masukkan nama outlet';
+
+  @override
+  String get label_outlet_location => 'Lokasi Outlet';
+
+  @override
+  String get label_bank_provider => 'Bank';
+
+  @override
+  String get label_outlet_category => 'Kategori Outlet';
+
+  @override
+  String get helper_outlet_category_select => 'Pilih kategori utama untuk outlet Anda';
+
+  @override
+  String get placeholder_select_outlet_category => 'Pilih kategori outlet';
+
+  @override
+  String get label_phone => 'Telepon';
+
+  @override
+  String get dialog_accept_order => 'Terima Pesanan';
+
+  @override
+  String get dialog_accept_order_confirm => 'Apakah Anda yakin ingin menerima pesanan ini?';
+
+  @override
+  String get toast_validation_error => 'Kesalahan Validasi';
+
+  @override
+  String get error_menu_name_required => 'Nama menu wajib diisi';
+
+  @override
+  String get error_menu_price_required => 'Harga menu wajib diisi';
+
+  @override
+  String get error_valid_price_required => 'Mohon masukkan harga yang valid';
+
+  @override
+  String get error_merchant_info_not_found => 'Informasi merchant tidak ditemukan';
+
+  @override
+  String get success_menu_created => 'Menu berhasil dibuat';
+
+  @override
+  String get error_failed_create_menu => 'Gagal membuat menu';
+
+  @override
+  String get title_create_menu => 'Buat Menu';
+
+  @override
+  String get placeholder_zero => '0';
+
+  @override
+  String get error_menu_info_not_found => 'Informasi menu tidak ditemukan';
+
+  @override
+  String get title_edit_menu => 'Edit Menu';
+
+  @override
+  String get error_menu_not_found => 'Menu tidak ditemukan';
+
+  @override
+  String get placeholder_search_menu => 'Cari menu...';
+
+  @override
+  String get title_menu_detail => 'Detail Menu';
+
+  @override
+  String get dialog_delete_menu => 'Hapus Menu';
+
+  @override
+  String dialog_delete_menu_confirm(String name) {
+    return 'Apakah Anda yakin ingin menghapus \"$name\"?';
+  }
+
+  @override
+  String get success_menu_deleted => 'Menu berhasil dihapus';
+
+  @override
+  String get error_failed_delete_menu => 'Gagal menghapus menu';
+
+  @override
+  String get label_old_password => 'Kata Sandi Lama';
+
+  @override
+  String get placeholder_enter_old_password => 'Masukkan kata sandi lama Anda';
+
+  @override
+  String get label_new_password => 'Kata Sandi Baru';
+
+  @override
+  String get placeholder_enter_new_password => 'Masukkan kata sandi baru Anda';
+
+  @override
+  String get label_confirm_password => 'Konfirmasi Kata Sandi';
+
+  @override
+  String get placeholder_confirm_new_password => 'Konfirmasi kata sandi baru Anda';
+
+  @override
+  String get error_failed_verify_bank => 'Gagal memverifikasi rekening bank';
+
+  @override
+  String get loading_map => 'Memuat peta...';
+
+  @override
+  String get success_set_up_merchant => 'Berhasil menyiapkan merchant';
+
+  @override
+  String get title_set_up_outlet => 'Atur Outlet';
+
+  @override
+  String get placeholder_time_start => '10:00';
+
+  @override
+  String get placeholder_time_end => '22:00';
+
+  @override
+  String get title_sales_report => 'Laporan Penjualan';
+
+  @override
+  String get tab_weekly_sales => 'Penjualan Mingguan';
+
+  @override
+  String get tab_monthly_sales => 'Penjualan Bulanan';
+
+  @override
+  String get title_commission_report => 'Laporan Komisi';
+
+  @override
+  String get title_order_detail => 'Detail Pesanan';
+
+  @override
+  String get button_add_schedule => 'Tambah Jadwal';
+
+  @override
+  String get button_edit => 'Edit';
+
+  @override
+  String get placeholder_class_name => 'mis., Pemrograman Mobile';
+
+  @override
+  String get dialog_call_customer => 'Telepon Pelanggan';
+
+  @override
+  String get section_today_performance => 'Performa Hari Ini';
+
+  @override
+  String get section_quick_actions => 'Aksi Cepat';
+
+  @override
+  String get label_rating_suffix => 'rating';
+
+  @override
+  String get dialog_rate_customer => 'Beri Rating Pelanggan';
+
+  @override
+  String get label_review_category => 'Kategori Ulasan';
+
+  @override
+  String get label_comment_optional => 'Komentar (Opsional)';
+
+  @override
+  String get placeholder_share_experience => 'Bagikan pengalaman Anda...';
+
+  @override
+  String get button_submit => 'Kirim';
+
+  @override
+  String dialog_new_order(String type) {
+    return 'Pesanan $type Baru';
+  }
+
+  @override
+  String get label_order_id_prefix => 'Pesanan #';
+
+  @override
+  String get label_pickup => 'Penjemputan';
+
+  @override
+  String get label_dropoff => 'Tujuan';
+
+  @override
+  String get label_distance => 'Jarak';
+
+  @override
+  String get label_earnings => 'Penghasilan';
+
+  @override
+  String label_gender_preference(String gender) {
+    return 'Preferensi gender: $gender';
+  }
+
+  @override
+  String get label_note => 'Catatan:';
+
+  @override
+  String label_pickup_prefix(String location) {
+    return 'Penjemputan: $location';
+  }
+
+  @override
+  String label_dropoff_prefix(String location) {
+    return 'Tujuan: $location';
+  }
+
+  @override
+  String label_instructions_prefix(String instructions) {
+    return 'Instruksi: $instructions';
+  }
+
+  @override
+  String get order_type_ride_label => 'Perjalanan';
+
+  @override
+  String get order_type_delivery_label => 'Pengiriman';
+
+  @override
+  String get order_type_food_label => 'Makanan';
+
+  @override
+  String get toast_order_unavailable => 'Pesanan Tidak Tersedia';
+
+  @override
+  String get toast_order_unavailable_message => 'Pesanan ini dibatalkan atau diterima oleh driver lain';
+
+  @override
+  String get toast_order_rejected => 'Pesanan Ditolak';
+
+  @override
+  String get toast_order_rejected_message => 'Anda menolak pesanan';
+
+  @override
+  String get label_total_fare => 'Total Biaya';
+
+  @override
+  String get dialog_unsupported_payment => 'Metode pembayaran tidak didukung';
+
+  @override
+  String get dialog_unsupported_payment_message => 'Metode pembayaran yang dipilih tidak didukung. Silakan pilih metode lain.';
+
+  @override
+  String get label_provider => 'Penyedia :';
+
+  @override
+  String get label_va_number => 'Nomor VA :';
+
+  @override
+  String label_valid_until(String date) {
+    return 'Berlaku sampai $date';
+  }
+
+  @override
+  String get label_remaining_time => 'Waktu Tersisa :';
+
+  @override
+  String get button_copy_va_number => 'Salin Nomor VA';
+
+  @override
+  String get label_no_rating_yet => 'Belum ada rating';
+
+  @override
+  String get message_wait_for_driver => 'Mohon tunggu sementara kami mencocokkan Anda dengan driver';
+
+  @override
+  String get label_license_plate => 'Plat nomor';
+
+  @override
+  String get status_finding_driver => 'Mencari driver';
+
+  @override
+  String get status_your_driver => 'Driver Anda';
+
+  @override
+  String get instruction_choose_pickup_destination => 'Pilih titik penjemputan dan tujuan Anda!';
+
+  @override
+  String get button_proceed => 'Lanjutkan';
+
+  @override
+  String get placeholder_what_sending => 'Apa yang Anda kirim?';
+
+  @override
+  String get placeholder_enter_weight => 'Masukkan berat dalam kg (maks 20kg)';
+
+  @override
+  String get helper_special_instructions => 'Tambahkan instruksi penanganan atau pengiriman khusus';
+
+  @override
+  String get helper_add_photos => 'Tambahkan hingga 3 foto item';
+
+  @override
+  String get error_provide_item_description => 'Mohon berikan deskripsi item';
+
+  @override
+  String get error_no_estimate_available => 'Tidak ada perkiraan tersedia';
+
+  @override
+  String get button_choose_payment_method => 'Pilih Metode Pembayaran';
+
+  @override
+  String get button_place_order => 'Buat Pesanan';
+
+  @override
+  String get label_photo_profile => 'Foto Profil';
+
+  @override
+  String get label_name => 'Nama';
+
+  @override
+  String get label_email => 'Email';
+
+  @override
+  String get section_achievements => 'Pencapaian';
+
+  @override
+  String get button_rate_this_order => 'Beri rating pesanan ini';
+
+  @override
+  String get empty_no_order_history => 'Tidak ada riwayat pesanan';
+
+  @override
+  String get label_your_current_location => 'Lokasi Anda saat ini';
+
+  @override
+  String label_drivers_around(int count) {
+    return 'Ada $count driver di sekitar Anda';
+  }
+
+  @override
+  String get error_failed_load_mart => 'Gagal memuat data mart';
+
+  @override
+  String get error_failed_load_merchants => 'Gagal memuat merchant';
+
+  @override
+  String get empty_no_merchants_found => 'Tidak ada merchant ditemukan';
+
+  @override
+  String get button_select_via_map => 'Pilih melalui peta';
+
+  @override
+  String get error_no_place_found => 'Tidak ada tempat ditemukan';
+
+  @override
+  String get title_select_bank_provider => 'Pilih Bank';
+
+  @override
+  String get payment_akademove_pay => 'Akademove Pay';
+
+  @override
+  String get button_download_qr => 'Unduh QR';
+
+  @override
+  String get button_copy_qr_url => 'Salin URL QR';
+
+  @override
+  String get separator_colon => ':';
+
+  @override
+  String get placeholder_type_message => 'Ketik pesan...';
+
+  @override
+  String get tab_on_process => 'Dalam proses';
+
+  @override
+  String get tab_completed => 'Selesai';
+
+  @override
+  String get tab_canceled => 'Dibatalkan';
+
+  @override
+  String get start_preparing => 'Mulai Siapkan';
+
+  @override
+  String get order_ready => 'Pesanan Siap';
+
+  @override
+  String get waiting_for_driver_pickup => 'Menunggu driver untuk mengambil...';
+
+  @override
+  String get no_menu_items_yet => 'Belum ada menu. Ketuk + untuk menambahkan menu pertama Anda.';
+
+  @override
+  String no_menu_items_found(String query) {
+    return 'Tidak ada menu ditemukan untuk \"$query\"';
+  }
+
+  @override
+  String get placeholder_search_menu_hint => 'Cari menu...';
+
+  @override
+  String get label_menu_name => 'Nama Menu';
+
+  @override
+  String get label_menu_price => 'Harga Menu';
+
+  @override
+  String get label_menu_stock => 'Stok Menu';
+
+  @override
+  String get label_menu_category => 'Kategori Menu';
+
+  @override
+  String get label_menu_photo => 'Foto Menu';
+
+  @override
+  String get placeholder_menu_name => 'Masukkan nama menu';
+
+  @override
+  String get placeholder_menu_price => 'Masukkan harga';
+
+  @override
+  String get label_category => 'Kategori';
+
+  @override
+  String get label_price => 'Harga';
+
+  @override
+  String get label_stock => 'Stok';
+
+  @override
+  String get label_created => 'Dibuat';
+
+  @override
+  String get label_updated => 'Diperbarui';
+
+  @override
+  String get placeholder_select_category => 'Pilih kategori';
+
+  @override
+  String get error_validation => 'Kesalahan Validasi';
+
+  @override
+  String get title_privacy_policies => 'Kebijakan Privasi';
+
+  @override
+  String get ordered_by => 'Dipesan oleh';
+
+  @override
+  String get driver_assigned => 'Driver ditugaskan';
+
+  @override
+  String get order_items => 'Item Pesanan';
+
+  @override
+  String get base_price => 'Harga Dasar';
+
+  @override
+  String get order_time => 'Waktu Pesanan';
+
+  @override
+  String get order_chat => 'Chat Pesanan';
+
+  @override
+  String get toast_order_accepted => 'Pesanan berhasil diterima';
+
+  @override
+  String get toast_order_rejected_success => 'Pesanan berhasil ditolak';
+
+  @override
+  String get toast_order_marked_preparing => 'Pesanan ditandai sedang disiapkan';
+
+  @override
+  String get toast_order_marked_ready => 'Pesanan ditandai siap diambil';
+
+  @override
+  String get toast_failed_accept_order => 'Gagal menerima pesanan';
+
+  @override
+  String get toast_failed_reject_order => 'Gagal menolak pesanan';
+
+  @override
+  String get toast_failed_update_order => 'Gagal memperbarui pesanan';
+
+  @override
+  String get toast_merchant_id_not_found => 'ID Merchant tidak ditemukan';
+
+  @override
+  String get unknown_item => 'Item Tidak Diketahui';
+
+  @override
+  String get label_status => 'Status';
+
+  @override
+  String get label_wib => 'WIB';
+
+  @override
+  String get error_valid_price => 'Mohon masukkan harga yang valid';
+
+  @override
+  String get toast_menu_created_success => 'Menu berhasil dibuat';
+
+  @override
+  String get toast_failed_create_menu => 'Gagal membuat menu';
+
+  @override
+  String get toast_menu_updated_success => 'Menu berhasil diperbarui';
+
+  @override
+  String get toast_failed_update_menu => 'Gagal memperbarui menu';
+
+  @override
+  String get button_create_menu => 'Buat Menu';
+
+  @override
+  String get button_create => 'Buat';
+
+  @override
+  String get label_menu_description => 'Deskripsi Menu';
+
+  @override
+  String get placeholder_menu_description => 'Kopi dengan gula merah';
+
+  @override
+  String get placeholder_menu_category => 'Minuman';
+
+  @override
+  String get label_menu_photo_optional => 'Foto Menu (Opsional)';
+
+  @override
+  String get title_edit_profile => 'Edit Profil';
+
+  @override
+  String get label_owner_name => 'Nama Pemilik';
+
+  @override
+  String get placeholder_owner_name => 'Masukkan nama pemilik';
+
+  @override
+  String get label_owner_email => 'Email Pemilik';
+
+  @override
+  String get placeholder_owner_email => 'Masukkan email pemilik';
+
+  @override
+  String get label_owner_phone => 'Nomor Telepon Pemilik';
+
+  @override
+  String get label_outlet_name => 'Nama Outlet';
+
+  @override
+  String get label_outlet_phone => 'Nomor Telepon Outlet';
+
+  @override
+  String get label_outlet_email => 'Email Outlet';
+
+  @override
+  String get placeholder_outlet_email => 'Masukkan email outlet';
+
+  @override
+  String get label_outlet_document => 'Dokumen Outlet (Opsional)';
+
+  @override
+  String get label_choose_bank => 'Pilih bank';
+
+  @override
+  String get placeholder_select_bank_provider => 'Pilih provider bank';
+
+  @override
+  String get label_bank_account => 'Rekening Bank';
+
+  @override
+  String get placeholder_bank_account => '********1234';
+
+  @override
+  String get toast_location_permission => 'Izin Lokasi';
+
+  @override
+  String get toast_using_default_location => 'Menggunakan lokasi default. Anda dapat menyeret penanda untuk mengatur lokasi outlet Anda.';
+
+  @override
+  String get dialog_location_permission_title => 'Izin Lokasi';
+
+  @override
+  String get dialog_location_permission_message => 'Kami memerlukan akses ke lokasi Anda untuk mengatur lokasi outlet Anda secara otomatis di peta. Ini membantu pelanggan menemukan bisnis Anda dengan mudah. Anda juga dapat mengatur lokasi secara manual dengan menyeret penanda.';
+
+  @override
+  String get dialog_location_services_disabled_title => 'Layanan Lokasi Dinonaktifkan';
+
+  @override
+  String get dialog_location_services_disabled_message => 'Layanan lokasi saat ini dinonaktifkan di perangkat Anda. Mohon aktifkan untuk mendeteksi lokasi outlet Anda secara otomatis.';
+
+  @override
+  String get dialog_location_permission_required_title => 'Izin Lokasi Diperlukan';
+
+  @override
+  String get dialog_location_permission_required_message => 'Izin lokasi telah ditolak secara permanen. Untuk menggunakan deteksi lokasi otomatis, mohon aktifkan di pengaturan aplikasi Anda.\n\nAnda masih dapat mengatur lokasi outlet Anda secara manual dengan menyeret penanda di peta.';
+
+  @override
+  String get label_outlet_location_description => 'Pastikan titik lokasi di peta sudah benar untuk memenuhi persyaratan pendaftaran.';
+
+  @override
+  String get placeholder_search_location => 'Cari lokasi';
+
+  @override
+  String get label_dragging => 'Menyeret...';
+
+  @override
+  String get toast_location_found => 'Lokasi Ditemukan';
+
+  @override
+  String get toast_marker_moved => 'Penanda dipindahkan ke lokasi yang dicari';
+
+  @override
+  String get toast_not_found => 'Tidak Ditemukan';
+
+  @override
+  String get toast_location_not_found => 'Lokasi tidak ditemukan. Silakan coba pencarian lain.';
+
+  @override
+  String get toast_search_error => 'Kesalahan Pencarian';
+
+  @override
+  String get toast_search_error_message => 'Tidak dapat mencari lokasi. Mohon periksa koneksi internet Anda.';
+
+  @override
+  String get toast_enter_location => 'Mohon masukkan lokasi untuk dicari';
+
+  @override
+  String get label_benchmark_optional => 'Patokan (Opsional)';
+
+  @override
+  String get placeholder_benchmark => 'Samping toko Uniqlo.';
+
+  @override
+  String get toast_bank_account_verified => 'Rekening bank berhasil diverifikasi';
+
+  @override
+  String get toast_failed_verify_bank => 'Gagal memverifikasi rekening bank';
+
+  @override
+  String get toast_enter_bank_account => 'Mohon masukkan nomor rekening bank';
+
+  @override
+  String get toast_bank_account_min_digits => 'Nomor rekening bank minimal 5 digit';
+
+  @override
+  String get toast_select_bank_first => 'Mohon pilih provider bank terlebih dahulu';
+
+  @override
+  String get label_bank_account_number => 'Nomor Rekening Bank';
+
+  @override
+  String get label_account_holder_name => 'Nama Pemegang Rekening';
+
+  @override
+  String get label_owner_bank_name => 'Nama Pemilik';
+
+  @override
+  String get label_unable_get_address => 'Tidak dapat mendapatkan alamat';
+
+  @override
+  String get label_step_1 => 'Langkah 1';
+
+  @override
+  String get label_step_2 => 'Langkah 2';
+
+  @override
+  String get label_step_3 => 'Langkah 3';
+
+  @override
+  String get label_outlet_photo_profile => 'Foto Profil Outlet';
+
+  @override
+  String get placeholder_outlet_category => 'Pilih kategori outlet Anda';
+
+  @override
+  String get label_outlet_operating_hours => 'Jam Operasional Outlet';
+
+  @override
+  String get label_24_hours => '24 Jam';
+
+  @override
+  String get toast_success_set_up => 'Berhasil mengatur merchant';
+
+  @override
+  String get toast_complete_required_fields => 'Mohon lengkapi semua field yang wajib diisi';
+
+  @override
+  String get error_outlet_photo_required => 'Foto outlet wajib diisi';
+
+  @override
+  String get error_menu_photo_required => 'Foto menu wajib diisi';
+
+  @override
+  String get label_weekly_sales => 'Penjualan Mingguan';
+
+  @override
+  String get label_monthly_sales => 'Penjualan Bulanan';
+
+  @override
+  String get label_earns => 'Penghasilan';
+
+  @override
+  String get label_top_ordered_categories => 'Kategori Terlaris';
+
+  @override
+  String get label_top_ordered_products => 'Produk Terlaris';
+
+  @override
+  String get button_export_pdf => 'Ekspor ke PDF';
+
+  @override
+  String get category_junk_food => 'Junk Food';
+
+  @override
+  String get category_drinks => 'Minuman';
+
+  @override
+  String get category_snack => 'Camilan';
+
+  @override
+  String get product_fried_chicken => 'Ayam Goreng';
+
+  @override
+  String get product_coffee_latte => 'Kopi Latte';
+
+  @override
+  String get product_laundry_express => 'Laundry Express';
+
+  @override
+  String get label_incoming_balance => 'Saldo Masuk';
+
+  @override
+  String get label_outgoing_balance => 'Saldo Keluar';
+
+  @override
+  String get label_balance_detail => 'Detail Saldo';
+
+  @override
+  String get label_gross_sales => 'Penjualan Kotor';
+
+  @override
+  String get label_platform_commission => 'Komisi Platform (20%)';
+
+  @override
+  String get label_net_income => 'Pendapatan Bersih';
+
+  @override
+  String get label_nett_income => 'Pendapatan Nett';
+
+  @override
+  String get title_change_password => 'Ubah Kata Sandi';
+
+  @override
+  String get placeholder_old_password => 'Masukkan kata sandi lama Anda';
+
+  @override
+  String get placeholder_new_password => 'Masukkan kata sandi baru Anda';
+
+  @override
+  String get placeholder_confirm_password => '********';
+
+  @override
+  String get button_next => 'Lanjut';
+
+  @override
+  String get button_back => 'Kembali';
+
+  @override
+  String get button_save => 'Simpan';
+
+  @override
+  String get label_start => 'Mulai';
+
+  @override
+  String get label_end => 'Selesai';
+
+  @override
+  String get placeholder_start_time => '10:00';
+
+  @override
+  String get placeholder_end_time => '22:00';
+
+  @override
+  String get day_monday => 'Senin';
+
+  @override
+  String get day_tuesday => 'Selasa';
+
+  @override
+  String get day_wednesday => 'Rabu';
+
+  @override
+  String get day_thursday => 'Kamis';
+
+  @override
+  String get day_friday => 'Jumat';
+
+  @override
+  String get day_saturday => 'Sabtu';
+
+  @override
+  String get day_sunday => 'Minggu';
+
+  @override
+  String get toast_success => 'Berhasil';
+
+  @override
+  String get toast_success_set_up_merchant => 'Berhasil mengatur merchant';
+
+  @override
+  String get outlet_category_restaurant => 'Restoran';
+
+  @override
+  String get outlet_category_cafe => 'Kafe';
+
+  @override
+  String get outlet_category_fast_food => 'Makanan Cepat Saji';
+
+  @override
+  String get outlet_category_bakery => 'Toko Roti';
+
+  @override
+  String get outlet_category_street_food => 'Makanan Jalanan';
+
+  @override
+  String get outlet_category_food_truck => 'Food Truck';
+
+  @override
+  String get outlet_category_bar => 'Bar';
+
+  @override
+  String get outlet_category_coffeeshop => 'Kedai Kopi';
+
+  @override
+  String get outlet_category_dessert_shop => 'Toko Dessert';
+
+  @override
+  String get outlet_category_juice_bar => 'Kedai Jus';
+
+  @override
+  String get menu_category_appetizer => 'Pembuka';
+
+  @override
+  String get menu_category_main_course => 'Hidangan Utama';
+
+  @override
+  String get menu_category_dessert => 'Penutup';
+
+  @override
+  String get menu_category_beverage => 'Minuman';
+
+  @override
+  String get menu_category_snack => 'Camilan';
+
+  @override
+  String get menu_category_breakfast => 'Sarapan';
+
+  @override
+  String get menu_category_lunch => 'Makan Siang';
+
+  @override
+  String get menu_category_dinner => 'Makan Malam';
+
+  @override
+  String get menu_category_salad => 'Salad';
+
+  @override
+  String get menu_category_soup => 'Sup';
+
+  @override
+  String get menu_category_seafood => 'Makanan Laut';
+
+  @override
+  String get menu_category_vegetarian => 'Vegetarian';
+
+  @override
+  String get menu_category_vegan => 'Vegan';
+
+  @override
+  String get menu_category_pasta => 'Pasta';
+
+  @override
+  String get menu_category_pizza => 'Pizza';
+
+  @override
+  String get menu_category_burger => 'Burger';
+
+  @override
+  String get menu_category_sandwich => 'Sandwich';
+
+  @override
+  String get menu_category_rice => 'Nasi';
+
+  @override
+  String get menu_category_noodle => 'Mi';
+
+  @override
+  String get menu_category_grill => 'Panggang';
+
+  @override
+  String get title_delivery => 'Pengiriman';
+
+  @override
+  String get title_where_you_at => 'Di mana Anda?';
+
+  @override
+  String get title_where_are_you_going => 'Mau ke mana?';
+
+  @override
+  String get text_choose_pickup_destination => 'Pilih titik jemput dan tujuan Anda!';
+
+  @override
+  String get toast_failed_estimate_order => 'Gagal menghitung estimasi pesanan';
+
+  @override
+  String get marker_pickup => 'Jemput';
+
+  @override
+  String get marker_dropoff => 'Tujuan';
+
+  @override
+  String get title_order_summary => 'Ringkasan Pesanan';
+
+  @override
+  String get text_no_estimate_available => 'Estimasi tidak tersedia';
+
+  @override
+  String get label_delivery_details => 'Detail Pengiriman';
+
+  @override
+  String get label_from => 'Dari';
+
+  @override
+  String get label_to => 'Ke';
+
+  @override
+  String get label_item => 'Barang';
+
+  @override
+  String get label_weight => 'Berat';
+
+  @override
+  String get label_instructions => 'Instruksi';
+
+  @override
+  String get button_apply_coupon => 'Gunakan Kupon';
+
+  @override
+  String get text_coupon => 'Kupon';
+
+  @override
+  String get label_price_breakdown => 'Rincian Harga';
+
+  @override
+  String get label_base_fare => 'Tarif Dasar';
+
+  @override
+  String get label_distance_fare => 'Tarif Jarak';
+
+  @override
+  String get label_subtotal => 'Subtotal';
+
+  @override
+  String get label_discount => 'Diskon';
+
+  @override
+  String get label_total => 'Total';
+
+  @override
+  String get title_payment_method => 'Metode Pembayaran';
+
+  @override
+  String get toast_failed_place_order => 'Gagal membuat pesanan';
+
+  @override
+  String get toast_delivery_order_placed => 'Pesanan pengiriman berhasil dibuat';
+
+  @override
+  String get title_ride => 'Tumpangan';
+
+  @override
+  String get title_trip_details => 'Detail Perjalanan';
+
+  @override
+  String get toast_wallet_payment_failed => 'Pembayaran wallet gagal';
+
+  @override
+  String get title_ride_payment => 'Pembayaran Tumpangan';
+
+  @override
+  String get text_unsupported_payment_method => 'Metode pembayaran tidak didukung';
+
+  @override
+  String get text_valid_until => 'Berlaku hingga';
+
+  @override
+  String get label_confirm_new_password => 'Konfirmasi Password Baru';
+
+  @override
+  String get text_rate_this_order => 'Beri rating pesanan ini';
+
+  @override
+  String get text_driver => 'Driver';
+
+  @override
+  String get button_save_changes => 'Simpan Perubahan';
+
+  @override
+  String get text_thank_you_rating => 'Terima kasih atas penilaian Anda!';
+
+  @override
+  String get label_achievements => 'Pencapaian';
+
+  @override
+  String get text_earned_at => 'Diperoleh pada';
+
+  @override
+  String get text_all => 'Semua';
+
+  @override
+  String get toast_failed_load_merchants => 'Gagal memuat merchant';
+
+  @override
+  String get text_no_merchants_found => 'Merchant tidak ditemukan';
+
+  @override
+  String get text_try_different_category => 'Coba pilih kategori lain';
+
+  @override
+  String get text_open => 'Buka';
+
+  @override
+  String get text_closed => 'Tutup';
+
+  @override
+  String get toast_failed_load_mart_data => 'Gagal memuat data mart';
+
+  @override
+  String get label_categories => 'Kategori';
+
+  @override
+  String get label_recent_orders => 'Pesanan Terbaru';
+
+  @override
+  String get button_view_all => 'Lihat Semua';
+
+  @override
+  String get label_best_sellers => 'Terlaris';
+
+  @override
+  String get text_rating => 'Rating';
+
+  @override
+  String get text_no_rating_yet => 'Belum ada rating';
+
+  @override
+  String get label_nearby_drivers => 'Driver terdekat';
+
+  @override
+  String get text_your_current_location => 'Lokasi Anda saat ini';
+
+  @override
+  String item_count(Object count) {
+    return '$count item';
+  }
+
+  @override
+  String get button_accept => 'Terima';
+
+  @override
+  String get how_was_your_experience => 'Bagaimana pengalaman Anda?';
+
+  @override
+  String get mixed => 'Campuran';
+
+  @override
+  String get male => 'Laki-laki';
+
+  @override
+  String get female => 'Perempuan';
+
+  @override
+  String get toast_app_state_corrupted => 'State aplikasi rusak, silakan restart';
+
+  @override
+  String get toast_payment_info_not_available => 'Informasi pembayaran tidak tersedia';
+
+  @override
+  String get text_apply_coupon => 'Gunakan Kupon';
+
+  @override
+  String text_coupon_applied(String code) {
+    return 'Kupon: $code';
+  }
+
+  @override
+  String get label_payment_method => 'Metode Pembayaran';
+
+  @override
+  String get label_payment_summary => 'Ringkasan Pembayaran';
+
+  @override
+  String get text_payment_successful => 'Pembayaran berhasil';
+
+  @override
+  String get text_payment_failed => 'Pembayaran gagal';
+
+  @override
+  String get text_unsupported_payment_method_description => 'Metode pembayaran yang dipilih tidak didukung. Silakan pilih metode lain.';
+
+  @override
+  String get toast_va_number_not_available => 'Nomor VA tidak tersedia';
+
+  @override
+  String get toast_va_number_copied => 'Nomor VA disalin ke clipboard';
+
+  @override
+  String get text_provider_label => 'Penyedia :';
+
+  @override
+  String get text_va_number_label => 'Nomor VA :';
+
+  @override
+  String text_valid_until_with_date(String date) {
+    return 'Berlaku hingga $date';
+  }
+
+  @override
+  String get text_on_trip => 'Dalam Perjalanan';
+
+  @override
+  String get text_license_plate => 'Plat nomor';
+
+  @override
+  String get text_finding_driver => 'Mencari driver Anda...';
+
+  @override
+  String get text_finding_driver_message => 'Mohon tunggu sementara kami mencarikan driver untuk Anda';
+
+  @override
+  String get status_searching => 'Mencari';
+
+  @override
+  String get status_driver_found => 'Driver ditemukan';
+
+  @override
+  String get status_on_the_way => 'Dalam perjalanan';
+
+  @override
+  String get text_pickup_location => 'Lokasi penjemputan';
+
+  @override
+  String get text_dropoff_location => 'Lokasi tujuan';
+
+  @override
+  String get label_payment_method_lower => 'Metode Pembayaran';
+
+  @override
+  String get label_total_price => 'Total Harga';
+
+  @override
+  String get text_order_details => 'Detail Pesanan';
+
+  @override
+  String get text_finding_driver_title => 'Mencari driver';
+
+  @override
+  String get text_your_driver_title => 'Driver Anda';
+
+  @override
+  String get text_trip_completed => 'Perjalanan selesai!';
+
+  @override
+  String get text_trip_canceled => 'Perjalanan dibatalkan';
+
+  @override
+  String get title_delivery_details => 'Detail Pengiriman';
+
+  @override
+  String get label_item_description => 'Deskripsi Barang';
+
+  @override
+  String get placeholder_item_description => 'Apa yang akan Anda kirim?';
+
+  @override
+  String get label_weight_kg => 'Berat (kg)';
+
+  @override
+  String get placeholder_weight_kg => 'Masukkan berat dalam kg (maks 20kg)';
+
+  @override
+  String get text_maximum_weight => 'Berat maksimum: 20kg';
+
+  @override
+  String get text_special_handling_instructions => 'Tambahkan instruksi penanganan atau pengiriman khusus';
+
+  @override
+  String get label_item_photos_optional => 'Foto Barang (Opsional)';
+
+  @override
+  String get text_add_up_to_3_photos => 'Tambahkan hingga 3 foto barang';
+
+  @override
+  String get toast_provide_item_description => 'Harap berikan deskripsi barang';
+
+  @override
+  String get toast_weight_must_be_valid => 'Berat harus antara 0,1kg dan 20kg';
+
+  @override
+  String get text_thank_you_for_review => 'Terima kasih atas ulasan Anda!';
+
+  @override
+  String get toast_failed_submit_review => 'Gagal mengirim ulasan';
+
+  @override
+  String get text_rate_by_category => 'Beri nilai berdasarkan kategori';
+
+  @override
+  String get category_cleanliness => 'Kebersihan';
+
+  @override
+  String get category_courtesy => 'Kesopanan';
+
+  @override
+  String get category_punctuality => 'Ketepatan Waktu';
+
+  @override
+  String get category_safety => 'Keamanan';
+
+  @override
+  String get category_communication => 'Komunikasi';
+
+  @override
+  String get category_overall => 'Keseluruhan';
+
+  @override
+  String get category_desc_cleanliness => 'Seberapa bersih kendaraan dan penampilan driver?';
+
+  @override
+  String get category_desc_courtesy => 'Seberapa sopan dan hormat driver?';
+
+  @override
+  String get category_desc_punctuality => 'Apakah driver tepat waktu untuk penjemputan?';
+
+  @override
+  String get category_desc_safety => 'Apakah Anda merasa aman selama perjalanan?';
+
+  @override
+  String get category_desc_communication => 'Seberapa baik driver berkomunikasi?';
+
+  @override
+  String get category_desc_overall => 'Beri nilai pengalaman Anda secara keseluruhan dengan driver ini';
+
+  @override
+  String get rating_poor => 'Buruk';
+
+  @override
+  String get rating_below_average => 'Di Bawah Rata-rata';
+
+  @override
+  String get rating_average => 'Rata-rata';
+
+  @override
+  String get rating_good => 'Baik';
+
+  @override
+  String get rating_excellent => 'Sangat Baik';
+
+  @override
+  String get label_additional_comments => 'Komentar tambahan (opsional)';
+
+  @override
+  String get placeholder_additional_comments => 'Ceritakan lebih banyak tentang pengalaman Anda...';
+
+  @override
+  String get button_submit_review => 'Kirim Ulasan';
+
+  @override
+  String toast_please_rate_category(String category) {
+    return 'Harap beri nilai $category';
+  }
+
+  @override
+  String text_drivers_around_you(int count) {
+    return 'Ada $count driver di sekitar Anda';
+  }
+
+  @override
+  String get text_no_order_history => 'Tidak ada riwayat pesanan';
+
+  @override
+  String text_order_id_short(String id) {
+    return 'Pesanan #$id';
+  }
+
+  @override
+  String get label_notes => 'Catatan';
+
+  @override
+  String get text_unknown_user => 'Pengguna Tidak Dikenal';
+
+  @override
+  String get text_customer => 'Pelanggan';
+
+  @override
+  String get button_call_customer => 'Hubungi Pelanggan';
+
+  @override
+  String get button_delete => 'Hapus';
+
+  @override
+  String get title_edit_schedule => 'Edit Jadwal';
+
+  @override
+  String get title_add_schedule => 'Tambah Jadwal';
+
+  @override
+  String get placeholder_course_name => 'contoh: Pemrograman Mobile';
+
+  @override
+  String get button_cancel => 'Batal';
+
+  @override
+  String get placeholder_full_name => 'John Doe';
+
+  @override
+  String get placeholder_stock => '0';
+
+  @override
+  String text_failed_to_load_profile(String error) {
+    return 'Gagal memuat profil: $error';
+  }
+
+  @override
+  String get text_no_rankings_yet => 'Belum ada peringkat';
+
+  @override
+  String get title_where_going => 'Mau ke mana?';
+
+  @override
+  String get tab_rankings => 'Peringkat';
+
+  @override
+  String get tab_badges => 'Lencana';
+
+  @override
+  String text_user_id(String id) {
+    return 'Pengguna $id';
+  }
+
+  @override
+  String text_category_value(String category) {
+    return 'Kategori: $category';
+  }
+
+  @override
+  String text_period_value(String period) {
+    return 'Periode: $period';
+  }
+
+  @override
+  String get text_earned => 'Diperoleh';
+
+  @override
+  String text_balance_with_amount(String amount) {
+    return 'Saldo: $amount';
+  }
+
+  @override
+  String get button_top_up => 'Isi Saldo';
+
+  @override
+  String get text_select_via_map => 'Pilih via peta';
+
+  @override
+  String get text_no_place_found => 'Tidak ada tempat ditemukan';
+
+  @override
+  String get title_location_permission_required => 'Izin Lokasi Diperlukan';
+
+  @override
+  String get text_location_permission_denied => 'Izin lokasi sebelumnya ditolak. Untuk online dan menerima pesanan, Anda perlu mengaktifkan akses lokasi di pengaturan perangkat.';
+
+  @override
+  String get text_location_permission_request => 'Untuk menerima pesanan ride dan delivery, driver harus membagikan lokasi mereka secara real-time. Ini membantu:';
+
+  @override
+  String get text_location_benefit_match_orders => 'Mencocokkan Anda dengan pesanan terdekat';
+
+  @override
+  String get text_location_benefit_track_arrival => 'Biarkan pelanggan melacak kedatangan Anda';
+
+  @override
+  String get text_location_benefit_safety => 'Memastikan keamanan dan akuntabilitas';
+
+  @override
+  String get text_location_redirect_settings => 'Anda akan diarahkan ke pengaturan aplikasi untuk mengaktifkan akses lokasi.';
+
+  @override
+  String get button_open_settings => 'Buka Pengaturan';
+
+  @override
+  String get button_grant_permission => 'Berikan Izin';
+
+  @override
+  String get title_rate_customer => 'Beri Rating Pelanggan';
+
+  @override
+  String text_experience_with_user(String name) {
+    return 'Bagaimana pengalaman Anda dengan $name?';
+  }
+
+  @override
+  String get category_other => 'Lainnya';
+
+  @override
+  String label_rating_score(String score) {
+    return 'Rating: $score / 5.0';
+  }
+
+  @override
+  String get toast_review_submitted => 'Ulasan berhasil dikirim';
+
+  @override
+  String get toast_review_failed => 'Gagal mengirim ulasan';
+
+  @override
+  String get title_reject_order => 'Tolak Pesanan';
+
+  @override
+  String get text_select_rejection_reason => 'Silakan pilih alasan penolakan pesanan ini:';
+
+  @override
+  String get rejection_reason_out_of_stock => 'Stok Habis';
+
+  @override
+  String get rejection_reason_too_busy => 'Terlalu Sibuk / Volume Pesanan Tinggi';
+
+  @override
+  String get rejection_reason_ingredient_unavailable => 'Bahan Tidak Tersedia';
+
+  @override
+  String get rejection_reason_closed => 'Toko Tutup / Akan Tutup';
+
+  @override
+  String get rejection_reason_other => 'Lainnya';
+
+  @override
+  String get label_additional_note_optional => 'Catatan Tambahan (Opsional)';
+
+  @override
+  String get placeholder_rejection_note => 'contoh: \"Ayam habis, akan restok besok\"';
+
+  @override
+  String get button_reject_order => 'Tolak Pesanan';
 }

@@ -1,36 +1,36 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/coupon/presentation/cubits/_export.dart';
 import 'package:akademove/features/coupon/presentation/states/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:intl/intl.dart';
 
 /// Bottom sheet for selecting coupons
-class CouponSelectorWidget extends material.StatelessWidget {
+class CouponSelectorWidget extends StatelessWidget {
   const CouponSelectorWidget({required this.onCouponSelected, super.key});
 
   final void Function(Coupon?) onCouponSelected;
 
   @override
-  material.Widget build(material.BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocBuilder<CouponCubit, CouponState>(
       builder: (context, state) {
         if (state.state == CubitState.loading) {
-          return const Center(child: material.CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (state.state == CubitState.failure) {
           return Center(
             child: Column(
-              mainAxisSize: material.MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(LucideIcons.triangleAlert, size: 48),
                 const SizedBox(height: 16),
                 Text(
                   state.error?.message ?? 'Failed to load coupons',
-                  textAlign: material.TextAlign.center,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -41,41 +41,41 @@ class CouponSelectorWidget extends material.StatelessWidget {
         if (data == null || data.coupons.isEmpty) {
           return Center(
             child: Column(
-              mainAxisSize: material.MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(LucideIcons.ticketPercent, size: 48),
                 const SizedBox(height: 16),
-                const Text(
-                  'No coupons available',
-                  textAlign: material.TextAlign.center,
+                Text(
+                  context.l10n.coupon_no_coupons_available,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
           );
         }
 
-        return material.Column(
-          mainAxisSize: material.MainAxisSize.min,
-          crossAxisAlignment: material.CrossAxisAlignment.stretch,
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Header
-            material.Padding(
+            Padding(
               padding: const EdgeInsets.all(16),
-              child: material.Row(
+              child: Row(
                 children: [
-                  const material.Expanded(
+                  Expanded(
                     child: Text(
-                      'Select Coupon',
-                      style: TextStyle(
+                      context.l10n.coupon_select_coupon,
+                      style: const TextStyle(
                         fontSize: 20,
-                        fontWeight: material.FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   IconButton(
                     icon: Icon(LucideIcons.x),
-                    onPressed: () => material.Navigator.pop(context),
-                    variance: const ButtonStyle.ghost(),
+                    onPressed: () => Navigator.pop(context),
+                    variance: ButtonVariance.ghost,
                   ),
                 ],
               ),
@@ -84,29 +84,29 @@ class CouponSelectorWidget extends material.StatelessWidget {
 
             // Best coupon highlight (if any)
             if (data.bestCoupon != null && data.bestDiscountAmount > 0)
-              material.Container(
+              Container(
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.all(12),
-                decoration: material.BoxDecoration(
+                decoration: BoxDecoration(
                   color: const Color(0xFF10B981).withAlpha(25),
-                  borderRadius: material.BorderRadius.circular(8),
-                  border: material.Border.all(color: const Color(0xFF10B981)),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFF10B981)),
                 ),
-                child: material.Row(
+                child: Row(
                   children: [
                     Icon(
                       LucideIcons.badgeCheck,
                       color: const Color(0xFF10B981),
                     ),
                     const SizedBox(width: 12),
-                    material.Expanded(
-                      child: material.Column(
-                        crossAxisAlignment: material.CrossAxisAlignment.start,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Best Discount',
                             style: TextStyle(
-                              fontWeight: material.FontWeight.bold,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xFF10B981),
                             ),
                           ),
@@ -122,8 +122,8 @@ class CouponSelectorWidget extends material.StatelessWidget {
               ),
 
             // Coupon list
-            material.Expanded(
-              child: material.ListView.separated(
+            Expanded(
+              child: ListView.separated(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 8,
@@ -140,7 +140,7 @@ class CouponSelectorWidget extends material.StatelessWidget {
                     onTap: () {
                       context.read<CouponCubit>().selectCoupon(coupon);
                       onCouponSelected(coupon);
-                      material.Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     onInfo: () => _showCouponDetails(context, coupon),
                   );
@@ -150,15 +150,15 @@ class CouponSelectorWidget extends material.StatelessWidget {
 
             // Remove coupon button
             if (data.bestCoupon != null)
-              material.Padding(
+              Padding(
                 padding: const EdgeInsets.all(16),
                 child: OutlineButton(
                   onPressed: () {
                     context.read<CouponCubit>().clearCoupon();
                     onCouponSelected(null);
-                    material.Navigator.pop(context);
+                    Navigator.pop(context);
                   },
-                  child: const Text('Remove Coupon'),
+                  child: Text(context.l10n.coupon_remove_coupon),
                 ),
               ),
           ],
@@ -167,7 +167,7 @@ class CouponSelectorWidget extends material.StatelessWidget {
     );
   }
 
-  void _showCouponDetails(material.BuildContext context, Coupon coupon) {
+  void _showCouponDetails(BuildContext context, Coupon coupon) {
     showDialog(
       context: context,
       builder: (ctx) => CouponDetailDialog(coupon: coupon),
@@ -185,7 +185,7 @@ class CouponSelectorWidget extends material.StatelessWidget {
 }
 
 /// Individual coupon card widget
-class _CouponCard extends material.StatelessWidget {
+class _CouponCard extends StatelessWidget {
   const _CouponCard({
     required this.coupon,
     required this.isSelected,
@@ -195,41 +195,40 @@ class _CouponCard extends material.StatelessWidget {
 
   final Coupon coupon;
   final bool isSelected;
-  final material.VoidCallback onTap;
-  final material.VoidCallback onInfo;
+  final VoidCallback onTap;
+  final VoidCallback onInfo;
 
   @override
-  material.Widget build(material.BuildContext context) {
+  Widget build(BuildContext context) {
     final discountText = _getDiscountText();
     final expiryDate = DateFormat('dd MMM yyyy').format(coupon.periodEnd);
     final theme = Theme.of(context);
 
-    return material.InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: material.BorderRadius.circular(12),
-      child: material.Container(
+      child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: material.BoxDecoration(
+        decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary.withAlpha(25)
               : theme.colorScheme.background,
-          borderRadius: material.BorderRadius.circular(12),
-          border: material.Border.all(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
                 : theme.colorScheme.border,
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: material.Row(
+        child: Row(
           children: [
             // Discount icon/badge
-            material.Container(
+            Container(
               width: 56,
               height: 56,
-              decoration: material.BoxDecoration(
+              decoration: BoxDecoration(
                 color: theme.colorScheme.primary.withAlpha(25),
-                borderRadius: material.BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: Icon(
@@ -242,18 +241,18 @@ class _CouponCard extends material.StatelessWidget {
             const SizedBox(width: 16),
 
             // Coupon details
-            material.Expanded(
-              child: material.Column(
-                crossAxisAlignment: material.CrossAxisAlignment.start,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     coupon.name,
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: material.FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                     maxLines: 1,
-                    overflow: material.TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -261,11 +260,11 @@ class _CouponCard extends material.StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       color: theme.colorScheme.primary,
-                      fontWeight: material.FontWeight.w600,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  material.Row(
+                  Row(
                     children: [
                       Text(
                         'Code: ${coupon.code}',
@@ -286,11 +285,10 @@ class _CouponCard extends material.StatelessWidget {
             ),
 
             // Info button
-            material.IconButton(
+            IconButton(
               icon: Icon(LucideIcons.info, size: 20),
               onPressed: onInfo,
-              padding: material.EdgeInsets.zero,
-              constraints: const material.BoxConstraints(),
+              variance: ButtonVariance.ghost,
             ),
           ],
         ),
@@ -323,27 +321,28 @@ class _CouponCard extends material.StatelessWidget {
 }
 
 /// Dialog showing full coupon details
-class CouponDetailDialog extends material.StatelessWidget {
+class CouponDetailDialog extends StatelessWidget {
   const CouponDetailDialog({required this.coupon, super.key});
 
   final Coupon coupon;
 
   @override
-  material.Widget build(material.BuildContext context) {
+  Widget build(BuildContext context) {
     return AlertDialog(
-      title: material.Row(
+      title: Row(
         children: [
-          material.Expanded(child: Text(coupon.name)),
-          material.IconButton(
+          Expanded(child: Text(coupon.name)),
+          IconButton(
             icon: Icon(LucideIcons.x),
-            onPressed: () => material.Navigator.pop(context),
+            onPressed: () => Navigator.pop(context),
+            variance: ButtonVariance.ghost,
           ),
         ],
       ),
-      content: material.SingleChildScrollView(
-        child: material.Column(
-          crossAxisAlignment: material.CrossAxisAlignment.start,
-          mainAxisSize: material.MainAxisSize.min,
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildInfoRow('Code', coupon.code),
             const SizedBox(height: 12),
@@ -376,30 +375,25 @@ class CouponDetailDialog extends material.StatelessWidget {
       ),
       actions: [
         PrimaryButton(
-          onPressed: () => material.Navigator.pop(context),
-          child: const Text('Close'),
+          onPressed: () => Navigator.pop(context),
+          child: Text(context.l10n.close),
         ),
       ],
     );
   }
 
-  material.Widget _buildInfoRow(String label, String value) {
-    return material.Row(
-      crossAxisAlignment: material.CrossAxisAlignment.start,
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        material.SizedBox(
+        SizedBox(
           width: 100,
           child: Text(
             label,
-            style: const TextStyle(
-              fontWeight: material.FontWeight.w600,
-              fontSize: 13,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
           ),
         ),
-        material.Expanded(
-          child: Text(value, style: const TextStyle(fontSize: 13)),
-        ),
+        Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
       ],
     );
   }

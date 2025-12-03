@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/features/merchant/presentation/widgets/order_rejection_dialog.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,23 +75,26 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     final merchantId = _merchantId;
     if (merchantId == null) {
-      context.showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_merchant_id_not_found,
+        type: ToastType.failed,
+      );
       return;
     }
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Accept Order'),
-        content: const Text('Are you sure you want to accept this order?'),
+        title: Text(context.l10n.accept_order),
+        content: Text(context.l10n.message_confirm_accept_order),
         actions: [
           Button.ghost(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancel),
           ),
           Button.primary(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Accept'),
+            child: Text(context.l10n.accept),
           ),
         ],
       ),
@@ -113,13 +117,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           if (selected != null) {
             setState(() => _currentOrder = selected);
             context.showMyToast(
-              cubitState.message ?? 'Order accepted successfully',
+              cubitState.message ?? context.l10n.toast_order_accepted,
               type: ToastType.success,
             );
           }
         } else if (cubitState.isFailure) {
           context.showMyToast(
-            cubitState.error?.message ?? 'Failed to accept order',
+            cubitState.error?.message ?? context.l10n.toast_failed_accept_order,
             type: ToastType.failed,
           );
         }
@@ -132,7 +136,10 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     final merchantId = _merchantId;
     if (merchantId == null) {
-      context.showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_merchant_id_not_found,
+        type: ToastType.failed,
+      );
       return;
     }
 
@@ -154,13 +161,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         final cubitState = context.read<MerchantOrderCubit>().state;
         if (cubitState.isSuccess) {
           context.showMyToast(
-            cubitState.message ?? 'Order rejected successfully',
+            cubitState.message ?? context.l10n.toast_order_rejected_success,
             type: ToastType.success,
           );
           context.pop(); // Go back to order list
         } else if (cubitState.isFailure) {
           context.showMyToast(
-            cubitState.error?.message ?? 'Failed to reject order',
+            cubitState.error?.message ?? context.l10n.toast_failed_reject_order,
             type: ToastType.failed,
           );
         }
@@ -173,7 +180,10 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     final merchantId = _merchantId;
     if (merchantId == null) {
-      context.showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_merchant_id_not_found,
+        type: ToastType.failed,
+      );
       return;
     }
 
@@ -193,13 +203,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         if (selected != null) {
           setState(() => _currentOrder = selected);
           context.showMyToast(
-            cubitState.message ?? 'Order marked as preparing',
+            cubitState.message ?? context.l10n.toast_order_marked_preparing,
             type: ToastType.success,
           );
         }
       } else if (cubitState.isFailure) {
         context.showMyToast(
-          cubitState.error?.message ?? 'Failed to update order',
+          cubitState.error?.message ?? context.l10n.toast_failed_update_order,
           type: ToastType.failed,
         );
       }
@@ -211,7 +221,10 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
 
     final merchantId = _merchantId;
     if (merchantId == null) {
-      context.showMyToast('Merchant ID not found', type: ToastType.failed);
+      context.showMyToast(
+        context.l10n.toast_merchant_id_not_found,
+        type: ToastType.failed,
+      );
       return;
     }
 
@@ -231,13 +244,13 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         if (selected != null) {
           setState(() => _currentOrder = selected);
           context.showMyToast(
-            cubitState.message ?? 'Order marked as ready for pickup',
+            cubitState.message ?? context.l10n.toast_order_marked_ready,
             type: ToastType.success,
           );
         }
       } else if (cubitState.isFailure) {
         context.showMyToast(
-          cubitState.error?.message ?? 'Failed to update order',
+          cubitState.error?.message ?? context.l10n.toast_failed_update_order,
           type: ToastType.failed,
         );
       }
@@ -255,7 +268,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ordered by',
+                  context.l10n.ordered_by,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -296,7 +309,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Driver assigned',
+            context.l10n.driver_assigned,
             style: context.typography.small.copyWith(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
@@ -335,7 +348,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Order Items',
+            context.l10n.order_items,
             style: context.typography.small.copyWith(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
@@ -353,7 +366,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
                   ),
                 ),
                 Text(
-                  item.item.name ?? 'Unknown Item',
+                  item.item.name ?? context.l10n.unknown_item,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -394,7 +407,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             spacing: 8.w,
             children: [
               Text(
-                'Base Price',
+                context.l10n.base_price,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -414,7 +427,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             spacing: 8.w,
             children: [
               Text(
-                'Total',
+                context.l10n.total,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -444,7 +457,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             spacing: 8.w,
             children: [
               Text(
-                'Order ID',
+                context.l10n.order_id,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -464,7 +477,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             spacing: 8.w,
             children: [
               Text(
-                'Status',
+                context.l10n.label_status,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -485,7 +498,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
             spacing: 8.w,
             children: [
               Text(
-                'Order Time',
+                context.l10n.order_time,
                 style: context.typography.small.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
@@ -543,25 +556,25 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         primaryButton = Button.primary(
           onPressed: _isProcessing ? null : _handleAcceptOrder,
           child: _isProcessing
-              ? material.SizedBox(
+              ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: const material.CircularProgressIndicator(
+                  child: material.CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
-                      material.Colors.white,
+                    valueColor: material.AlwaysStoppedAnimation<Color>(
+                      context.colorScheme.primaryForeground,
                     ),
                   ),
                 )
               : Text(
-                  'Accept Order',
+                  context.l10n.accept_order,
                   style: context.typography.small.copyWith(fontSize: 16.sp),
                 ),
         );
         secondaryButton = Button.destructive(
           onPressed: _isProcessing ? null : _handleRejectOrder,
           child: Text(
-            'Reject Order',
+            context.l10n.reject_order,
             style: context.typography.small.copyWith(fontSize: 16.sp),
           ),
         );
@@ -572,18 +585,18 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         primaryButton = Button.primary(
           onPressed: _isProcessing ? null : _handleMarkPreparing,
           child: _isProcessing
-              ? material.SizedBox(
+              ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: const material.CircularProgressIndicator(
+                  child: material.CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
-                      material.Colors.white,
+                    valueColor: material.AlwaysStoppedAnimation<Color>(
+                      context.colorScheme.primaryForeground,
                     ),
                   ),
                 )
               : Text(
-                  'Start Preparing',
+                  context.l10n.start_preparing,
                   style: context.typography.small.copyWith(fontSize: 16.sp),
                 ),
         );
@@ -594,18 +607,18 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         primaryButton = Button.primary(
           onPressed: _isProcessing ? null : _handleMarkReady,
           child: _isProcessing
-              ? material.SizedBox(
+              ? SizedBox(
                   width: 20.w,
                   height: 20.h,
-                  child: const material.CircularProgressIndicator(
+                  child: material.CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: material.AlwaysStoppedAnimation<material.Color>(
-                      material.Colors.white,
+                    valueColor: material.AlwaysStoppedAnimation<Color>(
+                      context.colorScheme.primaryForeground,
                     ),
                   ),
                 )
               : Text(
-                  'Order Ready',
+                  context.l10n.order_ready,
                   style: context.typography.small.copyWith(fontSize: 16.sp),
                 ),
         );
@@ -621,7 +634,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           ),
           child: Center(
             child: Text(
-              'Waiting for driver to pickup...',
+              context.l10n.waiting_for_driver_pickup,
               style: context.typography.small.copyWith(
                 fontSize: 16.sp,
                 color: const Color(0xFF0000FF), // Blue
@@ -676,7 +689,7 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
           MyScaffold(
             headers: [
               DefaultAppBar(
-                title: 'Order Detail',
+                title: context.l10n.order_detail,
                 subtitle: 'F-${_currentOrder.id.substring(0, 8)}',
               ),
             ],
@@ -716,45 +729,45 @@ class _MerchantOrderDetailScreenState extends State<MerchantOrderDetailScreen> {
         minChildSize: 0.5,
         maxChildSize: 0.95,
         expand: false,
-        builder: (context, scrollController) => material.Container(
-          decoration: material.BoxDecoration(
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
             color: material.Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const material.BorderRadius.only(
-              topLeft: material.Radius.circular(16),
-              topRight: material.Radius.circular(16),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
           ),
-          child: material.Column(
+          child: Column(
             children: [
-              material.Container(
-                padding: material.EdgeInsets.all(16.w),
-                decoration: material.BoxDecoration(
-                  border: material.Border(
-                    bottom: material.BorderSide(
-                      color: material.Colors.grey.shade300,
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: const Color(0xFFE0E0E0),
                       width: 1,
                     ),
                   ),
                 ),
-                child: material.Row(
-                  mainAxisAlignment: material.MainAxisAlignment.spaceBetween,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    material.Text(
-                      'Order Chat',
-                      style: material.TextStyle(
+                    Text(
+                      context.l10n.order_chat,
+                      style: TextStyle(
                         fontSize: 18.sp,
-                        fontWeight: material.FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    material.IconButton(
-                      icon: const material.Icon(material.Icons.close),
-                      onPressed: () =>
-                          material.Navigator.of(bottomSheetContext).pop(),
+                    IconButton(
+                      icon: const Icon(material.Icons.close),
+                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
+                      variance: ButtonVariance.ghost,
                     ),
                   ],
                 ),
               ),
-              material.Expanded(child: OrderChatWidget(orderId: orderId)),
+              Expanded(child: OrderChatWidget(orderId: orderId)),
             ],
           ),
         ),

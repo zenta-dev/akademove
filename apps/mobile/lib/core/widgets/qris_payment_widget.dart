@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/services.dart';
@@ -116,21 +117,22 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
 
       if (context.mounted) {
         context.showMyToast(
-          'QR code saved successfully',
+          context.l10n.success_qr_saved,
           type: ToastType.success,
         );
       }
     } on GalException catch (e) {
       final message = switch (e.type) {
-        GalExceptionType.accessDenied =>
-          'Access denied. Please grant permission in settings.',
-        GalExceptionType.notEnoughSpace => 'Not enough storage space.',
-        GalExceptionType.notSupportedFormat => 'Image format not supported.',
-        GalExceptionType.unexpected => 'Unexpected error: $e',
+        GalExceptionType.accessDenied => context.l10n.error_access_denied,
+        GalExceptionType.notEnoughSpace => context.l10n.error_storage_full,
+        GalExceptionType.notSupportedFormat =>
+          context.l10n.error_format_unsupported,
+        GalExceptionType.unexpected =>
+          '${context.l10n.error_unexpected_prefix}$e',
       };
       showErrorToast(message);
     } catch (e) {
-      showErrorToast('Failed to save QR code: $e');
+      showErrorToast('${context.l10n.error_qr_save_failed}$e');
     }
   }
 
@@ -139,14 +141,14 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
       await Clipboard.setData(ClipboardData(text: url));
       if (context.mounted) {
         context.showMyToast(
-          'QR URL copied to clipboard',
+          context.l10n.success_qr_url_copied,
           type: ToastType.success,
         );
       }
     } catch (e) {
       if (context.mounted) {
         context.showMyToast(
-          'Failed to copy QR URL: $e',
+          '${context.l10n.error_qr_copy_failed}$e',
           type: ToastType.failed,
         );
       }
@@ -177,12 +179,16 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
             child: Column(
               spacing: 8.h,
               children: [
-                Text('Valid until $dateStr').muted(fontSize: 14.sp),
+                Text(
+                  context.l10n.label_valid_until(dateStr),
+                ).muted(fontSize: 14.sp),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   spacing: 4.w,
                   children: [
-                    const Text('Remaining Time :').muted(fontSize: 14.sp),
+                    Text(
+                      context.l10n.label_remaining_time,
+                    ).muted(fontSize: 14.sp),
                     TimeTickerWidget(
                       expiresAt: widget.payment.expiresAt,
                       onExpired: widget.onExpired,
@@ -202,7 +208,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.download, size: 16.sp),
-                const Text('Download QR').small,
+                Text(context.l10n.download_qr).small,
               ],
             ),
           ),
@@ -216,7 +222,7 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.copy, size: 16.sp),
-                const Text('Copy QR URL').small,
+                Text(context.l10n.button_copy_qr_url).small,
               ],
             ),
           ),

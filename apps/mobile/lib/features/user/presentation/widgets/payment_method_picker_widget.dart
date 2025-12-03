@@ -1,6 +1,7 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -44,9 +45,11 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DefaultText('wallet'),
+                    DefaultText(context.l10n.payment_method_wallet),
                     DefaultText(
-                      'Balance: ${context.formatCurrency(walletBalance)}',
+                      context.l10n.text_balance_with_amount(
+                        context.formatCurrency(walletBalance),
+                      ),
                       fontSize: 12.sp,
                       color: iswalletSufficient
                           ? context.colorScheme.primary
@@ -73,7 +76,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                               ),
                         ),
                     child: DefaultText(
-                      'Top Up',
+                      context.l10n.button_top_up,
                       fontSize: 12.sp,
                       color: context.colorScheme.destructive,
                     ),
@@ -92,7 +95,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
               spacing: 8.w,
               children: [
                 Icon(LucideIcons.qrCode, size: 16.sp),
-                const DefaultText('QRIS'),
+                DefaultText(context.l10n.payment_method_qris),
                 const Spacer(),
                 ChecklistIndicatorWidget(
                   isSelected: value == PaymentMethod.QRIS,
@@ -111,7 +114,7 @@ class PaymentMethodPickerWidget extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DefaultText('Bank Transfer'),
+                    DefaultText(context.l10n.payment_method_bank_transfer),
                     Builder(
                       builder: (context) {
                         final provider = bankProvider;

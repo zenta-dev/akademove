@@ -2,6 +2,7 @@ import 'dart:io' show File;
 
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' show TextInputAction;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,7 +78,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Edit Profile')],
+      headers: [DefaultAppBar(title: context.l10n.title_edit_profile)],
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, authState) {
           return BlocConsumer<UserProfileCubit, UserProfileState>(
@@ -107,7 +108,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                     Column(
                       spacing: 8.h,
                       children: [
-                        const Text('Photo Profile').small(),
+                        Text(context.l10n.label_photo_profile).small(),
                         ImagePickerWidget(
                           enabled: !profileState.isLoading,
                           previewUrl: authState.data?.image,
@@ -120,13 +121,16 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                     ),
                     FormField(
                       key: _nameKey,
-                      label: const Text('Name').small(),
+                      label: Text(context.l10n.label_name).small(),
                       showErrors: _showErrors,
                       child: TextField(
                         enabled: !profileState.isLoading,
                         focusNode: _nameFn,
                         initialValue: authState.data?.name,
-                        placeholder: Text(authState.data?.name ?? 'John Doe'),
+                        placeholder: Text(
+                          authState.data?.name ??
+                              context.l10n.placeholder_full_name,
+                        ),
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.name],
@@ -140,7 +144,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                     ),
                     FormField(
                       key: _emailKey,
-                      label: const Text('Email').small(),
+                      label: Text(context.l10n.label_email).small(),
                       validator: _emailValidator,
                       showErrors: _showErrors,
                       child: TextField(
@@ -161,7 +165,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                     ),
                     FormField(
                       key: _phoneKey,
-                      label: const Text('Phone').small(),
+                      label: Text(context.l10n.label_phone).small(),
                       showErrors: const {
                         FormValidationMode.changed,
                         FormValidationMode.submitted,
@@ -202,7 +206,7 @@ class _UserEditProfileScreenState extends State<UserEditProfileScreen> {
                             child: isLoading
                                 ? const Submiting()
                                 : Text(
-                                    'Save Changes',
+                                    context.l10n.button_save_changes,
                                     style: context.theme.typography.medium
                                         .copyWith(color: Colors.white),
                                   ),

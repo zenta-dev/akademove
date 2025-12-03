@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart' as material;
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Dialog for rejecting a food order with predefined reasons and optional note
-class OrderRejectionDialog extends material.StatefulWidget {
+class OrderRejectionDialog extends StatefulWidget {
   const OrderRejectionDialog({super.key});
 
   @override
-  material.State<OrderRejectionDialog> createState() =>
-      _OrderRejectionDialogState();
+  State<OrderRejectionDialog> createState() => _OrderRejectionDialogState();
 }
 
-class _OrderRejectionDialogState extends material.State<OrderRejectionDialog> {
+class _OrderRejectionDialogState extends State<OrderRejectionDialog> {
   String _selectedReason = 'OUT_OF_STOCK';
-  final _noteController = material.TextEditingController();
+  final _noteController = TextEditingController();
 
   @override
   void dispose() {
@@ -22,114 +22,110 @@ class _OrderRejectionDialogState extends material.State<OrderRejectionDialog> {
   }
 
   @override
-  material.Widget build(material.BuildContext context) {
-    final theme = Theme.of(context);
-
+  Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Reject Order'),
-      content: material.SingleChildScrollView(
-        child: material.SizedBox(
-          width: material.MediaQuery.of(context).size.width * 0.8,
-          child: material.Column(
-            mainAxisSize: material.MainAxisSize.min,
-            crossAxisAlignment: material.CrossAxisAlignment.start,
+      title: Text(context.l10n.title_reject_order),
+      content: SingleChildScrollView(
+        child: SizedBox(
+          width: context.mediaQuerySize.width * 0.8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.h,
             children: [
               Text(
-                'Please select a reason for rejecting this order:',
-                style: theme.typography.small,
+                context.l10n.text_select_rejection_reason,
+                style: context.typography.small,
               ),
-              material.SizedBox(height: 16.h),
+              SizedBox(height: 4.h),
 
               // Reason selector (radio buttons)
               ..._buildReasonOptions(),
 
-              material.SizedBox(height: 16.h),
+              SizedBox(height: 4.h),
 
               // Optional note field
               Text(
-                'Additional Note (Optional)',
-                style: theme.typography.semiBold.copyWith(fontSize: 14.sp),
+                context.l10n.label_additional_note_optional,
+                style: context.typography.semiBold.copyWith(fontSize: 14.sp),
               ),
-              material.SizedBox(height: 8.h),
-              material.TextField(
+              SizedBox(height: 4.h),
+              TextField(
                 controller: _noteController,
                 maxLines: 3,
                 maxLength: 200,
-                decoration: const material.InputDecoration(
-                  hintText:
-                      'e.g., "We ran out of chicken, will restock tomorrow"',
-                  border: material.OutlineInputBorder(),
-                ),
+                placeholder: Text(context.l10n.placeholder_rejection_note),
               ),
             ],
           ),
         ),
       ),
       actions: [
-        Button.ghost(
-          onPressed: () => material.Navigator.of(context).pop(null),
-          child: const Text('Cancel'),
+        GhostButton(
+          onPressed: () => Navigator.of(context).pop(null),
+          child: Text(context.l10n.button_cancel),
         ),
-        Button.destructive(
+        DestructiveButton(
           onPressed: () {
             final note = _noteController.text.trim();
-            material.Navigator.of(context).pop({
+            Navigator.of(context).pop({
               'reason': _selectedReason,
               'note': note.isEmpty ? null : note,
             });
           },
-          child: const Text('Reject Order'),
+          child: Text(context.l10n.button_reject_order),
         ),
       ],
     );
   }
 
-  List<material.Widget> _buildReasonOptions() {
-    const reasons = {
-      'OUT_OF_STOCK': 'Out of Stock',
-      'TOO_BUSY': 'Too Busy / High Order Volume',
-      'INGREDIENT_UNAVAILABLE': 'Ingredient Unavailable',
-      'CLOSED': 'Store Closed / Closing Soon',
-      'OTHER': 'Other',
+  List<Widget> _buildReasonOptions() {
+    final reasons = {
+      'OUT_OF_STOCK': context.l10n.rejection_reason_out_of_stock,
+      'TOO_BUSY': context.l10n.rejection_reason_too_busy,
+      'INGREDIENT_UNAVAILABLE':
+          context.l10n.rejection_reason_ingredient_unavailable,
+      'CLOSED': context.l10n.rejection_reason_closed,
+      'OTHER': context.l10n.rejection_reason_other,
     };
 
     return reasons.entries.map((entry) {
       final isSelected = _selectedReason == entry.key;
-      return material.InkWell(
+      return GestureDetector(
         onTap: () {
           setState(() => _selectedReason = entry.key);
         },
-        child: material.Padding(
-          padding: material.EdgeInsets.symmetric(vertical: 8.h),
-          child: material.Row(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
+          child: Row(
+            spacing: 12.w,
             children: [
-              material.Container(
-                width: 20,
-                height: 20,
-                decoration: material.BoxDecoration(
-                  shape: material.BoxShape.circle,
-                  border: material.Border.all(
+              Container(
+                width: 20.w,
+                height: 20.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
                     color: isSelected
-                        ? material.Colors.blue
-                        : material.Colors.grey,
+                        ? context.colorScheme.primary
+                        : context.colorScheme.border,
                     width: 2,
                   ),
                 ),
                 child: isSelected
-                    ? material.Center(
-                        child: material.Container(
-                          width: 12,
-                          height: 12,
-                          decoration: const material.BoxDecoration(
-                            shape: material.BoxShape.circle,
-                            color: material.Colors.blue,
+                    ? Center(
+                        child: Container(
+                          width: 12.w,
+                          height: 12.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: context.colorScheme.primary,
                           ),
                         ),
                       )
                     : null,
               ),
-              material.SizedBox(width: 12.w),
-              material.Expanded(child: Text(entry.value)),
+              Expanded(child: Text(entry.value)),
             ],
           ),
         ),
@@ -140,9 +136,9 @@ class _OrderRejectionDialogState extends material.State<OrderRejectionDialog> {
 
 /// Helper function to show the rejection dialog
 Future<Map<String, dynamic>?> showOrderRejectionDialog({
-  required material.BuildContext context,
+  required BuildContext context,
 }) async {
-  return material.showDialog<Map<String, dynamic>>(
+  return showDialog<Map<String, dynamic>>(
     context: context,
     barrierDismissible: false,
     builder: (context) => const OrderRejectionDialog(),

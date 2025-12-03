@@ -1,4 +1,5 @@
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => _cubit.loadMessages(),
-                          child: const Text('Retry'),
+                          child: Text(context.l10n.retry),
                         ),
                       ],
                     ),
@@ -82,7 +83,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
 
                 final messages = state.messages ?? [];
                 if (messages.isEmpty) {
-                  return const Center(child: Text('No messages yet'));
+                  return Center(child: Text(context.l10n.chat_no_messages));
                 }
 
                 return ListView.builder(
@@ -204,10 +205,10 @@ class _MessageInputField extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
-              decoration: const InputDecoration(
-                hintText: 'Type a message...',
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(
+              decoration: InputDecoration(
+                hintText: context.l10n.placeholder_type_message,
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
                 ),

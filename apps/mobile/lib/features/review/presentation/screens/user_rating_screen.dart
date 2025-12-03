@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
+import 'package:akademove/l10n/l10n.dart';
 
 class UserRatingScreen extends StatefulWidget {
   const UserRatingScreen({
@@ -61,7 +62,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     if (rating == 0) {
       if (mounted) {
         context.showMyToast(
-          'Please rate ${category.name}',
+          context.l10n.toast_please_rate_category(category.name),
           type: ToastType.failed,
         );
       }
@@ -84,14 +85,14 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
     final state = cubit.state;
     if (state.isSuccess) {
       context.showMyToast(
-        'Thank you for your review!',
+        context.l10n.text_thank_you_for_review,
         type: ToastType.success,
       );
       // Pop back to previous screen
       context.pop(true);
     } else if (state.isFailure) {
       context.showMyToast(
-        state.error?.message ?? 'Failed to submit review',
+        state.error?.message ?? context.l10n.toast_failed_submit_review,
         type: ToastType.failed,
       );
     }
@@ -100,12 +101,12 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Rate Your Driver')],
+      headers: [DefaultAppBar(title: context.l10n.rate_your_driver)],
       body: BlocListener<UserReviewCubit, UserReviewState>(
         listener: (context, state) {
           if (state.isFailure) {
             context.showMyToast(
-              state.error?.message ?? 'Failed to submit review',
+              state.error?.message ?? context.l10n.toast_failed_submit_review,
               type: ToastType.failed,
             );
           }
@@ -160,7 +161,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
                     ),
                   ),
                   Text(
-                    'How was your experience?',
+                    context.l10n.how_was_your_experience,
                     style: context.typography.small.copyWith(
                       fontSize: 14.sp,
                       color: context.colorScheme.mutedForeground,
@@ -181,7 +182,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
       spacing: 12.h,
       children: [
         Text(
-          'Rate by category',
+          context.l10n.text_rate_by_category,
           style: context.typography.h4.copyWith(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
@@ -303,7 +304,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
       spacing: 12.h,
       children: [
         Text(
-          'Additional comments (optional)',
+          context.l10n.label_additional_comments,
           style: context.typography.h4.copyWith(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
@@ -313,9 +314,9 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
           controller: _commentController,
           maxLines: 4,
           maxLength: 500,
-          decoration: const material.InputDecoration(
-            hintText: 'Tell us more about your experience...',
-            border: material.OutlineInputBorder(),
+          decoration: material.InputDecoration(
+            hintText: context.l10n.placeholder_additional_comments,
+            border: const material.OutlineInputBorder(),
           ),
         ),
       ],
@@ -332,7 +333,7 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
             onPressed: state.isLoading ? null : _submitReview,
             child: state.isLoading
                 ? const Submiting()
-                : const Text('Submit Review'),
+                : Text(context.l10n.button_submit_review),
           ),
         );
       },
@@ -359,49 +360,49 @@ class _UserRatingScreenState extends State<UserRatingScreen> {
   String _getCategoryLabel(ReviewCategory category) {
     switch (category) {
       case ReviewCategory.CLEANLINESS:
-        return 'Cleanliness';
+        return context.l10n.category_cleanliness;
       case ReviewCategory.COURTESY:
-        return 'Courtesy';
+        return context.l10n.category_courtesy;
       case ReviewCategory.PUNCTUALITY:
-        return 'Punctuality';
+        return context.l10n.category_punctuality;
       case ReviewCategory.SAFETY:
-        return 'Safety';
+        return context.l10n.category_safety;
       case ReviewCategory.COMMUNICATION:
-        return 'Communication';
+        return context.l10n.category_communication;
       case ReviewCategory.OTHER:
-        return 'Overall';
+        return context.l10n.category_overall;
     }
   }
 
   String _getCategoryDescription(ReviewCategory category) {
     switch (category) {
       case ReviewCategory.CLEANLINESS:
-        return 'How clean was the vehicle and the driver\'s appearance?';
+        return context.l10n.category_desc_cleanliness;
       case ReviewCategory.COURTESY:
-        return 'How polite and respectful was the driver?';
+        return context.l10n.category_desc_courtesy;
       case ReviewCategory.PUNCTUALITY:
-        return 'Was the driver on time for pickup?';
+        return context.l10n.category_desc_punctuality;
       case ReviewCategory.SAFETY:
-        return 'Did you feel safe during the trip?';
+        return context.l10n.category_desc_safety;
       case ReviewCategory.COMMUNICATION:
-        return 'How well did the driver communicate?';
+        return context.l10n.category_desc_communication;
       case ReviewCategory.OTHER:
-        return 'Rate your overall experience with this driver';
+        return context.l10n.category_desc_overall;
     }
   }
 
   String _getRatingLabel(int rating) {
     switch (rating) {
       case 1:
-        return 'Poor';
+        return context.l10n.rating_poor;
       case 2:
-        return 'Below Average';
+        return context.l10n.rating_below_average;
       case 3:
-        return 'Average';
+        return context.l10n.rating_average;
       case 4:
-        return 'Good';
+        return context.l10n.rating_good;
       case 5:
-        return 'Excellent';
+        return context.l10n.rating_excellent;
       default:
         return '';
     }

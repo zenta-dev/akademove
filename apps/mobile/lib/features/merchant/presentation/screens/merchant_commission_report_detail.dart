@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart' as charts;
@@ -22,7 +23,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
                     // Text bisa pindah baris
                     Expanded(
                       child: Text(
-                        'Incoming Balance',
+                        context.l10n.label_incoming_balance,
                         style: context.typography.p.copyWith(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -56,7 +57,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'Outgoing Balance',
+                        context.l10n.label_outgoing_balance,
                         style: context.typography.p.copyWith(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -99,7 +100,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
           spacing: 12.h,
           children: [
             Text(
-              'Balance Detail',
+              context.l10n.label_balance_detail,
               style: context.typography.p.copyWith(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
@@ -156,8 +157,8 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
 
   Widget _buildCommissionChart(BuildContext context) {
     final data = [
-      _ChartData('Nett Income', 75, const Color(0xFF5EC4D4)),
-      _ChartData('Platform Commission', 35, const Color(0xFFF9EFC7)),
+      _ChartData(context.l10n.label_nett_income, 75, const Color(0xFF5EC4D4)),
+      _ChartData(context.l10n.commission, 35, const Color(0xFFF9EFC7)),
     ];
 
     return Card(
@@ -218,9 +219,13 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
       spacing: 16.h,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _summaryCard(context, 'Gross Sales', 'Rp 1.500.000'),
-        _summaryCard(context, 'Platform Commission (20%)', 'Rp 300.000'),
-        _summaryCard(context, 'Net Income', 'Rp 1.200.000'),
+        _summaryCard(context, context.l10n.label_gross_sales, 'Rp 1.500.000'),
+        _summaryCard(
+          context,
+          context.l10n.label_platform_commission,
+          'Rp 300.000',
+        ),
+        _summaryCard(context, context.l10n.label_net_income, 'Rp 1.200.000'),
       ],
     );
   }
@@ -255,7 +260,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
     return Stack(
       children: [
         MyScaffold(
-          headers: const [DefaultAppBar(title: 'Commission Report')],
+          headers: [DefaultAppBar(title: context.l10n.title_commission_report)],
           padding: EdgeInsets.all(16.w),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -289,7 +294,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
                     child: Button.outline(
                       onPressed: () {},
                       child: Text(
-                        'Withdrawal',
+                        context.l10n.withdrawal,
                         style: context.typography.small.copyWith(
                           fontSize: 16.sp,
                         ),
@@ -301,7 +306,7 @@ class MerchantCommissionReportDetailScreen extends StatelessWidget {
                     child: Button.primary(
                       onPressed: () {},
                       child: Text(
-                        'Export to PDF',
+                        context.l10n.button_export_pdf,
                         style: context.typography.small.copyWith(
                           fontSize: 16.sp,
                         ),

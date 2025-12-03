@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,7 +40,8 @@ class UserMartCategoryScreen extends StatelessWidget {
                 _buildMerchantList(context, state.categoryMerchants),
             failure: (error) => Center(
               child: OopsAlertWidget(
-                message: error.message ?? 'Failed to load merchants',
+                message:
+                    error.message ?? context.l10n.toast_failed_load_merchants,
                 onRefresh: () {
                   final category = state.selectedCategory;
                   if (category != null) {
@@ -70,12 +72,12 @@ class UserMartCategoryScreen extends StatelessWidget {
             ),
             Gap(16.h),
             Text(
-              'No merchants found',
+              context.l10n.text_no_merchants_found,
               style: context.typography.h4.copyWith(fontSize: 16.sp),
             ),
             Gap(8.h),
             Text(
-              'Try selecting a different category',
+              context.l10n.text_try_different_category,
               style: context.typography.small.copyWith(
                 fontSize: 14.sp,
                 color: context.colorScheme.mutedForeground,
@@ -189,7 +191,9 @@ class _MerchantCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
-                            merchant.isActive ? 'Open' : 'Closed',
+                            merchant.isActive
+                                ? context.l10n.text_open
+                                : context.l10n.text_closed,
                             style: context.typography.small.copyWith(
                               fontSize: 10.sp,
                               color: merchant.isActive

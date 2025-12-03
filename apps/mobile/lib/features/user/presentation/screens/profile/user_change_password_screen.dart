@@ -1,5 +1,6 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:api_client/api_client.dart';
 import 'package:flutter/material.dart' show TextInputAction;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return MyScaffold(
-      headers: const [DefaultAppBar(title: 'Change Password')],
+      headers: [DefaultAppBar(title: context.l10n.title_change_password)],
       body: Form(
         onSubmit: _handleFormSubmit,
         child: BlocConsumer<UserProfileCubit, UserProfileState>(
@@ -98,7 +99,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
               children: [
                 FormField(
                   key: _oldPasswordKey,
-                  label: const Text('Old Password').small(),
+                  label: Text(context.l10n.label_old_password).small(),
                   validator: const LengthValidator(min: 8),
                   showErrors: const {
                     FormValidationMode.changed,
@@ -107,7 +108,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: TextField(
                     enabled: !state.isLoading,
                     focusNode: _oldPasswordFn,
-                    placeholder: const Text('********'),
+                    placeholder: Text(context.l10n.placeholder_old_password),
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.password],
                     onSubmitted: (value) {
@@ -121,7 +122,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                 ),
                 FormField(
                   key: _newPasswordKey,
-                  label: const Text('New Password').small(),
+                  label: Text(context.l10n.label_new_password).small(),
                   validator: const LengthValidator(min: 8),
                   showErrors: const {
                     FormValidationMode.changed,
@@ -130,7 +131,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: TextField(
                     enabled: !state.isLoading,
                     focusNode: _newPasswordFn,
-                    placeholder: const Text('********'),
+                    placeholder: Text(context.l10n.placeholder_old_password),
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.newPassword],
                     onSubmitted: (value) {
@@ -144,7 +145,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                 ),
                 FormField(
                   key: _confirmNewPasswordKey,
-                  label: const Text('Confirm New Password').small(),
+                  label: Text(context.l10n.label_confirm_new_password).small(),
                   validator: const LengthValidator(min: 8),
                   showErrors: const {
                     FormValidationMode.changed,
@@ -153,7 +154,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: TextField(
                     enabled: !state.isLoading,
                     focusNode: _confirmNewPasswordFn,
-                    placeholder: const Text('********'),
+                    placeholder: Text(context.l10n.placeholder_old_password),
                     textInputAction: TextInputAction.done,
                     autofillHints: const [AutofillHints.newPassword],
                     onSubmitted: (value) {
@@ -182,7 +183,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                         child: isLoading
                             ? const Submiting()
                             : Text(
-                                'Save Changes',
+                                context.l10n.button_save_changes,
                                 style: context.theme.typography.medium.copyWith(
                                   color: Colors.white,
                                 ),

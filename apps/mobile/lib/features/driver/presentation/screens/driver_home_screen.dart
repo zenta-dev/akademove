@@ -48,7 +48,7 @@ class _DriverHomeView extends StatelessWidget {
               title: context.l10n.driver_dashboard,
               trailing: [
                 IconButton(
-                  icon: const Icon(material.Icons.person),
+                  icon: const Icon(LucideIcons.user),
                   variance: ButtonVariance.ghost,
                   onPressed: () => context.push(Routes.driverProfile.path),
                 ),
@@ -92,7 +92,7 @@ class _DriverHomeView extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  material.Icons.waving_hand,
+                  LucideIcons.hand,
                   size: 24.sp,
                   color: context.colorScheme.primary,
                 ),
@@ -124,9 +124,9 @@ class _DriverHomeView extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            material.Icons.star,
+                            LucideIcons.star,
                             size: 16.sp,
-                            color: material.Colors.amber,
+                            color: const Color(0xFFFFC107),
                           ),
                           SizedBox(width: 4.w),
                           Text(
@@ -196,9 +196,7 @@ class _DriverHomeView extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    isOnline
-                        ? material.Icons.check_circle
-                        : material.Icons.offline_bolt,
+                    isOnline ? LucideIcons.circleCheck : LucideIcons.wifiOff,
                     color: isOnline
                         ? context.colorScheme.primary
                         : context.colorScheme.mutedForeground,
@@ -243,20 +241,20 @@ class _DriverHomeView extends StatelessWidget {
                 Expanded(
                   child: _buildStatItem(
                     context,
-                    icon: material.Icons.attach_money,
+                    icon: LucideIcons.dollarSign,
                     label: context.l10n.earnings,
                     value: 'Rp ${_formatMoney(state.todayEarnings ?? 0)}',
-                    color: material.Colors.green,
+                    color: const Color(0xFF4CAF50),
                   ),
                 ),
                 SizedBox(width: 16.w),
                 Expanded(
                   child: _buildStatItem(
                     context,
-                    icon: material.Icons.local_shipping,
+                    icon: LucideIcons.truck,
                     label: context.l10n.trips,
                     value: '${state.todayTrips ?? 0}',
-                    color: material.Colors.blue,
+                    color: const Color(0xFF2196F3),
                   ),
                 ),
               ],
@@ -269,10 +267,10 @@ class _DriverHomeView extends StatelessWidget {
 
   Widget _buildStatItem(
     BuildContext context, {
-    required material.IconData icon,
+    required IconData icon,
     required String label,
     required String value,
-    required material.Color color,
+    required Color color,
   }) {
     return Container(
       padding: EdgeInsets.all(12.dg),
@@ -317,19 +315,19 @@ class _DriverHomeView extends StatelessWidget {
             ),
             _buildActionButton(
               context,
-              icon: material.Icons.history,
+              icon: LucideIcons.history,
               label: context.l10n.order_history,
               onTap: () => context.push(Routes.driverHistory.path),
             ),
             _buildActionButton(
               context,
-              icon: material.Icons.calendar_today,
+              icon: LucideIcons.calendar,
               label: context.l10n.manage_schedule,
               onTap: () => context.push(Routes.driverKRS.path),
             ),
             _buildActionButton(
               context,
-              icon: material.Icons.emoji_events,
+              icon: LucideIcons.trophy,
               label: context.l10n.leadeboard_and_badges,
               onTap: () => context.push(Routes.driverLeaderboard.path),
             ),
@@ -349,31 +347,32 @@ class _DriverHomeView extends StatelessWidget {
 
   Widget _buildActionButton(
     BuildContext context, {
-    required material.IconData icon,
+    required IconData icon,
     required String label,
     required VoidCallback onTap,
   }) {
-    return material.InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-        child: Row(
-          children: [
-            Icon(icon, size: 20.sp, color: context.colorScheme.primary),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Text(
-                label,
-                style: context.typography.small.copyWith(fontSize: 14.sp),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          child: Row(
+            children: [
+              Icon(icon, size: 20.sp, color: context.colorScheme.primary),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  label,
+                  style: context.typography.small.copyWith(fontSize: 14.sp),
+                ),
               ),
-            ),
-            Icon(
-              material.Icons.chevron_right,
-              size: 20.sp,
-              color: context.colorScheme.mutedForeground,
-            ),
-          ],
+              Icon(
+                LucideIcons.chevronRight,
+                size: 20.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -32,7 +33,7 @@ class MerchantProfileScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Hello, Fore!',
+                  context.l10n.hello("Fore!"),
                   style: context.typography.small.copyWith(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w600,
@@ -48,7 +49,7 @@ class MerchantProfileScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Set Up Outlet',
+                  context.l10n.title_set_up_outlet,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -65,7 +66,7 @@ class MerchantProfileScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Edit Profile',
+                  context.l10n.edit_profile,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -83,7 +84,7 @@ class MerchantProfileScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Change Password',
+                  context.l10n.change_password,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -100,7 +101,7 @@ class MerchantProfileScreen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Privacy Policies',
+                  context.l10n.privacy_policy,
                   style: context.typography.small.copyWith(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
