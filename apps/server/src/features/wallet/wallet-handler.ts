@@ -1,9 +1,9 @@
 import { createORPCRouter } from "@/core/router/orpc";
-import { walletSpec } from "./wallet-spec";
+import { WalletSpec } from "./wallet-spec";
 
-const { pub, priv } = createORPCRouter(walletSpec);
+const { pub, priv } = createORPCRouter(WalletSpec);
 
-export const walletHandler = pub.router({
+export const WalletHandler = pub.router({
 	get: priv.get.handler(async ({ context }) => {
 		const res = await context.repo.wallet.getByUserId(context.user.id);
 

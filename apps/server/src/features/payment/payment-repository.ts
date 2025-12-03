@@ -13,7 +13,7 @@ import {
 	type WebhookRequest,
 } from "@repo/schema/payment";
 import type { Transaction, TransactionType } from "@repo/schema/transaction";
-import type { wallet } from "@repo/schema/wallet";
+import type { Wallet } from "@repo/schema/wallet";
 import { nullsToUndefined } from "@repo/shared";
 import Decimal from "decimal.js";
 import { eq, sql } from "drizzle-orm";
@@ -35,7 +35,7 @@ import { generateOrderCode } from "@/utils/uuid";
 import type { NotificationRepository } from "../notification/notification-repository";
 import { OrderRepository } from "../order/order-repository";
 import type { TransactionRepository } from "../transaction/transaction-repository";
-import { walletRepository } from "../wallet/wallet-repository";
+import { WalletRepository } from "../wallet/wallet-repository";
 
 export interface ChargePayload extends WithUserId {
 	transactionType: Extract<TransactionType, "TOPUP" | "PAYMENT">;
@@ -54,7 +54,7 @@ interface HandleWebhookPayload extends WithTx {
 export class PaymentRepository extends BaseRepository {
 	readonly #paymentSvc: PaymentService;
 	readonly #transaction: TransactionRepository;
-	readonly #wallet: walletRepository;
+	readonly #wallet: WalletRepository;
 	readonly #notification: NotificationRepository;
 
 	constructor(
@@ -62,7 +62,7 @@ export class PaymentRepository extends BaseRepository {
 		kv: KeyValueService,
 		paymentSvc: PaymentService,
 		transaction: TransactionRepository,
-		wallet: walletRepository,
+		wallet: WalletRepository,
 		notification: NotificationRepository,
 	) {
 		super("payment", kv, db);
@@ -155,7 +155,7 @@ export class PaymentRepository extends BaseRepository {
 	async charge(
 		params: ChargePayload,
 		opts: WithTx,
-	): Promise<{ payment: Payment; transaction: Transaction; wallet: wallet }> {
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
 		try {
 			const { provider, method, amount, userId, orderType, transactionType } =
 				params;
@@ -523,7 +523,7 @@ export class PaymentRepository extends BaseRepository {
 			...order,
 			status: "MATCHING",
 		});
-		const composedwallet = walletRepository.composeEntity(transaction.wallet);
+		const composedwallet = WalletRepository.composeEntity(transaction.wallet);
 
 		const tasks: Promise<unknown>[] = [
 			paymentStub.broadcast({
@@ -665,7 +665,7 @@ export class PaymentRepository extends BaseRepository {
 				p: {
 					payment: PaymentRepository.composeEntity(updatedPayment),
 					transaction: updatedTransaction,
-					wallet: walletRepository.composeEntity(updatedwallet),
+					wallet: WalletRepository.composeEntity(updatedwallet),
 				},
 			}),
 			this.#notification.sendNotificationToUserId(
@@ -684,14 +684,14 @@ export class PaymentRepository extends BaseRepository {
 
 	async #handlewalletPayment(
 		params: {
-			wallet: wallet;
+			wallet: Wallet;
 			amount: number;
 			userId: string;
 			orderType: ChargePayload["orderType"];
 			transactionType: TransactionType;
 			metadata?: Record<string, unknown>;
 		} & WithTx,
-	): Promise<{ payment: Payment; transaction: Transaction; wallet: wallet }> {
+	): Promise<{ payment: Payment; transaction: Transaction; wallet: Wallet }> {
 		const { wallet, amount, orderType, transactionType, metadata, tx } = params;
 
 		try {
@@ -773,7 +773,7 @@ export class PaymentRepository extends BaseRepository {
 			return {
 				payment,
 				transaction,
-				wallet: walletRepository.composeEntity(updatedwallet),
+				wallet: WalletRepository.composeEntity(updatedwallet),
 			};
 		} catch (error) {
 			log.error(

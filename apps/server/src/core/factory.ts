@@ -31,7 +31,7 @@ import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { UserMeRepository } from "@/features/user/me/user-me-repository";
-import { walletRepository } from "@/features/wallet/wallet-repository";
+import { WalletRepository } from "@/features/wallet/wallet-repository";
 import { JwtManager } from "@/utils/jwt";
 import { PasswordManager } from "@/utils/password";
 import { FirebaseAdminService } from "./services/firebase";
@@ -84,7 +84,7 @@ export function getRepositories(
 	manager: ManagerContext,
 ): RepositoryContext {
 	const transaction = new TransactionRepository(svc.db, svc.kv);
-	const wallet = new walletRepository(svc.db, svc.kv);
+	const wallet = new WalletRepository(svc.db, svc.kv);
 	const notification = new NotificationRepository(svc.db, svc.kv, svc.firebase);
 	const payment = new PaymentRepository(
 		svc.db,

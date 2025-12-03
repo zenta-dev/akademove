@@ -6,7 +6,7 @@ import { OrderSchema } from "./order.js";
 import { PaymentSchema } from "./payment.js";
 import { CoordinateSchema } from "./position.js";
 import { TransactionSchema } from "./transaction.js";
-import { walletSchema } from "./wallet.js";
+import { WalletSchema } from "./wallet.js";
 
 export const EnvelopeSenderSchema = z
 	.enum(["s", "c"])
@@ -108,7 +108,7 @@ export const PaymentEnvelopePayloadSchema = z.object({
 	failReason: z.string().optional(),
 	payment: PaymentSchema,
 	transaction: TransactionSchema,
-	wallet: walletSchema.optional(),
+	wallet: WalletSchema.optional(),
 });
 export const PaymentEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: PaymentEnvelopeEventSchema,

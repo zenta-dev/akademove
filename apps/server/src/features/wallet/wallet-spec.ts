@@ -7,14 +7,14 @@ import {
 	WithdrawRequestSchema,
 } from "@repo/schema/payment";
 import {
-	walletMonthlySummaryQuerySchema,
-	walletMonthlySummaryResponseSchema,
-	walletSchema,
+	WalletMonthlySummaryQuerySchema,
+	WalletMonthlySummaryResponseSchema,
+	WalletSchema,
 } from "@repo/schema/wallet";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-export const walletSpec = {
+export const WalletSpec = {
 	get: oc
 		.route({
 			tags: [FEATURE_TAGS.wallet],
@@ -25,7 +25,7 @@ export const walletSpec = {
 		})
 		.input(z.object())
 		.output(
-			createSuccesSchema(walletSchema, "Successfully retrieved users data"),
+			createSuccesSchema(WalletSchema, "Successfully retrieved wallet data"),
 		),
 	getMonthlySummary: oc
 		.route({
@@ -35,10 +35,10 @@ export const walletSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: walletMonthlySummaryQuerySchema }))
+		.input(z.object({ query: WalletMonthlySummaryQuerySchema }))
 		.output(
 			createSuccesSchema(
-				walletMonthlySummaryResponseSchema,
+				WalletMonthlySummaryResponseSchema,
 				"Successfully retrieved users data",
 			),
 		),

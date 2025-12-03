@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { getRepositories, getServices } from "@/core/factory";
+import { getManagers, getRepositories, getServices } from "@/core/factory";
 import { tables } from "@/core/services/db";
 import { log } from "@/utils";
 
@@ -16,13 +16,34 @@ import { log } from "@/utils";
  */
 export async function handleAutoOfflineCron() {
 	const svc = getServices();
-	const repo = getRepositories(svc);
+	const repo = getRepositories(svc, getManagers());
 
 	try {
 		const now = new Date();
-		const currentDay = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+		const currentDayNumber = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 		const currentHour = now.getHours();
 		const currentMinute = now.getMinutes();
+
+		// Convert numeric day to enum string
+		const dayMap: Record<
+			number,
+			| "SUNDAY"
+			| "MONDAY"
+			| "TUESDAY"
+			| "WEDNESDAY"
+			| "THURSDAY"
+			| "FRIDAY"
+			| "SATURDAY"
+		> = {
+			0: "SUNDAY",
+			1: "MONDAY",
+			2: "TUESDAY",
+			3: "WEDNESDAY",
+			4: "THURSDAY",
+			5: "FRIDAY",
+			6: "SATURDAY",
+		};
+		const currentDay = dayMap[currentDayNumber];
 
 		log.info(
 			{ currentDay, currentHour, currentMinute },
@@ -60,8 +81,8 @@ export async function handleAutoOfflineCron() {
 				const { startTime, endTime, driver } = schedule;
 
 				// Convert Time objects to minutes since midnight
-				const scheduleStart = startTime.hour * 60 + startTime.minute;
-				const scheduleEnd = endTime.hour * 60 + endTime.minute;
+				const scheduleStart = startTime.h * 60 + startTime.m;
+				const scheduleEnd = endTime.h * 60 + endTime.m;
 				const currentTimeMinutes = currentHour * 60 + currentMinute;
 
 				// Check if current time is within schedule period

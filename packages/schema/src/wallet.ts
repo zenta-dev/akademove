@@ -5,7 +5,7 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 
 export const CurrencySchema = z.enum(CURRENCY);
 
-export const walletSchema = z.object({
+export const WalletSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
 	balance: z.number(),
@@ -15,49 +15,47 @@ export const walletSchema = z.object({
 	updatedAt: DateSchema,
 });
 
-export const walletKeySchema = extractSchemaKeysAsEnum(walletSchema);
+export const WalletKeySchema = extractSchemaKeysAsEnum(WalletSchema);
 
-export const UpdatewalletSchema = walletSchema
-	.omit({
-		id: true,
-		createdAt: true,
-		updatedAt: true,
-	})
-	.partial();
+export const UpdateWalletSchema = WalletSchema.omit({
+	id: true,
+	createdAt: true,
+	updatedAt: true,
+}).partial();
 
-export const walletMonthlySummaryQuerySchema = z.object({
+export const WalletMonthlySummaryQuerySchema = z.object({
 	year: z.coerce.number(),
 	month: z.coerce.number(),
 });
 
-export const walletMonthlySummaryResponseSchema = z.object({
+export const WalletMonthlySummaryResponseSchema = z.object({
 	month: z.string().describe("YYYY-MM"),
 	totalIncome: z.coerce.number(),
 	totalExpense: z.coerce.number(),
 	net: z.coerce.number(),
 });
 
-export type walletCurrency = z.infer<typeof CurrencySchema>;
-export type wallet = z.infer<typeof walletSchema>;
-export type Updatewallet = z.infer<typeof UpdatewalletSchema>;
-export type walletMonthlySummaryRequest = z.infer<
-	typeof walletMonthlySummaryQuerySchema
+export type WalletCurrency = z.infer<typeof CurrencySchema>;
+export type Wallet = z.infer<typeof WalletSchema>;
+export type UpdateWallet = z.infer<typeof UpdateWalletSchema>;
+export type WalletMonthlySummaryRequest = z.infer<
+	typeof WalletMonthlySummaryQuerySchema
 >;
-export type walletMonthlySummaryResponse = z.infer<
-	typeof walletMonthlySummaryResponseSchema
+export type WalletMonthlySummaryResponse = z.infer<
+	typeof WalletMonthlySummaryResponseSchema
 >;
 
 export const walletSchemaRegistries = {
 	Currency: { schema: CurrencySchema, strategy: "output" },
-	wallet: { schema: walletSchema, strategy: "output" },
-	Updatewallet: { schema: UpdatewalletSchema, strategy: "input" },
-	walletMonthlySummaryResponse: {
-		schema: walletMonthlySummaryResponseSchema,
+	Wallet: { schema: WalletSchema, strategy: "output" },
+	UpdateWallet: { schema: UpdateWalletSchema, strategy: "input" },
+	WalletMonthlySummaryResponse: {
+		schema: WalletMonthlySummaryResponseSchema,
 		strategy: "output",
 	},
-	walletMonthlySummaryQuery: {
-		schema: walletMonthlySummaryQuerySchema,
+	WalletMonthlySummaryQuery: {
+		schema: WalletMonthlySummaryQuerySchema,
 		strategy: "input",
 	},
-	walletKey: { schema: walletKeySchema, strategy: "input" },
+	walletKey: { schema: WalletKeySchema, strategy: "input" },
 } satisfies SchemaRegistries;

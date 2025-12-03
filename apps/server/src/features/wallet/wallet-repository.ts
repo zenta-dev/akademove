@@ -1,9 +1,9 @@
 import type { Payment, PayRequest } from "@repo/schema/payment";
 import type {
-	Updatewallet,
-	wallet,
-	walletMonthlySummaryRequest,
-	walletMonthlySummaryResponse,
+	UpdateWallet,
+	Wallet,
+	WalletMonthlySummaryRequest,
+	WalletMonthlySummaryResponse,
 } from "@repo/schema/wallet";
 import Decimal from "decimal.js";
 import { eq, sql } from "drizzle-orm";
@@ -17,22 +17,22 @@ import type { walletDatabase } from "@/core/tables/wallet";
 import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { PaymentRepository } from "../payment/payment-repository";
 
-interface walletGetMonthlyPayload
-	extends walletMonthlySummaryRequest,
+interface WalletGetMonthlyPayload
+	extends WalletMonthlySummaryRequest,
 		WithUserId {}
 
 interface PayPayload extends PayRequest, WithUserId {}
 
-export class walletRepository extends BaseRepository {
+export class WalletRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("wallet", kv, db);
 	}
 
-	static composeEntity(item: walletDatabase): wallet {
+	static composeEntity(item: walletDatabase): Wallet {
 		return { ...item, balance: toNumberSafe(item.balance) };
 	}
 
-	async #ensurewallet(userId: string, opts?: WithTx): Promise<wallet> {
+	async #ensurewallet(userId: string, opts?: WithTx): Promise<Wallet> {
 		try {
 			let wallet = await (opts?.tx ?? this.db).query.wallet.findFirst({
 				where: (f, op) => op.eq(f.userId, userId),
@@ -43,13 +43,13 @@ export class walletRepository extends BaseRepository {
 					.values({ id: v7(), userId })
 					.returning();
 			}
-			return walletRepository.composeEntity(wallet);
+			return WalletRepository.composeEntity(wallet);
 		} catch (error) {
 			throw this.handleError(error, "ensure");
 		}
 	}
 
-	async getByUserId(userId: string, opts?: WithTx): Promise<wallet> {
+	async getByUserId(userId: string, opts?: WithTx): Promise<Wallet> {
 		try {
 			return await this.#ensurewallet(userId, opts);
 		} catch (error) {
@@ -58,9 +58,9 @@ export class walletRepository extends BaseRepository {
 	}
 
 	async getMonthlySummary(
-		params: walletGetMonthlyPayload,
+		params: WalletGetMonthlyPayload,
 		opts?: WithTx,
-	): Promise<walletMonthlySummaryResponse> {
+	): Promise<WalletMonthlySummaryResponse> {
 		try {
 			const { year, month } = params;
 			const tx = opts?.tx ?? this.db;
@@ -208,9 +208,9 @@ export class walletRepository extends BaseRepository {
 
 	async update(
 		id: string,
-		params: Updatewallet,
+		params: UpdateWallet,
 		opts?: Partial<WithTx>,
-	): Promise<wallet> {
+	): Promise<Wallet> {
 		try {
 			const [wallet] = await (opts?.tx ?? this.db)
 				.update(tables.wallet)
@@ -223,7 +223,7 @@ export class walletRepository extends BaseRepository {
 				.where(eq(tables.wallet.id, id))
 				.returning();
 
-			return walletRepository.composeEntity(wallet);
+			return WalletRepository.composeEntity(wallet);
 		} catch (error) {
 			throw this.handleError(error, "update");
 		}

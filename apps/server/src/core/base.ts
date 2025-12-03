@@ -160,7 +160,7 @@ export abstract class BaseRepository {
 		} catch {}
 	}
 
-	protected async deleteCache(key: string): Promise<void> {
+	async deleteCache(key: string): Promise<void> {
 		try {
 			await this.kv.delete(this.#composeCacheKey(key));
 		} catch {}

@@ -11,7 +11,7 @@ import { ReportKeySchema } from "./report.js";
 import { ReviewKeySchema } from "./review.js";
 import { TransactionKeySchema } from "./transaction.js";
 import { UserKeySchema } from "./user.js";
-import { walletKeySchema } from "./wallet.js";
+import { WalletKeySchema } from "./wallet.js";
 
 const MAX_LIMIT = 100;
 
@@ -70,7 +70,7 @@ export const SortBySchema = mergeEnums(
 	ReviewKeySchema,
 	TransactionKeySchema,
 	UserKeySchema,
-	walletKeySchema,
+	WalletKeySchema,
 );
 
 export const PaginationOrderSchema = z.enum(["asc", "desc"]);
