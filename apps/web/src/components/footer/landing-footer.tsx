@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
@@ -17,27 +18,27 @@ export function LandingFooter({ className }: { className?: string }) {
 
 	const footerLinks = {
 		product: [
-			{ label: "Transportasi", href: "/transport" },
-			{ label: "Food Delivery", href: "/food" },
-			{ label: "Goods Delivery", href: "/goods" },
-			{ label: "Jadi Driver", href: "/driver" },
+			{ label: m.footer_transportation(), href: "/transport" },
+			{ label: m.footer_food_delivery(), href: "/food" },
+			{ label: m.footer_goods_delivery(), href: "/goods" },
+			{ label: m.footer_become_driver(), href: "/driver" },
 		],
 		company: [
-			{ label: "Tentang Kami", href: "/about" },
+			{ label: m.footer_about_us(), href: "/about" },
 			// { label: "Karir", href: "/careers" },
 			// { label: "Blog", href: "/blog" },
 			// { label: "Press Kit", href: "/press" },
 		],
 		support: [
-			{ label: "FAQ", href: "/faq" },
-			{ label: "Bantuan", href: "/help" },
-			{ label: "Kontak", href: "/contact" },
-			{ label: "Status", href: "/status" },
+			{ label: m.faq(), href: "/faq" },
+			{ label: m.footer_help(), href: "/help" },
+			{ label: m.footer_contact(), href: "/contact" },
+			{ label: m.footer_status(), href: "/status" },
 		],
 		legal: [
-			{ label: "Privacy Policy", href: "/privacy" },
-			{ label: "Terms of Service", href: "/terms" },
-			{ label: "Cookie Policy", href: "/cookies" },
+			{ label: m.privacy_policy(), href: "/privacy" },
+			{ label: m.terms_of_service(), href: "/terms" },
+			{ label: m.cookie_policy(), href: "/cookies" },
 		],
 	};
 
@@ -72,8 +73,7 @@ export function LandingFooter({ className }: { className?: string }) {
 								</motion.h3>
 							</Link>
 							<p className="mt-4 max-w-xs text-muted-foreground text-sm leading-relaxed">
-								Solusi mobilitas dan delivery terpercaya untuk mahasiswa. Dari
-								mahasiswa, untuk mahasiswa.
+								{m.footer_tagline()}
 							</p>
 
 							{/* Contact Info */}
@@ -84,7 +84,7 @@ export function LandingFooter({ className }: { className?: string }) {
 									transition={{ duration: 0.2 }}
 								>
 									<MapPin className="size-4 shrink-0" />
-									<span>Surabaya, Indonesia</span>
+									<span>{m.footer_location()}</span>
 								</motion.div>
 								<motion.a
 									href="mailto:hello@akademove.com"
@@ -109,28 +109,28 @@ export function LandingFooter({ className }: { className?: string }) {
 
 						{/* Product Links */}
 						<FooterLinkSection
-							title="Produk"
+							title={m.footer_product()}
 							links={footerLinks.product}
 							delay={0.1}
 						/>
 
 						{/* Company Links */}
 						<FooterLinkSection
-							title="Perusahaan"
+							title={m.footer_company()}
 							links={footerLinks.company}
 							delay={0.2}
 						/>
 
 						{/* Support Links */}
 						<FooterLinkSection
-							title="Bantuan"
+							title={m.footer_support()}
 							links={footerLinks.support}
 							delay={0.3}
 						/>
 
 						{/* Legal Links */}
 						<FooterLinkSection
-							title="Legal"
+							title={m.footer_legal()}
 							links={footerLinks.legal}
 							delay={0.4}
 						/>
@@ -147,10 +147,10 @@ export function LandingFooter({ className }: { className?: string }) {
 						<div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
 							<div className="text-center sm:text-left">
 								<h4 className="font-semibold text-foreground text-lg">
-									Subscribe ke Newsletter
+									{m.footer_newsletter_title()}
 								</h4>
 								<p className="mt-1 text-muted-foreground text-sm">
-									Dapatkan update promo dan fitur terbaru
+									{m.footer_newsletter_subtitle()}
 								</p>
 							</div>
 							<motion.div
@@ -160,7 +160,7 @@ export function LandingFooter({ className }: { className?: string }) {
 							>
 								<input
 									type="email"
-									placeholder="Email kamu"
+									placeholder={m.footer_email_placeholder()}
 									className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 								/>
 								<motion.button
@@ -168,7 +168,7 @@ export function LandingFooter({ className }: { className?: string }) {
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 								>
-									Subscribe
+									{m.footer_subscribe()}
 								</motion.button>
 							</motion.div>
 						</div>
@@ -186,7 +186,7 @@ export function LandingFooter({ className }: { className?: string }) {
 								transition={{ duration: 0.5, delay: 0.6 }}
 								className="text-center text-muted-foreground text-sm"
 							>
-								© {currentYear} AkadeMove. All rights reserved.
+								© {currentYear} AkadeMove. {m.footer_all_rights_reserved()}
 							</motion.p>
 
 							{/* Social Links & Toggles */}
