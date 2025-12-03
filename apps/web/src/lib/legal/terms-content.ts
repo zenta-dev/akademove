@@ -21,7 +21,14 @@ export const acceptanceOfTerms = (): LegalSectionContent =>
 				"These Terms constitute a legally binding agreement between you and AkadeMove. Please read them carefully.",
 			],
 		},
-		id: undefined, // Indonesian translation to be added
+		id: {
+			title: "Penerimaan Syarat",
+			paragraphs: [
+				'Selamat datang di AkadeMove. Syarat Layanan ini ("Syarat") mengatur akses dan penggunaan platform mobilitas dan pengiriman kampus kami, termasuk aplikasi seluler dan situs web kami (secara kolektif, "Layanan").',
+				"Dengan membuat akun, mengakses, atau menggunakan Layanan kami, Anda setuju untuk terikat oleh Syarat ini dan Kebijakan Privasi kami. Jika Anda tidak setuju dengan Syarat ini, Anda tidak boleh menggunakan Layanan kami.",
+				"Syarat ini merupakan perjanjian yang mengikat secara hukum antara Anda dan AkadeMove. Harap baca dengan seksama.",
+			],
+		},
 	});
 
 export const serviceDescription = (): LegalSectionContent =>
@@ -56,7 +63,36 @@ export const serviceDescription = (): LegalSectionContent =>
 				"AkadeMove acts as a technology platform connecting users with service providers (drivers and merchants). We are not a transportation company or food delivery company. Drivers and merchants are independent contractors, not employees of AkadeMove.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Deskripsi Layanan",
+			paragraphs: [
+				"AkadeMove adalah platform khusus kampus yang menghubungkan mahasiswa, dosen, dan anggota komunitas kampus yang berwenang untuk:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Layanan Ride-Hailing",
+							content:
+								"Layanan transportasi di dalam dan sekitar area kampus, menghubungkan penumpang dengan pengemudi mahasiswa",
+						},
+						{
+							label: "Pengiriman Paket",
+							content:
+								"Pengiriman dokumen, paket, laundry, dan barang lainnya dalam batas kampus",
+						},
+						{
+							label: "Pengiriman Makanan",
+							content:
+								"Pesanan dan pengiriman makanan dan minuman dari pedagang dan penyewa kampus (kantin, kafe, restoran)",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"AkadeMove bertindak sebagai platform teknologi yang menghubungkan pengguna dengan penyedia layanan (pengemudi dan pedagang). Kami bukan perusahaan transportasi atau perusahaan pengiriman makanan. Pengemudi dan pedagang adalah kontraktor independen, bukan karyawan AkadeMove.",
+			],
+		},
 	});
 
 export const userEligibility = (): LegalSectionContent =>
@@ -65,7 +101,10 @@ export const userEligibility = (): LegalSectionContent =>
 			title: "User Roles and Eligibility",
 			paragraphs: [],
 		},
-		id: undefined,
+		id: {
+			title: "Peran Pengguna dan Kelayakan",
+			paragraphs: [],
+		},
 	});
 
 export const passengersEligibility = (): LegalSectionContent =>
@@ -102,7 +141,38 @@ export const passengersEligibility = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Peran Pengguna dan Kelayakan",
+			paragraphs: [],
+			lists: [
+				{
+					items: [
+						{
+							label: "Usia",
+							content: "Berusia minimal 17 tahun",
+						},
+						{
+							label: "Afiliasi Kampus",
+							content:
+								"Menjadi mahasiswa, dosen, atau anggota komunitas kampus yang berwenang",
+						},
+						{
+							label: "Informasi Kontak",
+							content: "Menyediakan alamat email dan nomor telepon yang valid",
+						},
+						{
+							label: "Verifikasi",
+							content:
+								"Memverifikasi afiliasi kampus Anda (KTM saat diperlukan)",
+						},
+						{
+							label: "Pemeliharaan Akun",
+							content: "Memelihara informasi akun yang akurat dan terbaru",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const driversEligibility = (): LegalSectionContent =>
@@ -156,7 +226,57 @@ export const driversEligibility = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengemudi",
+			paragraphs: ["Untuk menyediakan layanan sebagai pengemudi, Anda harus:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Usia",
+							content: "Berusia minimal 18 tahun",
+						},
+						{
+							label: "Status Mahasiswa",
+							content: "Menjadi mahasiswa yang sedang terdaftar",
+						},
+						{
+							label: "Surat Izin Mengemudi",
+							content:
+								"Memiliki surat izin mengemudi Indonesia yang valid (SIM C untuk sepeda motor atau SIM A untuk mobil)",
+						},
+						{
+							label: "Akses Kendaraan",
+							content:
+								"Memiliki atau memiliki akses legal ke kendaraan yang terdaftar",
+						},
+						{
+							label: "Registrasi Kendaraan",
+							content:
+								"Menyediakan dokumen registrasi kendaraan yang valid (STNK)",
+						},
+						{
+							label: "Kartu Tanda Mahasiswa",
+							content: "Mengirimkan foto jelas Kartu Tanda Mahasiswa (KTM)",
+						},
+						{
+							label: "Proses Verifikasi",
+							content: "Lulus proses verifikasi dan onboarding pengemudi kami",
+						},
+						{
+							label: "Pelatihan Keamanan",
+							content:
+								"Menyelesaikan pelatihan keamanan atau penilaian pengetahuan yang diperlukan",
+						},
+						{
+							label: "Asuransi",
+							content:
+								"Memiliki asuransi kendaraan sesuai dengan peraturan Indonesia",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const merchantsEligibility = (): LegalSectionContent =>
@@ -193,7 +313,40 @@ export const merchantsEligibility = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengelola",
+			paragraphs: [
+				"Pengelola adalah administrator kampus yang berwenang mengelola konfigurasi platform, harga, promosi, dan pemantauan. Akses pengelola diberikan hanya oleh administrator AkadeMove.",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Otorisasi",
+							content: "Menjadi pengelola kampus yang berwenang",
+						},
+						{
+							label: "Dokumentasi",
+							content: "Menyediakan dokumentasi bisnis dan izin yang valid",
+						},
+						{
+							label: "Keamanan Makanan",
+							content: "Mempertahankan standar keamanan dan kebersihan makanan",
+						},
+						{
+							label: "Kepatuhan Kampus",
+							content:
+								"Mematuhi peraturan kampus untuk operasi layanan makanan",
+						},
+						{
+							label: "Informasi Menu",
+							content:
+								"Menyediakan informasi menu, harga, dan ketersediaan yang akurat",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const operatorsEligibility = (): LegalSectionContent =>
@@ -204,7 +357,12 @@ export const operatorsEligibility = (): LegalSectionContent =>
 				"Operators are authorized campus administrators who manage platform configuration, pricing, promotions, and monitoring. Operator access is granted by AkadeMove administrators only.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengelola",
+			paragraphs: [
+				"Pengelola adalah administrator kampus yang berwenang mengelola konfigurasi platform, harga, promosi, dan pemantauan. Akses pengelola diberikan hanya oleh administrator AkadeMove.",
+			],
+		},
 	});
 
 export const accountRegistration = (): LegalSectionContent =>
@@ -232,7 +390,7 @@ export const accountRegistration = (): LegalSectionContent =>
 							content: "Date of birth and gender",
 						},
 						{
-							label: "Photo",
+							label: "Photo (optional for passengers, required for drivers)",
 							content:
 								"Profile photo (optional for passengers, required for drivers)",
 						},
@@ -245,7 +403,37 @@ export const accountRegistration = (): LegalSectionContent =>
 				"**Account Accuracy:** You agree to provide accurate, current, and complete information and to update it as necessary to maintain its accuracy.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pendaftaran dan Verifikasi Akun",
+			paragraphs: [
+				"Untuk menggunakan AkadeMove, Anda harus membuat akun dengan menyediakan:",
+			],
+			lists: [
+				{
+					items: [
+						{ label: "Nama", content: "Nama lengkap sesuai identitas" },
+						{ label: "Email", content: "Alamat email yang valid" },
+						{
+							label: "Telepon",
+							content: "Nomor telepon (diverifikasi melalui OTP)",
+						},
+						{
+							label: "Kata Sandi",
+							content: "Kata sandi (disimpan dengan aman dan terenkripsi)",
+						},
+						{
+							label: "Detail Pribadi",
+							content: "Tanggal lahir dan jenis kelamin",
+						},
+						{
+							label: "Foto (opsional untuk penumpang, wajib untuk pengemudi)",
+							content:
+								"Foto profil (opsional untuk penumpang, wajib untuk pengemudi)",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const cancellationPolicy = (): LegalSectionContent =>
@@ -268,7 +456,16 @@ export const cancellationPolicy = (): LegalSectionContent =>
 				"- Disputes must be raised within 24 hours of order completion",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Kebijakan Pembatalan dan Pengembalian Dana",
+			paragraphs: [
+				"**Pembatalan Pengguna:**",
+				"- Pembatalan gratis dalam waktu 2 menit setelah pemesanan",
+				"- Biaya pembatalan (dapat dikonfigurasi oleh pengelola) berlaku setelah 2 menit",
+				"- Jika pengemudi telah tiba atau pesanan sedang dipersiapkan, biaya pembatalan penuh berlaku",
+				"",
+			],
+		},
 	});
 
 export const ratingSystem = (): LegalSectionContent =>
@@ -305,7 +502,38 @@ export const ratingSystem = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Sistem Peringkat dan Ulasan",
+			paragraphs: [
+				"Baik pengguna maupun pengemudi dapat memberikan peringkat satu sama lain pada skala 5 bintang. Peringkat berkontribusi pada skor keseluruhan pengguna/pengemudi dan mempengaruhi kualitas layanan dan peluang.",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Keadilan",
+							content:
+								"Peringkat harus mencerminkan kualitas layanan dan perilaku yang sebenarnya",
+						},
+						{
+							label: "Larangan",
+							content:
+								"Jangan memanipulasi peringkat atau meninggalkan ulasan palsu/berniat jahat",
+						},
+						{
+							label: "Sengketa",
+							content:
+								"Sengketa peringkat dapat dilaporkan ke dukungan pelanggan untuk ditinjau",
+						},
+						{
+							label: "Konsekuensi",
+							content:
+								"Peringkat yang konsisten rendah dapat mengakibatkan peninjauan atau penangguhan akun",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const prohibitedConduct = (): LegalSectionContent =>
@@ -357,7 +585,50 @@ export const prohibitedConduct = (): LegalSectionContent =>
 				"Violation of these terms may result in immediate account suspension or termination, and potential legal action.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Perilaku Terlarang",
+			paragraphs: ["Pengguna AkadeMove tidak boleh:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Kegiatan Ilegal",
+							content:
+								"Gunakan layanan untuk tujuan ilegal atau mengangkut barang ilegal",
+						},
+						{
+							label: "Pelecehan",
+							content:
+								"Melakukan pelecehan, penyalahgunaan, ancaman, atau diskriminasi terhadap pengguna lain",
+						},
+						{
+							label: "Penipuan",
+							content:
+								"Terlibat dalam aktivitas penipuan, akun palsu, atau penipuan pembayaran",
+						},
+						{
+							label: "Penyalahgunaan Sistem",
+							content: "Memanipulasi platform, peringkat, harga, atau promosi",
+						},
+						{
+							label: "Pelanggaran Keselamatan",
+							content:
+								"Mengoperasikan kendaraan dengan tidak aman atau melanggar undang-undang lalu lintas",
+						},
+						{
+							label: "Akses Tidak Sah",
+							content:
+								"Mencoba mengakses akun atau data yang tidak Anda berwenang untuk mengakses",
+						},
+						{
+							label: "Hak Kekayaan Intelektual",
+							content:
+								"Melanggar hak kekayaan intelektual AkadeMove atau pihak lain",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const limitationLiability = (): LegalSectionContent =>
@@ -372,7 +643,16 @@ export const limitationLiability = (): LegalSectionContent =>
 				"**Third Parties:** We are not responsible for the actions of drivers, merchants, or other users.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Batasan Tanggung Jawab",
+			paragraphs: [
+				"**Peran Platform:** AkadeMove adalah platform teknologi yang menghubungkan pengguna dengan penyedia layanan independen. Kami tidak menyediakan layanan transportasi atau pengiriman secara langsung.",
+				'**Tanpa Jaminan:** Layanan disediakan "sebagaimana adanya" tanpa jaminan apa pun, baik tersurat maupun tersirat.',
+				"**Batasan:** Sejauh diizinkan oleh hukum Indonesia, AkadeMove tidak bertanggung jawab atas kerusakan tidak langsung, insidental, khusus, atau konsekuensial.",
+				"**Batas Maksimum:** Total tanggung jawab kami tidak akan melebihi jumlah yang Anda bayarkan kepada AkadeMove dalam 12 bulan sebelum klaim.",
+				"**Pihak Ketiga:** Kami tidak bertanggung jawab atas tindakan pengemudi, pedagang, atau pengguna lain.",
+			],
+		},
 	});
 
 export const disputeResolution = (): LegalSectionContent =>
@@ -383,11 +663,20 @@ export const disputeResolution = (): LegalSectionContent =>
 				"**Informal Resolution:** We encourage users to contact customer support first to resolve disputes informally.",
 				"**Mediation:** If informal resolution fails, parties agree to attempt mediation before litigation.",
 				"**Governing Law:** These Terms are governed by the laws of the Republic of Indonesia.",
-				"**Jurisdiction:** Any disputes shall be resolved in the courts of Jakarta, Indonesia.",
+				"**Jurisdiction:** Any disputes shall be resolved in the courts of Surabaya, Indonesia.",
 				"**Arbitration:** Parties may agree to binding arbitration as an alternative to litigation.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Penyelesaian Sengketa",
+			paragraphs: [
+				"**Penyelesaian Informal:** Kami mendorong pengguna untuk menghubungi dukungan pelanggan terlebih dahulu untuk menyelesaikan sengketa secara informal.",
+				"**Mediasi:** Jika penyelesaian informal gagal, para pihak setuju untuk mencoba mediasi sebelum litigasi.",
+				"**Hukum yang Mengatur:** Ketentuan ini diatur oleh hukum Republik Indonesia.",
+				"**Yurisdiksi:** Setiap sengketa akan diselesaikan di pengadilan Surabaya, Indonesia.",
+				"**Arbitrase:** Para pihak dapat setuju untuk arbitrase yang mengikat sebagai alternatif litigasi.",
+			],
+		},
 	});
 
 export const changesToTerms = (): LegalSectionContent =>
@@ -403,7 +692,17 @@ export const changesToTerms = (): LegalSectionContent =>
 				"Continued use of services after changes become effective constitutes acceptance of the updated Terms. If you do not agree to changes, you must stop using our Services.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Perubahan Ketentuan",
+			paragraphs: [
+				"Kami berhak untuk mengubah Ketentuan ini kapan saja. Perubahan material akan diberitahukan melalui:",
+				"- Notifikasi dalam aplikasi",
+				"- Email ke alamat terdaftar Anda",
+				"- Pemberitahuan mencolok di situs web kami",
+				"",
+				"Penggunaan layanan setelah perubahan berlaku merupakan penerimaan terhadap Ketentuan yang diperbarui. Jika Anda tidak setuju dengan perubahan, Anda harus berhenti menggunakan Layanan kami.",
+			],
+		},
 	});
 
 export const accountTermination = (): LegalSectionContent =>
@@ -417,7 +716,15 @@ export const accountTermination = (): LegalSectionContent =>
 				"**Outstanding Obligations:** Termination does not relieve you of payment obligations or liabilities incurred before termination.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengakhiran Akun",
+			paragraphs: [
+				"**Pengakhiran Pengguna:** Anda dapat mengakhiri akun Anda kapan saja melalui pengaturan aplikasi atau dengan menghubungi dukungan pelanggan.",
+				"**Pengakhiran Platform:** Kami berhak untuk menangguhkan atau mengakhiri akun yang melanggar Ketentuan ini, terlibat dalam aktivitas penipuan, atau menimbulkan risiko keselamatan.",
+				"**Efek Pengakhiran:** Setelah pengakhiran, akses Anda ke Layanan akan dihentikan, dan kami dapat menghapus data akun Anda sesuai dengan persyaratan retensi hukum.",
+				"**Kewajiban Tertunda:** Pengakhiran tidak membebaskan Anda dari kewajiban pembayaran atau tanggung jawab yang timbul sebelum pengakhiran.",
+			],
+		},
 	});
 
 export const contactInformation = (): LegalSectionContent =>
@@ -433,7 +740,7 @@ export const contactInformation = (): LegalSectionContent =>
 						{
 							label: "Address",
 							content:
-								"AkadeMove Indonesia, Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10220",
+								"AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur",
 						},
 						{
 							label: "Customer Support",
@@ -443,7 +750,29 @@ export const contactInformation = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Informasi Kontak",
+			paragraphs: [
+				"Untuk pertanyaan tentang Ketentuan ini atau melaporkan masalah:",
+			],
+			lists: [
+				{
+					items: [
+						{ label: "Email", content: "support@akademove.com" },
+						{ label: "Telepon", content: "+62 21 1234 5678" },
+						{
+							label: "Alamat",
+							content:
+								"AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur",
+						},
+						{
+							label: "Dukungan Pelanggan",
+							content: "Tersedia 24/7 melalui obrolan dalam aplikasi",
+						},
+					],
+				},
+			],
+		},
 	});
 
 // Driver Requirements Section
@@ -453,7 +782,10 @@ export const driverRequirements = (): LegalSectionContent =>
 			title: "Driver Requirements",
 			paragraphs: [],
 		},
-		id: undefined,
+		id: {
+			title: "Persyaratan Pengemudi",
+			paragraphs: [],
+		},
 	});
 
 export const driverDocuments = (): LegalSectionContent =>
@@ -493,7 +825,43 @@ export const driverDocuments = (): LegalSectionContent =>
 				"Documents must be clearly readable and not expired. You must update documents before expiration to maintain active driver status.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Dokumen yang Diperlukan",
+			paragraphs: [
+				"Semua pengemudi harus mengirimkan dan memelihara dokumen yang berlaku:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Kartu Tanda Mahasiswa (KTM)",
+							content: "Bukti valid pendaftaran saat ini",
+						},
+						{
+							label: "Surat Izin Mengemudi (SIM)",
+							content:
+								"SIM C (sepeda motor) atau SIM A (mobil) yang valid dari otoritas Indonesia",
+						},
+						{
+							label: "Registrasi Kendaraan (STNK)",
+							content:
+								"Registrasi kendaraan saat ini yang sesuai dengan kendaraan yang digunakan untuk layanan",
+						},
+						{
+							label: "Foto Kendaraan",
+							content: "Foto jelas kendaraan Anda dari berbagai sudut",
+						},
+						{
+							label: "Foto Diri",
+							content: "Foto terbaru untuk verifikasi identitas",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Dokumen harus terbaca dengan jelas dan tidak kedaluwarsa. Anda harus memperbarui dokumen sebelum kedaluwarsa untuk mempertahankan status pengemudi aktif.",
+			],
+		},
 	});
 
 export const driverSchedule = (): LegalSectionContent =>
@@ -528,7 +896,36 @@ export const driverSchedule = (): LegalSectionContent =>
 				"This feature helps drivers balance their academic responsibilities with earning opportunities. However, you remain responsible for managing your own schedule and ensuring you do not accept orders during times you are unavailable.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Manajemen Jadwal Kelas",
+			paragraphs: [
+				"Salah satu fitur unik AkadeMove adalah integrasi jadwal kelas:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								"Pengemudi dapat memasukkan jadwal kelas mereka (entri manual atau impor kalender saat tersedia)",
+						},
+						{
+							content:
+								'The system automatically sets drivers to "offline" status during scheduled class times',
+						},
+						{
+							content: "Schedules can be one-time or recurring weekly",
+						},
+						{
+							content:
+								"Drivers can override automatic offline status if their schedule changes",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Fitur ini membantu pengemudi menyeimbangkan tanggung jawab akademik dengan peluang penghasilan. Namun, Anda tetap bertanggung jawab mengelola jadwal Anda sendiri dan memastikan Anda tidak menerima pesanan selama waktu Anda tidak tersedia.",
+			],
+		},
 	});
 
 export const driverAvailability = (): LegalSectionContent =>
@@ -562,7 +959,36 @@ export const driverAvailability = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Ketersediaan dan Status Online",
+			paragraphs: ["Sebagai pengemudi, Anda mengontrol ketersediaan Anda:"],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								'Beralih antara "online" (tersedia untuk pesanan) dan "offline" (tidak tersedia)',
+						},
+						{
+							content:
+								"Saat online, Anda akan menerima permintaan pesanan berdasarkan lokasi dan preferensi penumpang",
+						},
+						{
+							content:
+								"Anda memiliki hak untuk menerima atau menolak permintaan pesanan",
+						},
+						{
+							content:
+								"Namun, tingkat penolakan yang berlebihan dapat mempengaruhi prioritas Anda dalam algoritma pencocokan",
+						},
+						{
+							content:
+								"Pembatalan berulang setelah menerima pesanan dapat mengakibatkan peringatan atau penangguhan",
+						},
+					],
+				},
+			],
+		},
 	});
 
 // Pricing and Payments Sections
@@ -572,7 +998,10 @@ export const pricingPayments = (): LegalSectionContent =>
 			title: "Pricing and Payments",
 			paragraphs: [],
 		},
-		id: undefined,
+		id: {
+			title: "Harga dan Pembayaran",
+			paragraphs: [],
+		},
 	});
 
 export const pricingStructure = (): LegalSectionContent =>
@@ -615,7 +1044,46 @@ export const pricingStructure = (): LegalSectionContent =>
 				"You will see the estimated fare before confirming your order. The final fare is calculated based on the actual route taken.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Struktur Harga",
+			paragraphs: [
+				"Harga untuk layanan angkutan dan pengiriman dihitung menggunakan rumus berikut:",
+				"**Total Harga = Harga Dasar + (Jarak dalam KM × Harga per KM) + Tip - Diskon Kupon**",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Harga Dasar",
+							content:
+								"Biaya minimum untuk setiap pesanan, ditetapkan oleh pengelola kampus",
+						},
+						{
+							label: "Harga per KM",
+							content:
+								"Tarif per kilometer yang ditempuh, dapat dikonfigurasi oleh pengelola",
+						},
+						{
+							label: "Perhitungan Jarak",
+							content:
+								"Dihitung menggunakan Google Maps API untuk rute terpendek",
+						},
+						{
+							label: "Tip",
+							content: "Gratifikasi opsional yang ditambahkan oleh penumpang",
+						},
+						{
+							label: "Kupon",
+							content: "Diskon promosi yang diterapkan saat checkout",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Pesanan Makanan:** Harga makanan ditetapkan oleh pedagang. Biaya pengiriman berdasarkan jarak berlaku secara terpisah.",
+				"Anda akan melihat perkiraan tarif sebelum mengonfirmasi pesanan Anda. Tarif akhir dihitung berdasarkan rute aktual yang diambil.",
+			],
+		},
 	});
 
 export const commissionStructure = (): LegalSectionContent =>
@@ -648,7 +1116,34 @@ export const commissionStructure = (): LegalSectionContent =>
 				"Commission rates are subject to change with advance notice. Drivers and merchants will be notified of any rate changes at least 14 days in advance.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Struktur Komisi",
+			paragraphs: ["AkadeMove beroperasi pada model berbasis komisi:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Angkutan dan Pengiriman Paket",
+							content: "Komisi platform 15% dikurangi dari total tarif",
+						},
+						{
+							label: "Pengiriman Makanan",
+							content:
+								"Komisi total 20% (10% dari pedagang, 10% dari penghasilan pengemudi)",
+						},
+						{
+							label: "Tip",
+							content:
+								"Tip langsung diberikan kepada pengemudi tanpa pemotongan komisi (dapat dikonfigurasi oleh pengelola)",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Contoh Perhitungan:**\nTotal Angkutan: Rp 25.000\nKomisi Platform (15%): Rp 3.750\nPenghasilan Pengemudi: Rp 21.250",
+				"Tingkat komisi dapat berubah dengan pemberitahuan sebelumnya. Pengemudi dan pedagang akan diberitahu tentang perubahan tarif setidaknya 14 hari sebelumnya.",
+			],
+		},
 	});
 
 export const walletSystem = (): LegalSectionContent =>
@@ -689,7 +1184,45 @@ export const walletSystem = (): LegalSectionContent =>
 				"Insufficient wallet balance will prevent order placement. Minimum top-up amounts and transaction limits may apply.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Sistem Dompet",
+			paragraphs: [
+				"Semua pengguna memiliki dompet dalam aplikasi untuk mengelola dana:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Isi Ulang",
+							content:
+								"Penumpang dapat menambahkan dana melalui QRIS, transfer bank, atau e-wallet melalui mitra pembayaran kami Midtrans",
+						},
+						{
+							label: "Pembayaran",
+							content:
+								"Pembayaran pesanan secara otomatis dikurangi dari saldo dompet",
+						},
+						{
+							label: "Penghasilan",
+							content:
+								"Penghasilan pengemudi dan pedagang dikreditkan ke dompet mereka setelah pesanan selesai",
+						},
+						{
+							label: "Pelacakan Saldo",
+							content:
+								"Lihat saldo dompet dan riwayat transaksi secara real-time",
+						},
+						{
+							label: "Mata Uang",
+							content: "Semua transaksi dalam Rupiah Indonesia (IDR)",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Saldo dompet yang tidak mencukupi akan mencegah penempatan pesanan. Jumlah minimum isi ulang dan batas transaksi dapat berlaku.",
+			],
+		},
 	});
 
 export const withdrawals = (): LegalSectionContent =>
@@ -716,7 +1249,28 @@ export const withdrawals = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Penarikan",
+			paragraphs: [
+				"Pengemudi dan pedagang dapat menarik penghasilan ke rekening bank terdaftar mereka:",
+			],
+			lists: [
+				{
+					items: [
+						{ content: "Jumlah penarikan minimum: Rp 50.000" },
+						{ content: "Waktu pemrosesan: 1-3 hari kerja" },
+						{
+							content: "Rekening bank harus atas nama pengemudi/pedagang",
+						},
+						{ content: "Biaya transaksi dapat berlaku tergantung pada bank" },
+						{
+							content:
+								"Penarikan yang gagal karena informasi bank yang salah dapat dikenakan biaya",
+						},
+					],
+				},
+			],
+		},
 	});
 
 // Order Management Sections
@@ -726,7 +1280,10 @@ export const orderManagement = (): LegalSectionContent =>
 			title: "Order Management",
 			paragraphs: [],
 		},
-		id: undefined,
+		id: {
+			title: "Manajemen Pesanan",
+			paragraphs: [],
+		},
 	});
 
 export const rideHailing = (): LegalSectionContent =>
@@ -744,7 +1301,19 @@ export const rideHailing = (): LegalSectionContent =>
 				"Requested → Matching → Accepted → Arriving → In-Trip → Completed",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Layanan Hailing Angkutan",
+			paragraphs: [
+				"**Tanggung Jawab Penumpang:**",
+				"- Tentukan lokasi penjemputan dan pengantaran yang akurat\n- Siap di lokasi penjemputan saat pengemudi tiba\n- Perlakukan pengemudi dengan hormat dan sopan\n- Ikuti semua pedoman keselamatan\n- Pastikan Anda memiliki saldo dompet yang cukup",
+				"",
+				"**Tanggung Jawab Pengemudi:**",
+				"- Terima pesanan yang dapat Anda penuhi\n- Arahkan ke lokasi penjemputan dengan cepat\n- Ikuti rute yang ditentukan atau alternatif yang wajar\n- Pertahankan kebersihan dan keselamatan kendaraan\n- Perlakukan penumpang dengan hormat dan pastikan perjalanan yang nyaman\n- Selesaikan pesanan sesuai permintaan",
+				"",
+				"**Alur Status Pesanan:**",
+				"Diminta → Pencocokan → Diterima → Sedang Menuju → Dalam Perjalanan → Selesai",
+			],
+		},
 	});
 
 export const packageDelivery = (): LegalSectionContent =>
@@ -777,7 +1346,34 @@ export const packageDelivery = (): LegalSectionContent =>
 				"AkadeMove is not responsible for package contents. Users agree not to ship prohibited or illegal items through our platform.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengiriman Paket",
+			paragraphs: ["Untuk layanan pengiriman paket:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Tanggung Jawab Pengirim",
+							content:
+								"Deskripsikan ukuran paket dengan akurat, berikan alamat penjemputan/pengantaran yang jelas, pastikan paket siap untuk dijemput",
+						},
+						{
+							label: "Tanggung Jawab Pengemudi",
+							content:
+								"Menangani paket dengan hati-hati, memperoleh bukti pengiriman (foto atau OTP dari penerima), tidak membuka atau memeriksa isi paket",
+						},
+						{
+							label: "Barang Terlarang",
+							content:
+								"Zat ilegal, senjata, bahan berbahaya, uang tunai, makanan mudah rusak tanpa kemasan yang tepat, atau barang yang melebihi batas ukuran/berat",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"AkadeMove tidak bertanggung jawab atas isi paket. Pengguna setuju untuk tidak mengirim barang terlarang atau ilegal melalui platform kami.",
+			],
+		},
 	});
 
 export const foodDelivery = (): LegalSectionContent =>
@@ -794,7 +1390,18 @@ export const foodDelivery = (): LegalSectionContent =>
 				"**Food Quality:** AkadeMove is not responsible for food quality, preparation, or safety. Merchants are solely responsible for the food they provide.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Pengiriman Makanan",
+			paragraphs: [
+				"**Alur Kerja Pesanan:**",
+				"- Pelanggan melakukan pemesanan dari menu pedagang\n- Pedagang menerima dan menyiapkan pesanan\n- Pengemudi ditugaskan untuk mengambil dari pedagang\n- Pengemudi mengantarkan ke lokasi pelanggan",
+				"",
+				"**Tanggung Jawab Pedagang:**",
+				"- Mempertahankan menu, harga, dan ketersedian yang akurat\n- Menyiapkan pesanan dalam waktu yang wajar\n- Mengemas makanan dengan aman untuk pengiriman\n- Memastikan standar keamanan dan kualitas makanan\n- Menandai item sebagai habis stok dengan cepat",
+				"",
+				"**Kualitas Makanan:** AkadeMove tidak bertanggung jawab atas kualitas, persiapan, atau keamanan makanan. Pedagang sepenuhnya bertanggung jawab atas makanan yang mereka sediakan.",
+			],
+		},
 	});
 
 // Safety and Additional Sections
@@ -839,7 +1446,45 @@ export const safetyReporting = (): LegalSectionContent =>
 				"**User Responsibilities:**\n- Report any safety concerns immediately\n- Do not share personal information unnecessarily\n- Use only the in-app communication features\n- Follow campus safety guidelines\n- Do not engage in prohibited conduct",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Keamanan dan Pelaporan",
+			paragraphs: [
+				"Keamanan Anda adalah prioritas kami. AkadeMove menyediakan beberapa fitur keamanan:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Obrolan Dalam Aplikasi",
+							content:
+								"Berkomunikasi tanpa membagikan nomor telepon (masking telepon diaktifkan)",
+						},
+						{
+							label: "Verifikasi Pengemudi",
+							content:
+								"Semua pengemudi menjalani verifikasi dokumen sebelum aktivasi",
+						},
+						{
+							label: "Pelacakan Waktu Nyata",
+							content: "Bagikan perjalanan Anda dengan kontak tepercaya",
+						},
+						{
+							label: "Tombol Darurat",
+							content: "Akses cepat ke keamanan kampus atau layanan darurat",
+						},
+						{
+							label: "Sistem Pelaporan",
+							content:
+								"Laporkan pelanggaran, pelecehan, penipuan, atau masalah keamanan",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Proses Pelaporan:**\n- Kirim laporan melalui aplikasi dengan deskripsi dan bukti\n- Laporan ditinjau oleh tim keamanan kami dalam waktu 24-48 jam\n- Investigasi dapat mencakup peninjauan log obrolan, detail pesanan, dan data GPS\n- Tindakan yang diambil dapat mencakup peringatan, penangguhan sementara, atau larangan permanen\n- Insiden serius dapat dilaporkan ke keamanan kampus atau polisi",
+				"**Tanggung Jawab Pengguna:**\n- Laporkan masalah keamanan segera\n- Jangan bagikan informasi pribadi secara tidak perlu\n- Gunakan hanya fitur komunikasi dalam aplikasi\n- Ikuti pedoman keamanan kampus\n- Jangan terlibat dalam perilaku terlarang",
+			],
+		},
 	});
 
 export const genderPreference = (): LegalSectionContent =>
@@ -879,7 +1524,41 @@ export const genderPreference = (): LegalSectionContent =>
 				"This feature is designed to promote inclusivity and comfort, particularly for users who may feel more comfortable with same-gender service providers.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Fitur Preferensi Gender",
+			paragraphs: [
+				"AkadeMove menawarkan fitur preferensi gender opsional untuk kenyamanan dan keamanan yang lebih baik:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							content:
+								"Penumpang dapat menentukan preferensi untuk pengemudi sejenis",
+						},
+						{
+							content:
+								"Preferensi ini dipertimbangkan dalam algoritma pencocokan",
+						},
+						{
+							content:
+								"Ketersediaan tergantung pada ketersediaan pengemudi di area Anda",
+						},
+						{
+							content:
+								"Menggunakan fitur ini dapat meningkatkan waktu tunggu jika pengemudi sejenis tidak tersedia di dekat Anda",
+						},
+						{
+							content:
+								"Preferensi gender bersifat opsional dan dapat diaktifkan/nonaktifkan",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Fitur ini dirancang untuk mempromosikan inklusivitas dan kenyamanan, terutama bagi pengguna yang mungkin merasa lebih nyaman dengan penyedia layanan sejenis.",
+			],
+		},
 	});
 
 export const intellectualProperty = (): LegalSectionContent =>
@@ -893,5 +1572,13 @@ export const intellectualProperty = (): LegalSectionContent =>
 				"You represent that you have all necessary rights to submit content and that your content does not violate any third-party rights or laws.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Kekayaan Intelektual",
+			paragraphs: [
+				"Platform AkadeMove, termasuk perangkat lunak, desain, konten, merek dagang, dan logo, dimiliki oleh AkadeMove dan dilindungi oleh hukum kekayaan intelektual Indonesia dan internasional.",
+				"Kami memberikan lisensi terbatas, non-eksklusif, dan tidak dapat dipindahtangankan untuk mengakses dan menggunakan Layanan untuk tujuan pribadi dan non-komersial.",
+				"**Konten Pengguna:** Anda mempertahankan kepemilikan atas konten yang Anda kirimkan (foto, ulasan, pesan). Dengan mengirimkan konten, Anda memberikan AkadeMove lisensi di seluruh dunia, bebas royalti untuk menggunakan, menampilkan, dan mendistribusikan konten Anda untuk operasi platform dan tujuan pemasaran.",
+				"Anda menyatakan bahwa Anda memiliki semua hak yang diperlukan untuk mengirimkan konten dan bahwa konten Anda tidak melanggar hak pihak ketiga atau hukum apa pun.",
+			],
+		},
 	});

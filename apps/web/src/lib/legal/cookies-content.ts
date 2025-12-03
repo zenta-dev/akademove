@@ -14,7 +14,10 @@ export const cookieIntro = () =>
 			"This Cookie Policy explains how AkadeMove uses cookies and similar tracking technologies on our website and mobile application. By using our Services, you consent to our use of cookies as described in this policy.",
 			"We use cookies to provide, improve, and protect our Services, and to give you a better experience. This policy should be read in conjunction with our Privacy Policy.",
 		],
-		id: undefined, // Indonesian translation to be added
+		id: [
+			"Kebijakan Cookie ini menjelaskan bagaimana AkadeMove menggunakan cookie dan teknologi pelacakan serupa di situs web dan aplikasi seluler kami. Dengan menggunakan Layanan kami, Anda menyetujui penggunaan cookie oleh kami sebagaimana dijelaskan dalam kebijakan ini.",
+			"Kami menggunakan cookie untuk menyediakan, meningkatkan, dan melindungi Layanan kami, serta untuk memberikan Anda pengalaman yang lebih baik. Kebijakan ini harus dibaca bersama dengan Kebijakan Privasi kami.	",
+		],
 	});
 
 export const whatAreCookies = (): LegalSectionContent =>
@@ -26,7 +29,13 @@ export const whatAreCookies = (): LegalSectionContent =>
 				'Cookies can be "persistent" (remaining on your device until deleted or expired) or "session" (deleted when you close your browser).',
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Apa itu Cookie?",
+			paragraphs: [
+				"Kuki adalah berkas teks kecil yang disimpan di perangkat Anda (komputer, ponsel pintar, atau tablet) saat Anda mengunjungi situs web atau menggunakan aplikasi. Kuki membantu situs web mengingat informasi tentang kunjungan Anda, menjadikan pengalaman Anda lebih efisien dan personal.",
+				'Kuki dapat berupa "persisten" (tetap di perangkat Anda sampai dihapus atau kedaluwarsa) atau "sesi" (dihapus saat Anda menutup browser).',
+			],
+		},
 	});
 
 export const cookiesWeUse = (): LegalSectionContent =>
@@ -66,7 +75,41 @@ export const cookiesWeUse = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Jenis Kuki yang Kami Gunakan",
+			paragraphs: [],
+			lists: [
+				{
+					items: [
+						{
+							label: "Kuki Esensial",
+							content:
+								"Diperlukan agar Layanan berfungsi dengan baik. Kuki ini memungkinkan fungsi inti seperti keamanan, otentikasi, dan pemrosesan pembayaran. Tanpa kuki ini, fitur tertentu tidak dapat disediakan.",
+						},
+						{
+							label: "Kuki Performa",
+							content:
+								"Mengumpulkan informasi tentang bagaimana Anda menggunakan Layanan kami, seperti halaman mana yang paling sering Anda kunjungi. Data ini membantu kami meningkatkan performa dan pengalaman pengguna. Kuki ini bersifat agregat dan anonim.",
+						},
+						{
+							label: "Kuki Fungsionalitas",
+							content:
+								"Mengingat preferensi dan pengaturan Anda, seperti pilihan bahasa, lokasi, dan kustomisasi. Kuki ini meningkatkan pengalaman Anda dengan menyediakan fitur yang dipersonalisasi.",
+						},
+						{
+							label: "Kuki Analitik",
+							content:
+								"Membantu kami memahami perilaku pengguna, mengukur lalu lintas, dan menganalisis tren. Kami menggunakan Google Analytics dan alat serupa untuk mengumpulkan wawasan yang meningkatkan Layanan kami.",
+						},
+						{
+							label: "Kuki Iklan",
+							content:
+								"Digunakan untuk menyampaikan iklan yang relevan dan mengukur efektivitas kampanye. Kuki ini melacak aktivitas penelusuran Anda di berbagai situs web untuk menampilkan iklan yang dipersonalisasi.",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const specificCookies = (): LegalSectionContent =>
@@ -117,7 +160,7 @@ export const specificCookies = (): LegalSectionContent =>
 								"Enables map functionality and location services (Functionality, Session)",
 						},
 						{
-							label: "Payment Processors (Stripe, Xendit)",
+							label: "Payment Processors (Midtrans)",
 							content:
 								"Facilitates secure payment processing (Essential, Session)",
 						},
@@ -130,7 +173,65 @@ export const specificCookies = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Kuki Spesifik yang Kami Gunakan",
+			paragraphs: [],
+			lists: [
+				{
+					title: "Kuki Pihak Pertama",
+					items: [
+						{
+							label: "session_id",
+							content: "Mempertahankan sesi login Anda (Esensial, Sesi)",
+						},
+						{
+							label: "auth_token",
+							content: "Mengesahkan permintaan Anda (Esensial, Persisten)",
+						},
+						{
+							label: "locale",
+							content:
+								"Mengingat preferensi bahasa Anda (Fungsionalitas, Persisten)",
+						},
+						{
+							label: "theme",
+							content:
+								"Menyimpan preferensi mode gelap/terang Anda (Fungsionalitas, Persisten)",
+						},
+						{
+							label: "consent",
+							content:
+								"Mencatat pilihan persetujuan cookie Anda (Esensial, Persisten)",
+						},
+					],
+				},
+				{
+					title: "Kuki Pihak Ketiga",
+					items: [
+						{
+							label: "Google Analytics (_ga, _gid)",
+							content:
+								"Melacak statistik penggunaan dan perjalanan pengguna (Analitik, Persisten)",
+						},
+						{
+							label: "Google Maps",
+							content:
+								"Memungkinkan fungsi peta dan layanan lokasi (Fungsionalitas, Sesi)",
+						},
+						{
+							label: "Payment Processors (Midtrans)",
+							content:
+								"Memfasilitasi pemrosesan pembayaran yang aman (Esensial, Sesi)",
+						},
+						{
+							label: "Social Media (Facebook, Instagram)",
+							content:
+								"Memungkinkan fitur berbagi sosial (Fungsionalitas, Persisten)",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const howWeUseCookies = (): LegalSectionContent =>
@@ -178,7 +279,51 @@ export const howWeUseCookies = (): LegalSectionContent =>
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Bagaimana Kami Menggunakan Kuki",
+			paragraphs: ["Kami menggunakan kuki untuk tujuan berikut:"],
+			lists: [
+				{
+					items: [
+						{
+							label: "Otentikasi",
+							content:
+								"Menjaga Anda tetap masuk dan memverifikasi identitas Anda",
+						},
+						{
+							label: "Keamanan",
+							content:
+								"Mendeteksi dan mencegah aktivitas penipuan dan ancaman keamanan",
+						},
+						{
+							label: "Preferensi",
+							content:
+								"Mengingat pengaturan, bahasa, dan pilihan kustomisasi Anda",
+						},
+						{
+							label: "Performa",
+							content:
+								"Memantau performa aplikasi, waktu muat, dan masalah teknis",
+						},
+						{
+							label: "Analitik",
+							content:
+								"Memahami pola penggunaan, fitur populer, dan perjalanan pengguna",
+						},
+						{
+							label: "Iklan",
+							content:
+								"Menyampaikan promosi yang ditargetkan dan mengukur efektivitas pemasaran",
+						},
+						{
+							label: "Peningkatan",
+							content:
+								"Mengidentifikasi area untuk peningkatan dan menguji fitur baru",
+						},
+					],
+				},
+			],
+		},
 	});
 
 export const managingCookies = (): LegalSectionContent =>
@@ -241,7 +386,65 @@ export const managingCookies = (): LegalSectionContent =>
 				"**Note:** Blocking essential cookies may prevent certain features from functioning properly. If you disable cookies, you may not be able to access all parts of our Services.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Mengelola Preferensi Kuki Anda",
+			paragraphs: [
+				"Anda memiliki kontrol atas kuki dan dapat mengelolanya dengan beberapa cara:",
+			],
+			lists: [
+				{
+					title: "Pengaturan Browser",
+					items: [
+						{
+							label: "Blokir Kuki",
+							content:
+								"Konfigurasikan browser Anda untuk menolak semua kuki atau jenis tertentu",
+						},
+						{
+							label: "Hapus Kuki",
+							content: "Hapus kuki yang ada dari browser Anda kapan saja",
+						},
+						{
+							label: "Notifikasi",
+							content:
+								"Atur browser Anda untuk memberi tahu Anda saat kuki disetel",
+						},
+					],
+				},
+				{
+					title: "Alat Persetujuan Kuki Kami",
+					items: [
+						{
+							label: "Pusat Preferensi",
+							content:
+								"Mengelola preferensi kuki Anda melalui pengaturan kuki di aplikasi kami",
+						},
+						{
+							label: "Kontrol Granular",
+							content:
+								"Pilih kategori kuki non-esensial mana yang akan diterima atau ditolak",
+						},
+					],
+				},
+				{
+					title: "Opt-Out Pihak Ketiga",
+					items: [
+						{
+							label: "Google Analytics",
+							content: "Pasang Google Analytics Opt-out Browser Add-on",
+						},
+						{
+							label: "Iklan",
+							content:
+								"Gunakan alat opt-out dari jaringan iklan seperti NAI atau DAA",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Catatan:** Memblokir kuki esensial dapat mencegah fitur tertentu berfungsi dengan baik. Jika Anda menonaktifkan kuki, Anda mungkin tidak dapat mengakses semua bagian dari Layanan kami.",
+			],
+		},
 	});
 
 export const thirdPartyServices = (): LegalSectionContent =>
@@ -265,12 +468,8 @@ export const thirdPartyServices = (): LegalSectionContent =>
 								"Mapping and location services - https://policies.google.com/privacy",
 						},
 						{
-							label: "Stripe",
-							content: "Payment processing - https://stripe.com/privacy",
-						},
-						{
-							label: "Xendit",
-							content: "Payment gateway - https://www.xendit.co/en/privacy",
+							label: "Midtrans",
+							content: "Payment gateway - https://midtrans.com/privacy-notice",
 						},
 						{
 							label: "Firebase",
@@ -289,7 +488,46 @@ export const thirdPartyServices = (): LegalSectionContent =>
 				"We are not responsible for the privacy practices of these third parties. We encourage you to review their policies.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Layanan Pihak Ketiga",
+			paragraphs: [
+				"Kami menggunakan layanan pihak ketiga yang mungkin menetapkan kuki mereka sendiri. Layanan ini memiliki kebijakan privasi mereka sendiri:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Google Analytics",
+							content:
+								"Layanan analitik web - https://policies.google.com/privacy",
+						},
+						{
+							label: "Google Maps",
+							content:
+								"Layanan pemetaan dan lokasi - https://policies.google.com/privacy",
+						},
+						{
+							label: "Midtrans",
+							content:
+								"Gateway pembayaran - https://midtrans.com/privacy-notice",
+						},
+						{
+							label: "Firebase",
+							content:
+								"Notifikasi push dan analitik - https://firebase.google.com/support/privacy",
+						},
+						{
+							label: "Cloudflare",
+							content:
+								"Pengiriman konten dan keamanan - https://www.cloudflare.com/privacypolicy",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Kami tidak bertanggung jawab atas praktik privasi pihak ketiga ini. Kami mendorong Anda untuk meninjau kebijakan mereka.",
+			],
+		},
 	});
 
 export const changesToCookiePolicy = (): LegalSectionContent =>
@@ -305,7 +543,17 @@ export const changesToCookiePolicy = (): LegalSectionContent =>
 				"We encourage you to review this policy periodically.",
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Perubahan pada Kebijakan Kuki Ini",
+			paragraphs: [
+				"Kami dapat memperbarui Kebijakan Kuki ini dari waktu ke waktu untuk mencerminkan perubahan dalam praktik kami atau untuk alasan operasional, hukum, atau regulasi. Kami akan memberi tahu Anda tentang perubahan material dengan cara:",
+				'- Memperbarui tanggal "Terakhir Diperbarui" di bagian atas kebijakan ini',
+				"- Memberikan pemberitahuan melalui Layanan kami atau melalui email",
+				"- Meminta persetujuan ulang jika diperlukan",
+				"",
+				"Kami mendorong Anda untuk meninjau kebijakan ini secara berkala.",
+			],
+		},
 	});
 
 export const contactCookies = (): LegalSectionContent =>
@@ -329,11 +577,35 @@ export const contactCookies = (): LegalSectionContent =>
 						{
 							label: "Address",
 							content:
-								"AkadeMove Indonesia, Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10220",
+								"AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur",
 						},
 					],
 				},
 			],
 		},
-		id: undefined,
+		id: {
+			title: "Hubungi Kami Tentang Kuki",
+			paragraphs: [
+				"Jika Anda memiliki pertanyaan tentang penggunaan kuki kami atau Kebijakan Kuki ini, silakan hubungi kami:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Email",
+							content: "privacy@akademove.com",
+						},
+						{
+							label: "Telepon",
+							content: "+62 21 1234 5678",
+						},
+						{
+							label: "Alamat",
+							content:
+								"AkadeMove, Universitas Negeri Surabaya, Surabaya, Jawa Timur",
+						},
+					],
+				},
+			],
+		},
 	});
