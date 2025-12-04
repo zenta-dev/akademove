@@ -101,4 +101,60 @@ export const DriverMainSpec = {
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(createSuccesSchema(z.null(), "Driver deleted successfully")),
+	getAnalytics: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "GET",
+			path: "/{id}/analytics",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				query: z.object({
+					period: z.enum(["today", "week", "month", "year"]).optional(),
+					startDate: z.coerce.date().optional(),
+					endDate: z.coerce.date().optional(),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					totalEarnings: z.number(),
+					totalCommission: z.number(),
+					netEarnings: z.number(),
+					totalOrders: z.number(),
+					completedOrders: z.number(),
+					cancelledOrders: z.number(),
+					completionRate: z.number(),
+					averageRating: z.number(),
+					earningsByType: z.array(
+						z.object({
+							type: z.enum(["RIDE", "DELIVERY", "FOOD"]),
+							orders: z.number(),
+							earnings: z.number(),
+							commission: z.number(),
+						}),
+					),
+					earningsByDay: z.array(
+						z.object({
+							date: z.string(),
+							earnings: z.number(),
+							orders: z.number(),
+							commission: z.number(),
+						}),
+					),
+					topEarningDays: z.array(
+						z.object({
+							date: z.string(),
+							earnings: z.number(),
+							orders: z.number(),
+						}),
+					),
+				}),
+				"Successfully retrieved driver analytics",
+			),
+		),
 };

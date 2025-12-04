@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type Driver,
 	DriverKeySchema,
@@ -277,7 +278,7 @@ export class DriverMainRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_driver());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};
@@ -295,7 +296,7 @@ export class DriverMainRepository extends BaseRepository {
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
-			if (!result) throw new RepositoryError("Failed to get merchant from DB");
+			if (!result) throw new RepositoryError(m.error_failed_get_merchant());
 
 			return await DriverMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {
@@ -324,7 +325,9 @@ export class DriverMainRepository extends BaseRepository {
 			]);
 
 			if (!user)
-				throw new RepositoryError("User not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_user_not_found(), {
+					code: "NOT_FOUND",
+				});
 
 			if (existingDriver) {
 				if (
@@ -339,14 +342,17 @@ export class DriverMainRepository extends BaseRepository {
 					);
 				}
 				if (existingDriver.studentId === item.studentId) {
-					throw new RepositoryError("Student ID already registered", {
+					throw new RepositoryError(m.error_student_id_already_registered(), {
 						code: "CONFLICT",
 					});
 				}
 				if (existingDriver.licensePlate === item.licensePlate) {
-					throw new RepositoryError("License Plate already registered", {
-						code: "CONFLICT",
-					});
+					throw new RepositoryError(
+						m.error_license_plate_already_registered(),
+						{
+							code: "CONFLICT",
+						},
+					);
 				}
 			}
 
@@ -405,7 +411,7 @@ export class DriverMainRepository extends BaseRepository {
 				with: { userBadges: { with: { badge: true } } },
 				where: (f, op) => op.eq(f.id, existing.userId),
 			});
-			if (!user) throw new RepositoryError("User not found");
+			if (!user) throw new RepositoryError(m.error_user_not_found());
 
 			const uploads = [
 				item.studentCard &&
@@ -459,7 +465,9 @@ export class DriverMainRepository extends BaseRepository {
 		try {
 			const find = await this.#getFromDB(id);
 			if (!find)
-				throw new RepositoryError("Driver not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
 
 			const [result] = await Promise.all([
 				this.db
@@ -482,6 +490,200 @@ export class DriverMainRepository extends BaseRepository {
 			}
 		} catch (error) {
 			throw this.handleError(error, "remove");
+		}
+	}
+
+	/**
+	 * Get comprehensive analytics for a driver
+	 * Includes earnings, performance metrics, and time-series data
+	 *
+	 * @param driverId - Driver ID
+	 * @param query - Optional query parameters for filtering by period
+	 * @returns Analytics data with earnings breakdown and performance metrics
+	 */
+	async getAnalytics(
+		driverId: string,
+		query?: {
+			period?: "today" | "week" | "month" | "year";
+			startDate?: Date;
+			endDate?: Date;
+		},
+	): Promise<{
+		// Earnings metrics
+		totalEarnings: number;
+		totalCommission: number;
+		netEarnings: number;
+
+		// Order metrics
+		totalOrders: number;
+		completedOrders: number;
+		cancelledOrders: number;
+		completionRate: number;
+
+		// Performance metrics
+		averageRating: number;
+
+		// Breakdown by service type
+		earningsByType: Array<{
+			type: "RIDE" | "DELIVERY" | "FOOD";
+			orders: number;
+			earnings: number;
+			commission: number;
+		}>;
+
+		// Time-series data for charts
+		earningsByDay: Array<{
+			date: string;
+			earnings: number;
+			orders: number;
+			commission: number;
+		}>;
+
+		// Top earning days
+		topEarningDays: Array<{
+			date: string;
+			earnings: number;
+			orders: number;
+		}>;
+	}> {
+		try {
+			// Calculate date range based on period
+			let startDate = query?.startDate ?? new Date();
+			let endDate = query?.endDate ?? new Date();
+
+			if (query?.period) {
+				endDate = new Date();
+				startDate = new Date();
+				switch (query.period) {
+					case "today":
+						startDate.setHours(0, 0, 0, 0);
+						break;
+					case "week":
+						startDate.setDate(startDate.getDate() - 7);
+						break;
+					case "month":
+						startDate.setMonth(startDate.getMonth() - 1);
+						break;
+					case "year":
+						startDate.setFullYear(startDate.getFullYear() - 1);
+						break;
+				}
+			}
+
+			// Get overall statistics
+			const statsResult = await this.db.execute<{
+				total_orders: number;
+				total_earnings: string;
+				total_commission: string;
+				completed_orders: number;
+				cancelled_orders: number;
+				average_rating: string;
+			}>(sql`
+				SELECT
+					COUNT(*)::int AS total_orders,
+					COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS total_earnings,
+					COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN driver_commission END), 0)::text AS total_commission,
+					COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
+					COUNT(CASE WHEN status LIKE 'CANCELLED%' THEN 1 END)::int AS cancelled_orders,
+					COALESCE(AVG(CASE WHEN driver_rating IS NOT NULL THEN driver_rating END), 0)::text AS average_rating
+				FROM am_orders
+				WHERE driver_id = ${driverId}
+					AND requested_at >= ${startDate.toISOString()}
+					AND requested_at <= ${endDate.toISOString()}
+			`);
+
+			// Get earnings by type
+			const earningsByTypeResult = await this.db.execute<{
+				type: "RIDE" | "DELIVERY" | "FOOD";
+				orders: number;
+				earnings: string;
+				commission: string;
+			}>(sql`
+				SELECT
+					type,
+					COUNT(*)::int AS orders,
+					COALESCE(SUM(total_price), 0)::text AS earnings,
+					COALESCE(SUM(driver_commission), 0)::text AS commission
+				FROM am_orders
+				WHERE driver_id = ${driverId}
+					AND status = 'COMPLETED'
+					AND requested_at >= ${startDate.toISOString()}
+					AND requested_at <= ${endDate.toISOString()}
+				GROUP BY type
+			`);
+
+			// Get earnings by day
+			const earningsByDayResult = await this.db.execute<{
+				date: string;
+				earnings: string;
+				commission: string;
+				orders: number;
+			}>(sql`
+				SELECT
+					TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
+					COALESCE(SUM(total_price), 0)::text AS earnings,
+					COALESCE(SUM(driver_commission), 0)::text AS commission,
+					COUNT(*)::int AS orders
+				FROM am_orders
+				WHERE driver_id = ${driverId}
+					AND status = 'COMPLETED'
+					AND requested_at >= ${startDate.toISOString()}
+					AND requested_at <= ${endDate.toISOString()}
+				GROUP BY DATE(requested_at)
+				ORDER BY DATE(requested_at) ASC
+			`);
+
+			const stats = statsResult[0] ?? {
+				total_orders: 0,
+				total_earnings: "0",
+				total_commission: "0",
+				completed_orders: 0,
+				cancelled_orders: 0,
+				average_rating: "0",
+			};
+
+			const totalEarnings = Number.parseFloat(stats.total_earnings);
+			const totalCommission = Number.parseFloat(stats.total_commission);
+			const completionRate =
+				stats.total_orders > 0
+					? (stats.completed_orders / stats.total_orders) * 100
+					: 0;
+
+			// Calculate top earning days
+			const sortedDays = earningsByDayResult
+				.map((day) => ({
+					date: day.date,
+					earnings: Number.parseFloat(day.earnings),
+					orders: day.orders,
+				}))
+				.sort((a, b) => b.earnings - a.earnings)
+				.slice(0, 5);
+
+			return {
+				totalEarnings,
+				totalCommission,
+				netEarnings: totalEarnings - totalCommission,
+				totalOrders: stats.total_orders,
+				completedOrders: stats.completed_orders,
+				cancelledOrders: stats.cancelled_orders,
+				completionRate,
+				averageRating: Number.parseFloat(stats.average_rating),
+				earningsByType: earningsByTypeResult.map((item) => ({
+					type: item.type,
+					orders: item.orders,
+					earnings: Number.parseFloat(item.earnings),
+					commission: Number.parseFloat(item.commission),
+				})),
+				earningsByDay: earningsByDayResult.map((day) => ({
+					date: day.date,
+					earnings: Number.parseFloat(day.earnings),
+					orders: day.orders,
+					commission: Number.parseFloat(day.commission),
+				})),
+				topEarningDays: sortedDays,
+			};
+		} catch (error) {
+			throw this.handleError(error, "get analytics");
 		}
 	}
 }

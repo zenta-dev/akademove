@@ -17,7 +17,7 @@ export const DriverMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved merchant data", data: result },
+				body: { message: m.server_driver_retrieved(), data: result },
 			};
 		}),
 	list: priv.list
@@ -28,7 +28,7 @@ export const DriverMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved drivers data",
+					message: m.server_drivers_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -40,7 +40,7 @@ export const DriverMainHandler = priv.router({
 			const result = await context.repo.driver.main.nearby(query);
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved drivers data", data: result },
+				body: { message: m.server_drivers_retrieved(), data: result },
 			};
 		}),
 	get: priv.get
@@ -50,7 +50,7 @@ export const DriverMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved driver data", data: result },
+				body: { message: m.server_driver_retrieved(), data: result },
 			};
 		}),
 	update: priv.update
@@ -61,7 +61,7 @@ export const DriverMainHandler = priv.router({
 			if (context.user.role === "DRIVER") {
 				const driver = await context.repo.driver.main.get(params.id);
 				if (driver.userId !== context.user.id) {
-					throw new AuthError("You can only update your own driver profile", {
+					throw new AuthError(m.error_only_update_own_driver_profile(), {
 						code: "FORBIDDEN",
 					});
 				}
@@ -83,6 +83,33 @@ export const DriverMainHandler = priv.router({
 			return {
 				status: 200,
 				body: { message: m.server_driver_deleted(), data: null },
+			};
+		}),
+	getAnalytics: priv.getAnalytics
+		.use(hasPermission({ driver: ["get"] }))
+		.handler(async ({ context, input: { params, query } }) => {
+			// IDOR Protection: Drivers can only view their own analytics
+			// Admins/Operators can view any driver's analytics
+			if (context.user.role === "DRIVER") {
+				const driver = await context.repo.driver.main.get(params.id);
+				if (driver.userId !== context.user.id) {
+					throw new AuthError(m.error_only_view_own_analytics(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const result = await context.repo.driver.main.getAnalytics(
+				params.id,
+				query,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_driver_retrieved(),
+					data: result,
+				},
 			};
 		}),
 });
