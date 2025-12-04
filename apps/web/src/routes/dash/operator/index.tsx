@@ -45,7 +45,9 @@ function RouteComponent() {
 	const { data: stats, isLoading } = useQuery({
 		queryKey: ["operator", "dashboard-stats"],
 		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({});
+			const result = await orpcClient.user.admin.dashboardStats({
+				query: { period: "month" },
+			});
 			if (result.status !== 200) throw new Error(result.body.message);
 			return result.body.data;
 		},
