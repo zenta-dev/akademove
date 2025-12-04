@@ -47,6 +47,10 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"COMPLETED",
 	"MATCHING",
 	"CHAT_MESSAGE",
+	"MERCHANT_ACCEPTED",
+	"MERCHANT_REJECTED",
+	"MERCHANT_PREPARING",
+	"MERCHANT_READY",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
@@ -54,13 +58,17 @@ export const OrderEnvelopeActionSchema = z.enum([
 	"UPDATE_LOCATION",
 	"DONE",
 	"SEND_MESSAGE",
+	"MERCHANT_ACCEPT",
+	"MERCHANT_REJECT",
+	"MERCHANT_MARK_PREPARING",
+	"MERCHANT_MARK_READY",
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z
 		.object({
 			order: OrderSchema,
-			payment: PaymentSchema,
-			transaction: TransactionSchema,
+			payment: PaymentSchema.nullable(),
+			transaction: TransactionSchema.nullable(),
 		})
 		.optional(),
 	driverAssigned: DriverSchema.optional(),
@@ -86,6 +94,13 @@ export const OrderEnvelopePayloadSchema = z.object({
 			senderName: z.string(),
 			message: z.string(),
 			sentAt: z.date(),
+		})
+		.optional(),
+	merchantAction: z
+		.object({
+			orderId: z.string().uuid(),
+			merchantId: z.string().uuid(),
+			reason: z.string().optional(),
 		})
 		.optional(),
 	cancelReason: z.string().optional(),
