@@ -45,5 +45,38 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>AkadeMove needs your location to show nearby drivers and calculate trip distances</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>AkadeMove needs your location to track your trip in real-time</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>AkadeMove needs your location to track your trip in real-time</string>
+	<key>NSCameraUsageDescription</key>
+	<string>AkadeMove needs camera access to upload profile photos and verification documents</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AkadeMove needs photo library access to select images for your profile</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>AkadeMove needs permission to save photos to your library</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.akademove.akademove</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>akademove</string>
+			</array>
+		</dict>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+		<string>location</string>
+	</array>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>
