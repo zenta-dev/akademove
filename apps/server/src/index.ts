@@ -21,6 +21,14 @@ export default {
 				log.error({ error }, "[Cron] Auto-offline handler failed");
 			}),
 		);
+
+		const logAsync = async () => {
+			log.info("[Cron] Scheduled event processing completed");
+			console.log(
+				`[Cron] Scheduled event ${event.cron} processed at ${new Date().toISOString()}`,
+			);
+		};
+		ctx.waitUntil(logAsync());
 	},
 };
 export * from "./features/ws";

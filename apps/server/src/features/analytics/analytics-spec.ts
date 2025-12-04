@@ -22,7 +22,18 @@ export const AnalyticsSpec = {
 				query: ExportQuerySchema,
 			}),
 		)
-		.output(z.string()),
+		.output(
+			z.object({
+				status: z.literal(200),
+				headers: z
+					.object({
+						"Content-Type": z.literal("text/csv"),
+						"Content-Disposition": z.string(),
+					})
+					.optional(),
+				body: z.string(),
+			}),
+		),
 	exportMerchantAnalytics: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
@@ -37,7 +48,18 @@ export const AnalyticsSpec = {
 				query: ExportQuerySchema,
 			}),
 		)
-		.output(z.string()),
+		.output(
+			z.object({
+				status: z.literal(200),
+				headers: z
+					.object({
+						"Content-Type": z.literal("text/csv"),
+						"Content-Disposition": z.string(),
+					})
+					.optional(),
+				body: z.string(),
+			}),
+		),
 	exportOperatorAnalytics: oc
 		.route({
 			tags: [FEATURE_TAGS.ADMIN],
@@ -47,5 +69,16 @@ export const AnalyticsSpec = {
 			outputStructure: "detailed",
 		})
 		.input(z.object({ query: ExportQuerySchema }))
-		.output(z.string()),
+		.output(
+			z.object({
+				status: z.literal(200),
+				headers: z
+					.object({
+						"Content-Type": z.literal("text/csv"),
+						"Content-Disposition": z.string(),
+					})
+					.optional(),
+				body: z.string(),
+			}),
+		),
 };

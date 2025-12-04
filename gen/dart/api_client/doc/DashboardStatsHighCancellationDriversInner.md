@@ -1,0 +1,19 @@
+# api_client.model.DashboardStatsHighCancellationDriversInner
+
+## Load the model package
+```dart
+import 'package:api_client/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **String** |  | 
+**name** | **String** |  | 
+**totalOrders** | **num** |  | 
+**cancelledOrders** | **num** |  | 
+**cancellationRate** | **num** |  | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

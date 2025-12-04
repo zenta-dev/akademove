@@ -29,6 +29,26 @@ abstract class _$DashboardStatsCWProxy {
 
   DashboardStats onlineDrivers(num onlineDrivers);
 
+  DashboardStats revenueByDay(
+    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+  );
+
+  DashboardStats ordersByDay(List<DashboardStatsOrdersByDayInner> ordersByDay);
+
+  DashboardStats ordersByType(
+    List<DashboardStatsOrdersByTypeInner> ordersByType,
+  );
+
+  DashboardStats topDrivers(List<DashboardStatsTopDriversInner> topDrivers);
+
+  DashboardStats topMerchants(
+    List<DashboardStatsTopMerchantsInner> topMerchants,
+  );
+
+  DashboardStats highCancellationDrivers(
+    List<DashboardStatsHighCancellationDriversInner> highCancellationDrivers,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DashboardStats(...).copyWith.fieldName(value)`.
   ///
@@ -48,6 +68,12 @@ abstract class _$DashboardStatsCWProxy {
     num todayRevenue,
     num todayOrders,
     num onlineDrivers,
+    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+    List<DashboardStatsOrdersByDayInner> ordersByDay,
+    List<DashboardStatsOrdersByTypeInner> ordersByType,
+    List<DashboardStatsTopDriversInner> topDrivers,
+    List<DashboardStatsTopMerchantsInner> topMerchants,
+    List<DashboardStatsHighCancellationDriversInner> highCancellationDrivers,
   });
 }
 
@@ -100,6 +126,35 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
       call(onlineDrivers: onlineDrivers);
 
   @override
+  DashboardStats revenueByDay(
+    List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay,
+  ) => call(revenueByDay: revenueByDay);
+
+  @override
+  DashboardStats ordersByDay(
+    List<DashboardStatsOrdersByDayInner> ordersByDay,
+  ) => call(ordersByDay: ordersByDay);
+
+  @override
+  DashboardStats ordersByType(
+    List<DashboardStatsOrdersByTypeInner> ordersByType,
+  ) => call(ordersByType: ordersByType);
+
+  @override
+  DashboardStats topDrivers(List<DashboardStatsTopDriversInner> topDrivers) =>
+      call(topDrivers: topDrivers);
+
+  @override
+  DashboardStats topMerchants(
+    List<DashboardStatsTopMerchantsInner> topMerchants,
+  ) => call(topMerchants: topMerchants);
+
+  @override
+  DashboardStats highCancellationDrivers(
+    List<DashboardStatsHighCancellationDriversInner> highCancellationDrivers,
+  ) => call(highCancellationDrivers: highCancellationDrivers);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `DashboardStats(...).copyWith.fieldName(value)`.
   ///
@@ -119,6 +174,12 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
     Object? todayRevenue = const $CopyWithPlaceholder(),
     Object? todayOrders = const $CopyWithPlaceholder(),
     Object? onlineDrivers = const $CopyWithPlaceholder(),
+    Object? revenueByDay = const $CopyWithPlaceholder(),
+    Object? ordersByDay = const $CopyWithPlaceholder(),
+    Object? ordersByType = const $CopyWithPlaceholder(),
+    Object? topDrivers = const $CopyWithPlaceholder(),
+    Object? topMerchants = const $CopyWithPlaceholder(),
+    Object? highCancellationDrivers = const $CopyWithPlaceholder(),
   }) {
     return DashboardStats(
       totalUsers:
@@ -179,6 +240,39 @@ class _$DashboardStatsCWProxyImpl implements _$DashboardStatsCWProxy {
           ? _value.onlineDrivers
           // ignore: cast_nullable_to_non_nullable
           : onlineDrivers as num,
+      revenueByDay:
+          revenueByDay == const $CopyWithPlaceholder() || revenueByDay == null
+          ? _value.revenueByDay
+          // ignore: cast_nullable_to_non_nullable
+          : revenueByDay
+                as List<MerchantAnalytics200ResponseDataRevenueByDayInner>,
+      ordersByDay:
+          ordersByDay == const $CopyWithPlaceholder() || ordersByDay == null
+          ? _value.ordersByDay
+          // ignore: cast_nullable_to_non_nullable
+          : ordersByDay as List<DashboardStatsOrdersByDayInner>,
+      ordersByType:
+          ordersByType == const $CopyWithPlaceholder() || ordersByType == null
+          ? _value.ordersByType
+          // ignore: cast_nullable_to_non_nullable
+          : ordersByType as List<DashboardStatsOrdersByTypeInner>,
+      topDrivers:
+          topDrivers == const $CopyWithPlaceholder() || topDrivers == null
+          ? _value.topDrivers
+          // ignore: cast_nullable_to_non_nullable
+          : topDrivers as List<DashboardStatsTopDriversInner>,
+      topMerchants:
+          topMerchants == const $CopyWithPlaceholder() || topMerchants == null
+          ? _value.topMerchants
+          // ignore: cast_nullable_to_non_nullable
+          : topMerchants as List<DashboardStatsTopMerchantsInner>,
+      highCancellationDrivers:
+          highCancellationDrivers == const $CopyWithPlaceholder() ||
+              highCancellationDrivers == null
+          ? _value.highCancellationDrivers
+          // ignore: cast_nullable_to_non_nullable
+          : highCancellationDrivers
+                as List<DashboardStatsHighCancellationDriversInner>,
     );
   }
 }
@@ -194,39 +288,106 @@ extension $DashboardStatsCopyWith on DashboardStats {
 // JsonSerializableGenerator
 // **************************************************************************
 
-DashboardStats _$DashboardStatsFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('DashboardStats', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'totalUsers',
-          'totalDrivers',
-          'totalMerchants',
-          'activeOrders',
-          'totalOrders',
-          'completedOrders',
-          'cancelledOrders',
-          'totalRevenue',
-          'todayRevenue',
-          'todayOrders',
-          'onlineDrivers',
-        ],
-      );
-      final val = DashboardStats(
-        totalUsers: $checkedConvert('totalUsers', (v) => v as num),
-        totalDrivers: $checkedConvert('totalDrivers', (v) => v as num),
-        totalMerchants: $checkedConvert('totalMerchants', (v) => v as num),
-        activeOrders: $checkedConvert('activeOrders', (v) => v as num),
-        totalOrders: $checkedConvert('totalOrders', (v) => v as num),
-        completedOrders: $checkedConvert('completedOrders', (v) => v as num),
-        cancelledOrders: $checkedConvert('cancelledOrders', (v) => v as num),
-        totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),
-        todayRevenue: $checkedConvert('todayRevenue', (v) => v as num),
-        todayOrders: $checkedConvert('todayOrders', (v) => v as num),
-        onlineDrivers: $checkedConvert('onlineDrivers', (v) => v as num),
-      );
-      return val;
-    });
+DashboardStats _$DashboardStatsFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('DashboardStats', json, ($checkedConvert) {
+  $checkKeys(
+    json,
+    requiredKeys: const [
+      'totalUsers',
+      'totalDrivers',
+      'totalMerchants',
+      'activeOrders',
+      'totalOrders',
+      'completedOrders',
+      'cancelledOrders',
+      'totalRevenue',
+      'todayRevenue',
+      'todayOrders',
+      'onlineDrivers',
+      'revenueByDay',
+      'ordersByDay',
+      'ordersByType',
+      'topDrivers',
+      'topMerchants',
+      'highCancellationDrivers',
+    ],
+  );
+  final val = DashboardStats(
+    totalUsers: $checkedConvert('totalUsers', (v) => v as num),
+    totalDrivers: $checkedConvert('totalDrivers', (v) => v as num),
+    totalMerchants: $checkedConvert('totalMerchants', (v) => v as num),
+    activeOrders: $checkedConvert('activeOrders', (v) => v as num),
+    totalOrders: $checkedConvert('totalOrders', (v) => v as num),
+    completedOrders: $checkedConvert('completedOrders', (v) => v as num),
+    cancelledOrders: $checkedConvert('cancelledOrders', (v) => v as num),
+    totalRevenue: $checkedConvert('totalRevenue', (v) => v as num),
+    todayRevenue: $checkedConvert('todayRevenue', (v) => v as num),
+    todayOrders: $checkedConvert('todayOrders', (v) => v as num),
+    onlineDrivers: $checkedConvert('onlineDrivers', (v) => v as num),
+    revenueByDay: $checkedConvert(
+      'revenueByDay',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => MerchantAnalytics200ResponseDataRevenueByDayInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    ordersByDay: $checkedConvert(
+      'ordersByDay',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => DashboardStatsOrdersByDayInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    ordersByType: $checkedConvert(
+      'ordersByType',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => DashboardStatsOrdersByTypeInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    topDrivers: $checkedConvert(
+      'topDrivers',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => DashboardStatsTopDriversInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    topMerchants: $checkedConvert(
+      'topMerchants',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => DashboardStatsTopMerchantsInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+    highCancellationDrivers: $checkedConvert(
+      'highCancellationDrivers',
+      (v) => (v as List<dynamic>)
+          .map(
+            (e) => DashboardStatsHighCancellationDriversInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
+          .toList(),
+    ),
+  );
+  return val;
+});
 
 Map<String, dynamic> _$DashboardStatsToJson(DashboardStats instance) =>
     <String, dynamic>{
@@ -241,4 +402,12 @@ Map<String, dynamic> _$DashboardStatsToJson(DashboardStats instance) =>
       'todayRevenue': instance.todayRevenue,
       'todayOrders': instance.todayOrders,
       'onlineDrivers': instance.onlineDrivers,
+      'revenueByDay': instance.revenueByDay.map((e) => e.toJson()).toList(),
+      'ordersByDay': instance.ordersByDay.map((e) => e.toJson()).toList(),
+      'ordersByType': instance.ordersByType.map((e) => e.toJson()).toList(),
+      'topDrivers': instance.topDrivers.map((e) => e.toJson()).toList(),
+      'topMerchants': instance.topMerchants.map((e) => e.toJson()).toList(),
+      'highCancellationDrivers': instance.highCancellationDrivers
+          .map((e) => e.toJson())
+          .toList(),
     };

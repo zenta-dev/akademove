@@ -3,6 +3,12 @@
 //
 
 // ignore_for_file: unused_element
+import 'package:api_client/src/model/dashboard_stats_orders_by_day_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_top_drivers_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_high_cancellation_drivers_inner.dart';
+import 'package:api_client/src/model/merchant_analytics200_response_data_revenue_by_day_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_orders_by_type_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_top_merchants_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -29,6 +35,12 @@ class DashboardStats {
     required this.todayRevenue,
     required this.todayOrders,
     required this.onlineDrivers,
+    required this.revenueByDay,
+    required this.ordersByDay,
+    required this.ordersByType,
+    required this.topDrivers,
+    required this.topMerchants,
+    required this.highCancellationDrivers,
   });
 
   @JsonKey(name: r'totalUsers', required: true, includeIfNull: false)
@@ -64,6 +76,29 @@ class DashboardStats {
   @JsonKey(name: r'onlineDrivers', required: true, includeIfNull: false)
   final num onlineDrivers;
 
+  @JsonKey(name: r'revenueByDay', required: true, includeIfNull: false)
+  final List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay;
+
+  @JsonKey(name: r'ordersByDay', required: true, includeIfNull: false)
+  final List<DashboardStatsOrdersByDayInner> ordersByDay;
+
+  @JsonKey(name: r'ordersByType', required: true, includeIfNull: false)
+  final List<DashboardStatsOrdersByTypeInner> ordersByType;
+
+  @JsonKey(name: r'topDrivers', required: true, includeIfNull: false)
+  final List<DashboardStatsTopDriversInner> topDrivers;
+
+  @JsonKey(name: r'topMerchants', required: true, includeIfNull: false)
+  final List<DashboardStatsTopMerchantsInner> topMerchants;
+
+  @JsonKey(
+    name: r'highCancellationDrivers',
+    required: true,
+    includeIfNull: false,
+  )
+  final List<DashboardStatsHighCancellationDriversInner>
+  highCancellationDrivers;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -78,7 +113,13 @@ class DashboardStats {
           other.totalRevenue == totalRevenue &&
           other.todayRevenue == todayRevenue &&
           other.todayOrders == todayOrders &&
-          other.onlineDrivers == onlineDrivers;
+          other.onlineDrivers == onlineDrivers &&
+          other.revenueByDay == revenueByDay &&
+          other.ordersByDay == ordersByDay &&
+          other.ordersByType == ordersByType &&
+          other.topDrivers == topDrivers &&
+          other.topMerchants == topMerchants &&
+          other.highCancellationDrivers == highCancellationDrivers;
 
   @override
   int get hashCode =>
@@ -92,7 +133,13 @@ class DashboardStats {
       totalRevenue.hashCode +
       todayRevenue.hashCode +
       todayOrders.hashCode +
-      onlineDrivers.hashCode;
+      onlineDrivers.hashCode +
+      revenueByDay.hashCode +
+      ordersByDay.hashCode +
+      ordersByType.hashCode +
+      topDrivers.hashCode +
+      topMerchants.hashCode +
+      highCancellationDrivers.hashCode;
 
   factory DashboardStats.fromJson(Map<String, dynamic> json) =>
       _$DashboardStatsFromJson(json);

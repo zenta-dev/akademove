@@ -28,7 +28,14 @@ export const AnalyticsHandler = priv.router({
 				endDate: query.endDate,
 			});
 
-			return csv;
+			return {
+				status: 200,
+				headers: {
+					"Content-Type": "text/csv",
+					"Content-Disposition": `attachment; filename="driver-${params.driverId}-analytics.csv"`,
+				},
+				body: csv,
+			};
 		}),
 	exportMerchantAnalytics: priv.exportMerchantAnalytics
 		.use(hasPermission({ order: ["list"] }))
@@ -52,7 +59,14 @@ export const AnalyticsHandler = priv.router({
 				endDate: query.endDate,
 			});
 
-			return csv;
+			return {
+				status: 200,
+				headers: {
+					"Content-Type": "text/csv",
+					"Content-Disposition": `attachment; filename="merchant-${params.merchantId}-analytics.csv"`,
+				},
+				body: csv,
+			};
 		}),
 	exportOperatorAnalytics: priv.exportOperatorAnalytics
 		.use(hasPermission({ order: ["list"] }))
@@ -72,6 +86,16 @@ export const AnalyticsHandler = priv.router({
 				endDate: query.endDate,
 			});
 
-			return csv;
+			const startDateStr = query.startDate.toISOString().split("T")[0];
+			const endDateStr = query.endDate.toISOString().split("T")[0];
+
+			return {
+				status: 200,
+				headers: {
+					"Content-Type": "text/csv",
+					"Content-Disposition": `attachment; filename="platform-analytics-${startDateStr}-to-${endDateStr}.csv"`,
+				},
+				body: csv,
+			};
 		}),
 });

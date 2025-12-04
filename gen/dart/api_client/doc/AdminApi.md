@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**analyticsExportOperatorAnalytics**](AdminApi.md#analyticsexportoperatoranalytics) | **GET** /analytics/operator/export | 
 [**contactDelete**](AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [**contactGetById**](AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
 [**contactList**](AdminApi.md#contactlist) | **GET** /contacts | 
@@ -20,6 +21,49 @@ Method | HTTP request | Description
 [**userAdminRemove**](AdminApi.md#useradminremove) | **DELETE** /users/admin/{id} | 
 [**userAdminUpdate**](AdminApi.md#useradminupdate) | **PUT** /users/admin/{id} | 
 
+
+# **analyticsExportOperatorAnalytics**
+> String analyticsExportOperatorAnalytics(startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.analyticsExportOperatorAnalytics(startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->analyticsExportOperatorAnalytics: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **startDate** | **DateTime**|  | 
+ **endDate** | **DateTime**|  | 
+
+### Return type
+
+**String**
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **contactDelete**
 > AuthSignOut200Response contactDelete(id)
@@ -235,7 +279,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userAdminDashboardStats**
-> UserAdminDashboardStats200Response userAdminDashboardStats()
+> UserAdminDashboardStats200Response userAdminDashboardStats(startDate, endDate, period)
 
 
 
@@ -244,9 +288,12 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAdminApi();
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final String period = period_example; // String | 
 
 try {
-    final response = api.userAdminDashboardStats();
+    final response = api.userAdminDashboardStats(startDate, endDate, period);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AdminApi->userAdminDashboardStats: $e\n');
@@ -254,7 +301,12 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+ **period** | **String**|  | [optional] 
 
 ### Return type
 

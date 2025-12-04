@@ -9,6 +9,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**analyticsExportMerchantAnalytics**](MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
 [**merchantAnalytics**](MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [**merchantBestSellers**](MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
@@ -27,6 +28,51 @@ Method | HTTP request | Description
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 
+
+# **analyticsExportMerchantAnalytics**
+> String analyticsExportMerchantAnalytics(merchantId, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String merchantId = merchantId_example; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.analyticsExportMerchantAnalytics(merchantId, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->analyticsExportMerchantAnalytics: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **merchantId** | **String**|  | 
+ **startDate** | **DateTime**|  | 
+ **endDate** | **DateTime**|  | 
+
+### Return type
+
+**String**
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantAnalytics**
 > MerchantAnalytics200Response merchantAnalytics(id, period, startDate, endDate)

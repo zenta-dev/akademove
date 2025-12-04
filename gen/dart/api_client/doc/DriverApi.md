@@ -9,7 +9,9 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**analyticsExportDriverAnalytics**](DriverApi.md#analyticsexportdriveranalytics) | **GET** /analytics/driver/{driverId}/export | 
 [**driverGet**](DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[**driverGetAnalytics**](DriverApi.md#drivergetanalytics) | **GET** /drivers/{id}/analytics | 
 [**driverGetMine**](DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [**driverList**](DriverApi.md#driverlist) | **GET** /drivers | 
 [**driverNearby**](DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
@@ -21,6 +23,51 @@ Method | HTTP request | Description
 [**driverScheduleUpdate**](DriverApi.md#driverscheduleupdate) | **PUT** /drivers/{driverId}/schedules/{id} | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 
+
+# **analyticsExportDriverAnalytics**
+> String analyticsExportDriverAnalytics(driverId, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String driverId = driverId_example; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.analyticsExportDriverAnalytics(driverId, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->analyticsExportDriverAnalytics: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **driverId** | **String**|  | 
+ **startDate** | **DateTime**|  | 
+ **endDate** | **DateTime**|  | 
+
+### Return type
+
+**String**
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverGet**
 > DriverGetMine200ResponseBody driverGet(id)
@@ -51,6 +98,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverGetAnalytics**
+> DriverGetAnalytics200Response driverGetAnalytics(id, period, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+final String period = period_example; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.driverGetAnalytics(id, period, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverGetAnalytics: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **period** | **String**|  | [optional] 
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**DriverGetAnalytics200Response**](DriverGetAnalytics200Response.md)
 
 ### Authorization
 
