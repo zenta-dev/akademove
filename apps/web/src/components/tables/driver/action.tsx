@@ -1,11 +1,14 @@
 import { m } from "@repo/i18n";
 import type { Driver } from "@repo/schema/driver";
 import { MoreHorizontal } from "lucide-react";
+import { ActivateDriverDialog } from "@/components/dialogs/activate-driver";
+import { ApproveDriverDialog } from "@/components/dialogs/approve-driver";
+import { RejectDriverDialog } from "@/components/dialogs/reject-driver";
+import { SuspendDriverDialog } from "@/components/dialogs/suspend-driver";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -19,32 +22,23 @@ export const DriverActionTable = ({ val }: { val: Driver }) => {
 					<MoreHorizontal className="h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
+			<DropdownMenuContent align="end" className="w-48">
 				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
 				{val.status === "PENDING" && (
 					<>
-						<DropdownMenuItem>Approve Driver</DropdownMenuItem>
-						<DropdownMenuItem className="text-red-600">
-							Reject Driver
-						</DropdownMenuItem>
+						<ApproveDriverDialog driverId={val.id} />
+						<RejectDriverDialog driverId={val.id} />
 					</>
 				)}
 				{val.status === "APPROVED" && (
-					<DropdownMenuItem>Activate Driver</DropdownMenuItem>
+					<ActivateDriverDialog driverId={val.id} />
 				)}
-				{val.status === "ACTIVE" && (
-					<>
-						<DropdownMenuItem>View Details</DropdownMenuItem>
-						<DropdownMenuItem className="text-orange-600">
-							Suspend Driver
-						</DropdownMenuItem>
-					</>
-				)}
+				{val.status === "ACTIVE" && <SuspendDriverDialog driverId={val.id} />}
 				{val.status === "INACTIVE" && (
-					<DropdownMenuItem>Activate Driver</DropdownMenuItem>
+					<ActivateDriverDialog driverId={val.id} />
 				)}
 				{val.status === "SUSPENDED" && (
-					<DropdownMenuItem>Reactivate Driver</DropdownMenuItem>
+					<ActivateDriverDialog driverId={val.id} />
 				)}
 			</DropdownMenuContent>
 		</DropdownMenu>

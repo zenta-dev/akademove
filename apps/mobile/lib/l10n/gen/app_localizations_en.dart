@@ -3003,4 +3003,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get button_reject_order => 'Reject Order';
+
+  @override
+  String get my_reviews => 'My Reviews';
+
+  @override
+  String get failed_to_load => 'Failed to load';
+
+  @override
+  String get no_reviews_yet => 'No reviews yet';
+
+  @override
+  String get punctuality => 'Punctuality';
+
+  @override
+  String get safety => 'Safety';
+
+  @override
+  String get communication => 'Communication';
 }

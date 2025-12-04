@@ -1,56 +1,61 @@
 import { m } from "@repo/i18n";
-import type { User } from "@repo/schema/user";
+import type { Coupon } from "@repo/schema/coupon";
 import { MoreHorizontal } from "lucide-react";
-import { BanUserDialog } from "@/components/dialogs/ban-user";
-import { UnbanUserDialog } from "@/components/dialogs/unban-user";
-import { UpdateUserPasswordDialog } from "@/components/dialogs/update-user-password";
-import { UpdateUserRoleDialog } from "@/components/dialogs/update-user-role";
+import { useState } from "react";
+import { ActivateCouponDialog } from "@/components/dialogs/activate-coupon";
+import { DeactivateCouponDialog } from "@/components/dialogs/deactivate-coupon";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const UserActionTable = ({ val }: { val: User }) => {
+export const CouponActionTable = ({ val }: { val: Coupon }) => {
+	const [activateOpen, setActivateOpen] = useState(false);
+	const [deactivateOpen, setDeactivateOpen] = useState(false);
+
 	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" className="h-8 w-8 p-0">
-					<span className="sr-only">
-						{m.perform_user_action_placeholder({ name: val.name })}
-					</span>
-					<MoreHorizontal className="h-4 w-4" />
-				</Button>
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
-				<DropdownMenuGroup className="flex flex-1 flex-col gap-2">
-					<DropdownMenuItem asChild>
-						<UpdateUserRoleDialog userId={val.id} />
-					</DropdownMenuItem>
-					<DropdownMenuItem asChild>
-						<UpdateUserPasswordDialog userId={val.id} />
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuGroup className="flex flex-1 flex-col gap-2">
-					{val.banned && (
-						<DropdownMenuItem asChild>
-							<UnbanUserDialog userId={val.id} />
+		<>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button variant="ghost" className="h-8 w-8 p-0">
+						<span className="sr-only">{m.actions()}</span>
+						<MoreHorizontal className="h-4 w-4" />
+					</Button>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
+					{val.isActive ? (
+						<DropdownMenuItem
+							className="text-orange-600"
+							onClick={() => setDeactivateOpen(true)}
+						>
+							{m.deactivate_coupon()}
+						</DropdownMenuItem>
+					) : (
+						<DropdownMenuItem
+							className="text-green-600"
+							onClick={() => setActivateOpen(true)}
+						>
+							{m.activate_coupon()}
 						</DropdownMenuItem>
 					)}
-					{!val.banned && (
-						<DropdownMenuItem asChild>
-							<BanUserDialog userId={val.id} />
-						</DropdownMenuItem>
-					)}
-				</DropdownMenuGroup>
-			</DropdownMenuContent>
-		</DropdownMenu>
+				</DropdownMenuContent>
+			</DropdownMenu>
+
+			<ActivateCouponDialog
+				open={activateOpen}
+				onOpenChange={setActivateOpen}
+				coupon={val}
+			/>
+			<DeactivateCouponDialog
+				open={deactivateOpen}
+				onOpenChange={setDeactivateOpen}
+				coupon={val}
+			/>
+		</>
 	);
 };

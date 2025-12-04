@@ -41,6 +41,7 @@ import { Route as DashUserWalletRouteImport } from './routes/dash/user/wallet'
 import { Route as DashUserProfileRouteImport } from './routes/dash/user/profile'
 import { Route as DashUserHistoryRouteImport } from './routes/dash/user/history'
 import { Route as DashUserBookingsRouteImport } from './routes/dash/user/bookings'
+import { Route as DashOperatorUsersRouteImport } from './routes/dash/operator/users'
 import { Route as DashOperatorReportsRouteImport } from './routes/dash/operator/reports'
 import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/pricing'
 import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
@@ -229,6 +230,11 @@ const DashUserBookingsRoute = DashUserBookingsRouteImport.update({
   id: '/bookings',
   path: '/bookings',
   getParentRoute: () => DashUserRouteRoute,
+} as any)
+const DashOperatorUsersRoute = DashOperatorUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => DashOperatorRouteRoute,
 } as any)
 const DashOperatorReportsRoute = DashOperatorReportsRouteImport.update({
   id: '/reports',
@@ -430,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
   '/dash/user/profile': typeof DashUserProfileRoute
@@ -487,6 +494,7 @@ export interface FileRoutesByTo {
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
   '/dash/user/profile': typeof DashUserProfileRoute
@@ -552,6 +560,7 @@ export interface FileRoutesById {
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
+  '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
   '/dash/user/profile': typeof DashUserProfileRoute
@@ -616,6 +625,7 @@ export interface FileRouteTypes {
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
     | '/dash/operator/reports'
+    | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
     | '/dash/user/profile'
@@ -673,6 +683,7 @@ export interface FileRouteTypes {
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
     | '/dash/operator/reports'
+    | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
     | '/dash/user/profile'
@@ -737,6 +748,7 @@ export interface FileRouteTypes {
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
     | '/dash/operator/reports'
+    | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
     | '/dash/user/profile'
@@ -996,6 +1008,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/user/bookings'
       preLoaderRoute: typeof DashUserBookingsRouteImport
       parentRoute: typeof DashUserRouteRoute
+    }
+    '/dash/operator/users': {
+      id: '/dash/operator/users'
+      path: '/users'
+      fullPath: '/dash/operator/users'
+      preLoaderRoute: typeof DashOperatorUsersRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
     }
     '/dash/operator/reports': {
       id: '/dash/operator/reports'
@@ -1348,6 +1367,7 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorOrdersRoute: typeof DashOperatorOrdersRoute
   DashOperatorPricingRoute: typeof DashOperatorPricingRoute
   DashOperatorReportsRoute: typeof DashOperatorReportsRoute
+  DashOperatorUsersRoute: typeof DashOperatorUsersRoute
   DashOperatorIndexRoute: typeof DashOperatorIndexRoute
   DashOperatorCouponsNewRoute: typeof DashOperatorCouponsNewRoute
   DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
@@ -1360,6 +1380,7 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorOrdersRoute: DashOperatorOrdersRoute,
   DashOperatorPricingRoute: DashOperatorPricingRoute,
   DashOperatorReportsRoute: DashOperatorReportsRoute,
+  DashOperatorUsersRoute: DashOperatorUsersRoute,
   DashOperatorIndexRoute: DashOperatorIndexRoute,
   DashOperatorCouponsNewRoute: DashOperatorCouponsNewRoute,
   DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,

@@ -122,10 +122,37 @@ export const UpdateDriverScheduleSchema = DriverScheduleSchema.omit({
 }).partial();
 export type UpdateDriverSchedule = z.infer<typeof UpdateDriverScheduleSchema>;
 
+export const ApproveDriverSchema = z.object({
+	id: z.string(),
+});
+export type ApproveDriver = z.infer<typeof ApproveDriverSchema>;
+
+export const RejectDriverSchema = z.object({
+	id: z.string(),
+	reason: z.string().min(1, "Rejection reason is required"),
+});
+export type RejectDriver = z.infer<typeof RejectDriverSchema>;
+
+export const SuspendDriverSchema = z.object({
+	id: z.string(),
+	reason: z.string().min(1, "Suspension reason is required"),
+	suspendUntil: z.coerce.date().optional(),
+});
+export type SuspendDriver = z.infer<typeof SuspendDriverSchema>;
+
+export const ActivateDriverSchema = z.object({
+	id: z.string(),
+});
+export type ActivateDriver = z.infer<typeof ActivateDriverSchema>;
+
 export const DriverSchemaRegistries = {
 	DriverStatus: { schema: DriverStatusSchema, strategy: "output" },
 	Driver: { schema: DriverSchema, strategy: "output" },
 	DriverSchedule: { schema: DriverScheduleSchema, strategy: "output" },
 	DriverKey: { schema: DriverKeySchema, strategy: "input" },
 	DriverScheduleKey: { schema: DriverScheduleKeySchema, strategy: "input" },
+	ApproveDriver: { schema: ApproveDriverSchema, strategy: "input" },
+	RejectDriver: { schema: RejectDriverSchema, strategy: "input" },
+	SuspendDriver: { schema: SuspendDriverSchema, strategy: "input" },
+	ActivateDriver: { schema: ActivateDriverSchema, strategy: "input" },
 } satisfies SchemaRegistries;

@@ -79,6 +79,16 @@ export const UpdateCouponSchema = CouponSchema.omit({
 }).partial();
 export type UpdateCoupon = z.infer<typeof UpdateCouponSchema>;
 
+export const ActivateCouponSchema = z.object({
+	id: z.string().uuid(),
+});
+export type ActivateCoupon = z.infer<typeof ActivateCouponSchema>;
+
+export const DeactivateCouponSchema = z.object({
+	id: z.string().uuid(),
+});
+export type DeactivateCoupon = z.infer<typeof DeactivateCouponSchema>;
+
 export const CouponSchemaRegistries = {
 	GeneralRuleType: { schema: GeneralRuleTypeSchema, strategy: "output" },
 	GeneralRules: { schema: GeneralRulesSchema, strategy: "output" },

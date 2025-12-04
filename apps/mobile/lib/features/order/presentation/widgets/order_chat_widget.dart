@@ -31,10 +31,17 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
     // Fetch quick message templates for current user's role
     final currentUser = sl<AuthCubit>().state.data;
     if (currentUser != null) {
-      _quickMessageCubit.fetchTemplates(
-        role: currentUser.role.value,
-        locale: 'en', // TODO: Get from app locale
-      );
+      // Get app locale from Flutter localization context
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          final appLocalizations = context.l10n;
+          final locale = appLocalizations.localeName.split('_').first;
+          _quickMessageCubit.fetchTemplates(
+            role: currentUser.role.value,
+            locale: locale,
+          );
+        }
+      });
     }
   }
 

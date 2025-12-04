@@ -1270,5 +1270,11 @@
 	"rejection_reason_other": "Lainnya",
 	"label_additional_note_optional": "Catatan Tambahan (Opsional)",
 	"placeholder_rejection_note": "contoh: \"Ayam habis, akan restok besok\"",
-	"button_reject_order": "Tolak Pesanan"
+	"button_reject_order": "Tolak Pesanan",
+	"my_reviews": "Ulasan Saya",
+	"failed_to_load": "Gagal memuat",
+	"no_reviews_yet": "Belum ada ulasan",
+	"punctuality": "Ketepatan Waktu",
+	"safety": "Keamanan",
+	"communication": "Komunikasi"
 }

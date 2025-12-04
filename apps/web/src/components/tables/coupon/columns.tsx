@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, BadgeCheckIcon, BadgeXIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CouponActionTable } from "./action";
 
 export const COUPON_COLUMNS = [
 	{
@@ -162,12 +163,12 @@ export const COUPON_COLUMNS = [
 			);
 		},
 	},
-	// {
-	// 	id: "actions",
-	// 	enableHiding: false,
-	// 	header: m.actions(),
-	// 	cell: ({ row }) => {
-	// 		return <UserActionTable val={row.original} />;
-	// 	},
-	// },
+	{
+		id: "actions",
+		enableHiding: false,
+		header: m.actions(),
+		cell: ({ row }) => {
+			return <CouponActionTable val={row.original} />;
+		},
+	},
 ] as const satisfies ColumnDef<Coupon>[];

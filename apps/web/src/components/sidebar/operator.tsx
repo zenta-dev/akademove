@@ -9,6 +9,7 @@ import {
 	Receipt,
 	Store,
 	Ticket,
+	Users,
 } from "lucide-react";
 import {
 	Sidebar,
@@ -26,6 +27,11 @@ const navMain = Object.freeze([
 		title: m.overview(),
 		href: localizeHref("/dash/operator"),
 		icon: Gauge,
+	},
+	{
+		title: m.users(),
+		href: localizeHref("/dash/operator/users"),
+		icon: Users,
 	},
 	{
 		title: m.drivers(),

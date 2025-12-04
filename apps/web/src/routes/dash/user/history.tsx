@@ -22,6 +22,7 @@ import {
 	XCircle,
 } from "lucide-react";
 import { useState } from "react";
+import { LiveTrackingDialog } from "@/components/dialogs/live-tracking";
 import { RateOrderDialog } from "@/components/dialogs/rate-order";
 import { ReportUserDialog } from "@/components/dialogs/report-user";
 import { Badge } from "@/components/ui/badge";
@@ -68,6 +69,7 @@ function RouteComponent() {
 	>("active");
 	const [reportDialogOpen, setReportDialogOpen] = useState(false);
 	const [rateDialogOpen, setRateDialogOpen] = useState(false);
+	const [trackingDialogOpen, setTrackingDialogOpen] = useState(false);
 	const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
 	if (!allowed) navigate({ to: "/" });
@@ -356,7 +358,16 @@ function RouteComponent() {
 									{/* Action Buttons */}
 									<div className="flex gap-2">
 										{isActive && (
-											<Button variant="outline" size="sm" className="flex-1">
+											<Button
+												variant="outline"
+												size="sm"
+												className="flex-1"
+												onClick={() => {
+													setSelectedOrder(order);
+													setTrackingDialogOpen(true);
+												}}
+											>
+												<MapPin className="mr-2 h-4 w-4" />
 												Track Order
 											</Button>
 										)}
@@ -401,6 +412,13 @@ function RouteComponent() {
 					})
 				)}
 			</div>
+
+			{/* Live Tracking Dialog */}
+			<LiveTrackingDialog
+				order={selectedOrder}
+				open={trackingDialogOpen}
+				onOpenChange={setTrackingDialogOpen}
+			/>
 
 			{/* Rate Dialog */}
 			{selectedOrder?.driver?.userId && (

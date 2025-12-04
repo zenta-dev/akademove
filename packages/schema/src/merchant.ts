@@ -94,6 +94,20 @@ export type InsertMerchantMenu = z.infer<typeof InsertMerchantMenuSchema>;
 export const UpdateMerchantMenuSchema = InsertMerchantMenuSchema.partial();
 export type UpdateMerchantMenu = z.infer<typeof UpdateMerchantMenuSchema>;
 
+export const ActivateMerchantSchema = z.object({
+	id: z.string().uuid(),
+});
+export type ActivateMerchant = z.infer<typeof ActivateMerchantSchema>;
+
+export const DeactivateMerchantSchema = z.object({
+	id: z.string().uuid(),
+	reason: z
+		.string()
+		.min(10, "Reason must be at least 10 characters")
+		.describe("Reason for deactivation"),
+});
+export type DeactivateMerchant = z.infer<typeof DeactivateMerchantSchema>;
+
 export const MerchantSchemaRegistries = {
 	MerchantCategory: { schema: MerchantCategorySchema, strategy: "output" },
 	Merchant: { schema: MerchantSchema, strategy: "output" },

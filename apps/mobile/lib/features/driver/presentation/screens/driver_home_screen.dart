@@ -331,14 +331,12 @@ class _DriverHomeView extends StatelessWidget {
               label: context.l10n.leadeboard_and_badges,
               onTap: () => context.push(Routes.driverLeaderboard.path),
             ),
-            // Note: Reviews feature - route and screen not yet implemented
-            // Uncomment when driverReviews route is added to router
-            // _buildActionButton(
-            //   context,
-            //   icon: material.Icons.star,
-            //   label: 'My Reviews',
-            //   onTap: () => context.push(Routes.driverReviews.path),
-            // ),
+            _buildActionButton(
+              context,
+              icon: material.Icons.star,
+              label: context.l10n.my_reviews,
+              onTap: () => context.push(Routes.driverReviews.path),
+            ),
           ],
         ),
       ),

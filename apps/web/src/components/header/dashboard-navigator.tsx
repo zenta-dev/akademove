@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 export const DashboardNavigator = ({ role }: { role: UserRole }) => {
 	const route = useMemo(() => {
-		return localizeHref(`/dash/${role}`);
+		return localizeHref(`/dash/${role.toLowerCase()}`);
 	}, [role]);
 
 	if (role === "USER") return;

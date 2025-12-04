@@ -3003,4 +3003,22 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get button_reject_order => 'Tolak Pesanan';
+
+  @override
+  String get my_reviews => 'Ulasan Saya';
+
+  @override
+  String get failed_to_load => 'Gagal memuat';
+
+  @override
+  String get no_reviews_yet => 'Belum ada ulasan';
+
+  @override
+  String get punctuality => 'Ketepatan Waktu';
+
+  @override
+  String get safety => 'Keamanan';
+
+  @override
+  String get communication => 'Komunikasi';
 }

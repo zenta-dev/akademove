@@ -5946,6 +5946,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reject Order'**
   String get button_reject_order;
+
+  /// No description provided for @my_reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'My Reviews'**
+  String get my_reviews;
+
+  /// No description provided for @failed_to_load.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load'**
+  String get failed_to_load;
+
+  /// No description provided for @no_reviews_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get no_reviews_yet;
+
+  /// No description provided for @punctuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Punctuality'**
+  String get punctuality;
+
+  /// No description provided for @safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety'**
+  String get safety;
+
+  /// No description provided for @communication.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get communication;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

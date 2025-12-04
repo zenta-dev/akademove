@@ -41,6 +41,21 @@ export const UpdateReportSchema = ReportSchema.omit({
 }).partial();
 export type UpdateReport = z.infer<typeof UpdateReportSchema>;
 
+export const StartInvestigationSchema = z.object({
+	notes: z.string().min(1, "Investigation notes are required"),
+});
+export type StartInvestigation = z.infer<typeof StartInvestigationSchema>;
+
+export const ResolveReportSchema = z.object({
+	resolution: z.string().min(1, "Resolution description is required"),
+});
+export type ResolveReport = z.infer<typeof ResolveReportSchema>;
+
+export const DismissReportSchema = z.object({
+	reason: z.string().min(1, "Dismissal reason is required"),
+});
+export type DismissReport = z.infer<typeof DismissReportSchema>;
+
 export const ReportSchemaRegistries = {
 	ReportCategory: { schema: ReportCategorySchema, strategy: "output" },
 	ReportStatus: { schema: ReportStatusSchema, strategy: "output" },
@@ -48,4 +63,7 @@ export const ReportSchemaRegistries = {
 	InsertReport: { schema: InsertReportSchema, strategy: "input" },
 	UpdateReport: { schema: UpdateReportSchema, strategy: "input" },
 	ReportKey: { schema: ReportKeySchema, strategy: "input" },
+	StartInvestigation: { schema: StartInvestigationSchema, strategy: "input" },
+	ResolveReport: { schema: ResolveReportSchema, strategy: "input" },
+	DismissReport: { schema: DismissReportSchema, strategy: "input" },
 } satisfies SchemaRegistries;
