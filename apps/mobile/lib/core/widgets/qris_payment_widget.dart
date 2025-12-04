@@ -122,17 +122,21 @@ class _QRISPaymentWidgetState extends State<QRISPaymentWidget> {
         );
       }
     } on GalException catch (e) {
-      final message = switch (e.type) {
-        GalExceptionType.accessDenied => context.l10n.error_access_denied,
-        GalExceptionType.notEnoughSpace => context.l10n.error_storage_full,
-        GalExceptionType.notSupportedFormat =>
-          context.l10n.error_format_unsupported,
-        GalExceptionType.unexpected =>
-          '${context.l10n.error_unexpected_prefix}$e',
-      };
-      showErrorToast(message);
+      if (context.mounted) {
+        final message = switch (e.type) {
+          GalExceptionType.accessDenied => context.l10n.error_access_denied,
+          GalExceptionType.notEnoughSpace => context.l10n.error_storage_full,
+          GalExceptionType.notSupportedFormat =>
+            context.l10n.error_format_unsupported,
+          GalExceptionType.unexpected =>
+            '${context.l10n.error_unexpected_prefix}$e',
+        };
+        showErrorToast(message);
+      }
     } catch (e) {
-      showErrorToast('${context.l10n.error_qr_save_failed}$e');
+      if (context.mounted) {
+        showErrorToast('${context.l10n.error_qr_save_failed}$e');
+      }
     }
   }
 
