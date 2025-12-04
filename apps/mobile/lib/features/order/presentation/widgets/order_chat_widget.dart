@@ -16,6 +16,7 @@ class OrderChatWidget extends StatefulWidget {
 
 class _OrderChatWidgetState extends State<OrderChatWidget> {
   late OrderChatCubit _cubit;
+  late QuickMessageCubit _quickMessageCubit;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
@@ -23,8 +24,18 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
   void initState() {
     super.initState();
     _cubit = sl<OrderChatCubit>();
+    _quickMessageCubit = sl<QuickMessageCubit>();
     _cubit.init(widget.orderId);
     _scrollController.addListener(_onScroll);
+
+    // Fetch quick message templates for current user's role
+    final currentUser = sl<AuthCubit>().state.data;
+    if (currentUser != null) {
+      _quickMessageCubit.fetchTemplates(
+        role: currentUser.role.value,
+        locale: 'en', // TODO: Get from app locale
+      );
+    }
   }
 
   @override
@@ -32,6 +43,7 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
     _messageController.dispose();
     _scrollController.dispose();
     _cubit.close();
+    _quickMessageCubit.close();
     super.dispose();
   }
 
@@ -107,6 +119,14 @@ class _OrderChatWidgetState extends State<OrderChatWidget> {
             ),
           ),
           const Divider(height: 1),
+          BlocProvider.value(
+            value: _quickMessageCubit,
+            child: _QuickMessageChips(
+              onMessageSelected: (message) {
+                _messageController.text = message;
+              },
+            ),
+          ),
           _MessageInputField(
             controller: _messageController,
             onSend: _sendMessage,
@@ -186,6 +206,48 @@ class _ChatMessageBubble extends StatelessWidget {
     } else {
       return 'Just now';
     }
+  }
+}
+
+class _QuickMessageChips extends StatelessWidget {
+  const _QuickMessageChips({required this.onMessageSelected});
+
+  final ValueChanged<String> onMessageSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<QuickMessageCubit, QuickMessageState>(
+      builder: (context, state) {
+        if (!state.isSuccess ||
+            state.templates == null ||
+            state.templates!.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        final templates = state.templates!;
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          color: Colors.grey[100],
+          height: 50,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: templates.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final template = templates[index];
+              return ActionChip(
+                label: Text(template.message),
+                onPressed: () => onMessageSelected(template.message),
+                backgroundColor: Colors.white,
+                side: BorderSide(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }
 

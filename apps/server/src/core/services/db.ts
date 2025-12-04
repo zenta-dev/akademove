@@ -14,6 +14,7 @@ import * as merchant from "@/core/tables/merchant";
 import * as notification from "@/core/tables/notification";
 import * as order from "@/core/tables/order";
 import * as payment from "@/core/tables/payment";
+import * as quickMessage from "@/core/tables/quick-message";
 import * as report from "@/core/tables/report";
 import * as review from "@/core/tables/review";
 import * as transaction from "@/core/tables/transaction";
@@ -34,6 +35,7 @@ export const tables = {
 	...notification,
 	...order,
 	...payment,
+	...quickMessage,
 	...report,
 	...review,
 	...transaction,

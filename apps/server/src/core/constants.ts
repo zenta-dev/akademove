@@ -6,6 +6,7 @@ export const FEATURE_TAGS = Object.freeze({
 	ADMIN: "Admin",
 	AUTH: "Auth",
 	BADGE: "Badge",
+	CHAT: "Chat",
 	CONFIGURATION: "Configuration",
 	CONTACT: "Contact",
 	DRIVER: "Driver",

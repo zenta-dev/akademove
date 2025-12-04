@@ -27,6 +27,7 @@ import { MerchantOrderRepository } from "@/features/merchant/order/merchant-orde
 import { NotificationRepository } from "@/features/notification/notification-repository";
 import { OrderRepository } from "@/features/order/order-repository";
 import { PaymentRepository } from "@/features/payment/payment-repository";
+import { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import { ReportRepository } from "@/features/report/report-repository";
 import { ReviewRepository } from "@/features/review/review-repository";
 import { TransactionRepository } from "@/features/transaction/transaction-repository";
@@ -112,6 +113,7 @@ export function getRepositories(
 		chat: new ChatRepository(svc.db, svc.kv),
 		configuration: new ConfigurationRepository(svc.db, svc.kv),
 		contact: new ContactRepository(svc.db, svc.kv),
+		quickMessage: new QuickMessageRepository(svc.db, svc.kv),
 		driver: {
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
 			schedule: new DriverScheduleRepository(svc.db, svc.kv),

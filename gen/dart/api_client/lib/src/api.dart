@@ -10,6 +10,7 @@ import 'package:api_client/src/auth/oauth.dart';
 import 'package:api_client/src/api/admin_api.dart';
 import 'package:api_client/src/api/auth_api.dart';
 import 'package:api_client/src/api/badge_api.dart';
+import 'package:api_client/src/api/chat_api.dart';
 import 'package:api_client/src/api/configuration_api.dart';
 import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
@@ -110,6 +111,12 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   BadgeApi getBadgeApi() {
     return BadgeApi(dio);
+  }
+
+  /// Get ChatApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  ChatApi getChatApi() {
+    return ChatApi(dio);
   }
 
   /// Get ConfigurationApi instance, base route and serializer can be overridden by a given but be careful,

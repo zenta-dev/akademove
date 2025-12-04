@@ -22,6 +22,7 @@ import type { MerchantOrderRepository } from "@/features/merchant/order/merchant
 import type { NotificationRepository } from "@/features/notification/notification-repository";
 import type { OrderRepository } from "@/features/order/order-repository";
 import type { PaymentRepository } from "@/features/payment/payment-repository";
+import type { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
@@ -60,6 +61,7 @@ export interface RepositoryContext {
 	chat: ChatRepository;
 	configuration: ConfigurationRepository;
 	contact: ContactRepository;
+	quickMessage: QuickMessageRepository;
 	driver: {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;

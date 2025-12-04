@@ -96,6 +96,9 @@ void _setupRepository() {
     ..registerLazySingleton(() => BadgeRepository(apiClient: sl<ApiClient>()))
     ..registerLazySingleton(
       () => CartRepository(keyValueService: sl<KeyValueService>()),
+    )
+    ..registerLazySingleton(
+      () => QuickMessageRepository(apiClient: sl<ApiClient>()),
     );
 }
 
@@ -212,5 +215,10 @@ void _setupCubit() {
         badgeRepository: sl<BadgeRepository>(),
       ),
     )
-    ..registerFactory(() => CartCubit(cartRepository: sl<CartRepository>()));
+    ..registerFactory(() => CartCubit(cartRepository: sl<CartRepository>()))
+    ..registerFactory(
+      () => QuickMessageCubit(
+        quickMessageRepository: sl<QuickMessageRepository>(),
+      ),
+    );
 }

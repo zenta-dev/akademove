@@ -47,8 +47,19 @@ import 'package:api_client/src/model/coupon_validate200_response.dart';
 import 'package:api_client/src/model/coupon_validate200_response_data.dart';
 import 'package:api_client/src/model/coupon_validate_request.dart';
 import 'package:api_client/src/model/dashboard_stats.dart';
+import 'package:api_client/src/model/dashboard_stats_high_cancellation_drivers_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_orders_by_day_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_orders_by_type_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_query.dart';
+import 'package:api_client/src/model/dashboard_stats_top_drivers_inner.dart';
+import 'package:api_client/src/model/dashboard_stats_top_merchants_inner.dart';
 import 'package:api_client/src/model/delivery_pricing_configuration.dart';
 import 'package:api_client/src/model/driver.dart';
+import 'package:api_client/src/model/driver_get_analytics200_response.dart';
+import 'package:api_client/src/model/driver_get_analytics200_response_data.dart';
+import 'package:api_client/src/model/driver_get_analytics200_response_data_earnings_by_day_inner.dart';
+import 'package:api_client/src/model/driver_get_analytics200_response_data_earnings_by_type_inner.dart';
+import 'package:api_client/src/model/driver_get_analytics200_response_data_top_earning_days_inner.dart';
 import 'package:api_client/src/model/driver_get_mine200_response.dart';
 import 'package:api_client/src/model/driver_get_mine200_response_body.dart';
 import 'package:api_client/src/model/driver_list200_response.dart';
@@ -78,6 +89,7 @@ import 'package:api_client/src/model/insert_emergency.dart';
 import 'package:api_client/src/model/insert_leaderboard.dart';
 import 'package:api_client/src/model/insert_order_chat_message.dart';
 import 'package:api_client/src/model/insert_payment.dart';
+import 'package:api_client/src/model/insert_quick_message_template.dart';
 import 'package:api_client/src/model/insert_report.dart';
 import 'package:api_client/src/model/insert_review.dart';
 import 'package:api_client/src/model/insert_transaction.dart';
@@ -85,6 +97,7 @@ import 'package:api_client/src/model/insert_user.dart';
 import 'package:api_client/src/model/leaderboard.dart';
 import 'package:api_client/src/model/leaderboard_get200_response.dart';
 import 'package:api_client/src/model/leaderboard_list200_response.dart';
+import 'package:api_client/src/model/list_quick_message_query.dart';
 import 'package:api_client/src/model/location.dart';
 import 'package:api_client/src/model/merchant.dart';
 import 'package:api_client/src/model/merchant_analytics200_response.dart';
@@ -141,6 +154,12 @@ import 'package:api_client/src/model/place_order.dart';
 import 'package:api_client/src/model/place_order_payment.dart';
 import 'package:api_client/src/model/place_order_response.dart';
 import 'package:api_client/src/model/pricing_configuration.dart';
+import 'package:api_client/src/model/quick_message_create200_response.dart';
+import 'package:api_client/src/model/quick_message_delete200_response.dart';
+import 'package:api_client/src/model/quick_message_delete200_response_data.dart';
+import 'package:api_client/src/model/quick_message_list200_response.dart';
+import 'package:api_client/src/model/quick_message_list200_response_data.dart';
+import 'package:api_client/src/model/quick_message_template.dart';
 import 'package:api_client/src/model/report.dart';
 import 'package:api_client/src/model/report_create200_response.dart';
 import 'package:api_client/src/model/report_list200_response.dart';
@@ -171,12 +190,13 @@ import 'package:api_client/src/model/update_emergency.dart';
 import 'package:api_client/src/model/update_leaderboard.dart';
 import 'package:api_client/src/model/update_order.dart';
 import 'package:api_client/src/model/update_payment.dart';
+import 'package:api_client/src/model/update_quick_message_template.dart';
 import 'package:api_client/src/model/update_report.dart';
 import 'package:api_client/src/model/update_review.dart';
 import 'package:api_client/src/model/update_transaction.dart';
 import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/update_user_role.dart';
-import 'package:api_client/src/model/updatewallet.dart';
+import 'package:api_client/src/model/update_wallet.dart';
 import 'package:api_client/src/model/user.dart';
 import 'package:api_client/src/model/user_admin_create200_response.dart';
 import 'package:api_client/src/model/user_admin_dashboard_stats200_response.dart';
@@ -379,6 +399,34 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'DashboardStats':
       return DashboardStats.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'DashboardStatsHighCancellationDriversInner':
+      return DashboardStatsHighCancellationDriversInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DashboardStatsOrdersByDayInner':
+      return DashboardStatsOrdersByDayInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DashboardStatsOrdersByTypeInner':
+      return DashboardStatsOrdersByTypeInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DashboardStatsQuery':
+      return DashboardStatsQuery.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'DashboardStatsTopDriversInner':
+      return DashboardStatsTopDriversInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DashboardStatsTopMerchantsInner':
+      return DashboardStatsTopMerchantsInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'DayOfWeek':
     case 'DeliveryPricingConfiguration':
       return DeliveryPricingConfiguration.fromJson(
@@ -387,6 +435,31 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'Driver':
       return Driver.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'DriverGetAnalytics200Response':
+      return DriverGetAnalytics200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverGetAnalytics200ResponseData':
+      return DriverGetAnalytics200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverGetAnalytics200ResponseDataEarningsByDayInner':
+      return DriverGetAnalytics200ResponseDataEarningsByDayInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverGetAnalytics200ResponseDataEarningsByTypeInner':
+      return DriverGetAnalytics200ResponseDataEarningsByTypeInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'DriverGetAnalytics200ResponseDataTopEarningDaysInner':
+      return DriverGetAnalytics200ResponseDataTopEarningDaysInner.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'DriverGetMine200Response':
       return DriverGetMine200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -493,6 +566,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'InsertPayment':
       return InsertPayment.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'InsertQuickMessageTemplate':
+      return InsertQuickMessageTemplate.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertReport':
       return InsertReport.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'InsertReview':
@@ -509,6 +585,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'LeaderboardList200Response':
       return LeaderboardList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ListQuickMessageQuery':
+      return ListQuickMessageQuery.fromJson(value as Map<String, dynamic>)
           as ReturnType;
     case 'Location':
       return Location.fromJson(value as Map<String, dynamic>) as ReturnType;
@@ -716,6 +795,32 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'PricingConfiguration':
       return PricingConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'QuickMessageCreate200Response':
+      return QuickMessageCreate200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'QuickMessageDelete200Response':
+      return QuickMessageDelete200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'QuickMessageDelete200ResponseData':
+      return QuickMessageDelete200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'QuickMessageList200Response':
+      return QuickMessageList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'QuickMessageList200ResponseData':
+      return QuickMessageList200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'QuickMessageTemplate':
+      return QuickMessageTemplate.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Report':
       return Report.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'ReportCategory':
@@ -807,6 +912,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdatePayment':
       return UpdatePayment.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'UpdateQuickMessageTemplate':
+      return UpdateQuickMessageTemplate.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateReport':
       return UpdateReport.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UpdateReview':
@@ -820,8 +928,8 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'UpdateUserRole':
       return UpdateUserRole.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'Updatewallet':
-      return Updatewallet.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdateWallet':
+      return UpdateWallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'User':
       return User.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'UserAdminCreate200Response':

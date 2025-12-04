@@ -816,5 +816,10 @@
   "error_payment_charge_failed": "Failed to charge",
   "error_payment_verify_failed": "Failed to verify",
   "error_payment_webhook_failed": "Failed to handle webhook",
-  "error_kv_namespace_required": "KVNamespace is required"
+  "error_kv_namespace_required": "KVNamespace is required",
+  "server_quick_messages_retrieved": "Quick message templates retrieved successfully",
+  "server_quick_message_retrieved": "Quick message template retrieved successfully",
+  "server_quick_message_created": "Quick message template created successfully",
+  "server_quick_message_updated": "Quick message template updated successfully",
+  "server_quick_message_deleted": "Quick message template deleted successfully"
 }

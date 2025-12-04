@@ -49,13 +49,14 @@ import 'package:api_client/api_client.dart';
 
 
 final api = ApiClient().getAdminApi();
-final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
 
 try {
-    final response = await api.contactDelete(id);
+    final response = await api.analyticsExportOperatorAnalytics(startDate, endDate);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling AdminApi->contactDelete: $e\n");
+    print("Exception when calling AdminApi->analyticsExportOperatorAnalytics: $e\n");
 }
 
 ```
@@ -66,6 +67,7 @@ All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AdminApi*](doc/AdminApi.md) | [**analyticsExportOperatorAnalytics**](doc/AdminApi.md#analyticsexportoperatoranalytics) | **GET** /analytics/operator/export | 
 [*AdminApi*](doc/AdminApi.md) | [**contactDelete**](doc/AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**contactGetById**](doc/AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**contactList**](doc/AdminApi.md#contactlist) | **GET** /contacts | 
@@ -96,6 +98,11 @@ Class | Method | HTTP request | Description
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserList**](doc/BadgeApi.md#badgeuserlist) | **GET** /badges/user | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserRemove**](doc/BadgeApi.md#badgeuserremove) | **DELETE** /badges/user/{id} | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeUserUpdate**](doc/BadgeApi.md#badgeuserupdate) | **PUT** /badges/user/{id} | 
+[*ChatApi*](doc/ChatApi.md) | [**quickMessageCreate**](doc/ChatApi.md#quickmessagecreate) | **POST** /quick-messages | 
+[*ChatApi*](doc/ChatApi.md) | [**quickMessageDelete**](doc/ChatApi.md#quickmessagedelete) | **DELETE** /quick-messages/:id | 
+[*ChatApi*](doc/ChatApi.md) | [**quickMessageGet**](doc/ChatApi.md#quickmessageget) | **GET** /quick-messages/:id | 
+[*ChatApi*](doc/ChatApi.md) | [**quickMessageList**](doc/ChatApi.md#quickmessagelist) | **GET** /quick-messages | 
+[*ChatApi*](doc/ChatApi.md) | [**quickMessageUpdate**](doc/ChatApi.md#quickmessageupdate) | **PATCH** /quick-messages/:id | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGet**](doc/ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationList**](doc/ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
@@ -106,7 +113,9 @@ Class | Method | HTTP request | Description
 [*CouponApi*](doc/CouponApi.md) | [**couponRemove**](doc/CouponApi.md#couponremove) | **DELETE** /coupons/{id} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponUpdate**](doc/CouponApi.md#couponupdate) | **PUT** /coupons/{id} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponValidate**](doc/CouponApi.md#couponvalidate) | **POST** /coupons/validate | 
+[*DriverApi*](doc/DriverApi.md) | [**analyticsExportDriverAnalytics**](doc/DriverApi.md#analyticsexportdriveranalytics) | **GET** /analytics/driver/{driverId}/export | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGet**](doc/DriverApi.md#driverget) | **GET** /drivers/{id} | 
+[*DriverApi*](doc/DriverApi.md) | [**driverGetAnalytics**](doc/DriverApi.md#drivergetanalytics) | **GET** /drivers/{id}/analytics | 
 [*DriverApi*](doc/DriverApi.md) | [**driverGetMine**](doc/DriverApi.md#drivergetmine) | **GET** /drivers/mine | 
 [*DriverApi*](doc/DriverApi.md) | [**driverList**](doc/DriverApi.md#driverlist) | **GET** /drivers | 
 [*DriverApi*](doc/DriverApi.md) | [**driverNearby**](doc/DriverApi.md#drivernearby) | **GET** /drivers/nearby | 
@@ -123,6 +132,7 @@ Class | Method | HTTP request | Description
 [*EmergencyApi*](doc/EmergencyApi.md) | [**emergencyUpdateStatus**](doc/EmergencyApi.md#emergencyupdatestatus) | **PATCH** /emergencies/{id}/status | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
+[*MerchantApi*](doc/MerchantApi.md) | [**analyticsExportMerchantAnalytics**](doc/MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantAnalytics**](doc/MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
@@ -242,9 +252,20 @@ Class | Method | HTTP request | Description
  - [CouponValidateRequest](doc/CouponValidateRequest.md)
  - [Currency](doc/Currency.md)
  - [DashboardStats](doc/DashboardStats.md)
+ - [DashboardStatsHighCancellationDriversInner](doc/DashboardStatsHighCancellationDriversInner.md)
+ - [DashboardStatsOrdersByDayInner](doc/DashboardStatsOrdersByDayInner.md)
+ - [DashboardStatsOrdersByTypeInner](doc/DashboardStatsOrdersByTypeInner.md)
+ - [DashboardStatsQuery](doc/DashboardStatsQuery.md)
+ - [DashboardStatsTopDriversInner](doc/DashboardStatsTopDriversInner.md)
+ - [DashboardStatsTopMerchantsInner](doc/DashboardStatsTopMerchantsInner.md)
  - [DayOfWeek](doc/DayOfWeek.md)
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
  - [Driver](doc/Driver.md)
+ - [DriverGetAnalytics200Response](doc/DriverGetAnalytics200Response.md)
+ - [DriverGetAnalytics200ResponseData](doc/DriverGetAnalytics200ResponseData.md)
+ - [DriverGetAnalytics200ResponseDataEarningsByDayInner](doc/DriverGetAnalytics200ResponseDataEarningsByDayInner.md)
+ - [DriverGetAnalytics200ResponseDataEarningsByTypeInner](doc/DriverGetAnalytics200ResponseDataEarningsByTypeInner.md)
+ - [DriverGetAnalytics200ResponseDataTopEarningDaysInner](doc/DriverGetAnalytics200ResponseDataTopEarningDaysInner.md)
  - [DriverGetMine200Response](doc/DriverGetMine200Response.md)
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
  - [DriverKey](doc/DriverKey.md)
@@ -283,6 +304,7 @@ Class | Method | HTTP request | Description
  - [InsertLeaderboard](doc/InsertLeaderboard.md)
  - [InsertOrderChatMessage](doc/InsertOrderChatMessage.md)
  - [InsertPayment](doc/InsertPayment.md)
+ - [InsertQuickMessageTemplate](doc/InsertQuickMessageTemplate.md)
  - [InsertReport](doc/InsertReport.md)
  - [InsertReview](doc/InsertReview.md)
  - [InsertTransaction](doc/InsertTransaction.md)
@@ -290,6 +312,7 @@ Class | Method | HTTP request | Description
  - [Leaderboard](doc/Leaderboard.md)
  - [LeaderboardGet200Response](doc/LeaderboardGet200Response.md)
  - [LeaderboardList200Response](doc/LeaderboardList200Response.md)
+ - [ListQuickMessageQuery](doc/ListQuickMessageQuery.md)
  - [Location](doc/Location.md)
  - [Merchant](doc/Merchant.md)
  - [MerchantAnalytics200Response](doc/MerchantAnalytics200Response.md)
@@ -360,6 +383,12 @@ Class | Method | HTTP request | Description
  - [PlaceOrderPayment](doc/PlaceOrderPayment.md)
  - [PlaceOrderResponse](doc/PlaceOrderResponse.md)
  - [PricingConfiguration](doc/PricingConfiguration.md)
+ - [QuickMessageCreate200Response](doc/QuickMessageCreate200Response.md)
+ - [QuickMessageDelete200Response](doc/QuickMessageDelete200Response.md)
+ - [QuickMessageDelete200ResponseData](doc/QuickMessageDelete200ResponseData.md)
+ - [QuickMessageList200Response](doc/QuickMessageList200Response.md)
+ - [QuickMessageList200ResponseData](doc/QuickMessageList200ResponseData.md)
+ - [QuickMessageTemplate](doc/QuickMessageTemplate.md)
  - [Report](doc/Report.md)
  - [ReportCategory](doc/ReportCategory.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
@@ -398,12 +427,13 @@ Class | Method | HTTP request | Description
  - [UpdateLeaderboard](doc/UpdateLeaderboard.md)
  - [UpdateOrder](doc/UpdateOrder.md)
  - [UpdatePayment](doc/UpdatePayment.md)
+ - [UpdateQuickMessageTemplate](doc/UpdateQuickMessageTemplate.md)
  - [UpdateReport](doc/UpdateReport.md)
  - [UpdateReview](doc/UpdateReview.md)
  - [UpdateTransaction](doc/UpdateTransaction.md)
  - [UpdateUserPassword](doc/UpdateUserPassword.md)
  - [UpdateUserRole](doc/UpdateUserRole.md)
- - [Updatewallet](doc/Updatewallet.md)
+ - [UpdateWallet](doc/UpdateWallet.md)
  - [User](doc/User.md)
  - [UserAdminCreate200Response](doc/UserAdminCreate200Response.md)
  - [UserAdminDashboardStats200Response](doc/UserAdminDashboardStats200Response.md)

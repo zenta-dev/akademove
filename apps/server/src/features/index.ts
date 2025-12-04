@@ -29,6 +29,8 @@ import { OrderHandler } from "./order/order-handler";
 import { OrderSpec } from "./order/order-spec";
 import { PaymentHandler } from "./payment/payment-handler";
 import { PaymentSpec } from "./payment/payment-spec";
+import { QuickMessageHandler } from "./quick-message/quick-message-handler";
+import { QuickMessageSpec } from "./quick-message/quick-message-spec";
 import { ReportHandler } from "./report/report-handler";
 import { ReportSpec } from "./report/report-spec";
 import { ReviewHandler } from "./review/review-handler";
@@ -47,6 +49,7 @@ export const FetchServerSpec = oc.router({
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	contact: oc.prefix("/contacts").router(ContactSpec),
+	quickMessage: oc.prefix("/quick-messages").router(QuickMessageSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
 	emergency: oc.prefix("/emergencies").router(EmergencySpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
@@ -70,6 +73,7 @@ export const FetchServerRouter = os.router({
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
 	contact: ContactHandler,
+	quickMessage: QuickMessageHandler,
 	driver: DriverHandler,
 	emergency: EmergencyHandler,
 	leaderboard: LeaderboardHandler,

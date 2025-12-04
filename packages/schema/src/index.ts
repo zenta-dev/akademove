@@ -15,6 +15,7 @@ import { OrderSchemaRegistries } from "./order.js";
 import { PaginationSchemaRegistries } from "./pagination.js";
 import { PaymentSchemaRegistries } from "./payment.js";
 import { PositionSchemaRegistries } from "./position.js";
+import { QuickMessageSchemaRegistries } from "./quick-message.js";
 import { ReportSchemaRegistries } from "./report.js";
 import { ReviewSchemaRegistries } from "./review.js";
 import { TransactionSchemaRegistries } from "./transaction.js";
@@ -38,6 +39,7 @@ export const AllSchemaRegistries = {
 	...OrderSchemaRegistries,
 	...PaymentSchemaRegistries,
 	...PositionSchemaRegistries,
+	...QuickMessageSchemaRegistries,
 	...ReportSchemaRegistries,
 	...ReviewSchemaRegistries,
 	...UserSchemaRegistries,
@@ -47,3 +49,28 @@ export const AllSchemaRegistries = {
 	...NotificationSchemaRegistries,
 	...WSSchemaRegistries,
 } satisfies SchemaRegistries;
+export * from "./auth.js";
+export * from "./badge.js";
+export * from "./cart.js";
+export * from "./chat.js";
+export * from "./common.js";
+export * from "./configuration.js";
+export * from "./constants.js";
+export * from "./contact.js";
+export * from "./coupon.js";
+export * from "./driver.js";
+export * from "./emergency.js";
+export * from "./leaderboard.js";
+export * from "./merchant.js";
+export * from "./notification.js";
+export * from "./order.js";
+export * from "./pagination.js";
+export * from "./payment.js";
+export * from "./position.js";
+export * from "./quick-message.js";
+export * from "./report.js";
+export * from "./review.js";
+export * from "./transaction.js";
+export * from "./user.js";
+export * from "./wallet.js";
+export * from "./ws.js";
