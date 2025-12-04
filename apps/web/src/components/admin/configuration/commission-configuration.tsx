@@ -85,7 +85,7 @@ export function CommissionConfiguration() {
 		},
 	});
 
-	const onSubmit = (data: CommissionFormData) => {
+	const onSubmit = (data: unknown) => {
 		updateMutation.mutate({
 			params: { key: COMMISSION_CONFIG_KEY },
 			body: { value: data },
@@ -131,19 +131,23 @@ export function CommissionConfiguration() {
 													max="1"
 													placeholder="0.15"
 													{...field}
+													value={field.value as number | string}
 													onChange={(e) =>
 														field.onChange(Number.parseFloat(e.target.value))
 													}
 												/>
 												<span className="min-w-[4rem] text-right font-medium text-sm">
 													{(
-														(watchedValues.rideCommissionRate || 0) * 100
+														(Number(watchedValues.rideCommissionRate) || 0) *
+														100
 													).toFixed(1)}
 													%
 												</span>
 											</div>
 											<Progress
-												value={(watchedValues.rideCommissionRate || 0) * 100}
+												value={
+													(Number(watchedValues.rideCommissionRate) || 0) * 100
+												}
 												className="h-2"
 											/>
 										</div>
@@ -174,20 +178,23 @@ export function CommissionConfiguration() {
 													max="1"
 													placeholder="0.15"
 													{...field}
+													value={field.value as number | string}
 													onChange={(e) =>
 														field.onChange(Number.parseFloat(e.target.value))
 													}
 												/>
 												<span className="min-w-[4rem] text-right font-medium text-sm">
 													{(
-														(watchedValues.deliveryCommissionRate || 0) * 100
+														(Number(watchedValues.deliveryCommissionRate) ||
+															0) * 100
 													).toFixed(1)}
 													%
 												</span>
 											</div>
 											<Progress
 												value={
-													(watchedValues.deliveryCommissionRate || 0) * 100
+													(Number(watchedValues.deliveryCommissionRate) || 0) *
+													100
 												}
 												className="h-2"
 											/>
@@ -219,19 +226,23 @@ export function CommissionConfiguration() {
 													max="1"
 													placeholder="0.20"
 													{...field}
+													value={field.value as number | string}
 													onChange={(e) =>
 														field.onChange(Number.parseFloat(e.target.value))
 													}
 												/>
 												<span className="min-w-[4rem] text-right font-medium text-sm">
 													{(
-														(watchedValues.foodCommissionRate || 0) * 100
+														(Number(watchedValues.foodCommissionRate) || 0) *
+														100
 													).toFixed(1)}
 													%
 												</span>
 											</div>
 											<Progress
-												value={(watchedValues.foodCommissionRate || 0) * 100}
+												value={
+													(Number(watchedValues.foodCommissionRate) || 0) * 100
+												}
 												className="h-2"
 											/>
 										</div>
@@ -262,20 +273,23 @@ export function CommissionConfiguration() {
 													max="1"
 													placeholder="0.10"
 													{...field}
+													value={field.value as number | string}
 													onChange={(e) =>
 														field.onChange(Number.parseFloat(e.target.value))
 													}
 												/>
 												<span className="min-w-[4rem] text-right font-medium text-sm">
 													{(
-														(watchedValues.merchantCommissionRate || 0) * 100
+														(Number(watchedValues.merchantCommissionRate) ||
+															0) * 100
 													).toFixed(1)}
 													%
 												</span>
 											</div>
 											<Progress
 												value={
-													(watchedValues.merchantCommissionRate || 0) * 100
+													(Number(watchedValues.merchantCommissionRate) || 0) *
+													100
 												}
 												className="h-2"
 											/>

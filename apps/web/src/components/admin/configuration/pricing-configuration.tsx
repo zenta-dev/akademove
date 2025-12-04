@@ -156,6 +156,7 @@ function RidePricingForm() {
 												step="0.01"
 												placeholder="5000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -176,6 +177,7 @@ function RidePricingForm() {
 												step="0.01"
 												placeholder="3000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -196,6 +198,7 @@ function RidePricingForm() {
 												step="0.01"
 												placeholder="8000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -216,6 +219,7 @@ function RidePricingForm() {
 												step="0.01"
 												placeholder="0.05"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -236,6 +240,7 @@ function RidePricingForm() {
 												step="0.01"
 												placeholder="0.11"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -258,7 +263,10 @@ function RidePricingForm() {
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">Base Fare:</span>
 										<span className="font-medium">
-											Rp {(form.watch("baseFare") || 0).toLocaleString()}
+											Rp{" "}
+											{(
+												Number(form.watch("baseFare") || 0) || 0
+											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
@@ -266,7 +274,10 @@ function RidePricingForm() {
 											Distance (5km):
 										</span>
 										<span className="font-medium">
-											Rp {((form.watch("perKmRate") || 0) * 5).toLocaleString()}
+											Rp{" "}
+											{(
+												(Number(form.watch("perKmRate") || 0) || 0) * 5
+											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between border-t pt-2">
@@ -274,36 +285,42 @@ function RidePricingForm() {
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												(form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5
+												(Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5
 											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">
 											Platform Fee (
-											{((form.watch("platformFeeRate") || 0) * 100).toFixed(1)}
+											{(
+												(Number(form.watch("platformFeeRate") || 0) || 0) * 100
+											).toFixed(1)}
 											%):
 										</span>
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5) *
-												(form.watch("platformFeeRate") || 0)
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5) *
+												(Number(form.watch("platformFeeRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">
-											Tax ({((form.watch("taxRate") || 0) * 100).toFixed(1)}%):
+											Tax (
+											{(
+												(Number(form.watch("taxRate") || 0) || 0) * 100
+											).toFixed(1)}
+											%):
 										</span>
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5) *
-												(form.watch("taxRate") || 0)
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5) *
+												(Number(form.watch("taxRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
@@ -312,14 +329,14 @@ function RidePricingForm() {
 										<span>
 											Rp{" "}
 											{(
-												(form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5) *
-													(form.watch("platformFeeRate") || 0) +
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5) *
-													(form.watch("taxRate") || 0)
+												(Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5) *
+													(Number(form.watch("platformFeeRate") || 0) || 0) +
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5) *
+													(Number(form.watch("taxRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
@@ -427,6 +444,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="5000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -447,6 +465,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="3000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -467,6 +486,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="2000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -487,6 +507,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="8000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -507,6 +528,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="0.05"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -527,6 +549,7 @@ function DeliveryPricingForm() {
 												step="0.01"
 												placeholder="0.11"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -549,7 +572,10 @@ function DeliveryPricingForm() {
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">Base Fare:</span>
 										<span className="font-medium">
-											Rp {(form.watch("baseFare") || 0).toLocaleString()}
+											Rp{" "}
+											{(
+												Number(form.watch("baseFare") || 0) || 0
+											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
@@ -557,13 +583,19 @@ function DeliveryPricingForm() {
 											Distance (5km):
 										</span>
 										<span className="font-medium">
-											Rp {((form.watch("perKmRate") || 0) * 5).toLocaleString()}
+											Rp{" "}
+											{(
+												(Number(form.watch("perKmRate") || 0) || 0) * 5
+											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">Weight (3kg):</span>
 										<span className="font-medium">
-											Rp {((form.watch("perKgRate") || 0) * 3).toLocaleString()}
+											Rp{" "}
+											{(
+												(Number(form.watch("perKgRate") || 0) || 0) * 3
+											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between border-t pt-2">
@@ -571,39 +603,45 @@ function DeliveryPricingForm() {
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												(form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
-												(form.watch("perKgRate") || 0) * 3
+												(Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+												(Number(form.watch("perKgRate") || 0) || 0) * 3
 											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">
 											Platform Fee (
-											{((form.watch("platformFeeRate") || 0) * 100).toFixed(1)}
+											{(
+												(Number(form.watch("platformFeeRate") || 0) || 0) * 100
+											).toFixed(1)}
 											%):
 										</span>
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5 +
-													(form.watch("perKgRate") || 0) * 3) *
-												(form.watch("platformFeeRate") || 0)
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+													(Number(form.watch("perKgRate") || 0) || 0) * 3) *
+												(Number(form.watch("platformFeeRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="text-muted-foreground">
-											Tax ({((form.watch("taxRate") || 0) * 100).toFixed(1)}%):
+											Tax (
+											{(
+												(Number(form.watch("taxRate") || 0) || 0) * 100
+											).toFixed(1)}
+											%):
 										</span>
 										<span className="font-medium">
 											Rp{" "}
 											{(
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5 +
-													(form.watch("perKgRate") || 0) * 3) *
-												(form.watch("taxRate") || 0)
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+													(Number(form.watch("perKgRate") || 0) || 0) * 3) *
+												(Number(form.watch("taxRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
@@ -612,17 +650,17 @@ function DeliveryPricingForm() {
 										<span>
 											Rp{" "}
 											{(
-												(form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
-												(form.watch("perKgRate") || 0) * 3 +
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5 +
-													(form.watch("perKgRate") || 0) * 3) *
-													(form.watch("platformFeeRate") || 0) +
-												((form.watch("baseFare") || 0) +
-													(form.watch("perKmRate") || 0) * 5 +
-													(form.watch("perKgRate") || 0) * 3) *
-													(form.watch("taxRate") || 0)
+												(Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+												(Number(form.watch("perKgRate") || 0) || 0) * 3 +
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+													(Number(form.watch("perKgRate") || 0) || 0) * 3) *
+													(Number(form.watch("platformFeeRate") || 0) || 0) +
+												((Number(form.watch("baseFare") || 0) || 0) +
+													(Number(form.watch("perKmRate") || 0) || 0) * 5 +
+													(Number(form.watch("perKgRate") || 0) || 0) * 3) *
+													(Number(form.watch("taxRate") || 0) || 0)
 											).toLocaleString()}
 										</span>
 									</div>
@@ -729,6 +767,7 @@ function FoodPricingForm() {
 												step="0.01"
 												placeholder="5000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -749,6 +788,7 @@ function FoodPricingForm() {
 												step="0.01"
 												placeholder="3000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -769,6 +809,7 @@ function FoodPricingForm() {
 												step="0.01"
 												placeholder="8000"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -789,6 +830,7 @@ function FoodPricingForm() {
 												step="0.01"
 												placeholder="0.05"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -809,6 +851,7 @@ function FoodPricingForm() {
 												step="0.01"
 												placeholder="0.11"
 												{...field}
+												value={field.value as number | string}
 												onChange={(e) => field.onChange(Number(e.target.value))}
 											/>
 										</FormControl>
@@ -830,15 +873,20 @@ function FoodPricingForm() {
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">Base Fare:</span>
 									<span className="font-mono">
-										IDR {form.watch("baseFare")?.toLocaleString() || 0}
+										IDR{" "}
+										{Number(form.watch("baseFare") || 0)?.toLocaleString() || 0}
 									</span>
 								</div>
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">
-										Distance (5km × IDR {form.watch("perKmRate") || 0}):
+										Distance (5km × IDR{" "}
+										{Number(form.watch("perKmRate") || 0) || 0}):
 									</span>
 									<span className="font-mono">
-										IDR {((form.watch("perKmRate") || 0) * 5).toLocaleString()}
+										IDR{" "}
+										{(
+											(Number(form.watch("perKmRate") || 0) || 0) * 5
+										).toLocaleString()}
 									</span>
 								</div>
 								<div className="flex justify-between">
@@ -850,8 +898,8 @@ function FoodPricingForm() {
 									<span className="font-mono">
 										IDR{" "}
 										{(
-											(form.watch("baseFare") || 0) +
-											(form.watch("perKmRate") || 0) * 5 +
+											(Number(form.watch("baseFare") || 0) || 0) +
+											(Number(form.watch("perKmRate") || 0) || 0) * 5 +
 											50000
 										).toLocaleString()}
 									</span>
@@ -859,29 +907,36 @@ function FoodPricingForm() {
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">
 										Platform Fee (
-										{((form.watch("platformFeeRate") || 0) * 100).toFixed(1)}%):
+										{(
+											(Number(form.watch("platformFeeRate") || 0) || 0) * 100
+										).toFixed(1)}
+										%):
 									</span>
 									<span className="font-mono">
 										IDR{" "}
 										{(
-											((form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
+											((Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
 												50000) *
-											(form.watch("platformFeeRate") || 0)
+											(Number(form.watch("platformFeeRate") || 0) || 0)
 										).toLocaleString()}
 									</span>
 								</div>
 								<div className="flex justify-between">
 									<span className="text-muted-foreground">
-										Tax ({((form.watch("taxRate") || 0) * 100).toFixed(1)}%):
+										Tax (
+										{((Number(form.watch("taxRate") || 0) || 0) * 100).toFixed(
+											1,
+										)}
+										%):
 									</span>
 									<span className="font-mono">
 										IDR{" "}
 										{(
-											((form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
+											((Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
 												50000) *
-											(form.watch("taxRate") || 0)
+											(Number(form.watch("taxRate") || 0) || 0)
 										).toLocaleString()}
 									</span>
 								</div>
@@ -890,25 +945,25 @@ function FoodPricingForm() {
 									<span className="font-mono">
 										IDR{" "}
 										{Math.max(
-											((form.watch("baseFare") || 0) +
-												(form.watch("perKmRate") || 0) * 5 +
+											((Number(form.watch("baseFare") || 0) || 0) +
+												(Number(form.watch("perKmRate") || 0) || 0) * 5 +
 												50000) *
 												(1 +
-													(form.watch("platformFeeRate") || 0) +
-													(form.watch("taxRate") || 0)),
-											form.watch("minimumFare") || 0,
+													(Number(form.watch("platformFeeRate") || 0) || 0) +
+													(Number(form.watch("taxRate") || 0) || 0)),
+											Number(form.watch("minimumFare") || 0) || 0,
 										).toLocaleString()}
 									</span>
 								</div>
 								{Math.max(
-									((form.watch("baseFare") || 0) +
-										(form.watch("perKmRate") || 0) * 5 +
+									((Number(form.watch("baseFare") || 0) || 0) +
+										(Number(form.watch("perKmRate") || 0) || 0) * 5 +
 										50000) *
 										(1 +
-											(form.watch("platformFeeRate") || 0) +
-											(form.watch("taxRate") || 0)),
-									form.watch("minimumFare") || 0,
-								) === (form.watch("minimumFare") || 0) && (
+											(Number(form.watch("platformFeeRate") || 0) || 0) +
+											(Number(form.watch("taxRate") || 0) || 0)),
+									Number(form.watch("minimumFare") || 0) || 0,
+								) === (Number(form.watch("minimumFare") || 0) || 0) && (
 									<p className="pt-2 text-amber-600 text-xs dark:text-amber-500">
 										* Minimum fare applied
 									</p>

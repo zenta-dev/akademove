@@ -131,7 +131,7 @@ export const StartInvestigationDialog = ({
 								{m.cancel()}
 							</Button>
 							<Button type="submit" disabled={isLoading}>
-								{isLoading ? m.loading() : m.start_investigation()}
+								{isLoading ? m.submitting() : m.start_investigation()}
 							</Button>
 						</DialogFooter>
 					</form>

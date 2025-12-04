@@ -28,7 +28,7 @@ export const ApproveDriverDialog = ({ driverId }: { driverId: string }) => {
 
 	const mutation = useMutation({
 		mutationFn: async () => {
-			const result = await orpcClient.driver.main.approve({
+			const result = await orpcClient.driver.approve({
 				params: { id: driverId },
 			});
 			if (result.status !== 200) {

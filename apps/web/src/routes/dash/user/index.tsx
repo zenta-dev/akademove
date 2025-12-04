@@ -292,7 +292,10 @@ function RouteComponent() {
 						<CardDescription>Your current and upcoming trips</CardDescription>
 						<CardAction>
 							<Button variant="ghost" size="sm" asChild>
-								<Link to="/dash/user/history">
+								<Link
+									to="/dash/user/history"
+									search={{ order: "desc", mode: "offset", limit: 10 }}
+								>
 									View All
 									<ArrowRight className="ml-2 h-4 w-4" />
 								</Link>
@@ -379,13 +382,19 @@ function RouteComponent() {
 							</div>
 							<div className="grid grid-cols-2 gap-2">
 								<Button variant="outline" size="sm" asChild>
-									<Link to="/dash/user/wallet">
+									<Link
+										to="/dash/user/wallet"
+										search={{ order: "desc", mode: "offset", limit: 10 }}
+									>
 										<TrendingUp className="mr-2 h-4 w-4" />
 										Top Up
 									</Link>
 								</Button>
 								<Button variant="outline" size="sm" asChild>
-									<Link to="/dash/user/wallet">
+									<Link
+										to="/dash/user/wallet"
+										search={{ order: "desc", mode: "offset", limit: 10 }}
+									>
 										<Clock className="mr-2 h-4 w-4" />
 										History
 									</Link>
@@ -534,7 +543,12 @@ function RouteComponent() {
 									</p>
 								</div>
 								<Button variant="default" size="sm" asChild>
-									<Link to="/dash/user/wallet">Top Up</Link>
+									<Link
+										to="/dash/user/wallet"
+										search={{ order: "desc", mode: "offset", limit: 10 }}
+									>
+										Top Up
+									</Link>
 								</Button>
 							</div>
 						)}

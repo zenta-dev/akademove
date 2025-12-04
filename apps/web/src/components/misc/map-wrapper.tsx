@@ -1,3 +1,5 @@
+/// <reference types="google.maps" />
+
 import type { Location } from "@repo/schema/position";
 import {
 	APIProvider,

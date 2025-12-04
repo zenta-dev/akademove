@@ -54,7 +54,7 @@ export const SuspendDriverDialog = ({ driverId }: { driverId: string }) => {
 
 	const mutation = useMutation({
 		mutationFn: async (values: SuspendDriverForm) => {
-			const result = await orpcClient.driver.main.suspend({
+			const result = await orpcClient.driver.suspend({
 				params: { id: driverId },
 				body: values,
 			});

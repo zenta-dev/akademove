@@ -70,7 +70,6 @@ const MapLogic = ({ pickup, delivery, driverLocation }: MapLogicProps) => {
 		if (!map) return;
 
 		try {
-			// @ts-expect-error - Google Maps global types
 			const bounds = new window.google.maps.LatLngBounds();
 			bounds.extend(pickup);
 			bounds.extend(delivery);

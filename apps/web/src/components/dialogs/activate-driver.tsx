@@ -28,7 +28,7 @@ export const ActivateDriverDialog = ({ driverId }: { driverId: string }) => {
 
 	const mutation = useMutation({
 		mutationFn: async () => {
-			const result = await orpcClient.driver.main.activate({
+			const result = await orpcClient.driver.activate({
 				params: { id: driverId },
 			});
 			if (result.status !== 200) {

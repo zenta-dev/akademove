@@ -77,7 +77,7 @@ export const DeactivateCouponDialog = ({
 						onClick={handleDeactivate}
 						disabled={isLoading}
 					>
-						{isLoading ? m.loading() : m.deactivate()}
+						{isLoading ? m.submitting() : m.deactivate()}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

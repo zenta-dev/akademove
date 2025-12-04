@@ -1,7 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InsertReviewSchema, type ReviewCategory } from "@repo/schema/review";
 import { useMutation } from "@tanstack/react-query";
-import { Car, Heart, MessageSquare, Star } from "lucide-react";
+import {
+	Car,
+	Clock,
+	Heart,
+	MessageCircle,
+	MessageSquare,
+	ShieldCheck,
+	Star,
+} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -40,12 +48,18 @@ type RateOrderDialogProps = {
 const categoryIcons: Record<ReviewCategory, typeof Heart> = {
 	CLEANLINESS: Car,
 	COURTESY: Heart,
+	PUNCTUALITY: Clock,
+	SAFETY: ShieldCheck,
+	COMMUNICATION: MessageCircle,
 	OTHER: MessageSquare,
 };
 
 const categoryLabels: Record<ReviewCategory, string> = {
 	CLEANLINESS: "Cleanliness",
 	COURTESY: "Courtesy & Service",
+	PUNCTUALITY: "Punctuality",
+	SAFETY: "Safety",
+	COMMUNICATION: "Communication",
 	OTHER: "Other",
 };
 

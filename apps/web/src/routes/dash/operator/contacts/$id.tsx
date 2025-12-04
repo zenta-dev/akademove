@@ -109,7 +109,7 @@ function RouteComponent() {
 					onClick={() =>
 						navigate({
 							to: "/dash/operator/contacts",
-							search: { page: 1, limit: 12 },
+							search: { page: 1, limit: 12, order: "desc", mode: "offset" },
 						})
 					}
 				>

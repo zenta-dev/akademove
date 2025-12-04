@@ -53,13 +53,16 @@ export const Route = createFileRoute("/dash/admin/")({
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
-	const _fcm = useFCM();
+	const fcm = useFCM();
 	if (!allowed) navigate({ to: "/" });
+	console.log("FCM initialized:", !!fcm);
 
 	const { data: stats, isLoading } = useQuery({
 		queryKey: ["admin", "dashboard-stats"],
 		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({});
+			const result = await orpcClient.user.admin.dashboardStats({
+				query: {},
+			});
 			if (result.status !== 200) throw new Error(result.body.message);
 			return result.body.data;
 		},

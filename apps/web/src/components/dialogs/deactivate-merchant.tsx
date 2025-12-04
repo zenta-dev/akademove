@@ -127,7 +127,7 @@ export const DeactivateMerchantDialog = ({
 								{m.cancel()}
 							</Button>
 							<Button type="submit" variant="destructive" disabled={isLoading}>
-								{isLoading ? m.loading() : m.deactivate()}
+								{isLoading ? m.submitting() : m.deactivate()}
 							</Button>
 						</DialogFooter>
 					</form>

@@ -39,7 +39,7 @@ export const RejectDriverDialog = ({ driverId }: { driverId: string }) => {
 
 	const mutation = useMutation({
 		mutationFn: async (values: RejectDriver) => {
-			const result = await orpcClient.driver.main.reject({
+			const result = await orpcClient.driver.reject({
 				params: { id: driverId },
 				body: values,
 			});

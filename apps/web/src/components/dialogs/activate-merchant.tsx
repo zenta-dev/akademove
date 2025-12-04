@@ -71,7 +71,7 @@ export const ActivateMerchantDialog = ({
 						{m.cancel()}
 					</Button>
 					<Button onClick={handleActivate} disabled={isLoading}>
-						{isLoading ? m.loading() : m.activate()}
+						{isLoading ? m.submitting() : m.activate()}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

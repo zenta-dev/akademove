@@ -57,7 +57,7 @@ function RouteComponent() {
 
 	const form = useForm({
 		resolver: zodResolver(ResetPasswordSchema),
-		defaultValues: createDefaults(ResetPasswordSchema) as const,
+		defaultValues: createDefaults(ResetPasswordSchema),
 	});
 
 	const mutation = useMutation(

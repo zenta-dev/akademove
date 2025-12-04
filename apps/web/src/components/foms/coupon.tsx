@@ -280,7 +280,7 @@ export const CouponForm = ({
 											disabled={isLoading}
 										>
 											{field.value ? (
-												format(field.value, "PPP")
+												format(field.value as Date | number, "PPP")
 											) : (
 												<span>{m.pick_a_date()}</span>
 											)}
@@ -291,12 +291,16 @@ export const CouponForm = ({
 								<PopoverContent className="w-auto p-0" align="start">
 									<Calendar
 										mode="single"
-										selected={field.value ? new Date(field.value) : undefined}
+										selected={
+											typeof field.value === "number"
+												? new Date(field.value)
+												: undefined
+										}
 										onSelect={(val) => field.onChange(val?.getTime())}
 										disabled={(date) => {
 											if (isLoading) return true;
 											const endDate = form.getValues("periodEnd");
-											if (endDate) {
+											if (typeof endDate === "number") {
 												return date > new Date(endDate);
 											}
 											return false;
@@ -327,7 +331,7 @@ export const CouponForm = ({
 											disabled={isLoading}
 										>
 											{field.value ? (
-												format(field.value, "PPP")
+												format(field.value as Date | number, "PPP")
 											) : (
 												<span>{m.pick_a_date()}</span>
 											)}
@@ -338,12 +342,16 @@ export const CouponForm = ({
 								<PopoverContent className="w-auto p-0" align="start">
 									<Calendar
 										mode="single"
-										selected={field.value ? new Date(field.value) : undefined}
+										selected={
+											typeof field.value === "number"
+												? new Date(field.value)
+												: undefined
+										}
 										onSelect={(val) => field.onChange(val?.getTime())}
 										disabled={(date) => {
 											if (isLoading) return true;
 											const startDate = form.getValues("periodStart");
-											if (startDate) {
+											if (typeof startDate === "number") {
 												return date < new Date(startDate);
 											}
 											return false;
