@@ -73,8 +73,12 @@ export const UserAdminHandler = priv.router({
 		}),
 	dashboardStats: priv.dashboardStats
 		.use(hasPermission({ user: ["list"] }))
-		.handler(async ({ context }) => {
-			const result = await context.repo.user.admin.getDashboardStats();
+		.handler(async ({ context, input: { query } }) => {
+			const result = await context.repo.user.admin.getDashboardStats({
+				startDate: query.startDate,
+				endDate: query.endDate,
+				period: query.period,
+			});
 
 			return {
 				status: 200,

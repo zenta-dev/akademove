@@ -129,8 +129,64 @@ export const DashboardStatsSchema = z.object({
 	todayRevenue: z.number(),
 	todayOrders: z.number(),
 	onlineDrivers: z.number(),
+	revenueByDay: z.array(
+		z.object({
+			date: z.string(),
+			revenue: z.number(),
+			orders: z.number(),
+		}),
+	),
+	ordersByDay: z.array(
+		z.object({
+			date: z.string(),
+			total: z.number(),
+			completed: z.number(),
+			cancelled: z.number(),
+		}),
+	),
+	ordersByType: z.array(
+		z.object({
+			type: z.string(),
+			orders: z.number(),
+			revenue: z.number(),
+		}),
+	),
+	topDrivers: z.array(
+		z.object({
+			id: z.string(),
+			name: z.string(),
+			earnings: z.number(),
+			orders: z.number(),
+			rating: z.number(),
+		}),
+	),
+	topMerchants: z.array(
+		z.object({
+			id: z.string(),
+			name: z.string(),
+			revenue: z.number(),
+			orders: z.number(),
+			rating: z.number(),
+		}),
+	),
+	highCancellationDrivers: z.array(
+		z.object({
+			id: z.string(),
+			name: z.string(),
+			totalOrders: z.number(),
+			cancelledOrders: z.number(),
+			cancellationRate: z.number(),
+		}),
+	),
 });
 export type DashboardStats = z.infer<typeof DashboardStatsSchema>;
+
+export const DashboardStatsQuerySchema = z.object({
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
+	period: z.enum(["today", "week", "month", "year"]).optional(),
+});
+export type DashboardStatsQuery = z.infer<typeof DashboardStatsQuerySchema>;
 
 export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
@@ -144,4 +200,5 @@ export const UserSchemaRegistries = {
 	AdminUpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },
 	UserKey: { schema: UserKeySchema, strategy: "input" },
 	DashboardStats: { schema: DashboardStatsSchema, strategy: "output" },
+	DashboardStatsQuery: { schema: DashboardStatsQuerySchema, strategy: "input" },
 } satisfies SchemaRegistries;

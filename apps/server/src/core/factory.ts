@@ -9,6 +9,7 @@ import { CloudflareKVService } from "@/core/services/kv";
 import { ResendMailService } from "@/core/services/mail";
 import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
+import { AnalyticsRepository } from "@/features/analytics/analytics-repository";
 import { AuthRepository } from "@/features/auth/auth-repository";
 import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
@@ -95,6 +96,7 @@ export function getRepositories(
 		notification,
 	);
 	const repo: RepositoryContext = {
+		analytics: new AnalyticsRepository(svc.kv, svc.db),
 		auth: new AuthRepository(
 			svc.db,
 			svc.kv,

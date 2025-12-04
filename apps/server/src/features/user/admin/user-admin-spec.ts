@@ -2,6 +2,7 @@ import { oc } from "@orpc/contract";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
 	AdminUpdateUserSchema,
+	DashboardStatsQuerySchema,
 	DashboardStatsSchema,
 	InsertUserSchema,
 	UserSchema,
@@ -78,7 +79,7 @@ export const UserAdminSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({}))
+		.input(z.object({ query: DashboardStatsQuerySchema }))
 		.output(
 			createSuccesSchema(
 				DashboardStatsSchema,

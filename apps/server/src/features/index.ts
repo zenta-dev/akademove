@@ -1,6 +1,8 @@
 import { oc } from "@orpc/contract";
 import { implement, type RouterClient } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
+import { AnalyticsHandler } from "./analytics/analytics-handler";
+import { AnalyticsSpec } from "./analytics/analytics-spec";
 import { AuthHandler } from "./auth/auth-handler";
 import { AuthSpec } from "./auth/auth-spec";
 import { BadgeHandler } from "./badge/badge-handler";
@@ -39,6 +41,7 @@ import { WalletHandler } from "./wallet/wallet-handler";
 import { WalletSpec } from "./wallet/wallet-spec";
 
 export const FetchServerSpec = oc.router({
+	analytics: oc.prefix("/analytics").router(AnalyticsSpec),
 	auth: oc.prefix("/auth").router(AuthSpec),
 	badge: oc.prefix("/badges").router(BadgeSpec),
 	chat: oc.prefix("/chat").router(ChatSpec),
@@ -61,6 +64,7 @@ export const FetchServerSpec = oc.router({
 
 const os = implement(FetchServerSpec).$context<ORPCContext>();
 export const FetchServerRouter = os.router({
+	analytics: AnalyticsHandler,
 	auth: AuthHandler,
 	badge: BadgeHandler,
 	chat: ChatHandler,
