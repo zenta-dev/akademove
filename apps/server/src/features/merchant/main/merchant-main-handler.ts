@@ -153,4 +153,38 @@ export const MerchantMainHandler = priv.router({
 				},
 			};
 		}),
+	activate: priv.activate
+		.use(hasPermission({ merchant: ["update"] }))
+		.use(requireRoles("SYSTEM"))
+		.handler(async ({ context, input: { params } }) => {
+			log.info(
+				{ merchantId: params.id, userId: context.user.id },
+				"[MerchantMainHandler] Activating merchant",
+			);
+			const result = await context.repo.merchant.main.activate(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_merchant_activated(), data: result },
+			};
+		}),
+	deactivate: priv.deactivate
+		.use(hasPermission({ merchant: ["update"] }))
+		.use(requireRoles("SYSTEM"))
+		.handler(async ({ context, input: { params, body } }) => {
+			log.info(
+				{ merchantId: params.id, userId: context.user.id, reason: body.reason },
+				"[MerchantMainHandler] Deactivating merchant",
+			);
+			const data = trimObjectValues(body);
+			const result = await context.repo.merchant.main.deactivate(
+				params.id,
+				data.reason,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_merchant_deactivated(), data: result },
+			};
+		}),
 });

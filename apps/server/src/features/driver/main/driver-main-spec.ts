@@ -157,4 +157,57 @@ export const DriverMainSpec = {
 				"Successfully retrieved driver analytics",
 			),
 		),
+	approve: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "POST",
+			path: "/{id}/approve",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(DriverSchema, "Driver approved successfully")),
+	reject: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "POST",
+			path: "/{id}/reject",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ reason: z.string() }),
+			}),
+		)
+		.output(createSuccesSchema(DriverSchema, "Driver rejected successfully")),
+	suspend: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "POST",
+			path: "/{id}/suspend",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({
+					reason: z.string(),
+					suspendUntil: z.coerce.date().optional(),
+				}),
+			}),
+		)
+		.output(createSuccesSchema(DriverSchema, "Driver suspended successfully")),
+	activate: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "POST",
+			path: "/{id}/activate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(DriverSchema, "Driver activated successfully")),
 };

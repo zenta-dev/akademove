@@ -1,27 +1,26 @@
-import { randomBytes } from "node:crypto";
 import { m } from "@repo/i18n";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import {
-	type AdminUpdateUser,
-	type InsertUser,
-	type User,
-	UserKeySchema,
-} from "@repo/schema/user";
-import { count, eq, gt, ilike, ne, type SQL } from "drizzle-orm";
+import type { AdminUpdateUser, InsertUser, User } from "@repo/schema/user";
+import { eq, gt, ilike, ne, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
-import type {
-	ListResult,
-	OrderByOperation,
-	PartialWithTx,
-} from "@/core/interface";
+import type { ListResult, PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import {
+	DashboardStatsService,
+	PasswordChangeService,
+	UserBanService,
+	UserIdService,
+	UserListQueryService,
+	UserRefreshService,
+	UserSearchService,
+} from "@/features/user/services";
 import { log } from "@/utils";
 
 const BUCKET = "user";
@@ -81,35 +80,14 @@ export class UserAdminRepository extends BaseRepository {
 	}
 
 	async #getQueryCount(query: string): Promise<number> {
-		try {
-			const [dbResult] = await this.db
-				.select({ count: count(tables.user.id) })
-				.from(tables.user)
-				.where(ilike(tables.user.name, `%${query}%`));
-
-			return dbResult?.count ?? 0;
-		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
-			return 0;
-		}
+		// Delegate to UserSearchService
+		return UserSearchService.getQueryCount(this.db, query);
 	}
 
 	async list(
 		query?: UnifiedPaginationQuery & { requesterId: string },
 	): Promise<ListResult<User>> {
 		try {
-			const orderBy = (
-				f: typeof tables.user._.columns,
-				op: OrderByOperation,
-			) => {
-				if (sortBy) {
-					const parsed = UserKeySchema.safeParse(sortBy);
-					const field = parsed.success ? f[parsed.data] : f.id;
-					return op[order](field);
-				}
-				return op[order](f.id);
-			};
-
 			const {
 				cursor,
 				page,
@@ -120,9 +98,14 @@ export class UserAdminRepository extends BaseRepository {
 				requesterId,
 			} = query ?? {};
 
+			// Use service to generate order by clause
+			const orderBy = UserListQueryService.generateOrderBy(sortBy, order);
+
+			// Build where clauses
 			const clauses: SQL[] = [];
 			if (requesterId) clauses.push(ne(tables.user.id, requesterId));
 
+			// Cursor-based pagination
 			if (cursor) {
 				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
 
@@ -141,10 +124,14 @@ export class UserAdminRepository extends BaseRepository {
 				return { rows };
 			}
 
+			// Page-based pagination
 			if (page) {
-				const offset = (page - 1) * limit;
+				const offset = UserListQueryService.calculateOffset(page, limit);
 
-				if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
+				// Add search clause if provided (delegate to service)
+				if (search) {
+					clauses.push(ilike(tables.user.name, `%${search}%`));
+				}
 
 				const result = await this.db.query.user.findMany({
 					with: { userBadges: { with: { badge: true } } },
@@ -164,11 +151,15 @@ export class UserAdminRepository extends BaseRepository {
 					? await this.#getQueryCount(search)
 					: await this.getTotalRow();
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const totalPages = UserListQueryService.calculateTotalPages(
+					totalCount,
+					limit,
+				);
 
 				return { rows, totalPages };
 			}
 
+			// Simple listing
 			const result = await this.db.query.user.findMany({
 				with: { userBadges: { with: { badge: true } } },
 				where: (_f, op) => op.and(...clauses),
@@ -214,7 +205,7 @@ export class UserAdminRepository extends BaseRepository {
 				});
 			}
 
-			const userId = this.#generateId();
+			const userId = UserIdService.generate();
 
 			// Create user with role, no image for admin-created users
 			const [user] = await this.db
@@ -243,8 +234,8 @@ export class UserAdminRepository extends BaseRepository {
 			const hashedPassword = this.#pw.hash(item.password);
 
 			await this.db.insert(tables.account).values({
-				id: this.#generateId(),
-				accountId: this.#generateId(),
+				id: UserIdService.generate(),
+				accountId: UserIdService.generate(),
 				userId: user.id,
 				providerId: "credentials",
 				password: hashedPassword,
@@ -272,10 +263,6 @@ export class UserAdminRepository extends BaseRepository {
 			log.error({ error }, "[UserAdminRepository] Failed to create user");
 			throw this.handleError(error, "create");
 		}
-	}
-
-	#generateId(): string {
-		return randomBytes(32).toString("hex");
 	}
 
 	async update(
@@ -309,15 +296,12 @@ export class UserAdminRepository extends BaseRepository {
 						});
 					}
 
-					const refreshed = await tx.query.user.findFirst({
-						with: { userBadges: { with: { badge: true } } },
-						where: (f, op) => op.eq(f.id, id),
-					});
-					if (!refreshed) {
-						throw new RepositoryError(m.error_failed_fetch_updated_user());
-					}
+					// Use UserRefreshService to refresh and compose user
+					const refreshed = await UserRefreshService.refreshUser(tx, id);
 					updatedUser = await UserAdminRepository.composeEntity(
-						refreshed,
+						refreshed as Parameters<
+							typeof UserAdminRepository.composeEntity
+						>[0],
 						this.#storage,
 					);
 
@@ -350,19 +334,18 @@ export class UserAdminRepository extends BaseRepository {
 						});
 					}
 
-					// Verify old password
-					const isValid = this.#pw.verify(
+					// Use service to verify old password
+					PasswordChangeService.verifyOldPassword(
+						this.#pw,
 						account.password ?? "",
 						item.oldPassword,
 					);
-					if (!isValid) {
-						throw new RepositoryError(m.error_invalid_old_password(), {
-							code: "UNAUTHORIZED",
-						});
-					}
 
-					// Hash and update new password
-					const hashedPassword = this.#pw.hash(item.newPassword);
+					// Hash new password using service
+					const hashedPassword = PasswordChangeService.hashPassword(
+						this.#pw,
+						item.newPassword,
+					);
 					await tx
 						.update(tables.account)
 						.set({ password: hashedPassword })
@@ -376,17 +359,14 @@ export class UserAdminRepository extends BaseRepository {
 
 				// Handle ban
 				if ("banReason" in item) {
-					const banExpires = item.banExpiresIn
-						? new Date(Date.now() + item.banExpiresIn)
-						: null;
+					const banData = UserBanService.createBanData(
+						item.banReason,
+						item.banExpiresIn,
+					);
 
 					const [updated] = await tx
 						.update(tables.user)
-						.set({
-							banned: true,
-							banReason: item.banReason,
-							banExpires,
-						})
+						.set(banData)
 						.where(eq(tables.user.id, id))
 						.returning();
 
@@ -396,15 +376,12 @@ export class UserAdminRepository extends BaseRepository {
 						});
 					}
 
-					const refreshed = await tx.query.user.findFirst({
-						with: { userBadges: { with: { badge: true } } },
-						where: (f, op) => op.eq(f.id, id),
-					});
-					if (!refreshed) {
-						throw new RepositoryError(m.error_failed_fetch_updated_user());
-					}
+					// Use UserRefreshService to refresh and compose user
+					const refreshed = await UserRefreshService.refreshUser(tx, id);
 					updatedUser = await UserAdminRepository.composeEntity(
-						refreshed,
+						refreshed as Parameters<
+							typeof UserAdminRepository.composeEntity
+						>[0],
 						this.#storage,
 					);
 
@@ -415,15 +392,13 @@ export class UserAdminRepository extends BaseRepository {
 				}
 
 				// Handle unban
-				if ("id" in item && Object.keys(item).length === 1) {
+				if (UserBanService.isUnbanOperation(item)) {
 					// UnbanUserSchema only has 'id' field
+					const unbanData = UserBanService.createUnbanData();
+
 					const [updated] = await tx
 						.update(tables.user)
-						.set({
-							banned: false,
-							banReason: null,
-							banExpires: null,
-						})
+						.set(unbanData)
 						.where(eq(tables.user.id, id))
 						.returning();
 
@@ -433,15 +408,12 @@ export class UserAdminRepository extends BaseRepository {
 						});
 					}
 
-					const refreshed = await tx.query.user.findFirst({
-						with: { userBadges: { with: { badge: true } } },
-						where: (f, op) => op.eq(f.id, id),
-					});
-					if (!refreshed) {
-						throw new RepositoryError(m.error_failed_fetch_updated_user());
-					}
+					// Use UserRefreshService to refresh and compose user
+					const refreshed = await UserRefreshService.refreshUser(tx, id);
 					updatedUser = await UserAdminRepository.composeEntity(
-						refreshed,
+						refreshed as Parameters<
+							typeof UserAdminRepository.composeEntity
+						>[0],
 						this.#storage,
 					);
 
@@ -532,255 +504,76 @@ export class UserAdminRepository extends BaseRepository {
 		}>;
 	}> {
 		try {
-			// Determine date range based on period or custom dates
-			let startDate: Date;
-			let endDate: Date = new Date();
+			// Use service to calculate date range
+			const { startDate, endDate } =
+				DashboardStatsService.calculateDateRange(options);
+			const cacheKey = DashboardStatsService.getCacheKey(startDate, endDate);
 
-			if (options?.startDate && options?.endDate) {
-				startDate = options.startDate;
-				endDate = options.endDate;
-			} else {
-				const period = options?.period ?? "month";
-				startDate = new Date();
-				switch (period) {
-					case "today":
-						startDate.setHours(0, 0, 0, 0);
-						break;
-					case "week":
-						startDate.setDate(startDate.getDate() - 7);
-						break;
-					case "month":
-						startDate.setMonth(startDate.getMonth() - 1);
-						break;
-					case "year":
-						startDate.setFullYear(startDate.getFullYear() - 1);
-						break;
-				}
-			}
-
-			const cacheKey = `dashboard-stats-${startDate.toISOString()}-${endDate.toISOString()}`;
 			const fallback = async () => {
-				const today = new Date();
-				today.setHours(0, 0, 0, 0);
+				const today = DashboardStatsService.getTodayMidnight();
 
-				// Basic stats query
-				const result = await this.db.execute<{
-					total_users: number;
-					total_drivers: number;
-					total_merchants: number;
-					active_orders: number;
-					total_orders: number;
-					completed_orders: number;
-					cancelled_orders: number;
-					total_revenue: string;
-					today_revenue: string;
-					today_orders: number;
-					online_drivers: number;
-				}>(/* sql */ `
-					SELECT
-						(SELECT COUNT(*)::int FROM am_users WHERE role = 'USER') AS total_users,
-						(SELECT COUNT(*)::int FROM am_drivers) AS total_drivers,
-						(SELECT COUNT(*)::int FROM am_merchants) AS total_merchants,
-						(SELECT COUNT(*)::int FROM am_orders WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS active_orders,
-						(SELECT COUNT(*)::int FROM am_orders) AS total_orders,
-						(SELECT COUNT(*)::int FROM am_orders WHERE status = 'COMPLETED') AS completed_orders,
-						(SELECT COUNT(*)::int FROM am_orders WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
-						(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED') AS total_revenue,
-						(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED' AND created_at >= '${today.toISOString()}') AS today_revenue,
-						(SELECT COUNT(*)::int FROM am_orders WHERE created_at >= '${today.toISOString()}') AS today_orders,
-						(SELECT COUNT(*)::int FROM am_drivers WHERE is_online = true) AS online_drivers
-				`);
+				// Execute all queries in parallel using service-generated SQL
+				const [
+					basicStatsResult,
+					revenueByDayResult,
+					ordersByDayResult,
+					ordersByTypeResult,
+					topDriversResult,
+					topMerchantsResult,
+					highCancellationResult,
+				] = await Promise.all([
+					this.db.execute(DashboardStatsService.getBasicStatsSQL(today)),
+					this.db.execute(
+						DashboardStatsService.getRevenueByDaySQL(startDate, endDate),
+					),
+					this.db.execute(
+						DashboardStatsService.getOrdersByDaySQL(startDate, endDate),
+					),
+					this.db.execute(
+						DashboardStatsService.getOrdersByTypeSQL(startDate, endDate),
+					),
+					this.db.execute(
+						DashboardStatsService.getTopDriversSQL(startDate, endDate),
+					),
+					this.db.execute(
+						DashboardStatsService.getTopMerchantsSQL(startDate, endDate),
+					),
+					this.db.execute(
+						DashboardStatsService.getHighCancellationSQL(startDate, endDate),
+					),
+				]);
 
-				// Revenue by day
-				const revenueByDayResult = await this.db.execute<{
-					date: string;
-					revenue: string;
-					orders: number;
-				}>(/* sql */ `
-					SELECT
-						TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-						COALESCE(SUM(total_price), 0)::text AS revenue,
-						COUNT(*)::int AS orders
-					FROM am_orders
-					WHERE status = 'COMPLETED'
-						AND requested_at >= '${startDate.toISOString()}'
-						AND requested_at <= '${endDate.toISOString()}'
-					GROUP BY DATE(requested_at)
-					ORDER BY DATE(requested_at) ASC
-				`);
-
-				// Orders by day
-				const ordersByDayResult = await this.db.execute<{
-					date: string;
-					total: number;
-					completed: number;
-					cancelled: number;
-				}>(/* sql */ `
-					SELECT
-						TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-						COUNT(*)::int AS total,
-						COUNT(*) FILTER (WHERE status = 'COMPLETED')::int AS completed,
-						COUNT(*) FILTER (WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM'))::int AS cancelled
-					FROM am_orders
-					WHERE requested_at >= '${startDate.toISOString()}'
-						AND requested_at <= '${endDate.toISOString()}'
-					GROUP BY DATE(requested_at)
-					ORDER BY DATE(requested_at) ASC
-				`);
-
-				// Orders by type
-				const ordersByTypeResult = await this.db.execute<{
-					type: string;
-					orders: number;
-					revenue: string;
-				}>(/* sql */ `
-					SELECT
-						type,
-						COUNT(*)::int AS orders,
-						COALESCE(SUM(total_price), 0)::text AS revenue
-					FROM am_orders
-					WHERE status = 'COMPLETED'
-						AND requested_at >= '${startDate.toISOString()}'
-						AND requested_at <= '${endDate.toISOString()}'
-					GROUP BY type
-					ORDER BY revenue DESC
-				`);
-
-				// Top drivers
-				const topDriversResult = await this.db.execute<{
-					id: string;
-					name: string;
-					earnings: string;
-					orders: number;
-					rating: string;
-				}>(/* sql */ `
-					SELECT
-						d.id,
-						u.name,
-						COALESCE(SUM(o.total_price), 0)::text AS earnings,
-						COUNT(o.id)::int AS orders,
-						COALESCE(AVG(o.driver_rating), 0)::text AS rating
-					FROM am_drivers d
-					JOIN am_users u ON d.id = u.id
-					LEFT JOIN am_orders o ON o.driver_id = d.id
-						AND o.status = 'COMPLETED'
-						AND o.requested_at >= '${startDate.toISOString()}'
-						AND o.requested_at <= '${endDate.toISOString()}'
-					GROUP BY d.id, u.name
-					HAVING COUNT(o.id) > 0
-					ORDER BY earnings DESC
-					LIMIT 5
-				`);
-
-				// Top merchants
-				const topMerchantsResult = await this.db.execute<{
-					id: string;
-					name: string;
-					revenue: string;
-					orders: number;
-					rating: string;
-				}>(/* sql */ `
-					SELECT
-						m.id,
-						m.name,
-						COALESCE(SUM(o.total_price), 0)::text AS revenue,
-						COUNT(o.id)::int AS orders,
-						COALESCE(AVG(o.driver_rating), 0)::text AS rating
-					FROM am_merchants m
-					LEFT JOIN am_orders o ON o.merchant_id = m.id
-						AND o.status = 'COMPLETED'
-						AND o.requested_at >= '${startDate.toISOString()}'
-						AND o.requested_at <= '${endDate.toISOString()}'
-					GROUP BY m.id, m.name
-					HAVING COUNT(o.id) > 0
-					ORDER BY revenue DESC
-					LIMIT 5
-				`);
-
-				// High cancellation drivers
-				const highCancellationResult = await this.db.execute<{
-					id: string;
-					name: string;
-					total_orders: number;
-					cancelled_orders: number;
-				}>(/* sql */ `
-					SELECT
-						d.id,
-						u.name,
-						COUNT(o.id)::int AS total_orders,
-						COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int AS cancelled_orders
-					FROM am_drivers d
-					JOIN am_users u ON d.id = u.id
-					LEFT JOIN am_orders o ON o.driver_id = d.id
-						AND o.requested_at >= '${startDate.toISOString()}'
-						AND o.requested_at <= '${endDate.toISOString()}'
-					GROUP BY d.id, u.name
-					HAVING COUNT(o.id) >= 10
-						AND COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int > 0
-					ORDER BY (COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::float / COUNT(o.id)::float) DESC
-					LIMIT 5
-				`);
-
-				const row = result[0];
-				if (!row) {
+				const basicStats = basicStatsResult[0];
+				if (!basicStats) {
 					throw new RepositoryError(m.error_failed_get_dashboard_stats(), {
 						code: "NOT_FOUND",
 					});
 				}
 
-				const stats = {
-					totalUsers: row.total_users,
-					totalDrivers: row.total_drivers,
-					totalMerchants: row.total_merchants,
-					activeOrders: row.active_orders,
-					totalOrders: row.total_orders,
-					completedOrders: row.completed_orders,
-					cancelledOrders: row.cancelled_orders,
-					totalRevenue: Number.parseFloat(row.total_revenue),
-					todayRevenue: Number.parseFloat(row.today_revenue),
-					todayOrders: row.today_orders,
-					onlineDrivers: row.online_drivers,
-					revenueByDay: revenueByDayResult.map((item) => ({
-						date: item.date,
-						revenue: Number.parseFloat(item.revenue),
-						orders: item.orders,
-					})),
-					ordersByDay: ordersByDayResult.map((item) => ({
-						date: item.date,
-						total: item.total,
-						completed: item.completed,
-						cancelled: item.cancelled,
-					})),
-					ordersByType: ordersByTypeResult.map((item) => ({
-						type: item.type,
-						orders: item.orders,
-						revenue: Number.parseFloat(item.revenue),
-					})),
-					topDrivers: topDriversResult.map((item) => ({
-						id: item.id,
-						name: item.name,
-						earnings: Number.parseFloat(item.earnings),
-						orders: item.orders,
-						rating: Number.parseFloat(item.rating),
-					})),
-					topMerchants: topMerchantsResult.map((item) => ({
-						id: item.id,
-						name: item.name,
-						revenue: Number.parseFloat(item.revenue),
-						orders: item.orders,
-						rating: Number.parseFloat(item.rating),
-					})),
-					highCancellationDrivers: highCancellationResult.map((item) => ({
-						id: item.id,
-						name: item.name,
-						totalOrders: item.total_orders,
-						cancelledOrders: item.cancelled_orders,
-						cancellationRate:
-							item.total_orders > 0
-								? (item.cancelled_orders / item.total_orders) * 100
-								: 0,
-					})),
-				};
+				// Use service to compose the final stats object
+				const stats = DashboardStatsService.composeDashboardStats({
+					basicStats: basicStats as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["basicStats"],
+					revenueByDay: revenueByDayResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["revenueByDay"],
+					ordersByDay: ordersByDayResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["ordersByDay"],
+					ordersByType: ordersByTypeResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["ordersByType"],
+					topDrivers: topDriversResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["topDrivers"],
+					topMerchants: topMerchantsResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["topMerchants"],
+					highCancellation: highCancellationResult as unknown as Parameters<
+						typeof DashboardStatsService.composeDashboardStats
+					>[0]["highCancellation"],
+				});
 
 				// Cache for 5 minutes
 				await this.setCache(cacheKey, stats, {

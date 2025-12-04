@@ -1,11 +1,8 @@
 import { env } from "cloudflare:workers";
 import { m } from "@repo/i18n";
-import {
-	type ConfigurationValue,
-	DeliveryPricingConfigurationSchema,
-	FoodPricingConfigurationSchema,
-	type PricingConfiguration,
-	RidePricingConfigurationSchema,
+import type {
+	ConfigurationValue,
+	PricingConfiguration,
 } from "@repo/schema/configuration";
 import type { Driver } from "@repo/schema/driver";
 import type { Merchant } from "@repo/schema/merchant";
@@ -23,7 +20,6 @@ import {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
-import Decimal from "decimal.js";
 import { count, eq, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -40,15 +36,27 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
 import type { OrderDatabase } from "@/core/tables/order";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
-import { PricingCalculator } from "@/utils/pricing";
 import type {
 	ChargePayload,
 	PaymentRepository,
 } from "../payment/payment-repository";
+import {
+	DriverCancellationService,
+	OrderCancellationService,
+	OrderCouponService,
+	OrderItemPreparationService,
+	type OrderMatchingService,
+	type OrderPricingService,
+	OrderRefundService,
+	type OrderStateService,
+	OrderValidationService,
+} from "./services";
 
 export class OrderRepository extends BaseRepository {
 	readonly #map: MapService;
 	readonly #paymentRepo: PaymentRepository;
+	readonly #pricingService: OrderPricingService;
+	readonly #stateService: OrderStateService;
 	// PERFORMANCE: In-memory cache for pricing configurations (99% faster than DB/KV)
 	// These configs rarely change, so we cache them in memory with manual invalidation
 	static #pricingConfigCache = new Map<string, ConfigurationValue>();
@@ -59,10 +67,15 @@ export class OrderRepository extends BaseRepository {
 		kv: KeyValueService,
 		map: MapService,
 		paymentRepo: PaymentRepository,
+		pricingService: OrderPricingService,
+		_matchingService: OrderMatchingService,
+		stateService: OrderStateService,
 	) {
 		super("order", kv, db);
 		this.#map = map;
 		this.#paymentRepo = paymentRepo;
+		this.#pricingService = pricingService;
+		this.#stateService = stateService;
 		// Preload pricing configs on first instantiation
 		if (!OrderRepository.#cacheLoadedAt) {
 			this.#preloadPricingConfigs().catch((err) => {
@@ -417,54 +430,26 @@ export class OrderRepository extends BaseRepository {
 				return cached;
 			}
 
-			// PERFORMANCE: Run external API calls in parallel with DB queries
-			// Do NOT pass transaction to external API calls (prevents long-held locks)
-			const [pricingConfig, { distanceMeters }] = await Promise.all([
-				this.#getPricingConfiguration({ type: params.type }, opts),
-				this.#map.getRouteDistance(
-					params.pickupLocation,
-					params.dropoffLocation,
-				),
-			]);
+			// REFACTOR: Delegate pricing calculation to OrderPricingService
+			// Build EstimateOrder input for the service
+			const estimateInput: EstimateOrder = {
+				type: params.type,
+				pickupLocation: params.pickupLocation,
+				dropoffLocation: params.dropoffLocation,
+				weight: params.weight,
+			};
+
+			// Get pricing configuration (still needed to return to client)
+			const pricingConfig = await this.#getPricingConfiguration(
+				{ type: params.type },
+				opts,
+			);
 
 			if (!pricingConfig)
 				throw new RepositoryError(m.error_missing_pricing_configuration());
-			const distanceKm = Number(
-				new Decimal(distanceMeters).dividedBy(1000).toFixed(2),
-			);
 
-			let pricing: Omit<OrderSummary, "driverEarning" | "currency">;
-
-			switch (params.type) {
-				case "RIDE": {
-					const validatedConfig =
-						RidePricingConfigurationSchema.parse(pricingConfig);
-					pricing = PricingCalculator.calculateRide(
-						distanceKm,
-						validatedConfig,
-					);
-					break;
-				}
-				case "DELIVERY": {
-					const validatedConfig =
-						DeliveryPricingConfigurationSchema.parse(pricingConfig);
-					pricing = PricingCalculator.calculateDelivery(
-						distanceKm,
-						params.weight,
-						validatedConfig,
-					);
-					break;
-				}
-				case "FOOD": {
-					const validatedConfig =
-						FoodPricingConfigurationSchema.parse(pricingConfig);
-					pricing = PricingCalculator.calculateFood(
-						distanceKm,
-						validatedConfig,
-					);
-					break;
-				}
-			}
+			// Use OrderPricingService to calculate estimate
+			const pricing = await this.#pricingService.estimateOrder(estimateInput);
 
 			const result = { ...pricing, config: pricingConfig };
 
@@ -476,7 +461,7 @@ export class OrderRepository extends BaseRepository {
 			});
 
 			log.debug(
-				{ cacheKey, distanceKm },
+				{ cacheKey, distanceKm: pricing.distanceKm },
 				"[OrderRepository] Cached new estimate",
 			);
 
@@ -506,28 +491,8 @@ export class OrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<PlaceOrderResponse> {
 		try {
-			// Validate required parameters
-			if (!params.pickupLocation || !params.dropoffLocation) {
-				throw new RepositoryError(m.error_pickup_dropoff_required(), {
-					code: "BAD_REQUEST",
-				});
-			}
-
-			if (!params.type) {
-				throw new RepositoryError(m.error_order_type_required(), {
-					code: "BAD_REQUEST",
-				});
-			}
-
-			if (
-				!params.payment ||
-				!params.payment.method ||
-				!params.payment.provider
-			) {
-				throw new RepositoryError(m.error_payment_info_required(), {
-					code: "BAD_REQUEST",
-				});
-			}
+			// Use OrderValidationService to validate required parameters
+			OrderValidationService.validatePlaceOrderParams(params);
 
 			log.debug(
 				{
@@ -538,9 +503,8 @@ export class OrderRepository extends BaseRepository {
 				"[OrderRepository] Starting order placement",
 			);
 
-			const itemIds = params.items
-				?.map((el) => el.item?.id)
-				.filter((id): id is string => !!id);
+			// Use OrderValidationService to extract menu item IDs
+			const itemIds = OrderValidationService.extractMenuItemIds(params.items);
 
 			// PERFORMANCE OPTIMIZATION: Don't pass transaction to estimate()
 			// This prevents external Google Maps API calls (500ms) from holding DB locks
@@ -564,60 +528,25 @@ export class OrderRepository extends BaseRepository {
 					: Promise.resolve([]),
 			]);
 
-			// Validate and apply coupon if provided
-			let couponValidation:
-				| {
-						valid: boolean;
-						coupon?: unknown;
-						discountAmount: number;
-						reason?: string;
-				  }
-				| undefined;
+			// Use OrderCouponService to validate and apply coupon
 			let finalTotalCost = estimate.totalCost;
 			let couponId: string | undefined;
 			let couponCode: string | undefined;
 			let discountAmount = 0;
 
 			if (params.couponCode) {
-				// Create a CouponRepository instance
-				const couponRepo = new (
-					await import("../coupon/coupon-repository")
-				).CouponRepository(this.db, this.kv);
-
-				couponValidation = await couponRepo.validateCoupon(
+				const couponResult = await OrderCouponService.validateAndApplyCoupon(
 					params.couponCode,
 					estimate.totalCost,
 					params.userId,
+					this.db,
+					this.kv,
 				);
 
-				if (!couponValidation.valid) {
-					throw new RepositoryError(
-						couponValidation.reason ?? "Invalid coupon",
-						{ code: "BAD_REQUEST" },
-					);
-				}
-
-				if (
-					couponValidation.coupon &&
-					typeof couponValidation.coupon === "object" &&
-					"id" in couponValidation.coupon
-				) {
-					couponId = couponValidation.coupon.id as string;
-				}
-				couponCode = params.couponCode;
-				discountAmount = couponValidation.discountAmount;
-				finalTotalCost = Math.max(0, estimate.totalCost - discountAmount);
-
-				log.info(
-					{
-						userId: params.userId,
-						couponCode,
-						originalPrice: estimate.totalCost,
-						discountAmount,
-						finalPrice: finalTotalCost,
-					},
-					"[OrderRepository] Coupon applied successfully",
-				);
+				couponId = couponResult.couponId;
+				couponCode = couponResult.couponCode;
+				discountAmount = couponResult.discountAmount;
+				finalTotalCost = couponResult.finalTotalCost;
 			}
 
 			if (!user)
@@ -625,18 +554,11 @@ export class OrderRepository extends BaseRepository {
 					code: "NOT_FOUND",
 				});
 
-			if (menus.length && menus.length !== itemIds?.length)
-				throw new RepositoryError(m.error_invalid_products(), {
-					code: "BAD_REQUEST",
-				});
+			// Use OrderValidationService to validate menu items
+			OrderValidationService.validateMenuItems(menus, itemIds);
+			OrderValidationService.validateSingleMerchant(menus);
 
-			const uniqueMerchantIds = new Set(menus.map((m) => m.merchantId));
-			if (uniqueMerchantIds.size > 1)
-				throw new RepositoryError("Can't order from different merchants", {
-					code: "BAD_REQUEST",
-				});
-
-			const merchantId = menus[0]?.merchantId;
+			const merchantId = OrderValidationService.getMerchantId(menus);
 			const now = new Date();
 
 			const safeTotalCost = toStringNumberSafe(finalTotalCost);
@@ -666,17 +588,13 @@ export class OrderRepository extends BaseRepository {
 				})
 				.returning({ id: tables.order.id });
 
-			if (menus.length) {
-				const orderItems = menus.map((menu) => ({
-					orderId: orderRow.id,
-					menuId: menu.id,
-					quantity:
-						params.items?.find((i) => i.item.id === menu.id)?.quantity ?? 0,
-					unitPrice: menu.price,
-				}));
-
-				await opts.tx.insert(tables.orderItem).values(orderItems);
-			}
+			// Use OrderItemPreparationService to prepare and insert order items
+			await OrderItemPreparationService.insertOrderItems(
+				orderRow.id,
+				menus,
+				params.items,
+				opts,
+			);
 
 			const chargePayload: ChargePayload = {
 				transactionType: "PAYMENT",
@@ -756,84 +674,15 @@ export class OrderRepository extends BaseRepository {
 		}
 	}
 
-	/**
-	 * Validates order status transitions according to state machine rules
-	 * Prevents invalid state transitions (e.g., COMPLETED → REQUESTED)
-	 */
-	#validateStatusTransition(
-		currentStatus: OrderStatus,
-		newStatus: OrderStatus,
-	): void {
-		// Define valid state transitions
-		const validTransitions: Record<OrderStatus, OrderStatus[]> = {
-			REQUESTED: [
-				"MATCHING",
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_MERCHANT",
-				"CANCELLED_BY_SYSTEM",
-			],
-			MATCHING: [
-				"ACCEPTED",
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_MERCHANT",
-				"CANCELLED_BY_SYSTEM",
-				"REQUESTED", // Allow retry
-			],
-			ACCEPTED: [
-				"PREPARING", // Food orders: merchant starts preparing
-				"ARRIVING", // Ride/Delivery: driver heads to pickup (skip preparation)
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_DRIVER",
-				"CANCELLED_BY_MERCHANT",
-				"CANCELLED_BY_SYSTEM",
-			],
-			PREPARING: [
-				"READY_FOR_PICKUP", // Food is ready for driver pickup
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_DRIVER",
-				"CANCELLED_BY_MERCHANT",
-				"CANCELLED_BY_SYSTEM",
-			],
-			READY_FOR_PICKUP: [
-				"ARRIVING", // Driver is on the way to pickup
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_DRIVER",
-				"CANCELLED_BY_MERCHANT",
-				"CANCELLED_BY_SYSTEM",
-			],
-			ARRIVING: [
-				"IN_TRIP",
-				"CANCELLED_BY_USER",
-				"CANCELLED_BY_DRIVER",
-				"CANCELLED_BY_SYSTEM",
-			],
-			IN_TRIP: ["COMPLETED", "CANCELLED_BY_DRIVER", "CANCELLED_BY_SYSTEM"],
-			COMPLETED: [], // Terminal state - no transitions allowed
-			CANCELLED_BY_USER: [], // Terminal state
-			CANCELLED_BY_DRIVER: [], // Terminal state
-			CANCELLED_BY_MERCHANT: [], // Terminal state
-			CANCELLED_BY_SYSTEM: [], // Terminal state
-		};
-
-		const allowedNextStates = validTransitions[currentStatus] || [];
-
-		if (!allowedNextStates.includes(newStatus)) {
-			throw new RepositoryError(
-				`Invalid status transition from "${currentStatus}" to "${newStatus}". Allowed: ${allowedNextStates.join(", ")}`,
-				{ code: "BAD_REQUEST" },
-			);
-		}
-	}
-
 	async update(id: string, item: UpdateOrder, opts: WithTx): Promise<Order> {
 		try {
 			const existing = await this.#getFromDB(id, opts);
 			if (!existing)
 				throw new RepositoryError(`Order with id "${id}" not found`);
 
-			// Validate status transition if status is being updated
+			// REFACTOR: Use OrderStateService to validate status transition
 			if (item.status && item.status !== existing.status) {
-				this.#validateStatusTransition(existing.status, item.status);
+				this.#stateService.validateTransition(existing.status, item.status);
 			}
 
 			const [operation] = await opts.tx
@@ -910,42 +759,35 @@ export class OrderRepository extends BaseRepository {
 				});
 			}
 
-			// Determine cancellation type based on role
-			let cancelStatus: OrderStatus;
-			if (userRole === "USER") {
-				cancelStatus = "CANCELLED_BY_USER";
-			} else if (userRole === "DRIVER") {
-				cancelStatus = "CANCELLED_BY_DRIVER";
-			} else if (userRole === "MERCHANT") {
-				cancelStatus = "CANCELLED_BY_MERCHANT";
-			} else {
-				cancelStatus = "CANCELLED_BY_SYSTEM";
-			}
+			// Use OrderCancellationService to determine cancellation status
+			const cancelStatus =
+				OrderCancellationService.determineCancellationStatus(userRole);
 
 			// Validate status transition
-			this.#validateStatusTransition(order.status, cancelStatus);
+			this.#stateService.validateTransition(order.status, cancelStatus);
 
-			// Calculate refund amount with penalty logic
-			const totalPrice = new Decimal(order.totalPrice);
-			let refundAmount = totalPrice;
-			let penaltyAmount = new Decimal(0);
-
-			// Apply 10% penalty for user cancellation after driver acceptance
-			if (
-				cancelStatus === "CANCELLED_BY_USER" &&
-				order.driverId &&
-				["ACCEPTED", "PREPARING", "READY_FOR_PICKUP", "ARRIVING"].includes(
+			// Use OrderCancellationService to calculate refund with penalty logic
+			const { refundAmount, penaltyAmount } =
+				OrderCancellationService.calculateRefund(
+					order.totalPrice,
+					cancelStatus,
 					order.status,
+					order.driverId,
+				);
+
+			// Log penalty if applied
+			if (
+				OrderCancellationService.shouldApplyPenalty(
+					cancelStatus,
+					order.status,
+					order.driverId,
 				)
 			) {
-				penaltyAmount = totalPrice.times(0.1); // 10% penalty
-				refundAmount = totalPrice.minus(penaltyAmount);
-
 				log.info(
 					{
 						orderId: order.id,
 						userId: order.userId,
-						totalPrice: toNumberSafe(totalPrice),
+						totalPrice: order.totalPrice,
 						penaltyAmount: toNumberSafe(penaltyAmount),
 						refundAmount: toNumberSafe(refundAmount),
 					},
@@ -962,44 +804,38 @@ export class OrderRepository extends BaseRepository {
 				});
 
 				if (driver) {
-					const now = new Date();
-					const lastCancellation = driver.lastCancellationDate
-						? new Date(driver.lastCancellationDate)
-						: null;
-
-					// Check if last cancellation was today
-					const isToday =
-						lastCancellation &&
-						lastCancellation.toDateString() === now.toDateString();
-
-					const newCancellationCount = isToday
-						? driver.cancellationCount + 1
-						: 1;
+					// Use DriverCancellationService to prepare cancellation update
+					const cancellationUpdate =
+						DriverCancellationService.prepareCancellationUpdate(
+							driver.cancellationCount,
+							driver.lastCancellationDate,
+						);
 
 					// Update driver cancellation tracking
 					await opts.tx
 						.update(tables.driver)
-						.set({
-							cancellationCount: newCancellationCount,
-							lastCancellationDate: now,
-						})
+						.set(cancellationUpdate)
 						.where(eq(tables.driver.id, order.driverId));
 
-					// Suspend driver if 3 or more cancellations today (per SRS 8.3)
-					if (newCancellationCount >= 3) {
+					// Check if driver should be suspended
+					if (
+						DriverCancellationService.shouldSuspendDriver(
+							cancellationUpdate.cancellationCount,
+						)
+					) {
+						// Use service to prepare suspension data
+						const suspensionData =
+							DriverCancellationService.prepareSuspensionData();
+
 						await opts.tx
 							.update(tables.driver)
-							.set({
-								status: "SUSPENDED",
-								isOnline: false,
-								isTakingOrder: false,
-							})
+							.set(suspensionData)
 							.where(eq(tables.driver.id, order.driverId));
 
 						log.warn(
 							{
 								driverId: order.driverId,
-								cancellationCount: newCancellationCount,
+								cancellationCount: cancellationUpdate.cancellationCount,
 								orderId: order.id,
 							},
 							"[OrderRepository] Driver suspended due to excessive cancellations (3/day)",
@@ -1008,7 +844,7 @@ export class OrderRepository extends BaseRepository {
 						log.info(
 							{
 								driverId: order.driverId,
-								cancellationCount: newCancellationCount,
+								cancellationCount: cancellationUpdate.cancellationCount,
 								orderId: order.id,
 							},
 							"[OrderRepository] Driver cancellation recorded - warning issued",
@@ -1017,64 +853,14 @@ export class OrderRepository extends BaseRepository {
 				}
 			}
 
-			// Process refund - find transaction by referenceId (orderId)
-			const paymentTransaction = await opts.tx.query.transaction.findFirst({
-				where: (f, op) =>
-					op.and(
-						op.eq(f.referenceId, order.id),
-						op.eq(f.type, "PAYMENT"),
-						op.inArray(f.status, ["PENDING", "SUCCESS"]),
-					),
-			});
-
-			if (paymentTransaction) {
-				// Get wallet
-				const wallet = await opts.tx.query.wallet.findFirst({
-					where: (f, op) => op.eq(f.id, paymentTransaction.walletId),
-				});
-
-				// Get payment
-				const payment = await opts.tx.query.payment.findFirst({
-					where: (f, op) => op.eq(f.transactionId, paymentTransaction.id),
-				});
-
-				if (wallet && payment) {
-					const currentBalance = new Decimal(wallet.balance);
-					const newBalance = currentBalance.plus(refundAmount);
-
-					// Update transaction status
-					await opts.tx
-						.update(tables.transaction)
-						.set({
-							status: "REFUNDED",
-							balanceBefore: toStringNumberSafe(currentBalance),
-							balanceAfter: toStringNumberSafe(newBalance),
-						})
-						.where(eq(tables.transaction.id, paymentTransaction.id));
-
-					// Update payment status
-					await opts.tx
-						.update(tables.payment)
-						.set({ status: "REFUNDED" })
-						.where(eq(tables.payment.id, payment.id));
-
-					// Update wallet balance
-					await opts.tx
-						.update(tables.wallet)
-						.set({ balance: toStringNumberSafe(newBalance) })
-						.where(eq(tables.wallet.id, wallet.id));
-
-					log.info(
-						{
-							orderId: order.id,
-							userId: order.userId,
-							refundAmount: toNumberSafe(refundAmount),
-							penaltyAmount: toNumberSafe(penaltyAmount),
-						},
-						m.server_refund_processed(),
-					);
-				}
-			}
+			// Use OrderRefundService to process refund
+			await OrderRefundService.processRefund(
+				order.id,
+				order.userId,
+				refundAmount,
+				penaltyAmount,
+				opts,
+			);
 
 			// Update order status
 			const updatedOrder = await this.update(

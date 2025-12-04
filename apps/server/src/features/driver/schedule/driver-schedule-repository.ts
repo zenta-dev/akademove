@@ -1,12 +1,11 @@
 import { m } from "@repo/i18n";
-import {
-	type DriverSchedule,
-	DriverScheduleKeySchema,
-	type InsertDriverSchedule,
-	type UpdateDriverSchedule,
+import type {
+	DriverSchedule,
+	InsertDriverSchedule,
+	UpdateDriverSchedule,
 } from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -15,7 +14,7 @@ import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { DriverScheduleDatabase } from "@/core/tables/driver";
-import { log } from "@/utils";
+import { DriverScheduleListQueryService } from "./services/driver-schedule-list-query-service";
 
 export class DriverScheduleRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -36,52 +35,36 @@ export class DriverScheduleRepository extends BaseRepository {
 		return result ? DriverScheduleRepository.composeEntity(result) : undefined;
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
-		try {
-			const [dbResult] = await this.db
-				.select({ count: count(tables.driverSchedule.id) })
-				.from(tables.driverSchedule)
-				.where(ilike(tables.driverSchedule.name, `%${query}%`));
-
-			return dbResult?.count ?? 0;
-		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
-			return 0;
-		}
-	}
-
 	async list(
 		query?: UnifiedPaginationQuery,
 	): Promise<ListResult<DriverSchedule>> {
 		try {
-			const {
-				cursor,
-				page,
-				limit = 10,
-				query: search,
-				sortBy,
-				order = "asc",
-			} = query ?? {};
+			// Extract pagination parameters
+			const { cursor, page, limit, search, sortBy, order } =
+				DriverScheduleListQueryService.extractPaginationParams(query);
 
+			// Generate ORDER BY clause
 			const orderBy = (
 				f: typeof tables.driverSchedule._.columns,
 				op: OrderByOperation,
 			) => {
-				if (sortBy) {
-					const parsed = DriverScheduleKeySchema.safeParse(sortBy);
-					const field = parsed.success ? f[parsed.data] : f.id;
+				const validField =
+					DriverScheduleListQueryService.parseSortField(sortBy);
+				if (validField) {
+					const field = f[validField as keyof typeof f];
 					return op[order](field);
 				}
 				return op[order](f.id);
 			};
 
-			const clauses: SQL[] = [];
+			// Generate WHERE clauses
+			const clauses = DriverScheduleListQueryService.generateWhereClauses({
+				search,
+				cursor,
+			});
 
-			if (search) clauses.push(ilike(tables.driverSchedule.name, `%${query}%`));
-
+			// Cursor-based pagination
 			if (cursor) {
-				clauses.push(gt(tables.driverSchedule.createdAt, new Date(cursor)));
-
 				const res = await this.db.query.driverSchedule.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
@@ -93,27 +76,37 @@ export class DriverScheduleRepository extends BaseRepository {
 				return { rows };
 			}
 
+			// Page-based pagination
 			if (page) {
-				const offset = (page - 1) * limit;
-
 				const res = await this.db.query.driverSchedule.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
-					offset,
+					offset: DriverScheduleListQueryService.calculatePagination({
+						page,
+						limit,
+						totalCount: 0,
+					}).offset,
 					limit,
 				});
 
 				const rows = res.map(DriverScheduleRepository.composeEntity);
 
+				// Get total count based on search
 				const totalCount = search
-					? await this.#getQueryCount(search)
+					? await DriverScheduleListQueryService.getSearchCount(this.db, search)
 					: await this.getTotalRow();
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const { totalPages } =
+					DriverScheduleListQueryService.calculatePagination({
+						page,
+						limit,
+						totalCount,
+					});
 
 				return { rows, totalPages };
 			}
 
+			// Default: no pagination
 			const res = await this.db.query.driverSchedule.findMany({
 				where: (_, op) => op.and(...clauses),
 				orderBy,

@@ -6,7 +6,6 @@ import {
 	type UpdateMerchant,
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { getFileExtension } from "@repo/shared";
 import { count, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -18,9 +17,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 import { log } from "@/utils";
-
-const PRIV_BUCKET = "merchant-priv";
-const PUB_BUCKET = "merchant";
+import { MerchantDocumentService, MerchantStatsService } from "../services";
 
 export class MerchantMainRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -40,13 +37,13 @@ export class MerchantMainRepository extends BaseRepository {
 	): Promise<Merchant & { documentId?: string; imageId?: string }> {
 		const document = item.document
 			? await storage.getPresignedUrl({
-					bucket: PRIV_BUCKET,
+					bucket: MerchantDocumentService.PRIV_BUCKET,
 					key: item.document,
 				})
 			: undefined;
 		const image = item.image
 			? storage.getPublicUrl({
-					bucket: PUB_BUCKET,
+					bucket: MerchantDocumentService.PUB_BUCKET,
 					key: item.image,
 				})
 			: undefined;
@@ -319,8 +316,8 @@ export class MerchantMainRepository extends BaseRepository {
 			const id = v7();
 			const doc = item.document;
 			const image = item.image;
-			const docKey = doc ? `M-${id}.${getFileExtension(doc)}` : undefined;
-			const imageKey = image ? `M-${id}.${getFileExtension(image)}` : undefined;
+			const docKey = MerchantDocumentService.generateDocumentKey(id, doc);
+			const imageKey = MerchantDocumentService.generateImageKey(id, image);
 
 			const [operation] = await Promise.all([
 				(opts?.tx ?? this.db)
@@ -335,14 +332,14 @@ export class MerchantMainRepository extends BaseRepository {
 					.then((r) => r[0]),
 				doc && docKey
 					? this.#storage.upload({
-							bucket: PRIV_BUCKET,
+							bucket: MerchantDocumentService.PRIV_BUCKET,
 							key: docKey,
 							file: doc,
 						})
 					: Promise.resolve(),
 				image && imageKey
 					? this.#storage.upload({
-							bucket: PUB_BUCKET,
+							bucket: MerchantDocumentService.PUB_BUCKET,
 							key: imageKey,
 							file: image,
 						})
@@ -370,8 +367,16 @@ export class MerchantMainRepository extends BaseRepository {
 
 			const doc = item.document;
 			const image = item.image;
-			const docKey = doc ? `M-${id}.${getFileExtension(doc)}` : undefined;
-			const imageKey = image ? `M-${id}.${getFileExtension(image)}` : undefined;
+			const docKey = MerchantDocumentService.resolveUpdateDocumentKey(
+				id,
+				existing.documentId,
+				doc,
+			);
+			const imageKey = MerchantDocumentService.resolveUpdateImageKey(
+				id,
+				existing.imageId,
+				image,
+			);
 
 			const [operation] = await Promise.all([
 				this.db
@@ -379,8 +384,8 @@ export class MerchantMainRepository extends BaseRepository {
 					.set({
 						...existing,
 						...item,
-						document: docKey ?? existing.documentId,
-						image: imageKey ?? existing.imageId,
+						document: docKey,
+						image: imageKey,
 						updatedAt: new Date(),
 					})
 					.where(eq(tables.merchant.id, id))
@@ -388,14 +393,14 @@ export class MerchantMainRepository extends BaseRepository {
 					.then((r) => r[0]),
 				doc && docKey
 					? this.#storage.upload({
-							bucket: PRIV_BUCKET,
+							bucket: MerchantDocumentService.PRIV_BUCKET,
 							key: docKey,
 							file: doc,
 						})
 					: Promise.resolve(),
 				image && imageKey
 					? this.#storage.upload({
-							bucket: PUB_BUCKET,
+							bucket: MerchantDocumentService.PUB_BUCKET,
 							key: imageKey,
 							file: image,
 						})
@@ -428,13 +433,13 @@ export class MerchantMainRepository extends BaseRepository {
 					.returning({ id: tables.merchant.id }),
 				find.documentId
 					? this.#storage.delete({
-							bucket: PRIV_BUCKET,
+							bucket: MerchantDocumentService.PRIV_BUCKET,
 							key: find.documentId,
 						})
 					: Promise.resolve(),
 				find.imageId
 					? this.#storage.delete({
-							bucket: PUB_BUCKET,
+							bucket: MerchantDocumentService.PUB_BUCKET,
 							key: find.imageId,
 						})
 					: Promise.resolve(),
@@ -476,142 +481,158 @@ export class MerchantMainRepository extends BaseRepository {
 		}>;
 	}> {
 		try {
-			// Calculate date range based on period
-			let startDate = query?.startDate ?? new Date();
-			let endDate = query?.endDate ?? new Date();
+			// Calculate date range based on period (delegated to service)
+			const { startDate, endDate } = MerchantStatsService.calculateDateRange(
+				query?.period,
+				query?.startDate,
+				query?.endDate,
+			);
 
-			if (query?.period) {
-				endDate = new Date();
-				startDate = new Date();
-				switch (query.period) {
-					case "today":
-						startDate.setHours(0, 0, 0, 0);
-						break;
-					case "week":
-						startDate.setDate(startDate.getDate() - 7);
-						break;
-					case "month":
-						startDate.setMonth(startDate.getMonth() - 1);
-						break;
-					case "year":
-						startDate.setFullYear(startDate.getFullYear() - 1);
-						break;
-				}
-			}
-
-			// Get overall statistics
-			const statsResult = await this.db.execute<{
-				total_orders: number;
-				total_revenue: string;
-				total_commission: string;
-				completed_orders: number;
-				cancelled_orders: number;
-				average_order_value: string;
-			}>(sql`
-				SELECT
-					COUNT(*)::int AS total_orders,
-					COALESCE(SUM(total_price), 0)::text AS total_revenue,
-					COALESCE(SUM(merchant_commission), 0)::text AS total_commission,
-					COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
-					COUNT(CASE WHEN status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM') THEN 1 END)::int AS cancelled_orders,
-					COALESCE(AVG(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS average_order_value
-				FROM am_orders
-				WHERE merchant_id = ${merchantId}
-					AND requested_at >= ${startDate.toISOString()}
-					AND requested_at <= ${endDate.toISOString()}
-			`);
-
-			// Get top selling items
-			const topSellingResult = await this.db.execute<{
-				menu_id: string;
-				menu_name: string;
-				menu_image: string | null;
-				total_orders: number;
-				total_revenue: string;
-			}>(sql`
-				SELECT
-					oi."menuId" AS menu_id,
-					mm.name AS menu_name,
-					mm.image AS menu_image,
-					COUNT(DISTINCT o.id)::int AS total_orders,
-					COALESCE(SUM(oi.unit_price * oi.quantity), 0)::text AS total_revenue
-				FROM am_orders o
-				INNER JOIN am_order_items oi ON o.id = oi."orderId"
-				INNER JOIN am_merchant_menus mm ON oi."menuId" = mm.id
-				WHERE o.merchant_id = ${merchantId}
-					AND o.status = 'COMPLETED'
-					AND o.requested_at >= ${startDate.toISOString()}
-					AND o.requested_at <= ${endDate.toISOString()}
-				GROUP BY oi."menuId", mm.name, mm.image
-				ORDER BY total_orders DESC
-				LIMIT 10
-			`);
-
-			// Get revenue by day
-			const revenueByDayResult = await this.db.execute<{
-				date: string;
-				revenue: string;
-				orders: number;
-			}>(sql`
-				SELECT
-					TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-					COALESCE(SUM(total_price), 0)::text AS revenue,
-					COUNT(*)::int AS orders
-				FROM am_orders
-				WHERE merchant_id = ${merchantId}
-					AND status = 'COMPLETED'
-					AND requested_at >= ${startDate.toISOString()}
-					AND requested_at <= ${endDate.toISOString()}
-				GROUP BY DATE(requested_at)
-				ORDER BY DATE(requested_at) ASC
-			`);
-
-			const stats = statsResult[0] ?? {
-				total_orders: 0,
-				total_revenue: "0",
-				total_commission: "0",
-				completed_orders: 0,
-				cancelled_orders: 0,
-				average_order_value: "0",
-			};
-
-			return {
-				totalOrders: stats.total_orders,
-				totalRevenue: Number.parseFloat(stats.total_revenue),
-				totalCommission: Number.parseFloat(stats.total_commission),
-				completedOrders: stats.completed_orders,
-				cancelledOrders: stats.cancelled_orders,
-				averageOrderValue: Number.parseFloat(stats.average_order_value),
-				topSellingItems: topSellingResult.map(
-					(item: {
+			// Execute queries (SQL generation delegated to service)
+			const [statsResult, topSellingResult, revenueByDayResult] =
+				await Promise.all([
+					this.db.execute<{
+						total_orders: number;
+						total_revenue: string;
+						total_commission: string;
+						completed_orders: number;
+						cancelled_orders: number;
+						average_order_value: string;
+					}>(
+						MerchantStatsService.getOverallStatsSQL(
+							merchantId,
+							startDate,
+							endDate,
+						),
+					),
+					this.db.execute<{
 						menu_id: string;
 						menu_name: string;
 						menu_image: string | null;
 						total_orders: number;
 						total_revenue: string;
-					}) => ({
-						menuId: item.menu_id,
-						menuName: item.menu_name,
-						menuImage: item.menu_image
+					}>(
+						MerchantStatsService.getTopSellingItemsSQL(
+							merchantId,
+							startDate,
+							endDate,
+							10,
+						),
+					),
+					this.db.execute<{
+						date: string;
+						revenue: string;
+						orders: number;
+					}>(
+						MerchantStatsService.getRevenueByDaySQL(
+							merchantId,
+							startDate,
+							endDate,
+						),
+					),
+				]);
+
+			// Compose analytics result (delegated to service)
+			return MerchantStatsService.composeMerchantStats(
+				statsResult[0],
+				topSellingResult,
+				revenueByDayResult,
+				{
+					getMenuImageUrl: (key: string | null) =>
+						key
 							? this.#storage.getPublicUrl({
 									bucket: "merchant-menu",
-									key: item.menu_image,
+									key,
 								})
 							: undefined,
-						totalOrders: item.total_orders,
-						totalRevenue: Number.parseFloat(item.total_revenue),
-					}),
-				),
-				revenueByDay: revenueByDayResult.map(
-					(day: { date: string; revenue: string; orders: number }) => ({
-						date: day.date,
-						revenue: Number.parseFloat(day.revenue),
-						orders: day.orders,
-					}),
-				),
-			};
+				},
+			);
 		} catch (error) {
 			throw this.handleError(error, "get analytics");
+		}
+	}
+
+	async activate(id: string): Promise<Merchant> {
+		try {
+			log.info(
+				{ merchantId: id },
+				"[MerchantMainRepository] Activating merchant",
+			);
+
+			const merchant = await this.#getFromDB(id);
+			if (!merchant) {
+				throw new RepositoryError(m.error_merchant_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (merchant.isActive) {
+				throw new RepositoryError("Merchant is already active", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [updated] = await this.db
+				.update(tables.merchant)
+				.set({ isActive: true, updatedAt: new Date() })
+				.where(eq(tables.merchant.id, id))
+				.returning();
+
+			const result = await MerchantMainRepository.composeEntity(
+				updated,
+				this.#storage,
+			);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info(
+				{ merchantId: id },
+				"[MerchantMainRepository] Merchant activated",
+			);
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "activate");
+		}
+	}
+
+	async deactivate(id: string, reason: string): Promise<Merchant> {
+		try {
+			log.info(
+				{ merchantId: id, reason },
+				"[MerchantMainRepository] Deactivating merchant",
+			);
+
+			const merchant = await this.#getFromDB(id);
+			if (!merchant) {
+				throw new RepositoryError(m.error_merchant_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (!merchant.isActive) {
+				throw new RepositoryError("Merchant is already inactive", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [updated] = await this.db
+				.update(tables.merchant)
+				.set({ isActive: false, updatedAt: new Date() })
+				.where(eq(tables.merchant.id, id))
+				.returning();
+
+			const result = await MerchantMainRepository.composeEntity(
+				updated,
+				this.#storage,
+			);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info(
+				{ merchantId: id, reason },
+				"[MerchantMainRepository] Merchant deactivated",
+			);
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "deactivate");
 		}
 	}
 }

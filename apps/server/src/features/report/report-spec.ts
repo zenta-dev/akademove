@@ -1,8 +1,11 @@
 import { oc } from "@orpc/contract";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import {
+	DismissReportSchema,
 	InsertReportSchema,
 	ReportSchema,
+	ResolveReportSchema,
+	StartInvestigationSchema,
 	UpdateReportSchema,
 } from "@repo/schema/report";
 import * as z from "zod";
@@ -71,4 +74,51 @@ export const ReportSpec = {
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(createSuccesSchema(z.null(), "Report deleted successfully")),
+	startInvestigation: oc
+		.route({
+			tags: [FEATURE_TAGS.REPORT],
+			method: "POST",
+			path: "/{id}/start-investigation",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: StartInvestigationSchema,
+			}),
+		)
+		.output(
+			createSuccesSchema(ReportSchema, "Investigation started successfully"),
+		),
+	resolve: oc
+		.route({
+			tags: [FEATURE_TAGS.REPORT],
+			method: "POST",
+			path: "/{id}/resolve",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: ResolveReportSchema,
+			}),
+		)
+		.output(createSuccesSchema(ReportSchema, "Report resolved successfully")),
+	dismiss: oc
+		.route({
+			tags: [FEATURE_TAGS.REPORT],
+			method: "POST",
+			path: "/{id}/dismiss",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: DismissReportSchema,
+			}),
+		)
+		.output(createSuccesSchema(ReportSchema, "Report dismissed successfully")),
 };

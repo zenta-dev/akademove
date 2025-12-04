@@ -129,4 +129,26 @@ export const CouponSpec = {
 		})
 		.input(z.object({ params: z.object({ id: z.string() }) }))
 		.output(createSuccesSchema(z.null(), "Coupon deleted successfully")),
+	activate: oc
+		.route({
+			tags: [FEATURE_TAGS.COUPON],
+			method: "POST",
+			path: "/{id}/activate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(createSuccesSchema(CouponSchema, "Coupon activated successfully")),
+	deactivate: oc
+		.route({
+			tags: [FEATURE_TAGS.COUPON],
+			method: "POST",
+			path: "/{id}/deactivate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(CouponSchema, "Coupon deactivated successfully"),
+		),
 };

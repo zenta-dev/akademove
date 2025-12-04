@@ -14,6 +14,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { QuickMessageTemplateDatabase } from "@/core/tables/quick-message";
 import { log } from "@/utils";
+import { QuickMessageCacheService } from "./services";
 
 export class QuickMessageRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -35,11 +36,10 @@ export class QuickMessageRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	): Promise<QuickMessageTemplate[]> {
 		try {
-			const { role, orderType, locale, isActive } = query;
-
-			const cacheKey = `quick-messages:${role ?? "all"}:${orderType ?? "all"}:${locale ?? "all"}:${isActive ?? "all"}`;
+			const cacheKey = QuickMessageCacheService.generateListCacheKey(query);
 
 			const fallback = async () => {
+				const { role, orderType, locale, isActive } = query;
 				const tx = opts?.tx ?? this.db;
 
 				const conditions: SQL[] = [];
@@ -126,10 +126,15 @@ export class QuickMessageRepository extends BaseRepository {
 				.returning();
 
 			// Invalidate list cache
-			await this.deleteCache(
-				`quick-messages:${data.role}:${data.orderType ?? "all"}:${data.locale}:*`,
+			const invalidationPatterns =
+				QuickMessageCacheService.generateInvalidationPatterns(
+					data.role,
+					data.orderType,
+					data.locale,
+				);
+			await Promise.all(
+				invalidationPatterns.map((pattern) => this.deleteCache(pattern)),
 			);
-			await this.deleteCache("quick-messages:all:*");
 
 			log.info(
 				{ templateId: res.id, role: data.role },
@@ -167,7 +172,7 @@ export class QuickMessageRepository extends BaseRepository {
 			// Invalidate caches
 			await Promise.all([
 				this.deleteCache(id),
-				this.deleteCache("quick-messages:*"),
+				this.deleteCache(QuickMessageCacheService.generateWildcardPattern()),
 			]);
 
 			log.info({ templateId: id }, "[QuickMessageRepository] Template updated");
@@ -198,7 +203,7 @@ export class QuickMessageRepository extends BaseRepository {
 			// Invalidate caches
 			await Promise.all([
 				this.deleteCache(id),
-				this.deleteCache("quick-messages:*"),
+				this.deleteCache(QuickMessageCacheService.generateWildcardPattern()),
 			]);
 
 			log.info({ templateId: id }, "[QuickMessageRepository] Template deleted");

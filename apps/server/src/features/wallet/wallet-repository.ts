@@ -5,8 +5,7 @@ import type {
 	WalletMonthlySummaryRequest,
 	WalletMonthlySummaryResponse,
 } from "@repo/schema/wallet";
-import Decimal from "decimal.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -14,8 +13,12 @@ import type { WithTx, WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { walletDatabase } from "@/core/tables/wallet";
-import { safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
-import { PaymentRepository } from "../payment/payment-repository";
+import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import {
+	type WalletBalanceService,
+	WalletMonthlySummaryService,
+	type WalletTransactionService,
+} from "./services";
 
 interface WalletGetMonthlyPayload
 	extends WalletMonthlySummaryRequest,
@@ -24,7 +27,12 @@ interface WalletGetMonthlyPayload
 interface PayPayload extends PayRequest, WithUserId {}
 
 export class WalletRepository extends BaseRepository {
-	constructor(db: DatabaseService, kv: KeyValueService) {
+	constructor(
+		db: DatabaseService,
+		kv: KeyValueService,
+		private readonly balanceService: WalletBalanceService,
+		private readonly transactionService: WalletTransactionService,
+	) {
 		super("wallet", kv, db);
 	}
 
@@ -62,64 +70,16 @@ export class WalletRepository extends BaseRepository {
 		opts?: WithTx,
 	): Promise<WalletMonthlySummaryResponse> {
 		try {
-			const { year, month } = params;
+			const { year, month, userId } = params;
 			const tx = opts?.tx ?? this.db;
-			const wallet = await this.#ensurewallet(params.userId);
+			const wallet = await this.#ensurewallet(userId);
 
-			const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
-			const endDate = new Date(Date.UTC(year, month, 1, 0, 0, 0));
-
-			const res = await safeAsync(
-				tx
-					.select({
-						type: tables.transaction.type,
-						total: sql<string>`SUM(${tables.transaction.amount})`,
-					})
-					.from(tables.transaction)
-					.where(
-						sql`${tables.transaction.walletId} = ${wallet.id} AND ${tables.transaction.status} = 'SUCCESS' AND ${tables.transaction.createdAt} >= ${startDate} AND ${tables.transaction.createdAt} < ${endDate}`,
-					)
-					.groupBy(tables.transaction.type),
-			);
-
-			const rows = res.data;
-
-			if (!rows) {
-				return {
-					month: `${year}-${String(month).padStart(2, "0")}`,
-					totalIncome: 0,
-					totalExpense: 0,
-					net: 0,
-				};
-			}
-
-			let income = 0;
-			let expense = 0;
-
-			for (const row of rows) {
-				const type = row.type;
-				const total = Number(row.total);
-
-				switch (type) {
-					case "TOPUP":
-					case "REFUND":
-						income += total;
-						break;
-					case "PAYMENT":
-					case "WITHDRAW":
-						expense += total;
-						break;
-					case "ADJUSTMENT":
-						break;
-				}
-			}
-
-			return {
-				month: `${year}-${String(month).padStart(2, "0")}`,
-				totalIncome: income,
-				totalExpense: expense,
-				net: income - expense,
-			};
+			// Delegate monthly summary calculation to WalletMonthlySummaryService
+			return await WalletMonthlySummaryService.getMonthlySummary(tx, {
+				walletId: wallet.id,
+				year,
+				month,
+			});
 		} catch (error) {
 			throw this.handleError(error, "get monthly summary");
 		}
@@ -144,63 +104,31 @@ export class WalletRepository extends BaseRepository {
 				});
 			}
 
-			const safeAmount = new Decimal(amount);
-			const amountSql = toStringNumberSafe(safeAmount);
-
-			// CRITICAL FIX: Atomic update with WHERE clause check to prevent race conditions
-			// This uses database-level constraints to ensure balance never goes negative
-			const [updatedwallet] = await tx
-				.update(tables.wallet)
-				.set({
-					balance: sql`balance - ${amountSql}`,
-					updatedAt: new Date(),
-				})
-				.where(
-					sql`${tables.wallet.id} = ${wallet.id} AND balance >= ${amountSql}`,
-				)
-				.returning();
-
-			if (!updatedwallet) {
-				throw new RepositoryError(
-					`Insufficient balance. Payment of ${amount} exceeds available balance.`,
-					{ code: "BAD_REQUEST" },
-				);
+			if (!referenceId) {
+				throw new RepositoryError("Reference ID is required for payment", {
+					code: "BAD_REQUEST",
+				});
 			}
 
-			const safeBalanceBefore = new Decimal(wallet.balance);
-			const safeBalanceAfter = new Decimal(updatedwallet.balance);
-			const balanceBefore = toStringNumberSafe(safeBalanceBefore);
-			const balanceAfter = toStringNumberSafe(safeBalanceAfter);
+			// Delegate balance deduction to WalletBalanceService
+			const { balanceBefore, balanceAfter } = await this.balanceService.deduct(
+				{ walletId: wallet.id, amount },
+				{ tx },
+			);
 
-			const [transaction] = await tx
-				.insert(tables.transaction)
-				.values({
-					id: v7(),
+			// Delegate payment transaction recording to WalletTransactionService
+			const payment = await this.transactionService.recordPayment(
+				{
 					walletId: wallet.id,
-					type: "PAYMENT",
-					amount: amountSql,
+					amount,
 					balanceBefore,
 					balanceAfter,
-					status: "SUCCESS",
-					description: `Payment for ${referenceId}`,
 					referenceId,
-				})
-				.returning();
+				},
+				{ tx },
+			);
 
-			const [payment] = await tx
-				.insert(tables.payment)
-				.values({
-					id: v7(),
-					transactionId: transaction.id,
-					provider: "MANUAL",
-					method: "wallet",
-					amount: amountSql,
-					status: "SUCCESS",
-					externalId: referenceId,
-				})
-				.returning();
-
-			return PaymentRepository.composeEntity(payment);
+			return payment;
 		} catch (error) {
 			throw this.handleError(error, "pay");
 		}

@@ -13,6 +13,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ConfigurationDatabase } from "@/core/tables/configuration";
 import { safeAsync } from "@/utils";
+import { ConfigurationAuditService } from "./services";
 
 export class ConfigurationRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -88,13 +89,16 @@ export class ConfigurationRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Configuration with key "${key}" not found`);
 
+			const updateData = ConfigurationAuditService.prepareUpdateData(
+				item.userId,
+			);
+
 			const [[operation]] = await Promise.all([
 				this.db
 					.update(tables.configuration)
 					.set({
 						...item,
-						updatedById: item.userId,
-						updatedAt: new Date(),
+						...updateData,
 					})
 					.where(eq(tables.configuration.key, key))
 					.returning(),
@@ -102,17 +106,17 @@ export class ConfigurationRepository extends BaseRepository {
 			]);
 
 			const result = ConfigurationRepository.composeEntity(operation);
+			const auditLogEntry = ConfigurationAuditService.prepareAuditLogEntry(
+				key,
+				existing as unknown as ConfigurationDatabase,
+				operation,
+				item.userId,
+			);
+
 			await safeAsync(
 				Promise.all([
 					this.setCache(key, result, { expirationTtl: CACHE_TTLS["24h"] }),
-					this.db.insert(tables.configurationAuditLog).values({
-						tableName: "configurations",
-						recordId: key,
-						operation: "UPDATE",
-						oldData: existing,
-						newData: operation,
-						updatedById: item.userId,
-					}),
+					this.db.insert(tables.configurationAuditLog).values(auditLogEntry),
 				]),
 			);
 

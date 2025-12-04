@@ -1,7 +1,6 @@
 import { m } from "@repo/i18n";
 import type { Phone } from "@repo/schema/common";
 import type { UpdateUser, UpdateUserPassword, User } from "@repo/schema/user";
-import { getFileExtension } from "@repo/shared";
 import { and, eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -11,8 +10,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { PasswordManager } from "@/utils/password";
 import { UserAdminRepository } from "../admin/user-admin-repository";
-
-const BUCKET = "user";
+import { PasswordChangeService, UserProfileService } from "../services";
 
 export class UserMeRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -79,23 +77,13 @@ export class UserMeRepository extends BaseRepository {
 
 			let phone: Phone | undefined;
 			if (item.phone) {
-				const cc = item.phone.countryCode;
-				const num = item.phone.number;
-				if (!cc || !num) {
-					throw new RepositoryError(m.error_invalid_phone_values(), {
-						code: "BAD_REQUEST",
-					});
-				}
-
-				phone = { countryCode: cc, number: num };
+				phone = UserProfileService.validatePhone(item.phone);
 			}
 
-			let photoKey: string | undefined;
-
-			if (item.photo) {
-				const extension = getFileExtension(item.photo);
-				photoKey = `PP-${existing.id}.${extension}`;
-			}
+			const photoKey = UserProfileService.generatePhotoKey(
+				existing.id,
+				item.photo,
+			);
 
 			const tasks: Promise<unknown>[] = [
 				tx
@@ -107,7 +95,7 @@ export class UserMeRepository extends BaseRepository {
 			if (item.photo && photoKey) {
 				tasks.push(
 					this.#storage.upload({
-						bucket: BUCKET,
+						bucket: UserProfileService.BUCKET,
 						key: photoKey,
 						file: item.photo,
 					}),
@@ -136,11 +124,10 @@ export class UserMeRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	): Promise<boolean> {
 		try {
-			if (item.newPassword !== item.confirmNewPassword) {
-				throw new RepositoryError(m.error_password_not_match(), {
-					code: "BAD_REQUEST",
-				});
-			}
+			PasswordChangeService.validatePasswordMatch(
+				item.newPassword,
+				item.confirmNewPassword,
+			);
 
 			const tx = opts?.tx ?? this.db;
 
@@ -163,18 +150,17 @@ export class UserMeRepository extends BaseRepository {
 			}
 
 			if (account.password) {
-				const isValidPassword = this.#pw.verify(
+				PasswordChangeService.verifyOldPassword(
+					this.#pw,
 					account.password,
 					item.oldPassword,
 				);
-				if (!isValidPassword) {
-					throw new RepositoryError(m.error_invalid_credentials(), {
-						code: "UNAUTHORIZED",
-					});
-				}
 			}
 
-			const hashedPassword = this.#pw.hash(item.newPassword);
+			const hashedPassword = PasswordChangeService.hashPassword(
+				this.#pw,
+				item.newPassword,
+			);
 
 			const res = await tx
 				.update(tables.account)

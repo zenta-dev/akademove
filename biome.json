@@ -31,7 +31,8 @@
 			"!**/i18n",
 			"!**/ref",
 			"!**/.tanstack",
-			"!**/*.css"
+			"!**/*.css",
+			"!alchemy.run.d.ts"
 		]
 	},
 	"formatter": {
@@ -52,6 +53,9 @@
 			"correctness": {
 				"useExhaustiveDependencies": "info"
 			},
+			"complexity": {
+				"noStaticOnlyClass": "off"
+			},
 			"nursery": {
 				"useSortedClasses": {
 					"level": "warn",
@@ -71,7 +75,11 @@
 				"noUnusedTemplateLiteral": "error",
 				"useNumberNamespace": "error",
 				"noInferrableTypes": "error",
-				"noUselessElse": "error"
+				"noUselessElse": "error",
+				"noNonNullAssertion": "warn"
+			},
+			"suspicious": {
+				"noNonNullAssertedOptionalChain": "warn"
 			}
 		}
 	},

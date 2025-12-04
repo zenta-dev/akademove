@@ -1,5 +1,6 @@
 import { oc } from "@orpc/contract";
 import {
+	DeactivateMerchantSchema,
 	FlatUpdateMerchantSchema,
 	MerchantSchema,
 } from "@repo/schema/merchant";
@@ -192,5 +193,34 @@ export const MerchantMainSpec = {
 				}),
 				"Successfully retrieved merchant analytics",
 			),
+		),
+	activate: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "POST",
+			path: "/{id}/activate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string() }) }))
+		.output(
+			createSuccesSchema(MerchantSchema, "Merchant activated successfully"),
+		),
+	deactivate: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "POST",
+			path: "/{id}/deactivate",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: DeactivateMerchantSchema.omit({ id: true }),
+			}),
+		)
+		.output(
+			createSuccesSchema(MerchantSchema, "Merchant deactivated successfully"),
 		),
 };

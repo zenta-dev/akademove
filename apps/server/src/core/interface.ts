@@ -20,8 +20,18 @@ import type { MerchantMainRepository } from "@/features/merchant/main/merchant-m
 import type { MerchantMenuRepository } from "@/features/merchant/menu/merchant-menu-repository";
 import type { MerchantOrderRepository } from "@/features/merchant/order/merchant-order-repository";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
+import type { PushNotificationService } from "@/features/notification/services/push-notification-service";
 import type { OrderRepository } from "@/features/order/order-repository";
+import type {
+	OrderMatchingService,
+	OrderPricingService,
+	OrderStateService,
+} from "@/features/order/services";
 import type { PaymentRepository } from "@/features/payment/payment-repository";
+import type {
+	PaymentChargeService,
+	PaymentWebhookService,
+} from "@/features/payment/services";
 import type { QuickMessageRepository } from "@/features/quick-message/quick-message-repository";
 import type { ReportRepository } from "@/features/report/report-repository";
 import type { ReviewRepository } from "@/features/review/review-repository";
@@ -49,6 +59,32 @@ export interface ServiceContext {
 	map: MapService;
 	payment: PaymentService;
 	firebase: FirebaseAdminService;
+	authServices: {
+		session: import("@/features/auth/services").SessionService;
+		registration: import("@/features/auth/services").UserRegistrationService;
+		passwordReset: import("@/features/auth/services").PasswordResetService;
+	};
+	orderServices: {
+		pricing: OrderPricingService;
+		matching: OrderMatchingService;
+		state: OrderStateService;
+	};
+	notificationServices: {
+		push: PushNotificationService;
+	};
+	paymentServices: {
+		charge: PaymentChargeService;
+		webhook: PaymentWebhookService;
+	};
+	driverServices: {
+		location: import("@/features/driver/services").DriverLocationService;
+		verification: import("@/features/driver/services").DriverVerificationService;
+		availability: import("@/features/driver/services").DriverAvailabilityService;
+	};
+	walletServices: {
+		balance: import("@/features/wallet/services").WalletBalanceService;
+		transaction: import("@/features/wallet/services").WalletTransactionService;
+	};
 }
 
 export interface RepositoryContext {

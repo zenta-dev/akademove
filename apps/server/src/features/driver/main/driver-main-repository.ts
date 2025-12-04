@@ -6,18 +6,7 @@ import {
 	type UpdateDriver,
 } from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { getFileExtension } from "@repo/shared";
-import {
-	and,
-	count,
-	eq,
-	gt,
-	ilike,
-	isNotNull,
-	type SQL,
-	sql,
-} from "drizzle-orm";
-import { v7 } from "uuid";
+import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -30,12 +19,18 @@ import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
 import type { DriverDatabase } from "@/core/tables/driver";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
+import {
+	DriverDocumentService,
+	DriverLocationService,
+	DriverStatsService,
+	DriverVerificationService,
+} from "../services";
 import type { NearbyQuery } from "./driver-main-spec";
-
-const BUCKET = "driver";
 
 export class DriverMainRepository extends BaseRepository {
 	readonly #storage: StorageService;
+	readonly #locationService: DriverLocationService;
+	readonly #verificationService: DriverVerificationService;
 
 	constructor(
 		db: DatabaseService,
@@ -44,6 +39,8 @@ export class DriverMainRepository extends BaseRepository {
 	) {
 		super("driver", kv, db);
 		this.#storage = storage;
+		this.#locationService = new DriverLocationService(db);
+		this.#verificationService = new DriverVerificationService(db, storage);
 	}
 
 	static async composeEntity(
@@ -63,15 +60,15 @@ export class DriverMainRepository extends BaseRepository {
 		const [studentCard, driverLicense, vehicleCertificate, user] =
 			await Promise.all([
 				storage.getPresignedUrl({
-					bucket: BUCKET,
+					bucket: DriverDocumentService.BUCKET,
 					key: item.studentCard,
 				}),
 				storage.getPresignedUrl({
-					bucket: BUCKET,
+					bucket: DriverDocumentService.BUCKET,
 					key: item.driverLicense,
 				}),
 				storage.getPresignedUrl({
-					bucket: BUCKET,
+					bucket: DriverDocumentService.BUCKET,
 					key: item.vehicleCertificate,
 				}),
 				UserAdminRepository.composeEntity(item.user, storage),
@@ -233,41 +230,13 @@ export class DriverMainRepository extends BaseRepository {
 		try {
 			const { x, y, limit = 20, radiusKm = 10, gender } = query;
 
-			const point = sql`ST_SetSRID(ST_MakePoint(${x}, ${y}), 4326)::geography`;
-			const distance = sql<number>`ST_Distance(${tables.driver.currentLocation}::geography, ${point})`;
-
-			const conditions = [
-				eq(tables.driver.isOnline, true),
-				eq(tables.driver.isTakingOrder, false),
-				isNotNull(tables.driver.currentLocation),
-				sql`ST_DWithin(
-		${tables.driver.currentLocation}::geography,
-		${point},
-		${radiusKm * 1000}
-	)`,
-			];
-
-			if (gender) conditions.push(eq(tables.user.gender, gender));
-
-			const result = await this.db
-				.select({
-					driver: tables.driver,
-					user: tables.user,
-					distance: distance.as("distance_meters"),
-				})
-				.from(tables.driver)
-				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
-				.where(and(...conditions))
-				.orderBy(distance)
-				.limit(limit);
-
-			return await Promise.all(
-				result.map((r) =>
-					DriverMainRepository.composeEntity(
-						{ ...r.driver, user: { ...r.user, userBadges: [] } },
-						this.#storage,
-					),
-				),
+			// Delegate to DriverLocationService
+			return await this.#locationService.findNearby(
+				{ lat: y, lng: x, radiusKm, limit, gender },
+				{
+					composeEntity: async (driver) =>
+						await DriverMainRepository.composeEntity(driver, this.#storage),
+				},
 			);
 		} catch (error) {
 			throw this.handleError(error, "nearby");
@@ -309,82 +278,42 @@ export class DriverMainRepository extends BaseRepository {
 		opts?: WithTx,
 	): Promise<Driver> {
 		try {
-			const [user, existingDriver] = await Promise.all([
-				(opts?.tx ?? this.db).query.user.findFirst({
-					with: { userBadges: { with: { badge: true } } },
-					where: (f, op) => op.eq(f.id, item.userId),
-				}),
-				(opts?.tx ?? this.db).query.driver.findFirst({
-					columns: { studentId: true, licensePlate: true },
-					where: (f, op) =>
-						op.or(
-							op.eq(f.studentId, item.studentId),
-							op.eq(f.licensePlate, item.licensePlate),
-						),
-				}),
-			]);
+			// Fetch user
+			const user = await (opts?.tx ?? this.db).query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, item.userId),
+			});
 
 			if (!user)
 				throw new RepositoryError(m.error_user_not_found(), {
 					code: "NOT_FOUND",
 				});
 
-			if (existingDriver) {
-				if (
-					existingDriver.studentId === item.studentId ||
-					existingDriver.licensePlate === item.licensePlate
-				) {
-					throw new RepositoryError(
-						"Student ID or License Plate already registered",
-						{
-							code: "CONFLICT",
-						},
-					);
-				}
-				if (existingDriver.studentId === item.studentId) {
-					throw new RepositoryError(m.error_student_id_already_registered(), {
-						code: "CONFLICT",
-					});
-				}
-				if (existingDriver.licensePlate === item.licensePlate) {
-					throw new RepositoryError(
-						m.error_license_plate_already_registered(),
-						{
-							code: "CONFLICT",
-						},
-					);
-				}
-			}
+			// Validate uniqueness and upload documents (delegated to service)
+			const fileKeys =
+				await this.#verificationService.validateAndUploadDocuments(
+					{
+						studentId: item.studentId,
+						licensePlate: item.licensePlate,
+						studentCard: item.studentCard,
+						driverLicense: item.driverLicense,
+						vehicleCertificate: item.vehicleCertificate,
+					},
+					opts,
+				);
 
-			const id = v7();
-			const fileKeys = {
-				studentCard: `SC-${id}.${getFileExtension(item.studentCard)}`,
-				driverLicense: `DL-${id}.${getFileExtension(item.driverLicense)}`,
-				vehicleCertificate: `VC-${id}.${getFileExtension(item.vehicleCertificate)}`,
-			};
-
-			const [operation] = await Promise.all([
-				(opts?.tx ?? this.db)
-					.insert(tables.driver)
-					.values({ ...item, id, ...fileKeys })
-					.returning()
-					.then((r) => r[0]),
-				this.#storage.upload({
-					bucket: BUCKET,
-					key: fileKeys.studentCard,
-					file: item.studentCard,
-				}),
-				this.#storage.upload({
-					bucket: BUCKET,
-					key: fileKeys.driverLicense,
-					file: item.driverLicense,
-				}),
-				this.#storage.upload({
-					bucket: BUCKET,
-					key: fileKeys.vehicleCertificate,
-					file: item.vehicleCertificate,
-				}),
-			]);
+			// Insert driver record
+			const operation = await (opts?.tx ?? this.db)
+				.insert(tables.driver)
+				.values({
+					...item,
+					id: fileKeys.id,
+					studentCard: fileKeys.studentCard,
+					driverLicense: fileKeys.driverLicense,
+					vehicleCertificate: fileKeys.vehicleCertificate,
+				})
+				.returning()
+				.then((r) => r[0]);
 
 			const result = await DriverMainRepository.composeEntity(
 				{ ...operation, user },
@@ -413,42 +342,28 @@ export class DriverMainRepository extends BaseRepository {
 			});
 			if (!user) throw new RepositoryError(m.error_user_not_found());
 
-			const uploads = [
-				item.studentCard &&
-					this.#storage.upload({
-						bucket: BUCKET,
-						key: `SC-${id}.${getFileExtension(item.studentCard)}`,
-						file: item.studentCard,
-					}),
-				item.driverLicense &&
-					this.#storage.upload({
-						bucket: BUCKET,
-						key: `DL-${id}.${getFileExtension(item.driverLicense)}`,
-						file: item.driverLicense,
-					}),
-				item.vehicleCertificate &&
-					this.#storage.upload({
-						bucket: BUCKET,
-						key: `VC-${id}.${getFileExtension(item.vehicleCertificate)}`,
-						file: item.vehicleCertificate,
-					}),
-			].filter(Boolean);
+			// Upload updated documents (if provided) - delegated to service
+			if (item.studentCard || item.driverLicense || item.vehicleCertificate) {
+				await this.#verificationService.updateDocuments(id, {
+					studentCard: item.studentCard,
+					driverLicense: item.driverLicense,
+					vehicleCertificate: item.vehicleCertificate,
+				});
+			}
 
-			const [operation] = await Promise.all([
-				tx
-					.update(tables.driver)
-					.set({
-						...item,
-						studentCard: existing.studentCardId,
-						driverLicense: existing.driverLicenseId,
-						vehicleCertificate: existing.vehicleCertificateId,
-						createdAt: new Date(existing.createdAt),
-					})
-					.where(eq(tables.driver.id, id))
-					.returning()
-					.then((r) => r[0]),
-				...uploads,
-			]);
+			// Update driver record
+			const operation = await tx
+				.update(tables.driver)
+				.set({
+					...item,
+					studentCard: existing.studentCardId,
+					driverLicense: existing.driverLicenseId,
+					vehicleCertificate: existing.vehicleCertificateId,
+					createdAt: new Date(existing.createdAt),
+				})
+				.where(eq(tables.driver.id, id))
+				.returning()
+				.then((r) => r[0]);
 
 			const result = await DriverMainRepository.composeEntity(
 				{ ...operation, user },
@@ -469,19 +384,17 @@ export class DriverMainRepository extends BaseRepository {
 					code: "NOT_FOUND",
 				});
 
+			// Delete driver record and documents in parallel
 			const [result] = await Promise.all([
 				this.db
 					.delete(tables.driver)
 					.where(eq(tables.driver.id, id))
 					.returning({ id: tables.driver.id }),
-				this.#storage.delete({ bucket: BUCKET, key: find.studentCardId }),
-				this.#storage.delete({
-					bucket: BUCKET,
-					key: find.driverLicenseId,
-				}),
-				this.#storage.delete({
-					bucket: BUCKET,
-					key: find.vehicleCertificateId,
+				// Delete documents - delegated to service
+				this.#verificationService.deleteDocuments({
+					studentCard: find.studentCardId,
+					driverLicense: find.driverLicenseId,
+					vehicleCertificate: find.vehicleCertificateId,
 				}),
 			]);
 
@@ -547,143 +460,246 @@ export class DriverMainRepository extends BaseRepository {
 		}>;
 	}> {
 		try {
-			// Calculate date range based on period
-			let startDate = query?.startDate ?? new Date();
-			let endDate = query?.endDate ?? new Date();
+			// Calculate date range based on period (delegated to service)
+			const { startDate, endDate } = DriverStatsService.calculateDateRange(
+				query?.period,
+				query?.startDate,
+				query?.endDate,
+			);
 
-			if (query?.period) {
-				endDate = new Date();
-				startDate = new Date();
-				switch (query.period) {
-					case "today":
-						startDate.setHours(0, 0, 0, 0);
-						break;
-					case "week":
-						startDate.setDate(startDate.getDate() - 7);
-						break;
-					case "month":
-						startDate.setMonth(startDate.getMonth() - 1);
-						break;
-					case "year":
-						startDate.setFullYear(startDate.getFullYear() - 1);
-						break;
-				}
-			}
+			// Execute queries (SQL generation delegated to service)
+			const [statsResult, earningsByTypeResult, earningsByDayResult] =
+				await Promise.all([
+					this.db.execute<{
+						total_orders: number;
+						total_earnings: string;
+						total_commission: string;
+						completed_orders: number;
+						cancelled_orders: number;
+						average_rating: string;
+					}>(
+						DriverStatsService.getOverallStatsSQL(driverId, startDate, endDate),
+					),
+					this.db.execute<{
+						type: "RIDE" | "DELIVERY" | "FOOD";
+						orders: number;
+						earnings: string;
+						commission: string;
+					}>(
+						DriverStatsService.getEarningsByTypeSQL(
+							driverId,
+							startDate,
+							endDate,
+						),
+					),
+					this.db.execute<{
+						date: string;
+						earnings: string;
+						commission: string;
+						orders: number;
+					}>(
+						DriverStatsService.getEarningsByDaySQL(
+							driverId,
+							startDate,
+							endDate,
+						),
+					),
+				]);
 
-			// Get overall statistics
-			const statsResult = await this.db.execute<{
-				total_orders: number;
-				total_earnings: string;
-				total_commission: string;
-				completed_orders: number;
-				cancelled_orders: number;
-				average_rating: string;
-			}>(sql`
-				SELECT
-					COUNT(*)::int AS total_orders,
-					COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN total_price END), 0)::text AS total_earnings,
-					COALESCE(SUM(CASE WHEN status = 'COMPLETED' THEN driver_commission END), 0)::text AS total_commission,
-					COUNT(CASE WHEN status = 'COMPLETED' THEN 1 END)::int AS completed_orders,
-					COUNT(CASE WHEN status LIKE 'CANCELLED%' THEN 1 END)::int AS cancelled_orders,
-					COALESCE(AVG(CASE WHEN driver_rating IS NOT NULL THEN driver_rating END), 0)::text AS average_rating
-				FROM am_orders
-				WHERE driver_id = ${driverId}
-					AND requested_at >= ${startDate.toISOString()}
-					AND requested_at <= ${endDate.toISOString()}
-			`);
-
-			// Get earnings by type
-			const earningsByTypeResult = await this.db.execute<{
-				type: "RIDE" | "DELIVERY" | "FOOD";
-				orders: number;
-				earnings: string;
-				commission: string;
-			}>(sql`
-				SELECT
-					type,
-					COUNT(*)::int AS orders,
-					COALESCE(SUM(total_price), 0)::text AS earnings,
-					COALESCE(SUM(driver_commission), 0)::text AS commission
-				FROM am_orders
-				WHERE driver_id = ${driverId}
-					AND status = 'COMPLETED'
-					AND requested_at >= ${startDate.toISOString()}
-					AND requested_at <= ${endDate.toISOString()}
-				GROUP BY type
-			`);
-
-			// Get earnings by day
-			const earningsByDayResult = await this.db.execute<{
-				date: string;
-				earnings: string;
-				commission: string;
-				orders: number;
-			}>(sql`
-				SELECT
-					TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
-					COALESCE(SUM(total_price), 0)::text AS earnings,
-					COALESCE(SUM(driver_commission), 0)::text AS commission,
-					COUNT(*)::int AS orders
-				FROM am_orders
-				WHERE driver_id = ${driverId}
-					AND status = 'COMPLETED'
-					AND requested_at >= ${startDate.toISOString()}
-					AND requested_at <= ${endDate.toISOString()}
-				GROUP BY DATE(requested_at)
-				ORDER BY DATE(requested_at) ASC
-			`);
-
-			const stats = statsResult[0] ?? {
-				total_orders: 0,
-				total_earnings: "0",
-				total_commission: "0",
-				completed_orders: 0,
-				cancelled_orders: 0,
-				average_rating: "0",
-			};
-
-			const totalEarnings = Number.parseFloat(stats.total_earnings);
-			const totalCommission = Number.parseFloat(stats.total_commission);
-			const completionRate =
-				stats.total_orders > 0
-					? (stats.completed_orders / stats.total_orders) * 100
-					: 0;
-
-			// Calculate top earning days
-			const sortedDays = earningsByDayResult
-				.map((day) => ({
-					date: day.date,
-					earnings: Number.parseFloat(day.earnings),
-					orders: day.orders,
-				}))
-				.sort((a, b) => b.earnings - a.earnings)
-				.slice(0, 5);
-
-			return {
-				totalEarnings,
-				totalCommission,
-				netEarnings: totalEarnings - totalCommission,
-				totalOrders: stats.total_orders,
-				completedOrders: stats.completed_orders,
-				cancelledOrders: stats.cancelled_orders,
-				completionRate,
-				averageRating: Number.parseFloat(stats.average_rating),
-				earningsByType: earningsByTypeResult.map((item) => ({
-					type: item.type,
-					orders: item.orders,
-					earnings: Number.parseFloat(item.earnings),
-					commission: Number.parseFloat(item.commission),
-				})),
-				earningsByDay: earningsByDayResult.map((day) => ({
-					date: day.date,
-					earnings: Number.parseFloat(day.earnings),
-					orders: day.orders,
-					commission: Number.parseFloat(day.commission),
-				})),
-				topEarningDays: sortedDays,
-			};
+			// Compose analytics result (delegated to service)
+			return DriverStatsService.composeDriverStats(
+				statsResult[0],
+				earningsByTypeResult,
+				earningsByDayResult,
+			);
 		} catch (error) {
 			throw this.handleError(error, "get analytics");
+		}
+	}
+
+	async approve(id: string): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (existing.status !== "PENDING") {
+				throw new RepositoryError(
+					"Driver must be in PENDING status to be approved",
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ status: "APPROVED" })
+				.where(eq(tables.driver.id, id))
+				.returning();
+
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+
+			await this.deleteCache(id);
+			log.info({ driverId: id }, "[DriverMainRepository] Driver approved");
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "approve");
+		}
+	}
+
+	async reject(id: string, reason: string): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (existing.status !== "PENDING") {
+				throw new RepositoryError(
+					"Driver must be in PENDING status to be rejected",
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ status: "REJECTED" })
+				.where(eq(tables.driver.id, id))
+				.returning();
+
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+
+			await this.deleteCache(id);
+			log.info(
+				{ driverId: id, reason },
+				"[DriverMainRepository] Driver rejected",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "reject");
+		}
+	}
+
+	async suspend(
+		id: string,
+		reason: string,
+		suspendUntil?: Date,
+	): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (existing.status !== "ACTIVE" && existing.status !== "APPROVED") {
+				throw new RepositoryError(
+					"Driver must be ACTIVE or APPROVED to be suspended",
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ status: "SUSPENDED" })
+				.where(eq(tables.driver.id, id))
+				.returning();
+
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+
+			await this.deleteCache(id);
+			log.info(
+				{ driverId: id, reason, suspendUntil },
+				"[DriverMainRepository] Driver suspended",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "suspend");
+		}
+	}
+
+	async activate(id: string): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (
+				existing.status !== "APPROVED" &&
+				existing.status !== "INACTIVE" &&
+				existing.status !== "SUSPENDED"
+			) {
+				throw new RepositoryError(
+					"Driver must be APPROVED, INACTIVE, or SUSPENDED to be activated",
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ status: "ACTIVE" })
+				.where(eq(tables.driver.id, id))
+				.returning();
+
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+
+			await this.deleteCache(id);
+			log.info({ driverId: id }, "[DriverMainRepository] Driver activated");
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "activate");
 		}
 	}
 }

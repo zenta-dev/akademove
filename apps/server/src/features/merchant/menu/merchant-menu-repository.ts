@@ -7,7 +7,6 @@ import {
 	type UpdateMerchantMenu,
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { getFileExtension } from "@repo/shared";
 import { and, count, desc, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -23,13 +22,15 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { MerchantMenuDatabase } from "@/core/tables/merchant";
+import {
+	BestSellersService,
+	MenuImageService,
+} from "@/features/merchant/services";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
 
 interface MerchantMenuWithImage extends MerchantMenu {
 	imageId?: string;
 }
-
-const BUCKET = "merchant-menu";
 
 export class MerchantMenuRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -49,7 +50,7 @@ export class MerchantMenuRepository extends BaseRepository {
 	): Promise<MerchantMenuWithImage> {
 		const image = item.image
 			? storage.getPublicUrl({
-					bucket: BUCKET,
+					bucket: MenuImageService.BUCKET,
 					key: item.image,
 				})
 			: undefined;
@@ -254,9 +255,7 @@ export class MerchantMenuRepository extends BaseRepository {
 		try {
 			const id = v7();
 			const imageFile = item.image;
-			const imageKey = imageFile
-				? `MM-${id}.${getFileExtension(imageFile)}`
-				: undefined;
+			const imageKey = MenuImageService.generateImageKey(id, imageFile);
 
 			const [operation] = await Promise.all([
 				this.db
@@ -271,7 +270,7 @@ export class MerchantMenuRepository extends BaseRepository {
 					.then((r) => r[0]),
 				imageFile && imageKey
 					? this.#storage.upload({
-							bucket: BUCKET,
+							bucket: MenuImageService.BUCKET,
 							key: imageKey,
 							file: imageFile,
 							isPublic: true,
@@ -313,13 +312,15 @@ export class MerchantMenuRepository extends BaseRepository {
 			}
 
 			const imageFile = item.image;
-			const key = imageFile
-				? `MM-${id}.${getFileExtension(imageFile)}`
-				: undefined;
+			const imageKey = MenuImageService.resolveUpdateImageKey(
+				id,
+				existing.imageId,
+				imageFile,
+			);
 			const uploadPromise = imageFile
 				? this.#storage.upload({
-						bucket: BUCKET,
-						key: key ?? `MM-${id}.${getFileExtension(imageFile)}`,
+						bucket: MenuImageService.BUCKET,
+						key: imageKey ?? existing.imageId ?? "",
 						file: imageFile,
 						isPublic: true,
 					})
@@ -331,7 +332,7 @@ export class MerchantMenuRepository extends BaseRepository {
 					.set({
 						...item,
 						price: item.price ? toStringNumberSafe(item.price) : undefined,
-						image: existing.imageId ?? key,
+						image: imageKey,
 						createdAt: new Date(existing.createdAt),
 						updatedAt: new Date(),
 					})
@@ -372,10 +373,10 @@ export class MerchantMenuRepository extends BaseRepository {
 					.delete(tables.merchantMenu)
 					.where(eq(tables.merchantMenu.id, id))
 					.returning({ id: tables.merchantMenu.id }),
-				existing.imageId
+				MenuImageService.shouldDelete(existing.imageId)
 					? this.#storage.delete({
-							bucket: BUCKET,
-							key: existing.imageId,
+							bucket: MenuImageService.BUCKET,
+							key: existing.imageId ?? "",
 						})
 					: Promise.resolve(),
 			]);
@@ -403,7 +404,7 @@ export class MerchantMenuRepository extends BaseRepository {
 	> {
 		try {
 			const { limit = 10, category } = params;
-			const cacheKey = `bestsellers:${category || "all"}:${limit}`;
+			const cacheKey = BestSellersService.getCacheKey(params);
 
 			// Try cache first
 			const cached =
@@ -474,44 +475,19 @@ export class MerchantMenuRepository extends BaseRepository {
 				.orderBy(desc(count(tables.orderItem.id)))
 				.limit(limit);
 
-			// Transform result to proper structure
-			const bestSellers = await Promise.all(
-				result.map(async (row) => {
-					const menuImage = row.menuImage
-						? this.#storage.getPublicUrl({
-								bucket: BUCKET,
-								key: row.menuImage,
-							})
-						: undefined;
-
-					const merchantImage = row.merchantImage
-						? this.#storage.getPublicUrl({
-								bucket: "merchant",
-								key: row.merchantImage,
-							})
-						: undefined;
-
-					return {
-						menu: {
-							id: row.menuId,
-							merchantId: row.merchantId,
-							name: row.menuName,
-							image: menuImage,
-							category: row.menuCategory ?? undefined,
-							price: toNumberSafe(row.menuPrice),
-							stock: row.menuStock,
-							createdAt: row.menuCreatedAt,
-							updatedAt: row.menuUpdatedAt,
-						},
-						merchant: {
-							id: row.merchantId,
-							name: row.merchantName,
-							image: merchantImage,
-							rating: toNumberSafe(row.merchantRating),
-						},
-						orderCount: row.orderCount,
-					};
-				}),
+			// Use service to transform results
+			const bestSellers = await BestSellersService.transformBestSellers(
+				result,
+				{
+					getMenuImageUrl: (key) =>
+						this.#storage.getPublicUrl({
+							bucket: MenuImageService.BUCKET,
+							key,
+						}),
+					getMerchantImageUrl: (key) =>
+						this.#storage.getPublicUrl({ bucket: "merchant", key }),
+					toNumberSafe,
+				},
 			);
 
 			// Cache for 1 hour

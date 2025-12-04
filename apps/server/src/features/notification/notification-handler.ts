@@ -33,7 +33,11 @@ export const NotificationHandler = priv.router({
 				status: 200,
 				body: {
 					message: m.server_notification_subscribed(),
-					data: res,
+					data: {
+						successCount: res.successCount,
+						failureCount: res.failureCount,
+						errors: res.errors,
+					},
 				},
 			};
 		},
@@ -50,7 +54,11 @@ export const NotificationHandler = priv.router({
 				status: 200,
 				body: {
 					message: m.server_notification_unsubscribed(),
-					data: res,
+					data: {
+						successCount: res.successCount,
+						failureCount: res.failureCount,
+						errors: res.errors,
+					},
 				},
 			};
 		},

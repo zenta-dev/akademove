@@ -21,6 +21,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { EmergencyDatabase } from "@/core/tables/emergency";
 import { log } from "@/utils";
+import { EmergencyLocationService, EmergencyStatusService } from "./services";
 
 export class EmergencyRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -32,12 +33,9 @@ export class EmergencyRepository extends BaseRepository {
 			...item,
 			orderId: item.orderId ?? undefined,
 			driverId: item.driverId ?? undefined,
-			location: item.location
-				? {
-						latitude: item.location.x,
-						longitude: item.location.y,
-					}
-				: undefined,
+			location: EmergencyLocationService.fromPostGISPointOrUndefined(
+				item.location,
+			),
 			contactedAuthorities:
 				(item.contactedAuthorities as string[]) ?? undefined,
 			respondedById: item.respondedById ?? undefined,
@@ -208,9 +206,9 @@ export class EmergencyRepository extends BaseRepository {
 
 	async create(item: InsertEmergency, opts: WithTx): Promise<Emergency> {
 		try {
-			const location = item.location
-				? `POINT(${item.location.longitude} ${item.location.latitude})`
-				: undefined;
+			const location = EmergencyLocationService.toPostGISPointOrUndefined(
+				item.location,
+			);
 
 			const values: Record<string, unknown> = {
 				id: v7(),
@@ -275,20 +273,21 @@ export class EmergencyRepository extends BaseRepository {
 			const updateData: Record<string, unknown> = { ...item };
 
 			if (item.location) {
-				updateData.location = `POINT(${item.location.longitude} ${item.location.latitude})`;
+				updateData.location = EmergencyLocationService.toPostGISPoint(
+					item.location,
+				);
 			}
 
 			if (item.contactedAuthorities) {
 				updateData.contactedAuthorities = item.contactedAuthorities as unknown;
 			}
 
-			// Set timestamps based on status updates
-			if (item.status === "ACKNOWLEDGED") {
-				updateData.acknowledgedAt = new Date();
-			} else if (item.status === "RESPONDING") {
-				updateData.respondingAt = new Date();
-			} else if (item.status === "RESOLVED") {
-				updateData.resolvedAt = new Date();
+			// Calculate timestamps using service
+			if (item.status) {
+				const timestamps = EmergencyStatusService.calculateStatusTimestamps(
+					item.status,
+				);
+				Object.assign(updateData, timestamps);
 			}
 
 			const [operation] = await (opts.tx ?? this.db)

@@ -105,4 +105,24 @@ export const CouponHandler = priv.router({
 				body: { message: m.server_coupon_deleted(), data: null },
 			};
 		}),
+	activate: priv.activate
+		.use(hasPermission({ coupon: ["update"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.coupon.activate(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_activated(), data: result },
+			};
+		}),
+	deactivate: priv.deactivate
+		.use(hasPermission({ coupon: ["update"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.coupon.deactivate(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_coupon_deactivated(), data: result },
+			};
+		}),
 });

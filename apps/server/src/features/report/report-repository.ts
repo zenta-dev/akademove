@@ -1,12 +1,7 @@
 import { m } from "@repo/i18n";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import {
-	type InsertReport,
-	type Report,
-	ReportKeySchema,
-	type UpdateReport,
-} from "@repo/schema/report";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import type { InsertReport, Report, UpdateReport } from "@repo/schema/report";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -16,6 +11,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
 import { log } from "@/utils";
+import { ReportListQueryService, ReportStatusService } from "./services";
 
 export class ReportRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -40,49 +36,33 @@ export class ReportRepository extends BaseRepository {
 		return result ? ReportRepository.composeEntity(result) : undefined;
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
-		try {
-			const [dbResult] = await this.db
-				.select({ count: count(tables.report.id) })
-				.from(tables.report)
-				.where(ilike(tables.report.description, `%${query}%`));
-
-			return dbResult?.count ?? 0;
-		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
-			return 0;
-		}
-	}
-
 	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Report>> {
 		try {
-			const {
-				cursor,
-				page,
-				limit = 10,
-				query: search,
-				sortBy,
-				order = "asc",
-			} = query ?? {};
+			// Extract pagination parameters
+			const { cursor, page, limit, search, sortBy, order } =
+				ReportListQueryService.extractPaginationParams(query);
 
+			// Generate ORDER BY clause
 			const orderBy = (
 				f: typeof tables.report._.columns,
 				op: OrderByOperation,
 			) => {
-				if (sortBy) {
-					const parsed = ReportKeySchema.safeParse(sortBy);
-					const field = parsed.success ? f[parsed.data] : f.id;
+				const validField = ReportListQueryService.parseSortField(sortBy);
+				if (validField) {
+					const field = f[validField as keyof typeof f];
 					return op[order](field);
 				}
 				return op[order](f.id);
 			};
 
-			const clauses: SQL[] = [];
+			// Generate WHERE clauses
+			const clauses = ReportListQueryService.generateWhereClauses({
+				search,
+				cursor,
+			});
 
-			if (search) clauses.push(ilike(tables.report.description, `%${search}%`));
+			// Cursor-based pagination
 			if (cursor) {
-				clauses.push(gt(tables.report.reportedAt, new Date(cursor)));
-
 				const result = await this.db.query.report.findMany({
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
@@ -93,27 +73,36 @@ export class ReportRepository extends BaseRepository {
 				return { rows };
 			}
 
+			// Page-based pagination
 			if (page) {
-				const offset = (page - 1) * limit;
-
 				const result = await this.db.query.report.findMany({
 					where: (_f, op) => op.and(...clauses),
 					orderBy,
-					offset,
+					offset: ReportListQueryService.calculatePagination({
+						page,
+						limit,
+						totalCount: 0,
+					}).offset,
 					limit,
 				});
 
 				const rows = result.map(ReportRepository.composeEntity);
 
+				// Get total count based on search
 				const totalCount = search
-					? await this.#getQueryCount(search)
+					? await ReportListQueryService.getSearchCount(this.db, search)
 					: await this.getTotalRow();
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const { totalPages } = ReportListQueryService.calculatePagination({
+					page,
+					limit,
+					totalCount,
+				});
 
 				return { rows, totalPages };
 			}
 
+			// Default: no pagination
 			const result = await this.db.query.report.findMany({
 				where: (_f, op) => op.and(...clauses),
 				orderBy,
@@ -164,17 +153,18 @@ export class ReportRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Report with id "${id}" not found`);
 
+			// Calculate resolvedAt timestamp (delegated to service)
+			const resolvedAt = ReportStatusService.calculateResolvedAt(
+				item.status,
+				existing.resolvedAt,
+			);
+
 			const [operation] = await this.db
 				.update(tables.report)
 				.set({
 					...item,
 					reportedAt: new Date(existing.reportedAt),
-					resolvedAt:
-						item.status === "RESOLVED"
-							? new Date()
-							: existing.resolvedAt
-								? new Date(existing.resolvedAt)
-								: null,
+					resolvedAt,
 				})
 				.where(eq(tables.report.id, id))
 				.returning();
@@ -200,6 +190,134 @@ export class ReportRepository extends BaseRepository {
 			}
 		} catch (error) {
 			throw this.handleError(error, "remove");
+		}
+	}
+
+	async startInvestigation(
+		id: string,
+		notes: string,
+		handledById: string,
+	): Promise<Report> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError("Report not found", { code: "NOT_FOUND" });
+			}
+
+			if (existing.status !== "PENDING") {
+				throw new RepositoryError("Only pending reports can be investigated", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [operation] = await this.db
+				.update(tables.report)
+				.set({
+					status: "INVESTIGATING",
+					resolution: notes,
+					handledById,
+					reportedAt: new Date(existing.reportedAt),
+				})
+				.where(eq(tables.report.id, id))
+				.returning();
+
+			const result = ReportRepository.composeEntity(operation);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info(
+				{ reportId: id, handledById },
+				"[ReportRepository] Started investigation",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "start investigation");
+		}
+	}
+
+	async resolve(
+		id: string,
+		resolution: string,
+		handledById: string,
+	): Promise<Report> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError("Report not found", { code: "NOT_FOUND" });
+			}
+
+			if (existing.status === "RESOLVED" || existing.status === "DISMISSED") {
+				throw new RepositoryError("Report is already closed", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [operation] = await this.db
+				.update(tables.report)
+				.set({
+					status: "RESOLVED",
+					resolution,
+					handledById,
+					resolvedAt: new Date(),
+					reportedAt: new Date(existing.reportedAt),
+				})
+				.where(eq(tables.report.id, id))
+				.returning();
+
+			const result = ReportRepository.composeEntity(operation);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info(
+				{ reportId: id, handledById },
+				"[ReportRepository] Resolved report",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "resolve");
+		}
+	}
+
+	async dismiss(
+		id: string,
+		reason: string,
+		handledById: string,
+	): Promise<Report> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing) {
+				throw new RepositoryError("Report not found", { code: "NOT_FOUND" });
+			}
+
+			if (existing.status === "RESOLVED" || existing.status === "DISMISSED") {
+				throw new RepositoryError("Report is already closed", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [operation] = await this.db
+				.update(tables.report)
+				.set({
+					status: "DISMISSED",
+					resolution: reason,
+					handledById,
+					resolvedAt: new Date(),
+					reportedAt: new Date(existing.reportedAt),
+				})
+				.where(eq(tables.report.id, id))
+				.returning();
+
+			const result = ReportRepository.composeEntity(operation);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info(
+				{ reportId: id, handledById },
+				"[ReportRepository] Dismissed report",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "dismiss");
 		}
 	}
 }

@@ -16,6 +16,8 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
 import { log, toNumberSafe, toStringNumberSafe } from "@/utils";
+import { CouponCalculationService } from "./services/coupon-calculation-service";
+import { CouponValidationService } from "./services/coupon-validation-service";
 
 export class CouponRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -78,7 +80,7 @@ export class CouponRepository extends BaseRepository {
 
 			const clauses: SQL[] = [];
 
-			if (search) clauses.push(ilike(tables.coupon.name, `%${query}%`));
+			if (search) clauses.push(ilike(tables.coupon.name, `%${search}%`));
 
 			if (cursor) {
 				clauses.push(gt(tables.coupon.createdAt, new Date(cursor)));
@@ -244,95 +246,56 @@ export class CouponRepository extends BaseRepository {
 					),
 			});
 
-			const eligibleCoupons: Array<Coupon & { calculatedDiscount: number }> =
-				[];
+			// Create validation callbacks
+			const getUserUsageCount = CouponValidationService.createGetUserUsageCount(
+				this.db,
+			);
+			const getUserOrderCount = CouponValidationService.createGetUserOrderCount(
+				this.db,
+			);
 
-			// Validate each coupon and calculate discount
+			// Filter eligible coupons using validation service
+			const eligibleCoupons: Coupon[] = [];
+
 			for (const couponData of coupons) {
 				const coupon = CouponRepository.composeEntity(couponData);
 
-				// Check service type compatibility
-				const couponServiceType = coupon.rules?.general?.type;
-				if (
-					couponServiceType &&
-					couponServiceType !== "FIXED" &&
-					couponServiceType !== "PERCENTAGE"
-				) {
-					continue; // Skip if type doesn't match (future: add ORDER_TYPE filter)
-				}
-
-				// Check minimum order amount
-				const minOrderAmount = coupon.rules?.general?.minOrderAmount;
-				if (minOrderAmount !== undefined && totalAmount < minOrderAmount) {
-					continue;
-				}
-
-				// Check per-user usage limit
-				const userUsageCount = await this.getUserUsageCount(coupon.id, userId);
-				const perUserLimit = coupon.rules?.user?.perUserLimit ?? 1;
-				if (userUsageCount >= perUserLimit) {
-					continue;
-				}
-
-				// Check if new user only
-				if (coupon.rules?.user?.newUserOnly) {
-					const userOrderCount = await this.db
-						.select({ count: count(tables.order.id) })
-						.from(tables.order)
-						.where(eq(tables.order.userId, userId));
-
-					if (userOrderCount[0]?.count > 0) {
-						continue;
-					}
-				}
-
-				// Calculate discount
-				let discountAmount = 0;
-				if (coupon.discountAmount !== undefined && coupon.discountAmount > 0) {
-					discountAmount = coupon.discountAmount;
-				} else if (
-					coupon.discountPercentage !== undefined &&
-					coupon.discountPercentage > 0
-				) {
-					discountAmount = (totalAmount * coupon.discountPercentage) / 100;
-				}
-
-				// Apply max discount cap
-				const maxDiscountAmount = coupon.rules?.general?.maxDiscountAmount;
-				if (
-					maxDiscountAmount !== undefined &&
-					discountAmount > maxDiscountAmount
-				) {
-					discountAmount = maxDiscountAmount;
-				}
-
-				if (discountAmount > 0) {
-					eligibleCoupons.push({
-						...coupon,
-						calculatedDiscount: discountAmount,
+				const validation =
+					await CouponValidationService.validateCouponEligibility(coupon, {
+						orderAmount: totalAmount,
+						userId,
+						merchantId,
+						getUserUsageCount,
+						getUserOrderCount,
 					});
+
+				if (validation.valid) {
+					eligibleCoupons.push(coupon);
 				}
 			}
 
-			// Sort by discount amount (best first)
-			eligibleCoupons.sort(
-				(a, b) => b.calculatedDiscount - a.calculatedDiscount,
-			);
+			// Calculate best coupon using calculation service
+			const { bestCoupon, bestDiscountAmount, allDiscounts } =
+				CouponCalculationService.calculateBestCoupon(
+					eligibleCoupons,
+					totalAmount,
+				);
 
-			// Auto-select best coupon
-			const bestCoupon = eligibleCoupons[0] ?? null;
-			const bestDiscountAmount = bestCoupon?.calculatedDiscount ?? 0;
-
-			// Remove calculated discount from return (not in schema)
-			const cleanCoupons = eligibleCoupons.map(
-				({ calculatedDiscount, ...c }) => c,
+			log.info(
+				{
+					userId,
+					merchantId,
+					totalAmount,
+					eligibleCount: eligibleCoupons.length,
+					bestCouponCode: bestCoupon?.code,
+					bestDiscountAmount,
+				},
+				"[CouponRepository] Eligible coupons calculated",
 			);
 
 			return {
-				coupons: cleanCoupons,
-				bestCoupon: bestCoupon
-					? ({ ...bestCoupon, calculatedDiscount: undefined } as Coupon)
-					: null,
+				coupons: allDiscounts.map((d) => d.coupon),
+				bestCoupon,
 				bestDiscountAmount,
 			};
 		} catch (error) {
@@ -371,180 +334,39 @@ export class CouponRepository extends BaseRepository {
 
 			const coupon = CouponRepository.composeEntity(couponData);
 
-			// Check if coupon is active
-			if (!coupon.isActive) {
+			// Create validation callbacks
+			const getUserUsageCount = CouponValidationService.createGetUserUsageCount(
+				this.db,
+			);
+			const getUserOrderCount = CouponValidationService.createGetUserOrderCount(
+				this.db,
+			);
+
+			// Validate coupon using validation service
+			const validation = await CouponValidationService.validateCouponCode(
+				coupon,
+				{
+					orderAmount,
+					userId,
+					merchantId,
+					getUserUsageCount,
+					getUserOrderCount,
+				},
+			);
+
+			if (!validation.valid) {
 				return {
 					valid: false,
 					coupon,
 					discountAmount: 0,
 					finalAmount: orderAmount,
-					reason: "Coupon is not active",
+					reason: validation.reason,
 				};
 			}
 
-			// Check merchantId if specified
-			if (merchantId && coupon.merchantId && coupon.merchantId !== merchantId) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: "Coupon not valid for this merchant",
-				};
-			}
-
-			// Check date validity
-			const now = new Date();
-			const startDate = new Date(coupon.periodStart);
-			const endDate = new Date(coupon.periodEnd);
-
-			if (now < startDate) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: "Coupon is not yet valid",
-				};
-			}
-
-			if (now > endDate) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: "Coupon has expired",
-				};
-			}
-
-			// Check usage limit
-			if (coupon.usedCount >= coupon.usageLimit) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: "Coupon usage limit reached",
-				};
-			}
-
-			// Check per-user usage limit (if applicable)
-			const userUsageCount = await this.getUserUsageCount(coupon.id, userId);
-			// Assuming a default per-user limit of 1, can be made configurable in rules
-			const perUserLimit = coupon.rules?.user?.perUserLimit ?? 1;
-			if (userUsageCount >= perUserLimit) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: "You have already used this coupon",
-				};
-			}
-
-			// Check if coupon is for new users only
-			if (coupon.rules?.user?.newUserOnly) {
-				const userOrderCount = await this.db
-					.select({ count: count(tables.order.id) })
-					.from(tables.order)
-					.where(eq(tables.order.userId, userId));
-
-				if (userOrderCount[0]?.count > 0) {
-					return {
-						valid: false,
-						coupon,
-						discountAmount: 0,
-						finalAmount: orderAmount,
-						reason: "This coupon is for new users only",
-					};
-				}
-			}
-
-			// Check minimum order amount
-			const minOrderAmount = coupon.rules?.general?.minOrderAmount;
-			if (minOrderAmount !== undefined && orderAmount < minOrderAmount) {
-				return {
-					valid: false,
-					coupon,
-					discountAmount: 0,
-					finalAmount: orderAmount,
-					reason: `Minimum order amount is ${minOrderAmount}`,
-				};
-			}
-
-			// Check time-based rules
-			if (coupon.rules?.time) {
-				const currentDay = [
-					"SUNDAY",
-					"MONDAY",
-					"TUESDAY",
-					"WEDNESDAY",
-					"THURSDAY",
-					"FRIDAY",
-					"SATURDAY",
-				][now.getDay()];
-				const currentHour = now.getHours();
-
-				if (
-					coupon.rules.time.allowedDays &&
-					coupon.rules.time.allowedDays.length > 0 &&
-					!coupon.rules.time.allowedDays.includes(
-						currentDay as
-							| "SUNDAY"
-							| "MONDAY"
-							| "TUESDAY"
-							| "WEDNESDAY"
-							| "THURSDAY"
-							| "FRIDAY"
-							| "SATURDAY",
-					)
-				) {
-					return {
-						valid: false,
-						coupon,
-						discountAmount: 0,
-						finalAmount: orderAmount,
-						reason: "Coupon not valid on this day",
-					};
-				}
-
-				if (
-					coupon.rules.time.allowedHours &&
-					coupon.rules.time.allowedHours.length > 0 &&
-					!coupon.rules.time.allowedHours.includes(currentHour)
-				) {
-					return {
-						valid: false,
-						coupon,
-						discountAmount: 0,
-						finalAmount: orderAmount,
-						reason: "Coupon not valid at this hour",
-					};
-				}
-			}
-
-			// Calculate discount
-			let discountAmount = 0;
-			if (coupon.discountAmount !== undefined && coupon.discountAmount > 0) {
-				discountAmount = coupon.discountAmount;
-			} else if (
-				coupon.discountPercentage !== undefined &&
-				coupon.discountPercentage > 0
-			) {
-				discountAmount = (orderAmount * coupon.discountPercentage) / 100;
-			}
-
-			// Apply max discount limit if set
-			const maxDiscountAmount = coupon.rules?.general?.maxDiscountAmount;
-			if (
-				maxDiscountAmount !== undefined &&
-				discountAmount > maxDiscountAmount
-			) {
-				discountAmount = maxDiscountAmount;
-			}
-
-			const finalAmount = Math.max(0, orderAmount - discountAmount);
+			// Calculate discount using calculation service
+			const { discountAmount, finalAmount } =
+				CouponCalculationService.calculateDiscount(coupon, orderAmount);
 
 			return {
 				valid: true,
@@ -611,6 +433,72 @@ export class CouponRepository extends BaseRepository {
 				"Failed to record coupon usage",
 			);
 			throw this.handleError(error, "recordUsage");
+		}
+	}
+
+	async activate(id: string): Promise<Coupon> {
+		try {
+			log.info({ couponId: id }, "[CouponRepository] Activating coupon");
+
+			const coupon = await this.#getFromDB(id);
+			if (!coupon) {
+				throw new RepositoryError(m.error_failed_get_coupon(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (coupon.isActive) {
+				throw new RepositoryError("Coupon is already active", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [updated] = await this.db
+				.update(tables.coupon)
+				.set({ isActive: true })
+				.where(eq(tables.coupon.id, id))
+				.returning();
+
+			const result = CouponRepository.composeEntity(updated);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info({ couponId: id }, "[CouponRepository] Coupon activated");
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "activate");
+		}
+	}
+
+	async deactivate(id: string): Promise<Coupon> {
+		try {
+			log.info({ couponId: id }, "[CouponRepository] Deactivating coupon");
+
+			const coupon = await this.#getFromDB(id);
+			if (!coupon) {
+				throw new RepositoryError(m.error_failed_get_coupon(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			if (!coupon.isActive) {
+				throw new RepositoryError("Coupon is already inactive", {
+					code: "BAD_REQUEST",
+				});
+			}
+
+			const [updated] = await this.db
+				.update(tables.coupon)
+				.set({ isActive: false })
+				.where(eq(tables.coupon.id, id))
+				.returning();
+
+			const result = CouponRepository.composeEntity(updated);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			log.info({ couponId: id }, "[CouponRepository] Coupon deactivated");
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "deactivate");
 		}
 	}
 }

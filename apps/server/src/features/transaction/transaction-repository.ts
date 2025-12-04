@@ -1,9 +1,8 @@
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import {
-	type InsertTransaction,
-	type Transaction,
-	TransactionKeySchema,
-	type UpdateTransaction,
+import type {
+	InsertTransaction,
+	Transaction,
+	UpdateTransaction,
 } from "@repo/schema/transaction";
 import { eq, gt, inArray, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
@@ -20,6 +19,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { TransactionDatabase } from "@/core/tables/transaction";
 import { toNumberSafe, toStringNumberSafe } from "@/utils";
+import { TransactionListQueryService } from "./services/transaction-list-query-service";
 
 export class TransactionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -109,30 +109,28 @@ export class TransactionRepository extends BaseRepository {
 	): Promise<ListResult<Transaction>> {
 		const result = { rows: [] };
 		try {
-			const {
-				cursor,
-				page,
-				limit = 10,
-				sortBy,
-				order = "asc",
-				userId,
-			} = query ?? {};
+			// Extract and validate pagination parameters
+			const { cursor, page, limit, sortBy, order, userId } =
+				TransactionListQueryService.extractPaginationParams(query);
+
 			if (!userId) return result;
 
 			const tx = opts?.tx ?? this.db;
 
+			// Generate ORDER BY clause
 			const orderBy = (
 				f: typeof tables.transaction._.columns,
 				op: OrderByOperation,
 			) => {
-				if (sortBy) {
-					const parsed = TransactionKeySchema.safeParse(sortBy);
-					const field = parsed.success ? f[parsed.data] : f.id;
+				const validField = TransactionListQueryService.parseSortField(sortBy);
+				if (validField) {
+					const field = f[validField as keyof typeof f];
 					return op[order](field);
 				}
 				return op[order](f.id);
 			};
 
+			// Generate WHERE clauses
 			const clauses: SQL[] = [
 				inArray(
 					tables.transaction.walletId,
@@ -144,9 +142,12 @@ export class TransactionRepository extends BaseRepository {
 			];
 
 			if (cursor) {
-				clauses.push(gt(tables.review.createdAt, new Date(cursor)));
+				clauses.push(gt(tables.transaction.createdAt, new Date(cursor)));
+			}
 
-				const res = await this.db.query.transaction.findMany({
+			// Cursor-based pagination
+			if (cursor) {
+				const res = await tx.query.transaction.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
 					limit: limit + 1,
@@ -157,8 +158,16 @@ export class TransactionRepository extends BaseRepository {
 				return { rows };
 			}
 
+			// Page-based pagination
 			if (page) {
-				const offset = (page - 1) * limit;
+				const totalCount = await this.getTotalRow();
+
+				const { offset, totalPages } =
+					TransactionListQueryService.calculatePagination({
+						page,
+						limit,
+						totalCount,
+					});
 
 				const result = await tx.query.transaction.findMany({
 					where: (_f, op) => op.and(...clauses),
@@ -169,13 +178,10 @@ export class TransactionRepository extends BaseRepository {
 
 				const rows = result.map(TransactionRepository.composeEntity);
 
-				const totalCount = await this.getTotalRow();
-
-				const totalPages = Math.ceil(totalCount / limit);
-
 				return { rows, totalPages };
 			}
 
+			// Default: no pagination
 			const res = await tx.query.transaction.findMany({
 				orderBy,
 				limit,

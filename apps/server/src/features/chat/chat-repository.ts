@@ -14,6 +14,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { OrderChatMessageDatabase } from "@/core/tables/chat";
 import { log } from "@/utils";
+import { ChatAuthorizationService, ChatCacheService } from "./services";
 
 export class ChatRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -108,25 +109,19 @@ export class ChatRepository extends BaseRepository {
 				});
 			}
 
-			// Verify user is part of the order (either user, driver, or merchant)
-			const isUser = order.userId === params.userId;
-			const isDriver = order.driverId === params.userId;
-			// For merchant, we need to check if userId matches merchant's userId
-			let isMerchant = false;
-			const merchantId = order.merchantId;
-			if (merchantId) {
-				const merchant = await opts.tx.query.merchant.findFirst({
-					where: (f, op) => op.eq(f.id, merchantId),
-				});
-				isMerchant = merchant?.userId === params.userId;
-			}
-
-			if (!isUser && !isDriver && !isMerchant) {
-				throw new RepositoryError(
-					"User is not authorized to send messages in this order",
-					{ code: "FORBIDDEN" },
-				);
-			}
+			// Verify user is authorized (delegated to service)
+			await ChatAuthorizationService.requireOrderParticipant(
+				params.userId,
+				order,
+				{
+					getMerchantUserId: async (merchantId: string) => {
+						const merchant = await opts.tx.query.merchant.findFirst({
+							where: (f, op) => op.eq(f.id, merchantId),
+						});
+						return merchant?.userId;
+					},
+				},
+			);
 
 			const [result] = await opts.tx
 				.insert(tables.orderChatMessage)
@@ -147,7 +142,9 @@ export class ChatRepository extends BaseRepository {
 			}
 
 			// Invalidate order messages cache
-			await this.deleteCache(`order:${params.orderId}:messages`);
+			await this.deleteCache(
+				ChatCacheService.generateMessagesCacheKey(params.orderId),
+			);
 
 			log.info(
 				{
@@ -173,7 +170,7 @@ export class ChatRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	): Promise<number> {
 		try {
-			const cacheKey = `order:${orderId}:count`;
+			const cacheKey = ChatCacheService.generateCountCacheKey(orderId);
 
 			const fallback = async () => {
 				const [result] = await (opts?.tx ?? this.db)

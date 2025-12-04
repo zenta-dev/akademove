@@ -1,13 +1,12 @@
 import { m } from "@repo/i18n";
-import {
-	type InsertLeaderboard,
-	type Leaderboard,
-	LeaderboardKeySchema,
-	type UpdateLeaderboard,
+import type {
+	InsertLeaderboard,
+	Leaderboard,
+	UpdateLeaderboard,
 } from "@repo/schema/leaderboard";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { nullsToUndefined } from "@repo/shared";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -16,7 +15,7 @@ import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { LeaderboardDatabase } from "@/core/tables/leaderboard";
-import { log } from "@/utils";
+import { LeaderboardListQueryService } from "./services/leaderboard-list-query-service";
 
 export class LeaderboardRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -35,51 +34,33 @@ export class LeaderboardRepository extends BaseRepository {
 		return result ? LeaderboardRepository.composeEntity(result) : undefined;
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
-		try {
-			const [dbResult] = await this.db
-				.select({ count: count(tables.leaderboard.id) })
-				.from(tables.leaderboard)
-				.where(ilike(tables.leaderboard.category, `%${query}%`));
-
-			return dbResult?.count ?? 0;
-		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
-			return 0;
-		}
-	}
-
 	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Leaderboard>> {
 		try {
-			const {
-				cursor,
-				page,
-				limit = 10,
-				query: search,
-				sortBy,
-				order = "asc",
-			} = query ?? {};
+			// Extract pagination parameters
+			const { cursor, page, limit, search, sortBy, order } =
+				LeaderboardListQueryService.extractPaginationParams(query);
 
+			// Generate ORDER BY clause
 			const orderBy = (
 				f: typeof tables.leaderboard._.columns,
 				op: OrderByOperation,
 			) => {
-				if (sortBy) {
-					const parsed = LeaderboardKeySchema.safeParse(sortBy);
-					const field = parsed.success ? f[parsed.data] : f.id;
+				const validField = LeaderboardListQueryService.parseSortField(sortBy);
+				if (validField) {
+					const field = f[validField as keyof typeof f];
 					return op[order](field);
 				}
 				return op[order](f.id);
 			};
 
-			const clauses: SQL[] = [];
+			// Generate WHERE clauses
+			const clauses = LeaderboardListQueryService.generateWhereClauses({
+				search,
+				cursor,
+			});
 
-			if (search)
-				clauses.push(ilike(tables.leaderboard.category, `%${query}%`));
-
+			// Cursor-based pagination
 			if (cursor) {
-				clauses.push(gt(tables.leaderboard.createdAt, new Date(cursor)));
-
 				const res = await this.db.query.leaderboard.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
@@ -91,27 +72,36 @@ export class LeaderboardRepository extends BaseRepository {
 				return { rows };
 			}
 
+			// Page-based pagination
 			if (page) {
-				const offset = (page - 1) * limit;
-
 				const res = await this.db.query.leaderboard.findMany({
 					where: (_, op) => op.and(...clauses),
 					orderBy,
-					offset,
+					offset: LeaderboardListQueryService.calculatePagination({
+						page,
+						limit,
+						totalCount: 0,
+					}).offset,
 					limit,
 				});
 
 				const rows = res.map(LeaderboardRepository.composeEntity);
 
+				// Get total count based on search
 				const totalCount = search
-					? await this.#getQueryCount(search)
+					? await LeaderboardListQueryService.getSearchCount(this.db, search)
 					: await this.getTotalRow();
 
-				const totalPages = Math.ceil(totalCount / limit);
+				const { totalPages } = LeaderboardListQueryService.calculatePagination({
+					page,
+					limit,
+					totalCount,
+				});
 
 				return { rows, totalPages };
 			}
 
+			// Default: no pagination
 			const res = await this.db.query.leaderboard.findMany({
 				where: (_, op) => op.and(...clauses),
 				orderBy,

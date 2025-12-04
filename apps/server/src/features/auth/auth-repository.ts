@@ -1,6 +1,3 @@
-import { env } from "cloudflare:workers";
-import { randomBytes } from "node:crypto";
-import { m } from "@repo/i18n";
 import type {
 	ForgotPassword,
 	ResetPassword,
@@ -9,36 +6,38 @@ import type {
 	SignUpDriver,
 	SignUpMerchant,
 } from "@repo/schema/auth";
-import type { ClientAgent } from "@repo/schema/common";
+import type { ClientAgent, Phone } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
-import { getFileExtension, omit } from "@repo/shared";
-import { eq } from "drizzle-orm";
-import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
-import { AuthError, RepositoryError } from "@/core/error";
-import {
-	type DatabaseService,
-	type DatabaseTransaction,
-	tables,
-} from "@/core/services/db";
+import type { PartialWithTx } from "@/core/interface";
+import type { DatabaseService } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MailService } from "@/core/services/mail";
-import { S3StorageService, type StorageService } from "@/core/services/storage";
-import { log } from "@/utils";
+import type { StorageService } from "@/core/services/storage";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
-import { UserAdminRepository } from "../user/admin/user-admin-repository";
+import {
+	PasswordResetService,
+	type PhoneNumber,
+	SessionService,
+	UserRegistrationService,
+} from "./services";
 
-const BUCKET = "user";
-
+/**
+ * Repository responsible for authentication operations
+ *
+ * Delegates to:
+ * - SessionService: Sign in, session management, token rotation, sign out
+ * - UserRegistrationService: User/driver/merchant registration
+ * - PasswordResetService: Forgot password, reset password flows
+ *
+ * This repository acts as a coordinator, bridging the handler layer
+ * with the service layer while maintaining cache operations.
+ */
 export class AuthRepository extends BaseRepository {
-	readonly #storage: StorageService;
-	readonly #jwt: JwtManager;
-	readonly #pw: PasswordManager;
-	readonly #mail: MailService;
-
-	readonly #JWT_EXPIRY = "7d";
-	readonly #RESET_TOKEN_EXPIRY_HOURS = 1;
+	readonly #sessionService: SessionService;
+	readonly #registrationService: UserRegistrationService;
+	readonly #passwordResetService: PasswordResetService;
 
 	constructor(
 		db: DatabaseService,
@@ -49,327 +48,262 @@ export class AuthRepository extends BaseRepository {
 		mail: MailService,
 	) {
 		super("user", kv, db);
-		this.#storage = storage;
-		this.#jwt = jwt;
-		this.#pw = pw;
-		this.#mail = mail;
+
+		// Initialize services
+		this.#sessionService = new SessionService(jwt, pw, storage, kv);
+		this.#registrationService = new UserRegistrationService(db, pw, storage);
+		this.#passwordResetService = new PasswordResetService(db, pw, mail);
 	}
 
-	#generateId(): string {
-		return randomBytes(32).toString("hex");
-	}
-
+	/**
+	 * Authenticates user and generates session token
+	 *
+	 * Delegates to SessionService.signIn()
+	 *
+	 * @param params - Email, password, and optional client agent
+	 * @returns Token and user data
+	 */
 	async signIn(params: SignIn & { clientAgent?: ClientAgent }) {
 		try {
-			const user = await this.db.query.user.findFirst({
-				with: {
-					accounts: {
-						columns: { password: true },
-						where: (f, op) => op.eq(f.providerId, "credentials"),
-					},
-					userBadges: { with: { badge: true } },
+			return await this.#sessionService.signIn(params, {
+				getUserWithAccount: async (email: string) => {
+					return await this.db.query.user.findFirst({
+						with: {
+							accounts: {
+								columns: { password: true },
+								where: (f, op) => op.eq(f.providerId, "credentials"),
+							},
+							userBadges: { with: { badge: true } },
+						},
+						where: (f, op) => op.eq(f.email, email),
+					});
 				},
-				where: (f, op) => op.eq(f.email, params.email),
+				getUserById: async (id: string) => {
+					return await this.db.query.user.findFirst({
+						with: {
+							userBadges: { with: { badge: true } },
+						},
+						where: (f, op) => op.eq(f.id, id),
+					});
+				},
+				getCache: async <T>(key: string) => {
+					return await this.getCache<T>(key);
+				},
+				setCache: async <T>(key: string, value: T) => {
+					await this.setCache(key, value);
+				},
+				deleteCache: async (key: string) => {
+					await this.deleteCache(key);
+				},
 			});
-
-			if (!user?.accounts[0]) {
-				throw new AuthError(m.email_not_registered(), { code: "NOT_FOUND" });
-			}
-
-			const isValidPassword = this.#pw.verify(
-				user.accounts[0].password ?? "",
-				params.password,
-			);
-
-			if (!isValidPassword) {
-				throw new AuthError(m.invalid_credentials(), { code: "UNAUTHORIZED" });
-			}
-
-			const composedUser = await UserAdminRepository.composeEntity(
-				omit(user, ["accounts"]),
-				this.#storage,
-				{ expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY },
-			);
-
-			const [token, _] = await Promise.all([
-				this.#jwt.sign({
-					id: composedUser.id,
-					role: composedUser.role,
-					expiration: this.#JWT_EXPIRY,
-					clientAgent: params.clientAgent,
-				}),
-				this.setCache(composedUser.id, composedUser),
-			]);
-			return {
-				token,
-				user: composedUser,
-			};
 		} catch (error) {
 			throw this.handleError(error, "sign in");
 		}
 	}
 
-	async signUp(
-		params: SignUp & { role?: UserRole },
-		opts?: { tx?: DatabaseTransaction },
-	) {
+	/**
+	 * Registers new user
+	 *
+	 * Delegates to UserRegistrationService.signUp()
+	 *
+	 * @param params - User registration data
+	 * @param opts - Optional transaction context
+	 * @returns Newly created user
+	 */
+	async signUp(params: SignUp & { role?: UserRole }, opts?: PartialWithTx) {
 		try {
-			const existingUser = await (opts?.tx ?? this.db).query.user.findFirst({
-				columns: { email: true, phone: true },
-				where: (f, op) =>
-					op.or(op.eq(f.email, params.email), op.eq(f.phone, params.phone)),
-			});
-
-			if (existingUser) {
-				if (
-					existingUser.email === params.email ||
-					existingUser.phone === params.phone
-				) {
-					throw new RepositoryError("Email or phone Plate already registered", {
-						code: "CONFLICT",
-					});
-				}
-				if (existingUser.email === params.email) {
-					throw new RepositoryError(m.error_email_already_registered(), {
-						code: "CONFLICT",
-					});
-				}
-				if (existingUser.phone === params.phone) {
-					throw new RepositoryError(m.error_phone_already_registered(), {
-						code: "CONFLICT",
-					});
-				}
-			}
-
-			const hashedPassword = this.#pw.hash(params.password);
-			const userId = this.#generateId();
-
-			let photoKey: string | undefined;
-			if (params.photo) {
-				const extension = getFileExtension(params.photo);
-				photoKey = `PP-${userId}.${extension}`;
-			}
-
-			const [user] = await (opts?.tx ?? this.db)
-				.insert(tables.user)
-				.values({
-					...params,
-					id: userId,
-					role: params.role ?? "USER",
-					image: photoKey,
-				})
-				.returning();
-
-			const promises: Promise<unknown>[] = [
-				(opts?.tx ?? this.db).insert(tables.account).values({
-					id: this.#generateId(),
-					accountId: this.#generateId(),
-					userId: user.id,
-					providerId: "credentials",
-					password: hashedPassword,
-				}),
-				(opts?.tx ?? this.db).insert(tables.wallet).values({
-					id: v7(),
-					userId: user.id,
-					balance: "0",
-				}),
-			];
-
-			if (photoKey && params.photo) {
-				promises.push(
-					this.#storage.upload({
-						bucket: BUCKET,
-						key: photoKey,
-						file: params.photo,
-					}),
-				);
-			}
-
-			await Promise.all(promises);
-
-			return {
-				user: await UserAdminRepository.composeEntity(
-					{ ...user, userBadges: [] },
-					this.#storage,
-				),
-			};
+			return await this.#registrationService.signUp(
+				params,
+				{
+					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+						return await (opts?.tx ?? this.db).query.user.findFirst({
+							columns: { email: true, phone: true },
+							where: (f, op) =>
+								op.or(
+									op.eq(f.email, email),
+									op.eq(f.phone, phone as unknown as Phone),
+								),
+						});
+					},
+				},
+				opts,
+			);
 		} catch (error) {
 			throw this.handleError(error, "sign up");
 		}
 	}
 
-	async signUpDriver(
-		params: SignUpDriver,
-		opts?: { tx?: DatabaseTransaction },
-	) {
+	/**
+	 * Registers new driver
+	 *
+	 * Delegates to UserRegistrationService.signUpDriver()
+	 *
+	 * @param params - Driver registration data
+	 * @param opts - Optional transaction context
+	 * @returns Newly created driver user
+	 */
+	async signUpDriver(params: SignUpDriver, opts?: PartialWithTx) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "DRIVER" }, opts);
-			return { user };
+			return await this.#registrationService.signUpDriver(
+				params,
+				{
+					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+						return await (opts?.tx ?? this.db).query.user.findFirst({
+							columns: { email: true, phone: true },
+							where: (f, op) =>
+								op.or(
+									op.eq(f.email, email),
+									op.eq(f.phone, phone as unknown as Phone),
+								),
+						});
+					},
+				},
+				opts,
+			);
 		} catch (error) {
 			throw this.handleError(error, "sign up driver");
 		}
 	}
 
-	async signUpMerchant(
-		params: SignUpMerchant,
-		opts?: { tx?: DatabaseTransaction },
-	) {
+	/**
+	 * Registers new merchant
+	 *
+	 * Delegates to UserRegistrationService.signUpMerchant()
+	 *
+	 * @param params - Merchant registration data
+	 * @param opts - Optional transaction context
+	 * @returns Newly created merchant user
+	 */
+	async signUpMerchant(params: SignUpMerchant, opts?: PartialWithTx) {
 		try {
-			const { user } = await this.signUp({ ...params, role: "MERCHANT" }, opts);
-			return { user };
+			return await this.#registrationService.signUpMerchant(
+				params,
+				{
+					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+						return await (opts?.tx ?? this.db).query.user.findFirst({
+							columns: { email: true, phone: true },
+							where: (f, op) =>
+								op.or(
+									op.eq(f.email, email),
+									op.eq(f.phone, phone as unknown as Phone),
+								),
+						});
+					},
+				},
+				opts,
+			);
 		} catch (error) {
 			throw this.handleError(error, "sign up merchant");
 		}
 	}
 
+	/**
+	 * Signs out user by invalidating cached session
+	 *
+	 * Delegates to SessionService.signOut()
+	 *
+	 * @param token - JWT token to invalidate
+	 * @returns true if successful
+	 */
 	async signOut(token: string) {
 		try {
-			const payload = await this.#jwt.verify(token);
-			await this.deleteCache(payload.id);
-			return true;
+			return await this.#sessionService.signOut(token, {
+				deleteCache: async (key: string) => {
+					await this.deleteCache(key);
+				},
+			});
 		} catch (error) {
 			throw this.handleError(error, "sign out");
 		}
 	}
 
+	/**
+	 * Retrieves session data from JWT token
+	 *
+	 * Delegates to SessionService.getSession()
+	 *
+	 * @param token - JWT token string
+	 * @returns Session data with optional new token (if rotated)
+	 */
 	async getSession(token: string) {
 		try {
-			const payload = await this.#jwt.verify(token);
-
-			const fallback = async () => {
-				const res = await this.db.query.user.findFirst({
-					with: {
-						userBadges: { with: { badge: true } },
-					},
-					where: (f, op) => op.eq(f.id, payload.id),
-				});
-				if (!res) {
-					throw new AuthError("User not found", { code: "UNAUTHORIZED" });
-				}
-				const user = await UserAdminRepository.composeEntity(
-					res,
-					this.#storage,
-					{
-						expiresIn: S3StorageService.SEVEN_DAY_PRESIGNED_URL_EXPIRY,
-					},
-				);
-				await this.setCache(user.id, user);
-				return user;
-			};
-
-			const user = await this.getCache(payload.id, { fallback });
-
-			let newToken: string | undefined;
-			if (payload.shouldRotate) {
-				newToken = await this.#jwt.sign({
-					id: user.id,
-					role: user.role,
-					expiration: this.#JWT_EXPIRY,
-				});
-			}
-
-			return {
-				user,
-				token: newToken,
-				payload,
-			};
+			return await this.#sessionService.getSession(token, {
+				getUserWithAccount: async (email: string) => {
+					return await this.db.query.user.findFirst({
+						with: {
+							accounts: {
+								columns: { password: true },
+								where: (f, op) => op.eq(f.providerId, "credentials"),
+							},
+							userBadges: { with: { badge: true } },
+						},
+						where: (f, op) => op.eq(f.email, email),
+					});
+				},
+				getUserById: async (id: string) => {
+					return await this.db.query.user.findFirst({
+						with: {
+							userBadges: { with: { badge: true } },
+						},
+						where: (f, op) => op.eq(f.id, id),
+					});
+				},
+				getCache: async <T>(key: string) => {
+					return await this.getCache<T>(key);
+				},
+				setCache: async <T>(key: string, value: T) => {
+					await this.setCache(key, value);
+				},
+				deleteCache: async (key: string) => {
+					await this.deleteCache(key);
+				},
+			});
 		} catch (error) {
 			throw this.handleError(error, "get session");
 		}
 	}
 
+	/**
+	 * Generates reset token and sends email
+	 *
+	 * Delegates to PasswordResetService.forgotPassword()
+	 *
+	 * @param params - Email address
+	 * @returns true if successful
+	 */
 	async forgotPassword(params: ForgotPassword) {
 		try {
-			const user = await this.db.query.user.findFirst({
-				columns: { id: true, name: true, email: true },
-				where: (f, op) => op.eq(f.email, params.email),
+			return await this.#passwordResetService.forgotPassword(params, {
+				findUserByEmail: async (email: string) => {
+					return await this.db.query.user.findFirst({
+						columns: { id: true, name: true, email: true },
+						where: (f, op) => op.eq(f.email, email),
+					});
+				},
+				deleteCache: async (userId: string) => {
+					await this.deleteCache(userId);
+				},
 			});
-
-			if (!user) {
-				throw new AuthError(m.email_not_registered(), { code: "NOT_FOUND" });
-			}
-
-			const token = randomBytes(32).toString("hex");
-			const expiresAt = new Date(
-				Date.now() + this.#RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
-			);
-
-			await this.db.insert(tables.verification).values({
-				id: v7(),
-				identifier: params.email,
-				value: token,
-				expiresAt,
-			});
-
-			const resetUrl = `${env.CORS_ORIGIN}/auth/reset-password?token=${token}`;
-
-			await this.#mail.sendResetPassword({
-				to: user.email,
-				url: resetUrl,
-				userName: user.name,
-			});
-
-			log.info(
-				{ userId: user.id, email: user.email },
-				"[AuthRepository] Password reset email sent",
-			);
-
-			return true;
 		} catch (error) {
 			throw this.handleError(error, "forgot password");
 		}
 	}
 
+	/**
+	 * Validates token and resets password
+	 *
+	 * Delegates to PasswordResetService.resetPassword()
+	 *
+	 * @param params - Token and new password
+	 * @returns true if successful
+	 */
 	async resetPassword(params: ResetPassword) {
 		try {
-			const verification = await this.db.query.verification.findFirst({
-				where: (f, op) =>
-					op.and(op.eq(f.value, params.token), op.gt(f.expiresAt, new Date())),
-			});
-
-			if (!verification) {
-				throw new AuthError("Invalid or expired reset token", {
-					code: "BAD_REQUEST",
-				});
-			}
-
-			const user = await this.db.query.user.findFirst({
-				columns: { id: true, email: true },
-				with: {
-					accounts: {
-						columns: { id: true },
-						where: (f, op) => op.eq(f.providerId, "credentials"),
-					},
+			return await this.#passwordResetService.resetPassword(params, {
+				deleteCache: async (userId: string) => {
+					await this.deleteCache(userId);
 				},
-				where: (f, op) => op.eq(f.email, verification.identifier),
 			});
-
-			if (!user?.accounts[0]) {
-				throw new AuthError("User account not found", { code: "NOT_FOUND" });
-			}
-
-			const hashedPassword = this.#pw.hash(params.newPassword);
-
-			await this.db.transaction(async (tx) => {
-				await Promise.all([
-					tx
-						.update(tables.account)
-						.set({ password: hashedPassword })
-						.where(eq(tables.account.id, user.accounts[0].id)),
-					tx
-						.delete(tables.verification)
-						.where(eq(tables.verification.id, verification.id)),
-				]);
-			});
-
-			await this.deleteCache(user.id);
-
-			log.info(
-				{ userId: user.id, email: user.email },
-				"[AuthRepository] Password reset successful",
-			);
-
-			return true;
 		} catch (error) {
 			throw this.handleError(error, "reset password");
 		}

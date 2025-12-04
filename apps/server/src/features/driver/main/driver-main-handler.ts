@@ -112,4 +112,53 @@ export const DriverMainHandler = priv.router({
 				},
 			};
 		}),
+	approve: priv.approve
+		.use(hasPermission({ driver: ["approve"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.driver.main.approve(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_approved(), data: result },
+			};
+		}),
+	reject: priv.reject
+		.use(hasPermission({ driver: ["approve"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.reject(
+				params.id,
+				data.reason,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_rejected(), data: result },
+			};
+		}),
+	suspend: priv.suspend
+		.use(hasPermission({ driver: ["ban"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.suspend(
+				params.id,
+				data.reason,
+				data.suspendUntil,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_suspended(), data: result },
+			};
+		}),
+	activate: priv.activate
+		.use(hasPermission({ driver: ["ban"] }))
+		.handler(async ({ context, input: { params } }) => {
+			const result = await context.repo.driver.main.activate(params.id);
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_activated(), data: result },
+			};
+		}),
 });

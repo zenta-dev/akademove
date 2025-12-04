@@ -66,4 +66,52 @@ export const ReportHandler = priv.router({
 				body: { message: m.server_report_deleted(), data: null },
 			};
 		}),
+	startInvestigation: priv.startInvestigation
+		.use(hasPermission({ report: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.report.startInvestigation(
+				params.id,
+				data.notes,
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_report_investigation_started(),
+					data: result,
+				},
+			};
+		}),
+	resolve: priv.resolve
+		.use(hasPermission({ report: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.report.resolve(
+				params.id,
+				data.resolution,
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_report_resolved(), data: result },
+			};
+		}),
+	dismiss: priv.dismiss
+		.use(hasPermission({ report: ["update"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+			const result = await context.repo.report.dismiss(
+				params.id,
+				data.reason,
+				context.user.id,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_report_dismissed(), data: result },
+			};
+		}),
 });

@@ -1,3 +1,12 @@
+/**
+ * NotificationRepository - Refactored to use PushNotificationService
+ *
+ * SOLID Principles Applied:
+ * - SRP: Delegates notification sending to PushNotificationService
+ * - DIP: Depends on PushNotificationService abstraction
+ * - OCP: Open for extension with new notification providers
+ */
+
 import { m } from "@repo/i18n";
 import {
 	type FCMNotificationLog,
@@ -25,11 +34,7 @@ import type {
 	WithUserId,
 } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
-import type {
-	FirebaseAdminService,
-	NotificationPayload,
-	SendToTopicOptions,
-} from "@/core/services/firebase";
+import type { NotificationPayload } from "@/core/services/firebase";
 import type { KeyValueService } from "@/core/services/kv";
 import type {
 	FCMNotificationLogDatabase,
@@ -39,13 +44,26 @@ import type {
 } from "@/core/tables/notification";
 import { log } from "@/utils";
 import type { ListNotificationQuery } from "./notification-spec";
+import {
+	NotificationTopicService,
+	type PushNotificationService,
+} from "./services";
 
 interface SendNotificationOptions extends NotificationPayload {
 	fromUserId: string;
 }
 
+/**
+ * NotificationRepository
+ *
+ * Responsibilities:
+ * - Coordinate notification sending via PushNotificationService
+ * - Persist FCM tokens, logs, and user notifications
+ * - Manage topic subscriptions
+ * - List user notifications with pagination
+ */
 export class NotificationRepository {
-	#firebaseAdmin: FirebaseAdminService;
+	#pushNotificationService: PushNotificationService;
 	#fcmToken: FCMTokenRepository;
 	#fcmTopic: FCMTopicSubscriptionRepository;
 	#fcmNotificationLog: FCMNotificationLogRepository;
@@ -54,230 +72,192 @@ export class NotificationRepository {
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
-		firebaseAdmin: FirebaseAdminService,
+		pushNotificationService: PushNotificationService,
 	) {
-		this.#firebaseAdmin = firebaseAdmin;
+		this.#pushNotificationService = pushNotificationService;
 		this.#fcmToken = new FCMTokenRepository(db, kv);
 		this.#fcmTopic = new FCMTopicSubscriptionRepository(db, kv);
 		this.#fcmNotificationLog = new FCMNotificationLogRepository(db, kv);
 		this.#userNotification = new UserNotificationRepository(db, kv);
 	}
 
+	/**
+	 * Send push notification to a single user
+	 * Delegates to PushNotificationService and persists results
+	 */
 	async sendNotificationToUserId(
 		params: SendNotificationOptions & {
 			toUserId: string;
 		},
 		opts?: PartialWithTx,
 	): Promise<string[]> {
-		const { toUserId, fromUserId } = params;
+		const { toUserId } = params;
 
 		try {
-			const tokenResults = await this.#fcmToken.listByUserId(toUserId, opts);
-			log.info({ tokenResults }, "FCM tokens found for user");
-			if (!tokenResults.length) return [];
-
-			const messageIds = await Promise.all(
-				tokenResults.map((t) =>
-					this.#firebaseAdmin.sendNotification({ ...params, token: t.token }),
-				),
-			);
-			log.info({ messageIds }, "FCM messages sent to tokens");
-
-			const sentAt = new Date();
-
-			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
-				(messageId) => ({
-					...params,
-					userId: fromUserId,
-					messageId,
-					status: "SUCCESS",
-					sentAt,
-				}),
+			// Delegate to PushNotificationService
+			const result = await this.#pushNotificationService.sendToUser(
+				{ ...params, toUserId },
+				this.#fcmToken,
+				opts,
 			);
 
-			const userNotification: InsertUserNotification[] = messageIds.map(
-				(messageId) => ({
-					...params,
-					messageId,
-					userId: toUserId,
-					isRead: false,
-				}),
-			);
-
+			// Persist logs and user notifications
 			await Promise.all([
-				this.#fcmNotificationLog.createBatch(notificationLogs, opts),
-				this.#userNotification.createBatch(userNotification, opts),
+				result.logs.length > 0 &&
+					this.#fcmNotificationLog.createBatch(result.logs, opts),
+				result.userNotifications.length > 0 &&
+					this.#userNotification.createBatch(result.userNotifications, opts),
 			]);
 
-			return messageIds;
+			log.info(
+				{ toUserId, messageCount: result.messageIds.length },
+				"[NotificationRepository] Notification sent to user",
+			);
+
+			return result.messageIds;
 		} catch (error) {
-			log.error({ error }, "Failed to send notification by token");
-
-			const msg = error instanceof Error ? error.message : "Unknown error";
-
-			const failLog: InsertFCMNotificationLog = {
-				...params,
-				userId: fromUserId,
-				status: "FAILED",
-				sentAt: new Date(),
-				error: msg,
-			};
-
-			await Promise.all([
-				this.#fcmNotificationLog.create(failLog, opts),
-				this.#userNotification.create(
-					{
-						...params,
-						userId: toUserId,
-						isRead: false,
-					},
-					opts,
-				),
-			]);
-
-			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
+			log.error(
+				{ error, toUserId },
+				"[NotificationRepository] Failed to send notification to user",
+			);
+			throw error;
 		}
 	}
+
+	/**
+	 * Send push notification to multiple users
+	 * Delegates to PushNotificationService and persists results
+	 */
 	async sendNotificationToUserIds(
 		params: SendNotificationOptions & {
 			toUserIds: string[];
 		},
 		opts?: PartialWithTx,
 	): Promise<string[]> {
-		const { toUserIds, fromUserId } = params;
+		const { toUserIds } = params;
 
 		try {
-			const tokenResults = await this.#fcmToken.listByUserIds(toUserIds, opts);
-			if (!tokenResults.length) return [];
-
-			const messageIds = await Promise.all(
-				tokenResults.map((t) =>
-					this.#firebaseAdmin.sendNotification({ ...params, token: t.token }),
-				),
+			// Delegate to PushNotificationService
+			const result = await this.#pushNotificationService.sendToUsers(
+				{ ...params, toUserIds },
+				this.#fcmToken,
+				opts,
 			);
 
-			const sentAt = new Date();
-
-			const notificationLogs: InsertFCMNotificationLog[] = messageIds.map(
-				(messageId) => ({
-					...params,
-					userId: fromUserId,
-					messageId,
-					status: "SUCCESS",
-					sentAt,
-				}),
-			);
-
-			const userNotifications: InsertUserNotification[] = [];
-			for (const userId of toUserIds) {
-				for (const messageId of messageIds) {
-					userNotifications.push({
-						...params,
-						userId,
-						messageId,
-						isRead: false,
-					});
-				}
-			}
-
+			// Persist logs and user notifications
 			await Promise.all([
-				this.#fcmNotificationLog.createBatch(notificationLogs, opts),
-				this.#userNotification.createBatch(userNotifications, opts),
+				result.logs.length > 0 &&
+					this.#fcmNotificationLog.createBatch(result.logs, opts),
+				result.userNotifications.length > 0 &&
+					this.#userNotification.createBatch(result.userNotifications, opts),
 			]);
 
-			return messageIds;
+			log.info(
+				{ toUserIds, messageCount: result.messageIds.length },
+				"[NotificationRepository] Notification sent to users",
+			);
+
+			return result.messageIds;
 		} catch (error) {
-			log.error({ error }, "Failed to send notification by token");
-
-			const msg = error instanceof Error ? error.message : "Unknown error";
-
-			const failLog: InsertFCMNotificationLog = {
-				...params,
-				userId: fromUserId,
-				status: "FAILED",
-				sentAt: new Date(),
-				error: msg,
-			};
-
-			const failNotifications: InsertUserNotification[] = toUserIds.map(
-				(userId) => ({
-					...params,
-					userId,
-					isRead: false,
-				}),
+			log.error(
+				{ error, toUserIds },
+				"[NotificationRepository] Failed to send notification to users",
 			);
-
-			await Promise.all([
-				this.#fcmNotificationLog.create(failLog, opts),
-				this.#userNotification.createBatch(failNotifications, opts),
-			]);
-
-			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
+			throw error;
 		}
 	}
 
+	/**
+	 * Send push notification to a topic (broadcast)
+	 * Delegates to PushNotificationService and persists results
+	 */
 	async sendToTopic(
-		params: SendToTopicOptions & WithUserId,
+		params: NotificationPayload & { topic: string; userId: string },
 		opts?: PartialWithTx,
 	): Promise<string> {
+		const { userId, topic, ...payload } = params;
+
 		try {
+			// Send notification and get topic subscribers
 			const [messageId, topicUsers] = await Promise.all([
-				this.#firebaseAdmin.sendToTopic(params),
-				this.#fcmTopic.listByTopic(params.topic, opts),
+				this.#pushNotificationService.sendToTopic({ ...payload, topic }),
+				this.#fcmTopic.listByTopic(topic, opts),
 			]);
 
-			if (!topicUsers.length) return messageId;
+			const sentAt = new Date();
 
-			const userNotifications = topicUsers.map((t) => ({
-				...params,
-				userId: t.userId,
-				messageId,
-				isRead: false,
-			}));
+			// Use NotificationTopicService to prepare user notifications
+			const userNotifications =
+				NotificationTopicService.prepareUserNotifications(
+					topicUsers,
+					payload,
+					messageId,
+				);
 
+			// Persist log and user notifications
 			await Promise.all([
 				this.#fcmNotificationLog.create(
 					{
-						...params,
+						...payload,
+						userId,
+						messageId,
 						status: "SUCCESS",
-						sentAt: new Date(),
+						sentAt,
 					},
 					opts,
 				),
-				this.#userNotification.createBatch(userNotifications, opts),
+				userNotifications.length > 0 &&
+					this.#userNotification.createBatch(userNotifications, opts),
 			]);
+
+			log.info(
+				{ topic, subscribers: topicUsers.length, messageId },
+				"[NotificationRepository] Notification sent to topic",
+			);
 
 			return messageId;
 		} catch (error) {
-			log.error({ error }, "Failed to send notification by topic");
+			log.error(
+				{ error, topic },
+				"[NotificationRepository] Failed to send notification to topic",
+			);
 
-			const msg = error instanceof Error ? error.message : "Unknown error";
+			// Use NotificationTopicService to extract error message
+			const msg = NotificationTopicService.extractErrorMessage(error);
 
-			const topicUsers = await this.#fcmTopic.listByTopic(params.topic, opts);
+			// Log failure
+			const topicUsers = await this.#fcmTopic.listByTopic(topic, opts);
 
-			const userNotifications = topicUsers.map((t) => ({
-				...params,
-				userId: t.userId,
-				isRead: false,
-			}));
+			// Use NotificationTopicService to prepare user notifications for failure case
+			const userNotifications =
+				NotificationTopicService.prepareUserNotifications(
+					topicUsers,
+					payload,
+					"",
+				);
 
 			await Promise.all([
 				this.#fcmNotificationLog.create(
 					{
-						...params,
+						...payload,
+						userId,
 						status: "FAILED",
 						sentAt: new Date(),
 						error: msg,
 					},
 					opts,
 				),
-				this.#userNotification.createBatch(userNotifications, opts),
+				userNotifications.length > 0 &&
+					this.#userNotification.createBatch(userNotifications, opts),
 			]);
 
 			throw new RepositoryError(msg, { code: "INTERNAL_SERVER_ERROR" });
 		}
 	}
 
+	/**
+	 * List user notifications with pagination
+	 */
 	async list(
 		query: ListNotificationQuery & WithUserId,
 		opts?: PartialWithTx,
@@ -285,6 +265,9 @@ export class NotificationRepository {
 		return await this.#userNotification.list(query, opts);
 	}
 
+	/**
+	 * Subscribe user's FCM token to a topic
+	 */
 	async subscribeToTopic(
 		params: {
 			token: string;
@@ -294,13 +277,24 @@ export class NotificationRepository {
 		opts?: PartialWithTx,
 	) {
 		const [res] = await Promise.all([
-			this.#firebaseAdmin.subscribeToTopic(params.token, params.topic),
+			this.#pushNotificationService.subscribeToTopic(
+				params.token,
+				params.topic,
+			),
 			this.#fcmTopic.subscribe(params, opts),
 		]);
+
+		log.info(
+			{ userId: params.userId, topic: params.topic },
+			"[NotificationRepository] Subscribed to topic",
+		);
 
 		return res;
 	}
 
+	/**
+	 * Unsubscribe user's FCM token from a topic
+	 */
 	async unsubscribeFromTopic(
 		params: {
 			token: string;
@@ -310,13 +304,24 @@ export class NotificationRepository {
 		opts?: PartialWithTx,
 	) {
 		const [res] = await Promise.all([
-			this.#firebaseAdmin.unsubscribeFromTopic(params.token, params.topic),
+			this.#pushNotificationService.unsubscribeFromTopic(
+				params.token,
+				params.topic,
+			),
 			this.#fcmTopic.unsubscribe(params, opts),
 		]);
+
+		log.info(
+			{ userId: params.userId, topic: params.topic },
+			"[NotificationRepository] Unsubscribed from topic",
+		);
 
 		return res;
 	}
 
+	/**
+	 * Save FCM token for a user
+	 */
 	async saveToken(
 		params: { userId: string; token: string },
 		opts?: PartialWithTx,
@@ -324,11 +329,18 @@ export class NotificationRepository {
 		return await this.#fcmToken.saveToken(params, opts);
 	}
 
+	/**
+	 * Remove FCM token
+	 */
 	async removeByToken(params: { token: string }, opts?: PartialWithTx) {
 		return await this.#fcmToken.removeByToken(params, opts);
 	}
 }
 
+/**
+ * FCMTokenRepository - Implements IFCMTokenProvider interface
+ * Manages FCM device tokens for push notifications
+ */
 class FCMTokenRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmToken", kv, db);
@@ -465,6 +477,10 @@ class FCMTokenRepository extends BaseRepository {
 	}
 }
 
+/**
+ * FCMTopicSubscriptionRepository
+ * Manages topic subscriptions for push notifications
+ */
 class FCMTopicSubscriptionRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmTopicSubscription", kv, db);
@@ -550,6 +566,10 @@ class FCMTopicSubscriptionRepository extends BaseRepository {
 	}
 }
 
+/**
+ * FCMNotificationLogRepository
+ * Manages FCM notification logs for audit trail
+ */
 class FCMNotificationLogRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("fcmNotificationLog", kv, db);
@@ -684,6 +704,10 @@ class FCMNotificationLogRepository extends BaseRepository {
 	}
 }
 
+/**
+ * UserNotificationRepository
+ * Manages user-facing notification records
+ */
 class UserNotificationRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("userNotification", kv, db);

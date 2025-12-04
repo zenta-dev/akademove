@@ -1,5 +1,6 @@
 import type { Coordinate } from "@repo/schema/position";
 import { log } from "@/utils";
+import type { IMapService } from "../abstractions/interfaces";
 import { MapError } from "../error";
 
 // ---------------------------------------------------------------------------
@@ -107,7 +108,7 @@ interface RouteMatrixResponse {
 // Google Maps Service Implementation
 // ---------------------------------------------------------------------------
 
-export class GoogleMapService implements MapService {
+export class GoogleMapService implements MapService, IMapService {
 	readonly #timeout = 10000;
 	readonly #headers: Record<string, string>;
 
@@ -120,6 +121,122 @@ export class GoogleMapService implements MapService {
 			"Content-Type": "application/json",
 			"X-Goog-Api-Key": apiKey,
 		};
+	}
+
+	// ---------------------------------------------------------------------------
+	// IMapService Implementation (Adapter Methods)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Calculate distance between two coordinates (IMapService)
+	 * @returns Distance in kilometers
+	 */
+	async getDistance(
+		origin: { lat: number; lng: number },
+		destination: { lat: number; lng: number },
+	): Promise<number> {
+		const coordinate1 = { x: origin.lng, y: origin.lat };
+		const coordinate2 = { x: destination.lng, y: destination.lat };
+		const routeInfo = await this.getRouteDistance(coordinate1, coordinate2);
+		return routeInfo.distanceMeters / 1000; // Convert meters to kilometers
+	}
+
+	/**
+	 * Get coordinates from an address (IMapService)
+	 * Uses Google Geocoding API
+	 */
+	async geocode(address: string): Promise<{ lat: number; lng: number }> {
+		try {
+			const encodedAddress = encodeURIComponent(address);
+			const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
+
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), this.#timeout);
+
+			try {
+				const response = await fetch(url, {
+					method: "GET",
+					headers: this.#headers,
+					signal: controller.signal,
+				});
+
+				if (!response.ok) {
+					throw new MapError(`HTTP error: ${response.status}`);
+				}
+
+				const data = (await response.json()) as {
+					status: string;
+					results?: Array<{
+						geometry: {
+							location: { lat: number; lng: number };
+						};
+					}>;
+					error_message?: string;
+				};
+
+				if (data.status !== "OK" || !data.results?.length) {
+					throw new MapError(
+						data.error_message ?? `Geocoding failed: ${data.status}`,
+					);
+				}
+
+				const location = data.results[0].geometry.location;
+				return { lat: location.lat, lng: location.lng };
+			} finally {
+				clearTimeout(timeoutId);
+			}
+		} catch (error) {
+			log.error({ error, address }, "[MapService] Geocoding failed");
+			if (error instanceof MapError) throw error;
+			throw new MapError(`Failed to geocode address: ${error}`);
+		}
+	}
+
+	/**
+	 * Get address from coordinates (IMapService)
+	 * Uses Google Geocoding API
+	 */
+	async reverseGeocode(lat: number, lng: number): Promise<string> {
+		try {
+			const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}`;
+
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), this.#timeout);
+
+			try {
+				const response = await fetch(url, {
+					method: "GET",
+					headers: this.#headers,
+					signal: controller.signal,
+				});
+
+				if (!response.ok) {
+					throw new MapError(`HTTP error: ${response.status}`);
+				}
+
+				const data = (await response.json()) as {
+					status: string;
+					results?: Array<{
+						formatted_address: string;
+					}>;
+					error_message?: string;
+				};
+
+				if (data.status !== "OK" || !data.results?.length) {
+					throw new MapError(
+						data.error_message ?? `Reverse geocoding failed: ${data.status}`,
+					);
+				}
+
+				return data.results[0].formatted_address;
+			} finally {
+				clearTimeout(timeoutId);
+			}
+		} catch (error) {
+			log.error({ error, lat, lng }, "[MapService] Reverse geocoding failed");
+			if (error instanceof MapError) throw error;
+			throw new MapError(`Failed to reverse geocode coordinates: ${error}`);
+		}
 	}
 
 	// ---------------------------------------------------------------------------

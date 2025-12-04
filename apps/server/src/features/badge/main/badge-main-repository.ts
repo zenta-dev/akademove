@@ -6,7 +6,7 @@ import {
 	type UpdateBadge,
 } from "@repo/schema/badge";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { getFileExtension, nullsToUndefined } from "@repo/shared";
+import { nullsToUndefined } from "@repo/shared";
 import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
@@ -18,8 +18,7 @@ import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
 import type { BadgeDatabase } from "@/core/tables/badge";
 import { log } from "@/utils";
-
-const BUCKET = "badges";
+import { BadgeIconService } from "../services";
 
 export class BadgeRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -36,7 +35,7 @@ export class BadgeRepository extends BaseRepository {
 		if (item.icon) {
 			item.icon = storage.getPublicUrl({
 				key: item.icon,
-				bucket: BUCKET,
+				bucket: BadgeIconService.BUCKET,
 			});
 		}
 		return nullsToUndefined(item);
@@ -190,12 +189,7 @@ export class BadgeRepository extends BaseRepository {
 
 	async create(item: InsertBadge, opts?: WithTx): Promise<Badge> {
 		try {
-			let iconKey: string | undefined;
-
-			if (item.icon) {
-				const extension = getFileExtension(item.icon);
-				iconKey = `${item.code}.${extension}`;
-			}
+			const iconKey = BadgeIconService.generateIconKey(item.code, item.icon);
 
 			const tx = opts?.tx ?? this.db;
 			const [operation] = await Promise.all([
@@ -212,7 +206,7 @@ export class BadgeRepository extends BaseRepository {
 				item.icon &&
 					iconKey &&
 					this.#storage.upload({
-						bucket: BUCKET,
+						bucket: BadgeIconService.BUCKET,
 						key: iconKey,
 						file: item.icon,
 					}),
@@ -232,12 +226,10 @@ export class BadgeRepository extends BaseRepository {
 			if (!existing)
 				throw new RepositoryError(`Badge with id "${id}" not found`);
 
-			let iconKey: string | undefined;
-
-			if (item.icon) {
-				const extension = getFileExtension(item.icon);
-				iconKey = `${item.code ?? existing.code}.${extension}`;
-			}
+			const iconKey = BadgeIconService.generateIconKey(
+				item.code ?? existing.code,
+				item.icon,
+			);
 
 			const tx = opts?.tx ?? this.db;
 			const [operation] = await Promise.all([
@@ -254,7 +246,7 @@ export class BadgeRepository extends BaseRepository {
 				item.icon &&
 					iconKey &&
 					this.#storage.upload({
-						bucket: BUCKET,
+						bucket: BadgeIconService.BUCKET,
 						key: iconKey,
 						file: item.icon,
 					}),

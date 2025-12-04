@@ -1,6 +1,5 @@
-import { env } from "cloudflare:workers";
 import { m } from "@repo/i18n";
-import type { Order, OrderStatus } from "@repo/schema/order";
+import type { Order } from "@repo/schema/order";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -10,10 +9,14 @@ import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { OrderDatabase } from "@/core/tables/order";
 import { log, toNumberSafe } from "@/utils";
+import { MerchantOrderStatusService } from "../services";
 
 export class MerchantOrderRepository extends BaseRepository {
+	private statusService: MerchantOrderStatusService;
+
 	constructor(db: DatabaseService, kv: KeyValueService) {
 		super("order", kv, db);
+		this.statusService = new MerchantOrderStatusService();
 	}
 
 	/**
@@ -54,40 +57,6 @@ export class MerchantOrderRepository extends BaseRepository {
 	}
 
 	/**
-	 * Emit WebSocket event for order status update
-	 * Broadcasts status change to all connected clients in the order room
-	 */
-	async #emitOrderStatusUpdate(
-		orderId: string,
-		status: OrderStatus,
-	): Promise<void> {
-		try {
-			const stub = env.ORDER_ROOM.idFromName(orderId);
-			const room = env.ORDER_ROOM.get(stub);
-
-			await room.fetch("https://internal/broadcast", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					t: "r",
-					e: "ORDER_STATUS_UPDATED",
-					p: { detail: { order: { id: orderId, status } } },
-				}),
-			});
-
-			log.info(
-				{ orderId, status },
-				"[MerchantOrderRepository] WebSocket event emitted",
-			);
-		} catch (error) {
-			log.warn(
-				{ error, orderId, status },
-				"[MerchantOrderRepository] Failed to emit WebSocket event - non-critical",
-			);
-		}
-	}
-
-	/**
 	 * Accept a food order
 	 * Updates order status to ACCEPTED and sets acceptedAt timestamp
 	 */
@@ -97,7 +66,7 @@ export class MerchantOrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<Order> {
 		try {
-			// Verify order belongs to merchant
+			// Get existing order
 			const existing = await opts.tx.query.order.findFirst({
 				where: (f, op) => op.eq(f.id, orderId),
 			});
@@ -108,17 +77,16 @@ export class MerchantOrderRepository extends BaseRepository {
 				});
 			}
 
-			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
-					code: "FORBIDDEN",
-				});
-			}
+			const order = this.composeEntity(existing);
 
-			if (existing.status !== "REQUESTED" && existing.status !== "MATCHING") {
-				throw new RepositoryError(
-					`Cannot accept order with status ${existing.status}`,
-					{ code: "BAD_REQUEST" },
-				);
+			// Validate using service
+			const validation = this.statusService.canAcceptOrder(order, merchantId);
+			if (!validation.allowed) {
+				throw new RepositoryError(validation.reason ?? "Cannot accept order", {
+					code: validation.reason?.includes("belong")
+						? "FORBIDDEN"
+						: "BAD_REQUEST",
+				});
 			}
 
 			// Update order status
@@ -144,7 +112,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			// Invalidate cache and emit WebSocket event
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.#emitOrderStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(orderId, updated.status),
 			]);
 
 			return this.composeEntity(updated);
@@ -169,7 +137,7 @@ export class MerchantOrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<Order> {
 		try {
-			// Verify order belongs to merchant
+			// Get existing order
 			const existing = await opts.tx.query.order.findFirst({
 				where: (f, op) => op.eq(f.id, orderId),
 			});
@@ -180,27 +148,20 @@ export class MerchantOrderRepository extends BaseRepository {
 				});
 			}
 
-			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
-					code: "FORBIDDEN",
+			const order = this.composeEntity(existing);
+
+			// Validate using service
+			const validation = this.statusService.canRejectOrder(order, merchantId);
+			if (!validation.allowed) {
+				throw new RepositoryError(validation.reason ?? "Cannot reject order", {
+					code: validation.reason?.includes("belong")
+						? "FORBIDDEN"
+						: "BAD_REQUEST",
 				});
 			}
 
-			if (
-				existing.status !== "REQUESTED" &&
-				existing.status !== "MATCHING" &&
-				existing.status !== "ACCEPTED"
-			) {
-				throw new RepositoryError(
-					`Cannot reject order with status ${existing.status}`,
-					{ code: "BAD_REQUEST" },
-				);
-			}
-
-			// Format cancel reason
-			const cancelReason = note
-				? `${reason}: ${note}`
-				: reason.replace(/_/g, " ");
+			// Format cancel reason using service
+			const cancelReason = this.statusService.formatCancelReason(reason, note);
 
 			// Update order status
 			const [updated] = await opts.tx
@@ -226,7 +187,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			// NOTE: Refund logic should be handled by payment service/handler
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.#emitOrderStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(orderId, updated.status),
 			]);
 
 			return this.composeEntity(updated);
@@ -249,7 +210,7 @@ export class MerchantOrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<Order> {
 		try {
-			// Verify order belongs to merchant
+			// Get existing order
 			const existing = await opts.tx.query.order.findFirst({
 				where: (f, op) => op.eq(f.id, orderId),
 			});
@@ -260,16 +221,18 @@ export class MerchantOrderRepository extends BaseRepository {
 				});
 			}
 
-			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
-					code: "FORBIDDEN",
-				});
-			}
+			const order = this.composeEntity(existing);
 
-			if (existing.status !== "ACCEPTED") {
+			// Validate using service
+			const validation = this.statusService.canMarkPreparing(order, merchantId);
+			if (!validation.allowed) {
 				throw new RepositoryError(
-					`Cannot mark order as preparing with status ${existing.status}`,
-					{ code: "BAD_REQUEST" },
+					validation.reason ?? "Cannot mark as preparing",
+					{
+						code: validation.reason?.includes("belong")
+							? "FORBIDDEN"
+							: "BAD_REQUEST",
+					},
 				);
 			}
 
@@ -296,7 +259,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			// Invalidate cache and emit WebSocket event to notify driver/user
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.#emitOrderStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(orderId, updated.status),
 			]);
 
 			return this.composeEntity(updated);
@@ -319,7 +282,7 @@ export class MerchantOrderRepository extends BaseRepository {
 		opts: WithTx,
 	): Promise<Order> {
 		try {
-			// Verify order belongs to merchant
+			// Get existing order
 			const existing = await opts.tx.query.order.findFirst({
 				where: (f, op) => op.eq(f.id, orderId),
 			});
@@ -330,17 +293,16 @@ export class MerchantOrderRepository extends BaseRepository {
 				});
 			}
 
-			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
-					code: "FORBIDDEN",
-				});
-			}
+			const order = this.composeEntity(existing);
 
-			if (existing.status !== "PREPARING") {
-				throw new RepositoryError(
-					`Cannot mark order as ready with status ${existing.status}`,
-					{ code: "BAD_REQUEST" },
-				);
+			// Validate using service
+			const validation = this.statusService.canMarkReady(order, merchantId);
+			if (!validation.allowed) {
+				throw new RepositoryError(validation.reason ?? "Cannot mark as ready", {
+					code: validation.reason?.includes("belong")
+						? "FORBIDDEN"
+						: "BAD_REQUEST",
+				});
 			}
 
 			// Update order status
@@ -367,7 +329,7 @@ export class MerchantOrderRepository extends BaseRepository {
 			// NOTE: Push notification should be handled by notification service
 			await Promise.allSettled([
 				this.deleteCache(orderId),
-				this.#emitOrderStatusUpdate(orderId, updated.status),
+				this.statusService.emitStatusUpdate(orderId, updated.status),
 			]);
 
 			return this.composeEntity(updated);

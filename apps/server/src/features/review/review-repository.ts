@@ -6,7 +6,7 @@ import {
 	ReviewKeySchema,
 	type UpdateReview,
 } from "@repo/schema/review";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import { eq, gt, ilike, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -15,7 +15,7 @@ import type { ListResult, OrderByOperation } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReviewDatabase } from "@/core/tables/review";
-import { log } from "@/utils";
+import { ReviewEligibilityService, ReviewSearchService } from "./services";
 
 export class ReviewRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -34,17 +34,8 @@ export class ReviewRepository extends BaseRepository {
 	}
 
 	async #getQueryCount(query: string): Promise<number> {
-		try {
-			const [dbResult] = await this.db
-				.select({ count: count(tables.review.id) })
-				.from(tables.review)
-				.where(ilike(tables.review.comment, `%${query}%`));
-
-			return dbResult?.count ?? 0;
-		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
-			return 0;
-		}
+		// Delegate to ReviewSearchService
+		return ReviewSearchService.getQueryCount(this.db, query);
 	}
 
 	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Review>> {
@@ -214,20 +205,12 @@ export class ReviewRepository extends BaseRepository {
 		orderId: string,
 		userId: string,
 	): Promise<boolean> {
-		try {
-			const result = await this.db.query.review.findFirst({
-				where: (f, op) =>
-					op.and(op.eq(f.orderId, orderId), op.eq(f.fromUserId, userId)),
-			});
-
-			return !!result;
-		} catch (error) {
-			log.error(
-				{ orderId, userId, error },
-				"Failed to check if user reviewed order",
-			);
-			return false;
-		}
+		// Delegate to ReviewEligibilityService
+		return ReviewEligibilityService.hasUserReviewedOrder(
+			this.db,
+			orderId,
+			userId,
+		);
 	}
 
 	async getOrderReviewStatus(
@@ -238,41 +221,11 @@ export class ReviewRepository extends BaseRepository {
 		alreadyReviewed: boolean;
 		orderCompleted: boolean;
 	}> {
-		try {
-			// Check if order exists and is completed
-			const order = await this.db.query.order.findFirst({
-				where: (f, op) => op.eq(f.id, orderId),
-			});
-
-			const orderCompleted = order?.status === "COMPLETED";
-
-			// Check if user is part of this order (as user or driver)
-			const isUserInOrder =
-				order?.userId === userId || order?.driverId === userId;
-
-			// Check if user already reviewed this order
-			const alreadyReviewed = await this.checkUserReviewedOrder(
-				orderId,
-				userId,
-			);
-
-			const canReview = orderCompleted && isUserInOrder && !alreadyReviewed;
-
-			return {
-				canReview,
-				alreadyReviewed,
-				orderCompleted,
-			};
-		} catch (error) {
-			log.error(
-				{ orderId, userId, error },
-				"Failed to get order review status",
-			);
-			return {
-				canReview: false,
-				alreadyReviewed: false,
-				orderCompleted: false,
-			};
-		}
+		// Delegate to ReviewEligibilityService
+		return ReviewEligibilityService.getOrderReviewStatus(
+			this.db,
+			orderId,
+			userId,
+		);
 	}
 }

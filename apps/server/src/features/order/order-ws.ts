@@ -5,6 +5,8 @@ import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
+import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
+import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
 import { log, safeSync, toNumberSafe } from "@/utils";
 
 type OrderId = string;
@@ -67,6 +69,26 @@ export class OrderRoom extends BaseDurableObject {
 						async (tx) => await this.#handleChatMessage(ws, data, tx),
 					);
 				}
+				if (data.a === "MERCHANT_ACCEPT") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleMerchantAccept(ws, data, tx),
+					);
+				}
+				if (data.a === "MERCHANT_REJECT") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleMerchantReject(ws, data, tx),
+					);
+				}
+				if (data.a === "MERCHANT_MARK_PREPARING") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleMerchantMarkPreparing(ws, data, tx),
+					);
+				}
+				if (data.a === "MERCHANT_MARK_READY") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleMerchantMarkReady(ws, data, tx),
+					);
+				}
 			} catch (error) {
 				log.error(
 					{ error, action: data.a, userId: session },
@@ -92,35 +114,58 @@ export class OrderRoom extends BaseDurableObject {
 
 		const findOrder = await this.#repo.order.get(detail.order.id, opts);
 
-		// PERFORMANCE OPTIMIZATION: Single query with max radius instead of sequential expansion
-		// Previous: Multiple queries with 2s delays (10km→20km→30km...) = 20+ seconds worst case
-		// Optimized: Single query up to 50km = <1 second (20x faster)
-		// The repository already filters for available drivers (isTakingOrder = false)
-		const maxRadiusKm = 50;
+		// REFACTOR: Use OrderMatchingService for driver discovery
+		// Service encapsulates matching business logic (radius, gender preference, availability)
+		const matchedDrivers =
+			await this.#svc.orderServices.matching.findAvailableDrivers(
+				{
+					pickupLocation: findOrder.pickupLocation,
+					orderType: findOrder.type,
+					genderPreference: findOrder.genderPreference,
+					userGender: findOrder.gender,
+					radiusKm: 50, // Max radius for initial search
+				},
+				10, // Get multiple drivers to increase acceptance chance
+				opts,
+			);
 
-		// Determine driver gender filter based on user's gender preference
-		let driverGenderFilter: "MALE" | "FEMALE" | undefined;
-		if (findOrder.genderPreference === "SAME" && findOrder.gender) {
-			// User wants same gender driver
-			driverGenderFilter = findOrder.gender;
+		// Extract driver data for compatibility with existing code
+		let nearbyDrivers = matchedDrivers.map((m) => m.driver);
+
+		// Sort drivers by priority (badges + leaderboard rank)
+		if (nearbyDrivers.length > 0) {
+			const driverPriorityService = new DriverPriorityService(this.#svc.db);
+			const driverIds = nearbyDrivers
+				.map((d) => d.id)
+				.filter((id): id is string => id !== null && id !== undefined);
+			const sortedDrivers = await driverPriorityService.sortDriversByPriority(
+				driverIds,
+				opts,
+			);
+
+			// Reorder nearbyDrivers based on priority
+			nearbyDrivers = sortedDrivers
+				.map((pd) => nearbyDrivers.find((d) => d.id === pd.driverId))
+				.filter(
+					(d): d is NonNullable<typeof d> => d !== null && d !== undefined,
+				);
+
+			log.info(
+				{
+					orderId: findOrder.id,
+					availableDrivers: nearbyDrivers.length,
+					sortedByPriority: true,
+				},
+				"[OrderRoom] Drivers sorted by priority (badges + leaderboard)",
+			);
 		}
-		// If preference is "ANY" or not set, driverGenderFilter remains undefined (matches any gender)
-
-		const nearbyDrivers = await this.#repo.driver.main.nearby({
-			x: findOrder.pickupLocation.x,
-			y: findOrder.pickupLocation.y,
-			radiusKm: maxRadiusKm,
-			limit: 10, // Get multiple drivers to increase acceptance chance
-			gender: driverGenderFilter,
-		});
 
 		log.info(
 			{
 				orderId: findOrder.id,
 				availableDrivers: nearbyDrivers.length,
-				maxRadius: maxRadiusKm,
 			},
-			"[OrderRoom] Driver search completed",
+			"[OrderRoom] Driver matching completed via OrderMatchingService",
 		);
 
 		if (nearbyDrivers.length === 0) {
@@ -129,6 +174,7 @@ export class OrderRoom extends BaseDurableObject {
 				"[OrderRoom] No nearby driver found — cancelling order and processing refund",
 			);
 
+			const paymentId = detail.payment?.id;
 			const [updatedOrder, findPayment] = await Promise.all([
 				this.#repo.order.update(
 					findOrder.id,
@@ -138,10 +184,12 @@ export class OrderRoom extends BaseDurableObject {
 					},
 					opts,
 				),
-				opts.tx.query.payment.findFirst({
-					with: { transaction: { with: { wallet: true } } },
-					where: (f, op) => op.eq(f.id, detail.payment.id),
-				}),
+				paymentId
+					? opts.tx.query.payment.findFirst({
+							with: { transaction: { with: { wallet: true } } },
+							where: (f, op) => op.eq(f.id, paymentId),
+						})
+					: Promise.resolve(null),
 			]);
 
 			const response: OrderEnvelope = {
@@ -225,8 +273,14 @@ export class OrderRoom extends BaseDurableObject {
 		const msg = JSON.stringify(envelope);
 
 		const tasks: Promise<unknown>[] = [];
-		const driverIds = [];
+		const driverIds: string[] = [];
 		for (const driver of nearbyDrivers) {
+			// Skip drivers without required fields
+			if (!driver.userId || !driver.id) {
+				log.warn({ driver }, "[OrderRoom] Skipping driver with missing fields");
+				continue;
+			}
+
 			const driverWs = this.findById(driver.userId);
 			if (driverWs) {
 				driverWs.send(msg);
@@ -370,6 +424,48 @@ export class OrderRoom extends BaseDurableObject {
 			commissionRate = commissionRates.foodCommissionRate || 0.2;
 		}
 
+		// Apply commission reduction from driver badges
+		if (order.driverId) {
+			const driver = await tx.query.driver.findFirst({
+				where: (f, op) => op.eq(f.id, order.driverId ?? ""),
+			});
+
+			if (driver?.userId) {
+				const driverBadges = await tx.query.userBadge.findMany({
+					where: (f, op) => op.eq(f.userId, driver.userId),
+					with: { badge: true },
+				});
+
+				// Find highest commission reduction from badges
+				let maxReduction = 0;
+				for (const userBadge of driverBadges) {
+					const benefits = userBadge.badge.benefits as
+						| { commissionReduction?: number }
+						| null
+						| undefined;
+					const reduction = benefits?.commissionReduction ?? 0;
+					if (reduction > maxReduction) {
+						maxReduction = reduction;
+					}
+				}
+
+				// Apply reduction (max 50% per schema)
+				if (maxReduction > 0) {
+					const originalRate = commissionRate;
+					commissionRate = commissionRate * (1 - maxReduction);
+					log.info(
+						{
+							driverId: order.driverId,
+							originalRate,
+							reduction: maxReduction,
+							finalRate: commissionRate,
+						},
+						"[OrderRoom] Applied badge commission reduction",
+					);
+				}
+			}
+		}
+
 		// Calculate amounts
 		const totalPrice = new Decimal(order.totalPrice);
 		const platformCommission = totalPrice.times(commissionRate);
@@ -456,6 +552,19 @@ export class OrderRoom extends BaseDurableObject {
 			opts,
 		);
 
+		// Award badges to driver after order completion
+		if (order.driverId) {
+			const badgeAwardService = new BadgeAwardService(this.#svc.db, this.#repo);
+			await badgeAwardService
+				.evaluateAndAwardBadges(order.driverId, opts)
+				.catch((error) => {
+					log.error(
+						{ error, driverId: order.driverId },
+						"[OrderRoom] Failed to award badges",
+					);
+				});
+		}
+
 		log.info(
 			{
 				orderId: order.id,
@@ -534,6 +643,207 @@ export class OrderRoom extends BaseDurableObject {
 			log.error(
 				{ error, userId, orderId: messagePayload.orderId },
 				"[OrderRoom] Failed to handle chat message",
+			);
+			throw error;
+		}
+	}
+
+	async #handleMerchantAccept(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const merchantAction = data.p.merchantAction;
+		if (!merchantAction) {
+			log.warn(data, "Invalid merchant accept payload");
+			return;
+		}
+
+		const opts = { tx };
+
+		try {
+			const updatedOrder = await this.#repo.merchant.order.acceptOrder(
+				merchantAction.orderId,
+				merchantAction.merchantId,
+				opts,
+			);
+
+			log.info(
+				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
+				"[OrderRoom] Merchant accepted order",
+			);
+
+			const response: OrderEnvelope = {
+				e: "MERCHANT_ACCEPTED",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order: updatedOrder,
+						// biome-ignore lint/style/noNonNullAssertion: payment and transaction are guaranteed to exist from incoming data
+						// biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: payment and transaction are guaranteed to exist from incoming data
+						payment: data.p.detail?.payment!,
+						transaction: data.p.detail?.transaction!,
+					},
+				},
+			};
+
+			this.broadcast(response, { excludes: [ws] });
+		} catch (error) {
+			log.error(
+				{ error, merchantAction },
+				"[OrderRoom] Failed to handle merchant accept",
+			);
+			throw error;
+		}
+	}
+
+	async #handleMerchantReject(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const merchantAction = data.p.merchantAction;
+		if (!merchantAction) {
+			log.warn(data, "Invalid merchant reject payload");
+			return;
+		}
+
+		const opts = { tx };
+
+		try {
+			const updatedOrder = await this.#repo.merchant.order.rejectOrder(
+				merchantAction.orderId,
+				merchantAction.merchantId,
+				merchantAction.reason ?? "Rejected by merchant",
+				undefined,
+				opts,
+			);
+
+			log.info(
+				{
+					orderId: updatedOrder.id,
+					merchantId: merchantAction.merchantId,
+					reason: merchantAction.reason,
+				},
+				"[OrderRoom] Merchant rejected order",
+			);
+
+			const response: OrderEnvelope = {
+				e: "MERCHANT_REJECTED",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
+					},
+					cancelReason: merchantAction.reason,
+				},
+			};
+
+			this.broadcast(response, { excludes: [ws] });
+		} catch (error) {
+			log.error(
+				{ error, merchantAction },
+				"[OrderRoom] Failed to handle merchant reject",
+			);
+			throw error;
+		}
+	}
+
+	async #handleMerchantMarkPreparing(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const merchantAction = data.p.merchantAction;
+		if (!merchantAction) {
+			log.warn(data, "Invalid merchant mark preparing payload");
+			return;
+		}
+
+		const opts = { tx };
+
+		try {
+			const updatedOrder = await this.#repo.merchant.order.markPreparing(
+				merchantAction.orderId,
+				merchantAction.merchantId,
+				opts,
+			);
+
+			log.info(
+				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
+				"[OrderRoom] Merchant marked order as preparing",
+			);
+
+			const response: OrderEnvelope = {
+				e: "MERCHANT_PREPARING",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
+					},
+				},
+			};
+
+			this.broadcast(response, { excludes: [ws] });
+		} catch (error) {
+			log.error(
+				{ error, merchantAction },
+				"[OrderRoom] Failed to handle merchant mark preparing",
+			);
+			throw error;
+		}
+	}
+
+	async #handleMerchantMarkReady(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const merchantAction = data.p.merchantAction;
+		if (!merchantAction) {
+			log.warn(data, "Invalid merchant mark ready payload");
+			return;
+		}
+
+		const opts = { tx };
+
+		try {
+			const updatedOrder = await this.#repo.merchant.order.markReady(
+				merchantAction.orderId,
+				merchantAction.merchantId,
+				opts,
+			);
+
+			log.info(
+				{ orderId: updatedOrder.id, merchantId: merchantAction.merchantId },
+				"[OrderRoom] Merchant marked order as ready",
+			);
+
+			const response: OrderEnvelope = {
+				e: "MERCHANT_READY",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
+					},
+				},
+			};
+
+			this.broadcast(response, { excludes: [ws] });
+		} catch (error) {
+			log.error(
+				{ error, merchantAction },
+				"[OrderRoom] Failed to handle merchant mark ready",
 			);
 			throw error;
 		}

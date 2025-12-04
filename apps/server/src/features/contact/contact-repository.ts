@@ -6,7 +6,7 @@ import type {
 } from "@repo/schema/contact";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { nullsToUndefined } from "@repo/shared";
-import { and, count, desc, eq, ilike, or } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -16,6 +16,7 @@ import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { log } from "@/utils";
+import { ContactResponseService, ContactSearchService } from "./services";
 
 export class ContactRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -36,21 +37,8 @@ export class ContactRepository extends BaseRepository {
 		try {
 			const { limit = 10, cursor, page = 1, status, search } = query ?? {};
 
-			const conditions = [];
-			if (status) {
-				conditions.push(eq(tables.contact.status, status));
-			}
-			if (search) {
-				conditions.push(
-					or(
-						ilike(tables.contact.name, `%${search}%`),
-						ilike(tables.contact.email, `%${search}%`),
-						ilike(tables.contact.subject, `%${search}%`),
-					),
-				);
-			}
-
-			const where = conditions.length > 0 ? and(...conditions) : undefined;
+			// Use service to build WHERE clause
+			const where = ContactSearchService.buildWhereClause({ status, search });
 
 			const [items, [totalResult]] = await Promise.all([
 				(opts?.tx ?? this.db).query.contact.findMany({
@@ -221,14 +209,15 @@ export class ContactRepository extends BaseRepository {
 		opts?: PartialWithTx,
 	): Promise<Contact> {
 		try {
+			const responseData = ContactResponseService.prepareResponseData(
+				data.response,
+				data.status,
+				data.respondedById,
+			);
+
 			const [updated] = await (opts?.tx ?? this.db)
 				.update(tables.contact)
-				.set({
-					response: data.response,
-					status: data.status,
-					respondedById: data.respondedById,
-					respondedAt: new Date(),
-				})
+				.set(responseData)
 				.where(eq(tables.contact.id, id))
 				.returning();
 

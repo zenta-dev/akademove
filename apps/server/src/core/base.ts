@@ -122,6 +122,15 @@ export class BaseDurableObject extends DurableObject {
 	}
 }
 
+/**
+ * BaseRepository - Provides common repository capabilities
+ *
+ * This class follows ISP by providing optional method implementations.
+ * Subclasses should implement only the interfaces they need.
+ *
+ * @abstract
+ * @implements {ICacheable}
+ */
 export abstract class BaseRepository {
 	readonly #tableName: DatabaseName;
 	protected readonly kv: KeyValueService;
@@ -222,44 +231,74 @@ export abstract class BaseRepository {
 		);
 	}
 
+	/**
+	 * Optional method - only implement if your repository supports listing
+	 * @deprecated Implement IReadable<T> interface instead
+	 */
 	async list(
 		_query?: UnifiedPaginationQuery,
 		_opts?: PartialWithTx,
 		..._args: unknown[]
 	): Promise<unknown> {
-		throw new RepositoryError("Unimplemented");
+		throw new RepositoryError(
+			`${this.#tableName}: list() not implemented. Implement IReadable<T> interface.`,
+		);
 	}
 
+	/**
+	 * Optional method - only implement if your repository supports get by ID
+	 * @deprecated Implement IReadable<T> interface instead
+	 */
 	async get(
 		_id: string,
 		_opts?: PartialWithTx,
 		..._args: unknown[]
 	): Promise<unknown> {
-		throw new RepositoryError("Unimplemented");
+		throw new RepositoryError(
+			`${this.#tableName}: get() not implemented. Implement IReadable<T> interface.`,
+		);
 	}
 
+	/**
+	 * Optional method - only implement if your repository supports creation
+	 * @deprecated Implement IWritable<T> interface instead
+	 */
 	async create(
 		_item: unknown,
 		_opts?: PartialWithTx,
 		..._args: unknown[]
 	): Promise<unknown> {
-		throw new RepositoryError("Unimplemented");
+		throw new RepositoryError(
+			`${this.#tableName}: create() not implemented. Implement IWritable<T> interface.`,
+		);
 	}
 
+	/**
+	 * Optional method - only implement if your repository supports updates
+	 * @deprecated Implement IWritable<T> interface instead
+	 */
 	async update(
 		_id: string,
 		_item: unknown,
 		_opts?: PartialWithTx,
 		..._args: unknown[]
 	): Promise<unknown> {
-		throw new RepositoryError("Unimplemented");
+		throw new RepositoryError(
+			`${this.#tableName}: update() not implemented. Implement IWritable<T> interface.`,
+		);
 	}
 
+	/**
+	 * Optional method - only implement if your repository supports deletion
+	 * @deprecated Implement IDeletable interface instead
+	 */
 	async delete(
 		_id: string,
 		_opts?: PartialWithTx,
 		..._args: unknown[]
 	): Promise<unknown> {
-		throw new RepositoryError("Unimplemented");
+		throw new RepositoryError(
+			`${this.#tableName}: delete() not implemented. Implement IDeletable interface.`,
+		);
 	}
 }
