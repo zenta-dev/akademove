@@ -28,7 +28,7 @@ class BadgeRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(message: data.message, data: data.data ?? []);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -53,7 +53,7 @@ class BadgeRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(message: data.message, data: data.data ?? []);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 

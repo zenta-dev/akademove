@@ -31,7 +31,7 @@ class LeaderboardRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data ?? []);
+      return SuccessResponse(message: data.message, data: data.data);
     });
   }
 
@@ -72,12 +72,8 @@ class LeaderboardRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      final allLeaderboards = data.data ?? [];
-
       // Filter by current user
-      final myRankings = allLeaderboards
-          .where((lb) => lb.userId == userId)
-          .toList();
+      final myRankings = data.data.where((lb) => lb.userId == userId).toList();
 
       return SuccessResponse(
         message: 'Successfully fetched your rankings',
