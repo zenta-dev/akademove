@@ -4,13 +4,14 @@ import { z } from "zod/v4";
 
 /* ------------------------------ Type Helpers ------------------------------ */
 
-type UnwrapZodType<T> = T extends z.ZodOptional<infer U>
-	? UnwrapZodType<U>
-	: T extends z.ZodDefault<infer U>
+type UnwrapZodType<T> =
+	T extends z.ZodOptional<infer U>
 		? UnwrapZodType<U>
-		: T extends z.ZodNullable<infer U>
+		: T extends z.ZodDefault<infer U>
 			? UnwrapZodType<U>
-			: T;
+			: T extends z.ZodNullable<infer U>
+				? UnwrapZodType<U>
+				: T;
 
 type BuildPrefix<P extends string, K extends string> = P extends ""
 	? K
