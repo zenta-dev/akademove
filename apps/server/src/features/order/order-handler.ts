@@ -115,7 +115,7 @@ export const OrderHandler = priv.router({
 						context.user.role === "USER" &&
 						order.userId !== context.user.id
 					) {
-						throw new AuthError("You can only update your own orders", {
+						throw new AuthError(m.error_only_update_own_orders(), {
 							code: "FORBIDDEN",
 						});
 					}
@@ -125,7 +125,7 @@ export const OrderHandler = priv.router({
 						context.user.role === "DRIVER" &&
 						order.driverId !== context.user.id
 					) {
-						throw new AuthError("You can only update orders assigned to you", {
+						throw new AuthError(m.error_only_update_assigned_orders(), {
 							code: "FORBIDDEN",
 						});
 					}
@@ -135,7 +135,7 @@ export const OrderHandler = priv.router({
 						context.user.role === "MERCHANT" &&
 						order.merchantId !== context.user.id
 					) {
-						throw new AuthError("You can only update your own orders", {
+						throw new AuthError(m.error_only_update_own_orders(), {
 							code: "FORBIDDEN",
 						});
 					}

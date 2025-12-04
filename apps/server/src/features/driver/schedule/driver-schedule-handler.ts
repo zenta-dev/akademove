@@ -16,7 +16,7 @@ export const DriverScheduleHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved schedules data",
+					message: m.server_schedules_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -29,7 +29,7 @@ export const DriverScheduleHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved schedule data", data: result },
+				body: { message: m.server_schedule_retrieved(), data: result },
 			};
 		}),
 	create: priv.create

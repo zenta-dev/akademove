@@ -14,7 +14,7 @@ export const CouponHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved coupons data",
+					message: m.server_coupons_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -27,7 +27,7 @@ export const CouponHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved coupon data", data: result },
+				body: { message: m.server_coupon_retrieved(), data: result },
 			};
 		}),
 	validate: priv.validate
@@ -46,7 +46,7 @@ export const CouponHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Coupon validated successfully",
+					message: m.server_coupon_validated(),
 					data: result,
 				},
 			};
@@ -65,7 +65,7 @@ export const CouponHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved eligible coupons",
+					message: m.server_eligible_coupons_retrieved(),
 					data: result,
 				},
 			};

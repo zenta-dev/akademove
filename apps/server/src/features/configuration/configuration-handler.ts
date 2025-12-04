@@ -14,7 +14,7 @@ export const ConfigurationHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved configurations data",
+					message: m.server_configurations_retrieved(),
 					data: result,
 				},
 			};
@@ -26,7 +26,7 @@ export const ConfigurationHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved configuration data",
+					message: m.server_configuration_retrieved(),
 					data: result,
 				},
 			};

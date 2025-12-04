@@ -15,7 +15,7 @@ export const BadgeMainHandler = priv.router({
 		return {
 			status: 200,
 			body: {
-				message: "Successfully retrieved badges data",
+				message: m.server_badges_retrieved(),
 				data: rows,
 				totalPages,
 			},
@@ -26,7 +26,7 @@ export const BadgeMainHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "Successfully retrieved badge data", data: result },
+			body: { message: m.server_badge_retrieved(), data: result },
 		};
 	}),
 	create: priv.create

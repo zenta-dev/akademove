@@ -119,7 +119,7 @@ export const EmergencyHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved emergencies for order",
+					message: m.server_emergencies_retrieved(),
 					data: rows,
 				},
 			};
@@ -144,7 +144,7 @@ export const EmergencyHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved emergency data",
+					message: m.server_emergency_retrieved(),
 					data: result,
 				},
 			};

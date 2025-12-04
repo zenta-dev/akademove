@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { createORPCRouter } from "@/core/router/orpc";
 import { LeaderboardSpec } from "./leaderboard-spec";
 
@@ -9,7 +10,7 @@ export const LeaderboardHandler = priv.router({
 		return {
 			status: 200,
 			body: {
-				message: "Successfully retrieved leaderboards data",
+				message: m.server_leaderboards_retrieved(),
 				data: rows,
 				totalPages,
 			},
@@ -21,7 +22,7 @@ export const LeaderboardHandler = priv.router({
 		return {
 			status: 200,
 			body: {
-				message: "Successfully retrieved leaderboard data",
+				message: m.server_leaderboard_retrieved(),
 				data: result,
 			},
 		};

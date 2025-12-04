@@ -15,7 +15,7 @@ export const ReviewHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved reviews data",
+					message: m.server_reviews_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -28,7 +28,7 @@ export const ReviewHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved review data", data: result },
+				body: { message: m.server_review_retrieved(), data: result },
 			};
 		}),
 	getByOrder: priv.getByOrder
@@ -39,7 +39,7 @@ export const ReviewHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved order reviews",
+					message: m.server_order_reviews_retrieved(),
 					data: result,
 				},
 			};
@@ -55,7 +55,7 @@ export const ReviewHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully checked review eligibility",
+					message: m.server_review_eligibility_checked(),
 					data: result,
 				},
 			};
@@ -73,12 +73,12 @@ export const ReviewHandler = priv.router({
 
 			if (!reviewStatus.canReview) {
 				if (reviewStatus.alreadyReviewed) {
-					throw new Error("You have already reviewed this order");
+					throw new Error(m.server_review_already_exists());
 				}
 				if (!reviewStatus.orderCompleted) {
-					throw new Error("Order must be completed before reviewing");
+					throw new Error(m.server_review_order_not_completed());
 				}
-				throw new Error("You cannot review this order");
+				throw new Error(m.server_review_not_authorized());
 			}
 
 			const result = await context.repo.review.create({

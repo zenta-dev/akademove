@@ -64,7 +64,7 @@ export const AuthHandler = pub.router({
 				if (error instanceof BaseError) {
 					throw error;
 				}
-				throw new RepositoryError("An error occured", {
+				throw new RepositoryError(m.error_internal_server(), {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
@@ -159,7 +159,7 @@ export const AuthHandler = pub.router({
 					if (error instanceof BaseError) {
 						throw error;
 					}
-					throw new RepositoryError("An error occured", {
+					throw new RepositoryError(m.error_internal_server(), {
 						code: "INTERNAL_SERVER_ERROR",
 					});
 				}
@@ -177,7 +177,7 @@ export const AuthHandler = pub.router({
 		);
 
 		if (!context.token) {
-			throw new AuthError("Invalid authentication token.", {
+			throw new AuthError(m.error_invalid_authentication_token(), {
 				code: "BAD_REQUEST",
 			});
 		}
@@ -194,7 +194,7 @@ export const AuthHandler = pub.router({
 	}),
 	getSession: priv.getSession.handler(async ({ context }) => {
 		if (!context.token) {
-			throw new AuthError("Invalid authentication token.", {
+			throw new AuthError(m.error_invalid_authentication_token(), {
 				code: "BAD_REQUEST",
 			});
 		}
@@ -255,7 +255,7 @@ export const AuthHandler = pub.router({
 			return {
 				status: 200,
 				body: {
-					message: "Permission verification completed.",
+					message: m.server_permission_verified(),
 					data: ok,
 				},
 			} as const;
@@ -263,7 +263,7 @@ export const AuthHandler = pub.router({
 	),
 	exchangeToken: priv.exchangeToken.handler(async ({ context }) => {
 		if (!context.user) {
-			throw new AuthError("Invalid session");
+			throw new AuthError(m.error_invalid_session());
 		}
 		const token = await context.manager.jwt.signForWebSocket({
 			id: context.user.id,
@@ -272,7 +272,7 @@ export const AuthHandler = pub.router({
 		return {
 			status: 200,
 			body: {
-				message: "Successfully retrieved users data",
+				message: m.server_token_exchanged(),
 				data: token,
 			},
 		};

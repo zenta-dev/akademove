@@ -17,7 +17,7 @@ export const MerchantMenuHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchantmenus data",
+					message: m.server_merchant_menus_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -31,7 +31,7 @@ export const MerchantMenuHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchantmenu data",
+					message: m.server_merchant_menu_retrieved(),
 					data: result,
 				},
 			};

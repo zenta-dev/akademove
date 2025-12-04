@@ -15,7 +15,7 @@ export const ReportHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved reports data",
+					message: m.server_reports_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -28,7 +28,7 @@ export const ReportHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved report data", data: result },
+				body: { message: m.server_report_retrieved(), data: result },
 			};
 		}),
 	create: priv.create

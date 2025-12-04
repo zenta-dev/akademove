@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { createORPCRouter } from "@/core/router/orpc";
 import { TransactionSpec } from "./transaction-spec";
 
@@ -12,7 +13,11 @@ export const TransactionHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "Get transaction success", data: rows, totalPages },
+			body: {
+				message: m.server_transactions_retrieved(),
+				data: rows,
+				totalPages,
+			},
 		};
 	}),
 	get: priv.get.handler(async ({ context, input: { params } }) => {
@@ -20,7 +25,7 @@ export const TransactionHandler = priv.router({
 
 		return {
 			status: 200,
-			body: { message: "Get transaction success", data: res },
+			body: { message: m.server_transaction_retrieved(), data: res },
 		};
 	}),
 });

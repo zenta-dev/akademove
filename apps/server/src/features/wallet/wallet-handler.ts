@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { createORPCRouter } from "@/core/router/orpc";
 import { WalletSpec } from "./wallet-spec";
 
@@ -9,7 +10,7 @@ export const WalletHandler = pub.router({
 
 		return {
 			status: 200,
-			body: { message: "Get wallet success", data: res },
+			body: { message: m.server_wallet_retrieved(), data: res },
 		};
 	}),
 	getMonthlySummary: priv.getMonthlySummary.handler(
@@ -21,7 +22,7 @@ export const WalletHandler = pub.router({
 
 			return {
 				status: 200,
-				body: { message: "Get monthly summary success", data: res },
+				body: { message: m.server_wallet_summary_retrieved(), data: res },
 			};
 		},
 	),
@@ -39,7 +40,7 @@ export const WalletHandler = pub.router({
 
 			return {
 				status: 200,
-				body: { message: "Get wallet success", data: res.payment },
+				body: { message: m.server_wallet_retrieved(), data: res.payment },
 			};
 		});
 	}),
@@ -55,7 +56,7 @@ export const WalletHandler = pub.router({
 
 			return {
 				status: 200,
-				body: { message: "Get wallet success", data: res },
+				body: { message: m.server_wallet_retrieved(), data: res },
 			};
 		});
 	}),
@@ -111,8 +112,7 @@ export const WalletHandler = pub.router({
 			return {
 				status: 200,
 				body: {
-					message:
-						"Withdrawal request submitted successfully. It will be processed within 1-3 business days.",
+					message: m.server_withdrawal_requested(),
 					data: {
 						id: transaction.id,
 						transactionId: transaction.id,

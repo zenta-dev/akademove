@@ -15,7 +15,7 @@ export const ChatHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved chat messages",
+					message: m.server_chat_messages_retrieved(),
 					data: result,
 				},
 			};

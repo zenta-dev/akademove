@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
 import { NotificationSpec } from "./notification-spec";
@@ -14,7 +15,7 @@ export const NotificationHandler = priv.router({
 		return {
 			status: 200,
 			body: {
-				message: "success",
+				message: m.server_notifications_retrieved(),
 				data: rows,
 				totalPages,
 			},
@@ -31,7 +32,7 @@ export const NotificationHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "success",
+					message: m.server_notification_subscribed(),
 					data: res,
 				},
 			};
@@ -48,7 +49,7 @@ export const NotificationHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "success",
+					message: m.server_notification_unsubscribed(),
 					data: res,
 				},
 			};
@@ -64,7 +65,7 @@ export const NotificationHandler = priv.router({
 		return {
 			status: 200,
 			body: {
-				message: "success",
+				message: m.server_notification_token_saved(),
 				data: { ok: true },
 			},
 		};
@@ -76,7 +77,7 @@ export const NotificationHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "success",
+					message: m.server_notification_token_removed(),
 					data: { ok: true },
 				},
 			};
