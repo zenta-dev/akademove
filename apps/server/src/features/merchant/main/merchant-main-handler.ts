@@ -20,7 +20,7 @@ export const MerchantMainHandler = priv.router({
 
 			return {
 				status: 200,
-				body: { message: "Successfully retrieved merchant data", data: result },
+				body: { message: m.server_merchant_retrieved(), data: result },
 			};
 		}),
 	list: priv.list
@@ -32,7 +32,7 @@ export const MerchantMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchants data",
+					message: m.server_merchants_retrieved(),
 					data: rows,
 					totalPages,
 				},
@@ -52,7 +52,7 @@ export const MerchantMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchants data",
+					message: m.server_merchants_retrieved(),
 					data: result,
 				},
 			};
@@ -70,7 +70,7 @@ export const MerchantMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchant data",
+					message: m.server_merchant_retrieved(),
 					data: result,
 				},
 			};
@@ -84,7 +84,7 @@ export const MerchantMainHandler = priv.router({
 			if (context.user.role === "MERCHANT") {
 				const merchant = await context.repo.merchant.main.get(params.id);
 				if (merchant.userId !== context.user.id) {
-					throw new AuthError("You can only update your own merchant profile", {
+					throw new AuthError(m.error_only_update_own_merchant_profile(), {
 						code: "FORBIDDEN",
 					});
 				}
@@ -121,7 +121,7 @@ export const MerchantMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved best sellers",
+					message: m.server_best_sellers_retrieved(),
 					data: result,
 				},
 			};
@@ -134,7 +134,7 @@ export const MerchantMainHandler = priv.router({
 			if (context.user.role === "MERCHANT") {
 				const merchant = await context.repo.merchant.main.get(params.id);
 				if (merchant.userId !== context.user.id) {
-					throw new AuthError("You can only view your own analytics", {
+					throw new AuthError(m.error_only_view_own_analytics(), {
 						code: "FORBIDDEN",
 					});
 				}
@@ -148,7 +148,7 @@ export const MerchantMainHandler = priv.router({
 			return {
 				status: 200,
 				body: {
-					message: "Successfully retrieved merchant analytics",
+					message: m.server_merchant_analytics_retrieved(),
 					data: result,
 				},
 			};
