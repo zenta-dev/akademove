@@ -51,5 +51,10 @@ void main() {
     test('to test the property `isActive`', () async {
       // TODO
     });
+
+    // String merchantId
+    test('to test the property `merchantId`', () async {
+      // TODO
+    });
   });
 }

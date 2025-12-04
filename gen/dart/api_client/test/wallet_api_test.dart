@@ -1,33 +1,38 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-/// tests for walletApi
+/// tests for WalletApi
 void main() {
-  final instance = ApiClient().getwalletApi();
+  final instance = ApiClient().getWalletApi();
 
-  group(walletApi, () {
-    //Future<walletGet200Response> walletGet() async
+  group(WalletApi, () {
+    //Future<WalletGet200Response> walletGet() async
     test('test walletGet', () async {
       // TODO
     });
 
-    //Future<walletGetMonthlySummary200Response> walletGetMonthlySummary(num year, num month) async
+    //Future<WalletGetMonthlySummary200Response> walletGetMonthlySummary(num year, num month) async
     test('test walletGetMonthlySummary', () async {
       // TODO
     });
 
-    //Future<walletTopUp200Response> walletPay(PayRequest payRequest) async
+    //Future<WalletTopUp200Response> walletPay(PayRequest payRequest) async
     test('test walletPay', () async {
       // TODO
     });
 
-    //Future<walletTopUp200Response> walletTopUp(TopUpRequest topUpRequest) async
+    //Future<WalletTopUp200Response> walletTopUp(TopUpRequest topUpRequest) async
     test('test walletTopUp', () async {
       // TODO
     });
 
-    //Future<walletTopUp200Response> walletTransfer(TransferRequest transferRequest) async
+    //Future<WalletTopUp200Response> walletTransfer(TransferRequest transferRequest) async
     test('test walletTransfer', () async {
+      // TODO
+    });
+
+    //Future<WalletTopUp200Response> walletWithdraw(WithdrawRequest withdrawRequest) async
+    test('test walletWithdraw', () async {
       // TODO
     });
   });

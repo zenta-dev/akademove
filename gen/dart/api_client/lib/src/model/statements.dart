@@ -386,8 +386,12 @@ enum StatementsConfigurationsEnum {
   list(r'list'),
   @JsonValue(r'get')
   get_(r'get'),
+  @JsonValue(r'create')
+  create(r'create'),
   @JsonValue(r'update')
-  update(r'update');
+  update(r'update'),
+  @JsonValue(r'delete')
+  delete(r'delete');
 
   const StatementsConfigurationsEnum(this.value);
 

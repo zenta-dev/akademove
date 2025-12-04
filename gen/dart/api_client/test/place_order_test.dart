@@ -37,6 +37,11 @@ void main() {
       // TODO
     });
 
+    // String couponCode
+    test('to test the property `couponCode`', () async {
+      // TODO
+    });
+
     // PlaceOrderPayment payment
     test('to test the property `payment`', () async {
       // TODO

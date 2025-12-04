@@ -6,6 +6,26 @@ void main() {
   final instance = ApiClient().getAdminApi();
 
   group(AdminApi, () {
+    //Future<AuthSignOut200Response> contactDelete(String id) async
+    test('test contactDelete', () async {
+      // TODO
+    });
+
+    //Future<ContactSubmit201Response> contactGetById(String id) async
+    test('test contactGetById', () async {
+      // TODO
+    });
+
+    //Future<ContactList200Response> contactList({ int page, int limit, String status, String search }) async
+    test('test contactList', () async {
+      // TODO
+    });
+
+    //Future<ContactSubmit201Response> contactUpdate(String id, UpdateContact updateContact) async
+    test('test contactUpdate', () async {
+      // TODO
+    });
+
     //Future<UserAdminCreate200Response> userAdminCreate(InsertUser insertUser) async
     test('test userAdminCreate', () async {
       // TODO

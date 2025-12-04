@@ -11,5 +11,10 @@ void main() {
     test('to test the property `newUserOnly`', () async {
       // TODO
     });
+
+    // int perUserLimit
+    test('to test the property `perUserLimit`', () async {
+      // TODO
+    });
   });
 }

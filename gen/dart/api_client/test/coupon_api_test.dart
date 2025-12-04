@@ -16,6 +16,11 @@ void main() {
       // TODO
     });
 
+    //Future<CouponGetEligibleCoupons200Response> couponGetEligibleCoupons(CouponGetEligibleCouponsRequest couponGetEligibleCouponsRequest) async
+    test('test couponGetEligibleCoupons', () async {
+      // TODO
+    });
+
     //Future<CouponList200Response> couponList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test couponList', () async {
       // TODO
@@ -28,6 +33,11 @@ void main() {
 
     //Future<CouponCreate200Response> couponUpdate(String id, UpdateCoupon updateCoupon) async
     test('test couponUpdate', () async {
+      // TODO
+    });
+
+    //Future<CouponValidate200Response> couponValidate(CouponValidateRequest couponValidateRequest) async
+    test('test couponValidate', () async {
       // TODO
     });
   });

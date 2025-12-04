@@ -22,6 +22,9 @@
 		"db:studio": "turbo -F server db:studio",
 		"db:generate": "turbo -F server db:generate",
 		"db:migrate": "turbo -F server db:migrate",
+		"db:seed": "bun run apps/server/scripts/seed.ts",
+		"db:reset": "bun run apps/server/scripts/reset.ts",
+		"seed:quick-messages": "bun run apps/server/scripts/seed-quick-messages.ts",
 		"deploy": "ALCHEMY_TELEMETRY_DISABLED=1 alchemy deploy --stage production --env-file .env.prod",
 		"destroy": "ALCHEMY_TELEMETRY_DISABLED=1 alchemy destroy --stage production --env-file .env.prod"
 	},

@@ -57,6 +57,21 @@ void main() {
       // TODO
     });
 
+    // String couponId
+    test('to test the property `couponId`', () async {
+      // TODO
+    });
+
+    // String couponCode
+    test('to test the property `couponCode`', () async {
+      // TODO
+    });
+
+    // num discountAmount
+    test('to test the property `discountAmount`', () async {
+      // TODO
+    });
+
     // OrderNote note
     test('to test the property `note`', () async {
       // TODO

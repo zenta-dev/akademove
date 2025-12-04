@@ -1,19 +1,19 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for walletGetMonthlySummary200Response
+// tests for WalletGetMonthlySummary200Response
 void main() {
-  final walletGetMonthlySummary200Response?
-  instance = /* walletGetMonthlySummary200Response(...) */ null;
+  final WalletGetMonthlySummary200Response?
+  instance = /* WalletGetMonthlySummary200Response(...) */ null;
   // TODO add properties to the entity
 
-  group(walletGetMonthlySummary200Response, () {
+  group(WalletGetMonthlySummary200Response, () {
     // String message
     test('to test the property `message`', () async {
       // TODO
     });
 
-    // walletMonthlySummaryResponse data
+    // WalletMonthlySummaryResponse data
     test('to test the property `data`', () async {
       // TODO
     });

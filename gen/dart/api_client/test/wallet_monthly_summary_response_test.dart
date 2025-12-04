@@ -1,13 +1,13 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for walletMonthlySummaryResponse
+// tests for WalletMonthlySummaryResponse
 void main() {
-  final walletMonthlySummaryResponse?
-  instance = /* walletMonthlySummaryResponse(...) */ null;
+  final WalletMonthlySummaryResponse?
+  instance = /* WalletMonthlySummaryResponse(...) */ null;
   // TODO add properties to the entity
 
-  group(walletMonthlySummaryResponse, () {
+  group(WalletMonthlySummaryResponse, () {
     // YYYY-MM
     // String month
     test('to test the property `month`', () async {

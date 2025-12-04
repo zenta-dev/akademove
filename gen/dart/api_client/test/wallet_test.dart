@@ -1,12 +1,12 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for wallet
+// tests for Wallet
 void main() {
-  final wallet? instance = /* wallet(...) */ null;
+  final Wallet? instance = /* Wallet(...) */ null;
   // TODO add properties to the entity
 
-  group(wallet, () {
+  group(Wallet, () {
     // String id
     test('to test the property `id`', () async {
       // TODO

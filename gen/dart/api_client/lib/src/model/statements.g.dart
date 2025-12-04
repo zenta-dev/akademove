@@ -461,7 +461,9 @@ const _$StatementsBookingsEnumEnumMap = {
 const _$StatementsConfigurationsEnumEnumMap = {
   StatementsConfigurationsEnum.list: 'list',
   StatementsConfigurationsEnum.get_: 'get',
+  StatementsConfigurationsEnum.create: 'create',
   StatementsConfigurationsEnum.update: 'update',
+  StatementsConfigurationsEnum.delete: 'delete',
 };
 
 const _$StatementsEmergencyEnumEnumMap = {

@@ -1,18 +1,18 @@
 import 'package:test/test.dart';
 import 'package:api_client/api_client.dart';
 
-// tests for walletGet200Response
+// tests for WalletGet200Response
 void main() {
-  final walletGet200Response? instance = /* walletGet200Response(...) */ null;
+  final WalletGet200Response? instance = /* WalletGet200Response(...) */ null;
   // TODO add properties to the entity
 
-  group(walletGet200Response, () {
+  group(WalletGet200Response, () {
     // String message
     test('to test the property `message`', () async {
       // TODO
     });
 
-    // wallet data
+    // Wallet data
     test('to test the property `data`', () async {
       // TODO
     });

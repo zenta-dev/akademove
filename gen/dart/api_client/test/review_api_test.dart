@@ -6,6 +6,11 @@ void main() {
   final instance = ApiClient().getReviewApi();
 
   group(ReviewApi, () {
+    //Future<ReviewCheckCanReview200Response> reviewCheckCanReview(String orderId) async
+    test('test reviewCheckCanReview', () async {
+      // TODO
+    });
+
     //Future<ReviewCreate200Response> reviewCreate(InsertReview insertReview) async
     test('test reviewCreate', () async {
       // TODO
@@ -13,6 +18,11 @@ void main() {
 
     //Future<ReviewCreate200Response> reviewGet(String id) async
     test('test reviewGet', () async {
+      // TODO
+    });
+
+    //Future<ReviewList200Response> reviewGetByOrder(String orderId) async
+    test('test reviewGetByOrder', () async {
       // TODO
     });
 

@@ -62,6 +62,11 @@ void main() {
       // TODO
     });
 
+    // String merchantId
+    test('to test the property `merchantId`', () async {
+      // TODO
+    });
+
     // String createdById
     test('to test the property `createdById`', () async {
       // TODO

@@ -21,7 +21,7 @@ void main() {
       // TODO
     });
 
-    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, List<num> discountIds, num weight }) async
+    //Future<OrderEstimate200Response> orderEstimate(num dropoffLocationX, num dropoffLocationY, num pickupLocationX, num pickupLocationY, OrderType type, { String notePickup, String noteDropoff, String noteInstructions, List<OrderItem> items, UserGender gender, String couponCode, List<num> discountIds, num weight }) async
     test('test orderEstimate', () async {
       // TODO
     });

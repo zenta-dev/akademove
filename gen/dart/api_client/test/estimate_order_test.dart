@@ -37,6 +37,11 @@ void main() {
       // TODO
     });
 
+    // String couponCode
+    test('to test the property `couponCode`', () async {
+      // TODO
+    });
+
     // List<num> discountIds
     test('to test the property `discountIds`', () async {
       // TODO
