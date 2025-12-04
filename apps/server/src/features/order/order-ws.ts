@@ -680,10 +680,8 @@ export class OrderRoom extends BaseDurableObject {
 				p: {
 					detail: {
 						order: updatedOrder,
-						// biome-ignore lint/style/noNonNullAssertion: payment and transaction are guaranteed to exist from incoming data
-						// biome-ignore lint/suspicious/noNonNullAssertedOptionalChain: payment and transaction are guaranteed to exist from incoming data
-						payment: data.p.detail?.payment!,
-						transaction: data.p.detail?.transaction!,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
 					},
 				},
 			};
