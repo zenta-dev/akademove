@@ -820,7 +820,7 @@ function AnimatedTitle({
 	ref,
 	children,
 }: {
-	ref: React.RefObject<HTMLDivElement>;
+	ref: React.RefObject<HTMLDivElement | null>;
 	children: React.ReactNode;
 }) {
 	const isInView = useInView(ref, { once: true, margin: "-100px" });

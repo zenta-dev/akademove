@@ -83,7 +83,7 @@ function RouteComponent() {
 	const { data: driver, isLoading: driverLoading } = useQuery({
 		queryKey: ["driver", "me"],
 		queryFn: async () => {
-			const result = await orpcClient.driver.main.getMine({});
+			const result = await orpcClient.driver.getMine({});
 			if (result.status !== 200) throw new Error(result.body.message);
 			return result.body.data;
 		},
@@ -94,7 +94,7 @@ function RouteComponent() {
 		queryKey: ["driver", driver?.id, "analytics", selectedPeriod],
 		queryFn: async () => {
 			if (!driver?.id) throw new Error("Driver not found");
-			const result = await orpcClient.driver.main.getAnalytics({
+			const result = await orpcClient.driver.getAnalytics({
 				params: { id: driver.id },
 				query: { period: selectedPeriod },
 			});
@@ -144,7 +144,8 @@ function RouteComponent() {
 			});
 
 			// Create download link
-			const blob = new Blob([result], { type: "text/csv" });
+			const csvData = result.status === 200 ? result.body : "";
+			const blob = new Blob([csvData], { type: "text/csv" });
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
@@ -472,9 +473,13 @@ function RouteComponent() {
 											cx="50%"
 											cy="50%"
 											labelLine={false}
-											label={({ name, earnings }) =>
-												`${name}: ${formatPrice(earnings)}`
-											}
+											label={(props) => {
+												const entry = props as unknown as {
+													name: string;
+													earnings: number;
+												};
+												return `${entry.name}: ${formatPrice(entry.earnings)}`;
+											}}
 											outerRadius={100}
 											fill="#8884d8"
 											dataKey="earnings"

@@ -67,7 +67,9 @@ const InputComponent = React.forwardRef<
 		{...props}
 		ref={ref}
 	/>
-));
+)) as React.ComponentType<
+	React.ComponentProps<"input"> & { ref?: React.Ref<HTMLInputElement> }
+>;
 InputComponent.displayName = "InputComponent";
 
 type CountryEntry = { label: string; value: RPNInput.Country | undefined };

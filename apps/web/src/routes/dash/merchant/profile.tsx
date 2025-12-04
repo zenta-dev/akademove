@@ -518,8 +518,8 @@ function EditMerchantProfile({
 									<FormControl>
 										<MapWrapper
 											value={{
-												lat: form.getValues("location_y") || 0,
-												lng: form.getValues("location_x") || 0,
+												lat: Number(form.getValues("location_y")) || 0,
+												lng: Number(form.getValues("location_x")) || 0,
 											}}
 											onLocationChange={({ lat, lng }) => {
 												form.setValue("location_y", lat);
@@ -565,7 +565,7 @@ function EditMerchantProfile({
 						<FormField
 							control={form.control}
 							name="bank_number"
-							render={({ field }) => (
+							render={({ field: { value, ...field } }) => (
 								<FormItem>
 									<FormLabel>{m.bank_number()}</FormLabel>
 									<FormControl>
@@ -573,6 +573,8 @@ function EditMerchantProfile({
 											placeholder="1234567890"
 											disabled={mutation.isPending}
 											{...field}
+											value={String(value ?? "")}
+											onChange={(e) => field.onChange(e.target.value)}
 										/>
 									</FormControl>
 									<FormMessage />

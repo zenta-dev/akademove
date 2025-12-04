@@ -15,6 +15,7 @@
 
 		/* Linting */
 		"skipLibCheck": true,
+		"skipDefaultLibCheck": true,
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
@@ -23,7 +24,8 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["./src/*"],
-			"@repo/shared": ["../../packages/shared/src"]
+			"@repo/shared": ["../../packages/shared/src"],
+			"react": ["./node_modules/@types/react"]
 		}
 	},
 	"references": [
