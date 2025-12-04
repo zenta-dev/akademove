@@ -5,6 +5,7 @@ import {
 	DollarSign,
 	Flag,
 	Gauge,
+	Mail,
 	Receipt,
 	Store,
 	Ticket,
@@ -55,6 +56,11 @@ const navMain = Object.freeze([
 		title: m.reports(),
 		href: localizeHref("/dash/operator/reports"),
 		icon: Flag,
+	},
+	{
+		title: m.contact_us(),
+		href: localizeHref("/dash/operator/contacts"),
+		icon: Mail,
 	},
 ] as const);
 

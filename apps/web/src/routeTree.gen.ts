@@ -46,6 +46,7 @@ import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/
 import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
 import { Route as DashOperatorMerchantsRouteImport } from './routes/dash/operator/merchants'
 import { Route as DashOperatorDriversRouteImport } from './routes/dash/operator/drivers'
+import { Route as DashOperatorContactsRouteImport } from './routes/dash/operator/contacts'
 import { Route as DashMerchantWalletRouteImport } from './routes/dash/merchant/wallet'
 import { Route as DashMerchantSalesRouteImport } from './routes/dash/merchant/sales'
 import { Route as DashMerchantProfileRouteImport } from './routes/dash/merchant/profile'
@@ -60,6 +61,7 @@ import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
 import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
 import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
 import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
+import { Route as DashAdminContactsRouteImport } from './routes/dash/admin/contacts'
 import { Route as DashAdminConfigurationsRouteImport } from './routes/dash/admin/configurations'
 import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
 import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
@@ -67,6 +69,8 @@ import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/
 import { Route as authSignUpDriverRouteImport } from './routes/(auth)/sign-up/driver'
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
+import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
+import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
 
 const supportRouteRoute = supportRouteRouteImport.update({
   id: '/(support)',
@@ -251,6 +255,11 @@ const DashOperatorDriversRoute = DashOperatorDriversRouteImport.update({
   path: '/drivers',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashOperatorContactsRoute = DashOperatorContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
 const DashMerchantWalletRoute = DashMerchantWalletRouteImport.update({
   id: '/wallet',
   path: '/wallet',
@@ -321,6 +330,11 @@ const DashAdminDriversRoute = DashAdminDriversRouteImport.update({
   path: '/drivers',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashAdminContactsRoute = DashAdminContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
 const DashAdminConfigurationsRoute = DashAdminConfigurationsRouteImport.update({
   id: '/configurations',
   path: '/configurations',
@@ -357,6 +371,16 @@ const DashOperatorCouponsNewRoute = DashOperatorCouponsNewRouteImport.update({
   path: '/coupons/new',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashOperatorContactsIdRoute = DashOperatorContactsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashOperatorContactsRoute,
+} as any)
+const DashAdminContactsIdRoute = DashAdminContactsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DashAdminContactsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -385,6 +409,7 @@ export interface FileRoutesByFullPath {
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
@@ -399,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/contacts': typeof DashOperatorContactsRouteWithChildren
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -413,6 +439,8 @@ export interface FileRoutesByFullPath {
   '/dash/merchant/': typeof DashMerchantIndexRoute
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
+  '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
 }
@@ -438,6 +466,7 @@ export interface FileRoutesByTo {
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
@@ -452,6 +481,7 @@ export interface FileRoutesByTo {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/contacts': typeof DashOperatorContactsRouteWithChildren
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -466,6 +496,8 @@ export interface FileRoutesByTo {
   '/dash/merchant': typeof DashMerchantIndexRoute
   '/dash/operator': typeof DashOperatorIndexRoute
   '/dash/user': typeof DashUserIndexRoute
+  '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
 }
@@ -499,6 +531,7 @@ export interface FileRoutesById {
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
+  '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
@@ -513,6 +546,7 @@ export interface FileRoutesById {
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
   '/dash/merchant/sales': typeof DashMerchantSalesRoute
   '/dash/merchant/wallet': typeof DashMerchantWalletRoute
+  '/dash/operator/contacts': typeof DashOperatorContactsRouteWithChildren
   '/dash/operator/drivers': typeof DashOperatorDriversRoute
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
@@ -527,6 +561,8 @@ export interface FileRoutesById {
   '/dash/merchant/': typeof DashMerchantIndexRoute
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
+  '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
   '/dash/operator/coupons/': typeof DashOperatorCouponsIndexRoute
 }
@@ -559,6 +595,7 @@ export interface FileRouteTypes {
     | '/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/configurations'
+    | '/dash/admin/contacts'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
@@ -573,6 +610,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/contacts'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -587,6 +625,8 @@ export interface FileRouteTypes {
     | '/dash/merchant/'
     | '/dash/operator/'
     | '/dash/user/'
+    | '/dash/admin/contacts/$id'
+    | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/coupons'
   fileRoutesByTo: FileRoutesByTo
@@ -612,6 +652,7 @@ export interface FileRouteTypes {
     | '/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/configurations'
+    | '/dash/admin/contacts'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
@@ -626,6 +667,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/contacts'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -640,6 +682,8 @@ export interface FileRouteTypes {
     | '/dash/merchant'
     | '/dash/operator'
     | '/dash/user'
+    | '/dash/admin/contacts/$id'
+    | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/coupons'
   id:
@@ -672,6 +716,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/configurations'
+    | '/dash/admin/contacts'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
@@ -686,6 +731,7 @@ export interface FileRouteTypes {
     | '/dash/merchant/profile'
     | '/dash/merchant/sales'
     | '/dash/merchant/wallet'
+    | '/dash/operator/contacts'
     | '/dash/operator/drivers'
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
@@ -700,6 +746,8 @@ export interface FileRouteTypes {
     | '/dash/merchant/'
     | '/dash/operator/'
     | '/dash/user/'
+    | '/dash/admin/contacts/$id'
+    | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
     | '/dash/operator/coupons/'
   fileRoutesById: FileRoutesById
@@ -984,6 +1032,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashOperatorDriversRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
+    '/dash/operator/contacts': {
+      id: '/dash/operator/contacts'
+      path: '/contacts'
+      fullPath: '/dash/operator/contacts'
+      preLoaderRoute: typeof DashOperatorContactsRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/merchant/wallet': {
       id: '/dash/merchant/wallet'
       path: '/wallet'
@@ -1082,6 +1137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminDriversRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/admin/contacts': {
+      id: '/dash/admin/contacts'
+      path: '/contacts'
+      fullPath: '/dash/admin/contacts'
+      preLoaderRoute: typeof DashAdminContactsRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
     '/dash/admin/configurations': {
       id: '/dash/admin/configurations'
       path: '/configurations'
@@ -1131,6 +1193,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashOperatorCouponsNewRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
+    '/dash/operator/contacts/$id': {
+      id: '/dash/operator/contacts/$id'
+      path: '/$id'
+      fullPath: '/dash/operator/contacts/$id'
+      preLoaderRoute: typeof DashOperatorContactsIdRouteImport
+      parentRoute: typeof DashOperatorContactsRoute
+    }
+    '/dash/admin/contacts/$id': {
+      id: '/dash/admin/contacts/$id'
+      path: '/$id'
+      fullPath: '/dash/admin/contacts/$id'
+      preLoaderRoute: typeof DashAdminContactsIdRouteImport
+      parentRoute: typeof DashAdminContactsRoute
+    }
   }
 }
 
@@ -1174,9 +1250,21 @@ const supportRouteRouteWithChildren = supportRouteRoute._addFileChildren(
   supportRouteRouteChildren,
 )
 
+interface DashAdminContactsRouteChildren {
+  DashAdminContactsIdRoute: typeof DashAdminContactsIdRoute
+}
+
+const DashAdminContactsRouteChildren: DashAdminContactsRouteChildren = {
+  DashAdminContactsIdRoute: DashAdminContactsIdRoute,
+}
+
+const DashAdminContactsRouteWithChildren =
+  DashAdminContactsRoute._addFileChildren(DashAdminContactsRouteChildren)
+
 interface DashAdminRouteRouteChildren {
   DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
   DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
+  DashAdminContactsRoute: typeof DashAdminContactsRouteWithChildren
   DashAdminDriversRoute: typeof DashAdminDriversRoute
   DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
   DashAdminOrdersRoute: typeof DashAdminOrdersRoute
@@ -1187,6 +1275,7 @@ interface DashAdminRouteRouteChildren {
 const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
   DashAdminConfigurationsRoute: DashAdminConfigurationsRoute,
+  DashAdminContactsRoute: DashAdminContactsRouteWithChildren,
   DashAdminDriversRoute: DashAdminDriversRoute,
   DashAdminMerchantsRoute: DashAdminMerchantsRoute,
   DashAdminOrdersRoute: DashAdminOrdersRoute,
@@ -1241,7 +1330,19 @@ const DashMerchantRouteRouteChildren: DashMerchantRouteRouteChildren = {
 const DashMerchantRouteRouteWithChildren =
   DashMerchantRouteRoute._addFileChildren(DashMerchantRouteRouteChildren)
 
+interface DashOperatorContactsRouteChildren {
+  DashOperatorContactsIdRoute: typeof DashOperatorContactsIdRoute
+}
+
+const DashOperatorContactsRouteChildren: DashOperatorContactsRouteChildren = {
+  DashOperatorContactsIdRoute: DashOperatorContactsIdRoute,
+}
+
+const DashOperatorContactsRouteWithChildren =
+  DashOperatorContactsRoute._addFileChildren(DashOperatorContactsRouteChildren)
+
 interface DashOperatorRouteRouteChildren {
+  DashOperatorContactsRoute: typeof DashOperatorContactsRouteWithChildren
   DashOperatorDriversRoute: typeof DashOperatorDriversRoute
   DashOperatorMerchantsRoute: typeof DashOperatorMerchantsRoute
   DashOperatorOrdersRoute: typeof DashOperatorOrdersRoute
@@ -1253,6 +1354,7 @@ interface DashOperatorRouteRouteChildren {
 }
 
 const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
+  DashOperatorContactsRoute: DashOperatorContactsRouteWithChildren,
   DashOperatorDriversRoute: DashOperatorDriversRoute,
   DashOperatorMerchantsRoute: DashOperatorMerchantsRoute,
   DashOperatorOrdersRoute: DashOperatorOrdersRoute,

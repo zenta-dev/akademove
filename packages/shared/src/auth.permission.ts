@@ -29,8 +29,9 @@ export const statement = {
 	session: ["list", "revoke", "delete"],
 	pricing: ["get", "update", "delete"],
 	bookings: ["list", "get", "create", "update", "delete"],
-	configurations: ["list", "get", "update"],
+	configurations: ["list", "get", "create", "update", "delete"],
 	emergency: ["list", "get", "create", "update"],
+	contact: ["list", "get", "update", "delete", "respond"],
 } as const;
 
 export type Statement = typeof statement;

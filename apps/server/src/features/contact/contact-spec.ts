@@ -122,4 +122,30 @@ export const ContactSpec = {
 				createSuccesSchema(z.literal(true), "Contact deleted successfully"),
 			]),
 		),
+	respond: oc
+		.route({
+			tags: [FEATURE_TAGS.ADMIN],
+			method: "POST",
+			path: "/{id}/respond",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({
+					id: z.string().uuid(),
+				}),
+				body: z.object({
+					response: z.string().min(1).max(5000),
+					status: z
+						.enum(["PENDING", "REVIEWING", "RESOLVED", "CLOSED"])
+						.optional(),
+				}),
+			}),
+		)
+		.output(
+			z.union([
+				createSuccesSchema(ContactSchema, "Response sent successfully"),
+			]),
+		),
 };

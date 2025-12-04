@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
@@ -21,40 +22,54 @@ export const ContactHandler = pub.router({
 			return {
 				status: 201 as const,
 				body: {
-					message: "Contact submitted successfully",
+					message: m.server_contact_submitted(),
 					data: result,
 				},
 			};
 		});
 	}),
 	list: priv.list
-		.use(hasPermission({ user: ["list"] }))
+		.use(hasPermission({ contact: ["list"] }))
 		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.contact.list(query);
+			const result = await context.repo.contact.list(
+				query
+					? {
+							...query,
+							order: "desc" as const,
+							mode: "offset" as const,
+							limit: query.limit ?? 10,
+						}
+					: undefined,
+			);
 
 			return {
 				status: 200 as const,
 				body: {
-					message: "Contacts fetched successfully",
-					data: result,
+					message: m.server_contacts_retrieved(),
+					data: {
+						rows: result.rows,
+						pagination: result.pagination
+							? { totalPages: result.pagination.totalPages ?? 0 }
+							: undefined,
+					},
 				},
 			};
 		}),
 	getById: priv.getById
-		.use(hasPermission({ user: ["list"] }))
+		.use(hasPermission({ contact: ["get"] }))
 		.handler(async ({ context, input: { params } }) => {
 			const result = await context.repo.contact.get(params.id);
 
 			return {
 				status: 200 as const,
 				body: {
-					message: "Contact fetched successfully",
+					message: m.server_contact_retrieved(),
 					data: result,
 				},
 			};
 		}),
 	update: priv.update
-		.use(hasPermission({ user: ["update"] }))
+		.use(hasPermission({ contact: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 
@@ -66,14 +81,14 @@ export const ContactHandler = pub.router({
 				return {
 					status: 200 as const,
 					body: {
-						message: "Contact updated successfully",
+						message: m.server_contact_updated(),
 						data: result,
 					},
 				};
 			});
 		}),
 	delete: priv.delete
-		.use(hasPermission({ user: ["delete"] }))
+		.use(hasPermission({ contact: ["delete"] }))
 		.handler(async ({ context, input: { params } }) => {
 			return await context.svc.db.transaction(async (tx) => {
 				await context.repo.contact.delete(params.id, { tx });
@@ -81,8 +96,33 @@ export const ContactHandler = pub.router({
 				return {
 					status: 200 as const,
 					body: {
-						message: "Contact deleted successfully",
+						message: m.server_contact_deleted(),
 						data: true,
+					},
+				};
+			});
+		}),
+	respond: priv.respond
+		.use(hasPermission({ contact: ["respond"] }))
+		.handler(async ({ context, input: { params, body } }) => {
+			const data = trimObjectValues(body);
+
+			return await context.svc.db.transaction(async (tx) => {
+				const result = await context.repo.contact.respond(
+					params.id,
+					{
+						response: data.response,
+						status: data.status ?? "RESOLVED",
+						respondedById: context.user.id,
+					},
+					{ tx },
+				);
+
+				return {
+					status: 200 as const,
+					body: {
+						message: m.server_contact_updated(),
+						data: result,
 					},
 				};
 			});

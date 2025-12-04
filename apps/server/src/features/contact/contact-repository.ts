@@ -210,4 +210,43 @@ export class ContactRepository extends BaseRepository {
 			throw this.handleError(error, "delete");
 		}
 	}
+
+	async respond(
+		id: string,
+		data: {
+			response: string;
+			status: "PENDING" | "REVIEWING" | "RESOLVED" | "CLOSED";
+			respondedById: string;
+		},
+		opts?: PartialWithTx,
+	): Promise<Contact> {
+		try {
+			const [updated] = await (opts?.tx ?? this.db)
+				.update(tables.contact)
+				.set({
+					response: data.response,
+					status: data.status,
+					respondedById: data.respondedById,
+					respondedAt: new Date(),
+				})
+				.where(eq(tables.contact.id, id))
+				.returning();
+
+			if (!updated) {
+				throw new RepositoryError(m.error_contact_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			await this.deleteCache(id);
+			log.info(
+				{ contactId: id, respondedById: data.respondedById },
+				"[ContactRepository] Contact responded",
+			);
+
+			return ContactRepository.composeEntity(updated);
+		} catch (error) {
+			throw this.handleError(error, "respond");
+		}
+	}
 }

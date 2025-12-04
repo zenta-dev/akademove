@@ -40,7 +40,8 @@ export class RBACService {
 			],
 			session: ["list", "revoke", "delete"],
 			bookings: ["list", "get", "create", "update", "delete"],
-			configurations: ["list", "get", "update"],
+			configurations: ["list", "get", "create", "update", "delete"],
+			contact: ["list", "get", "update", "delete", "respond"],
 		},
 		OPERATOR: {
 			driver: ["list", "get", "update", "ban"],
@@ -52,7 +53,8 @@ export class RBACService {
 			report: ["list", "get", "create", "export"],
 			review: ["list", "get"],
 			user: ["list", "get", "update"],
-			configurations: ["list", "get", "update"],
+			configurations: ["list", "get", "create", "update", "delete"],
+			contact: ["list", "get", "update", "respond"],
 		},
 		MERCHANT: {
 			merchant: ["get", "update"],

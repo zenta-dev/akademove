@@ -4,6 +4,7 @@ import {
 	Bike,
 	ChartLine,
 	Gauge,
+	Mail,
 	Receipt,
 	Settings2,
 	Store,
@@ -50,6 +51,11 @@ const navMain = Object.freeze([
 		title: m.analytics(),
 		href: localizeHref("/dash/admin/analytics"),
 		icon: ChartLine,
+	},
+	{
+		title: m.contact_us(),
+		href: localizeHref("/dash/admin/contacts"),
+		icon: Mail,
 	},
 	{
 		title: m.configurations(),
