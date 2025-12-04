@@ -213,7 +213,11 @@ function RouteComponent() {
 									<Label htmlFor="status">{m.status()}</Label>
 									<Select
 										value={status}
-										onValueChange={(v: any) => setStatus(v)}
+										onValueChange={(v) =>
+											setStatus(
+												v as "PENDING" | "REVIEWING" | "RESOLVED" | "CLOSED",
+											)
+										}
 									>
 										<SelectTrigger>
 											<SelectValue />
