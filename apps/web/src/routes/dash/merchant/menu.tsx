@@ -3,7 +3,7 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { MerchantMenuForm } from "@/components/foms/merchant-menu";
+import { MerchantMenuForm } from "@/components/forms/merchant-menu";
 import { MerchantMenuTable } from "@/components/tables/menu/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { EditIcon, MoreHorizontal, TrashIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { MerchantMenuForm } from "@/components/foms/merchant-menu";
+import { MerchantMenuForm } from "@/components/forms/merchant-menu";
 import { Submitting } from "@/components/misc/submitting";
 import {
 	AlertDialog,
