@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type Emergency,
 	EmergencyKeySchema,
@@ -192,7 +193,7 @@ export class EmergencyRepository extends BaseRepository {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id, opts);
 				if (!res) {
-					throw new RepositoryError("Emergency not found", {
+					throw new RepositoryError(m.error_emergency_not_found(), {
 						code: "NOT_FOUND",
 					});
 				}
@@ -233,7 +234,7 @@ export class EmergencyRepository extends BaseRepository {
 				.returning();
 
 			if (!operation) {
-				throw new RepositoryError("Failed to create emergency", {
+				throw new RepositoryError(m.error_failed_create_emergency(), {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
@@ -297,7 +298,9 @@ export class EmergencyRepository extends BaseRepository {
 				.returning();
 
 			if (!operation) {
-				throw new RepositoryError("Emergency not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_emergency_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			const result = EmergencyRepository.composeEntity(operation);
@@ -328,7 +331,9 @@ export class EmergencyRepository extends BaseRepository {
 				.returning();
 
 			if (!result || result.length === 0) {
-				throw new RepositoryError("Emergency not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_emergency_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			log.info({ emergencyId: id }, "[EmergencyRepository] Emergency deleted");

@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import type { ChargeResponse } from "@erhahahaa/midtrans-client-typescript";
+import { m } from "@repo/i18n";
 import type { BankProvider } from "@repo/schema/common";
 import type { OrderType } from "@repo/schema/order";
 import {
@@ -93,7 +94,7 @@ export class PaymentRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id, opts);
-				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_driver());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["1h"] });
 				return res;
 			};
@@ -349,7 +350,7 @@ export class PaymentRepository extends BaseRepository {
 		} catch (error) {
 			log.error({ error }, "Failed to process webhook");
 			if (error instanceof RepositoryError) throw error;
-			throw new RepositoryError("Failed to process webhook", {
+			throw new RepositoryError(m.error_failed_process_webhook(), {
 				code: "INTERNAL_SERVER_ERROR",
 			});
 		}
@@ -727,7 +728,7 @@ export class PaymentRepository extends BaseRepository {
 				.returning();
 
 			if (!updatedwallet) {
-				throw new RepositoryError("Insufficient wallet balance", {
+				throw new RepositoryError(m.error_insufficient_wallet_balance(), {
 					code: "BAD_REQUEST",
 				});
 			}

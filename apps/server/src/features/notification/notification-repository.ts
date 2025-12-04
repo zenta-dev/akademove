@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type FCMNotificationLog,
 	FCMNotificationLogKeySchema,
@@ -426,7 +427,7 @@ class FCMTokenRepository extends BaseRepository {
 			const res = await this.getCache(token, { fallback });
 
 			if (!res) {
-				throw new RepositoryError("Failed to find by token");
+				throw new RepositoryError(m.error_failed_find_by_token());
 			}
 
 			return FCMTokenRepository.composeEntity(res);
@@ -573,7 +574,7 @@ class FCMNotificationLogRepository extends BaseRepository {
 			} = query ?? {};
 
 			if (!userId) {
-				throw new RepositoryError("List fcm notif log must have user id", {
+				throw new RepositoryError(m.error_list_fcm_must_have_user_id(), {
 					code: "BAD_REQUEST",
 				});
 			}
@@ -708,7 +709,7 @@ class UserNotificationRepository extends BaseRepository {
 			} = query ?? {};
 
 			if (!userId) {
-				throw new RepositoryError("List fcm notif log must have user id", {
+				throw new RepositoryError(m.error_list_fcm_must_have_user_id(), {
 					code: "BAD_REQUEST",
 				});
 			}

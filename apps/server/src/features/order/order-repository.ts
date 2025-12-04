@@ -357,7 +357,7 @@ export class OrderRepository extends BaseRepository {
 				key = CONFIGURATION_KEYS.FOOD_SERVICE_PRICING;
 				break;
 			default:
-				throw new RepositoryError("Invalid order type");
+				throw new RepositoryError(m.error_invalid_order_type());
 		}
 
 		// PERFORMANCE: Check in-memory cache first (99% faster, zero DB load)
@@ -428,7 +428,7 @@ export class OrderRepository extends BaseRepository {
 			]);
 
 			if (!pricingConfig)
-				throw new RepositoryError("Missing pricing configuration");
+				throw new RepositoryError(m.error_missing_pricing_configuration());
 			const distanceKm = Number(
 				new Decimal(distanceMeters).dividedBy(1000).toFixed(2),
 			);
@@ -490,7 +490,7 @@ export class OrderRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id, opts);
-				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_driver());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["1h"] });
 				return res;
 			};
@@ -508,13 +508,13 @@ export class OrderRepository extends BaseRepository {
 		try {
 			// Validate required parameters
 			if (!params.pickupLocation || !params.dropoffLocation) {
-				throw new RepositoryError("Pickup and dropoff locations are required", {
+				throw new RepositoryError(m.error_pickup_dropoff_required(), {
 					code: "BAD_REQUEST",
 				});
 			}
 
 			if (!params.type) {
-				throw new RepositoryError("Order type is required", {
+				throw new RepositoryError(m.error_order_type_required(), {
 					code: "BAD_REQUEST",
 				});
 			}
@@ -524,7 +524,7 @@ export class OrderRepository extends BaseRepository {
 				!params.payment.method ||
 				!params.payment.provider
 			) {
-				throw new RepositoryError("Payment information is required", {
+				throw new RepositoryError(m.error_payment_info_required(), {
 					code: "BAD_REQUEST",
 				});
 			}
@@ -626,7 +626,7 @@ export class OrderRepository extends BaseRepository {
 				});
 
 			if (menus.length && menus.length !== itemIds?.length)
-				throw new RepositoryError("Invalid products", {
+				throw new RepositoryError(m.error_invalid_products(), {
 					code: "BAD_REQUEST",
 				});
 
@@ -706,7 +706,8 @@ export class OrderRepository extends BaseRepository {
 			);
 
 			let order = await this.#getFromDB(orderRow.id, opts);
-			if (!order) throw new RepositoryError("Failed to retrieve placed order");
+			if (!order)
+				throw new RepositoryError(m.error_failed_retrieve_placed_order());
 
 			// For wallet payments, automatically update order status to MATCHING
 			if (params.payment.method === "wallet" && payment.status === "SUCCESS") {
@@ -869,7 +870,7 @@ export class OrderRepository extends BaseRepository {
 				.returning({ id: tables.order.id });
 
 			const result = await this.#getFromDB(operation.id, opts);
-			if (!result) throw new RepositoryError("Failed to update order");
+			if (!result) throw new RepositoryError(m.error_failed_update_order());
 
 			await this.setCache(id, result, {
 				expirationTtl: CACHE_TTLS["1h"],

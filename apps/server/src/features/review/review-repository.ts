@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import {
 	type InsertReview,
@@ -127,7 +128,7 @@ export class ReviewRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError("Failed to get review from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_review());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};

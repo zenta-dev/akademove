@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type {
 	Contact,
 	InsertContact,
@@ -117,7 +118,9 @@ export class ContactRepository extends BaseRepository {
 					},
 				});
 				if (!res) {
-					throw new RepositoryError("Contact not found", { code: "NOT_FOUND" });
+					throw new RepositoryError(m.error_contact_not_found(), {
+						code: "NOT_FOUND",
+					});
 				}
 				const composed = ContactRepository.composeEntity(res);
 				await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
@@ -141,7 +144,7 @@ export class ContactRepository extends BaseRepository {
 				.returning();
 
 			if (!contact) {
-				throw new RepositoryError("Failed to create contact", {
+				throw new RepositoryError(m.error_failed_create_contact(), {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
@@ -172,7 +175,9 @@ export class ContactRepository extends BaseRepository {
 				.returning();
 
 			if (!updated) {
-				throw new RepositoryError("Contact not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_contact_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			await this.deleteCache(id);
@@ -192,7 +197,9 @@ export class ContactRepository extends BaseRepository {
 				.returning();
 
 			if (result.length === 0) {
-				throw new RepositoryError("Contact not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_contact_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			await this.deleteCache(id);

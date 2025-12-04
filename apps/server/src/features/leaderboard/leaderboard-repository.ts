@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type InsertLeaderboard,
 	type Leaderboard,
@@ -130,8 +131,7 @@ export class LeaderboardRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res)
-					throw new RepositoryError("Failed to get leaderboard from db");
+				if (!res) throw new RepositoryError(m.error_failed_get_leaderboard());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};

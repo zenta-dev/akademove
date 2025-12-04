@@ -103,7 +103,9 @@ export class ChatRepository extends BaseRepository {
 			});
 
 			if (!order) {
-				throw new RepositoryError("Order not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			// Verify user is part of the order (either user, driver, or merchant)
@@ -141,7 +143,7 @@ export class ChatRepository extends BaseRepository {
 
 			const message = await this.#getFromDB(result.id, opts);
 			if (!message) {
-				throw new RepositoryError("Failed to retrieve created message");
+				throw new RepositoryError(m.error_failed_retrieve_created_message());
 			}
 
 			// Invalidate order messages cache

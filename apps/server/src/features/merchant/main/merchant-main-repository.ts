@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type InsertMerchant,
 	type Merchant,
@@ -189,7 +190,7 @@ export class MerchantMainRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError("Failed to get merchant from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_merchant());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};
@@ -206,7 +207,7 @@ export class MerchantMainRepository extends BaseRepository {
 				where: (f, op) => op.eq(f.userId, userId),
 			});
 
-			if (!result) throw new RepositoryError("Failed to get merchant from DB");
+			if (!result) throw new RepositoryError(m.error_failed_get_merchant());
 
 			return await MerchantMainRepository.composeEntity(result, this.#storage);
 		} catch (error) {
@@ -416,7 +417,9 @@ export class MerchantMainRepository extends BaseRepository {
 		try {
 			const find = await this.#getFromDB(id);
 			if (!find)
-				throw new RepositoryError("Merchant not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_merchant_not_found(), {
+					code: "NOT_FOUND",
+				});
 
 			const [result] = await Promise.all([
 				this.db

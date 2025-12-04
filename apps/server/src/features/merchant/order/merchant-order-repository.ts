@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { m } from "@repo/i18n";
 import type { Order, OrderStatus } from "@repo/schema/order";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
@@ -43,6 +44,11 @@ export class MerchantOrderRepository extends BaseRepository {
 				: undefined,
 			merchantCommission: item.merchantCommission
 				? toNumberSafe(item.merchantCommission)
+				: undefined,
+			couponId: item.couponId ?? undefined,
+			couponCode: item.couponCode ?? undefined,
+			discountAmount: item.discountAmount
+				? toNumberSafe(item.discountAmount)
 				: undefined,
 		};
 	}
@@ -97,11 +103,13 @@ export class MerchantOrderRepository extends BaseRepository {
 			});
 
 			if (!existing) {
-				throw new RepositoryError("Order not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError("Order does not belong to this merchant", {
+				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
 					code: "FORBIDDEN",
 				});
 			}
@@ -125,7 +133,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				.returning();
 
 			if (!updated) {
-				throw new RepositoryError("Failed to accept order");
+				throw new RepositoryError(m.error_failed_accept_order());
 			}
 
 			log.info(
@@ -167,11 +175,13 @@ export class MerchantOrderRepository extends BaseRepository {
 			});
 
 			if (!existing) {
-				throw new RepositoryError("Order not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError("Order does not belong to this merchant", {
+				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
 					code: "FORBIDDEN",
 				});
 			}
@@ -204,7 +214,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				.returning();
 
 			if (!updated) {
-				throw new RepositoryError("Failed to reject order");
+				throw new RepositoryError(m.error_failed_reject_order());
 			}
 
 			log.info(
@@ -245,11 +255,13 @@ export class MerchantOrderRepository extends BaseRepository {
 			});
 
 			if (!existing) {
-				throw new RepositoryError("Order not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError("Order does not belong to this merchant", {
+				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
 					code: "FORBIDDEN",
 				});
 			}
@@ -273,7 +285,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				.returning();
 
 			if (!updated) {
-				throw new RepositoryError("Failed to mark order as preparing");
+				throw new RepositoryError(m.error_failed_mark_order_preparing());
 			}
 
 			log.info(
@@ -313,11 +325,13 @@ export class MerchantOrderRepository extends BaseRepository {
 			});
 
 			if (!existing) {
-				throw new RepositoryError("Order not found", { code: "NOT_FOUND" });
+				throw new RepositoryError(m.error_order_not_found(), {
+					code: "NOT_FOUND",
+				});
 			}
 
 			if (existing.merchantId !== merchantId) {
-				throw new RepositoryError("Order does not belong to this merchant", {
+				throw new RepositoryError(m.error_order_not_belong_to_merchant(), {
 					code: "FORBIDDEN",
 				});
 			}
@@ -341,7 +355,7 @@ export class MerchantOrderRepository extends BaseRepository {
 				.returning();
 
 			if (!updated) {
-				throw new RepositoryError("Failed to mark order as ready");
+				throw new RepositoryError(m.error_failed_mark_order_ready());
 			}
 
 			log.info(

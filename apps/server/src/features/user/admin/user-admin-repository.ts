@@ -188,7 +188,7 @@ export class UserAdminRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_driver());
 				await this.setCache(id, res);
 				return res;
 			};
@@ -209,7 +209,7 @@ export class UserAdminRepository extends BaseRepository {
 			});
 
 			if (existingUser) {
-				throw new RepositoryError("Email or phone already registered", {
+				throw new RepositoryError(m.error_email_or_phone_already_registered(), {
 					code: "CONFLICT",
 				});
 			}
@@ -236,7 +236,7 @@ export class UserAdminRepository extends BaseRepository {
 
 			// Create account with hashed password
 			if (!this.#pw) {
-				throw new RepositoryError("Password manager not available", {
+				throw new RepositoryError(m.error_password_manager_not_available(), {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
@@ -304,7 +304,7 @@ export class UserAdminRepository extends BaseRepository {
 						.returning();
 
 					if (!updated) {
-						throw new RepositoryError("Failed to update user role", {
+						throw new RepositoryError(m.error_failed_update_user_role(), {
 							code: "INTERNAL_SERVER_ERROR",
 						});
 					}
@@ -314,7 +314,7 @@ export class UserAdminRepository extends BaseRepository {
 						where: (f, op) => op.eq(f.id, id),
 					});
 					if (!refreshed) {
-						throw new RepositoryError("Failed to fetch updated user");
+						throw new RepositoryError(m.error_failed_fetch_updated_user());
 					}
 					updatedUser = await UserAdminRepository.composeEntity(
 						refreshed,
@@ -330,9 +330,12 @@ export class UserAdminRepository extends BaseRepository {
 				// Handle password updates
 				if ("newPassword" in item) {
 					if (!this.#pw) {
-						throw new RepositoryError("Password manager not available", {
-							code: "INTERNAL_SERVER_ERROR",
-						});
+						throw new RepositoryError(
+							m.error_password_manager_not_available(),
+							{
+								code: "INTERNAL_SERVER_ERROR",
+							},
+						);
 					}
 
 					// Get account to verify old password
@@ -342,7 +345,7 @@ export class UserAdminRepository extends BaseRepository {
 					});
 
 					if (!account) {
-						throw new RepositoryError("User account not found", {
+						throw new RepositoryError(m.error_user_account_not_found(), {
 							code: "NOT_FOUND",
 						});
 					}
@@ -353,7 +356,7 @@ export class UserAdminRepository extends BaseRepository {
 						item.oldPassword,
 					);
 					if (!isValid) {
-						throw new RepositoryError("Invalid old password", {
+						throw new RepositoryError(m.error_invalid_old_password(), {
 							code: "UNAUTHORIZED",
 						});
 					}
@@ -388,7 +391,7 @@ export class UserAdminRepository extends BaseRepository {
 						.returning();
 
 					if (!updated) {
-						throw new RepositoryError("Failed to ban user", {
+						throw new RepositoryError(m.error_failed_ban_user(), {
 							code: "INTERNAL_SERVER_ERROR",
 						});
 					}
@@ -398,7 +401,7 @@ export class UserAdminRepository extends BaseRepository {
 						where: (f, op) => op.eq(f.id, id),
 					});
 					if (!refreshed) {
-						throw new RepositoryError("Failed to fetch updated user");
+						throw new RepositoryError(m.error_failed_fetch_updated_user());
 					}
 					updatedUser = await UserAdminRepository.composeEntity(
 						refreshed,
@@ -425,7 +428,7 @@ export class UserAdminRepository extends BaseRepository {
 						.returning();
 
 					if (!updated) {
-						throw new RepositoryError("Failed to unban user", {
+						throw new RepositoryError(m.error_failed_unban_user(), {
 							code: "INTERNAL_SERVER_ERROR",
 						});
 					}
@@ -435,7 +438,7 @@ export class UserAdminRepository extends BaseRepository {
 						where: (f, op) => op.eq(f.id, id),
 					});
 					if (!refreshed) {
-						throw new RepositoryError("Failed to fetch updated user");
+						throw new RepositoryError(m.error_failed_fetch_updated_user());
 					}
 					updatedUser = await UserAdminRepository.composeEntity(
 						refreshed,
@@ -474,7 +477,11 @@ export class UserAdminRepository extends BaseRepository {
 		}
 	}
 
-	async getDashboardStats(): Promise<{
+	async getDashboardStats(options?: {
+		startDate?: Date;
+		endDate?: Date;
+		period?: "today" | "week" | "month" | "year";
+	}): Promise<{
 		totalUsers: number;
 		totalDrivers: number;
 		totalMerchants: number;
@@ -486,13 +493,77 @@ export class UserAdminRepository extends BaseRepository {
 		todayRevenue: number;
 		todayOrders: number;
 		onlineDrivers: number;
+		revenueByDay: Array<{
+			date: string;
+			revenue: number;
+			orders: number;
+		}>;
+		ordersByDay: Array<{
+			date: string;
+			total: number;
+			completed: number;
+			cancelled: number;
+		}>;
+		ordersByType: Array<{
+			type: string;
+			orders: number;
+			revenue: number;
+		}>;
+		topDrivers: Array<{
+			id: string;
+			name: string;
+			earnings: number;
+			orders: number;
+			rating: number;
+		}>;
+		topMerchants: Array<{
+			id: string;
+			name: string;
+			revenue: number;
+			orders: number;
+			rating: number;
+		}>;
+		highCancellationDrivers: Array<{
+			id: string;
+			name: string;
+			totalOrders: number;
+			cancelledOrders: number;
+			cancellationRate: number;
+		}>;
 	}> {
 		try {
-			const cacheKey = "dashboard-stats";
+			// Determine date range based on period or custom dates
+			let startDate: Date;
+			let endDate: Date = new Date();
+
+			if (options?.startDate && options?.endDate) {
+				startDate = options.startDate;
+				endDate = options.endDate;
+			} else {
+				const period = options?.period ?? "month";
+				startDate = new Date();
+				switch (period) {
+					case "today":
+						startDate.setHours(0, 0, 0, 0);
+						break;
+					case "week":
+						startDate.setDate(startDate.getDate() - 7);
+						break;
+					case "month":
+						startDate.setMonth(startDate.getMonth() - 1);
+						break;
+					case "year":
+						startDate.setFullYear(startDate.getFullYear() - 1);
+						break;
+				}
+			}
+
+			const cacheKey = `dashboard-stats-${startDate.toISOString()}-${endDate.toISOString()}`;
 			const fallback = async () => {
 				const today = new Date();
 				today.setHours(0, 0, 0, 0);
 
+				// Basic stats query
 				const result = await this.db.execute<{
 					total_users: number;
 					total_drivers: number;
@@ -520,9 +591,139 @@ export class UserAdminRepository extends BaseRepository {
 						(SELECT COUNT(*)::int FROM am_drivers WHERE is_online = true) AS online_drivers
 				`);
 
+				// Revenue by day
+				const revenueByDayResult = await this.db.execute<{
+					date: string;
+					revenue: string;
+					orders: number;
+				}>(/* sql */ `
+					SELECT
+						TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
+						COALESCE(SUM(total_price), 0)::text AS revenue,
+						COUNT(*)::int AS orders
+					FROM am_orders
+					WHERE status = 'COMPLETED'
+						AND requested_at >= '${startDate.toISOString()}'
+						AND requested_at <= '${endDate.toISOString()}'
+					GROUP BY DATE(requested_at)
+					ORDER BY DATE(requested_at) ASC
+				`);
+
+				// Orders by day
+				const ordersByDayResult = await this.db.execute<{
+					date: string;
+					total: number;
+					completed: number;
+					cancelled: number;
+				}>(/* sql */ `
+					SELECT
+						TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
+						COUNT(*)::int AS total,
+						COUNT(*) FILTER (WHERE status = 'COMPLETED')::int AS completed,
+						COUNT(*) FILTER (WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM'))::int AS cancelled
+					FROM am_orders
+					WHERE requested_at >= '${startDate.toISOString()}'
+						AND requested_at <= '${endDate.toISOString()}'
+					GROUP BY DATE(requested_at)
+					ORDER BY DATE(requested_at) ASC
+				`);
+
+				// Orders by type
+				const ordersByTypeResult = await this.db.execute<{
+					type: string;
+					orders: number;
+					revenue: string;
+				}>(/* sql */ `
+					SELECT
+						type,
+						COUNT(*)::int AS orders,
+						COALESCE(SUM(total_price), 0)::text AS revenue
+					FROM am_orders
+					WHERE status = 'COMPLETED'
+						AND requested_at >= '${startDate.toISOString()}'
+						AND requested_at <= '${endDate.toISOString()}'
+					GROUP BY type
+					ORDER BY revenue DESC
+				`);
+
+				// Top drivers
+				const topDriversResult = await this.db.execute<{
+					id: string;
+					name: string;
+					earnings: string;
+					orders: number;
+					rating: string;
+				}>(/* sql */ `
+					SELECT
+						d.id,
+						u.name,
+						COALESCE(SUM(o.total_price), 0)::text AS earnings,
+						COUNT(o.id)::int AS orders,
+						COALESCE(AVG(o.driver_rating), 0)::text AS rating
+					FROM am_drivers d
+					JOIN am_users u ON d.id = u.id
+					LEFT JOIN am_orders o ON o.driver_id = d.id
+						AND o.status = 'COMPLETED'
+						AND o.requested_at >= '${startDate.toISOString()}'
+						AND o.requested_at <= '${endDate.toISOString()}'
+					GROUP BY d.id, u.name
+					HAVING COUNT(o.id) > 0
+					ORDER BY earnings DESC
+					LIMIT 5
+				`);
+
+				// Top merchants
+				const topMerchantsResult = await this.db.execute<{
+					id: string;
+					name: string;
+					revenue: string;
+					orders: number;
+					rating: string;
+				}>(/* sql */ `
+					SELECT
+						m.id,
+						m.name,
+						COALESCE(SUM(o.total_price), 0)::text AS revenue,
+						COUNT(o.id)::int AS orders,
+						COALESCE(AVG(o.driver_rating), 0)::text AS rating
+					FROM am_merchants m
+					LEFT JOIN am_orders o ON o.merchant_id = m.id
+						AND o.status = 'COMPLETED'
+						AND o.requested_at >= '${startDate.toISOString()}'
+						AND o.requested_at <= '${endDate.toISOString()}'
+					GROUP BY m.id, m.name
+					HAVING COUNT(o.id) > 0
+					ORDER BY revenue DESC
+					LIMIT 5
+				`);
+
+				// High cancellation drivers
+				const highCancellationResult = await this.db.execute<{
+					id: string;
+					name: string;
+					total_orders: number;
+					cancelled_orders: number;
+				}>(/* sql */ `
+					SELECT
+						d.id,
+						u.name,
+						COUNT(o.id)::int AS total_orders,
+						COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int AS cancelled_orders
+					FROM am_drivers d
+					JOIN am_users u ON d.id = u.id
+					LEFT JOIN am_orders o ON o.driver_id = d.id
+						AND o.requested_at >= '${startDate.toISOString()}'
+						AND o.requested_at <= '${endDate.toISOString()}'
+					GROUP BY d.id, u.name
+					HAVING COUNT(o.id) >= 10
+						AND COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int > 0
+					ORDER BY (COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::float / COUNT(o.id)::float) DESC
+					LIMIT 5
+				`);
+
 				const row = result[0];
 				if (!row) {
-					throw new RepositoryError("Failed to get dashboard stats", {
+					throw new RepositoryError(m.error_failed_get_dashboard_stats(), {
 						code: "NOT_FOUND",
 					});
 				}
@@ -539,6 +740,46 @@ export class UserAdminRepository extends BaseRepository {
 					todayRevenue: Number.parseFloat(row.today_revenue),
 					todayOrders: row.today_orders,
 					onlineDrivers: row.online_drivers,
+					revenueByDay: revenueByDayResult.map((item) => ({
+						date: item.date,
+						revenue: Number.parseFloat(item.revenue),
+						orders: item.orders,
+					})),
+					ordersByDay: ordersByDayResult.map((item) => ({
+						date: item.date,
+						total: item.total,
+						completed: item.completed,
+						cancelled: item.cancelled,
+					})),
+					ordersByType: ordersByTypeResult.map((item) => ({
+						type: item.type,
+						orders: item.orders,
+						revenue: Number.parseFloat(item.revenue),
+					})),
+					topDrivers: topDriversResult.map((item) => ({
+						id: item.id,
+						name: item.name,
+						earnings: Number.parseFloat(item.earnings),
+						orders: item.orders,
+						rating: Number.parseFloat(item.rating),
+					})),
+					topMerchants: topMerchantsResult.map((item) => ({
+						id: item.id,
+						name: item.name,
+						revenue: Number.parseFloat(item.revenue),
+						orders: item.orders,
+						rating: Number.parseFloat(item.rating),
+					})),
+					highCancellationDrivers: highCancellationResult.map((item) => ({
+						id: item.id,
+						name: item.name,
+						totalOrders: item.total_orders,
+						cancelledOrders: item.cancelled_orders,
+						cancellationRate:
+							item.total_orders > 0
+								? (item.cancelled_orders / item.total_orders) * 100
+								: 0,
+					})),
 				};
 
 				// Cache for 5 minutes

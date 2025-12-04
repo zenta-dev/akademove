@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type Badge,
 	BadgeKeySchema,
@@ -153,7 +154,7 @@ export class BadgeRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id, opts);
-				if (!res) throw new RepositoryError("Failed to get badge from db");
+				if (!res) throw new RepositoryError(m.error_failed_get_badge());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};
@@ -175,7 +176,7 @@ export class BadgeRepository extends BaseRepository {
 				const res = result
 					? BadgeRepository.composeEntity(result, this.#storage)
 					: undefined;
-				if (!res) throw new RepositoryError("Failed to get badge from db");
+				if (!res) throw new RepositoryError(m.error_failed_get_badge());
 				await this.setCache(code, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};

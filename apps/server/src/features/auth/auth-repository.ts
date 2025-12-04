@@ -130,12 +130,12 @@ export class AuthRepository extends BaseRepository {
 					});
 				}
 				if (existingUser.email === params.email) {
-					throw new RepositoryError("Email already registered", {
+					throw new RepositoryError(m.error_email_already_registered(), {
 						code: "CONFLICT",
 					});
 				}
 				if (existingUser.phone === params.phone) {
-					throw new RepositoryError("Phone already registered", {
+					throw new RepositoryError(m.error_phone_already_registered(), {
 						code: "CONFLICT",
 					});
 				}

@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type {
 	Configuration,
 	UpdateConfiguration,
@@ -67,8 +68,7 @@ export class ConfigurationRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(key);
-				if (!res)
-					throw new RepositoryError("Failed to get configuration from db");
+				if (!res) throw new RepositoryError(m.error_failed_get_configuration());
 				await this.setCache(key, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};

@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { Merchant } from "@repo/schema/merchant";
 import {
 	type InsertMerchantMenu,
@@ -236,7 +237,7 @@ export class MerchantMenuRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
-				if (!res) throw new RepositoryError("Failed to get menu from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_menu());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};
@@ -279,7 +280,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			]);
 
 			if (!operation) {
-				throw new RepositoryError("Failed to insert merchant menu into DB");
+				throw new RepositoryError(m.error_failed_insert_merchant_menu());
 			}
 
 			const result = await MerchantMenuRepository.composeEntity(
@@ -341,7 +342,7 @@ export class MerchantMenuRepository extends BaseRepository {
 			]);
 
 			if (!operation) {
-				throw new RepositoryError("Failed to update merchant menu in DB");
+				throw new RepositoryError(m.error_failed_update_merchant_menu());
 			}
 
 			const result = await MerchantMenuRepository.composeEntity(

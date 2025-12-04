@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import {
 	type DriverSchedule,
 	DriverScheduleKeySchema,
@@ -133,7 +134,7 @@ export class DriverScheduleRepository extends BaseRepository {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id);
 				if (!res)
-					throw new RepositoryError("Failed to get driver schedule from DB");
+					throw new RepositoryError(m.error_failed_get_driver_schedule());
 				await this.setCache(id, res, { expirationTtl: CACHE_TTLS["24h"] });
 				return res;
 			};

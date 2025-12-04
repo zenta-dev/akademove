@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { Phone } from "@repo/schema/common";
 import type { UpdateUser, UpdateUserPassword, User } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
@@ -49,7 +50,7 @@ export class UserMeRepository extends BaseRepository {
 		try {
 			const fallback = async () => {
 				const res = await this.#getFromDB(id, opts);
-				if (!res) throw new RepositoryError("Failed to get driver from DB");
+				if (!res) throw new RepositoryError(m.error_failed_get_driver());
 				await this.setCache(id, res);
 				return res;
 			};
@@ -81,7 +82,7 @@ export class UserMeRepository extends BaseRepository {
 				const cc = item.phone.countryCode;
 				const num = item.phone.number;
 				if (!cc || !num) {
-					throw new RepositoryError("Invalid phone values must suplied", {
+					throw new RepositoryError(m.error_invalid_phone_values(), {
 						code: "BAD_REQUEST",
 					});
 				}
@@ -136,7 +137,7 @@ export class UserMeRepository extends BaseRepository {
 	): Promise<boolean> {
 		try {
 			if (item.newPassword !== item.confirmNewPassword) {
-				throw new RepositoryError("Password didnt same", {
+				throw new RepositoryError(m.error_password_not_match(), {
 					code: "BAD_REQUEST",
 				});
 			}
@@ -167,7 +168,7 @@ export class UserMeRepository extends BaseRepository {
 					item.oldPassword,
 				);
 				if (!isValidPassword) {
-					throw new RepositoryError("Invalid credentials", {
+					throw new RepositoryError(m.error_invalid_credentials(), {
 						code: "UNAUTHORIZED",
 					});
 				}
@@ -189,7 +190,7 @@ export class UserMeRepository extends BaseRepository {
 			const ok = res.length > 0;
 
 			if (!ok) {
-				throw new RepositoryError("Failed to update password", {
+				throw new RepositoryError(m.error_failed_update_password(), {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
