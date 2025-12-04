@@ -14,7 +14,7 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
 	Area,
 	AreaChart,
@@ -64,16 +64,22 @@ export const Route = createFileRoute("/dash/admin/analytics")({
 	component: RouteComponent,
 });
 
+type Period = "today" | "week" | "month" | "year";
+
 function RouteComponent() {
 	const { allowed } = Route.useLoaderData();
 	const navigate = useNavigate();
+	const [selectedPeriod, setSelectedPeriod] = useState<Period>("month");
+
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch dashboard stats
 	const { data: stats, isLoading: statsLoading } = useQuery({
-		queryKey: ["admin", "dashboard-stats"],
+		queryKey: ["admin", "dashboard-stats", selectedPeriod],
 		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({});
+			const result = await orpcClient.user.admin.dashboardStats({
+				query: { period: selectedPeriod },
+			});
 			if (result.status !== 200) throw new Error(result.body.message);
 			return result.body.data;
 		},
@@ -287,15 +293,18 @@ function RouteComponent() {
 						Comprehensive platform analytics and insights
 					</p>
 				</div>
-				<Select defaultValue="30d">
+				<Select
+					value={selectedPeriod}
+					onValueChange={(v) => setSelectedPeriod(v as Period)}
+				>
 					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Select period" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="7d">Last 7 days</SelectItem>
-						<SelectItem value="30d">Last 30 days</SelectItem>
-						<SelectItem value="90d">Last 90 days</SelectItem>
-						<SelectItem value="1y">Last year</SelectItem>
+						<SelectItem value="today">Today</SelectItem>
+						<SelectItem value="week">This Week</SelectItem>
+						<SelectItem value="month">This Month</SelectItem>
+						<SelectItem value="year">This Year</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
