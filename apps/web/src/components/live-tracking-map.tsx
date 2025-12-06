@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { Location } from "@repo/schema/position";
 import {
 	AdvancedMarker,
@@ -52,19 +53,25 @@ export const LiveTrackingMap = ({
 					<CardContent className="flex items-center justify-between gap-4 p-4">
 						{orderStatus && (
 							<div className="flex items-center gap-2">
-								<span className="text-muted-foreground text-sm">Status:</span>
+								<span className="text-muted-foreground text-sm">
+									{m.tracking_status()}
+								</span>
 								<Badge variant="default">{formatStatus(orderStatus)}</Badge>
 							</div>
 						)}
 						{eta && (
 							<div className="flex items-center gap-2">
-								<span className="text-muted-foreground text-sm">ETA:</span>
+								<span className="text-muted-foreground text-sm">
+									{m.tracking_eta()}
+								</span>
 								<span className="font-medium text-sm">{eta}</span>
 							</div>
 						)}
 						{distance && (
 							<div className="flex items-center gap-2">
-								<span className="text-muted-foreground text-sm">Distance:</span>
+								<span className="text-muted-foreground text-sm">
+									{m.tracking_distance()}
+								</span>
 								<span className="font-medium text-sm">{distance}</span>
 							</div>
 						)}
@@ -101,16 +108,16 @@ export const LiveTrackingMap = ({
 			<div className="flex items-center justify-center gap-6 text-sm">
 				<div className="flex items-center gap-2">
 					<div className="h-3 w-3 rounded-full bg-green-500" />
-					<span className="text-muted-foreground">Pickup</span>
+					<span className="text-muted-foreground">{m.tracking_pickup()}</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div className="h-3 w-3 rounded-full bg-red-500" />
-					<span className="text-muted-foreground">Delivery</span>
+					<span className="text-muted-foreground">{m.tracking_delivery()}</span>
 				</div>
 				{driverLocation && (
 					<div className="flex items-center gap-2">
 						<div className="h-3 w-3 rounded-full bg-blue-500" />
-						<span className="text-muted-foreground">Driver</span>
+						<span className="text-muted-foreground">{m.tracking_driver()}</span>
 					</div>
 				)}
 			</div>
@@ -156,7 +163,7 @@ const MapLogic = ({
 	return (
 		<>
 			{/* Pickup marker (green) */}
-			<AdvancedMarker position={pickup} title="Pickup Location">
+			<AdvancedMarker position={pickup} title={m.tracking_pickup()}>
 				<Pin
 					background="#22c55e"
 					glyphColor="#fff"
@@ -166,7 +173,7 @@ const MapLogic = ({
 			</AdvancedMarker>
 
 			{/* Delivery marker (red) */}
-			<AdvancedMarker position={delivery} title="Delivery Location">
+			<AdvancedMarker position={delivery} title={m.tracking_delivery()}>
 				<Pin
 					background="#ef4444"
 					glyphColor="#fff"
@@ -181,7 +188,7 @@ const MapLogic = ({
 					<AdvancedMarker
 						ref={driverMarkerRef}
 						position={driverLocation}
-						title={driverName || "Driver"}
+						title={driverName || m.tracking_driver()}
 						onClick={() => setShowDriverInfo((prev) => !prev)}
 					>
 						<Pin
@@ -203,10 +210,10 @@ const MapLogic = ({
 						>
 							<div className="p-2">
 								<p className="font-semibold text-sm">
-									{driverName || "Driver"}
+									{driverName || m.tracking_driver()}
 								</p>
 								<p className="text-muted-foreground text-xs">
-									En route to pickup/delivery
+									{m.tracking_enroute()}
 								</p>
 							</div>
 						</InfoWindow>
@@ -219,15 +226,15 @@ const MapLogic = ({
 
 const formatStatus = (status: string): string => {
 	const statusMap: Record<string, string> = {
-		REQUESTED: "Requested",
-		MATCHING: "Finding Driver...",
-		ACCEPTED: "Driver Accepted",
-		PREPARING: "Preparing Order",
-		READY_FOR_PICKUP: "Ready for Pickup",
-		ARRIVING: "Driver Arriving",
-		IN_TRIP: "On the Way",
-		COMPLETED: "Completed",
-		CANCELLED: "Cancelled",
+		REQUESTED: m.tracking_status_requested(),
+		MATCHING: m.tracking_status_finding(),
+		ACCEPTED: m.tracking_status_accepted(),
+		PREPARING: m.tracking_status_preparing(),
+		READY_FOR_PICKUP: m.tracking_status_ready(),
+		ARRIVING: m.tracking_status_arriving(),
+		IN_TRIP: m.tracking_status_onway(),
+		COMPLETED: m.tracking_status_completed(),
+		CANCELLED: m.tracking_status_cancelled(),
 	};
 	return statusMap[status] || status;
 };

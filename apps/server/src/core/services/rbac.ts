@@ -52,7 +52,7 @@ export class RBACService {
 			schedule: ["list", "get", "update"],
 			coupon: ["list", "get", "create", "update"],
 			emergency: ["list", "get", "update"],
-			report: ["list", "get", "create", "export"],
+			report: ["list", "get", "create", "update", "delete", "export"],
 			review: ["list", "get"],
 			user: ["list", "get", "update", "ban"],
 			configurations: ["list", "get", "create", "update", "delete"],

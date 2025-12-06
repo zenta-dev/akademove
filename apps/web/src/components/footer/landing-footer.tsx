@@ -43,10 +43,22 @@ export function LandingFooter({ className }: { className?: string }) {
 	};
 
 	const socialLinks = [
-		{ icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-		{ icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-		{ icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-		{ icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+		{
+			icon: Instagram,
+			href: "https://www.instagram.com/akademove",
+			label: "Instagram",
+		},
+		{ icon: Twitter, href: "https://twitter.com/akademove", label: "Twitter" },
+		{
+			icon: Facebook,
+			href: "https://facebook.com/akademove",
+			label: "Facebook",
+		},
+		{
+			icon: Linkedin,
+			href: "https://linkedin.com/akademove",
+			label: "LinkedIn",
+		},
 	];
 
 	return (

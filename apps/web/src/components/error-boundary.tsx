@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { log } from "@/utils/logger";
 
@@ -77,11 +78,10 @@ function DefaultErrorFallback({
 			<div className="w-full max-w-md space-y-6 rounded-lg border border-destructive/50 bg-card p-6 shadow-lg">
 				<div className="space-y-2">
 					<h1 className="font-bold text-2xl text-destructive">
-						Something went wrong
+						{m.error_fallback_title()}
 					</h1>
 					<p className="text-muted-foreground text-sm">
-						An unexpected error occurred. We've logged the error and will look
-						into it.
+						{m.error_fallback_desc()}
 					</p>
 				</div>
 
@@ -92,7 +92,7 @@ function DefaultErrorFallback({
 					{error.stack && (
 						<details className="mt-2">
 							<summary className="cursor-pointer text-muted-foreground text-xs hover:text-foreground">
-								View stack trace
+								{m.error_view_stack()}
 							</summary>
 							<pre className="mt-2 overflow-x-auto whitespace-pre-wrap text-xs">
 								{error.stack}
@@ -107,20 +107,20 @@ function DefaultErrorFallback({
 						onClick={reset}
 						className="flex-1 rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground text-sm transition-colors hover:bg-primary/90"
 					>
-						Try Again
+						{m.try_again()}
 					</button>
 					<button
 						type="button"
 						onClick={() => window.location.reload()}
 						className="flex-1 rounded-md border border-input bg-background px-4 py-2 font-medium text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
 					>
-						Reload Page
+						{m.reload()}
 					</button>
 				</div>
 
 				<div className="flex justify-center">
 					<a href="/" className="text-primary text-sm hover:underline">
-						Go back to home
+						{m.error_go_home()}
 					</a>
 				</div>
 			</div>

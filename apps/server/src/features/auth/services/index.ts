@@ -1,4 +1,10 @@
 export type {
+	EmailVerificationDeps,
+	SendEmailVerificationRequest,
+	VerifyEmailRequest,
+} from "./email-verification-service";
+export { EmailVerificationService } from "./email-verification-service";
+export type {
 	ForgotPasswordRequest,
 	PasswordResetDeps,
 	ResetPasswordRequest,

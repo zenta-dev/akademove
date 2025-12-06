@@ -267,4 +267,40 @@ class AuthRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: true);
     });
   }
+
+  Future<BaseResponse<bool>> sendEmailVerification({
+    required String email,
+  }) async {
+    return guard(() async {
+      final result = await _apiClient.getAuthApi().authSendEmailVerification(
+        sendEmailVerification: SendEmailVerification(email: email.trim()),
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'Failed to send verification email',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: true);
+    });
+  }
+
+  Future<BaseResponse<bool>> verifyEmail({required String token}) async {
+    return guard(() async {
+      final result = await _apiClient.getAuthApi().authVerifyEmail(
+        verifyEmail: VerifyEmail(token: token.trim()),
+      );
+
+      final data =
+          result.data ??
+          (throw const RepositoryError(
+            'Failed to verify email',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: true);
+    });
+  }
 }

@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import { Bell, X } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -63,18 +64,19 @@ export const NotificationBanner = ({ onDismiss }: NotificationBannerProps) => {
 					</div>
 					<div className="flex-1">
 						<CardTitle className="mb-1 text-base">
-							Enable Notifications
+							{m.notification_enable()}
 						</CardTitle>
 						<CardDescription className="mb-3 text-sm">
-							Get instant alerts when you receive new orders. Never miss an
-							order again!
+							{m.notification_enable_desc()}
 						</CardDescription>
 						<div className="flex gap-2">
 							<Button size="sm" onClick={handleEnable} disabled={isRequesting}>
-								{isRequesting ? "Requesting..." : "Enable Notifications"}
+								{isRequesting
+									? m.notification_requesting()
+									: m.notification_enable()}
 							</Button>
 							<Button size="sm" variant="outline" onClick={handleDismiss}>
-								Maybe Later
+								{m.notification_maybe_later()}
 							</Button>
 						</div>
 					</div>
@@ -85,7 +87,7 @@ export const NotificationBanner = ({ onDismiss }: NotificationBannerProps) => {
 						onClick={handleDismiss}
 					>
 						<X className="h-4 w-4" />
-						<span className="sr-only">Dismiss</span>
+						<span className="sr-only">{m.notification_dismiss()}</span>
 					</Button>
 				</div>
 			</CardContent>

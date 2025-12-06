@@ -6,9 +6,11 @@ import {
 	ForgotPasswordSchema,
 	GetSessionResponseSchema,
 	ResetPasswordSchema,
+	SendEmailVerificationSchema,
 	SignInResponseSchema,
 	SignInSchema,
 	SignUpResponseSchema,
+	VerifyEmailSchema,
 } from "@repo/schema/auth";
 import * as z from "zod/v4";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
@@ -175,4 +177,35 @@ export const AuthSpec = {
 			outputStructure: "detailed",
 		})
 		.output(createSuccesSchema(z.string(), "Exchange token success")),
+	sendEmailVerification: oc
+		.route({
+			tags: [FEATURE_TAGS.AUTH],
+			method: "POST",
+			path: "/send-email-verification",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: SendEmailVerificationSchema }))
+		.output(
+			z.union([
+				createSuccesSchema(
+					z.literal(true),
+					"Email verification sent successfully",
+				),
+			]),
+		),
+	verifyEmail: oc
+		.route({
+			tags: [FEATURE_TAGS.AUTH],
+			method: "POST",
+			path: "/verify-email",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ body: VerifyEmailSchema }))
+		.output(
+			z.union([
+				createSuccesSchema(z.literal(true), "Email verified successfully"),
+			]),
+		),
 };

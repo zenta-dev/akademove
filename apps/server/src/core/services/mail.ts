@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { render } from "@react-email/components";
+import { EmailVerificationEmail } from "emails/email-verification";
 import { InvitationEmail } from "emails/invitation";
 import { ResetPasswordEmail } from "emails/reset-password";
 import * as React from "react";
@@ -25,6 +26,12 @@ interface SendInvitationProps {
 	password: string;
 	role: string;
 }
+
+interface SendEmailVerificationProps {
+	to: string;
+	url: string;
+	userName?: string;
+}
 interface RenderEmailOptions {
 	pretty?: boolean;
 	plainText?: boolean;
@@ -44,12 +51,14 @@ export interface MailService {
 	sendMail(props: BaseSendMailProps): Promise<void>;
 	sendResetPassword(props: SendResetPasswordProps): Promise<void>;
 	sendInvitation(props: SendInvitationProps): Promise<void>;
+	sendEmailVerification(props: SendEmailVerificationProps): Promise<void>;
 }
 
 export const MAIL_FROMS = {
 	DEFAULT: "Akademove <no-reply@mail.akademove.com>",
 	SECURITY: "Akademove Security <security@mail.akademove.com>",
 	INVITATION: "Akademove <no-reply@mail.akademove.com>",
+	VERIFICATION: "Akademove Verification <verify@mail.akademove.com>",
 };
 
 export class ResendMailService implements MailService {
@@ -104,6 +113,27 @@ export class ResendMailService implements MailService {
 		} catch (error) {
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send invitation email");
+		}
+	}
+
+	async sendEmailVerification(
+		props: SendEmailVerificationProps,
+	): Promise<void> {
+		try {
+			await this.#send(
+				React.createElement(EmailVerificationEmail, {
+					userName: props.userName ?? "User",
+					verificationUrl: props.url,
+				}),
+				{
+					from: MAIL_FROMS.VERIFICATION,
+					to: props.to,
+					subject: "Verify Your AkadeMove Email Address",
+				},
+			);
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send email verification");
 		}
 	}
 

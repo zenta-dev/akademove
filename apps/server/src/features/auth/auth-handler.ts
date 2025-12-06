@@ -277,4 +277,28 @@ export const AuthHandler = pub.router({
 			},
 		};
 	}),
+	sendEmailVerification: pub.sendEmailVerification.handler(
+		async ({ context, input: { body } }) => {
+			await context.repo.auth.sendEmailVerification(trimObjectValues(body));
+
+			return {
+				status: 202,
+				body: {
+					message: "Email verification sent successfully",
+					data: true,
+				},
+			};
+		},
+	),
+	verifyEmail: pub.verifyEmail.handler(async ({ context, input: { body } }) => {
+		await context.repo.auth.verifyEmail(trimObjectValues(body));
+
+		return {
+			status: 200,
+			body: {
+				message: "Email verified successfully",
+				data: true,
+			},
+		};
+	}),
 });

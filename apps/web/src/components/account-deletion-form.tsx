@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { m } from "@repo/i18n";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -37,29 +38,27 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { orpcClient } from "@/lib/orpc";
 
-// Validation schema
-const deletionFormSchema = z.object({
-	email: z.string().email("Please enter a valid email address"),
-	phoneNumber: z
-		.string()
-		.min(10, "Phone number must be at least 10 digits")
-		.max(20, "Phone number must not exceed 20 digits")
-		.regex(/^\+?[0-9]+$/, "Please enter a valid phone number"),
-	fullName: z
-		.string()
-		.min(2, "Full name must be at least 2 characters")
-		.max(255, "Full name must not exceed 255 characters"),
-	accountType: z.enum(["user", "driver", "merchant"], {
-		message: "Please select your account type",
-	}),
-	reason: z
-		.string()
-		.max(1000, "Reason must not exceed 1000 characters")
-		.optional(),
-	confirmEmail: z.string().email("Please enter a valid email address"),
-});
+// Create validation schema with i18n messages
+const createDeletionFormSchema = () =>
+	z.object({
+		email: z.string().email(m.account_deletion_email_validation()),
+		phoneNumber: z
+			.string()
+			.min(10, m.account_deletion_phone_min())
+			.max(20, m.account_deletion_phone_max())
+			.regex(/^\+?[0-9]+$/, m.account_deletion_phone_validation()),
+		fullName: z
+			.string()
+			.min(2, m.account_deletion_fullname_min())
+			.max(255, m.account_deletion_fullname_max()),
+		accountType: z.enum(["user", "driver", "merchant"], {
+			message: m.account_deletion_account_type_required(),
+		}),
+		reason: z.string().max(1000, m.account_deletion_reason_max()).optional(),
+		confirmEmail: z.string().email(m.account_deletion_email_validation()),
+	});
 
-type DeletionFormValues = z.infer<typeof deletionFormSchema>;
+type DeletionFormValues = z.infer<ReturnType<typeof createDeletionFormSchema>>;
 
 interface AccountDeletionFormProps {
 	onSuccess?: () => void;
@@ -73,10 +72,13 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 
 	const form = useForm<DeletionFormValues>({
 		resolver: zodResolver(
-			deletionFormSchema.refine((data) => data.email === data.confirmEmail, {
-				message: "Email addresses do not match",
-				path: ["confirmEmail"],
-			}),
+			createDeletionFormSchema().refine(
+				(data) => data.email === data.confirmEmail,
+				{
+					message: m.account_deletion_email_match(),
+					path: ["confirmEmail"],
+				},
+			),
 		),
 		defaultValues: {
 			email: "",
@@ -121,16 +123,14 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 				setShowSuccessDialog(true);
 				form.reset();
 				onSuccess?.();
-				toast.success("Account deletion request submitted successfully");
+				toast.success(m.account_deletion_success());
 			} else {
 				throw new Error("Failed to submit deletion request");
 			}
 		} catch (error) {
 			console.error("Deletion request failed:", error);
 			setIsSubmitting(false);
-			toast.error(
-				"Failed to submit deletion request. Please try again or contact support directly at privacy@akademove.com",
-			);
+			toast.error(m.account_deletion_error());
 		}
 	};
 
@@ -139,7 +139,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 			<Card className="border-2">
 				<CardHeader>
 					<CardTitle className="text-2xl">
-						Submit Account Deletion Request
+						{m.account_deletion_title()}
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
@@ -154,17 +154,18 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Full Name <span className="text-red-500">*</span>
+											{m.account_deletion_full_name()}{" "}
+											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
 											<Input
-												placeholder="John Doe"
+												placeholder={m.account_deletion_full_name_placeholder()}
 												{...field}
 												disabled={isSubmitting}
 											/>
 										</FormControl>
 										<FormDescription>
-											Enter your full name as registered in your account
+											{m.account_deletion_full_name_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -177,18 +178,19 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Email Address <span className="text-red-500">*</span>
+											{m.account_deletion_confirm_email()}{" "}
+											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
 											<Input
 												type="email"
-												placeholder="john@example.com"
+												placeholder={m.account_deletion_confirm_email_placeholder()}
 												{...field}
 												disabled={isSubmitting}
 											/>
 										</FormControl>
 										<FormDescription>
-											Enter the email address associated with your account
+											{m.account_deletion_confirm_email_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -201,19 +203,19 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Confirm Email Address{" "}
+											{m.account_deletion_phone_label()}{" "}
 											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
 											<Input
-												type="email"
-												placeholder="john@example.com"
+												type="tel"
+												placeholder={m.account_deletion_phone_placeholder()}
 												{...field}
 												disabled={isSubmitting}
 											/>
 										</FormControl>
 										<FormDescription>
-											Re-enter your email address to confirm
+											{m.account_deletion_phone_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -226,7 +228,8 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Phone Number <span className="text-red-500">*</span>
+											{m.account_deletion_full_name()}{" "}
+											<span className="text-red-500">*</span>
 										</FormLabel>
 										<FormControl>
 											<Input
@@ -237,8 +240,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 											/>
 										</FormControl>
 										<FormDescription>
-											Enter the phone number registered to your account (with
-											country code)
+											{m.account_deletion_full_name_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -251,7 +253,8 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>
-											Account Type <span className="text-red-500">*</span>
+											{m.account_deletion_account_type_label()}{" "}
+											<span className="text-red-500">*</span>
 										</FormLabel>
 										<Select
 											onValueChange={field.onChange}
@@ -260,21 +263,25 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 										>
 											<FormControl>
 												<SelectTrigger>
-													<SelectValue placeholder="Select your account type" />
+													<SelectValue
+														placeholder={m.account_deletion_account_type_placeholder()}
+													/>
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												<SelectItem value="user">User (Passenger)</SelectItem>
+												<SelectItem value="user">
+													{m.account_deletion_account_type_user()}
+												</SelectItem>
 												<SelectItem value="driver">
-													Driver (Student Mitra)
+													{m.account_deletion_account_type_driver()}
 												</SelectItem>
 												<SelectItem value="merchant">
-													Merchant (Business Owner)
+													{m.account_deletion_account_type_merchant()}
 												</SelectItem>
 											</SelectContent>
 										</Select>
 										<FormDescription>
-											Select the type of account you want to delete
+											{m.account_deletion_account_type_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -286,18 +293,17 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 								name="reason"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Reason for Deletion (Optional)</FormLabel>
+										<FormLabel>{m.account_deletion_reason_label()}</FormLabel>
 										<FormControl>
 											<Textarea
-												placeholder="Tell us why you're leaving (optional)..."
+												placeholder={m.account_deletion_reason_placeholder()}
 												className="min-h-[100px] resize-none"
 												{...field}
 												disabled={isSubmitting}
 											/>
 										</FormControl>
 										<FormDescription>
-											Your feedback helps us improve our service (maximum 500
-											characters)
+											{m.account_deletion_reason_desc()}
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
@@ -307,20 +313,15 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 							<Card className="border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950">
 								<CardContent className="pt-6">
 									<div className="space-y-2 text-orange-900 text-sm dark:text-orange-100">
-										<p className="font-semibold">⚠️ Before you proceed:</p>
+										<p className="font-semibold">
+											{m.account_deletion_warning_title()}
+										</p>
 										<ul className="ml-2 list-inside list-disc space-y-1">
-											<li>
-												Account deletion is permanent and cannot be undone
-											</li>
-											<li>All wallet balance will be forfeited</li>
-											<li>You will lose access to order history and ratings</li>
-											<li>
-												Financial records will be retained for 10 years (legal
-												requirement)
-											</li>
-											<li>
-												You cannot use the same email to register for 90 days
-											</li>
+											<li>{m.account_deletion_warning_1()}</li>
+											<li>{m.account_deletion_warning_2()}</li>
+											<li>{m.account_deletion_warning_3()}</li>
+											<li>{m.account_deletion_warning_4()}</li>
+											<li>{m.account_deletion_warning_5()}</li>
 										</ul>
 									</div>
 								</CardContent>
@@ -333,7 +334,9 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 									className="flex-1"
 									disabled={isSubmitting}
 								>
-									{isSubmitting ? "Submitting..." : "Request Account Deletion"}
+									{isSubmitting
+										? m.submitting()
+										: m.account_deletion_request_button()}
 								</Button>
 								<Button
 									type="button"
@@ -341,7 +344,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 									onClick={() => form.reset()}
 									disabled={isSubmitting}
 								>
-									Clear Form
+									{m.clear()}
 								</Button>
 							</div>
 						</form>
@@ -354,44 +357,45 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							⚠️ Confirm Account Deletion Request
+							{m.account_deletion_confirm_title()}
 						</AlertDialogTitle>
 						<AlertDialogDescription className="space-y-4">
-							<p>
-								You are about to submit a request to permanently delete your
-								AkadeMove account.
-							</p>
+							<p>{m.account_deletion_confirm_desc()}</p>
 							<div className="space-y-2 rounded-lg bg-muted p-4 text-sm">
-								<p className="font-semibold">Request Details:</p>
+								<p className="font-semibold">
+									{m.account_deletion_confirm_details()}
+								</p>
 								<ul className="space-y-1">
 									<li>
-										<strong>Name:</strong> {formData?.fullName}
+										<strong>{m.account_deletion_confirm_name()}:</strong>{" "}
+										{formData?.fullName}
 									</li>
 									<li>
-										<strong>Email:</strong> {formData?.email}
+										<strong>{m.account_deletion_confirm_email()}:</strong>{" "}
+										{formData?.email}
 									</li>
 									<li>
-										<strong>Phone:</strong> {formData?.phoneNumber}
+										<strong>{m.account_deletion_confirm_phone()}:</strong>{" "}
+										{formData?.phoneNumber}
 									</li>
 									<li>
-										<strong>Account Type:</strong>{" "}
+										<strong>{m.account_deletion_confirm_type()}:</strong>{" "}
 										{formData?.accountType?.toUpperCase()}
 									</li>
 								</ul>
 							</div>
 							<p className="font-semibold text-red-600 dark:text-red-400">
-								This action is permanent and cannot be undone. Are you
-								absolutely sure?
+								{m.account_deletion_confirm_warning()}
 							</p>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogCancel>{m.cancel()}</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={handleConfirmedSubmit}
 							className="bg-red-600 text-white hover:bg-red-700"
 						>
-							Yes, Delete My Account
+							{m.account_deletion_confirm_yes()}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -402,36 +406,23 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							✅ Request Submitted Successfully
+							{m.account_deletion_success_title()}
 						</AlertDialogTitle>
 						<AlertDialogDescription className="space-y-4">
-							<p>
-								Your account deletion request has been submitted to our data
-								protection team.
-							</p>
+							<p>{m.account_deletion_success_desc()}</p>
 							<div className="space-y-2 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm dark:border-blue-900 dark:bg-blue-950">
 								<p className="font-semibold text-blue-900 dark:text-blue-100">
-									What happens next:
+									{m.account_deletion_success_next()}
 								</p>
 								<ul className="list-inside list-disc space-y-1 text-blue-900 dark:text-blue-100">
-									<li>
-										We will verify your identity (usually within 1-2 business
-										days)
-									</li>
-									<li>
-										You'll receive an email confirmation once verification is
-										complete
-									</li>
-									<li>
-										Your account will be permanently deleted within 3-5 business
-										days
-									</li>
-									<li>A final confirmation email will be sent once complete</li>
+									<li>{m.account_deletion_success_step_1()}</li>
+									<li>{m.account_deletion_success_step_2()}</li>
+									<li>{m.account_deletion_success_step_3()}</li>
+									<li>{m.account_deletion_success_step_4()}</li>
 								</ul>
 							</div>
 							<p className="text-muted-foreground text-sm">
-								If you don't receive a confirmation email within 7 days, please
-								contact us at{" "}
+								{m.account_deletion_success_step_5()}{" "}
 								<a
 									href="mailto:privacy@akademove.com"
 									className="text-primary hover:underline"
@@ -443,7 +434,7 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogAction onClick={() => setShowSuccessDialog(false)}>
-							Close
+							{m.close()}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

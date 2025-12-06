@@ -1,10 +1,12 @@
 import type {
 	ForgotPassword,
 	ResetPassword,
+	SendEmailVerification,
 	SignIn,
 	SignUp,
 	SignUpDriver,
 	SignUpMerchant,
+	VerifyEmail,
 } from "@repo/schema/auth";
 import type { ClientAgent, Phone } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
@@ -17,6 +19,7 @@ import type { StorageService } from "@/core/services/storage";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
 import {
+	EmailVerificationService,
 	PasswordResetService,
 	type PhoneNumber,
 	SessionService,
@@ -38,6 +41,7 @@ export class AuthRepository extends BaseRepository {
 	readonly #sessionService: SessionService;
 	readonly #registrationService: UserRegistrationService;
 	readonly #passwordResetService: PasswordResetService;
+	readonly #emailVerificationService: EmailVerificationService;
 
 	constructor(
 		db: DatabaseService,
@@ -53,6 +57,7 @@ export class AuthRepository extends BaseRepository {
 		this.#sessionService = new SessionService(jwt, pw, storage, kv);
 		this.#registrationService = new UserRegistrationService(db, pw, storage);
 		this.#passwordResetService = new PasswordResetService(db, pw, mail);
+		this.#emailVerificationService = new EmailVerificationService(db, mail);
 	}
 
 	/**
@@ -306,6 +311,60 @@ export class AuthRepository extends BaseRepository {
 			});
 		} catch (error) {
 			throw this.handleError(error, "reset password");
+		}
+	}
+
+	/**
+	 * Generates verification token and sends email
+	 *
+	 * Delegates to EmailVerificationService.sendEmailVerification()
+	 *
+	 * @param params - Email address
+	 * @returns true if successful
+	 */
+	async sendEmailVerification(params: SendEmailVerification) {
+		try {
+			return await this.#emailVerificationService.sendEmailVerification(
+				params,
+				{
+					findUserByEmail: async (email: string) => {
+						return await this.db.query.user.findFirst({
+							columns: {
+								id: true,
+								name: true,
+								email: true,
+								emailVerified: true,
+							},
+							where: (f, op) => op.eq(f.email, email),
+						});
+					},
+					deleteCache: async (userId: string) => {
+						await this.deleteCache(userId);
+					},
+				},
+			);
+		} catch (error) {
+			throw this.handleError(error, "send email verification");
+		}
+	}
+
+	/**
+	 * Validates token and verifies email
+	 *
+	 * Delegates to EmailVerificationService.verifyEmail()
+	 *
+	 * @param params - Token
+	 * @returns true if successful
+	 */
+	async verifyEmail(params: VerifyEmail) {
+		try {
+			return await this.#emailVerificationService.verifyEmail(params, {
+				deleteCache: async (userId: string) => {
+					await this.deleteCache(userId);
+				},
+			});
+		} catch (error) {
+			throw this.handleError(error, "verify email");
 		}
 	}
 }

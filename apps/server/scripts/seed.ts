@@ -348,7 +348,7 @@ export async function seedConfigurations() {
 				updatedAt: now,
 			},
 			{
-				key: "commission_rates",
+				key: "commission-rates",
 				name: "Commission Rates",
 				value: {
 					rideCommissionRate: 0.15,

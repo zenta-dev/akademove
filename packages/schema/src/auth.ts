@@ -106,6 +106,18 @@ export const ResetPasswordSchema = z
 	});
 export type ResetPassword = z.infer<typeof ResetPasswordSchema>;
 
+export const SendEmailVerificationSchema = z.object({
+	email: z.email(
+		m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
+	),
+});
+export type SendEmailVerification = z.infer<typeof SendEmailVerificationSchema>;
+
+export const VerifyEmailSchema = z.object({
+	token: z.string(),
+});
+export type VerifyEmail = z.infer<typeof VerifyEmailSchema>;
+
 export const SignInResponseSchema = z.object({
 	token: z.string(),
 	user: UserSchema,
@@ -129,6 +141,11 @@ export const AuthSchemaRegistries = {
 	Session: { schema: SessionSchema, strategy: "output" },
 	SignInRequest: { schema: SignInSchema, strategy: "input" },
 	ResetPassword: { schema: ResetPasswordSchema, strategy: "input" },
+	SendEmailVerification: {
+		schema: SendEmailVerificationSchema,
+		strategy: "input",
+	},
+	VerifyEmail: { schema: VerifyEmailSchema, strategy: "input" },
 	SignInResponse: { schema: SignInResponseSchema, strategy: "output" },
 	SignUpResponse: { schema: SignUpResponseSchema, strategy: "output" },
 	GetSessionResponse: { schema: GetSessionResponseSchema, strategy: "output" },
