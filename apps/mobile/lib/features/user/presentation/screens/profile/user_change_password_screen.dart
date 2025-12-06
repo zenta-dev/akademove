@@ -131,7 +131,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: TextField(
                     enabled: !state.isLoading,
                     focusNode: _newPasswordFn,
-                    placeholder: Text(context.l10n.placeholder_old_password),
+                    placeholder: Text(context.l10n.placeholder_new_password),
                     textInputAction: TextInputAction.next,
                     autofillHints: const [AutofillHints.newPassword],
                     onSubmitted: (value) {
@@ -154,7 +154,9 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
                   child: TextField(
                     enabled: !state.isLoading,
                     focusNode: _confirmNewPasswordFn,
-                    placeholder: Text(context.l10n.placeholder_old_password),
+                    placeholder: Text(
+                      context.l10n.placeholder_confirm_new_password,
+                    ),
                     textInputAction: TextInputAction.done,
                     autofillHints: const [AutofillHints.newPassword],
                     onSubmitted: (value) {

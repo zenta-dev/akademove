@@ -14,11 +14,13 @@ Method | HTTP request | Description
 [**authGetSession**](AuthApi.md#authgetsession) | **GET** /auth/session | 
 [**authHasPermission**](AuthApi.md#authhaspermission) | **POST** /auth/has-permission | 
 [**authResetPassword**](AuthApi.md#authresetpassword) | **POST** /auth/reset-password | 
+[**authSendEmailVerification**](AuthApi.md#authsendemailverification) | **POST** /auth/send-email-verification | 
 [**authSignIn**](AuthApi.md#authsignin) | **POST** /auth/sign-in | 
 [**authSignOut**](AuthApi.md#authsignout) | **POST** /auth/sign-out | 
 [**authSignUpDriver**](AuthApi.md#authsignupdriver) | **POST** /auth/sign-up/driver | 
 [**authSignUpMerchant**](AuthApi.md#authsignupmerchant) | **POST** /auth/sign-up/merchant | 
 [**authSignUpUser**](AuthApi.md#authsignupuser) | **POST** /auth/sign-up/user | 
+[**authVerifyEmail**](AuthApi.md#authverifyemail) | **POST** /auth/verify-email | 
 
 
 # **authExchangeToken**
@@ -202,6 +204,47 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **resetPassword** | [**ResetPassword**](ResetPassword.md)|  | 
+
+### Return type
+
+[**AuthSignOut200Response**](AuthSignOut200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **authSendEmailVerification**
+> AuthSignOut200Response authSendEmailVerification(sendEmailVerification)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAuthApi();
+final SendEmailVerification sendEmailVerification = ; // SendEmailVerification | 
+
+try {
+    final response = api.authSendEmailVerification(sendEmailVerification);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AuthApi->authSendEmailVerification: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **sendEmailVerification** | [**SendEmailVerification**](SendEmailVerification.md)|  | 
 
 ### Return type
 
@@ -495,6 +538,47 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: multipart/form-data
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **authVerifyEmail**
+> AuthSignOut200Response authVerifyEmail(verifyEmail)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAuthApi();
+final VerifyEmail verifyEmail = ; // VerifyEmail | 
+
+try {
+    final response = api.authVerifyEmail(verifyEmail);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AuthApi->authVerifyEmail: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **verifyEmail** | [**VerifyEmail**](VerifyEmail.md)|  | 
+
+### Return type
+
+[**AuthSignOut200Response**](AuthSignOut200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

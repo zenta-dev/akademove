@@ -6,17 +6,37 @@ void main() {
   final instance = ApiClient().getNotificationApi();
 
   group(NotificationApi, () {
+    //Future<NotificationDelete200Response> notificationDelete(String id) async
+    test('test notificationDelete', () async {
+      // TODO
+    });
+
+    //Future<NotificationGetUnreadCount200Response> notificationGetUnreadCount() async
+    test('test notificationGetUnreadCount', () async {
+      // TODO
+    });
+
     //Future<NotificationList200Response> notificationList(String read, { String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test notificationList', () async {
       // TODO
     });
 
-    //Future<NotificationSaveToken200Response> notificationRemoveToken(String token) async
+    //Future<NotificationGetUnreadCount200Response> notificationMarkAllAsRead() async
+    test('test notificationMarkAllAsRead', () async {
+      // TODO
+    });
+
+    //Future<NotificationMarkAsRead200Response> notificationMarkAsRead(String id) async
+    test('test notificationMarkAsRead', () async {
+      // TODO
+    });
+
+    //Future<NotificationDelete200Response> notificationRemoveToken(String token) async
     test('test notificationRemoveToken', () async {
       // TODO
     });
 
-    //Future<NotificationSaveToken200Response> notificationSaveToken(NotificationSaveTokenRequest notificationSaveTokenRequest) async
+    //Future<NotificationDelete200Response> notificationSaveToken(NotificationSaveTokenRequest notificationSaveTokenRequest) async
     test('test notificationSaveToken', () async {
       // TODO
     });

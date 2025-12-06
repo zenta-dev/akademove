@@ -140,8 +140,10 @@ class _UserWalletTopUpInsertAmountScreenState
                                 await context.pushNamed(
                                   Routes.userWalletTopUpQRIS.name,
                                 );
-                              default:
-                                break;
+                              case TopUpRequestMethodEnum.BANK_TRANSFER:
+                                await context.pushNamed(
+                                  Routes.userWalletTopUpBankTransfer.name,
+                                );
                             }
                           }
                         },

@@ -93,7 +93,7 @@ function FAQComponent() {
 				},
 				{
 					question: m.faq_payment_q2(),
-					answer: m.faq_payment_q2(),
+					answer: m.faq_payment_a2(),
 				},
 				{
 					question: m.faq_payment_q3(),

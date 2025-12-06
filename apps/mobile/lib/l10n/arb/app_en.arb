@@ -1300,5 +1300,26 @@
 	"delete_account_method_whatsapp_desc": "Chat with support team",
 	"delete_account_error_open_web": "Could not open web page. Please try again.",
 	"delete_account_error_open_email": "Could not open email app. Please try again.",
-	"delete_account_error_open_whatsapp": "Could not open WhatsApp. Please try again."
+	"delete_account_error_open_whatsapp": "Could not open WhatsApp. Please try again.",
+	"email_verification_title": "Verify Your Email",
+	"email_verification_description": "We've sent a verification link to your email address.",
+	"email_verification_sent": "Verification email sent successfully!",
+	"email_verification_instruction": "Click the link in the email to verify your account. If you don't see the email, check your spam folder.",
+	"email_verification_resend": "Resend Verification Email",
+	"email_verification_resend_countdown": "Resend in {seconds}s",
+	"@email_verification_resend_countdown": {
+		"placeholders": {
+			"seconds": {
+				"type": "String"
+			}
+		}
+	},
+	"email_verification_spam_hint": "Don't forget to check your spam folder!",
+	"email_verification_success_title": "Email Verified!",
+	"email_verification_success_description": "Your email has been verified successfully. You can now sign in to your account.",
+	"email_verification_failed": "Email verification failed",
+	"email_verification_invalid_token": "Invalid or expired verification link. Please request a new one.",
+	"back_to_sign_in": "Back to Sign In",
+	"no_vouchers_available": "No Vouchers Available",
+	"check_back_later_for_promotions": "Check back later for promotions and discounts"
 }

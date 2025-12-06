@@ -2,6 +2,7 @@ import { env } from "cloudflare:workers";
 import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
+import { CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
@@ -405,8 +406,9 @@ export class OrderRoom extends BaseDurableObject {
 		const order = await this.#repo.order.get(done.orderId, opts);
 
 		// Get commission configuration
-		const commissionConfig =
-			await this.#repo.configuration.get("commission_rates");
+		const commissionConfig = await this.#repo.configuration.get(
+			CONFIGURATION_KEYS.COMMISSION_RATES,
+		);
 		const commissionRates = commissionConfig.value as {
 			rideCommissionRate: number;
 			deliveryCommissionRate: number;

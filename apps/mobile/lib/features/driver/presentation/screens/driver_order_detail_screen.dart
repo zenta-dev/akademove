@@ -11,8 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-import '../widgets/review_submission_dialog.dart';
-
 class DriverOrderDetailScreen extends StatefulWidget {
   const DriverOrderDetailScreen({required this.orderId, super.key});
 
@@ -53,8 +51,11 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<EmergencyCubit>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<DriverOrderCubit>()),
+        BlocProvider(create: (context) => sl<EmergencyCubit>()),
+      ],
       child: BlocConsumer<DriverOrderCubit, DriverOrderState>(
         listener: (context, state) {
           // Show error messages

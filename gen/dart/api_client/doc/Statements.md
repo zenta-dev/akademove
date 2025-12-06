@@ -8,6 +8,7 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**accountDeletion** | **List&lt;String&gt;** |  | [optional] 
 **driver** | **List&lt;String&gt;** |  | [optional] 
 **merchant** | **List&lt;String&gt;** |  | [optional] 
 **merchantMenu** | **List&lt;String&gt;** |  | [optional] 

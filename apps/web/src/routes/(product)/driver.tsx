@@ -157,7 +157,7 @@ function RouteComponent() {
 										</h3>
 										<p className="font-bold text-2xl text-blue-600">Rp 5,000</p>
 										<p className="mt-2 text-muted-foreground text-sm">
-											Per trip
+											{m.driver_per_trip()}
 										</p>
 									</div>
 									<div className="rounded-lg border bg-background p-6 text-center">
@@ -166,7 +166,7 @@ function RouteComponent() {
 										</h3>
 										<p className="font-bold text-2xl text-blue-600">Rp 2,000</p>
 										<p className="mt-2 text-muted-foreground text-sm">
-											Per kilometer
+											{m.driver_per_kilometer()}
 										</p>
 									</div>
 									<div className="rounded-lg border bg-background p-6 text-center">
@@ -197,22 +197,22 @@ function RouteComponent() {
 						<StepCard
 							number={1}
 							title={m.sign_up()}
-							description="Register with your student ID and documents"
+							description={m.driver_sign_up_desc()}
 						/>
 						<StepCard
 							number={2}
-							title="Get Verified"
-							description="Wait for approval (usually 1-2 days)"
+							title={m.driver_get_verified()}
+							description={m.driver_get_verified_desc()}
 						/>
 						<StepCard
 							number={3}
-							title="Set Schedule"
-							description="Add your class schedule and go online"
+							title={m.driver_set_schedule()}
+							description={m.driver_set_schedule_desc()}
 						/>
 						<StepCard
 							number={4}
-							title="Start Earning"
-							description="Accept orders and earn money"
+							title={m.driver_start_earning()}
+							description={m.driver_start_earning_desc()}
 						/>
 					</div>
 				</div>

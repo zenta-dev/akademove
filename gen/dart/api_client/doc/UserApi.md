@@ -9,10 +9,52 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**accountDeletionSubmit**](UserApi.md#accountdeletionsubmit) | **POST** /account-deletion/submit | 
 [**contactSubmit**](UserApi.md#contactsubmit) | **POST** /contacts/submit | 
 [**userMeChangePassword**](UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [**userMeUpdate**](UserApi.md#usermeupdate) | **PUT** /users/me | 
 
+
+# **accountDeletionSubmit**
+> AccountDeletionSubmit201Response accountDeletionSubmit(insertAccountDeletion)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getUserApi();
+final InsertAccountDeletion insertAccountDeletion = ; // InsertAccountDeletion | 
+
+try {
+    final response = api.accountDeletionSubmit(insertAccountDeletion);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling UserApi->accountDeletionSubmit: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **insertAccountDeletion** | [**InsertAccountDeletion**](InsertAccountDeletion.md)|  | 
+
+### Return type
+
+[**AccountDeletionSubmit201Response**](AccountDeletionSubmit201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **contactSubmit**
 > ContactSubmit201Response contactSubmit(insertContact)

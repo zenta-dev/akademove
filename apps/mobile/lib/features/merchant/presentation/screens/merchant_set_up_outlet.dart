@@ -21,8 +21,8 @@ enum OutletCategoryEnum {
   juiceBar,
 }
 
-// Dummy Menu Category Enum
-enum MenuCategoryEnum {
+// Setup Menu Category Enum (local to this screen)
+enum _SetupMenuCategoryEnum {
   appetizer,
   mainCourse,
   dessert,
@@ -112,7 +112,7 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
   late final StepperController _stepController;
 
   OutletCategoryEnum? _selectedOutletCategory;
-  MenuCategoryEnum? _selectedMenuCategory;
+  _SetupMenuCategoryEnum? _selectedMenuCategory;
 
   // Image picker state
   final Map<_Step1Docs, File?> _step1Docs = {};
@@ -240,29 +240,37 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
     );
   }
 
-  void _handleSaveAndNavigateHome() {
+  Future<void> _handleSaveAndNavigateHome() async {
     _scrollToTop();
 
-    if (_validateStep(2, () => _isStep3Valid)) {
-      _showToast(
-        context,
-        context.l10n.toast_success,
-        context.l10n.toast_success_set_up_merchant,
-      );
-
-      // Navigate to home after a short delay to show the toast
-      Future.delayed(const Duration(milliseconds: 800), () {
-        if (mounted) {
-          context.goNamed(Routes.merchantHome.name);
-        }
-      });
-    } else {
+    if (!_validateStep(2, () => _isStep3Valid)) {
       _showToast(
         context,
         context.l10n.toast_validation_error,
         context.l10n.toast_complete_required_fields,
       );
+      return;
     }
+
+    // TODO: Integrate with MerchantCubit.updateOutletSetup when API is available
+    // The following data should be sent to the API:
+    // - Step 1: _step1Docs[_Step1Docs.outletPhotoProfile], _selectedOutletCategory
+    // - Step 2: _weeklySchedule (operating hours)
+    // - Step 3: _selectedMenuCategory, _step3Docs[_Step3Docs.menuPhoto], menu details
+
+    // For now, simulate API call
+    _showToast(
+      context,
+      context.l10n.toast_success,
+      context.l10n.toast_success_set_up_merchant,
+    );
+
+    // Navigate to home after a short delay to show the toast
+    Future.delayed(const Duration(milliseconds: 800), () {
+      if (mounted) {
+        context.goNamed(Routes.merchantHome.name);
+      }
+    });
   }
 
   @override
@@ -508,13 +516,13 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
       title: Text(context.l10n.step_3),
       contentBuilder: (context) => _buildStepContainer(
         content: [
-          _buildEnumSelect<MenuCategoryEnum>(
+          _buildEnumSelect<_SetupMenuCategoryEnum>(
             label: context.l10n.label_menu_category,
             key: _FormKeys.step3MenuCategory,
             placeholder: context.l10n.placeholder_menu_category,
             icon: LucideIcons.utensils,
             value: _selectedMenuCategory,
-            items: MenuCategoryEnum.values,
+            items: _SetupMenuCategoryEnum.values,
             enabled: true,
             onChanged: (value) => setState(() => _selectedMenuCategory = value),
           ),
@@ -730,47 +738,47 @@ class _MerchantSetUpOutletScreenState extends State<MerchantSetUpOutletScreen> {
         case OutletCategoryEnum.juiceBar:
           return context.l10n.outlet_category_juice_bar;
       }
-    } else if (enumValue is MenuCategoryEnum) {
+    } else if (enumValue is _SetupMenuCategoryEnum) {
       switch (enumValue) {
-        case MenuCategoryEnum.appetizer:
+        case _SetupMenuCategoryEnum.appetizer:
           return context.l10n.menu_category_appetizer;
-        case MenuCategoryEnum.mainCourse:
+        case _SetupMenuCategoryEnum.mainCourse:
           return context.l10n.menu_category_main_course;
-        case MenuCategoryEnum.dessert:
+        case _SetupMenuCategoryEnum.dessert:
           return context.l10n.menu_category_dessert;
-        case MenuCategoryEnum.beverage:
+        case _SetupMenuCategoryEnum.beverage:
           return context.l10n.menu_category_beverage;
-        case MenuCategoryEnum.snack:
+        case _SetupMenuCategoryEnum.snack:
           return context.l10n.menu_category_snack;
-        case MenuCategoryEnum.breakfast:
+        case _SetupMenuCategoryEnum.breakfast:
           return context.l10n.menu_category_breakfast;
-        case MenuCategoryEnum.lunch:
+        case _SetupMenuCategoryEnum.lunch:
           return context.l10n.menu_category_lunch;
-        case MenuCategoryEnum.dinner:
+        case _SetupMenuCategoryEnum.dinner:
           return context.l10n.menu_category_dinner;
-        case MenuCategoryEnum.salad:
+        case _SetupMenuCategoryEnum.salad:
           return context.l10n.menu_category_salad;
-        case MenuCategoryEnum.soup:
+        case _SetupMenuCategoryEnum.soup:
           return context.l10n.menu_category_soup;
-        case MenuCategoryEnum.seafood:
+        case _SetupMenuCategoryEnum.seafood:
           return context.l10n.menu_category_seafood;
-        case MenuCategoryEnum.vegetarian:
+        case _SetupMenuCategoryEnum.vegetarian:
           return context.l10n.menu_category_vegetarian;
-        case MenuCategoryEnum.vegan:
+        case _SetupMenuCategoryEnum.vegan:
           return context.l10n.menu_category_vegan;
-        case MenuCategoryEnum.pasta:
+        case _SetupMenuCategoryEnum.pasta:
           return context.l10n.menu_category_pasta;
-        case MenuCategoryEnum.pizza:
+        case _SetupMenuCategoryEnum.pizza:
           return context.l10n.menu_category_pizza;
-        case MenuCategoryEnum.burger:
+        case _SetupMenuCategoryEnum.burger:
           return context.l10n.menu_category_burger;
-        case MenuCategoryEnum.sandwich:
+        case _SetupMenuCategoryEnum.sandwich:
           return context.l10n.menu_category_sandwich;
-        case MenuCategoryEnum.rice:
+        case _SetupMenuCategoryEnum.rice:
           return context.l10n.menu_category_rice;
-        case MenuCategoryEnum.noodle:
+        case _SetupMenuCategoryEnum.noodle:
           return context.l10n.menu_category_noodle;
-        case MenuCategoryEnum.grill:
+        case _SetupMenuCategoryEnum.grill:
           return context.l10n.menu_category_grill;
       }
     }

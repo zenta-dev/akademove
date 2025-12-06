@@ -9,19 +9,22 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   DriverHomeCubit({
     required DriverRepository driverRepository,
     required OrderRepository orderRepository,
-
     required WebSocketService webSocketService,
+    required ConfigurationRepository configurationRepository,
   }) : _driverRepository = driverRepository,
        _orderRepository = orderRepository,
        _webSocketService = webSocketService,
+       _configurationRepository = configurationRepository,
        super(const DriverHomeState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
+  final ConfigurationRepository _configurationRepository;
 
   Timer? _locationUpdateTimer;
   String? _driverId;
+  double? _platformFeeRate;
 
   Future<void> init() async {
     reset();
@@ -84,10 +87,8 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
             return orderDate.isAfter(startOfDay);
           }).toList();
 
-          final todayEarnings = todayOrders.fold<num>(
-            0,
-            (sum, order) => sum + order.totalPrice,
-          );
+          // Calculate driver earnings (totalPrice - platform commission)
+          final todayEarnings = await _calculateDriverEarnings(todayOrders);
 
           emit(
             state.toSuccess(
@@ -274,5 +275,43 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   void clearCurrentOrder() {
     emit(state.clearCurrentOrder());
+  }
+
+  /// Calculate total driver earnings from orders after platform commission
+  /// Fetches commission rate from configuration (with fallback to 15%)
+  Future<num> _calculateDriverEarnings(List<Order> orders) async {
+    if (orders.isEmpty) return 0;
+
+    // Fetch platform fee rate from configuration if not already cached
+    if (_platformFeeRate == null) {
+      try {
+        final configRes = await _configurationRepository.get('commission');
+        final commissionConfig = configRes.data.value;
+
+        // Parse the commission configuration JSON
+        if (commissionConfig is Map<String, Object?>) {
+          // Use rideCommissionRate as the default platform fee
+          // Different order types can have different commission rates
+          final rideCommissionRate = commissionConfig['rideCommissionRate'];
+          if (rideCommissionRate is num) {
+            _platformFeeRate = rideCommissionRate.toDouble();
+          }
+        }
+      } catch (e) {
+        logger.w(
+          '[DriverHomeCubit] Failed to fetch platform fee rate, using default 15%',
+          error: e,
+        );
+      }
+    }
+
+    // Fallback to 15% if configuration fetch failed
+    final platformFeeRate = _platformFeeRate ?? 0.15;
+    final driverShare = 1.0 - platformFeeRate;
+
+    return orders.fold<num>(
+      0,
+      (sum, order) => sum + (order.totalPrice * driverShare),
+    );
   }
 }

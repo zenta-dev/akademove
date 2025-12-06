@@ -1,3 +1,4 @@
+export 'bank_transfer_payment_widget.dart';
 export 'bottom_navbar.dart';
 export 'default_app_bar.dart';
 export 'default_text.dart';

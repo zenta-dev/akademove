@@ -1,6 +1,6 @@
 enum ErrorCode {
   badRequest(400),
-  unathorized(401),
+  unauthorized(401),
   forbidden(403),
   notFound(404),
   methodNotSupported(405),

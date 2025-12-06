@@ -102,7 +102,7 @@ export const UserDropdwon = () => {
 				<div className="p-1.5">
 					<Skeleton className="size-6" />
 				</div>
-				<Skeleton className="size-8 rounded-full" />
+				<Skeleton className="h-10 w-32 rounded-full" />
 			</div>
 		);
 	}
@@ -142,6 +142,11 @@ export const UserDropdwon = () => {
 		}
 	};
 
+	function limitString(str: string, maxLength: number) {
+		if (str.length <= maxLength) return str;
+		return `${str.slice(0, maxLength)}...`;
+	}
+
 	return (
 		<div className="flex items-center gap-2">
 			<DashboardNavigator role={user.role} />
@@ -158,7 +163,7 @@ export const UserDropdwon = () => {
 							</AvatarFallback>
 						</Avatar>
 						<span className="hidden font-medium text-sm md:inline-block">
-							{user.name}
+							{limitString(user.name, 10)}
 						</span>
 					</Button>
 				</DropdownMenuTrigger>

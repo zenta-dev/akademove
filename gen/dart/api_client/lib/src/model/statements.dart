@@ -18,6 +18,7 @@ part 'statements.g.dart';
 class Statements {
   /// Returns a new [Statements] instance.
   const Statements({
+    this.accountDeletion,
     this.driver,
     this.merchant,
     this.merchantMenu,
@@ -34,6 +35,9 @@ class Statements {
     this.emergency,
     this.contact,
   });
+
+  @JsonKey(name: r'accountDeletion', required: false, includeIfNull: false)
+  final List<StatementsAccountDeletionEnum>? accountDeletion;
 
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
   final List<StatementsDriverEnum>? driver;
@@ -84,6 +88,7 @@ class Statements {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Statements &&
+          other.accountDeletion == accountDeletion &&
           other.driver == driver &&
           other.merchant == merchant &&
           other.merchantMenu == merchantMenu &&
@@ -102,6 +107,7 @@ class Statements {
 
   @override
   int get hashCode =>
+      accountDeletion.hashCode +
       driver.hashCode +
       merchant.hashCode +
       merchantMenu.hashCode +
@@ -127,6 +133,24 @@ class Statements {
   String toString() {
     return toJson().toString();
   }
+}
+
+enum StatementsAccountDeletionEnum {
+  @JsonValue(r'list')
+  list(r'list'),
+  @JsonValue(r'get')
+  get_(r'get'),
+  @JsonValue(r'review')
+  review(r'review'),
+  @JsonValue(r'delete')
+  delete(r'delete');
+
+  const StatementsAccountDeletionEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }
 
 enum StatementsDriverEnum {

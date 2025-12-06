@@ -613,7 +613,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get send_reset_link => 'Kirim Tautan Reset';
 
   @override
-  String get back_to_sign_in => 'Kembali ke Masuk';
+  String get back_to_sign_in => 'Kembali ke Halaman Masuk';
 
   @override
   String get reset_password => 'Atur Ulang Kata Sandi';
@@ -3099,4 +3099,45 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get delete_account_error_open_whatsapp => 'Tidak dapat membuka WhatsApp. Silakan coba lagi.';
+
+  @override
+  String get email_verification_title => 'Verifikasi Email Anda';
+
+  @override
+  String get email_verification_description => 'Kami telah mengirim link verifikasi ke alamat email Anda.';
+
+  @override
+  String get email_verification_sent => 'Email verifikasi berhasil dikirim!';
+
+  @override
+  String get email_verification_instruction => 'Klik link di email untuk memverifikasi akun Anda. Jika tidak melihat emailnya, periksa folder spam.';
+
+  @override
+  String get email_verification_resend => 'Kirim Ulang Email Verifikasi';
+
+  @override
+  String email_verification_resend_countdown(String seconds) {
+    return 'Kirim ulang dalam $seconds detik';
+  }
+
+  @override
+  String get email_verification_spam_hint => 'Jangan lupa periksa folder spam Anda!';
+
+  @override
+  String get email_verification_success_title => 'Email Terverifikasi!';
+
+  @override
+  String get email_verification_success_description => 'Email Anda telah berhasil diverifikasi. Anda sekarang dapat masuk ke akun Anda.';
+
+  @override
+  String get email_verification_failed => 'Verifikasi email gagal';
+
+  @override
+  String get email_verification_invalid_token => 'Link verifikasi tidak valid atau sudah kadaluarsa. Silakan minta yang baru.';
+
+  @override
+  String get no_vouchers_available => 'Tidak Ada Voucher';
+
+  @override
+  String get check_back_later_for_promotions => 'Cek kembali nanti untuk promo dan diskon';
 }

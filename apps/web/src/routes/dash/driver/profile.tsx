@@ -548,16 +548,19 @@ function EditDriverProfile({
 					<Button
 						type="button"
 						variant="outline"
-						onClick={onCancel}
+						onClick={() => {
+							if (mutation.isPending) return;
+							onCancel();
+						}}
 						disabled={mutation.isPending}
-						className="w-full"
+						className="w-[49.8%]"
 					>
 						{m.cancel()}
 					</Button>
 					<Button
 						type="submit"
 						disabled={mutation.isPending}
-						className="w-full"
+						className="w-[49.8%]"
 					>
 						{mutation.isPending ? <Submitting /> : m.save_changes()}
 					</Button>

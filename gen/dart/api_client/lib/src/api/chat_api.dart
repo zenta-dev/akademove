@@ -9,9 +9,9 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/account_deletion_delete200_response.dart';
 import 'package:api_client/src/model/insert_quick_message_template.dart';
 import 'package:api_client/src/model/quick_message_create200_response.dart';
-import 'package:api_client/src/model/quick_message_delete200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/update_quick_message_template.dart';
 
@@ -123,9 +123,9 @@ class ChatApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [QuickMessageDelete200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AccountDeletionDelete200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<QuickMessageDelete200Response>> quickMessageDelete({
+  Future<Response<AccountDeletionDelete200Response>> quickMessageDelete({
     required String id,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
@@ -160,16 +160,16 @@ class ChatApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    QuickMessageDelete200Response? _responseData;
+    AccountDeletionDelete200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
           : deserialize<
-              QuickMessageDelete200Response,
-              QuickMessageDelete200Response
-            >(rawData, 'QuickMessageDelete200Response', growable: true);
+              AccountDeletionDelete200Response,
+              AccountDeletionDelete200Response
+            >(rawData, 'AccountDeletionDelete200Response', growable: true);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -180,7 +180,7 @@ class ChatApi {
       );
     }
 
-    return Response<QuickMessageDelete200Response>(
+    return Response<AccountDeletionDelete200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

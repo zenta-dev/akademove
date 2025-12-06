@@ -1,3 +1,11 @@
+import 'package:api_client/src/model/account_deletion.dart';
+import 'package:api_client/src/model/account_deletion_delete200_response.dart';
+import 'package:api_client/src/model/account_deletion_delete200_response_data.dart';
+import 'package:api_client/src/model/account_deletion_list200_response.dart';
+import 'package:api_client/src/model/account_deletion_list200_response_data.dart';
+import 'package:api_client/src/model/account_deletion_list200_response_data_pagination.dart';
+import 'package:api_client/src/model/account_deletion_review_request.dart';
+import 'package:api_client/src/model/account_deletion_submit201_response.dart';
 import 'package:api_client/src/model/activate_driver.dart';
 import 'package:api_client/src/model/add_to_cart.dart';
 import 'package:api_client/src/model/admin_update_user.dart';
@@ -37,7 +45,6 @@ import 'package:api_client/src/model/configuration_list200_response.dart';
 import 'package:api_client/src/model/contact.dart';
 import 'package:api_client/src/model/contact_list200_response.dart';
 import 'package:api_client/src/model/contact_list200_response_data.dart';
-import 'package:api_client/src/model/contact_list200_response_data_pagination.dart';
 import 'package:api_client/src/model/contact_respond_request.dart';
 import 'package:api_client/src/model/contact_submit201_response.dart';
 import 'package:api_client/src/model/coordinate.dart';
@@ -90,6 +97,7 @@ import 'package:api_client/src/model/fcm_notification_log.dart';
 import 'package:api_client/src/model/food_pricing_configuration.dart';
 import 'package:api_client/src/model/general_rules.dart';
 import 'package:api_client/src/model/get_session_response.dart';
+import 'package:api_client/src/model/insert_account_deletion.dart';
 import 'package:api_client/src/model/insert_configuration.dart';
 import 'package:api_client/src/model/insert_contact.dart';
 import 'package:api_client/src/model/insert_coupon.dart';
@@ -124,9 +132,12 @@ import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
+import 'package:api_client/src/model/notification_delete200_response.dart';
+import 'package:api_client/src/model/notification_delete200_response_data.dart';
+import 'package:api_client/src/model/notification_get_unread_count200_response.dart';
+import 'package:api_client/src/model/notification_get_unread_count200_response_data.dart';
 import 'package:api_client/src/model/notification_list200_response.dart';
-import 'package:api_client/src/model/notification_save_token200_response.dart';
-import 'package:api_client/src/model/notification_save_token200_response_data.dart';
+import 'package:api_client/src/model/notification_mark_as_read200_response.dart';
 import 'package:api_client/src/model/notification_save_token_request.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic200_response.dart';
 import 'package:api_client/src/model/notification_subscribe_to_topic200_response_data.dart';
@@ -171,8 +182,6 @@ import 'package:api_client/src/model/place_order_payment.dart';
 import 'package:api_client/src/model/place_order_response.dart';
 import 'package:api_client/src/model/pricing_configuration.dart';
 import 'package:api_client/src/model/quick_message_create200_response.dart';
-import 'package:api_client/src/model/quick_message_delete200_response.dart';
-import 'package:api_client/src/model/quick_message_delete200_response_data.dart';
 import 'package:api_client/src/model/quick_message_list200_response.dart';
 import 'package:api_client/src/model/quick_message_list200_response_data.dart';
 import 'package:api_client/src/model/quick_message_template.dart';
@@ -188,6 +197,7 @@ import 'package:api_client/src/model/review_check_can_review200_response_data.da
 import 'package:api_client/src/model/review_create200_response.dart';
 import 'package:api_client/src/model/review_list200_response.dart';
 import 'package:api_client/src/model/ride_pricing_configuration.dart';
+import 'package:api_client/src/model/send_email_verification.dart';
 import 'package:api_client/src/model/session.dart';
 import 'package:api_client/src/model/sign_in_request.dart';
 import 'package:api_client/src/model/sign_in_response.dart';
@@ -203,6 +213,7 @@ import 'package:api_client/src/model/transaction_get200_response.dart';
 import 'package:api_client/src/model/transaction_list200_response.dart';
 import 'package:api_client/src/model/transfer_request.dart';
 import 'package:api_client/src/model/unban_user.dart';
+import 'package:api_client/src/model/update_account_deletion.dart';
 import 'package:api_client/src/model/update_configuration.dart';
 import 'package:api_client/src/model/update_contact.dart';
 import 'package:api_client/src/model/update_coupon.dart';
@@ -226,6 +237,7 @@ import 'package:api_client/src/model/user_badge_metadata.dart';
 import 'package:api_client/src/model/user_notification.dart';
 import 'package:api_client/src/model/user_rules.dart';
 import 'package:api_client/src/model/va_number.dart';
+import 'package:api_client/src/model/verify_email.dart';
 import 'package:api_client/src/model/wallet.dart';
 import 'package:api_client/src/model/wallet_get200_response.dart';
 import 'package:api_client/src/model/wallet_get_monthly_summary200_response.dart';
@@ -256,6 +268,48 @@ ReturnType deserialize<ReturnType, BaseType>(
       return (valueString == 'true' || valueString == '1') as ReturnType;
     case 'double':
       return (value is double ? value : double.parse('$value')) as ReturnType;
+    case 'AccountDeletion':
+      return AccountDeletion.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'AccountDeletionDelete200Response':
+      return AccountDeletionDelete200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionDelete200ResponseData':
+      return AccountDeletionDelete200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionKey':
+    case 'AccountDeletionList200Response':
+      return AccountDeletionList200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionList200ResponseData':
+      return AccountDeletionList200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionList200ResponseDataPagination':
+      return AccountDeletionList200ResponseDataPagination.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionReason':
+    case 'AccountDeletionReviewRequest':
+      return AccountDeletionReviewRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountDeletionStatus':
+    case 'AccountDeletionSubmit201Response':
+      return AccountDeletionSubmit201Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'AccountType':
     case 'ActivateDriver':
       return ActivateDriver.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -379,11 +433,6 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'ContactList200ResponseData':
       return ContactList200ResponseData.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'ContactList200ResponseDataPagination':
-      return ContactList200ResponseDataPagination.fromJson(
-            value as Map<String, dynamic>,
-          )
           as ReturnType;
     case 'ContactRespondRequest':
       return ContactRespondRequest.fromJson(value as Map<String, dynamic>)
@@ -592,6 +641,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'GetSessionResponse':
       return GetSessionResponse.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'InsertAccountDeletion':
+      return InsertAccountDeletion.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'InsertConfiguration':
       return InsertConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -711,16 +763,31 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'MerchantPopulars200Response':
       return MerchantPopulars200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
-    case 'NotificationList200Response':
-      return NotificationList200Response.fromJson(value as Map<String, dynamic>)
-          as ReturnType;
-    case 'NotificationSaveToken200Response':
-      return NotificationSaveToken200Response.fromJson(
+    case 'NotificationDelete200Response':
+      return NotificationDelete200Response.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
-    case 'NotificationSaveToken200ResponseData':
-      return NotificationSaveToken200ResponseData.fromJson(
+    case 'NotificationDelete200ResponseData':
+      return NotificationDelete200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationGetUnreadCount200Response':
+      return NotificationGetUnreadCount200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationGetUnreadCount200ResponseData':
+      return NotificationGetUnreadCount200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'NotificationList200Response':
+      return NotificationList200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'NotificationMarkAsRead200Response':
+      return NotificationMarkAsRead200Response.fromJson(
             value as Map<String, dynamic>,
           )
           as ReturnType;
@@ -884,16 +951,6 @@ ReturnType deserialize<ReturnType, BaseType>(
             value as Map<String, dynamic>,
           )
           as ReturnType;
-    case 'QuickMessageDelete200Response':
-      return QuickMessageDelete200Response.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
-    case 'QuickMessageDelete200ResponseData':
-      return QuickMessageDelete200ResponseData.fromJson(
-            value as Map<String, dynamic>,
-          )
-          as ReturnType;
     case 'QuickMessageList200Response':
       return QuickMessageList200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -947,6 +1004,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'RidePricingConfiguration':
       return RidePricingConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'SendEmailVerification':
+      return SendEmailVerification.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Session':
       return Session.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'SignInRequest':
@@ -988,6 +1048,9 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'UnbanUser':
       return UnbanUser.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'UpdateAccountDeletion':
+      return UpdateAccountDeletion.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'UpdateConfiguration':
       return UpdateConfiguration.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -1053,6 +1116,8 @@ ReturnType deserialize<ReturnType, BaseType>(
       return UserRules.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'VANumber':
       return VANumber.fromJson(value as Map<String, dynamic>) as ReturnType;
+    case 'VerifyEmail':
+      return VerifyEmail.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'Wallet':
       return Wallet.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'WalletGet200Response':

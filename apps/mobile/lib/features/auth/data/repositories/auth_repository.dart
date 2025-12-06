@@ -216,7 +216,7 @@ class AuthRepository extends BaseRepository {
 
         throw const RepositoryError(
           'Session expired',
-          code: ErrorCode.unathorized,
+          code: ErrorCode.unauthorized,
         );
       }
 

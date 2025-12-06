@@ -51,6 +51,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
   bool _termsAccepted = false;
+  String _submittedEmail = '';
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,10 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
             location: ToastLocation.topCenter,
           );
           context.read<SignUpCubit>().reset();
-          context.pushReplacementNamed(Routes.authSignIn.name);
+          context.pushReplacementNamed(
+            Routes.authEmailVerificationPending.name,
+            queryParameters: {'email': _submittedEmail},
+          );
         }
       },
       builder: (context, state) {
@@ -97,6 +101,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               return;
             }
 
+            _submittedEmail = email;
             context.read<SignUpCubit>().signUpUser(
               name: name,
               email: email,
@@ -124,7 +129,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   FormValidationMode.submitted,
                 },
                 child: TextField(
-                  placeholder: Text(context.l10n.placeholder_password),
+                  placeholder: Text(context.l10n.placeholder_name),
                   enabled: !state.isLoading,
                   features: const [
                     InputFeature.leading(Icon(LucideIcons.user)),
@@ -231,7 +236,10 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
               FormField(
                 key: _confirmPasswordKey,
                 label: Text(context.l10n.confirm_password),
-                // validator: const CompareWith<String>.equal(_passwordKey),
+                validator: CompareWith.equal(
+                  _passwordKey,
+                  message: context.l10n.error_password_mismatch,
+                ),
                 showErrors: const {
                   FormValidationMode.changed,
                   FormValidationMode.submitted,
@@ -292,10 +300,10 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                   final isLoading = state.isLoading;
 
                   return Button(
-                    style: isLoading || hasErrors
+                    style: isLoading || hasErrors || !_termsAccepted
                         ? const ButtonStyle.outline()
                         : const ButtonStyle.primary(),
-                    onPressed: (!hasErrors && !isLoading)
+                    onPressed: (!hasErrors && !isLoading && _termsAccepted)
                         ? () => context.submitForm()
                         : null,
                     child: isLoading

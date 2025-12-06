@@ -57,6 +57,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   BankProvider? _selectedBankProvider;
   CountryCode _selectedCountryCode = CountryCode.ID;
   bool _termsAccepted = false;
+  String? _submittedEmail;
 
   final Map<Step2Docs, File?> _step2Docs = {
     for (var doc in Step2Docs.values) doc: null,
@@ -147,18 +148,25 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     );
   }
 
-  void _handleSignUpSuccess(BuildContext context, String? message) {
+  void _handleSignUpSuccess(
+    BuildContext context,
+    String? message,
+    String email,
+  ) {
     context.showMyToast(
       message ?? context.l10n.sign_up_success,
       type: ToastType.success,
     );
     context.read<SignUpCubit>().reset();
-    context.pushReplacementNamed(Routes.authSignIn.name);
+    context.pushReplacementNamed(
+      Routes.authEmailVerificationPending.name,
+      queryParameters: {'email': email},
+    );
   }
 
   void _handleSignUpFailure(BuildContext context, String? error) {
     context.showMyToast(error ?? context.l10n.an_error_occurred);
-    delay(Duration(seconds: 5));
+    // Reset immediately - delay was ineffective (unawaited Future)
     context.read<SignUpCubit>().reset();
   }
 
@@ -172,6 +180,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
     final formData = _extractFormData(values);
     if (formData == null) return;
+
+    _submittedEmail = formData['email'];
 
     final photo = _step2Docs[Step2Docs.photo];
     final studentCard = _step2Docs[Step2Docs.studentCard];
@@ -266,7 +276,12 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
           if (state.isFailure) {
             _handleSignUpFailure(context, state.error?.message);
           }
-          if (state.isSuccess) _handleSignUpSuccess(context, state.message);
+          if (state.isSuccess) {
+            final email = _submittedEmail;
+            if (email != null) {
+              _handleSignUpSuccess(context, state.message, email);
+            }
+          }
         },
         builder: (context, state) {
           return Form(

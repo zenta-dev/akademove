@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // ContactList200ResponseDataPagination pagination
+    // AccountDeletionList200ResponseDataPagination pagination
     test('to test the property `pagination`', () async {
       // TODO
     });

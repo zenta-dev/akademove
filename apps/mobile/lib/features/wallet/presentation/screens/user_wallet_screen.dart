@@ -31,7 +31,9 @@ class UserWalletScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(LucideIcons.bell),
               variance: ButtonVariance.ghost,
-              onPressed: () {},
+              onPressed: () {
+                // TODO: Navigate to notifications screen when implemented
+              },
             ),
             BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
@@ -41,7 +43,7 @@ class UserWalletScreen extends StatelessWidget {
                     image: state.data?.image,
                   ),
                   variance: ButtonVariance.ghost,
-                  onPressed: () {},
+                  onPressed: () => context.pushNamed(Routes.userProfile.name),
                 ).asSkeleton(enabled: state.isLoading);
               },
             ),

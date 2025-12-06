@@ -3099,4 +3099,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete_account_error_open_whatsapp => 'Could not open WhatsApp. Please try again.';
+
+  @override
+  String get email_verification_title => 'Verify Your Email';
+
+  @override
+  String get email_verification_description => 'We\'ve sent a verification link to your email address.';
+
+  @override
+  String get email_verification_sent => 'Verification email sent successfully!';
+
+  @override
+  String get email_verification_instruction => 'Click the link in the email to verify your account. If you don\'t see the email, check your spam folder.';
+
+  @override
+  String get email_verification_resend => 'Resend Verification Email';
+
+  @override
+  String email_verification_resend_countdown(String seconds) {
+    return 'Resend in ${seconds}s';
+  }
+
+  @override
+  String get email_verification_spam_hint => 'Don\'t forget to check your spam folder!';
+
+  @override
+  String get email_verification_success_title => 'Email Verified!';
+
+  @override
+  String get email_verification_success_description => 'Your email has been verified successfully. You can now sign in to your account.';
+
+  @override
+  String get email_verification_failed => 'Email verification failed';
+
+  @override
+  String get email_verification_invalid_token => 'Invalid or expired verification link. Please request a new one.';
+
+  @override
+  String get no_vouchers_available => 'No Vouchers Available';
+
+  @override
+  String get check_back_later_for_promotions => 'Check back later for promotions and discounts';
 }

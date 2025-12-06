@@ -9,12 +9,94 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**notificationDelete**](NotificationApi.md#notificationdelete) | **DELETE** /notifications/{id} | 
+[**notificationGetUnreadCount**](NotificationApi.md#notificationgetunreadcount) | **GET** /notifications/unread-count | 
 [**notificationList**](NotificationApi.md#notificationlist) | **GET** /notifications | 
+[**notificationMarkAllAsRead**](NotificationApi.md#notificationmarkallasread) | **PATCH** /notifications/read-all | 
+[**notificationMarkAsRead**](NotificationApi.md#notificationmarkasread) | **PATCH** /notifications/{id}/read | 
 [**notificationRemoveToken**](NotificationApi.md#notificationremovetoken) | **DELETE** /notifications/token/{token} | 
 [**notificationSaveToken**](NotificationApi.md#notificationsavetoken) | **POST** /notifications/token | 
 [**notificationSubscribeToTopic**](NotificationApi.md#notificationsubscribetotopic) | **POST** /notifications/subscribe | 
 [**notificationUnsubscribeToTopic**](NotificationApi.md#notificationunsubscribetotopic) | **POST** /notifications/unsubscribe | 
 
+
+# **notificationDelete**
+> NotificationDelete200Response notificationDelete(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getNotificationApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.notificationDelete(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling NotificationApi->notificationDelete: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**NotificationDelete200Response**](NotificationDelete200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **notificationGetUnreadCount**
+> NotificationGetUnreadCount200Response notificationGetUnreadCount()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getNotificationApi();
+
+try {
+    final response = api.notificationGetUnreadCount();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling NotificationApi->notificationGetUnreadCount: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**NotificationGetUnreadCount200Response**](NotificationGetUnreadCount200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationList**
 > NotificationList200Response notificationList(read, cursor, limit, direction, page, query, sortBy, order, mode)
@@ -73,8 +155,86 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **notificationMarkAllAsRead**
+> NotificationGetUnreadCount200Response notificationMarkAllAsRead()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getNotificationApi();
+
+try {
+    final response = api.notificationMarkAllAsRead();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling NotificationApi->notificationMarkAllAsRead: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**NotificationGetUnreadCount200Response**](NotificationGetUnreadCount200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **notificationMarkAsRead**
+> NotificationMarkAsRead200Response notificationMarkAsRead(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getNotificationApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.notificationMarkAsRead(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling NotificationApi->notificationMarkAsRead: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**NotificationMarkAsRead200Response**](NotificationMarkAsRead200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **notificationRemoveToken**
-> NotificationSaveToken200Response notificationRemoveToken(token)
+> NotificationDelete200Response notificationRemoveToken(token)
 
 
 
@@ -101,7 +261,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NotificationSaveToken200Response**](NotificationSaveToken200Response.md)
+[**NotificationDelete200Response**](NotificationDelete200Response.md)
 
 ### Authorization
 
@@ -115,7 +275,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationSaveToken**
-> NotificationSaveToken200Response notificationSaveToken(notificationSaveTokenRequest)
+> NotificationDelete200Response notificationSaveToken(notificationSaveTokenRequest)
 
 
 
@@ -142,7 +302,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NotificationSaveToken200Response**](NotificationSaveToken200Response.md)
+[**NotificationDelete200Response**](NotificationDelete200Response.md)
 
 ### Authorization
 

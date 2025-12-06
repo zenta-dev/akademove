@@ -4,7 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/contact.dart';
-import 'package:api_client/src/model/contact_list200_response_data_pagination.dart';
+import 'package:api_client/src/model/account_deletion_list200_response_data_pagination.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -25,7 +25,7 @@ class ContactList200ResponseData {
   final List<Contact> rows;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
-  final ContactList200ResponseDataPagination? pagination;
+  final AccountDeletionList200ResponseDataPagination? pagination;
 
   @override
   bool operator ==(Object other) =>

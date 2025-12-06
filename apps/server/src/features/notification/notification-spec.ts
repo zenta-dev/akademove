@@ -26,6 +26,58 @@ export const NotificationSpec = {
 				"List notification success",
 			),
 		),
+	getUnreadCount: oc
+		.route({
+			tags: [FEATURE_TAGS.NOTIFICATION],
+			method: "GET",
+			path: "/unread-count",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			createSuccesSchema(
+				z.object({ count: z.number() }),
+				"Get unread count success",
+			),
+		),
+	markAsRead: oc
+		.route({
+			tags: [FEATURE_TAGS.NOTIFICATION],
+			method: "PATCH",
+			path: "/{id}/read",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.output(createSuccesSchema(UserNotificationSchema, "Mark as read success")),
+	markAllAsRead: oc
+		.route({
+			tags: [FEATURE_TAGS.NOTIFICATION],
+			method: "PATCH",
+			path: "/read-all",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			createSuccesSchema(
+				z.object({ count: z.number() }),
+				"Mark all as read success",
+			),
+		),
+	delete: oc
+		.route({
+			tags: [FEATURE_TAGS.NOTIFICATION],
+			method: "DELETE",
+			path: "/{id}",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.output(
+			createSuccesSchema(z.object({ ok: z.boolean() }), "Delete success"),
+		),
 	subscribeToTopic: oc
 		.route({
 			tags: [FEATURE_TAGS.NOTIFICATION],

@@ -511,19 +511,42 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
     );
   }
 
-  void _startBankAccountEdit() {
-    debugPrint('=== START BANK ACCOUNT EDIT CLICKED ===');
-    debugPrint('Before: _isBankAccountEditing = $_isBankAccountEditing');
-    debugPrint('Before: _isBankAccountVerified = $_isBankAccountVerified');
+  Future<void> _handleSaveProfile() async {
+    // Validate form
+    if (_formController.errors.isNotEmpty) {
+      _showToast(
+        context,
+        context.l10n.error_validation,
+        context.l10n.error_fill_all_required_fields,
+      );
+      return;
+    }
 
+    setState(() => _isLoading = true);
+
+    try {
+      // TODO: Integrate with MerchantRepository.updateProfile when available
+      // For now, simulate API call
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (mounted) {
+        setState(() => _isLoading = false);
+        _showToast(context, context.l10n.success, context.l10n.toast_success);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        _showToast(context, context.l10n.error, context.l10n.an_error_occurred);
+      }
+    }
+  }
+
+  void _startBankAccountEdit() {
     setState(() {
       _isBankAccountEditing = true;
       // Clear the field for new input
       _bankAccountController.clear();
     });
-
-    debugPrint('After: _isBankAccountEditing = $_isBankAccountEditing');
-    debugPrint('=== END START BANK ACCOUNT EDIT ===');
   }
 
   Future<void> _verifyBankAccount() async {
@@ -696,14 +719,20 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Button.primary(
-                  onPressed: () {},
-                  child: Text(
-                    context.l10n.save_changes,
-                    style: context.typography.small.copyWith(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  onPressed: _isLoading ? null : _handleSaveProfile,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(
+                          context.l10n.save_changes,
+                          style: context.typography.small.copyWith(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -1210,10 +1239,6 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
   }
 
   Widget _buildBankAccountField() {
-    debugPrint('=== BUILDING BANK ACCOUNT FIELD ===');
-    debugPrint('_isBankAccountEditing: $_isBankAccountEditing');
-    debugPrint('_isBankAccountVerified: $_isBankAccountVerified');
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 8.h,
@@ -1261,10 +1286,8 @@ class _MerchantEditProfileScreenState extends State<MerchantEditProfileScreen> {
                   if (_isLoading) return;
 
                   if (_isBankAccountEditing) {
-                    debugPrint('✅ CHECKLIST TAPPED - Verifying...');
                     _verifyBankAccount();
                   } else {
-                    debugPrint('✏️ PENCIL TAPPED - Starting edit...');
                     _startBankAccountEdit();
                   }
                 },

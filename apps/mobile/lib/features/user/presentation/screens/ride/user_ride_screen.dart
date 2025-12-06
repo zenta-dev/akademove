@@ -57,7 +57,9 @@ class _UserRideScreenState extends State<UserRideScreen> {
       );
 
       if (coordinate == null) {
-        debugPrint('⚠️ Coordinate is still null after getMyLocation');
+        logger.w(
+          '[UserRideScreen] Coordinate is still null after getMyLocation',
+        );
         return;
       }
 
@@ -73,8 +75,12 @@ class _UserRideScreenState extends State<UserRideScreen> {
       setState(() {});
 
       await _fetchDriversAtLocation(position, 10);
-    } catch (e, stack) {
-      debugPrint('⚠️ Location setup failed: $e\n$stack');
+    } catch (e, st) {
+      logger.e(
+        '[UserRideScreen] Location setup failed',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 

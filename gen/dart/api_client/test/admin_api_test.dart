@@ -6,6 +6,26 @@ void main() {
   final instance = ApiClient().getAdminApi();
 
   group(AdminApi, () {
+    //Future<AccountDeletionDelete200Response> accountDeletionDelete(String id) async
+    test('test accountDeletionDelete', () async {
+      // TODO
+    });
+
+    //Future<AccountDeletionSubmit201Response> accountDeletionGetById(String id) async
+    test('test accountDeletionGetById', () async {
+      // TODO
+    });
+
+    //Future<AccountDeletionList200Response> accountDeletionList({ int page, int limit, String status, String search }) async
+    test('test accountDeletionList', () async {
+      // TODO
+    });
+
+    //Future<AccountDeletionSubmit201Response> accountDeletionReview(String id, AccountDeletionReviewRequest accountDeletionReviewRequest) async
+    test('test accountDeletionReview', () async {
+      // TODO
+    });
+
     //Future<String> analyticsExportOperatorAnalytics(DateTime startDate, DateTime endDate) async
     test('test analyticsExportOperatorAnalytics', () async {
       // TODO

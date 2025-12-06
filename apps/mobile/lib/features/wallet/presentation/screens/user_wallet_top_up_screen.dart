@@ -16,7 +16,10 @@ class _Option {
 class UserWalletTopUpScreen extends StatelessWidget {
   const UserWalletTopUpScreen({super.key});
 
-  static const _options = [_Option('QRIS', TopUpRequestMethodEnum.QRIS)];
+  static const _options = [
+    _Option('QRIS', TopUpRequestMethodEnum.QRIS),
+    _Option('Bank Transfer', TopUpRequestMethodEnum.BANK_TRANSFER),
+  ];
 
   @override
   Widget build(BuildContext context) {

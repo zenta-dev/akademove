@@ -11,7 +11,7 @@ void main() {
       // TODO
     });
 
-    //Future<QuickMessageDelete200Response> quickMessageDelete(String id) async
+    //Future<AccountDeletionDelete200Response> quickMessageDelete(String id) async
     test('test quickMessageDelete', () async {
       // TODO
     });

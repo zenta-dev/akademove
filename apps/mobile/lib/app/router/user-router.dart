@@ -232,6 +232,12 @@ final userRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => const UserWalletTopUpQRISScreen(),
         ),
         GoRoute(
+          name: Routes.userWalletTopUpBankTransfer.name,
+          path: Routes.userWalletTopUpBankTransfer.path,
+          builder: (context, state) =>
+              const UserWalletTopUpBankTransferScreen(),
+        ),
+        GoRoute(
           name: Routes.userVoucher.name,
           path: Routes.userVoucher.path,
           builder: (context, state) => const UserVoucherScreen(),

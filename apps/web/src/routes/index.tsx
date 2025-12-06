@@ -149,10 +149,10 @@ const getTestimonials = () => [
 ];
 
 const getTrustBadges = () => [
-	{ icon: Shield, label: "Secure Platform" },
-	{ icon: Users, label: "Student Verified" },
-	{ icon: Zap, label: "Fast Service" },
-	{ icon: Clock, label: "24/7 Support" },
+	{ icon: Shield, label: m.landing_trust_secure() },
+	{ icon: Users, label: m.landing_trust_verified() },
+	{ icon: Zap, label: m.landing_trust_fast() },
+	{ icon: Clock, label: m.landing_trust_support() },
 ];
 
 // Optimized: Reduced animation complexity and will-change
@@ -868,15 +868,15 @@ const AnimatedCTA = memo(() => {
 				>
 					<div className="flex items-center gap-2">
 						<Shield className="size-4" />
-						<span>Secure & Safe</span>
+						<span>{m.landing_cta_secure()}</span>
 					</div>
 					<div className="flex items-center gap-2">
 						<Users className="size-4" />
-						<span>2000+ Active Users</span>
+						<span>{m.landing_cta_users()}</span>
 					</div>
 					<div className="flex items-center gap-2">
 						<Zap className="size-4" />
-						<span>Fast Service</span>
+						<span>{m.landing_cta_fast()}</span>
 					</div>
 				</motion.div>
 			</div>

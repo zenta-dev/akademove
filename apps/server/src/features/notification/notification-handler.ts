@@ -21,6 +21,62 @@ export const NotificationHandler = priv.router({
 			},
 		};
 	}),
+	getUnreadCount: priv.getUnreadCount.handler(async ({ context }) => {
+		const count = await context.repo.notification.getUnreadCount(
+			context.user.id,
+		);
+
+		return {
+			status: 200,
+			body: {
+				message: m.server_notifications_retrieved(),
+				data: { count },
+			},
+		};
+	}),
+	markAsRead: priv.markAsRead.handler(
+		async ({ context, input: { params } }) => {
+			const notification = await context.repo.notification.markAsRead({
+				id: params.id,
+				userId: context.user.id,
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: m.server_notifications_retrieved(),
+					data: notification,
+				},
+			};
+		},
+	),
+	markAllAsRead: priv.markAllAsRead.handler(async ({ context }) => {
+		const count = await context.repo.notification.markAllAsRead(
+			context.user.id,
+		);
+
+		return {
+			status: 200,
+			body: {
+				message: m.server_notifications_retrieved(),
+				data: { count },
+			},
+		};
+	}),
+	delete: priv.delete.handler(async ({ context, input: { params } }) => {
+		await context.repo.notification.deleteNotification({
+			id: params.id,
+			userId: context.user.id,
+		});
+
+		return {
+			status: 200,
+			body: {
+				message: m.server_notifications_retrieved(),
+				data: { ok: true },
+			},
+		};
+	}),
 	subscribeToTopic: priv.subscribeToTopic.handler(
 		async ({ context, input: { body } }) => {
 			const data = trimObjectValues(body);

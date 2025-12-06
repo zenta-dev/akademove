@@ -67,5 +67,27 @@ final authRouter = ShellRoute(
         );
       },
     ),
+    GoRoute(
+      name: Routes.authEmailVerificationPending.name,
+      path: Routes.authEmailVerificationPending.path,
+      builder: (context, state) {
+        final email = state.uri.queryParameters['email'] ?? '';
+        return BlocProvider(
+          create: (_) => sl<EmailVerificationCubit>(),
+          child: EmailVerificationPendingScreen(email: email),
+        );
+      },
+    ),
+    GoRoute(
+      name: Routes.authVerifyEmail.name,
+      path: Routes.authVerifyEmail.path,
+      builder: (context, state) {
+        final token = state.uri.queryParameters['token'];
+        return BlocProvider(
+          create: (_) => sl<EmailVerificationCubit>(),
+          child: EmailVerificationScreen(token: token),
+        );
+      },
+    ),
   ],
 );

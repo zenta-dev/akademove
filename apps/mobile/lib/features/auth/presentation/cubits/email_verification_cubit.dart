@@ -11,7 +11,7 @@ class EmailVerificationCubit extends BaseCubit<EmailVerificationState> {
   void reset() => emit(EmailVerificationState.initial());
 
   void setEmail(String email) =>
-      emit(EmailVerificationState.initial().copyWith(email: email));
+      emit(const EmailVerificationState().copyWith(email: email));
 
   Future<void> sendVerificationEmail(String email) async =>
       await taskManager.execute('EVC-sVE-$email', () async {

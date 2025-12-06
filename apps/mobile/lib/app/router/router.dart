@@ -22,6 +22,8 @@ enum Routes {
   authSignUpMerchant('/auth/sign-up/merchant'),
   authForgotPassword('/auth/forgot-password'),
   authResetPassword('/auth/reset-password'),
+  authEmailVerificationPending('/auth/email-verification-pending'),
+  authVerifyEmail('/auth/verify-email'),
 
   ///
   /// User Routes
@@ -50,6 +52,7 @@ enum Routes {
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
   userWalletTopUpQRIS('/user/home/wallet/topup/qris'),
+  userWalletTopUpBankTransfer('/user/home/wallet/topup/bank-transfer'),
   userVoucher('/user/home/voucher'),
 
   userHistory('/user/history'),

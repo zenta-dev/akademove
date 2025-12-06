@@ -9,6 +9,10 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**accountDeletionDelete**](AdminApi.md#accountdeletiondelete) | **DELETE** /account-deletion/{id} | 
+[**accountDeletionGetById**](AdminApi.md#accountdeletiongetbyid) | **GET** /account-deletion/{id} | 
+[**accountDeletionList**](AdminApi.md#accountdeletionlist) | **GET** /account-deletion | 
+[**accountDeletionReview**](AdminApi.md#accountdeletionreview) | **PUT** /account-deletion/{id}/review | 
 [**analyticsExportOperatorAnalytics**](AdminApi.md#analyticsexportoperatoranalytics) | **GET** /analytics/operator/export | 
 [**contactDelete**](AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [**contactGetById**](AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
@@ -26,6 +30,178 @@ Method | HTTP request | Description
 [**userAdminRemove**](AdminApi.md#useradminremove) | **DELETE** /users/admin/{id} | 
 [**userAdminUpdate**](AdminApi.md#useradminupdate) | **PUT** /users/admin/{id} | 
 
+
+# **accountDeletionDelete**
+> AccountDeletionDelete200Response accountDeletionDelete(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.accountDeletionDelete(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->accountDeletionDelete: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**AccountDeletionDelete200Response**](AccountDeletionDelete200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **accountDeletionGetById**
+> AccountDeletionSubmit201Response accountDeletionGetById(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.accountDeletionGetById(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->accountDeletionGetById: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**AccountDeletionSubmit201Response**](AccountDeletionSubmit201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **accountDeletionList**
+> AccountDeletionList200Response accountDeletionList(page, limit, status, search)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final int page = 56; // int | 
+final int limit = 56; // int | 
+final String status = status_example; // String | 
+final String search = search_example; // String | 
+
+try {
+    final response = api.accountDeletionList(page, limit, status, search);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->accountDeletionList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **page** | **int**|  | [optional] 
+ **limit** | **int**|  | [optional] 
+ **status** | **String**|  | [optional] 
+ **search** | **String**|  | [optional] 
+
+### Return type
+
+[**AccountDeletionList200Response**](AccountDeletionList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **accountDeletionReview**
+> AccountDeletionSubmit201Response accountDeletionReview(id, accountDeletionReviewRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final AccountDeletionReviewRequest accountDeletionReviewRequest = ; // AccountDeletionReviewRequest | 
+
+try {
+    final response = api.accountDeletionReview(id, accountDeletionReviewRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->accountDeletionReview: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **accountDeletionReviewRequest** | [**AccountDeletionReviewRequest**](AccountDeletionReviewRequest.md)|  | 
+
+### Return type
+
+[**AccountDeletionSubmit201Response**](AccountDeletionSubmit201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **analyticsExportOperatorAnalytics**
 > String analyticsExportOperatorAnalytics(startDate, endDate)

@@ -31,6 +31,11 @@ void main() {
       // TODO
     });
 
+    //Future<AuthSignOut200Response> authSendEmailVerification(SendEmailVerification sendEmailVerification) async
+    test('test authSendEmailVerification', () async {
+      // TODO
+    });
+
     //Future<AuthSignIn200Response> authSignIn(SignInRequest signInRequest) async
     test('test authSignIn', () async {
       // TODO
@@ -53,6 +58,11 @@ void main() {
 
     //Future<AuthSignUpUser201Response> authSignUpUser(String name, String email, String phoneCountryCode, int phoneNumber, String password, String confirmPassword, { MultipartFile photo, String gender }) async
     test('test authSignUpUser', () async {
+      // TODO
+    });
+
+    //Future<AuthSignOut200Response> authVerifyEmail(VerifyEmail verifyEmail) async
+    test('test authVerifyEmail', () async {
       // TODO
     });
   });

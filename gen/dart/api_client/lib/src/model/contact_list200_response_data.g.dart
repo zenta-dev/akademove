@@ -10,7 +10,7 @@ abstract class _$ContactList200ResponseDataCWProxy {
   ContactList200ResponseData rows(List<Contact> rows);
 
   ContactList200ResponseData pagination(
-    ContactList200ResponseDataPagination? pagination,
+    AccountDeletionList200ResponseDataPagination? pagination,
   );
 
   /// Creates a new instance with the provided field values.
@@ -22,7 +22,7 @@ abstract class _$ContactList200ResponseDataCWProxy {
   /// ```
   ContactList200ResponseData call({
     List<Contact> rows,
-    ContactList200ResponseDataPagination? pagination,
+    AccountDeletionList200ResponseDataPagination? pagination,
   });
 }
 
@@ -39,7 +39,7 @@ class _$ContactList200ResponseDataCWProxyImpl
 
   @override
   ContactList200ResponseData pagination(
-    ContactList200ResponseDataPagination? pagination,
+    AccountDeletionList200ResponseDataPagination? pagination,
   ) => call(pagination: pagination);
 
   @override
@@ -62,7 +62,7 @@ class _$ContactList200ResponseDataCWProxyImpl
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
-          : pagination as ContactList200ResponseDataPagination?,
+          : pagination as AccountDeletionList200ResponseDataPagination?,
     );
   }
 }
@@ -94,7 +94,7 @@ ContactList200ResponseData _$ContactList200ResponseDataFromJson(
       'pagination',
       (v) => v == null
           ? null
-          : ContactList200ResponseDataPagination.fromJson(
+          : AccountDeletionList200ResponseDataPagination.fromJson(
               v as Map<String, dynamic>,
             ),
     ),

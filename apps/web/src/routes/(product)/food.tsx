@@ -168,22 +168,22 @@ function RouteComponent() {
 								<OrderStep
 									number={1}
 									title={m.food_browse_menu()}
-									description="Browse menus from campus merchants"
+									description={m.food_browse_menu_desc()}
 								/>
 								<OrderStep
 									number={2}
-									title="Add to Cart"
-									description="Select items and add special instructions"
+									title={m.food_add_to_cart()}
+									description={m.food_add_to_cart_desc()}
 								/>
 								<OrderStep
 									number={3}
 									title={m.confirm_booking()}
-									description="Review your order and choose payment method"
+									description={m.food_confirm_order_desc()}
 								/>
 								<OrderStep
 									number={4}
-									title="Track Delivery"
-									description="Watch your order being prepared and delivered"
+									title={m.food_track_delivery()}
+									description={m.food_track_delivery_desc()}
 								/>
 							</div>
 						</CardContent>

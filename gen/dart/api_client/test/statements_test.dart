@@ -7,6 +7,11 @@ void main() {
   // TODO add properties to the entity
 
   group(Statements, () {
+    // List<String> accountDeletion
+    test('to test the property `accountDeletion`', () async {
+      // TODO
+    });
+
     // List<String> driver
     test('to test the property `driver`', () async {
       // TODO

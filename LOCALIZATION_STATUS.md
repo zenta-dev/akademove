@@ -39,10 +39,16 @@ Added translations for the following components:
 #### Reports
 - `report_user_*` (12 keys) - Report form, categories, privacy notice
 
+#### Landing & Product Pages
+- `landing_*` (40+ keys) - Hero, features, testimonials, CTA sections
+- `food_*` (20+ keys) - Food delivery page content, steps
+- `driver_*` (25+ keys) - Driver signup page, benefits, requirements, earnings
+- Common CTAs: `book_now`, `order_now`, `apply_now`, `learn_more`, `get_started_now`
+
 ### 🔄 Phase 3: Component Updates (IN PROGRESS)
 - ✅ Package rebuilt with new translations
 - ✅ **Common reusable keys added** (submit, cancel, close, loading, etc.)
-- ✅ **8/74 files completed (10.8%)**
+- ✅ **13/74 files completed (17.6%)**
 
 #### ✅ Completed Files
 1. `account-deletion-form.tsx` - Account deletion request form (445 lines)
@@ -52,9 +58,14 @@ Added translations for the following components:
 5. `dialogs/rate-order.tsx` - Driver rating dialog (270 lines)
 6. `dialogs/withdraw-wallet.tsx` - Wallet withdrawal form (250 lines)
 7. `dialogs/report-user.tsx` - User report form (197 lines)
-8. `dialogs/order-detail.tsx` - Order information dialog (471 lines) ✨
+8. `dialogs/order-detail.tsx` - Order information dialog (471 lines)
+9. `routes/index.tsx` - Landing page (887 lines) ✨
+10. `routes/(product)/transport.tsx` - Transport service page (185 lines) ✅ Already done
+11. `routes/(product)/goods.tsx` - Goods delivery page (227 lines) ✅ Already done
+12. `routes/(product)/food.tsx` - Food delivery page (286 lines) ✨
+13. `routes/(product)/driver.tsx` - Driver signup page (305 lines) ✨
 
-**Total lines localized**: ~2,092 lines
+**Total lines localized**: ~4,082 lines
 
 #### ⏳ Remaining: 66 files
 
@@ -80,11 +91,11 @@ Added translations for the following components:
 ### 🟡 High Priority (Public Pages)
 **Landing and marketing pages**
 
-14. ⏳ `routes/index.tsx` - Landing page (100+ strings)
-15. ⏳ `routes/(product)/transport.tsx` - Transport service page
-16. ⏳ `routes/(product)/food.tsx` - Food delivery page
-17. ⏳ `routes/(product)/goods.tsx` - Goods delivery page
-18. ⏳ `routes/(product)/driver.tsx` - Driver signup page
+14. ✅ `routes/index.tsx` - Landing page (887 lines)
+15. ✅ `routes/(product)/transport.tsx` - Transport service page (185 lines)
+16. ✅ `routes/(product)/food.tsx` - Food delivery page (286 lines)
+17. ✅ `routes/(product)/goods.tsx` - Goods delivery page (227 lines)
+18. ✅ `routes/(product)/driver.tsx` - Driver signup page (305 lines)
 19. ⏳ `routes/(company)/about.tsx` - About page
 20. ⏳ `routes/(support)/contact.tsx` - Contact page
 21. ⏳ `routes/(support)/faq.tsx` - FAQ page
@@ -185,10 +196,12 @@ Added translations for the following components:
 ## Statistics
 
 - **Total Files to Update**: ~74
+- **Files Completed**: 13/74 (17.6%)
+- **Lines Localized**: ~4,082 lines
 - **Total Hardcoded Strings**: 500+
-- **Translation Keys Added**: 200+
+- **Translation Keys Added**: 250+
 - **Languages Supported**: 2 (en, id)
-- **Completion**: ~5%
+- **Completion**: ~17.6%
 
 ## Next Steps
 

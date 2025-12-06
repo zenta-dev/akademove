@@ -62,7 +62,9 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       coordinate ??= await cubit.getMyLocation(context);
 
       if (coordinate == null) {
-        debugPrint('⚠️ Coordinate is still null after getMyLocation');
+        logger.w(
+          '[UserNearbyDriverScreen] Coordinate is still null after getMyLocation',
+        );
         return;
       }
 
@@ -74,8 +76,12 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
 
       await _fetchDriversAtLocation(myPos, _radiusKm, true);
       setState(() {});
-    } catch (e) {
-      debugPrint('⚠️ Location setup failed: $e');
+    } catch (e, st) {
+      logger.e(
+        '[UserNearbyDriverScreen] Location setup failed',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -170,8 +176,8 @@ class _UserNearbyDriverScreenState extends State<UserNearbyDriverScreen> {
       _lastCenter = newCenter;
       _radiusKm = radiusKm.round();
 
-      debugPrint(
-        '📍 Map changed → Fetching drivers | Zoom: $_lastZoom | Radius: $_radiusKm km | Center: $_lastCenter',
+      logger.d(
+        '[UserNearbyDriverScreen] Map changed → Fetching drivers | Zoom: $_lastZoom | Radius: $_radiusKm km | Center: $_lastCenter',
       );
 
       await _fetchDriversAtLocation(newCenter, _radiusKm, false);

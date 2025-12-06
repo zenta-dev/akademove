@@ -76,6 +76,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   bool _isLocationLoaded = false;
   bool _isDraggingMarker = false;
   bool _termsAccepted = false;
+  String? _submittedEmail;
 
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
@@ -151,7 +152,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         ),
       );
     } catch (e) {
-      debugPrint('Error loading location: $e');
+      logger.e('[SignUpMerchantScreen] Error loading location', error: e);
       if (mounted) {
         setState(() {
           _isLocationLoaded = true;
@@ -344,7 +345,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         });
       }
     } catch (e) {
-      debugPrint('Error getting address: $e');
+      logger.e('[SignUpMerchantScreen] Error getting address', error: e);
       if (mounted) {
         setState(() => _outletAddress = context.l10n.label_unable_get_address);
       }
@@ -388,7 +389,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         }
       }
     } catch (e) {
-      debugPrint('Error searching location: $e');
+      logger.e('[SignUpMerchantScreen] Error searching location', error: e);
       if (mounted) {
         setState(() => _isSearching = false);
         _showToast(
@@ -458,7 +459,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
               suggestions.add(placemarks.first);
             }
           } catch (e) {
-            debugPrint('Error getting placemark: $e');
+            logger.e(
+              '[SignUpMerchantScreen] Error getting placemark',
+              error: e,
+            );
           }
         }
 
@@ -479,7 +483,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         }
       }
     } catch (e) {
-      debugPrint('Error fetching suggestions: $e');
+      logger.e('[SignUpMerchantScreen] Error fetching suggestions', error: e);
       if (mounted) {
         setState(() {
           _searchSuggestions = [];
@@ -511,7 +515,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
         );
       }
     } catch (e) {
-      debugPrint('Error getting location from suggestion: $e');
+      logger.e(
+        '[SignUpMerchantScreen] Error getting location from suggestion',
+        error: e,
+      );
     }
   }
 
@@ -594,14 +601,21 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     );
   }
 
-  void _handleSignUpSuccess(BuildContext context, String? message) {
+  void _handleSignUpSuccess(
+    BuildContext context,
+    String? message,
+    String email,
+  ) {
     _showToast(
       context,
       context.l10n.sign_up_success,
       message ?? context.l10n.success_signed_up,
     );
     context.read<SignUpCubit>().reset();
-    context.pushReplacementNamed(Routes.authSignIn.name);
+    context.pushReplacementNamed(
+      Routes.authEmailVerificationPending.name,
+      queryParameters: {'email': email},
+    );
   }
 
   void _handleSignUpFailure(BuildContext context, String? error) {
@@ -646,6 +660,8 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
       );
       return;
     }
+
+    _submittedEmail = formData['ownerEmail'];
 
     cubit.signUpMerchant(
       ownerName: formData['ownerName']!,
@@ -731,7 +747,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             _handleSignUpFailure(context, state.error?.message);
           }
           if (state.isSuccess) {
-            _handleSignUpSuccess(context, state.message);
+            final email = _submittedEmail;
+            if (email != null) {
+              _handleSignUpSuccess(context, state.message, email);
+            }
           }
         },
         builder: (context, state) {

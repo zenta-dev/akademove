@@ -5,6 +5,7 @@ import 'package:akademove/l10n/l10n.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class UserDetailProfileScreen extends StatelessWidget {
@@ -41,49 +42,6 @@ class UserDetailProfileScreen extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ).asSkeleton(enabled: state.isLoading);
                 },
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  child: BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      final user = state.data ?? dummyUser;
-                      return Column(
-                        spacing: 12.h,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultText(
-                                context.l10n.label_email,
-                                fontSize: 14.sp,
-                              ),
-                              DefaultText(user.email, fontSize: 14.sp),
-                            ],
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DefaultText(
-                                context.l10n.label_phone,
-                                fontSize: 14.sp,
-                              ),
-                              DefaultText(
-                                user.phone.toPhoneNumber().toString(),
-                                fontSize: 14.sp,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ).asSkeleton(enabled: state.isLoading);
-                    },
-                  ),
-                ),
-              ),
-              DefaultText(
-                context.l10n.label_achievements,
-                fontWeight: FontWeight.w500,
               ),
               SizedBox(
                 width: double.infinity,
@@ -185,9 +143,7 @@ class UserDetailProfileScreen extends StatelessWidget {
           left: 0.01.sw,
           child: GhostButton(
             density: ButtonDensity.icon,
-            onPressed: () {
-              // context.pop();
-            },
+            onPressed: () => context.pop(),
             child: Icon(
               LucideIcons.chevronLeft,
               color: Colors.black,

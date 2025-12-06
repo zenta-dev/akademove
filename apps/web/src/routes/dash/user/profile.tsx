@@ -40,9 +40,49 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 import { createPhotoPreviewUrl } from "@/utils/file";
+
+function VerifyEmailButton({ email }: { email: string }) {
+	const [isPending, setIsPending] = useState(false);
+
+	const handleSendVerification = useCallback(async () => {
+		if (isPending) return;
+
+		setIsPending(true);
+		try {
+			const result = await orpcClient.auth.sendEmailVerification({
+				body: { email },
+			});
+			if (result.status !== 202) {
+				throw new Error(
+					result.body.message || "Failed to send verification email",
+				);
+			}
+			toast.success("Verification email sent! Please check your inbox.");
+		} catch (error) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: "Failed to send verification email",
+			);
+		} finally {
+			setIsPending(false);
+		}
+	}, [email, isPending]);
+
+	return (
+		<Button
+			variant="outline"
+			size="sm"
+			onClick={handleSendVerification}
+			disabled={isPending}
+		>
+			{isPending ? <Submitting /> : "Verify Email"}
+		</Button>
+	);
+}
 
 export const Route = createFileRoute("/dash/user/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.PROFILE }] }),
@@ -227,12 +267,22 @@ function ViewUserProfile({ user }: { user: User }) {
 				</CardHeader>
 				<CardContent className="space-y-3">
 					<div className="flex items-center justify-between">
-						<span className="text-muted-foreground text-sm">
-							Email Verified
-						</span>
-						<Badge variant={user.emailVerified ? "default" : "destructive"}>
-							{user.emailVerified ? "Verified" : "Not Verified"}
-						</Badge>
+						<div className="flex flex-col gap-1">
+							<span className="text-muted-foreground text-sm">
+								Email Verified
+							</span>
+							{!user.emailVerified && (
+								<span className="text-muted-foreground text-xs">
+									Verify your email to secure your account
+								</span>
+							)}
+						</div>
+						<div className="flex items-center gap-2">
+							<Badge variant={user.emailVerified ? "default" : "destructive"}>
+								{user.emailVerified ? "Verified" : "Not Verified"}
+							</Badge>
+							{!user.emailVerified && <VerifyEmailButton email={user.email} />}
+						</div>
 					</div>
 					<div className="flex items-center justify-between">
 						<span className="text-muted-foreground text-sm">
@@ -473,16 +523,19 @@ function EditUserProfile({
 					<Button
 						type="button"
 						variant="outline"
-						onClick={onCancel}
+						onClick={() => {
+							if (mutation.isPending) return;
+							onCancel();
+						}}
 						disabled={mutation.isPending}
-						className="w-full"
+						className="w-[49.8%]"
 					>
 						{m.cancel()}
 					</Button>
 					<Button
 						type="submit"
 						disabled={mutation.isPending}
-						className="w-full"
+						className="w-[49.8%]"
 					>
 						{mutation.isPending ? <Submitting /> : m.save_changes()}
 					</Button>

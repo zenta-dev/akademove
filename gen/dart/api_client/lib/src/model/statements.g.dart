@@ -7,6 +7,10 @@ part of 'statements.dart';
 // **************************************************************************
 
 abstract class _$StatementsCWProxy {
+  Statements accountDeletion(
+    List<StatementsAccountDeletionEnum>? accountDeletion,
+  );
+
   Statements driver(List<StatementsDriverEnum>? driver);
 
   Statements merchant(List<StatementsMerchantEnum>? merchant);
@@ -45,6 +49,7 @@ abstract class _$StatementsCWProxy {
   /// Statements(...).copyWith(id: 12, name: "My name")
   /// ```
   Statements call({
+    List<StatementsAccountDeletionEnum>? accountDeletion,
     List<StatementsDriverEnum>? driver,
     List<StatementsMerchantEnum>? merchant,
     List<StatementsMerchantMenuEnum>? merchantMenu,
@@ -69,6 +74,11 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   const _$StatementsCWProxyImpl(this._value);
 
   final Statements _value;
+
+  @override
+  Statements accountDeletion(
+    List<StatementsAccountDeletionEnum>? accountDeletion,
+  ) => call(accountDeletion: accountDeletion);
 
   @override
   Statements driver(List<StatementsDriverEnum>? driver) => call(driver: driver);
@@ -134,6 +144,7 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
   /// Statements(...).copyWith(id: 12, name: "My name")
   /// ```
   Statements call({
+    Object? accountDeletion = const $CopyWithPlaceholder(),
     Object? driver = const $CopyWithPlaceholder(),
     Object? merchant = const $CopyWithPlaceholder(),
     Object? merchantMenu = const $CopyWithPlaceholder(),
@@ -151,6 +162,10 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
     Object? contact = const $CopyWithPlaceholder(),
   }) {
     return Statements(
+      accountDeletion: accountDeletion == const $CopyWithPlaceholder()
+          ? _value.accountDeletion
+          // ignore: cast_nullable_to_non_nullable
+          : accountDeletion as List<StatementsAccountDeletionEnum>?,
       driver: driver == const $CopyWithPlaceholder()
           ? _value.driver
           // ignore: cast_nullable_to_non_nullable
@@ -231,6 +246,12 @@ Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate(
   json,
   ($checkedConvert) {
     final val = Statements(
+      accountDeletion: $checkedConvert(
+        'accountDeletion',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsAccountDeletionEnumEnumMap, e))
+            .toList(),
+      ),
       driver: $checkedConvert(
         'driver',
         (v) => (v as List<dynamic>?)
@@ -329,6 +350,9 @@ Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate(
 Map<String, dynamic> _$StatementsToJson(
   Statements instance,
 ) => <String, dynamic>{
+  'accountDeletion': ?instance.accountDeletion
+      ?.map((e) => _$StatementsAccountDeletionEnumEnumMap[e]!)
+      .toList(),
   'driver': ?instance.driver
       ?.map((e) => _$StatementsDriverEnumEnumMap[e]!)
       .toList(),
@@ -372,6 +396,13 @@ Map<String, dynamic> _$StatementsToJson(
   'contact': ?instance.contact
       ?.map((e) => _$StatementsContactEnumEnumMap[e]!)
       .toList(),
+};
+
+const _$StatementsAccountDeletionEnumEnumMap = {
+  StatementsAccountDeletionEnum.list: 'list',
+  StatementsAccountDeletionEnum.get_: 'get',
+  StatementsAccountDeletionEnum.review: 'review',
+  StatementsAccountDeletionEnum.delete: 'delete',
 };
 
 const _$StatementsDriverEnumEnumMap = {

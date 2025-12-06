@@ -43,7 +43,7 @@ function ContactComponent() {
 			});
 
 			if (result.status !== 201) {
-				throw new Error(result.body.message || "Failed to submit contact form");
+				throw new Error(result.body.message || m.contact_submit_error());
 			}
 
 			return result;
@@ -59,7 +59,7 @@ function ContactComponent() {
 			}, 3000);
 		},
 		onError: (error: Error) => {
-			toast.error(error.message || "Failed to submit contact form");
+			toast.error(error.message || m.contact_submit_error());
 		},
 	});
 
@@ -247,7 +247,9 @@ function ContactComponent() {
 						{/* Quick Links */}
 						<Card className="bg-primary/5">
 							<CardContent className="p-6">
-								<h3 className="mb-4 font-semibold text-lg">Quick Links</h3>
+								<h3 className="mb-4 font-semibold text-lg">
+									{m.contact_quick_links()}
+								</h3>
 								<div className="space-y-2">
 									<a
 										href="/faq"

@@ -49,14 +49,13 @@ import 'package:api_client/api_client.dart';
 
 
 final api = ApiClient().getAdminApi();
-final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
-final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
 
 try {
-    final response = await api.analyticsExportOperatorAnalytics(startDate, endDate);
+    final response = await api.accountDeletionDelete(id);
     print(response);
 } catch on DioException (e) {
-    print("Exception when calling AdminApi->analyticsExportOperatorAnalytics: $e\n");
+    print("Exception when calling AdminApi->accountDeletionDelete: $e\n");
 }
 
 ```
@@ -67,6 +66,10 @@ All URIs are relative to *http://localhost:3000/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+[*AdminApi*](doc/AdminApi.md) | [**accountDeletionDelete**](doc/AdminApi.md#accountdeletiondelete) | **DELETE** /account-deletion/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**accountDeletionGetById**](doc/AdminApi.md#accountdeletiongetbyid) | **GET** /account-deletion/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**accountDeletionList**](doc/AdminApi.md#accountdeletionlist) | **GET** /account-deletion | 
+[*AdminApi*](doc/AdminApi.md) | [**accountDeletionReview**](doc/AdminApi.md#accountdeletionreview) | **PUT** /account-deletion/{id}/review | 
 [*AdminApi*](doc/AdminApi.md) | [**analyticsExportOperatorAnalytics**](doc/AdminApi.md#analyticsexportoperatoranalytics) | **GET** /analytics/operator/export | 
 [*AdminApi*](doc/AdminApi.md) | [**contactDelete**](doc/AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**contactGetById**](doc/AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
@@ -88,11 +91,13 @@ Class | Method | HTTP request | Description
 [*AuthApi*](doc/AuthApi.md) | [**authGetSession**](doc/AuthApi.md#authgetsession) | **GET** /auth/session | 
 [*AuthApi*](doc/AuthApi.md) | [**authHasPermission**](doc/AuthApi.md#authhaspermission) | **POST** /auth/has-permission | 
 [*AuthApi*](doc/AuthApi.md) | [**authResetPassword**](doc/AuthApi.md#authresetpassword) | **POST** /auth/reset-password | 
+[*AuthApi*](doc/AuthApi.md) | [**authSendEmailVerification**](doc/AuthApi.md#authsendemailverification) | **POST** /auth/send-email-verification | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignIn**](doc/AuthApi.md#authsignin) | **POST** /auth/sign-in | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignOut**](doc/AuthApi.md#authsignout) | **POST** /auth/sign-out | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpDriver**](doc/AuthApi.md#authsignupdriver) | **POST** /auth/sign-up/driver | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpMerchant**](doc/AuthApi.md#authsignupmerchant) | **POST** /auth/sign-up/merchant | 
 [*AuthApi*](doc/AuthApi.md) | [**authSignUpUser**](doc/AuthApi.md#authsignupuser) | **POST** /auth/sign-up/user | 
+[*AuthApi*](doc/AuthApi.md) | [**authVerifyEmail**](doc/AuthApi.md#authverifyemail) | **POST** /auth/verify-email | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeCreate**](doc/BadgeApi.md#badgecreate) | **POST** /badges | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeGet**](doc/BadgeApi.md#badgeget) | **GET** /badges/{id} | 
 [*BadgeApi*](doc/BadgeApi.md) | [**badgeList**](doc/BadgeApi.md#badgelist) | **GET** /badges | 
@@ -160,7 +165,11 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationDelete**](doc/NotificationApi.md#notificationdelete) | **DELETE** /notifications/{id} | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationGetUnreadCount**](doc/NotificationApi.md#notificationgetunreadcount) | **GET** /notifications/unread-count | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationList**](doc/NotificationApi.md#notificationlist) | **GET** /notifications | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationMarkAllAsRead**](doc/NotificationApi.md#notificationmarkallasread) | **PATCH** /notifications/read-all | 
+[*NotificationApi*](doc/NotificationApi.md) | [**notificationMarkAsRead**](doc/NotificationApi.md#notificationmarkasread) | **PATCH** /notifications/{id}/read | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationRemoveToken**](doc/NotificationApi.md#notificationremovetoken) | **DELETE** /notifications/token/{token} | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSaveToken**](doc/NotificationApi.md#notificationsavetoken) | **POST** /notifications/token | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationSubscribeToTopic**](doc/NotificationApi.md#notificationsubscribetotopic) | **POST** /notifications/subscribe | 
@@ -195,6 +204,7 @@ Class | Method | HTTP request | Description
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewUpdate**](doc/ReviewApi.md#reviewupdate) | **PUT** /reviews/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionGet**](doc/TransactionApi.md#transactionget) | **GET** /transactions/{id} | 
 [*TransactionApi*](doc/TransactionApi.md) | [**transactionList**](doc/TransactionApi.md#transactionlist) | **GET** /transactions | 
+[*UserApi*](doc/UserApi.md) | [**accountDeletionSubmit**](doc/UserApi.md#accountdeletionsubmit) | **POST** /account-deletion/submit | 
 [*UserApi*](doc/UserApi.md) | [**contactSubmit**](doc/UserApi.md#contactsubmit) | **POST** /contacts/submit | 
 [*UserApi*](doc/UserApi.md) | [**userMeChangePassword**](doc/UserApi.md#usermechangepassword) | **PUT** /users/me/change-password | 
 [*UserApi*](doc/UserApi.md) | [**userMeUpdate**](doc/UserApi.md#usermeupdate) | **PUT** /users/me | 
@@ -208,6 +218,18 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AccountDeletion](doc/AccountDeletion.md)
+ - [AccountDeletionDelete200Response](doc/AccountDeletionDelete200Response.md)
+ - [AccountDeletionDelete200ResponseData](doc/AccountDeletionDelete200ResponseData.md)
+ - [AccountDeletionKey](doc/AccountDeletionKey.md)
+ - [AccountDeletionList200Response](doc/AccountDeletionList200Response.md)
+ - [AccountDeletionList200ResponseData](doc/AccountDeletionList200ResponseData.md)
+ - [AccountDeletionList200ResponseDataPagination](doc/AccountDeletionList200ResponseDataPagination.md)
+ - [AccountDeletionReason](doc/AccountDeletionReason.md)
+ - [AccountDeletionReviewRequest](doc/AccountDeletionReviewRequest.md)
+ - [AccountDeletionStatus](doc/AccountDeletionStatus.md)
+ - [AccountDeletionSubmit201Response](doc/AccountDeletionSubmit201Response.md)
+ - [AccountType](doc/AccountType.md)
  - [ActivateDriver](doc/ActivateDriver.md)
  - [AddToCart](doc/AddToCart.md)
  - [AdminUpdateUser](doc/AdminUpdateUser.md)
@@ -253,7 +275,6 @@ Class | Method | HTTP request | Description
  - [ContactKey](doc/ContactKey.md)
  - [ContactList200Response](doc/ContactList200Response.md)
  - [ContactList200ResponseData](doc/ContactList200ResponseData.md)
- - [ContactList200ResponseDataPagination](doc/ContactList200ResponseDataPagination.md)
  - [ContactRespondRequest](doc/ContactRespondRequest.md)
  - [ContactStatus](doc/ContactStatus.md)
  - [ContactSubmit201Response](doc/ContactSubmit201Response.md)
@@ -320,6 +341,7 @@ Class | Method | HTTP request | Description
  - [GeneralRuleType](doc/GeneralRuleType.md)
  - [GeneralRules](doc/GeneralRules.md)
  - [GetSessionResponse](doc/GetSessionResponse.md)
+ - [InsertAccountDeletion](doc/InsertAccountDeletion.md)
  - [InsertConfiguration](doc/InsertConfiguration.md)
  - [InsertContact](doc/InsertContact.md)
  - [InsertCoupon](doc/InsertCoupon.md)
@@ -357,9 +379,12 @@ Class | Method | HTTP request | Description
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
  - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
+ - [NotificationDelete200Response](doc/NotificationDelete200Response.md)
+ - [NotificationDelete200ResponseData](doc/NotificationDelete200ResponseData.md)
+ - [NotificationGetUnreadCount200Response](doc/NotificationGetUnreadCount200Response.md)
+ - [NotificationGetUnreadCount200ResponseData](doc/NotificationGetUnreadCount200ResponseData.md)
  - [NotificationList200Response](doc/NotificationList200Response.md)
- - [NotificationSaveToken200Response](doc/NotificationSaveToken200Response.md)
- - [NotificationSaveToken200ResponseData](doc/NotificationSaveToken200ResponseData.md)
+ - [NotificationMarkAsRead200Response](doc/NotificationMarkAsRead200Response.md)
  - [NotificationSaveTokenRequest](doc/NotificationSaveTokenRequest.md)
  - [NotificationSubscribeToTopic200Response](doc/NotificationSubscribeToTopic200Response.md)
  - [NotificationSubscribeToTopic200ResponseData](doc/NotificationSubscribeToTopic200ResponseData.md)
@@ -415,8 +440,6 @@ Class | Method | HTTP request | Description
  - [PlaceOrderResponse](doc/PlaceOrderResponse.md)
  - [PricingConfiguration](doc/PricingConfiguration.md)
  - [QuickMessageCreate200Response](doc/QuickMessageCreate200Response.md)
- - [QuickMessageDelete200Response](doc/QuickMessageDelete200Response.md)
- - [QuickMessageDelete200ResponseData](doc/QuickMessageDelete200ResponseData.md)
  - [QuickMessageList200Response](doc/QuickMessageList200Response.md)
  - [QuickMessageList200ResponseData](doc/QuickMessageList200ResponseData.md)
  - [QuickMessageTemplate](doc/QuickMessageTemplate.md)
@@ -437,6 +460,7 @@ Class | Method | HTTP request | Description
  - [ReviewKeySchema](doc/ReviewKeySchema.md)
  - [ReviewList200Response](doc/ReviewList200Response.md)
  - [RidePricingConfiguration](doc/RidePricingConfiguration.md)
+ - [SendEmailVerification](doc/SendEmailVerification.md)
  - [Session](doc/Session.md)
  - [SignInRequest](doc/SignInRequest.md)
  - [SignInResponse](doc/SignInResponse.md)
@@ -455,6 +479,7 @@ Class | Method | HTTP request | Description
  - [TransactionType](doc/TransactionType.md)
  - [TransferRequest](doc/TransferRequest.md)
  - [UnbanUser](doc/UnbanUser.md)
+ - [UpdateAccountDeletion](doc/UpdateAccountDeletion.md)
  - [UpdateConfiguration](doc/UpdateConfiguration.md)
  - [UpdateContact](doc/UpdateContact.md)
  - [UpdateCoupon](doc/UpdateCoupon.md)
@@ -481,6 +506,7 @@ Class | Method | HTTP request | Description
  - [UserRole](doc/UserRole.md)
  - [UserRules](doc/UserRules.md)
  - [VANumber](doc/VANumber.md)
+ - [VerifyEmail](doc/VerifyEmail.md)
  - [Wallet](doc/Wallet.md)
  - [WalletGet200Response](doc/WalletGet200Response.md)
  - [WalletGetMonthlySummary200Response](doc/WalletGetMonthlySummary200Response.md)

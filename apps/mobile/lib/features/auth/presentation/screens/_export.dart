@@ -1,3 +1,5 @@
+export 'email_verification_pending_screen.dart';
+export 'email_verification_screen.dart';
 export 'forgot_password_screen.dart';
 export 'reset_password_screen.dart';
 export 'sign_in_screen.dart';

@@ -266,6 +266,40 @@ export class NotificationRepository {
 	}
 
 	/**
+	 * Get unread notification count for a user
+	 */
+	async getUnreadCount(userId: string, opts?: PartialWithTx): Promise<number> {
+		return await this.#userNotification.countUnread(userId, opts);
+	}
+
+	/**
+	 * Mark a notification as read
+	 */
+	async markAsRead(
+		params: { id: string; userId: string },
+		opts?: PartialWithTx,
+	): Promise<UserNotification> {
+		return await this.#userNotification.markAsRead(params, opts);
+	}
+
+	/**
+	 * Mark all notifications as read for a user
+	 */
+	async markAllAsRead(userId: string, opts?: PartialWithTx): Promise<number> {
+		return await this.#userNotification.markAllAsRead(userId, opts);
+	}
+
+	/**
+	 * Delete a notification
+	 */
+	async deleteNotification(
+		params: { id: string; userId: string },
+		opts?: PartialWithTx,
+	): Promise<void> {
+		return await this.#userNotification.deleteById(params, opts);
+	}
+
+	/**
 	 * Subscribe user's FCM token to a topic
 	 */
 	async subscribeToTopic(
@@ -904,6 +938,82 @@ class UserNotificationRepository extends BaseRepository {
 			return res.count;
 		} catch (error) {
 			throw this.handleError(error, "count unread");
+		}
+	}
+
+	async markAsRead(
+		params: { id: string; userId: string },
+		opts?: PartialWithTx,
+	): Promise<UserNotification> {
+		try {
+			const tx = opts?.tx ?? this.db;
+			const [[res]] = await Promise.all([
+				tx
+					.update(tables.userNotification)
+					.set({ isRead: true, readAt: new Date() })
+					.where(
+						and(
+							eq(tables.userNotification.id, params.id),
+							eq(tables.userNotification.userId, params.userId),
+						),
+					)
+					.returning(),
+				this.deleteCache(`unread:${params.userId}`),
+			]);
+
+			if (!res) {
+				throw new RepositoryError(m.error_user_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			return UserNotificationRepository.composeEntity(res);
+		} catch (error) {
+			throw this.handleError(error, "mark as read");
+		}
+	}
+
+	async markAllAsRead(userId: string, opts?: PartialWithTx): Promise<number> {
+		try {
+			const tx = opts?.tx ?? this.db;
+			const result = await tx
+				.update(tables.userNotification)
+				.set({ isRead: true, readAt: new Date() })
+				.where(
+					and(
+						eq(tables.userNotification.userId, userId),
+						eq(tables.userNotification.isRead, false),
+					),
+				)
+				.returning({ id: tables.userNotification.id });
+
+			await this.deleteCache(`unread:${userId}`);
+
+			return result.length;
+		} catch (error) {
+			throw this.handleError(error, "mark all as read");
+		}
+	}
+
+	async deleteById(
+		params: { id: string; userId: string },
+		opts?: PartialWithTx,
+	): Promise<void> {
+		try {
+			const tx = opts?.tx ?? this.db;
+			await Promise.all([
+				tx
+					.delete(tables.userNotification)
+					.where(
+						and(
+							eq(tables.userNotification.id, params.id),
+							eq(tables.userNotification.userId, params.userId),
+						),
+					),
+				this.deleteCache(`unread:${params.userId}`),
+			]);
+		} catch (error) {
+			throw this.handleError(error, "delete");
 		}
 	}
 }

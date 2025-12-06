@@ -63,7 +63,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             IconButton(
               icon: const Icon(LucideIcons.bell),
               variance: ButtonVariance.ghost,
-              onPressed: () {},
+              onPressed: () {
+                // TODO: Navigate to notifications screen when implemented
+              },
             ),
             BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
@@ -116,7 +118,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       padding: (context, states, value) =>
                           EdgeInsetsGeometry.all(4.dg),
                     ),
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Navigate to all merchants screen when implemented
+                },
                 child: Row(
                   children: [
                     Text(
@@ -151,7 +155,9 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               separatorBuilder: (context, index) => Gap(16.w),
               itemBuilder: (context, index) => Button(
                 style: const ButtonStyle.ghost(density: ButtonDensity.compact),
-                onPressed: () {},
+                onPressed: () {
+                  // TODO: Navigate to merchant detail screen when implemented
+                },
                 child: LimitedBox(
                   maxWidth: 111.w,
                   child: _MerchantCardWidget(

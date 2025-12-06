@@ -130,7 +130,7 @@ void main() {
           when(() => mockAuthRepository.authenticate()).thenThrow(
             const RepositoryError(
               TestConstants.unauthorizedMessage,
-              code: ErrorCode.unathorized,
+              code: ErrorCode.unauthorized,
             ),
           );
 

@@ -6,6 +6,11 @@ void main() {
   final instance = ApiClient().getUserApi();
 
   group(UserApi, () {
+    //Future<AccountDeletionSubmit201Response> accountDeletionSubmit(InsertAccountDeletion insertAccountDeletion) async
+    test('test accountDeletionSubmit', () async {
+      // TODO
+    });
+
     //Future<ContactSubmit201Response> contactSubmit(InsertContact insertContact) async
     test('test contactSubmit', () async {
       // TODO

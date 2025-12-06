@@ -38,11 +38,22 @@ export const LiveTrackingDialog = ({
 	onOpenChange,
 }: LiveTrackingDialogProps) => {
 	const [driverLocation, setDriverLocation] = useState<Location | null>(null);
+	const [wsEnabled, setWsEnabled] = useState(false);
+
+	// Enable WebSocket when dialog opens, disable when closed
+	useEffect(() => {
+		if (open && order?.id) {
+			setWsEnabled(true);
+		} else {
+			setWsEnabled(false);
+			setDriverLocation(null);
+		}
+	}, [open, order?.id]);
 
 	// WebSocket connection for real-time updates
 	const { isConnected, lastEvent } = useOrderWebSocket({
 		orderId: order?.id,
-		enabled: open && !!order?.id,
+		enabled: wsEnabled,
 		onEvent: (event, envelope) => {
 			switch (event) {
 				case "DRIVER_LOCATION_UPDATE":
@@ -69,13 +80,6 @@ export const LiveTrackingDialog = ({
 			}
 		},
 	});
-
-	// Reset driver location when dialog closes or order changes
-	useEffect(() => {
-		if (!open || !order) {
-			setDriverLocation(null);
-		}
-	}, [open, order]);
 
 	if (!order) return null;
 

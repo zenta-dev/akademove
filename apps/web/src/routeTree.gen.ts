@@ -40,10 +40,12 @@ import { Route as DashDriverIndexRouteImport } from './routes/dash/driver/index'
 import { Route as DashAdminIndexRouteImport } from './routes/dash/admin/index'
 import { Route as DashUserWalletRouteImport } from './routes/dash/user/wallet'
 import { Route as DashUserProfileRouteImport } from './routes/dash/user/profile'
+import { Route as DashUserNotificationsRouteImport } from './routes/dash/user/notifications'
 import { Route as DashUserHistoryRouteImport } from './routes/dash/user/history'
 import { Route as DashUserBookingsRouteImport } from './routes/dash/user/bookings'
 import { Route as DashOperatorUsersRouteImport } from './routes/dash/operator/users'
 import { Route as DashOperatorReportsRouteImport } from './routes/dash/operator/reports'
+import { Route as DashOperatorProfileRouteImport } from './routes/dash/operator/profile'
 import { Route as DashOperatorPricingRouteImport } from './routes/dash/operator/pricing'
 import { Route as DashOperatorOrdersRouteImport } from './routes/dash/operator/orders'
 import { Route as DashOperatorMerchantsRouteImport } from './routes/dash/operator/merchants'
@@ -60,6 +62,7 @@ import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/prof
 import { Route as DashDriverOrdersRouteImport } from './routes/dash/driver/orders'
 import { Route as DashDriverEarningsRouteImport } from './routes/dash/driver/earnings'
 import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
+import { Route as DashAdminProfileRouteImport } from './routes/dash/admin/profile'
 import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
 import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
 import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
@@ -228,6 +231,11 @@ const DashUserProfileRoute = DashUserProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashUserRouteRoute,
 } as any)
+const DashUserNotificationsRoute = DashUserNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => DashUserRouteRoute,
+} as any)
 const DashUserHistoryRoute = DashUserHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -246,6 +254,11 @@ const DashOperatorUsersRoute = DashOperatorUsersRouteImport.update({
 const DashOperatorReportsRoute = DashOperatorReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => DashOperatorRouteRoute,
+} as any)
+const DashOperatorProfileRoute = DashOperatorProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
 const DashOperatorPricingRoute = DashOperatorPricingRouteImport.update({
@@ -326,6 +339,11 @@ const DashDriverEarningsRoute = DashDriverEarningsRouteImport.update({
 const DashAdminUsersRoute = DashAdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
+const DashAdminProfileRoute = DashAdminProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
 const DashAdminOrdersRoute = DashAdminOrdersRouteImport.update({
@@ -433,6 +451,7 @@ export interface FileRoutesByFullPath {
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -449,10 +468,12 @@ export interface FileRoutesByFullPath {
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/profile': typeof DashOperatorProfileRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
   '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/notifications': typeof DashUserNotificationsRoute
   '/dash/user/profile': typeof DashUserProfileRoute
   '/dash/user/wallet': typeof DashUserWalletRoute
   '/dash/admin/': typeof DashAdminIndexRoute
@@ -493,6 +514,7 @@ export interface FileRoutesByTo {
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -509,10 +531,12 @@ export interface FileRoutesByTo {
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/profile': typeof DashOperatorProfileRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
   '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/notifications': typeof DashUserNotificationsRoute
   '/dash/user/profile': typeof DashUserProfileRoute
   '/dash/user/wallet': typeof DashUserWalletRoute
   '/dash/admin': typeof DashAdminIndexRoute
@@ -561,6 +585,7 @@ export interface FileRoutesById {
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
@@ -577,10 +602,12 @@ export interface FileRoutesById {
   '/dash/operator/merchants': typeof DashOperatorMerchantsRoute
   '/dash/operator/orders': typeof DashOperatorOrdersRoute
   '/dash/operator/pricing': typeof DashOperatorPricingRoute
+  '/dash/operator/profile': typeof DashOperatorProfileRoute
   '/dash/operator/reports': typeof DashOperatorReportsRoute
   '/dash/operator/users': typeof DashOperatorUsersRoute
   '/dash/user/bookings': typeof DashUserBookingsRoute
   '/dash/user/history': typeof DashUserHistoryRoute
+  '/dash/user/notifications': typeof DashUserNotificationsRoute
   '/dash/user/profile': typeof DashUserProfileRoute
   '/dash/user/wallet': typeof DashUserWalletRoute
   '/dash/admin/': typeof DashAdminIndexRoute
@@ -628,6 +655,7 @@ export interface FileRouteTypes {
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -644,10 +672,12 @@ export interface FileRouteTypes {
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
+    | '/dash/operator/profile'
     | '/dash/operator/reports'
     | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
+    | '/dash/user/notifications'
     | '/dash/user/profile'
     | '/dash/user/wallet'
     | '/dash/admin/'
@@ -688,6 +718,7 @@ export interface FileRouteTypes {
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -704,10 +735,12 @@ export interface FileRouteTypes {
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
+    | '/dash/operator/profile'
     | '/dash/operator/reports'
     | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
+    | '/dash/user/notifications'
     | '/dash/user/profile'
     | '/dash/user/wallet'
     | '/dash/admin'
@@ -755,6 +788,7 @@ export interface FileRouteTypes {
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
@@ -771,10 +805,12 @@ export interface FileRouteTypes {
     | '/dash/operator/merchants'
     | '/dash/operator/orders'
     | '/dash/operator/pricing'
+    | '/dash/operator/profile'
     | '/dash/operator/reports'
     | '/dash/operator/users'
     | '/dash/user/bookings'
     | '/dash/user/history'
+    | '/dash/user/notifications'
     | '/dash/user/profile'
     | '/dash/user/wallet'
     | '/dash/admin/'
@@ -1027,6 +1063,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashUserProfileRouteImport
       parentRoute: typeof DashUserRouteRoute
     }
+    '/dash/user/notifications': {
+      id: '/dash/user/notifications'
+      path: '/notifications'
+      fullPath: '/dash/user/notifications'
+      preLoaderRoute: typeof DashUserNotificationsRouteImport
+      parentRoute: typeof DashUserRouteRoute
+    }
     '/dash/user/history': {
       id: '/dash/user/history'
       path: '/history'
@@ -1053,6 +1096,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/dash/operator/reports'
       preLoaderRoute: typeof DashOperatorReportsRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/operator/profile': {
+      id: '/dash/operator/profile'
+      path: '/profile'
+      fullPath: '/dash/operator/profile'
+      preLoaderRoute: typeof DashOperatorProfileRouteImport
       parentRoute: typeof DashOperatorRouteRoute
     }
     '/dash/operator/pricing': {
@@ -1165,6 +1215,13 @@ declare module '@tanstack/react-router' {
       path: '/users'
       fullPath: '/dash/admin/users'
       preLoaderRoute: typeof DashAdminUsersRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
+    '/dash/admin/profile': {
+      id: '/dash/admin/profile'
+      path: '/profile'
+      fullPath: '/dash/admin/profile'
+      preLoaderRoute: typeof DashAdminProfileRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/orders': {
@@ -1327,6 +1384,7 @@ interface DashAdminRouteRouteChildren {
   DashAdminDriversRoute: typeof DashAdminDriversRoute
   DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
   DashAdminOrdersRoute: typeof DashAdminOrdersRoute
+  DashAdminProfileRoute: typeof DashAdminProfileRoute
   DashAdminUsersRoute: typeof DashAdminUsersRoute
   DashAdminIndexRoute: typeof DashAdminIndexRoute
 }
@@ -1339,6 +1397,7 @@ const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminDriversRoute: DashAdminDriversRoute,
   DashAdminMerchantsRoute: DashAdminMerchantsRoute,
   DashAdminOrdersRoute: DashAdminOrdersRoute,
+  DashAdminProfileRoute: DashAdminProfileRoute,
   DashAdminUsersRoute: DashAdminUsersRoute,
   DashAdminIndexRoute: DashAdminIndexRoute,
 }
@@ -1407,6 +1466,7 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorMerchantsRoute: typeof DashOperatorMerchantsRoute
   DashOperatorOrdersRoute: typeof DashOperatorOrdersRoute
   DashOperatorPricingRoute: typeof DashOperatorPricingRoute
+  DashOperatorProfileRoute: typeof DashOperatorProfileRoute
   DashOperatorReportsRoute: typeof DashOperatorReportsRoute
   DashOperatorUsersRoute: typeof DashOperatorUsersRoute
   DashOperatorIndexRoute: typeof DashOperatorIndexRoute
@@ -1420,6 +1480,7 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorMerchantsRoute: DashOperatorMerchantsRoute,
   DashOperatorOrdersRoute: DashOperatorOrdersRoute,
   DashOperatorPricingRoute: DashOperatorPricingRoute,
+  DashOperatorProfileRoute: DashOperatorProfileRoute,
   DashOperatorReportsRoute: DashOperatorReportsRoute,
   DashOperatorUsersRoute: DashOperatorUsersRoute,
   DashOperatorIndexRoute: DashOperatorIndexRoute,
@@ -1433,6 +1494,7 @@ const DashOperatorRouteRouteWithChildren =
 interface DashUserRouteRouteChildren {
   DashUserBookingsRoute: typeof DashUserBookingsRoute
   DashUserHistoryRoute: typeof DashUserHistoryRoute
+  DashUserNotificationsRoute: typeof DashUserNotificationsRoute
   DashUserProfileRoute: typeof DashUserProfileRoute
   DashUserWalletRoute: typeof DashUserWalletRoute
   DashUserIndexRoute: typeof DashUserIndexRoute
@@ -1441,6 +1503,7 @@ interface DashUserRouteRouteChildren {
 const DashUserRouteRouteChildren: DashUserRouteRouteChildren = {
   DashUserBookingsRoute: DashUserBookingsRoute,
   DashUserHistoryRoute: DashUserHistoryRoute,
+  DashUserNotificationsRoute: DashUserNotificationsRoute,
   DashUserProfileRoute: DashUserProfileRoute,
   DashUserWalletRoute: DashUserWalletRoute,
   DashUserIndexRoute: DashUserIndexRoute,

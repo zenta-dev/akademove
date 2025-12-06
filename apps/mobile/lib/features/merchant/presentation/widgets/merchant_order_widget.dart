@@ -71,36 +71,27 @@ class MerchantOrderCardWidget extends StatelessWidget {
                 'Rp. ${order.totalPrice}',
                 style: context.typography.small.copyWith(fontSize: 14.sp),
               ),
+              // Only show accept button for REQUESTED orders when callback is provided
               if (onAccept != null && order.status == OrderStatus.REQUESTED)
-                ...[],
-              SizedBox(
-                width: double.infinity,
-                child: PrimaryButton(
-                  onPressed: () {
-                    showToast(
-                      context: context,
-                      location: ToastLocation.topCenter,
-                      builder: (context, overlay) => context.buildToast(
-                        title: 'Tap Button',
-                        message: 'index => ${order.id}',
-                      ),
-                    );
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(context.l10n.button_accept),
-                      Row(
-                        spacing: 4.w,
-                        children: [
-                          Icon(LucideIcons.clock, size: 16.sp),
-                          const Text('01:00'),
-                        ],
-                      ),
-                    ],
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    onPressed: onAccept,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(context.l10n.button_accept),
+                        Row(
+                          spacing: 4.w,
+                          children: [
+                            Icon(LucideIcons.clock, size: 16.sp),
+                            const Text('01:00'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

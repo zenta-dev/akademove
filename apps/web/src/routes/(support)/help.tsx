@@ -73,21 +73,18 @@ function HelpComponent() {
 			icon: <Settings className="h-5 w-5" />,
 			articles: [
 				{
-					title: "How to update my profile?",
-					description:
-						"Learn how to update your personal information, photo, and contact details.",
+					title: m.help_account_q1(),
+					description: m.help_account_a1(),
 					link: "/faq#account",
 				},
 				{
-					title: "How to change my password?",
-					description:
-						"Step-by-step guide to reset or change your account password securely.",
+					title: m.help_account_q2(),
+					description: m.help_account_a2(),
 					link: "/faq#account",
 				},
 				{
-					title: "How to manage notifications?",
-					description:
-						"Control what notifications you receive and how you receive them.",
+					title: m.help_account_q3(),
+					description: m.help_account_a3(),
 					link: "/faq#account",
 				},
 			],
@@ -104,7 +101,7 @@ function HelpComponent() {
 				},
 				{
 					title: m.faq_payment_q2(),
-					description: m.faq_payment_q2(),
+					description: m.faq_payment_a2(),
 					link: "/faq#payment",
 				},
 				{
@@ -164,21 +161,18 @@ function HelpComponent() {
 			icon: <Wrench className="h-5 w-5" />,
 			articles: [
 				{
-					title: "App is not loading",
-					description:
-						"Solutions for when the app won't load or is stuck on the loading screen.",
+					title: m.help_troubleshoot_q1(),
+					description: m.help_troubleshoot_a1(),
 					link: "/faq#troubleshooting",
 				},
 				{
-					title: "Location not accurate",
-					description:
-						"Fix GPS and location accuracy issues for better ride matching.",
+					title: m.help_troubleshoot_q2(),
+					description: m.help_troubleshoot_a2(),
 					link: "/faq#troubleshooting",
 				},
 				{
-					title: "Payment failed",
-					description:
-						"Common reasons for payment failures and how to resolve them.",
+					title: m.help_troubleshoot_q3(),
+					description: m.help_troubleshoot_a3(),
 					link: "/faq#troubleshooting",
 				},
 			],
@@ -236,7 +230,7 @@ function HelpComponent() {
 									{m.no_result_found()}
 								</h3>
 								<p className="text-muted-foreground text-sm">
-									Try different keywords or browse all categories below
+									{m.help_no_results_desc()}
 								</p>
 							</CardContent>
 						</Card>

@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import type { MessagePayload } from "firebase/messaging";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { firebaseClient } from "@/lib/firebase";
-import { orpcQuery } from "@/lib/orpc";
+import { notificationSound } from "@/lib/notification-sound";
+import { orpcClient } from "@/lib/orpc";
 
 const FCM_LOCAL_STORAGE_KEY = "fcm_token";
 
@@ -12,15 +14,42 @@ export function useFCM() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const saveTokenMutation = useMutation(
-		orpcQuery.notification.saveToken.mutationOptions(),
-	);
-	const subscribeMutation = useMutation(
-		orpcQuery.notification.subscribeToTopic.mutationOptions(),
-	);
-	const unsubscribeMutation = useMutation(
-		orpcQuery.notification.unsubscribeToTopic.mutationOptions(),
-	);
+	const saveTokenMutation = useMutation({
+		mutationFn: async (variables: { body: { token: string } }) => {
+			const result = await orpcClient.notification.saveToken(variables);
+			if (result.status !== 200) {
+				throw new Error(result.body.message || "Failed to save FCM token");
+			}
+			return result;
+		},
+	});
+
+	const subscribeMutation = useMutation({
+		mutationFn: async (variables: {
+			body: { topic: string; token: string };
+		}) => {
+			const result = await orpcClient.notification.subscribeToTopic(variables);
+			if (result.status !== 200) {
+				throw new Error(result.body.message || "Failed to subscribe to topic");
+			}
+			return result;
+		},
+	});
+
+	const unsubscribeMutation = useMutation({
+		mutationFn: async (variables: {
+			body: { topic: string; token: string };
+		}) => {
+			const result =
+				await orpcClient.notification.unsubscribeToTopic(variables);
+			if (result.status !== 200) {
+				throw new Error(
+					result.body.message || "Failed to unsubscribe from topic",
+				);
+			}
+			return result;
+		},
+	});
 
 	const client = firebaseClient;
 
@@ -58,6 +87,16 @@ export function useFCM() {
 
 		const unsubscribe = client.onMessage((payload) => {
 			setNotification(payload);
+
+			// Show toast notification for foreground messages
+			if (payload.notification) {
+				toast.info(payload.notification.title, {
+					description: payload.notification.body,
+				});
+
+				// Play notification sound
+				notificationSound.play();
+			}
 		});
 
 		return () => unsubscribe();

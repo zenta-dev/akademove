@@ -110,6 +110,9 @@ void _setupCubit() {
     ..registerFactory(() => SignInCubit(authRepository: sl<AuthRepository>()))
     ..registerFactory(() => SignUpCubit(authRepository: sl<AuthRepository>()))
     ..registerFactory(
+      () => EmailVerificationCubit(authRepository: sl<AuthRepository>()),
+    )
+    ..registerFactory(
       () => MerchantCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(
@@ -185,6 +188,7 @@ void _setupCubit() {
         driverRepository: sl<DriverRepository>(),
         orderRepository: sl<OrderRepository>(),
         webSocketService: sl<WebSocketService>(),
+        configurationRepository: sl<ConfigurationRepository>(),
       ),
     )
     ..registerFactory(

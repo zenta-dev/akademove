@@ -6138,6 +6138,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not open WhatsApp. Please try again.'**
   String get delete_account_error_open_whatsapp;
+
+  /// No description provided for @email_verification_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get email_verification_title;
+
+  /// No description provided for @email_verification_description.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent a verification link to your email address.'**
+  String get email_verification_description;
+
+  /// No description provided for @email_verification_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification email sent successfully!'**
+  String get email_verification_sent;
+
+  /// No description provided for @email_verification_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the link in the email to verify your account. If you don\'t see the email, check your spam folder.'**
+  String get email_verification_instruction;
+
+  /// No description provided for @email_verification_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Verification Email'**
+  String get email_verification_resend;
+
+  /// No description provided for @email_verification_resend_countdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend in {seconds}s'**
+  String email_verification_resend_countdown(String seconds);
+
+  /// No description provided for @email_verification_spam_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t forget to check your spam folder!'**
+  String get email_verification_spam_hint;
+
+  /// No description provided for @email_verification_success_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Verified!'**
+  String get email_verification_success_title;
+
+  /// No description provided for @email_verification_success_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email has been verified successfully. You can now sign in to your account.'**
+  String get email_verification_success_description;
+
+  /// No description provided for @email_verification_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Email verification failed'**
+  String get email_verification_failed;
+
+  /// No description provided for @email_verification_invalid_token.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired verification link. Please request a new one.'**
+  String get email_verification_invalid_token;
+
+  /// No description provided for @no_vouchers_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No Vouchers Available'**
+  String get no_vouchers_available;
+
+  /// No description provided for @check_back_later_for_promotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back later for promotions and discounts'**
+  String get check_back_later_for_promotions;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
