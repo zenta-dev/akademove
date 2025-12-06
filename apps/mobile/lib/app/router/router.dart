@@ -92,7 +92,9 @@ enum Routes {
   ///
   /// Shared Routes
   ///
-  privacyPolicies('/privacy-policies');
+  privacyPolicies('/privacy-policies'),
+  termsOfService('/terms-of-service'),
+  faq('/faq');
 
   const Routes(this.path);
   final String path;
@@ -109,6 +111,16 @@ final router = GoRouter(
       name: Routes.privacyPolicies.name,
       path: Routes.privacyPolicies.path,
       builder: (context, state) => const PrivacyPoliciesScreen(),
+    ),
+    GoRoute(
+      name: Routes.termsOfService.name,
+      path: Routes.termsOfService.path,
+      builder: (context, state) => const TermsOfServiceScreen(),
+    ),
+    GoRoute(
+      name: Routes.faq.name,
+      path: Routes.faq.path,
+      builder: (context, state) => const FaqScreen(),
     ),
   ],
 );
