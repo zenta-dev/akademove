@@ -191,7 +191,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget _buildPopularMerchants() {
     return SizedBox(
-      height: 165.h,
+      height: double.infinity,
       width: double.infinity,
       child: BlocBuilder<UserHomeCubit, UserHomeState>(
         builder: (context, state) {
