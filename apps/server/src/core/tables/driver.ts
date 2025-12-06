@@ -1,5 +1,5 @@
 import type { Bank, Time } from "@repo/schema/common";
-import { CONSTANTS } from "@repo/schema/constants";
+import { CONSTANTS, DRIVER_QUIZ_STATUSES } from "@repo/schema/constants";
 import { relations, sql } from "drizzle-orm";
 import {
 	boolean,
@@ -14,6 +14,10 @@ import { user } from "./auth";
 import { DateModifier, index, pgEnum, pgTable, timestamp } from "./common";
 
 export const driverStatus = pgEnum("driver_status", CONSTANTS.DRIVER_STATUSES);
+export const driverQuizStatus = pgEnum(
+	"driver_quiz_status",
+	DRIVER_QUIZ_STATUSES,
+);
 
 export const driver = pgTable(
 	"drivers",
@@ -26,6 +30,12 @@ export const driver = pgTable(
 		studentId: integer("student_id").notNull().unique(),
 		licensePlate: text("license_plate").notNull().unique(),
 		status: driverStatus().notNull().default("PENDING"),
+		quizStatus: driverQuizStatus("quiz_status")
+			.notNull()
+			.default("NOT_STARTED"),
+		quizAttemptId: text("quiz_attempt_id"),
+		quizScore: integer("quiz_score"),
+		quizCompletedAt: timestamp("quiz_completed_at"),
 		rating: numeric({ precision: 2, scale: 1, mode: "number" })
 			.notNull()
 			.default(0.0),
@@ -47,9 +57,11 @@ export const driver = pgTable(
 	},
 	(t) => [
 		index("driver_status_idx").on(t.status),
+		index("driver_quiz_status_idx").on(t.quizStatus),
 		index("driver_is_online_idx").on(t.isOnline),
 		index("driver_rating_idx").on(t.rating),
 		index("driver_status_online_idx").on(t.status, t.isOnline),
+		index("driver_status_quiz_idx").on(t.status, t.quizStatus),
 		index("driver_current_location_idx").using("gist", t.currentLocation),
 		index("driver_online_location_idx")
 			.using("gist", t.currentLocation)

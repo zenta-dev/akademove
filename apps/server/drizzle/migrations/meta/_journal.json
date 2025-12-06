@@ -78,6 +78,13 @@
 			"when": 1765001543142,
 			"tag": "0010_round_golden_guardian",
 			"breakpoints": true
+		},
+		{
+			"idx": 11,
+			"version": "7",
+			"when": 1765029969655,
+			"tag": "0011_parched_dreaming_celestial",
+			"breakpoints": true
 		}
 	]
 }

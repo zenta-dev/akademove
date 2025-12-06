@@ -6,7 +6,7 @@ import {
 	type SchemaRegistries,
 	TimeSchema,
 } from "./common.js";
-import { CONSTANTS } from "./constants.js";
+import { CONSTANTS, DRIVER_QUIZ_STATUSES } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 import { CoordinateSchema } from "./position.js";
 import { UserSchema } from "./user.js";
@@ -14,12 +14,19 @@ import { UserSchema } from "./user.js";
 export const DriverStatusSchema = z.enum(CONSTANTS.DRIVER_STATUSES);
 export type DriverStatus = z.infer<typeof DriverStatusSchema>;
 
+export const DriverQuizStatusSchema = z.enum(DRIVER_QUIZ_STATUSES);
+export type DriverQuizStatus = z.infer<typeof DriverQuizStatusSchema>;
+
 export const DriverSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
 	studentId: z.coerce.number<number>(),
 	licensePlate: z.string().min(6).max(32),
 	status: DriverStatusSchema,
+	quizStatus: DriverQuizStatusSchema.default("NOT_STARTED"),
+	quizAttemptId: z.string().nullable().optional(),
+	quizScore: z.number().int().min(0).max(100).nullable().optional(),
+	quizCompletedAt: DateSchema.nullable().optional(),
 	rating: z.number(),
 	isTakingOrder: z.boolean(),
 	isOnline: z.boolean(),
@@ -147,6 +154,7 @@ export type ActivateDriver = z.infer<typeof ActivateDriverSchema>;
 
 export const DriverSchemaRegistries = {
 	DriverStatus: { schema: DriverStatusSchema, strategy: "output" },
+	DriverQuizStatus: { schema: DriverQuizStatusSchema, strategy: "output" },
 	Driver: { schema: DriverSchema, strategy: "output" },
 	DriverSchedule: { schema: DriverScheduleSchema, strategy: "output" },
 	DriverKey: { schema: DriverKeySchema, strategy: "input" },
