@@ -475,6 +475,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
       case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
         return const Color(0xFFF44336);
+      case OrderStatus.NO_SHOW:
+        return const Color(0xFFFF5722);
     }
   }
 
@@ -501,6 +503,8 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
       case OrderStatus.CANCELLED_BY_MERCHANT:
       case OrderStatus.CANCELLED_BY_SYSTEM:
         return context.l10n.cancelled;
+      case OrderStatus.NO_SHOW:
+        return 'No Show';
     }
   }
 }

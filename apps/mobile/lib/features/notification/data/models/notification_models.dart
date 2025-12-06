@@ -17,7 +17,7 @@ class NotificationModel {
     this.readAt,
   });
 
-  factory NotificationModel.fromDto(UserNotification dto) {
+  factory NotificationModel.fromDto(NotificationList200ResponseDataInner dto) {
     return NotificationModel(
       id: dto.id,
       userId: dto.userId,

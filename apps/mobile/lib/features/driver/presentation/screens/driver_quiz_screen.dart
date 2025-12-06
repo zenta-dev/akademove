@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/driver/data/repositories/driver_quiz_repository.dart';
 import 'package:akademove/features/driver/presentation/cubits/driver_quiz_cubit_simple.dart';
 import 'package:akademove/features/driver/presentation/states/driver_quiz_state_simple.dart';
+import 'package:akademove/locator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DriverQuizScreen extends StatefulWidget {
   const DriverQuizScreen({super.key});
@@ -17,19 +18,23 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   @override
   void initState() {
     super.initState();
-    _quizCubit = DriverQuizCubit(
-      quizRepository: sl(),
-    );
-    
+    _quizCubit = DriverQuizCubit(quizRepository: sl<DriverQuizRepository>());
+
     // Check for existing attempt
     _quizCubit.getLatestAttempt();
+  }
+
+  @override
+  void dispose() {
+    _quizCubit.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: 'Driver Knowledge Quiz',
+        title: const Text('Driver Knowledge Quiz'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -37,9 +42,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
         bloc: _quizCubit,
         builder: (context, state) {
           if (state.state == 'loading') {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state.state == 'failure') {
@@ -47,11 +50,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Colors.red,
-                  ),
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
                   Text(
                     'Failed to load quiz',
@@ -86,16 +85,13 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildStartScreen() {
+    final primaryColor = Theme.of(context).primaryColor;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.quiz_outlined,
-            size: 64,
-            color: Theme.of(context).primaryColor,
-          ),
+          Icon(Icons.quiz_outlined, size: 64, color: primaryColor),
           const SizedBox(height: 24),
           Text(
             'Driver Knowledge Quiz',
@@ -103,7 +99,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.',
             style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
@@ -114,11 +110,14 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             child: ElevatedButton.icon(
               onPressed: () => _quizCubit.startQuiz(),
               icon: const Icon(Icons.play_arrow),
-              label: 'Start Quiz',
+              label: const Text('Start Quiz'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -132,8 +131,9 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
   Widget _buildQuizScreen(DriverQuizState state) {
     final attempt = state.attempt;
-    final currentQuestion = state.currentQuestionIndex;
-    final progress = state.progress;
+    final currentQuestionIndex = state.currentQuestionIndex ?? 0;
+    final progress = _quizCubit.progress;
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Column(
       children: [
@@ -146,14 +146,14 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Question ${currentQuestion + 1} of ${attempt.questions.length}',
+                    'Question ${currentQuestionIndex + 1} of ${attempt?.questions.length ?? 0}',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
                     '${(progress * 100).toInt()}%',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: primaryColor),
                   ),
                 ],
               ),
@@ -161,7 +161,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               LinearProgressIndicator(
                 value: progress,
                 backgroundColor: Colors.grey.shade300,
-                valueColor: Theme.of(context).primaryColor,
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
               ),
             ],
           ),
@@ -169,11 +169,9 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
         // Question Card
         Expanded(
-          child: currentQuestion != null
-              ? _buildQuestionCard(currentQuestion, state)
-              : const Center(
-                  child: Text('No question available'),
-                ),
+          child: _quizCubit.currentQuestion != null
+              ? _buildQuestionCard(_quizCubit.currentQuestion, state)
+              : const Center(child: Text('No question available')),
         ),
 
         // Navigation Buttons
@@ -183,37 +181,40 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Previous Button
-              if (currentQuestion > 0)
+              if (currentQuestionIndex > 0)
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () => _quizCubit.previousQuestion(),
                     icon: const Icon(Icons.arrow_back),
-                    label: 'Previous',
+                    label: const Text('Previous'),
                   ),
                 ),
 
               // Next/Complete Button
               Expanded(
-                child: state.isLastQuestion
+                child: _quizCubit.isLastQuestion
                     ? ElevatedButton.icon(
                         onPressed: () => _quizCubit.completeQuiz(),
                         icon: const Icon(Icons.check_circle),
-                        label: 'Complete Quiz',
+                        label: const Text('Complete Quiz'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                       )
                     : ElevatedButton.icon(
-                        onPressed: state.isCurrentQuestionAnswered
+                        onPressed: _quizCubit.isCurrentQuestionAnswered
                             ? () => _quizCubit.nextQuestion()
                             : null,
                         icon: const Icon(Icons.arrow_forward),
-                        label: 'Next',
+                        label: const Text('Next'),
                       ),
               ),
             ],
@@ -224,6 +225,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildQuestionCard(dynamic question, DriverQuizState state) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Card(
       margin: const EdgeInsets.all(8),
       child: Padding(
@@ -235,11 +237,11 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: _getCategoryColor(question.category),
+                color: _getCategoryColor(question.category as String),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                question.category.replaceAll('_', ' '),
+                (question.category as String).replaceAll('_', ' '),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -252,33 +254,35 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
             // Question
             Text(
-              question.question,
+              question.question as String,
               style: Theme.of(context).textTheme.titleMedium,
             ),
 
             const SizedBox(height: 16),
 
             // Options
-            ...question.options.map((option) {
+            ...(question.options as List).map((option) {
               final isSelected = state.selectedAnswerId == option.id;
-              final isAnswered = state.answeredQuestions.contains(question.id);
+              final isAnswered = state.answeredQuestions.contains(
+                question.id as String,
+              );
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: InkWell(
-                  onTap: isAnswered ? null : () => _quizCubit.selectAnswer(option.id),
+                  onTap: isAnswered
+                      ? null
+                      : () => _quizCubit.selectAnswer(option.id as String),
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isSelected
-                            ? Theme.of(context).primaryColor.withOpacity(0.1)
-                            : Colors.grey.shade100,
+                          ? primaryColor.withValues(alpha: 0.1)
+                          : Colors.grey.shade100,
                       border: Border.all(
-                        color: isSelected
-                            ? Theme.of(context).primaryColor
-                            : Colors.grey.shade300,
+                        color: isSelected ? primaryColor : Colors.grey.shade300,
                         width: 2,
                       ),
                     ),
@@ -290,22 +294,20 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                           height: 20,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: isSelected
-                                ? Theme.of(context).primaryColor
-                                : Colors.white,
+                            color: isSelected ? primaryColor : Colors.white,
                             border: Border.all(
                               color: isSelected
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.grey.shade300,
+                                  ? primaryColor
+                                  : Colors.grey.shade300,
                               width: 2,
                             ),
                           ),
                           child: isSelected
                               ? const Icon(
-                                      Icons.check_circle,
-                                      color: Colors.white,
-                                      size: 16,
-                                    )
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                  size: 16,
+                                )
                               : null,
                         ),
                         const SizedBox(width: 12),
@@ -313,21 +315,21 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                         // Option Text
                         Expanded(
                           child: Text(
-                            option.text,
+                            option.text as String,
                             style: TextStyle(
-                              color: isSelected
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.black87,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected ? primaryColor : Colors.black87,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                );
+                ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -335,6 +337,8 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildResultScreen(dynamic result) {
+    final primaryColor = Theme.of(context).primaryColor;
+    final passed = result.passed as bool;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -345,11 +349,11 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: result.passed ? Colors.green.shade100 : Colors.red.shade100,
+              color: passed ? Colors.green.shade100 : Colors.red.shade100,
               shape: BoxShape.circle,
             ),
             child: Icon(
-              result.passed ? Icons.check_circle : Icons.cancel,
+              passed ? Icons.check_circle : Icons.cancel,
               size: 64,
               color: Colors.white,
             ),
@@ -359,9 +363,9 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
           // Result Message
           Text(
-            result.passed ? 'Congratulations!' : 'Quiz Not Passed',
+            passed ? 'Congratulations!' : 'Quiz Not Passed',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: result.passed ? Colors.green.shade700 : Colors.red.shade700,
+              color: passed ? Colors.green.shade700 : Colors.red.shade700,
             ),
             textAlign: TextAlign.center,
           ),
@@ -369,7 +373,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
           const SizedBox(height: 8),
 
           Text(
-            result.passed
+            passed
                 ? 'You have successfully passed the driver knowledge quiz!'
                 : 'You did not pass the quiz. Please try again.',
             style: Theme.of(context).textTheme.bodyMedium,
@@ -387,9 +391,15 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             ),
             child: Column(
               children: [
-                _buildScoreRow('Score', '${result.scorePercentage.toInt()}%'),
+                _buildScoreRow(
+                  'Score',
+                  '${(result.scorePercentage as num).toInt()}%',
+                ),
                 const SizedBox(height: 8),
-                _buildScoreRow('Correct Answers', '${result.correctAnswers}/${result.totalQuestions}'),
+                _buildScoreRow(
+                  'Correct Answers',
+                  '${result.correctAnswers}/${result.totalQuestions}',
+                ),
                 const SizedBox(height: 8),
                 _buildScoreRow('Points Earned', '${result.earnedPoints}'),
                 const SizedBox(height: 8),
@@ -406,11 +416,14 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             child: ElevatedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back),
-              label: 'Back to Dashboard',
+              label: const Text('Back to Dashboard'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -428,15 +441,15 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Colors.grey.shade600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
         ),
         Text(
           value,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );

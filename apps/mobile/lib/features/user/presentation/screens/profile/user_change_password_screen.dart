@@ -61,7 +61,7 @@ class _UserChangePasswordScreenState extends State<UserChangePasswordScreen> {
     }
 
     cubit.updatePassword(
-      UpdateUserPassword(
+      UserMeChangePasswordRequest(
         oldPassword: oldPassword,
         newPassword: newPassword,
         confirmNewPassword: confirmNewPassword,

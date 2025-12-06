@@ -6,7 +6,6 @@ export 'driver_home_state.dart';
 export 'driver_order_state.dart';
 export 'driver_profile_state.dart';
 export 'review_state.dart';
-export 'driver_quiz_state.dart';
 
 part '_export.mapper.dart';
 part 'driver_earnings_state.dart';

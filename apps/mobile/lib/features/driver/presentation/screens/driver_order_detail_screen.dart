@@ -290,6 +290,9 @@ class _DriverOrderDetailScreenState extends State<DriverOrderDetailScreen> {
       case OrderStatus.CANCELLED_BY_SYSTEM:
         statusText = context.l10n.cancelled_by_system;
         statusColor = const Color(0xFFF44336);
+      case OrderStatus.NO_SHOW:
+        statusText = 'No Show';
+        statusColor = const Color(0xFFFF5722);
     }
 
     return Container(

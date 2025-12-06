@@ -33,7 +33,7 @@ class NotificationListItem extends StatelessWidget {
         ),
         child: Icon(
           LucideIcons.trash2,
-          color: context.colorScheme.destructiveForeground,
+          color: context.colorScheme.foreground,
           size: 24.sp,
         ),
       ),

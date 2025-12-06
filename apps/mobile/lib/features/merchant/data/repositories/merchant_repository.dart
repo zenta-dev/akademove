@@ -48,7 +48,7 @@ class MerchantRepository extends BaseRepository {
   }) {
     return guard(() async {
       final res = await _apiClient.getMerchantApi().merchantList(
-        category: category,
+        categories: category != null ? [category] : null,
         query: query,
         page: page,
         limit: limit,

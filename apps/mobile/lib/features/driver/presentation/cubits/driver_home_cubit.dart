@@ -278,36 +278,51 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   /// Calculate total driver earnings from orders after platform commission
-  /// Fetches commission rate from configuration (with fallback to 15%)
+  /// Fetches commission rate from configuration.
+  /// NOTE: Platform fee rate MUST come from database configuration.
+  /// Fallback values are forbidden per business requirements.
   Future<num> _calculateDriverEarnings(List<Order> orders) async {
     if (orders.isEmpty) return 0;
 
     // Fetch platform fee rate from configuration if not already cached
     if (_platformFeeRate == null) {
       try {
-        final configRes = await _configurationRepository.get('commission');
-        final commissionConfig = configRes.data.value;
+        // Fetch ride pricing configuration (contains platformFeeRate)
+        final configRes = await _configurationRepository.get(
+          'ride-service-pricing',
+        );
+        final pricingConfig = configRes.data.value;
 
-        // Parse the commission configuration JSON
-        if (commissionConfig is Map<String, Object?>) {
-          // Use rideCommissionRate as the default platform fee
-          // Different order types can have different commission rates
-          final rideCommissionRate = commissionConfig['rideCommissionRate'];
-          if (rideCommissionRate is num) {
-            _platformFeeRate = rideCommissionRate.toDouble();
+        // Parse the pricing configuration JSON
+        if (pricingConfig is Map<String, Object?>) {
+          final platformFeeRate = pricingConfig['platformFeeRate'];
+          if (platformFeeRate is num) {
+            _platformFeeRate = platformFeeRate.toDouble();
+          } else {
+            logger.e(
+              '[DriverHomeCubit] platformFeeRate not found in configuration',
+            );
+            // Return 0 earnings to indicate error rather than showing wrong data
+            return 0;
           }
         }
       } catch (e) {
-        logger.w(
-          '[DriverHomeCubit] Failed to fetch platform fee rate, using default 15%',
+        logger.e(
+          '[DriverHomeCubit] Failed to fetch platform fee rate from database',
           error: e,
         );
+        // Return 0 earnings to indicate error rather than showing wrong data
+        return 0;
       }
     }
 
-    // Fallback to 15% if configuration fetch failed
-    final platformFeeRate = _platformFeeRate ?? 0.15;
-    final driverShare = 1.0 - platformFeeRate;
+    // platformFeeRate should now be available from database
+    if (_platformFeeRate == null) {
+      logger.e('[DriverHomeCubit] Platform fee rate not available');
+      return 0;
+    }
+
+    final driverShare = 1.0 - _platformFeeRate!;
 
     return orders.fold<num>(
       0,

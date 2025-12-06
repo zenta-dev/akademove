@@ -113,6 +113,7 @@ class DriverQuizRepository extends BaseRepository {
   const DriverQuizRepository({required ApiClient apiClient})
     : _apiClient = apiClient;
 
+  // ignore: unused_field - Will be used when API is implemented
   final ApiClient _apiClient;
 
   Future<BaseResponse<QuizAttempt>> startQuiz(

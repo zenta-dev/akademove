@@ -1,9 +1,8 @@
-part of '_export.dart';
-
-part of '_export.dart';
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/driver/data/repositories/driver_quiz_repository.dart';
 
 class DriverQuizState {
-  DriverQuizState({
+  const DriverQuizState({
     this.state = CubitState.initial,
     this.message,
     this.error,
@@ -20,7 +19,7 @@ class DriverQuizState {
   final QuizAttempt? attempt;
   final int? currentQuestionIndex;
   final String? selectedAnswerId;
-  final Set<String> answeredQuestions = const <String>{};
+  final Set<String> answeredQuestions;
   final QuizResult? result;
 
   DriverQuizState copyWith({
@@ -45,7 +44,7 @@ class DriverQuizState {
     );
   }
 
-  DriverQuizState toInitial() => DriverQuizState();
+  DriverQuizState toInitial() => const DriverQuizState();
 
   DriverQuizState toLoading() => copyWith(state: CubitState.loading);
 

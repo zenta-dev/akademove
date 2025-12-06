@@ -6,7 +6,7 @@ class DriverQuizState {
     this.attempt,
     this.currentQuestionIndex,
     this.selectedAnswerId,
-    this.answeredQuestions,
+    this.answeredQuestions = const <String>{},
     this.result,
   });
 

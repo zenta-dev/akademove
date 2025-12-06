@@ -119,7 +119,7 @@ class _ChangePasswordFormViewState extends State<_ChangePasswordFormView> {
     // Call the cubit to update password
     final cubit = context.read<UserProfileCubit>();
     await cubit.updatePassword(
-      UpdateUserPassword(
+      UserMeChangePasswordRequest(
         oldPassword: oldPassword,
         newPassword: newPassword,
         confirmNewPassword: confirmPassword,

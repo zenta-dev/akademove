@@ -32,7 +32,7 @@ class UserProfileCubit extends BaseCubit<UserProfileState> {
         }
       });
 
-  Future<void> updatePassword(UpdateUserPassword req) async =>
+  Future<void> updatePassword(UserMeChangePasswordRequest req) async =>
       await taskManager.execute('UPC-uPW', () async {
         try {
           emit(state.toLoading());

@@ -44,10 +44,10 @@ class UserRepository extends BaseRepository {
         return SuccessResponse(message: data.message, data: data.data);
       });
 
-  Future<BaseResponse<bool>> updatePassword(UpdateUserPassword req) =>
+  Future<BaseResponse<bool>> updatePassword(UserMeChangePasswordRequest req) =>
       guard(() async {
         final res = await _apiClient.getUserApi().userMeChangePassword(
-          updateUserPassword: req,
+          userMeChangePasswordRequest: req,
         );
         final data =
             res.data ??

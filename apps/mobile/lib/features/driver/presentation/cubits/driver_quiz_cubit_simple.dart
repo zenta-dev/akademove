@@ -31,7 +31,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to start quiz', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e.message));
+      emit(DriverQuizState().toFailure(e.message ?? 'Failed to start quiz'));
     }
   }
 
@@ -45,7 +45,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         return;
       }
 
-      final question = attempt.questions[currentIndex!];
+      final question = attempt.questions[currentIndex];
 
       emit(DriverQuizState().toLoading());
 
@@ -57,9 +57,8 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
       final res = await _quizRepository.submitAnswer(request);
 
-      final newAnsweredQuestions = Set<String>.from(
-        state.answeredQuestions ?? {},
-      )..add(question.id);
+      final newAnsweredQuestions = Set<String>.from(state.answeredQuestions)
+        ..add(question.id);
 
       emit(
         DriverQuizState().toSuccess(
@@ -69,7 +68,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to submit answer', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e.message));
+      emit(DriverQuizState().toFailure(e.message ?? 'Failed to submit answer'));
     }
   }
 
@@ -79,10 +78,10 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
     if (attempt != null &&
         currentIndex != null &&
-        currentIndex! < attempt.questions.length - 1) {
+        currentIndex < attempt.questions.length - 1) {
       emit(
         DriverQuizState().toSuccess(
-          currentQuestionIndex: currentIndex! + 1,
+          currentQuestionIndex: currentIndex + 1,
           selectedAnswerId: null,
         ),
       );
@@ -92,10 +91,10 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
   Future<void> previousQuestion() async {
     final currentIndex = state.currentQuestionIndex;
 
-    if (currentIndex != null && currentIndex! > 0) {
+    if (currentIndex != null && currentIndex > 0) {
       emit(
         DriverQuizState().toSuccess(
-          currentQuestionIndex: currentIndex! - 1,
+          currentQuestionIndex: currentIndex - 1,
           selectedAnswerId: null,
         ),
       );
@@ -124,7 +123,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to complete quiz', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e.message));
+      emit(DriverQuizState().toFailure(e.message ?? 'Failed to complete quiz'));
     }
   }
 
@@ -137,7 +136,11 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       emit(DriverQuizState().toSuccess(message: res.message, result: res.data));
     } on BaseError catch (e, st) {
       logger.e('Failed to get latest attempt', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e.message));
+      emit(
+        DriverQuizState().toFailure(
+          e.message ?? 'Failed to get latest attempt',
+        ),
+      );
     }
   }
 
@@ -158,11 +161,11 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       return null;
     }
 
-    if (currentIndex! >= attempt.questions.length) {
+    if (currentIndex >= attempt.questions.length) {
       return null;
     }
 
-    return attempt.questions[currentIndex!];
+    return attempt.questions[currentIndex];
   }
 
   bool get isLastQuestion {
@@ -173,14 +176,14 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       return false;
     }
 
-    return currentIndex! >= attempt.questions.length - 1;
+    return currentIndex >= attempt.questions.length - 1;
   }
 
   bool get allQuestionsAnswered {
     final attempt = state.attempt;
     final answeredQuestions = state.answeredQuestions;
 
-    if (attempt == null || answeredQuestions == null) {
+    if (attempt == null) {
       return false;
     }
 
@@ -191,11 +194,11 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
     final currentQuestion = this.currentQuestion;
     final answeredQuestions = state.answeredQuestions;
 
-    if (currentQuestion == null || answeredQuestions == null) {
+    if (currentQuestion == null) {
       return false;
     }
 
-    return answeredQuestions.contains(currentQuestion!.id);
+    return answeredQuestions.contains(currentQuestion.id);
   }
 
   double get progress {
@@ -206,6 +209,6 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       return 0.0;
     }
 
-    return (currentIndex! + 1) / attempt.questions.length;
+    return (currentIndex + 1) / attempt.questions.length;
   }
 }
