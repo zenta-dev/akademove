@@ -23,6 +23,7 @@ export interface MatchingCriteria {
 	genderPreference?: GenderPreference;
 	userGender?: UserGender;
 	radiusKm?: number;
+	orderId?: string; // Optional for logging purposes
 }
 
 export interface MatchedDriver {
@@ -214,6 +215,138 @@ export class OrderMatchingService {
 			throw new RepositoryError("Failed to find available drivers", {
 				code: "INTERNAL_SERVER_ERROR",
 			});
+		}
+	}
+
+	/**
+	 * Find drivers with timeout and radius expansion logic
+	 *
+	 * Algorithm:
+	 * 1. Try initial radius for 30 seconds
+	 * 2. If no drivers found, expand radius by 20% and retry
+	 * 3. Continue expanding until max radius reached or drivers found
+	 *
+	 * @param criteria - Matching criteria
+	 * @param maxAttempts - Maximum expansion attempts (default: 3)
+	 * @param opts - Transaction options
+	 * @returns Matched drivers or empty array
+	 */
+	async findDriversWithTimeoutExpansion(
+		criteria: MatchingCriteria,
+		maxAttempts = 3,
+		opts?: { tx?: DatabaseTransaction },
+	): Promise<MatchedDriver[]> {
+		try {
+			const initialRadius =
+				criteria.radiusKm ?? BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM;
+			const expansionRate = BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_EXPANSION;
+			const timeoutMs = BUSINESS_CONSTANTS.DRIVER_MATCHING_TIMEOUT_MS;
+
+			log.debug(
+				{ criteria, initialRadius, expansionRate, timeoutMs, maxAttempts },
+				"[OrderMatchingService] Starting timeout expansion matching",
+			);
+
+			let currentRadius = initialRadius;
+			let attempt = 0;
+
+			while (attempt < maxAttempts) {
+				attempt++;
+				const startTime = Date.now();
+
+				log.info(
+					{
+						orderId: criteria.orderId || "unknown",
+						attempt,
+						currentRadius,
+						timeoutMs,
+					},
+					"[OrderMatchingService] Attempting driver search",
+				);
+
+				// Search for drivers with current radius
+				const drivers = await this.findAvailableDrivers(
+					{ ...criteria, radiusKm: currentRadius },
+					10, // Get multiple drivers
+					opts,
+				);
+
+				const elapsedTime = Date.now() - startTime;
+
+				if (drivers.length > 0) {
+					log.info(
+						{
+							orderId: criteria.orderId || "unknown",
+							attempt,
+							currentRadius,
+							foundDrivers: drivers.length,
+							elapsedTime,
+						},
+						"[OrderMatchingService] Drivers found - returning matches",
+					);
+
+					return drivers;
+				}
+
+				// No drivers found, wait for timeout or expand radius
+				const remainingTime = timeoutMs - elapsedTime;
+
+				if (remainingTime > 0 && attempt < maxAttempts) {
+					log.info(
+						{
+							orderId: criteria.orderId || "unknown",
+							attempt,
+							currentRadius,
+							remainingTime,
+						},
+						"[OrderMatchingService] No drivers found, waiting for timeout before expansion",
+					);
+
+					// Wait for remaining timeout time
+					await new Promise((resolve) => setTimeout(resolve, remainingTime));
+				}
+
+				// Expand radius for next attempt
+				if (attempt < maxAttempts) {
+					currentRadius = currentRadius * (1 + expansionRate);
+
+					log.info(
+						{
+							orderId: criteria.orderId || "unknown",
+							attempt,
+							previousRadius: currentRadius / (1 + expansionRate),
+							newRadius: currentRadius,
+							expansionRate,
+						},
+						"[OrderMatchingService] Expanding search radius",
+					);
+				}
+			}
+
+			// No drivers found after all attempts
+			log.warn(
+				{
+					orderId: criteria.orderId || "unknown",
+					initialRadius,
+					finalRadius: currentRadius,
+					maxAttempts,
+					totalExpansion: (currentRadius / initialRadius - 1) * 100,
+				},
+				"[OrderMatchingService] No drivers found after radius expansion",
+			);
+
+			return [];
+		} catch (error) {
+			log.error(
+				{ error, criteria },
+				"[OrderMatchingService] Timeout expansion matching failed",
+			);
+			throw new RepositoryError(
+				"Failed to find drivers with timeout expansion",
+				{
+					code: "INTERNAL_SERVER_ERROR",
+				},
+			);
 		}
 	}
 

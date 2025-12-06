@@ -137,6 +137,12 @@ export const PlaceOrderResponseSchema = z.object({
 	order: OrderSchema,
 	payment: PaymentSchema,
 	transaction: TransactionSchema,
+	autoAppliedCoupon: z
+		.object({
+			code: z.string(),
+			discountAmount: z.number(),
+		})
+		.optional(),
 });
 export type PlaceOrderResponse = z.infer<typeof PlaceOrderResponseSchema>;
 

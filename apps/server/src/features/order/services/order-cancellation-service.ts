@@ -1,6 +1,7 @@
 import type { OrderStatus } from "@repo/schema/order";
 import type { UserRole } from "@repo/schema/user";
 import Decimal from "decimal.js";
+import { BUSINESS_CONSTANTS } from "@/core/constants";
 
 /**
  * Service responsible for order cancellation business logic
@@ -9,6 +10,7 @@ import Decimal from "decimal.js";
  * - Determining cancellation status based on user role
  * - Calculating cancellation penalties
  * - Refund amount calculation
+ * - No-show penalty calculation
  */
 export class OrderCancellationService {
 	/**
@@ -65,7 +67,9 @@ export class OrderCancellationService {
 				orderStatus,
 			)
 		) {
-			penaltyAmount = total.times(0.1); // 10% penalty
+			penaltyAmount = total.times(
+				BUSINESS_CONSTANTS.USER_CANCELLATION_FEE_AFTER_ACCEPT,
+			); // 10% penalty
 			refundAmount = total.minus(penaltyAmount);
 		}
 
@@ -92,5 +96,42 @@ export class OrderCancellationService {
 				orderStatus,
 			)
 		);
+	}
+
+	/**
+	 * Calculate no-show refund and fee
+	 *
+	 * Per SRS 8.3: When driver arrives but user is not present (no-show),
+	 * the user is charged 50% of the order total as a penalty.
+	 * The driver receives compensation for their time and effort.
+	 *
+	 * @param totalPrice - Original order total price
+	 * @returns Object with refundAmount, penaltyAmount (50%), and driverCompensation
+	 */
+	static calculateNoShowRefund(totalPrice: number): {
+		refundAmount: Decimal;
+		penaltyAmount: Decimal;
+		driverCompensation: Decimal;
+	} {
+		const total = new Decimal(totalPrice);
+		const penaltyAmount = total.times(BUSINESS_CONSTANTS.NO_SHOW_FEE); // 50% penalty
+		const refundAmount = total.minus(penaltyAmount); // User gets 50% back
+		// Driver receives 80% of the penalty (40% of total) as compensation
+		// Platform keeps 20% of the penalty (10% of total) as commission
+		const driverCompensation = penaltyAmount.times(0.8);
+
+		return { refundAmount, penaltyAmount, driverCompensation };
+	}
+
+	/**
+	 * Check if order status allows no-show reporting
+	 *
+	 * No-show can only be reported when driver has arrived at pickup location
+	 *
+	 * @param orderStatus - Current order status
+	 * @returns True if no-show can be reported
+	 */
+	static canReportNoShow(orderStatus: OrderStatus): boolean {
+		return orderStatus === "ARRIVING";
 	}
 }

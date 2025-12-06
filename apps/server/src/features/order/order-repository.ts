@@ -607,8 +607,15 @@ export class OrderRepository extends BaseRepository {
 			let couponId: string | undefined;
 			let couponCode: string | undefined;
 			let discountAmount = 0;
+			let autoAppliedCoupon:
+				| { code: string; discountAmount: number }
+				| undefined;
+
+			// Extract merchantId early for coupon eligibility check
+			const merchantId = OrderValidationService.getMerchantId(menus);
 
 			if (params.couponCode) {
+				// User provided a coupon code - validate and apply it
 				const couponResult = await OrderCouponService.validateAndApplyCoupon(
 					params.couponCode,
 					estimate.totalCost,
@@ -621,6 +628,38 @@ export class OrderRepository extends BaseRepository {
 				couponCode = couponResult.couponCode;
 				discountAmount = couponResult.discountAmount;
 				finalTotalCost = couponResult.finalTotalCost;
+			} else {
+				// No coupon provided - auto-apply the best eligible coupon
+				const autoCouponResult = await OrderCouponService.getAndApplyBestCoupon(
+					estimate.totalCost,
+					params.userId,
+					params.type,
+					this.db,
+					this.kv,
+					merchantId,
+				);
+
+				if (autoCouponResult.autoApplied) {
+					couponId = autoCouponResult.couponId;
+					couponCode = autoCouponResult.couponCode;
+					discountAmount = autoCouponResult.discountAmount;
+					finalTotalCost = autoCouponResult.finalTotalCost;
+					autoAppliedCoupon = {
+						code: autoCouponResult.couponCode ?? "",
+						discountAmount: autoCouponResult.discountAmount,
+					};
+
+					log.info(
+						{
+							userId: params.userId,
+							couponCode,
+							discountAmount,
+							originalTotal: estimate.totalCost,
+							finalTotal: finalTotalCost,
+						},
+						"[OrderRepository] Auto-applied best eligible coupon",
+					);
+				}
 			}
 
 			if (!user)
@@ -632,7 +671,6 @@ export class OrderRepository extends BaseRepository {
 			OrderValidationService.validateMenuItems(menus, itemIds);
 			OrderValidationService.validateSingleMerchant(menus);
 
-			const merchantId = OrderValidationService.getMerchantId(menus);
 			const now = new Date();
 
 			const safeTotalCost = toStringNumberSafe(finalTotalCost);
@@ -729,11 +767,12 @@ export class OrderRepository extends BaseRepository {
 					type: params.type,
 					method: params.payment.method,
 					status: order.status,
+					autoAppliedCoupon: autoAppliedCoupon?.code,
 				},
 				m.server_order_placed(),
 			);
 
-			return { order, payment, transaction };
+			return { order, payment, transaction, autoAppliedCoupon };
 		} catch (err) {
 			log.error(
 				{

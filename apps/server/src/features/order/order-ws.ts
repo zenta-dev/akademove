@@ -2,12 +2,14 @@ import { env } from "cloudflare:workers";
 import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
-import { CONFIGURATION_KEYS } from "@/core/constants";
+import { BUSINESS_CONSTANTS, CONFIGURATION_KEYS } from "@/core/constants";
 import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
 import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
+import { OrderCancellationService } from "@/features/order/services/order-cancellation-service";
+import { OrderRefundService } from "@/features/order/services/order-refund-service";
 import { log, safeSync, toNumberSafe } from "@/utils";
 
 type OrderId = string;
@@ -90,6 +92,11 @@ export class OrderRoom extends BaseDurableObject {
 						async (tx) => await this.#handleMerchantMarkReady(ws, data, tx),
 					);
 				}
+				if (data.a === "REPORT_NO_SHOW") {
+					await this.#svc.db.transaction(
+						async (tx) => await this.#handleNoShow(ws, data, tx),
+					);
+				}
 			} catch (error) {
 				log.error(
 					{ error, action: data.a, userId: session },
@@ -115,18 +122,20 @@ export class OrderRoom extends BaseDurableObject {
 
 		const findOrder = await this.#repo.order.get(detail.order.id, opts);
 
-		// REFACTOR: Use OrderMatchingService for driver discovery
+		// REFACTOR: Use OrderMatchingService for driver discovery with timeout expansion
 		// Service encapsulates matching business logic (radius, gender preference, availability)
+		// Uses 30s timeout with 20% radius expansion on each attempt
 		const matchedDrivers =
-			await this.#svc.orderServices.matching.findAvailableDrivers(
+			await this.#svc.orderServices.matching.findDriversWithTimeoutExpansion(
 				{
+					orderId: findOrder.id,
 					pickupLocation: findOrder.pickupLocation,
 					orderType: findOrder.type,
 					genderPreference: findOrder.genderPreference,
 					userGender: findOrder.gender,
-					radiusKm: 50, // Max radius for initial search
+					radiusKm: BUSINESS_CONSTANTS.DRIVER_MATCHING_RADIUS_KM, // Initial radius from constants
 				},
-				10, // Get multiple drivers to increase acceptance chance
+				3, // Maximum 3 expansion attempts (5km → 6km → 7.2km)
 				opts,
 			);
 
@@ -844,6 +853,248 @@ export class OrderRoom extends BaseDurableObject {
 			log.error(
 				{ error, merchantAction },
 				"[OrderRoom] Failed to handle merchant mark ready",
+			);
+			throw error;
+		}
+	}
+
+	/**
+	 * Handle no-show report from driver
+	 *
+	 * When a driver arrives at pickup location but user is not present,
+	 * the driver can report a no-show. This results in:
+	 * - Order status changed to NO_SHOW
+	 * - 50% penalty charged to user
+	 * - Driver receives 80% of penalty as compensation
+	 * - Platform keeps 20% of penalty as commission
+	 */
+	async #handleNoShow(
+		ws: WebSocket,
+		data: OrderEnvelope,
+		tx: DatabaseTransaction,
+	) {
+		const noShowPayload = data.p.noShow;
+		if (!noShowPayload) {
+			log.warn(data, "Invalid no-show payload");
+			return;
+		}
+
+		const opts = { tx };
+		const { orderId, driverId, reason } = noShowPayload;
+
+		try {
+			// Get order details
+			const order = await this.#repo.order.get(orderId, opts);
+
+			// Validate order status - can only report no-show when driver has arrived
+			if (!OrderCancellationService.canReportNoShow(order.status)) {
+				log.warn(
+					{ orderId, currentStatus: order.status },
+					"[OrderRoom] Cannot report no-show - invalid order status",
+				);
+				ws.send(
+					JSON.stringify({
+						e: "ERROR",
+						f: "s",
+						t: "c",
+						p: {
+							message:
+								"Cannot report no-show. Order must be in ARRIVING status.",
+						},
+					}),
+				);
+				return;
+			}
+
+			// Validate that the driver reporting is the assigned driver
+			if (order.driverId !== driverId) {
+				log.warn(
+					{
+						orderId,
+						requestingDriverId: driverId,
+						assignedDriverId: order.driverId,
+					},
+					"[OrderRoom] Driver not authorized to report no-show",
+				);
+				ws.send(
+					JSON.stringify({
+						e: "ERROR",
+						f: "s",
+						t: "c",
+						p: {
+							message:
+								"You are not authorized to report no-show for this order.",
+						},
+					}),
+				);
+				return;
+			}
+
+			// Calculate no-show fees
+			const { refundAmount, penaltyAmount, driverCompensation } =
+				OrderCancellationService.calculateNoShowRefund(order.totalPrice);
+
+			// Find payment transaction for this order using OrderRefundService
+			const paymentTransaction =
+				await OrderRefundService.findPaymentTransaction(tx, orderId);
+
+			// Get driver wallet for compensation
+			const driverWallet = await this.#repo.wallet.getByUserId(driverId, opts);
+
+			// Update order status
+			const updatedOrder = await this.#repo.order.update(
+				orderId,
+				{
+					status: "NO_SHOW",
+					cancelReason: reason ?? "User not present at pickup location",
+				},
+				opts,
+			);
+
+			// Process partial refund to user and compensation to driver
+			if (paymentTransaction) {
+				const userWallet = await OrderRefundService.findWallet(
+					tx,
+					paymentTransaction.walletId,
+				);
+				const payment = await OrderRefundService.findPayment(
+					tx,
+					paymentTransaction.id,
+				);
+
+				if (userWallet && payment) {
+					const safeUserBalance = new Decimal(userWallet.balance);
+					const safeNewUserBalance = safeUserBalance.plus(refundAmount);
+					const safeDriverBalance = new Decimal(driverWallet.balance);
+					const safeNewDriverBalance =
+						safeDriverBalance.plus(driverCompensation);
+
+					await Promise.all([
+						// Update user transaction as partial refund
+						this.#repo.transaction.update(
+							paymentTransaction.id,
+							{
+								status: "REFUNDED",
+								balanceBefore: toNumberSafe(safeUserBalance),
+								balanceAfter: toNumberSafe(safeNewUserBalance),
+							},
+							opts,
+						),
+						// Update payment status
+						this.#repo.payment.update(payment.id, { status: "REFUNDED" }, opts),
+						// Refund partial amount to user wallet (50%)
+						this.#repo.wallet.update(
+							userWallet.id,
+							{ balance: toNumberSafe(safeNewUserBalance) },
+							opts,
+						),
+						// Create penalty transaction for audit trail
+						this.#repo.transaction.insert(
+							{
+								walletId: userWallet.id,
+								type: "COMMISSION",
+								amount: toNumberSafe(penaltyAmount),
+								status: "SUCCESS",
+								description: `No-show penalty for order #${orderId.slice(0, 8)}`,
+								referenceId: orderId,
+								metadata: {
+									type: "NO_SHOW_PENALTY",
+									orderId,
+									reason: reason ?? "User not present",
+								},
+							},
+							opts,
+						),
+						// Credit driver wallet with compensation
+						this.#repo.wallet.update(
+							driverWallet.id,
+							{ balance: toNumberSafe(safeNewDriverBalance) },
+							opts,
+						),
+						// Create earning transaction for driver
+						this.#repo.transaction.insert(
+							{
+								walletId: driverWallet.id,
+								type: "EARNING",
+								amount: toNumberSafe(driverCompensation),
+								balanceBefore: toNumberSafe(safeDriverBalance),
+								balanceAfter: toNumberSafe(safeNewDriverBalance),
+								status: "SUCCESS",
+								description: `No-show compensation for order #${orderId.slice(0, 8)}`,
+								referenceId: orderId,
+								metadata: {
+									type: "NO_SHOW_COMPENSATION",
+									orderId,
+									penaltyAmount: toNumberSafe(penaltyAmount),
+									driverCompensation: toNumberSafe(driverCompensation),
+								},
+							},
+							opts,
+						),
+					]);
+
+					log.info(
+						{
+							orderId,
+							driverId,
+							userId: order.userId,
+							penaltyAmount: toNumberSafe(penaltyAmount),
+							refundAmount: toNumberSafe(refundAmount),
+							driverCompensation: toNumberSafe(driverCompensation),
+						},
+						"[OrderRoom] No-show processed successfully",
+					);
+				}
+			}
+
+			// Reset driver availability
+			await this.#repo.driver.main.update(driverId, { isTakingOrder: false });
+
+			// Notify user about no-show
+			const userWs = this.findById(order.userId);
+
+			const noShowResponse: OrderEnvelope = {
+				e: "NO_SHOW",
+				f: "s",
+				t: "c",
+				p: {
+					detail: {
+						order: updatedOrder,
+						payment: data.p.detail?.payment ?? null,
+						transaction: data.p.detail?.transaction ?? null,
+					},
+					noShow: {
+						orderId,
+						driverId,
+						reason: reason ?? "User not present at pickup location",
+					},
+				},
+			};
+
+			// Send to user
+			if (userWs) {
+				userWs.send(JSON.stringify(noShowResponse));
+			}
+
+			// Send confirmation to driver
+			ws.send(JSON.stringify(noShowResponse));
+
+			// Send notification to user
+			await this.#repo.notification.sendNotificationToUserId({
+				fromUserId: driverId,
+				toUserId: order.userId,
+				title: "Order Marked as No-Show",
+				body: `Your order #${orderId.slice(0, 8)} was marked as no-show. 50% of the order amount has been charged as a penalty.`,
+				data: {
+					type: "NO_SHOW",
+					orderId,
+					deeplink: `akademove://order/${orderId}`,
+				},
+			});
+		} catch (error) {
+			log.error(
+				{ error, noShowPayload },
+				"[OrderRoom] Failed to handle no-show",
 			);
 			throw error;
 		}
