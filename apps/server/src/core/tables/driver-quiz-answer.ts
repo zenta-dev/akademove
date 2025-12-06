@@ -1,7 +1,8 @@
 import { DRIVER_QUIZ_ANSWER_STATUSES } from "@repo/schema/constants";
 import type { DriverQuizQuestionAnswer } from "@repo/schema/driver-quiz-answer";
-import { integer, jsonb, text, uuid } from "drizzle-orm/pg-core";
+import { integer, jsonb, uuid } from "drizzle-orm/pg-core";
 import { DateModifier, index, pgEnum, pgTable, timestamp } from "./common";
+import { driver } from "./driver";
 
 export const driverQuizAnswerStatus = pgEnum(
 	"driver_quiz_answer_status",
@@ -12,7 +13,9 @@ export const driverQuizAnswer = pgTable(
 	"driver_quiz_answers",
 	{
 		id: uuid().primaryKey(),
-		driverId: text("driver_id").notNull(),
+		driverId: uuid("driver_id")
+			.notNull()
+			.references(() => driver.id),
 		status: driverQuizAnswerStatus().notNull().default("IN_PROGRESS"),
 		totalQuestions: integer("total_questions").notNull(),
 		correctAnswers: integer("correct_answers").notNull().default(0),

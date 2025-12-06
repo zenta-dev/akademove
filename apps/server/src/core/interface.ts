@@ -8,6 +8,11 @@ import type { AccountDeletionRepository } from "@/features/account-deletion/acco
 import type { AnalyticsRepository } from "@/features/analytics/analytics-repository";
 import type { AuditRepository } from "@/features/audit/audit-repository";
 import type { AuthRepository } from "@/features/auth/auth-repository";
+import type {
+	PasswordResetService,
+	SessionService,
+	UserRegistrationService,
+} from "@/features/auth/services";
 import type { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
 import type { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
@@ -17,6 +22,11 @@ import type { ContactRepository } from "@/features/contact/contact-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import type {
+	DriverAvailabilityService,
+	DriverLocationService,
+	DriverVerificationService,
+} from "@/features/driver/services";
 import type { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
 import type { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import type { EmergencyRepository } from "@/features/emergency/emergency-repository";
@@ -28,6 +38,7 @@ import type { NotificationRepository } from "@/features/notification/notificatio
 import type { PushNotificationService } from "@/features/notification/services/push-notification-service";
 import type { OrderRepository } from "@/features/order/order-repository";
 import type {
+	DeliveryProofService,
 	OrderMatchingService,
 	OrderPricingService,
 	OrderStateService,
@@ -43,6 +54,10 @@ import type { ReviewRepository } from "@/features/review/review-repository";
 import type { TransactionRepository } from "@/features/transaction/transaction-repository";
 import type { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import type { UserMeRepository } from "@/features/user/me/user-me-repository";
+import type {
+	WalletBalanceService,
+	WalletTransactionService,
+} from "@/features/wallet/services";
 import type { WalletRepository } from "@/features/wallet/wallet-repository";
 import type { JwtManager } from "@/utils/jwt";
 import type { PasswordManager } from "@/utils/password";
@@ -52,7 +67,6 @@ import type { KeyValueService } from "./services/kv";
 import type { MailService } from "./services/mail";
 import type { MapService } from "./services/map";
 import type { PaymentService } from "./services/payment";
-import type { RBACService } from "./services/rbac";
 import type { StorageService } from "./services/storage";
 
 export interface ServiceContext {
@@ -60,20 +74,19 @@ export interface ServiceContext {
 	kv: KeyValueService;
 	mail: MailService;
 	storage: StorageService;
-	rbac: RBACService;
 	map: MapService;
 	payment: PaymentService;
 	firebase: FirebaseAdminService;
 	authServices: {
-		session: import("@/features/auth/services").SessionService;
-		registration: import("@/features/auth/services").UserRegistrationService;
-		passwordReset: import("@/features/auth/services").PasswordResetService;
+		session: SessionService;
+		registration: UserRegistrationService;
+		passwordReset: PasswordResetService;
 	};
 	orderServices: {
 		pricing: OrderPricingService;
 		matching: OrderMatchingService;
 		state: OrderStateService;
-		deliveryProof: import("@/features/order/services/delivery-proof-service").DeliveryProofService;
+		deliveryProof: DeliveryProofService;
 	};
 	notificationServices: {
 		push: PushNotificationService;
@@ -83,13 +96,13 @@ export interface ServiceContext {
 		webhook: PaymentWebhookService;
 	};
 	driverServices: {
-		location: import("@/features/driver/services").DriverLocationService;
-		verification: import("@/features/driver/services").DriverVerificationService;
-		availability: import("@/features/driver/services").DriverAvailabilityService;
+		location: DriverLocationService;
+		verification: DriverVerificationService;
+		availability: DriverAvailabilityService;
 	};
 	walletServices: {
-		balance: import("@/features/wallet/services").WalletBalanceService;
-		transaction: import("@/features/wallet/services").WalletTransactionService;
+		balance: WalletBalanceService;
+		transaction: WalletTransactionService;
 	};
 }
 

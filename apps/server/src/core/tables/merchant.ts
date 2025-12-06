@@ -29,7 +29,7 @@ export const merchant = pgTable(
 			.references(() => user.id, { onDelete: "cascade" }),
 		name: text().notNull(),
 		email: text().notNull().unique(),
-		phone: jsonb().$type<Phone>().notNull().unique(),
+		phone: jsonb().$type<Phone>().unique(),
 		address: text().notNull(),
 		location: geometry("location", { type: "point", mode: "xy", srid: 4326 }),
 		bank: jsonb().$type<Bank>().notNull(),

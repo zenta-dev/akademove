@@ -7,7 +7,6 @@ import type {
 import { getDatabase } from "@/core/services/db";
 import { CloudflareKVService } from "@/core/services/kv";
 import { ResendMailService } from "@/core/services/mail";
-import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
 import { AccountDeletionRepository } from "@/features/account-deletion/account-deletion-repository";
 import { AnalyticsRepository } from "@/features/analytics/analytics-repository";
@@ -129,7 +128,7 @@ export function getServices(): ServiceContext {
 	);
 	const orderMatchingService = new OrderMatchingService(db);
 	const orderStateService = new OrderStateService();
-	const deliveryProofService = new DeliveryProofService(storage);
+	const deliveryProofService = new DeliveryProofService(storage, db, kv);
 
 	// Initialize notification domain services
 	const pushNotificationService = new PushNotificationService(firebase);
@@ -148,7 +147,6 @@ export function getServices(): ServiceContext {
 		mail,
 		kv,
 		storage,
-		rbac: new RBACService(),
 		map,
 		payment: midtransPaymentService,
 		firebase,
@@ -275,7 +273,13 @@ export function getRepositories(
 		review: new ReviewRepository(svc.db, svc.kv),
 		wallet,
 		user: {
-			admin: new UserAdminRepository(svc.db, svc.kv, svc.storage, manager.pw),
+			admin: new UserAdminRepository(
+				svc.db,
+				svc.kv,
+				svc.storage,
+				svc.mail,
+				manager.pw,
+			),
 			me: new UserMeRepository(svc.db, svc.kv, svc.storage, manager.pw),
 		},
 		transaction,

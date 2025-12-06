@@ -1,6 +1,6 @@
 import { os } from "@orpc/server";
 import { createMiddleware } from "hono/factory";
-import { log } from "@/utils";
+import { log, safeAsync } from "@/utils";
 import { MiddlewareError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
@@ -68,7 +68,9 @@ export const honoRateLimit = (config: RateLimitConfig) =>
 
 		try {
 			// Get current state from KV
-			const stateStr = await svc.kv.get<string>(key);
+			const stateStr = await svc.kv.get<string | undefined>(key, {
+				fallback: async () => undefined,
+			});
 			const now = Date.now();
 			let state: RateLimitState;
 
@@ -111,7 +113,9 @@ export const honoRateLimit = (config: RateLimitConfig) =>
 
 			// Update state in KV with TTL
 			const ttl = Math.ceil((state.resetAt - now) / 1000);
-			await svc.kv.put(key, JSON.stringify(state), { expirationTtl: ttl });
+			await safeAsync(() =>
+				svc.kv.put(key, JSON.stringify(state), { expirationTtl: ttl }),
+			);
 
 			// Set rate limit headers
 			const remaining = Math.max(0, limit - state.count);
@@ -165,13 +169,12 @@ export const orpcRateLimit = (config: RateLimitConfig) =>
 
 		try {
 			// Get current state from KV
-			const stateStr = await svc.kv.get<string>(key);
 			const now = Date.now();
-			let state: RateLimitState;
+			let state = await svc.kv.get<RateLimitState | undefined>(key, {
+				fallback: async () => undefined,
+			});
 
-			if (stateStr) {
-				state = JSON.parse(stateStr);
-
+			if (state) {
 				// Check if window has expired
 				if (now >= state.resetAt) {
 					// Reset counter
@@ -202,7 +205,7 @@ export const orpcRateLimit = (config: RateLimitConfig) =>
 
 			// Update state in KV with TTL
 			const ttl = Math.ceil((state.resetAt - now) / 1000);
-			await svc.kv.put(key, JSON.stringify(state), { expirationTtl: ttl });
+			await svc.kv.put(key, state, { expirationTtl: ttl });
 
 			// Note: oRPC doesn't support setting response headers in middleware
 			// Headers are set in Hono middleware version only

@@ -42,11 +42,6 @@ interface SendContactResponseProps {
 	respondedBy: string;
 }
 
-interface RenderEmailOptions {
-	pretty?: boolean;
-	plainText?: boolean;
-}
-
 interface SendEmailOptions {
 	from?: string;
 	to: string | string[];

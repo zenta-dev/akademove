@@ -24,7 +24,6 @@ import type { Hono } from "hono";
 import { TRUSTED_ORIGINS } from "@/core/constants";
 import { BaseError, UnknownError } from "@/core/error";
 import type { HonoContext, ORPCContext, UserInContext } from "@/core/interface";
-import { RBACService } from "@/core/services/rbac";
 import { FetchServerRouter } from "@/features";
 import { log } from "@/utils";
 import {
@@ -138,10 +137,7 @@ export const setupOrpcRouter = (app: Hono<HonoContext>) => {
 					new OpenAPIReferencePlugin({
 						schemaConverters: [converter],
 						specGenerateOptions: {
-							commonSchemas: {
-								...AllSchemaRegistries,
-								Statements: { schema: RBACService.schema, strategy: "input" },
-							},
+							commonSchemas: AllSchemaRegistries,
 							info: {
 								title: "AkadeMove API",
 								version: "1.0.0",

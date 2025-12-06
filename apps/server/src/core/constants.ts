@@ -53,7 +53,7 @@ export const CONFIGURATION_KEYS = {
 	RIDE_SERVICE_PRICING: "ride-service-pricing",
 	DELIVERY_SERVICE_PRICING: "delivery-service-pricing",
 	FOOD_SERVICE_PRICING: "food-service-pricing",
-	COMMISSION_RATES: "commission-rates",
+	BUSINESS_CONFIGURATION: "business-configuration",
 } as const;
 export const createSuccesSchema = <
 	TSchema,
@@ -80,7 +80,8 @@ export const DRIVER_POOL_KEY = "driver-pool";
 
 /**
  * Business Constants
- * These values define core business rules and should be configurable via admin panel
+ * NOTE: Pricing-related values (cancellation fees, min amounts, etc.) MUST be stored in database.
+ * Only non-pricing technical constants should be here.
  */
 export const BUSINESS_CONSTANTS = Object.freeze({
 	// Order matching
@@ -88,22 +89,6 @@ export const BUSINESS_CONSTANTS = Object.freeze({
 	DRIVER_MATCHING_RADIUS_KM: 5, // Initial radius in kilometers
 	DRIVER_MATCHING_RADIUS_EXPANSION: 0.2, // Expand by 20% on timeout
 	DRIVER_MAX_CANCELLATIONS_PER_DAY: 3,
-
-	// Order pricing
-	DEFAULT_TIP_PERCENTAGE: 0.1, // 10%
-	MINIMUM_ORDER_VALUE: 5000, // IDR
-	MAXIMUM_ORDER_VALUE: 1_000_000, // IDR
-
-	// Commission rates (should be loaded from configuration)
-	RIDE_COMMISSION_RATE: 0.15, // 15%
-	DELIVERY_COMMISSION_RATE: 0.15, // 15%
-	FOOD_COMMISSION_RATE: 0.2, // 20%
-	MERCHANT_FOOD_COMMISSION_RATE: 0.1, // 10%
-
-	// Cancellation fees
-	USER_CANCELLATION_FEE_BEFORE_ACCEPT: 0, // 0%
-	USER_CANCELLATION_FEE_AFTER_ACCEPT: 0.1, // 10%
-	NO_SHOW_FEE: 0.5, // 50%
 
 	// Location tracking
 	LOCATION_UPDATE_INTERVAL_MS: 5000, // 5 seconds

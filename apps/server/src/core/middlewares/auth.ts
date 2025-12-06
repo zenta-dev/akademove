@@ -1,10 +1,10 @@
 import { os } from "@orpc/server";
+import type { RoleAccess } from "@repo/schema";
 import type { UserRole } from "@repo/schema/user";
-import type { Permissions } from "@repo/shared";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
 import { isDev, log, safeAsync } from "@/utils";
-import { AuthError, MiddlewareError } from "../error";
+import { AuthError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
 const base = os.$context<ORPCContext>();
@@ -118,48 +118,34 @@ export const orpcRequireAuthMiddleware = base.middleware(
 	},
 );
 
-export const hasPermission = (permissions: Permissions) =>
-	base.middleware(async ({ context, next }) => {
-		const { user, svc } = context;
-		if (!user) {
-			throw new AuthError("Invalid session", {
-				code: "UNAUTHORIZED",
-			});
-		}
-		const ok = svc.rbac.hasPermission({ role: user.role, permissions });
-		if (!ok) {
-			throw new MiddlewareError(
-				`Access denied: Missing required permission '${JSON.stringify(permissions)}'`,
-				{
-					code: "FORBIDDEN",
-				},
-			);
-		}
-		return await next();
-	});
-
 // "ALL" means any logged in user
 // "SYSTEM" means only system level users like ADMIN and OPERATOR only
-type Roles = UserRole | "ALL" | "SYSTEM";
 const systemRoles: UserRole[] = ["ADMIN", "OPERATOR"];
-export const requireRoles = (...roles: Roles[]) =>
+
+export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
+	if (!userRole) return false;
+
+	const hasRole = roles.some((role) => {
+		if (role === "ALL") return true;
+		if (role === "SYSTEM") {
+			return systemRoles.includes(userRole);
+		}
+		return role === userRole;
+	});
+
+	return hasRole;
+}
+
+export const requireRoles = (...roles: RoleAccess[]) =>
 	base.middleware(async ({ context, next }) => {
 		const userRole = context.user?.role;
-		console.log("userRole", userRole);
-		console.log("requiredRoles", roles);
 		if (!userRole) {
 			throw new AuthError("Invalid session", {
 				code: "UNAUTHORIZED",
 			});
 		}
 
-		const hasRole = roles.some((role) => {
-			if (role === "ALL") return true;
-			if (role === "SYSTEM") {
-				return systemRoles.includes(userRole);
-			}
-			return role === userRole;
-		});
+		const hasRole = hasRoles(userRole, ...roles);
 
 		if (!hasRole) {
 			throw new AuthError("Access denied: Missing required role", {

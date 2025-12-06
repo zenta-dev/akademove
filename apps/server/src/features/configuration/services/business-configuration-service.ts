@@ -1,0 +1,184 @@
+import type { BusinessConfiguration } from "@repo/schema/configuration";
+import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
+import { RepositoryError } from "@/core/error";
+import type { DatabaseService } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import { log } from "@/utils";
+
+/**
+ * BusinessConfigurationService - Provides typed access to business configuration values.
+ *
+ * All pricing-related values MUST come from the database, not static constants.
+ * This service ensures consistent access to business rules that can be changed
+ * by admin/operator via the configuration panel.
+ *
+ * @example
+ * ```typescript
+ * const config = await BusinessConfigurationService.getConfig(db, kv);
+ * const minTransfer = config.minTransferAmount;
+ * const cancellationFee = config.userCancellationFeeAfterAccept;
+ * ```
+ */
+export class BusinessConfigurationService {
+	private static readonly CACHE_KEY = "business-config";
+
+	/**
+	 * Get business configuration from database with caching
+	 *
+	 * @param db - Database service
+	 * @param kv - Key-value service for caching
+	 * @returns Business configuration
+	 * @throws {RepositoryError} When configuration is not found
+	 */
+	static async getConfig(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<BusinessConfiguration> {
+		try {
+			// Try to get from cache first
+			const cached = await kv.get<BusinessConfiguration>(
+				BusinessConfigurationService.CACHE_KEY,
+			);
+			if (cached) {
+				return cached;
+			}
+
+			// Fetch from database
+			const result = await db.query.configuration.findFirst({
+				where: (f, op) =>
+					op.eq(f.key, CONFIGURATION_KEYS.BUSINESS_CONFIGURATION),
+			});
+
+			if (!result) {
+				log.error(
+					"[BusinessConfigurationService] Business configuration not found in database",
+				);
+				throw new RepositoryError(
+					"Business configuration not found. Please run database seed.",
+					{ code: "NOT_FOUND" },
+				);
+			}
+
+			const config = result.value as unknown as BusinessConfiguration;
+
+			// Cache for 1 hour
+			await kv.put(BusinessConfigurationService.CACHE_KEY, config, {
+				expirationTtl: CACHE_TTLS["1h"],
+			});
+
+			return config;
+		} catch (error) {
+			if (error instanceof RepositoryError) {
+				throw error;
+			}
+			log.error(
+				{ error },
+				"[BusinessConfigurationService] Failed to get business configuration",
+			);
+			throw new RepositoryError("Failed to get business configuration", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	/**
+	 * Invalidate the cached business configuration.
+	 * Call this when business configuration is updated.
+	 *
+	 * @param kv - Key-value service
+	 */
+	static async invalidateCache(kv: KeyValueService): Promise<void> {
+		await kv.delete(BusinessConfigurationService.CACHE_KEY);
+		log.info(
+			"[BusinessConfigurationService] Business configuration cache invalidated",
+		);
+	}
+
+	/**
+	 * Get minimum transfer amount from config
+	 */
+	static async getMinTransferAmount(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.minTransferAmount;
+	}
+
+	/**
+	 * Get minimum withdrawal amount from config
+	 */
+	static async getMinWithdrawalAmount(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.minWithdrawalAmount;
+	}
+
+	/**
+	 * Get minimum top-up amount from config
+	 */
+	static async getMinTopUpAmount(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.minTopUpAmount;
+	}
+
+	/**
+	 * Get quick top-up amounts from config
+	 */
+	static async getQuickTopUpAmounts(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number[]> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.quickTopUpAmounts;
+	}
+
+	/**
+	 * Get cancellation fee rate before driver accepts
+	 */
+	static async getCancellationFeeBeforeAccept(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.userCancellationFeeBeforeAccept;
+	}
+
+	/**
+	 * Get cancellation fee rate after driver accepts
+	 */
+	static async getCancellationFeeAfterAccept(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.userCancellationFeeAfterAccept;
+	}
+
+	/**
+	 * Get no-show fee rate
+	 */
+	static async getNoShowFee(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.noShowFee;
+	}
+
+	/**
+	 * Get high value order threshold for OTP verification
+	 */
+	static async getHighValueOrderThreshold(
+		db: DatabaseService,
+		kv: KeyValueService,
+	): Promise<number> {
+		const config = await BusinessConfigurationService.getConfig(db, kv);
+		return config.highValueOrderThreshold;
+	}
+}

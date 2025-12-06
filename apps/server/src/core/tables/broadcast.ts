@@ -55,15 +55,15 @@ export const broadcast = pgTable(
 			.notNull()
 			.default("ALL")
 			.$type<TargetAudience>(),
-		targetUserIds: uuid("target_user_ids").array(),
-		scheduledAt: timestamp("scheduled_at", { withTime: true }),
-		sentAt: timestamp("sent_at", { withTime: true }),
+		targetIds: uuid("target_ids").array(),
+		scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
+		sentAt: timestamp("sent_at", { withTimezone: true }),
 		totalRecipients: integer("total_recipients").default(0),
 		sentCount: integer("sent_count").default(0),
 		failedCount: integer("failed_count").default(0),
 		createdBy: uuid("created_by").notNull(),
-		createdAt: timestamp("created_at", { withTime: true }).defaultNow(),
-		updatedAt: timestamp("updated_at", { withTime: true }).defaultNow(),
+		createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+		updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 	},
 	(table) => [
 		// Indexes for performance
@@ -80,19 +80,19 @@ export const broadcast = pgTable(
 );
 // Zod Schemas
 export const BroadcastSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 	title: z.string().min(1, "Title is required").max(255, "Title too long"),
 	message: z.string().min(1, "Message is required"),
 	type: BroadcastTypeSchema,
 	status: BroadcastStatusSchema,
 	targetAudience: TargetAudienceSchema,
-	targetUserIds: z.array(z.string().uuid()).optional(),
+	targetIds: z.array(z.uuid()).optional(),
 	scheduledAt: z.date().optional(),
 	sentAt: z.date().optional(),
 	totalRecipients: z.number().int().min(0).default(0),
 	sentCount: z.number().int().min(0).default(0),
 	failedCount: z.number().int().min(0).default(0),
-	createdBy: z.string().uuid(),
+	createdBy: z.uuid(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 });

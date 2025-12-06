@@ -222,21 +222,6 @@ export interface IAuthService {
 }
 
 /**
- * IRBACService - Abstract authorization service interface
- */
-export interface IRBACService<TRole, TPermissions> {
-	/**
-	 * Check if a role has specific permissions
-	 */
-	hasPermission(input: { role: TRole; permissions: TPermissions }): boolean;
-
-	/**
-	 * Get all permissions for a role
-	 */
-	getPermissions(role: TRole): TPermissions;
-}
-
-/**
  * IPasswordManager - Abstract password hashing interface
  */
 export interface IPasswordManager {
