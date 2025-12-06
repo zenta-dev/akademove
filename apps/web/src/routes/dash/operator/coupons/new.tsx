@@ -8,9 +8,7 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 export const Route = createFileRoute("/dash/operator/coupons/new")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.COUPONS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			coupon: ["create"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

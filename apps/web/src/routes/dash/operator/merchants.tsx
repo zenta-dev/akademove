@@ -14,9 +14,7 @@ export const Route = createFileRoute("/dash/operator/merchants")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.MERCHANTS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			merchant: ["get", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

@@ -25,13 +25,7 @@ import { useMyMerchant } from "@/providers/merchant";
 export const Route = createFileRoute("/dash/merchant/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.OVERVIEW }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			merchant: ["get", "update"],
-			merchantMenu: ["list", "get", "create", "update", "delete"],
-			order: ["get", "update"],
-			review: ["get"],
-			report: ["get"],
-		});
+		const ok = await hasAccess(["MERCHANT"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

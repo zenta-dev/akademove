@@ -7,9 +7,7 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 export const Route = createFileRoute("/dash/user/bookings")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.BOOKINGS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			bookings: ["create", "get", "update", "delete"],
-		});
+		const ok = await hasAccess(["USER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

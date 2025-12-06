@@ -14,9 +14,7 @@ export const Route = createFileRoute("/dash/operator/orders")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.ORDERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			order: ["get", "update", "cancel", "assign"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

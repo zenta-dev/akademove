@@ -44,17 +44,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/admin/analytics")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.ANALYTICS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			order: ["get", "update", "delete", "cancel", "assign"],
-			report: ["create", "get", "update", "delete", "export"],
-			review: ["get", "update", "delete"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -74,53 +70,43 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch dashboard stats
-	const { data: stats, isLoading: statsLoading } = useQuery({
-		queryKey: ["admin", "dashboard-stats", selectedPeriod],
-		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({
-				query: { period: selectedPeriod },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000,
-	});
+	const { data: stats, isLoading: statsLoading } = useQuery(
+		orpcQuery.user.admin.dashboardStats.queryOptions({
+			input: { query: { period: selectedPeriod } },
+			refetchInterval: 60000,
+		}),
+	);
 
 	// Fetch recent orders for analytics
-	const { data: recentOrders } = useQuery({
-		queryKey: ["admin", "analytics", "orders"],
-		queryFn: async () => {
-			const result = await orpcClient.order.list({
+	const { data: recentOrders } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: {
 				query: {
 					limit: 1000,
 					sortBy: "createdAt",
 					order: "desc",
 					mode: "offset",
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 300000, // 5 minutes
-	});
+			},
+			refetchInterval: 300000, // 5 minutes
+		}),
+	);
 
 	// Fetch users for analytics
-	const { data: users } = useQuery({
-		queryKey: ["admin", "analytics", "users"],
-		queryFn: async () => {
-			const result = await orpcClient.user.admin.list({
+	const { data: users } = useQuery(
+		orpcQuery.user.admin.list.queryOptions({
+			input: {
 				query: {
 					limit: 1000,
 					sortBy: "createdAt",
 					order: "desc",
 					mode: "offset",
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 300000,
-	});
+			},
+
+			refetchInterval: 300000, // 5 minutes
+		}),
+	);
 
 	// Process data for charts
 	const analytics = useMemo(() => {
@@ -134,7 +120,7 @@ function RouteComponent() {
 		});
 
 		const revenueByDay = last30Days.map((date) => {
-			const dayOrders = recentOrders.filter((order) => {
+			const dayOrders = recentOrders.body.data.filter((order) => {
 				const orderDate = new Date(order.createdAt).toISOString().split("T")[0];
 				return orderDate === date && order.status === "COMPLETED";
 			});
@@ -156,17 +142,18 @@ function RouteComponent() {
 		const ordersByType = [
 			{
 				name: "Ride",
-				value: recentOrders.filter((o) => o.type === "RIDE").length,
+				value: recentOrders.body.data.filter((o) => o.type === "RIDE").length,
 				color: "#3b82f6",
 			},
 			{
 				name: "Delivery",
-				value: recentOrders.filter((o) => o.type === "DELIVERY").length,
+				value: recentOrders.body.data.filter((o) => o.type === "DELIVERY")
+					.length,
 				color: "#8b5cf6",
 			},
 			{
 				name: "Food",
-				value: recentOrders.filter((o) => o.type === "FOOD").length,
+				value: recentOrders.body.data.filter((o) => o.type === "FOOD").length,
 				color: "#f59e0b",
 			},
 		];
@@ -175,12 +162,13 @@ function RouteComponent() {
 		const ordersByStatus = [
 			{
 				name: "Completed",
-				value: recentOrders.filter((o) => o.status === "COMPLETED").length,
+				value: recentOrders.body.data.filter((o) => o.status === "COMPLETED")
+					.length,
 				color: "#10b981",
 			},
 			{
 				name: "Active",
-				value: recentOrders.filter((o) =>
+				value: recentOrders.body.data.filter((o) =>
 					[
 						"REQUESTED",
 						"MATCHING",
@@ -195,8 +183,9 @@ function RouteComponent() {
 			},
 			{
 				name: "Cancelled",
-				value: recentOrders.filter((o) => o.status.startsWith("CANCELLED"))
-					.length,
+				value: recentOrders.body.data.filter((o) =>
+					o.status.startsWith("CANCELLED"),
+				).length,
 				color: "#ef4444",
 			},
 		];
@@ -212,7 +201,7 @@ function RouteComponent() {
 		});
 
 		const userGrowth = last12Months.map(({ year, month }) => {
-			const monthUsers = users?.filter((user) => {
+			const monthUsers = users?.body.data.filter((user) => {
 				const userDate = new Date(user.createdAt);
 				return userDate.getFullYear() === year && userDate.getMonth() === month;
 			});
@@ -226,22 +215,22 @@ function RouteComponent() {
 		});
 
 		// Order completion rate
-		const completedOrders = recentOrders.filter(
+		const completedOrders = recentOrders.body.data.filter(
 			(o) => o.status === "COMPLETED",
 		).length;
-		const totalOrders = recentOrders.length;
+		const totalOrders = recentOrders.body.data.length;
 		const completionRate =
 			totalOrders > 0 ? (completedOrders / totalOrders) * 100 : 0;
 
 		// Cancellation rate
-		const cancelledOrders = recentOrders.filter((o) =>
+		const cancelledOrders = recentOrders.body.data.filter((o) =>
 			o.status.startsWith("CANCELLED"),
 		).length;
 		const cancellationRate =
 			totalOrders > 0 ? (cancelledOrders / totalOrders) * 100 : 0;
 
 		// Average order value
-		const totalRevenue = recentOrders
+		const totalRevenue = recentOrders.body.data
 			.filter((o) => o.status === "COMPLETED")
 			.reduce((sum, order) => sum + (order.totalPrice ?? 0), 0);
 		const avgOrderValue =
@@ -324,8 +313,9 @@ function RouteComponent() {
 						</div>
 						<Progress value={analytics?.completionRate ?? 0} className="mt-2" />
 						<p className="mt-2 text-muted-foreground text-xs">
-							{stats?.completedOrders?.toLocaleString() ?? 0} /{" "}
-							{stats?.totalOrders?.toLocaleString() ?? 0} orders completed
+							{stats?.body.data.completedOrders?.toLocaleString() ?? 0} /{" "}
+							{stats?.body.data.totalOrders?.toLocaleString() ?? 0} orders
+							completed
 						</p>
 					</CardContent>
 				</Card>
@@ -365,7 +355,8 @@ function RouteComponent() {
 							indicatorClassName="bg-orange-500"
 						/>
 						<p className="mt-2 text-muted-foreground text-xs">
-							{stats?.cancelledOrders?.toLocaleString() ?? 0} cancelled orders
+							{stats?.body.data.cancelledOrders?.toLocaleString() ?? 0}{" "}
+							cancelled orders
 						</p>
 					</CardContent>
 				</Card>
@@ -379,10 +370,11 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.onlineDrivers?.toLocaleString() ?? 0}
+							{stats?.body.data.onlineDrivers?.toLocaleString() ?? 0}
 						</div>
 						<p className="mt-2 text-muted-foreground text-xs">
-							of {stats?.totalDrivers?.toLocaleString() ?? 0} total drivers
+							of {stats?.body.data.totalDrivers?.toLocaleString() ?? 0} total
+							drivers
 						</p>
 					</CardContent>
 				</Card>
@@ -496,20 +488,20 @@ function RouteComponent() {
 									<div className="flex items-center justify-between">
 										<span className="text-sm">Total Revenue</span>
 										<span className="font-semibold">
-											{formatPrice(stats?.totalRevenue ?? 0)}
+											{formatPrice(stats?.body.data.totalRevenue ?? 0)}
 										</span>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm">Today's Revenue</span>
 										<span className="font-semibold">
-											{formatPrice(stats?.todayRevenue ?? 0)}
+											{formatPrice(stats?.body.data.todayRevenue ?? 0)}
 										</span>
 									</div>
 									<div className="flex items-center justify-between">
 										<span className="text-sm">Avg Daily Revenue</span>
 										<span className="font-semibold">
 											{formatPrice(
-												(stats?.totalRevenue ?? 0) /
+												(stats?.body.data.totalRevenue ?? 0) /
 													Math.max(analytics?.revenueByDay?.length ?? 1, 1),
 											)}
 										</span>
@@ -705,16 +697,16 @@ function RouteComponent() {
 												<span className="text-sm">Users</span>
 											</div>
 											<span className="font-semibold">
-												{stats?.totalUsers?.toLocaleString() ?? 0}
+												{stats?.body.data.totalUsers?.toLocaleString() ?? 0}
 											</span>
 										</div>
 										<Progress
 											value={
-												((stats?.totalUsers ?? 0) /
+												((stats?.body.data.totalUsers ?? 0) /
 													Math.max(
-														(stats?.totalUsers ?? 0) +
-															(stats?.totalDrivers ?? 0) +
-															(stats?.totalMerchants ?? 0),
+														(stats?.body.data.totalUsers ?? 0) +
+															(stats?.body.data.totalDrivers ?? 0) +
+															(stats?.body.data.totalMerchants ?? 0),
 														1,
 													)) *
 												100
@@ -730,16 +722,16 @@ function RouteComponent() {
 												<span className="text-sm">Drivers</span>
 											</div>
 											<span className="font-semibold">
-												{stats?.totalDrivers?.toLocaleString() ?? 0}
+												{stats?.body.data.totalDrivers?.toLocaleString() ?? 0}
 											</span>
 										</div>
 										<Progress
 											value={
-												((stats?.totalDrivers ?? 0) /
+												((stats?.body.data.totalDrivers ?? 0) /
 													Math.max(
-														(stats?.totalUsers ?? 0) +
-															(stats?.totalDrivers ?? 0) +
-															(stats?.totalMerchants ?? 0),
+														(stats?.body.data.totalUsers ?? 0) +
+															(stats?.body.data.totalDrivers ?? 0) +
+															(stats?.body.data.totalMerchants ?? 0),
 														1,
 													)) *
 												100
@@ -756,16 +748,16 @@ function RouteComponent() {
 												<span className="text-sm">Merchants</span>
 											</div>
 											<span className="font-semibold">
-												{stats?.totalMerchants?.toLocaleString() ?? 0}
+												{stats?.body.data.totalMerchants?.toLocaleString() ?? 0}
 											</span>
 										</div>
 										<Progress
 											value={
-												((stats?.totalMerchants ?? 0) /
+												((stats?.body.data.totalMerchants ?? 0) /
 													Math.max(
-														(stats?.totalUsers ?? 0) +
-															(stats?.totalDrivers ?? 0) +
-															(stats?.totalMerchants ?? 0),
+														(stats?.body.data.totalUsers ?? 0) +
+															(stats?.body.data.totalDrivers ?? 0) +
+															(stats?.body.data.totalMerchants ?? 0),
 														1,
 													)) *
 												100
@@ -779,9 +771,9 @@ function RouteComponent() {
 										<p className="font-medium text-sm">Total Platform Users</p>
 										<p className="mt-1 font-bold text-3xl">
 											{(
-												(stats?.totalUsers ?? 0) +
-												(stats?.totalDrivers ?? 0) +
-												(stats?.totalMerchants ?? 0)
+												(stats?.body.data.totalUsers ?? 0) +
+												(stats?.body.data.totalDrivers ?? 0) +
+												(stats?.body.data.totalMerchants ?? 0)
 											).toLocaleString()}
 										</p>
 										<p className="mt-1 text-muted-foreground text-xs">
@@ -851,16 +843,16 @@ function RouteComponent() {
 							<CardContent>
 								<div className="font-bold text-2xl text-blue-600">
 									{(
-										((stats?.activeOrders ?? 0) /
-											Math.max(stats?.totalOrders ?? 1, 1)) *
+										((stats?.body.data.activeOrders ?? 0) /
+											Math.max(stats?.body.data.totalOrders ?? 1, 1)) *
 										100
 									).toFixed(1)}
 									%
 								</div>
 								<Progress
 									value={
-										((stats?.activeOrders ?? 0) /
-											Math.max(stats?.totalOrders ?? 1, 1)) *
+										((stats?.body.data.activeOrders ?? 0) /
+											Math.max(stats?.body.data.totalOrders ?? 1, 1)) *
 										100
 									}
 									className="mt-2"
@@ -924,8 +916,8 @@ function RouteComponent() {
 								<div
 									className={cn(
 										"flex items-start gap-3 rounded-lg border p-4",
-										(stats?.onlineDrivers ?? 0) /
-											Math.max(stats?.totalDrivers ?? 1, 1) >=
+										(stats?.body.data.onlineDrivers ?? 0) /
+											Math.max(stats?.body.data.totalDrivers ?? 1, 1) >=
 											0.2
 											? "border-green-200 bg-green-50 dark:border-green-900 dark:bg-green-950"
 											: "border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950",
@@ -934,8 +926,8 @@ function RouteComponent() {
 									<Car
 										className={cn(
 											"mt-0.5 h-5 w-5",
-											(stats?.onlineDrivers ?? 0) /
-												Math.max(stats?.totalDrivers ?? 1, 1) >=
+											(stats?.body.data.onlineDrivers ?? 0) /
+												Math.max(stats?.body.data.totalDrivers ?? 1, 1) >=
 												0.2
 												? "text-green-600 dark:text-green-400"
 												: "text-orange-600 dark:text-orange-400",
@@ -945,8 +937,8 @@ function RouteComponent() {
 										<p
 											className={cn(
 												"font-medium text-sm",
-												(stats?.onlineDrivers ?? 0) /
-													Math.max(stats?.totalDrivers ?? 1, 1) >=
+												(stats?.body.data.onlineDrivers ?? 0) /
+													Math.max(stats?.body.data.totalDrivers ?? 1, 1) >=
 													0.2
 													? "text-green-900 dark:text-green-100"
 													: "text-orange-900 dark:text-orange-100",
@@ -957,17 +949,17 @@ function RouteComponent() {
 										<p
 											className={cn(
 												"text-xs",
-												(stats?.onlineDrivers ?? 0) /
-													Math.max(stats?.totalDrivers ?? 1, 1) >=
+												(stats?.body.data.onlineDrivers ?? 0) /
+													Math.max(stats?.body.data.totalDrivers ?? 1, 1) >=
 													0.2
 													? "text-green-700 dark:text-green-300"
 													: "text-orange-700 dark:text-orange-300",
 											)}
 										>
-											{(stats?.onlineDrivers ?? 0) /
-												Math.max(stats?.totalDrivers ?? 1, 1) >=
+											{(stats?.body.data.onlineDrivers ?? 0) /
+												Math.max(stats?.body.data.totalDrivers ?? 1, 1) >=
 											0.2
-												? `Good driver availability with ${stats?.onlineDrivers} drivers currently online.`
+												? `Good driver availability with ${stats?.body.data.onlineDrivers} drivers currently online.`
 												: "Low driver availability. Consider incentives to increase online drivers."}
 										</p>
 									</div>
@@ -982,8 +974,8 @@ function RouteComponent() {
 										<p className="text-blue-700 text-xs dark:text-blue-300">
 											Average order value:{" "}
 											{formatPrice(analytics?.avgOrderValue ?? 0)}. Today's
-											revenue: {formatPrice(stats?.todayRevenue ?? 0)} from{" "}
-											{stats?.todayOrders} orders.
+											revenue: {formatPrice(stats?.body.data.todayRevenue ?? 0)}{" "}
+											from {stats?.body.data.todayOrders} orders.
 										</p>
 									</div>
 								</div>

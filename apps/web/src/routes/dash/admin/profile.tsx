@@ -47,9 +47,7 @@ import { createPhotoPreviewUrl } from "@/utils/file";
 export const Route = createFileRoute("/dash/admin/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.PROFILE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["get", "update"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

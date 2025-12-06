@@ -25,9 +25,7 @@ import { cn } from "@/utils/cn";
 export const Route = createFileRoute("/dash/admin/contacts/$id")({
 	head: () => ({ meta: [{ title: `${m.contact_us()} - ${APP_NAME}` }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			contact: ["get", "update", "respond"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

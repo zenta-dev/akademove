@@ -17,17 +17,7 @@ import { orpcClient } from "@/lib/orpc";
 export const Route = createFileRoute("/dash/operator/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.OVERVIEW }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update", "ban"],
-			merchant: ["get", "update"],
-			order: ["get", "update", "cancel", "assign"],
-			schedule: ["get", "update"],
-			coupon: ["get", "update"],
-			report: ["create", "get", "export"],
-			review: ["get"],
-			user: ["get", "update"],
-			configurations: ["get", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

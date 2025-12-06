@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { UserListQuerySchema } from "@repo/schema/pagination";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { UserTable } from "@/components/tables/user/table";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,15 +8,13 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/operator/users")({
 	validateSearch: (values) => {
-		const search = UnifiedPaginationQuerySchema.parse(values);
+		const search = UserListQuerySchema.parse(values);
 		if (!values.limit) return { ...search, page: 1, limit: 12 };
 		return search;
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.USERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["list", "get", "update", "ban"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

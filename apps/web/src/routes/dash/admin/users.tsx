@@ -1,5 +1,5 @@
 import { m } from "@repo/i18n";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { UserListQuerySchema } from "@repo/schema/pagination";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { InviteUserDialog } from "@/components/dialogs/invite-user";
 import { UserTable } from "@/components/tables/user/table";
@@ -9,25 +9,13 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
 export const Route = createFileRoute("/dash/admin/users")({
 	validateSearch: (values) => {
-		const search = UnifiedPaginationQuerySchema.parse(values);
-		if (!values.limit) return { ...search, page: 1, limit: 12 };
+		const search = UserListQuerySchema.parse(values);
+		if (!values.limit) return { ...search, page: 1, limit: 11 };
 		return search;
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.USERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: [
-				"invite",
-				"list",
-				"get",
-				"update",
-				"delete",
-				"verify",
-				"set-role",
-				"set-password",
-				"ban",
-			],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

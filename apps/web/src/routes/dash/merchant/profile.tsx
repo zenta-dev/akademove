@@ -55,9 +55,7 @@ import { createPhotoPreviewUrl } from "@/utils/file";
 export const Route = createFileRoute("/dash/merchant/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.PROFILE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			merchant: ["get", "update"],
-		});
+		const ok = await hasAccess(["MERCHANT"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

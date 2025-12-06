@@ -61,9 +61,7 @@ export const Route = createFileRoute("/dash/user/wallet")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.wallet }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["get"],
-		});
+		const ok = await hasAccess(["USER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -80,6 +78,27 @@ function RouteComponent() {
 	const [topUpDialogOpen, setTopUpDialogOpen] = useState(false);
 	const [topUpAmount, setTopUpAmount] = useState("");
 	const [paymentMethod, setPaymentMethod] = useState<string>("QRIS");
+
+	// Fetch business configuration for validation limits
+	const { data: businessConfig } = useQuery({
+		queryKey: ["businessConfig"],
+		queryFn: async () => {
+			const result = await orpcClient.configuration.get({
+				params: { key: "business-configuration" },
+			});
+			if (result.status !== 200) throw new Error(result.body.message);
+			return result.body.data.value as {
+				minTransferAmount: number;
+				minWithdrawalAmount: number;
+				minTopUpAmount: number;
+				quickTopUpAmounts: number[];
+				userCancellationFeeBeforeAccept: number;
+				userCancellationFeeAfterAccept: number;
+				noShowFee: number;
+				highValueOrderThreshold: number;
+			};
+		},
+	});
 
 	// Fetch wallet data
 	const { data: wallet, isLoading: walletLoading } = useQuery({
@@ -198,8 +217,11 @@ function RouteComponent() {
 			toast.error("Please enter a valid amount");
 			return;
 		}
-		if (amount < 10000) {
-			toast.error("Minimum top-up amount is Rp 10,000");
+		const minTopUp = businessConfig?.minTopUpAmount ?? 10000;
+		if (amount < minTopUp) {
+			toast.error(
+				`Minimum top-up amount is Rp ${minTopUp.toLocaleString("id-ID")}`,
+			);
 			return;
 		}
 
@@ -212,7 +234,10 @@ function RouteComponent() {
 		});
 	};
 
-	const quickAmounts = [10000, 25000, 50000, 100000, 250000, 500000];
+	// Quick amounts from business configuration
+	const quickAmounts = businessConfig?.quickTopUpAmounts ?? [
+		10000, 25000, 50000, 100000, 250000, 500000,
+	];
 
 	return (
 		<>
@@ -422,7 +447,7 @@ function RouteComponent() {
 						<div className="space-y-2">
 							<Label>Quick Select</Label>
 							<div className="grid grid-cols-3 gap-2">
-								{quickAmounts.map((amount) => (
+								{quickAmounts.map((amount: number) => (
 									<Button
 										key={amount}
 										variant="outline"

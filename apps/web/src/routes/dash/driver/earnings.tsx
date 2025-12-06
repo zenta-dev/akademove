@@ -52,15 +52,13 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/earnings")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.EARNINGS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			order: ["get"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -80,29 +78,20 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch current driver info
-	const { data: driver, isLoading: driverLoading } = useQuery({
-		queryKey: ["driver", "me"],
-		queryFn: async () => {
-			const result = await orpcClient.driver.getMine({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: driver, isLoading: driverLoading } = useQuery(
+		orpcQuery.driver.getMine.queryOptions({}),
+	);
 
 	// Fetch driver analytics
-	const { data: analytics, isLoading: analyticsLoading } = useQuery({
-		queryKey: ["driver", driver?.id, "analytics", selectedPeriod],
-		queryFn: async () => {
-			if (!driver?.id) throw new Error("Driver not found");
-			const result = await orpcClient.driver.getAnalytics({
-				params: { id: driver.id },
+	const { data: analytics, isLoading: analyticsLoading } = useQuery(
+		orpcQuery.driver.getAnalytics.queryOptions({
+			input: {
+				params: { id: driver?.body.data?.id || "" },
 				query: { period: selectedPeriod },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		enabled: !!driver?.id,
-	});
+			},
+			enabled: !!driver?.body.data?.id,
+		}),
+	);
 
 	const formatPrice = (price: number) => {
 		return new Intl.NumberFormat("id-ID", {
@@ -113,7 +102,7 @@ function RouteComponent() {
 	};
 
 	const handleExport = async () => {
-		if (!driver?.id) return;
+		if (!driver?.body.data?.id) return;
 
 		try {
 			// Calculate date range based on period
@@ -136,7 +125,7 @@ function RouteComponent() {
 			}
 
 			const result = await orpcClient.analytics.exportDriverAnalytics({
-				params: { driverId: driver.id },
+				params: { driverId: driver?.body.data?.id || "" },
 				query: {
 					startDate: startDate.toISOString(),
 					endDate: endDate.toISOString(),
@@ -166,10 +155,12 @@ function RouteComponent() {
 		FOOD: "#f59e0b",
 	};
 
-	const earningsByTypeData = analytics?.earningsByType.map((item) => ({
-		...item,
-		color: SERVICE_TYPE_COLORS[item.type] || "#6b7280",
-	}));
+	const earningsByTypeData = analytics?.body.data.earningsByType.map(
+		(item) => ({
+			...item,
+			color: SERVICE_TYPE_COLORS[item.type] || "#6b7280",
+		}),
+	);
 
 	const isLoading = driverLoading || analyticsLoading;
 
@@ -223,10 +214,10 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{formatPrice(analytics?.totalEarnings ?? 0)}
+							{formatPrice(analytics?.body.data.totalEarnings ?? 0)}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
-							From {analytics?.completedOrders ?? 0} completed orders
+							From {analytics?.body.data.completedOrders ?? 0} completed orders
 						</p>
 					</CardContent>
 				</Card>
@@ -240,7 +231,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl text-orange-600">
-							{formatPrice(analytics?.totalCommission ?? 0)}
+							{formatPrice(analytics?.body.data.totalCommission ?? 0)}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
 							Platform commission
@@ -255,7 +246,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl text-green-600">
-							{formatPrice(analytics?.netEarnings ?? 0)}
+							{formatPrice(analytics?.body.data.netEarnings ?? 0)}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
 							After commission
@@ -274,16 +265,16 @@ function RouteComponent() {
 						<div
 							className={cn(
 								"font-bold text-2xl",
-								(analytics?.completionRate ?? 0) >= 85
+								(analytics?.body.data.completionRate ?? 0) >= 85
 									? "text-green-600"
 									: "text-orange-600",
 							)}
 						>
-							{(analytics?.completionRate ?? 0).toFixed(1)}%
+							{(analytics?.body.data.completionRate ?? 0).toFixed(1)}%
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
-							{analytics?.completedOrders ?? 0} of {analytics?.totalOrders ?? 0}{" "}
-							orders
+							{analytics?.body.data.completedOrders ?? 0} of{" "}
+							{analytics?.body.data.totalOrders ?? 0} orders
 						</p>
 					</CardContent>
 				</Card>
@@ -300,7 +291,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{(analytics?.averageRating ?? 0).toFixed(2)}
+							{(analytics?.body.data.averageRating ?? 0).toFixed(2)}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
 							From completed orders
@@ -317,12 +308,12 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl text-red-600">
-							{analytics?.cancelledOrders ?? 0}
+							{analytics?.body.data.cancelledOrders ?? 0}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
 							{(
-								((analytics?.cancelledOrders ?? 0) /
-									Math.max(analytics?.totalOrders ?? 1, 1)) *
+								((analytics?.body.data.cancelledOrders ?? 0) /
+									Math.max(analytics?.body.data.totalOrders ?? 1, 1)) *
 								100
 							).toFixed(1)}
 							% cancellation rate
@@ -337,7 +328,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{analytics?.totalOrders ?? 0}
+							{analytics?.body.data.totalOrders ?? 0}
 						</div>
 						<p className="mt-1 text-muted-foreground text-xs">
 							All orders in period
@@ -365,7 +356,7 @@ function RouteComponent() {
 						</CardHeader>
 						<CardContent>
 							<ResponsiveContainer width="100%" height={350}>
-								<AreaChart data={analytics?.earningsByDay ?? []}>
+								<AreaChart data={analytics?.body.data.earningsByDay ?? []}>
 									<defs>
 										<linearGradient
 											id="colorEarnings"
@@ -407,6 +398,16 @@ function RouteComponent() {
 											formatPrice(value),
 											"Earnings",
 										]}
+										labelFormatter={(label) => {
+											// Handle YYYY-MM-DD format from database
+											const date = new Date(`${label}T00:00:00`);
+											return date.toLocaleDateString("id-ID", {
+												weekday: "long",
+												year: "numeric",
+												month: "long",
+												day: "numeric",
+											});
+										}}
 									/>
 									<Legend />
 									<Area
@@ -430,7 +431,7 @@ function RouteComponent() {
 						</CardHeader>
 						<CardContent>
 							<ResponsiveContainer width="100%" height={300}>
-								<BarChart data={analytics?.earningsByDay ?? []}>
+								<BarChart data={analytics?.body.data.earningsByDay ?? []}>
 									<CartesianGrid
 										strokeDasharray="3 3"
 										className="stroke-muted"
@@ -439,6 +440,14 @@ function RouteComponent() {
 										dataKey="date"
 										className="text-xs"
 										tick={{ fill: "currentColor" }}
+										tickFormatter={(value) => {
+											// Handle YYYY-MM-DD format from database
+											const date = new Date(`${value}T00:00:00`);
+											return date.toLocaleDateString("id-ID", {
+												month: "short",
+												day: "numeric",
+											});
+										}}
 									/>
 									<YAxis className="text-xs" tick={{ fill: "currentColor" }} />
 									<Tooltip
@@ -446,6 +455,16 @@ function RouteComponent() {
 											backgroundColor: "hsl(var(--card))",
 											border: "1px solid hsl(var(--border))",
 											borderRadius: "var(--radius)",
+										}}
+										labelFormatter={(label) => {
+											// Handle YYYY-MM-DD format from database
+											const date = new Date(`${label}T00:00:00`);
+											return date.toLocaleDateString("id-ID", {
+												weekday: "long",
+												year: "numeric",
+												month: "long",
+												day: "numeric",
+											});
 										}}
 									/>
 									<Bar dataKey="orders" fill="#3b82f6" radius={[8, 8, 0, 0]} />
@@ -511,9 +530,17 @@ function RouteComponent() {
 											className="stroke-muted"
 										/>
 										<XAxis
-											dataKey="type"
+											dataKey="date"
 											className="text-xs"
 											tick={{ fill: "currentColor" }}
+											tickFormatter={(value) => {
+												// Handle YYYY-MM-DD format from database
+												const date = new Date(`${value}T00:00:00`);
+												return date.toLocaleDateString("id-ID", {
+													month: "short",
+													day: "numeric",
+												});
+											}}
 										/>
 										<YAxis
 											className="text-xs"
@@ -551,7 +578,7 @@ function RouteComponent() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							{!analytics?.topEarningDays ||
+							{!analytics?.body.data.topEarningDays ||
 							analytics.topEarningDays.length === 0 ? (
 								<div className="flex flex-col items-center justify-center py-12 text-center">
 									<Calendar className="mb-4 h-12 w-12 text-muted-foreground" />

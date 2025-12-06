@@ -29,7 +29,7 @@ import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/quiz")({
@@ -37,9 +37,7 @@ export const Route = createFileRoute("/dash/driver/quiz")({
 		meta: [{ title: SUB_ROUTE_TITLES.DRIVER.QUIZ ?? "Driver Quiz" }],
 	}),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -90,112 +88,75 @@ function RouteComponent() {
 	const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
 	// Fetch driver data to check quiz status
-	const { data: driverData, isLoading: driverLoading } = useQuery({
-		queryKey: ["driver", "mine"],
-		queryFn: async () => {
-			const result = await orpcClient.driver.getMine();
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: driverData, isLoading: driverLoading } = useQuery(
+		orpcQuery.driver.getMine.queryOptions({
+			input: { query: {} },
+		}),
+	);
 
 	// Fetch latest quiz attempt
-	const { data: latestAttempt, isLoading: attemptLoading } = useQuery({
-		queryKey: ["driver-quiz", "latest"],
-		queryFn: async () => {
-			const result = await orpcClient.driverQuizAnswer.getMyLatestAttempt({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-	});
+	const { data: latestAttempt, isLoading: attemptLoading } = useQuery(
+		orpcQuery.driverQuizAnswer.getMyLatestAttempt.queryOptions({
+			input: {},
+		}),
+	);
 
 	// Start quiz mutation
-	const startQuizMutation = useMutation({
-		mutationFn: async () => {
-			const result = await orpcClient.driverQuizAnswer.startQuiz({
-				body: {},
-			});
-			if (result.status !== 201) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: (data) => {
-			setQuizAttempt(data);
-			setCurrentQuestionIndex(0);
-			setSelectedAnswer(null);
-			setAnsweredQuestions(new Set());
-			setQuizResult(null);
-			queryClient.invalidateQueries({ queryKey: ["driver-quiz", "latest"] });
-			toast.success("Quiz started! Good luck!");
-		},
-		onError: (error) => {
-			toast.error(`Failed to start quiz: ${error.message}`);
-		},
-	});
+	const startQuizMutation = useMutation(
+		orpcQuery.driverQuizAnswer.startQuiz.mutationOptions({
+			onSuccess: (data) => {
+				setQuizAttempt(data.body.data);
+				setCurrentQuestionIndex(0);
+				setSelectedAnswer(null);
+				setAnsweredQuestions(new Set());
+				setQuizResult(null);
+				queryClient.invalidateQueries();
+				toast.success("Quiz started! Good luck!");
+			},
+			onError: (error) => {
+				toast.error(`Failed to start quiz: ${error.message}`);
+			},
+		}),
+	);
 
 	// Submit answer mutation
-	const submitAnswerMutation = useMutation({
-		mutationFn: async ({
-			questionId,
-			optionId,
-		}: {
-			questionId: string;
-			optionId: string;
-		}) => {
-			if (!quizAttempt) throw new Error("No active quiz attempt");
-			const result = await orpcClient.driverQuizAnswer.submitAnswer({
-				body: {
-					attemptId: quizAttempt.attemptId,
-					questionId,
-					selectedOptionId: optionId,
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: (data, variables) => {
-			setAnsweredQuestions((prev) => new Set([...prev, variables.questionId]));
-			if (data.isCorrect) {
-				toast.success(`Correct! +${data.pointsEarned} points`);
-			} else {
-				toast.error("Incorrect answer");
-			}
-		},
-		onError: (error) => {
-			toast.error(`Failed to submit answer: ${error.message}`);
-		},
-	});
+	const submitAnswerMutation = useMutation(
+		orpcQuery.driverQuizAnswer.submitAnswer.mutationOptions({
+			onSuccess: (data, variables) => {
+				setAnsweredQuestions(
+					(prev) => new Set([...prev, variables.body.questionId]),
+				);
+				if (data.body.data.isCorrect) {
+					toast.success(`Correct! +${data.body.data.pointsEarned} points`);
+				} else {
+					toast.error("Incorrect answer");
+				}
+				queryClient.invalidateQueries();
+			},
+			onError: (error) => {
+				toast.error(`Failed to submit answer: ${error.message}`);
+			},
+		}),
+	);
 
 	// Complete quiz mutation
-	const completeQuizMutation = useMutation({
-		mutationFn: async () => {
-			if (!quizAttempt) throw new Error("No active quiz attempt");
-			const result = await orpcClient.driverQuizAnswer.completeQuiz({
-				body: {
-					attemptId: quizAttempt.attemptId,
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: (data) => {
-			setQuizResult(data);
-			setQuizAttempt(null);
-			queryClient.invalidateQueries({ queryKey: ["driver-quiz", "latest"] });
-			queryClient.invalidateQueries({ queryKey: ["driver", "mine"] });
-			if (data.passed) {
-				toast.success("Congratulations! You passed the quiz!");
-			} else {
-				toast.error("You did not pass. Please try again.");
-			}
-		},
-		onError: (error) => {
-			toast.error(`Failed to complete quiz: ${error.message}`);
-		},
-	});
-
-	const handleStartQuiz = useCallback(() => {
-		startQuizMutation.mutate();
-	}, [startQuizMutation]);
+	const completeQuizMutation = useMutation(
+		orpcQuery.driverQuizAnswer.completeQuiz.mutationOptions({
+			onSuccess: (data) => {
+				setQuizResult(data.body.data);
+				setQuizAttempt(null);
+				queryClient.invalidateQueries();
+				if (data.body.data.passed) {
+					toast.success("Congratulations! You passed the quiz!");
+				} else {
+					toast.error("You did not pass. Please try again.");
+				}
+			},
+			onError: (error) => {
+				toast.error(`Failed to complete quiz: ${error.message}`);
+			},
+		}),
+	);
 
 	const handleSubmitAnswer = useCallback(() => {
 		if (!selectedAnswer || !quizAttempt) return;
@@ -203,8 +164,11 @@ function RouteComponent() {
 		if (!currentQuestion) return;
 
 		submitAnswerMutation.mutate({
-			questionId: currentQuestion.id,
-			optionId: selectedAnswer,
+			body: {
+				questionId: currentQuestion.id,
+				selectedOptionId: selectedAnswer,
+				attemptId: quizAttempt.attemptId,
+			},
 		});
 	}, [selectedAnswer, quizAttempt, currentQuestionIndex, submitAnswerMutation]);
 
@@ -217,9 +181,18 @@ function RouteComponent() {
 		}
 	}, [quizAttempt, currentQuestionIndex]);
 
+	const handleStartQuiz = useCallback(() => {
+		startQuizMutation.mutate({
+			body: {},
+		});
+	}, [startQuizMutation]);
+
 	const handleCompleteQuiz = useCallback(() => {
-		completeQuizMutation.mutate();
-	}, [completeQuizMutation]);
+		if (!quizAttempt) return;
+		completeQuizMutation.mutate({
+			body: { attemptId: quizAttempt.attemptId },
+		});
+	}, [completeQuizMutation, quizAttempt]);
 
 	const handleGoToDashboard = useCallback(() => {
 		navigate({ to: "/dash/driver" });
@@ -234,7 +207,7 @@ function RouteComponent() {
 	}
 
 	// If driver has passed the quiz, show success message
-	if (driverData?.quizStatus === "PASSED") {
+	if (driverData?.body.data.quizStatus === "PASSED") {
 		return (
 			<div className="mx-auto max-w-2xl py-8">
 				<Card>
@@ -252,13 +225,15 @@ function RouteComponent() {
 							<p className="text-muted-foreground">
 								Quiz Score:{" "}
 								<span className="font-semibold text-foreground">
-									{driverData.quizScore}%
+									{driverData.body.data.quizScore}%
 								</span>
 							</p>
-							{driverData.quizCompletedAt && (
+							{driverData.body.data.quizCompletedAt && (
 								<p className="text-muted-foreground text-sm">
 									Completed on:{" "}
-									{new Date(driverData.quizCompletedAt).toLocaleDateString()}
+									{new Date(
+										driverData.body.data.quizCompletedAt,
+									).toLocaleDateString()}
 								</p>
 							)}
 						</div>
@@ -525,7 +500,8 @@ function RouteComponent() {
 	}
 
 	// Show start quiz screen or check for in-progress attempt
-	const hasInProgressAttempt = latestAttempt?.status === "IN_PROGRESS";
+	const hasInProgressAttempt =
+		latestAttempt?.body.data?.status === "IN_PROGRESS";
 
 	return (
 		<div className="mx-auto max-w-2xl py-8">
@@ -543,7 +519,7 @@ function RouteComponent() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
-					{driverData?.quizStatus === "FAILED" && (
+					{driverData?.body.data.quizStatus === "FAILED" && (
 						<Alert variant="destructive">
 							<XCircle className="h-4 w-4" />
 							<AlertTitle>Previous Attempt Failed</AlertTitle>

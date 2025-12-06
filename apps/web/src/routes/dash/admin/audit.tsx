@@ -27,9 +27,7 @@ export const Route = createFileRoute("/dash/admin/audit")({
 	},
 	head: () => ({ meta: [{ title: m.audit_logs() }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			configurations: ["list"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

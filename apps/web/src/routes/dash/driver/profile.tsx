@@ -55,9 +55,7 @@ import { useMyDriver } from "@/providers/driver";
 export const Route = createFileRoute("/dash/driver/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.PROFILE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

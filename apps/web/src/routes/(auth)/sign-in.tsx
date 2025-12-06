@@ -27,7 +27,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const Route = createFileRoute("/(auth)/sign-in")({
 	component: RouteComponent,
@@ -51,8 +51,21 @@ function RouteComponent() {
 					}),
 				});
 
-				// Check if user is a driver and needs to take quiz
 				const user = data.body.data.user;
+				if (user.banned) {
+					toast.error(m.banned(), {
+						description: m.account_banned_placeholder({
+							reason: user.banReason || m.no_reason_provided(),
+						}),
+					});
+					await Promise.all([
+						router.invalidate(),
+						queryClient.invalidateQueries(),
+					]);
+					return;
+				}
+
+				// Check if user is a driver and needs to take quiz
 				if (user.role === "DRIVER") {
 					// Fetch driver data to check quiz status
 					try {

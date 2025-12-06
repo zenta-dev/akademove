@@ -48,9 +48,7 @@ export const Route = createFileRoute("/dash/user/history")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.HISTORY }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			order: ["create", "get", "update", "cancel"],
-		});
+		const ok = await hasAccess(["USER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

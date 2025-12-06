@@ -15,9 +15,7 @@ export const Route = createFileRoute("/dash/admin/contacts/")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.CONTACTS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			contact: ["list", "get", "update", "respond"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

@@ -21,9 +21,7 @@ export const Route = createFileRoute("/dash/driver/orders")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.ORDERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			order: ["get", "update"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

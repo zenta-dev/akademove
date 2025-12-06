@@ -55,11 +55,7 @@ import { cn } from "@/utils/cn";
 export const Route = createFileRoute("/dash/merchant/sales")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.SALES }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			report: ["get"],
-			merchant: ["get"],
-			order: ["list"],
-		});
+		const ok = await hasAccess(["MERCHANT"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -296,7 +292,8 @@ function RouteComponent() {
 											dataKey="date"
 											tick={{ fontSize: 12 }}
 											tickFormatter={(value) => {
-												const date = new Date(value);
+												// Handle YYYY-MM-DD format from database
+												const date = new Date(`${value}T00:00:00`);
 												return date.toLocaleDateString("id-ID", {
 													month: "short",
 													day: "numeric",
@@ -315,7 +312,8 @@ function RouteComponent() {
 												m.revenue(),
 											]}
 											labelFormatter={(label) => {
-												const date = new Date(label);
+												// Handle YYYY-MM-DD format from database
+												const date = new Date(`${label}T00:00:00`);
 												return date.toLocaleDateString("id-ID", {
 													weekday: "long",
 													year: "numeric",
@@ -357,7 +355,8 @@ function RouteComponent() {
 											dataKey="date"
 											tick={{ fontSize: 12 }}
 											tickFormatter={(value) => {
-												const date = new Date(value);
+												// Handle YYYY-MM-DD format from database
+												const date = new Date(`${value}T00:00:00`);
 												return date.toLocaleDateString("id-ID", {
 													month: "short",
 													day: "numeric",
@@ -368,7 +367,8 @@ function RouteComponent() {
 										<Tooltip
 											formatter={(value: number) => [value, m.orders()]}
 											labelFormatter={(label) => {
-												const date = new Date(label);
+												// Handle YYYY-MM-DD format from database
+												const date = new Date(`${label}T00:00:00`);
 												return date.toLocaleDateString("id-ID", {
 													weekday: "long",
 													year: "numeric",

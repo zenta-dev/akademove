@@ -47,9 +47,7 @@ import { createPhotoPreviewUrl } from "@/utils/file";
 export const Route = createFileRoute("/dash/operator/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.PROFILE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["get", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -172,7 +170,7 @@ function ViewUserProfile({ user }: { user: User }) {
 						<div>
 							<p className="text-muted-foreground text-sm">{m.phone()}</p>
 							<p className="font-medium">
-								+{user.phone.countryCode} {user.phone.number}
+								+{user?.phone?.countryCode} {user?.phone?.number}
 							</p>
 						</div>
 					</div>

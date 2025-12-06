@@ -21,9 +21,7 @@ export const Route = createFileRoute("/dash/operator/coupons/")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.COUPONS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			coupon: ["get", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

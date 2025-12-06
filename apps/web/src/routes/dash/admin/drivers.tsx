@@ -9,14 +9,12 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 export const Route = createFileRoute("/dash/admin/drivers")({
 	validateSearch: (values) => {
 		const search = UnifiedPaginationQuerySchema.parse(values);
-		if (!values.limit) return { ...search, page: 1, limit: 15 };
+		if (!values.limit) return { ...search, page: 1, limit: 11 };
 		return search;
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.DRIVERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update", "ban", "approve"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

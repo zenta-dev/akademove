@@ -40,14 +40,7 @@ import { cn } from "@/utils/cn";
 export const Route = createFileRoute("/dash/user/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.OVERVIEW }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["get", "update"],
-			order: ["create", "get", "update", "cancel"],
-			review: ["create", "get", "update"],
-			merchant: ["get"],
-			coupon: ["get"],
-			bookings: ["create", "get", "update", "delete"],
-		});
+		const ok = await hasAccess(["USER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

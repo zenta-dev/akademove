@@ -18,6 +18,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
+import { queryClient } from "@/lib/orpc";
 import { useMyMerchant } from "@/providers/merchant";
 
 export const Route = createFileRoute("/dash/merchant/menu")({
@@ -28,9 +29,7 @@ export const Route = createFileRoute("/dash/merchant/menu")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.MERCHANT.MENU }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			merchantMenu: ["list", "get", "create", "update", "delete"],
-		});
+		const ok = await hasAccess(["MERCHANT"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

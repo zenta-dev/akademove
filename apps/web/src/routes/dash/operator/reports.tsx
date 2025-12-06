@@ -60,7 +60,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/operator/reports")({
@@ -71,9 +71,7 @@ export const Route = createFileRoute("/dash/operator/reports")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.REPORTS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			report: ["get", "list", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -111,42 +109,29 @@ function RouteComponent() {
 	);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const { data: reportsResult, isLoading } = useQuery({
-		queryKey: ["reports", search],
-		queryFn: async () => {
-			const result = await orpcClient.report.list({ query: search });
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body;
-		},
-	});
+	const { data: reportsResult, isLoading } = useQuery(
+		orpcQuery.report.list.queryOptions({
+			input: { query: search },
+		}),
+	);
 
-	const updateMutation = useMutation({
-		mutationFn: async ({
-			id,
-			status,
-			resolution,
-		}: {
-			id: string;
-			status: ReportStatus;
-			resolution: string;
-		}) => {
-			const result = await orpcClient.report.update({
-				params: { id },
-				body: { status, resolution },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: () => {
-			toast.success("Report updated successfully");
-			queryClient.invalidateQueries({ queryKey: ["reports"] });
-			setUpdateDialogOpen(false);
-			setSelectedReport(null);
-		},
-		onError: (error: Error) => {
-			toast.error(`Failed to update report: ${error.message}`);
-		},
-	});
+	const updateMutation = useMutation(
+		orpcQuery.report.update.mutationOptions({
+			onSuccess: () => {
+				toast.success("Report updated successfully");
+				queryClient.invalidateQueries({
+					queryKey: orpcQuery.report.list.queryKey({
+						input: { query: search },
+					}),
+				});
+				setUpdateDialogOpen(false);
+				setSelectedReport(null);
+			},
+			onError: (error: Error) => {
+				toast.error(`Failed to update report: ${error.message}`);
+			},
+		}),
+	);
 
 	if (!allowed) navigate({ to: "/" });
 
@@ -215,7 +200,7 @@ function RouteComponent() {
 		}
 	};
 
-	const filteredReports = reportsResult?.data?.filter((report) => {
+	const filteredReports = reportsResult?.body.data?.filter((report) => {
 		if (statusFilter !== "ALL" && report.status !== statusFilter) return false;
 		if (categoryFilter !== "ALL" && report.category !== categoryFilter)
 			return false;
@@ -228,14 +213,16 @@ function RouteComponent() {
 	});
 
 	const stats = {
-		total: reportsResult?.data?.length || 0,
+		total: reportsResult?.body.data?.length || 0,
 		pending:
-			reportsResult?.data?.filter((r) => r.status === "PENDING").length || 0,
-		investigating:
-			reportsResult?.data?.filter((r) => r.status === "INVESTIGATING").length ||
+			reportsResult?.body.data?.filter((r) => r.status === "PENDING").length ||
 			0,
+		investigating:
+			reportsResult?.body.data?.filter((r) => r.status === "INVESTIGATING")
+				.length || 0,
 		resolved:
-			reportsResult?.data?.filter((r) => r.status === "RESOLVED").length || 0,
+			reportsResult?.body.data?.filter((r) => r.status === "RESOLVED").length ||
+			0,
 	};
 
 	return (
@@ -547,9 +534,8 @@ function RouteComponent() {
 				onUpdate={(status, resolution) => {
 					if (selectedReport) {
 						updateMutation.mutate({
-							id: selectedReport.id,
-							status,
-							resolution,
+							params: { id: selectedReport.id },
+							body: { status, resolution },
 						});
 					}
 				}}

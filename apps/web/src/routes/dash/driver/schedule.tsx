@@ -65,9 +65,7 @@ export const Route = createFileRoute("/dash/driver/schedule")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.SCHEDULE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			schedule: ["create", "get", "update", "delete"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

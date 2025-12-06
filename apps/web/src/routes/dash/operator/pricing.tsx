@@ -119,6 +119,7 @@ export const CONFIGURATIONS = [
 			minimumFare: 0,
 			platformFeeRate: 0,
 			taxRate: 0,
+			merchantCommissionRate: 0.1,
 		} satisfies FoodPricingConfiguration,
 		fields: [
 			"baseFare",
@@ -126,6 +127,7 @@ export const CONFIGURATIONS = [
 			"minimumFare",
 			"platformFeeRate",
 			"taxRate",
+			"merchantCommissionRate",
 		] as const,
 	},
 ];
@@ -135,9 +137,7 @@ type Configuration = (typeof CONFIGURATIONS)[number];
 export const Route = createFileRoute("/dash/operator/pricing")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.PRICING }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			configurations: ["get", "update"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -196,6 +196,7 @@ function getFieldLabel(fieldName: string) {
 		platformFeeRate: () => m.platform_fee_rate?.() || "Platform Fee Rate (%)",
 		taxRate: () => m.tax_rate?.() || "Tax Rate (%)",
 		perKgRate: () => m.per_kg_rate?.() || "Price per KG",
+		merchantCommissionRate: () => "Merchant Commission Rate",
 	};
 	return labels[fieldName]?.() || fieldName;
 }
@@ -226,6 +227,8 @@ export function ConfigurationItem({
 					platformFeeRate: pricing.data.body.data.value.platformFeeRate,
 					taxRate: pricing.data.body.data.value.taxRate,
 					perKgRate: pricing.data.body.data.value.perKgRate,
+					merchantCommissionRate:
+						pricing.data.body.data.value.merchantCommissionRate,
 				}
 			: defaultValues,
 	});

@@ -13,34 +13,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFCM } from "@/hooks/use-fcm";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 
 export const Route = createFileRoute("/dash/admin/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.OVERVIEW }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update", "ban", "approve"],
-			merchant: ["get", "update", "delete", "approve"],
-			order: ["get", "update", "delete", "cancel", "assign"],
-			schedule: ["get", "update", "delete"],
-			coupon: ["create", "get", "update", "delete", "approve"],
-			report: ["create", "get", "update", "delete", "export"],
-			review: ["get", "update", "delete"],
-			user: [
-				"invite",
-				"list",
-				"get",
-				"update",
-				"delete",
-				"verify",
-				"set-role",
-				"set-password",
-				"ban",
-			],
-			session: ["list", "revoke", "delete"],
-			configurations: ["list", "get", "update"],
-			bookings: ["create", "get", "update", "delete"],
-		});
+		const ok = await hasAccess(["ADMIN"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -57,17 +35,12 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 	console.log("FCM initialized:", !!fcm);
 
-	const { data: stats, isLoading } = useQuery({
-		queryKey: ["admin", "dashboard-stats"],
-		queryFn: async () => {
-			const result = await orpcClient.user.admin.dashboardStats({
-				query: {},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000, // Refetch every minute
-	});
+	const { data: stats, isLoading } = useQuery(
+		orpcQuery.user.admin.dashboardStats.queryOptions({
+			input: { query: {} },
+			refreshInterval: 60000, // Refetch every minute
+		}),
+	);
 
 	if (isLoading) {
 		return (
@@ -93,7 +66,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.totalUsers?.toLocaleString() ?? 0}
+							{stats?.body.data.totalUsers?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
 							Active user accounts
@@ -108,10 +81,10 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.totalDrivers?.toLocaleString() ?? 0}
+							{stats?.body.data.totalDrivers?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
-							{stats?.onlineDrivers ?? 0} online now
+							{stats?.body.data.onlineDrivers ?? 0} online now
 						</p>
 					</CardContent>
 				</Card>
@@ -125,7 +98,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.totalMerchants?.toLocaleString() ?? 0}
+							{stats?.body.data.totalMerchants?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
 							Registered merchants
@@ -140,7 +113,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.activeOrders?.toLocaleString() ?? 0}
+							{stats?.body.data.activeOrders?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
 							Currently in progress
@@ -158,11 +131,11 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							IDR {stats?.totalRevenue?.toLocaleString() ?? 0}
+							IDR {stats?.body.data.totalRevenue?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
-							From {stats?.completedOrders?.toLocaleString() ?? 0} completed
-							orders
+							From {stats?.body.data.completedOrders?.toLocaleString() ?? 0}{" "}
+							completed orders
 						</p>
 					</CardContent>
 				</Card>
@@ -176,10 +149,11 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							IDR {stats?.todayRevenue?.toLocaleString() ?? 0}
+							IDR {stats?.body.data.todayRevenue?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
-							From {stats?.todayOrders?.toLocaleString() ?? 0} orders today
+							From {stats?.body.data.todayOrders?.toLocaleString() ?? 0} orders
+							today
 						</p>
 					</CardContent>
 				</Card>
@@ -191,10 +165,11 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{stats?.totalOrders?.toLocaleString() ?? 0}
+							{stats?.body.data.totalOrders?.toLocaleString() ?? 0}
 						</div>
 						<p className="text-muted-foreground text-xs">
-							{stats?.cancelledOrders?.toLocaleString() ?? 0} cancelled
+							{stats?.body.data.cancelledOrders?.toLocaleString() ?? 0}{" "}
+							cancelled
 						</p>
 					</CardContent>
 				</Card>

@@ -31,10 +31,7 @@ export const Route = createFileRoute("/dash/driver/ratings")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.RATINGS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			review: ["get", "list"],
-			driver: ["get"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

@@ -87,9 +87,7 @@ function VerifyEmailButton({ email }: { email: string }) {
 export const Route = createFileRoute("/dash/user/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.PROFILE }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			user: ["get", "update"],
-		});
+		const ok = await hasAccess(["USER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},

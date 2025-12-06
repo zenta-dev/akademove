@@ -34,19 +34,13 @@ import {
 } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.DRIVER.OVERVIEW }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update"],
-			schedule: ["create", "get", "update", "delete"],
-			order: ["get", "update"],
-			review: ["get"],
-			report: ["get"],
-		});
+		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
@@ -63,133 +57,111 @@ function RouteComponent() {
 	if (!allowed) navigate({ to: "/" });
 
 	// Fetch driver data
-	const { data: driverData, isLoading: driverLoading } = useQuery({
-		queryKey: ["driver", "mine"],
-		queryFn: async () => {
-			const result = await orpcClient.driver.getMine();
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 30000,
-	});
+	const { data: driverData, isLoading: driverLoading } = useQuery(
+		orpcQuery.driver.getMine.queryOptions({
+			input: {},
+			refreshInterval: 30000,
+		}),
+	);
 
 	// Fetch wallet data for earnings
-	const { data: walletData, isLoading: walletLoading } = useQuery({
-		queryKey: ["wallet"],
-		queryFn: async () => {
-			const result = await orpcClient.wallet.get({});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000,
-	});
+	const { data: walletData, isLoading: walletLoading } = useQuery(
+		orpcQuery.wallet.get.queryOptions({
+			input: {},
+			refreshInterval: 60000,
+		}),
+	);
 
 	// Fetch wallet monthly summary
-	const { data: walletSummary } = useQuery({
-		queryKey: ["wallet", "summary", new Date().getMonth()],
-		queryFn: async () => {
-			const now = new Date();
-			const result = await orpcClient.wallet.getMonthlySummary({
-				query: {
-					month: now.getMonth() + 1,
-					year: now.getFullYear(),
-				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		refetchInterval: 60000,
-	});
+	const { data: walletSummary } = useQuery(
+		orpcQuery.wallet.getMonthlySummary.queryOptions({
+			input: {
+				query: (() => {
+					const now = new Date();
+					return {
+						month: now.getMonth() + 1,
+						year: now.getFullYear(),
+					};
+				})(),
+			},
+			refreshInterval: 60000,
+		}),
+	);
 
 	// Fetch recent orders
-	const { data: recentOrders, isLoading: ordersLoading } = useQuery({
-		queryKey: ["driver", "orders", "recent"],
-		queryFn: async () => {
-			if (!driverData?.id) return [];
-			const result = await orpcClient.order.list({
+	const { data: recentOrders, isLoading: ordersLoading } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: {
 				query: {
 					limit: 5,
 					sortBy: "id",
 					order: "desc",
 					statuses: ["ACCEPTED", "ARRIVING", "IN_TRIP"],
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data.filter(
-				(order) => order.driverId === driverData.id,
-			);
-		},
-		enabled: !!driverData?.id,
-		refetchInterval: 15000,
-	});
+			},
+			refreshInterval: 15000,
+		}),
+	);
 
 	// Fetch completed orders count
-	const { data: completedOrders } = useQuery({
-		queryKey: ["driver", "orders", "completed"],
-		queryFn: async () => {
-			if (!driverData?.id) return [];
-			const result = await orpcClient.order.list({
+	const { data: completedOrders } = useQuery(
+		orpcQuery.order.list.queryOptions({
+			input: {
 				query: {
 					limit: 100,
 					sortBy: "id",
 					order: "desc",
 					statuses: ["COMPLETED"],
 				},
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data.filter(
-				(order) => order.driverId === driverData.id,
-			);
-		},
-		enabled: !!driverData?.id,
-	});
+			},
+			refreshInterval: 60000,
+		}),
+	);
 
 	// Toggle online status mutation
-	const toggleOnlineMutation = useMutation({
-		mutationFn: async (isOnline: boolean) => {
-			if (!driverData?.id) throw new Error("Driver data not found");
-			const result = await orpcClient.driver.update({
-				params: { id: driverData.id },
-				body: { isTakingOrder: isOnline },
-			});
-			if (result.status !== 200) throw new Error(result.body.message);
-			return result.body.data;
-		},
-		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: ["driver", "mine"] });
-			toast.success(
-				data.isTakingOrder
-					? "You are now online and accepting orders"
-					: "You are now offline",
-			);
-		},
-		onError: (error) => {
-			toast.error(`Failed to update status: ${error.message}`);
-		},
-	});
+	const toggleOnlineMutation = useMutation(
+		orpcQuery.driver.update.mutationOptions({
+			onSuccess: async (data) => {
+				await queryClient.invalidateQueries();
+				toast.success(
+					data.body.data.isTakingOrder
+						? "You are now online and accepting orders"
+						: "You are now offline",
+				);
+			},
+			onError: (error) => {
+				toast.error(`Failed to update status: ${error.message}`);
+			},
+		}),
+	);
 
 	const handleToggleOnline = useCallback(() => {
 		if (!driverData) return;
-		toggleOnlineMutation.mutate(!driverData.isTakingOrder);
+		toggleOnlineMutation.mutate({
+			params: { id: driverData.body.data.id },
+			body: {
+				isTakingOrder: !driverData.body.data.isTakingOrder,
+			},
+		});
 	}, [driverData, toggleOnlineMutation]);
 
 	const driverStatusBadge = useMemo(() => {
 		if (!driverData) return null;
-		if (driverData.status === "PENDING") {
+		if (driverData.body.data.status === "PENDING") {
 			return (
 				<Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
 					Pending Approval
 				</Badge>
 			);
 		}
-		if (driverData.status === "REJECTED") {
+		if (driverData.body.data.status === "REJECTED") {
 			return (
 				<Badge variant="secondary" className="bg-red-100 text-red-800">
 					Rejected
 				</Badge>
 			);
 		}
-		if (driverData.status === "INACTIVE") {
+		if (driverData.body.data.status === "INACTIVE") {
 			return (
 				<Badge variant="secondary" className="bg-gray-100 text-gray-800">
 					Inactive
@@ -202,7 +174,7 @@ function RouteComponent() {
 	// Calculate total earnings from completed orders
 	const totalEarnings = useMemo(() => {
 		if (!completedOrders) return 0;
-		return completedOrders.reduce(
+		return completedOrders.body.data.reduce(
 			(sum, order) => sum + (order.driverEarning ?? order.totalPrice * 0.8),
 			0,
 		);
@@ -257,10 +229,12 @@ function RouteComponent() {
 						Track your earnings and manage your trips
 					</p>
 				</div>
-				{driverData?.status === "APPROVED" && (
+				{driverData?.body.data.status === "APPROVED" && (
 					<Button
 						size="lg"
-						variant={driverData.isTakingOrder ? "destructive" : "default"}
+						variant={
+							driverData.body.data.isTakingOrder ? "destructive" : "default"
+						}
 						onClick={handleToggleOnline}
 						disabled={toggleOnlineMutation.isPending}
 						className="gap-2"
@@ -270,7 +244,7 @@ function RouteComponent() {
 						) : (
 							<Activity className="h-5 w-5" />
 						)}
-						{driverData.isTakingOrder ? "Go Offline" : "Go Online"}
+						{driverData.body.data.isTakingOrder ? "Go Offline" : "Go Online"}
 					</Button>
 				)}
 			</div>
@@ -285,11 +259,11 @@ function RouteComponent() {
 								Account Status: {driverStatusBadge}
 							</p>
 							<p className="text-xs text-yellow-700 dark:text-yellow-300">
-								{driverData?.status === "PENDING" &&
+								{driverData?.body.data.status === "PENDING" &&
 									"Your driver account is under review. You'll be notified once approved."}
-								{driverData?.status === "REJECTED" &&
+								{driverData?.body.data.status === "REJECTED" &&
 									"Your driver application was rejected. Please contact support for more information."}
-								{driverData?.status === "INACTIVE" &&
+								{driverData?.body.data.status === "INACTIVE" &&
 									"Your account is currently inactive. Please contact support to reactivate."}
 							</p>
 						</div>
@@ -308,7 +282,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{formatPrice(walletData?.balance ?? 0)}
+							{formatPrice(walletData?.body.data.balance ?? 0)}
 						</div>
 						<p className="text-muted-foreground text-xs">
 							Available for withdrawal
@@ -328,7 +302,7 @@ function RouteComponent() {
 							{formatPrice(totalEarnings)}
 						</div>
 						<p className="text-muted-foreground text-xs">
-							From {completedOrders?.length ?? 0} completed trips
+							From {completedOrders?.body.data.length ?? 0} completed trips
 						</p>
 					</CardContent>
 				</Card>
@@ -342,7 +316,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="font-bold text-2xl">
-							{formatPrice(walletSummary?.totalIncome ?? 0)}
+							{formatPrice(walletSummary?.body.data.totalIncome ?? 0)}
 						</div>
 						<p className="text-muted-foreground text-xs">This month's income</p>
 					</CardContent>
@@ -355,7 +329,7 @@ function RouteComponent() {
 					</CardHeader>
 					<CardContent>
 						<div className="flex items-center gap-1 font-bold text-2xl">
-							{driverData?.rating?.toFixed(1) ?? "0.0"}
+							{driverData?.body.data.rating?.toFixed(1) ?? "0.0"}
 							<Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
 						</div>
 						<p className="text-muted-foreground text-xs">
@@ -389,8 +363,8 @@ function RouteComponent() {
 							<div className="flex items-center justify-center py-8">
 								<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
 							</div>
-						) : recentOrders && recentOrders.length > 0 ? (
-							recentOrders.map((order: Order) => (
+						) : recentOrders && recentOrders.body.data.length > 0 ? (
+							recentOrders.body.data.map((order: Order) => (
 								<div
 									key={order.id}
 									className="flex items-center justify-between border-b pb-3 last:border-0 last:pb-0"
@@ -433,7 +407,7 @@ function RouteComponent() {
 							<div className="flex flex-col items-center justify-center py-8 text-center">
 								<ShoppingCart className="mb-2 h-10 w-10 text-muted-foreground" />
 								<p className="text-muted-foreground text-sm">
-									{driverData?.isTakingOrder
+									{driverData?.body.data.isTakingOrder
 										? "No active trips. Waiting for orders..."
 										: "Go online to start accepting orders"}
 								</p>
@@ -464,7 +438,7 @@ function RouteComponent() {
 									<span>Vehicle</span>
 								</div>
 								<p className="font-medium text-sm">
-									{driverData?.licensePlate ?? "N/A"}
+									{driverData?.body.data.licensePlate ?? "N/A"}
 								</p>
 							</div>
 
@@ -474,9 +448,13 @@ function RouteComponent() {
 									<span>Status</span>
 								</div>
 								<Badge
-									variant={driverData?.isTakingOrder ? "default" : "secondary"}
+									variant={
+										driverData?.body.data.isTakingOrder
+											? "default"
+											: "secondary"
+									}
 								>
-									{driverData?.isTakingOrder ? "Online" : "Offline"}
+									{driverData?.body.data.isTakingOrder ? "Online" : "Offline"}
 								</Badge>
 							</div>
 
@@ -486,7 +464,7 @@ function RouteComponent() {
 									<span>Rating</span>
 								</div>
 								<p className="font-medium text-sm">
-									{driverData?.rating?.toFixed(2) ?? "0.00"} / 5.00
+									{driverData?.body.data.rating?.toFixed(2) ?? "0.00"} / 5.00
 								</p>
 							</div>
 
@@ -496,12 +474,12 @@ function RouteComponent() {
 									<span>Cancellations</span>
 								</div>
 								<p className="font-medium text-sm">
-									{driverData?.cancellationCount ?? 0}
+									{driverData?.body.data.cancellationCount ?? 0}
 								</p>
 							</div>
 						</div>
 
-						{(driverData?.cancellationCount ?? 0) >= 3 && (
+						{(driverData?.body.data.cancellationCount ?? 0) >= 3 && (
 							<div className="mt-4 rounded-lg bg-red-50 p-3 dark:bg-red-950">
 								<p className="font-medium text-red-800 text-sm dark:text-red-200">
 									Warning: High Cancellation Rate
@@ -527,14 +505,14 @@ function RouteComponent() {
 						<div className="space-y-2">
 							<p className="text-muted-foreground text-sm">Total Income</p>
 							<p className="font-bold text-2xl text-green-600">
-								{formatPrice(walletSummary?.totalIncome ?? 0)}
+								{formatPrice(walletSummary?.body.data.totalIncome ?? 0)}
 							</p>
 							<p className="text-muted-foreground text-xs">Money earned</p>
 						</div>
 						<div className="space-y-2">
 							<p className="text-muted-foreground text-sm">Total Expenses</p>
 							<p className="font-bold text-2xl text-orange-600">
-								{formatPrice(walletSummary?.totalExpense ?? 0)}
+								{formatPrice(walletSummary?.body.data.totalExpense ?? 0)}
 							</p>
 							<p className="text-muted-foreground text-xs">Money spent</p>
 						</div>
@@ -543,33 +521,35 @@ function RouteComponent() {
 							<p
 								className={cn(
 									"font-bold text-2xl",
-									(walletSummary?.net ?? 0) >= 0
+									(walletSummary?.body.data.net ?? 0) >= 0
 										? "text-green-600"
 										: "text-red-600",
 								)}
 							>
-								{formatPrice(walletSummary?.net ?? 0)}
+								{formatPrice(walletSummary?.body.data.net ?? 0)}
 							</p>
 							<p className="text-muted-foreground text-xs">Overall balance</p>
 						</div>
 					</div>
 
-					{walletSummary && walletData && (walletData.balance ?? 0) > 50000 && (
-						<div className="mt-6 flex items-center justify-between rounded-lg bg-green-50 p-4 dark:bg-green-950">
-							<div>
-								<p className="font-medium text-green-800 text-sm dark:text-green-200">
-									Ready to withdraw?
-								</p>
-								<p className="text-green-600 text-xs dark:text-green-400">
-									You have {formatPrice(walletData.balance)} available for
-									withdrawal
-								</p>
+					{walletSummary &&
+						walletData &&
+						(walletData.body.data.balance ?? 0) > 50000 && (
+							<div className="mt-6 flex items-center justify-between rounded-lg bg-green-50 p-4 dark:bg-green-950">
+								<div>
+									<p className="font-medium text-green-800 text-sm dark:text-green-200">
+										Ready to withdraw?
+									</p>
+									<p className="text-green-600 text-xs dark:text-green-400">
+										You have {formatPrice(walletData.body.data.balance)}{" "}
+										available for withdrawal
+									</p>
+								</div>
+								<Button variant="default" size="sm" asChild>
+									<Link to="/dash/driver/earnings">Withdraw</Link>
+								</Button>
 							</div>
-							<Button variant="default" size="sm" asChild>
-								<Link to="/dash/driver/earnings">Withdraw</Link>
-							</Button>
-						</div>
-					)}
+						)}
 				</CardContent>
 			</Card>
 		</>

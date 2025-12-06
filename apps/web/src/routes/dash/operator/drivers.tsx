@@ -14,9 +14,7 @@ export const Route = createFileRoute("/dash/operator/drivers")({
 	},
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.DRIVERS }] }),
 	beforeLoad: async () => {
-		const ok = await hasAccess({
-			driver: ["get", "update", "ban"],
-		});
+		const ok = await hasAccess(["OPERATOR"]);
 		if (!ok) redirect({ to: "/", throw: true });
 		return { allowed: ok };
 	},
