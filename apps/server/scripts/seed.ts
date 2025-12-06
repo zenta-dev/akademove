@@ -142,7 +142,7 @@ const storage = new S3StorageService({
 });
 
 function generateId(): string {
-	return randomBytes(32).toString("hex");
+	return randomBytes(16).toString("hex");
 }
 
 async function seedUser(baseOnly = false) {

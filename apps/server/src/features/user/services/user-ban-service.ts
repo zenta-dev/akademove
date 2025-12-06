@@ -127,7 +127,7 @@ export class UserIdService {
 	 * @returns Random ID string (64 hex characters)
 	 */
 	static generate(): string {
-		return randomBytes(32).toString("hex");
+		return randomBytes(16).toString("hex");
 	}
 
 	/**

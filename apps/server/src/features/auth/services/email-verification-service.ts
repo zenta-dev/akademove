@@ -108,7 +108,7 @@ export class EmailVerificationService {
 				});
 			}
 
-			const token = randomBytes(32).toString("hex");
+			const token = randomBytes(16).toString("hex");
 			const expiresAt = new Date(
 				Date.now() + this.#VERIFICATION_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
 			);

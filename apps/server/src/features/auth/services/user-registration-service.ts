@@ -86,7 +86,7 @@ export class UserRegistrationService {
 	}
 
 	#generateId(): string {
-		return randomBytes(32).toString("hex");
+		return randomBytes(16).toString("hex");
 	}
 
 	/**

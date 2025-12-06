@@ -6,7 +6,6 @@ import {
 	type InsertDriver,
 	type UpdateDriver,
 } from "@repo/schema/driver";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import {
 	and,
 	count,

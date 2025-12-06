@@ -17,7 +17,6 @@ import {
 	type PlaceOrderResponse,
 	type UpdateOrder,
 } from "@repo/schema/order";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
 import {
@@ -31,7 +30,6 @@ import {
 	lte,
 	or,
 	type SQL,
-	sql,
 } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";

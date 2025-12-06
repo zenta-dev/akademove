@@ -104,7 +104,7 @@ export class PasswordResetService {
 				throw new AuthError("Email not registered", { code: "NOT_FOUND" });
 			}
 
-			const token = randomBytes(32).toString("hex");
+			const token = randomBytes(16).toString("hex");
 			const expiresAt = new Date(
 				Date.now() + this.#RESET_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000,
 			);

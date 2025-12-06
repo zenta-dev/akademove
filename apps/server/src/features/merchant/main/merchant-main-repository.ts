@@ -104,7 +104,8 @@ export class MerchantMainRepository extends BaseRepository {
 				const categoryConditions = filters.categories.map(
 					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
 				);
-				clauses.push(or(...categoryConditions)!);
+				const categoryClause = or(...categoryConditions);
+				if (categoryClause) clauses.push(categoryClause);
 			}
 			if (filters?.isActive !== undefined) {
 				clauses.push(eq(tables.merchant.isActive, filters.isActive));
@@ -166,7 +167,8 @@ export class MerchantMainRepository extends BaseRepository {
 				const categoryConditions = categories.map(
 					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
 				);
-				clauses.push(or(...categoryConditions)!);
+				const categoryClause = or(...categoryConditions);
+				if (categoryClause) clauses.push(categoryClause);
 			}
 			if (isActive !== undefined) {
 				clauses.push(eq(tables.merchant.isActive, isActive));
