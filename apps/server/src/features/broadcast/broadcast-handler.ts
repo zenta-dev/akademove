@@ -1,14 +1,14 @@
-import { BROADCAST_STATUS, BROADCAST_TYPE } from "@repo/schema/broadcast";
-import { hasPermission } from "@/core/middlewares/auth";
+import { trimObjectValues } from "@repo/shared";
 import { createORPCRouter } from "@/core/router/orpc";
-import { log, trimObjectValues } from "@/utils";
+import { BROADCAST_STATUS, BROADCAST_TYPE } from "@/core/tables/broadcast";
+import { log } from "@/utils";
 import { BroadcastSpec } from "./broadcast-spec";
+import { BroadcastService } from "./services/broadcast-service";
 
-export const BroadcastHandler = createORPCRouter(BroadcastSpec);
+const { priv } = createORPCRouter(BroadcastSpec);
 
-// Private endpoints
-BroadcastHandler.priv.list = BroadcastHandler.priv.list.handler(
-	async ({ context, input: { query } }) => {
+export const BroadcastHandler = priv.router({
+	list: priv.list.handler(async ({ context, input: { query } }) => {
 		const { broadcasts, total } = await context.repo.broadcast.findMany({
 			page: query.page,
 			limit: query.limit,
@@ -21,32 +21,32 @@ BroadcastHandler.priv.list = BroadcastHandler.priv.list.handler(
 		const totalPages = Math.ceil(total / query.limit);
 
 		return {
-			data: broadcasts,
-			pagination: {
-				page: query.page,
-				limit: query.limit,
-				total,
+			status: 200,
+			body: {
+				message: "Broadcasts retrieved successfully",
+				data: broadcasts,
 				totalPages,
 			},
-		};
-	},
-);
+		} as const;
+	}),
 
-BroadcastHandler.priv.get = BroadcastHandler.priv.get
-	.use(hasPermission({ broadcast: ["read"] }))
-	.handler(async ({ context, input: { params } }) => {
+	get: priv.get.handler(async ({ context, input: { params } }) => {
 		const broadcast = await context.repo.broadcast.findById(params.id);
 
 		if (!broadcast) {
 			throw new Error("Broadcast not found");
 		}
 
-		return broadcast;
-	});
+		return {
+			status: 200,
+			body: {
+				message: "Broadcast retrieved successfully",
+				data: broadcast,
+			},
+		} as const;
+	}),
 
-BroadcastHandler.priv.create = BroadcastHandler.priv.create
-	.use(hasPermission({ broadcast: ["create"] }))
-	.handler(async ({ context, input: { body } }) => {
+	create: priv.create.handler(async ({ context, input: { body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);
 
@@ -67,13 +67,17 @@ BroadcastHandler.priv.create = BroadcastHandler.priv.create
 				"[BroadcastHandler] Created broadcast",
 			);
 
-			return broadcast;
+			return {
+				status: 201,
+				body: {
+					message: "Broadcast created successfully",
+					data: broadcast,
+				},
+			} as const;
 		});
-	});
+	}),
 
-BroadcastHandler.priv.update = BroadcastHandler.priv.update
-	.use(hasPermission({ broadcast: ["update"] }))
-	.handler(async ({ context, input: { params, body } }) => {
+	update: priv.update.handler(async ({ context, input: { params, body } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			const data = trimObjectValues(body);
 
@@ -99,13 +103,18 @@ BroadcastHandler.priv.update = BroadcastHandler.priv.update
 				{ broadcastId: broadcast.id },
 				"[BroadcastHandler] Updated broadcast",
 			);
-			return broadcast;
-		});
-	});
 
-BroadcastHandler.priv.delete = BroadcastHandler.priv.delete
-	.use(hasPermission({ broadcast: ["delete"] }))
-	.handler(async ({ context, input: { params } }) => {
+			return {
+				status: 200,
+				body: {
+					message: "Broadcast updated successfully",
+					data: broadcast,
+				},
+			} as const;
+		});
+	}),
+
+	delete: priv.delete.handler(async ({ context, input: { params } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			// Check if broadcast exists and can be deleted
 			const existing = await context.repo.broadcast.findById(params.id, { tx });
@@ -127,12 +136,18 @@ BroadcastHandler.priv.delete = BroadcastHandler.priv.delete
 				{ broadcastId: params.id },
 				"[BroadcastHandler] Deleted broadcast",
 			);
-		});
-	});
 
-BroadcastHandler.priv.send = BroadcastHandler.priv.send
-	.use(hasPermission({ broadcast: ["send"] }))
-	.handler(async ({ context, input: { params } }) => {
+			return {
+				status: 200,
+				body: {
+					message: "Broadcast deleted successfully",
+					data: { ok: true },
+				},
+			} as const;
+		});
+	}),
+
+	send: priv.send.handler(async ({ context, input: { params } }) => {
 		return await context.svc.db.transaction(async (tx) => {
 			// Check if broadcast exists and can be sent
 			const existing = await context.repo.broadcast.findById(params.id, { tx });
@@ -151,24 +166,31 @@ BroadcastHandler.priv.send = BroadcastHandler.priv.send
 				{ tx },
 			);
 
+			// Create broadcast service for sending
+			const broadcastService = new BroadcastService(
+				context.svc.db,
+				context.svc.mail,
+				context.repo.notification,
+			);
+
 			// Send broadcast (this will be processed asynchronously)
 			try {
 				if (
 					broadcast.type === BROADCAST_TYPE.EMAIL ||
 					broadcast.type === BROADCAST_TYPE.ALL
 				) {
-					await context.svc.broadcast.sendEmailBroadcast(broadcast, { tx });
+					await broadcastService.sendEmailBroadcast(broadcast, { tx });
 				}
 
 				if (
 					broadcast.type === BROADCAST_TYPE.IN_APP ||
 					broadcast.type === BROADCAST_TYPE.ALL
 				) {
-					await context.svc.broadcast.sendInAppBroadcast(broadcast, { tx });
+					await broadcastService.sendInAppBroadcast(broadcast, { tx });
 				}
 
 				// Update status to SENT
-				await context.repo.broadcast.updateStatus(
+				const sentBroadcast = await context.repo.broadcast.updateStatus(
 					params.id,
 					BROADCAST_STATUS.SENT,
 					{ tx },
@@ -182,6 +204,14 @@ BroadcastHandler.priv.send = BroadcastHandler.priv.send
 					},
 					"[BroadcastHandler] Sent broadcast",
 				);
+
+				return {
+					status: 200,
+					body: {
+						message: "Broadcast sent successfully",
+						data: sentBroadcast,
+					},
+				} as const;
 			} catch (error) {
 				// Update status to FAILED
 				await context.repo.broadcast.updateStatus(
@@ -200,14 +230,17 @@ BroadcastHandler.priv.send = BroadcastHandler.priv.send
 
 				throw new Error("Failed to send broadcast");
 			}
-
-			return broadcast;
 		});
-	});
+	}),
 
-BroadcastHandler.priv.stats = BroadcastHandler.priv.stats
-	.use(hasPermission({ broadcast: ["read"] }))
-	.handler(async ({ context }) => {
+	stats: priv.stats.handler(async ({ context }) => {
 		const stats = await context.repo.broadcast.getStats();
-		return stats;
-	});
+		return {
+			status: 200,
+			body: {
+				message: "Broadcast stats retrieved successfully",
+				data: stats,
+			},
+		} as const;
+	}),
+});

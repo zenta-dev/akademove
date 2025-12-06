@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ilike, or } from "drizzle-orm";
+import { and, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { v7 as uuidv7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -8,8 +8,11 @@ import type { KeyValueService } from "@/core/services/kv";
 import {
 	BROADCAST_STATUS,
 	type Broadcast,
+	type BroadcastStatus,
+	type BroadcastType,
 	broadcast,
 	type InsertBroadcast,
+	type TargetAudience,
 	type UpdateBroadcast,
 } from "@/core/tables/broadcast";
 import { log } from "@/utils";
@@ -80,9 +83,9 @@ export class BroadcastRepository extends BaseRepository {
 		options: {
 			page?: number;
 			limit?: number;
-			status?: string;
-			type?: string;
-			targetAudience?: string;
+			status?: BroadcastStatus;
+			type?: BroadcastType;
+			targetAudience?: TargetAudience;
 			search?: string;
 		},
 		opts?: WithTx,
@@ -103,15 +106,15 @@ export class BroadcastRepository extends BaseRepository {
 			const conditions = [];
 
 			if (status) {
-				conditions.push(eq(broadcast.status, status as any));
+				conditions.push(eq(broadcast.status, status));
 			}
 
 			if (type) {
-				conditions.push(eq(broadcast.type, type as any));
+				conditions.push(eq(broadcast.type, type));
 			}
 
 			if (targetAudience) {
-				conditions.push(eq(broadcast.targetAudience, targetAudience as any));
+				conditions.push(eq(broadcast.targetAudience, targetAudience));
 			}
 
 			if (search) {
@@ -210,26 +213,29 @@ export class BroadcastRepository extends BaseRepository {
 		try {
 			const db = opts?.tx ?? this.db;
 
-			const stats = await db
+			const result = await db
 				.select({
 					total: count(),
-					pending: count(broadcast.id).where(
-						eq(broadcast.status, BROADCAST_STATUS.PENDING),
+					pending:
+						sql<number>`count(case when ${broadcast.status} = ${BROADCAST_STATUS.PENDING} then 1 end)`.mapWith(
+							Number,
+						),
+					sending:
+						sql<number>`count(case when ${broadcast.status} = ${BROADCAST_STATUS.SENDING} then 1 end)`.mapWith(
+							Number,
+						),
+					sent: sql<number>`count(case when ${broadcast.status} = ${BROADCAST_STATUS.SENT} then 1 end)`.mapWith(
+						Number,
 					),
-					sending: count(broadcast.id).where(
-						eq(broadcast.status, BROADCAST_STATUS.SENDING),
-					),
-					sent: count(broadcast.id).where(
-						eq(broadcast.status, BROADCAST_STATUS.SENT),
-					),
-					failed: count(broadcast.id).where(
-						eq(broadcast.status, BROADCAST_STATUS.FAILED),
-					),
+					failed:
+						sql<number>`count(case when ${broadcast.status} = ${BROADCAST_STATUS.FAILED} then 1 end)`.mapWith(
+							Number,
+						),
 				})
 				.from(broadcast);
 
 			return (
-				stats[0] || {
+				result[0] || {
 					total: 0,
 					pending: 0,
 					sending: 0,
@@ -242,14 +248,17 @@ export class BroadcastRepository extends BaseRepository {
 		}
 	}
 
-	async findByStatus(status: string, opts?: WithTx): Promise<Broadcast[]> {
+	async findByStatus(
+		status: BroadcastStatus,
+		opts?: WithTx,
+	): Promise<Broadcast[]> {
 		try {
 			const db = opts?.tx ?? this.db;
 
 			const results = await db
 				.select()
 				.from(broadcast)
-				.where(eq(broadcast.status, status as any))
+				.where(eq(broadcast.status, status))
 				.orderBy(broadcast.createdAt);
 
 			return results.map((result) => BroadcastRepository.composeEntity(result));
@@ -260,12 +269,12 @@ export class BroadcastRepository extends BaseRepository {
 
 	async updateStatus(
 		id: string,
-		status: string,
+		status: BroadcastStatus,
 		opts?: WithTx,
 	): Promise<Broadcast> {
 		try {
 			const updateData: Partial<Broadcast> = {
-				status: status as any,
+				status: status,
 				updatedAt: new Date(),
 			};
 
@@ -289,19 +298,44 @@ export class BroadcastRepository extends BaseRepository {
 		opts?: WithTx,
 	): Promise<Broadcast> {
 		try {
-			return await this.update(id, counts, opts);
+			const db = opts?.tx ?? this.db;
+
+			const result = await db
+				.update(broadcast)
+				.set({
+					...counts,
+					updatedAt: new Date(),
+				})
+				.where(eq(broadcast.id, id))
+				.returning();
+
+			const updatedBroadcast = result[0];
+			if (!updatedBroadcast) {
+				throw new Error("Broadcast not found");
+			}
+
+			// Update cache
+			await this.setCache(`broadcast:${id}`, updatedBroadcast, {
+				expirationTtl: CACHE_TTLS["1h"],
+			});
+
+			return BroadcastRepository.composeEntity(updatedBroadcast);
 		} catch (error) {
 			throw this.handleError(error, "updateCounts");
 		}
 	}
 
-	private static composeEntity(row: any): Broadcast {
+	private static composeEntity(row: typeof broadcast.$inferSelect): Broadcast {
 		return {
 			...row,
-			scheduledAt: row.scheduledAt ? new Date(row.scheduledAt) : null,
-			sentAt: row.sentAt ? new Date(row.sentAt) : null,
-			createdAt: new Date(row.createdAt),
-			updatedAt: new Date(row.updatedAt),
+			scheduledAt: row.scheduledAt ? new Date(row.scheduledAt) : undefined,
+			sentAt: row.sentAt ? new Date(row.sentAt) : undefined,
+			createdAt: row.createdAt ? new Date(row.createdAt) : new Date(),
+			updatedAt: row.updatedAt ? new Date(row.updatedAt) : new Date(),
+			totalRecipients: row.totalRecipients ?? 0,
+			sentCount: row.sentCount ?? 0,
+			failedCount: row.failedCount ?? 0,
+			targetIds: row.targetIds ?? undefined,
 		};
 	}
 }

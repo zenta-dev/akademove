@@ -1,17 +1,16 @@
-import { auth, driver, merchant, user } from "@repo/schema/auth";
-import type { Broadcast } from "@repo/schema/broadcast";
-import { TARGET_AUDIENCE } from "@repo/schema/broadcast";
 import { and, eq, inArray } from "drizzle-orm";
-import { convert } from "html-to-text";
 import type { WithTx } from "@/core/interface";
-import type { ResendMailService } from "@/core/services/mail";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { MailService } from "@/core/services/mail";
+import type { Broadcast } from "@/core/tables/broadcast";
+import { TARGET_AUDIENCE } from "@/core/tables/broadcast";
 import type { NotificationRepository } from "@/features/notification/notification-repository";
 import { log } from "@/utils";
 
 export class BroadcastService {
 	constructor(
-		private db: any,
-		private mailService: ResendMailService,
+		private db: DatabaseService,
+		private mailService: MailService,
 		private notificationRepository: NotificationRepository,
 	) {}
 
@@ -28,7 +27,7 @@ export class BroadcastService {
 			// Get target users based on audience
 			const targetUsers = await this.getTargetUsers(
 				broadcast.targetAudience,
-				broadcast.targetUserIds,
+				broadcast.targetIds,
 				opts,
 			);
 
@@ -57,30 +56,25 @@ export class BroadcastService {
 			for (let i = 0; i < targetUsers.length; i += batchSize) {
 				const batch = targetUsers.slice(i, i + batchSize);
 
-				const emailPromises = batch.map(async (user) => {
+				const emailPromises = batch.map(async (targetUser) => {
 					try {
-						await this.mailService.sendEmail({
-							to: user.email,
+						await this.mailService.sendMail({
+							from: "AkadeMove <no-reply@mail.akademove.com>",
+							to: targetUser.email,
 							subject: broadcast.title,
-							html: this.createEmailTemplate(
-								broadcast.message,
-								user.fullName || user.email,
-							),
-							text: convert(broadcast.message, {
-								wordwrap: 130,
-							}),
+							text: broadcast.message,
 						});
-						return { success: true, userId: user.id };
+						return { success: true, userId: targetUser.id };
 					} catch (error) {
 						log.error(
 							{
 								error,
-								userId: user.id,
-								email: user.email,
+								userId: targetUser.id,
+								email: targetUser.email,
 							},
 							"[BroadcastService] Failed to send email to user",
 						);
-						return { success: false, userId: user.id };
+						return { success: false, userId: targetUser.id };
 					}
 				});
 
@@ -138,7 +132,7 @@ export class BroadcastService {
 			// Get target users based on audience
 			const targetUsers = await this.getTargetUsers(
 				broadcast.targetAudience,
-				broadcast.targetUserIds,
+				broadcast.targetIds,
 				opts,
 			);
 
@@ -150,39 +144,32 @@ export class BroadcastService {
 				return;
 			}
 
-			// Create notifications for all target users
-			const notifications = targetUsers.map((user) => ({
-				id: `broadcast_${broadcast.id}_${user.id}`,
-				userId: user.id,
-				title: broadcast.title,
-				message: broadcast.message,
-				type: "BROADCAST" as const,
-				data: {
-					broadcastId: broadcast.id,
-					type: broadcast.type,
-				},
-				isRead: false,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			}));
-
-			// Insert notifications in batches
-			const batchSize = 100;
+			// Create notifications for all target users one by one
 			let createdCount = 0;
 
-			for (let i = 0; i < notifications.length; i += batchSize) {
-				const batch = notifications.slice(i, i + batchSize);
-
+			for (const targetUser of targetUsers) {
 				try {
-					await this.notificationRepository.createMany(batch, opts);
-					createdCount += batch.length;
+					await this.notificationRepository.sendNotificationToUserId(
+						{
+							toUserId: targetUser.id,
+							fromUserId: "system",
+							title: broadcast.title,
+							body: broadcast.message,
+							data: {
+								broadcastId: broadcast.id,
+								type: broadcast.type,
+							},
+						},
+						opts,
+					);
+					createdCount++;
 				} catch (error) {
 					log.error(
 						{
 							error,
-							batchSize: batch.length,
+							userId: targetUser.id,
 						},
-						"[BroadcastService] Failed to create notification batch",
+						"[BroadcastService] Failed to create notification for user",
 					);
 				}
 			}
@@ -209,21 +196,21 @@ export class BroadcastService {
 
 	private async getTargetUsers(
 		targetAudience: string,
-		targetUserIds?: string[],
+		targetIds?: string[],
 		opts?: WithTx,
-	): Promise<Array<{ id: string; email: string; fullName?: string }>> {
+	): Promise<Array<{ id: string; email: string; name?: string }>> {
 		const db = opts?.tx ?? this.db;
 
 		// If specific user IDs are provided, use those
-		if (targetUserIds && targetUserIds.length > 0) {
+		if (targetIds && targetIds.length > 0) {
 			const users = await db
 				.select({
-					id: user.id,
-					email: user.email,
-					fullName: user.fullName,
+					id: tables.user.id,
+					email: tables.user.email,
+					name: tables.user.name,
 				})
-				.from(user)
-				.where(inArray(user.id, targetUserIds));
+				.from(tables.user)
+				.where(inArray(tables.user.id, targetIds));
 
 			return users;
 		}
@@ -233,44 +220,43 @@ export class BroadcastService {
 			case TARGET_AUDIENCE.ALL: {
 				const allUsers = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.where(eq(auth.isActive, true));
+					.from(tables.user)
+					.where(eq(tables.user.banned, false));
 				return allUsers;
 			}
 
 			case TARGET_AUDIENCE.USERS: {
 				const regularUsers = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.where(and(eq(auth.isActive, true), eq(auth.role, "USER")));
+					.from(tables.user)
+					.where(
+						and(eq(tables.user.banned, false), eq(tables.user.role, "USER")),
+					);
 				return regularUsers;
 			}
 
 			case TARGET_AUDIENCE.DRIVERS: {
 				const drivers = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.innerJoin(driver, eq(user.id, driver.userId))
+					.from(tables.user)
+					.innerJoin(tables.driver, eq(tables.user.id, tables.driver.userId))
 					.where(
 						and(
-							eq(auth.isActive, true),
-							eq(auth.role, "DRIVER"),
-							eq(driver.isVerified, true),
+							eq(tables.user.banned, false),
+							eq(tables.user.role, "DRIVER"),
+							eq(tables.driver.status, "ACTIVE"),
 						),
 					);
 				return drivers;
@@ -279,18 +265,20 @@ export class BroadcastService {
 			case TARGET_AUDIENCE.MERCHANTS: {
 				const merchants = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.innerJoin(merchant, eq(user.id, merchant.userId))
+					.from(tables.user)
+					.innerJoin(
+						tables.merchant,
+						eq(tables.user.id, tables.merchant.userId),
+					)
 					.where(
 						and(
-							eq(auth.isActive, true),
-							eq(auth.role, "MERCHANT"),
-							eq(merchant.isVerified, true),
+							eq(tables.user.banned, false),
+							eq(tables.user.role, "MERCHANT"),
+							eq(tables.merchant.isActive, true),
 						),
 					);
 				return merchants;
@@ -299,88 +287,37 @@ export class BroadcastService {
 			case TARGET_AUDIENCE.ADMINS: {
 				const admins = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.where(and(eq(auth.isActive, true), eq(auth.role, "ADMIN")));
+					.from(tables.user)
+					.where(
+						and(eq(tables.user.banned, false), eq(tables.user.role, "ADMIN")),
+					);
 				return admins;
 			}
 
 			case TARGET_AUDIENCE.OPERATORS: {
 				const operators = await db
 					.select({
-						id: user.id,
-						email: user.email,
-						fullName: user.fullName,
+						id: tables.user.id,
+						email: tables.user.email,
+						name: tables.user.name,
 					})
-					.from(user)
-					.innerJoin(auth, eq(user.id, auth.userId))
-					.where(and(eq(auth.isActive, true), eq(auth.role, "OPERATOR")));
+					.from(tables.user)
+					.where(
+						and(
+							eq(tables.user.banned, false),
+							eq(tables.user.role, "OPERATOR"),
+						),
+					);
 				return operators;
 			}
 
 			default:
 				return [];
 		}
-	}
-
-	private createEmailTemplate(message: string, recipientName: string): string {
-		return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AkadeMove Broadcast</title>
-        <style>
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-          }
-          .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            border-radius: 10px 10px 0 0;
-          }
-          .content {
-            background: #f9f9f9;
-            padding: 30px;
-            border-radius: 0 0 10px 10px;
-          }
-          .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
-            font-size: 14px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>AkadeMove</h1>
-          <p>Important Announcement</p>
-        </div>
-        <div class="content">
-          <p>Hi ${recipientName},</p>
-          <div>${message}</div>
-          <p>Best regards,<br>The AkadeMove Team</p>
-        </div>
-        <div class="footer">
-          <p>&copy; 2024 AkadeMove. All rights reserved.</p>
-          <p>If you no longer wish to receive these emails, you can unsubscribe in your account settings.</p>
-        </div>
-      </body>
-      </html>
-    `;
 	}
 
 	private async updateBroadcastCounts(
@@ -394,6 +331,9 @@ export class BroadcastService {
 	): Promise<void> {
 		const db = opts?.tx ?? this.db;
 
-		await db.update(broadcast).set(counts).where(eq(broadcast.id, broadcastId));
+		await db
+			.update(tables.broadcast)
+			.set(counts)
+			.where(eq(tables.broadcast.id, broadcastId));
 	}
 }
