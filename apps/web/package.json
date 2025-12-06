@@ -5,7 +5,7 @@
 	"scripts": {
 		"clean": "git clean -xdf .wrangler dist .turbo node_modules",
 		"build": "vite build",
-		"dev": "vite dev --port=3001",
+		"dev": "vite dev --port=3001 --host",
 		"serve": "vite preview",
 		"lint": "biome lint",
 		"check-types": "tsc --noEmit",

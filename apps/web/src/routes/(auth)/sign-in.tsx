@@ -50,6 +50,32 @@ function RouteComponent() {
 						name: data.body.data.user.name,
 					}),
 				});
+
+				// Check if user is a driver and needs to take quiz
+				const user = data.body.data.user;
+				if (user.role === "DRIVER") {
+					// Fetch driver data to check quiz status
+					try {
+						const driverResult = await orpcClient.driver.getMine();
+						if (driverResult.status === 200) {
+							const driver = driverResult.body.data;
+							// If driver hasn't passed quiz, redirect to quiz
+							if (driver.quizStatus !== "PASSED") {
+								await Promise.all([
+									router.invalidate(),
+									queryClient.invalidateQueries(),
+									router.navigate({ to: localizeHref("/dash/driver/quiz") }),
+								]);
+								return;
+							}
+						}
+					} catch (error) {
+						console.error("Failed to fetch driver data:", error);
+						// Continue with normal flow if driver data fetch fails
+					}
+				}
+
+				// Normal flow for non-drivers or drivers who passed quiz
 				await Promise.all([
 					router.invalidate(),
 					queryClient.invalidateQueries(),

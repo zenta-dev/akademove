@@ -74,7 +74,10 @@ function RouteComponent() {
 							<MerchantMenuForm
 								kind="new"
 								merchantId={merchant.value?.id ?? ""}
-								onSuccess={() => setOpen(false)}
+								onSuccess={() => {
+									queryClient.invalidateQueries();
+									setOpen(false);
+								}}
 							/>
 						</DialogContent>
 					</Dialog>

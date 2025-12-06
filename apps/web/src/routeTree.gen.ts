@@ -17,6 +17,7 @@ import { Route as supportHelpRouteImport } from './routes/(support)/help'
 import { Route as supportFaqRouteImport } from './routes/(support)/faq'
 import { Route as supportContactRouteImport } from './routes/(support)/contact'
 import { Route as productTransportRouteImport } from './routes/(product)/transport'
+import { Route as productNewsletterRouteImport } from './routes/(product)/newsletter'
 import { Route as productGoodsRouteImport } from './routes/(product)/goods'
 import { Route as productFoodRouteImport } from './routes/(product)/food'
 import { Route as productDriverRouteImport } from './routes/(product)/driver'
@@ -114,6 +115,11 @@ const supportContactRoute = supportContactRouteImport.update({
 const productTransportRoute = productTransportRouteImport.update({
   id: '/(product)/transport',
   path: '/transport',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const productNewsletterRoute = productNewsletterRouteImport.update({
+  id: '/(product)/newsletter',
+  path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const productGoodsRoute = productGoodsRouteImport.update({
@@ -437,6 +443,7 @@ export interface FileRoutesByFullPath {
   '/driver': typeof productDriverRoute
   '/food': typeof productFoodRoute
   '/goods': typeof productGoodsRoute
+  '/newsletter': typeof productNewsletterRoute
   '/transport': typeof productTransportRoute
   '/contact': typeof supportContactRoute
   '/faq': typeof supportFaqRoute
@@ -500,6 +507,7 @@ export interface FileRoutesByTo {
   '/driver': typeof productDriverRoute
   '/food': typeof productFoodRoute
   '/goods': typeof productGoodsRoute
+  '/newsletter': typeof productNewsletterRoute
   '/transport': typeof productTransportRoute
   '/contact': typeof supportContactRoute
   '/faq': typeof supportFaqRoute
@@ -571,6 +579,7 @@ export interface FileRoutesById {
   '/(product)/driver': typeof productDriverRoute
   '/(product)/food': typeof productFoodRoute
   '/(product)/goods': typeof productGoodsRoute
+  '/(product)/newsletter': typeof productNewsletterRoute
   '/(product)/transport': typeof productTransportRoute
   '/(support)/contact': typeof supportContactRoute
   '/(support)/faq': typeof supportFaqRoute
@@ -641,6 +650,7 @@ export interface FileRouteTypes {
     | '/driver'
     | '/food'
     | '/goods'
+    | '/newsletter'
     | '/transport'
     | '/contact'
     | '/faq'
@@ -704,6 +714,7 @@ export interface FileRouteTypes {
     | '/driver'
     | '/food'
     | '/goods'
+    | '/newsletter'
     | '/transport'
     | '/contact'
     | '/faq'
@@ -774,6 +785,7 @@ export interface FileRouteTypes {
     | '/(product)/driver'
     | '/(product)/food'
     | '/(product)/goods'
+    | '/(product)/newsletter'
     | '/(product)/transport'
     | '/(support)/contact'
     | '/(support)/faq'
@@ -842,6 +854,7 @@ export interface RootRouteChildren {
   productDriverRoute: typeof productDriverRoute
   productFoodRoute: typeof productFoodRoute
   productGoodsRoute: typeof productGoodsRoute
+  productNewsletterRoute: typeof productNewsletterRoute
   productTransportRoute: typeof productTransportRoute
 }
 
@@ -901,6 +914,13 @@ declare module '@tanstack/react-router' {
       path: '/transport'
       fullPath: '/transport'
       preLoaderRoute: typeof productTransportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(product)/newsletter': {
+      id: '/(product)/newsletter'
+      path: '/newsletter'
+      fullPath: '/newsletter'
+      preLoaderRoute: typeof productNewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(product)/goods': {
@@ -1513,6 +1533,7 @@ const rootRouteChildren: RootRouteChildren = {
   productDriverRoute: productDriverRoute,
   productFoodRoute: productFoodRoute,
   productGoodsRoute: productGoodsRoute,
+  productNewsletterRoute: productNewsletterRoute,
   productTransportRoute: productTransportRoute,
 }
 export const routeTree = rootRouteImport
