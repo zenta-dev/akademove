@@ -3142,6 +3142,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get check_back_later_for_promotions => 'Check back later for promotions and discounts';
 
   @override
+  String get toast_report_submitted => 'Report submitted successfully';
+
+  @override
+  String get toast_failed_submit_report => 'Failed to submit report';
+
+  @override
+  String get report_user => 'Report User';
+
+  @override
+  String get report_user_description => 'Report an issue with this user';
+
+  @override
+  String get select_report_category => 'Select Issue Category';
+
+  @override
+  String get report_description => 'Description';
+
+  @override
+  String get report_description_hint => 'Please describe the issue in detail...';
+
+  @override
+  String get report_description_helper => 'Minimum 10 characters required';
+
+  @override
+  String get report_guidelines_title => 'Reporting Guidelines';
+
+  @override
+  String get report_guidelines_content => 'Your report will be kept confidential. The reported user will not be notified of your identity. Our safety team will review all reports within 24-48 hours.';
+
+  @override
+  String get button_submit_report => 'Submit Report';
+
+  @override
+  String get report_category_behavior => 'Inappropriate Behavior';
+
+  @override
+  String get report_category_safety => 'Safety Concern';
+
+  @override
+  String get report_category_fraud => 'Fraud or Scam';
+
+  @override
+  String get report_category_other => 'Other Issue';
+
+  @override
+  String get report_category_behavior_desc => 'Rude, offensive, or inappropriate conduct during the trip';
+
+  @override
+  String get report_category_safety_desc => 'Dangerous driving, harassment, or threatening behavior';
+
+  @override
+  String get report_category_fraud_desc => 'Payment manipulation, fake profiles, or scam attempts';
+
+  @override
+  String get report_category_other_desc => 'Any other issue not covered by the categories above';
+
+  @override
   String get no_notifications => 'No notifications yet';
 
   @override

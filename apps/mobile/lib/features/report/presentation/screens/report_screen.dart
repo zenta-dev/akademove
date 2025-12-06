@@ -1,0 +1,325 @@
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
+import 'package:akademove/l10n/l10n.dart';
+import 'package:api_client/api_client.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
+
+class ReportUserScreen extends StatefulWidget {
+  const ReportUserScreen({
+    required this.targetUserId,
+    required this.targetUserName,
+    this.orderId,
+    super.key,
+  });
+
+  final String targetUserId;
+  final String targetUserName;
+  final String? orderId;
+
+  @override
+  State<ReportUserScreen> createState() => _ReportUserScreenState();
+}
+
+class _ReportUserScreenState extends State<ReportUserScreen> {
+  final TextEditingController _descriptionController = TextEditingController();
+  ReportCategory? _selectedCategory;
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  bool get _canSubmit {
+    return _selectedCategory != null &&
+        _descriptionController.text.trim().length >= 10;
+  }
+
+  Future<void> _submitReport() async {
+    if (!_canSubmit) return;
+
+    final category = _selectedCategory;
+    if (category == null) return;
+
+    final cubit = context.read<ReportCubit>();
+    await cubit.submitReport(
+      targetUserId: widget.targetUserId,
+      category: category,
+      description: _descriptionController.text.trim(),
+      orderId: widget.orderId,
+    );
+
+    if (!mounted) return;
+
+    final state = cubit.state;
+    if (state.isSuccess) {
+      context.showMyToast(
+        context.l10n.toast_report_submitted,
+        type: ToastType.success,
+      );
+      context.pop(true);
+    } else if (state.isFailure) {
+      context.showMyToast(
+        state.error?.message ?? context.l10n.toast_failed_submit_report,
+        type: ToastType.failed,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyScaffold(
+      headers: [DefaultAppBar(title: context.l10n.report_user)],
+      body: BlocListener<ReportCubit, ReportState>(
+        listener: (context, state) {
+          if (state.isFailure) {
+            context.showMyToast(
+              state.error?.message ?? context.l10n.toast_failed_submit_report,
+              type: ToastType.failed,
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 24.h,
+            children: [
+              // Target user info
+              _buildTargetUserInfo(),
+
+              // Category selector
+              _buildCategorySelector(),
+
+              // Description section
+              _buildDescriptionSection(),
+
+              // Guidelines
+              _buildGuidelines(),
+
+              // Submit button
+              _buildSubmitButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTargetUserInfo() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Row(
+          children: [
+            Avatar(
+              size: 56.sp,
+              initials: Avatar.getInitials(widget.targetUserName),
+            ),
+            Gap(16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4.h,
+                children: [
+                  Text(
+                    widget.targetUserName,
+                    style: context.typography.h4.copyWith(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    context.l10n.report_user_description,
+                    style: context.typography.small.copyWith(
+                      fontSize: 14.sp,
+                      color: context.colorScheme.mutedForeground,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategorySelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.h,
+      children: [
+        Text(
+          context.l10n.select_report_category,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: ReportCategory.values.map((category) {
+            final isSelected = _selectedCategory == category;
+
+            return Button(
+              style: isSelected
+                  ? const ButtonStyle.primary(density: ButtonDensity.compact)
+                  : const ButtonStyle.outline(density: ButtonDensity.compact),
+              onPressed: () {
+                setState(() {
+                  _selectedCategory = category;
+                });
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
+                children: [
+                  Icon(_getCategoryIcon(category), size: 16.sp),
+                  Text(_getCategoryLabel(category)),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+        if (_selectedCategory != null)
+          Padding(
+            padding: EdgeInsets.only(top: 8.h),
+            child: Text(
+              _getCategoryDescription(_selectedCategory!),
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDescriptionSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.h,
+      children: [
+        Text(
+          context.l10n.report_description,
+          style: context.typography.h4.copyWith(
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        material.TextField(
+          controller: _descriptionController,
+          maxLines: 5,
+          maxLength: 1000,
+          onChanged: (_) => setState(() {}),
+          decoration: material.InputDecoration(
+            hintText: context.l10n.report_description_hint,
+            border: const material.OutlineInputBorder(),
+            helperText: context.l10n.report_description_helper,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGuidelines() {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.dg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12.h,
+          children: [
+            Row(
+              spacing: 8.w,
+              children: [
+                Icon(
+                  material.Icons.info_outline_rounded,
+                  size: 20.sp,
+                  color: context.colorScheme.primary,
+                ),
+                Text(
+                  context.l10n.report_guidelines_title,
+                  style: context.typography.h4.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              context.l10n.report_guidelines_content,
+              style: context.typography.small.copyWith(
+                fontSize: 12.sp,
+                color: context.colorScheme.mutedForeground,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return BlocBuilder<ReportCubit, ReportState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: double.infinity,
+          child: Button.primary(
+            enabled: _canSubmit && !state.isLoading,
+            onPressed: state.isLoading ? null : _submitReport,
+            child: state.isLoading
+                ? const Submiting()
+                : Text(context.l10n.button_submit_report),
+          ),
+        );
+      },
+    );
+  }
+
+  material.IconData _getCategoryIcon(ReportCategory category) {
+    switch (category) {
+      case ReportCategory.BEHAVIOR:
+        return material.Icons.sentiment_dissatisfied_rounded;
+      case ReportCategory.SAFETY:
+        return material.Icons.warning_rounded;
+      case ReportCategory.FRAUD:
+        return material.Icons.gpp_bad_rounded;
+      case ReportCategory.OTHER:
+        return material.Icons.more_horiz_rounded;
+    }
+  }
+
+  String _getCategoryLabel(ReportCategory category) {
+    switch (category) {
+      case ReportCategory.BEHAVIOR:
+        return context.l10n.report_category_behavior;
+      case ReportCategory.SAFETY:
+        return context.l10n.report_category_safety;
+      case ReportCategory.FRAUD:
+        return context.l10n.report_category_fraud;
+      case ReportCategory.OTHER:
+        return context.l10n.report_category_other;
+    }
+  }
+
+  String _getCategoryDescription(ReportCategory category) {
+    switch (category) {
+      case ReportCategory.BEHAVIOR:
+        return context.l10n.report_category_behavior_desc;
+      case ReportCategory.SAFETY:
+        return context.l10n.report_category_safety_desc;
+      case ReportCategory.FRAUD:
+        return context.l10n.report_category_fraud_desc;
+      case ReportCategory.OTHER:
+        return context.l10n.report_category_other_desc;
+    }
+  }
+}

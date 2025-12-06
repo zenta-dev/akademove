@@ -6217,6 +6217,120 @@ abstract class AppLocalizations {
   /// **'Check back later for promotions and discounts'**
   String get check_back_later_for_promotions;
 
+  /// No description provided for @toast_report_submitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted successfully'**
+  String get toast_report_submitted;
+
+  /// No description provided for @toast_failed_submit_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit report'**
+  String get toast_failed_submit_report;
+
+  /// No description provided for @report_user.
+  ///
+  /// In en, this message translates to:
+  /// **'Report User'**
+  String get report_user;
+
+  /// No description provided for @report_user_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Report an issue with this user'**
+  String get report_user_description;
+
+  /// No description provided for @select_report_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Issue Category'**
+  String get select_report_category;
+
+  /// No description provided for @report_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get report_description;
+
+  /// No description provided for @report_description_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe the issue in detail...'**
+  String get report_description_hint;
+
+  /// No description provided for @report_description_helper.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 10 characters required'**
+  String get report_description_helper;
+
+  /// No description provided for @report_guidelines_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporting Guidelines'**
+  String get report_guidelines_title;
+
+  /// No description provided for @report_guidelines_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Your report will be kept confidential. The reported user will not be notified of your identity. Our safety team will review all reports within 24-48 hours.'**
+  String get report_guidelines_content;
+
+  /// No description provided for @button_submit_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Report'**
+  String get button_submit_report;
+
+  /// No description provided for @report_category_behavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Inappropriate Behavior'**
+  String get report_category_behavior;
+
+  /// No description provided for @report_category_safety.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Concern'**
+  String get report_category_safety;
+
+  /// No description provided for @report_category_fraud.
+  ///
+  /// In en, this message translates to:
+  /// **'Fraud or Scam'**
+  String get report_category_fraud;
+
+  /// No description provided for @report_category_other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Issue'**
+  String get report_category_other;
+
+  /// No description provided for @report_category_behavior_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Rude, offensive, or inappropriate conduct during the trip'**
+  String get report_category_behavior_desc;
+
+  /// No description provided for @report_category_safety_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Dangerous driving, harassment, or threatening behavior'**
+  String get report_category_safety_desc;
+
+  /// No description provided for @report_category_fraud_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment manipulation, fake profiles, or scam attempts'**
+  String get report_category_fraud_desc;
+
+  /// No description provided for @report_category_other_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Any other issue not covered by the categories above'**
+  String get report_category_other_desc;
+
   /// No description provided for @no_notifications.
   ///
   /// In en, this message translates to:

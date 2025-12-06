@@ -3142,6 +3142,63 @@ class AppLocalizationsId extends AppLocalizations {
   String get check_back_later_for_promotions => 'Cek kembali nanti untuk promo dan diskon';
 
   @override
+  String get toast_report_submitted => 'Laporan berhasil dikirim';
+
+  @override
+  String get toast_failed_submit_report => 'Gagal mengirim laporan';
+
+  @override
+  String get report_user => 'Laporkan Pengguna';
+
+  @override
+  String get report_user_description => 'Laporkan masalah dengan pengguna ini';
+
+  @override
+  String get select_report_category => 'Pilih Kategori Masalah';
+
+  @override
+  String get report_description => 'Deskripsi';
+
+  @override
+  String get report_description_hint => 'Harap jelaskan masalahnya secara detail...';
+
+  @override
+  String get report_description_helper => 'Minimal 10 karakter';
+
+  @override
+  String get report_guidelines_title => 'Panduan Pelaporan';
+
+  @override
+  String get report_guidelines_content => 'Laporan Anda akan dijaga kerahasiaannya. Pengguna yang dilaporkan tidak akan diberitahu tentang identitas Anda. Tim keamanan kami akan meninjau semua laporan dalam 24-48 jam.';
+
+  @override
+  String get button_submit_report => 'Kirim Laporan';
+
+  @override
+  String get report_category_behavior => 'Perilaku Tidak Pantas';
+
+  @override
+  String get report_category_safety => 'Kekhawatiran Keamanan';
+
+  @override
+  String get report_category_fraud => 'Penipuan atau Scam';
+
+  @override
+  String get report_category_other => 'Masalah Lainnya';
+
+  @override
+  String get report_category_behavior_desc => 'Perilaku kasar, menyinggung, atau tidak pantas selama perjalanan';
+
+  @override
+  String get report_category_safety_desc => 'Mengemudi berbahaya, pelecehan, atau perilaku mengancam';
+
+  @override
+  String get report_category_fraud_desc => 'Manipulasi pembayaran, profil palsu, atau percobaan penipuan';
+
+  @override
+  String get report_category_other_desc => 'Masalah lain yang tidak tercakup oleh kategori di atas';
+
+  @override
   String get no_notifications => 'Belum ada notifikasi';
 
   @override
