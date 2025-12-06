@@ -2,11 +2,12 @@
 // @see https://alchemy.run/concepts/bindings/#type-safe-bindings
 
 import type { ServerEnv } from "../../alchemy.run";
-import type { PaymentRoom, OrderRoom } from "./src";
+import type { PaymentRoom, OrderRoom, SupportChatRoom } from "./src";
 
 export interface CloudflareEnv extends ServerEnv {
 	ORDER_ROOM: DurableObjectNamespace<OrderRoom>;
 	PAYMENT_ROOM: DurableObjectNamespace<PaymentRoom>;
+	SUPPORT_CHAT_ROOM: DurableObjectNamespace<SupportChatRoom>;
 }
 
 declare global {
