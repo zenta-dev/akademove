@@ -9,9 +9,9 @@ part of 'order_envelope_payload_detail.dart';
 abstract class _$OrderEnvelopePayloadDetailCWProxy {
   OrderEnvelopePayloadDetail order(Order order);
 
-  OrderEnvelopePayloadDetail payment(Payment payment);
+  OrderEnvelopePayloadDetail payment(Payment? payment);
 
-  OrderEnvelopePayloadDetail transaction(Transaction transaction);
+  OrderEnvelopePayloadDetail transaction(Transaction? transaction);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayloadDetail(...).copyWith.fieldName(value)`.
@@ -22,8 +22,8 @@ abstract class _$OrderEnvelopePayloadDetailCWProxy {
   /// ```
   OrderEnvelopePayloadDetail call({
     Order order,
-    Payment payment,
-    Transaction transaction,
+    Payment? payment,
+    Transaction? transaction,
   });
 }
 
@@ -39,10 +39,11 @@ class _$OrderEnvelopePayloadDetailCWProxyImpl
   OrderEnvelopePayloadDetail order(Order order) => call(order: order);
 
   @override
-  OrderEnvelopePayloadDetail payment(Payment payment) => call(payment: payment);
+  OrderEnvelopePayloadDetail payment(Payment? payment) =>
+      call(payment: payment);
 
   @override
-  OrderEnvelopePayloadDetail transaction(Transaction transaction) =>
+  OrderEnvelopePayloadDetail transaction(Transaction? transaction) =>
       call(transaction: transaction);
 
   @override
@@ -63,15 +64,14 @@ class _$OrderEnvelopePayloadDetailCWProxyImpl
           ? _value.order
           // ignore: cast_nullable_to_non_nullable
           : order as Order,
-      payment: payment == const $CopyWithPlaceholder() || payment == null
+      payment: payment == const $CopyWithPlaceholder()
           ? _value.payment
           // ignore: cast_nullable_to_non_nullable
-          : payment as Payment,
-      transaction:
-          transaction == const $CopyWithPlaceholder() || transaction == null
+          : payment as Payment?,
+      transaction: transaction == const $CopyWithPlaceholder()
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
-          : transaction as Transaction,
+          : transaction as Transaction?,
     );
   }
 }
@@ -99,11 +99,11 @@ OrderEnvelopePayloadDetail _$OrderEnvelopePayloadDetailFromJson(
     ),
     payment: $checkedConvert(
       'payment',
-      (v) => Payment.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Payment.fromJson(v as Map<String, dynamic>),
     ),
     transaction: $checkedConvert(
       'transaction',
-      (v) => Transaction.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Transaction.fromJson(v as Map<String, dynamic>),
     ),
   );
   return val;
@@ -113,6 +113,6 @@ Map<String, dynamic> _$OrderEnvelopePayloadDetailToJson(
   OrderEnvelopePayloadDetail instance,
 ) => <String, dynamic>{
   'order': instance.order.toJson(),
-  'payment': instance.payment.toJson(),
-  'transaction': instance.transaction.toJson(),
+  'payment': instance.payment?.toJson(),
+  'transaction': instance.transaction?.toJson(),
 };

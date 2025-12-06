@@ -520,7 +520,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get account_settings => 'Account Settings';
 
   @override
+  String get terms_of_service => 'Terms of Service';
+
+  @override
   String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get i_agree_to_the => 'I agree to the';
+
+  @override
+  String get terms_and_conditions => 'Terms and Conditions';
 
   @override
   String get change_password => 'Change Password';
@@ -3021,4 +3033,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get communication => 'Communication';
+
+  @override
+  String get delete_account => 'Delete Account';
+
+  @override
+  String get delete_account_title => 'Delete Account?';
+
+  @override
+  String get delete_account_warning => 'This action is permanent and cannot be undone.';
+
+  @override
+  String get delete_account_you_will_lose => 'You will lose:';
+
+  @override
+  String get delete_account_lose_wallet => 'All wallet balance';
+
+  @override
+  String get delete_account_lose_history => 'Order history';
+
+  @override
+  String get delete_account_lose_ratings => 'Ratings and reviews';
+
+  @override
+  String get delete_account_lose_addresses => 'Saved addresses';
+
+  @override
+  String get delete_account_lose_data => 'All account data';
+
+  @override
+  String get delete_account_proceed_methods => 'To proceed, please use one of the following methods:';
+
+  @override
+  String get continue_text => 'Continue';
+
+  @override
+  String get delete_account_choose_method => 'Choose Deletion Method';
+
+  @override
+  String get delete_account_select_method => 'Select how you want to request account deletion:';
+
+  @override
+  String get delete_account_method_web => 'Online Form (Recommended)';
+
+  @override
+  String get delete_account_method_web_desc => 'Complete form on our website';
+
+  @override
+  String get delete_account_method_email => 'Email Request';
+
+  @override
+  String get delete_account_method_email_desc => 'Send request via email';
+
+  @override
+  String get delete_account_method_whatsapp => 'WhatsApp Support';
+
+  @override
+  String get delete_account_method_whatsapp_desc => 'Chat with support team';
+
+  @override
+  String get delete_account_error_open_web => 'Could not open web page. Please try again.';
+
+  @override
+  String get delete_account_error_open_email => 'Could not open email app. Please try again.';
+
+  @override
+  String get delete_account_error_open_whatsapp => 'Could not open WhatsApp. Please try again.';
 }

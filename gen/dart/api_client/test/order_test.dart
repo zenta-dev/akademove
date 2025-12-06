@@ -152,6 +152,21 @@ void main() {
       // TODO
     });
 
+    // String proofOfDeliveryUrl
+    test('to test the property `proofOfDeliveryUrl`', () async {
+      // TODO
+    });
+
+    // String deliveryOtp
+    test('to test the property `deliveryOtp`', () async {
+      // TODO
+    });
+
+    // DateTime otpVerifiedAt
+    test('to test the property `otpVerifiedAt`', () async {
+      // TODO
+    });
+
     // num itemCount
     test('to test the property `itemCount`', () async {
       // TODO

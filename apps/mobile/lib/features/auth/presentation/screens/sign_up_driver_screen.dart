@@ -56,6 +56,7 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   UserGender _selectedGender = UserGender.MALE;
   BankProvider? _selectedBankProvider;
   CountryCode _selectedCountryCode = CountryCode.ID;
+  bool _termsAccepted = false;
 
   final Map<Step2Docs, File?> _step2Docs = {
     for (var doc in Step2Docs.values) doc: null,
@@ -217,7 +218,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     final licensePlate = _FormKeys.step3LicensePlate[values];
     final bankNumber = _FormKeys.step4BankNumber[values];
 
-    if (name == null ||
+    if (!_termsAccepted ||
+        name == null ||
         email == null ||
         studentId == null ||
         phoneNumber == null ||
@@ -349,6 +351,47 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
             ),
             enabled: !state.isLoading,
             isPassword: true,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.w,
+            children: [
+              Checkbox(
+                state: _termsAccepted
+                    ? CheckboxState.checked
+                    : CheckboxState.unchecked,
+                enabled: !state.isLoading,
+                onChanged: (checkboxState) {
+                  setState(() {
+                    _termsAccepted = checkboxState == CheckboxState.checked;
+                  });
+                },
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    await context.pushNamed(Routes.termsOfService.name);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: context.theme.typography.small.copyWith(
+                        fontSize: 12.sp,
+                      ),
+                      children: [
+                        TextSpan(text: context.l10n.i_agree_to_the),
+                        TextSpan(
+                          text: ' ${context.l10n.terms_and_conditions}',
+                          style: TextStyle(
+                            color: context.theme.colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
         actions: [

@@ -61,5 +61,35 @@ void main() {
     test('to test the property `onlineDrivers`', () async {
       // TODO
     });
+
+    // List<MerchantAnalytics200ResponseDataRevenueByDayInner> revenueByDay
+    test('to test the property `revenueByDay`', () async {
+      // TODO
+    });
+
+    // List<DashboardStatsOrdersByDayInner> ordersByDay
+    test('to test the property `ordersByDay`', () async {
+      // TODO
+    });
+
+    // List<DashboardStatsOrdersByTypeInner> ordersByType
+    test('to test the property `ordersByType`', () async {
+      // TODO
+    });
+
+    // List<DashboardStatsTopDriversInner> topDrivers
+    test('to test the property `topDrivers`', () async {
+      // TODO
+    });
+
+    // List<DashboardStatsTopMerchantsInner> topMerchants
+    test('to test the property `topMerchants`', () async {
+      // TODO
+    });
+
+    // List<DashboardStatsHighCancellationDriversInner> highCancellationDrivers
+    test('to test the property `highCancellationDrivers`', () async {
+      // TODO
+    });
   });
 }

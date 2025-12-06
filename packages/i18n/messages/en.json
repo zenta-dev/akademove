@@ -911,5 +911,8 @@
   "activate": "Activate",
   "approve": "Approve",
   "reject": "Reject",
-  "deactivate": "Deactivate"
+  "deactivate": "Deactivate",
+  "cookie_consent_message": "We use cookies to enhance your experience. By clicking Accept, you agree to our use of cookies.",
+  "cookie_accept": "Accept",
+  "cookie_dismiss": "Dismiss"
 }

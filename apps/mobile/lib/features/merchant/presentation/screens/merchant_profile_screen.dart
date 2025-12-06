@@ -1,5 +1,6 @@
 import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -111,6 +112,7 @@ class MerchantProfileScreen extends StatelessWidget {
             ),
           ),
 
+          const DeleteAccountButtonWidget(accountType: 'MERCHANT'),
           const SignOutButtonWidget(),
         ],
       ),

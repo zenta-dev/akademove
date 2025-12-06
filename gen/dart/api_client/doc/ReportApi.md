@@ -10,9 +10,12 @@ All URIs are relative to *http://localhost:3000/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**reportCreate**](ReportApi.md#reportcreate) | **POST** /reports | 
+[**reportDismiss**](ReportApi.md#reportdismiss) | **POST** /reports/{id}/dismiss | 
 [**reportGet**](ReportApi.md#reportget) | **GET** /reports/{id} | 
 [**reportList**](ReportApi.md#reportlist) | **GET** /reports | 
 [**reportRemove**](ReportApi.md#reportremove) | **DELETE** /reports/{id} | 
+[**reportResolve**](ReportApi.md#reportresolve) | **POST** /reports/{id}/resolve | 
+[**reportStartInvestigation**](ReportApi.md#reportstartinvestigation) | **POST** /reports/{id}/start-investigation | 
 [**reportUpdate**](ReportApi.md#reportupdate) | **PUT** /reports/{id} | 
 
 
@@ -41,6 +44,49 @@ try {
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **insertReport** | [**InsertReport**](InsertReport.md)|  | 
+
+### Return type
+
+[**ReportCreate200Response**](ReportCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **reportDismiss**
+> ReportCreate200Response reportDismiss(id, dismissReport)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getReportApi();
+final String id = id_example; // String | 
+final DismissReport dismissReport = ; // DismissReport | 
+
+try {
+    final response = api.reportDismiss(id, dismissReport);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ReportApi->reportDismiss: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **dismissReport** | [**DismissReport**](DismissReport.md)|  | 
 
 ### Return type
 
@@ -190,6 +236,92 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **reportResolve**
+> ReportCreate200Response reportResolve(id, resolveReport)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getReportApi();
+final String id = id_example; // String | 
+final ResolveReport resolveReport = ; // ResolveReport | 
+
+try {
+    final response = api.reportResolve(id, resolveReport);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ReportApi->reportResolve: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **resolveReport** | [**ResolveReport**](ResolveReport.md)|  | 
+
+### Return type
+
+[**ReportCreate200Response**](ReportCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **reportStartInvestigation**
+> ReportCreate200Response reportStartInvestigation(id, startInvestigation)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getReportApi();
+final String id = id_example; // String | 
+final StartInvestigation startInvestigation = ; // StartInvestigation | 
+
+try {
+    final response = api.reportStartInvestigation(id, startInvestigation);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ReportApi->reportStartInvestigation: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **startInvestigation** | [**StartInvestigation**](StartInvestigation.md)|  | 
+
+### Return type
+
+[**ReportCreate200Response**](ReportCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

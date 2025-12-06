@@ -22,6 +22,7 @@ Name | Type | Description | Notes
 **bookings** | **List&lt;String&gt;** |  | [optional] 
 **configurations** | **List&lt;String&gt;** |  | [optional] 
 **emergency** | **List&lt;String&gt;** |  | [optional] 
+**contact** | **List&lt;String&gt;** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

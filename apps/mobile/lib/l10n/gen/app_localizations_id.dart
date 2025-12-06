@@ -520,7 +520,19 @@ class AppLocalizationsId extends AppLocalizations {
   String get account_settings => 'Pengaturan Akun';
 
   @override
+  String get terms_of_service => 'Ketentuan Layanan';
+
+  @override
   String get privacy_policy => 'Kebijakan Privasi';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get i_agree_to_the => 'Saya setuju dengan';
+
+  @override
+  String get terms_and_conditions => 'Syarat dan Ketentuan';
 
   @override
   String get change_password => 'Ganti Kata Sandi';
@@ -3021,4 +3033,70 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get communication => 'Komunikasi';
+
+  @override
+  String get delete_account => 'Hapus Akun';
+
+  @override
+  String get delete_account_title => 'Hapus Akun?';
+
+  @override
+  String get delete_account_warning => 'Tindakan ini permanen dan tidak dapat dibatalkan.';
+
+  @override
+  String get delete_account_you_will_lose => 'Anda akan kehilangan:';
+
+  @override
+  String get delete_account_lose_wallet => 'Semua saldo dompet';
+
+  @override
+  String get delete_account_lose_history => 'Riwayat pesanan';
+
+  @override
+  String get delete_account_lose_ratings => 'Rating dan ulasan';
+
+  @override
+  String get delete_account_lose_addresses => 'Alamat tersimpan';
+
+  @override
+  String get delete_account_lose_data => 'Semua data akun';
+
+  @override
+  String get delete_account_proceed_methods => 'Untuk melanjutkan, silakan gunakan salah satu metode berikut:';
+
+  @override
+  String get continue_text => 'Lanjutkan';
+
+  @override
+  String get delete_account_choose_method => 'Pilih Metode Penghapusan';
+
+  @override
+  String get delete_account_select_method => 'Pilih cara Anda ingin meminta penghapusan akun:';
+
+  @override
+  String get delete_account_method_web => 'Formulir Online (Rekomendasi)';
+
+  @override
+  String get delete_account_method_web_desc => 'Lengkapi formulir di website kami';
+
+  @override
+  String get delete_account_method_email => 'Permintaan Email';
+
+  @override
+  String get delete_account_method_email_desc => 'Kirim permintaan melalui email';
+
+  @override
+  String get delete_account_method_whatsapp => 'Dukungan WhatsApp';
+
+  @override
+  String get delete_account_method_whatsapp_desc => 'Chat dengan tim dukungan';
+
+  @override
+  String get delete_account_error_open_web => 'Tidak dapat membuka halaman web. Silakan coba lagi.';
+
+  @override
+  String get delete_account_error_open_email => 'Tidak dapat membuka aplikasi email. Silakan coba lagi.';
+
+  @override
+  String get delete_account_error_open_whatsapp => 'Tidak dapat membuka WhatsApp. Silakan coba lagi.';
 }

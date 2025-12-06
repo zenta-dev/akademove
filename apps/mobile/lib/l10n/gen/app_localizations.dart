@@ -1105,11 +1105,35 @@ abstract class AppLocalizations {
   /// **'Account Settings'**
   String get account_settings;
 
+  /// No description provided for @terms_of_service.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get terms_of_service;
+
   /// No description provided for @privacy_policy.
   ///
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get privacy_policy;
+
+  /// No description provided for @faq.
+  ///
+  /// In en, this message translates to:
+  /// **'FAQ'**
+  String get faq;
+
+  /// No description provided for @i_agree_to_the.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the'**
+  String get i_agree_to_the;
+
+  /// No description provided for @terms_and_conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms and Conditions'**
+  String get terms_and_conditions;
 
   /// No description provided for @change_password.
   ///
@@ -5982,6 +6006,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Communication'**
   String get communication;
+
+  /// No description provided for @delete_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get delete_account;
+
+  /// No description provided for @delete_account_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get delete_account_title;
+
+  /// No description provided for @delete_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'This action is permanent and cannot be undone.'**
+  String get delete_account_warning;
+
+  /// No description provided for @delete_account_you_will_lose.
+  ///
+  /// In en, this message translates to:
+  /// **'You will lose:'**
+  String get delete_account_you_will_lose;
+
+  /// No description provided for @delete_account_lose_wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'All wallet balance'**
+  String get delete_account_lose_wallet;
+
+  /// No description provided for @delete_account_lose_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Order history'**
+  String get delete_account_lose_history;
+
+  /// No description provided for @delete_account_lose_ratings.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratings and reviews'**
+  String get delete_account_lose_ratings;
+
+  /// No description provided for @delete_account_lose_addresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved addresses'**
+  String get delete_account_lose_addresses;
+
+  /// No description provided for @delete_account_lose_data.
+  ///
+  /// In en, this message translates to:
+  /// **'All account data'**
+  String get delete_account_lose_data;
+
+  /// No description provided for @delete_account_proceed_methods.
+  ///
+  /// In en, this message translates to:
+  /// **'To proceed, please use one of the following methods:'**
+  String get delete_account_proceed_methods;
+
+  /// No description provided for @continue_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_text;
+
+  /// No description provided for @delete_account_choose_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Deletion Method'**
+  String get delete_account_choose_method;
+
+  /// No description provided for @delete_account_select_method.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how you want to request account deletion:'**
+  String get delete_account_select_method;
+
+  /// No description provided for @delete_account_method_web.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Form (Recommended)'**
+  String get delete_account_method_web;
+
+  /// No description provided for @delete_account_method_web_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete form on our website'**
+  String get delete_account_method_web_desc;
+
+  /// No description provided for @delete_account_method_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Request'**
+  String get delete_account_method_email;
+
+  /// No description provided for @delete_account_method_email_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request via email'**
+  String get delete_account_method_email_desc;
+
+  /// No description provided for @delete_account_method_whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp Support'**
+  String get delete_account_method_whatsapp;
+
+  /// No description provided for @delete_account_method_whatsapp_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with support team'**
+  String get delete_account_method_whatsapp_desc;
+
+  /// No description provided for @delete_account_error_open_web.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open web page. Please try again.'**
+  String get delete_account_error_open_web;
+
+  /// No description provided for @delete_account_error_open_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open email app. Please try again.'**
+  String get delete_account_error_open_email;
+
+  /// No description provided for @delete_account_error_open_whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open WhatsApp. Please try again.'**
+  String get delete_account_error_open_whatsapp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

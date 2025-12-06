@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
+import 'package:api_client/src/model/audit_list200_response.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
 import 'package:api_client/src/model/pagination_mode.dart';
@@ -19,6 +20,127 @@ class ConfigurationApi {
   final Dio _dio;
 
   const ConfigurationApi(this._dio);
+
+  /// auditList
+  ///
+  ///
+  /// Parameters:
+  /// * [cursor]
+  /// * [limit]
+  /// * [direction]
+  /// * [page]
+  /// * [query]
+  /// * [sortBy]
+  /// * [order]
+  /// * [mode]
+  /// * [tableName]
+  /// * [recordId]
+  /// * [operation]
+  /// * [updatedById]
+  /// * [startDate]
+  /// * [endDate]
+  /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
+  /// * [headers] - Can be used to add additional headers to the request
+  /// * [extras] - Can be used to add flags to the request
+  /// * [validateStatus] - A [ValidateStatus] callback that can be used to determine request success based on the HTTP status of the response
+  /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
+  /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
+  ///
+  /// Returns a [Future] containing a [Response] with a [AuditList200Response] as data
+  /// Throws [DioException] if API call or serialization fails
+  Future<Response<AuditList200Response>> auditList({
+    String? cursor,
+    Object? limit,
+    String? direction,
+    Object? page,
+    String? query,
+    String? sortBy,
+    PaginationOrder? order = PaginationOrder.desc,
+    PaginationMode? mode = PaginationMode.offset,
+    String? tableName,
+    String? recordId,
+    String? operation,
+    String? updatedById,
+    DateTime? startDate,
+    DateTime? endDate,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? extra,
+    ValidateStatus? validateStatus,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    final _path = r'/audit-logs';
+    final _options = Options(
+      method: r'GET',
+      headers: <String, dynamic>{...?headers},
+      extra: <String, dynamic>{
+        'secure': <Map<String, String>>[
+          {'type': 'http', 'scheme': 'bearer', 'name': 'bearer_auth'},
+        ],
+        ...?extra,
+      },
+      validateStatus: validateStatus,
+    );
+
+    final _queryParameters = <String, dynamic>{
+      if (cursor != null) r'cursor': cursor,
+      if (limit != null) r'limit': limit,
+      if (direction != null) r'direction': direction,
+      if (page != null) r'page': page,
+      if (query != null) r'query': query,
+      if (sortBy != null) r'sortBy': sortBy,
+      if (order != null) r'order': order,
+      if (mode != null) r'mode': mode,
+      if (tableName != null) r'tableName': tableName,
+      if (recordId != null) r'recordId': recordId,
+      if (operation != null) r'operation': operation,
+      if (updatedById != null) r'updatedById': updatedById,
+      if (startDate != null) r'startDate': startDate,
+      if (endDate != null) r'endDate': endDate,
+    };
+
+    final _response = await _dio.request<Object>(
+      _path,
+      options: _options,
+      queryParameters: _queryParameters,
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+      onReceiveProgress: onReceiveProgress,
+    );
+
+    AuditList200Response? _responseData;
+
+    try {
+      final rawData = _response.data;
+      _responseData = rawData == null
+          ? null
+          : deserialize<AuditList200Response, AuditList200Response>(
+              rawData,
+              'AuditList200Response',
+              growable: true,
+            );
+    } catch (error, stackTrace) {
+      throw DioException(
+        requestOptions: _response.requestOptions,
+        response: _response,
+        type: DioExceptionType.unknown,
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+
+    return Response<AuditList200Response>(
+      data: _responseData,
+      headers: _response.headers,
+      isRedirect: _response.isRedirect,
+      requestOptions: _response.requestOptions,
+      redirects: _response.redirects,
+      statusCode: _response.statusCode,
+      statusMessage: _response.statusMessage,
+      extra: _response.extra,
+    );
+  }
 
   /// configurationGet
   ///

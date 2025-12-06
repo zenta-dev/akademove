@@ -32,6 +32,7 @@ class Statements {
     this.bookings,
     this.configurations,
     this.emergency,
+    this.contact,
   });
 
   @JsonKey(name: r'driver', required: false, includeIfNull: false)
@@ -76,6 +77,9 @@ class Statements {
   @JsonKey(name: r'emergency', required: false, includeIfNull: false)
   final List<StatementsEmergencyEnum>? emergency;
 
+  @JsonKey(name: r'contact', required: false, includeIfNull: false)
+  final List<StatementsContactEnum>? contact;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -93,7 +97,8 @@ class Statements {
           other.pricing == pricing &&
           other.bookings == bookings &&
           other.configurations == configurations &&
-          other.emergency == emergency;
+          other.emergency == emergency &&
+          other.contact == contact;
 
   @override
   int get hashCode =>
@@ -110,7 +115,8 @@ class Statements {
       pricing.hashCode +
       bookings.hashCode +
       configurations.hashCode +
-      emergency.hashCode;
+      emergency.hashCode +
+      contact.hashCode;
 
   factory Statements.fromJson(Map<String, dynamic> json) =>
       _$StatementsFromJson(json);
@@ -412,6 +418,26 @@ enum StatementsEmergencyEnum {
   update(r'update');
 
   const StatementsEmergencyEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
+}
+
+enum StatementsContactEnum {
+  @JsonValue(r'list')
+  list(r'list'),
+  @JsonValue(r'get')
+  get_(r'get'),
+  @JsonValue(r'update')
+  update(r'update'),
+  @JsonValue(r'delete')
+  delete(r'delete'),
+  @JsonValue(r'respond')
+  respond(r'respond');
+
+  const StatementsContactEnum(this.value);
 
   final String value;
 

@@ -35,6 +35,8 @@ abstract class _$StatementsCWProxy {
 
   Statements emergency(List<StatementsEmergencyEnum>? emergency);
 
+  Statements contact(List<StatementsContactEnum>? contact);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
@@ -57,6 +59,7 @@ abstract class _$StatementsCWProxy {
     List<StatementsBookingsEnum>? bookings,
     List<StatementsConfigurationsEnum>? configurations,
     List<StatementsEmergencyEnum>? emergency,
+    List<StatementsContactEnum>? contact,
   });
 }
 
@@ -119,6 +122,10 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
       call(emergency: emergency);
 
   @override
+  Statements contact(List<StatementsContactEnum>? contact) =>
+      call(contact: contact);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `Statements(...).copyWith.fieldName(value)`.
   ///
@@ -141,6 +148,7 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
     Object? bookings = const $CopyWithPlaceholder(),
     Object? configurations = const $CopyWithPlaceholder(),
     Object? emergency = const $CopyWithPlaceholder(),
+    Object? contact = const $CopyWithPlaceholder(),
   }) {
     return Statements(
       driver: driver == const $CopyWithPlaceholder()
@@ -199,6 +207,10 @@ class _$StatementsCWProxyImpl implements _$StatementsCWProxy {
           ? _value.emergency
           // ignore: cast_nullable_to_non_nullable
           : emergency as List<StatementsEmergencyEnum>?,
+      contact: contact == const $CopyWithPlaceholder()
+          ? _value.contact
+          // ignore: cast_nullable_to_non_nullable
+          : contact as List<StatementsContactEnum>?,
     );
   }
 }
@@ -303,6 +315,12 @@ Statements _$StatementsFromJson(Map<String, dynamic> json) => $checkedCreate(
             ?.map((e) => $enumDecode(_$StatementsEmergencyEnumEnumMap, e))
             .toList(),
       ),
+      contact: $checkedConvert(
+        'contact',
+        (v) => (v as List<dynamic>?)
+            ?.map((e) => $enumDecode(_$StatementsContactEnumEnumMap, e))
+            .toList(),
+      ),
     );
     return val;
   },
@@ -350,6 +368,9 @@ Map<String, dynamic> _$StatementsToJson(
       .toList(),
   'emergency': ?instance.emergency
       ?.map((e) => _$StatementsEmergencyEnumEnumMap[e]!)
+      .toList(),
+  'contact': ?instance.contact
+      ?.map((e) => _$StatementsContactEnumEnumMap[e]!)
       .toList(),
 };
 
@@ -471,4 +492,12 @@ const _$StatementsEmergencyEnumEnumMap = {
   StatementsEmergencyEnum.get_: 'get',
   StatementsEmergencyEnum.create: 'create',
   StatementsEmergencyEnum.update: 'update',
+};
+
+const _$StatementsContactEnumEnumMap = {
+  StatementsContactEnum.list: 'list',
+  StatementsContactEnum.get_: 'get',
+  StatementsContactEnum.update: 'update',
+  StatementsContactEnum.delete: 'delete',
+  StatementsContactEnum.respond: 'respond',
 };

@@ -7,6 +7,7 @@ import 'package:api_client/src/model/order_envelope_payload_done.dart';
 import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
 import 'package:api_client/src/model/driver.dart';
+import 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
 import 'package:api_client/src/model/order_envelope_payload_message.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -28,6 +29,7 @@ class OrderEnvelopePayload {
     this.driverUpdateLocation,
     this.done,
     this.message,
+    this.merchantAction,
     this.cancelReason,
   });
 
@@ -46,6 +48,9 @@ class OrderEnvelopePayload {
   @JsonKey(name: r'message', required: false, includeIfNull: false)
   final OrderEnvelopePayloadMessage? message;
 
+  @JsonKey(name: r'merchantAction', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadMerchantAction? merchantAction;
+
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
 
@@ -58,6 +63,7 @@ class OrderEnvelopePayload {
           other.driverUpdateLocation == driverUpdateLocation &&
           other.done == done &&
           other.message == message &&
+          other.merchantAction == merchantAction &&
           other.cancelReason == cancelReason;
 
   @override
@@ -67,6 +73,7 @@ class OrderEnvelopePayload {
       driverUpdateLocation.hashCode +
       done.hashCode +
       message.hashCode +
+      merchantAction.hashCode +
       cancelReason.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>

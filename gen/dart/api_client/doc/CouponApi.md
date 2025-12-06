@@ -9,7 +9,9 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**couponActivate**](CouponApi.md#couponactivate) | **POST** /coupons/{id}/activate | 
 [**couponCreate**](CouponApi.md#couponcreate) | **POST** /coupons | 
+[**couponDeactivate**](CouponApi.md#coupondeactivate) | **POST** /coupons/{id}/deactivate | 
 [**couponGet**](CouponApi.md#couponget) | **GET** /coupons/{id} | 
 [**couponGetEligibleCoupons**](CouponApi.md#coupongeteligiblecoupons) | **POST** /coupons/eligible | 
 [**couponList**](CouponApi.md#couponlist) | **GET** /coupons | 
@@ -17,6 +19,47 @@ Method | HTTP request | Description
 [**couponUpdate**](CouponApi.md#couponupdate) | **PUT** /coupons/{id} | 
 [**couponValidate**](CouponApi.md#couponvalidate) | **POST** /coupons/validate | 
 
+
+# **couponActivate**
+> CouponCreate200Response couponActivate(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getCouponApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.couponActivate(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling CouponApi->couponActivate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**CouponCreate200Response**](CouponCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **couponCreate**
 > CouponCreate200Response couponCreate(insertCoupon)
@@ -55,6 +98,47 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **couponDeactivate**
+> CouponCreate200Response couponDeactivate(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getCouponApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.couponDeactivate(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling CouponApi->couponDeactivate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**CouponCreate200Response**](CouponCreate200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

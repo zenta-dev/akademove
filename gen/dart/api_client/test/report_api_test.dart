@@ -11,6 +11,11 @@ void main() {
       // TODO
     });
 
+    //Future<ReportCreate200Response> reportDismiss(String id, DismissReport dismissReport) async
+    test('test reportDismiss', () async {
+      // TODO
+    });
+
     //Future<ReportCreate200Response> reportGet(String id) async
     test('test reportGet', () async {
       // TODO
@@ -23,6 +28,16 @@ void main() {
 
     //Future<BadgeRemove200Response> reportRemove(String id) async
     test('test reportRemove', () async {
+      // TODO
+    });
+
+    //Future<ReportCreate200Response> reportResolve(String id, ResolveReport resolveReport) async
+    test('test reportResolve', () async {
+      // TODO
+    });
+
+    //Future<ReportCreate200Response> reportStartInvestigation(String id, StartInvestigation startInvestigation) async
+    test('test reportStartInvestigation', () async {
       // TODO
     });
 

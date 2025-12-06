@@ -39,13 +39,13 @@ export class CloudflareKVService implements KeyValueService {
 			if (options?.fallback) {
 				try {
 					return await options.fallback();
-				} catch {
-					throw new KeyValueError(
-						`Failed to get value for key "${key}" from fallback`,
-						{
-							code: "NOT_FOUND",
-						},
+				} catch (fallbackError) {
+					console.error(
+						`[CloudflareKVService] Fallback error for key "${key}" =>`,
+						fallbackError,
 					);
+					// Re-throw the original error from fallback to preserve context
+					throw fallbackError;
 				}
 			}
 			throw new KeyValueError(`Failed to get value for key "${key}"`);

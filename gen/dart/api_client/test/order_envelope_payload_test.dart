@@ -32,6 +32,11 @@ void main() {
       // TODO
     });
 
+    // OrderEnvelopePayloadMerchantAction merchantAction
+    test('to test the property `merchantAction`', () async {
+      // TODO
+    });
+
     // String cancelReason
     test('to test the property `cancelReason`', () async {
       // TODO

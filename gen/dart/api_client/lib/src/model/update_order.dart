@@ -43,6 +43,9 @@ class UpdateOrder {
     this.cancelReason,
     this.gender,
     this.genderPreference,
+    this.proofOfDeliveryUrl,
+    this.deliveryOtp,
+    this.otpVerifiedAt,
     this.itemCount,
     this.items,
     this.user,
@@ -101,6 +104,15 @@ class UpdateOrder {
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final UpdateOrderGenderPreferenceEnum? genderPreference;
 
+  @JsonKey(name: r'proofOfDeliveryUrl', required: false, includeIfNull: false)
+  final String? proofOfDeliveryUrl;
+
+  @JsonKey(name: r'deliveryOtp', required: false, includeIfNull: false)
+  final String? deliveryOtp;
+
+  @JsonKey(name: r'otpVerifiedAt', required: false, includeIfNull: false)
+  final DateTime? otpVerifiedAt;
+
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
   final num? itemCount;
 
@@ -137,6 +149,9 @@ class UpdateOrder {
           other.cancelReason == cancelReason &&
           other.gender == gender &&
           other.genderPreference == genderPreference &&
+          other.proofOfDeliveryUrl == proofOfDeliveryUrl &&
+          other.deliveryOtp == deliveryOtp &&
+          other.otpVerifiedAt == otpVerifiedAt &&
           other.itemCount == itemCount &&
           other.items == items &&
           other.user == user &&
@@ -162,6 +177,9 @@ class UpdateOrder {
       cancelReason.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
+      proofOfDeliveryUrl.hashCode +
+      deliveryOtp.hashCode +
+      otpVerifiedAt.hashCode +
       itemCount.hashCode +
       items.hashCode +
       user.hashCode +

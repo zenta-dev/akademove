@@ -6,6 +6,11 @@ void main() {
   final instance = ApiClient().getConfigurationApi();
 
   group(ConfigurationApi, () {
+    //Future<AuditList200Response> auditList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, String tableName, String recordId, String operation, String updatedById, DateTime startDate, DateTime endDate }) async
+    test('test auditList', () async {
+      // TODO
+    });
+
     //Future<ConfigurationGet200Response> configurationGet(String key) async
     test('test configurationGet', () async {
       // TODO

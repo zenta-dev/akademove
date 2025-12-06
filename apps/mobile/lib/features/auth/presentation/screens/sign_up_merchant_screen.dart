@@ -75,6 +75,7 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
   CountryCode _selectedOutletCountryCode = CountryCode.ID;
   bool _isLocationLoaded = false;
   bool _isDraggingMarker = false;
+  bool _termsAccepted = false;
 
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
@@ -634,7 +635,10 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
     final bankProvider = _selectedBankProvider;
     final document = _step2Docs[_Step2Docs.governmentDocument];
 
-    if (category == null || bankProvider == null || document == null) {
+    if (!_termsAccepted ||
+        category == null ||
+        bankProvider == null ||
+        document == null) {
       _showToast(
         context,
         context.l10n.error,
@@ -816,6 +820,47 @@ class _SignUpMerchantScreenState extends State<SignUpMerchantScreen> {
             ),
             enabled: !state.isLoading,
             isPassword: true,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8.w,
+            children: [
+              Checkbox(
+                state: _termsAccepted
+                    ? CheckboxState.checked
+                    : CheckboxState.unchecked,
+                enabled: !state.isLoading,
+                onChanged: (checkboxState) {
+                  setState(() {
+                    _termsAccepted = checkboxState == CheckboxState.checked;
+                  });
+                },
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () async {
+                    await context.pushNamed(Routes.termsOfService.name);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      style: context.theme.typography.small.copyWith(
+                        fontSize: 12.sp,
+                      ),
+                      children: [
+                        TextSpan(text: context.l10n.i_agree_to_the),
+                        TextSpan(
+                          text: ' ${context.l10n.terms_and_conditions}',
+                          style: TextStyle(
+                            color: context.theme.colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
         actions: [

@@ -163,11 +163,11 @@ export class DashboardStatsService {
 	}
 
 	/**
-	 * Get today's date at midnight (start of day)
+	 * Get today's date at midnight (start of day) in UTC
 	 */
 	static getTodayMidnight(): Date {
 		const today = new Date();
-		today.setHours(0, 0, 0, 0);
+		today.setUTCHours(0, 0, 0, 0);
 		return today;
 	}
 
@@ -267,13 +267,13 @@ export class DashboardStatsService {
 				(SELECT COUNT(*)::int FROM am_users WHERE role = 'USER') AS total_users,
 				(SELECT COUNT(*)::int FROM am_drivers) AS total_drivers,
 				(SELECT COUNT(*)::int FROM am_merchants) AS total_merchants,
-				(SELECT COUNT(*)::int FROM am_orders WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS active_orders,
+				(SELECT COUNT(*)::int FROM am_orders WHERE status NOT IN ('COMPLETED', 'CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS active_orders,
 				(SELECT COUNT(*)::int FROM am_orders) AS total_orders,
 				(SELECT COUNT(*)::int FROM am_orders WHERE status = 'COMPLETED') AS completed_orders,
-				(SELECT COUNT(*)::int FROM am_orders WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
+				(SELECT COUNT(*)::int FROM am_orders WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM')) AS cancelled_orders,
 				(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED') AS total_revenue,
-				(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED' AND created_at >= '${today.toISOString()}') AS today_revenue,
-				(SELECT COUNT(*)::int FROM am_orders WHERE created_at >= '${today.toISOString()}') AS today_orders,
+				(SELECT COALESCE(SUM(total_price), 0)::text FROM am_orders WHERE status = 'COMPLETED' AND requested_at >= '${today.toISOString()}') AS today_revenue,
+				(SELECT COUNT(*)::int FROM am_orders WHERE requested_at >= '${today.toISOString()}') AS today_orders,
 				(SELECT COUNT(*)::int FROM am_drivers WHERE is_online = true) AS online_drivers
 		`;
 	}
@@ -305,7 +305,7 @@ export class DashboardStatsService {
 				TO_CHAR(DATE(requested_at), 'YYYY-MM-DD') AS date,
 				COUNT(*)::int AS total,
 				COUNT(*) FILTER (WHERE status = 'COMPLETED')::int AS completed,
-				COUNT(*) FILTER (WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_SYSTEM'))::int AS cancelled
+				COUNT(*) FILTER (WHERE status IN ('CANCELLED_BY_USER', 'CANCELLED_BY_DRIVER', 'CANCELLED_BY_MERCHANT', 'CANCELLED_BY_SYSTEM'))::int AS cancelled
 			FROM am_orders
 			WHERE requested_at >= '${startDate.toISOString()}'
 				AND requested_at <= '${endDate.toISOString()}'
@@ -342,14 +342,14 @@ export class DashboardStatsService {
 				u.name,
 				COALESCE(SUM(o.total_price), 0)::text AS earnings,
 				COUNT(o.id)::int AS orders,
-				COALESCE(AVG(o.driver_rating), 0)::text AS rating
+				d.rating::text AS rating
 			FROM am_drivers d
-			JOIN am_users u ON d.id = u.id
+			JOIN am_users u ON d.user_id = u.id
 			LEFT JOIN am_orders o ON o.driver_id = d.id
 				AND o.status = 'COMPLETED'
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'
-			GROUP BY d.id, u.name
+			GROUP BY d.id, u.name, d.rating
 			HAVING COUNT(o.id) > 0
 			ORDER BY earnings DESC
 			LIMIT 5
@@ -366,13 +366,13 @@ export class DashboardStatsService {
 				m.name,
 				COALESCE(SUM(o.total_price), 0)::text AS revenue,
 				COUNT(o.id)::int AS orders,
-				COALESCE(AVG(o.driver_rating), 0)::text AS rating
+				m.rating::text AS rating
 			FROM am_merchants m
 			LEFT JOIN am_orders o ON o.merchant_id = m.id
 				AND o.status = 'COMPLETED'
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'
-			GROUP BY m.id, m.name
+			GROUP BY m.id, m.name, m.rating
 			HAVING COUNT(o.id) > 0
 			ORDER BY revenue DESC
 			LIMIT 5
@@ -390,7 +390,7 @@ export class DashboardStatsService {
 				COUNT(o.id)::int AS total_orders,
 				COUNT(*) FILTER (WHERE o.status = 'CANCELLED_BY_DRIVER')::int AS cancelled_orders
 			FROM am_drivers d
-			JOIN am_users u ON d.id = u.id
+			JOIN am_users u ON d.user_id = u.id
 			LEFT JOIN am_orders o ON o.driver_id = d.id
 				AND o.requested_at >= '${startDate.toISOString()}'
 				AND o.requested_at <= '${endDate.toISOString()}'

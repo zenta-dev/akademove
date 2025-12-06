@@ -43,6 +43,12 @@ abstract class _$UpdateOrderCWProxy {
     UpdateOrderGenderPreferenceEnum? genderPreference,
   );
 
+  UpdateOrder proofOfDeliveryUrl(String? proofOfDeliveryUrl);
+
+  UpdateOrder deliveryOtp(String? deliveryOtp);
+
+  UpdateOrder otpVerifiedAt(DateTime? otpVerifiedAt);
+
   UpdateOrder itemCount(num? itemCount);
 
   UpdateOrder items(List<OrderItem>? items);
@@ -78,6 +84,9 @@ abstract class _$UpdateOrderCWProxy {
     String? cancelReason,
     UserGender? gender,
     UpdateOrderGenderPreferenceEnum? genderPreference,
+    String? proofOfDeliveryUrl,
+    String? deliveryOtp,
+    DateTime? otpVerifiedAt,
     num? itemCount,
     List<OrderItem>? items,
     DriverUser? user,
@@ -152,6 +161,18 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
   ) => call(genderPreference: genderPreference);
 
   @override
+  UpdateOrder proofOfDeliveryUrl(String? proofOfDeliveryUrl) =>
+      call(proofOfDeliveryUrl: proofOfDeliveryUrl);
+
+  @override
+  UpdateOrder deliveryOtp(String? deliveryOtp) =>
+      call(deliveryOtp: deliveryOtp);
+
+  @override
+  UpdateOrder otpVerifiedAt(DateTime? otpVerifiedAt) =>
+      call(otpVerifiedAt: otpVerifiedAt);
+
+  @override
   UpdateOrder itemCount(num? itemCount) => call(itemCount: itemCount);
 
   @override
@@ -192,6 +213,9 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
     Object? cancelReason = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? genderPreference = const $CopyWithPlaceholder(),
+    Object? proofOfDeliveryUrl = const $CopyWithPlaceholder(),
+    Object? deliveryOtp = const $CopyWithPlaceholder(),
+    Object? otpVerifiedAt = const $CopyWithPlaceholder(),
     Object? itemCount = const $CopyWithPlaceholder(),
     Object? items = const $CopyWithPlaceholder(),
     Object? user = const $CopyWithPlaceholder(),
@@ -267,6 +291,18 @@ class _$UpdateOrderCWProxyImpl implements _$UpdateOrderCWProxy {
           ? _value.genderPreference
           // ignore: cast_nullable_to_non_nullable
           : genderPreference as UpdateOrderGenderPreferenceEnum?,
+      proofOfDeliveryUrl: proofOfDeliveryUrl == const $CopyWithPlaceholder()
+          ? _value.proofOfDeliveryUrl
+          // ignore: cast_nullable_to_non_nullable
+          : proofOfDeliveryUrl as String?,
+      deliveryOtp: deliveryOtp == const $CopyWithPlaceholder()
+          ? _value.deliveryOtp
+          // ignore: cast_nullable_to_non_nullable
+          : deliveryOtp as String?,
+      otpVerifiedAt: otpVerifiedAt == const $CopyWithPlaceholder()
+          ? _value.otpVerifiedAt
+          // ignore: cast_nullable_to_non_nullable
+          : otpVerifiedAt as DateTime?,
       itemCount: itemCount == const $CopyWithPlaceholder()
           ? _value.itemCount
           // ignore: cast_nullable_to_non_nullable
@@ -338,6 +374,15 @@ UpdateOrder _$UpdateOrderFromJson(
       'genderPreference',
       (v) => $enumDecodeNullable(_$UpdateOrderGenderPreferenceEnumEnumMap, v),
     ),
+    proofOfDeliveryUrl: $checkedConvert(
+      'proofOfDeliveryUrl',
+      (v) => v as String?,
+    ),
+    deliveryOtp: $checkedConvert('deliveryOtp', (v) => v as String?),
+    otpVerifiedAt: $checkedConvert(
+      'otpVerifiedAt',
+      (v) => v == null ? null : DateTime.parse(v as String),
+    ),
     itemCount: $checkedConvert('itemCount', (v) => v as num?),
     items: $checkedConvert(
       'items',
@@ -382,6 +427,9 @@ Map<String, dynamic> _$UpdateOrderToJson(UpdateOrder instance) =>
       'gender': ?_$UserGenderEnumMap[instance.gender],
       'genderPreference':
           ?_$UpdateOrderGenderPreferenceEnumEnumMap[instance.genderPreference],
+      'proofOfDeliveryUrl': ?instance.proofOfDeliveryUrl,
+      'deliveryOtp': ?instance.deliveryOtp,
+      'otpVerifiedAt': ?instance.otpVerifiedAt?.toIso8601String(),
       'itemCount': ?instance.itemCount,
       'items': ?instance.items?.map((e) => e.toJson()).toList(),
       'user': ?instance.user?.toJson(),

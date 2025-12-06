@@ -55,5 +55,15 @@ void main() {
     test('test orderUpdate', () async {
       // TODO
     });
+
+    //Future<OrderUploadDeliveryProof200Response> orderUploadDeliveryProof(String id, OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest) async
+    test('test orderUploadDeliveryProof', () async {
+      // TODO
+    });
+
+    //Future<OrderVerifyDeliveryOTP200Response> orderVerifyDeliveryOTP(String id, OrderVerifyDeliveryOTPRequest orderVerifyDeliveryOTPRequest) async
+    test('test orderVerifyDeliveryOTP', () async {
+      // TODO
+    });
   });
 }

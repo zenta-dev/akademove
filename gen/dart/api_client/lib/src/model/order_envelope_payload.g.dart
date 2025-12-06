@@ -19,6 +19,10 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload message(OrderEnvelopePayloadMessage? message);
 
+  OrderEnvelopePayload merchantAction(
+    OrderEnvelopePayloadMerchantAction? merchantAction,
+  );
+
   OrderEnvelopePayload cancelReason(String? cancelReason);
 
   /// Creates a new instance with the provided field values.
@@ -34,6 +38,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     OrderEnvelopePayloadDriverUpdateLocation? driverUpdateLocation,
     OrderEnvelopePayloadDone? done,
     OrderEnvelopePayloadMessage? message,
+    OrderEnvelopePayloadMerchantAction? merchantAction,
     String? cancelReason,
   });
 }
@@ -67,6 +72,11 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(message: message);
 
   @override
+  OrderEnvelopePayload merchantAction(
+    OrderEnvelopePayloadMerchantAction? merchantAction,
+  ) => call(merchantAction: merchantAction);
+
+  @override
   OrderEnvelopePayload cancelReason(String? cancelReason) =>
       call(cancelReason: cancelReason);
 
@@ -84,6 +94,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? driverUpdateLocation = const $CopyWithPlaceholder(),
     Object? done = const $CopyWithPlaceholder(),
     Object? message = const $CopyWithPlaceholder(),
+    Object? merchantAction = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
@@ -107,6 +118,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.message
           // ignore: cast_nullable_to_non_nullable
           : message as OrderEnvelopePayloadMessage?,
+      merchantAction: merchantAction == const $CopyWithPlaceholder()
+          ? _value.merchantAction
+          // ignore: cast_nullable_to_non_nullable
+          : merchantAction as OrderEnvelopePayloadMerchantAction?,
       cancelReason: cancelReason == const $CopyWithPlaceholder()
           ? _value.cancelReason
           // ignore: cast_nullable_to_non_nullable
@@ -161,6 +176,14 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
           ? null
           : OrderEnvelopePayloadMessage.fromJson(v as Map<String, dynamic>),
     ),
+    merchantAction: $checkedConvert(
+      'merchantAction',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadMerchantAction.fromJson(
+              v as Map<String, dynamic>,
+            ),
+    ),
     cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
   );
   return val;
@@ -174,5 +197,6 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'driverUpdateLocation': ?instance.driverUpdateLocation?.toJson(),
   'done': ?instance.done?.toJson(),
   'message': ?instance.message?.toJson(),
+  'merchantAction': ?instance.merchantAction?.toJson(),
   'cancelReason': ?instance.cancelReason,
 };

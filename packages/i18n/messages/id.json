@@ -911,5 +911,8 @@
   "activate": "Aktifkan",
   "approve": "Setujui",
   "reject": "Tolak",
-  "deactivate": "Nonaktifkan"
+  "deactivate": "Nonaktifkan",
+  "cookie_consent_message": "Kami menggunakan kuki untuk meningkatkan pengalaman Anda. Dengan mengklik Terima, Anda menyetujui penggunaan kuki kami.",
+  "cookie_accept": "Terima",
+  "cookie_dismiss": "Tutup"
 }

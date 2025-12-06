@@ -63,7 +63,13 @@ enum OrderKey {
   @JsonValue(r'gender')
   gender(r'gender'),
   @JsonValue(r'genderPreference')
-  genderPreference(r'genderPreference');
+  genderPreference(r'genderPreference'),
+  @JsonValue(r'proofOfDeliveryUrl')
+  proofOfDeliveryUrl(r'proofOfDeliveryUrl'),
+  @JsonValue(r'deliveryOtp')
+  deliveryOtp(r'deliveryOtp'),
+  @JsonValue(r'otpVerifiedAt')
+  otpVerifiedAt(r'otpVerifiedAt');
 
   const OrderKey(this.value);
 

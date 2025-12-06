@@ -10,8 +10,10 @@ All URIs are relative to *http://localhost:3000/api*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**analyticsExportMerchantAnalytics**](MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
+[**merchantActivate**](MerchantApi.md#merchantactivate) | **POST** /merchants/{id}/activate | 
 [**merchantAnalytics**](MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [**merchantBestSellers**](MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
+[**merchantDeactivate**](MerchantApi.md#merchantdeactivate) | **POST** /merchants/{id}/deactivate | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -62,6 +64,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 **String**
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantActivate**
+> MerchantGetMine200ResponseBody merchantActivate(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantActivate(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantActivate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
 
 ### Authorization
 
@@ -160,6 +203,49 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantDeactivate**
+> MerchantGetMine200ResponseBody merchantDeactivate(id, merchantDeactivateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final MerchantDeactivateRequest merchantDeactivateRequest = ; // MerchantDeactivateRequest | 
+
+try {
+    final response = api.merchantDeactivate(id, merchantDeactivateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantDeactivate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **merchantDeactivateRequest** | [**MerchantDeactivateRequest**](MerchantDeactivateRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

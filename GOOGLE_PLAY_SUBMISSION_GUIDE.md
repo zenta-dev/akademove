@@ -19,34 +19,24 @@ All code implementations are complete:
 
 ## 🚀 **REMAINING STEPS** (2-3 hours total)
 
-### **Step 1: Deploy Web App** (30 minutes) 🚨 **CRITICAL**
+### **Step 1: Deploy Web App** (5 minutes) 🚨 **CRITICAL**
 
-You MUST have a publicly accessible privacy policy URL before submitting to Google Play.
+You already have the domain `https://akademove.com` deployed. You just need to redeploy with the latest changes (account deletion page).
 
-#### **Option A: Using Vercel (Recommended - Easiest)**
 ```bash
 cd /home/morty/Work/akademove
 
-# Install Vercel CLI if needed
-npm install -g vercel
+# Build the latest changes
+bun run build
 
-# Deploy web app
-cd apps/web
-vercel --prod
-
-# You'll get a URL like: https://akademove.vercel.app
-# Your privacy policy will be at: https://akademove.vercel.app/privacy
+# Deploy to production (Cloudflare via Alchemy)
+bun run deploy
 ```
 
-#### **Option B: Using Cloudflare Pages**
-```bash
-# Build the web app
-cd apps/web
-npm run build
-
-# Upload dist folder to Cloudflare Pages dashboard
-# Set custom domain if you have one: akademove.com
-```
+**After deployment, verify these URLs are accessible:**
+- ✅ Privacy Policy: https://akademove.com/privacy (already working!)
+- ⚠️ Account Deletion: https://akademove.com/account-deletion (needs deployment)
+- ✅ Terms of Service: https://akademove.com/terms (should work after deployment)
 
 #### **Option C: Using Your Own Domain**
 If you already have `akademove.com` or `akademove.id`:
@@ -67,13 +57,22 @@ If you already have `akademove.com` or `akademove.id`:
 
 ---
 
-### **Step 2: Add Privacy URL to Google Play Console** (5 minutes)
+### **Step 2: Add Required URLs to Google Play Console** (10 minutes)
 
 1. Go to [Google Play Console](https://play.google.com/console)
 2. Select your app (AkadeMove)
+
+#### **Privacy Policy URL:**
 3. Navigate to: **Policy** > **App content** > **Privacy policy**
-4. Enter your URL: `https://your-domain.com/privacy`
+4. Enter your URL: `https://akademove.com/privacy` ✅ (already deployed and working!)
 5. Click **Save**
+
+#### **Account Deletion URL:**
+6. Navigate to: **Policy** > **App content** > **Data safety** > **Data deletion**
+7. Enter your URL: `https://akademove.com/account-deletion` ⚠️ (will work after redeployment)
+8. Click **Save**
+
+**Note:** Both URLs MUST be publicly accessible (no login required). Test in incognito mode to verify.
 
 ---
 

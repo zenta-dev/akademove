@@ -76,5 +76,10 @@ void main() {
     test('to test the property `emergency`', () async {
       // TODO
     });
+
+    // List<String> contact
+    test('to test the property `contact`', () async {
+      // TODO
+    });
   });
 }

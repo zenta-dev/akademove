@@ -53,6 +53,9 @@ export class MerchantOrderRepository extends BaseRepository {
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
+			proofOfDeliveryUrl: item.proofOfDeliveryUrl ?? undefined,
+			deliveryOtp: item.deliveryOtp ?? undefined,
+			otpVerifiedAt: item.otpVerifiedAt ?? undefined,
 		};
 	}
 

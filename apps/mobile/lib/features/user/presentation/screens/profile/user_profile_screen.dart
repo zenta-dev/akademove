@@ -93,6 +93,28 @@ class UserProfileScreen extends StatelessWidget {
                       ),
                 ),
             onPressed: () async {
+              await context.pushNamed(Routes.termsOfService.name);
+            },
+            child: Row(
+              children: [
+                DefaultText(context.l10n.terms_of_service, fontSize: 14.sp),
+              ],
+            ),
+          ),
+          Button(
+            style:
+                ButtonStyle.card(
+                  density: ButtonDensity(
+                    (val) =>
+                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                  ),
+                ).copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                ),
+            onPressed: () async {
               await context.pushNamed(Routes.privacyPolicies.name);
             },
             child: Row(
@@ -101,6 +123,27 @@ class UserProfileScreen extends StatelessWidget {
               ],
             ),
           ),
+          Button(
+            style:
+                ButtonStyle.card(
+                  density: ButtonDensity(
+                    (val) =>
+                        EdgeInsets.symmetric(horizontal: 12.dg, vertical: 8.h),
+                  ),
+                ).copyWith(
+                  decoration: (context, states, value) =>
+                      value.copyWithIfBoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                ),
+            onPressed: () async {
+              await context.pushNamed(Routes.faq.name);
+            },
+            child: Row(
+              children: [DefaultText(context.l10n.faq, fontSize: 14.sp)],
+            ),
+          ),
+          const DeleteAccountButtonWidget(accountType: 'USER'),
           const SignOutButtonWidget(),
           DefaultText(
             context.l10n.app_settings,

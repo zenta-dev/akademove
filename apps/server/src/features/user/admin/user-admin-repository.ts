@@ -617,6 +617,20 @@ export class UserAdminRepository extends BaseRepository {
 					});
 				}
 
+				// Log raw database results for debugging
+				log.info(
+					{
+						basicStats,
+						revenueByDayCount: revenueByDayResult.length,
+						ordersByDayCount: ordersByDayResult.length,
+						ordersByTypeCount: ordersByTypeResult.length,
+						topDriversCount: topDriversResult.length,
+						topMerchantsCount: topMerchantsResult.length,
+						highCancellationCount: highCancellationResult.length,
+					},
+					"[UserAdminRepository] Raw dashboard stats from database",
+				);
+
 				// Use service to compose the final stats object
 				const stats = DashboardStatsService.composeDashboardStats({
 					basicStats: basicStats as unknown as Parameters<

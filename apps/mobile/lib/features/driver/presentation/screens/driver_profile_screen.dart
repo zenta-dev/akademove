@@ -457,6 +457,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ),
           ),
         ),
+        const DeleteAccountButtonWidget(accountType: 'DRIVER'),
         SizedBox(
           width: double.infinity,
           child: DestructiveButton(

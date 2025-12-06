@@ -162,6 +162,10 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.COMPLETED: 'COMPLETED',
   OrderEnvelopeEvent.MATCHING: 'MATCHING',
   OrderEnvelopeEvent.CHAT_MESSAGE: 'CHAT_MESSAGE',
+  OrderEnvelopeEvent.MERCHANT_ACCEPTED: 'MERCHANT_ACCEPTED',
+  OrderEnvelopeEvent.MERCHANT_REJECTED: 'MERCHANT_REJECTED',
+  OrderEnvelopeEvent.MERCHANT_PREPARING: 'MERCHANT_PREPARING',
+  OrderEnvelopeEvent.MERCHANT_READY: 'MERCHANT_READY',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
@@ -170,6 +174,10 @@ const _$OrderEnvelopeActionEnumMap = {
   OrderEnvelopeAction.UPDATE_LOCATION: 'UPDATE_LOCATION',
   OrderEnvelopeAction.DONE: 'DONE',
   OrderEnvelopeAction.SEND_MESSAGE: 'SEND_MESSAGE',
+  OrderEnvelopeAction.MERCHANT_ACCEPT: 'MERCHANT_ACCEPT',
+  OrderEnvelopeAction.MERCHANT_REJECT: 'MERCHANT_REJECT',
+  OrderEnvelopeAction.MERCHANT_MARK_PREPARING: 'MERCHANT_MARK_PREPARING',
+  OrderEnvelopeAction.MERCHANT_MARK_READY: 'MERCHANT_MARK_READY',
 };
 
 const _$EnvelopeTargetEnumMap = {

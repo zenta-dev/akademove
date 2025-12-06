@@ -50,6 +50,7 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
 
   UserGender _selectedGender = UserGender.MALE;
   CountryCode _selectedCountryCode = CountryCode.ID;
+  bool _termsAccepted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,8 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                 email == null ||
                 phoneNumber == null ||
                 password == null ||
-                confirmPassword == null) {
+                confirmPassword == null ||
+                !_termsAccepted) {
               return;
             }
 
@@ -242,6 +244,47 @@ class _SignUpUserFormViewState extends State<_SignUpUserFormView> {
                     InputFeature.passwordToggle(),
                   ],
                 ),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.w,
+                children: [
+                  Checkbox(
+                    state: _termsAccepted
+                        ? CheckboxState.checked
+                        : CheckboxState.unchecked,
+                    enabled: !state.isLoading,
+                    onChanged: (checkboxState) {
+                      setState(() {
+                        _termsAccepted = checkboxState == CheckboxState.checked;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        await context.pushNamed(Routes.termsOfService.name);
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          style: context.theme.typography.small.copyWith(
+                            fontSize: 12.sp,
+                          ),
+                          children: [
+                            TextSpan(text: context.l10n.i_agree_to_the),
+                            TextSpan(
+                              text: ' ${context.l10n.terms_and_conditions}',
+                              style: TextStyle(
+                                color: context.theme.colorScheme.primary,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               FormErrorBuilder(
                 builder: (context, errors, child) {

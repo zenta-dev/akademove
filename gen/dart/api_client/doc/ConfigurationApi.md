@@ -9,10 +9,78 @@ All URIs are relative to *http://localhost:3000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**auditList**](ConfigurationApi.md#auditlist) | **GET** /audit-logs | 
 [**configurationGet**](ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
 [**configurationList**](ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [**configurationUpdate**](ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
 
+
+# **auditList**
+> AuditList200Response auditList(cursor, limit, direction, page, query, sortBy, order, mode, tableName, recordId, operation, updatedById, startDate, endDate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getConfigurationApi();
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+final String tableName = tableName_example; // String | 
+final String recordId = recordId_example; // String | 
+final String operation = operation_example; // String | 
+final String updatedById = updatedById_example; // String | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+
+try {
+    final response = api.auditList(cursor, limit, direction, page, query, sortBy, order, mode, tableName, recordId, operation, updatedById, startDate, endDate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ConfigurationApi->auditList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **tableName** | **String**|  | [optional] 
+ **recordId** | **String**|  | [optional] 
+ **operation** | **String**|  | [optional] 
+ **updatedById** | **String**|  | [optional] 
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
+
+### Return type
+
+[**AuditList200Response**](AuditList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **configurationGet**
 > ConfigurationGet200Response configurationGet(key)

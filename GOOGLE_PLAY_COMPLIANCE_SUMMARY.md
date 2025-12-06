@@ -3,11 +3,36 @@
 **Date:** December 6, 2025  
 **Status:** ✅ READY FOR GOOGLE PLAY SUBMISSION (with deployment notes)
 
+**Latest Update:** Account Deletion page created (required for Data Safety form)
+
 ---
 
 ## ✅ **COMPLETED IMPLEMENTATIONS**
 
-### **1. Web Privacy Policy Enhancements**
+### **1. Account Deletion Page** ✨ **NEW - REQUIRED BY GOOGLE PLAY**
+
+**Location:** `apps/web/src/routes/(legal)/account-deletion.tsx`
+
+**Created comprehensive standalone deletion page meeting Google Play Data Safety requirements:**
+
+#### **Key Sections:**
+1. **Overview** - Right to deletion, permanence warning
+2. **What Gets Deleted** - Profile, wallet, usage data, documents
+3. **What Is Retained** - Legal retention periods (10 years financial, 90 days fraud)
+4. **How to Request Deletion** - 3 methods with step-by-step instructions:
+   - In-app deletion (recommended, immediate)
+   - Email request (3-5 business days)
+   - WhatsApp support
+5. **Processing Time** - Clear timelines for each method
+6. **Consequences** - Detailed warnings about data loss
+
+**Public URL Required:** `https://your-domain.com/account-deletion`
+- Google Play Console requires this URL in Data Safety → Data deletion section
+- Must be publicly accessible (no login required)
+
+---
+
+### **2. Web Privacy Policy Enhancements**
 
 **Location:** `apps/web/src/lib/legal/privacy-content.ts`
 
@@ -116,12 +141,13 @@
 
 | Requirement | Status | Implementation |
 |-------------|--------|----------------|
-| **Privacy Policy - Public URL** | ⚠️ **PENDING DEPLOYMENT** | Web privacy page exists, needs public hosting |
+| **Privacy Policy - Public URL** | ✅ **DEPLOYED** | https://akademove.com/privacy |
+| **Account Deletion - Public URL** | ⚠️ **NEEDS REDEPLOYMENT** | NEW deletion page + form created, needs redeployment |
 | **Privacy Policy - In-App** | ✅ **COMPLETE** | Mobile has privacy screen |
 | **Terms of Service - In-App** | ✅ **COMPLETE** | NEW mobile terms screen created |
 | **Background Location Justification** | ✅ **COMPLETE** | Dedicated section in privacy policy |
 | **Third-Party SDK Disclosure** | ✅ **COMPLETE** | All SDKs listed with privacy links |
-| **Data Deletion Process** | ✅ **COMPLETE** | Clear instructions in privacy policy |
+| **Data Deletion Process** | ✅ **COMPLETE** | Comprehensive deletion page with 3 methods |
 | **User Rights Documentation** | ✅ **COMPLETE** | 7 rights under UU PDP 27/2022 |
 | **Data Retention Policies** | ✅ **COMPLETE** | Specific timeframes documented |
 
@@ -168,28 +194,33 @@ When filling out Google Play Console Data Safety section:
 
 ## 📋 **REMAINING TASKS**
 
-### **1. Deploy Web App to Production** 🚨 **CRITICAL**
+### **1. Redeploy Web App** 🚨 **URGENT - 5 MINUTES**
 
-**Before Google Play Submission:**
+**Current Status:**
+- ✅ Domain: https://akademove.com (already deployed)
+- ✅ Privacy Policy: https://akademove.com/privacy (working!)
+- ⚠️ Account Deletion: https://akademove.com/account-deletion (404 - needs redeploy)
+
+**Redeploy Command:**
 
 ```bash
-# Ensure web app is deployed to public domain
-# Examples:
-# - https://akademove.com/privacy
-# - https://akademove.id/privacy
-# - https://app.akademove.com/privacy
+cd /home/morty/Work/akademove
 
-# URL requirements:
-# ✅ Must be publicly accessible (no login required)
-# ✅ Must be stable (won't change)
-# ✅ Must load privacy policy correctly
-# ✅ Test in incognito/private browsing
+# Build with latest changes (account deletion page + form)
+bun run build
+
+# Deploy to production
+bun run deploy
 ```
 
-**Add URL to:**
-1. Google Play Console: Store presence > Privacy policy
-2. Mobile app: Add "Privacy Policy" link in Settings/Profile that opens URL
-3. Registration flow: Link to terms/privacy
+**After deployment, verify these URLs:**
+- ✅ https://akademove.com/privacy (already works)
+- ⚠️ https://akademove.com/account-deletion (will work after deploy)
+- ✅ https://akademove.com/terms (should work)
+
+**Add URLs to Google Play Console:**
+1. **Privacy Policy:** Policy > App content > Privacy policy → `https://akademove.com/privacy`
+2. **Account Deletion:** Policy > Data safety > Data deletion → `https://akademove.com/account-deletion`
 
 ---
 
@@ -321,9 +352,13 @@ ListTile(
 ## 🎯 **DEPLOYMENT CHECKLIST**
 
 ### **Pre-Submission (MUST DO):**
-- [ ] Deploy web app to production domain
-- [ ] Test privacy URL loads publicly (incognito mode)
-- [ ] Add privacy URL to Google Play Console
+- [ ] Redeploy web app (`bun run build && bun run deploy`)
+- [ ] Test URLs publicly (incognito mode):
+  - [ ] https://akademove.com/privacy
+  - [ ] https://akademove.com/account-deletion
+- [ ] Add URLs to Google Play Console:
+  - [ ] Privacy Policy: https://akademove.com/privacy
+  - [ ] Account Deletion: https://akademove.com/account-deletion
 - [ ] Add terms acceptance checkbox to registration
 - [ ] Add Settings links to Terms/Privacy/FAQ
 - [ ] Fill out Data Safety form in Play Console
@@ -365,8 +400,10 @@ ListTile(
 
 ## 📞 **NEXT STEPS**
 
-1. **Deploy web app** to `akademove.com` or `akademove.id`
-2. **Add public privacy URL** to Google Play Console
+1. **Redeploy web app** with account deletion page (`bun run build && bun run deploy`)
+2. **Add public URLs** to Google Play Console:
+   - Privacy: https://akademove.com/privacy
+   - Deletion: https://akademove.com/account-deletion
 3. **Implement terms acceptance** in registration flow
 4. **Add navigation links** in mobile app settings
 5. **Test all flows** on physical devices

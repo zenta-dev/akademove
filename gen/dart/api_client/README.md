@@ -71,7 +71,12 @@ Class | Method | HTTP request | Description
 [*AdminApi*](doc/AdminApi.md) | [**contactDelete**](doc/AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**contactGetById**](doc/AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
 [*AdminApi*](doc/AdminApi.md) | [**contactList**](doc/AdminApi.md#contactlist) | **GET** /contacts | 
+[*AdminApi*](doc/AdminApi.md) | [**contactRespond**](doc/AdminApi.md#contactrespond) | **POST** /contacts/{id}/respond | 
 [*AdminApi*](doc/AdminApi.md) | [**contactUpdate**](doc/AdminApi.md#contactupdate) | **PUT** /contacts/{id} | 
+[*AdminApi*](doc/AdminApi.md) | [**driverActivate**](doc/AdminApi.md#driveractivate) | **POST** /drivers/{id}/activate | 
+[*AdminApi*](doc/AdminApi.md) | [**driverApprove**](doc/AdminApi.md#driverapprove) | **POST** /drivers/{id}/approve | 
+[*AdminApi*](doc/AdminApi.md) | [**driverReject**](doc/AdminApi.md#driverreject) | **POST** /drivers/{id}/reject | 
+[*AdminApi*](doc/AdminApi.md) | [**driverSuspend**](doc/AdminApi.md#driversuspend) | **POST** /drivers/{id}/suspend | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminCreate**](doc/AdminApi.md#useradmincreate) | **POST** /users/admin | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminDashboardStats**](doc/AdminApi.md#useradmindashboardstats) | **GET** /users/admin/dashboard-stats | 
 [*AdminApi*](doc/AdminApi.md) | [**userAdminGet**](doc/AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
@@ -103,10 +108,13 @@ Class | Method | HTTP request | Description
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageGet**](doc/ChatApi.md#quickmessageget) | **GET** /quick-messages/:id | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageList**](doc/ChatApi.md#quickmessagelist) | **GET** /quick-messages | 
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageUpdate**](doc/ChatApi.md#quickmessageupdate) | **PATCH** /quick-messages/:id | 
+[*ConfigurationApi*](doc/ConfigurationApi.md) | [**auditList**](doc/ConfigurationApi.md#auditlist) | **GET** /audit-logs | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGet**](doc/ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationList**](doc/ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
+[*CouponApi*](doc/CouponApi.md) | [**couponActivate**](doc/CouponApi.md#couponactivate) | **POST** /coupons/{id}/activate | 
 [*CouponApi*](doc/CouponApi.md) | [**couponCreate**](doc/CouponApi.md#couponcreate) | **POST** /coupons | 
+[*CouponApi*](doc/CouponApi.md) | [**couponDeactivate**](doc/CouponApi.md#coupondeactivate) | **POST** /coupons/{id}/deactivate | 
 [*CouponApi*](doc/CouponApi.md) | [**couponGet**](doc/CouponApi.md#couponget) | **GET** /coupons/{id} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponGetEligibleCoupons**](doc/CouponApi.md#coupongeteligiblecoupons) | **POST** /coupons/eligible | 
 [*CouponApi*](doc/CouponApi.md) | [**couponList**](doc/CouponApi.md#couponlist) | **GET** /coupons | 
@@ -133,8 +141,10 @@ Class | Method | HTTP request | Description
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardGet**](doc/LeaderboardApi.md#leaderboardget) | **GET** /leaderboards/{id} | 
 [*LeaderboardApi*](doc/LeaderboardApi.md) | [**leaderboardList**](doc/LeaderboardApi.md#leaderboardlist) | **GET** /leaderboards | 
 [*MerchantApi*](doc/MerchantApi.md) | [**analyticsExportMerchantAnalytics**](doc/MerchantApi.md#analyticsexportmerchantanalytics) | **GET** /analytics/merchant/{merchantId}/export | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantActivate**](doc/MerchantApi.md#merchantactivate) | **POST** /merchants/{id}/activate | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantAnalytics**](doc/MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantDeactivate**](doc/MerchantApi.md#merchantdeactivate) | **POST** /merchants/{id}/deactivate | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
@@ -165,11 +175,16 @@ Class | Method | HTTP request | Description
 [*OrderApi*](doc/OrderApi.md) | [**orderPlaceOrder**](doc/OrderApi.md#orderplaceorder) | **POST** /orders | 
 [*OrderApi*](doc/OrderApi.md) | [**orderSendMessage**](doc/OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [*OrderApi*](doc/OrderApi.md) | [**orderUpdate**](doc/OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[*OrderApi*](doc/OrderApi.md) | [**orderUploadDeliveryProof**](doc/OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
+[*OrderApi*](doc/OrderApi.md) | [**orderVerifyDeliveryOTP**](doc/OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 [*PaymentApi*](doc/PaymentApi.md) | [**paymentWebhookMidtrans**](doc/PaymentApi.md#paymentwebhookmidtrans) | **POST** /payments/webhook/midtrans | 
 [*ReportApi*](doc/ReportApi.md) | [**reportCreate**](doc/ReportApi.md#reportcreate) | **POST** /reports | 
+[*ReportApi*](doc/ReportApi.md) | [**reportDismiss**](doc/ReportApi.md#reportdismiss) | **POST** /reports/{id}/dismiss | 
 [*ReportApi*](doc/ReportApi.md) | [**reportGet**](doc/ReportApi.md#reportget) | **GET** /reports/{id} | 
 [*ReportApi*](doc/ReportApi.md) | [**reportList**](doc/ReportApi.md#reportlist) | **GET** /reports | 
 [*ReportApi*](doc/ReportApi.md) | [**reportRemove**](doc/ReportApi.md#reportremove) | **DELETE** /reports/{id} | 
+[*ReportApi*](doc/ReportApi.md) | [**reportResolve**](doc/ReportApi.md#reportresolve) | **POST** /reports/{id}/resolve | 
+[*ReportApi*](doc/ReportApi.md) | [**reportStartInvestigation**](doc/ReportApi.md#reportstartinvestigation) | **POST** /reports/{id}/start-investigation | 
 [*ReportApi*](doc/ReportApi.md) | [**reportUpdate**](doc/ReportApi.md#reportupdate) | **PUT** /reports/{id} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewCheckCanReview**](doc/ReviewApi.md#reviewcheckcanreview) | **GET** /reviews/can-review/{orderId} | 
 [*ReviewApi*](doc/ReviewApi.md) | [**reviewCreate**](doc/ReviewApi.md#reviewcreate) | **POST** /reviews | 
@@ -193,8 +208,12 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [ActivateDriver](doc/ActivateDriver.md)
  - [AddToCart](doc/AddToCart.md)
  - [AdminUpdateUser](doc/AdminUpdateUser.md)
+ - [ApproveDriver](doc/ApproveDriver.md)
+ - [AuditList200Response](doc/AuditList200Response.md)
+ - [AuditList200ResponseDataInner](doc/AuditList200ResponseDataInner.md)
  - [AuthExchangeToken200Response](doc/AuthExchangeToken200Response.md)
  - [AuthForgotPasswordRequest](doc/AuthForgotPasswordRequest.md)
  - [AuthGetSession200Response](doc/AuthGetSession200Response.md)
@@ -235,6 +254,7 @@ Class | Method | HTTP request | Description
  - [ContactList200Response](doc/ContactList200Response.md)
  - [ContactList200ResponseData](doc/ContactList200ResponseData.md)
  - [ContactList200ResponseDataPagination](doc/ContactList200ResponseDataPagination.md)
+ - [ContactRespondRequest](doc/ContactRespondRequest.md)
  - [ContactStatus](doc/ContactStatus.md)
  - [ContactSubmit201Response](doc/ContactSubmit201Response.md)
  - [Coordinate](doc/Coordinate.md)
@@ -260,6 +280,7 @@ Class | Method | HTTP request | Description
  - [DashboardStatsTopMerchantsInner](doc/DashboardStatsTopMerchantsInner.md)
  - [DayOfWeek](doc/DayOfWeek.md)
  - [DeliveryPricingConfiguration](doc/DeliveryPricingConfiguration.md)
+ - [DismissReport](doc/DismissReport.md)
  - [Driver](doc/Driver.md)
  - [DriverGetAnalytics200Response](doc/DriverGetAnalytics200Response.md)
  - [DriverGetAnalytics200ResponseData](doc/DriverGetAnalytics200ResponseData.md)
@@ -270,6 +291,7 @@ Class | Method | HTTP request | Description
  - [DriverGetMine200ResponseBody](doc/DriverGetMine200ResponseBody.md)
  - [DriverKey](doc/DriverKey.md)
  - [DriverList200Response](doc/DriverList200Response.md)
+ - [DriverRejectRequest](doc/DriverRejectRequest.md)
  - [DriverSchedule](doc/DriverSchedule.md)
  - [DriverScheduleCreate200Response](doc/DriverScheduleCreate200Response.md)
  - [DriverScheduleCreateRequest](doc/DriverScheduleCreateRequest.md)
@@ -277,6 +299,7 @@ Class | Method | HTTP request | Description
  - [DriverScheduleList200Response](doc/DriverScheduleList200Response.md)
  - [DriverScheduleUpdateRequest](doc/DriverScheduleUpdateRequest.md)
  - [DriverStatus](doc/DriverStatus.md)
+ - [DriverSuspendRequest](doc/DriverSuspendRequest.md)
  - [DriverUpdateRequestBank](doc/DriverUpdateRequestBank.md)
  - [DriverUpdateRequestCurrentLocation](doc/DriverUpdateRequestCurrentLocation.md)
  - [DriverUser](doc/DriverUser.md)
@@ -324,6 +347,7 @@ Class | Method | HTTP request | Description
  - [MerchantBestSellers200ResponseDataInnerMenu](doc/MerchantBestSellers200ResponseDataInnerMenu.md)
  - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
  - [MerchantCategory](doc/MerchantCategory.md)
+ - [MerchantDeactivateRequest](doc/MerchantDeactivateRequest.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
  - [MerchantKey](doc/MerchantKey.md)
@@ -353,6 +377,7 @@ Class | Method | HTTP request | Description
  - [OrderEnvelopePayloadDetail](doc/OrderEnvelopePayloadDetail.md)
  - [OrderEnvelopePayloadDone](doc/OrderEnvelopePayloadDone.md)
  - [OrderEnvelopePayloadDriverUpdateLocation](doc/OrderEnvelopePayloadDriverUpdateLocation.md)
+ - [OrderEnvelopePayloadMerchantAction](doc/OrderEnvelopePayloadMerchantAction.md)
  - [OrderEnvelopePayloadMessage](doc/OrderEnvelopePayloadMessage.md)
  - [OrderEstimate200Response](doc/OrderEstimate200Response.md)
  - [OrderItem](doc/OrderItem.md)
@@ -367,6 +392,12 @@ Class | Method | HTTP request | Description
  - [OrderSummary](doc/OrderSummary.md)
  - [OrderSummaryBreakdown](doc/OrderSummaryBreakdown.md)
  - [OrderType](doc/OrderType.md)
+ - [OrderUploadDeliveryProof200Response](doc/OrderUploadDeliveryProof200Response.md)
+ - [OrderUploadDeliveryProof200ResponseData](doc/OrderUploadDeliveryProof200ResponseData.md)
+ - [OrderUploadDeliveryProofRequest](doc/OrderUploadDeliveryProofRequest.md)
+ - [OrderVerifyDeliveryOTP200Response](doc/OrderVerifyDeliveryOTP200Response.md)
+ - [OrderVerifyDeliveryOTP200ResponseData](doc/OrderVerifyDeliveryOTP200ResponseData.md)
+ - [OrderVerifyDeliveryOTPRequest](doc/OrderVerifyDeliveryOTPRequest.md)
  - [PaginationMode](doc/PaginationMode.md)
  - [PaginationOrder](doc/PaginationOrder.md)
  - [PaginationResult](doc/PaginationResult.md)
@@ -389,6 +420,7 @@ Class | Method | HTTP request | Description
  - [QuickMessageList200Response](doc/QuickMessageList200Response.md)
  - [QuickMessageList200ResponseData](doc/QuickMessageList200ResponseData.md)
  - [QuickMessageTemplate](doc/QuickMessageTemplate.md)
+ - [RejectDriver](doc/RejectDriver.md)
  - [Report](doc/Report.md)
  - [ReportCategory](doc/ReportCategory.md)
  - [ReportCreate200Response](doc/ReportCreate200Response.md)
@@ -396,6 +428,7 @@ Class | Method | HTTP request | Description
  - [ReportList200Response](doc/ReportList200Response.md)
  - [ReportStatus](doc/ReportStatus.md)
  - [ResetPassword](doc/ResetPassword.md)
+ - [ResolveReport](doc/ResolveReport.md)
  - [Review](doc/Review.md)
  - [ReviewCategory](doc/ReviewCategory.md)
  - [ReviewCheckCanReview200Response](doc/ReviewCheckCanReview200Response.md)
@@ -408,7 +441,9 @@ Class | Method | HTTP request | Description
  - [SignInRequest](doc/SignInRequest.md)
  - [SignInResponse](doc/SignInResponse.md)
  - [SignUpResponse](doc/SignUpResponse.md)
+ - [StartInvestigation](doc/StartInvestigation.md)
  - [Statements](doc/Statements.md)
+ - [SuspendDriver](doc/SuspendDriver.md)
  - [Time](doc/Time.md)
  - [TimeRules](doc/TimeRules.md)
  - [TopUpRequest](doc/TopUpRequest.md)

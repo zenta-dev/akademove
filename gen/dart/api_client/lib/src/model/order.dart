@@ -56,6 +56,9 @@ class Order {
     required this.updatedAt,
     this.gender,
     this.genderPreference,
+    this.proofOfDeliveryUrl,
+    this.deliveryOtp,
+    this.otpVerifiedAt,
     this.itemCount,
     this.items,
     this.user,
@@ -150,6 +153,15 @@ class Order {
   @JsonKey(name: r'genderPreference', required: false, includeIfNull: false)
   final OrderGenderPreferenceEnum? genderPreference;
 
+  @JsonKey(name: r'proofOfDeliveryUrl', required: false, includeIfNull: false)
+  final String? proofOfDeliveryUrl;
+
+  @JsonKey(name: r'deliveryOtp', required: false, includeIfNull: false)
+  final String? deliveryOtp;
+
+  @JsonKey(name: r'otpVerifiedAt', required: false, includeIfNull: false)
+  final DateTime? otpVerifiedAt;
+
   @JsonKey(name: r'itemCount', required: false, includeIfNull: false)
   final num? itemCount;
 
@@ -198,6 +210,9 @@ class Order {
           other.updatedAt == updatedAt &&
           other.gender == gender &&
           other.genderPreference == genderPreference &&
+          other.proofOfDeliveryUrl == proofOfDeliveryUrl &&
+          other.deliveryOtp == deliveryOtp &&
+          other.otpVerifiedAt == otpVerifiedAt &&
           other.itemCount == itemCount &&
           other.items == items &&
           other.user == user &&
@@ -235,6 +250,9 @@ class Order {
       updatedAt.hashCode +
       gender.hashCode +
       genderPreference.hashCode +
+      proofOfDeliveryUrl.hashCode +
+      deliveryOtp.hashCode +
+      otpVerifiedAt.hashCode +
       itemCount.hashCode +
       items.hashCode +
       user.hashCode +

@@ -6,6 +6,11 @@ void main() {
   final instance = ApiClient().getAdminApi();
 
   group(AdminApi, () {
+    //Future<String> analyticsExportOperatorAnalytics(DateTime startDate, DateTime endDate) async
+    test('test analyticsExportOperatorAnalytics', () async {
+      // TODO
+    });
+
     //Future<AuthSignOut200Response> contactDelete(String id) async
     test('test contactDelete', () async {
       // TODO
@@ -21,8 +26,33 @@ void main() {
       // TODO
     });
 
+    //Future<ContactSubmit201Response> contactRespond(String id, ContactRespondRequest contactRespondRequest) async
+    test('test contactRespond', () async {
+      // TODO
+    });
+
     //Future<ContactSubmit201Response> contactUpdate(String id, UpdateContact updateContact) async
     test('test contactUpdate', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverActivate(String id) async
+    test('test driverActivate', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverApprove(String id) async
+    test('test driverApprove', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverReject(String id, DriverRejectRequest driverRejectRequest) async
+    test('test driverReject', () async {
+      // TODO
+    });
+
+    //Future<DriverGetMine200ResponseBody> driverSuspend(String id, DriverSuspendRequest driverSuspendRequest) async
+    test('test driverSuspend', () async {
       // TODO
     });
 
@@ -31,7 +61,7 @@ void main() {
       // TODO
     });
 
-    //Future<UserAdminDashboardStats200Response> userAdminDashboardStats() async
+    //Future<UserAdminDashboardStats200Response> userAdminDashboardStats({ DateTime startDate, DateTime endDate, String period }) async
     test('test userAdminDashboardStats', () async {
       // TODO
     });

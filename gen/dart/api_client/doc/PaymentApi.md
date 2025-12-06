@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **paymentWebhookMidtrans**
-> BadgeRemove200Response paymentWebhookMidtrans(body)
+> BadgeRemove200Response paymentWebhookMidtrans(requestBody)
 
 
 
@@ -22,10 +22,10 @@ Method | HTTP request | Description
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getPaymentApi();
-final Object body = Object; // Object | 
+final Map<String, Object> requestBody = Object; // Map<String, Object> | 
 
 try {
-    final response = api.paymentWebhookMidtrans(body);
+    final response = api.paymentWebhookMidtrans(requestBody);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling PaymentApi->paymentWebhookMidtrans: $e\n');
@@ -36,7 +36,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | **Object**|  | 
+ **requestBody** | [**Map&lt;String, Object&gt;**](Object.md)|  | 
 
 ### Return type
 

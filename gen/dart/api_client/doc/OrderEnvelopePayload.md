@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **driverUpdateLocation** | [**OrderEnvelopePayloadDriverUpdateLocation**](OrderEnvelopePayloadDriverUpdateLocation.md) |  | [optional] 
 **done** | [**OrderEnvelopePayloadDone**](OrderEnvelopePayloadDone.md) |  | [optional] 
 **message** | [**OrderEnvelopePayloadMessage**](OrderEnvelopePayloadMessage.md) |  | [optional] 
+**merchantAction** | [**OrderEnvelopePayloadMerchantAction**](OrderEnvelopePayloadMerchantAction.md) |  | [optional] 
 **cancelReason** | **String** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -6,8 +6,18 @@ void main() {
   final instance = ApiClient().getCouponApi();
 
   group(CouponApi, () {
+    //Future<CouponCreate200Response> couponActivate(String id) async
+    test('test couponActivate', () async {
+      // TODO
+    });
+
     //Future<CouponCreate200Response> couponCreate(InsertCoupon insertCoupon) async
     test('test couponCreate', () async {
+      // TODO
+    });
+
+    //Future<CouponCreate200Response> couponDeactivate(String id) async
+    test('test couponDeactivate', () async {
       // TODO
     });
 

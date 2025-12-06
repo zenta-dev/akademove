@@ -73,15 +73,27 @@ export class AuditRepository {
 						? desc(auditTable.updatedAt)
 						: asc(auditTable.updatedAt);
 
-				const result = await (opts?.tx ?? this.db)
-					.select()
-					.from(auditTable)
-					.where(and(...clauses))
-					.orderBy(orderBy)
-					.offset(offset)
-					.limit(limit);
+				const [result, countResult] = await Promise.all([
+					(opts?.tx ?? this.db)
+						.select()
+						.from(auditTable)
+						.where(and(...clauses))
+						.orderBy(orderBy)
+						.offset(offset)
+						.limit(limit),
+					(opts?.tx ?? this.db)
+						.select({ count: auditTable.id })
+						.from(auditTable)
+						.where(and(...clauses)),
+				]);
 
-				return { rows: result as unknown[] as AuditLog[] };
+				const totalRecords = countResult.length;
+				const totalPages = Math.ceil(totalRecords / limit);
+
+				return {
+					rows: result as unknown[] as AuditLog[],
+					totalPages,
+				};
 			}
 
 			// If no tableName specified, query all audit tables and combine results
@@ -94,6 +106,7 @@ export class AuditRepository {
 				"wallet",
 			];
 
+			// Query all tables without limit to ensure proper global pagination
 			const allResults = await Promise.all(
 				allTables.map(async (table) => {
 					const auditTable = this.getAuditTable(table);
@@ -110,15 +123,14 @@ export class AuditRepository {
 					const result = await (opts?.tx ?? this.db)
 						.select()
 						.from(auditTable)
-						.where(and(...clauses))
-						.limit(limit);
+						.where(and(...clauses));
 
 					return result as unknown[] as AuditLog[];
 				}),
 			);
 
-			// Combine and sort results
-			let combined = allResults.flat();
+			// Combine and sort all results
+			const combined = allResults.flat();
 			combined.sort((a, b) => {
 				const dateA = new Date(a.updatedAt).getTime();
 				const dateB = new Date(b.updatedAt).getTime();
@@ -126,10 +138,12 @@ export class AuditRepository {
 			});
 
 			// Apply pagination to combined results
+			const totalRecords = combined.length;
+			const totalPages = Math.ceil(totalRecords / limit);
 			const offset = (page - 1) * limit;
-			combined = combined.slice(offset, offset + limit);
+			const paginated = combined.slice(offset, offset + limit);
 
-			return { rows: combined };
+			return { rows: paginated, totalPages };
 		} catch (error) {
 			log.error(
 				{ error, filters },

@@ -13,7 +13,12 @@ Method | HTTP request | Description
 [**contactDelete**](AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [**contactGetById**](AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
 [**contactList**](AdminApi.md#contactlist) | **GET** /contacts | 
+[**contactRespond**](AdminApi.md#contactrespond) | **POST** /contacts/{id}/respond | 
 [**contactUpdate**](AdminApi.md#contactupdate) | **PUT** /contacts/{id} | 
+[**driverActivate**](AdminApi.md#driveractivate) | **POST** /drivers/{id}/activate | 
+[**driverApprove**](AdminApi.md#driverapprove) | **POST** /drivers/{id}/approve | 
+[**driverReject**](AdminApi.md#driverreject) | **POST** /drivers/{id}/reject | 
+[**driverSuspend**](AdminApi.md#driversuspend) | **POST** /drivers/{id}/suspend | 
 [**userAdminCreate**](AdminApi.md#useradmincreate) | **POST** /users/admin | 
 [**userAdminDashboardStats**](AdminApi.md#useradmindashboardstats) | **GET** /users/admin/dashboard-stats | 
 [**userAdminGet**](AdminApi.md#useradminget) | **GET** /users/admin/{id} | 
@@ -194,6 +199,49 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **contactRespond**
+> ContactSubmit201Response contactRespond(id, contactRespondRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final ContactRespondRequest contactRespondRequest = ; // ContactRespondRequest | 
+
+try {
+    final response = api.contactRespond(id, contactRespondRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->contactRespond: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **contactRespondRequest** | [**ContactRespondRequest**](ContactRespondRequest.md)|  | 
+
+### Return type
+
+[**ContactSubmit201Response**](ContactSubmit201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **contactUpdate**
 > ContactSubmit201Response contactUpdate(id, updateContact)
 
@@ -225,6 +273,174 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ContactSubmit201Response**](ContactSubmit201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverActivate**
+> DriverGetMine200ResponseBody driverActivate(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.driverActivate(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->driverActivate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverApprove**
+> DriverGetMine200ResponseBody driverApprove(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.driverApprove(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->driverApprove: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverReject**
+> DriverGetMine200ResponseBody driverReject(id, driverRejectRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = id_example; // String | 
+final DriverRejectRequest driverRejectRequest = ; // DriverRejectRequest | 
+
+try {
+    final response = api.driverReject(id, driverRejectRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->driverReject: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverRejectRequest** | [**DriverRejectRequest**](DriverRejectRequest.md)|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverSuspend**
+> DriverGetMine200ResponseBody driverSuspend(id, driverSuspendRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = id_example; // String | 
+final DriverSuspendRequest driverSuspendRequest = ; // DriverSuspendRequest | 
+
+try {
+    final response = api.driverSuspend(id, driverSuspendRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->driverSuspend: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **driverSuspendRequest** | [**DriverSuspendRequest**](DriverSuspendRequest.md)|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 

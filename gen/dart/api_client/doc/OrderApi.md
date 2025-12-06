@@ -19,6 +19,8 @@ Method | HTTP request | Description
 [**orderPlaceOrder**](OrderApi.md#orderplaceorder) | **POST** /orders | 
 [**orderSendMessage**](OrderApi.md#ordersendmessage) | **POST** /orders/{id}/messages | 
 [**orderUpdate**](OrderApi.md#orderupdate) | **PUT** /orders/{id} | 
+[**orderUploadDeliveryProof**](OrderApi.md#orderuploaddeliveryproof) | **POST** /orders/{id}/delivery-proof | 
+[**orderVerifyDeliveryOTP**](OrderApi.md#orderverifydeliveryotp) | **POST** /orders/{id}/verify-otp | 
 
 
 # **chatList**
@@ -473,6 +475,92 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantOrderAccept200Response**](MerchantOrderAccept200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderUploadDeliveryProof**
+> OrderUploadDeliveryProof200Response orderUploadDeliveryProof(id, orderUploadDeliveryProofRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderUploadDeliveryProofRequest orderUploadDeliveryProofRequest = ; // OrderUploadDeliveryProofRequest | 
+
+try {
+    final response = api.orderUploadDeliveryProof(id, orderUploadDeliveryProofRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderUploadDeliveryProof: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderUploadDeliveryProofRequest** | [**OrderUploadDeliveryProofRequest**](OrderUploadDeliveryProofRequest.md)|  | 
+
+### Return type
+
+[**OrderUploadDeliveryProof200Response**](OrderUploadDeliveryProof200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **orderVerifyDeliveryOTP**
+> OrderVerifyDeliveryOTP200Response orderVerifyDeliveryOTP(id, orderVerifyDeliveryOTPRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getOrderApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final OrderVerifyDeliveryOTPRequest orderVerifyDeliveryOTPRequest = ; // OrderVerifyDeliveryOTPRequest | 
+
+try {
+    final response = api.orderVerifyDeliveryOTP(id, orderVerifyDeliveryOTPRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling OrderApi->orderVerifyDeliveryOTP: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **orderVerifyDeliveryOTPRequest** | [**OrderVerifyDeliveryOTPRequest**](OrderVerifyDeliveryOTPRequest.md)|  | 
+
+### Return type
+
+[**OrderVerifyDeliveryOTP200Response**](OrderVerifyDeliveryOTP200Response.md)
 
 ### Authorization
 

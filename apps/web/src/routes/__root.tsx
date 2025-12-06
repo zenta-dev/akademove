@@ -7,6 +7,7 @@ import {
 	Scripts,
 	useRouterState,
 } from "@tanstack/react-router";
+import { CookieConsent } from "@/components/cookie-consent";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ThemeProvider } from "@/components/providers/theme";
 import { Toaster } from "@/components/ui/sonner";
@@ -101,6 +102,7 @@ function RootDocument() {
 					>
 						<Outlet />
 						<Toaster richColors />
+						<CookieConsent />
 					</ThemeProvider>
 					{/* 					<TanStackRouterDevtools position="bottom-left" /> */}
 					<ReactQueryDevtools />

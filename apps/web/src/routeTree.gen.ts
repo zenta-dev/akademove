@@ -23,6 +23,7 @@ import { Route as productDriverRouteImport } from './routes/(product)/driver'
 import { Route as legalTermsRouteImport } from './routes/(legal)/terms'
 import { Route as legalPrivacyRouteImport } from './routes/(legal)/privacy'
 import { Route as legalCookiesRouteImport } from './routes/(legal)/cookies'
+import { Route as legalAccountDeletionRouteImport } from './routes/(legal)/account-deletion'
 import { Route as companyAboutRouteImport } from './routes/(company)/about'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
@@ -140,6 +141,11 @@ const legalPrivacyRoute = legalPrivacyRouteImport.update({
 const legalCookiesRoute = legalCookiesRouteImport.update({
   id: '/(legal)/cookies',
   path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const legalAccountDeletionRoute = legalAccountDeletionRouteImport.update({
+  id: '/(legal)/account-deletion',
+  path: '/account-deletion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const companyAboutRoute = companyAboutRouteImport.update({
@@ -405,6 +411,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/about': typeof companyAboutRoute
+  '/account-deletion': typeof legalAccountDeletionRoute
   '/cookies': typeof legalCookiesRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
@@ -464,6 +471,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof authResetPasswordRoute
   '/sign-in': typeof authSignInRoute
   '/about': typeof companyAboutRoute
+  '/account-deletion': typeof legalAccountDeletionRoute
   '/cookies': typeof legalCookiesRoute
   '/privacy': typeof legalPrivacyRoute
   '/terms': typeof legalTermsRoute
@@ -531,6 +539,7 @@ export interface FileRoutesById {
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(company)/about': typeof companyAboutRoute
+  '/(legal)/account-deletion': typeof legalAccountDeletionRoute
   '/(legal)/cookies': typeof legalCookiesRoute
   '/(legal)/privacy': typeof legalPrivacyRoute
   '/(legal)/terms': typeof legalTermsRoute
@@ -597,6 +606,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/about'
+    | '/account-deletion'
     | '/cookies'
     | '/privacy'
     | '/terms'
@@ -656,6 +666,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/about'
+    | '/account-deletion'
     | '/cookies'
     | '/privacy'
     | '/terms'
@@ -722,6 +733,7 @@ export interface FileRouteTypes {
     | '/(auth)/reset-password'
     | '/(auth)/sign-in'
     | '/(company)/about'
+    | '/(legal)/account-deletion'
     | '/(legal)/cookies'
     | '/(legal)/privacy'
     | '/(legal)/terms'
@@ -786,6 +798,7 @@ export interface RootRouteChildren {
   DashOperatorRouteRoute: typeof DashOperatorRouteRouteWithChildren
   DashUserRouteRoute: typeof DashUserRouteRouteWithChildren
   companyAboutRoute: typeof companyAboutRoute
+  legalAccountDeletionRoute: typeof legalAccountDeletionRoute
   legalCookiesRoute: typeof legalCookiesRoute
   legalPrivacyRoute: typeof legalPrivacyRoute
   legalTermsRoute: typeof legalTermsRoute
@@ -893,6 +906,13 @@ declare module '@tanstack/react-router' {
       path: '/cookies'
       fullPath: '/cookies'
       preLoaderRoute: typeof legalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(legal)/account-deletion': {
+      id: '/(legal)/account-deletion'
+      path: '/account-deletion'
+      fullPath: '/account-deletion'
+      preLoaderRoute: typeof legalAccountDeletionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(company)/about': {
@@ -1440,6 +1460,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashOperatorRouteRoute: DashOperatorRouteRouteWithChildren,
   DashUserRouteRoute: DashUserRouteRouteWithChildren,
   companyAboutRoute: companyAboutRoute,
+  legalAccountDeletionRoute: legalAccountDeletionRoute,
   legalCookiesRoute: legalCookiesRoute,
   legalPrivacyRoute: legalPrivacyRoute,
   legalTermsRoute: legalTermsRoute,

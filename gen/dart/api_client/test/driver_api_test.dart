@@ -6,8 +6,18 @@ void main() {
   final instance = ApiClient().getDriverApi();
 
   group(DriverApi, () {
+    //Future<String> analyticsExportDriverAnalytics(String driverId, DateTime startDate, DateTime endDate) async
+    test('test analyticsExportDriverAnalytics', () async {
+      // TODO
+    });
+
     //Future<DriverGetMine200ResponseBody> driverGet(String id) async
     test('test driverGet', () async {
+      // TODO
+    });
+
+    //Future<DriverGetAnalytics200Response> driverGetAnalytics(String id, { String period, DateTime startDate, DateTime endDate }) async
+    test('test driverGetAnalytics', () async {
       // TODO
     });
 

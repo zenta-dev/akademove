@@ -6,6 +6,16 @@ void main() {
   final instance = ApiClient().getMerchantApi();
 
   group(MerchantApi, () {
+    //Future<String> analyticsExportMerchantAnalytics(String merchantId, DateTime startDate, DateTime endDate) async
+    test('test analyticsExportMerchantAnalytics', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetMine200ResponseBody> merchantActivate(String id) async
+    test('test merchantActivate', () async {
+      // TODO
+    });
+
     //Future<MerchantAnalytics200Response> merchantAnalytics(String id, { String period, DateTime startDate, DateTime endDate }) async
     test('test merchantAnalytics', () async {
       // TODO
@@ -13,6 +23,11 @@ void main() {
 
     //Future<MerchantBestSellers200Response> merchantBestSellers(num limit, { String category }) async
     test('test merchantBestSellers', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetMine200ResponseBody> merchantDeactivate(String id, MerchantDeactivateRequest merchantDeactivateRequest) async
+    test('test merchantDeactivate', () async {
       // TODO
     });
 
