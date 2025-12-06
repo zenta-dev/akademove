@@ -135,4 +135,33 @@ class OrderRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: data.data);
     });
   }
+
+  /// Upload delivery proof photo (driver only)
+  /// POST /api/orders/{id}/delivery-proof
+  Future<BaseResponse<Order>> uploadDeliveryProof(
+    String orderId,
+    String imagePath,
+  ) {
+    return guard(() async {
+      // TODO: Implement multipart upload when API client is regenerated
+      // For now, this is a placeholder that will be replaced
+      throw UnimplementedError(
+        'uploadDeliveryProof: API client needs regeneration. '
+        'Use: POST /api/orders/$orderId/delivery-proof with multipart/form-data',
+      );
+    });
+  }
+
+  /// Verify delivery OTP (customer only)
+  /// POST /api/orders/{id}/verify-otp
+  Future<BaseResponse<Order>> verifyDeliveryOTP(String orderId, String otp) {
+    return guard(() async {
+      // TODO: Implement when API client is regenerated
+      // For now, this is a placeholder that will be replaced
+      throw UnimplementedError(
+        'verifyDeliveryOTP: API client needs regeneration. '
+        'Use: POST /api/orders/$orderId/verify-otp with body: {"otp": "$otp"}',
+      );
+    });
+  }
 }

@@ -11,13 +11,16 @@ import {
 	changesToPolicy,
 	childrenPrivacy,
 	contactUs,
+	dataDeletion,
 	dataRetention,
 	dataSecurity,
 	howWeUseInformation,
 	informationSharing,
 	informationWeCollect,
 	internationalTransfers,
+	locationDataCollection,
 	privacyIntro,
+	thirdPartyServices,
 	yourRights,
 } from "@/lib/legal/privacy-content";
 
@@ -44,12 +47,20 @@ const sections: LegalSectionType[] = [
 		title: informationWeCollect().title,
 	},
 	{
+		id: "location-data",
+		title: locationDataCollection().title,
+	},
+	{
 		id: "how-we-use",
 		title: howWeUseInformation().title,
 	},
 	{
 		id: "data-sharing",
 		title: informationSharing().title,
+	},
+	{
+		id: "third-party-services",
+		title: thirdPartyServices().title,
 	},
 	{
 		id: "data-security",
@@ -62,6 +73,10 @@ const sections: LegalSectionType[] = [
 	{
 		id: "data-retention",
 		title: dataRetention().title,
+	},
+	{
+		id: "data-deletion",
+		title: dataDeletion().title,
 	},
 	{
 		id: "international-transfers",
@@ -82,7 +97,7 @@ const sections: LegalSectionType[] = [
 ];
 
 function PrivacyPolicyComponent() {
-	const lastUpdated = "December 1, 2025";
+	const lastUpdated = "December 6, 2025";
 
 	return (
 		<LegalLayout
@@ -101,12 +116,23 @@ function PrivacyPolicyComponent() {
 				<LegalContentRenderer content={informationWeCollect()} />
 			</LegalSection>
 
+			<LegalSection id="location-data" title={locationDataCollection().title}>
+				<LegalContentRenderer content={locationDataCollection()} />
+			</LegalSection>
+
 			<LegalSection id="how-we-use" title={howWeUseInformation().title}>
 				<LegalContentRenderer content={howWeUseInformation()} />
 			</LegalSection>
 
 			<LegalSection id="data-sharing" title={informationSharing().title}>
 				<LegalContentRenderer content={informationSharing()} />
+			</LegalSection>
+
+			<LegalSection
+				id="third-party-services"
+				title={thirdPartyServices().title}
+			>
+				<LegalContentRenderer content={thirdPartyServices()} />
 			</LegalSection>
 
 			<LegalSection id="data-security" title={dataSecurity().title}>
@@ -119,6 +145,10 @@ function PrivacyPolicyComponent() {
 
 			<LegalSection id="data-retention" title={dataRetention().title}>
 				<LegalContentRenderer content={dataRetention()} />
+			</LegalSection>
+
+			<LegalSection id="data-deletion" title={dataDeletion().title}>
+				<LegalContentRenderer content={dataDeletion()} />
 			</LegalSection>
 
 			<LegalSection

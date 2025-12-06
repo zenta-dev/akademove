@@ -64,6 +64,7 @@ import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merc
 import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
 import { Route as DashAdminContactsRouteImport } from './routes/dash/admin/contacts'
 import { Route as DashAdminConfigurationsRouteImport } from './routes/dash/admin/configurations'
+import { Route as DashAdminAuditRouteImport } from './routes/dash/admin/audit'
 import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
 import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
 import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/merchant'
@@ -346,6 +347,11 @@ const DashAdminConfigurationsRoute = DashAdminConfigurationsRouteImport.update({
   path: '/configurations',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashAdminAuditRoute = DashAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
 const DashAdminAnalyticsRoute = DashAdminAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -414,6 +420,7 @@ export interface FileRoutesByFullPath {
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
@@ -472,6 +479,7 @@ export interface FileRoutesByTo {
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
@@ -538,6 +546,7 @@ export interface FileRoutesById {
   '/(auth)/sign-up/merchant': typeof authSignUpMerchantRoute
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
+  '/dash/admin/audit': typeof DashAdminAuditRoute
   '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/contacts': typeof DashAdminContactsRouteWithChildren
   '/dash/admin/drivers': typeof DashAdminDriversRoute
@@ -603,6 +612,7 @@ export interface FileRouteTypes {
     | '/sign-up/merchant'
     | '/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/audit'
     | '/dash/admin/configurations'
     | '/dash/admin/contacts'
     | '/dash/admin/drivers'
@@ -661,6 +671,7 @@ export interface FileRouteTypes {
     | '/sign-up/merchant'
     | '/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/audit'
     | '/dash/admin/configurations'
     | '/dash/admin/contacts'
     | '/dash/admin/drivers'
@@ -726,6 +737,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/merchant'
     | '/(auth)/sign-up/user'
     | '/dash/admin/analytics'
+    | '/dash/admin/audit'
     | '/dash/admin/configurations'
     | '/dash/admin/contacts'
     | '/dash/admin/drivers'
@@ -1170,6 +1182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminConfigurationsRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/admin/audit': {
+      id: '/dash/admin/audit'
+      path: '/audit'
+      fullPath: '/dash/admin/audit'
+      preLoaderRoute: typeof DashAdminAuditRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
     '/dash/admin/analytics': {
       id: '/dash/admin/analytics'
       path: '/analytics'
@@ -1282,6 +1301,7 @@ const DashAdminContactsRouteWithChildren =
 
 interface DashAdminRouteRouteChildren {
   DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
+  DashAdminAuditRoute: typeof DashAdminAuditRoute
   DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
   DashAdminContactsRoute: typeof DashAdminContactsRouteWithChildren
   DashAdminDriversRoute: typeof DashAdminDriversRoute
@@ -1293,6 +1313,7 @@ interface DashAdminRouteRouteChildren {
 
 const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
+  DashAdminAuditRoute: DashAdminAuditRoute,
   DashAdminConfigurationsRoute: DashAdminConfigurationsRoute,
   DashAdminContactsRoute: DashAdminContactsRouteWithChildren,
   DashAdminDriversRoute: DashAdminDriversRoute,

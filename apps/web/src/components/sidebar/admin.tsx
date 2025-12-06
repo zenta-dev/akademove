@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
 	Bike,
 	ChartLine,
+	ClipboardList,
 	Gauge,
 	Mail,
 	Receipt,
@@ -51,6 +52,11 @@ const navMain = Object.freeze([
 		title: m.analytics(),
 		href: localizeHref("/dash/admin/analytics"),
 		icon: ChartLine,
+	},
+	{
+		title: m.audit_logs(),
+		href: localizeHref("/dash/admin/audit"),
+		icon: ClipboardList,
 	},
 	{
 		title: m.contact_us(),

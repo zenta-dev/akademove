@@ -605,6 +605,322 @@ export const dataSecurity = (): LegalSectionContent =>
 		},
 	});
 
+export const locationDataCollection = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Location Data Collection",
+			paragraphs: [
+				"AkadeMove collects location data to enable core functionality of our services. Understanding how we use location data is essential:",
+			],
+			lists: [
+				{
+					title: "Foreground Location",
+					items: [
+						{
+							label: "When Collected",
+							content:
+								"When you actively use the app to book rides, track deliveries, or navigate",
+						},
+						{
+							label: "Purpose",
+							content:
+								"Match you with nearby drivers, calculate fares, display pickup/dropoff locations, show real-time tracking",
+						},
+						{
+							label: "Required For",
+							content: "All users (passengers and drivers) when using services",
+						},
+					],
+				},
+				{
+					title: "Background Location",
+					items: [
+						{
+							label: "When Collected",
+							content:
+								"Only during active trips/deliveries, even when app is minimized or screen is off",
+						},
+						{
+							label: "For Drivers",
+							content:
+								"To share your real-time location with passengers during active orders, ensuring passengers can track your approach and estimated arrival time",
+						},
+						{
+							label: "For Passengers",
+							content:
+								"To provide continuous trip tracking and safety features during active rides",
+						},
+						{
+							label: "NOT Collected When",
+							content:
+								"App is idle, you are offline, or no active orders - we do NOT track your location 24/7",
+						},
+						{
+							label: "Your Control",
+							content:
+								"Toggle background location in device Settings > Apps > AkadeMove > Permissions. Note: Disabling may prevent order completion",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Important:** Background location is ONLY active during trips. We respect your privacy and do not collect location data when you are not actively using our services.",
+			],
+		},
+		id: {
+			title: "Pengumpulan Data Lokasi",
+			paragraphs: [
+				"AkadeMove mengumpulkan data lokasi untuk mengaktifkan fungsi inti layanan kami. Memahami bagaimana kami menggunakan data lokasi sangat penting:",
+			],
+			lists: [
+				{
+					title: "Lokasi Latar Depan",
+					items: [
+						{
+							label: "Kapan Dikumpulkan",
+							content:
+								"Ketika Anda aktif menggunakan aplikasi untuk memesan perjalanan, melacak pengiriman, atau navigasi",
+						},
+						{
+							label: "Tujuan",
+							content:
+								"Mencocokkan Anda dengan pengemudi terdekat, menghitung tarif, menampilkan lokasi penjemputan/pengantaran, menampilkan pelacakan real-time",
+						},
+						{
+							label: "Diperlukan Untuk",
+							content:
+								"Semua pengguna (penumpang dan pengemudi) saat menggunakan layanan",
+						},
+					],
+				},
+				{
+					title: "Lokasi Latar Belakang",
+					items: [
+						{
+							label: "Kapan Dikumpulkan",
+							content:
+								"Hanya selama perjalanan/pengiriman aktif, bahkan ketika aplikasi diminimalkan atau layar dimatikan",
+						},
+						{
+							label: "Untuk Pengemudi",
+							content:
+								"Untuk membagikan lokasi real-time Anda dengan penumpang selama pesanan aktif, memastikan penumpang dapat melacak kedatangan dan waktu kedatangan perkiraan Anda",
+						},
+						{
+							label: "Untuk Penumpang",
+							content:
+								"Untuk memberikan pelacakan perjalanan berkelanjutan dan fitur keamanan selama perjalanan aktif",
+						},
+						{
+							label: "TIDAK Dikumpulkan Ketika",
+							content:
+								"Aplikasi idle, Anda offline, atau tidak ada pesanan aktif - kami TIDAK melacak lokasi Anda 24/7",
+						},
+						{
+							label: "Kontrol Anda",
+							content:
+								"Alihkan lokasi latar belakang di Pengaturan perangkat > Aplikasi > AkadeMove > Izin. Catatan: Menonaktifkan dapat mencegah penyelesaian pesanan",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Penting:** Lokasi latar belakang HANYA aktif selama perjalanan. Kami menghormati privasi Anda dan tidak mengumpulkan data lokasi ketika Anda tidak aktif menggunakan layanan kami.",
+			],
+		},
+	});
+
+export const thirdPartyServices = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Third-Party Services",
+			paragraphs: [
+				"We use the following third-party services that may collect data to provide our services:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Google Firebase",
+							content:
+								"Push notifications and app performance monitoring. Privacy Policy: https://firebase.google.com/support/privacy",
+						},
+						{
+							label: "Google Maps Platform",
+							content:
+								"Location services, mapping, distance calculations, and route planning. Privacy Policy: https://policies.google.com/privacy",
+						},
+						{
+							label: "Midtrans",
+							content:
+								"Payment processing for wallet top-ups via QRIS, bank transfer, and e-wallet. Privacy Policy: https://midtrans.com/privacy-policy",
+						},
+						{
+							label: "Cloudflare",
+							content:
+								"Hosting, infrastructure, and security services. Privacy Policy: https://www.cloudflare.com/privacypolicy/",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"These third parties have their own privacy policies governing their collection and use of your information. We recommend reviewing their policies to understand how they handle your data.",
+				"We conduct due diligence on our service providers to ensure they maintain appropriate data protection standards.",
+			],
+		},
+		id: {
+			title: "Layanan Pihak Ketiga",
+			paragraphs: [
+				"Kami menggunakan layanan pihak ketiga berikut yang dapat mengumpulkan data untuk menyediakan layanan kami:",
+			],
+			lists: [
+				{
+					items: [
+						{
+							label: "Google Firebase",
+							content:
+								"Notifikasi push dan pemantauan kinerja aplikasi. Kebijakan Privasi: https://firebase.google.com/support/privacy",
+						},
+						{
+							label: "Google Maps Platform",
+							content:
+								"Layanan lokasi, pemetaan, perhitungan jarak, dan perencanaan rute. Kebijakan Privasi: https://policies.google.com/privacy",
+						},
+						{
+							label: "Midtrans",
+							content:
+								"Pemrosesan pembayaran untuk top-up dompet melalui QRIS, transfer bank, dan e-wallet. Kebijakan Privasi: https://midtrans.com/privacy-policy",
+						},
+						{
+							label: "Cloudflare",
+							content:
+								"Hosting, infrastruktur, dan layanan keamanan. Kebijakan Privasi: https://www.cloudflare.com/privacypolicy/",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"Pihak ketiga ini memiliki kebijakan privasi mereka sendiri yang mengatur pengumpulan dan penggunaan informasi Anda. Kami merekomendasikan untuk meninjau kebijakan mereka untuk memahami bagaimana mereka menangani data Anda.",
+				"Kami melakukan uji tuntas pada penyedia layanan kami untuk memastikan mereka mempertahankan standar perlindungan data yang sesuai.",
+			],
+		},
+	});
+
+export const dataDeletion = (): LegalSectionContent =>
+	getLegalContent({
+		en: {
+			title: "Data Deletion and Account Closure",
+			paragraphs: [
+				"You have the right to delete your account and request deletion of your personal data at any time:",
+			],
+			lists: [
+				{
+					title: "How to Delete Your Account",
+					items: [
+						{
+							label: "In-App",
+							content:
+								"Go to Settings > Account > Delete Account. Follow the confirmation steps.",
+						},
+						{
+							label: "Email Request",
+							content:
+								'Send an email to privacy@akademove.com with subject "Data Deletion Request" including your name and registered email/phone number',
+						},
+						{
+							label: "Processing Time",
+							content: "Account deletion requests are processed within 30 days",
+						},
+					],
+				},
+				{
+					title: "What Happens When You Delete Your Account",
+					items: [
+						{
+							label: "Immediate Effect",
+							content:
+								"Your account is deactivated and you lose access to all services",
+						},
+						{
+							label: "Data Deleted (within 90 days)",
+							content:
+								"Profile information, preferences, chat history, GPS tracking data",
+						},
+						{
+							label: "Data Retained (as legally required)",
+							content:
+								"Transaction records (10 years for tax compliance), verification documents (for fraud prevention), dispute/legal records",
+						},
+						{
+							label: "Outstanding Obligations",
+							content:
+								"Any pending payments or unresolved disputes must be settled before full deletion",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Important:** Account deletion is permanent and cannot be undone. Make sure to withdraw any remaining wallet balance before deleting your account.",
+			],
+		},
+		id: {
+			title: "Penghapusan Data dan Penutupan Akun",
+			paragraphs: [
+				"Anda memiliki hak untuk menghapus akun Anda dan meminta penghapusan data pribadi Anda kapan saja:",
+			],
+			lists: [
+				{
+					title: "Cara Menghapus Akun Anda",
+					items: [
+						{
+							label: "Dalam Aplikasi",
+							content:
+								"Buka Pengaturan > Akun > Hapus Akun. Ikuti langkah konfirmasi.",
+						},
+						{
+							label: "Permintaan Email",
+							content:
+								'Kirim email ke privacy@akademove.com dengan subjek "Permintaan Penghapusan Data" termasuk nama dan email/nomor telepon terdaftar Anda',
+						},
+						{
+							label: "Waktu Pemrosesan",
+							content:
+								"Permintaan penghapusan akun diproses dalam waktu 30 hari",
+						},
+					],
+				},
+				{
+					title: "Apa yang Terjadi Ketika Anda Menghapus Akun",
+					items: [
+						{
+							label: "Efek Segera",
+							content:
+								"Akun Anda dinonaktifkan dan Anda kehilangan akses ke semua layanan",
+						},
+						{
+							label: "Data Dihapus (dalam 90 hari)",
+							content:
+								"Informasi profil, preferensi, riwayat obrolan, data pelacakan GPS",
+						},
+						{
+							label: "Data Disimpan (sesuai hukum)",
+							content:
+								"Catatan transaksi (10 tahun untuk kepatuhan pajak), dokumen verifikasi (untuk pencegahan penipuan), catatan sengketa/hukum",
+						},
+						{
+							label: "Kewajiban Tertunda",
+							content:
+								"Setiap pembayaran tertunda atau sengketa yang belum terselesaikan harus diselesaikan sebelum penghapusan penuh",
+						},
+					],
+				},
+			],
+			additionalParagraphs: [
+				"**Penting:** Penghapusan akun bersifat permanen dan tidak dapat dibatalkan. Pastikan untuk menarik sisa saldo dompet sebelum menghapus akun Anda.",
+			],
+		},
+	});
+
 export const internationalTransfers = (): LegalSectionContent =>
 	getLegalContent({
 		en: {

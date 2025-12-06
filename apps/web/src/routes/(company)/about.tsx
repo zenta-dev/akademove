@@ -275,7 +275,7 @@ function HeroSection() {
 	return (
 		<section
 			ref={ref}
-			className="relative flex min-h-[60vh] w-full items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 via-background to-secondary/30 px-4 py-20 sm:px-6 md:px-8 md:py-24 lg:px-16"
+			className="relative flex min-h-[60vh] w-full items-center justify-center overflow-hidden bg-linear-to-br from-primary/20 via-background to-secondary/30 px-4 py-20 sm:px-6 md:px-8 md:py-24 lg:px-16"
 		>
 			<div className="mx-auto w-full max-w-5xl text-center">
 				<motion.div

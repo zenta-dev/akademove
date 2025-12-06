@@ -28,7 +28,7 @@ function RouteComponent() {
 			<PublicHeader className="fixed top-0 right-0 left-0 z-50 mx-auto mt-2 w-full max-w-3xl rounded-xl border p-4" />
 
 			{/* Hero Section */}
-			<section className="bg-gradient-to-b from-blue-500/10 to-background px-4 py-32 sm:px-6 md:px-8 lg:px-16">
+			<section className="bg-linear-to-b from-blue-500/10 to-background px-4 py-32 sm:px-6 md:px-8 lg:px-16">
 				<div className="mx-auto max-w-7xl">
 					<div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
 						<div className="flex flex-col justify-center">

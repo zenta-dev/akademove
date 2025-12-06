@@ -155,7 +155,7 @@ function StatusComponent() {
 	return (
 		<div className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<div className="border-b bg-gradient-to-b from-primary/5 to-background">
+			<div className="border-b bg-linear-to-b from-primary/5 to-background pt-24">
 				<div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
 					<div className="mx-auto max-w-3xl text-center">
 						<Activity className="mx-auto mb-4 h-12 w-12 text-primary" />

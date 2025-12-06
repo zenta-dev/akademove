@@ -152,6 +152,42 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     await rejectOrder(orderId, reason: reason);
   }
 
+  /// Upload delivery proof photo (for high-value orders > 100k IDR)
+  Future<void> uploadDeliveryProof(String imagePath) async =>
+      await taskManager.execute('DOC-uDP-$imagePath', () async {
+        final orderId = _currentOrderId;
+        if (orderId == null) {
+          logger.w('[DriverOrderCubit] - No current order to upload proof for');
+          return;
+        }
+
+        try {
+          emit(state.toLoading());
+
+          final res = await _orderRepository.uploadDeliveryProof(
+            orderId,
+            imagePath,
+          );
+
+          emit(
+            state.toSuccess(
+              currentOrder: res.data,
+              orderStatus: res.data.status,
+              message: res.message,
+            ),
+          );
+
+          logger.i('[DriverOrderCubit] - Delivery proof uploaded successfully');
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[DriverOrderCubit] - Error uploading delivery proof: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
+        }
+      });
+
   void _startLocationTracking() {
     _locationUpdateTimer?.cancel();
     _locationUpdateTimer = Timer.periodic(const Duration(seconds: 10), (
