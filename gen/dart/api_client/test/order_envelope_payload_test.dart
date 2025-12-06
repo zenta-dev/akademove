@@ -41,5 +41,10 @@ void main() {
     test('to test the property `cancelReason`', () async {
       // TODO
     });
+
+    // OrderEnvelopePayloadNoShow noShow
+    test('to test the property `noShow`', () async {
+      // TODO
+    });
   });
 }

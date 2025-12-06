@@ -9,7 +9,9 @@ part of 'notification_mark_as_read200_response.dart';
 abstract class _$NotificationMarkAsRead200ResponseCWProxy {
   NotificationMarkAsRead200Response message(String message);
 
-  NotificationMarkAsRead200Response data(UserNotification data);
+  NotificationMarkAsRead200Response data(
+    NotificationList200ResponseDataInner data,
+  );
 
   NotificationMarkAsRead200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +26,7 @@ abstract class _$NotificationMarkAsRead200ResponseCWProxy {
   /// ```
   NotificationMarkAsRead200Response call({
     String message,
-    UserNotification data,
+    NotificationList200ResponseDataInner data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -43,8 +45,9 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
       call(message: message);
 
   @override
-  NotificationMarkAsRead200Response data(UserNotification data) =>
-      call(data: data);
+  NotificationMarkAsRead200Response data(
+    NotificationList200ResponseDataInner data,
+  ) => call(data: data);
 
   @override
   NotificationMarkAsRead200Response pagination(PaginationResult? pagination) =>
@@ -76,7 +79,7 @@ class _$NotificationMarkAsRead200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as UserNotification,
+          : data as NotificationList200ResponseDataInner,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -112,7 +115,9 @@ NotificationMarkAsRead200Response _$NotificationMarkAsRead200ResponseFromJson(
     message: $checkedConvert('message', (v) => v as String),
     data: $checkedConvert(
       'data',
-      (v) => UserNotification.fromJson(v as Map<String, dynamic>),
+      (v) => NotificationList200ResponseDataInner.fromJson(
+        v as Map<String, dynamic>,
+      ),
     ),
     pagination: $checkedConvert(
       'pagination',

@@ -31,6 +31,41 @@ void main() {
       // TODO
     });
 
+    //Future<BroadcastCreate201Response> broadcastCreate(BroadcastCreateRequest broadcastCreateRequest) async
+    test('test broadcastCreate', () async {
+      // TODO
+    });
+
+    //Future<BroadcastDelete200Response> broadcastDelete(String id) async
+    test('test broadcastDelete', () async {
+      // TODO
+    });
+
+    //Future<BroadcastCreate201Response> broadcastGet(String id) async
+    test('test broadcastGet', () async {
+      // TODO
+    });
+
+    //Future<BroadcastList200Response> broadcastList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, String status, String type, String targetAudience, String search }) async
+    test('test broadcastList', () async {
+      // TODO
+    });
+
+    //Future<BroadcastCreate201Response> broadcastSend(String id) async
+    test('test broadcastSend', () async {
+      // TODO
+    });
+
+    //Future<BroadcastStats200Response> broadcastStats() async
+    test('test broadcastStats', () async {
+      // TODO
+    });
+
+    //Future<BroadcastCreate201Response> broadcastUpdate(String id, BroadcastUpdateRequest broadcastUpdateRequest) async
+    test('test broadcastUpdate', () async {
+      // TODO
+    });
+
     //Future<AuthSignOut200Response> contactDelete(String id) async
     test('test contactDelete', () async {
       // TODO
@@ -91,7 +126,7 @@ void main() {
       // TODO
     });
 
-    //Future<UserAdminList200Response> userAdminList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    //Future<UserAdminList200Response> userAdminList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, UserAdminListFiltersParameter filters }) async
     test('test userAdminList', () async {
       // TODO
     });

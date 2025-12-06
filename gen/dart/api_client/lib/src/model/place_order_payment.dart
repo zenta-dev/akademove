@@ -25,7 +25,6 @@ class PlaceOrderPayment {
     required this.provider,
     this.bankProvider,
   });
-
   @JsonKey(name: r'method', required: true, includeIfNull: false)
   final PaymentMethod method;
 

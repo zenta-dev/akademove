@@ -25,7 +25,6 @@ class OrderEnvelopePayloadMessage {
     required this.message,
     required this.sentAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

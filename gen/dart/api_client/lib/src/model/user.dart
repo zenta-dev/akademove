@@ -32,12 +32,11 @@ class User {
     this.banReason,
     this.banExpires,
     this.gender,
-    required this.phone,
+    this.phone,
     required this.createdAt,
     required this.updatedAt,
     required this.userBadges,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
@@ -68,8 +67,8 @@ class User {
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
 
-  @JsonKey(name: r'phone', required: true, includeIfNull: false)
-  final Phone phone;
+  @JsonKey(name: r'phone', required: false, includeIfNull: false)
+  final Phone? phone;
 
   @JsonKey(name: r'createdAt', required: true, includeIfNull: false)
   final DateTime createdAt;

@@ -19,7 +19,6 @@ part 'sign_up_response.g.dart';
 class SignUpResponse {
   /// Returns a new [SignUpResponse] instance.
   const SignUpResponse({required this.user});
-
   @JsonKey(name: r'user', required: true, includeIfNull: false)
   final User user;
 

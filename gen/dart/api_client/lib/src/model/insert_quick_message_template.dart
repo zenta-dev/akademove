@@ -25,7 +25,6 @@ class InsertQuickMessageTemplate {
     required this.isActive,
     required this.displayOrder,
   });
-
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final InsertQuickMessageTemplateRoleEnum role;
 

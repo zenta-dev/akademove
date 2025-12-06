@@ -98,7 +98,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userMeChangePassword**
-> AuthHasPermission200Response userMeChangePassword(updateUserPassword)
+> AuthHasAccess200Response userMeChangePassword(userMeChangePasswordRequest)
 
 
 
@@ -107,10 +107,10 @@ Name | Type | Description  | Notes
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getUserApi();
-final UpdateUserPassword updateUserPassword = ; // UpdateUserPassword | 
+final UserMeChangePasswordRequest userMeChangePasswordRequest = ; // UserMeChangePasswordRequest | 
 
 try {
-    final response = api.userMeChangePassword(updateUserPassword);
+    final response = api.userMeChangePassword(userMeChangePasswordRequest);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling UserApi->userMeChangePassword: $e\n');
@@ -121,11 +121,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **updateUserPassword** | [**UpdateUserPassword**](UpdateUserPassword.md)|  | 
+ **userMeChangePasswordRequest** | [**UserMeChangePasswordRequest**](UserMeChangePasswordRequest.md)|  | 
 
 ### Return type
 
-[**AuthHasPermission200Response**](AuthHasPermission200Response.md)
+[**AuthHasAccess200Response**](AuthHasAccess200Response.md)
 
 ### Authorization
 

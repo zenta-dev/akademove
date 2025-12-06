@@ -14,6 +14,13 @@ Method | HTTP request | Description
 [**accountDeletionList**](AdminApi.md#accountdeletionlist) | **GET** /account-deletion | 
 [**accountDeletionReview**](AdminApi.md#accountdeletionreview) | **PUT** /account-deletion/{id}/review | 
 [**analyticsExportOperatorAnalytics**](AdminApi.md#analyticsexportoperatoranalytics) | **GET** /analytics/operator/export | 
+[**broadcastCreate**](AdminApi.md#broadcastcreate) | **POST** /broadcasts | 
+[**broadcastDelete**](AdminApi.md#broadcastdelete) | **DELETE** /broadcasts/{id} | 
+[**broadcastGet**](AdminApi.md#broadcastget) | **GET** /broadcasts/{id} | 
+[**broadcastList**](AdminApi.md#broadcastlist) | **GET** /broadcasts | 
+[**broadcastSend**](AdminApi.md#broadcastsend) | **POST** /broadcasts/{id}/send | 
+[**broadcastStats**](AdminApi.md#broadcaststats) | **GET** /broadcasts/stats | 
+[**broadcastUpdate**](AdminApi.md#broadcastupdate) | **PUT** /broadcasts/{id} | 
 [**contactDelete**](AdminApi.md#contactdelete) | **DELETE** /contacts/{id} | 
 [**contactGetById**](AdminApi.md#contactgetbyid) | **GET** /contacts/{id} | 
 [**contactList**](AdminApi.md#contactlist) | **GET** /contacts | 
@@ -242,6 +249,313 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastCreate**
+> BroadcastCreate201Response broadcastCreate(broadcastCreateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final BroadcastCreateRequest broadcastCreateRequest = ; // BroadcastCreateRequest | 
+
+try {
+    final response = api.broadcastCreate(broadcastCreateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastCreate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **broadcastCreateRequest** | [**BroadcastCreateRequest**](BroadcastCreateRequest.md)|  | 
+
+### Return type
+
+[**BroadcastCreate201Response**](BroadcastCreate201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastDelete**
+> BroadcastDelete200Response broadcastDelete(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.broadcastDelete(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastDelete: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastGet**
+> BroadcastCreate201Response broadcastGet(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.broadcastGet(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastGet: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**BroadcastCreate201Response**](BroadcastCreate201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastList**
+> BroadcastList200Response broadcastList(cursor, limit, direction, page, query, sortBy, order, mode, status, type, targetAudience, search)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String cursor = cursor_example; // String | 
+final Object limit = ; // Object | 
+final String direction = direction_example; // String | 
+final Object page = ; // Object | 
+final String query = query_example; // String | 
+final String sortBy = sortBy_example; // String | 
+final PaginationOrder order = ; // PaginationOrder | 
+final PaginationMode mode = ; // PaginationMode | 
+final String status = status_example; // String | 
+final String type = type_example; // String | 
+final String targetAudience = targetAudience_example; // String | 
+final String search = search_example; // String | 
+
+try {
+    final response = api.broadcastList(cursor, limit, direction, page, query, sortBy, order, mode, status, type, targetAudience, search);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastList: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **cursor** | **String**|  | [optional] 
+ **limit** | [**Object**](.md)|  | [optional] 
+ **direction** | **String**|  | [optional] 
+ **page** | [**Object**](.md)|  | [optional] 
+ **query** | **String**|  | [optional] 
+ **sortBy** | **String**|  | [optional] 
+ **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **status** | **String**|  | [optional] 
+ **type** | **String**|  | [optional] 
+ **targetAudience** | **String**|  | [optional] 
+ **search** | **String**|  | [optional] 
+
+### Return type
+
+[**BroadcastList200Response**](BroadcastList200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastSend**
+> BroadcastCreate201Response broadcastSend(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+
+try {
+    final response = api.broadcastSend(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastSend: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**BroadcastCreate201Response**](BroadcastCreate201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastStats**
+> BroadcastStats200Response broadcastStats()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+
+try {
+    final response = api.broadcastStats();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastStats: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**BroadcastStats200Response**](BroadcastStats200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **broadcastUpdate**
+> BroadcastCreate201Response broadcastUpdate(id, broadcastUpdateRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getAdminApi();
+final String id = 38400000-8cf0-11bd-b23e-10b96e4ef00d; // String | 
+final BroadcastUpdateRequest broadcastUpdateRequest = ; // BroadcastUpdateRequest | 
+
+try {
+    final response = api.broadcastUpdate(id, broadcastUpdateRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling AdminApi->broadcastUpdate: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **broadcastUpdateRequest** | [**BroadcastUpdateRequest**](BroadcastUpdateRequest.md)|  | 
+
+### Return type
+
+[**BroadcastCreate201Response**](BroadcastCreate201Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -757,7 +1071,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **userAdminList**
-> UserAdminList200Response userAdminList(cursor, limit, direction, page, query, sortBy, order, mode)
+> UserAdminList200Response userAdminList(cursor, limit, direction, page, query, sortBy, order, mode, filters)
 
 
 
@@ -774,9 +1088,10 @@ final String query = query_example; // String |
 final String sortBy = sortBy_example; // String | 
 final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
+final UserAdminListFiltersParameter filters = ; // UserAdminListFiltersParameter | 
 
 try {
-    final response = api.userAdminList(cursor, limit, direction, page, query, sortBy, order, mode);
+    final response = api.userAdminList(cursor, limit, direction, page, query, sortBy, order, mode, filters);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling AdminApi->userAdminList: $e\n');
@@ -795,6 +1110,7 @@ Name | Type | Description  | Notes
  **sortBy** | **String**|  | [optional] 
  **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **filters** | [**UserAdminListFiltersParameter**](.md)|  | [optional] 
 
 ### Return type
 

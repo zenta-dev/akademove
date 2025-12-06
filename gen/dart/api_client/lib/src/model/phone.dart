@@ -19,7 +19,6 @@ part 'phone.g.dart';
 class Phone {
   /// Returns a new [Phone] instance.
   const Phone({required this.countryCode, required this.number});
-
   @JsonKey(name: r'countryCode', required: true, includeIfNull: false)
   final CountryCode countryCode;
 

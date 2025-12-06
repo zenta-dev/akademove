@@ -18,7 +18,6 @@ part 'driver_reject_request.g.dart';
 class DriverRejectRequest {
   /// Returns a new [DriverRejectRequest] instance.
   const DriverRejectRequest({required this.reason});
-
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
 

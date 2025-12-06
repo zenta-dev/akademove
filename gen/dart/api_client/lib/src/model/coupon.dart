@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coupon_rules.dart';
+import 'package:api_client/src/model/coupon_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -22,6 +23,7 @@ class Coupon {
     required this.id,
     required this.name,
     required this.code,
+    this.couponType = CouponType.GENERAL,
     required this.rules,
     this.discountAmount,
     this.discountPercentage,
@@ -31,10 +33,11 @@ class Coupon {
     required this.periodEnd,
     required this.isActive,
     this.merchantId,
+    this.eventName,
+    this.eventDescription,
     required this.createdById,
     required this.createdAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
@@ -43,6 +46,14 @@ class Coupon {
 
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
+
+  @JsonKey(
+    defaultValue: CouponType.GENERAL,
+    name: r'couponType',
+    required: false,
+    includeIfNull: false,
+  )
+  final CouponType? couponType;
 
   @JsonKey(name: r'rules', required: true, includeIfNull: false)
   final CouponRules rules;
@@ -71,6 +82,12 @@ class Coupon {
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
 
+  @JsonKey(name: r'eventName', required: false, includeIfNull: false)
+  final String? eventName;
+
+  @JsonKey(name: r'eventDescription', required: false, includeIfNull: false)
+  final String? eventDescription;
+
   @JsonKey(name: r'createdById', required: true, includeIfNull: false)
   final String createdById;
 
@@ -84,6 +101,7 @@ class Coupon {
           other.id == id &&
           other.name == name &&
           other.code == code &&
+          other.couponType == couponType &&
           other.rules == rules &&
           other.discountAmount == discountAmount &&
           other.discountPercentage == discountPercentage &&
@@ -93,6 +111,8 @@ class Coupon {
           other.periodEnd == periodEnd &&
           other.isActive == isActive &&
           other.merchantId == merchantId &&
+          other.eventName == eventName &&
+          other.eventDescription == eventDescription &&
           other.createdById == createdById &&
           other.createdAt == createdAt;
 
@@ -101,6 +121,7 @@ class Coupon {
       id.hashCode +
       name.hashCode +
       code.hashCode +
+      couponType.hashCode +
       rules.hashCode +
       discountAmount.hashCode +
       discountPercentage.hashCode +
@@ -110,6 +131,8 @@ class Coupon {
       periodEnd.hashCode +
       isActive.hashCode +
       (merchantId == null ? 0 : merchantId.hashCode) +
+      eventName.hashCode +
+      eventDescription.hashCode +
       createdById.hashCode +
       createdAt.hashCode;
 

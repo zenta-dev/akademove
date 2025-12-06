@@ -19,7 +19,6 @@ part 'update_wallet.g.dart';
 class UpdateWallet {
   /// Returns a new [UpdateWallet] instance.
   const UpdateWallet({this.userId, this.balance, this.currency, this.isActive});
-
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
 

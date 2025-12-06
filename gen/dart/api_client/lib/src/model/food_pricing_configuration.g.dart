@@ -17,6 +17,8 @@ abstract class _$FoodPricingConfigurationCWProxy {
 
   FoodPricingConfiguration taxRate(num taxRate);
 
+  FoodPricingConfiguration merchantCommissionRate(num? merchantCommissionRate);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FoodPricingConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -30,6 +32,7 @@ abstract class _$FoodPricingConfigurationCWProxy {
     num minimumFare,
     num platformFeeRate,
     num taxRate,
+    num? merchantCommissionRate,
   });
 }
 
@@ -60,6 +63,11 @@ class _$FoodPricingConfigurationCWProxyImpl
   FoodPricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
 
   @override
+  FoodPricingConfiguration merchantCommissionRate(
+    num? merchantCommissionRate,
+  ) => call(merchantCommissionRate: merchantCommissionRate);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FoodPricingConfiguration(...).copyWith.fieldName(value)`.
   ///
@@ -73,6 +81,7 @@ class _$FoodPricingConfigurationCWProxyImpl
     Object? minimumFare = const $CopyWithPlaceholder(),
     Object? platformFeeRate = const $CopyWithPlaceholder(),
     Object? taxRate = const $CopyWithPlaceholder(),
+    Object? merchantCommissionRate = const $CopyWithPlaceholder(),
   }) {
     return FoodPricingConfiguration(
       baseFare: baseFare == const $CopyWithPlaceholder() || baseFare == null
@@ -98,6 +107,11 @@ class _$FoodPricingConfigurationCWProxyImpl
           ? _value.taxRate
           // ignore: cast_nullable_to_non_nullable
           : taxRate as num,
+      merchantCommissionRate:
+          merchantCommissionRate == const $CopyWithPlaceholder()
+          ? _value.merchantCommissionRate
+          // ignore: cast_nullable_to_non_nullable
+          : merchantCommissionRate as num?,
     );
   }
 }
@@ -133,6 +147,10 @@ FoodPricingConfiguration _$FoodPricingConfigurationFromJson(
     minimumFare: $checkedConvert('minimumFare', (v) => v as num),
     platformFeeRate: $checkedConvert('platformFeeRate', (v) => v as num),
     taxRate: $checkedConvert('taxRate', (v) => v as num),
+    merchantCommissionRate: $checkedConvert(
+      'merchantCommissionRate',
+      (v) => v as num? ?? 0.1,
+    ),
   );
   return val;
 });
@@ -145,4 +163,5 @@ Map<String, dynamic> _$FoodPricingConfigurationToJson(
   'minimumFare': instance.minimumFare,
   'platformFeeRate': instance.platformFeeRate,
   'taxRate': instance.taxRate,
+  'merchantCommissionRate': ?instance.merchantCommissionRate,
 };

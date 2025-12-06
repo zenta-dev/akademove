@@ -25,7 +25,6 @@ class DeliveryPricingConfiguration {
     required this.taxRate,
     required this.perKgRate,
   });
-
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
 

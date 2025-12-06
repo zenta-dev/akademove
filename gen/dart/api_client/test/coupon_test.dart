@@ -22,6 +22,11 @@ void main() {
       // TODO
     });
 
+    // CouponType couponType (default value: CouponType.GENERAL)
+    test('to test the property `couponType`', () async {
+      // TODO
+    });
+
     // CouponRules rules
     test('to test the property `rules`', () async {
       // TODO
@@ -64,6 +69,16 @@ void main() {
 
     // String merchantId
     test('to test the property `merchantId`', () async {
+      // TODO
+    });
+
+    // String eventName
+    test('to test the property `eventName`', () async {
+      // TODO
+    });
+
+    // String eventDescription
+    test('to test the property `eventDescription`', () async {
       // TODO
     });
 

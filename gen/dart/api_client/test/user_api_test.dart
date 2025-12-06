@@ -16,7 +16,7 @@ void main() {
       // TODO
     });
 
-    //Future<AuthHasPermission200Response> userMeChangePassword(UpdateUserPassword updateUserPassword) async
+    //Future<AuthHasAccess200Response> userMeChangePassword(UpdateUserPassword updateUserPassword) async
     test('test userMeChangePassword', () async {
       // TODO
     });

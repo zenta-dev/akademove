@@ -33,7 +33,6 @@ class DriverGetAnalytics200ResponseData {
     required this.earningsByDay,
     required this.topEarningDays,
   });
-
   @JsonKey(name: r'totalEarnings', required: true, includeIfNull: false)
   final num totalEarnings;
 

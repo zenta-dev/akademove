@@ -32,7 +32,6 @@ class Contact {
     required this.updatedAt,
     this.respondedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

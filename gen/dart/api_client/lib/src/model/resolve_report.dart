@@ -18,7 +18,6 @@ part 'resolve_report.g.dart';
 class ResolveReport {
   /// Returns a new [ResolveReport] instance.
   const ResolveReport({required this.resolution});
-
   @JsonKey(name: r'resolution', required: true, includeIfNull: false)
   final String resolution;
 

@@ -18,7 +18,6 @@ part 'wallet_monthly_summary_query.g.dart';
 class WalletMonthlySummaryQuery {
   /// Returns a new [WalletMonthlySummaryQuery] instance.
   const WalletMonthlySummaryQuery({required this.year, required this.month});
-
   @JsonKey(name: r'year', required: true, includeIfNull: false)
   final num year;
 

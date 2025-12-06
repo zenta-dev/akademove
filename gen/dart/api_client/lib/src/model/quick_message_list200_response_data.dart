@@ -19,7 +19,6 @@ part 'quick_message_list200_response_data.g.dart';
 class QuickMessageList200ResponseData {
   /// Returns a new [QuickMessageList200ResponseData] instance.
   const QuickMessageList200ResponseData({required this.rows});
-
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<QuickMessageTemplate> rows;
 

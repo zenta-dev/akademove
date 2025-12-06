@@ -37,7 +37,6 @@ class InsertPayment {
     this.payload,
     this.response,
   });
-
   @JsonKey(name: r'transactionId', required: true, includeIfNull: false)
   final String transactionId;
 

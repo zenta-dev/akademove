@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **platformFeeRate** | **num** |  | 
 **taxRate** | **num** |  | 
 **perKgRate** | **num** |  | 
+**merchantCommissionRate** | **num** |  | [optional] [default to 0.1]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

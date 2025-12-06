@@ -29,7 +29,6 @@ class OrderSummary {
     required this.totalCost,
     required this.breakdown,
   });
-
   @JsonKey(name: r'distanceKm', required: true, includeIfNull: false)
   final num distanceKm;
 

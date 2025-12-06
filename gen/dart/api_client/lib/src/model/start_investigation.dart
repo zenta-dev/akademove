@@ -18,7 +18,6 @@ part 'start_investigation.g.dart';
 class StartInvestigation {
   /// Returns a new [StartInvestigation] instance.
   const StartInvestigation({required this.notes});
-
   @JsonKey(name: r'notes', required: true, includeIfNull: false)
   final String notes;
 

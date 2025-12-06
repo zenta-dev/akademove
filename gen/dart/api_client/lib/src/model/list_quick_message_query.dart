@@ -23,7 +23,6 @@ class ListQuickMessageQuery {
     this.locale,
     this.isActive,
   });
-
   @JsonKey(name: r'role', required: false, includeIfNull: false)
   final ListQuickMessageQueryRoleEnum? role;
 

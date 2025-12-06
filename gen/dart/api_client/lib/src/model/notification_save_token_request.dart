@@ -18,7 +18,6 @@ part 'notification_save_token_request.g.dart';
 class NotificationSaveTokenRequest {
   /// Returns a new [NotificationSaveTokenRequest] instance.
   const NotificationSaveTokenRequest({required this.token});
-
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
 

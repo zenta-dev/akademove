@@ -23,7 +23,6 @@ class AccountDeletionList200ResponseData {
     required this.rows,
     this.pagination,
   });
-
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<AccountDeletion> rows;
 

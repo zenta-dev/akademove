@@ -22,7 +22,6 @@ class OrderEnvelopePayloadDriverUpdateLocation {
     required this.x,
     required this.y,
   });
-
   @JsonKey(name: r'driverId', required: true, includeIfNull: false)
   final String driverId;
 

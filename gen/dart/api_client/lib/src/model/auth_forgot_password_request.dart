@@ -18,7 +18,6 @@ part 'auth_forgot_password_request.g.dart';
 class AuthForgotPasswordRequest {
   /// Returns a new [AuthForgotPasswordRequest] instance.
   const AuthForgotPasswordRequest({required this.email});
-
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
 

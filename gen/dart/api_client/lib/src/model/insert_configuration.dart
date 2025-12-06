@@ -18,7 +18,6 @@ part 'insert_configuration.g.dart';
 class InsertConfiguration {
   /// Returns a new [InsertConfiguration] instance.
   const InsertConfiguration({required this.name, this.value, this.description});
-
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
 

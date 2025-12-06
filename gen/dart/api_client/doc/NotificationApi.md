@@ -21,7 +21,7 @@ Method | HTTP request | Description
 
 
 # **notificationDelete**
-> NotificationDelete200Response notificationDelete(id)
+> BroadcastDelete200Response notificationDelete(id)
 
 
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NotificationDelete200Response**](NotificationDelete200Response.md)
+[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
 
 ### Authorization
 
@@ -234,7 +234,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationRemoveToken**
-> NotificationDelete200Response notificationRemoveToken(token)
+> BroadcastDelete200Response notificationRemoveToken(token)
 
 
 
@@ -261,7 +261,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NotificationDelete200Response**](NotificationDelete200Response.md)
+[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
 
 ### Authorization
 
@@ -275,7 +275,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **notificationSaveToken**
-> NotificationDelete200Response notificationSaveToken(notificationSaveTokenRequest)
+> BroadcastDelete200Response notificationSaveToken(notificationSaveTokenRequest)
 
 
 
@@ -302,7 +302,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**NotificationDelete200Response**](NotificationDelete200Response.md)
+[**BroadcastDelete200Response**](BroadcastDelete200Response.md)
 
 ### Authorization
 

@@ -24,7 +24,6 @@ class EmergencyContactConfiguration {
     this.description,
     this.isActive = true,
   });
-
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
 

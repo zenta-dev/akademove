@@ -31,20 +31,5 @@ void main() {
     test('to test the property `phone`', () async {
       // TODO
     });
-
-    // List<UserBadge> userBadges
-    test('to test the property `userBadges`', () async {
-      // TODO
-    });
-
-    // String password
-    test('to test the property `password`', () async {
-      // TODO
-    });
-
-    // String confirmPassword
-    test('to test the property `confirmPassword`', () async {
-      // TODO
-    });
   });
 }

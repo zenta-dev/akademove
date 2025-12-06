@@ -23,7 +23,6 @@ class DriverGetAnalytics200ResponseDataEarningsByTypeInner {
     required this.earnings,
     required this.commission,
   });
-
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final DriverGetAnalytics200ResponseDataEarningsByTypeInnerTypeEnum type;
 

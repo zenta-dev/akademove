@@ -18,7 +18,6 @@ part 'location.g.dart';
 class Location {
   /// Returns a new [Location] instance.
   const Location({required this.lat, required this.lng});
-
   @JsonKey(name: r'lat', required: true, includeIfNull: false)
   final num lat;
 

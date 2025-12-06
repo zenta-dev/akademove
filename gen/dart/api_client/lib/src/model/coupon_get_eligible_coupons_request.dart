@@ -23,7 +23,6 @@ class CouponGetEligibleCouponsRequest {
     required this.totalAmount,
     this.merchantId,
   });
-
   @JsonKey(name: r'serviceType', required: true, includeIfNull: false)
   final OrderType serviceType;
 

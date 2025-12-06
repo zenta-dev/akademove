@@ -37,7 +37,6 @@ class AccountDeletion {
     this.reviewedAt,
     this.completedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

@@ -19,7 +19,6 @@ part 'update_user_role.g.dart';
 class UpdateUserRole {
   /// Returns a new [UpdateUserRole] instance.
   const UpdateUserRole({required this.role});
-
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final UserRole role;
 

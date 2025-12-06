@@ -13,7 +13,7 @@ void main() {
       // TODO
     });
 
-    // List<UserNotification> data
+    // List<NotificationList200ResponseDataInner> data
     test('to test the property `data`', () async {
       // TODO
     });

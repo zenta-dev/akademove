@@ -24,7 +24,6 @@ class DashboardStatsTopDriversInner {
     required this.orders,
     required this.rating,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

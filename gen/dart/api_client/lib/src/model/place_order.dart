@@ -33,7 +33,6 @@ class PlaceOrder {
     this.couponCode,
     required this.payment,
   });
-
   @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
   final Coordinate dropoffLocation;
 

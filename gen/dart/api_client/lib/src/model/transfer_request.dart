@@ -18,7 +18,6 @@ part 'transfer_request.g.dart';
 class TransferRequest {
   /// Returns a new [TransferRequest] instance.
   const TransferRequest({required this.amount, required this.walletId});
-
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 

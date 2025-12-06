@@ -18,7 +18,6 @@ part 'account_deletion_delete200_response_data.g.dart';
 class AccountDeletionDelete200ResponseData {
   /// Returns a new [AccountDeletionDelete200ResponseData] instance.
   const AccountDeletionDelete200ResponseData({required this.success});
-
   @JsonKey(name: r'success', required: true, includeIfNull: false)
   final bool success;
 

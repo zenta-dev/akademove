@@ -18,7 +18,6 @@ part 'order_upload_delivery_proof200_response_data.g.dart';
 class OrderUploadDeliveryProof200ResponseData {
   /// Returns a new [OrderUploadDeliveryProof200ResponseData] instance.
   const OrderUploadDeliveryProof200ResponseData({required this.url});
-
   @JsonKey(name: r'url', required: true, includeIfNull: false)
   final String url;
 

@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coupon_rules.dart';
+import 'package:api_client/src/model/coupon_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -21,6 +22,7 @@ class UpdateCoupon {
   const UpdateCoupon({
     this.name,
     this.code,
+    this.couponType = CouponType.GENERAL,
     this.rules,
     this.discountAmount,
     this.discountPercentage,
@@ -29,13 +31,22 @@ class UpdateCoupon {
     this.periodEnd,
     this.isActive,
     this.merchantId,
+    this.eventName,
+    this.eventDescription,
   });
-
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
 
   @JsonKey(name: r'code', required: false, includeIfNull: false)
   final String? code;
+
+  @JsonKey(
+    defaultValue: CouponType.GENERAL,
+    name: r'couponType',
+    required: false,
+    includeIfNull: false,
+  )
+  final CouponType? couponType;
 
   @JsonKey(name: r'rules', required: false, includeIfNull: false)
   final CouponRules? rules;
@@ -61,12 +72,19 @@ class UpdateCoupon {
   @JsonKey(name: r'merchantId', required: false, includeIfNull: false)
   final String? merchantId;
 
+  @JsonKey(name: r'eventName', required: false, includeIfNull: false)
+  final String? eventName;
+
+  @JsonKey(name: r'eventDescription', required: false, includeIfNull: false)
+  final String? eventDescription;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UpdateCoupon &&
           other.name == name &&
           other.code == code &&
+          other.couponType == couponType &&
           other.rules == rules &&
           other.discountAmount == discountAmount &&
           other.discountPercentage == discountPercentage &&
@@ -74,12 +92,15 @@ class UpdateCoupon {
           other.periodStart == periodStart &&
           other.periodEnd == periodEnd &&
           other.isActive == isActive &&
-          other.merchantId == merchantId;
+          other.merchantId == merchantId &&
+          other.eventName == eventName &&
+          other.eventDescription == eventDescription;
 
   @override
   int get hashCode =>
       name.hashCode +
       code.hashCode +
+      couponType.hashCode +
       rules.hashCode +
       discountAmount.hashCode +
       discountPercentage.hashCode +
@@ -87,7 +108,9 @@ class UpdateCoupon {
       periodStart.hashCode +
       periodEnd.hashCode +
       isActive.hashCode +
-      (merchantId == null ? 0 : merchantId.hashCode);
+      (merchantId == null ? 0 : merchantId.hashCode) +
+      eventName.hashCode +
+      eventDescription.hashCode;
 
   factory UpdateCoupon.fromJson(Map<String, dynamic> json) =>
       _$UpdateCouponFromJson(json);

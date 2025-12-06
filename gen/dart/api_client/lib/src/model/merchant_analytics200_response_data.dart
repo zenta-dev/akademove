@@ -29,7 +29,6 @@ class MerchantAnalytics200ResponseData {
     required this.topSellingItems,
     required this.revenueByDay,
   });
-
   @JsonKey(name: r'totalOrders', required: true, includeIfNull: false)
   final num totalOrders;
 

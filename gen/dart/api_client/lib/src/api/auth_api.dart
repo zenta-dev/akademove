@@ -12,8 +12,8 @@ import 'package:dio/dio.dart';
 import 'package:api_client/src/model/auth_exchange_token200_response.dart';
 import 'package:api_client/src/model/auth_forgot_password_request.dart';
 import 'package:api_client/src/model/auth_get_session200_response.dart';
-import 'package:api_client/src/model/auth_has_permission200_response.dart';
-import 'package:api_client/src/model/auth_has_permission_request.dart';
+import 'package:api_client/src/model/auth_has_access200_response.dart';
+import 'package:api_client/src/model/auth_has_access_request.dart';
 import 'package:api_client/src/model/auth_sign_in200_response.dart';
 import 'package:api_client/src/model/auth_sign_out200_response.dart';
 import 'package:api_client/src/model/auth_sign_up_user201_response.dart';
@@ -268,11 +268,11 @@ class AuthApi {
     );
   }
 
-  /// authHasPermission
+  /// authHasAccess
   ///
   ///
   /// Parameters:
-  /// * [authHasPermissionRequest]
+  /// * [authHasAccessRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -280,10 +280,10 @@ class AuthApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [AuthHasPermission200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AuthHasAccess200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthHasPermission200Response>> authHasPermission({
-    required AuthHasPermissionRequest authHasPermissionRequest,
+  Future<Response<AuthHasAccess200Response>> authHasAccess({
+    required AuthHasAccessRequest authHasAccessRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -291,7 +291,7 @@ class AuthApi {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
-    final _path = r'/auth/has-permission';
+    final _path = r'/auth/has-access';
     final _options = Options(
       method: r'POST',
       headers: <String, dynamic>{...?headers},
@@ -308,7 +308,7 @@ class AuthApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(authHasPermissionRequest);
+      _bodyData = jsonEncode(authHasAccessRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -327,16 +327,17 @@ class AuthApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    AuthHasPermission200Response? _responseData;
+    AuthHasAccess200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              AuthHasPermission200Response,
-              AuthHasPermission200Response
-            >(rawData, 'AuthHasPermission200Response', growable: true);
+          : deserialize<AuthHasAccess200Response, AuthHasAccess200Response>(
+              rawData,
+              'AuthHasAccess200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -347,7 +348,7 @@ class AuthApi {
       );
     }
 
-    return Response<AuthHasPermission200Response>(
+    return Response<AuthHasAccess200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

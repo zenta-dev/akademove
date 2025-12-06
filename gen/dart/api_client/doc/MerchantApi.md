@@ -329,7 +329,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantList**
-> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, category)
+> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating)
 
 
 
@@ -346,10 +346,13 @@ final String query = query_example; // String |
 final String sortBy = sortBy_example; // String | 
 final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
-final String category = category_example; // String | 
+final Object categories = ; // Object | 
+final Object isActive = ; // Object | 
+final num minRating = 8.14; // num | 
+final num maxRating = 8.14; // num | 
 
 try {
-    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, category);
+    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantList: $e\n');
@@ -368,7 +371,10 @@ Name | Type | Description  | Notes
  **sortBy** | **String**|  | [optional] 
  **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
- **category** | **String**|  | [optional] 
+ **categories** | [**Object**](.md)|  | [optional] 
+ **isActive** | [**Object**](.md)|  | [optional] 
+ **minRating** | **num**|  | [optional] 
+ **maxRating** | **num**|  | [optional] 
 
 ### Return type
 

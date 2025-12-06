@@ -9,7 +9,9 @@ part of 'notification_list200_response.dart';
 abstract class _$NotificationList200ResponseCWProxy {
   NotificationList200Response message(String message);
 
-  NotificationList200Response data(List<UserNotification> data);
+  NotificationList200Response data(
+    List<NotificationList200ResponseDataInner> data,
+  );
 
   NotificationList200Response pagination(PaginationResult? pagination);
 
@@ -24,7 +26,7 @@ abstract class _$NotificationList200ResponseCWProxy {
   /// ```
   NotificationList200Response call({
     String message,
-    List<UserNotification> data,
+    List<NotificationList200ResponseDataInner> data,
     PaginationResult? pagination,
     int? totalPages,
   });
@@ -42,8 +44,9 @@ class _$NotificationList200ResponseCWProxyImpl
   NotificationList200Response message(String message) => call(message: message);
 
   @override
-  NotificationList200Response data(List<UserNotification> data) =>
-      call(data: data);
+  NotificationList200Response data(
+    List<NotificationList200ResponseDataInner> data,
+  ) => call(data: data);
 
   @override
   NotificationList200Response pagination(PaginationResult? pagination) =>
@@ -75,7 +78,7 @@ class _$NotificationList200ResponseCWProxyImpl
       data: data == const $CopyWithPlaceholder() || data == null
           ? _value.data
           // ignore: cast_nullable_to_non_nullable
-          : data as List<UserNotification>,
+          : data as List<NotificationList200ResponseDataInner>,
       pagination: pagination == const $CopyWithPlaceholder()
           ? _value.pagination
           // ignore: cast_nullable_to_non_nullable
@@ -109,7 +112,11 @@ NotificationList200Response _$NotificationList200ResponseFromJson(
     data: $checkedConvert(
       'data',
       (v) => (v as List<dynamic>)
-          .map((e) => UserNotification.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) => NotificationList200ResponseDataInner.fromJson(
+              e as Map<String, dynamic>,
+            ),
+          )
           .toList(),
     ),
     pagination: $checkedConvert(

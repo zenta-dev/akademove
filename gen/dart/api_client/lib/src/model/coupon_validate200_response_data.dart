@@ -25,7 +25,6 @@ class CouponValidate200ResponseData {
     required this.finalAmount,
     this.reason,
   });
-
   @JsonKey(name: r'valid', required: true, includeIfNull: false)
   final bool valid;
 

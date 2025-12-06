@@ -18,7 +18,6 @@ part 'dashboard_stats_query.g.dart';
 class DashboardStatsQuery {
   /// Returns a new [DashboardStatsQuery] instance.
   const DashboardStatsQuery({this.startDate, this.endDate, this.period});
-
   @JsonKey(name: r'startDate', required: false, includeIfNull: false)
   final DateTime? startDate;
 

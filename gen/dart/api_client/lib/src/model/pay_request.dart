@@ -18,7 +18,6 @@ part 'pay_request.g.dart';
 class PayRequest {
   /// Returns a new [PayRequest] instance.
   const PayRequest({required this.amount, this.referenceId});
-
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 

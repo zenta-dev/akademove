@@ -31,7 +31,7 @@ void main() {
       // TODO
     });
 
-    //Future<OrderList200Response> orderList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object statuses }) async
+    //Future<OrderList200Response> orderList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object statuses, Object type, DateTime startDate, DateTime endDate }) async
     test('test orderList', () async {
       // TODO
     });

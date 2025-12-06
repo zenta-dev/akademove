@@ -18,7 +18,6 @@ part 'order_verify_delivery_otp200_response_data.g.dart';
 class OrderVerifyDeliveryOTP200ResponseData {
   /// Returns a new [OrderVerifyDeliveryOTP200ResponseData] instance.
   const OrderVerifyDeliveryOTP200ResponseData({required this.verified});
-
   @JsonKey(name: r'verified', required: true, includeIfNull: false)
   final bool verified;
 

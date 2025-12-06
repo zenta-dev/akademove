@@ -22,7 +22,6 @@ class MerchantAnalytics200ResponseDataRevenueByDayInner {
     required this.revenue,
     required this.orders,
   });
-
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
 

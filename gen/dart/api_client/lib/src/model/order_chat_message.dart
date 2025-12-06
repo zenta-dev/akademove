@@ -28,7 +28,6 @@ class OrderChatMessage {
     required this.updatedAt,
     this.sender,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

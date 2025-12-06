@@ -23,7 +23,6 @@ class CouponGetEligibleCoupons200ResponseData {
     required this.bestCoupon,
     required this.bestDiscountAmount,
   });
-
   @JsonKey(name: r'coupons', required: true, includeIfNull: false)
   final List<Coupon> coupons;
 

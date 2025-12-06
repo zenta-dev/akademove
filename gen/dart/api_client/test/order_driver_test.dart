@@ -32,6 +32,26 @@ void main() {
       // TODO
     });
 
+    // DriverQuizStatus quizStatus (default value: DriverQuizStatus.NOT_STARTED)
+    test('to test the property `quizStatus`', () async {
+      // TODO
+    });
+
+    // String quizAttemptId
+    test('to test the property `quizAttemptId`', () async {
+      // TODO
+    });
+
+    // int quizScore
+    test('to test the property `quizScore`', () async {
+      // TODO
+    });
+
+    // DateTime quizCompletedAt
+    test('to test the property `quizCompletedAt`', () async {
+      // TODO
+    });
+
     // num rating
     test('to test the property `rating`', () async {
       // TODO

@@ -31,7 +31,6 @@ class AuditList200ResponseDataInner {
     this.reason,
     required this.updatedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final num id;
 

@@ -19,7 +19,6 @@ part 'get_session_response.g.dart';
 class GetSessionResponse {
   /// Returns a new [GetSessionResponse] instance.
   const GetSessionResponse({this.token, required this.user});
-
   @JsonKey(name: r'token', required: false, includeIfNull: false)
   final String? token;
 

@@ -28,7 +28,6 @@ class InsertAccountDeletion {
     this.additionalInfo,
     this.userId,
   });
-
   @JsonKey(name: r'fullName', required: true, includeIfNull: false)
   final String fullName;
 

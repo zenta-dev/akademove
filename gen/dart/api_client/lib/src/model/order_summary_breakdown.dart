@@ -24,7 +24,6 @@ class OrderSummaryBreakdown {
     this.weight,
     this.perKgRate,
   });
-
   @JsonKey(name: r'distance', required: false, includeIfNull: false)
   final num? distance;
 

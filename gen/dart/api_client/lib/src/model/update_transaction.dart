@@ -30,7 +30,6 @@ class UpdateTransaction {
     this.referenceId,
     this.metadata,
   });
-
   @JsonKey(name: r'walletId', required: false, includeIfNull: false)
   final String? walletId;
 

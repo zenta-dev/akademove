@@ -24,7 +24,6 @@ class InsertContact {
     required this.message,
     this.userId,
   });
-
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
 

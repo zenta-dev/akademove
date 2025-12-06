@@ -21,8 +21,8 @@ void main() {
       // TODO
     });
 
-    //Future<AuthHasPermission200Response> authHasPermission(AuthHasPermissionRequest authHasPermissionRequest) async
-    test('test authHasPermission', () async {
+    //Future<AuthHasAccess200Response> authHasAccess(AuthHasAccessRequest authHasAccessRequest) async
+    test('test authHasAccess', () async {
       // TODO
     });
 

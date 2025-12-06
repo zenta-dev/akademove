@@ -26,7 +26,6 @@ class Cart {
     required this.subtotal,
     required this.lastUpdated,
   });
-
   @JsonKey(name: r'merchantId', required: true, includeIfNull: false)
   final String merchantId;
 

@@ -31,7 +31,6 @@ class Leaderboard {
     required this.createdAt,
     required this.updatedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

@@ -26,7 +26,6 @@ class PaymentEnvelopePayload {
     required this.transaction,
     this.wallet,
   });
-
   @JsonKey(name: r'failReason', required: false, includeIfNull: false)
   final String? failReason;
 

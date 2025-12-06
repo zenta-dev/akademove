@@ -26,7 +26,6 @@ class UpdateReview {
     this.score,
     this.comment = '',
   });
-
   @JsonKey(name: r'orderId', required: false, includeIfNull: false)
   final String? orderId;
 

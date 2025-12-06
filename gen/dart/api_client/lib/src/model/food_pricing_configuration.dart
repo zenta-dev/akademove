@@ -23,8 +23,8 @@ class FoodPricingConfiguration {
     required this.minimumFare,
     required this.platformFeeRate,
     required this.taxRate,
+    this.merchantCommissionRate = 0.1,
   });
-
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
 
@@ -40,6 +40,16 @@ class FoodPricingConfiguration {
   @JsonKey(name: r'taxRate', required: true, includeIfNull: false)
   final num taxRate;
 
+  // minimum: 0
+  // maximum: 1
+  @JsonKey(
+    defaultValue: 0.1,
+    name: r'merchantCommissionRate',
+    required: false,
+    includeIfNull: false,
+  )
+  final num? merchantCommissionRate;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -48,7 +58,8 @@ class FoodPricingConfiguration {
           other.perKmRate == perKmRate &&
           other.minimumFare == minimumFare &&
           other.platformFeeRate == platformFeeRate &&
-          other.taxRate == taxRate;
+          other.taxRate == taxRate &&
+          other.merchantCommissionRate == merchantCommissionRate;
 
   @override
   int get hashCode =>
@@ -56,7 +67,8 @@ class FoodPricingConfiguration {
       perKmRate.hashCode +
       minimumFare.hashCode +
       platformFeeRate.hashCode +
-      taxRate.hashCode;
+      taxRate.hashCode +
+      merchantCommissionRate.hashCode;
 
   factory FoodPricingConfiguration.fromJson(Map<String, dynamic> json) =>
       _$FoodPricingConfigurationFromJson(json);

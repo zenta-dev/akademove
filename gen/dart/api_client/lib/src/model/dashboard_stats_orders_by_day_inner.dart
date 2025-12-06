@@ -23,7 +23,6 @@ class DashboardStatsOrdersByDayInner {
     required this.completed,
     required this.cancelled,
   });
-
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
 

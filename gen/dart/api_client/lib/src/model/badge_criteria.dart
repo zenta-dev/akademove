@@ -24,7 +24,6 @@ class BadgeCriteria {
     this.minStreak,
     this.minEarnings,
   });
-
   // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'minOrders', required: false, includeIfNull: false)

@@ -32,7 +32,6 @@ class InsertEmergency {
     this.respondedById,
     this.resolution,
   });
-
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
 

@@ -28,7 +28,6 @@ class UpdateLeaderboard {
     this.periodStart,
     this.periodEnd,
   });
-
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
 

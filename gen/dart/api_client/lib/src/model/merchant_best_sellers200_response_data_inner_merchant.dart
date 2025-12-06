@@ -23,7 +23,6 @@ class MerchantBestSellers200ResponseDataInnerMerchant {
     this.image,
     required this.rating,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

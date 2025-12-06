@@ -19,7 +19,6 @@ part 'badge_user_update_request.g.dart';
 class BadgeUserUpdateRequest {
   /// Returns a new [BadgeUserUpdateRequest] instance.
   const BadgeUserUpdateRequest({this.userId, this.badgeId, this.metadata});
-
   @JsonKey(name: r'userId', required: false, includeIfNull: false)
   final String? userId;
 

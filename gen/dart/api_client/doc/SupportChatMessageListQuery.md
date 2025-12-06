@@ -1,0 +1,17 @@
+# api_client.model.SupportChatMessageListQuery
+
+## Load the model package
+```dart
+import 'package:api_client/api.dart';
+```
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**ticketId** | **String** |  | 
+**limit** | **int** |  | [optional] [default to 50]
+**cursor** | **String** |  | [optional] 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+

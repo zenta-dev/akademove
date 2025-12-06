@@ -18,7 +18,6 @@ part 'reject_driver.g.dart';
 class RejectDriver {
   /// Returns a new [RejectDriver] instance.
   const RejectDriver({required this.id, required this.reason});
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

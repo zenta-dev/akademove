@@ -18,7 +18,6 @@ part 'unban_user.g.dart';
 class UnbanUser {
   /// Returns a new [UnbanUser] instance.
   const UnbanUser({required this.id});
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

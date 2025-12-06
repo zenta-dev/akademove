@@ -18,7 +18,6 @@ part 'send_email_verification.g.dart';
 class SendEmailVerification {
   /// Returns a new [SendEmailVerification] instance.
   const SendEmailVerification({required this.email});
-
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
 

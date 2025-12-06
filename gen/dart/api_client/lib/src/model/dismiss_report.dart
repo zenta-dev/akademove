@@ -18,7 +18,6 @@ part 'dismiss_report.g.dart';
 class DismissReport {
   /// Returns a new [DismissReport] instance.
   const DismissReport({required this.reason});
-
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
 

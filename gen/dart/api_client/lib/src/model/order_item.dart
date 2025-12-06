@@ -19,7 +19,6 @@ part 'order_item.g.dart';
 class OrderItem {
   /// Returns a new [OrderItem] instance.
   const OrderItem({required this.quantity, required this.item});
-
   @JsonKey(name: r'quantity', required: true, includeIfNull: false)
   final num quantity;
 

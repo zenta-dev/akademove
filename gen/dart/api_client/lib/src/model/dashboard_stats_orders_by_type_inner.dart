@@ -22,7 +22,6 @@ class DashboardStatsOrdersByTypeInner {
     required this.orders,
     required this.revenue,
   });
-
   @JsonKey(name: r'type', required: true, includeIfNull: false)
   final String type;
 

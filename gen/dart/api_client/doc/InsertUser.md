@@ -12,10 +12,7 @@ Name | Type | Description | Notes
 **email** | **String** |  | 
 **role** | [**UserRole**](UserRole.md) |  | 
 **gender** | [**UserGender**](UserGender.md) |  | [optional] 
-**phone** | [**Phone**](Phone.md) |  | 
-**userBadges** | [**List&lt;UserBadge&gt;**](UserBadge.md) |  | 
-**password** | **String** |  | 
-**confirmPassword** | **String** |  | 
+**phone** | [**Phone**](Phone.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

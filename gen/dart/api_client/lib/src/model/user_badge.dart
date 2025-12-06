@@ -29,7 +29,6 @@ class UserBadge {
     required this.updatedAt,
     required this.badge,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

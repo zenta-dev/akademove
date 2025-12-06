@@ -17,6 +17,14 @@ abstract class _$OrderDriverCWProxy {
 
   OrderDriver status(DriverStatus? status);
 
+  OrderDriver quizStatus(DriverQuizStatus? quizStatus);
+
+  OrderDriver quizAttemptId(String? quizAttemptId);
+
+  OrderDriver quizScore(int? quizScore);
+
+  OrderDriver quizCompletedAt(DateTime? quizCompletedAt);
+
   OrderDriver rating(num? rating);
 
   OrderDriver isTakingOrder(bool? isTakingOrder);
@@ -58,6 +66,10 @@ abstract class _$OrderDriverCWProxy {
     num? studentId,
     String? licensePlate,
     DriverStatus? status,
+    DriverQuizStatus? quizStatus,
+    String? quizAttemptId,
+    int? quizScore,
+    DateTime? quizCompletedAt,
     num? rating,
     bool? isTakingOrder,
     bool? isOnline,
@@ -97,6 +109,21 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
 
   @override
   OrderDriver status(DriverStatus? status) => call(status: status);
+
+  @override
+  OrderDriver quizStatus(DriverQuizStatus? quizStatus) =>
+      call(quizStatus: quizStatus);
+
+  @override
+  OrderDriver quizAttemptId(String? quizAttemptId) =>
+      call(quizAttemptId: quizAttemptId);
+
+  @override
+  OrderDriver quizScore(int? quizScore) => call(quizScore: quizScore);
+
+  @override
+  OrderDriver quizCompletedAt(DateTime? quizCompletedAt) =>
+      call(quizCompletedAt: quizCompletedAt);
 
   @override
   OrderDriver rating(num? rating) => call(rating: rating);
@@ -162,6 +189,10 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
     Object? studentId = const $CopyWithPlaceholder(),
     Object? licensePlate = const $CopyWithPlaceholder(),
     Object? status = const $CopyWithPlaceholder(),
+    Object? quizStatus = const $CopyWithPlaceholder(),
+    Object? quizAttemptId = const $CopyWithPlaceholder(),
+    Object? quizScore = const $CopyWithPlaceholder(),
+    Object? quizCompletedAt = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? isTakingOrder = const $CopyWithPlaceholder(),
     Object? isOnline = const $CopyWithPlaceholder(),
@@ -198,6 +229,22 @@ class _$OrderDriverCWProxyImpl implements _$OrderDriverCWProxy {
           ? _value.status
           // ignore: cast_nullable_to_non_nullable
           : status as DriverStatus?,
+      quizStatus: quizStatus == const $CopyWithPlaceholder()
+          ? _value.quizStatus
+          // ignore: cast_nullable_to_non_nullable
+          : quizStatus as DriverQuizStatus?,
+      quizAttemptId: quizAttemptId == const $CopyWithPlaceholder()
+          ? _value.quizAttemptId
+          // ignore: cast_nullable_to_non_nullable
+          : quizAttemptId as String?,
+      quizScore: quizScore == const $CopyWithPlaceholder()
+          ? _value.quizScore
+          // ignore: cast_nullable_to_non_nullable
+          : quizScore as int?,
+      quizCompletedAt: quizCompletedAt == const $CopyWithPlaceholder()
+          ? _value.quizCompletedAt
+          // ignore: cast_nullable_to_non_nullable
+          : quizCompletedAt as DateTime?,
       rating: rating == const $CopyWithPlaceholder()
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
@@ -280,6 +327,18 @@ OrderDriver _$OrderDriverFromJson(Map<String, dynamic> json) =>
           'status',
           (v) => $enumDecodeNullable(_$DriverStatusEnumMap, v),
         ),
+        quizStatus: $checkedConvert(
+          'quizStatus',
+          (v) =>
+              $enumDecodeNullable(_$DriverQuizStatusEnumMap, v) ??
+              DriverQuizStatus.NOT_STARTED,
+        ),
+        quizAttemptId: $checkedConvert('quizAttemptId', (v) => v as String?),
+        quizScore: $checkedConvert('quizScore', (v) => (v as num?)?.toInt()),
+        quizCompletedAt: $checkedConvert(
+          'quizCompletedAt',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
         rating: $checkedConvert('rating', (v) => v as num?),
         isTakingOrder: $checkedConvert('isTakingOrder', (v) => v as bool?),
         isOnline: $checkedConvert('isOnline', (v) => v as bool?),
@@ -331,6 +390,10 @@ Map<String, dynamic> _$OrderDriverToJson(OrderDriver instance) =>
       'studentId': ?instance.studentId,
       'licensePlate': ?instance.licensePlate,
       'status': ?_$DriverStatusEnumMap[instance.status],
+      'quizStatus': ?_$DriverQuizStatusEnumMap[instance.quizStatus],
+      'quizAttemptId': ?instance.quizAttemptId,
+      'quizScore': ?instance.quizScore,
+      'quizCompletedAt': ?instance.quizCompletedAt?.toIso8601String(),
       'rating': ?instance.rating,
       'isTakingOrder': ?instance.isTakingOrder,
       'isOnline': ?instance.isOnline,
@@ -354,4 +417,11 @@ const _$DriverStatusEnumMap = {
   DriverStatus.ACTIVE: 'ACTIVE',
   DriverStatus.INACTIVE: 'INACTIVE',
   DriverStatus.SUSPENDED: 'SUSPENDED',
+};
+
+const _$DriverQuizStatusEnumMap = {
+  DriverQuizStatus.NOT_STARTED: 'NOT_STARTED',
+  DriverQuizStatus.IN_PROGRESS: 'IN_PROGRESS',
+  DriverQuizStatus.PASSED: 'PASSED',
+  DriverQuizStatus.FAILED: 'FAILED',
 };

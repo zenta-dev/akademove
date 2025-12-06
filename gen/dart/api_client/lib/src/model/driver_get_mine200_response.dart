@@ -19,7 +19,6 @@ part 'driver_get_mine200_response.g.dart';
 class DriverGetMine200Response {
   /// Returns a new [DriverGetMine200Response] instance.
   const DriverGetMine200Response({required this.status, required this.body});
-
   @JsonKey(name: r'status', required: true, includeIfNull: true)
   final Object? status;
 

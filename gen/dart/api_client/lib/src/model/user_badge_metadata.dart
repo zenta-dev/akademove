@@ -22,7 +22,6 @@ class UserBadgeMetadata {
     this.finalRating,
     this.streakDays,
   });
-
   // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'ordersCompleted', required: false, includeIfNull: false)

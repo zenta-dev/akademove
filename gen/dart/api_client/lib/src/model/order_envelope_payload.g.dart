@@ -25,6 +25,8 @@ abstract class _$OrderEnvelopePayloadCWProxy {
 
   OrderEnvelopePayload cancelReason(String? cancelReason);
 
+  OrderEnvelopePayload noShow(OrderEnvelopePayloadNoShow? noShow);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -40,6 +42,7 @@ abstract class _$OrderEnvelopePayloadCWProxy {
     OrderEnvelopePayloadMessage? message,
     OrderEnvelopePayloadMerchantAction? merchantAction,
     String? cancelReason,
+    OrderEnvelopePayloadNoShow? noShow,
   });
 }
 
@@ -81,6 +84,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
       call(cancelReason: cancelReason);
 
   @override
+  OrderEnvelopePayload noShow(OrderEnvelopePayloadNoShow? noShow) =>
+      call(noShow: noShow);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `OrderEnvelopePayload(...).copyWith.fieldName(value)`.
   ///
@@ -96,6 +103,7 @@ class _$OrderEnvelopePayloadCWProxyImpl
     Object? message = const $CopyWithPlaceholder(),
     Object? merchantAction = const $CopyWithPlaceholder(),
     Object? cancelReason = const $CopyWithPlaceholder(),
+    Object? noShow = const $CopyWithPlaceholder(),
   }) {
     return OrderEnvelopePayload(
       detail: detail == const $CopyWithPlaceholder()
@@ -126,6 +134,10 @@ class _$OrderEnvelopePayloadCWProxyImpl
           ? _value.cancelReason
           // ignore: cast_nullable_to_non_nullable
           : cancelReason as String?,
+      noShow: noShow == const $CopyWithPlaceholder()
+          ? _value.noShow
+          // ignore: cast_nullable_to_non_nullable
+          : noShow as OrderEnvelopePayloadNoShow?,
     );
   }
 }
@@ -185,6 +197,12 @@ OrderEnvelopePayload _$OrderEnvelopePayloadFromJson(
             ),
     ),
     cancelReason: $checkedConvert('cancelReason', (v) => v as String?),
+    noShow: $checkedConvert(
+      'noShow',
+      (v) => v == null
+          ? null
+          : OrderEnvelopePayloadNoShow.fromJson(v as Map<String, dynamic>),
+    ),
   );
   return val;
 });
@@ -199,4 +217,5 @@ Map<String, dynamic> _$OrderEnvelopePayloadToJson(
   'message': ?instance.message?.toJson(),
   'merchantAction': ?instance.merchantAction?.toJson(),
   'cancelReason': ?instance.cancelReason,
+  'noShow': ?instance.noShow?.toJson(),
 };

@@ -18,7 +18,6 @@ part 'order_cancel_request.g.dart';
 class OrderCancelRequest {
   /// Returns a new [OrderCancelRequest] instance.
   const OrderCancelRequest({this.reason});
-
   @JsonKey(name: r'reason', required: false, includeIfNull: false)
   final String? reason;
 

@@ -26,7 +26,7 @@ class Merchant {
     required this.userId,
     required this.name,
     required this.email,
-    required this.phone,
+    this.phone,
     required this.address,
     this.location,
     required this.isActive,
@@ -39,7 +39,6 @@ class Merchant {
     required this.createdAt,
     required this.updatedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
@@ -52,8 +51,8 @@ class Merchant {
   @JsonKey(name: r'email', required: true, includeIfNull: false)
   final String email;
 
-  @JsonKey(name: r'phone', required: true, includeIfNull: false)
-  final Phone phone;
+  @JsonKey(name: r'phone', required: false, includeIfNull: false)
+  final Phone? phone;
 
   @JsonKey(name: r'address', required: true, includeIfNull: false)
   final String address;

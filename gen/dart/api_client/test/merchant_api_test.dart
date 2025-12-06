@@ -41,7 +41,7 @@ void main() {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, String category }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object categories, Object isActive, num minRating, num maxRating }) async
     test('test merchantList', () async {
       // TODO
     });

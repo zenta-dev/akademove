@@ -16,6 +16,14 @@ enum DriverKey {
   licensePlate(r'licensePlate'),
   @JsonValue(r'status')
   status(r'status'),
+  @JsonValue(r'quizStatus')
+  quizStatus(r'quizStatus'),
+  @JsonValue(r'quizAttemptId')
+  quizAttemptId(r'quizAttemptId'),
+  @JsonValue(r'quizScore')
+  quizScore(r'quizScore'),
+  @JsonValue(r'quizCompletedAt')
+  quizCompletedAt(r'quizCompletedAt'),
   @JsonValue(r'rating')
   rating(r'rating'),
   @JsonValue(r'isTakingOrder')

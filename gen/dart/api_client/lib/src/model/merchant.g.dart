@@ -15,7 +15,7 @@ abstract class _$MerchantCWProxy {
 
   Merchant email(String email);
 
-  Merchant phone(Phone phone);
+  Merchant phone(Phone? phone);
 
   Merchant address(String address);
 
@@ -51,7 +51,7 @@ abstract class _$MerchantCWProxy {
     String userId,
     String name,
     String email,
-    Phone phone,
+    Phone? phone,
     String address,
     Coordinate? location,
     bool isActive,
@@ -86,7 +86,7 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
   Merchant email(String email) => call(email: email);
 
   @override
-  Merchant phone(Phone phone) => call(phone: phone);
+  Merchant phone(Phone? phone) => call(phone: phone);
 
   @override
   Merchant address(String address) => call(address: address);
@@ -164,10 +164,10 @@ class _$MerchantCWProxyImpl implements _$MerchantCWProxy {
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
           : email as String,
-      phone: phone == const $CopyWithPlaceholder() || phone == null
+      phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as Phone,
+          : phone as Phone?,
       address: address == const $CopyWithPlaceholder() || address == null
           ? _value.address
           // ignore: cast_nullable_to_non_nullable
@@ -238,7 +238,6 @@ Merchant _$MerchantFromJson(
       'userId',
       'name',
       'email',
-      'phone',
       'address',
       'isActive',
       'rating',
@@ -256,7 +255,7 @@ Merchant _$MerchantFromJson(
     email: $checkedConvert('email', (v) => v as String),
     phone: $checkedConvert(
       'phone',
-      (v) => Phone.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
     ),
     address: $checkedConvert('address', (v) => v as String),
     location: $checkedConvert(
@@ -290,7 +289,7 @@ Map<String, dynamic> _$MerchantToJson(Merchant instance) => <String, dynamic>{
   'userId': instance.userId,
   'name': instance.name,
   'email': instance.email,
-  'phone': instance.phone.toJson(),
+  'phone': ?instance.phone?.toJson(),
   'address': instance.address,
   'location': ?instance.location?.toJson(),
   'isActive': instance.isActive,

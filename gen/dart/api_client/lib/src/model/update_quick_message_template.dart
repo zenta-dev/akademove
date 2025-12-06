@@ -25,7 +25,6 @@ class UpdateQuickMessageTemplate {
     this.isActive,
     this.displayOrder,
   });
-
   @JsonKey(name: r'role', required: false, includeIfNull: false)
   final UpdateQuickMessageTemplateRoleEnum? role;
 

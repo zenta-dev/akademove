@@ -23,7 +23,6 @@ class ChatList200ResponseData {
     required this.hasMore,
     this.nextCursor,
   });
-
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<OrderChatMessage> rows;
 

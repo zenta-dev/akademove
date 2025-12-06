@@ -26,7 +26,7 @@ void main() {
       // TODO
     });
 
-    //Future<DriverList200Response> driverList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
+    //Future<DriverList200Response> driverList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object statuses, Object isOnline, num minRating, num maxRating }) async
     test('test driverList', () async {
       // TODO
     });

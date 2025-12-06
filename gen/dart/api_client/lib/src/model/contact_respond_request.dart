@@ -18,7 +18,6 @@ part 'contact_respond_request.g.dart';
 class ContactRespondRequest {
   /// Returns a new [ContactRespondRequest] instance.
   const ContactRespondRequest({required this.response, this.status});
-
   @JsonKey(name: r'response', required: true, includeIfNull: false)
   final String response;
 

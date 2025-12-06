@@ -18,7 +18,6 @@ part 'approve_driver.g.dart';
 class ApproveDriver {
   /// Returns a new [ApproveDriver] instance.
   const ApproveDriver({required this.id});
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

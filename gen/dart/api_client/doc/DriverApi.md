@@ -195,7 +195,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **driverList**
-> DriverList200Response driverList(cursor, limit, direction, page, query, sortBy, order, mode)
+> DriverList200Response driverList(cursor, limit, direction, page, query, sortBy, order, mode, statuses, isOnline, minRating, maxRating)
 
 
 
@@ -212,9 +212,13 @@ final String query = query_example; // String |
 final String sortBy = sortBy_example; // String | 
 final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
+final Object statuses = ; // Object | 
+final Object isOnline = ; // Object | 
+final num minRating = 8.14; // num | 
+final num maxRating = 8.14; // num | 
 
 try {
-    final response = api.driverList(cursor, limit, direction, page, query, sortBy, order, mode);
+    final response = api.driverList(cursor, limit, direction, page, query, sortBy, order, mode, statuses, isOnline, minRating, maxRating);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling DriverApi->driverList: $e\n');
@@ -233,6 +237,10 @@ Name | Type | Description  | Notes
  **sortBy** | **String**|  | [optional] 
  **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
+ **statuses** | [**Object**](.md)|  | [optional] 
+ **isOnline** | [**Object**](.md)|  | [optional] 
+ **minRating** | **num**|  | [optional] 
+ **maxRating** | **num**|  | [optional] 
 
 ### Return type
 

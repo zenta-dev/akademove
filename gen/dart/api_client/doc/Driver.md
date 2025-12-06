@@ -13,6 +13,10 @@ Name | Type | Description | Notes
 **studentId** | **num** |  | 
 **licensePlate** | **String** |  | 
 **status** | [**DriverStatus**](DriverStatus.md) |  | 
+**quizStatus** | [**DriverQuizStatus**](DriverQuizStatus.md) |  | [optional] [default to DriverQuizStatus.NOT_STARTED]
+**quizAttemptId** | **String** |  | [optional] 
+**quizScore** | **int** |  | [optional] 
+**quizCompletedAt** | [**DateTime**](DateTime.md) |  | [optional] 
 **rating** | **num** |  | 
 **isTakingOrder** | **bool** |  | 
 **isOnline** | **bool** |  | 

@@ -166,6 +166,7 @@ const _$OrderEnvelopeEventEnumMap = {
   OrderEnvelopeEvent.MERCHANT_REJECTED: 'MERCHANT_REJECTED',
   OrderEnvelopeEvent.MERCHANT_PREPARING: 'MERCHANT_PREPARING',
   OrderEnvelopeEvent.MERCHANT_READY: 'MERCHANT_READY',
+  OrderEnvelopeEvent.NO_SHOW: 'NO_SHOW',
 };
 
 const _$OrderEnvelopeActionEnumMap = {
@@ -178,6 +179,7 @@ const _$OrderEnvelopeActionEnumMap = {
   OrderEnvelopeAction.MERCHANT_REJECT: 'MERCHANT_REJECT',
   OrderEnvelopeAction.MERCHANT_MARK_PREPARING: 'MERCHANT_MARK_PREPARING',
   OrderEnvelopeAction.MERCHANT_MARK_READY: 'MERCHANT_MARK_READY',
+  OrderEnvelopeAction.REPORT_NO_SHOW: 'REPORT_NO_SHOW',
 };
 
 const _$EnvelopeTargetEnumMap = {

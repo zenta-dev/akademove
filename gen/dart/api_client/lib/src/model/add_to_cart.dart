@@ -19,7 +19,6 @@ part 'add_to_cart.g.dart';
 class AddToCart {
   /// Returns a new [AddToCart] instance.
   const AddToCart({required this.menu, this.quantity = 1, this.notes});
-
   @JsonKey(name: r'menu', required: true, includeIfNull: false)
   final MerchantMenu menu;
 

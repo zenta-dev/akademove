@@ -20,19 +20,14 @@ class AdminUpdateUser {
   /// Returns a new [AdminUpdateUser] instance.
   const AdminUpdateUser({
     required this.role,
-    required this.oldPassword,
     required this.newPassword,
     required this.confirmNewPassword,
     required this.banReason,
     this.banExpiresIn,
     required this.id,
   });
-
   @JsonKey(name: r'role', required: true, includeIfNull: false)
   final UserRole role;
-
-  @JsonKey(name: r'oldPassword', required: true, includeIfNull: false)
-  final String oldPassword;
 
   @JsonKey(name: r'newPassword', required: true, includeIfNull: false)
   final String newPassword;
@@ -54,7 +49,6 @@ class AdminUpdateUser {
       identical(this, other) ||
       other is AdminUpdateUser &&
           other.role == role &&
-          other.oldPassword == oldPassword &&
           other.newPassword == newPassword &&
           other.confirmNewPassword == confirmNewPassword &&
           other.banReason == banReason &&
@@ -64,7 +58,6 @@ class AdminUpdateUser {
   @override
   int get hashCode =>
       role.hashCode +
-      oldPassword.hashCode +
       newPassword.hashCode +
       confirmNewPassword.hashCode +
       banReason.hashCode +

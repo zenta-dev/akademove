@@ -22,7 +22,6 @@ class SuspendDriver {
     required this.reason,
     this.suspendUntil,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

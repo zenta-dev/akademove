@@ -20,7 +20,6 @@ class AccountDeletionList200ResponseDataPagination {
   const AccountDeletionList200ResponseDataPagination({
     required this.totalPages,
   });
-
   // minimum: 0
   // maximum: 9007199254740991
   @JsonKey(name: r'totalPages', required: true, includeIfNull: false)

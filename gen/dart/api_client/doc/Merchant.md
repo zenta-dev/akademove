@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **userId** | **String** |  | 
 **name** | **String** |  | 
 **email** | **String** |  | 
-**phone** | [**Phone**](Phone.md) |  | 
+**phone** | [**Phone**](Phone.md) |  | [optional] 
 **address** | **String** |  | 
 **location** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **isActive** | **bool** |  | 

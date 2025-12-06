@@ -19,7 +19,6 @@ part 'general_rules.g.dart';
 class GeneralRules {
   /// Returns a new [GeneralRules] instance.
   const GeneralRules({this.type, this.minOrderAmount, this.maxDiscountAmount});
-
   @JsonKey(name: r'type', required: false, includeIfNull: false)
   final GeneralRuleType? type;
 

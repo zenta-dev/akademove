@@ -23,7 +23,6 @@ class BadgeUserCreateRequest {
     required this.badgeId,
     this.metadata,
   });
-
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
 

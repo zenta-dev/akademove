@@ -25,7 +25,6 @@ class OrderEnvelopePayloadDetail {
     required this.payment,
     required this.transaction,
   });
-
   @JsonKey(name: r'order', required: true, includeIfNull: false)
   final Order order;
 

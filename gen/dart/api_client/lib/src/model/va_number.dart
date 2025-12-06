@@ -18,7 +18,6 @@ part 'va_number.g.dart';
 class VANumber {
   /// Returns a new [VANumber] instance.
   const VANumber({required this.bank, required this.vaNumber});
-
   @JsonKey(name: r'bank', required: true, includeIfNull: false)
   final String bank;
 

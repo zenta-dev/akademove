@@ -24,7 +24,6 @@ class RidePricingConfiguration {
     required this.platformFeeRate,
     required this.taxRate,
   });
-
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
 

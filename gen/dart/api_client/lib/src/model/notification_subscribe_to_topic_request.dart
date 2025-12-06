@@ -21,7 +21,6 @@ class NotificationSubscribeToTopicRequest {
     required this.topic,
     required this.token,
   });
-
   @JsonKey(name: r'topic', required: true, includeIfNull: false)
   final String topic;
 

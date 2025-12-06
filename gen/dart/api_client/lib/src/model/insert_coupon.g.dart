@@ -11,6 +11,8 @@ abstract class _$InsertCouponCWProxy {
 
   InsertCoupon code(String code);
 
+  InsertCoupon couponType(CouponType? couponType);
+
   InsertCoupon rules(CouponRules rules);
 
   InsertCoupon discountAmount(num? discountAmount);
@@ -27,6 +29,10 @@ abstract class _$InsertCouponCWProxy {
 
   InsertCoupon merchantId(String? merchantId);
 
+  InsertCoupon eventName(String? eventName);
+
+  InsertCoupon eventDescription(String? eventDescription);
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertCoupon(...).copyWith.fieldName(value)`.
   ///
@@ -37,6 +43,7 @@ abstract class _$InsertCouponCWProxy {
   InsertCoupon call({
     String name,
     String code,
+    CouponType? couponType,
     CouponRules rules,
     num? discountAmount,
     num? discountPercentage,
@@ -45,6 +52,8 @@ abstract class _$InsertCouponCWProxy {
     DateTime periodEnd,
     bool isActive,
     String? merchantId,
+    String? eventName,
+    String? eventDescription,
   });
 }
 
@@ -60,6 +69,10 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
 
   @override
   InsertCoupon code(String code) => call(code: code);
+
+  @override
+  InsertCoupon couponType(CouponType? couponType) =>
+      call(couponType: couponType);
 
   @override
   InsertCoupon rules(CouponRules rules) => call(rules: rules);
@@ -89,6 +102,13 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
   InsertCoupon merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
+  InsertCoupon eventName(String? eventName) => call(eventName: eventName);
+
+  @override
+  InsertCoupon eventDescription(String? eventDescription) =>
+      call(eventDescription: eventDescription);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertCoupon(...).copyWith.fieldName(value)`.
   ///
@@ -99,6 +119,7 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
   InsertCoupon call({
     Object? name = const $CopyWithPlaceholder(),
     Object? code = const $CopyWithPlaceholder(),
+    Object? couponType = const $CopyWithPlaceholder(),
     Object? rules = const $CopyWithPlaceholder(),
     Object? discountAmount = const $CopyWithPlaceholder(),
     Object? discountPercentage = const $CopyWithPlaceholder(),
@@ -107,6 +128,8 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
+    Object? eventName = const $CopyWithPlaceholder(),
+    Object? eventDescription = const $CopyWithPlaceholder(),
   }) {
     return InsertCoupon(
       name: name == const $CopyWithPlaceholder() || name == null
@@ -117,6 +140,10 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
           ? _value.code
           // ignore: cast_nullable_to_non_nullable
           : code as String,
+      couponType: couponType == const $CopyWithPlaceholder()
+          ? _value.couponType
+          // ignore: cast_nullable_to_non_nullable
+          : couponType as CouponType?,
       rules: rules == const $CopyWithPlaceholder() || rules == null
           ? _value.rules
           // ignore: cast_nullable_to_non_nullable
@@ -151,6 +178,14 @@ class _$InsertCouponCWProxyImpl implements _$InsertCouponCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
+      eventName: eventName == const $CopyWithPlaceholder()
+          ? _value.eventName
+          // ignore: cast_nullable_to_non_nullable
+          : eventName as String?,
+      eventDescription: eventDescription == const $CopyWithPlaceholder()
+          ? _value.eventDescription
+          // ignore: cast_nullable_to_non_nullable
+          : eventDescription as String?,
     );
   }
 }
@@ -184,6 +219,10 @@ InsertCoupon _$InsertCouponFromJson(
   final val = InsertCoupon(
     name: $checkedConvert('name', (v) => v as String),
     code: $checkedConvert('code', (v) => v as String),
+    couponType: $checkedConvert(
+      'couponType',
+      (v) => $enumDecodeNullable(_$CouponTypeEnumMap, v) ?? CouponType.GENERAL,
+    ),
     rules: $checkedConvert(
       'rules',
       (v) => CouponRules.fromJson(v as Map<String, dynamic>),
@@ -198,6 +237,8 @@ InsertCoupon _$InsertCouponFromJson(
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    eventName: $checkedConvert('eventName', (v) => v as String?),
+    eventDescription: $checkedConvert('eventDescription', (v) => v as String?),
   );
   return val;
 });
@@ -206,6 +247,7 @@ Map<String, dynamic> _$InsertCouponToJson(InsertCoupon instance) =>
     <String, dynamic>{
       'name': instance.name,
       'code': instance.code,
+      'couponType': ?_$CouponTypeEnumMap[instance.couponType],
       'rules': instance.rules.toJson(),
       'discountAmount': ?instance.discountAmount,
       'discountPercentage': ?instance.discountPercentage,
@@ -214,4 +256,13 @@ Map<String, dynamic> _$InsertCouponToJson(InsertCoupon instance) =>
       'periodEnd': instance.periodEnd.toIso8601String(),
       'isActive': instance.isActive,
       'merchantId': ?instance.merchantId,
+      'eventName': ?instance.eventName,
+      'eventDescription': ?instance.eventDescription,
     };
+
+const _$CouponTypeEnumMap = {
+  CouponType.GENERAL: 'GENERAL',
+  CouponType.EVENT: 'EVENT',
+  CouponType.MERCHANT: 'MERCHANT',
+  CouponType.FIRST_ORDER: 'FIRST_ORDER',
+};

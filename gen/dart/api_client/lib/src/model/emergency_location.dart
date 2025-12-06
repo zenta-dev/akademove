@@ -18,7 +18,6 @@ part 'emergency_location.g.dart';
 class EmergencyLocation {
   /// Returns a new [EmergencyLocation] instance.
   const EmergencyLocation({required this.latitude, required this.longitude});
-
   @JsonKey(name: r'latitude', required: true, includeIfNull: false)
   final num latitude;
 

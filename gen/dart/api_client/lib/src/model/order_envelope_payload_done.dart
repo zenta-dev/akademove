@@ -24,7 +24,6 @@ class OrderEnvelopePayloadDone {
     required this.driverId,
     required this.driverCurrentLocation,
   });
-
   @JsonKey(name: r'by', required: true, includeIfNull: false)
   final OrderEnvelopePayloadDoneByEnum by;
 

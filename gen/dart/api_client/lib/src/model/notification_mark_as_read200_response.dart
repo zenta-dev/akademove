@@ -3,8 +3,8 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/user_notification.dart';
 import 'package:api_client/src/model/pagination_result.dart';
+import 'package:api_client/src/model/notification_list200_response_data_inner.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 
@@ -25,12 +25,11 @@ class NotificationMarkAsRead200Response {
     this.pagination,
     this.totalPages,
   });
-
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 
   @JsonKey(name: r'data', required: true, includeIfNull: false)
-  final UserNotification data;
+  final NotificationList200ResponseDataInner data;
 
   @JsonKey(name: r'pagination', required: false, includeIfNull: false)
   final PaginationResult? pagination;

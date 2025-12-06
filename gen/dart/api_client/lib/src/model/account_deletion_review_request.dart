@@ -18,7 +18,6 @@ part 'account_deletion_review_request.g.dart';
 class AccountDeletionReviewRequest {
   /// Returns a new [AccountDeletionReviewRequest] instance.
   const AccountDeletionReviewRequest({required this.status, this.reviewNotes});
-
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final AccountDeletionReviewRequestStatusEnum status;
 

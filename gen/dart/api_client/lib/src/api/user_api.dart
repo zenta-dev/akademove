@@ -10,12 +10,12 @@ import 'package:api_client/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
 import 'package:api_client/src/model/account_deletion_submit201_response.dart';
-import 'package:api_client/src/model/auth_has_permission200_response.dart';
+import 'package:api_client/src/model/auth_has_access200_response.dart';
 import 'package:api_client/src/model/contact_submit201_response.dart';
 import 'package:api_client/src/model/insert_account_deletion.dart';
 import 'package:api_client/src/model/insert_contact.dart';
-import 'package:api_client/src/model/update_user_password.dart';
 import 'package:api_client/src/model/user_admin_create200_response.dart';
+import 'package:api_client/src/model/user_me_change_password_request.dart';
 
 class UserApi {
   final Dio _dio;
@@ -209,7 +209,7 @@ class UserApi {
   ///
   ///
   /// Parameters:
-  /// * [updateUserPassword]
+  /// * [userMeChangePasswordRequest]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -217,10 +217,10 @@ class UserApi {
   /// * [onSendProgress] - A [ProgressCallback] that can be used to get the send progress
   /// * [onReceiveProgress] - A [ProgressCallback] that can be used to get the receive progress
   ///
-  /// Returns a [Future] containing a [Response] with a [AuthHasPermission200Response] as data
+  /// Returns a [Future] containing a [Response] with a [AuthHasAccess200Response] as data
   /// Throws [DioException] if API call or serialization fails
-  Future<Response<AuthHasPermission200Response>> userMeChangePassword({
-    required UpdateUserPassword updateUserPassword,
+  Future<Response<AuthHasAccess200Response>> userMeChangePassword({
+    required UserMeChangePasswordRequest userMeChangePasswordRequest,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -245,7 +245,7 @@ class UserApi {
     dynamic _bodyData;
 
     try {
-      _bodyData = jsonEncode(updateUserPassword);
+      _bodyData = jsonEncode(userMeChangePasswordRequest);
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _options.compose(_dio.options, _path),
@@ -264,16 +264,17 @@ class UserApi {
       onReceiveProgress: onReceiveProgress,
     );
 
-    AuthHasPermission200Response? _responseData;
+    AuthHasAccess200Response? _responseData;
 
     try {
       final rawData = _response.data;
       _responseData = rawData == null
           ? null
-          : deserialize<
-              AuthHasPermission200Response,
-              AuthHasPermission200Response
-            >(rawData, 'AuthHasPermission200Response', growable: true);
+          : deserialize<AuthHasAccess200Response, AuthHasAccess200Response>(
+              rawData,
+              'AuthHasAccess200Response',
+              growable: true,
+            );
     } catch (error, stackTrace) {
       throw DioException(
         requestOptions: _response.requestOptions,
@@ -284,7 +285,7 @@ class UserApi {
       );
     }
 
-    return Response<AuthHasPermission200Response>(
+    return Response<AuthHasAccess200Response>(
       data: _responseData,
       headers: _response.headers,
       isRedirect: _response.isRedirect,

@@ -22,7 +22,6 @@ class DriverGetAnalytics200ResponseDataTopEarningDaysInner {
     required this.earnings,
     required this.orders,
   });
-
   @JsonKey(name: r'date', required: true, includeIfNull: false)
   final String date;
 

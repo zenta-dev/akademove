@@ -19,7 +19,6 @@ part 'time_rules.g.dart';
 class TimeRules {
   /// Returns a new [TimeRules] instance.
   const TimeRules({this.allowedDays, this.allowedHours});
-
   @JsonKey(name: r'allowedDays', required: false, includeIfNull: false)
   final List<DayOfWeek>? allowedDays;
 

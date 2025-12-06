@@ -9,8 +9,6 @@ part of 'admin_update_user.dart';
 abstract class _$AdminUpdateUserCWProxy {
   AdminUpdateUser role(UserRole role);
 
-  AdminUpdateUser oldPassword(String oldPassword);
-
   AdminUpdateUser newPassword(String newPassword);
 
   AdminUpdateUser confirmNewPassword(String confirmNewPassword);
@@ -30,7 +28,6 @@ abstract class _$AdminUpdateUserCWProxy {
   /// ```
   AdminUpdateUser call({
     UserRole role,
-    String oldPassword,
     String newPassword,
     String confirmNewPassword,
     String banReason,
@@ -48,10 +45,6 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
 
   @override
   AdminUpdateUser role(UserRole role) => call(role: role);
-
-  @override
-  AdminUpdateUser oldPassword(String oldPassword) =>
-      call(oldPassword: oldPassword);
 
   @override
   AdminUpdateUser newPassword(String newPassword) =>
@@ -81,7 +74,6 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
   /// ```
   AdminUpdateUser call({
     Object? role = const $CopyWithPlaceholder(),
-    Object? oldPassword = const $CopyWithPlaceholder(),
     Object? newPassword = const $CopyWithPlaceholder(),
     Object? confirmNewPassword = const $CopyWithPlaceholder(),
     Object? banReason = const $CopyWithPlaceholder(),
@@ -93,11 +85,6 @@ class _$AdminUpdateUserCWProxyImpl implements _$AdminUpdateUserCWProxy {
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
           : role as UserRole,
-      oldPassword:
-          oldPassword == const $CopyWithPlaceholder() || oldPassword == null
-          ? _value.oldPassword
-          // ignore: cast_nullable_to_non_nullable
-          : oldPassword as String,
       newPassword:
           newPassword == const $CopyWithPlaceholder() || newPassword == null
           ? _value.newPassword
@@ -142,7 +129,6 @@ AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
         json,
         requiredKeys: const [
           'role',
-          'oldPassword',
           'newPassword',
           'confirmNewPassword',
           'banReason',
@@ -151,7 +137,6 @@ AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
       );
       final val = AdminUpdateUser(
         role: $checkedConvert('role', (v) => $enumDecode(_$UserRoleEnumMap, v)),
-        oldPassword: $checkedConvert('oldPassword', (v) => v as String),
         newPassword: $checkedConvert('newPassword', (v) => v as String),
         confirmNewPassword: $checkedConvert(
           'confirmNewPassword',
@@ -167,7 +152,6 @@ AdminUpdateUser _$AdminUpdateUserFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$AdminUpdateUserToJson(AdminUpdateUser instance) =>
     <String, dynamic>{
       'role': _$UserRoleEnumMap[instance.role]!,
-      'oldPassword': instance.oldPassword,
       'newPassword': instance.newPassword,
       'confirmNewPassword': instance.confirmNewPassword,
       'banReason': instance.banReason,

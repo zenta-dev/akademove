@@ -18,7 +18,6 @@ part 'order_verify_delivery_otp_request.g.dart';
 class OrderVerifyDeliveryOTPRequest {
   /// Returns a new [OrderVerifyDeliveryOTPRequest] instance.
   const OrderVerifyDeliveryOTPRequest({required this.otp});
-
   @JsonKey(name: r'otp', required: true, includeIfNull: false)
   final String otp;
 

@@ -4,6 +4,7 @@
 
 // ignore_for_file: unused_element
 import 'package:api_client/src/model/coordinate.dart';
+import 'package:api_client/src/model/driver_quiz_status.dart';
 import 'package:api_client/src/model/bank.dart';
 import 'package:api_client/src/model/driver_user.dart';
 import 'package:api_client/src/model/driver_status.dart';
@@ -27,6 +28,10 @@ class Driver {
     required this.studentId,
     required this.licensePlate,
     required this.status,
+    this.quizStatus = DriverQuizStatus.NOT_STARTED,
+    this.quizAttemptId,
+    this.quizScore,
+    this.quizCompletedAt,
     required this.rating,
     required this.isTakingOrder,
     required this.isOnline,
@@ -42,7 +47,6 @@ class Driver {
     this.user,
     this.distance,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 
@@ -57,6 +61,25 @@ class Driver {
 
   @JsonKey(name: r'status', required: true, includeIfNull: false)
   final DriverStatus status;
+
+  @JsonKey(
+    defaultValue: DriverQuizStatus.NOT_STARTED,
+    name: r'quizStatus',
+    required: false,
+    includeIfNull: false,
+  )
+  final DriverQuizStatus? quizStatus;
+
+  @JsonKey(name: r'quizAttemptId', required: false, includeIfNull: false)
+  final String? quizAttemptId;
+
+  // minimum: 0
+  // maximum: 1000
+  @JsonKey(name: r'quizScore', required: false, includeIfNull: false)
+  final int? quizScore;
+
+  @JsonKey(name: r'quizCompletedAt', required: false, includeIfNull: false)
+  final DateTime? quizCompletedAt;
 
   @JsonKey(name: r'rating', required: true, includeIfNull: false)
   final num rating;
@@ -117,6 +140,10 @@ class Driver {
           other.studentId == studentId &&
           other.licensePlate == licensePlate &&
           other.status == status &&
+          other.quizStatus == quizStatus &&
+          other.quizAttemptId == quizAttemptId &&
+          other.quizScore == quizScore &&
+          other.quizCompletedAt == quizCompletedAt &&
           other.rating == rating &&
           other.isTakingOrder == isTakingOrder &&
           other.isOnline == isOnline &&
@@ -139,6 +166,10 @@ class Driver {
       studentId.hashCode +
       licensePlate.hashCode +
       status.hashCode +
+      quizStatus.hashCode +
+      (quizAttemptId == null ? 0 : quizAttemptId.hashCode) +
+      (quizScore == null ? 0 : quizScore.hashCode) +
+      (quizCompletedAt == null ? 0 : quizCompletedAt.hashCode) +
       rating.hashCode +
       isTakingOrder.hashCode +
       isOnline.hashCode +

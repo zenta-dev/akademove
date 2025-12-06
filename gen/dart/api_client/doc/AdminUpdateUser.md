@@ -9,7 +9,6 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **role** | [**UserRole**](UserRole.md) |  | 
-**oldPassword** | **String** |  | 
 **newPassword** | **String** |  | 
 **confirmNewPassword** | **String** |  | 
 **banReason** | **String** |  | 

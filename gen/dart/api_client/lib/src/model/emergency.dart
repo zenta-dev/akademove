@@ -37,7 +37,6 @@ class Emergency {
     this.respondingAt,
     this.resolvedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

@@ -18,7 +18,6 @@ part 'order_chat_message_sender.g.dart';
 class OrderChatMessageSender {
   /// Returns a new [OrderChatMessageSender] instance.
   const OrderChatMessageSender({required this.name, this.image});
-
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
 

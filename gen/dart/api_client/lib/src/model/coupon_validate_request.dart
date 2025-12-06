@@ -24,7 +24,6 @@ class CouponValidateRequest {
     this.serviceType,
     this.merchantId,
   });
-
   @JsonKey(name: r'code', required: true, includeIfNull: false)
   final String code;
 

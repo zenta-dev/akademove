@@ -21,7 +21,6 @@ part 'coupon_rules.g.dart';
 class CouponRules {
   /// Returns a new [CouponRules] instance.
   const CouponRules({this.general, this.user, this.time});
-
   @JsonKey(name: r'general', required: false, includeIfNull: false)
   final GeneralRules? general;
 

@@ -259,7 +259,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **orderList**
-> OrderList200Response orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses)
+> OrderList200Response orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses, type, startDate, endDate)
 
 
 
@@ -277,9 +277,12 @@ final String sortBy = sortBy_example; // String |
 final PaginationOrder order = ; // PaginationOrder | 
 final PaginationMode mode = ; // PaginationMode | 
 final Object statuses = ; // Object | 
+final Object type = ; // Object | 
+final DateTime startDate = 2013-10-20T19:20:30+01:00; // DateTime | 
+final DateTime endDate = 2013-10-20T19:20:30+01:00; // DateTime | 
 
 try {
-    final response = api.orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses);
+    final response = api.orderList(cursor, limit, direction, page, query, sortBy, order, mode, statuses, type, startDate, endDate);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling OrderApi->orderList: $e\n');
@@ -299,6 +302,9 @@ Name | Type | Description  | Notes
  **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **statuses** | [**Object**](.md)|  | [optional] 
+ **type** | [**Object**](.md)|  | [optional] 
+ **startDate** | **DateTime**|  | [optional] 
+ **endDate** | **DateTime**|  | [optional] 
 
 ### Return type
 

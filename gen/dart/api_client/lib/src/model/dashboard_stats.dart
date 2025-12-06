@@ -42,7 +42,6 @@ class DashboardStats {
     required this.topMerchants,
     required this.highCancellationDrivers,
   });
-
   @JsonKey(name: r'totalUsers', required: true, includeIfNull: false)
   final num totalUsers;
 

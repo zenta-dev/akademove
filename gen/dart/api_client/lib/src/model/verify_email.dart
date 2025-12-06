@@ -18,7 +18,6 @@ part 'verify_email.g.dart';
 class VerifyEmail {
   /// Returns a new [VerifyEmail] instance.
   const VerifyEmail({required this.token});
-
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
 

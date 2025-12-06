@@ -18,7 +18,6 @@ part 'activate_driver.g.dart';
 class ActivateDriver {
   /// Returns a new [ActivateDriver] instance.
   const ActivateDriver({required this.id});
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

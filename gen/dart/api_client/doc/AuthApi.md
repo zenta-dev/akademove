@@ -12,7 +12,7 @@ Method | HTTP request | Description
 [**authExchangeToken**](AuthApi.md#authexchangetoken) | **GET** /auth/exchange-token | 
 [**authForgotPassword**](AuthApi.md#authforgotpassword) | **POST** /auth/forgot-password | 
 [**authGetSession**](AuthApi.md#authgetsession) | **GET** /auth/session | 
-[**authHasPermission**](AuthApi.md#authhaspermission) | **POST** /auth/has-permission | 
+[**authHasAccess**](AuthApi.md#authhasaccess) | **POST** /auth/has-access | 
 [**authResetPassword**](AuthApi.md#authresetpassword) | **POST** /auth/reset-password | 
 [**authSendEmailVerification**](AuthApi.md#authsendemailverification) | **POST** /auth/send-email-verification | 
 [**authSignIn**](AuthApi.md#authsignin) | **POST** /auth/sign-in | 
@@ -138,8 +138,8 @@ This endpoint does not need any parameter.
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **authHasPermission**
-> AuthHasPermission200Response authHasPermission(authHasPermissionRequest)
+# **authHasAccess**
+> AuthHasAccess200Response authHasAccess(authHasAccessRequest)
 
 
 
@@ -148,13 +148,13 @@ This endpoint does not need any parameter.
 import 'package:api_client/api.dart';
 
 final api = ApiClient().getAuthApi();
-final AuthHasPermissionRequest authHasPermissionRequest = ; // AuthHasPermissionRequest | 
+final AuthHasAccessRequest authHasAccessRequest = ; // AuthHasAccessRequest | 
 
 try {
-    final response = api.authHasPermission(authHasPermissionRequest);
+    final response = api.authHasAccess(authHasAccessRequest);
     print(response);
 } catch on DioException (e) {
-    print('Exception when calling AuthApi->authHasPermission: $e\n');
+    print('Exception when calling AuthApi->authHasAccess: $e\n');
 }
 ```
 
@@ -162,11 +162,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authHasPermissionRequest** | [**AuthHasPermissionRequest**](AuthHasPermissionRequest.md)|  | 
+ **authHasAccessRequest** | [**AuthHasAccessRequest**](AuthHasAccessRequest.md)|  | 
 
 ### Return type
 
-[**AuthHasPermission200Response**](AuthHasPermission200Response.md)
+[**AuthHasAccess200Response**](AuthHasAccess200Response.md)
 
 ### Authorization
 

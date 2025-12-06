@@ -28,7 +28,6 @@ class DriverScheduleUpdateRequest {
     this.specificDate,
     this.isActive = true,
   });
-
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
 

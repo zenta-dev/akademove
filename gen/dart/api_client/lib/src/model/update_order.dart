@@ -52,7 +52,6 @@ class UpdateOrder {
     this.driver,
     this.merchant,
   });
-
   @JsonKey(name: r'driverId', required: false, includeIfNull: false)
   final String? driverId;
 

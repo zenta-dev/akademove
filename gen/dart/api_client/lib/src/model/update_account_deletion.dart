@@ -34,7 +34,6 @@ class UpdateAccountDeletion {
     this.reviewedAt,
     this.completedAt,
   });
-
   @JsonKey(name: r'fullName', required: false, includeIfNull: false)
   final String? fullName;
 

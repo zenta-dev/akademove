@@ -18,7 +18,6 @@ part 'insert_order_chat_message.g.dart';
 class InsertOrderChatMessage {
   /// Returns a new [InsertOrderChatMessage] instance.
   const InsertOrderChatMessage({required this.orderId, required this.message});
-
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
 

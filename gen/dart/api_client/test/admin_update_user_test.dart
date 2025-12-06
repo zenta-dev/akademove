@@ -12,11 +12,6 @@ void main() {
       // TODO
     });
 
-    // String oldPassword
-    test('to test the property `oldPassword`', () async {
-      // TODO
-    });
-
     // String newPassword
     test('to test the property `newPassword`', () async {
       // TODO

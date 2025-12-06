@@ -26,7 +26,6 @@ class InsertReview {
     required this.score,
     this.comment = '',
   });
-
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
 

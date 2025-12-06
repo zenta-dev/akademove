@@ -25,7 +25,6 @@ class EmergencyTrigger200Response {
     this.pagination,
     this.totalPages,
   });
-
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 

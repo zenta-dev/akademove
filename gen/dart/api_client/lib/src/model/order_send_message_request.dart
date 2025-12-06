@@ -18,7 +18,6 @@ part 'order_send_message_request.g.dart';
 class OrderSendMessageRequest {
   /// Returns a new [OrderSendMessageRequest] instance.
   const OrderSendMessageRequest({required this.message});
-
   @JsonKey(name: r'message', required: true, includeIfNull: false)
   final String message;
 

@@ -15,13 +15,7 @@ abstract class _$InsertUserCWProxy {
 
   InsertUser gender(UserGender? gender);
 
-  InsertUser phone(Phone phone);
-
-  InsertUser userBadges(List<UserBadge> userBadges);
-
-  InsertUser password(String password);
-
-  InsertUser confirmPassword(String confirmPassword);
+  InsertUser phone(Phone? phone);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `InsertUser(...).copyWith.fieldName(value)`.
@@ -35,10 +29,7 @@ abstract class _$InsertUserCWProxy {
     String email,
     UserRole role,
     UserGender? gender,
-    Phone phone,
-    List<UserBadge> userBadges,
-    String password,
-    String confirmPassword,
+    Phone? phone,
   });
 }
 
@@ -62,18 +53,7 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
   InsertUser gender(UserGender? gender) => call(gender: gender);
 
   @override
-  InsertUser phone(Phone phone) => call(phone: phone);
-
-  @override
-  InsertUser userBadges(List<UserBadge> userBadges) =>
-      call(userBadges: userBadges);
-
-  @override
-  InsertUser password(String password) => call(password: password);
-
-  @override
-  InsertUser confirmPassword(String confirmPassword) =>
-      call(confirmPassword: confirmPassword);
+  InsertUser phone(Phone? phone) => call(phone: phone);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -89,9 +69,6 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
     Object? role = const $CopyWithPlaceholder(),
     Object? gender = const $CopyWithPlaceholder(),
     Object? phone = const $CopyWithPlaceholder(),
-    Object? userBadges = const $CopyWithPlaceholder(),
-    Object? password = const $CopyWithPlaceholder(),
-    Object? confirmPassword = const $CopyWithPlaceholder(),
   }) {
     return InsertUser(
       name: name == const $CopyWithPlaceholder() || name == null
@@ -110,25 +87,10 @@ class _$InsertUserCWProxyImpl implements _$InsertUserCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
-      phone: phone == const $CopyWithPlaceholder() || phone == null
+      phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as Phone,
-      userBadges:
-          userBadges == const $CopyWithPlaceholder() || userBadges == null
-          ? _value.userBadges
-          // ignore: cast_nullable_to_non_nullable
-          : userBadges as List<UserBadge>,
-      password: password == const $CopyWithPlaceholder() || password == null
-          ? _value.password
-          // ignore: cast_nullable_to_non_nullable
-          : password as String,
-      confirmPassword:
-          confirmPassword == const $CopyWithPlaceholder() ||
-              confirmPassword == null
-          ? _value.confirmPassword
-          // ignore: cast_nullable_to_non_nullable
-          : confirmPassword as String,
+          : phone as Phone?,
     );
   }
 }
@@ -146,18 +108,7 @@ extension $InsertUserCopyWith on InsertUser {
 
 InsertUser _$InsertUserFromJson(Map<String, dynamic> json) =>
     $checkedCreate('InsertUser', json, ($checkedConvert) {
-      $checkKeys(
-        json,
-        requiredKeys: const [
-          'name',
-          'email',
-          'role',
-          'phone',
-          'userBadges',
-          'password',
-          'confirmPassword',
-        ],
-      );
+      $checkKeys(json, requiredKeys: const ['name', 'email', 'role']);
       final val = InsertUser(
         name: $checkedConvert('name', (v) => v as String),
         email: $checkedConvert('email', (v) => v as String),
@@ -168,16 +119,8 @@ InsertUser _$InsertUserFromJson(Map<String, dynamic> json) =>
         ),
         phone: $checkedConvert(
           'phone',
-          (v) => Phone.fromJson(v as Map<String, dynamic>),
+          (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
         ),
-        userBadges: $checkedConvert(
-          'userBadges',
-          (v) => (v as List<dynamic>)
-              .map((e) => UserBadge.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        ),
-        password: $checkedConvert('password', (v) => v as String),
-        confirmPassword: $checkedConvert('confirmPassword', (v) => v as String),
       );
       return val;
     });
@@ -188,10 +131,7 @@ Map<String, dynamic> _$InsertUserToJson(InsertUser instance) =>
       'email': instance.email,
       'role': _$UserRoleEnumMap[instance.role]!,
       'gender': ?_$UserGenderEnumMap[instance.gender],
-      'phone': instance.phone.toJson(),
-      'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),
-      'password': instance.password,
-      'confirmPassword': instance.confirmPassword,
+      'phone': ?instance.phone?.toJson(),
     };
 
 const _$UserRoleEnumMap = {

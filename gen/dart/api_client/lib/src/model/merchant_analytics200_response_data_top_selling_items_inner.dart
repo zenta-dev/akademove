@@ -24,7 +24,6 @@ class MerchantAnalytics200ResponseDataTopSellingItemsInner {
     required this.totalOrders,
     required this.totalRevenue,
   });
-
   @JsonKey(name: r'menuId', required: true, includeIfNull: false)
   final String menuId;
 

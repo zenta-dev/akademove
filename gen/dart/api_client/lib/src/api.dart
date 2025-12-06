@@ -14,6 +14,8 @@ import 'package:api_client/src/api/chat_api.dart';
 import 'package:api_client/src/api/configuration_api.dart';
 import 'package:api_client/src/api/coupon_api.dart';
 import 'package:api_client/src/api/driver_api.dart';
+import 'package:api_client/src/api/driver_quiz_answer_api.dart';
+import 'package:api_client/src/api/driver_quiz_question_api.dart';
 import 'package:api_client/src/api/emergency_api.dart';
 import 'package:api_client/src/api/leaderboard_api.dart';
 import 'package:api_client/src/api/merchant_api.dart';
@@ -135,6 +137,18 @@ class ApiClient {
   /// by doing that all interceptors will not be executed
   DriverApi getDriverApi() {
     return DriverApi(dio);
+  }
+
+  /// Get DriverQuizAnswerApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  DriverQuizAnswerApi getDriverQuizAnswerApi() {
+    return DriverQuizAnswerApi(dio);
+  }
+
+  /// Get DriverQuizQuestionApi instance, base route and serializer can be overridden by a given but be careful,
+  /// by doing that all interceptors will not be executed
+  DriverQuizQuestionApi getDriverQuizQuestionApi() {
+    return DriverQuizQuestionApi(dio);
   }
 
   /// Get EmergencyApi instance, base route and serializer can be overridden by a given but be careful,

@@ -28,7 +28,6 @@ class Review {
     this.comment = '',
     required this.createdAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

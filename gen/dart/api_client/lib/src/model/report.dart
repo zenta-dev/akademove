@@ -33,7 +33,6 @@ class Report {
     required this.reportedAt,
     this.resolvedAt,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

@@ -9,7 +9,7 @@ import 'package:api_client/api.dart';
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  | 
-**data** | [**List&lt;UserNotification&gt;**](UserNotification.md) |  | 
+**data** | [**List&lt;NotificationList200ResponseDataInner&gt;**](NotificationList200ResponseDataInner.md) |  | 
 **pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
 **totalPages** | **int** |  | [optional] 
 

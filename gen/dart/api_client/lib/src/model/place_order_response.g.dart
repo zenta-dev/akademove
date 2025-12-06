@@ -13,6 +13,10 @@ abstract class _$PlaceOrderResponseCWProxy {
 
   PlaceOrderResponse transaction(Transaction transaction);
 
+  PlaceOrderResponse autoAppliedCoupon(
+    PlaceOrderResponseAutoAppliedCoupon? autoAppliedCoupon,
+  );
+
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderResponse(...).copyWith.fieldName(value)`.
   ///
@@ -24,6 +28,7 @@ abstract class _$PlaceOrderResponseCWProxy {
     Order order,
     Payment payment,
     Transaction transaction,
+    PlaceOrderResponseAutoAppliedCoupon? autoAppliedCoupon,
   });
 }
 
@@ -45,6 +50,11 @@ class _$PlaceOrderResponseCWProxyImpl implements _$PlaceOrderResponseCWProxy {
       call(transaction: transaction);
 
   @override
+  PlaceOrderResponse autoAppliedCoupon(
+    PlaceOrderResponseAutoAppliedCoupon? autoAppliedCoupon,
+  ) => call(autoAppliedCoupon: autoAppliedCoupon);
+
+  @override
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PlaceOrderResponse(...).copyWith.fieldName(value)`.
   ///
@@ -56,6 +66,7 @@ class _$PlaceOrderResponseCWProxyImpl implements _$PlaceOrderResponseCWProxy {
     Object? order = const $CopyWithPlaceholder(),
     Object? payment = const $CopyWithPlaceholder(),
     Object? transaction = const $CopyWithPlaceholder(),
+    Object? autoAppliedCoupon = const $CopyWithPlaceholder(),
   }) {
     return PlaceOrderResponse(
       order: order == const $CopyWithPlaceholder() || order == null
@@ -71,6 +82,10 @@ class _$PlaceOrderResponseCWProxyImpl implements _$PlaceOrderResponseCWProxy {
           ? _value.transaction
           // ignore: cast_nullable_to_non_nullable
           : transaction as Transaction,
+      autoAppliedCoupon: autoAppliedCoupon == const $CopyWithPlaceholder()
+          ? _value.autoAppliedCoupon
+          // ignore: cast_nullable_to_non_nullable
+          : autoAppliedCoupon as PlaceOrderResponseAutoAppliedCoupon?,
     );
   }
 }
@@ -103,6 +118,14 @@ PlaceOrderResponse _$PlaceOrderResponseFromJson(Map<String, dynamic> json) =>
           'transaction',
           (v) => Transaction.fromJson(v as Map<String, dynamic>),
         ),
+        autoAppliedCoupon: $checkedConvert(
+          'autoAppliedCoupon',
+          (v) => v == null
+              ? null
+              : PlaceOrderResponseAutoAppliedCoupon.fromJson(
+                  v as Map<String, dynamic>,
+                ),
+        ),
       );
       return val;
     });
@@ -112,4 +135,5 @@ Map<String, dynamic> _$PlaceOrderResponseToJson(PlaceOrderResponse instance) =>
       'order': instance.order.toJson(),
       'payment': instance.payment.toJson(),
       'transaction': instance.transaction.toJson(),
+      'autoAppliedCoupon': ?instance.autoAppliedCoupon?.toJson(),
     };

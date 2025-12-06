@@ -25,7 +25,6 @@ class Configuration {
     required this.updatedById,
     required this.updatedAt,
   });
-
   @JsonKey(name: r'key', required: true, includeIfNull: false)
   final String key;
 

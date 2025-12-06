@@ -22,7 +22,6 @@ class BannerConfiguration {
     required this.description,
     required this.imageUrl,
   });
-
   @JsonKey(name: r'title', required: true, includeIfNull: false)
   final String title;
 

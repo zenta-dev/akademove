@@ -23,7 +23,6 @@ class EmergencyUpdateStatusRequest {
     this.resolution,
     this.respondedById,
   });
-
   @JsonKey(name: r'status', required: false, includeIfNull: false)
   final EmergencyStatus? status;
 

@@ -22,7 +22,6 @@ class ResetPassword {
     required this.newPassword,
     required this.confirmPassword,
   });
-
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
 

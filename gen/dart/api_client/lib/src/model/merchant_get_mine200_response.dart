@@ -19,7 +19,6 @@ part 'merchant_get_mine200_response.g.dart';
 class MerchantGetMine200Response {
   /// Returns a new [MerchantGetMine200Response] instance.
   const MerchantGetMine200Response({required this.status, required this.body});
-
   @JsonKey(name: r'status', required: true, includeIfNull: true)
   final Object? status;
 

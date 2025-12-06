@@ -27,7 +27,7 @@ abstract class _$UserCWProxy {
 
   User gender(UserGender? gender);
 
-  User phone(Phone phone);
+  User phone(Phone? phone);
 
   User createdAt(DateTime createdAt);
 
@@ -53,7 +53,7 @@ abstract class _$UserCWProxy {
     String? banReason,
     DateTime? banExpires,
     UserGender? gender,
-    Phone phone,
+    Phone? phone,
     DateTime createdAt,
     DateTime updatedAt,
     List<UserBadge> userBadges,
@@ -98,7 +98,7 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   User gender(UserGender? gender) => call(gender: gender);
 
   @override
-  User phone(Phone phone) => call(phone: phone);
+  User phone(Phone? phone) => call(phone: phone);
 
   @override
   User createdAt(DateTime createdAt) => call(createdAt: createdAt);
@@ -175,10 +175,10 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
           ? _value.gender
           // ignore: cast_nullable_to_non_nullable
           : gender as UserGender?,
-      phone: phone == const $CopyWithPlaceholder() || phone == null
+      phone: phone == const $CopyWithPlaceholder()
           ? _value.phone
           // ignore: cast_nullable_to_non_nullable
-          : phone as Phone,
+          : phone as Phone?,
       createdAt: createdAt == const $CopyWithPlaceholder() || createdAt == null
           ? _value.createdAt
           // ignore: cast_nullable_to_non_nullable
@@ -219,7 +219,6 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
       'emailVerified',
       'role',
       'banned',
-      'phone',
       'createdAt',
       'updatedAt',
       'userBadges',
@@ -244,7 +243,7 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate('User', json, (
     ),
     phone: $checkedConvert(
       'phone',
-      (v) => Phone.fromJson(v as Map<String, dynamic>),
+      (v) => v == null ? null : Phone.fromJson(v as Map<String, dynamic>),
     ),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
     updatedAt: $checkedConvert('updatedAt', (v) => DateTime.parse(v as String)),
@@ -269,7 +268,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'banReason': ?instance.banReason,
   'banExpires': ?instance.banExpires?.toIso8601String(),
   'gender': ?_$UserGenderEnumMap[instance.gender],
-  'phone': instance.phone.toJson(),
+  'phone': ?instance.phone?.toJson(),
   'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt.toIso8601String(),
   'userBadges': instance.userBadges.map((e) => e.toJson()).toList(),

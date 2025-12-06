@@ -13,6 +13,8 @@ abstract class _$CouponCWProxy {
 
   Coupon code(String code);
 
+  Coupon couponType(CouponType? couponType);
+
   Coupon rules(CouponRules rules);
 
   Coupon discountAmount(num? discountAmount);
@@ -31,6 +33,10 @@ abstract class _$CouponCWProxy {
 
   Coupon merchantId(String? merchantId);
 
+  Coupon eventName(String? eventName);
+
+  Coupon eventDescription(String? eventDescription);
+
   Coupon createdById(String createdById);
 
   Coupon createdAt(DateTime createdAt);
@@ -46,6 +52,7 @@ abstract class _$CouponCWProxy {
     String id,
     String name,
     String code,
+    CouponType? couponType,
     CouponRules rules,
     num? discountAmount,
     num? discountPercentage,
@@ -55,6 +62,8 @@ abstract class _$CouponCWProxy {
     DateTime periodEnd,
     bool isActive,
     String? merchantId,
+    String? eventName,
+    String? eventDescription,
     String createdById,
     DateTime createdAt,
   });
@@ -75,6 +84,9 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
 
   @override
   Coupon code(String code) => call(code: code);
+
+  @override
+  Coupon couponType(CouponType? couponType) => call(couponType: couponType);
 
   @override
   Coupon rules(CouponRules rules) => call(rules: rules);
@@ -106,6 +118,13 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
   Coupon merchantId(String? merchantId) => call(merchantId: merchantId);
 
   @override
+  Coupon eventName(String? eventName) => call(eventName: eventName);
+
+  @override
+  Coupon eventDescription(String? eventDescription) =>
+      call(eventDescription: eventDescription);
+
+  @override
   Coupon createdById(String createdById) => call(createdById: createdById);
 
   @override
@@ -123,6 +142,7 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? code = const $CopyWithPlaceholder(),
+    Object? couponType = const $CopyWithPlaceholder(),
     Object? rules = const $CopyWithPlaceholder(),
     Object? discountAmount = const $CopyWithPlaceholder(),
     Object? discountPercentage = const $CopyWithPlaceholder(),
@@ -132,6 +152,8 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
     Object? periodEnd = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
     Object? merchantId = const $CopyWithPlaceholder(),
+    Object? eventName = const $CopyWithPlaceholder(),
+    Object? eventDescription = const $CopyWithPlaceholder(),
     Object? createdById = const $CopyWithPlaceholder(),
     Object? createdAt = const $CopyWithPlaceholder(),
   }) {
@@ -148,6 +170,10 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.code
           // ignore: cast_nullable_to_non_nullable
           : code as String,
+      couponType: couponType == const $CopyWithPlaceholder()
+          ? _value.couponType
+          // ignore: cast_nullable_to_non_nullable
+          : couponType as CouponType?,
       rules: rules == const $CopyWithPlaceholder() || rules == null
           ? _value.rules
           // ignore: cast_nullable_to_non_nullable
@@ -186,6 +212,14 @@ class _$CouponCWProxyImpl implements _$CouponCWProxy {
           ? _value.merchantId
           // ignore: cast_nullable_to_non_nullable
           : merchantId as String?,
+      eventName: eventName == const $CopyWithPlaceholder()
+          ? _value.eventName
+          // ignore: cast_nullable_to_non_nullable
+          : eventName as String?,
+      eventDescription: eventDescription == const $CopyWithPlaceholder()
+          ? _value.eventDescription
+          // ignore: cast_nullable_to_non_nullable
+          : eventDescription as String?,
       createdById:
           createdById == const $CopyWithPlaceholder() || createdById == null
           ? _value.createdById
@@ -233,6 +267,10 @@ Coupon _$CouponFromJson(
     id: $checkedConvert('id', (v) => v as String),
     name: $checkedConvert('name', (v) => v as String),
     code: $checkedConvert('code', (v) => v as String),
+    couponType: $checkedConvert(
+      'couponType',
+      (v) => $enumDecodeNullable(_$CouponTypeEnumMap, v) ?? CouponType.GENERAL,
+    ),
     rules: $checkedConvert(
       'rules',
       (v) => CouponRules.fromJson(v as Map<String, dynamic>),
@@ -248,6 +286,8 @@ Coupon _$CouponFromJson(
     periodEnd: $checkedConvert('periodEnd', (v) => DateTime.parse(v as String)),
     isActive: $checkedConvert('isActive', (v) => v as bool),
     merchantId: $checkedConvert('merchantId', (v) => v as String?),
+    eventName: $checkedConvert('eventName', (v) => v as String?),
+    eventDescription: $checkedConvert('eventDescription', (v) => v as String?),
     createdById: $checkedConvert('createdById', (v) => v as String),
     createdAt: $checkedConvert('createdAt', (v) => DateTime.parse(v as String)),
   );
@@ -258,6 +298,7 @@ Map<String, dynamic> _$CouponToJson(Coupon instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'code': instance.code,
+  'couponType': ?_$CouponTypeEnumMap[instance.couponType],
   'rules': instance.rules.toJson(),
   'discountAmount': ?instance.discountAmount,
   'discountPercentage': ?instance.discountPercentage,
@@ -267,6 +308,15 @@ Map<String, dynamic> _$CouponToJson(Coupon instance) => <String, dynamic>{
   'periodEnd': instance.periodEnd.toIso8601String(),
   'isActive': instance.isActive,
   'merchantId': ?instance.merchantId,
+  'eventName': ?instance.eventName,
+  'eventDescription': ?instance.eventDescription,
   'createdById': instance.createdById,
   'createdAt': instance.createdAt.toIso8601String(),
+};
+
+const _$CouponTypeEnumMap = {
+  CouponType.GENERAL: 'GENERAL',
+  CouponType.EVENT: 'EVENT',
+  CouponType.MERCHANT: 'MERCHANT',
+  CouponType.FIRST_ORDER: 'FIRST_ORDER',
 };

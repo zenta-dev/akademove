@@ -27,7 +27,6 @@ class CartItem {
     required this.quantity,
     this.notes,
   });
-
   @JsonKey(name: r'menuId', required: true, includeIfNull: false)
   final String menuId;
 

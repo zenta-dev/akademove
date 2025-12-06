@@ -649,6 +649,7 @@ const _$OrderStatusEnumMap = {
   OrderStatus.CANCELLED_BY_DRIVER: 'CANCELLED_BY_DRIVER',
   OrderStatus.CANCELLED_BY_MERCHANT: 'CANCELLED_BY_MERCHANT',
   OrderStatus.CANCELLED_BY_SYSTEM: 'CANCELLED_BY_SYSTEM',
+  OrderStatus.NO_SHOW: 'NO_SHOW',
 };
 
 const _$UserGenderEnumMap = {

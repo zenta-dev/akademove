@@ -28,7 +28,6 @@ class UpdateContact {
     this.respondedById,
     this.response,
   });
-
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
 

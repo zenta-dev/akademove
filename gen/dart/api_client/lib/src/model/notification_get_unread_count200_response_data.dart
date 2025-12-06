@@ -18,7 +18,6 @@ part 'notification_get_unread_count200_response_data.g.dart';
 class NotificationGetUnreadCount200ResponseData {
   /// Returns a new [NotificationGetUnreadCount200ResponseData] instance.
   const NotificationGetUnreadCount200ResponseData({required this.count});
-
   @JsonKey(name: r'count', required: true, includeIfNull: false)
   final num count;
 

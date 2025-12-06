@@ -20,7 +20,6 @@ part 'contact_list200_response_data.g.dart';
 class ContactList200ResponseData {
   /// Returns a new [ContactList200ResponseData] instance.
   const ContactList200ResponseData({required this.rows, this.pagination});
-
   @JsonKey(name: r'rows', required: true, includeIfNull: false)
   final List<Contact> rows;
 

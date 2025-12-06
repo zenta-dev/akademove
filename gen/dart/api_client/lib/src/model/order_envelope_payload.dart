@@ -8,6 +8,7 @@ import 'package:api_client/src/model/order_envelope_payload_detail.dart';
 import 'package:api_client/src/model/order_envelope_payload_driver_update_location.dart';
 import 'package:api_client/src/model/driver.dart';
 import 'package:api_client/src/model/order_envelope_payload_merchant_action.dart';
+import 'package:api_client/src/model/order_envelope_payload_no_show.dart';
 import 'package:api_client/src/model/order_envelope_payload_message.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
@@ -31,8 +32,8 @@ class OrderEnvelopePayload {
     this.message,
     this.merchantAction,
     this.cancelReason,
+    this.noShow,
   });
-
   @JsonKey(name: r'detail', required: false, includeIfNull: false)
   final OrderEnvelopePayloadDetail? detail;
 
@@ -54,6 +55,9 @@ class OrderEnvelopePayload {
   @JsonKey(name: r'cancelReason', required: false, includeIfNull: false)
   final String? cancelReason;
 
+  @JsonKey(name: r'noShow', required: false, includeIfNull: false)
+  final OrderEnvelopePayloadNoShow? noShow;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -64,7 +68,8 @@ class OrderEnvelopePayload {
           other.done == done &&
           other.message == message &&
           other.merchantAction == merchantAction &&
-          other.cancelReason == cancelReason;
+          other.cancelReason == cancelReason &&
+          other.noShow == noShow;
 
   @override
   int get hashCode =>
@@ -74,7 +79,8 @@ class OrderEnvelopePayload {
       done.hashCode +
       message.hashCode +
       merchantAction.hashCode +
-      cancelReason.hashCode;
+      cancelReason.hashCode +
+      noShow.hashCode;
 
   factory OrderEnvelopePayload.fromJson(Map<String, dynamic> json) =>
       _$OrderEnvelopePayloadFromJson(json);

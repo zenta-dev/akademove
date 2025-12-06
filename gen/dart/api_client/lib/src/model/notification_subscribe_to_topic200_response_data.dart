@@ -22,7 +22,6 @@ class NotificationSubscribeToTopic200ResponseData {
     required this.failureCount,
     this.errors,
   });
-
   @JsonKey(name: r'successCount', required: true, includeIfNull: false)
   final num successCount;
 

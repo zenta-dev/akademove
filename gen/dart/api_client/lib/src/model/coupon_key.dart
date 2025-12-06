@@ -12,6 +12,8 @@ enum CouponKey {
   name(r'name'),
   @JsonValue(r'code')
   code(r'code'),
+  @JsonValue(r'couponType')
+  couponType(r'couponType'),
   @JsonValue(r'rules')
   rules(r'rules'),
   @JsonValue(r'discountAmount')
@@ -30,6 +32,10 @@ enum CouponKey {
   isActive(r'isActive'),
   @JsonValue(r'merchantId')
   merchantId(r'merchantId'),
+  @JsonValue(r'eventName')
+  eventName(r'eventName'),
+  @JsonValue(r'eventDescription')
+  eventDescription(r'eventDescription'),
   @JsonValue(r'createdById')
   createdById(r'createdById'),
   @JsonValue(r'createdAt')

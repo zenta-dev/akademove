@@ -23,7 +23,6 @@ class TopUpRequest {
     required this.provider,
     required this.method,
   });
-
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 

@@ -28,7 +28,6 @@ class OrderItemItem {
     this.createdAt,
     this.updatedAt,
   });
-
   @JsonKey(name: r'id', required: false, includeIfNull: false)
   final String? id;
 

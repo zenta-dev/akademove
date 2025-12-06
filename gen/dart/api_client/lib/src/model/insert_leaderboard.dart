@@ -28,7 +28,6 @@ class InsertLeaderboard {
     required this.periodStart,
     required this.periodEnd,
   });
-
   @JsonKey(name: r'userId', required: true, includeIfNull: false)
   final String userId;
 

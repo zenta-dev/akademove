@@ -18,7 +18,6 @@ part 'driver_update_request_bank.g.dart';
 class DriverUpdateRequestBank {
   /// Returns a new [DriverUpdateRequestBank] instance.
   const DriverUpdateRequestBank({required this.provider, required this.number});
-
   @JsonKey(name: r'provider', required: true, includeIfNull: false)
   final DriverUpdateRequestBankProviderEnum provider;
 

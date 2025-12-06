@@ -30,7 +30,6 @@ class OrderEnvelope {
     required this.t,
     required this.p,
   });
-
   @JsonKey(name: r'e', required: false, includeIfNull: false)
   final OrderEnvelopeEvent? e;
 

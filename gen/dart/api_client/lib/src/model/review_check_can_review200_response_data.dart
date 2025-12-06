@@ -22,7 +22,6 @@ class ReviewCheckCanReview200ResponseData {
     required this.alreadyReviewed,
     required this.orderCompleted,
   });
-
   @JsonKey(name: r'canReview', required: true, includeIfNull: false)
   final bool canReview;
 

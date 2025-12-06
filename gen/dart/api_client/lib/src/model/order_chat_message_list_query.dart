@@ -22,12 +22,11 @@ class OrderChatMessageListQuery {
     required this.limit,
     this.cursor,
   });
-
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
 
   // minimum: -9007199254740991
-  // maximum: 100
+  // maximum: 1000
   @JsonKey(name: r'limit', required: true, includeIfNull: false)
   final int limit;
 

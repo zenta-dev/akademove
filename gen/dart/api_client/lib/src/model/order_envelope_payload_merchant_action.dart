@@ -22,7 +22,6 @@ class OrderEnvelopePayloadMerchantAction {
     required this.merchantId,
     this.reason,
   });
-
   @JsonKey(name: r'orderId', required: true, includeIfNull: false)
   final String orderId;
 

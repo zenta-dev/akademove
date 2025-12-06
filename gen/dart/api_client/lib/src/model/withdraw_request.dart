@@ -24,7 +24,6 @@ class WithdrawRequest {
     required this.accountNumber,
     this.accountName,
   });
-
   @JsonKey(name: r'amount', required: true, includeIfNull: false)
   final num amount;
 

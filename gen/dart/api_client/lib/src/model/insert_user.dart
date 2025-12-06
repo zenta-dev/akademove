@@ -3,7 +3,6 @@
 //
 
 // ignore_for_file: unused_element
-import 'package:api_client/src/model/user_badge.dart';
 import 'package:api_client/src/model/user_gender.dart';
 import 'package:api_client/src/model/user_role.dart';
 import 'package:api_client/src/model/phone.dart';
@@ -26,12 +25,8 @@ class InsertUser {
     required this.email,
     required this.role,
     this.gender,
-    required this.phone,
-    required this.userBadges,
-    required this.password,
-    required this.confirmPassword,
+    this.phone,
   });
-
   @JsonKey(name: r'name', required: true, includeIfNull: false)
   final String name;
 
@@ -44,17 +39,8 @@ class InsertUser {
   @JsonKey(name: r'gender', required: false, includeIfNull: false)
   final UserGender? gender;
 
-  @JsonKey(name: r'phone', required: true, includeIfNull: false)
-  final Phone phone;
-
-  @JsonKey(name: r'userBadges', required: true, includeIfNull: false)
-  final List<UserBadge> userBadges;
-
-  @JsonKey(name: r'password', required: true, includeIfNull: false)
-  final String password;
-
-  @JsonKey(name: r'confirmPassword', required: true, includeIfNull: false)
-  final String confirmPassword;
+  @JsonKey(name: r'phone', required: false, includeIfNull: false)
+  final Phone? phone;
 
   @override
   bool operator ==(Object other) =>
@@ -64,10 +50,7 @@ class InsertUser {
           other.email == email &&
           other.role == role &&
           other.gender == gender &&
-          other.phone == phone &&
-          other.userBadges == userBadges &&
-          other.password == password &&
-          other.confirmPassword == confirmPassword;
+          other.phone == phone;
 
   @override
   int get hashCode =>
@@ -75,10 +58,7 @@ class InsertUser {
       email.hashCode +
       role.hashCode +
       gender.hashCode +
-      phone.hashCode +
-      userBadges.hashCode +
-      password.hashCode +
-      confirmPassword.hashCode;
+      phone.hashCode;
 
   factory InsertUser.fromJson(Map<String, dynamic> json) =>
       _$InsertUserFromJson(json);

@@ -24,7 +24,6 @@ class MerchantBestSellers200ResponseDataInner {
     required this.merchant,
     required this.orderCount,
   });
-
   @JsonKey(name: r'menu', required: true, includeIfNull: false)
   final MerchantBestSellers200ResponseDataInnerMenu menu;
 

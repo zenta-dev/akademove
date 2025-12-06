@@ -18,7 +18,6 @@ part 'ban_user.g.dart';
 class BanUser {
   /// Returns a new [BanUser] instance.
   const BanUser({required this.banReason, this.banExpiresIn});
-
   @JsonKey(name: r'banReason', required: true, includeIfNull: false)
   final String banReason;
 

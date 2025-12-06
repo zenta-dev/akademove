@@ -24,7 +24,6 @@ class DashboardStatsHighCancellationDriversInner {
     required this.cancelledOrders,
     required this.cancellationRate,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

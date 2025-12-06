@@ -18,7 +18,6 @@ part 'order_upload_delivery_proof_request.g.dart';
 class OrderUploadDeliveryProofRequest {
   /// Returns a new [OrderUploadDeliveryProofRequest] instance.
   const OrderUploadDeliveryProofRequest({required this.file});
-
   @JsonKey(name: r'file', required: true, includeIfNull: true)
   final Object? file;
 

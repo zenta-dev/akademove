@@ -37,7 +37,6 @@ class DriverUser {
     this.updatedAt,
     this.userBadges,
   });
-
   @JsonKey(name: r'id', required: false, includeIfNull: false)
   final String? id;
 

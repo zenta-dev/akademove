@@ -18,7 +18,6 @@ part 'driver_suspend_request.g.dart';
 class DriverSuspendRequest {
   /// Returns a new [DriverSuspendRequest] instance.
   const DriverSuspendRequest({required this.reason, this.suspendUntil});
-
   @JsonKey(name: r'reason', required: true, includeIfNull: false)
   final String reason;
 

@@ -30,7 +30,6 @@ class InsertReport {
     this.handledById,
     this.resolution,
   });
-
   @JsonKey(name: r'orderId', required: false, includeIfNull: false)
   final String? orderId;
 

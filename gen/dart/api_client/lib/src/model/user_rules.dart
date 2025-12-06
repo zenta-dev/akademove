@@ -18,7 +18,6 @@ part 'user_rules.g.dart';
 class UserRules {
   /// Returns a new [UserRules] instance.
   const UserRules({this.newUserOnly, this.perUserLimit});
-
   @JsonKey(name: r'newUserOnly', required: false, includeIfNull: false)
   final bool? newUserOnly;
 

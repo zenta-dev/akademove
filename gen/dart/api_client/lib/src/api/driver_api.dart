@@ -379,6 +379,10 @@ class DriverApi {
   /// * [sortBy]
   /// * [order]
   /// * [mode]
+  /// * [statuses]
+  /// * [isOnline]
+  /// * [minRating]
+  /// * [maxRating]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -397,6 +401,10 @@ class DriverApi {
     String? sortBy,
     PaginationOrder? order = PaginationOrder.desc,
     PaginationMode? mode = PaginationMode.offset,
+    Object? statuses,
+    Object? isOnline,
+    num? minRating,
+    num? maxRating,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -426,6 +434,10 @@ class DriverApi {
       if (sortBy != null) r'sortBy': sortBy,
       if (order != null) r'order': order,
       if (mode != null) r'mode': mode,
+      if (statuses != null) r'statuses': statuses,
+      if (isOnline != null) r'isOnline': isOnline,
+      if (minRating != null) r'minRating': minRating,
+      if (maxRating != null) r'maxRating': maxRating,
     };
 
     final _response = await _dio.request<Object>(

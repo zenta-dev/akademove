@@ -18,7 +18,6 @@ part 'update_configuration.g.dart';
 class UpdateConfiguration {
   /// Returns a new [UpdateConfiguration] instance.
   const UpdateConfiguration({this.name, this.value, this.description});
-
   @JsonKey(name: r'name', required: false, includeIfNull: false)
   final String? name;
 

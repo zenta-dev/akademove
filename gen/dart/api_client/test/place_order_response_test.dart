@@ -21,5 +21,10 @@ void main() {
     test('to test the property `transaction`', () async {
       // TODO
     });
+
+    // PlaceOrderResponseAutoAppliedCoupon autoAppliedCoupon
+    test('to test the property `autoAppliedCoupon`', () async {
+      // TODO
+    });
   });
 }

@@ -65,7 +65,6 @@ class Order {
     this.driver,
     this.merchant,
   });
-
   @JsonKey(name: r'id', required: true, includeIfNull: false)
   final String id;
 

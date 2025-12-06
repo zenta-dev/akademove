@@ -18,9 +18,8 @@ part 'badge_benefits.g.dart';
 class BadgeBenefits {
   /// Returns a new [BadgeBenefits] instance.
   const BadgeBenefits({this.priorityBoost, this.commissionReduction});
-
   // minimum: 0
-  // maximum: 100
+  // maximum: 1000
   @JsonKey(name: r'priorityBoost', required: false, includeIfNull: false)
   final int? priorityBoost;
 

@@ -19,7 +19,6 @@ part 'sign_in_response.g.dart';
 class SignInResponse {
   /// Returns a new [SignInResponse] instance.
   const SignInResponse({required this.token, required this.user});
-
   @JsonKey(name: r'token', required: true, includeIfNull: false)
   final String token;
 

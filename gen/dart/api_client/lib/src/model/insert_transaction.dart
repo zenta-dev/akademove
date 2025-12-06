@@ -30,7 +30,6 @@ class InsertTransaction {
     this.referenceId,
     this.metadata,
   });
-
   @JsonKey(name: r'walletId', required: true, includeIfNull: false)
   final String walletId;
 

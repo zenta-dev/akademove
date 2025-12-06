@@ -29,7 +29,9 @@ enum OrderEnvelopeEvent {
   @JsonValue(r'MERCHANT_PREPARING')
   MERCHANT_PREPARING(r'MERCHANT_PREPARING'),
   @JsonValue(r'MERCHANT_READY')
-  MERCHANT_READY(r'MERCHANT_READY');
+  MERCHANT_READY(r'MERCHANT_READY'),
+  @JsonValue(r'NO_SHOW')
+  NO_SHOW(r'NO_SHOW');
 
   const OrderEnvelopeEvent(this.value);
 

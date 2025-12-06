@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **id** | **String** |  | 
 **name** | **String** |  | 
 **code** | **String** |  | 
+**couponType** | [**CouponType**](CouponType.md) |  | [optional] [default to CouponType.GENERAL]
 **rules** | [**CouponRules**](CouponRules.md) |  | 
 **discountAmount** | **num** |  | [optional] 
 **discountPercentage** | **num** |  | [optional] 
@@ -20,6 +21,8 @@ Name | Type | Description | Notes
 **periodEnd** | [**DateTime**](DateTime.md) |  | 
 **isActive** | **bool** |  | 
 **merchantId** | **String** |  | [optional] 
+**eventName** | **String** |  | [optional] 
+**eventDescription** | **String** |  | [optional] 
 **createdById** | **String** |  | 
 **createdAt** | [**DateTime**](DateTime.md) |  | 
 

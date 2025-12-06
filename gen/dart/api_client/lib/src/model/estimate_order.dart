@@ -33,7 +33,6 @@ class EstimateOrder {
     this.discountIds,
     this.weight,
   });
-
   @JsonKey(name: r'dropoffLocation', required: true, includeIfNull: false)
   final Coordinate dropoffLocation;
 
