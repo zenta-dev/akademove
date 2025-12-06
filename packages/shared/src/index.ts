@@ -1,4 +1,3 @@
-export * from "./auth.permission.js";
 export * from "./cookie.js";
 export * from "./logger.browser.js";
 export * from "./object.js";

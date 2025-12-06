@@ -35,7 +35,7 @@ export const DriverQuizQuestionSchema = z.object({
 	category: DriverQuizQuestionCategorySchema,
 	options: z.array(DriverQuizQuestionOptionSchema).min(2).max(6),
 	explanation: z.string().max(2000).nullable(),
-	points: z.number().int().min(1).max(100).default(10),
+	points: z.number().int().min(1).max(1000).default(10),
 	isActive: z.boolean().default(true),
 	displayOrder: z.number().int().default(0),
 	createdAt: DateSchema,
@@ -67,7 +67,7 @@ export const ListDriverQuizQuestionQuerySchema = z.object({
 	type: DriverQuizQuestionTypeSchema.optional(),
 	isActive: z.boolean().optional(),
 	page: z.coerce.number().int().min(1).optional(),
-	limit: z.coerce.number().int().min(1).max(100).optional(),
+	limit: z.coerce.number().int().min(1).max(1000).optional(),
 });
 export type ListDriverQuizQuestionQuery = z.infer<
 	typeof ListDriverQuizQuestionQuerySchema

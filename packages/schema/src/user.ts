@@ -28,7 +28,7 @@ export const UserSchema = z.object({
 	banReason: z.string().optional(),
 	banExpires: DateSchema.optional(),
 	gender: UserGenderSchema.optional(),
-	phone: PhoneSchema,
+	phone: PhoneSchema.optional(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
 
@@ -41,7 +41,7 @@ export const UserKeySchema = extractSchemaKeysAsEnum(UserSchema).exclude([
 	"userBadges",
 ]);
 
-export const InsertUserSchema = UserSchema.omit({
+export const InviteUserSchema = UserSchema.omit({
 	id: true,
 	emailVerified: true,
 	image: true,
@@ -50,20 +50,9 @@ export const InsertUserSchema = UserSchema.omit({
 	banExpires: true,
 	createdAt: true,
 	updatedAt: true,
-})
-	.extend({
-		password: z
-			.string()
-			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
-		confirmPassword: z
-			.string()
-			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 })),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		path: ["confirmPassword"],
-		message: m.password_do_not_match(),
-	});
-export type InsertUser = z.infer<typeof InsertUserSchema>;
+	userBadges: true,
+});
+export type InviteUser = z.infer<typeof InviteUserSchema>;
 
 export const UpdateUserRoleSchema = UserSchema.pick({ role: true });
 export type UpdateUserRole = z.infer<typeof UpdateUserRoleSchema>;
@@ -84,7 +73,25 @@ export const UpdateUserPasswordSchema = z
 		path: ["confirmNewPassword"],
 		message: m.password_do_not_match(),
 	});
+
 export type UpdateUserPassword = z.infer<typeof UpdateUserPasswordSchema>;
+
+export const AdminUpdateUserPasswordSchema = z
+	.object({
+		newPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.password(), min: 8 })),
+		confirmNewPassword: z
+			.string()
+			.min(8, m.min_placeholder({ field: m.confirm_password(), min: 8 })),
+	})
+	.refine((data) => data.newPassword === data.confirmNewPassword, {
+		path: ["confirmNewPassword"],
+		message: m.password_do_not_match(),
+	});
+export type AdminUpdateUserPassword = z.infer<
+	typeof AdminUpdateUserPasswordSchema
+>;
 
 export const BanUserSchema = z.object({
 	banReason: z.string(),
@@ -97,7 +104,7 @@ export type UnbanUser = z.infer<typeof UnbanUserSchema>;
 
 export const AdminUpdateUserSchema = z.union([
 	UpdateUserRoleSchema,
-	UpdateUserPasswordSchema,
+	AdminUpdateUserPasswordSchema,
 	BanUserSchema,
 	UnbanUserSchema,
 ]);
@@ -192,9 +199,12 @@ export const UserSchemaRegistries = {
 	UserRole: { schema: UserRoleSchema, strategy: "output" },
 	UserGender: { schema: UserGenderSchema, strategy: "output" },
 	User: { schema: UserSchema, strategy: "output" },
-	InsertUser: { schema: InsertUserSchema, strategy: "input" },
+	InsertUser: { schema: InviteUserSchema, strategy: "input" },
 	UpdateUserRole: { schema: UpdateUserRoleSchema, strategy: "input" },
-	UpdateUserPassword: { schema: UpdateUserPasswordSchema, strategy: "input" },
+	UpdateUserPassword: {
+		schema: AdminUpdateUserPasswordSchema,
+		strategy: "input",
+	},
 	BanUser: { schema: BanUserSchema, strategy: "input" },
 	UnbanUser: { schema: UnbanUserSchema, strategy: "input" },
 	AdminUpdateUser: { schema: AdminUpdateUserSchema, strategy: "input" },

@@ -4,7 +4,7 @@ import { DateSchema, PhoneSchema, type SchemaRegistries } from "./common.js";
 import { InsertDriverSchema } from "./driver.js";
 import { flattenZodObject } from "./flatten.helper.js";
 import { InsertMerchantSchema } from "./merchant.js";
-import { UserGenderSchema, UserSchema } from "./user.js";
+import { UserGenderSchema, UserRoleSchema, UserSchema } from "./user.js";
 
 export const SessionSchema = z.object({
 	id: z.string(),
@@ -137,6 +137,13 @@ export const GetSessionResponseSchema = z
 	.nullable();
 export type GetSessionResponse = z.infer<typeof GetSessionResponseSchema>;
 
+export const RoleAccessSchema = z.enum([
+	...UserRoleSchema.options,
+	"ALL",
+	"SYSTEM",
+]);
+export type RoleAccess = z.infer<typeof RoleAccessSchema>;
+
 export const AuthSchemaRegistries = {
 	Session: { schema: SessionSchema, strategy: "output" },
 	SignInRequest: { schema: SignInSchema, strategy: "input" },
@@ -149,4 +156,5 @@ export const AuthSchemaRegistries = {
 	SignInResponse: { schema: SignInResponseSchema, strategy: "output" },
 	SignUpResponse: { schema: SignUpResponseSchema, strategy: "output" },
 	GetSessionResponse: { schema: GetSessionResponseSchema, strategy: "output" },
+	RoleAccess: { schema: RoleAccessSchema, strategy: "input" },
 } satisfies SchemaRegistries;

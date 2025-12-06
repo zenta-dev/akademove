@@ -32,14 +32,14 @@ export type DriverQuizQuestionAnswer = z.infer<
  */
 export const DriverQuizAnswerSchema = z.object({
 	id: z.string(),
-	driverId: z.string(),
+	driverId: z.uuid(),
 	status: DriverQuizAnswerStatusSchema,
 	totalQuestions: z.number().int().min(1),
 	correctAnswers: z.number().int().min(0),
 	totalPoints: z.number().int().min(0),
 	earnedPoints: z.number().int().min(0),
-	passingScore: z.number().int().min(0).max(100).default(70),
-	scorePercentage: z.number().min(0).max(100),
+	passingScore: z.number().int().min(0).max(1000).default(70),
+	scorePercentage: z.number().min(0).max(1000),
 	answers: z.array(DriverQuizQuestionAnswerSchema),
 	startedAt: DateSchema,
 	completedAt: DateSchema.nullable(),
@@ -88,7 +88,7 @@ export const ListDriverQuizAnswerQuerySchema = z.object({
 	driverId: z.string().optional(),
 	status: DriverQuizAnswerStatusSchema.optional(),
 	page: z.coerce.number().int().min(1).optional(),
-	limit: z.coerce.number().int().min(1).max(100).optional(),
+	limit: z.coerce.number().int().min(1).max(1000).optional(),
 });
 export type ListDriverQuizAnswerQuery = z.infer<
 	typeof ListDriverQuizAnswerQuerySchema

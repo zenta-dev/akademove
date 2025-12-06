@@ -25,7 +25,7 @@ export const DriverSchema = z.object({
 	status: DriverStatusSchema,
 	quizStatus: DriverQuizStatusSchema.default("NOT_STARTED"),
 	quizAttemptId: z.string().nullable().optional(),
-	quizScore: z.number().int().min(0).max(100).nullable().optional(),
+	quizScore: z.number().int().min(0).max(1000).nullable().optional(),
 	quizCompletedAt: DateSchema.nullable().optional(),
 	rating: z.number(),
 	isTakingOrder: z.boolean(),

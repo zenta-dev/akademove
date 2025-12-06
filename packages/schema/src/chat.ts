@@ -27,7 +27,7 @@ export type InsertOrderChatMessage = z.infer<
 
 export const OrderChatMessageListQuerySchema = z.object({
 	orderId: z.uuid(),
-	limit: z.coerce.number().int().max(100),
+	limit: z.coerce.number().int().max(1000),
 	cursor: z.uuid().optional(),
 });
 export type OrderChatMessageListQuery = z.infer<

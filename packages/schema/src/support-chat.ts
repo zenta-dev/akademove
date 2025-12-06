@@ -120,7 +120,7 @@ export const SupportTicketListQuerySchema = z.object({
 	assignedToId: z.string().optional(),
 	userId: z.string().optional(),
 	search: z.string().optional(),
-	limit: z.coerce.number().int().max(100).default(20),
+	limit: z.coerce.number().int().max(1000).default(20),
 	cursor: z.uuid().optional(),
 });
 export type SupportTicketListQuery = z.infer<
@@ -129,7 +129,7 @@ export type SupportTicketListQuery = z.infer<
 
 export const SupportChatMessageListQuerySchema = z.object({
 	ticketId: z.uuid(),
-	limit: z.coerce.number().int().max(100).default(50),
+	limit: z.coerce.number().int().max(1000).default(50),
 	cursor: z.uuid().optional(),
 });
 export type SupportChatMessageListQuery = z.infer<

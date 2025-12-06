@@ -22,7 +22,7 @@ export const MerchantSchema = z.object({
 	email: z.email(
 		m.invalid_placeholder({ field: m.email_address().toLowerCase() }),
 	),
-	phone: PhoneSchema,
+	phone: PhoneSchema.optional(),
 	address: z.string(),
 	location: CoordinateSchema.optional(),
 	isActive: z.boolean(),

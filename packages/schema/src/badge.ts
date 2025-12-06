@@ -14,7 +14,7 @@ export const BadgeCriteriaSchema = z.object({
 export type BadgeCriteria = z.infer<typeof BadgeCriteriaSchema>;
 
 export const BadgeBenefitsSchema = z.object({
-	priorityBoost: z.number().int().min(0).max(100).optional(),
+	priorityBoost: z.number().int().min(0).max(1000).optional(),
 	commissionReduction: z.number().min(0).max(0.5).optional(),
 });
 export type BadgeBenefits = z.infer<typeof BadgeBenefitsSchema>;
@@ -25,7 +25,7 @@ export const BadgeTargetRoleSchema = z.enum(BADGE_TARGET_ROLES);
 
 export const BadgeSchema = z.object({
 	id: z.uuid(),
-	code: z.string().min(1).max(100),
+	code: z.string().min(1).max(1000),
 	name: z.string().min(1).max(255),
 	description: z.string().min(1),
 	type: BadgeTypeSchema,

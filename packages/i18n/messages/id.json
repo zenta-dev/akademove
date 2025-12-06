@@ -1,5 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "account_banned_placeholder": "Akun Diblokir: {reason}",
+  "no_reason_provided": "Tidak ada alasan yang diberikan",
   "audit": "Audit",
   "audit_logs": "Log Audit",
   "audit_logs_desc": "Lihat semua log audit dan perubahan sistem",

@@ -59,6 +59,8 @@ export const UpdateBroadcastSchema = InsertBroadcastSchema.partial();
 export type UpdateBroadcast = z.infer<typeof UpdateBroadcastSchema>;
 
 export const BroadcastSchemaRegistries = {
+	BroadcastStatus: { schema: BroadcastStatusSchema, strategy: "output" },
+	BroadcastType: { schema: BroadcastTypeSchema, strategy: "output" },
 	Broadcast: { schema: BroadcastSchema, strategy: "output" },
 	InsertBroadcast: { schema: InsertBroadcastSchema, strategy: "input" },
 	UpdateBroadcast: { schema: UpdateBroadcastSchema, strategy: "input" },

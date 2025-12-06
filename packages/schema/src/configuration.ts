@@ -29,7 +29,9 @@ export type DeliveryPricingConfiguration = z.infer<
 >;
 
 export const FoodPricingConfigurationSchema =
-	_BasePricingConfigurationSchema.extend({});
+	_BasePricingConfigurationSchema.extend({
+		merchantCommissionRate: z.coerce.number().min(0).max(1),
+	});
 export type FoodPricingConfiguration = z.infer<
 	typeof FoodPricingConfigurationSchema
 >;
@@ -41,11 +43,32 @@ export const PricingConfigurationSchema = z.union([
 ]);
 export type PricingConfiguration = z.infer<typeof PricingConfigurationSchema>;
 
+/**
+ * Business configuration schema for configurable business rules.
+ * All pricing-related values MUST come from database, not static constants.
+ */
+export const BusinessConfigurationSchema = z.object({
+	// Wallet limits (in IDR)
+	minTransferAmount: z.coerce.number().positive(),
+	minWithdrawalAmount: z.coerce.number().positive(),
+	minTopUpAmount: z.coerce.number().positive(),
+	quickTopUpAmounts: z.array(z.coerce.number().positive()),
+
+	// Cancellation fees (as decimal, e.g., 0.1 = 10%)
+	userCancellationFeeBeforeAccept: z.coerce.number().min(0).max(1),
+	userCancellationFeeAfterAccept: z.coerce.number().min(0).max(1),
+	noShowFee: z.coerce.number().min(0).max(1),
+
+	// Delivery verification
+	highValueOrderThreshold: z.coerce.number().positive(),
+});
+export type BusinessConfiguration = z.infer<typeof BusinessConfigurationSchema>;
+
 export type ConfigurationValue =
 	| RidePricingConfiguration
 	| DeliveryPricingConfiguration
 	| FoodPricingConfiguration
-	| CommissionConfiguration;
+	| BusinessConfiguration;
 
 export const BannerConfigurationSchema = z.object({
 	title: z.string(),
@@ -69,40 +92,6 @@ export const EmergencyContactConfigurationSchema = z.object({
 });
 export type EmergencyContactConfiguration = z.infer<
 	typeof EmergencyContactConfigurationSchema
->;
-
-export const CommissionConfigurationSchema = z.object({
-	rideCommissionRate: z.coerce
-		.number()
-		.min(0)
-		.max(1)
-		.describe(
-			"Platform commission rate for RIDE orders (0-1, e.g., 0.15 for 15%)",
-		),
-	deliveryCommissionRate: z.coerce
-		.number()
-		.min(0)
-		.max(1)
-		.describe(
-			"Platform commission rate for DELIVERY orders (0-1, e.g., 0.15 for 15%)",
-		),
-	foodCommissionRate: z.coerce
-		.number()
-		.min(0)
-		.max(1)
-		.describe(
-			"Platform commission rate for FOOD orders (0-1, e.g., 0.20 for 20%)",
-		),
-	merchantCommissionRate: z.coerce
-		.number()
-		.min(0)
-		.max(1)
-		.describe(
-			"Merchant commission rate on food orders (0-1, e.g., 0.10 for 10%)",
-		),
-});
-export type CommissionConfiguration = z.infer<
-	typeof CommissionConfigurationSchema
 >;
 
 export const ConfigurationSchema = z.object({
@@ -161,8 +150,8 @@ export const ConfigurationSchemaRegistries = {
 		schema: EmergencyContactConfigurationSchema,
 		strategy: "output",
 	},
-	CommissionConfiguration: {
-		schema: CommissionConfigurationSchema,
+	BusinessConfiguration: {
+		schema: BusinessConfigurationSchema,
 		strategy: "output",
 	},
 	Configuration: { schema: ConfigurationSchema, strategy: "output" },

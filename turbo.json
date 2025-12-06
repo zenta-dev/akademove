@@ -28,7 +28,15 @@
 			"cache": false,
 			"persistent": true
 		},
+		"db:drop": {
+			"cache": false,
+			"persistent": true
+		},
 		"db:migrate": {
+			"cache": false,
+			"persistent": true
+		},
+		"db:seed": {
 			"cache": false,
 			"persistent": true
 		},

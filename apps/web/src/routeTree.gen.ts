@@ -17,7 +17,6 @@ import { Route as supportHelpRouteImport } from './routes/(support)/help'
 import { Route as supportFaqRouteImport } from './routes/(support)/faq'
 import { Route as supportContactRouteImport } from './routes/(support)/contact'
 import { Route as productTransportRouteImport } from './routes/(product)/transport'
-import { Route as productNewsletterRouteImport } from './routes/(product)/newsletter'
 import { Route as productGoodsRouteImport } from './routes/(product)/goods'
 import { Route as productFoodRouteImport } from './routes/(product)/food'
 import { Route as productDriverRouteImport } from './routes/(product)/driver'
@@ -58,15 +57,16 @@ import { Route as DashMerchantOrdersRouteImport } from './routes/dash/merchant/o
 import { Route as DashMerchantMenuRouteImport } from './routes/dash/merchant/menu'
 import { Route as DashDriverScheduleRouteImport } from './routes/dash/driver/schedule'
 import { Route as DashDriverRatingsRouteImport } from './routes/dash/driver/ratings'
+import { Route as DashDriverQuizRouteImport } from './routes/dash/driver/quiz'
 import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/profile'
 import { Route as DashDriverOrdersRouteImport } from './routes/dash/driver/orders'
 import { Route as DashDriverEarningsRouteImport } from './routes/dash/driver/earnings'
 import { Route as DashAdminUsersRouteImport } from './routes/dash/admin/users'
 import { Route as DashAdminProfileRouteImport } from './routes/dash/admin/profile'
+import { Route as DashAdminPricingRouteImport } from './routes/dash/admin/pricing'
 import { Route as DashAdminOrdersRouteImport } from './routes/dash/admin/orders'
 import { Route as DashAdminMerchantsRouteImport } from './routes/dash/admin/merchants'
 import { Route as DashAdminDriversRouteImport } from './routes/dash/admin/drivers'
-import { Route as DashAdminConfigurationsRouteImport } from './routes/dash/admin/configurations'
 import { Route as DashAdminAuditRouteImport } from './routes/dash/admin/audit'
 import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/analytics'
 import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
@@ -115,11 +115,6 @@ const supportContactRoute = supportContactRouteImport.update({
 const productTransportRoute = productTransportRouteImport.update({
   id: '/(product)/transport',
   path: '/transport',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const productNewsletterRoute = productNewsletterRouteImport.update({
-  id: '/(product)/newsletter',
-  path: '/newsletter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const productGoodsRoute = productGoodsRouteImport.update({
@@ -322,6 +317,11 @@ const DashDriverRatingsRoute = DashDriverRatingsRouteImport.update({
   path: '/ratings',
   getParentRoute: () => DashDriverRouteRoute,
 } as any)
+const DashDriverQuizRoute = DashDriverQuizRouteImport.update({
+  id: '/quiz',
+  path: '/quiz',
+  getParentRoute: () => DashDriverRouteRoute,
+} as any)
 const DashDriverProfileRoute = DashDriverProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -347,6 +347,11 @@ const DashAdminProfileRoute = DashAdminProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashAdminPricingRoute = DashAdminPricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => DashAdminRouteRoute,
+} as any)
 const DashAdminOrdersRoute = DashAdminOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -360,11 +365,6 @@ const DashAdminMerchantsRoute = DashAdminMerchantsRouteImport.update({
 const DashAdminDriversRoute = DashAdminDriversRouteImport.update({
   id: '/drivers',
   path: '/drivers',
-  getParentRoute: () => DashAdminRouteRoute,
-} as any)
-const DashAdminConfigurationsRoute = DashAdminConfigurationsRouteImport.update({
-  id: '/configurations',
-  path: '/configurations',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
 const DashAdminAuditRoute = DashAdminAuditRouteImport.update({
@@ -443,7 +443,6 @@ export interface FileRoutesByFullPath {
   '/driver': typeof productDriverRoute
   '/food': typeof productFoodRoute
   '/goods': typeof productGoodsRoute
-  '/newsletter': typeof productNewsletterRoute
   '/transport': typeof productTransportRoute
   '/contact': typeof supportContactRoute
   '/faq': typeof supportFaqRoute
@@ -454,15 +453,16 @@ export interface FileRoutesByFullPath {
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
-  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/quiz': typeof DashDriverQuizRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
@@ -507,7 +507,6 @@ export interface FileRoutesByTo {
   '/driver': typeof productDriverRoute
   '/food': typeof productFoodRoute
   '/goods': typeof productGoodsRoute
-  '/newsletter': typeof productNewsletterRoute
   '/transport': typeof productTransportRoute
   '/contact': typeof supportContactRoute
   '/faq': typeof supportFaqRoute
@@ -518,15 +517,16 @@ export interface FileRoutesByTo {
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
-  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/quiz': typeof DashDriverQuizRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
@@ -579,7 +579,6 @@ export interface FileRoutesById {
   '/(product)/driver': typeof productDriverRoute
   '/(product)/food': typeof productFoodRoute
   '/(product)/goods': typeof productGoodsRoute
-  '/(product)/newsletter': typeof productNewsletterRoute
   '/(product)/transport': typeof productTransportRoute
   '/(support)/contact': typeof supportContactRoute
   '/(support)/faq': typeof supportFaqRoute
@@ -590,15 +589,16 @@ export interface FileRoutesById {
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
   '/dash/admin/audit': typeof DashAdminAuditRoute
-  '/dash/admin/configurations': typeof DashAdminConfigurationsRoute
   '/dash/admin/drivers': typeof DashAdminDriversRoute
   '/dash/admin/merchants': typeof DashAdminMerchantsRoute
   '/dash/admin/orders': typeof DashAdminOrdersRoute
+  '/dash/admin/pricing': typeof DashAdminPricingRoute
   '/dash/admin/profile': typeof DashAdminProfileRoute
   '/dash/admin/users': typeof DashAdminUsersRoute
   '/dash/driver/earnings': typeof DashDriverEarningsRoute
   '/dash/driver/orders': typeof DashDriverOrdersRoute
   '/dash/driver/profile': typeof DashDriverProfileRoute
+  '/dash/driver/quiz': typeof DashDriverQuizRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
@@ -650,7 +650,6 @@ export interface FileRouteTypes {
     | '/driver'
     | '/food'
     | '/goods'
-    | '/newsletter'
     | '/transport'
     | '/contact'
     | '/faq'
@@ -661,15 +660,16 @@ export interface FileRouteTypes {
     | '/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/audit'
-    | '/dash/admin/configurations'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/pricing'
     | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
+    | '/dash/driver/quiz'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
     | '/dash/merchant/menu'
@@ -714,7 +714,6 @@ export interface FileRouteTypes {
     | '/driver'
     | '/food'
     | '/goods'
-    | '/newsletter'
     | '/transport'
     | '/contact'
     | '/faq'
@@ -725,15 +724,16 @@ export interface FileRouteTypes {
     | '/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/audit'
-    | '/dash/admin/configurations'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/pricing'
     | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
+    | '/dash/driver/quiz'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
     | '/dash/merchant/menu'
@@ -785,7 +785,6 @@ export interface FileRouteTypes {
     | '/(product)/driver'
     | '/(product)/food'
     | '/(product)/goods'
-    | '/(product)/newsletter'
     | '/(product)/transport'
     | '/(support)/contact'
     | '/(support)/faq'
@@ -796,15 +795,16 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up/user'
     | '/dash/admin/analytics'
     | '/dash/admin/audit'
-    | '/dash/admin/configurations'
     | '/dash/admin/drivers'
     | '/dash/admin/merchants'
     | '/dash/admin/orders'
+    | '/dash/admin/pricing'
     | '/dash/admin/profile'
     | '/dash/admin/users'
     | '/dash/driver/earnings'
     | '/dash/driver/orders'
     | '/dash/driver/profile'
+    | '/dash/driver/quiz'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
     | '/dash/merchant/menu'
@@ -854,7 +854,6 @@ export interface RootRouteChildren {
   productDriverRoute: typeof productDriverRoute
   productFoodRoute: typeof productFoodRoute
   productGoodsRoute: typeof productGoodsRoute
-  productNewsletterRoute: typeof productNewsletterRoute
   productTransportRoute: typeof productTransportRoute
 }
 
@@ -914,13 +913,6 @@ declare module '@tanstack/react-router' {
       path: '/transport'
       fullPath: '/transport'
       preLoaderRoute: typeof productTransportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(product)/newsletter': {
-      id: '/(product)/newsletter'
-      path: '/newsletter'
-      fullPath: '/newsletter'
-      preLoaderRoute: typeof productNewsletterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(product)/goods': {
@@ -1203,6 +1195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashDriverRatingsRouteImport
       parentRoute: typeof DashDriverRouteRoute
     }
+    '/dash/driver/quiz': {
+      id: '/dash/driver/quiz'
+      path: '/quiz'
+      fullPath: '/dash/driver/quiz'
+      preLoaderRoute: typeof DashDriverQuizRouteImport
+      parentRoute: typeof DashDriverRouteRoute
+    }
     '/dash/driver/profile': {
       id: '/dash/driver/profile'
       path: '/profile'
@@ -1238,6 +1237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminProfileRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/admin/pricing': {
+      id: '/dash/admin/pricing'
+      path: '/pricing'
+      fullPath: '/dash/admin/pricing'
+      preLoaderRoute: typeof DashAdminPricingRouteImport
+      parentRoute: typeof DashAdminRouteRoute
+    }
     '/dash/admin/orders': {
       id: '/dash/admin/orders'
       path: '/orders'
@@ -1257,13 +1263,6 @@ declare module '@tanstack/react-router' {
       path: '/drivers'
       fullPath: '/dash/admin/drivers'
       preLoaderRoute: typeof DashAdminDriversRouteImport
-      parentRoute: typeof DashAdminRouteRoute
-    }
-    '/dash/admin/configurations': {
-      id: '/dash/admin/configurations'
-      path: '/configurations'
-      fullPath: '/dash/admin/configurations'
-      preLoaderRoute: typeof DashAdminConfigurationsRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/audit': {
@@ -1389,10 +1388,10 @@ const supportRouteRouteWithChildren = supportRouteRoute._addFileChildren(
 interface DashAdminRouteRouteChildren {
   DashAdminAnalyticsRoute: typeof DashAdminAnalyticsRoute
   DashAdminAuditRoute: typeof DashAdminAuditRoute
-  DashAdminConfigurationsRoute: typeof DashAdminConfigurationsRoute
   DashAdminDriversRoute: typeof DashAdminDriversRoute
   DashAdminMerchantsRoute: typeof DashAdminMerchantsRoute
   DashAdminOrdersRoute: typeof DashAdminOrdersRoute
+  DashAdminPricingRoute: typeof DashAdminPricingRoute
   DashAdminProfileRoute: typeof DashAdminProfileRoute
   DashAdminUsersRoute: typeof DashAdminUsersRoute
   DashAdminIndexRoute: typeof DashAdminIndexRoute
@@ -1403,10 +1402,10 @@ interface DashAdminRouteRouteChildren {
 const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminAnalyticsRoute: DashAdminAnalyticsRoute,
   DashAdminAuditRoute: DashAdminAuditRoute,
-  DashAdminConfigurationsRoute: DashAdminConfigurationsRoute,
   DashAdminDriversRoute: DashAdminDriversRoute,
   DashAdminMerchantsRoute: DashAdminMerchantsRoute,
   DashAdminOrdersRoute: DashAdminOrdersRoute,
+  DashAdminPricingRoute: DashAdminPricingRoute,
   DashAdminProfileRoute: DashAdminProfileRoute,
   DashAdminUsersRoute: DashAdminUsersRoute,
   DashAdminIndexRoute: DashAdminIndexRoute,
@@ -1422,6 +1421,7 @@ interface DashDriverRouteRouteChildren {
   DashDriverEarningsRoute: typeof DashDriverEarningsRoute
   DashDriverOrdersRoute: typeof DashDriverOrdersRoute
   DashDriverProfileRoute: typeof DashDriverProfileRoute
+  DashDriverQuizRoute: typeof DashDriverQuizRoute
   DashDriverRatingsRoute: typeof DashDriverRatingsRoute
   DashDriverScheduleRoute: typeof DashDriverScheduleRoute
   DashDriverIndexRoute: typeof DashDriverIndexRoute
@@ -1431,6 +1431,7 @@ const DashDriverRouteRouteChildren: DashDriverRouteRouteChildren = {
   DashDriverEarningsRoute: DashDriverEarningsRoute,
   DashDriverOrdersRoute: DashDriverOrdersRoute,
   DashDriverProfileRoute: DashDriverProfileRoute,
+  DashDriverQuizRoute: DashDriverQuizRoute,
   DashDriverRatingsRoute: DashDriverRatingsRoute,
   DashDriverScheduleRoute: DashDriverScheduleRoute,
   DashDriverIndexRoute: DashDriverIndexRoute,
@@ -1533,7 +1534,6 @@ const rootRouteChildren: RootRouteChildren = {
   productDriverRoute: productDriverRoute,
   productFoodRoute: productFoodRoute,
   productGoodsRoute: productGoodsRoute,
-  productNewsletterRoute: productNewsletterRoute,
   productTransportRoute: productTransportRoute,
 }
 export const routeTree = rootRouteImport

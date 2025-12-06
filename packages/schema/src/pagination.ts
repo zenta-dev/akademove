@@ -13,7 +13,7 @@ import { TransactionKeySchema } from "./transaction.js";
 import { UserKeySchema } from "./user.js";
 import { WalletKeySchema } from "./wallet.js";
 
-const MAX_LIMIT = 100;
+const MAX_LIMIT = 1000;
 
 export const OffsetPaginationQuerySchema = z.object({
 	page: z
@@ -88,6 +88,22 @@ export const UnifiedPaginationQuerySchema = z
 	.refine((data) => !(data.cursor && data.page), {
 		message: "Cannot use both cursor and page at the same time.",
 	});
+
+export const UserFiltersSchema = z.object({
+	roles: z
+		.array(z.enum(["ADMIN", "OPERATOR", "MERCHANT", "DRIVER", "USER"]))
+		.optional(),
+	genders: z.array(z.enum(["MALE", "FEMALE"])).optional(),
+	emailVerified: z.boolean().optional(),
+	banned: z.boolean().optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
+});
+
+export const UserListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
+	filters: UserFiltersSchema.optional(),
+});
+export type UserListQuery = z.infer<typeof UserListQuerySchema>;
 export type UnifiedPaginationQuery = z.infer<
 	typeof UnifiedPaginationQuerySchema
 >;
