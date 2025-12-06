@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { firebaseClient } from "@/lib/firebase";
 import { orpcQuery } from "@/lib/orpc";
 
+const FCM_LOCAL_STORAGE_KEY = "fcm_token";
+
 export function useFCM() {
 	const [fcmToken, setFcmToken] = useState<string | null>(null);
 	const [notification, setNotification] = useState<MessagePayload | null>(null);
@@ -31,11 +33,17 @@ export function useFCM() {
 
 			try {
 				const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY;
-				const token = await client.requestPermissionAndGetToken(vapidKey);
+				const localToken = localStorage.getItem(FCM_LOCAL_STORAGE_KEY);
+				const freshToken = await client.requestPermissionAndGetToken(vapidKey);
 
-				if (token) {
-					setFcmToken(token);
-					await saveTokenMutation.mutateAsync({ body: { token } });
+				if (freshToken && freshToken !== localToken) {
+					setFcmToken(freshToken);
+					localStorage.setItem(FCM_LOCAL_STORAGE_KEY, freshToken);
+					await saveTokenMutation.mutateAsync({
+						body: { token: freshToken },
+					});
+				} else if (localToken) {
+					setFcmToken(localToken);
 				}
 			} catch (err) {
 				setError(
