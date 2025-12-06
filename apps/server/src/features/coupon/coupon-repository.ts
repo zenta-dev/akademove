@@ -33,10 +33,13 @@ export class CouponRepository extends BaseRepository {
 	static composeEntity(item: CouponDatabase): Coupon {
 		return {
 			...item,
+			couponType: item.couponType ?? "GENERAL",
 			discountAmount: item.discountAmount
 				? toNumberSafe(item.discountAmount)
 				: undefined,
 			discountPercentage: item.discountPercentage ?? undefined,
+			eventName: item.eventName ?? undefined,
+			eventDescription: item.eventDescription ?? undefined,
 		};
 	}
 

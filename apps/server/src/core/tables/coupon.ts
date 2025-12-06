@@ -1,4 +1,4 @@
-import type { CouponRules } from "@repo/schema/coupon";
+import type { CouponRules, CouponType } from "@repo/schema/coupon";
 import { relations } from "drizzle-orm";
 import {
 	boolean,
@@ -27,6 +27,10 @@ export const coupon = pgTable(
 		id: uuid().primaryKey(),
 		name: text().notNull(),
 		code: text().notNull(),
+		couponType: text("coupon_type")
+			.$type<CouponType>()
+			.notNull()
+			.default("GENERAL"),
 		rules: jsonb().$type<CouponRules>().notNull(),
 		discountAmount: numeric("discount_amount", {
 			precision: 18,
@@ -45,6 +49,9 @@ export const coupon = pgTable(
 		merchantId: uuid("merchant_id").references(() => merchant.id, {
 			onDelete: "cascade",
 		}), // Nullable - if null, coupon is platform-wide
+		// Event-specific fields (for EVENT type coupons)
+		eventName: text("event_name"),
+		eventDescription: text("event_description"),
 		createdById: text("created_by_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "no action" }),
@@ -64,6 +71,8 @@ export const coupon = pgTable(
 		index("coupon_created_by_id_idx").on(t.createdById),
 		index("coupon_used_count_idx").on(t.usedCount),
 		index("coupon_created_at_idx").on(t.createdAt),
+		index("coupon_type_idx").on(t.couponType),
+		index("coupon_type_active_idx").on(t.couponType, t.isActive),
 	],
 );
 

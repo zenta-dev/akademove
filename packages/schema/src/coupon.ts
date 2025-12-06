@@ -11,6 +11,9 @@ import { extractSchemaKeysAsEnum } from "./enum.helper.js";
 const GeneralRuleTypeSchema = z.enum(CONSTANTS.GENERAL_RULE_TYPES);
 export type GeneralRuleType = z.infer<typeof GeneralRuleTypeSchema>;
 
+export const CouponTypeSchema = z.enum(CONSTANTS.COUPON_TYPES);
+export type CouponType = z.infer<typeof CouponTypeSchema>;
+
 const GeneralRulesSchema = z.object({
 	type: GeneralRuleTypeSchema.optional(),
 	minOrderAmount: z.number().nonnegative().optional(),
@@ -47,6 +50,7 @@ export const CouponSchema = z.object({
 		.string()
 		.min(1, m.required_placeholder({ field: m.code() }))
 		.max(256),
+	couponType: CouponTypeSchema.default("GENERAL"),
 	rules: CouponRulesSchema,
 	discountAmount: z.number().optional(),
 	discountPercentage: z.number().optional(),
@@ -56,6 +60,9 @@ export const CouponSchema = z.object({
 	periodEnd: DateSchema,
 	isActive: z.boolean(),
 	merchantId: z.uuid().nullable().optional(), // For merchant-specific coupons
+	// Event-specific fields (for EVENT type coupons)
+	eventName: z.string().max(256).optional(),
+	eventDescription: z.string().max(1000).optional(),
 	createdById: z.string(),
 	createdAt: DateSchema,
 });
@@ -90,6 +97,7 @@ export const DeactivateCouponSchema = z.object({
 export type DeactivateCoupon = z.infer<typeof DeactivateCouponSchema>;
 
 export const CouponSchemaRegistries = {
+	CouponType: { schema: CouponTypeSchema, strategy: "output" },
 	GeneralRuleType: { schema: GeneralRuleTypeSchema, strategy: "output" },
 	GeneralRules: { schema: GeneralRulesSchema, strategy: "output" },
 	UserRules: { schema: UserRulesSchema, strategy: "output" },
