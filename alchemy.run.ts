@@ -44,12 +44,6 @@ const PAYMENT_ROOM = DurableObjectNamespace("payment-rooms", {
 	sqlite: true,
 });
 
-const SUPPORT_CHAT_ROOM = DurableObjectNamespace("support-chat-rooms", {
-	className: "SupportChatRoom",
-	environment: alchemy.env.NODE_ENV,
-	sqlite: true,
-});
-
 export const [server, web] = await Promise.all([
 	Worker(`${APP_NAME}-server`, {
 		name: `${APP_NAME}-server`,
@@ -79,7 +73,6 @@ export const [server, web] = await Promise.all([
 			FIREBASE_SERVICE_ACCOUNT: alchemy.secret.env.FIREBASE_SERVICE_ACCOUNT,
 			ORDER_ROOM,
 			PAYMENT_ROOM,
-			SUPPORT_CHAT_ROOM,
 			DB_URL: alchemy.secret.env.DATABASE_URL,
 			MAIN_DB: mainDB,
 			MAIN_KV: mainKV,
