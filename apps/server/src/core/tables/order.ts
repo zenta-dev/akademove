@@ -99,6 +99,11 @@ export const order = pgTable(
 
 		gender: userGender(),
 		genderPreference: text("gender_preference").$type<"SAME" | "ANY">(),
+
+		// Proof of delivery fields
+		proofOfDeliveryUrl: text("proof_of_delivery_url"),
+		deliveryOtp: text("delivery_otp"),
+		otpVerifiedAt: timestamp("otp_verified_at"),
 	},
 	(t) => [
 		// Foreign key indexes for filtering by user/driver/merchant

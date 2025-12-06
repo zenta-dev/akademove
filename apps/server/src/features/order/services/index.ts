@@ -14,6 +14,7 @@
  * - OrderValidationService: Validates order placement parameters
  */
 
+export { DeliveryProofService } from "./delivery-proof-service";
 export { DriverCancellationService } from "./driver-cancellation-service";
 export { OrderCancellationService } from "./order-cancellation-service";
 export { OrderCouponService } from "./order-coupon-service";

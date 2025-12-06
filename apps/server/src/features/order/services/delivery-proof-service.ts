@@ -1,0 +1,172 @@
+import { v7 } from "uuid";
+import { RepositoryError } from "@/core/error";
+import type { StorageService } from "@/core/services/storage";
+import { log } from "@/utils";
+
+/**
+ * DeliveryProofService - Handles proof of delivery operations
+ *
+ * Responsibilities:
+ * - Generate OTP for delivery verification
+ * - Upload proof photos to S3
+ * - Verify OTP matches
+ *
+ * @example
+ * ```typescript
+ * const service = new DeliveryProofService(storageService);
+ *
+ * // Generate OTP
+ * const otp = service.generateOTP();
+ *
+ * // Upload proof
+ * const url = await service.uploadProof({
+ *   orderId: "order-123",
+ *   file: proofFile,
+ *   userId: "user-456",
+ * });
+ *
+ * // Verify OTP
+ * const isValid = service.verifyOTP("123456", "123456");
+ * ```
+ */
+export class DeliveryProofService {
+	static readonly OTP_LENGTH = 6;
+	static readonly HIGH_VALUE_THRESHOLD = 100000; // 100k IDR
+
+	constructor(private readonly storageService: StorageService) {}
+
+	/**
+	 * Generate 6-digit OTP for delivery verification
+	 *
+	 * @returns 6-digit OTP string
+	 */
+	generateOTP(): string {
+		const min = 100000;
+		const max = 999999;
+		const otp = Math.floor(Math.random() * (max - min + 1)) + min;
+
+		log.debug("[DeliveryProofService] Generated OTP");
+
+		return otp.toString();
+	}
+
+	/**
+	 * Check if order requires OTP verification based on value
+	 *
+	 * @param totalPrice - Order total price in IDR
+	 * @returns true if OTP required
+	 */
+	requiresOTP(totalPrice: number): boolean {
+		return totalPrice >= DeliveryProofService.HIGH_VALUE_THRESHOLD;
+	}
+
+	/**
+	 * Upload proof photo to S3
+	 *
+	 * @param params - Upload parameters
+	 * @returns S3 URL of uploaded proof
+	 * @throws {RepositoryError} When upload fails
+	 */
+	async uploadProof(params: {
+		orderId: string;
+		file: File;
+		userId: string;
+	}): Promise<string> {
+		try {
+			const { orderId, file, userId } = params;
+
+			// Generate unique key
+			const timestamp = Date.now();
+			const uniqueId = v7();
+			const extension = file.name.split(".").pop() || "jpg";
+			const key = `delivery-proofs/${orderId}/${timestamp}-${uniqueId}.${extension}`;
+
+			log.info(
+				{ orderId, userId, key, size: file.size },
+				"[DeliveryProofService] Uploading proof",
+			);
+
+			// Upload to S3
+			const url = await this.storageService.upload({
+				bucket: "delivery-proofs",
+				key,
+				file,
+				userId,
+				isPublic: false, // Private - only accessible via presigned URL
+			});
+
+			log.info(
+				{ orderId, url },
+				"[DeliveryProofService] Proof uploaded successfully",
+			);
+
+			return url;
+		} catch (error) {
+			log.error(
+				{ error, orderId: params.orderId },
+				"[DeliveryProofService] Upload failed",
+			);
+			throw new RepositoryError("Failed to upload proof of delivery", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+
+	/**
+	 * Verify OTP matches expected value
+	 *
+	 * @param provided - OTP provided by user
+	 * @param expected - Expected OTP from database
+	 * @returns true if OTP matches
+	 */
+	verifyOTP(provided: string, expected: string): boolean {
+		if (!provided || !expected) {
+			log.warn("[DeliveryProofService] Missing OTP values");
+			return false;
+		}
+
+		// Normalize (trim and remove spaces)
+		const normalizedProvided = provided.trim().replace(/\s/g, "");
+		const normalizedExpected = expected.trim().replace(/\s/g, "");
+
+		const isValid = normalizedProvided === normalizedExpected;
+
+		log.info({ isValid }, "[DeliveryProofService] OTP verification completed");
+
+		return isValid;
+	}
+
+	/**
+	 * Get presigned URL for viewing proof
+	 *
+	 * @param proofUrl - S3 URL of proof
+	 * @returns Presigned URL valid for 15 minutes
+	 */
+	async getProofPresignedUrl(proofUrl: string): Promise<string> {
+		try {
+			// Extract bucket and key from URL
+			const url = new URL(proofUrl);
+			const pathParts = url.pathname.split("/");
+			const bucket = pathParts[1] as "delivery-proofs";
+			const key = pathParts.slice(2).join("/");
+
+			const presignedUrl = await this.storageService.getPresignedUrl({
+				bucket,
+				key,
+				expiresIn: 900, // 15 minutes
+			});
+
+			log.debug({ proofUrl }, "[DeliveryProofService] Generated presigned URL");
+
+			return presignedUrl;
+		} catch (error) {
+			log.error(
+				{ error, proofUrl },
+				"[DeliveryProofService] Failed to generate presigned URL",
+			);
+			throw new RepositoryError("Failed to get proof URL", {
+				code: "INTERNAL_SERVER_ERROR",
+			});
+		}
+	}
+}

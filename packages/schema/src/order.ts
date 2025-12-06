@@ -92,6 +92,11 @@ export const OrderSchema = z.object({
 	gender: UserGenderSchema.optional(),
 	genderPreference: GenderPreferenceSchema.optional(),
 
+	// Proof of delivery
+	proofOfDeliveryUrl: z.string().url().optional(),
+	deliveryOtp: z.string().length(6).optional(),
+	otpVerifiedAt: DateSchema.optional(),
+
 	// delivery, food
 	itemCount: z.number().optional(),
 	items: z.array(OrderItemSchema).optional(),

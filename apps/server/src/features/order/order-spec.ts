@@ -174,4 +174,45 @@ export const OrderSpec = {
 		.output(
 			createSuccesSchema(OrderChatMessageSchema, "Message sent successfully"),
 		),
+	uploadDeliveryProof: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/{id}/delivery-proof",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string().uuid() }),
+				body: z.object({
+					file: z.instanceof(File),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({ url: z.string().url() }),
+				"Proof uploaded successfully",
+			),
+		),
+	verifyDeliveryOTP: oc
+		.route({
+			tags: [FEATURE_TAGS.ORDER],
+			method: "POST",
+			path: "/{id}/verify-otp",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string().uuid() }),
+				body: z.object({
+					otp: z.string().length(6),
+				}),
+			}),
+		)
+		.output(
+			createSuccesSchema(z.object({ verified: z.boolean() }), "OTP verified"),
+		),
 };

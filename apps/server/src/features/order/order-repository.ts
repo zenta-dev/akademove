@@ -41,6 +41,7 @@ import type {
 	PaymentRepository,
 } from "../payment/payment-repository";
 import {
+	type DeliveryProofService,
 	DriverCancellationService,
 	OrderCancellationService,
 	OrderCouponService,
@@ -57,6 +58,7 @@ export class OrderRepository extends BaseRepository {
 	readonly #paymentRepo: PaymentRepository;
 	readonly #pricingService: OrderPricingService;
 	readonly #stateService: OrderStateService;
+	readonly #deliveryProofService: DeliveryProofService;
 	// PERFORMANCE: In-memory cache for pricing configurations (99% faster than DB/KV)
 	// These configs rarely change, so we cache them in memory with manual invalidation
 	static #pricingConfigCache = new Map<string, ConfigurationValue>();
@@ -70,12 +72,14 @@ export class OrderRepository extends BaseRepository {
 		pricingService: OrderPricingService,
 		_matchingService: OrderMatchingService,
 		stateService: OrderStateService,
+		deliveryProofService: DeliveryProofService,
 	) {
 		super("order", kv, db);
 		this.#map = map;
 		this.#paymentRepo = paymentRepo;
 		this.#pricingService = pricingService;
 		this.#stateService = stateService;
+		this.#deliveryProofService = deliveryProofService;
 		// Preload pricing configs on first instantiation
 		if (!OrderRepository.#cacheLoadedAt) {
 			this.#preloadPricingConfigs().catch((err) => {
@@ -685,10 +689,28 @@ export class OrderRepository extends BaseRepository {
 				this.#stateService.validateTransition(existing.status, item.status);
 			}
 
+			// Generate OTP for delivery proof if order is ARRIVING or IN_TRIP and requires OTP
+			let deliveryOtp = item.deliveryOtp;
+			if (
+				item.status &&
+				(item.status === "ARRIVING" || item.status === "IN_TRIP") &&
+				existing.status !== "ARRIVING" &&
+				existing.status !== "IN_TRIP" &&
+				!existing.deliveryOtp &&
+				this.#deliveryProofService.requiresOTP(existing.totalPrice)
+			) {
+				deliveryOtp = this.#deliveryProofService.generateOTP();
+				log.info(
+					{ orderId: id, totalPrice: existing.totalPrice },
+					"[OrderRepository] Generated OTP for high-value delivery order",
+				);
+			}
+
 			const [operation] = await opts.tx
 				.update(tables.order)
 				.set({
 					...item,
+					deliveryOtp: deliveryOtp ?? item.deliveryOtp,
 					basePrice: existing.basePrice
 						? toStringNumberSafe(existing.basePrice)
 						: undefined,
