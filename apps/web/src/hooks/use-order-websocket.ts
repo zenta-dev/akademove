@@ -86,6 +86,7 @@ export const useOrderWebSocket = (
 		}
 		setIsConnected(false);
 		onConnectionChange?.(false);
+		console.log("[OrderWebSocket] Cleaned up connection");
 	}, [onConnectionChange]);
 
 	const startHeartbeat = useCallback(() => {

@@ -1,7 +1,7 @@
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
+import type { UserListQuery } from "@repo/schema/pagination";
 import type { FileRouteTypes } from "@/routeTree.gen";
 
 export type TableProps = {
-	search: UnifiedPaginationQuery;
+	search: UserListQuery;
 	to: FileRouteTypes["to"];
 };

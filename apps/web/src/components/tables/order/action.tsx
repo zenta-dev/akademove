@@ -2,12 +2,8 @@ import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { AcceptOrderDialog } from "@/components/dialogs/accept-order";
 import { LiveTrackingDialog } from "@/components/dialogs/live-tracking";
-import { MarkPreparingDialog } from "@/components/dialogs/mark-preparing";
-import { MarkReadyDialog } from "@/components/dialogs/mark-ready";
 import { OrderDetailDialog } from "@/components/dialogs/order-detail";
-import { RejectOrderDialog } from "@/components/dialogs/reject-order";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -28,13 +24,6 @@ export const OrderActionTable = ({ val }: { val: Order }) => {
 		val.status === "ACCEPTED" ||
 		val.status === "ARRIVING" ||
 		val.status === "IN_TRIP";
-
-	// Merchant-specific actions for FOOD orders
-	const isFoodOrder = val.type === "FOOD";
-	const canAccept = isFoodOrder && val.status === "REQUESTED";
-	const canReject = isFoodOrder && val.status === "REQUESTED";
-	const canMarkPreparing = isFoodOrder && val.status === "ACCEPTED";
-	const canMarkReady = isFoodOrder && val.status === "PREPARING";
 
 	return (
 		<>
@@ -63,63 +52,6 @@ export const OrderActionTable = ({ val }: { val: Order }) => {
 					>
 						Track on Map
 					</DropdownMenuItem>
-
-					{/* Merchant FOOD order actions */}
-					{(canAccept || canReject || canMarkPreparing || canMarkReady) && (
-						<DropdownMenuSeparator />
-					)}
-					{canAccept && (
-						<AcceptOrderDialog
-							orderId={val.id}
-							trigger={
-								<DropdownMenuItem
-									className="text-green-600"
-									onSelect={(e) => e.preventDefault()}
-								>
-									Accept Order
-								</DropdownMenuItem>
-							}
-						/>
-					)}
-					{canReject && (
-						<RejectOrderDialog
-							orderId={val.id}
-							trigger={
-								<DropdownMenuItem
-									className="text-red-600"
-									onSelect={(e) => e.preventDefault()}
-								>
-									Reject Order
-								</DropdownMenuItem>
-							}
-						/>
-					)}
-					{canMarkPreparing && (
-						<MarkPreparingDialog
-							orderId={val.id}
-							trigger={
-								<DropdownMenuItem
-									className="text-blue-600"
-									onSelect={(e) => e.preventDefault()}
-								>
-									Mark Preparing
-								</DropdownMenuItem>
-							}
-						/>
-					)}
-					{canMarkReady && (
-						<MarkReadyDialog
-							orderId={val.id}
-							trigger={
-								<DropdownMenuItem
-									className="text-purple-600"
-									onSelect={(e) => e.preventDefault()}
-								>
-									Mark Ready
-								</DropdownMenuItem>
-							}
-						/>
-					)}
 
 					{/* Generic actions */}
 					{(isReassignable || isCancellable) && <DropdownMenuSeparator />}

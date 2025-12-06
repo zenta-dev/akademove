@@ -4,10 +4,10 @@ import {
 	Bike,
 	ChartLine,
 	ClipboardList,
+	DollarSign,
 	Gauge,
 	Mail,
 	Receipt,
-	Settings2,
 	Store,
 	Users,
 } from "lucide-react";
@@ -49,6 +49,11 @@ const navMain = Object.freeze([
 		icon: Receipt,
 	},
 	{
+		title: m.pricing(),
+		href: localizeHref("/dash/admin/pricing"),
+		icon: DollarSign,
+	},
+	{
 		title: m.analytics(),
 		href: localizeHref("/dash/admin/analytics"),
 		icon: ChartLine,
@@ -62,11 +67,6 @@ const navMain = Object.freeze([
 		title: m.contact_us(),
 		href: localizeHref("/dash/admin/contacts"),
 		icon: Mail,
-	},
-	{
-		title: m.configurations(),
-		href: localizeHref("/dash/admin/configurations"),
-		icon: Settings2,
 	},
 ] as const);
 

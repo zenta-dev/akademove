@@ -35,12 +35,14 @@ interface WithdrawDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	availableBalance: number;
+	minWithdrawalAmount?: number;
 }
 
 export function WithdrawDialog({
 	open,
 	onOpenChange,
 	availableBalance,
+	minWithdrawalAmount = 50000,
 }: WithdrawDialogProps) {
 	const [amount, setAmount] = useState("");
 	const [bankProvider, setBankProvider] = useState<BankProvider>("BCA");
@@ -54,7 +56,7 @@ export function WithdrawDialog({
 				throw new Error(m.withdraw_wallet_invalid_amount());
 			}
 
-			if (withdrawAmount < 50000) {
+			if (withdrawAmount < minWithdrawalAmount) {
 				throw new Error(m.withdraw_wallet_minimum());
 			}
 
@@ -141,7 +143,7 @@ export function WithdrawDialog({
 							placeholder={m.withdraw_wallet_amount_placeholder()}
 							value={amount}
 							onChange={(e) => setAmount(e.target.value)}
-							min={50000}
+							min={minWithdrawalAmount}
 							max={availableBalance}
 							step={1000}
 							required
@@ -149,7 +151,7 @@ export function WithdrawDialog({
 						/>
 						{amount && Number.parseFloat(amount) > 0 && (
 							<p className="mt-1 text-xs">
-								{Number.parseFloat(amount) < 50000 ? (
+								{Number.parseFloat(amount) < minWithdrawalAmount ? (
 									<span className="text-destructive">
 										{m.withdraw_wallet_amount_min()}
 									</span>

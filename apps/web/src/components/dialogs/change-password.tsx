@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { UpdateUserPasswordSchema } from "@repo/schema/user";
+import { AdminUpdateUserPasswordSchema } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
 import { KeyRound } from "lucide-react";
@@ -38,7 +38,7 @@ export const ChangePasswordDialog = ({
 	asChild,
 }: ChangePasswordDialogProps) => {
 	const form = useForm({
-		resolver: zodResolver(UpdateUserPasswordSchema),
+		resolver: zodResolver(AdminUpdateUserPasswordSchema),
 		defaultValues: {
 			oldPassword: "",
 			newPassword: "",
@@ -78,7 +78,7 @@ export const ChangePasswordDialog = ({
 
 	const onSubmit = useCallback(
 		async (values: unknown) => {
-			const parsed = UpdateUserPasswordSchema.safeParse(values);
+			const parsed = AdminUpdateUserPasswordSchema.safeParse(values);
 			if (parsed.success) {
 				await mutation.mutateAsync({ body: parsed.data });
 			}

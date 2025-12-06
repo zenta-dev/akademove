@@ -56,7 +56,7 @@ export const link = new RPCLink<MyContext>({
 		}),
 	],
 	method: ({ context }, path) => {
-		if (path.includes("hasPermission")) return "POST";
+		if (path.includes("hasAccess")) return "POST";
 		if (context?.cache) {
 			return "GET";
 		}

@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
 import {
-	type UpdateUserPassword,
-	UpdateUserPasswordSchema,
+	type AdminUpdateUserPassword,
+	AdminUpdateUserPasswordSchema,
 } from "@repo/schema/user";
 import { capitalizeFirstLetter } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
@@ -39,9 +39,8 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 
 	const [open, setOpen] = useState(false);
 	const form = useForm({
-		resolver: zodResolver(UpdateUserPasswordSchema),
+		resolver: zodResolver(AdminUpdateUserPasswordSchema),
 		defaultValues: {
-			oldPassword: "",
 			newPassword: "",
 			confirmNewPassword: "",
 		},
@@ -55,7 +54,6 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 					m.success_placeholder({ action: m.update_user_password() }),
 				);
 				setOpen(false);
-				form.setValue("oldPassword", "");
 				form.setValue("newPassword", "");
 				form.setValue("confirmNewPassword", "");
 				form.clearErrors();
@@ -71,12 +69,12 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 						description: error.message || m.an_unexpected_error_occurred(),
 					},
 				);
-				form.setError("oldPassword", { message: error.message });
+				form.setError("confirmNewPassword", { message: error.message });
 			},
 		}),
 	);
 
-	const onSubmit = async (values: UpdateUserPassword) => {
+	const onSubmit = async (values: AdminUpdateUserPassword) => {
 		await mutation.mutateAsync({ params: { id: userId }, body: values });
 	};
 
@@ -101,32 +99,6 @@ export const UpdateUserPasswordDialog = ({ userId }: { userId: string }) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="mt-4 space-y-4"
 					>
-						<FormField
-							control={form.control}
-							name="oldPassword"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Current {m.password()}</FormLabel>
-									<FormControl>
-										<div className="relative">
-											<Input
-												placeholder="••••••••"
-												autoComplete="current-password"
-												type={showPassword ? "text" : "password"}
-												disabled={mutation.isPending}
-												{...field}
-											/>
-											<PasswordToggle
-												isVisible={showPassword}
-												setIsVisible={setShowPassword}
-												className="-translate-y-1/2 absolute top-1/2 right-0"
-											/>
-										</div>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 						<FormField
 							control={form.control}
 							name="newPassword"

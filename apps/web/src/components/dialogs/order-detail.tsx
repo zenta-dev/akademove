@@ -11,10 +11,8 @@ import {
 } from "lucide-react";
 import type { ReactElement } from "react";
 import { useState } from "react";
-import { AcceptOrderDialog } from "@/components/dialogs/accept-order";
 import { MarkPreparingDialog } from "@/components/dialogs/mark-preparing";
 import { MarkReadyDialog } from "@/components/dialogs/mark-ready";
-import { RejectOrderDialog } from "@/components/dialogs/reject-order";
 import { OrderTrackingMap } from "@/components/order-tracking-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -445,26 +443,6 @@ export const OrderDetailDialog = ({
 					{/* Action Buttons */}
 					{order.type === "FOOD" && (
 						<div className="flex flex-wrap gap-2">
-							{order.status === "REQUESTED" && (
-								<>
-									<AcceptOrderDialog
-										orderId={order.id}
-										trigger={
-											<Button variant="default">
-												{m.order_detail_accept()}
-											</Button>
-										}
-									/>
-									<RejectOrderDialog
-										orderId={order.id}
-										trigger={
-											<Button variant="outline">
-												{m.order_detail_reject()}
-											</Button>
-										}
-									/>
-								</>
-							)}
 							{order.status === "ACCEPTED" && (
 								<MarkPreparingDialog
 									orderId={order.id}

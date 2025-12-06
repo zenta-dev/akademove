@@ -84,6 +84,30 @@ export const USER_COLUMNS = [
 		},
 	},
 	{
+		id: "gender",
+		accessorKey: "gender",
+		header: m.gender(),
+		cell: ({ row }) => {
+			const value = String(row.getValue("gender"));
+
+			return (
+				<Badge
+					variant="secondary"
+					className={cn(
+						"bg-gray-500/10 text-gray-500 dark:bg-gray-600/10 dark:text-gray-600",
+						value === "MALE" &&
+							"bg-blue-500/10 text-blue-500 dark:bg-blue-600/10 dark:text-blue-600",
+						value === "FEMALE" &&
+							"bg-pink-500/10 text-pink-500 dark:bg-pink-600/10 dark:text-pink-600",
+					)}
+				>
+					<BadgeXIcon />
+					{capitalizeFirstLetter(value.toLowerCase())}
+				</Badge>
+			);
+		},
+	},
+	{
 		id: "emailVerified",
 		accessorKey: "emailVerified",
 		header: m.verified(),

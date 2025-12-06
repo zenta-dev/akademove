@@ -35,7 +35,7 @@ interface DataTableProps<TData, TValue> {
 	isPending?: boolean;
 	columnVisibility?: VisibilityState;
 	setColumnVisibility?: React.Dispatch<React.SetStateAction<VisibilityState>>;
-	filterKeys?: string;
+	filterKeys?: string | string[];
 	totalPages?: number;
 	filterValue?: string;
 	onFilterChange?: (str: string) => void;
@@ -75,7 +75,12 @@ export function DataTable<TData, TValue>({
 				{onFilterChange && (
 					<Input
 						placeholder={
-							filterKeys && m.search_placeholder({ field: filterKeys })
+							filterKeys &&
+							m.search_placeholder({
+								field: Array.isArray(filterKeys)
+									? filterKeys.join(", ")
+									: filterKeys,
+							})
 						}
 						value={filterValue ?? ""}
 						onChange={(event) => {

@@ -1,13 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
-import { type InsertUser, InsertUserSchema } from "@repo/schema/user";
+import { createDefaults } from "@repo/schema/default.helper";
+import { type InviteUser, InviteUserSchema } from "@repo/schema/user";
 import { capitalizeFirstLetter, ROLES_TYPED } from "@repo/shared";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Submitting } from "@/components/misc/submitting";
-import { PasswordToggle } from "@/components/toggle/password-toggle";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -37,32 +38,41 @@ import {
 } from "@/components/ui/select";
 import { orpcQuery, queryClient } from "@/lib/orpc";
 
+function randomPhoneNumber() {
+	return {
+		countryCode: "ID",
+		number: Math.floor(Math.random() * 1000000000),
+	} as const;
+}
+
 export const InviteUserDialog = () => {
+	const router = useRouter();
 	const [open, setOpen] = useState(false);
-	const [showPassword, setShowPassword] = useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [_showPassword, _setShowPassword] = useState(false);
+	const [_showConfirmPassword, _setShowConfirmPassword] = useState(false);
 	const form = useForm({
-		resolver: zodResolver(InsertUserSchema),
-		defaultValues: {
-			name: "",
-			email: "",
-			role: "USER",
-			password: "",
-			confirmPassword: "",
-		},
+		resolver: zodResolver(InviteUserSchema),
+		defaultValues: createDefaults(InviteUserSchema, {
+			overrides: {
+				role: "USER",
+				gender: undefined,
+				phone: randomPhoneNumber(),
+			},
+		}),
 	});
 
 	const mutation = useMutation(
 		orpcQuery.user.admin.create.mutationOptions({
 			onSuccess: async () => {
-				await queryClient.invalidateQueries();
+				await Promise.all([
+					queryClient.invalidateQueries(),
+					router.invalidate(),
+				]);
 				toast.success(m.success_placeholder({ action: m.invite_user() }));
 				setOpen(false);
 				form.setValue("name", "");
 				form.setValue("email", "");
 				form.setValue("role", "USER");
-				form.setValue("password", "");
-				form.setValue("confirmPassword", "");
 				form.clearErrors();
 			},
 			onError: (error: Error) => {
@@ -76,14 +86,12 @@ export const InviteUserDialog = () => {
 				);
 				if (error.message.toLowerCase().includes("email")) {
 					form.setError("email", { message: error.message });
-				} else {
-					form.setError("confirmPassword", { message: error.message });
 				}
 			},
 		}),
 	);
 
-	const onSubmit = async (values: InsertUser) => {
+	const onSubmit = async (values: InviteUser) => {
 		await mutation.mutateAsync({ body: values });
 	};
 
@@ -158,56 +166,6 @@ export const InviteUserDialog = () => {
 											disabled={mutation.isPending}
 											{...field}
 										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="password"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{m.password()}</FormLabel>
-									<FormControl>
-										<div className="relative">
-											<Input
-												placeholder="••••••••"
-												type={showPassword ? "text" : "password"}
-												disabled={mutation.isPending}
-												{...field}
-											/>
-											<PasswordToggle
-												isVisible={showPassword}
-												setIsVisible={setShowPassword}
-												className="-translate-y-1/2 absolute top-1/2 right-0"
-											/>
-										</div>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="confirmPassword"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>{m.confirm_password()}</FormLabel>
-									<FormControl>
-										<div className="relative">
-											<Input
-												placeholder="••••••••"
-												type={showConfirmPassword ? "text" : "password"}
-												disabled={mutation.isPending}
-												{...field}
-											/>
-											<PasswordToggle
-												isVisible={showConfirmPassword}
-												setIsVisible={setShowConfirmPassword}
-												className="-translate-y-1/2 absolute top-1/2 right-0"
-											/>
-										</div>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

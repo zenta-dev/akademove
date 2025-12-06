@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { Bell, Check, CheckCheck, Loader2, Trash2 } from "lucide-react";
 import { useFCM } from "@/hooks/use-fcm";
-import { orpcClient, queryClient } from "@/lib/orpc";
+import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 import { Button } from "../ui/button";
 import {
@@ -19,73 +19,75 @@ import {
 import { ScrollArea } from "../ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 
+const limit = 10;
+const read = "all";
+const order = "desc";
+const sortBy = "createdAt";
+
 export const NotificationDropdown = () => {
 	const fcm = useFCM();
 
-	const unreadCountQuery = useQuery({
-		queryKey: ["notifications", "unread-count"],
-		queryFn: async () => {
-			const res = await orpcClient.notification.getUnreadCount({});
-			return res.body.data.count;
-		},
-		refetchInterval: 30000, // Refetch every 30 seconds
-	});
+	const unreadCountQuery = useQuery(
+		orpcQuery.notification.getUnreadCount.queryOptions({
+			input: {},
+			refetchInterval: 30000, // Refetch every 30 seconds
+		}),
+	);
 
-	const notificationsQuery = useQuery({
-		queryKey: ["notifications", "list"],
-		queryFn: async () => {
-			const res = await orpcClient.notification.list({
-				query: { limit: 10, read: "all", order: "desc", sortBy: "createdAt" },
-			});
-			return res.body.data;
-		},
-	});
+	const notificationsQuery = useQuery(
+		orpcQuery.notification.list.queryOptions({
+			input: { query: { limit, read, order, sortBy } },
+		}),
+	);
 
-	const markAsReadMutation = useMutation({
-		mutationFn: async (variables: { params: { id: string } }) => {
-			const result = await orpcClient.notification.markAsRead(variables);
-			if (result.status !== 200) {
-				throw new Error(result.body.message || "Failed to mark as read");
-			}
-			return result;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["notifications"] });
-		},
-	});
+	const markAsReadMutation = useMutation(
+		orpcQuery.notification.markAsRead.mutationOptions({
+			onSuccess: async (_data) => {
+				await Promise.all([
+					queryClient.invalidateQueries({
+						queryKey: orpcQuery.notification.list.queryKey({
+							input: { query: { limit, read, order, sortBy } },
+						}),
+					}),
+				]);
+			},
+		}),
+	);
 
-	const markAllAsReadMutation = useMutation({
-		mutationFn: async () => {
-			const result = await orpcClient.notification.markAllAsRead({});
-			if (result.status !== 200) {
-				throw new Error(result.body.message || "Failed to mark all as read");
-			}
-			return result;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["notifications"] });
-		},
-	});
+	const markAllAsReadMutation = useMutation(
+		orpcQuery.notification.markAllAsRead.mutationOptions({
+			onSuccess: async (_data) => {
+				await Promise.all([
+					queryClient.invalidateQueries({
+						queryKey: orpcQuery.notification.list.queryKey({
+							input: { query: { limit, read, order, sortBy } },
+						}),
+					}),
+				]);
+			},
+		}),
+	);
 
-	const deleteMutation = useMutation({
-		mutationFn: async (variables: { params: { id: string } }) => {
-			const result = await orpcClient.notification.delete(variables);
-			if (result.status !== 200) {
-				throw new Error(result.body.message || "Failed to delete notification");
-			}
-			return result;
-		},
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["notifications"] });
-		},
-	});
+	const deleteMutation = useMutation(
+		orpcQuery.notification.delete.mutationOptions({
+			onSuccess: async (_data) => {
+				await Promise.all([
+					queryClient.invalidateQueries({
+						queryKey: orpcQuery.notification.list.queryKey({
+							input: { query: { limit, read, order, sortBy } },
+						}),
+					}),
+				]);
+			},
+		}),
+	);
 
 	const handleMarkAsRead = async (id: string) => {
 		await markAsReadMutation.mutateAsync({ params: { id } });
 	};
 
 	const handleMarkAllAsRead = async () => {
-		await markAllAsReadMutation.mutateAsync();
+		await markAllAsReadMutation.mutateAsync({});
 	};
 
 	const handleDelete = async (
@@ -100,8 +102,8 @@ export const NotificationDropdown = () => {
 		return <Skeleton className="size-8" />;
 	}
 
-	const unreadCount = unreadCountQuery.data ?? 0;
-	const notifications = notificationsQuery.data ?? [];
+	const unreadCount = unreadCountQuery?.data?.body.data.count ?? 0;
+	const notifications = notificationsQuery?.data?.body.data ?? [];
 
 	return (
 		<DropdownMenu>

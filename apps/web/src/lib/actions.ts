@@ -4,7 +4,8 @@ import {
 	type Locale,
 	setLocale,
 } from "@repo/i18n";
-import { cookieParser, type Permissions } from "@repo/shared";
+import type { RoleAccess } from "@repo/schema";
+import { cookieParser } from "@repo/shared";
 import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
 import { getRequest, getRequestHeaders } from "@tanstack/react-start/server";
 import * as z from "zod";
@@ -60,22 +61,22 @@ export const getSession = createIsomorphicFn()
 	});
 
 export const hasAccess = createIsomorphicFn()
-	.client(async (permissions: Permissions) => {
+	.client(async (roles: RoleAccess[]) => {
 		try {
-			const res = await orpcClient.auth.hasPermission({
-				body: { permissions },
+			const res = await orpcClient.auth.hasAccess({
+				body: { roles },
 			});
 			return res.body.data;
 		} catch (_) {
 			return false;
 		}
 	})
-	.server(async (permissions: Permissions) => {
+	.server(async (roles: RoleAccess[]) => {
 		try {
 			const headers = getRequestHeaders();
-			const res = await orpcClient.auth.hasPermission(
+			const res = await orpcClient.auth.hasAccess(
 				{
-					body: { permissions },
+					body: { roles },
 				},
 				{ context: { headers } },
 			);

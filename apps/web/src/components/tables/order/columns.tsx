@@ -40,6 +40,7 @@ export const STATUS: Record<
 	CANCELLED_BY_DRIVER: { name: m.cancelled_by_driver(), icon: XOctagon },
 	CANCELLED_BY_MERCHANT: { name: "Cancelled by Merchant", icon: XOctagon },
 	CANCELLED_BY_SYSTEM: { name: m.cancelled_by_system(), icon: AlertTriangle },
+	NO_SHOW: { name: "No Show", icon: UserX },
 };
 
 export const TYPES: Record<
@@ -69,6 +70,7 @@ export const statusVariants = cva("", {
 			CANCELLED_BY_DRIVER: "bg-orange-500/10 text-orange-500",
 			CANCELLED_BY_MERCHANT: "bg-pink-500/10 text-pink-500",
 			CANCELLED_BY_SYSTEM: "bg-gray-500/10 text-gray-700 dark:text-gray-200",
+			NO_SHOW: "bg-amber-500/10 text-amber-500",
 		},
 	},
 	defaultVariants: { intent: "REQUESTED" },

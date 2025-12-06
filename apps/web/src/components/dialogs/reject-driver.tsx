@@ -28,13 +28,14 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { orpcClient, queryClient } from "@/lib/orpc";
+import { Input } from "../ui/input";
 
 export const RejectDriverDialog = ({ driverId }: { driverId: string }) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 
 	const form = useForm<RejectDriver>({
 		resolver: zodResolver(RejectDriverSchema),
-		defaultValues: { reason: "" },
+		defaultValues: { reason: "", id: driverId },
 	});
 
 	const mutation = useMutation({
@@ -93,6 +94,23 @@ export const RejectDriverDialog = ({ driverId }: { driverId: string }) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="mt-4 space-y-4"
 					>
+						<FormField
+							control={form.control}
+							name="id"
+							render={({ field }) => (
+								<FormItem className="hidden">
+									<FormControl>
+										<Input
+											disabled={mutation.isPending}
+											{...field}
+											value={driverId}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name="reason"

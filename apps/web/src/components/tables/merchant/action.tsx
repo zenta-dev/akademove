@@ -16,6 +16,7 @@ import {
 export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [deactivateOpen, setDeactivateOpen] = useState(false);
+	const [_locationOpen, _setLocationOpen] = useState(false);
 
 	return (
 		<>
@@ -28,8 +29,8 @@ export const MerchantActionTable = ({ val }: { val: Merchant }) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
 					<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
-					<DropdownMenuItem>View Details</DropdownMenuItem>
-					<DropdownMenuItem>View Menu</DropdownMenuItem>
+					{/* <DropdownMenuItem>View Details</DropdownMenuItem>
+					<DropdownMenuItem>View Menu</DropdownMenuItem> */}
 					{val.isActive ? (
 						<DropdownMenuItem
 							className="text-orange-600"
