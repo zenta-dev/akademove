@@ -1,0 +1,2 @@
+ALTER TABLE "am_merchants" ALTER COLUMN "phone" DROP NOT NULL;--> statement-breakpoint
+ALTER TABLE "am_driver_quiz_answers" ADD CONSTRAINT "am_driver_quiz_answers_driver_id_am_drivers_id_fk" FOREIGN KEY ("driver_id") REFERENCES "public"."am_drivers"("id") ON DELETE no action ON UPDATE no action;

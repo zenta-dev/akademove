@@ -1,0 +1,1 @@
+ALTER TABLE "am_driver_quiz_answers" ALTER COLUMN "driver_id" SET DATA TYPE uuid USING "driver_id"::uuid;
