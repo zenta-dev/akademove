@@ -51,6 +51,7 @@ export const OrderEnvelopeEventSchema = z.enum([
 	"MERCHANT_REJECTED",
 	"MERCHANT_PREPARING",
 	"MERCHANT_READY",
+	"NO_SHOW",
 ]);
 export const OrderEnvelopeActionSchema = z.enum([
 	"MATCHING",
@@ -62,6 +63,7 @@ export const OrderEnvelopeActionSchema = z.enum([
 	"MERCHANT_REJECT",
 	"MERCHANT_MARK_PREPARING",
 	"MERCHANT_MARK_READY",
+	"REPORT_NO_SHOW",
 ]);
 export const OrderEnvelopePayloadSchema = z.object({
 	detail: z
@@ -104,6 +106,13 @@ export const OrderEnvelopePayloadSchema = z.object({
 		})
 		.optional(),
 	cancelReason: z.string().optional(),
+	noShow: z
+		.object({
+			orderId: z.uuid(),
+			driverId: z.uuid(),
+			reason: z.string().optional(),
+		})
+		.optional(),
 });
 export const OrderEnvelopeSchema = createWsMinEnvelopeSchema({
 	event: OrderEnvelopeEventSchema,

@@ -21,8 +21,10 @@ export const CONSTANTS = Object.freeze({
 		"CANCELLED_BY_DRIVER",
 		"CANCELLED_BY_MERCHANT",
 		"CANCELLED_BY_SYSTEM",
+		"NO_SHOW",
 	] as const,
 	ORDER_TYPES: ["RIDE", "DELIVERY", "FOOD"] as const,
+	COUPON_TYPES: ["GENERAL", "EVENT", "MERCHANT", "FIRST_ORDER"] as const,
 	DAY_OF_WEEK: [
 		"SUNDAY",
 		"MONDAY",
@@ -134,4 +136,33 @@ export const LEADERBOARD_CATEGORIES = [
 	"STREAK",
 	"ON-TIME",
 	"COMPLETION-RATE",
+] as const;
+
+export const DRIVER_QUIZ_QUESTION_TYPES = [
+	"MULTIPLE_CHOICE",
+	"TRUE_FALSE",
+] as const;
+
+export const DRIVER_QUIZ_QUESTION_CATEGORIES = [
+	"SAFETY",
+	"NAVIGATION",
+	"CUSTOMER_SERVICE",
+	"PLATFORM_RULES",
+	"EMERGENCY_PROCEDURES",
+	"VEHICLE_MAINTENANCE",
+	"GENERAL",
+] as const;
+
+export const DRIVER_QUIZ_ANSWER_STATUSES = [
+	"IN_PROGRESS",
+	"COMPLETED",
+	"PASSED",
+	"FAILED",
+] as const;
+
+export const DRIVER_QUIZ_STATUSES = [
+	"NOT_STARTED",
+	"IN_PROGRESS",
+	"PASSED",
+	"FAILED",
 ] as const;
