@@ -48,7 +48,6 @@ BEGIN
         EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
     END LOOP;
 END $$;
-DROP EXTENSION IF EXISTS postgis CASCADE;
 
 DO $$
 DECLARE

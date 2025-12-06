@@ -68,7 +68,7 @@ const buttonContainer = {
 };
 
 const button = {
-	backgroundColor: "#667eea",
+	backgroundColor: "#0d9488",
 	borderRadius: "8px",
 	color: "#ffffff",
 	fontSize: "16px",
@@ -93,7 +93,7 @@ const footerNote = {
 };
 
 const linkText = {
-	color: "#667eea",
+	color: "#0d9488",
 	fontSize: "12px",
 	lineHeight: "1.6",
 	margin: "0 0 8px 0",

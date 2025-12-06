@@ -101,7 +101,7 @@ const container = {
 };
 
 const header = {
-	background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+	background: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
 	padding: "40px 32px",
 	textAlign: "center" as const,
 	borderRadius: "12px 12px 0 0",
@@ -122,7 +122,7 @@ const logo = {
 };
 
 const logoGradient = {
-	background: "linear-gradient(90deg, #ffffff 0%, #e0e7ff 100%)",
+	background: "linear-gradient(90deg, #ffffff 0%, #ccfbf1 100%)",
 	WebkitBackgroundClip: "text",
 	WebkitTextFillColor: "transparent",
 	backgroundClip: "text",
@@ -130,12 +130,12 @@ const logoGradient = {
 };
 
 const logoSecondary = {
-	color: "#fbbf24",
+	color: "#fde047",
 	fontWeight: "800",
 };
 
 const tagline = {
-	color: "#e0e7ff",
+	color: "#ccfbf1",
 	fontSize: "14px",
 	fontWeight: "500",
 	margin: "8px 0 0 0",
@@ -179,7 +179,7 @@ const socialLinks = {
 };
 
 const socialLink = {
-	color: "#667eea",
+	color: "#0d9488",
 	fontSize: "14px",
 	fontWeight: "600",
 	textDecoration: "none",

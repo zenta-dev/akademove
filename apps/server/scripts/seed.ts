@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import * as readline from "node:readline";
 import { faker, fakerID_ID } from "@faker-js/faker";
+import type { Phone, UserGender, UserRole } from "@repo/schema";
 import type { InsertBadge } from "@repo/schema/badge";
 import {
 	CONSTANTS,
@@ -14,7 +15,6 @@ import {
 	type TRANSACTION_TYPE,
 } from "@repo/schema/constants";
 import type { InsertMerchant } from "@repo/schema/merchant";
-import type { InsertUser } from "@repo/schema/user";
 import { eq, inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -394,7 +394,90 @@ type SeedOptions = {
 	seeders: Set<string>;
 };
 
+// Parse command line arguments for non-interactive mode
+// Usage: bun scripts/seed.ts --mode=all|base|custom [--seeders=1,2,3] [--yes]
+function parseCliArgs(): {
+	mode?: string;
+	seeders?: string;
+	skipConfirm: boolean;
+} {
+	const args = process.argv.slice(2);
+	let mode: string | undefined;
+	let seeders: string | undefined;
+	let skipConfirm = false;
+
+	for (const arg of args) {
+		if (arg.startsWith("--mode=")) {
+			mode = arg.split("=")[1];
+		} else if (arg.startsWith("--seeders=")) {
+			seeders = arg.split("=")[1];
+		} else if (arg === "--yes" || arg === "-y") {
+			skipConfirm = true;
+		}
+	}
+
+	return { mode, seeders, skipConfirm };
+}
+
 async function promptSeedingOptions(): Promise<SeedOptions> {
+	const cliArgs = parseCliArgs();
+
+	// Non-interactive mode via CLI args
+	if (cliArgs.mode) {
+		if (cliArgs.mode === "all" || cliArgs.mode === "1") {
+			console.log("📋 Mode: All (from CLI)");
+			return { mode: "all", seeders: new Set() };
+		}
+		if (cliArgs.mode === "base" || cliArgs.mode === "2") {
+			console.log("📋 Mode: Base (from CLI)");
+			return {
+				mode: "base",
+				seeders: new Set(["users", "badges", "userBadges", "configurations"]),
+			};
+		}
+		if (cliArgs.mode === "custom" || cliArgs.mode === "3") {
+			const seederMap: Record<string, string> = {
+				"1": "users",
+				"2": "badges",
+				"3": "userBadges",
+				"4": "configurations",
+				"5": "merchants",
+				"6": "drivers",
+				"7": "orders",
+				"8": "merchantMenus",
+				"9": "driverSchedules",
+				"10": "driverQuizQuestions",
+				"11": "driverQuizAnswers",
+				"12": "coupons",
+				"13": "transactions",
+				"14": "payments",
+				"15": "reviews",
+				"16": "leaderboards",
+				"17": "orderItems",
+				"18": "couponUsages",
+				"19": "orderChatMessages",
+				"20": "emergencies",
+				"21": "reports",
+				"22": "broadcasts",
+				"23": "contacts",
+				"24": "userNotifications",
+				"25": "accountDeletions",
+			};
+			const selectedSeeders = new Set(
+				(cliArgs.seeders ?? "")
+					.split(",")
+					.map((s) => s.trim())
+					.filter((s) => seederMap[s])
+					.map((s) => seederMap[s]),
+			);
+			console.log(
+				`📋 Mode: Custom (from CLI) - Seeders: ${[...selectedSeeders].join(", ")}`,
+			);
+			return { mode: "custom", seeders: selectedSeeders };
+		}
+	}
+
+	// Interactive mode
 	const rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout,
@@ -508,6 +591,13 @@ async function confirmExecution() {
 		process.exit(1);
 	}
 
+	// Skip confirmation if --yes flag is provided
+	const cliArgs = parseCliArgs();
+	if (cliArgs.skipConfirm) {
+		console.log("⚠️  Skipping confirmation (--yes flag provided)");
+		return;
+	}
+
 	const rl = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout,
@@ -533,22 +623,51 @@ console.log(`DB URL: ${process.env.DATABASE_URL}`);
 
 const client = postgres(process.env.DATABASE_URL || "");
 const db = drizzle({ client });
-const storage = new S3StorageService({
-	endpoint: process.env.S3_ENDPOINT || "",
-	region: process.env.S3_REGION || "",
-	accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
-	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
-	publicUrl: process.env.S3_PUBLIC_URL || "",
-});
+
+// Lazy-initialize storage only when needed (for badge seeding)
+let _storage: S3StorageService | null = null;
+function getStorage(): S3StorageService | null {
+	if (_storage) return _storage;
+
+	const endpoint = process.env.S3_ENDPOINT;
+	const region = process.env.S3_REGION;
+	const accessKeyId = process.env.S3_ACCESS_KEY_ID;
+	const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
+	const publicUrl = process.env.S3_PUBLIC_URL;
+
+	if (!endpoint || !region || !accessKeyId || !secretAccessKey || !publicUrl) {
+		console.warn(
+			"⚠️ S3 credentials not configured. Badge icons will not be uploaded.",
+		);
+		return null;
+	}
+
+	_storage = new S3StorageService({
+		endpoint,
+		region,
+		accessKeyId,
+		secretAccessKey,
+		publicUrl,
+	});
+	return _storage;
+}
 
 function generateId(): string {
 	return randomBytes(16).toString("hex");
 }
 
+type InsertUser = {
+	name: string;
+	email: string;
+	role: UserRole;
+	password: string;
+	phone: Phone;
+	gender?: UserGender;
+};
 async function seedUser(baseOnly = false) {
 	const pw = new PasswordManager();
 
-	const FIXED_USERS: Omit<InsertUser, "confirmPassword" | "userBadges">[] = [
+	const FIXED_USERS: InsertUser[] = [
 		{
 			name: "Test Admin 1",
 			email: "test-admin-1@akademove.com",
@@ -586,7 +705,7 @@ async function seedUser(baseOnly = false) {
 			phone: { countryCode: "ID", number: 8573230855 },
 			gender: "MALE",
 		},
-	];
+	] as const;
 
 	const RANDOM_USERS = baseOnly
 		? []
@@ -741,6 +860,7 @@ export async function seedConfigurations() {
 					minimumFare: 10_000,
 					platformFeeRate: 0.02,
 					taxRate: 0.11,
+					merchantCommissionRate: 0.1, // 10% merchant commission
 				},
 				description: "Food delivery pricing",
 				updatedById: admin.id,
@@ -748,16 +868,25 @@ export async function seedConfigurations() {
 				updatedAt: now,
 			},
 			{
-				key: "commission-rates",
-				name: "Commission Rates",
+				key: "business-configuration",
+				name: "Business Configuration",
 				value: {
-					rideCommissionRate: 0.15,
-					deliveryCommissionRate: 0.15,
-					foodCommissionRate: 0.2,
-					merchantCommissionRate: 0.1,
+					// Wallet limits (in IDR)
+					minTransferAmount: 10_000,
+					minWithdrawalAmount: 50_000,
+					minTopUpAmount: 10_000,
+					quickTopUpAmounts: [
+						10_000, 25_000, 50_000, 100_000, 250_000, 500_000,
+					],
+					// Cancellation fees (as decimal, e.g., 0.1 = 10%)
+					userCancellationFeeBeforeAccept: 0, // 0% before driver accepts
+					userCancellationFeeAfterAccept: 0.1, // 10% after driver accepts
+					noShowFee: 0.5, // 50% no-show penalty
+					// Delivery verification
+					highValueOrderThreshold: 100_000, // 100k IDR threshold for OTP
 				},
 				description:
-					"Platform commission rates for different order types (SRS 8.4)",
+					"Business configuration for wallet limits, cancellation fees, and delivery verification",
 				updatedById: admin.id,
 				createdAt: now,
 				updatedAt: now,
@@ -852,7 +981,7 @@ async function seedMerchants() {
 			userId: user.id,
 			name: faker.company.name(),
 			email: user.email,
-			phone: user.phone,
+			phone: user.phone ?? undefined,
 			address: faker.location.streetAddress(),
 			category,
 			location: {
@@ -904,9 +1033,13 @@ async function seedDrivers() {
 		return;
 	}
 
-	// Check existing drivers to avoid duplicates
+	// Check existing drivers to avoid duplicates (userId, studentId, licensePlate)
 	const existingDrivers = await db
-		.select({ userId: driver.userId })
+		.select({
+			userId: driver.userId,
+			studentId: driver.studentId,
+			licensePlate: driver.licensePlate,
+		})
 		.from(driver);
 
 	const existingUserIds = new Set(existingDrivers.map((d) => d.userId));
@@ -917,6 +1050,32 @@ async function seedDrivers() {
 		return;
 	}
 
+	// Pre-populate Sets with existing values from database to avoid unique constraint violations
+	const usedStudentIds = new Set<number>(
+		existingDrivers.map((d) => d.studentId),
+	);
+	const usedLicensePlates = new Set<string>(
+		existingDrivers.map((d) => d.licensePlate),
+	);
+
+	const generateUniqueStudentId = (): number => {
+		let id: number;
+		do {
+			id = faker.number.int({ min: 2_000_000, max: 9_999_999 });
+		} while (usedStudentIds.has(id));
+		usedStudentIds.add(id);
+		return id;
+	};
+
+	const generateUniqueLicensePlate = (): string => {
+		let plate: string;
+		do {
+			plate = faker.string.alphanumeric(8).toUpperCase();
+		} while (usedLicensePlates.has(plate));
+		usedLicensePlates.add(plate);
+		return plate;
+	};
+
 	const drivers = availableUsers.map((user) => {
 		const bankProvider = faker.helpers.arrayElement(CONSTANTS.BANK_PROVIDERS);
 		const { lat, lng } = randomOffsetLatLng(BASE_LAT, BASE_LNG, OFFSET_METERS);
@@ -924,8 +1083,8 @@ async function seedDrivers() {
 		return {
 			id: v7(),
 			userId: user.id,
-			studentId: faker.number.int({ min: 2_000_000, max: 9_999_999 }),
-			licensePlate: faker.string.alphanumeric(8).toUpperCase(),
+			studentId: generateUniqueStudentId(),
+			licensePlate: generateUniqueLicensePlate(),
 			status: faker.helpers.arrayElement(CONSTANTS.DRIVER_STATUSES),
 			rating: Number.parseFloat(
 				faker.number.float({ min: 3.5, max: 5 }).toFixed(1),
@@ -945,9 +1104,32 @@ async function seedDrivers() {
 		};
 	});
 
-	await db.insert(driver).values(drivers);
+	// Insert drivers in smaller batches to handle potential conflicts
+	const BATCH_SIZE = 10;
+	let insertedCount = 0;
+
+	for (let i = 0; i < drivers.length; i += BATCH_SIZE) {
+		const batch = drivers.slice(i, i + BATCH_SIZE);
+		try {
+			await db.insert(driver).values(batch);
+			insertedCount += batch.length;
+		} catch (_error) {
+			// If batch fails, try inserting one by one
+			for (const d of batch) {
+				try {
+					await db.insert(driver).values(d);
+					insertedCount += 1;
+				} catch {
+					console.warn(
+						`⚠️ Skipped driver for user ${d.userId} (duplicate constraint)`,
+					);
+				}
+			}
+		}
+	}
+
 	console.log(
-		`✅ Inserted ${drivers.length} drivers near (${BASE_LAT}, ${BASE_LNG}).`,
+		`✅ Inserted ${insertedCount} drivers near (${BASE_LAT}, ${BASE_LNG}).`,
 	);
 }
 
@@ -1271,34 +1453,43 @@ async function seedBadges() {
 			iconPath: "assets/Top-Rated-Merchant.png",
 		},
 	];
-	const cwd = process.cwd();
+	// Use the script's directory to resolve asset paths (works regardless of cwd)
+	const scriptDir = import.meta.dirname ?? process.cwd();
+	const serverDir = join(scriptDir, "..");
 
 	console.log("🎖️ Seeding Badges...");
 
-	await Promise.all([
-		db
-			.insert(tables.badge)
-			.values(
-				DEFAULT_BADGES.map((e) => ({ ...e, id: v7(), icon: `${e.code}.png` })),
-			)
-			.onConflictDoNothing(),
-		...DEFAULT_BADGES.map(async (badge) => {
-			const filePath = join(cwd, badge.iconPath);
-			const buff = await readFile(filePath);
-			const fileName = `${badge.code}.png`;
+	// Insert badge records into the database
+	await db
+		.insert(tables.badge)
+		.values(
+			DEFAULT_BADGES.map((e) => ({ ...e, id: v7(), icon: `${e.code}.png` })),
+		)
+		.onConflictDoNothing();
 
-			const file = new File([buff], fileName, {
-				type: "image/png",
-				lastModified: Date.now(),
-			});
+	// Upload badge icons to S3 (if storage is configured)
+	const storage = getStorage();
+	if (storage) {
+		await Promise.all(
+			DEFAULT_BADGES.map(async (badge) => {
+				const filePath = join(serverDir, badge.iconPath);
+				const buff = await readFile(filePath);
+				const fileName = `${badge.code}.png`;
 
-			return storage.upload({
-				bucket: "badges",
-				key: fileName,
-				file,
-			});
-		}),
-	]);
+				const file = new File([buff], fileName, {
+					type: "image/png",
+					lastModified: Date.now(),
+				});
+
+				return storage.upload({
+					bucket: "badges",
+					key: fileName,
+					file,
+				});
+			}),
+		);
+		console.log("✅ Badge icons uploaded to S3.");
+	}
 
 	console.log("✅ Badges seeded successfully.");
 }

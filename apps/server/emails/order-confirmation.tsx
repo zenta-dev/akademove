@@ -136,8 +136,8 @@ export const OrderConfirmationEmail = ({
 export default OrderConfirmationEmail;
 
 const statusBadge = {
-	backgroundColor: "#d1fae5",
-	border: "2px solid #10b981",
+	backgroundColor: "#ccfbf1",
+	border: "2px solid #0d9488",
 	borderRadius: "24px",
 	padding: "8px 20px",
 	textAlign: "center" as const,
@@ -146,7 +146,7 @@ const statusBadge = {
 };
 
 const statusText = {
-	color: "#065f46",
+	color: "#0f766e",
 	fontSize: "14px",
 	fontWeight: "700",
 	margin: "0",
@@ -204,15 +204,15 @@ const sectionTitle = {
 };
 
 const locationBox = {
-	backgroundColor: "#f0f9ff",
-	border: "2px solid #bae6fd",
+	backgroundColor: "#f0fdfa",
+	border: "2px solid #ccfbf1",
 	borderRadius: "8px",
 	padding: "16px",
 	margin: "0 0 16px 0",
 };
 
 const locationText = {
-	color: "#0c4a6e",
+	color: "#0f766e",
 	fontSize: "15px",
 	lineHeight: "1.6",
 	margin: "0",
@@ -238,7 +238,7 @@ const totalLabel = {
 };
 
 const totalAmountStyle = {
-	color: "#667eea",
+	color: "#0d9488",
 	fontSize: "24px",
 	fontWeight: "800",
 	margin: "0",
@@ -250,7 +250,7 @@ const buttonContainer = {
 };
 
 const button = {
-	backgroundColor: "#667eea",
+	backgroundColor: "#0d9488",
 	borderRadius: "8px",
 	color: "#ffffff",
 	fontSize: "16px",

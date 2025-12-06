@@ -106,15 +106,15 @@ const messageContent = {
 };
 
 const responseBox = {
-	backgroundColor: "#eff6ff",
-	border: "2px solid #667eea",
+	backgroundColor: "#f0fdfa",
+	border: "2px solid #0d9488",
 	borderRadius: "8px",
 	padding: "24px",
 	margin: "24px 0",
 };
 
 const responseLabel = {
-	color: "#667eea",
+	color: "#0d9488",
 	fontSize: "13px",
 	fontWeight: "600",
 	textTransform: "uppercase" as const,
