@@ -12,6 +12,9 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get no_show => 'Tidak Hadir';
+
+  @override
   String get popular_merchants => 'Mitra populer';
 
   @override

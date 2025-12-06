@@ -97,6 +97,12 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @no_show.
+  ///
+  /// In en, this message translates to:
+  /// **'No Show'**
+  String get no_show;
+
   /// No description provided for @popular_merchants.
   ///
   /// In en, this message translates to:

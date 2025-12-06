@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get no_show => 'No Show';
+
+  @override
   String get popular_merchants => 'Popular merchants';
 
   @override
