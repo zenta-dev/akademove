@@ -10,9 +10,10 @@ import type {
 } from "@repo/schema/auth";
 import type { ClientAgent, Phone } from "@repo/schema/common";
 import type { UserRole } from "@repo/schema/user";
+import { eq, type SQL } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import type { PartialWithTx } from "@/core/interface";
-import type { DatabaseService } from "@/core/services/db";
+import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MailService } from "@/core/services/mail";
 import type { StorageService } from "@/core/services/storage";
@@ -21,7 +22,6 @@ import type { PasswordManager } from "@/utils/password";
 import {
 	EmailVerificationService,
 	PasswordResetService,
-	type PhoneNumber,
 	SessionService,
 	UserRegistrationService,
 } from "./services";
@@ -120,14 +120,14 @@ export class AuthRepository extends BaseRepository {
 			return await this.#registrationService.signUp(
 				params,
 				{
-					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+					checkDuplicateUser: async (email: string, phone: Phone | null) => {
+						const clauses: SQL[] = [eq(tables.user.email, email)];
+						if (phone) {
+							clauses.push(eq(tables.user.phone, phone));
+						}
 						return await (opts?.tx ?? this.db).query.user.findFirst({
 							columns: { email: true, phone: true },
-							where: (f, op) =>
-								op.or(
-									op.eq(f.email, email),
-									op.eq(f.phone, phone as unknown as Phone),
-								),
+							where: (_f, op) => op.or(...clauses),
 						});
 					},
 				},
@@ -152,14 +152,14 @@ export class AuthRepository extends BaseRepository {
 			return await this.#registrationService.signUpDriver(
 				params,
 				{
-					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+					checkDuplicateUser: async (email: string, phone: Phone | null) => {
+						const clauses: SQL[] = [eq(tables.user.email, email)];
+						if (phone) {
+							clauses.push(eq(tables.user.phone, phone));
+						}
 						return await (opts?.tx ?? this.db).query.user.findFirst({
 							columns: { email: true, phone: true },
-							where: (f, op) =>
-								op.or(
-									op.eq(f.email, email),
-									op.eq(f.phone, phone as unknown as Phone),
-								),
+							where: (_f, op) => op.or(...clauses),
 						});
 					},
 				},
@@ -184,14 +184,14 @@ export class AuthRepository extends BaseRepository {
 			return await this.#registrationService.signUpMerchant(
 				params,
 				{
-					checkDuplicateUser: async (email: string, phone: PhoneNumber) => {
+					checkDuplicateUser: async (email: string, phone: Phone | null) => {
+						const clauses: SQL[] = [eq(tables.user.email, email)];
+						if (phone) {
+							clauses.push(eq(tables.user.phone, phone));
+						}
 						return await (opts?.tx ?? this.db).query.user.findFirst({
 							columns: { email: true, phone: true },
-							where: (f, op) =>
-								op.or(
-									op.eq(f.email, email),
-									op.eq(f.phone, phone as unknown as Phone),
-								),
+							where: (_f, op) => op.or(...clauses),
 						});
 					},
 				},

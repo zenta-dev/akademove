@@ -6,6 +6,7 @@ import {
 	ForgotPasswordSchema,
 	GetSessionResponseSchema,
 	ResetPasswordSchema,
+	RoleAccessSchema,
 	SendEmailVerificationSchema,
 	SignInResponseSchema,
 	SignInSchema,
@@ -14,7 +15,6 @@ import {
 } from "@repo/schema/auth";
 import * as z from "zod/v4";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
-import { RBACService } from "@/core/services/rbac";
 import { toOAPIRequestBody } from "@/utils/oapi";
 
 export const AuthSpec = {
@@ -152,18 +152,18 @@ export const AuthSpec = {
 				createSuccesSchema(z.literal(true), "Reset password successfully"),
 			]),
 		),
-	hasPermission: oc
+	hasAccess: oc
 		.route({
 			tags: [FEATURE_TAGS.AUTH],
 			method: "POST",
-			path: "/has-permission",
+			path: "/has-access",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
 		.input(
 			z.object({
 				body: z.object({
-					permissions: RBACService.schema,
+					roles: z.array(RoleAccessSchema).min(1),
 				}),
 			}),
 		)

@@ -6,14 +6,26 @@ import type {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import { eq } from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS } from "@/core/constants";
+import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import type { WithUserId } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ConfigurationDatabase } from "@/core/tables/configuration";
-import { safeAsync } from "@/utils";
-import { ConfigurationAuditService } from "./services";
+import { OrderRepository } from "@/features/order/order-repository";
+import { log, safeAsync } from "@/utils";
+import {
+	BusinessConfigurationService,
+	ConfigurationAuditService,
+} from "./services";
+
+/** Pricing configuration keys that require cache invalidation when updated */
+const PRICING_CONFIG_KEYS = [
+	CONFIGURATION_KEYS.RIDE_SERVICE_PRICING,
+	CONFIGURATION_KEYS.DELIVERY_SERVICE_PRICING,
+	CONFIGURATION_KEYS.FOOD_SERVICE_PRICING,
+	CONFIGURATION_KEYS.BUSINESS_CONFIGURATION,
+] as const;
 
 export class ConfigurationRepository extends BaseRepository {
 	constructor(db: DatabaseService, kv: KeyValueService) {
@@ -119,6 +131,28 @@ export class ConfigurationRepository extends BaseRepository {
 					this.db.insert(tables.configurationAuditLog).values(auditLogEntry),
 				]),
 			);
+
+			// Invalidate OrderRepository's in-memory pricing cache when pricing config is updated
+			if (
+				PRICING_CONFIG_KEYS.includes(
+					key as (typeof PRICING_CONFIG_KEYS)[number],
+				)
+			) {
+				OrderRepository.invalidatePricingCache();
+				log.info(
+					{ key },
+					"[ConfigurationRepository] Pricing config updated - invalidated OrderRepository cache",
+				);
+			}
+
+			// Invalidate business configuration cache when business config is updated
+			if (key === CONFIGURATION_KEYS.BUSINESS_CONFIGURATION) {
+				await BusinessConfigurationService.invalidateCache(this.kv);
+				log.info(
+					{ key },
+					"[ConfigurationRepository] Business config updated - invalidated cache",
+				);
+			}
 
 			return result;
 		} catch (error) {

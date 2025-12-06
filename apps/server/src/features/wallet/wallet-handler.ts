@@ -1,5 +1,6 @@
 import { m } from "@repo/i18n";
 import { createORPCRouter } from "@/core/router/orpc";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { WalletSpec } from "./wallet-spec";
 
 const { pub, priv } = createORPCRouter(WalletSpec);
@@ -89,9 +90,15 @@ export const WalletHandler = pub.router({
 				throw new Error("Insufficient balance");
 			}
 
-			// Minimum transfer check (10,000 IDR)
-			if (body.amount < 10000) {
-				throw new Error("Minimum transfer amount is 10,000 IDR");
+			// Get minimum transfer amount from configuration
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				context.svc.db,
+				context.svc.kv,
+			);
+			if (body.amount < businessConfig.minTransferAmount) {
+				throw new Error(
+					`Minimum transfer amount is ${businessConfig.minTransferAmount.toLocaleString("id-ID")} IDR`,
+				);
 			}
 
 			const senderBalanceBefore = senderWallet.balance;
@@ -190,9 +197,15 @@ export const WalletHandler = pub.router({
 				throw new Error("Insufficient balance");
 			}
 
-			// Minimum withdrawal check (50,000 IDR)
-			if (body.amount < 50000) {
-				throw new Error("Minimum withdrawal amount is 50,000 IDR");
+			// Get minimum withdrawal amount from configuration
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				context.svc.db,
+				context.svc.kv,
+			);
+			if (body.amount < businessConfig.minWithdrawalAmount) {
+				throw new Error(
+					`Minimum withdrawal amount is ${businessConfig.minWithdrawalAmount.toLocaleString("id-ID")} IDR`,
+				);
 			}
 
 			const balanceBefore = wallet.balance;

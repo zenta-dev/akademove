@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import type { Phone } from "@repo/schema";
 import type { SignUp, SignUpDriver, SignUpMerchant } from "@repo/schema/auth";
 import type { User, UserRole } from "@repo/schema/user";
 import { getFileExtension } from "@repo/shared";
@@ -19,24 +20,16 @@ export interface SignUpResult {
 }
 
 /**
- * Phone number structure
- */
-export interface PhoneNumber {
-	countryCode: string;
-	number: number;
-}
-
-/**
  * Dependencies for user registration
  */
 export interface UserRegistrationDeps {
 	checkDuplicateUser: (
 		email: string,
-		phone: PhoneNumber,
+		phone: Phone | null,
 	) => Promise<
 		| {
 				email: string;
-				phone: PhoneNumber;
+				phone: Phone | null;
 		  }
 		| undefined
 	>;
@@ -125,7 +118,7 @@ export class UserRegistrationService {
 						code: "CONFLICT",
 					});
 				}
-				if (existingUser.phone.number === params.phone.number) {
+				if (existingUser.phone?.number === params.phone?.number) {
 					throw new RepositoryError("Phone already registered", {
 						code: "CONFLICT",
 					});

@@ -1,4 +1,8 @@
 import { env } from "cloudflare:workers";
+import type {
+	FoodPricingConfiguration,
+	PricingConfiguration,
+} from "@repo/schema";
 import { type OrderEnvelope, OrderEnvelopeSchema } from "@repo/schema/ws";
 import Decimal from "decimal.js";
 import { BaseDurableObject, type BroadcastOptions } from "@/core/base";
@@ -7,6 +11,7 @@ import { getManagers, getRepositories, getServices } from "@/core/factory";
 import type { RepositoryContext, ServiceContext } from "@/core/interface";
 import type { DatabaseTransaction } from "@/core/services/db";
 import { BadgeAwardService } from "@/features/badge/services/badge-award-service";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { DriverPriorityService } from "@/features/driver/services/driver-priority-service";
 import { OrderCancellationService } from "@/features/order/services/order-cancellation-service";
 import { OrderRefundService } from "@/features/order/services/order-refund-service";
@@ -414,25 +419,27 @@ export class OrderRoom extends BaseDurableObject {
 		// Get order details to calculate commission
 		const order = await this.#repo.order.get(done.orderId, opts);
 
+		let key = "";
+		if (order.type === "RIDE") {
+			key = CONFIGURATION_KEYS.RIDE_SERVICE_PRICING;
+		} else if (order.type === "DELIVERY") {
+			key = CONFIGURATION_KEYS.DELIVERY_SERVICE_PRICING;
+		} else if (order.type === "FOOD") {
+			key = CONFIGURATION_KEYS.FOOD_SERVICE_PRICING;
+		}
+
 		// Get commission configuration
-		const commissionConfig = await this.#repo.configuration.get(
-			CONFIGURATION_KEYS.COMMISSION_RATES,
-		);
-		const commissionRates = commissionConfig.value as {
-			rideCommissionRate: number;
-			deliveryCommissionRate: number;
-			foodCommissionRate: number;
-			merchantCommissionRate: number;
-		};
+		const prcingConfig = await this.#repo.configuration.get(key);
+		const commissionRates = prcingConfig.value as PricingConfiguration;
 
 		// Calculate commission based on order type
 		let commissionRate = 0;
 		if (order.type === "RIDE") {
-			commissionRate = commissionRates.rideCommissionRate || 0.15;
+			commissionRate = commissionRates.platformFeeRate;
 		} else if (order.type === "DELIVERY") {
-			commissionRate = commissionRates.deliveryCommissionRate || 0.15;
+			commissionRate = commissionRates.platformFeeRate;
 		} else if (order.type === "FOOD") {
-			commissionRate = commissionRates.foodCommissionRate || 0.2;
+			commissionRate = commissionRates.platformFeeRate;
 		}
 
 		// Apply commission reduction from driver badges
@@ -481,9 +488,13 @@ export class OrderRoom extends BaseDurableObject {
 		const totalPrice = new Decimal(order.totalPrice);
 		const platformCommission = totalPrice.times(commissionRate);
 		const driverEarning = totalPrice.minus(platformCommission);
+		// For FOOD orders, merchantCommissionRate MUST come from config, no fallback allowed
 		const merchantCommission =
 			order.type === "FOOD"
-				? totalPrice.times(commissionRates.merchantCommissionRate || 0.1)
+				? totalPrice.times(
+						(commissionRates as FoodPricingConfiguration)
+							.merchantCommissionRate,
+					)
 				: new Decimal(0);
 
 		// Get driver wallet
@@ -930,9 +941,18 @@ export class OrderRoom extends BaseDurableObject {
 				return;
 			}
 
-			// Calculate no-show fees
+			// Get business configuration for fee calculations
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				this.#svc.db,
+				this.#svc.kv,
+			);
+
+			// Calculate no-show fees using config from database
 			const { refundAmount, penaltyAmount, driverCompensation } =
-				OrderCancellationService.calculateNoShowRefund(order.totalPrice);
+				OrderCancellationService.calculateNoShowRefund(
+					order.totalPrice,
+					businessConfig,
+				);
 
 			// Find payment transaction for this order using OrderRefundService
 			const paymentTransaction =

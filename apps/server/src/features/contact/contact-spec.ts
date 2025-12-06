@@ -37,7 +37,7 @@ export const ContactSpec = {
 				query: z
 					.object({
 						page: z.coerce.number().int().min(1).optional(),
-						limit: z.coerce.number().int().min(1).max(100).optional(),
+						limit: z.coerce.number().int().min(1).max(1000).optional(),
 						status: z
 							.enum(["PENDING", "REVIEWING", "RESOLVED", "CLOSED"])
 							.optional(),

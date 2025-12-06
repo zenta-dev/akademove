@@ -1,14 +1,12 @@
 import { RepositoryError } from "@/core/error";
-import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { AnalyticsSpec } from "./analytics-spec";
 
 const { priv } = createORPCRouter(AnalyticsSpec);
 
 export const AnalyticsHandler = priv.router({
-	exportDriverAnalytics: priv.exportDriverAnalytics
-		.use(hasPermission({ order: ["list"] }))
-		.handler(async ({ context, input: { params, query } }) => {
+	exportDriverAnalytics: priv.exportDriverAnalytics.handler(
+		async ({ context, input: { params, query } }) => {
 			// IDOR protection - drivers can only export their own data
 			if (
 				context.user.role === "DRIVER" &&
@@ -36,10 +34,10 @@ export const AnalyticsHandler = priv.router({
 				},
 				body: csv,
 			};
-		}),
-	exportMerchantAnalytics: priv.exportMerchantAnalytics
-		.use(hasPermission({ order: ["list"] }))
-		.handler(async ({ context, input: { params, query } }) => {
+		},
+	),
+	exportMerchantAnalytics: priv.exportMerchantAnalytics.handler(
+		async ({ context, input: { params, query } }) => {
 			// IDOR protection - merchants can only export their own data
 			if (
 				context.user.role === "MERCHANT" &&
@@ -67,10 +65,10 @@ export const AnalyticsHandler = priv.router({
 				},
 				body: csv,
 			};
-		}),
-	exportOperatorAnalytics: priv.exportOperatorAnalytics
-		.use(hasPermission({ order: ["list"] }))
-		.handler(async ({ context, input: { query } }) => {
+		},
+	),
+	exportOperatorAnalytics: priv.exportOperatorAnalytics.handler(
+		async ({ context, input: { query } }) => {
 			// Only operators and admins can export platform analytics
 			if (!["OPERATOR", "ADMIN"].includes(context.user.role)) {
 				throw new RepositoryError(
@@ -97,5 +95,6 @@ export const AnalyticsHandler = priv.router({
 				},
 				body: csv,
 			};
-		}),
+		},
+	),
 });

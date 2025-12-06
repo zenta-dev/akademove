@@ -1,10 +1,10 @@
 import { oc } from "@orpc/contract";
-import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
+import { UserListQuerySchema } from "@repo/schema/pagination";
 import {
 	AdminUpdateUserSchema,
 	DashboardStatsQuerySchema,
 	DashboardStatsSchema,
-	InsertUserSchema,
+	InviteUserSchema,
 	UserSchema,
 } from "@repo/schema/user";
 import * as z from "zod";
@@ -19,7 +19,7 @@ export const UserAdminSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(z.object({ query: UserListQuerySchema }))
 		.output(
 			createSuccesSchema(
 				z.array(UserSchema),
@@ -44,7 +44,7 @@ export const UserAdminSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ body: InsertUserSchema }))
+		.input(z.object({ body: InviteUserSchema }))
 		.output(createSuccesSchema(UserSchema, "User created successfully")),
 	update: oc
 		.route({

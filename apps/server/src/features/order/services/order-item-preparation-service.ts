@@ -1,5 +1,6 @@
 import type { WithTx } from "@/core/interface";
 import { tables } from "@/core/services/db";
+import { toNumberSafe } from "@/utils";
 
 interface MenuItem {
 	id: string;
@@ -20,6 +21,29 @@ interface OrderItem {
  * @responsibility Transform menu items and quantities into order items for insertion
  */
 export class OrderItemPreparationService {
+	/**
+	 * Calculate total price of menu items
+	 *
+	 * @param menus - Menu items with prices
+	 * @param items - Order items with quantities
+	 * @returns Total price of all menu items
+	 */
+	static calculateMenuItemsTotal(
+		menus: MenuItem[],
+		items: OrderItem[] | undefined,
+	): number {
+		if (!menus.length || !items?.length) {
+			return 0;
+		}
+
+		return menus.reduce((total, menu) => {
+			const orderItem = items.find((i) => i.item.id === menu.id);
+			const quantity = orderItem?.quantity ?? 0;
+			const price = toNumberSafe(menu.price);
+			return total + price * quantity;
+		}, 0);
+	}
+
 	/**
 	 * Prepare order items data for database insertion
 	 */

@@ -1,63 +1,57 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
-import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { MerchantOrderSpec } from "./merchant-order-spec";
 
 const { priv } = createORPCRouter(MerchantOrderSpec);
 
 export const MerchantOrderHandler = priv.router({
-	accept: priv.accept
-		.use(hasPermission({ order: ["update"] }))
-		.handler(async ({ context, input: { params } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				// Get merchant ID from logged-in user
-				const merchant = await context.repo.merchant.main.getByUserId(
-					context.user.id,
-				);
+	accept: priv.accept.handler(async ({ context, input: { params } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			// Get merchant ID from logged-in user
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
 
-				const result = await context.repo.merchant.order.acceptOrder(
-					params.id,
-					merchant.id,
-					{ tx },
-				);
+			const result = await context.repo.merchant.order.acceptOrder(
+				params.id,
+				merchant.id,
+				{ tx },
+			);
 
-				return {
-					status: 200,
-					body: { message: m.server_order_accepted(), data: result },
-				};
-			});
-		}),
+			return {
+				status: 200,
+				body: { message: m.server_order_accepted(), data: result },
+			};
+		});
+	}),
 
-	reject: priv.reject
-		.use(hasPermission({ order: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				const data = trimObjectValues(body);
+	reject: priv.reject.handler(async ({ context, input: { params, body } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			const data = trimObjectValues(body);
 
-				// Get merchant ID from logged-in user
-				const merchant = await context.repo.merchant.main.getByUserId(
-					context.user.id,
-				);
+			// Get merchant ID from logged-in user
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
 
-				const result = await context.repo.merchant.order.rejectOrder(
-					params.id,
-					merchant.id,
-					data.reason,
-					data.note,
-					{ tx },
-				);
+			const result = await context.repo.merchant.order.rejectOrder(
+				params.id,
+				merchant.id,
+				data.reason,
+				data.note,
+				{ tx },
+			);
 
-				return {
-					status: 200,
-					body: { message: m.server_order_rejected(), data: result },
-				};
-			});
-		}),
+			return {
+				status: 200,
+				body: { message: m.server_order_rejected(), data: result },
+			};
+		});
+	}),
 
-	markPreparing: priv.markPreparing
-		.use(hasPermission({ order: ["update"] }))
-		.handler(async ({ context, input: { params } }) => {
+	markPreparing: priv.markPreparing.handler(
+		async ({ context, input: { params } }) => {
 			return await context.svc.db.transaction(async (tx) => {
 				// Get merchant ID from logged-in user
 				const merchant = await context.repo.merchant.main.getByUserId(
@@ -78,30 +72,29 @@ export const MerchantOrderHandler = priv.router({
 					},
 				};
 			});
-		}),
+		},
+	),
 
-	markReady: priv.markReady
-		.use(hasPermission({ order: ["update"] }))
-		.handler(async ({ context, input: { params } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				// Get merchant ID from logged-in user
-				const merchant = await context.repo.merchant.main.getByUserId(
-					context.user.id,
-				);
+	markReady: priv.markReady.handler(async ({ context, input: { params } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			// Get merchant ID from logged-in user
+			const merchant = await context.repo.merchant.main.getByUserId(
+				context.user.id,
+			);
 
-				const result = await context.repo.merchant.order.markReady(
-					params.id,
-					merchant.id,
-					{ tx },
-				);
+			const result = await context.repo.merchant.order.markReady(
+				params.id,
+				merchant.id,
+				{ tx },
+			);
 
-				return {
-					status: 200,
-					body: {
-						message: m.server_order_ready(),
-						data: result,
-					},
-				};
-			});
-		}),
+			return {
+				status: 200,
+				body: {
+					message: m.server_order_ready(),
+					data: result,
+				},
+			};
+		});
+	}),
 });

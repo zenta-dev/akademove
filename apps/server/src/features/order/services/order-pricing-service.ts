@@ -5,9 +5,13 @@
  * - SRP: Single responsibility for pricing logic
  * - OCP: Open for extension with new order types
  * - DIP: Depends on IMapService interface
+ *
+ * NOTE: All pricing-related values MUST come from the database configuration.
+ * Static pricing constants are forbidden.
  */
 
 import type {
+	BusinessConfiguration,
 	DeliveryPricingConfiguration,
 	FoodPricingConfiguration,
 	PricingConfiguration,
@@ -20,7 +24,6 @@ import type {
 } from "@repo/schema/order";
 import Decimal from "decimal.js";
 import type { IMapService } from "@/core/abstractions/interfaces";
-import { BUSINESS_CONSTANTS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
 import { log } from "@/utils";
 import { PricingCalculator } from "@/utils/pricing";
@@ -29,6 +32,7 @@ export interface IPricingConfigProvider {
 	getRidePricing(): Promise<RidePricingConfiguration>;
 	getDeliveryPricing(): Promise<DeliveryPricingConfiguration>;
 	getFoodPricing(): Promise<FoodPricingConfiguration>;
+	getBusinessConfig(): Promise<BusinessConfiguration>;
 }
 
 /**
@@ -89,80 +93,99 @@ export class OrderPricingService {
 	}
 
 	/**
-	 * Calculate commission for completed order
+	 * Calculate commission for completed order using dynamic pricing config
 	 *
 	 * @param orderType - Type of order
 	 * @param totalPrice - Total order price
+	 * @param badgeCommissionReduction - Optional reduction from driver badges (0-0.5)
 	 * @returns Object with platform and merchant commission
 	 */
-	calculateCommission(
+	async calculateCommission(
 		orderType: OrderType,
 		totalPrice: number,
-	): {
+		badgeCommissionReduction = 0,
+	): Promise<{
 		platformCommission: number;
 		merchantCommission?: number;
 		driverEarning: number;
-	} {
+		commissionRate: number;
+	}> {
 		const amount = new Decimal(totalPrice);
-		let platformRate: Decimal;
-		let merchantCommission: number | undefined;
 
-		switch (orderType) {
-			case "RIDE":
-				platformRate = new Decimal(BUSINESS_CONSTANTS.RIDE_COMMISSION_RATE);
-				break;
-			case "DELIVERY":
-				platformRate = new Decimal(BUSINESS_CONSTANTS.DELIVERY_COMMISSION_RATE);
-				break;
-			case "FOOD":
-				platformRate = new Decimal(BUSINESS_CONSTANTS.FOOD_COMMISSION_RATE);
-				merchantCommission = amount
-					.mul(BUSINESS_CONSTANTS.MERCHANT_FOOD_COMMISSION_RATE)
-					.toNumber();
-				break;
-			default: {
-				const err: never = orderType;
-				throw new RepositoryError(`Unknown order type: ${err}`);
-			}
+		// Get pricing config for the order type
+		const config = await this.#getPricingForType(orderType);
+
+		// Use platformFeeRate from config as the commission rate
+		let platformRate = new Decimal(config.platformFeeRate);
+
+		// Apply badge commission reduction (max 50%)
+		if (badgeCommissionReduction > 0) {
+			const reduction = Math.min(badgeCommissionReduction, 0.5);
+			platformRate = platformRate.mul(1 - reduction);
+			log.info(
+				{
+					orderType,
+					originalRate: config.platformFeeRate,
+					reduction,
+					finalRate: platformRate.toNumber(),
+				},
+				"[OrderPricingService] Applied badge commission reduction",
+			);
 		}
 
-		const platformCommission = amount.mul(platformRate).toNumber();
-		const driverEarning = amount.minus(platformCommission).toNumber();
+		const platformCommission = amount.mul(platformRate);
+		const driverEarning = amount.minus(platformCommission);
+
+		// Calculate merchant commission for FOOD orders
+		// merchantCommissionRate MUST come from database config, no fallback allowed
+		let merchantCommission: number | undefined;
+		if (orderType === "FOOD") {
+			const foodConfig = config as FoodPricingConfiguration;
+			merchantCommission = Number(
+				amount.mul(foodConfig.merchantCommissionRate).toFixed(2),
+			);
+		}
 
 		return {
 			platformCommission: Number(platformCommission.toFixed(2)),
-			merchantCommission: merchantCommission
-				? Number(merchantCommission.toFixed(2))
-				: undefined,
+			merchantCommission,
 			driverEarning: Number(driverEarning.toFixed(2)),
+			commissionRate: platformRate.toNumber(),
 		};
 	}
 
 	/**
-	 * Calculate cancellation fee based on order status
+	 * Calculate cancellation fee based on order status.
+	 * Fee rates are fetched from database configuration.
 	 *
 	 * @param totalPrice - Total order price
 	 * @param isAccepted - Whether driver has accepted
 	 * @returns Cancellation fee amount
 	 */
-	calculateCancellationFee(totalPrice: number, isAccepted: boolean): number {
+	async calculateCancellationFee(
+		totalPrice: number,
+		isAccepted: boolean,
+	): Promise<number> {
+		const businessConfig = await this.configProvider.getBusinessConfig();
 		const amount = new Decimal(totalPrice);
 		const rate = isAccepted
-			? BUSINESS_CONSTANTS.USER_CANCELLATION_FEE_AFTER_ACCEPT
-			: BUSINESS_CONSTANTS.USER_CANCELLATION_FEE_BEFORE_ACCEPT;
+			? businessConfig.userCancellationFeeAfterAccept
+			: businessConfig.userCancellationFeeBeforeAccept;
 
 		return Number(amount.mul(rate).toFixed(2));
 	}
 
 	/**
-	 * Calculate no-show fee
+	 * Calculate no-show fee.
+	 * Fee rate is fetched from database configuration.
 	 *
 	 * @param totalPrice - Total order price
-	 * @returns No-show fee amount (50% of order)
+	 * @returns No-show fee amount
 	 */
-	calculateNoShowFee(totalPrice: number): number {
+	async calculateNoShowFee(totalPrice: number): Promise<number> {
+		const businessConfig = await this.configProvider.getBusinessConfig();
 		const amount = new Decimal(totalPrice);
-		return Number(amount.mul(BUSINESS_CONSTANTS.NO_SHOW_FEE).toFixed(2));
+		return Number(amount.mul(businessConfig.noShowFee).toFixed(2));
 	}
 
 	/**

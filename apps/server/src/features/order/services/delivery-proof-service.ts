@@ -1,6 +1,9 @@
 import { v7 } from "uuid";
 import { RepositoryError } from "@/core/error";
+import type { DatabaseService } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
 import type { StorageService } from "@/core/services/storage";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { log } from "@/utils";
 
 /**
@@ -13,7 +16,7 @@ import { log } from "@/utils";
  *
  * @example
  * ```typescript
- * const service = new DeliveryProofService(storageService);
+ * const service = new DeliveryProofService(storageService, db, kv);
  *
  * // Generate OTP
  * const otp = service.generateOTP();
@@ -31,9 +34,12 @@ import { log } from "@/utils";
  */
 export class DeliveryProofService {
 	static readonly OTP_LENGTH = 6;
-	static readonly HIGH_VALUE_THRESHOLD = 100000; // 100k IDR
 
-	constructor(private readonly storageService: StorageService) {}
+	constructor(
+		private readonly storageService: StorageService,
+		private readonly db: DatabaseService,
+		private readonly kv: KeyValueService,
+	) {}
 
 	/**
 	 * Generate 6-digit OTP for delivery verification
@@ -51,13 +57,19 @@ export class DeliveryProofService {
 	}
 
 	/**
-	 * Check if order requires OTP verification based on value
+	 * Check if order requires OTP verification based on value.
+	 * The threshold is fetched from database configuration.
 	 *
 	 * @param totalPrice - Order total price in IDR
 	 * @returns true if OTP required
 	 */
-	requiresOTP(totalPrice: number): boolean {
-		return totalPrice >= DeliveryProofService.HIGH_VALUE_THRESHOLD;
+	async requiresOTP(totalPrice: number): Promise<boolean> {
+		const threshold =
+			await BusinessConfigurationService.getHighValueOrderThreshold(
+				this.db,
+				this.kv,
+			);
+		return totalPrice >= threshold;
 	}
 
 	/**

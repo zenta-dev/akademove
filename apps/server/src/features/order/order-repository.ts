@@ -45,6 +45,7 @@ import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { MapService } from "@/core/services/map";
 import type { OrderDatabase } from "@/core/tables/order";
+import { BusinessConfigurationService } from "@/features/configuration/services";
 import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import type {
 	ChargePayload,
@@ -602,8 +603,20 @@ export class OrderRepository extends BaseRepository {
 					: Promise.resolve([]),
 			]);
 
+			// Calculate menu items total for FOOD orders
+			const menuItemsTotal =
+				params.type === "FOOD"
+					? OrderItemPreparationService.calculateMenuItemsTotal(
+							menus,
+							params.items,
+						)
+					: 0;
+
+			// Total cost = delivery fee (from estimate) + menu items total
+			const baseTotalCost = estimate.totalCost + menuItemsTotal;
+
 			// Use OrderCouponService to validate and apply coupon
-			let finalTotalCost = estimate.totalCost;
+			let finalTotalCost = baseTotalCost;
 			let couponId: string | undefined;
 			let couponCode: string | undefined;
 			let discountAmount = 0;
@@ -614,11 +627,23 @@ export class OrderRepository extends BaseRepository {
 			// Extract merchantId early for coupon eligibility check
 			const merchantId = OrderValidationService.getMerchantId(menus);
 
+			if (menuItemsTotal > 0) {
+				log.info(
+					{
+						userId: params.userId,
+						deliveryFee: estimate.totalCost,
+						menuItemsTotal,
+						baseTotalCost,
+					},
+					"[OrderRepository] FOOD order - menu items total calculated",
+				);
+			}
+
 			if (params.couponCode) {
 				// User provided a coupon code - validate and apply it
 				const couponResult = await OrderCouponService.validateAndApplyCoupon(
 					params.couponCode,
-					estimate.totalCost,
+					baseTotalCost,
 					params.userId,
 					this.db,
 					this.kv,
@@ -631,7 +656,7 @@ export class OrderRepository extends BaseRepository {
 			} else {
 				// No coupon provided - auto-apply the best eligible coupon
 				const autoCouponResult = await OrderCouponService.getAndApplyBestCoupon(
-					estimate.totalCost,
+					baseTotalCost,
 					params.userId,
 					params.type,
 					this.db,
@@ -654,7 +679,7 @@ export class OrderRepository extends BaseRepository {
 							userId: params.userId,
 							couponCode,
 							discountAmount,
-							originalTotal: estimate.totalCost,
+							originalTotal: baseTotalCost,
 							finalTotal: finalTotalCost,
 						},
 						"[OrderRepository] Auto-applied best eligible coupon",
@@ -727,7 +752,8 @@ export class OrderRepository extends BaseRepository {
 				params.payment.method === "BANK_TRANSFER"
 			) {
 				chargePayload.bank = params.payment.bankProvider;
-				chargePayload.va_number = `${user.phone.number}`;
+				const phoneNumber = user.phone?.number;
+				if (phoneNumber) chargePayload.va_number = `${phoneNumber}`;
 			}
 
 			const { transaction, payment } = await this.#paymentRepo.charge(
@@ -800,14 +826,14 @@ export class OrderRepository extends BaseRepository {
 
 			// Generate OTP for delivery proof if order is ARRIVING or IN_TRIP and requires OTP
 			let deliveryOtp = item.deliveryOtp;
-			if (
+			const shouldGenerateOtp =
 				item.status &&
 				(item.status === "ARRIVING" || item.status === "IN_TRIP") &&
 				existing.status !== "ARRIVING" &&
 				existing.status !== "IN_TRIP" &&
 				!existing.deliveryOtp &&
-				this.#deliveryProofService.requiresOTP(existing.totalPrice)
-			) {
+				(await this.#deliveryProofService.requiresOTP(existing.totalPrice));
+			if (shouldGenerateOtp) {
 				deliveryOtp = this.#deliveryProofService.generateOTP();
 				log.info(
 					{ orderId: id, totalPrice: existing.totalPrice },
@@ -897,12 +923,19 @@ export class OrderRepository extends BaseRepository {
 			// Validate status transition
 			this.#stateService.validateTransition(order.status, cancelStatus);
 
+			// Fetch business configuration for cancellation fee rates
+			const businessConfig = await BusinessConfigurationService.getConfig(
+				this.db,
+				this.kv,
+			);
+
 			// Use OrderCancellationService to calculate refund with penalty logic
 			const { refundAmount, penaltyAmount } =
 				OrderCancellationService.calculateRefund(
 					order.totalPrice,
 					cancelStatus,
 					order.status,
+					businessConfig,
 					order.driverId,
 				);
 

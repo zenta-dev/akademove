@@ -3,10 +3,10 @@ import { unflattenData } from "@repo/schema/flatten.helper";
 import {
 	composeAuthCookieValue,
 	nullToUndefined,
-	type Permissions,
 	trimObjectValues,
 } from "@repo/shared";
 import { AuthError, BaseError, RepositoryError } from "@/core/error";
+import { hasRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { isDev, log } from "@/utils";
 import { AuthSpec } from "./auth-spec";
@@ -17,14 +17,16 @@ export const AuthHandler = pub.router({
 	signIn: pub.signIn.handler(async ({ context, input: { body } }) => {
 		const result = await context.repo.auth.signIn(trimObjectValues(body));
 
-		context.resHeaders?.set(
-			"Set-Cookie",
-			composeAuthCookieValue({
-				token: result.token,
-				isDev,
-				maxAge: 7 * 24 * 60 * 60,
-			}),
-		);
+		if (!result.user.banned) {
+			context.resHeaders?.set(
+				"Set-Cookie",
+				composeAuthCookieValue({
+					token: result.token,
+					isDev,
+					maxAge: 7 * 24 * 60 * 60,
+				}),
+			);
+		}
 
 		return {
 			status: 200,
@@ -245,22 +247,17 @@ export const AuthHandler = pub.router({
 			} as const;
 		},
 	),
-	hasPermission: priv.hasPermission.handler(
-		async ({ context, input: { body } }) => {
-			const ok = context.svc.rbac.hasPermission({
-				role: context.user.role,
-				permissions: body.permissions as Permissions,
-			});
+	hasAccess: priv.hasAccess.handler(async ({ context, input: { body } }) => {
+		const ok = hasRoles(context.user?.role, ...body.roles);
 
-			return {
-				status: 200,
-				body: {
-					message: m.server_permission_verified(),
-					data: ok,
-				},
-			} as const;
-		},
-	),
+		return {
+			status: 200,
+			body: {
+				message: m.server_permission_verified(),
+				data: ok,
+			},
+		} as const;
+	}),
 	exchangeToken: priv.exchangeToken.handler(async ({ context }) => {
 		if (!context.user) {
 			throw new AuthError(m.error_invalid_session());

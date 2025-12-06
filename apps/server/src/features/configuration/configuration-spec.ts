@@ -1,5 +1,6 @@
 import { oc } from "@orpc/contract";
 import {
+	BusinessConfigurationSchema,
 	ConfigurationSchema,
 	UpdateConfigurationSchema,
 } from "@repo/schema/configuration";
@@ -61,6 +62,28 @@ export const ConfigurationSpec = {
 				createSuccesSchema(
 					ConfigurationSchema,
 					"Configuration updated successfully",
+				),
+			]),
+		),
+	/**
+	 * Public endpoint to get business configuration.
+	 * Returns wallet limits, fee rates, and other business rules
+	 * that frontends need to display to users.
+	 */
+	getBusinessConfig: oc
+		.route({
+			tags: [FEATURE_TAGS.CONFIGURATION],
+			method: "GET",
+			path: "/business",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(z.object({}))
+		.output(
+			z.union([
+				createSuccesSchema(
+					BusinessConfigurationSchema,
+					"Successfully retrieved business configuration",
 				),
 			]),
 		),

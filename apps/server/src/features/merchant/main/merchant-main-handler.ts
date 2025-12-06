@@ -2,7 +2,7 @@ import { m } from "@repo/i18n";
 import { unflattenData } from "@repo/schema/flatten.helper";
 import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
-import { hasPermission, requireRoles } from "@/core/middlewares/auth";
+import { requireRoles } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { log } from "@/utils";
 import { MerchantMainSpec } from "./merchant-main-spec";
@@ -11,7 +11,7 @@ const { priv } = createORPCRouter(MerchantMainSpec);
 
 export const MerchantMainHandler = priv.router({
 	getMine: priv.getMine
-		.use(hasPermission({ merchant: ["get"] }))
+
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context }) => {
 			const result = await context.repo.merchant.main.getByUserId(
@@ -24,7 +24,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	list: priv.list
-		.use(hasPermission({ merchant: ["list"] }))
+
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.merchant.main.list(query);
@@ -39,7 +39,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	populars: priv.populars
-		.use(hasPermission({ merchant: ["list"] }))
+
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
 			log.debug(
@@ -58,7 +58,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	get: priv.get
-		.use(hasPermission({ merchant: ["get"] }))
+
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { params } }) => {
 			log.debug(
@@ -76,7 +76,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	update: priv.update
-		.use(hasPermission({ merchant: ["update"] }))
+
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params, body } }) => {
 			// IDOR Protection: Merchants can only update their own profile
@@ -99,7 +99,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	remove: priv.remove
-		.use(hasPermission({ merchant: ["update"] }))
+
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
 			await context.repo.merchant.main.remove(params.id);
@@ -110,7 +110,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	bestSellers: priv.bestSellers
-		.use(hasPermission({ merchantMenu: ["list"] }))
+
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
 			const result = await context.repo.merchant.menu.getBestSellers({
@@ -127,7 +127,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	analytics: priv.analytics
-		.use(hasPermission({ merchant: ["get"], order: ["list"] }))
+
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context, input: { params, query } }) => {
 			// IDOR Protection: Merchants can only view their own analytics
@@ -154,7 +154,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	activate: priv.activate
-		.use(hasPermission({ merchant: ["update"] }))
+
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { params } }) => {
 			log.info(
@@ -169,7 +169,7 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	deactivate: priv.deactivate
-		.use(hasPermission({ merchant: ["update"] }))
+
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { params, body } }) => {
 			log.info(

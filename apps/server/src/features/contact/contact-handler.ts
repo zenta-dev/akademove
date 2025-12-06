@@ -1,6 +1,5 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
-import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { log } from "@/utils";
 import { ContactSpec } from "./contact-spec";
@@ -29,83 +28,74 @@ export const ContactHandler = pub.router({
 			};
 		});
 	}),
-	list: priv.list
-		.use(hasPermission({ contact: ["list"] }))
-		.handler(async ({ context, input: { query } }) => {
-			const result = await context.repo.contact.list(
-				query
-					? {
-							...query,
-							order: "desc" as const,
-							mode: "offset" as const,
-							limit: query.limit ?? 10,
-						}
-					: undefined,
-			);
+	list: priv.list.handler(async ({ context, input: { query } }) => {
+		const result = await context.repo.contact.list(
+			query
+				? {
+						...query,
+						order: "desc" as const,
+						mode: "offset" as const,
+						limit: query.limit ?? 10,
+					}
+				: undefined,
+		);
 
-			return {
-				status: 200 as const,
-				body: {
-					message: m.server_contacts_retrieved(),
-					data: {
-						rows: result.rows,
-						pagination: result.pagination
-							? { totalPages: result.pagination.totalPages ?? 0 }
-							: undefined,
-					},
+		return {
+			status: 200 as const,
+			body: {
+				message: m.server_contacts_retrieved(),
+				data: {
+					rows: result.rows,
+					pagination: result.pagination
+						? { totalPages: result.pagination.totalPages ?? 0 }
+						: undefined,
 				},
-			};
-		}),
-	getById: priv.getById
-		.use(hasPermission({ contact: ["get"] }))
-		.handler(async ({ context, input: { params } }) => {
-			const result = await context.repo.contact.get(params.id);
+			},
+		};
+	}),
+	getById: priv.getById.handler(async ({ context, input: { params } }) => {
+		const result = await context.repo.contact.get(params.id);
+
+		return {
+			status: 200 as const,
+			body: {
+				message: m.server_contact_retrieved(),
+				data: result,
+			},
+		};
+	}),
+	update: priv.update.handler(async ({ context, input: { params, body } }) => {
+		const data = trimObjectValues(body);
+
+		return await context.svc.db.transaction(async (tx) => {
+			const result = await context.repo.contact.update(params.id, data, {
+				tx,
+			});
 
 			return {
 				status: 200 as const,
 				body: {
-					message: m.server_contact_retrieved(),
+					message: m.server_contact_updated(),
 					data: result,
 				},
 			};
-		}),
-	update: priv.update
-		.use(hasPermission({ contact: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
-			const data = trimObjectValues(body);
+		});
+	}),
+	delete: priv.delete.handler(async ({ context, input: { params } }) => {
+		return await context.svc.db.transaction(async (tx) => {
+			await context.repo.contact.delete(params.id, { tx });
 
-			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.contact.update(params.id, data, {
-					tx,
-				});
-
-				return {
-					status: 200 as const,
-					body: {
-						message: m.server_contact_updated(),
-						data: result,
-					},
-				};
-			});
-		}),
-	delete: priv.delete
-		.use(hasPermission({ contact: ["delete"] }))
-		.handler(async ({ context, input: { params } }) => {
-			return await context.svc.db.transaction(async (tx) => {
-				await context.repo.contact.delete(params.id, { tx });
-
-				return {
-					status: 200 as const,
-					body: {
-						message: m.server_contact_deleted(),
-						data: true,
-					},
-				};
-			});
-		}),
-	respond: priv.respond
-		.use(hasPermission({ contact: ["respond"] }))
-		.handler(async ({ context, input: { params, body } }) => {
+			return {
+				status: 200 as const,
+				body: {
+					message: m.server_contact_deleted(),
+					data: true,
+				},
+			};
+		});
+	}),
+	respond: priv.respond.handler(
+		async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 
 			// Get the original contact first for email details
@@ -156,5 +146,6 @@ export const ContactHandler = pub.router({
 					data: result,
 				},
 			};
-		}),
+		},
+	),
 });

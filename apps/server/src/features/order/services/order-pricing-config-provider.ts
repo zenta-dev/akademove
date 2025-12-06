@@ -7,6 +7,8 @@
  */
 
 import {
+	type BusinessConfiguration,
+	BusinessConfigurationSchema,
 	type DeliveryPricingConfiguration,
 	DeliveryPricingConfigurationSchema,
 	type FoodPricingConfiguration,
@@ -54,6 +56,7 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 						CONFIGURATION_KEYS.RIDE_SERVICE_PRICING,
 						CONFIGURATION_KEYS.DELIVERY_SERVICE_PRICING,
 						CONFIGURATION_KEYS.FOOD_SERVICE_PRICING,
+						CONFIGURATION_KEYS.BUSINESS_CONFIGURATION,
 					]),
 			});
 
@@ -192,6 +195,43 @@ export class OrderPricingConfigProvider implements IPricingConfigProvider {
 			log.error(
 				{ error },
 				"[OrderPricingConfigProvider] Get food pricing failed",
+			);
+			throw error;
+		}
+	}
+
+	/**
+	 * Get business configuration (cancellation fees, wallet limits, etc.)
+	 */
+	async getBusinessConfig(): Promise<BusinessConfiguration> {
+		try {
+			const cached = OrderPricingConfigProvider.cache.get(
+				CONFIGURATION_KEYS.BUSINESS_CONFIGURATION,
+			);
+
+			if (cached) {
+				return BusinessConfigurationSchema.parse(cached);
+			}
+
+			const config = await this.db.query.configuration.findFirst({
+				where: (f, op) =>
+					op.eq(f.key, CONFIGURATION_KEYS.BUSINESS_CONFIGURATION),
+			});
+
+			if (!config) {
+				throw new RepositoryError("Business configuration not found", {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const parsed = BusinessConfigurationSchema.parse(config.value);
+			OrderPricingConfigProvider.cache.set(config.key, parsed);
+
+			return parsed;
+		} catch (error) {
+			log.error(
+				{ error },
+				"[OrderPricingConfigProvider] Get business config failed",
 			);
 			throw error;
 		}

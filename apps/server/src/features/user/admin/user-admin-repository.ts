@@ -1,7 +1,17 @@
 import { m } from "@repo/i18n";
-import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import type { AdminUpdateUser, InsertUser, User } from "@repo/schema/user";
-import { eq, gt, ilike, ne, type SQL } from "drizzle-orm";
+import type { UserListQuery } from "@repo/schema/pagination";
+import type { AdminUpdateUser, InviteUser, User } from "@repo/schema/user";
+import {
+	eq,
+	gt,
+	gte,
+	ilike,
+	inArray,
+	lte,
+	ne,
+	or,
+	type SQL,
+} from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
@@ -9,6 +19,7 @@ import type { ListResult, ORPCContext, PartialWithTx } from "@/core/interface";
 import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
+import type { MailService } from "@/core/services/mail";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
 import type { UserDatabase } from "@/core/tables/auth";
 import type { DetailedUserBadgeDatabase } from "@/core/tables/badge";
@@ -23,21 +34,25 @@ import {
 	UserSearchService,
 } from "@/features/user/services";
 import { log } from "@/utils";
+import type { PasswordManager } from "@/utils/password";
 
 const BUCKET = "user";
 
 export class UserAdminRepository extends BaseRepository {
 	#storage: StorageService;
-	#pw?: typeof import("@/utils/password").PasswordManager.prototype;
+	#mailService: MailService;
+	#pw: PasswordManager;
 
 	constructor(
 		db: DatabaseService,
 		kv: KeyValueService,
 		storage: StorageService,
-		pw?: typeof import("@/utils/password").PasswordManager.prototype,
+		mailService: MailService,
+		pw: PasswordManager,
 	) {
 		super("user", kv, db);
 		this.#storage = storage;
+		this.#mailService = mailService;
 		this.#pw = pw;
 	}
 
@@ -62,6 +77,7 @@ export class UserAdminRepository extends BaseRepository {
 			banReason: user.banReason ?? undefined,
 			banExpires: user.banExpires ?? undefined,
 			gender: user.gender ?? undefined,
+			phone: user.phone ?? undefined,
 			userBadges: user.userBadges.map((e) =>
 				UserBadgeRepository.composeEntity(e, storage),
 			),
@@ -86,7 +102,7 @@ export class UserAdminRepository extends BaseRepository {
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery & { requesterId: string },
+		query?: UserListQuery & { requesterId: string },
 	): Promise<ListResult<User>> {
 		try {
 			const {
@@ -94,9 +110,10 @@ export class UserAdminRepository extends BaseRepository {
 				page,
 				limit = 10,
 				query: search,
-				sortBy,
+				sortBy = "createdAt",
 				order = "asc",
 				requesterId,
+				filters,
 			} = query ?? {};
 
 			// Use service to generate order by clause
@@ -106,6 +123,45 @@ export class UserAdminRepository extends BaseRepository {
 			const clauses: SQL[] = [];
 			if (requesterId) clauses.push(ne(tables.user.id, requesterId));
 
+			// Add search clause if provided (delegate to service)
+			if (search) {
+				const determine = or(
+					ilike(tables.user.name, `%${search}%`),
+					ilike(tables.user.email, `%${search}%`),
+				);
+				if (determine) clauses.push(determine);
+			}
+
+			// Add filter clauses
+			if (filters) {
+				// Role filter
+				if (filters.roles && filters.roles.length > 0) {
+					clauses.push(inArray(tables.user.role, filters.roles));
+				}
+
+				// Gender filter
+				if (filters.genders && filters.genders.length > 0) {
+					clauses.push(inArray(tables.user.gender, filters.genders));
+				}
+
+				// Email verified filter
+				if (filters.emailVerified !== undefined) {
+					clauses.push(eq(tables.user.emailVerified, filters.emailVerified));
+				}
+
+				// Banned filter
+				if (filters.banned !== undefined) {
+					clauses.push(eq(tables.user.banned, filters.banned));
+				}
+
+				// Date range filter
+				if (filters.startDate) {
+					clauses.push(gte(tables.user.createdAt, filters.startDate));
+				}
+				if (filters.endDate) {
+					clauses.push(lte(tables.user.createdAt, filters.endDate));
+				}
+			}
 			// Cursor-based pagination
 			if (cursor) {
 				clauses.push(gt(tables.user.updatedAt, new Date(cursor)));
@@ -128,11 +184,6 @@ export class UserAdminRepository extends BaseRepository {
 			// Page-based pagination
 			if (page) {
 				const offset = UserListQueryService.calculateOffset(page, limit);
-
-				// Add search clause if provided (delegate to service)
-				if (search) {
-					clauses.push(ilike(tables.user.name, `%${search}%`));
-				}
 
 				const result = await this.db.query.user.findMany({
 					with: { userBadges: { with: { badge: true } } },
@@ -191,13 +242,26 @@ export class UserAdminRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertUser): Promise<User & { password: string }> {
+	generateRandomPassword(): string {
+		const randomPassword = Math.random().toString(36).slice(-8);
+		return randomPassword;
+	}
+
+	async create(item: InviteUser): Promise<User & { password: string }> {
 		try {
 			// Check if user already exists
+
+			const whereClauses: SQL[] = [];
+			if (item.email) {
+				whereClauses.push(eq(tables.user.email, item.email));
+			}
+			if (item.phone) {
+				whereClauses.push(eq(tables.user.phone, item.phone));
+			}
+
 			const existingUser = await this.db.query.user.findFirst({
 				columns: { email: true, phone: true },
-				where: (f, op) =>
-					op.or(op.eq(f.email, item.email), op.eq(f.phone, item.phone)),
+				where: (_f, op) => op.or(...whereClauses),
 			});
 
 			if (existingUser) {
@@ -209,7 +273,7 @@ export class UserAdminRepository extends BaseRepository {
 			const userId = UserIdService.generate();
 
 			// Create user with role, no image for admin-created users
-			const [user] = await this.db
+			const user = await this.db
 				.insert(tables.user)
 				.values({
 					id: userId,
@@ -224,7 +288,8 @@ export class UserAdminRepository extends BaseRepository {
 					banReason: null,
 					banExpires: null,
 				})
-				.returning();
+				.returning()
+				.then((r) => r[0]);
 
 			// Create account with hashed password
 			if (!this.#pw) {
@@ -232,34 +297,41 @@ export class UserAdminRepository extends BaseRepository {
 					code: "INTERNAL_SERVER_ERROR",
 				});
 			}
-			const hashedPassword = this.#pw.hash(item.password);
 
-			await this.db.insert(tables.account).values({
-				id: UserIdService.generate(),
-				accountId: UserIdService.generate(),
-				userId: user.id,
-				providerId: "credentials",
-				password: hashedPassword,
-			});
+			const password = this.generateRandomPassword();
+			const hashedPassword = this.#pw.hash(password);
 
-			// Create wallet
-			await this.db.insert(tables.wallet).values({
-				id: v7(),
-				userId: user.id,
-				balance: "0",
-			});
-
-			const composedUser = await UserAdminRepository.composeEntity(
-				{ ...user, userBadges: [] },
-				this.#storage,
-			);
+			const [composedUser] = await Promise.all([
+				await UserAdminRepository.composeEntity(
+					{ ...user, userBadges: [] },
+					this.#storage,
+				),
+				await this.db.insert(tables.account).values({
+					id: UserIdService.generate(),
+					accountId: UserIdService.generate(),
+					userId: user.id,
+					providerId: "credentials",
+					password: hashedPassword,
+				}),
+				await this.db.insert(tables.wallet).values({
+					id: v7(),
+					userId: user.id,
+					balance: "0",
+				}),
+				await this.#mailService.sendInvitation({
+					to: user.email,
+					email: user.email,
+					password,
+					role: user.role,
+				}),
+			]);
 
 			log.info(
 				{ userId: user.id, email: user.email, role: user.role },
 				m.server_user_created(),
 			);
 
-			return { ...composedUser, password: item.password };
+			return { ...composedUser, password };
 		} catch (error) {
 			log.error({ error }, "[UserAdminRepository] Failed to create user");
 			throw this.handleError(error, "create");
@@ -352,13 +424,6 @@ export class UserAdminRepository extends BaseRepository {
 							code: "NOT_FOUND",
 						});
 					}
-
-					// Use service to verify old password
-					PasswordChangeService.verifyOldPassword(
-						this.#pw,
-						account.password ?? "",
-						item.oldPassword,
-					);
 
 					// Hash new password using service
 					const hashedPassword = PasswordChangeService.hashPassword(

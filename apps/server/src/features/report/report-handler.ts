@@ -1,79 +1,67 @@
 import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
-import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
 import { ReportSpec } from "./report-spec";
 
 const { priv } = createORPCRouter(ReportSpec);
 
 export const ReportHandler = priv.router({
-	list: priv.list
-		.use(hasPermission({ report: ["list"] }))
-		.handler(async ({ context, input: { query } }) => {
-			const { rows, totalPages } = await context.repo.report.list(query);
+	list: priv.list.handler(async ({ context, input: { query } }) => {
+		const { rows, totalPages } = await context.repo.report.list(query);
 
-			return {
-				status: 200,
-				body: {
-					message: m.server_reports_retrieved(),
-					data: rows,
-					totalPages,
-				},
-			};
-		}),
-	get: priv.get
-		.use(hasPermission({ report: ["get"] }))
-		.handler(async ({ context, input: { params } }) => {
-			const result = await context.repo.report.get(params.id);
+		return {
+			status: 200,
+			body: {
+				message: m.server_reports_retrieved(),
+				data: rows,
+				totalPages,
+			},
+		};
+	}),
+	get: priv.get.handler(async ({ context, input: { params } }) => {
+		const result = await context.repo.report.get(params.id);
 
-			return {
-				status: 200,
-				body: { message: m.server_report_retrieved(), data: result },
-			};
-		}),
-	create: priv.create
-		.use(hasPermission({ report: ["create"] }))
-		.handler(async ({ context, input: { body } }) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.report.create({
-				...data,
-				reporterId: context.user.id,
-			});
+		return {
+			status: 200,
+			body: { message: m.server_report_retrieved(), data: result },
+		};
+	}),
+	create: priv.create.handler(async ({ context, input: { body } }) => {
+		const data = trimObjectValues(body);
+		const result = await context.repo.report.create({
+			...data,
+			reporterId: context.user.id,
+		});
 
-			return {
-				status: 200,
-				body: { message: m.server_report_created(), data: result },
-			};
-		}),
-	update: priv.update
-		.use(hasPermission({ report: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
-			const data = trimObjectValues(body);
-			const result = await context.repo.report.update(
-				params.id,
-				data,
-				undefined,
-				context,
-			);
+		return {
+			status: 200,
+			body: { message: m.server_report_created(), data: result },
+		};
+	}),
+	update: priv.update.handler(async ({ context, input: { params, body } }) => {
+		const data = trimObjectValues(body);
+		const result = await context.repo.report.update(
+			params.id,
+			data,
+			undefined,
+			context,
+		);
 
-			return {
-				status: 200,
-				body: { message: m.server_report_updated(), data: result },
-			};
-		}),
-	remove: priv.remove
-		.use(hasPermission({ report: ["update"] }))
-		.handler(async ({ context, input: { params } }) => {
-			await context.repo.report.remove(params.id);
+		return {
+			status: 200,
+			body: { message: m.server_report_updated(), data: result },
+		};
+	}),
+	remove: priv.remove.handler(async ({ context, input: { params } }) => {
+		await context.repo.report.remove(params.id);
 
-			return {
-				status: 200,
-				body: { message: m.server_report_deleted(), data: null },
-			};
-		}),
-	startInvestigation: priv.startInvestigation
-		.use(hasPermission({ report: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
+		return {
+			status: 200,
+			body: { message: m.server_report_deleted(), data: null },
+		};
+	}),
+	startInvestigation: priv.startInvestigation.handler(
+		async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 			const result = await context.repo.report.startInvestigation(
 				params.id,
@@ -90,10 +78,10 @@ export const ReportHandler = priv.router({
 					data: result,
 				},
 			};
-		}),
-	resolve: priv.resolve
-		.use(hasPermission({ report: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
+		},
+	),
+	resolve: priv.resolve.handler(
+		async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 			const result = await context.repo.report.resolve(
 				params.id,
@@ -107,10 +95,10 @@ export const ReportHandler = priv.router({
 				status: 200,
 				body: { message: m.server_report_resolved(), data: result },
 			};
-		}),
-	dismiss: priv.dismiss
-		.use(hasPermission({ report: ["update"] }))
-		.handler(async ({ context, input: { params, body } }) => {
+		},
+	),
+	dismiss: priv.dismiss.handler(
+		async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 			const result = await context.repo.report.dismiss(
 				params.id,
@@ -124,5 +112,6 @@ export const ReportHandler = priv.router({
 				status: 200,
 				body: { message: m.server_report_dismissed(), data: result },
 			};
-		}),
+		},
+	),
 });
