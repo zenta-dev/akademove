@@ -1,3 +1,4 @@
+import { nullToUndefined } from "@repo/shared";
 import { and, asc, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import type { ListResult, PartialWithTx } from "@/core/interface";
 import { type DatabaseService, tables } from "@/core/services/db";
@@ -38,6 +39,10 @@ export class AuditRepository {
 			case "wallet":
 				return tables.walletAuditLog;
 		}
+	}
+
+	static composeEntity(row: unknown): AuditLog {
+		return nullToUndefined(row) as AuditLog;
 	}
 
 	async list(
@@ -93,7 +98,7 @@ export class AuditRepository {
 				const totalPages = Math.ceil(totalRecords / limit);
 
 				return {
-					rows: result as unknown[] as AuditLog[],
+					rows: result.map(AuditRepository.composeEntity),
 					totalPages,
 				};
 			}
@@ -128,7 +133,7 @@ export class AuditRepository {
 						.from(auditTable)
 						.where(and(...clauses));
 
-					return result as unknown[] as AuditLog[];
+					return result.map(AuditRepository.composeEntity);
 				}),
 			);
 

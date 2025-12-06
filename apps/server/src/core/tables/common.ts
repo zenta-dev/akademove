@@ -82,3 +82,4 @@ export const createAuditLogTable = (tableName: AllowedLoggedTable) =>
 			index(`${tableName}_audit_ip_address_idx`).on(t.ipAddress),
 		],
 	);
+export type AuditLogDatabase = ReturnType<typeof createAuditLogTable>;
