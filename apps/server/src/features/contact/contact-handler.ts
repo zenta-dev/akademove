@@ -116,6 +116,7 @@ export const ContactHandler = pub.router({
 						respondedById: context.user.id,
 					},
 					{ tx },
+					context,
 				);
 
 				return {

@@ -11,7 +11,12 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { PartialWithTx, UnifiedListResult } from "@/core/interface";
+import type {
+	ORPCContext,
+	PartialWithTx,
+	UnifiedListResult,
+} from "@/core/interface";
+import { AuditService } from "@/core/services/audit";
 import type { DatabaseService } from "@/core/services/db";
 import { tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
@@ -207,8 +212,16 @@ export class ContactRepository extends BaseRepository {
 			respondedById: string;
 		},
 		opts?: PartialWithTx,
+		context?: ORPCContext,
 	): Promise<Contact> {
 		try {
+			// Get existing for audit
+			const existing = context
+				? await (opts?.tx ?? this.db).query.contact.findFirst({
+						where: (f, op) => op.eq(f.id, id),
+					})
+				: undefined;
+
 			const responseData = ContactResponseService.prepareResponseData(
 				data.response,
 				data.status,
@@ -228,9 +241,30 @@ export class ContactRepository extends BaseRepository {
 			}
 
 			await this.deleteCache(id);
+
+			// Audit log
+			if (context?.user && existing) {
+				await AuditService.logChange(
+					{
+						tableName: "contact",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: updated,
+						updatedById: context.user.id,
+						metadata: {
+							...AuditService.extractMetadata(context),
+							reason: `Responded with status: ${data.status}`,
+						},
+					},
+					context,
+					opts,
+				);
+			}
+
 			log.info(
 				{ contactId: id, respondedById: data.respondedById },
-				"[ContactRepository] Contact responded",
+				"[ContactRepository] Contact responded and audited",
 			);
 
 			return ContactRepository.composeEntity(updated);

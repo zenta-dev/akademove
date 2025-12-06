@@ -54,6 +54,7 @@ export const UserAdminHandler = priv.router({
 				data,
 				{},
 				context.req.headers,
+				context,
 			);
 
 			return {

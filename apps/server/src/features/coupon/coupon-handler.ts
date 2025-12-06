@@ -74,10 +74,14 @@ export const CouponHandler = priv.router({
 		.use(hasPermission({ coupon: ["create"] }))
 		.handler(async ({ context, input: { body } }) => {
 			const data = trimObjectValues(body);
-			const result = await context.repo.coupon.create({
-				...data,
-				userId: context.user.id,
-			});
+			const result = await context.repo.coupon.create(
+				{
+					...data,
+					userId: context.user.id,
+				},
+				undefined,
+				context,
+			);
 
 			return {
 				status: 200,
@@ -88,7 +92,12 @@ export const CouponHandler = priv.router({
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
-			const result = await context.repo.coupon.update(params.id, data);
+			const result = await context.repo.coupon.update(
+				params.id,
+				data,
+				undefined,
+				context,
+			);
 
 			return {
 				status: 200,
@@ -98,7 +107,7 @@ export const CouponHandler = priv.router({
 	remove: priv.remove
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
-			await context.repo.coupon.remove(params.id);
+			await context.repo.coupon.remove(params.id, undefined, context);
 
 			return {
 				status: 200,
@@ -108,7 +117,11 @@ export const CouponHandler = priv.router({
 	activate: priv.activate
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
-			const result = await context.repo.coupon.activate(params.id);
+			const result = await context.repo.coupon.activate(
+				params.id,
+				undefined,
+				context,
+			);
 
 			return {
 				status: 200,
@@ -118,7 +131,11 @@ export const CouponHandler = priv.router({
 	deactivate: priv.deactivate
 		.use(hasPermission({ coupon: ["update"] }))
 		.handler(async ({ context, input: { params } }) => {
-			const result = await context.repo.coupon.deactivate(params.id);
+			const result = await context.repo.coupon.deactivate(
+				params.id,
+				undefined,
+				context,
+			);
 
 			return {
 				status: 200,

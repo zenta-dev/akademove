@@ -11,7 +11,13 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type {
+	ListResult,
+	ORPCContext,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
+import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { CouponDatabase } from "@/core/tables/coupon";
@@ -148,7 +154,11 @@ export class CouponRepository extends BaseRepository {
 		}
 	}
 
-	async create(item: InsertCoupon & { userId: string }): Promise<Coupon> {
+	async create(
+		item: InsertCoupon & { userId: string },
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<Coupon> {
 		try {
 			const [operation] = await this.db
 				.insert(tables.coupon)
@@ -168,13 +178,41 @@ export class CouponRepository extends BaseRepository {
 
 			const result = CouponRepository.composeEntity(operation);
 			await this.setCache(result.id, result);
+
+			// Audit log
+			if (context) {
+				await AuditService.logChange(
+					{
+						tableName: "coupon",
+						recordId: result.id,
+						operation: "INSERT",
+						oldData: null,
+						newData: operation,
+						updatedById: item.userId,
+						metadata: AuditService.extractMetadata(context),
+					},
+					context,
+					opts,
+				);
+
+				log.info(
+					{ couponId: result.id, userId: item.userId },
+					"[CouponRepository] Coupon created and audited",
+				);
+			}
+
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "create");
 		}
 	}
 
-	async update(id: string, item: UpdateCoupon): Promise<Coupon> {
+	async update(
+		id: string,
+		item: UpdateCoupon,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<Coupon> {
 		try {
 			const existing = await this.#getFromDB(id);
 			if (!existing)
@@ -196,14 +234,43 @@ export class CouponRepository extends BaseRepository {
 
 			const result = CouponRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "coupon",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: context.user.id,
+						metadata: AuditService.extractMetadata(context),
+					},
+					context,
+					opts,
+				);
+
+				log.info(
+					{ couponId: id, userId: context.user.id },
+					"[CouponRepository] Coupon updated and audited",
+				);
+			}
+
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "update");
 		}
 	}
 
-	async remove(id: string): Promise<void> {
+	async remove(
+		id: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<void> {
 		try {
+			const existing = context ? await this.#getFromDB(id) : undefined;
+
 			const result = await this.db
 				.delete(tables.coupon)
 				.where(eq(tables.coupon.id, id))
@@ -211,6 +278,28 @@ export class CouponRepository extends BaseRepository {
 
 			if (result.length > 0) {
 				await this.deleteCache(id);
+
+				// Audit log
+				if (context?.user && existing) {
+					await AuditService.logChange(
+						{
+							tableName: "coupon",
+							recordId: id,
+							operation: "DELETE",
+							oldData: existing,
+							newData: null,
+							updatedById: context.user.id,
+							metadata: AuditService.extractMetadata(context),
+						},
+						context,
+						opts,
+					);
+
+					log.info(
+						{ couponId: id, userId: context.user.id },
+						"[CouponRepository] Coupon deleted and audited",
+					);
+				}
 			}
 		} catch (error) {
 			throw this.handleError(error, "delete");
@@ -436,7 +525,11 @@ export class CouponRepository extends BaseRepository {
 		}
 	}
 
-	async activate(id: string): Promise<Coupon> {
+	async activate(
+		id: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<Coupon> {
 		try {
 			log.info({ couponId: id }, "[CouponRepository] Activating coupon");
 
@@ -462,14 +555,39 @@ export class CouponRepository extends BaseRepository {
 			const result = CouponRepository.composeEntity(updated);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
-			log.info({ couponId: id }, "[CouponRepository] Coupon activated");
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "coupon",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: coupon,
+						newData: updated,
+						updatedById: context.user.id,
+						metadata: AuditService.extractMetadata(context),
+					},
+					context,
+					opts,
+				);
+
+				log.info(
+					{ couponId: id, userId: context.user.id },
+					"[CouponRepository] Coupon activated and audited",
+				);
+			}
+
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "activate");
 		}
 	}
 
-	async deactivate(id: string): Promise<Coupon> {
+	async deactivate(
+		id: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<Coupon> {
 		try {
 			log.info({ couponId: id }, "[CouponRepository] Deactivating coupon");
 
@@ -495,7 +613,28 @@ export class CouponRepository extends BaseRepository {
 			const result = CouponRepository.composeEntity(updated);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
-			log.info({ couponId: id }, "[CouponRepository] Coupon deactivated");
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "coupon",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: coupon,
+						newData: updated,
+						updatedById: context.user.id,
+						metadata: AuditService.extractMetadata(context),
+					},
+					context,
+					opts,
+				);
+
+				log.info(
+					{ couponId: id, userId: context.user.id },
+					"[CouponRepository] Coupon deactivated and audited",
+				);
+			}
+
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "deactivate");

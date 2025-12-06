@@ -6,7 +6,13 @@ import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, OrderByOperation } from "@/core/interface";
+import type {
+	ListResult,
+	ORPCContext,
+	OrderByOperation,
+	PartialWithTx,
+} from "@/core/interface";
+import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import type { ReportDatabase } from "@/core/tables/report";
@@ -147,7 +153,12 @@ export class ReportRepository extends BaseRepository {
 		}
 	}
 
-	async update(id: string, item: UpdateReport): Promise<Report> {
+	async update(
+		id: string,
+		item: UpdateReport,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
+	): Promise<Report> {
 		try {
 			const existing = await this.#getFromDB(id);
 			if (!existing)
@@ -171,6 +182,28 @@ export class ReportRepository extends BaseRepository {
 
 			const result = ReportRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "report",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: context.user.id,
+						metadata: AuditService.extractMetadata(context),
+					},
+					context,
+					opts,
+				);
+
+				log.info(
+					{ reportId: id, userId: context.user.id, status: item.status },
+					"[ReportRepository] Report updated and audited",
+				);
+			}
 
 			return result;
 		} catch (error) {
@@ -197,6 +230,8 @@ export class ReportRepository extends BaseRepository {
 		id: string,
 		notes: string,
 		handledById: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
 	): Promise<Report> {
 		try {
 			const existing = await this.#getFromDB(id);
@@ -224,9 +259,29 @@ export class ReportRepository extends BaseRepository {
 			const result = ReportRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "report",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: context.user.id,
+						metadata: {
+							...AuditService.extractMetadata(context),
+							reason: `Started investigation: ${notes}`,
+						},
+					},
+					context,
+					opts,
+				);
+			}
+
 			log.info(
 				{ reportId: id, handledById },
-				"[ReportRepository] Started investigation",
+				"[ReportRepository] Started investigation and audited",
 			);
 
 			return result;
@@ -239,6 +294,8 @@ export class ReportRepository extends BaseRepository {
 		id: string,
 		resolution: string,
 		handledById: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
 	): Promise<Report> {
 		try {
 			const existing = await this.#getFromDB(id);
@@ -267,9 +324,29 @@ export class ReportRepository extends BaseRepository {
 			const result = ReportRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "report",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: context.user.id,
+						metadata: {
+							...AuditService.extractMetadata(context),
+							reason: `Resolved: ${resolution}`,
+						},
+					},
+					context,
+					opts,
+				);
+			}
+
 			log.info(
 				{ reportId: id, handledById },
-				"[ReportRepository] Resolved report",
+				"[ReportRepository] Resolved report and audited",
 			);
 
 			return result;
@@ -282,6 +359,8 @@ export class ReportRepository extends BaseRepository {
 		id: string,
 		reason: string,
 		handledById: string,
+		opts?: PartialWithTx,
+		context?: ORPCContext,
 	): Promise<Report> {
 		try {
 			const existing = await this.#getFromDB(id);
@@ -310,9 +389,29 @@ export class ReportRepository extends BaseRepository {
 			const result = ReportRepository.composeEntity(operation);
 			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
 
+			// Audit log
+			if (context?.user) {
+				await AuditService.logChange(
+					{
+						tableName: "report",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: existing,
+						newData: operation,
+						updatedById: context.user.id,
+						metadata: {
+							...AuditService.extractMetadata(context),
+							reason: `Dismissed: ${reason}`,
+						},
+					},
+					context,
+					opts,
+				);
+			}
+
 			log.info(
 				{ reportId: id, handledById },
-				"[ReportRepository] Dismissed report",
+				"[ReportRepository] Dismissed report and audited",
 			);
 
 			return result;

@@ -49,7 +49,12 @@ export const ReportHandler = priv.router({
 		.use(hasPermission({ report: ["update"] }))
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
-			const result = await context.repo.report.update(params.id, data);
+			const result = await context.repo.report.update(
+				params.id,
+				data,
+				undefined,
+				context,
+			);
 
 			return {
 				status: 200,
@@ -74,6 +79,8 @@ export const ReportHandler = priv.router({
 				params.id,
 				data.notes,
 				context.user.id,
+				undefined,
+				context,
 			);
 
 			return {
@@ -92,6 +99,8 @@ export const ReportHandler = priv.router({
 				params.id,
 				data.resolution,
 				context.user.id,
+				undefined,
+				context,
 			);
 
 			return {
@@ -107,6 +116,8 @@ export const ReportHandler = priv.router({
 				params.id,
 				data.reason,
 				context.user.id,
+				undefined,
+				context,
 			);
 
 			return {

@@ -146,11 +146,13 @@ export const WalletHandler = pub.router({
 					senderWallet.id,
 					{ balance: senderBalanceAfter },
 					opts,
+					context,
 				),
 				context.repo.wallet.update(
 					recipientWallet.id,
 					{ balance: recipientBalanceAfter },
 					opts,
+					context,
 				),
 			]);
 
@@ -221,6 +223,7 @@ export const WalletHandler = pub.router({
 				wallet.id,
 				{ balance: balanceAfter },
 				{ tx },
+				context,
 			);
 
 			return {

@@ -138,8 +138,20 @@ export class WalletRepository extends BaseRepository {
 		id: string,
 		params: UpdateWallet,
 		opts?: Partial<WithTx>,
+		context?: import("@/core/interface").ORPCContext,
 	): Promise<Wallet> {
 		try {
+			// Get existing wallet for audit trail
+			const existing = await (opts?.tx ?? this.db).query.wallet.findFirst({
+				where: (f, op) => op.eq(f.id, id),
+			});
+
+			if (!existing) {
+				throw new RepositoryError(`Wallet with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
 			const [wallet] = await (opts?.tx ?? this.db)
 				.update(tables.wallet)
 				.set({
@@ -150,6 +162,27 @@ export class WalletRepository extends BaseRepository {
 				})
 				.where(eq(tables.wallet.id, id))
 				.returning();
+
+			// Audit log: manual balance adjustment
+			if (context?.user && params.balance !== undefined) {
+				const { AuditService } = await import("@/core/services/audit");
+				await AuditService.logChange(
+					{
+						tableName: "wallet",
+						recordId: id,
+						operation: "UPDATE",
+						oldData: { balance: toNumberSafe(existing.balance) },
+						newData: { balance: params.balance },
+						updatedById: context.user.id,
+						metadata: {
+							...AuditService.extractMetadata(context),
+							reason: "Manual balance adjustment by admin",
+						},
+					},
+					context,
+					opts,
+				);
+			}
 
 			return WalletRepository.composeEntity(wallet);
 		} catch (error) {

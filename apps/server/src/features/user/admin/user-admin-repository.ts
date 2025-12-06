@@ -5,7 +5,8 @@ import { eq, gt, ilike, ne, type SQL } from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { RepositoryError } from "@/core/error";
-import type { ListResult, PartialWithTx } from "@/core/interface";
+import type { ListResult, ORPCContext, PartialWithTx } from "@/core/interface";
+import { AuditService } from "@/core/services/audit";
 import { type DatabaseService, tables } from "@/core/services/db";
 import type { KeyValueService } from "@/core/services/kv";
 import { S3StorageService, type StorageService } from "@/core/services/storage";
@@ -270,6 +271,7 @@ export class UserAdminRepository extends BaseRepository {
 		item: AdminUpdateUser,
 		opts: PartialWithTx,
 		_header: Headers,
+		context?: ORPCContext,
 	): Promise<User> {
 		try {
 			const existing = await this.#getFromDB(id);
@@ -304,6 +306,23 @@ export class UserAdminRepository extends BaseRepository {
 						>[0],
 						this.#storage,
 					);
+
+					// Audit log: role change
+					if (context?.user) {
+						await AuditService.logChange(
+							{
+								tableName: "user",
+								recordId: id,
+								operation: "UPDATE",
+								oldData: { role: existing.role },
+								newData: { role: item.role },
+								updatedById: context.user.id,
+								metadata: AuditService.extractMetadata(context),
+							},
+							context,
+							{ tx },
+						);
+					}
 
 					log.info(
 						{ userId: id, newRole: item.role },
@@ -385,6 +404,30 @@ export class UserAdminRepository extends BaseRepository {
 						this.#storage,
 					);
 
+					// Audit log: user ban
+					if (context?.user) {
+						await AuditService.logChange(
+							{
+								tableName: "user",
+								recordId: id,
+								operation: "UPDATE",
+								oldData: {
+									banned: existing.banned,
+									banReason: existing.banReason,
+									banExpires: existing.banExpires,
+								},
+								newData: banData,
+								updatedById: context.user.id,
+								metadata: {
+									...AuditService.extractMetadata(context),
+									reason: item.banReason,
+								},
+							},
+							context,
+							{ tx },
+						);
+					}
+
 					log.info(
 						{ userId: id, banReason: item.banReason },
 						"[UserAdminRepository] User banned",
@@ -416,6 +459,30 @@ export class UserAdminRepository extends BaseRepository {
 						>[0],
 						this.#storage,
 					);
+
+					// Audit log: user unban
+					if (context?.user) {
+						await AuditService.logChange(
+							{
+								tableName: "user",
+								recordId: id,
+								operation: "UPDATE",
+								oldData: {
+									banned: existing.banned,
+									banReason: existing.banReason,
+									banExpires: existing.banExpires,
+								},
+								newData: unbanData,
+								updatedById: context.user.id,
+								metadata: {
+									...AuditService.extractMetadata(context),
+									reason: "User unbanned by admin",
+								},
+							},
+							context,
+							{ tx },
+						);
+					}
 
 					log.info({ userId: id }, "[UserAdminRepository] User unbanned");
 				}
