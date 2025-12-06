@@ -99,7 +99,8 @@ void _setupRepository() {
     )
     ..registerLazySingleton(
       () => QuickMessageRepository(apiClient: sl<ApiClient>()),
-    );
+    )
+    ..registerLazySingleton(() => ReportRepository(apiClient: sl<ApiClient>()));
 }
 
 void _setupCubit() {
@@ -229,5 +230,6 @@ void _setupCubit() {
       () => NotificationCubit(
         notificationRepository: sl<NotificationRepository>(),
       ),
-    );
+    )
+    ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()));
 }
