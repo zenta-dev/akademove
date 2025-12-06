@@ -137,6 +137,7 @@ class NotificationListResponse {
     required this.total,
     required this.page,
     required this.limit,
+    this.totalPages = 1,
   });
 
   factory NotificationListResponse.fromJson(Map<String, dynamic> json) {
@@ -147,6 +148,7 @@ class NotificationListResponse {
       total: json['total'] as int,
       page: json['page'] as int,
       limit: json['limit'] as int,
+      totalPages: json['totalPages'] as int? ?? 1,
     );
   }
 
@@ -154,6 +156,7 @@ class NotificationListResponse {
   final int total;
   final int page;
   final int limit;
+  final int totalPages;
 
   Map<String, dynamic> toJson() {
     return {
@@ -161,6 +164,7 @@ class NotificationListResponse {
       'total': total,
       'page': page,
       'limit': limit,
+      'totalPages': totalPages,
     };
   }
 }

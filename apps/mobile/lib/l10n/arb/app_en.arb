@@ -1321,5 +1321,15 @@
 	"email_verification_invalid_token": "Invalid or expired verification link. Please request a new one.",
 	"back_to_sign_in": "Back to Sign In",
 	"no_vouchers_available": "No Vouchers Available",
-	"check_back_later_for_promotions": "Check back later for promotions and discounts"
+	"check_back_later_for_promotions": "Check back later for promotions and discounts",
+	"no_notifications": "No notifications yet",
+	"mark_all_as_read": "Mark all as read",
+	"notification_time_ago": "{time} ago",
+	"@notification_time_ago": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	}
 }

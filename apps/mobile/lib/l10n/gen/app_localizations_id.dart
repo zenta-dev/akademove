@@ -3140,4 +3140,15 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get check_back_later_for_promotions => 'Cek kembali nanti untuk promo dan diskon';
+
+  @override
+  String get no_notifications => 'Belum ada notifikasi';
+
+  @override
+  String get mark_all_as_read => 'Tandai semua sudah dibaca';
+
+  @override
+  String notification_time_ago(String time) {
+    return '$time yang lalu';
+  }
 }

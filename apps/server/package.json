@@ -21,8 +21,8 @@
 		"with-env": "dotenv -e ../../.env --"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.943.0",
-		"@aws-sdk/s3-request-presigner": "^3.943.0",
+		"@aws-sdk/client-s3": "^3.946.0",
+		"@aws-sdk/s3-request-presigner": "^3.946.0",
 		"@erhahahaa/midtrans-client-typescript": "^1.0.8",
 		"@msgpack/msgpack": "^3.1.2",
 		"@orpc/contract": "^1.12.2",
@@ -49,7 +49,7 @@
 		"zod": "^4.1.13"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20251202.0",
+		"@cloudflare/workers-types": "^4.20251205.0",
 		"@faker-js/faker": "^10.1.0",
 		"@types/node": "^24.10.1",
 		"@types/react": "19.2.7",
@@ -59,7 +59,7 @@
 		"dotenv-cli": "^11.0.0",
 		"drizzle-kit": "^0.31.8",
 		"react-email": "5.0.5",
-		"tsdown": "^0.16.8",
+		"tsdown": "^0.17.0",
 		"typescript": "^5.9.3",
 		"wrangler": "^4.53.0"
 	}

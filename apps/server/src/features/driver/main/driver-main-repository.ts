@@ -2,11 +2,22 @@ import { m } from "@repo/i18n";
 import {
 	type Driver,
 	DriverKeySchema,
+	type DriverStatus,
 	type InsertDriver,
 	type UpdateDriver,
 } from "@repo/schema/driver";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, eq, gt, ilike, type SQL } from "drizzle-orm";
+import {
+	and,
+	count,
+	eq,
+	gt,
+	gte,
+	ilike,
+	inArray,
+	lte,
+	type SQL,
+} from "drizzle-orm";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
 import { RepositoryError } from "@/core/error";
@@ -25,7 +36,7 @@ import {
 	DriverStatsService,
 	DriverVerificationService,
 } from "../services";
-import type { NearbyQuery } from "./driver-main-spec";
+import type { DriverListQuery, NearbyQuery } from "./driver-main-spec";
 
 export class DriverMainRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -116,22 +127,48 @@ export class DriverMainRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
+	async #getQueryCount(
+		query: string,
+		filters?: {
+			statuses?: DriverStatus[];
+			isOnline?: boolean;
+			minRating?: number;
+			maxRating?: number;
+		},
+	): Promise<number> {
 		try {
+			const clauses: SQL[] = [];
+
+			if (query) {
+				clauses.push(ilike(tables.user.name, `%${query}%`));
+			}
+			if (filters?.statuses && filters.statuses.length > 0) {
+				clauses.push(inArray(tables.driver.status, filters.statuses));
+			}
+			if (filters?.isOnline !== undefined) {
+				clauses.push(eq(tables.driver.isOnline, filters.isOnline));
+			}
+			if (filters?.minRating !== undefined) {
+				clauses.push(gte(tables.driver.rating, filters.minRating));
+			}
+			if (filters?.maxRating !== undefined) {
+				clauses.push(lte(tables.driver.rating, filters.maxRating));
+			}
+
 			const [dbResult] = await this.db
 				.select({ count: count(tables.driver.id) })
 				.from(tables.driver)
 				.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
-				.where(ilike(tables.user.name, `%${query}%`));
+				.where(clauses.length > 0 ? and(...clauses) : undefined);
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			log.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
 
-	async list(query?: UnifiedPaginationQuery): Promise<ListResult<Driver>> {
+	async list(query?: DriverListQuery): Promise<ListResult<Driver>> {
 		try {
 			const {
 				cursor,
@@ -140,6 +177,10 @@ export class DriverMainRepository extends BaseRepository {
 				query: search,
 				sortBy,
 				order = "asc",
+				statuses,
+				isOnline,
+				minRating,
+				maxRating,
 			} = query ?? {};
 
 			const orderBy = (
@@ -157,6 +198,20 @@ export class DriverMainRepository extends BaseRepository {
 			const clauses: SQL[] = [];
 
 			if (search) clauses.push(ilike(tables.user.name, `%${search}%`));
+
+			// Add filter clauses
+			if (statuses && statuses.length > 0) {
+				clauses.push(inArray(tables.driver.status, statuses));
+			}
+			if (isOnline !== undefined) {
+				clauses.push(eq(tables.driver.isOnline, isOnline));
+			}
+			if (minRating !== undefined) {
+				clauses.push(gte(tables.driver.rating, minRating));
+			}
+			if (maxRating !== undefined) {
+				clauses.push(lte(tables.driver.rating, maxRating));
+			}
 
 			if (cursor) {
 				clauses.push(gt(tables.driver.updatedAt, new Date(cursor)));
@@ -201,9 +256,21 @@ export class DriverMainRepository extends BaseRepository {
 					),
 				);
 
-				const totalCount = search
-					? await this.#getQueryCount(search)
-					: await this.getTotalRow();
+				const hasFilters =
+					(statuses && statuses.length > 0) ||
+					isOnline !== undefined ||
+					minRating !== undefined ||
+					maxRating !== undefined;
+
+				const totalCount =
+					search || hasFilters
+						? await this.#getQueryCount(search ?? "", {
+								statuses,
+								isOnline,
+								minRating,
+								maxRating,
+							})
+						: await this.getTotalRow();
 
 				const totalPages = Math.ceil(totalCount / limit);
 

@@ -3140,4 +3140,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get check_back_later_for_promotions => 'Check back later for promotions and discounts';
+
+  @override
+  String get no_notifications => 'No notifications yet';
+
+  @override
+  String get mark_all_as_read => 'Mark all as read';
+
+  @override
+  String notification_time_ago(String time) {
+    return '$time ago';
+  }
 }

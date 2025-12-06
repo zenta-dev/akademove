@@ -6216,6 +6216,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Check back later for promotions and discounts'**
   String get check_back_later_for_promotions;
+
+  /// No description provided for @no_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get no_notifications;
+
+  /// No description provided for @mark_all_as_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get mark_all_as_read;
+
+  /// No description provided for @notification_time_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} ago'**
+  String notification_time_ago(String time);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

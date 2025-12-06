@@ -224,5 +224,10 @@ void _setupCubit() {
       () => QuickMessageCubit(
         quickMessageRepository: sl<QuickMessageRepository>(),
       ),
+    )
+    ..registerFactory(
+      () => NotificationCubit(
+        notificationRepository: sl<NotificationRepository>(),
+      ),
     );
 }

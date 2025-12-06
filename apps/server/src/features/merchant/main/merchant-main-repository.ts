@@ -6,7 +6,18 @@ import {
 	type UpdateMerchant,
 } from "@repo/schema/merchant";
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
-import { count, eq, gt, ilike, type SQL, sql } from "drizzle-orm";
+import {
+	and,
+	count,
+	eq,
+	gt,
+	gte,
+	ilike,
+	lte,
+	or,
+	type SQL,
+	sql,
+} from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS } from "@/core/constants";
@@ -18,6 +29,7 @@ import type { StorageService } from "@/core/services/storage";
 import type { MerchantDatabase } from "@/core/tables/merchant";
 import { log } from "@/utils";
 import { MerchantDocumentService, MerchantStatsService } from "../services";
+import type { MerchantListQuery } from "./merchant-main-spec";
 
 export class MerchantMainRepository extends BaseRepository {
 	readonly #storage: StorageService;
@@ -72,24 +84,52 @@ export class MerchantMainRepository extends BaseRepository {
 			: undefined;
 	}
 
-	async #getQueryCount(query: string): Promise<number> {
+	async #getQueryCount(
+		query: string,
+		filters?: {
+			categories?: string[];
+			isActive?: boolean;
+			minRating?: number;
+			maxRating?: number;
+		},
+	): Promise<number> {
 		try {
+			const clauses: SQL[] = [];
+
+			if (query) {
+				clauses.push(ilike(tables.merchant.name, `%${query}%`));
+			}
+			if (filters?.categories && filters.categories.length > 0) {
+				// Match any of the categories in the array
+				const categoryConditions = filters.categories.map(
+					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
+				);
+				clauses.push(or(...categoryConditions)!);
+			}
+			if (filters?.isActive !== undefined) {
+				clauses.push(eq(tables.merchant.isActive, filters.isActive));
+			}
+			if (filters?.minRating !== undefined) {
+				clauses.push(gte(tables.merchant.rating, filters.minRating));
+			}
+			if (filters?.maxRating !== undefined) {
+				clauses.push(lte(tables.merchant.rating, filters.maxRating));
+			}
+
 			const [dbResult] = await this.db
 				.select({ count: count(tables.merchant.id) })
 				.from(tables.merchant)
 				.innerJoin(tables.user, eq(tables.merchant.userId, tables.user.id))
-				.where(ilike(tables.user.name, `%${query}%`));
+				.where(clauses.length > 0 ? and(...clauses) : undefined);
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			log.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
 
-	async list(
-		query?: UnifiedPaginationQuery & { category?: string },
-	): Promise<ListResult<Merchant>> {
+	async list(query?: MerchantListQuery): Promise<ListResult<Merchant>> {
 		try {
 			const {
 				cursor,
@@ -98,7 +138,10 @@ export class MerchantMainRepository extends BaseRepository {
 				query: search,
 				sortBy,
 				order = "asc",
-				category,
+				categories,
+				isActive,
+				minRating,
+				maxRating,
 			} = query ?? {};
 
 			const orderBy = (
@@ -117,11 +160,22 @@ export class MerchantMainRepository extends BaseRepository {
 
 			if (search) clauses.push(ilike(tables.merchant.name, `%${search}%`));
 
-			// Add category filter for mart functionality
-			if (category) {
-				clauses.push(
-					sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`,
+			// Add filter clauses
+			if (categories && categories.length > 0) {
+				// Match any of the categories in the array
+				const categoryConditions = categories.map(
+					(cat) => sql`${tables.merchant.categories} @> ARRAY[${cat}]::text[]`,
 				);
+				clauses.push(or(...categoryConditions)!);
+			}
+			if (isActive !== undefined) {
+				clauses.push(eq(tables.merchant.isActive, isActive));
+			}
+			if (minRating !== undefined) {
+				clauses.push(gte(tables.merchant.rating, minRating));
+			}
+			if (maxRating !== undefined) {
+				clauses.push(lte(tables.merchant.rating, maxRating));
 			}
 
 			if (cursor) {
@@ -157,9 +211,21 @@ export class MerchantMainRepository extends BaseRepository {
 					),
 				);
 
-				const totalCount = search
-					? await this.#getQueryCount(search)
-					: await this.getTotalRow();
+				const hasFilters =
+					(categories && categories.length > 0) ||
+					isActive !== undefined ||
+					minRating !== undefined ||
+					maxRating !== undefined;
+
+				const totalCount =
+					search || hasFilters
+						? await this.#getQueryCount(search ?? "", {
+								categories,
+								isActive,
+								minRating,
+								maxRating,
+							})
+						: await this.getTotalRow();
 
 				const totalPages = Math.ceil(totalCount / limit);
 

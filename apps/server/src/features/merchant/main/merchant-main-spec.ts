@@ -9,6 +9,36 @@ import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 import { toOAPIRequestBody } from "@/utils/oapi";
 
+const MerchantListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
+	categories: z
+		.preprocess((val) => {
+			if (val === undefined) return undefined;
+			if (Array.isArray(val)) return val;
+			if (typeof val === "string") {
+				try {
+					const parsed = JSON.parse(val);
+					if (Array.isArray(parsed)) return parsed;
+				} catch (_) {}
+				return [val];
+			}
+			return val;
+		}, z.array(z.string()).optional())
+		.optional(),
+	isActive: z
+		.preprocess((val) => {
+			if (val === undefined) return undefined;
+			if (typeof val === "boolean") return val;
+			if (val === "true") return true;
+			if (val === "false") return false;
+			return undefined;
+		}, z.boolean().optional())
+		.optional(),
+	minRating: z.coerce.number().min(0).max(5).optional(),
+	maxRating: z.coerce.number().min(0).max(5).optional(),
+});
+
+export type MerchantListQuery = z.infer<typeof MerchantListQuerySchema>;
+
 export const MerchantMainSpec = {
 	getMine: oc
 		.route({
@@ -45,13 +75,7 @@ export const MerchantMainSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(
-			z.object({
-				query: UnifiedPaginationQuerySchema.safeExtend({
-					category: z.string().optional(),
-				}),
-			}),
-		)
+		.input(z.object({ query: MerchantListQuerySchema }))
 		.output(
 			createSuccesSchema(
 				z.array(MerchantSchema),

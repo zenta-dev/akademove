@@ -54,6 +54,7 @@ enum Routes {
   userWalletTopUpQRIS('/user/home/wallet/topup/qris'),
   userWalletTopUpBankTransfer('/user/home/wallet/topup/bank-transfer'),
   userVoucher('/user/home/voucher'),
+  userNotifications('/user/home/notifications'),
 
   userHistory('/user/history'),
   userHistoryDetail('/user/history/:orderId'),

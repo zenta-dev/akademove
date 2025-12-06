@@ -1,16 +1,27 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { m } from "@repo/i18n";
+import type { InsertContact } from "@repo/schema";
+import { InsertContactSchema } from "@repo/schema";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { APP_NAME } from "@/lib/constants";
-import { orpcClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 
 export const Route = createFileRoute("/(support)/contact")({
 	component: ContactComponent,
@@ -28,53 +39,38 @@ export const Route = createFileRoute("/(support)/contact")({
 });
 
 function ContactComponent() {
-	const [formData, setFormData] = useState({
-		name: "",
-		email: "",
-		subject: "",
-		message: "",
-	});
 	const [submitted, setSubmitted] = useState(false);
 
-	const submitContactMutation = useMutation({
-		mutationFn: async (data: typeof formData) => {
-			const result = await orpcClient.contact.submit({
-				body: data,
-			});
-
-			if (result.status !== 201) {
-				throw new Error(result.body.message || m.contact_submit_error());
-			}
-
-			return result;
-		},
-		onSuccess: () => {
-			setSubmitted(true);
-			toast.success(m.message_sent_successfully());
-
-			// Reset form after 3 seconds
-			setTimeout(() => {
-				setSubmitted(false);
-				setFormData({ name: "", email: "", subject: "", message: "" });
-			}, 3000);
-		},
-		onError: (error: Error) => {
-			toast.error(error.message || m.contact_submit_error());
+	const form = useForm<InsertContact>({
+		resolver: zodResolver(InsertContactSchema),
+		defaultValues: {
+			name: "",
+			email: "",
+			subject: "",
+			message: "",
 		},
 	});
 
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		submitContactMutation.mutate(formData);
-	};
+	const submitContactMutation = useMutation(
+		orpcQuery.contact.submit.mutationOptions({
+			onSuccess: () => {
+				setSubmitted(true);
+				toast.success(m.message_sent_successfully());
 
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-	) => {
-		setFormData((prev) => ({
-			...prev,
-			[e.target.name]: e.target.value,
-		}));
+				// Reset form after 3 seconds
+				setTimeout(() => {
+					setSubmitted(false);
+					form.reset();
+				}, 3000);
+			},
+			onError: (error: Error) => {
+				toast.error(error.message || m.contact_submit_error());
+			},
+		}),
+	);
+
+	const onSubmit = (data: InsertContact) => {
+		submitContactMutation.mutate({ body: data });
 	};
 
 	const contactInfo = [
@@ -142,70 +138,87 @@ function ContactComponent() {
 									</h3>
 								</div>
 							) : (
-								<form onSubmit={handleSubmit} className="space-y-4">
-									<div className="space-y-2">
-										<Label htmlFor="name">{m.your_name()}</Label>
-										<Input
-											id="name"
-											name="name"
-											type="text"
-											required
-											value={formData.name}
-											onChange={handleChange}
-											placeholder={m.name()}
-										/>
-									</div>
-
-									<div className="space-y-2">
-										<Label htmlFor="email">{m.your_email()}</Label>
-										<Input
-											id="email"
-											name="email"
-											type="email"
-											required
-											value={formData.email}
-											onChange={handleChange}
-											placeholder={m.email_address()}
-										/>
-									</div>
-
-									<div className="space-y-2">
-										<Label htmlFor="subject">{m.subject()}</Label>
-										<Input
-											id="subject"
-											name="subject"
-											type="text"
-											required
-											value={formData.subject}
-											onChange={handleChange}
-											placeholder={m.subject()}
-										/>
-									</div>
-
-									<div className="space-y-2">
-										<Label htmlFor="message">{m.your_message()}</Label>
-										<Textarea
-											id="message"
-											name="message"
-											required
-											rows={6}
-											value={formData.message}
-											onChange={handleChange}
-											placeholder={m.your_message()}
-											className="resize-none"
-										/>
-									</div>
-
-									<Button
-										type="submit"
-										className="w-full"
-										disabled={submitContactMutation.isPending}
+								<Form {...form}>
+									<form
+										onSubmit={form.handleSubmit(onSubmit)}
+										className="space-y-4"
 									>
-										{submitContactMutation.isPending
-											? m.submitting()
-											: m.send_message()}
-									</Button>
-								</form>
+										<FormField
+											control={form.control}
+											name="name"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>{m.your_name()}</FormLabel>
+													<FormControl>
+														<Input placeholder={m.name()} {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={form.control}
+											name="email"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>{m.your_email()}</FormLabel>
+													<FormControl>
+														<Input
+															type="email"
+															placeholder={m.email_address()}
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={form.control}
+											name="subject"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>{m.subject()}</FormLabel>
+													<FormControl>
+														<Input placeholder={m.subject()} {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={form.control}
+											name="message"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>{m.your_message()}</FormLabel>
+													<FormControl>
+														<Textarea
+															rows={6}
+															placeholder={m.your_message()}
+															className="resize-none"
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<Button
+											type="submit"
+											className="w-full"
+											disabled={submitContactMutation.isPending}
+										>
+											{submitContactMutation.isPending
+												? m.submitting()
+												: m.send_message()}
+										</Button>
+									</form>
+								</Form>
 							)}
 						</CardContent>
 					</Card>

@@ -1,5 +1,9 @@
 import { oc } from "@orpc/contract";
-import { DriverSchema, UpdateDriverSchema } from "@repo/schema/driver";
+import {
+	DriverSchema,
+	DriverStatusSchema,
+	UpdateDriverSchema,
+} from "@repo/schema/driver";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import { CoordinateSchema } from "@repo/schema/position";
 import { UserGenderSchema } from "@repo/schema/user";
@@ -15,6 +19,36 @@ export const NearbyQuerySchema = z.object({
 });
 
 export type NearbyQuery = z.infer<typeof NearbyQuerySchema>;
+
+const DriverListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
+	statuses: z
+		.preprocess((val) => {
+			if (val === undefined) return undefined;
+			if (Array.isArray(val)) return val;
+			if (typeof val === "string") {
+				try {
+					const parsed = JSON.parse(val);
+					if (Array.isArray(parsed)) return parsed;
+				} catch (_) {}
+				return [val];
+			}
+			return val;
+		}, z.array(DriverStatusSchema).optional())
+		.optional(),
+	isOnline: z
+		.preprocess((val) => {
+			if (val === undefined) return undefined;
+			if (typeof val === "boolean") return val;
+			if (val === "true") return true;
+			if (val === "false") return false;
+			return undefined;
+		}, z.boolean().optional())
+		.optional(),
+	minRating: z.coerce.number().min(0).max(5).optional(),
+	maxRating: z.coerce.number().min(0).max(5).optional(),
+});
+
+export type DriverListQuery = z.infer<typeof DriverListQuerySchema>;
 
 export const DriverMainSpec = {
 	getMine: oc
@@ -34,7 +68,7 @@ export const DriverMainSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: UnifiedPaginationQuerySchema }))
+		.input(z.object({ query: DriverListQuerySchema }))
 		.output(
 			createSuccesSchema(
 				z.array(DriverSchema),

@@ -20,7 +20,19 @@ import {
 import type { UnifiedPaginationQuery } from "@repo/schema/pagination";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
-import { count, eq, ilike, inArray, lt, or, type SQL } from "drizzle-orm";
+import {
+	and,
+	count,
+	eq,
+	gte,
+	ilike,
+	inArray,
+	lt,
+	lte,
+	or,
+	type SQL,
+	sql,
+} from "drizzle-orm";
 import { v7 } from "uuid";
 import { BaseRepository } from "@/core/base";
 import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
@@ -40,6 +52,7 @@ import type {
 	ChargePayload,
 	PaymentRepository,
 } from "../payment/payment-repository";
+import type { OrderListQuery } from "./order-spec";
 import {
 	type DeliveryProofService,
 	DriverCancellationService,
@@ -180,53 +193,85 @@ export class OrderRepository extends BaseRepository {
 		return result ? OrderRepository.composeEntity(result) : undefined;
 	}
 
-	async #getQueryCount(query: string, opts?: WithTx): Promise<number> {
+	async #getQueryCount(
+		query: string,
+		filters?: {
+			statuses?: OrderStatus[];
+			type?: OrderType;
+			startDate?: Date;
+			endDate?: Date;
+		},
+		opts?: WithTx,
+	): Promise<number> {
 		try {
 			const tx = opts?.tx ?? this.db;
+			const clauses: SQL[] = [];
+
+			if (query) {
+				const searchClause = or(
+					inArray(
+						tables.order.userId,
+						tx
+							.select({ id: tables.user.id })
+							.from(tables.user)
+							.where(ilike(tables.user.name, `%${query}%`)),
+					),
+					inArray(
+						tables.order.merchantId,
+						tx
+							.select({ id: tables.merchant.id })
+							.from(tables.merchant)
+							.where(ilike(tables.merchant.name, `%${query}%`)),
+					),
+					inArray(
+						tables.order.driverId,
+						tx
+							.select({ id: tables.driver.id })
+							.from(tables.driver)
+							.innerJoin(tables.user, eq(tables.driver.userId, tables.user.id))
+							.where(ilike(tables.user.name, `%${query}%`)),
+					),
+				);
+				if (searchClause) clauses.push(searchClause);
+			}
+
+			if (filters?.statuses && filters.statuses.length > 0) {
+				clauses.push(inArray(tables.order.status, filters.statuses));
+			}
+
+			if (filters?.type) {
+				clauses.push(eq(tables.order.type, filters.type));
+			}
+
+			if (filters?.startDate) {
+				clauses.push(gte(tables.order.requestedAt, filters.startDate));
+			}
+
+			if (filters?.endDate) {
+				clauses.push(lte(tables.order.requestedAt, filters.endDate));
+			}
+
+			if (clauses.length === 0) {
+				const [dbResult] = await tx
+					.select({ count: count(tables.order.id) })
+					.from(tables.order);
+				return dbResult?.count ?? 0;
+			}
 
 			const [dbResult] = await tx
 				.select({ count: count(tables.order.id) })
 				.from(tables.order)
-				.where(
-					or(
-						inArray(
-							tables.order.userId,
-							tx
-								.select({ id: tables.user.id })
-								.from(tables.user)
-								.where(ilike(tables.user.name, `%${query}%`)),
-						),
-						inArray(
-							tables.order.merchantId,
-							tx
-								.select({ id: tables.merchant.id })
-								.from(tables.merchant)
-								.where(ilike(tables.merchant.name, `%${query}%`)),
-						),
-						inArray(
-							tables.order.driverId,
-							tx
-								.select({ id: tables.driver.id })
-								.from(tables.driver)
-								.innerJoin(
-									tables.user,
-									eq(tables.driver.userId, tables.user.id),
-								)
-								.where(ilike(tables.user.name, `%${query}%`)),
-						),
-					),
-				);
+				.where(and(...clauses));
 
 			return dbResult?.count ?? 0;
 		} catch (error) {
-			log.error({ query, error }, "Failed to get query count");
+			log.error({ query, filters, error }, "Failed to get query count");
 			return 0;
 		}
 	}
 
 	async list(
-		query?: UnifiedPaginationQuery & {
-			statuses?: OrderStatus[];
+		query?: OrderListQuery & {
 			id?: string;
 			role: UserRole;
 		},
@@ -240,6 +285,9 @@ export class OrderRepository extends BaseRepository {
 			sortBy,
 			order = "asc",
 			statuses = [],
+			type,
+			startDate,
+			endDate,
 			id,
 			role,
 			mode = "offset",
@@ -272,6 +320,18 @@ export class OrderRepository extends BaseRepository {
 
 			if (statuses.length > 0) {
 				clauses.push(inArray(tables.order.status, statuses));
+			}
+
+			if (type) {
+				clauses.push(eq(tables.order.type, type));
+			}
+
+			if (startDate) {
+				clauses.push(gte(tables.order.requestedAt, startDate));
+			}
+
+			if (endDate) {
+				clauses.push(lte(tables.order.requestedAt, endDate));
 			}
 
 			if (id && role) {
@@ -345,9 +405,21 @@ export class OrderRepository extends BaseRepository {
 
 			const rows = result.map(OrderRepository.composeEntity);
 
-			const totalCount = search
-				? await this.#getQueryCount(search, opts)
-				: await this.getTotalRow();
+			const hasFilters = statuses.length > 0 || type || startDate || endDate;
+
+			const totalCount =
+				search || hasFilters
+					? await this.#getQueryCount(
+							search ?? "",
+							{
+								statuses,
+								type,
+								startDate,
+								endDate,
+							},
+							opts,
+						)
+					: await this.getTotalRow();
 
 			const totalPages = Math.ceil(totalCount / limit);
 

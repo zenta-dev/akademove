@@ -1323,5 +1323,15 @@
 	"email_verification_invalid_token": "Link verifikasi tidak valid atau sudah kadaluarsa. Silakan minta yang baru.",
 	"back_to_sign_in": "Kembali ke Halaman Masuk",
 	"no_vouchers_available": "Tidak Ada Voucher",
-	"check_back_later_for_promotions": "Cek kembali nanti untuk promo dan diskon"
+	"check_back_later_for_promotions": "Cek kembali nanti untuk promo dan diskon",
+	"no_notifications": "Belum ada notifikasi",
+	"mark_all_as_read": "Tandai semua sudah dibaca",
+	"notification_time_ago": "{time} yang lalu",
+	"@notification_time_ago": {
+		"placeholders": {
+			"time": {
+				"type": "String"
+			}
+		}
+	}
 }

@@ -9,6 +9,7 @@ import {
 	OrderSchema,
 	OrderStatusSchema,
 	OrderSummarySchema,
+	OrderTypeSchema,
 	PlaceOrderResponseSchema,
 	PlaceOrderSchema,
 	UpdateOrderSchema,
@@ -17,7 +18,7 @@ import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
 import * as z from "zod";
 import { createSuccesSchema, FEATURE_TAGS } from "@/core/constants";
 
-const _UnifiedPaginationQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
+const OrderListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 	statuses: z
 		.preprocess((val) => {
 			if (val === undefined) return undefined;
@@ -34,7 +35,17 @@ const _UnifiedPaginationQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 			return val;
 		}, z.array(OrderStatusSchema).optional())
 		.optional(),
+	type: z
+		.preprocess((val) => {
+			if (val === undefined || val === "") return undefined;
+			return val;
+		}, OrderTypeSchema.optional())
+		.optional(),
+	startDate: z.coerce.date().optional(),
+	endDate: z.coerce.date().optional(),
 });
+
+export type OrderListQuery = z.infer<typeof OrderListQuerySchema>;
 
 export const OrderSortBySchema = z.enum(["id"]);
 
@@ -47,7 +58,7 @@ export const OrderSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ query: _UnifiedPaginationQuerySchema }))
+		.input(z.object({ query: OrderListQuerySchema }))
 		.output(
 			createSuccesSchema(
 				z.array(OrderSchema),

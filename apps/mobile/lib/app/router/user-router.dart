@@ -242,6 +242,11 @@ final userRouter = StatefulShellRoute.indexedStack(
           path: Routes.userVoucher.path,
           builder: (context, state) => const UserVoucherScreen(),
         ),
+        GoRoute(
+          name: Routes.userNotifications.name,
+          path: Routes.userNotifications.path,
+          builder: (context, state) => const NotificationScreen(),
+        ),
       ],
     ),
     StatefulShellBranch(

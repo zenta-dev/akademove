@@ -3,6 +3,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,12 +33,15 @@ class UserHomeScreen extends StatefulWidget {
 class _UserHomeScreenState extends State<UserHomeScreen> {
   late final TextEditingController _searchController;
   late final CarouselController _bannerController;
+  late final NotificationCubit _notificationCubit;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
     _bannerController = CarouselController();
+    _notificationCubit = sl<NotificationCubit>();
+    _notificationCubit.getUnreadCount();
     Future.wait([
       context.read<UserHomeCubit>().getPopulars(),
       context.read<ConfigurationCubit>().getBanner(),
@@ -50,6 +54,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
   void dispose() {
     _searchController.dispose();
     _bannerController.dispose();
+    _notificationCubit.close();
     super.dispose();
   }
 
@@ -60,11 +65,53 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         AppBar(
           title: TextField(controller: _searchController),
           trailing: [
-            IconButton(
-              icon: const Icon(LucideIcons.bell),
-              variance: ButtonVariance.ghost,
-              onPressed: () {
-                // TODO: Navigate to notifications screen when implemented
+            BlocBuilder<NotificationCubit, NotificationState>(
+              bloc: _notificationCubit,
+              builder: (context, state) {
+                return IconButton(
+                  variance: ButtonVariance.ghost,
+                  onPressed: () async {
+                    await context.pushNamed(Routes.userNotifications.name);
+                    // Refresh unread count when returning from notifications
+                    _notificationCubit.getUnreadCount();
+                  },
+                  icon: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(LucideIcons.bell),
+                      if (state.unreadCount > 0)
+                        Positioned(
+                          right: -4,
+                          top: -4,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 4.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: context.colorScheme.destructive,
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 16.w,
+                              minHeight: 16.h,
+                            ),
+                            child: Text(
+                              state.unreadCount > 99
+                                  ? '99+'
+                                  : state.unreadCount.toString(),
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
               },
             ),
             BlocBuilder<AuthCubit, AuthState>(
