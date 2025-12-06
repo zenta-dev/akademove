@@ -81,7 +81,7 @@ export const AccountDeletionSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 			}),
 		)
@@ -104,7 +104,7 @@ export const AccountDeletionSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 				body: z.object({
 					status: z.enum(["REVIEWING", "APPROVED", "REJECTED", "COMPLETED"]),
@@ -131,7 +131,7 @@ export const AccountDeletionSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 			}),
 		)

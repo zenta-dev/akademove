@@ -4,6 +4,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Mail, Send, User } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -71,8 +72,12 @@ function RouteComponent() {
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: ["contact", "getById", id] });
 				queryClient.invalidateQueries({ queryKey: ["contact", "list"] });
-				toast.success("Response sent successfully");
+				toast.success("Response sent and email delivered to user");
 				setResponse("");
+				navigate({
+					to: "/dash/operator/contacts",
+					search: { page: 1, limit: 12, order: "desc", mode: "offset" },
+				});
 			},
 			onError: (error: Error) => {
 				toast.error(error.message || "Failed to send response");
@@ -193,6 +198,14 @@ function RouteComponent() {
 
 							{/* Response Form */}
 							<form onSubmit={handleSubmit} className="space-y-4">
+								<Alert className="border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950">
+									<Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+									<AlertDescription className="text-blue-700 dark:text-blue-300">
+										Your response will be sent via email to{" "}
+										<strong>{contactData.email}</strong>
+									</AlertDescription>
+								</Alert>
+
 								<div className="space-y-2">
 									<Label htmlFor="response">
 										{contactData.response
@@ -237,7 +250,9 @@ function RouteComponent() {
 									disabled={respondMutation.isPending || !response.trim()}
 								>
 									<Send className="mr-2 h-4 w-4" />
-									{respondMutation.isPending ? "Sending..." : "Send Response"}
+									{respondMutation.isPending
+										? "Sending..."
+										: "Send Response via Email"}
 								</Button>
 							</form>
 						</CardContent>

@@ -88,8 +88,8 @@ export const OrderEnvelopePayloadSchema = z.object({
 		.optional(),
 	message: z
 		.object({
-			id: z.string().uuid(),
-			orderId: z.string().uuid(),
+			id: z.uuid(),
+			orderId: z.uuid(),
 			senderId: z.string(),
 			senderName: z.string(),
 			message: z.string(),
@@ -98,8 +98,8 @@ export const OrderEnvelopePayloadSchema = z.object({
 		.optional(),
 	merchantAction: z
 		.object({
-			orderId: z.string().uuid(),
-			merchantId: z.string().uuid(),
+			orderId: z.uuid(),
+			merchantId: z.uuid(),
 			reason: z.string().optional(),
 		})
 		.optional(),

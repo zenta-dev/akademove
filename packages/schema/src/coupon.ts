@@ -55,7 +55,7 @@ export const CouponSchema = z.object({
 	periodStart: DateSchema,
 	periodEnd: DateSchema,
 	isActive: z.boolean(),
-	merchantId: z.string().uuid().nullable().optional(), // For merchant-specific coupons
+	merchantId: z.uuid().nullable().optional(), // For merchant-specific coupons
 	createdById: z.string(),
 	createdAt: DateSchema,
 });
@@ -80,12 +80,12 @@ export const UpdateCouponSchema = CouponSchema.omit({
 export type UpdateCoupon = z.infer<typeof UpdateCouponSchema>;
 
 export const ActivateCouponSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 });
 export type ActivateCoupon = z.infer<typeof ActivateCouponSchema>;
 
 export const DeactivateCouponSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 });
 export type DeactivateCoupon = z.infer<typeof DeactivateCouponSchema>;
 

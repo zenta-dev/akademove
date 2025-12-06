@@ -22,7 +22,7 @@ export const ChatSpec = {
 				z.object({
 					rows: z.array(OrderChatMessageSchema),
 					hasMore: z.boolean(),
-					nextCursor: z.string().uuid().optional(),
+					nextCursor: z.uuid().optional(),
 				}),
 				"Successfully retrieved chat messages",
 			),

@@ -4,8 +4,8 @@ import { MerchantMenuSchema } from "./merchant.js";
 
 // Individual cart item
 export const CartItemSchema = z.object({
-	menuId: z.string().uuid(),
-	merchantId: z.string().uuid(),
+	menuId: z.uuid(),
+	merchantId: z.uuid(),
 	merchantName: z.string(),
 	menuName: z.string(),
 	menuImage: z.string().nullable(),
@@ -18,7 +18,7 @@ export type CartItem = z.infer<typeof CartItemSchema>;
 
 // Full cart
 export const CartSchema = z.object({
-	merchantId: z.string().uuid(),
+	merchantId: z.uuid(),
 	merchantName: z.string(),
 	items: z.array(CartItemSchema).min(1),
 	totalItems: z.number().int().min(1),

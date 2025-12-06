@@ -28,7 +28,7 @@ export const EmergencySpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ orderId: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ orderId: z.uuid() }) }))
 		.output(
 			createSuccesSchema(
 				z.array(EmergencySchema),
@@ -43,7 +43,7 @@ export const EmergencySpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(
 			createSuccesSchema(
 				EmergencySchema,
@@ -60,7 +60,7 @@ export const EmergencySpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: UpdateEmergencySchema.pick({
 					status: true,
 					resolution: true,

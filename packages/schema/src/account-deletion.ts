@@ -30,16 +30,16 @@ export const AccountTypeSchema = z.enum([
 export type AccountType = z.infer<typeof AccountTypeSchema>;
 
 export const AccountDeletionSchema = z.object({
-	id: z.string().uuid(),
+	id: z.uuid(),
 	fullName: z.string().min(1).max(255),
-	email: z.string().email({ message: "Invalid email address" }),
+	email: z.email({ message: "Invalid email address" }),
 	phone: z.string().min(1).max(50),
 	accountType: AccountTypeSchema,
 	reason: AccountDeletionReasonSchema,
 	additionalInfo: z.string().optional(),
 	status: AccountDeletionStatusSchema,
-	userId: z.string().uuid().optional(),
-	reviewedById: z.string().uuid().optional(),
+	userId: z.uuid().optional(),
+	reviewedById: z.uuid().optional(),
 	reviewNotes: z.string().optional(),
 	createdAt: DateSchema,
 	updatedAt: DateSchema,
@@ -62,7 +62,7 @@ export const InsertAccountDeletionSchema = AccountDeletionSchema.omit({
 	reviewedAt: true,
 	completedAt: true,
 }).extend({
-	userId: z.string().uuid().optional(),
+	userId: z.uuid().optional(),
 });
 export type InsertAccountDeletion = z.infer<typeof InsertAccountDeletionSchema>;
 

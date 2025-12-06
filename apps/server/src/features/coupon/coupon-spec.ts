@@ -51,7 +51,7 @@ export const CouponSpec = {
 					code: z.string(),
 					orderAmount: z.number(),
 					serviceType: OrderTypeSchema.optional(),
-					merchantId: z.string().uuid().optional(),
+					merchantId: z.uuid().optional(),
 				}),
 			}),
 		)
@@ -80,7 +80,7 @@ export const CouponSpec = {
 				body: z.object({
 					serviceType: OrderTypeSchema,
 					totalAmount: z.coerce.number().positive(),
-					merchantId: z.string().uuid().optional(),
+					merchantId: z.uuid().optional(),
 				}),
 			}),
 		)

@@ -72,7 +72,7 @@ export const ContactSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 			}),
 		)
@@ -92,7 +92,7 @@ export const ContactSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 				body: UpdateContactSchema,
 			}),
@@ -113,7 +113,7 @@ export const ContactSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 			}),
 		)
@@ -133,7 +133,7 @@ export const ContactSpec = {
 		.input(
 			z.object({
 				params: z.object({
-					id: z.string().uuid(),
+					id: z.uuid(),
 				}),
 				body: z.object({
 					response: z.string().min(1).max(5000),

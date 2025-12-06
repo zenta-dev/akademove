@@ -45,6 +45,8 @@ export const EmailVerificationEmail = ({
 	);
 };
 
+export default EmailVerificationEmail;
+
 const h1 = {
 	color: "#1f2937",
 	fontSize: "28px",

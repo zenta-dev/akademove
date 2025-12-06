@@ -69,6 +69,8 @@ export const InvitationEmail = ({
 	);
 };
 
+export default InvitationEmail;
+
 const h1 = {
 	color: "#1f2937",
 	fontSize: "28px",

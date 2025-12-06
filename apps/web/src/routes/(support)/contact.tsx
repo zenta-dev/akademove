@@ -61,7 +61,7 @@ function ContactComponent() {
 				setTimeout(() => {
 					setSubmitted(false);
 					form.reset();
-				}, 3000);
+				}, 5000);
 			},
 			onError: (error: Error) => {
 				toast.error(error.message || m.contact_submit_error());

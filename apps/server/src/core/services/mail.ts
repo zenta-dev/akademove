@@ -1,5 +1,5 @@
 import { env } from "cloudflare:workers";
-import { render } from "@react-email/components";
+import { ContactResponseEmail } from "emails/contact-response";
 import { EmailVerificationEmail } from "emails/email-verification";
 import { InvitationEmail } from "emails/invitation";
 import { ResetPasswordEmail } from "emails/reset-password";
@@ -32,6 +32,16 @@ interface SendEmailVerificationProps {
 	url: string;
 	userName?: string;
 }
+
+interface SendContactResponseProps {
+	to: string;
+	userName: string;
+	subject: string;
+	originalMessage: string;
+	response: string;
+	respondedBy: string;
+}
+
 interface RenderEmailOptions {
 	pretty?: boolean;
 	plainText?: boolean;
@@ -52,6 +62,7 @@ export interface MailService {
 	sendResetPassword(props: SendResetPasswordProps): Promise<void>;
 	sendInvitation(props: SendInvitationProps): Promise<void>;
 	sendEmailVerification(props: SendEmailVerificationProps): Promise<void>;
+	sendContactResponse(props: SendContactResponseProps): Promise<void>;
 }
 
 export const MAIL_FROMS = {
@@ -59,6 +70,7 @@ export const MAIL_FROMS = {
 	SECURITY: "Akademove Security <security@mail.akademove.com>",
 	INVITATION: "Akademove <no-reply@mail.akademove.com>",
 	VERIFICATION: "Akademove Verification <verify@mail.akademove.com>",
+	SUPPORT: "Akademove Support <support@mail.akademove.com>",
 };
 
 export class ResendMailService implements MailService {
@@ -137,18 +149,35 @@ export class ResendMailService implements MailService {
 		}
 	}
 
-	async #render(
-		component: React.ReactElement,
-		opts: RenderEmailOptions = {},
-	): Promise<string> {
+	async sendContactResponse(props: SendContactResponseProps): Promise<void> {
 		try {
-			const html = await render(component, {
-				pretty: opts.pretty ?? false,
-				plainText: opts.plainText ?? false,
+			console.log("[MailService] Sending contact response email with props:", {
+				to: props.to,
+				userName: props.userName,
+				subject: props.subject,
+				originalMessageLength: props.originalMessage?.length,
+				responseLength: props.response?.length,
+				respondedBy: props.respondedBy,
 			});
-			return html;
-		} catch (_error) {
-			throw new MailError("Failed to render email template");
+			const res = await this.#send(
+				React.createElement(ContactResponseEmail, {
+					userName: props.userName,
+					subject: props.subject,
+					originalMessage: props.originalMessage,
+					response: props.response,
+					respondedBy: props.respondedBy,
+				}),
+				{
+					from: MAIL_FROMS.SUPPORT,
+					to: props.to,
+					subject: `Re: ${props.subject}`,
+				},
+			);
+			console.log("Contact response email sent, res:", res);
+		} catch (error) {
+			console.error("[MailService] sendContactResponse error:", error);
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send contact response email");
 		}
 	}
 
@@ -157,17 +186,11 @@ export class ResendMailService implements MailService {
 		opts: SendEmailOptions,
 	): Promise<{ id: string }> {
 		try {
-			const [html, text] = await Promise.all([
-				this.#render(component),
-				this.#render(component, { plainText: true }),
-			]);
-
 			const response = await this.#client.emails.send({
 				from: opts.from ?? MAIL_FROMS.DEFAULT,
 				to: opts.to,
 				subject: opts.subject,
-				html,
-				text,
+				react: component,
 				replyTo: opts.replyTo,
 				cc: opts.cc,
 				bcc: opts.bcc,

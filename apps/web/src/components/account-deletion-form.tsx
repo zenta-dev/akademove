@@ -41,7 +41,7 @@ import { orpcClient } from "@/lib/orpc";
 // Create validation schema with i18n messages
 const createDeletionFormSchema = () =>
 	z.object({
-		email: z.string().email(m.account_deletion_email_validation()),
+		email: z.email(m.account_deletion_email_validation()),
 		phoneNumber: z
 			.string()
 			.min(10, m.account_deletion_phone_min())
@@ -55,7 +55,7 @@ const createDeletionFormSchema = () =>
 			message: m.account_deletion_account_type_required(),
 		}),
 		reason: z.string().max(1000, m.account_deletion_reason_max()).optional(),
-		confirmEmail: z.string().email(m.account_deletion_email_validation()),
+		confirmEmail: z.email(m.account_deletion_email_validation()),
 	});
 
 type DeletionFormValues = z.infer<ReturnType<typeof createDeletionFormSchema>>;

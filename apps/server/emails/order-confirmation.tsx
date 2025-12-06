@@ -133,6 +133,8 @@ export const OrderConfirmationEmail = ({
 	);
 };
 
+export default OrderConfirmationEmail;
+
 const statusBadge = {
 	backgroundColor: "#d1fae5",
 	border: "2px solid #10b981",

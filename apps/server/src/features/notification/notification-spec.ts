@@ -49,7 +49,7 @@ export const NotificationSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(createSuccesSchema(UserNotificationSchema, "Mark as read success")),
 	markAllAsRead: oc
 		.route({
@@ -74,7 +74,7 @@ export const NotificationSpec = {
 			inputStructure: "detailed",
 			outputStructure: "detailed",
 		})
-		.input(z.object({ params: z.object({ id: z.string().uuid() }) }))
+		.input(z.object({ params: z.object({ id: z.uuid() }) }))
 		.output(
 			createSuccesSchema(z.object({ ok: z.boolean() }), "Delete success"),
 		),

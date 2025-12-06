@@ -7,13 +7,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
 
-export const Route = createFileRoute("/dash/admin/contacts")({
+export const Route = createFileRoute("/dash/operator/contacts/")({
 	validateSearch: (values) => {
 		const search = UnifiedPaginationQuerySchema.parse(values);
 		if (!values.limit) return { ...search, page: 1, limit: 12 };
 		return search;
 	},
-	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.ADMIN.CONTACTS }] }),
+	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.OPERATOR.CONTACTS }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({
 			contact: ["list", "get", "update", "respond"],
@@ -55,7 +55,7 @@ function RouteComponent() {
 				<TabsContent value="all">
 					<Card className="p-0">
 						<CardContent className="p-0">
-							<ContactTable search={search} to="/dash/admin/contacts" />
+							<ContactTable search={search} to="/dash/operator/contacts" />
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -64,7 +64,7 @@ function RouteComponent() {
 						<CardContent className="p-0">
 							<ContactTable
 								search={search}
-								to="/dash/admin/contacts"
+								to="/dash/operator/contacts"
 								status="PENDING"
 							/>
 						</CardContent>
@@ -75,7 +75,7 @@ function RouteComponent() {
 						<CardContent className="p-0">
 							<ContactTable
 								search={search}
-								to="/dash/admin/contacts"
+								to="/dash/operator/contacts"
 								status="REVIEWING"
 							/>
 						</CardContent>
@@ -86,7 +86,7 @@ function RouteComponent() {
 						<CardContent className="p-0">
 							<ContactTable
 								search={search}
-								to="/dash/admin/contacts"
+								to="/dash/operator/contacts"
 								status="RESOLVED"
 							/>
 						</CardContent>
@@ -97,7 +97,7 @@ function RouteComponent() {
 						<CardContent className="p-0">
 							<ContactTable
 								search={search}
-								to="/dash/admin/contacts"
+								to="/dash/operator/contacts"
 								status="CLOSED"
 							/>
 						</CardContent>

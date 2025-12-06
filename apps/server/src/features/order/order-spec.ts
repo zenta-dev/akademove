@@ -137,7 +137,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: z.object({
 					reason: z.string().optional(),
 				}),
@@ -154,7 +154,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				query: OrderChatMessageListQuerySchema.omit({ orderId: true }),
 			}),
 		)
@@ -163,7 +163,7 @@ export const OrderSpec = {
 				z.object({
 					rows: z.array(OrderChatMessageSchema),
 					hasMore: z.boolean(),
-					nextCursor: z.string().uuid().optional(),
+					nextCursor: z.uuid().optional(),
 				}),
 				"Successfully retrieved chat messages",
 			),
@@ -178,7 +178,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: InsertOrderChatMessageSchema.omit({ orderId: true }),
 			}),
 		)
@@ -195,7 +195,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: z.object({
 					file: z.instanceof(File),
 				}),
@@ -217,7 +217,7 @@ export const OrderSpec = {
 		})
 		.input(
 			z.object({
-				params: z.object({ id: z.string().uuid() }),
+				params: z.object({ id: z.uuid() }),
 				body: z.object({
 					otp: z.string().length(6),
 				}),

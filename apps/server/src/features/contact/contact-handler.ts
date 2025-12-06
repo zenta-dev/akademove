@@ -2,6 +2,7 @@ import { m } from "@repo/i18n";
 import { trimObjectValues } from "@repo/shared";
 import { hasPermission } from "@/core/middlewares/auth";
 import { createORPCRouter } from "@/core/router/orpc";
+import { log } from "@/utils";
 import { ContactSpec } from "./contact-spec";
 
 const { pub, priv } = createORPCRouter(ContactSpec);
@@ -107,8 +108,14 @@ export const ContactHandler = pub.router({
 		.handler(async ({ context, input: { params, body } }) => {
 			const data = trimObjectValues(body);
 
-			return await context.svc.db.transaction(async (tx) => {
-				const result = await context.repo.contact.respond(
+			// Get the original contact first for email details
+			const originalContact = await context.repo.contact.get(params.id);
+
+			// Get the responder's name for the email
+			const responder = await context.repo.user.admin.get(context.user.id);
+
+			const result = await context.svc.db.transaction(async (tx) => {
+				return await context.repo.contact.respond(
 					params.id,
 					{
 						response: data.response,
@@ -118,14 +125,36 @@ export const ContactHandler = pub.router({
 					{ tx },
 					context,
 				);
-
-				return {
-					status: 200 as const,
-					body: {
-						message: m.server_contact_updated(),
-						data: result,
-					},
-				};
 			});
+
+			// Send email to user with the response
+			try {
+				await context.svc.mail.sendContactResponse({
+					to: originalContact.email,
+					userName: originalContact.name,
+					subject: originalContact.subject,
+					originalMessage: originalContact.message,
+					response: data.response,
+					respondedBy: responder?.name ?? "AkadeMove Support",
+				});
+				log.info(
+					{ contactId: params.id, email: originalContact.email },
+					"[ContactHandler] Response email sent to user",
+				);
+			} catch (error) {
+				// Log error but don't fail the response operation
+				log.error(
+					{ error, contactId: params.id, email: originalContact.email },
+					"[ContactHandler] Failed to send response email",
+				);
+			}
+
+			return {
+				status: 200 as const,
+				body: {
+					message: m.server_contact_updated(),
+					data: result,
+				},
+			};
 		}),
 });

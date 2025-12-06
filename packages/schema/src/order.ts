@@ -76,7 +76,7 @@ export const OrderSchema = z.object({
 	platformCommission: z.number().optional(),
 	driverEarning: z.number().optional(),
 	merchantCommission: z.number().optional(),
-	couponId: z.string().uuid().optional(),
+	couponId: z.uuid().optional(),
 	couponCode: z.string().optional(),
 	discountAmount: z.number().optional(),
 	note: OrderNoteSchema.optional(),

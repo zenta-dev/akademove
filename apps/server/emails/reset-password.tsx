@@ -41,6 +41,8 @@ export const ResetPasswordEmail = ({
 	);
 };
 
+export default ResetPasswordEmail;
+
 const h1 = {
 	color: "#1f2937",
 	fontSize: "28px",
