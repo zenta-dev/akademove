@@ -5,6 +5,7 @@ import { relations } from "drizzle-orm";
 import { boolean, jsonb, text } from "drizzle-orm/pg-core";
 import { userBadge } from "./badge";
 import {
+	createAuditLogTable,
 	DateModifier,
 	index,
 	pgEnum,
@@ -95,3 +96,6 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 export type UserDatabase = typeof user.$inferSelect;
+
+// Audit log for user changes
+export const userAuditLog = createAuditLogTable("user");

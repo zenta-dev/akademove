@@ -10,6 +10,7 @@ import { ResendMailService } from "@/core/services/mail";
 import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
 import { AnalyticsRepository } from "@/features/analytics/analytics-repository";
+import { AuditRepository } from "@/features/audit/audit-repository";
 import { AuthRepository } from "@/features/auth/auth-repository";
 import {
 	PasswordResetService,
@@ -38,6 +39,7 @@ import { NotificationRepository } from "@/features/notification/notification-rep
 import { PushNotificationService } from "@/features/notification/services/push-notification-service";
 import { OrderRepository } from "@/features/order/order-repository";
 import {
+	DeliveryProofService,
 	OrderMatchingService,
 	OrderPricingConfigProvider,
 	OrderPricingService,
@@ -123,6 +125,7 @@ export function getServices(): ServiceContext {
 	);
 	const orderMatchingService = new OrderMatchingService(db);
 	const orderStateService = new OrderStateService();
+	const deliveryProofService = new DeliveryProofService(storage);
 
 	// Initialize notification domain services
 	const pushNotificationService = new PushNotificationService(firebase);
@@ -154,6 +157,7 @@ export function getServices(): ServiceContext {
 			pricing: orderPricingService,
 			matching: orderMatchingService,
 			state: orderStateService,
+			deliveryProof: deliveryProofService,
 		},
 		notificationServices: {
 			push: pushNotificationService,
@@ -250,6 +254,7 @@ export function getRepositories(
 			svc.orderServices.pricing,
 			svc.orderServices.matching,
 			svc.orderServices.state,
+			svc.orderServices.deliveryProof,
 		),
 		payment,
 		coupon: new CouponRepository(svc.db, svc.kv),
@@ -262,6 +267,7 @@ export function getRepositories(
 		},
 		transaction,
 		notification,
+		audit: new AuditRepository(svc.db),
 	};
 
 	return repo;

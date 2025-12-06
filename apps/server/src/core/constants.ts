@@ -42,6 +42,7 @@ export const STORAGE_BUCKETS = [
 	"merchant-priv",
 	"user",
 	"merchant-menu",
+	"delivery-proofs",
 ] as const;
 export type StorageBucket = (typeof STORAGE_BUCKETS)[number];
 

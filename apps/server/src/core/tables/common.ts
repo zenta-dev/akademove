@@ -44,6 +44,8 @@ export const allowedLoggedTables = pgEnum("allowed_logged_table", [
 	"contact",
 	"coupon",
 	"report",
+	"user",
+	"wallet",
 ]);
 
 export type AllowedLoggedTable =
@@ -66,10 +68,16 @@ export const createAuditLogTable = (tableName: AllowedLoggedTable) =>
 			oldData: jsonb("old_data"),
 			newData: jsonb("new_data"),
 			updatedById: text("updated_by_id"),
+			ipAddress: text("ip_address"),
+			userAgent: text("user_agent"),
+			sessionId: text("session_id"),
+			reason: text("reason"),
 			updatedAt: timestamp("updated_at").$defaultFn(nowFn).notNull(),
 		},
 		(t) => [
 			index(`${tableName}_audit_record_idx`).on(t.recordId),
 			index(`${tableName}_audit_updated_at_idx`).on(t.updatedAt),
+			index(`${tableName}_audit_updated_by_idx`).on(t.updatedById),
+			index(`${tableName}_audit_ip_address_idx`).on(t.ipAddress),
 		],
 	);

@@ -5,6 +5,7 @@ import type { PaginationResult } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
 import type { asc, desc, sql } from "drizzle-orm";
 import type { AnalyticsRepository } from "@/features/analytics/analytics-repository";
+import type { AuditRepository } from "@/features/audit/audit-repository";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
@@ -68,6 +69,7 @@ export interface ServiceContext {
 		pricing: OrderPricingService;
 		matching: OrderMatchingService;
 		state: OrderStateService;
+		deliveryProof: import("@/features/order/services/delivery-proof-service").DeliveryProofService;
 	};
 	notificationServices: {
 		push: PushNotificationService;
@@ -121,6 +123,7 @@ export interface RepositoryContext {
 	};
 	wallet: WalletRepository;
 	notification: NotificationRepository;
+	audit: AuditRepository;
 }
 
 export interface UserInContext {

@@ -2,7 +2,7 @@ import { CURRENCY } from "@repo/schema/constants";
 import { relations } from "drizzle-orm";
 import { boolean, numeric, text, uuid } from "drizzle-orm/pg-core";
 import { user } from "./auth";
-import { DateModifier, pgEnum, pgTable } from "./common";
+import { createAuditLogTable, DateModifier, pgEnum, pgTable } from "./common";
 import { transaction } from "./transaction";
 
 export const walletCurrencyEnum = pgEnum("wallet_currency", CURRENCY);
@@ -27,3 +27,6 @@ export const walletRelations = relations(wallet, ({ one, many }) => ({
 }));
 
 export type walletDatabase = typeof wallet.$inferSelect;
+
+// Audit log for wallet changes
+export const walletAuditLog = createAuditLogTable("wallet");
