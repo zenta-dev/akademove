@@ -20,6 +20,7 @@ import {
 } from "@/features/auth/services";
 import { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
 import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { ContactRepository } from "@/features/contact/contact-repository";
@@ -31,6 +32,8 @@ import {
 	DriverLocationService,
 	DriverVerificationService,
 } from "@/features/driver/services";
+import { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
+import { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
@@ -218,6 +221,12 @@ export function getRepositories(
 		wallet,
 		notification,
 	);
+	const driverQuizQuestion = new DriverQuizQuestionRepository(svc.db, svc.kv);
+	const driverQuizAnswer = new DriverQuizAnswerRepository(
+		svc.db,
+		svc.kv,
+		driverQuizQuestion,
+	);
 	const repo: RepositoryContext = {
 		accountDeletion: new AccountDeletionRepository(svc.db, svc.kv),
 		analytics: new AnalyticsRepository(svc.kv, svc.db),
@@ -241,6 +250,8 @@ export function getRepositories(
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
 			schedule: new DriverScheduleRepository(svc.db, svc.kv),
 		},
+		driverQuizQuestion,
+		driverQuizAnswer,
 		emergency: new EmergencyRepository(svc.db, svc.kv),
 		leaderboard: new LeaderboardRepository(svc.db, svc.kv),
 		merchant: {
@@ -270,6 +281,7 @@ export function getRepositories(
 		transaction,
 		notification,
 		audit: new AuditRepository(svc.db),
+		broadcast: new BroadcastRepository(svc.db, svc.kv),
 	};
 
 	return repo;

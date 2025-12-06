@@ -11,6 +11,8 @@ import { AuthHandler } from "./auth/auth-handler";
 import { AuthSpec } from "./auth/auth-spec";
 import { BadgeHandler } from "./badge/badge-handler";
 import { BadgeSpec } from "./badge/badge-spec";
+import { BroadcastHandler } from "./broadcast/broadcast-handler";
+import { BroadcastSpec } from "./broadcast/broadcast-spec";
 import { ChatHandler } from "./chat/chat-handler";
 import { ChatSpec } from "./chat/chat-spec";
 import { ConfigurationHandler } from "./configuration/configuration-handler";
@@ -21,6 +23,10 @@ import { CouponHandler } from "./coupon/coupon-handler";
 import { CouponSpec } from "./coupon/coupon-spec";
 import { DriverHandler } from "./driver/driver-handler";
 import { DriverSpec } from "./driver/driver-spec";
+import { DriverQuizAnswerHandler } from "./driver-quiz-answer/driver-quiz-answer-handler";
+import { DriverQuizAnswerSpec } from "./driver-quiz-answer/driver-quiz-answer-spec";
+import { DriverQuizQuestionHandler } from "./driver-quiz-question/driver-quiz-question-handler";
+import { DriverQuizQuestionSpec } from "./driver-quiz-question/driver-quiz-question-spec";
 import { EmergencyHandler } from "./emergency/emergency-handler";
 import { EmergencySpec } from "./emergency/emergency-spec";
 import { LeaderboardHandler } from "./leaderboard/leaderboard-handler";
@@ -51,12 +57,19 @@ export const FetchServerSpec = oc.router({
 	analytics: oc.prefix("/analytics").router(AnalyticsSpec),
 	audit: oc.prefix("/audit-logs").router(AuditSpec),
 	auth: oc.prefix("/auth").router(AuthSpec),
+	broadcast: oc.prefix("/broadcasts").router(BroadcastSpec),
 	badge: oc.prefix("/badges").router(BadgeSpec),
 	chat: oc.prefix("/chat").router(ChatSpec),
 	configuration: oc.prefix("/configurations").router(ConfigurationSpec),
 	contact: oc.prefix("/contacts").router(ContactSpec),
 	quickMessage: oc.prefix("/quick-messages").router(QuickMessageSpec),
 	driver: oc.prefix("/drivers").router(DriverSpec),
+	driverQuizQuestion: oc
+		.prefix("/driver-quiz-questions")
+		.router(DriverQuizQuestionSpec),
+	driverQuizAnswer: oc
+		.prefix("/driver-quiz-answers")
+		.router(DriverQuizAnswerSpec),
 	emergency: oc.prefix("/emergencies").router(EmergencySpec),
 	leaderboard: oc.prefix("/leaderboards").router(LeaderboardSpec),
 	merchant: oc.prefix("/merchants").router(MerchantSpec),
@@ -77,12 +90,15 @@ export const FetchServerRouter = os.router({
 	analytics: AnalyticsHandler,
 	audit: AuditHandler,
 	auth: AuthHandler,
+	broadcast: BroadcastHandler,
 	badge: BadgeHandler,
 	chat: ChatHandler,
 	configuration: ConfigurationHandler,
 	contact: ContactHandler,
 	quickMessage: QuickMessageHandler,
 	driver: DriverHandler,
+	driverQuizQuestion: DriverQuizQuestionHandler,
+	driverQuizAnswer: DriverQuizAnswerHandler,
 	emergency: EmergencyHandler,
 	leaderboard: LeaderboardHandler,
 	merchant: MerchantHandler,

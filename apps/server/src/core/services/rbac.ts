@@ -43,6 +43,8 @@ export class RBACService {
 			bookings: ["list", "get", "create", "update", "delete"],
 			configurations: ["list", "get", "create", "update", "delete"],
 			contact: ["list", "get", "update", "delete", "respond"],
+			newsletter: ["list", "get", "create", "update", "delete"],
+			support: ["list", "get", "create", "update"],
 		},
 		OPERATOR: {
 			accountDeletion: ["list", "get", "review"],
@@ -57,6 +59,8 @@ export class RBACService {
 			user: ["list", "get", "update", "ban"],
 			configurations: ["list", "get", "create", "update", "delete"],
 			contact: ["list", "get", "update", "respond"],
+			newsletter: ["create"],
+			support: ["list", "get", "create", "update"],
 		},
 		MERCHANT: {
 			merchant: ["get", "update"],
@@ -64,6 +68,7 @@ export class RBACService {
 			order: ["list", "get", "update"],
 			review: ["get"],
 			report: ["get"],
+			support: ["get", "create", "update"],
 		},
 		DRIVER: {
 			driver: ["get", "update"],
@@ -72,6 +77,7 @@ export class RBACService {
 			emergency: ["list", "get", "create"],
 			review: ["get"],
 			report: ["get"],
+			support: ["get", "create", "update"],
 		},
 		USER: {
 			user: ["get", "update"],
@@ -82,6 +88,8 @@ export class RBACService {
 			merchant: ["list", "get"],
 			coupon: ["list", "get"],
 			bookings: ["get", "create", "update", "delete"],
+			newsletter: ["create"],
+			support: ["get", "create", "update"],
 		},
 	} as const;
 

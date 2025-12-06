@@ -4,11 +4,14 @@ import postgres from "postgres";
 import * as accountDeletion from "@/core/tables/account-deletion";
 import * as auth from "@/core/tables/auth";
 import * as badge from "@/core/tables/badge";
+import * as broadcast from "@/core/tables/broadcast";
 import * as chat from "@/core/tables/chat";
 import * as configuration from "@/core/tables/configuration";
 import * as contact from "@/core/tables/contact";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
+import * as driverQuizAnswer from "@/core/tables/driver-quiz-answer";
+import * as driverQuizQuestion from "@/core/tables/driver-quiz-question";
 import * as emergency from "@/core/tables/emergency";
 import * as leaderboard from "@/core/tables/leaderboard";
 import * as merchant from "@/core/tables/merchant";
@@ -26,11 +29,14 @@ export const tables = {
 	...accountDeletion,
 	...auth,
 	...badge,
+	...broadcast,
 	...chat,
 	...configuration,
 	...contact,
 	...coupon,
 	...driver,
+	...driverQuizAnswer,
+	...driverQuizQuestion,
 	...emergency,
 	...leaderboard,
 	...merchant,

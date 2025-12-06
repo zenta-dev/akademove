@@ -2,6 +2,7 @@ import { m } from "@repo/i18n";
 import {
 	type Driver,
 	DriverKeySchema,
+	type DriverQuizStatus,
 	type DriverStatus,
 	type InsertDriver,
 	type UpdateDriver,
@@ -90,6 +91,9 @@ export class DriverMainRepository extends BaseRepository {
 			currentLocation: item.currentLocation ?? undefined,
 			lastLocationUpdate: item.lastLocationUpdate ?? undefined,
 			lastCancellationDate: item.lastCancellationDate ?? undefined,
+			quizAttemptId: item.quizAttemptId ?? undefined,
+			quizScore: item.quizScore ?? undefined,
+			quizCompletedAt: item.quizCompletedAt ?? undefined,
 			studentCardId: item.studentCard,
 			driverLicenseId: item.driverLicense,
 			vehicleCertificateId: item.vehicleCertificate,
@@ -599,6 +603,15 @@ export class DriverMainRepository extends BaseRepository {
 				);
 			}
 
+			// Check if driver has passed the quiz
+			if (existing.quizStatus !== "PASSED") {
+				throw new RepositoryError(
+					"Driver must pass the quiz before approval. Current quiz status: " +
+						existing.quizStatus,
+					{ code: "BAD_REQUEST" },
+				);
+			}
+
 			const [updated] = await this.db
 				.update(tables.driver)
 				.set({ status: "APPROVED" })
@@ -766,6 +779,68 @@ export class DriverMainRepository extends BaseRepository {
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "activate");
+		}
+	}
+
+	/**
+	 * Update driver's quiz status after completing a quiz attempt
+	 */
+	async updateQuizStatus(
+		id: string,
+		data: {
+			quizStatus: DriverQuizStatus;
+			quizAttemptId: string;
+			quizScore: number;
+			quizCompletedAt: Date;
+		},
+		opts?: WithTx,
+	): Promise<Driver> {
+		try {
+			const tx = opts?.tx ?? this.db;
+
+			const existing = await this.#getFromDB(id, opts);
+			if (!existing) {
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const [updated] = await tx
+				.update(tables.driver)
+				.set({
+					quizStatus: data.quizStatus,
+					quizAttemptId: data.quizAttemptId,
+					quizScore: data.quizScore,
+					quizCompletedAt: data.quizCompletedAt,
+				})
+				.where(eq(tables.driver.id, id))
+				.returning();
+
+			const user = await tx.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+
+			await this.deleteCache(id);
+			log.info(
+				{
+					driverId: id,
+					quizStatus: data.quizStatus,
+					quizScore: data.quizScore,
+				},
+				"[DriverMainRepository] Driver quiz status updated",
+			);
+
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "updateQuizStatus");
 		}
 	}
 }

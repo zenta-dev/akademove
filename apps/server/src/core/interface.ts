@@ -10,12 +10,15 @@ import type { AuditRepository } from "@/features/audit/audit-repository";
 import type { AuthRepository } from "@/features/auth/auth-repository";
 import type { BadgeRepository } from "@/features/badge/main/badge-main-repository";
 import type { UserBadgeRepository } from "@/features/badge/user/user-badge-repository";
+import type { BroadcastRepository } from "@/features/broadcast/broadcast-repository";
 import type { ChatRepository } from "@/features/chat/chat-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { ContactRepository } from "@/features/contact/contact-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
+import type { DriverQuizAnswerRepository } from "@/features/driver-quiz-answer/driver-quiz-answer-repository";
+import type { DriverQuizQuestionRepository } from "@/features/driver-quiz-question/driver-quiz-question-repository";
 import type { EmergencyRepository } from "@/features/emergency/emergency-repository";
 import type { LeaderboardRepository } from "@/features/leaderboard/leaderboard-repository";
 import type { MerchantMainRepository } from "@/features/merchant/main/merchant-main-repository";
@@ -106,6 +109,8 @@ export interface RepositoryContext {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;
 	};
+	driverQuizQuestion: DriverQuizQuestionRepository;
+	driverQuizAnswer: DriverQuizAnswerRepository;
 	emergency: EmergencyRepository;
 	leaderboard: LeaderboardRepository;
 	merchant: {
@@ -126,6 +131,7 @@ export interface RepositoryContext {
 	wallet: WalletRepository;
 	notification: NotificationRepository;
 	audit: AuditRepository;
+	broadcast: BroadcastRepository;
 }
 
 export interface UserInContext {

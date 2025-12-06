@@ -33,6 +33,8 @@ export const statement = {
 	configurations: ["list", "get", "create", "update", "delete"],
 	emergency: ["list", "get", "create", "update"],
 	contact: ["list", "get", "update", "delete", "respond"],
+	newsletter: ["list", "get", "create", "update", "delete"],
+	support: ["list", "get", "create", "update"],
 } as const;
 
 export type Statement = typeof statement;
