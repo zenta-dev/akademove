@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { m } from "@repo/i18n";
 import { InsertReviewSchema, type ReviewCategory } from "@repo/schema/review";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -54,14 +55,14 @@ const categoryIcons: Record<ReviewCategory, typeof Heart> = {
 	OTHER: MessageSquare,
 };
 
-const categoryLabels: Record<ReviewCategory, string> = {
-	CLEANLINESS: "Cleanliness",
-	COURTESY: "Courtesy & Service",
-	PUNCTUALITY: "Punctuality",
-	SAFETY: "Safety",
-	COMMUNICATION: "Communication",
-	OTHER: "Other",
-};
+const getCategoryLabels = (): Record<ReviewCategory, string> => ({
+	CLEANLINESS: m.rate_order_cleanliness(),
+	COURTESY: m.rate_order_courtesy(),
+	PUNCTUALITY: m.rate_order_punctuality(),
+	SAFETY: m.rate_order_safety(),
+	COMMUNICATION: m.rate_order_communication(),
+	OTHER: m.rate_order_other(),
+});
 
 export function RateOrderDialog({
 	open,
@@ -97,12 +98,12 @@ export function RateOrderDialog({
 			onSuccess: () => {
 				queryClient.invalidateQueries({ queryKey: ["reviews"] });
 				queryClient.invalidateQueries({ queryKey: ["user", "orders"] });
-				toast.success("Rating submitted successfully");
+				toast.success(m.rate_order_success());
 				onOpenChange(false);
 				form.reset();
 			},
 			onError: (error) => {
-				toast.error(error.message || "Failed to submit rating");
+				toast.error(error.message || m.rate_order_error());
 			},
 		}),
 	);
@@ -111,7 +112,7 @@ export function RateOrderDialog({
 		const parsedValues = InsertReviewSchema.parse(values);
 
 		if (parsedValues.score === 0) {
-			toast.error("Please select a rating");
+			toast.error(m.rate_order_select_rating());
 			return;
 		}
 		createReviewMutation.mutate({ body: parsedValues });
@@ -123,9 +124,11 @@ export function RateOrderDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
-					<DialogTitle>Rate Your Experience</DialogTitle>
+					<DialogTitle>{m.rate_order_title()}</DialogTitle>
 					<DialogDescription>
-						How was your experience with {driverName || "the driver"}?
+						{m.rate_order_desc({
+							driverName: driverName || m.tracking_driver(),
+						})}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -137,7 +140,7 @@ export function RateOrderDialog({
 							name="score"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Overall Rating *</FormLabel>
+									<FormLabel>{m.rate_order_overall()}</FormLabel>
 									<FormControl>
 										<div className="flex items-center justify-center gap-2 py-4">
 											{Array.from({ length: 5 }).map((_, i) => {
@@ -171,12 +174,12 @@ export function RateOrderDialog({
 										</div>
 									</FormControl>
 									<FormDescription className="text-center">
-										{currentScore === 0 && "Click a star to rate"}
-										{currentScore === 1 && "Poor"}
-										{currentScore === 2 && "Fair"}
-										{currentScore === 3 && "Good"}
-										{currentScore === 4 && "Very Good"}
-										{currentScore === 5 && "Excellent"}
+										{currentScore === 0 && m.rate_order_select_rating()}
+										{currentScore === 1 && m.rate_order_poor()}
+										{currentScore === 2 && m.rate_order_fair()}
+										{currentScore === 3 && m.rate_order_good()}
+										{currentScore === 4 && m.rate_order_very_good()}
+										{currentScore === 5 && m.rate_order_excellent()}
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -189,7 +192,7 @@ export function RateOrderDialog({
 							name="category"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>What aspect would you like to rate? *</FormLabel>
+									<FormLabel>{m.rate_order_aspect()}</FormLabel>
 									<FormControl>
 										<RadioGroup
 											value={field.value}
@@ -197,9 +200,12 @@ export function RateOrderDialog({
 											className="flex flex-col space-y-2"
 										>
 											{(
-												Object.keys(categoryLabels) as Array<ReviewCategory>
+												Object.keys(
+													getCategoryLabels(),
+												) as Array<ReviewCategory>
 											).map((category) => {
 												const Icon = categoryIcons[category];
+												const labels = getCategoryLabels();
 												return (
 													<div
 														key={category}
@@ -211,7 +217,7 @@ export function RateOrderDialog({
 															className="flex cursor-pointer items-center gap-2 font-normal"
 														>
 															<Icon className="h-4 w-4 text-muted-foreground" />
-															{categoryLabels[category]}
+															{labels[category]}
 														</Label>
 													</div>
 												);
@@ -229,17 +235,19 @@ export function RateOrderDialog({
 							name="comment"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Additional Comments (Optional)</FormLabel>
+									<FormLabel>{m.rate_order_comments()}</FormLabel>
 									<FormControl>
 										<Textarea
 											{...field}
-											placeholder="Share more details about your experience..."
+											placeholder={m.rate_order_comments_placeholder()}
 											rows={4}
 											maxLength={500}
 										/>
 									</FormControl>
 									<FormDescription>
-										{field.value?.length || 0}/500 characters
+										{m.rate_order_comments_count({
+											length: field.value?.length || 0,
+										})}
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -253,12 +261,12 @@ export function RateOrderDialog({
 								onClick={() => onOpenChange(false)}
 								disabled={createReviewMutation.isPending}
 							>
-								Cancel
+								{m.cancel()}
 							</Button>
 							<Button type="submit" disabled={createReviewMutation.isPending}>
 								{createReviewMutation.isPending
-									? "Submitting..."
-									: "Submit Rating"}
+									? m.submitting()
+									: m.rate_order_submit()}
 							</Button>
 						</DialogFooter>
 					</form>

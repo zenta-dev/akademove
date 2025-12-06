@@ -167,8 +167,8 @@ class _ReviewCard extends StatelessWidget {
                 _buildRating(context, review.score),
               ],
             ),
-            if (review.comment != null && review.comment!.isNotEmpty)
-              Text(review.comment!, style: context.typography.small),
+            if (review.comment?.isNotEmpty == true)
+              Text(review.comment ?? '', style: context.typography.small),
             Row(
               children: [
                 Icon(

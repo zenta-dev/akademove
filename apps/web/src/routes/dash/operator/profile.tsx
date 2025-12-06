@@ -44,7 +44,7 @@ import { orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 import { createPhotoPreviewUrl } from "@/utils/file";
 
-export const Route = createFileRoute("/dash/user/profile")({
+export const Route = createFileRoute("/dash/operator/profile")({
 	head: () => ({ meta: [{ title: SUB_ROUTE_TITLES.USER.PROFILE }] }),
 	beforeLoad: async () => {
 		const ok = await hasAccess({

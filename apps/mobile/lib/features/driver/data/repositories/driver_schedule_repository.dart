@@ -36,12 +36,13 @@ class DriverScheduleRepository extends BaseRepository {
         id: scheduleId,
       );
 
-      if (response.data?.data == null) {
+      final scheduleData = response.data?.data;
+      if (scheduleData == null) {
         throw Exception('Schedule not found');
       }
 
       return SuccessResponse(
-        data: response.data!.data,
+        data: scheduleData,
         message: 'Schedule retrieved successfully',
       );
     });
@@ -57,12 +58,13 @@ class DriverScheduleRepository extends BaseRepository {
         driverScheduleCreateRequest: schedule,
       );
 
-      if (response.data?.data == null) {
+      final scheduleData = response.data?.data;
+      if (scheduleData == null) {
         throw Exception('Failed to create schedule');
       }
 
       return SuccessResponse(
-        data: response.data!.data,
+        data: scheduleData,
         message: 'Schedule created successfully',
       );
     });
@@ -80,12 +82,13 @@ class DriverScheduleRepository extends BaseRepository {
         driverScheduleUpdateRequest: schedule,
       );
 
-      if (response.data?.data == null) {
+      final scheduleData = response.data?.data;
+      if (scheduleData == null) {
         throw Exception('Failed to update schedule');
       }
 
       return SuccessResponse(
-        data: response.data!.data,
+        data: scheduleData,
         message: 'Schedule updated successfully',
       );
     });

@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { BankProvider } from "@repo/schema/common";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -50,19 +51,19 @@ export function WithdrawDialog({
 		mutationFn: async () => {
 			const withdrawAmount = Number.parseFloat(amount);
 			if (Number.isNaN(withdrawAmount) || withdrawAmount <= 0) {
-				throw new Error("Invalid amount");
+				throw new Error(m.withdraw_wallet_invalid_amount());
 			}
 
 			if (withdrawAmount < 50000) {
-				throw new Error("Minimum withdrawal amount is 50,000 IDR");
+				throw new Error(m.withdraw_wallet_minimum());
 			}
 
 			if (withdrawAmount > availableBalance) {
-				throw new Error("Insufficient balance");
+				throw new Error(m.withdraw_wallet_insufficient());
 			}
 
 			if (!accountNumber.trim()) {
-				throw new Error("Account number is required");
+				throw new Error(m.withdraw_wallet_account_required());
 			}
 
 			const result = await orpcClient.wallet.withdraw({
@@ -81,16 +82,14 @@ export function WithdrawDialog({
 			return result.body.data;
 		},
 		onSuccess: () => {
-			toast.success(
-				"Withdrawal request submitted successfully! It will be processed within 1-3 business days.",
-			);
+			toast.success(m.withdraw_wallet_success());
 			onOpenChange(false);
 			resetForm();
 			queryClient.invalidateQueries({ queryKey: ["wallet"] });
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
 		},
 		onError: (error: Error) => {
-			toast.error(`Failed to request withdrawal: ${error.message}`);
+			toast.error(m.withdraw_wallet_error({ error: error.message }));
 		},
 	});
 
@@ -118,17 +117,16 @@ export function WithdrawDialog({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
-					<DialogTitle>Request Withdrawal</DialogTitle>
-					<DialogDescription>
-						Withdraw your earnings to your bank account. Processing time: 1-3
-						business days.
-					</DialogDescription>
+					<DialogTitle>{m.withdraw_wallet_title()}</DialogTitle>
+					<DialogDescription>{m.withdraw_wallet_desc()}</DialogDescription>
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
 					{/* Available Balance */}
 					<div className="rounded-lg border bg-muted/50 p-4">
-						<p className="text-muted-foreground text-sm">Available Balance</p>
+						<p className="text-muted-foreground text-sm">
+							{m.withdraw_wallet_available()}
+						</p>
 						<p className="font-semibold text-2xl">
 							{formatCurrency(availableBalance)}
 						</p>
@@ -136,16 +134,11 @@ export function WithdrawDialog({
 
 					{/* Amount */}
 					<div>
-						<Label htmlFor="amount">
-							Withdrawal Amount{" "}
-							<span className="text-muted-foreground text-xs">
-								(min. 50,000 IDR)
-							</span>
-						</Label>
+						<Label htmlFor="amount">{m.withdraw_wallet_amount()}</Label>
 						<Input
 							id="amount"
 							type="number"
-							placeholder="50000"
+							placeholder={m.withdraw_wallet_amount_placeholder()}
 							value={amount}
 							onChange={(e) => setAmount(e.target.value)}
 							min={50000}
@@ -158,16 +151,17 @@ export function WithdrawDialog({
 							<p className="mt-1 text-xs">
 								{Number.parseFloat(amount) < 50000 ? (
 									<span className="text-destructive">
-										Minimum withdrawal is 50,000 IDR
+										{m.withdraw_wallet_amount_min()}
 									</span>
 								) : Number.parseFloat(amount) > availableBalance ? (
 									<span className="text-destructive">
-										Amount exceeds available balance
+										{m.withdraw_wallet_amount_exceeds()}
 									</span>
 								) : (
 									<span className="text-muted-foreground">
-										You will receive:{" "}
-										{formatCurrency(Number.parseFloat(amount))}
+										{m.withdraw_wallet_receive({
+											amount: formatCurrency(Number.parseFloat(amount)),
+										})}
 									</span>
 								)}
 							</p>
@@ -176,7 +170,7 @@ export function WithdrawDialog({
 
 					{/* Bank Provider */}
 					<div>
-						<Label htmlFor="bank">Bank</Label>
+						<Label htmlFor="bank">{m.withdraw_wallet_bank()}</Label>
 						<Select
 							value={bankProvider}
 							onValueChange={(value) => setBankProvider(value as BankProvider)}
@@ -197,11 +191,13 @@ export function WithdrawDialog({
 
 					{/* Account Number */}
 					<div>
-						<Label htmlFor="accountNumber">Account Number</Label>
+						<Label htmlFor="accountNumber">
+							{m.withdraw_wallet_account_number()}
+						</Label>
 						<Input
 							id="accountNumber"
 							type="text"
-							placeholder="1234567890"
+							placeholder={m.withdraw_wallet_account_number_placeholder()}
 							value={accountNumber}
 							onChange={(e) =>
 								setAccountNumber(e.target.value.replace(/\D/g, ""))
@@ -214,19 +210,21 @@ export function WithdrawDialog({
 					{/* Account Name (Optional) */}
 					<div>
 						<Label htmlFor="accountName">
-							Account Name{" "}
-							<span className="text-muted-foreground text-xs">(optional)</span>
+							{m.withdraw_wallet_account_name()}{" "}
+							<span className="text-muted-foreground text-xs">
+								({m.optional()})
+							</span>
 						</Label>
 						<Input
 							id="accountName"
 							type="text"
-							placeholder="John Doe"
+							placeholder={m.withdraw_wallet_account_name_placeholder()}
 							value={accountName}
 							onChange={(e) => setAccountName(e.target.value)}
 							disabled={withdrawMutation.isPending}
 						/>
 						<p className="mt-1 text-muted-foreground text-xs">
-							For verification purposes
+							{m.withdraw_wallet_account_name_desc()}
 						</p>
 					</div>
 
@@ -240,12 +238,12 @@ export function WithdrawDialog({
 							}}
 							disabled={withdrawMutation.isPending}
 						>
-							Cancel
+							{m.cancel()}
 						</Button>
 						<Button type="submit" disabled={withdrawMutation.isPending}>
 							{withdrawMutation.isPending
-								? "Processing..."
-								: "Request Withdrawal"}
+								? m.withdraw_wallet_processing()
+								: m.withdraw_wallet_title()}
 						</Button>
 					</DialogFooter>
 				</form>

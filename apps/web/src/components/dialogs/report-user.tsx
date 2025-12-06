@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { ReportCategory } from "@repo/schema/report";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -22,11 +23,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { orpcClient } from "@/lib/orpc";
 
-const REPORT_CATEGORIES: { value: ReportCategory; label: string }[] = [
-	{ value: "BEHAVIOR", label: "Inappropriate Behavior" },
-	{ value: "SAFETY", label: "Safety Concern" },
-	{ value: "FRAUD", label: "Fraud or Scam" },
-	{ value: "OTHER", label: "Other Issue" },
+const getReportCategories = (): { value: ReportCategory; label: string }[] => [
+	{ value: "BEHAVIOR", label: m.report_user_inappropriate() },
+	{ value: "SAFETY", label: m.report_user_safety() },
+	{ value: "FRAUD", label: m.report_user_fraud() },
+	{ value: "OTHER", label: m.report_user_other() },
 ];
 
 interface ReportUserDialogProps {
@@ -50,11 +51,11 @@ export function ReportUserDialog({
 	const reportMutation = useMutation({
 		mutationFn: async () => {
 			if (!description.trim()) {
-				throw new Error("Please provide a description");
+				throw new Error(m.report_user_description_required());
 			}
 
 			if (description.trim().length < 20) {
-				throw new Error("Description must be at least 20 characters");
+				throw new Error(m.report_user_description_too_short());
 			}
 
 			// Note: reporterId will be set by backend from authenticated user context
@@ -76,14 +77,12 @@ export function ReportUserDialog({
 			return result.body.data;
 		},
 		onSuccess: () => {
-			toast.success(
-				"Report submitted successfully. Our team will review it shortly.",
-			);
+			toast.success(m.report_user_success());
 			onOpenChange(false);
 			resetForm();
 		},
 		onError: (error: Error) => {
-			toast.error(`Failed to submit report: ${error.message}`);
+			toast.error(m.report_user_error({ error: error.message }));
 		},
 	});
 
@@ -107,19 +106,16 @@ export function ReportUserDialog({
 		>
 			<DialogContent className="max-w-md">
 				<DialogHeader>
-					<DialogTitle>Report User</DialogTitle>
+					<DialogTitle>{m.report_user_title()}</DialogTitle>
 					<DialogDescription>
-						{targetUserName
-							? `Report an issue with ${targetUserName}`
-							: "Report an issue with this user"}
-						. Your report will be reviewed by our safety team.
+						{m.report_user_desc({ name: targetUserName || "this user" })}
 					</DialogDescription>
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-4">
 					{/* Category Selection */}
 					<div>
-						<Label htmlFor="category">Issue Category</Label>
+						<Label htmlFor="category">{m.report_user_category()}</Label>
 						<Select
 							value={category}
 							onValueChange={(value) => setCategory(value as ReportCategory)}
@@ -129,7 +125,7 @@ export function ReportUserDialog({
 								<SelectValue />
 							</SelectTrigger>
 							<SelectContent>
-								{REPORT_CATEGORIES.map((cat) => (
+								{getReportCategories().map((cat) => (
 									<SelectItem key={cat.value} value={cat.value}>
 										{cat.label}
 									</SelectItem>
@@ -140,15 +136,10 @@ export function ReportUserDialog({
 
 					{/* Description */}
 					<div>
-						<Label htmlFor="description">
-							Description{" "}
-							<span className="text-muted-foreground text-xs">
-								(min. 20 characters)
-							</span>
-						</Label>
+						<Label htmlFor="description">{m.report_user_description()}</Label>
 						<Textarea
 							id="description"
-							placeholder="Please describe the issue in detail..."
+							placeholder={m.report_user_description_placeholder()}
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
 							rows={5}
@@ -157,16 +148,17 @@ export function ReportUserDialog({
 							minLength={20}
 						/>
 						<p className="mt-1 text-muted-foreground text-xs">
-							{description.length}/20 characters minimum
+							{m.report_user_description_min({ length: description.length })}
 						</p>
 					</div>
 
 					{/* Privacy Notice */}
 					<div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-sm">
-						<p className="font-medium text-yellow-900">Privacy Notice</p>
+						<p className="font-medium text-yellow-900">
+							{m.report_user_privacy()}
+						</p>
 						<p className="mt-1 text-yellow-800">
-							Your report will be kept confidential. The reported user will not
-							be notified of your identity.
+							{m.report_user_privacy_desc()}
 						</p>
 					</div>
 
@@ -180,13 +172,15 @@ export function ReportUserDialog({
 							}}
 							disabled={reportMutation.isPending}
 						>
-							Cancel
+							{m.cancel()}
 						</Button>
 						<Button
 							type="submit"
 							disabled={reportMutation.isPending || description.length < 20}
 						>
-							{reportMutation.isPending ? "Submitting..." : "Submit Report"}
+							{reportMutation.isPending
+								? m.submitting()
+								: m.report_user_submit()}
 						</Button>
 					</DialogFooter>
 				</form>

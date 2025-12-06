@@ -54,13 +54,14 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
   }
 
   Future<void> _uploadProof() async {
-    if (_selectedImage == null || _isUploading) return;
+    final selectedImage = _selectedImage;
+    if (selectedImage == null || _isUploading) return;
 
     setState(() => _isUploading = true);
 
     final driverOrderCubit = context.read<DriverOrderCubit>();
 
-    await driverOrderCubit.uploadDeliveryProof(_selectedImage!.path);
+    await driverOrderCubit.uploadDeliveryProof(selectedImage.path);
 
     if (!mounted) return;
 
@@ -101,31 +102,39 @@ class _DeliveryProofUploadDialogState extends State<DeliveryProofUploadDialog> {
 
               // Image preview or picker buttons
               if (_selectedImage != null)
-                Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Image.file(
-                        File(_selectedImage!.path),
-                        width: double.infinity,
-                        height: 200.h,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: material.IconButton(
-                        icon: const Icon(LucideIcons.x),
-                        onPressed: () => setState(() => _selectedImage = null),
-                        style: material.IconButton.styleFrom(
-                          backgroundColor: material.Colors.black54,
-                          foregroundColor: material.Colors.white,
+                Builder(
+                  builder: (context) {
+                    final imagePath = _selectedImage?.path;
+                    if (imagePath == null) return const SizedBox.shrink();
+
+                    return Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Image.file(
+                            File(imagePath),
+                            width: double.infinity,
+                            height: 200.h,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: material.IconButton(
+                            icon: const Icon(LucideIcons.x),
+                            onPressed: () =>
+                                setState(() => _selectedImage = null),
+                            style: material.IconButton.styleFrom(
+                              backgroundColor: material.Colors.black54,
+                              foregroundColor: material.Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 )
               else
                 Column(

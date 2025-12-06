@@ -40,10 +40,7 @@ class ReviewRepository extends BaseRepository {
   }
 
   /// Get reviews received by the current user (driver)
-  Future<BaseResponse<List<Review>>> getMyReviews({
-    int limit = 20,
-    String? cursor,
-  }) {
+  Future<ReviewList200Response> getMyReviews({int limit = 20, String? cursor}) {
     return guard(() async {
       final res = await _apiClient.getReviewApi().reviewList(
         limit: limit,
@@ -60,7 +57,7 @@ class ReviewRepository extends BaseRepository {
             code: ErrorCode.unknown,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return data;
     });
   }
 

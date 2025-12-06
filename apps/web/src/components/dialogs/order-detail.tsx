@@ -1,3 +1,4 @@
+import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import {
 	CheckCircle2,
@@ -130,24 +131,28 @@ export const OrderDetailDialog = ({
 	const StatusIcon = statusConfig[order.status]?.icon || Clock;
 
 	const timelineSteps = [
-		{ label: "Requested", date: order.requestedAt, active: true },
 		{
-			label: "Accepted",
+			label: m.order_detail_requested(),
+			date: order.requestedAt,
+			active: true,
+		},
+		{
+			label: m.order_detail_accepted(),
 			date: order.acceptedAt,
 			active: !!order.acceptedAt,
 		},
 		{
-			label: "Preparing",
+			label: m.order_detail_preparing(),
 			date: order.preparedAt,
 			active: !!order.preparedAt && order.type === "FOOD",
 		},
 		{
-			label: "Ready",
+			label: m.order_detail_ready(),
 			date: order.readyAt,
 			active: !!order.readyAt && order.type === "FOOD",
 		},
 		{
-			label: "Arrived",
+			label: m.order_detail_arrived(),
 			date: order.arrivedAt,
 			active: !!order.arrivedAt,
 		},
@@ -155,7 +160,7 @@ export const OrderDetailDialog = ({
 
 	const defaultTrigger = (
 		<Button variant="ghost" size="sm">
-			View Details
+			{m.order_detail_view()}
 		</Button>
 	);
 
@@ -167,7 +172,7 @@ export const OrderDetailDialog = ({
 					<div className="flex items-start justify-between">
 						<div>
 							<DialogTitle className="flex items-center gap-2">
-								Order #{order.id.slice(0, 8)}
+								{m.order_detail_title({ id: order.id.slice(0, 8) })}
 								<Badge
 									variant="secondary"
 									className={cn(statusConfig[order.status]?.color)}
@@ -177,7 +182,7 @@ export const OrderDetailDialog = ({
 								</Badge>
 							</DialogTitle>
 							<DialogDescription>
-								Created {formatDate(order.createdAt)}
+								{m.order_detail_created({ date: formatDate(order.createdAt) })}
 							</DialogDescription>
 						</div>
 					</div>
@@ -188,18 +193,22 @@ export const OrderDetailDialog = ({
 					<div className="space-y-3">
 						<h3 className="flex items-center gap-2 font-semibold text-sm">
 							<User className="h-4 w-4" />
-							Customer Information
+							{m.order_detail_customer_info()}
 						</h3>
 						<div className="grid gap-2 rounded-lg border p-4">
 							<div className="flex justify-between">
-								<span className="text-muted-foreground text-sm">Name</span>
+								<span className="text-muted-foreground text-sm">
+									{m.order_detail_customer_name()}
+								</span>
 								<span className="font-medium text-sm">
 									{order.user?.name || "N/A"}
 								</span>
 							</div>
 							{order.user?.phone && (
 								<div className="flex justify-between">
-									<span className="text-muted-foreground text-sm">Phone</span>
+									<span className="text-muted-foreground text-sm">
+										{m.order_detail_customer_phone()}
+									</span>
 									<span className="flex items-center gap-1 font-medium text-sm">
 										<Phone className="h-3 w-3" />
 										{String(order.user.phone.number).replace(
@@ -217,11 +226,13 @@ export const OrderDetailDialog = ({
 						<div className="space-y-3">
 							<h3 className="flex items-center gap-2 font-semibold text-sm">
 								<MapPin className="h-4 w-4" />
-								Driver Information
+								{m.order_detail_driver_info()}
 							</h3>
 							<div className="grid gap-2 rounded-lg border p-4">
 								<div className="flex justify-between">
-									<span className="text-muted-foreground text-sm">Name</span>
+									<span className="text-muted-foreground text-sm">
+										{m.order_detail_driver_name()}
+									</span>
 									<span className="font-medium text-sm">
 										{order.driver.studentId || "N/A"}
 									</span>
@@ -229,7 +240,7 @@ export const OrderDetailDialog = ({
 								{order.driver.licensePlate && (
 									<div className="flex justify-between">
 										<span className="text-muted-foreground text-sm">
-											Vehicle
+											{m.order_detail_driver_vehicle()}
 										</span>
 										<span className="font-medium text-sm">
 											{order.driver.licensePlate}
@@ -239,7 +250,7 @@ export const OrderDetailDialog = ({
 								{order.driver.rating && (
 									<div className="flex justify-between">
 										<span className="text-muted-foreground text-sm">
-											Rating
+											{m.order_detail_driver_rating()}
 										</span>
 										<span className="font-medium text-sm">
 											⭐ {order.driver.rating.toFixed(1)}
@@ -255,16 +266,22 @@ export const OrderDetailDialog = ({
 						<div className="space-y-3">
 							<h3 className="flex items-center gap-2 font-semibold text-sm">
 								<Utensils className="h-4 w-4" />
-								Order Items
+								{m.order_detail_items()}
 							</h3>
 							<div className="rounded-lg border">
 								<Table>
 									<TableHeader>
 										<TableRow>
-											<TableHead>Item</TableHead>
-											<TableHead className="text-center">Qty</TableHead>
-											<TableHead className="text-right">Price</TableHead>
-											<TableHead className="text-right">Subtotal</TableHead>
+											<TableHead>{m.order_detail_item_header()}</TableHead>
+											<TableHead className="text-center">
+												{m.order_detail_qty_header()}
+											</TableHead>
+											<TableHead className="text-right">
+												{m.order_detail_price_header()}
+											</TableHead>
+											<TableHead className="text-right">
+												{m.order_detail_subtotal_header()}
+											</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
@@ -279,7 +296,9 @@ export const OrderDetailDialog = ({
 																className="h-10 w-10 rounded object-cover"
 															/>
 														)}
-														<span>{item.item.name || "Unknown Item"}</span>
+														<span>
+															{item.item.name || m.order_detail_unknown_item()}
+														</span>
 													</div>
 												</TableCell>
 												<TableCell className="text-center">
@@ -303,23 +322,29 @@ export const OrderDetailDialog = ({
 					<div className="space-y-3">
 						<h3 className="flex items-center gap-2 font-semibold text-sm">
 							<MapPin className="h-4 w-4" />
-							Locations
+							{m.order_detail_locations()}
 						</h3>
 						<div className="grid gap-2 rounded-lg border p-4">
 							<div className="flex justify-between">
-								<span className="text-muted-foreground text-sm">Pickup</span>
+								<span className="text-muted-foreground text-sm">
+									{m.order_detail_pickup()}
+								</span>
 								<span className="font-medium text-sm">
 									{`${order.pickupLocation.y}, ${order.pickupLocation.x}`}
 								</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-muted-foreground text-sm">Dropoff</span>
+								<span className="text-muted-foreground text-sm">
+									{m.order_detail_dropoff()}
+								</span>
 								<span className="font-medium text-sm">
 									{`${order.dropoffLocation.y}, ${order.dropoffLocation.x}`}
 								</span>
 							</div>
 							<div className="flex justify-between">
-								<span className="text-muted-foreground text-sm">Distance</span>
+								<span className="text-muted-foreground text-sm">
+									{m.order_detail_distance()}
+								</span>
 								<span className="font-medium text-sm">
 									{order.distanceKm.toFixed(1)} km
 								</span>
@@ -331,7 +356,7 @@ export const OrderDetailDialog = ({
 					<div className="space-y-3">
 						<h3 className="flex items-center gap-2 font-semibold text-sm">
 							<MapPin className="h-4 w-4" />
-							Map View
+							{m.order_detail_map_view()}
 						</h3>
 						<OrderTrackingMap
 							pickup={{
@@ -350,28 +375,32 @@ export const OrderDetailDialog = ({
 					<div className="space-y-3">
 						<h3 className="flex items-center gap-2 font-semibold text-sm">
 							<Package className="h-4 w-4" />
-							Order Summary
+							{m.order_detail_summary()}
 						</h3>
 						<div className="rounded-lg border p-4">
 							<div className="space-y-2">
 								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground">Base Price</span>
+									<span className="text-muted-foreground">
+										{m.order_detail_base_price()}
+									</span>
 									<span>{formatPrice(order.basePrice)}</span>
 								</div>
 								{order.tip && order.tip > 0 && (
 									<div className="flex justify-between text-sm">
-										<span className="text-muted-foreground">Tip</span>
+										<span className="text-muted-foreground">
+											{m.order_detail_tip()}
+										</span>
 										<span>{formatPrice(order.tip)}</span>
 									</div>
 								)}
 								<Separator />
 								<div className="flex justify-between font-bold">
-									<span>Total</span>
+									<span>{m.order_detail_total()}</span>
 									<span>{formatPrice(order.totalPrice)}</span>
 								</div>
 								{order.merchantCommission && (
 									<div className="flex justify-between text-muted-foreground text-sm">
-										<span>Platform Commission</span>
+										<span>{m.order_detail_commission()}</span>
 										<span>- {formatPrice(order.merchantCommission)}</span>
 									</div>
 								)}
@@ -383,7 +412,7 @@ export const OrderDetailDialog = ({
 					<div className="space-y-3">
 						<h3 className="flex items-center gap-2 font-semibold text-sm">
 							<Clock className="h-4 w-4" />
-							Timeline
+							{m.order_detail_timeline()}
 						</h3>
 						<div className="space-y-2">
 							{timelineSteps.map((step) => (
@@ -420,25 +449,39 @@ export const OrderDetailDialog = ({
 								<>
 									<AcceptOrderDialog
 										orderId={order.id}
-										trigger={<Button variant="default">Accept Order</Button>}
+										trigger={
+											<Button variant="default">
+												{m.order_detail_accept()}
+											</Button>
+										}
 									/>
 									<RejectOrderDialog
 										orderId={order.id}
-										trigger={<Button variant="outline">Reject Order</Button>}
+										trigger={
+											<Button variant="outline">
+												{m.order_detail_reject()}
+											</Button>
+										}
 									/>
 								</>
 							)}
 							{order.status === "ACCEPTED" && (
 								<MarkPreparingDialog
 									orderId={order.id}
-									trigger={<Button variant="default">Mark Preparing</Button>}
+									trigger={
+										<Button variant="default">
+											{m.order_detail_mark_preparing()}
+										</Button>
+									}
 								/>
 							)}
 							{order.status === "PREPARING" && (
 								<MarkReadyDialog
 									orderId={order.id}
 									trigger={
-										<Button variant="default">Mark Ready for Pickup</Button>
+										<Button variant="default">
+											{m.order_detail_mark_ready()}
+										</Button>
 									}
 								/>
 							)}

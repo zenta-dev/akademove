@@ -180,7 +180,7 @@ export class AuditRepository {
 				)
 				.orderBy(desc(auditTable.updatedAt));
 
-			return result as unknown[] as AuditLog[];
+			return result.map(AuditRepository.composeEntity);
 		} catch (error) {
 			log.error(
 				{ error, tableName, recordId },

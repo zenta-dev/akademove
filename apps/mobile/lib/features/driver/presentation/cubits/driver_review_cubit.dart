@@ -59,19 +59,20 @@ class DriverReviewCubit extends BaseCubit<ReviewState> {
           cursor: refresh ? null : state.cursor,
         );
 
+        final nextCursor = res.pagination?.nextCursor;
+        final hasMore = res.pagination?.hasMore ?? false;
+
         if (refresh) {
           emit(
             state.toSuccess(
               reviews: res.data,
-              cursor: (res as dynamic).pagination?.cursor,
-              hasMore: (res as dynamic).pagination?.cursor != null,
+              cursor: nextCursor,
+              hasMore: hasMore,
               message: res.message,
             ),
           );
         } else {
-          emit(
-            state.appendReviews(res.data, (res as dynamic).pagination?.cursor),
-          );
+          emit(state.appendReviews(res.data, nextCursor));
         }
       } on BaseError catch (e, st) {
         logger.e(
