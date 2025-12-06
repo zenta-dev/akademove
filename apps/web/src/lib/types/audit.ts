@@ -9,12 +9,12 @@ export interface AuditLog {
 		| "wallet";
 	recordId: string;
 	operation: "INSERT" | "UPDATE" | "DELETE";
-	oldData: unknown | null;
-	newData: unknown | null;
-	updatedById: string | null;
-	ipAddress: string | null;
-	userAgent: string | null;
-	sessionId: string | null;
-	reason: string | null;
+	oldData?: unknown | null;
+	newData?: unknown | null;
+	updatedById?: string | null;
+	ipAddress?: string | null;
+	userAgent?: string | null;
+	sessionId?: string | null;
+	reason?: string | null;
 	updatedAt: Date;
 }

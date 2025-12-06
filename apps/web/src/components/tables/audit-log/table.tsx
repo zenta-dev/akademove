@@ -179,14 +179,16 @@ export const AuditLogTable = ({ search, to }: Props) => {
 			<div className="space-y-4 p-4">
 				<div className="flex flex-wrap gap-2">
 					<Select
-						value={tableName ?? ""}
-						onValueChange={(value) => setTableName(value || undefined)}
+						value={tableName ?? "ALL"}
+						onValueChange={(value) =>
+							setTableName(value === "ALL" ? undefined : value)
+						}
 					>
 						<SelectTrigger className="w-[180px]">
 							<SelectValue placeholder={m.table()} />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="">All Tables</SelectItem>
+							<SelectItem value="ALL">All Tables</SelectItem>
 							<SelectItem value="configurations">Configurations</SelectItem>
 							<SelectItem value="contact">Contact</SelectItem>
 							<SelectItem value="coupon">Coupon</SelectItem>
@@ -197,14 +199,16 @@ export const AuditLogTable = ({ search, to }: Props) => {
 					</Select>
 
 					<Select
-						value={operation ?? ""}
-						onValueChange={(value) => setOperation(value || undefined)}
+						value={operation ?? "ALL"}
+						onValueChange={(value) =>
+							setOperation(value === "ALL" ? undefined : value)
+						}
 					>
 						<SelectTrigger className="w-[180px]">
 							<SelectValue placeholder={m.operation()} />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="">All Operations</SelectItem>
+							<SelectItem value="ALL">All Operations</SelectItem>
 							<SelectItem value="INSERT">INSERT</SelectItem>
 							<SelectItem value="UPDATE">UPDATE</SelectItem>
 							<SelectItem value="DELETE">DELETE</SelectItem>

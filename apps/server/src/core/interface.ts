@@ -4,6 +4,7 @@ import type { ClientAgent } from "@repo/schema/common";
 import type { PaginationResult } from "@repo/schema/pagination";
 import type { UserRole } from "@repo/schema/user";
 import type { asc, desc, sql } from "drizzle-orm";
+import type { AccountDeletionRepository } from "@/features/account-deletion/account-deletion-repository";
 import type { AnalyticsRepository } from "@/features/analytics/analytics-repository";
 import type { AuditRepository } from "@/features/audit/audit-repository";
 import type { AuthRepository } from "@/features/auth/auth-repository";
@@ -90,6 +91,7 @@ export interface ServiceContext {
 }
 
 export interface RepositoryContext {
+	accountDeletion: AccountDeletionRepository;
 	analytics: AnalyticsRepository;
 	auth: AuthRepository;
 	badge: {

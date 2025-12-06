@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import * as accountDeletion from "@/core/tables/account-deletion";
 import * as auth from "@/core/tables/auth";
 import * as badge from "@/core/tables/badge";
 import * as chat from "@/core/tables/chat";
@@ -22,6 +23,7 @@ import * as wallet from "@/core/tables/wallet";
 import { isDev } from "@/utils";
 
 export const tables = {
+	...accountDeletion,
 	...auth,
 	...badge,
 	...chat,

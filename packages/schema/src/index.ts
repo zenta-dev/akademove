@@ -1,3 +1,4 @@
+import { AccountDeletionSchemaRegistries } from "./account-deletion.js";
 import { AuthSchemaRegistries } from "./auth.js";
 import { BadgeSchemaRegistries } from "./badge.js";
 import { CartSchemaRegistries } from "./cart.js";
@@ -25,6 +26,7 @@ import { WSSchemaRegistries } from "./ws.js";
 
 export const AllSchemaRegistries = {
 	...CommonSchemaRegistries,
+	...AccountDeletionSchemaRegistries,
 	...AuthSchemaRegistries,
 	...BadgeSchemaRegistries,
 	...CartSchemaRegistries,
@@ -49,6 +51,7 @@ export const AllSchemaRegistries = {
 	...NotificationSchemaRegistries,
 	...WSSchemaRegistries,
 } satisfies SchemaRegistries;
+export * from "./account-deletion.js";
 export * from "./auth.js";
 export * from "./badge.js";
 export * from "./cart.js";

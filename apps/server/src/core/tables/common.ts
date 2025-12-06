@@ -40,6 +40,7 @@ export const index = (name?: string) =>
 	indexCreator(name ? `am_${name}` : undefined);
 
 export const allowedLoggedTables = pgEnum("allowed_logged_table", [
+	"account_deletion",
 	"configurations",
 	"contact",
 	"coupon",

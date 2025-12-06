@@ -23,6 +23,8 @@ export class AuditRepository {
 
 	private getAuditTable(tableName: AllowedLoggedTable) {
 		switch (tableName) {
+			case "account_deletion":
+				return tables.accountDeletionAuditLog;
 			case "configurations":
 				return tables.configurationAuditLog;
 			case "coupon":
@@ -98,6 +100,7 @@ export class AuditRepository {
 
 			// If no tableName specified, query all audit tables and combine results
 			const allTables: AllowedLoggedTable[] = [
+				"account_deletion",
 				"configurations",
 				"contact",
 				"coupon",

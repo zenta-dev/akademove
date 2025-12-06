@@ -83,6 +83,8 @@ export class AuditService {
 	 */
 	private static getAuditTable(tableName: AllowedLoggedTable) {
 		switch (tableName) {
+			case "account_deletion":
+				return tables.accountDeletionAuditLog;
 			case "configurations":
 				return tables.configurationAuditLog;
 			case "coupon":

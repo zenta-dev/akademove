@@ -1,6 +1,8 @@
 import { oc } from "@orpc/contract";
 import { implement, type RouterClient } from "@orpc/server";
 import type { ORPCContext } from "@/core/interface";
+import { AccountDeletionHandler } from "./account-deletion/account-deletion-handler";
+import { AccountDeletionSpec } from "./account-deletion/account-deletion-spec";
 import { AnalyticsHandler } from "./analytics/analytics-handler";
 import { AnalyticsSpec } from "./analytics/analytics-spec";
 import { AuditHandler } from "./audit/audit-handler";
@@ -45,6 +47,7 @@ import { WalletHandler } from "./wallet/wallet-handler";
 import { WalletSpec } from "./wallet/wallet-spec";
 
 export const FetchServerSpec = oc.router({
+	accountDeletion: oc.prefix("/account-deletion").router(AccountDeletionSpec),
 	analytics: oc.prefix("/analytics").router(AnalyticsSpec),
 	audit: oc.prefix("/audit-logs").router(AuditSpec),
 	auth: oc.prefix("/auth").router(AuthSpec),
@@ -70,6 +73,7 @@ export const FetchServerSpec = oc.router({
 
 const os = implement(FetchServerSpec).$context<ORPCContext>();
 export const FetchServerRouter = os.router({
+	accountDeletion: AccountDeletionHandler,
 	analytics: AnalyticsHandler,
 	audit: AuditHandler,
 	auth: AuthHandler,

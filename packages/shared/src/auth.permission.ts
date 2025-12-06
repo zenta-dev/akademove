@@ -4,6 +4,7 @@
 ///
 
 export const statement = {
+	accountDeletion: ["list", "get", "review", "delete"],
 	driver: ["list", "get", "create", "update", "delete", "ban", "approve"],
 	merchant: ["list", "get", "create", "update", "delete", "approve"],
 	merchantMenu: ["list", "get", "create", "update", "delete"],

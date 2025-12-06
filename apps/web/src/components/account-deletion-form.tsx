@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
 	AlertDialog,
@@ -34,6 +35,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { orpcClient } from "@/lib/orpc";
 
 // Validation schema
 const deletionFormSchema = z.object({
@@ -41,18 +43,18 @@ const deletionFormSchema = z.object({
 	phoneNumber: z
 		.string()
 		.min(10, "Phone number must be at least 10 digits")
-		.max(15, "Phone number must not exceed 15 digits")
+		.max(20, "Phone number must not exceed 20 digits")
 		.regex(/^\+?[0-9]+$/, "Please enter a valid phone number"),
 	fullName: z
 		.string()
-		.min(3, "Full name must be at least 3 characters")
-		.max(100, "Full name must not exceed 100 characters"),
+		.min(2, "Full name must be at least 2 characters")
+		.max(255, "Full name must not exceed 255 characters"),
 	accountType: z.enum(["user", "driver", "merchant"], {
 		message: "Please select your account type",
 	}),
 	reason: z
 		.string()
-		.max(500, "Reason must not exceed 500 characters")
+		.max(1000, "Reason must not exceed 1000 characters")
 		.optional(),
 	confirmEmail: z.string().email("Please enter a valid email address"),
 });
@@ -99,50 +101,34 @@ export function AccountDeletionForm({ onSuccess }: AccountDeletionFormProps) {
 		setShowConfirmDialog(false);
 
 		try {
-			// TODO: Replace with actual API call
-			// const response = await fetch('/api/account-deletion', {
-			//   method: 'POST',
-			//   headers: { 'Content-Type': 'application/json' },
-			//   body: JSON.stringify(formData),
-			// });
+			// Call the API
+			const response = await orpcClient.accountDeletion.submit({
+				body: {
+					accountType: formData.accountType.toUpperCase() as
+						| "USER"
+						| "DRIVER"
+						| "MERCHANT",
+					reason: "OTHER",
+					additionalInfo: formData.reason || undefined,
+					email: formData.email,
+					phone: formData.phoneNumber,
+					fullName: formData.fullName,
+				},
+			});
 
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// For now, just send an email via mailto
-			const subject = encodeURIComponent("Account Deletion Request");
-			const body = encodeURIComponent(
-				`Account Deletion Request
-
-Full Name: ${formData.fullName}
-Email: ${formData.email}
-Phone Number: ${formData.phoneNumber}
-Account Type: ${formData.accountType.toUpperCase()}
-Reason: ${formData.reason || "Not provided"}
-
-I request that my AkadeMove account be permanently deleted along with all associated personal data.
-
-I understand that:
-- This action is permanent and cannot be undone
-- All wallet balance will be forfeited
-- Order history and ratings will be removed
-- Financial records may be retained for legal compliance (10 years)
-
-Date: ${new Date().toLocaleDateString()}`,
-			);
-
-			// Open mailto link
-			window.location.href = `mailto:privacy@akademove.com?subject=${subject}&body=${body}`;
-
-			setIsSubmitting(false);
-			setShowSuccessDialog(true);
-			form.reset();
-			onSuccess?.();
+			if (response.status === 201) {
+				setIsSubmitting(false);
+				setShowSuccessDialog(true);
+				form.reset();
+				onSuccess?.();
+				toast.success("Account deletion request submitted successfully");
+			} else {
+				throw new Error("Failed to submit deletion request");
+			}
 		} catch (error) {
 			console.error("Deletion request failed:", error);
 			setIsSubmitting(false);
-			// Show error toast/notification
-			alert(
+			toast.error(
 				"Failed to submit deletion request. Please try again or contact support directly at privacy@akademove.com",
 			);
 		}

@@ -9,6 +9,7 @@ import { CloudflareKVService } from "@/core/services/kv";
 import { ResendMailService } from "@/core/services/mail";
 import { RBACService } from "@/core/services/rbac";
 import { S3StorageService } from "@/core/services/storage";
+import { AccountDeletionRepository } from "@/features/account-deletion/account-deletion-repository";
 import { AnalyticsRepository } from "@/features/analytics/analytics-repository";
 import { AuditRepository } from "@/features/audit/audit-repository";
 import { AuthRepository } from "@/features/auth/auth-repository";
@@ -218,6 +219,7 @@ export function getRepositories(
 		notification,
 	);
 	const repo: RepositoryContext = {
+		accountDeletion: new AccountDeletionRepository(svc.db, svc.kv),
 		analytics: new AnalyticsRepository(svc.kv, svc.db),
 		auth: new AuthRepository(
 			svc.db,
