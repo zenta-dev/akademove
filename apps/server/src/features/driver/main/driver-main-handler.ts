@@ -100,6 +100,30 @@ export const DriverMainHandler = priv.router({
 	approve: priv.approve.handler(async ({ context, input: { params } }) => {
 		const result = await context.repo.driver.main.approve(params.id);
 
+		// Send approval notification to driver
+		try {
+			await context.repo.notification.sendNotificationToUserId({
+				toUserId: result.userId,
+				title: "Driver Application Approved",
+				body: "Congratulations! Your driver application and quiz have been approved. You can now start accepting orders.",
+				data: {
+					type: "DRIVER_APPROVED",
+					driverId: result.id,
+					deeplink: "akademove://driver/home",
+				},
+				apns: {
+					payload: { aps: { category: "DRIVER_APPROVED", sound: "default" } },
+				},
+				fromUserId: context.user.id,
+			});
+		} catch (error) {
+			// Log but don't fail the request if notification sending fails
+			console.error(
+				`Failed to send approval notification to user ${result.userId}:`,
+				error,
+			);
+		}
+
 		return {
 			status: 200,
 			body: { message: m.server_driver_approved(), data: result },
@@ -111,6 +135,31 @@ export const DriverMainHandler = priv.router({
 			params.id,
 			data.reason,
 		);
+
+		// Send rejection notification to driver with reason
+		try {
+			await context.repo.notification.sendNotificationToUserId({
+				toUserId: result.userId,
+				title: "Driver Application Declined",
+				body: `Your driver application has been declined. Reason: ${data.reason || "Your application does not meet our requirements. Please contact support for more information."}`,
+				data: {
+					type: "DRIVER_DECLINED",
+					driverId: result.id,
+					reason: data.reason || "",
+					deeplink: "akademove://contact-support",
+				},
+				apns: {
+					payload: { aps: { category: "DRIVER_DECLINED", sound: "default" } },
+				},
+				fromUserId: context.user.id,
+			});
+		} catch (error) {
+			// Log but don't fail the request if notification sending fails
+			console.error(
+				`Failed to send rejection notification to user ${result.userId}:`,
+				error,
+			);
+		}
 
 		return {
 			status: 200,
