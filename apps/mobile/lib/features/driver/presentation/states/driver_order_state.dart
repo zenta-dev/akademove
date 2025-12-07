@@ -1,55 +1,47 @@
-import 'package:akademove/core/_export.dart';
-import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+part of '_export.dart';
 
-part 'driver_order_state.mapper.dart';
-
-@MappableClass()
-class DriverOrderState with DriverOrderStateMappable {
-  const DriverOrderState({
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
+)
+class DriverOrderState extends BaseState2 with DriverOrderStateMappable {
+  DriverOrderState({
+    super.state,
+    super.message,
+    super.error,
     this.currentOrder,
     this.customer,
     this.orderStatus,
-    this.isLoading = false,
-    this.error,
-    this.message,
   });
 
   final Order? currentOrder;
   final User? customer;
   final OrderStatus? orderStatus;
-  final bool isLoading;
-  final BaseError? error;
-  final String? message;
 
-  bool get isSuccess => error == null && !isLoading;
-  bool get isFailure => error != null;
+  @override
+  DriverOrderState toInitial() => DriverOrderState();
 
-  DriverOrderState toLoading() {
-    return copyWith(isLoading: true, error: null, message: null);
-  }
+  @override
+  DriverOrderState toLoading() => copyWith(state: CubitState.loading);
 
+  @override
   DriverOrderState toSuccess({
+    String? message,
     Order? currentOrder,
     User? customer,
     OrderStatus? orderStatus,
-    String? message,
-  }) {
-    return copyWith(
-      currentOrder: currentOrder ?? this.currentOrder,
-      customer: customer ?? this.customer,
-      orderStatus: orderStatus ?? this.orderStatus,
-      isLoading: false,
-      error: null,
-      message: message,
-    );
-  }
+  }) => copyWith(
+    state: CubitState.success,
+    message: message,
+    currentOrder: currentOrder ?? this.currentOrder,
+    customer: customer ?? this.customer,
+    orderStatus: orderStatus ?? this.orderStatus,
+  );
 
-  DriverOrderState toFailure(BaseError error) {
-    return copyWith(isLoading: false, error: error);
-  }
-
-  DriverOrderState clearOrder() {
-    return copyWith(currentOrder: null, customer: null, orderStatus: null);
-  }
+  @override
+  DriverOrderState toFailure(BaseError error, {String? message}) => copyWith(
+    state: CubitState.failure,
+    error: error,
+    message: message ?? error.message,
+  );
 }

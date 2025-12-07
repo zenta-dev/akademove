@@ -1,76 +1,5 @@
 import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/driver/data/repositories/driver_quiz_repository.dart';
-
-class DriverQuizState {
-  const DriverQuizState({
-    this.state = CubitState.initial,
-    this.message,
-    this.error,
-    this.attempt,
-    this.currentQuestionIndex,
-    this.selectedAnswerId,
-    this.answeredQuestions = const <String>{},
-    this.result,
-  });
-
-  final CubitState state;
-  final String? message;
-  final BaseError? error;
-  final QuizAttempt? attempt;
-  final int? currentQuestionIndex;
-  final String? selectedAnswerId;
-  final Set<String> answeredQuestions;
-  final QuizResult? result;
-
-  DriverQuizState copyWith({
-    CubitState? state,
-    String? message,
-    BaseError? error,
-    QuizAttempt? attempt,
-    int? currentQuestionIndex,
-    String? selectedAnswerId,
-    Set<String>? answeredQuestions,
-    QuizResult? result,
-  }) {
-    return DriverQuizState(
-      state: state ?? this.state,
-      message: message ?? this.message,
-      error: error ?? this.error,
-      attempt: attempt ?? this.attempt,
-      currentQuestionIndex: currentQuestionIndex ?? this.currentQuestionIndex,
-      selectedAnswerId: selectedAnswerId ?? this.selectedAnswerId,
-      answeredQuestions: answeredQuestions ?? this.answeredQuestions,
-      result: result ?? this.result,
-    );
-  }
-
-  DriverQuizState toInitial() => DriverQuizState();
-
-  DriverQuizState toLoading() => copyWith(state: CubitState.loading);
-
-  DriverQuizState toSuccess({
-    String? message,
-    QuizAttempt? attempt,
-    int? currentQuestionIndex,
-    String? selectedAnswerId,
-    Set<String>? answeredQuestions,
-    QuizResult? result,
-  }) => copyWith(
-    state: CubitState.success,
-    message: message,
-    attempt: attempt ?? this.attempt,
-    currentQuestionIndex: currentQuestionIndex ?? this.currentQuestionIndex,
-    selectedAnswerId: selectedAnswerId ?? this.selectedAnswerId,
-    answeredQuestions: answeredQuestions ?? this.answeredQuestions,
-    result: result ?? this.result,
-  );
-
-  DriverQuizState toFailure(BaseError error, {String? message}) => copyWith(
-    state: CubitState.failure,
-    error: error,
-    message: message ?? error.message,
-  );
-}
+import 'package:akademove/features/features.dart';
 
 class DriverQuizCubit extends BaseCubit<DriverQuizState> {
   DriverQuizCubit({required DriverQuizRepository quizRepository})
@@ -81,7 +10,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
   Future<void> startQuiz({List<String>? questionIds, String? category}) async {
     try {
-      emit(DriverQuizState().toLoading());
+      emit(state.toLoading());
 
       final request = StartDriverQuizRequest(
         questionIds: questionIds,
@@ -91,7 +20,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       final res = await _quizRepository.startQuiz(request);
 
       emit(
-        DriverQuizState().toSuccess(
+        state.toSuccess(
           message: res.message,
           attempt: res.data,
           currentQuestionIndex: 0,
@@ -101,7 +30,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to start quiz', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e));
+      emit(state.toFailure(e));
     }
   }
 
@@ -117,7 +46,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
       final question = attempt.questions[currentIndex];
 
-      emit(DriverQuizState().toLoading());
+      emit(state.toLoading());
 
       final request = SubmitDriverQuizAnswerRequest(
         attemptId: attempt.attemptId,
@@ -131,14 +60,14 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         ..add(question.id);
 
       emit(
-        DriverQuizState().toSuccess(
+        state.toSuccess(
           message: res.message,
           answeredQuestions: newAnsweredQuestions,
         ),
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to submit answer', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e));
+      emit(state.toFailure(e));
     }
   }
 
@@ -150,7 +79,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         currentIndex != null &&
         currentIndex < attempt.questions.length - 1) {
       emit(
-        DriverQuizState().toSuccess(
+        state.toSuccess(
           currentQuestionIndex: currentIndex + 1,
           selectedAnswerId: null,
         ),
@@ -163,7 +92,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
     if (currentIndex != null && currentIndex > 0) {
       emit(
-        DriverQuizState().toSuccess(
+        state.toSuccess(
           currentQuestionIndex: currentIndex - 1,
           selectedAnswerId: null,
         ),
@@ -178,14 +107,14 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         return;
       }
 
-      emit(DriverQuizState().toLoading());
+      emit(state.toLoading());
 
       final request = CompleteDriverQuizRequest(attemptId: attempt.attemptId);
 
       final res = await _quizRepository.completeQuiz(request);
 
       emit(
-        DriverQuizState().toSuccess(
+        state.toSuccess(
           message: res.message,
           result: res.data,
           attempt: null, // Clear attempt after completion
@@ -193,29 +122,29 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       );
     } on BaseError catch (e, st) {
       logger.e('Failed to complete quiz', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e));
+      emit(state.toFailure(e));
     }
   }
 
   Future<void> getLatestAttempt() async {
     try {
-      emit(DriverQuizState().toLoading());
+      emit(state.toLoading());
 
       final res = await _quizRepository.getLatestAttempt();
 
-      emit(DriverQuizState().toSuccess(message: res.message, result: res.data));
+      emit(state.toSuccess(message: res.message, result: res.data));
     } on BaseError catch (e, st) {
       logger.e('Failed to get latest attempt', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e));
+      emit(state.toFailure(e));
     }
   }
 
   void selectAnswer(String optionId) {
-    emit(DriverQuizState().toSuccess(selectedAnswerId: optionId));
+    emit(state.toSuccess(selectedAnswerId: optionId));
   }
 
   void reset() {
-    emit(DriverQuizState());
+    emit(state);
   }
 
   // Getters
@@ -287,19 +216,14 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
       if (res.data != null) {
         // Quiz attempt exists, show result screen
-        emit(
-          DriverQuizState().toSuccess(
-            result: res.data,
-            message: 'Quiz status loaded',
-          ),
-        );
+        emit(state.toSuccess(result: res.data, message: 'Quiz status loaded'));
       } else {
         // No quiz attempt found
-        emit(DriverQuizState().toSuccess(message: 'No quiz attempt found'));
+        emit(state.toSuccess(message: 'No quiz attempt found'));
       }
     } on BaseError catch (e, st) {
       logger.e('Failed to check persisted state', error: e, stackTrace: st);
-      emit(DriverQuizState().toFailure(e));
+      emit(state.toFailure(e));
     }
   }
 }

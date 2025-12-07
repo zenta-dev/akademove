@@ -52,7 +52,7 @@ class _DriverReviewsScreenState extends State<DriverReviewsScreen> {
       headers: [AppBar(title: Text(context.l10n.my_reviews))],
       body: BlocProvider.value(
         value: _cubit,
-        child: BlocBuilder<DriverReviewCubit, ReviewState>(
+        child: BlocBuilder<DriverReviewCubit, DriverReviewState>(
           builder: (context, state) {
             if (state.isLoading && state.reviews.isEmpty) {
               return Center(child: CircularProgressIndicator());

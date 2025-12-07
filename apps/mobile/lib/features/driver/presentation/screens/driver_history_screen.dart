@@ -158,6 +158,7 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
           ],
         ),
       ],
+      scrollable: false,
       body: material.RefreshIndicator(
         onRefresh: _onRefresh,
         child: Column(
@@ -165,7 +166,6 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
             // Filter chips
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               child: Row(
                 spacing: 8.w,
                 children: [
@@ -187,7 +187,6 @@ class _DriverHistoryScreenState extends State<DriverHistoryScreen> {
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Row(
                 spacing: 8.w,
                 children: [

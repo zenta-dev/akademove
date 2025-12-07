@@ -15,7 +15,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
        _orderRepository = orderRepository,
        _webSocketService = webSocketService,
        _configurationRepository = configurationRepository,
-       super(const DriverHomeState());
+       super(DriverHomeState());
 
   final DriverRepository _driverRepository;
   final OrderRepository _orderRepository;
@@ -33,7 +33,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void reset() {
-    emit(const DriverHomeState());
+    emit(DriverHomeState());
     _locationUpdateTimer?.cancel();
   }
 
@@ -217,12 +217,12 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
               if (envelope.e == OrderEnvelopeEvent.CANCELED) {
                 // Order was cancelled before driver could accept
-                emit(state.clearIncomingOrder());
+                clearIncomingOrder();
               }
 
               if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
                 // Order no longer available (accepted by another driver)
-                emit(state.clearIncomingOrder());
+                clearIncomingOrder();
               }
             } catch (e, st) {
               logger.e(
@@ -266,7 +266,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void clearIncomingOrder() {
-    emit(state.clearIncomingOrder());
+    emit(state.toSuccess(incomingOrder: null));
   }
 
   void setCurrentOrder(Order order) {
@@ -274,7 +274,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void clearCurrentOrder() {
-    emit(state.clearCurrentOrder());
+    emit(state.toSuccess(currentOrder: null));
   }
 
   /// Calculate total driver earnings from orders after platform commission

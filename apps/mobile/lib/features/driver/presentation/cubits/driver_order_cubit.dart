@@ -13,7 +13,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   }) : _orderRepository = orderRepository,
        _webSocketService = webSocketService,
        _driverRepository = driverRepository,
-       super(const DriverOrderState());
+       super(DriverOrderState());
 
   final OrderRepository _orderRepository;
   final WebSocketService _webSocketService;
@@ -32,7 +32,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
   void reset() {
     _stopLocationTracking();
     _currentOrderId = null;
-    emit(const DriverOrderState());
+    emit(DriverOrderState());
   }
 
   @override
@@ -85,7 +85,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
             ),
           );
 
-          emit(state.clearOrder());
+          emit(state.toInitial());
         } on BaseError catch (e, st) {
           logger.e(
             '[DriverOrderCubit] - Error rejecting order: ${e.message}',
@@ -264,7 +264,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
 
           if (envelope.e == OrderEnvelopeEvent.CANCELED) {
             // Order was cancelled
-            emit(state.clearOrder());
+            emit(state.toInitial());
             teardownWebSocket();
           }
 

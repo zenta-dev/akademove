@@ -1,21 +1,20 @@
-import 'package:akademove/core/_export.dart';
-import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+part of '_export.dart';
 
-part 'driver_home_state.mapper.dart';
-
-@MappableClass()
-class DriverHomeState with DriverHomeStateMappable {
-  const DriverHomeState({
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
+)
+class DriverHomeState extends BaseState2 with DriverHomeStateMappable {
+  DriverHomeState({
+    super.state,
+    super.message,
+    super.error,
     this.myDriver,
     this.isOnline = false,
     this.todayEarnings = 0,
     this.todayTrips = 0,
     this.currentOrder,
     this.incomingOrder,
-    this.isLoading = false,
-    this.error,
-    this.message,
   });
 
   final Driver? myDriver;
@@ -24,48 +23,37 @@ class DriverHomeState with DriverHomeStateMappable {
   final int todayTrips;
   final Order? currentOrder;
   final Order? incomingOrder;
-  final bool isLoading;
-  final BaseError? error;
-  final String? message;
 
-  bool get isSuccess => error == null && !isLoading;
-  bool get isFailure => error != null;
+  @override
+  DriverHomeState toInitial() => DriverHomeState();
 
-  DriverHomeState toLoading() {
-    return copyWith(isLoading: true, error: null, message: null);
-  }
+  @override
+  DriverHomeState toLoading() => copyWith(state: CubitState.loading);
 
+  @override
   DriverHomeState toSuccess({
+    String? message,
     Driver? myDriver,
     bool? isOnline,
     num? todayEarnings,
     int? todayTrips,
     Order? currentOrder,
     Order? incomingOrder,
-    String? message,
-  }) {
-    return copyWith(
-      myDriver: myDriver ?? this.myDriver,
-      isOnline: isOnline ?? this.isOnline,
-      todayEarnings: todayEarnings ?? this.todayEarnings,
-      todayTrips: todayTrips ?? this.todayTrips,
-      currentOrder: currentOrder,
-      incomingOrder: incomingOrder,
-      isLoading: false,
-      error: null,
-      message: message,
-    );
-  }
+  }) => copyWith(
+    state: CubitState.success,
+    message: message,
+    myDriver: myDriver ?? this.myDriver,
+    isOnline: isOnline ?? this.isOnline,
+    todayEarnings: todayEarnings ?? this.todayEarnings,
+    todayTrips: todayTrips ?? this.todayTrips,
+    currentOrder: currentOrder ?? this.currentOrder,
+    incomingOrder: incomingOrder ?? this.incomingOrder,
+  );
 
-  DriverHomeState toFailure(BaseError error) {
-    return copyWith(isLoading: false, error: error);
-  }
-
-  DriverHomeState clearIncomingOrder() {
-    return copyWith(incomingOrder: null);
-  }
-
-  DriverHomeState clearCurrentOrder() {
-    return copyWith(currentOrder: null);
-  }
+  @override
+  DriverHomeState toFailure(BaseError error, {String? message}) => copyWith(
+    state: CubitState.failure,
+    error: error,
+    message: message ?? error.message,
+  );
 }

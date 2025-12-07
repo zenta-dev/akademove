@@ -3,7 +3,6 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -55,24 +54,20 @@ class _DriverHomeView extends StatelessWidget {
               ],
             ),
           ],
-          body: SafeArea(
-            child: material.RefreshIndicator(
-              onRefresh: () => context.read<DriverCubit>().init(),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Padding(
-                  padding: EdgeInsets.all(16.dg),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 20.h,
-                    children: [
-                      _buildWelcomeCard(context, state),
-                      _buildOnlineToggle(context, state),
-                      _buildTodayStats(context, state),
-                      _buildQuickActions(context),
-                    ],
-                  ),
-                ),
+          scrollable: false,
+          body: RefreshTrigger(
+            onRefresh: () => context.read<DriverCubit>().init(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 20.h,
+                children: [
+                  _buildWelcomeCard(context, state),
+                  _buildOnlineToggle(context, state),
+                  _buildTodayStats(context, state),
+                  _buildQuickActions(context),
+                ],
               ),
             ),
           ),
@@ -333,7 +328,7 @@ class _DriverHomeView extends StatelessWidget {
             ),
             _buildActionButton(
               context,
-              icon: material.Icons.star,
+              icon: LucideIcons.star,
               label: context.l10n.my_reviews,
               onTap: () => context.push(Routes.driverReviews.path),
             ),
@@ -349,8 +344,8 @@ class _DriverHomeView extends StatelessWidget {
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
+    return GhostButton(
+      onPressed: onTap,
       child: Card(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),

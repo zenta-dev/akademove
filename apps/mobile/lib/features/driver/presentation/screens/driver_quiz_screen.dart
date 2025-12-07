@@ -1,9 +1,8 @@
-import 'package:akademove/features/driver/data/repositories/driver_quiz_repository.dart';
-import 'package:akademove/features/driver/presentation/cubits/driver_quiz_cubit_simple.dart';
-import 'package:akademove/features/driver/presentation/states/driver_quiz_state_simple.dart';
+import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/features.dart';
 import 'package:akademove/locator.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class DriverQuizScreen extends StatefulWidget {
   const DriverQuizScreen({super.key});
@@ -32,32 +31,25 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Driver Knowledge Quiz'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+    return MyScaffold(
+      headers: [AppBar(title: const Text('Driver Knowledge Quiz'))],
       body: BlocBuilder<DriverQuizCubit, DriverQuizState>(
         bloc: _quizCubit,
         builder: (context, state) {
-          if (state.state == 'loading') {
+          if (state.state == CubitState.loading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state.state == 'failure') {
+          if (state.state == CubitState.failure) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 16,
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Failed to load quiz',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
+                  Text('Failed to load quiz').h4,
+                  Text(state.error?.message ?? '').h4,
+                  PrimaryButton(
                     onPressed: () => _quizCubit.reset(),
                     child: const Text('Try Again'),
                   ),
@@ -85,7 +77,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildStartScreen() {
-    final primaryColor = Theme.of(context).primaryColor;
+    final primaryColor = context.colorScheme.primary;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -95,33 +87,22 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
           const SizedBox(height: 24),
           Text(
             'Driver Knowledge Quiz',
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: context.typography.h2,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: context.typography.large,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton.icon(
+            child: IconButton(
+              variance: ButtonVariance.primary,
               onPressed: () => _quizCubit.startQuiz(),
               icon: const Icon(Icons.play_arrow),
-              label: const Text('Start Quiz'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
             ),
           ),
         ],
@@ -133,7 +114,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
     final attempt = state.attempt;
     final currentQuestionIndex = state.currentQuestionIndex ?? 0;
     final progress = _quizCubit.progress;
-    final primaryColor = Theme.of(context).primaryColor;
+    final primaryColor = context.colorScheme.primary;
 
     return Column(
       children: [
@@ -147,21 +128,21 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                 children: [
                   Text(
                     'Question ${currentQuestionIndex + 1} of ${attempt?.questions.length ?? 0}',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: context.typography.medium,
                   ),
                   Text(
                     '${(progress * 100).toInt()}%',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.titleSmall?.copyWith(color: primaryColor),
+                    style: context.typography.small.copyWith(
+                      color: primaryColor,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               LinearProgressIndicator(
                 value: progress,
-                backgroundColor: Colors.grey.shade300,
-                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                backgroundColor: Colors.gray.shade300,
+                color: primaryColor,
               ),
             ],
           ),
@@ -183,38 +164,27 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
               // Previous Button
               if (currentQuestionIndex > 0)
                 Expanded(
-                  child: ElevatedButton.icon(
+                  child: IconButton(
+                    variance: ButtonVariance.secondary,
                     onPressed: () => _quizCubit.previousQuestion(),
                     icon: const Icon(Icons.arrow_back),
-                    label: const Text('Previous'),
                   ),
                 ),
 
               // Next/Complete Button
               Expanded(
                 child: _quizCubit.isLastQuestion
-                    ? ElevatedButton.icon(
+                    ? IconButton(
+                        variance: ButtonVariance.secondary,
                         onPressed: () => _quizCubit.completeQuiz(),
                         icon: const Icon(Icons.check_circle),
-                        label: const Text('Complete Quiz'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
                       )
-                    : ElevatedButton.icon(
+                    : IconButton(
+                        variance: ButtonVariance.secondary,
                         onPressed: _quizCubit.isCurrentQuestionAnswered
                             ? () => _quizCubit.nextQuestion()
                             : null,
                         icon: const Icon(Icons.arrow_forward),
-                        label: const Text('Next'),
                       ),
               ),
             ],
@@ -225,9 +195,8 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildQuestionCard(dynamic question, DriverQuizState state) {
-    final primaryColor = Theme.of(context).primaryColor;
+    final primaryColor = context.colorScheme.primary;
     return Card(
-      margin: const EdgeInsets.all(8),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -253,10 +222,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             const SizedBox(height: 16),
 
             // Question
-            Text(
-              question.question as String,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text(question.question as String, style: context.typography.medium),
 
             const SizedBox(height: 16),
 
@@ -269,20 +235,19 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: InkWell(
-                  onTap: isAnswered
+                child: OutlineButton(
+                  onPressed: isAnswered
                       ? null
                       : () => _quizCubit.selectAnswer(option.id as String),
-                  borderRadius: BorderRadius.circular(8),
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? primaryColor.withValues(alpha: 0.1)
-                          : Colors.grey.shade100,
+                          : Colors.gray.shade100,
                       border: Border.all(
-                        color: isSelected ? primaryColor : Colors.grey.shade300,
+                        color: isSelected ? primaryColor : Colors.gray.shade300,
                         width: 2,
                       ),
                     ),
@@ -298,7 +263,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                             border: Border.all(
                               color: isSelected
                                   ? primaryColor
-                                  : Colors.grey.shade300,
+                                  : Colors.gray.shade300,
                               width: 2,
                             ),
                           ),
@@ -317,7 +282,9 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
                           child: Text(
                             option.text as String,
                             style: TextStyle(
-                              color: isSelected ? primaryColor : Colors.black87,
+                              color: isSelected
+                                  ? primaryColor
+                                  : Colors.gray.shade800,
                               fontWeight: isSelected
                                   ? FontWeight.bold
                                   : FontWeight.normal,
@@ -337,7 +304,6 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
   }
 
   Widget _buildResultScreen(dynamic result) {
-    final primaryColor = Theme.of(context).primaryColor;
     final passed = result.passed as bool;
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -364,7 +330,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
           // Result Message
           Text(
             passed ? 'Congratulations!' : 'Quiz Not Passed',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            style: context.typography.h2.copyWith(
               color: passed ? Colors.green.shade700 : Colors.red.shade700,
             ),
             textAlign: TextAlign.center,
@@ -376,7 +342,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             passed
                 ? 'You have successfully passed the driver knowledge quiz!'
                 : 'You did not pass the quiz. Please try again.',
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: context.typography.large,
             textAlign: TextAlign.center,
           ),
 
@@ -386,7 +352,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Colors.gray.shade100,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -413,21 +379,10 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
           // Action Button
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton.icon(
+            child: IconButton(
+              variance: ButtonVariance.secondary,
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Back to Dashboard'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
             ),
           ),
         ],
@@ -441,15 +396,13 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
       children: [
         Text(
           label,
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+          style: context.typography.medium.copyWith(
+            color: Colors.gray.shade600,
+          ),
         ),
         Text(
           value,
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: context.typography.small.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -470,7 +423,7 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
       case 'VEHICLE_MAINTENANCE':
         return Colors.teal;
       default:
-        return Colors.grey;
+        return Colors.gray;
     }
   }
 }

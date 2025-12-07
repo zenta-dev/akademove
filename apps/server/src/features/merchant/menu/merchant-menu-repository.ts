@@ -407,100 +407,106 @@ export class MerchantMenuRepository extends BaseRepository {
 			const cacheKey = BestSellersService.getCacheKey(params);
 
 			// Try cache first
-			const cached =
-				await this.getCache<
-					Array<{
-						menu: MerchantMenu;
-						merchant: Pick<Merchant, "id" | "name" | "image" | "rating">;
-						orderCount: number;
-					}>
-				>(cacheKey);
-			if (cached) return cached;
+			const result = await this.getCache<
+				Array<{
+					menu: MerchantMenu;
+					merchant: Pick<Merchant, "id" | "name" | "image" | "rating">;
+					orderCount: number;
+				}>
+			>(cacheKey, {
+				fallback: async () => {
+					const tx = opts?.tx ?? this.db;
 
-			const tx = opts?.tx ?? this.db;
+					// Build category filter
+					const categoryFilter = category
+						? sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`
+						: sql`${tables.merchant.categories} && ARRAY['ATK', 'Printing', 'Food']::text[]`;
 
-			// Build category filter
-			const categoryFilter = category
-				? sql`${tables.merchant.categories} @> ARRAY[${category}]::text[]`
-				: sql`${tables.merchant.categories} && ARRAY['ATK', 'Printing', 'Food']::text[]`;
+					// Query to aggregate best sellers
+					const result = await tx
+						.select({
+							menuId: tables.merchantMenu.id,
+							menuName: tables.merchantMenu.name,
+							menuImage: tables.merchantMenu.image,
+							menuPrice: tables.merchantMenu.price,
+							menuCategory: tables.merchantMenu.category,
+							menuStock: tables.merchantMenu.stock,
+							menuCreatedAt: tables.merchantMenu.createdAt,
+							menuUpdatedAt: tables.merchantMenu.updatedAt,
+							merchantId: tables.merchant.id,
+							merchantName: tables.merchant.name,
+							merchantImage: tables.merchant.image,
+							merchantRating: tables.merchant.rating,
+							orderCount: sql<number>`cast(count(${tables.orderItem.id}) as integer)`,
+						})
+						.from(tables.orderItem)
+						.innerJoin(
+							tables.order,
+							eq(tables.orderItem.orderId, tables.order.id),
+						)
+						.innerJoin(
+							tables.merchantMenu,
+							eq(tables.orderItem.menuId, tables.merchantMenu.id),
+						)
+						.innerJoin(
+							tables.merchant,
+							eq(tables.merchantMenu.merchantId, tables.merchant.id),
+						)
+						.where(
+							and(
+								eq(tables.order.type, "FOOD"),
+								eq(tables.order.status, "COMPLETED"),
+								categoryFilter,
+							),
+						)
+						.groupBy(
+							tables.merchantMenu.id,
+							tables.merchantMenu.name,
+							tables.merchantMenu.image,
+							tables.merchantMenu.price,
+							tables.merchantMenu.category,
+							tables.merchantMenu.stock,
+							tables.merchantMenu.createdAt,
+							tables.merchantMenu.updatedAt,
+							tables.merchant.id,
+							tables.merchant.name,
+							tables.merchant.image,
+							tables.merchant.rating,
+						)
+						.orderBy(
+							desc(sql<number>`cast(count(${tables.orderItem.id}) as integer)`),
+						)
+						.limit(limit);
 
-			// Query to aggregate best sellers
-			const result = await tx
-				.select({
-					menuId: tables.merchantMenu.id,
-					menuName: tables.merchantMenu.name,
-					menuImage: tables.merchantMenu.image,
-					menuPrice: tables.merchantMenu.price,
-					menuCategory: tables.merchantMenu.category,
-					menuStock: tables.merchantMenu.stock,
-					menuCreatedAt: tables.merchantMenu.createdAt,
-					menuUpdatedAt: tables.merchantMenu.updatedAt,
-					merchantId: tables.merchant.id,
-					merchantName: tables.merchant.name,
-					merchantImage: tables.merchant.image,
-					merchantRating: tables.merchant.rating,
-					orderCount: count(tables.orderItem.id),
-				})
-				.from(tables.orderItem)
-				.innerJoin(tables.order, eq(tables.orderItem.orderId, tables.order.id))
-				.innerJoin(
-					tables.merchantMenu,
-					eq(tables.orderItem.menuId, tables.merchantMenu.id),
-				)
-				.innerJoin(
-					tables.merchant,
-					eq(tables.merchantMenu.merchantId, tables.merchant.id),
-				)
-				.where(
-					and(
-						eq(tables.order.type, "FOOD"),
-						eq(tables.order.status, "COMPLETED"),
-						categoryFilter,
-					),
-				)
-				.groupBy(
-					tables.merchantMenu.id,
-					tables.merchantMenu.name,
-					tables.merchantMenu.image,
-					tables.merchantMenu.price,
-					tables.merchantMenu.category,
-					tables.merchantMenu.stock,
-					tables.merchantMenu.createdAt,
-					tables.merchantMenu.updatedAt,
-					tables.merchant.id,
-					tables.merchant.name,
-					tables.merchant.image,
-					tables.merchant.rating,
-				)
-				.orderBy(desc(count(tables.orderItem.id)))
-				.limit(limit);
+					// Use service to transform results
+					const bestSellers = await BestSellersService.transformBestSellers(
+						result,
+						{
+							getMenuImageUrl: (key) =>
+								this.#storage.getPublicUrl({
+									bucket: MenuImageService.BUCKET,
+									key,
+								}),
+							getMerchantImageUrl: (key) =>
+								this.#storage.getPublicUrl({ bucket: "merchant", key }),
+							toNumberSafe,
+						},
+					);
 
-			// Use service to transform results
-			const bestSellers = await BestSellersService.transformBestSellers(
-				result,
-				{
-					getMenuImageUrl: (key) =>
-						this.#storage.getPublicUrl({
-							bucket: MenuImageService.BUCKET,
-							key,
-						}),
-					getMerchantImageUrl: (key) =>
-						this.#storage.getPublicUrl({ bucket: "merchant", key }),
-					toNumberSafe,
+					// Cache for 1 hour
+					await this.setCache(cacheKey, bestSellers, {
+						expirationTtl: CACHE_TTLS["1h"],
+					});
+
+					log.info(
+						{ category, limit, count: bestSellers.length },
+						"[MerchantMenuRepository] Retrieved best sellers",
+					);
+
+					return bestSellers;
 				},
-			);
-
-			// Cache for 1 hour
-			await this.setCache(cacheKey, bestSellers, {
-				expirationTtl: CACHE_TTLS["1h"],
 			});
-
-			log.info(
-				{ category, limit, count: bestSellers.length },
-				"[MerchantMenuRepository] Retrieved best sellers",
-			);
-
-			return bestSellers;
+			return result;
 		} catch (error) {
 			log.error(
 				{ error, params },

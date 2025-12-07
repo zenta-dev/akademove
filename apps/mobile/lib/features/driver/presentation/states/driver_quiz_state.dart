@@ -1,11 +1,14 @@
-import 'package:akademove/core/_export.dart';
-import 'package:akademove/features/driver/data/repositories/driver_quiz_repository.dart';
+part of '_export.dart';
 
-class DriverQuizState {
-  const DriverQuizState({
-    this.state = CubitState.initial,
-    this.message,
-    this.error,
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
+)
+class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
+  DriverQuizState({
+    super.state,
+    super.message,
+    super.error,
     this.attempt,
     this.currentQuestionIndex,
     this.selectedAnswerId,
@@ -13,41 +16,19 @@ class DriverQuizState {
     this.result,
   });
 
-  final CubitState state;
-  final String? message;
-  final BaseError? error;
   final QuizAttempt? attempt;
   final int? currentQuestionIndex;
   final String? selectedAnswerId;
   final Set<String> answeredQuestions;
   final QuizResult? result;
 
-  DriverQuizState copyWith({
-    CubitState? state,
-    String? message,
-    BaseError? error,
-    QuizAttempt? attempt,
-    int? currentQuestionIndex,
-    String? selectedAnswerId,
-    Set<String>? answeredQuestions,
-    QuizResult? result,
-  }) {
-    return DriverQuizState(
-      state: state ?? this.state,
-      message: message ?? this.message,
-      error: error ?? this.error,
-      attempt: attempt ?? this.attempt,
-      currentQuestionIndex: currentQuestionIndex ?? this.currentQuestionIndex,
-      selectedAnswerId: selectedAnswerId ?? this.selectedAnswerId,
-      answeredQuestions: answeredQuestions ?? this.answeredQuestions,
-      result: result ?? this.result,
-    );
-  }
+  @override
+  DriverQuizState toInitial() => DriverQuizState();
 
-  DriverQuizState toInitial() => const DriverQuizState();
-
+  @override
   DriverQuizState toLoading() => copyWith(state: CubitState.loading);
 
+  @override
   DriverQuizState toSuccess({
     String? message,
     QuizAttempt? attempt,
@@ -65,6 +46,7 @@ class DriverQuizState {
     result: result ?? this.result,
   );
 
+  @override
   DriverQuizState toFailure(BaseError error, {String? message}) => copyWith(
     state: CubitState.failure,
     error: error,

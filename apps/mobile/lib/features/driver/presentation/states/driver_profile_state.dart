@@ -1,40 +1,31 @@
-import 'package:akademove/core/_export.dart';
-import 'package:api_client/api_client.dart';
-import 'package:dart_mappable/dart_mappable.dart';
+part of '_export.dart';
 
-part 'driver_profile_state.mapper.dart';
-
-@MappableClass()
-class DriverProfileState with DriverProfileStateMappable {
-  const DriverProfileState({
-    this.myDriver,
-    this.isLoading = false,
-    this.error,
-    this.message,
-  });
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.equals | GenerateMethods.copy,
+)
+class DriverProfileState extends BaseState2 with DriverProfileStateMappable {
+  DriverProfileState({super.state, super.message, super.error, this.myDriver});
 
   final Driver? myDriver;
-  final bool isLoading;
-  final BaseError? error;
-  final String? message;
 
-  bool get isSuccess => error == null && !isLoading;
-  bool get isFailure => error != null;
+  @override
+  DriverProfileState toInitial() => DriverProfileState();
 
-  DriverProfileState toLoading() {
-    return copyWith(isLoading: true, error: null, message: null);
-  }
+  @override
+  DriverProfileState toLoading() => copyWith(state: CubitState.loading);
 
-  DriverProfileState toSuccess({Driver? myDriver, String? message}) {
-    return copyWith(
-      myDriver: myDriver ?? this.myDriver,
-      isLoading: false,
-      error: null,
-      message: message,
-    );
-  }
+  @override
+  DriverProfileState toSuccess({String? message, Driver? myDriver}) => copyWith(
+    state: CubitState.success,
+    message: message,
+    myDriver: myDriver ?? this.myDriver,
+  );
 
-  DriverProfileState toFailure(BaseError error) {
-    return copyWith(isLoading: false, error: error);
-  }
+  @override
+  DriverProfileState toFailure(BaseError error, {String? message}) => copyWith(
+    state: CubitState.failure,
+    error: error,
+    message: message ?? error.message,
+  );
 }

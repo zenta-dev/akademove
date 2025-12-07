@@ -22,7 +22,6 @@ class _FormKeys {
   static const FormKey<String> step1StudentId = TextFieldKey(
     'step-1-student_id',
   );
-  static const step1Gender = SelectKey<UserGender>('step-1-gender');
   static const FormKey<String> step1PhoneNumber = TextFieldKey(
     'step-1-phone-number',
   );
@@ -32,9 +31,6 @@ class _FormKeys {
   );
   static const FormKey<String> step3LicensePlate = TextFieldKey(
     'step-3-license-plate',
-  );
-  static const step4BankProvider = SelectKey<BankProvider>(
-    'step-4-bank-provider',
   );
   static const FormKey<String> step4BankNumber = TextFieldKey(
     'step-4-bank-number',
@@ -132,13 +128,8 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     return !hasFileErrors && !hasFormError;
   });
 
-  bool get _isStep4Valid => _validateStep(
-    3,
-    () => _validateFormFields([
-      _FormKeys.step4BankProvider,
-      _FormKeys.step4BankNumber,
-    ]),
-  );
+  bool get _isStep4Valid =>
+      _validateStep(3, () => _validateFormFields([_FormKeys.step4BankNumber]));
 
   void _scrollToTop() {
     _scrollController.animateTo(
@@ -660,7 +651,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Widget _buildGenderSelect(SignUpState state) {
     return _buildEnumSelect<UserGender>(
-      key: _FormKeys.step1Gender,
       label: context.l10n.gender,
       placeholder: _selectedGender.value,
       value: _selectedGender,
@@ -676,7 +666,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
 
   Widget _buildBankProviderSelect(SignUpState state) {
     return _buildEnumSelect<BankProvider>(
-      key: _FormKeys.step4BankProvider,
       label: context.l10n.bank_provider,
       placeholder: context.l10n.hint_bank_provider,
       value: _selectedBankProvider,
@@ -687,7 +676,6 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
   }
 
   Widget _buildEnumSelect<T extends Enum>({
-    required FormKey<T> key,
     required String label,
     required String placeholder,
     required T? value,
@@ -695,31 +683,34 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
     required bool enabled,
     required void Function(T?) onChanged,
   }) {
-    return FormField(
-      key: key,
-      label: Text(label),
-      showErrors: const {
-        FormValidationMode.changed,
-        FormValidationMode.submitted,
-      },
-      validator: NonNullValidator<T>(),
-      child: SizedBox(
-        width: double.infinity,
-        child: Select<T>(
-          enabled: enabled,
-          itemBuilder: (context, item) => Text(item.name),
-          value: value,
-          placeholder: Text(placeholder),
-          onChanged: onChanged,
-          popup: SelectPopup<T>(
-            items: SelectItemList(
-              children: items
-                  .map((e) => SelectItemButton(value: e, child: Text(e.name)))
-                  .toList(),
-            ),
-          ).call,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8.h,
+      children: [
+        Text(label),
+        SizedBox(
+          width: double.infinity,
+          child: Select<T>(
+            enabled: enabled,
+            itemBuilder: (context, item) => Text(item.name),
+            value: value,
+            placeholder: Text(placeholder),
+            onChanged: onChanged,
+            popup: SelectPopup<T>(
+              items: SelectItemList(
+                children: items
+                    .map((e) => SelectItemButton(value: e, child: Text(e.name)))
+                    .toList(),
+              ),
+            ).call,
+          ),
         ),
-      ),
+        if (value == null)
+          DefaultTextStyle.merge(
+            style: TextStyle(color: context.theme.colorScheme.destructive),
+            child: Text("Must be selected").xSmall().medium(),
+          ),
+      ],
     );
   }
 

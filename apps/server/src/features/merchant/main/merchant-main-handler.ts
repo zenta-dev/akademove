@@ -11,7 +11,6 @@ const { priv } = createORPCRouter(MerchantMainSpec);
 
 export const MerchantMainHandler = priv.router({
 	getMine: priv.getMine
-
 		.use(requireRoles("MERCHANT", "SYSTEM"))
 		.handler(async ({ context }) => {
 			const result = await context.repo.merchant.main.getByUserId(
@@ -24,7 +23,6 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	list: priv.list
-
 		.use(requireRoles("SYSTEM"))
 		.handler(async ({ context, input: { query } }) => {
 			const { rows, totalPages } = await context.repo.merchant.main.list(query);
@@ -39,7 +37,6 @@ export const MerchantMainHandler = priv.router({
 			};
 		}),
 	populars: priv.populars
-
 		.use(requireRoles("ALL"))
 		.handler(async ({ context, input: { query } }) => {
 			log.debug(

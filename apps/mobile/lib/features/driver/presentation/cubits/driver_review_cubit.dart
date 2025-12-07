@@ -3,10 +3,10 @@ import 'package:akademove/features/driver/data/repositories/_export.dart';
 import 'package:akademove/features/driver/presentation/states/_export.dart';
 import 'package:api_client/api_client.dart';
 
-class DriverReviewCubit extends BaseCubit<ReviewState> {
+class DriverReviewCubit extends BaseCubit<DriverReviewState> {
   DriverReviewCubit({required ReviewRepository reviewRepository})
     : _reviewRepository = reviewRepository,
-      super(const ReviewState());
+      super(DriverReviewState());
 
   final ReviewRepository _reviewRepository;
 
@@ -48,7 +48,7 @@ class DriverReviewCubit extends BaseCubit<ReviewState> {
     () async {
       try {
         if (refresh) {
-          emit(const ReviewState().toLoading());
+          emit(state.toLoading());
         } else {
           if (!state.hasMore || state.isLoading) return;
           emit(state.toLoading());
@@ -72,7 +72,14 @@ class DriverReviewCubit extends BaseCubit<ReviewState> {
             ),
           );
         } else {
-          emit(state.appendReviews(res.data, nextCursor));
+          emit(
+            state.toSuccess(
+              reviews: [...state.reviews, ...res.data],
+              cursor: nextCursor,
+              hasMore: hasMore,
+              message: res.message,
+            ),
+          );
         }
       } on BaseError catch (e, st) {
         logger.e(
@@ -98,6 +105,6 @@ class DriverReviewCubit extends BaseCubit<ReviewState> {
 
   /// Reset state
   void reset() {
-    emit(const ReviewState());
+    emit(DriverReviewState());
   }
 }

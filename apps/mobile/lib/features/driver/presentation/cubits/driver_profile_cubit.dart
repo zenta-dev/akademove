@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 class DriverProfileCubit extends BaseCubit<DriverProfileState> {
   DriverProfileCubit({required DriverRepository driverRepository})
     : _driverRepository = driverRepository,
-      super(const DriverProfileState());
+      super(DriverProfileState());
 
   final DriverRepository _driverRepository;
 
