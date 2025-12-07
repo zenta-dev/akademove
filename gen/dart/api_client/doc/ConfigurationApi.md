@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**auditList**](ConfigurationApi.md#auditlist) | **GET** /audit-logs | 
 [**configurationGet**](ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
+[**configurationGetBusinessConfig**](ConfigurationApi.md#configurationgetbusinessconfig) | **GET** /configurations/business | 
 [**configurationList**](ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [**configurationUpdate**](ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
 
@@ -111,6 +112,43 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**ConfigurationGet200Response**](ConfigurationGet200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **configurationGetBusinessConfig**
+> ConfigurationGetBusinessConfig200Response configurationGetBusinessConfig()
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getConfigurationApi();
+
+try {
+    final response = api.configurationGetBusinessConfig();
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling ConfigurationApi->configurationGetBusinessConfig: $e\n');
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**ConfigurationGetBusinessConfig200Response**](ConfigurationGetBusinessConfig200Response.md)
 
 ### Authorization
 

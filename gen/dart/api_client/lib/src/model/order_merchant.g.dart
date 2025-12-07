@@ -23,6 +23,14 @@ abstract class _$OrderMerchantCWProxy {
 
   OrderMerchant isActive(bool? isActive);
 
+  OrderMerchant isOnline(bool? isOnline);
+
+  OrderMerchant isTakingOrders(bool? isTakingOrders);
+
+  OrderMerchant operatingStatus(
+    OrderMerchantOperatingStatusEnum? operatingStatus,
+  );
+
   OrderMerchant rating(num? rating);
 
   OrderMerchant document(String? document);
@@ -55,6 +63,9 @@ abstract class _$OrderMerchantCWProxy {
     String? address,
     Coordinate? location,
     bool? isActive,
+    bool? isOnline,
+    bool? isTakingOrders,
+    OrderMerchantOperatingStatusEnum? operatingStatus,
     num? rating,
     String? document,
     String? image,
@@ -96,6 +107,18 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
 
   @override
   OrderMerchant isActive(bool? isActive) => call(isActive: isActive);
+
+  @override
+  OrderMerchant isOnline(bool? isOnline) => call(isOnline: isOnline);
+
+  @override
+  OrderMerchant isTakingOrders(bool? isTakingOrders) =>
+      call(isTakingOrders: isTakingOrders);
+
+  @override
+  OrderMerchant operatingStatus(
+    OrderMerchantOperatingStatusEnum? operatingStatus,
+  ) => call(operatingStatus: operatingStatus);
 
   @override
   OrderMerchant rating(num? rating) => call(rating: rating);
@@ -140,6 +163,9 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
     Object? address = const $CopyWithPlaceholder(),
     Object? location = const $CopyWithPlaceholder(),
     Object? isActive = const $CopyWithPlaceholder(),
+    Object? isOnline = const $CopyWithPlaceholder(),
+    Object? isTakingOrders = const $CopyWithPlaceholder(),
+    Object? operatingStatus = const $CopyWithPlaceholder(),
     Object? rating = const $CopyWithPlaceholder(),
     Object? document = const $CopyWithPlaceholder(),
     Object? image = const $CopyWithPlaceholder(),
@@ -182,6 +208,18 @@ class _$OrderMerchantCWProxyImpl implements _$OrderMerchantCWProxy {
           ? _value.isActive
           // ignore: cast_nullable_to_non_nullable
           : isActive as bool?,
+      isOnline: isOnline == const $CopyWithPlaceholder()
+          ? _value.isOnline
+          // ignore: cast_nullable_to_non_nullable
+          : isOnline as bool?,
+      isTakingOrders: isTakingOrders == const $CopyWithPlaceholder()
+          ? _value.isTakingOrders
+          // ignore: cast_nullable_to_non_nullable
+          : isTakingOrders as bool?,
+      operatingStatus: operatingStatus == const $CopyWithPlaceholder()
+          ? _value.operatingStatus
+          // ignore: cast_nullable_to_non_nullable
+          : operatingStatus as OrderMerchantOperatingStatusEnum?,
       rating: rating == const $CopyWithPlaceholder()
           ? _value.rating
           // ignore: cast_nullable_to_non_nullable
@@ -247,6 +285,13 @@ OrderMerchant _$OrderMerchantFromJson(Map<String, dynamic> json) =>
               v == null ? null : Coordinate.fromJson(v as Map<String, dynamic>),
         ),
         isActive: $checkedConvert('isActive', (v) => v as bool?),
+        isOnline: $checkedConvert('isOnline', (v) => v as bool?),
+        isTakingOrders: $checkedConvert('isTakingOrders', (v) => v as bool?),
+        operatingStatus: $checkedConvert(
+          'operatingStatus',
+          (v) =>
+              $enumDecodeNullable(_$OrderMerchantOperatingStatusEnumEnumMap, v),
+        ),
         rating: $checkedConvert('rating', (v) => v as num?),
         document: $checkedConvert('document', (v) => v as String?),
         image: $checkedConvert('image', (v) => v as String?),
@@ -284,6 +329,10 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'address': ?instance.address,
       'location': ?instance.location?.toJson(),
       'isActive': ?instance.isActive,
+      'isOnline': ?instance.isOnline,
+      'isTakingOrders': ?instance.isTakingOrders,
+      'operatingStatus':
+          ?_$OrderMerchantOperatingStatusEnumEnumMap[instance.operatingStatus],
       'rating': ?instance.rating,
       'document': ?instance.document,
       'image': ?instance.image,
@@ -293,6 +342,13 @@ Map<String, dynamic> _$OrderMerchantToJson(OrderMerchant instance) =>
       'createdAt': ?instance.createdAt?.toIso8601String(),
       'updatedAt': ?instance.updatedAt?.toIso8601String(),
     };
+
+const _$OrderMerchantOperatingStatusEnumEnumMap = {
+  OrderMerchantOperatingStatusEnum.OPEN: 'OPEN',
+  OrderMerchantOperatingStatusEnum.CLOSED: 'CLOSED',
+  OrderMerchantOperatingStatusEnum.BREAK: 'BREAK',
+  OrderMerchantOperatingStatusEnum.MAINTENANCE: 'MAINTENANCE',
+};
 
 const _$MerchantCategoryEnumMap = {
   MerchantCategory.ATK: 'ATK',

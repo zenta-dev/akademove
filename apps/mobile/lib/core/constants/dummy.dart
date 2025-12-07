@@ -70,6 +70,9 @@ const dummyMerchant = Merchant(
   bank: Bank(provider: BankProvider.BCA, number: 12345),
   categories: ['Drink', 'Coffe', 'Desert', 'Food'],
   image: '${UrlConstants.randomImageUrl}/seed/512/512',
+  operatingStatus: MerchantOperatingStatusEnum.MAINTENANCE,
+  isTakingOrders: false,
+  isOnline: false,
   createdAt: dummyConstDateTime,
   updatedAt: dummyConstDateTime,
 );

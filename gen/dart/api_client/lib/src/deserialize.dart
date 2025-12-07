@@ -43,6 +43,7 @@ import 'package:api_client/src/model/broadcast_list200_response_data_inner.dart'
 import 'package:api_client/src/model/broadcast_stats200_response.dart';
 import 'package:api_client/src/model/broadcast_stats200_response_data.dart';
 import 'package:api_client/src/model/broadcast_update_request.dart';
+import 'package:api_client/src/model/business_configuration.dart';
 import 'package:api_client/src/model/cart.dart';
 import 'package:api_client/src/model/cart_item.dart';
 import 'package:api_client/src/model/chat_list200_response.dart';
@@ -51,6 +52,7 @@ import 'package:api_client/src/model/chat_send200_response.dart';
 import 'package:api_client/src/model/complete_driver_quiz.dart';
 import 'package:api_client/src/model/configuration.dart';
 import 'package:api_client/src/model/configuration_get200_response.dart';
+import 'package:api_client/src/model/configuration_get_business_config200_response.dart';
 import 'package:api_client/src/model/configuration_list200_response.dart';
 import 'package:api_client/src/model/contact.dart';
 import 'package:api_client/src/model/contact_list200_response.dart';
@@ -160,6 +162,8 @@ import 'package:api_client/src/model/merchant_best_sellers200_response_data_inne
 import 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_menu.dart';
 import 'package:api_client/src/model/merchant_best_sellers200_response_data_inner_merchant.dart';
 import 'package:api_client/src/model/merchant_deactivate_request.dart';
+import 'package:api_client/src/model/merchant_get_availability_status200_response.dart';
+import 'package:api_client/src/model/merchant_get_availability_status200_response_data.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response.dart';
 import 'package:api_client/src/model/merchant_get_mine200_response_body.dart';
 import 'package:api_client/src/model/merchant_menu.dart';
@@ -167,6 +171,9 @@ import 'package:api_client/src/model/merchant_menu_create200_response.dart';
 import 'package:api_client/src/model/merchant_menu_list200_response.dart';
 import 'package:api_client/src/model/merchant_order_accept200_response.dart';
 import 'package:api_client/src/model/merchant_populars200_response.dart';
+import 'package:api_client/src/model/merchant_set_online_status_request.dart';
+import 'package:api_client/src/model/merchant_set_operating_status_request.dart';
+import 'package:api_client/src/model/merchant_set_order_taking_status_request.dart';
 import 'package:api_client/src/model/newsletter.dart';
 import 'package:api_client/src/model/notification_get_unread_count200_response.dart';
 import 'package:api_client/src/model/notification_get_unread_count200_response_data.dart';
@@ -483,6 +490,9 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'BroadcastUpdateRequest':
       return BroadcastUpdateRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'BusinessConfiguration':
+      return BusinessConfiguration.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
     case 'Cart':
       return Cart.fromJson(value as Map<String, dynamic>) as ReturnType;
     case 'CartItem':
@@ -504,6 +514,11 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'ConfigurationGet200Response':
       return ConfigurationGet200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'ConfigurationGetBusinessConfig200Response':
+      return ConfigurationGetBusinessConfig200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'ConfigurationKey':
     case 'ConfigurationList200Response':
@@ -929,6 +944,16 @@ ReturnType deserialize<ReturnType, BaseType>(
     case 'MerchantDeactivateRequest':
       return MerchantDeactivateRequest.fromJson(value as Map<String, dynamic>)
           as ReturnType;
+    case 'MerchantGetAvailabilityStatus200Response':
+      return MerchantGetAvailabilityStatus200Response.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantGetAvailabilityStatus200ResponseData':
+      return MerchantGetAvailabilityStatus200ResponseData.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
     case 'MerchantGetMine200Response':
       return MerchantGetMine200Response.fromJson(value as Map<String, dynamic>)
           as ReturnType;
@@ -956,6 +981,21 @@ ReturnType deserialize<ReturnType, BaseType>(
           as ReturnType;
     case 'MerchantPopulars200Response':
       return MerchantPopulars200Response.fromJson(value as Map<String, dynamic>)
+          as ReturnType;
+    case 'MerchantSetOnlineStatusRequest':
+      return MerchantSetOnlineStatusRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantSetOperatingStatusRequest':
+      return MerchantSetOperatingStatusRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
+          as ReturnType;
+    case 'MerchantSetOrderTakingStatusRequest':
+      return MerchantSetOrderTakingStatusRequest.fromJson(
+            value as Map<String, dynamic>,
+          )
           as ReturnType;
     case 'Newsletter':
       return Newsletter.fromJson(value as Map<String, dynamic>) as ReturnType;

@@ -16,6 +16,9 @@ Name | Type | Description | Notes
 **address** | **String** |  | 
 **location** | [**Coordinate**](Coordinate.md) |  | [optional] 
 **isActive** | **bool** |  | 
+**isOnline** | **bool** | Whether merchant is currently online/available | 
+**isTakingOrders** | **bool** | Whether merchant is actively taking orders (subset of online) | 
+**operatingStatus** | **String** | Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE) | 
 **rating** | **num** |  | 
 **document** | **String** |  | [optional] 
 **image** | **String** |  | [optional] 

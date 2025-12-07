@@ -30,6 +30,9 @@ class OrderMerchant {
     this.address,
     this.location,
     this.isActive,
+    this.isOnline,
+    this.isTakingOrders,
+    this.operatingStatus,
     this.rating,
     this.document,
     this.image,
@@ -62,6 +65,18 @@ class OrderMerchant {
 
   @JsonKey(name: r'isActive', required: false, includeIfNull: false)
   final bool? isActive;
+
+  /// Whether merchant is currently online/available
+  @JsonKey(name: r'isOnline', required: false, includeIfNull: false)
+  final bool? isOnline;
+
+  /// Whether merchant is actively taking orders (subset of online)
+  @JsonKey(name: r'isTakingOrders', required: false, includeIfNull: false)
+  final bool? isTakingOrders;
+
+  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  @JsonKey(name: r'operatingStatus', required: false, includeIfNull: false)
+  final OrderMerchantOperatingStatusEnum? operatingStatus;
 
   @JsonKey(name: r'rating', required: false, includeIfNull: false)
   final num? rating;
@@ -100,6 +115,9 @@ class OrderMerchant {
           other.address == address &&
           other.location == location &&
           other.isActive == isActive &&
+          other.isOnline == isOnline &&
+          other.isTakingOrders == isTakingOrders &&
+          other.operatingStatus == operatingStatus &&
           other.rating == rating &&
           other.document == document &&
           other.image == image &&
@@ -119,6 +137,9 @@ class OrderMerchant {
       address.hashCode +
       location.hashCode +
       isActive.hashCode +
+      isOnline.hashCode +
+      isTakingOrders.hashCode +
+      operatingStatus.hashCode +
       rating.hashCode +
       document.hashCode +
       image.hashCode +
@@ -137,4 +158,30 @@ class OrderMerchant {
   String toString() {
     return toJson().toString();
   }
+}
+
+/// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+enum OrderMerchantOperatingStatusEnum {
+  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  @JsonValue(r'OPEN')
+  OPEN(r'OPEN'),
+
+  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  @JsonValue(r'CLOSED')
+  CLOSED(r'CLOSED'),
+
+  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  @JsonValue(r'BREAK')
+  BREAK(r'BREAK'),
+
+  /// Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  @JsonValue(r'MAINTENANCE')
+  MAINTENANCE(r'MAINTENANCE');
+
+  const OrderMerchantOperatingStatusEnum(this.value);
+
+  final String value;
+
+  @override
+  String toString() => value;
 }

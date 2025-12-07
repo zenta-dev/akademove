@@ -1,4 +1,4 @@
-# api_client.model.PricingConfiguration
+# api_client.model.ConfigurationGetBusinessConfig200Response
 
 ## Load the model package
 ```dart
@@ -8,13 +8,10 @@ import 'package:api_client/api.dart';
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**baseFare** | **num** |  | 
-**perKmRate** | **num** |  | 
-**minimumFare** | **num** |  | 
-**platformFeeRate** | **num** |  | 
-**taxRate** | **num** |  | 
-**perKgRate** | **num** |  | 
-**merchantCommissionRate** | **num** |  | 
+**message** | **String** |  | 
+**data** | [**BusinessConfiguration**](BusinessConfiguration.md) |  | 
+**pagination** | [**PaginationResult**](PaginationResult.md) |  | [optional] 
+**totalPages** | **int** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -19,6 +19,11 @@ export const merchantCategory = pgEnum(
 	CONSTANTS.MERCHANT_CATEGORIES,
 );
 
+export const merchantOperatingStatus = pgEnum(
+	"merchant_operating_status",
+	CONSTANTS.MERCHANT_OPERATING_STATUSES,
+);
+
 export const merchant = pgTable(
 	"merchants",
 	{
@@ -36,6 +41,11 @@ export const merchant = pgTable(
 		category: merchantCategory().notNull(),
 		categories: text().array(),
 		isActive: boolean("is_active").notNull().default(true),
+		isOnline: boolean("is_online").notNull().default(false),
+		isTakingOrders: boolean("is_taking_orders").notNull().default(false),
+		operatingStatus: merchantOperatingStatus("operating_status")
+			.notNull()
+			.default("CLOSED"),
 		rating: numeric({ precision: 2, scale: 1, mode: "number" })
 			.notNull()
 			.default(0.0),
@@ -51,7 +61,12 @@ export const merchant = pgTable(
 		index("merchant_name_text_idx").on(t.name.op("text_pattern_ops")),
 		// index("merchant_type_idx").on(t.type),
 		index("merchant_is_active_idx").on(t.isActive),
+		index("merchant_is_online_idx").on(t.isOnline),
+		index("merchant_is_taking_orders_idx").on(t.isTakingOrders),
+		index("merchant_operating_status_idx").on(t.operatingStatus),
 		index("merchant_rating_idx").on(t.rating),
+		// Composite index for order matching queries
+		index("merchant_online_taking_orders_idx").on(t.isOnline, t.isTakingOrders),
 		// index("merchant_type_active_idx").on(t.type, t.isActive),
 		index("merchant_created_at_idx").on(t.createdAt),
 		index("merchant_location_idx").using("gist", t.location),

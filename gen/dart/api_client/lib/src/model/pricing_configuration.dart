@@ -24,7 +24,7 @@ class PricingConfiguration {
     required this.platformFeeRate,
     required this.taxRate,
     required this.perKgRate,
-    this.merchantCommissionRate = 0.1,
+    required this.merchantCommissionRate,
   });
   @JsonKey(name: r'baseFare', required: true, includeIfNull: false)
   final num baseFare;
@@ -47,12 +47,11 @@ class PricingConfiguration {
   // minimum: 0
   // maximum: 1
   @JsonKey(
-    defaultValue: 0.1,
     name: r'merchantCommissionRate',
-    required: false,
+    required: true,
     includeIfNull: false,
   )
-  final num? merchantCommissionRate;
+  final num merchantCommissionRate;
 
   @override
   bool operator ==(Object other) =>

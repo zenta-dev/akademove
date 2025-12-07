@@ -17,7 +17,7 @@ abstract class _$FoodPricingConfigurationCWProxy {
 
   FoodPricingConfiguration taxRate(num taxRate);
 
-  FoodPricingConfiguration merchantCommissionRate(num? merchantCommissionRate);
+  FoodPricingConfiguration merchantCommissionRate(num merchantCommissionRate);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `FoodPricingConfiguration(...).copyWith.fieldName(value)`.
@@ -32,7 +32,7 @@ abstract class _$FoodPricingConfigurationCWProxy {
     num minimumFare,
     num platformFeeRate,
     num taxRate,
-    num? merchantCommissionRate,
+    num merchantCommissionRate,
   });
 }
 
@@ -63,9 +63,8 @@ class _$FoodPricingConfigurationCWProxyImpl
   FoodPricingConfiguration taxRate(num taxRate) => call(taxRate: taxRate);
 
   @override
-  FoodPricingConfiguration merchantCommissionRate(
-    num? merchantCommissionRate,
-  ) => call(merchantCommissionRate: merchantCommissionRate);
+  FoodPricingConfiguration merchantCommissionRate(num merchantCommissionRate) =>
+      call(merchantCommissionRate: merchantCommissionRate);
 
   @override
   /// Creates a new instance with the provided field values.
@@ -108,10 +107,11 @@ class _$FoodPricingConfigurationCWProxyImpl
           // ignore: cast_nullable_to_non_nullable
           : taxRate as num,
       merchantCommissionRate:
-          merchantCommissionRate == const $CopyWithPlaceholder()
+          merchantCommissionRate == const $CopyWithPlaceholder() ||
+              merchantCommissionRate == null
           ? _value.merchantCommissionRate
           // ignore: cast_nullable_to_non_nullable
-          : merchantCommissionRate as num?,
+          : merchantCommissionRate as num,
     );
   }
 }
@@ -139,6 +139,7 @@ FoodPricingConfiguration _$FoodPricingConfigurationFromJson(
       'minimumFare',
       'platformFeeRate',
       'taxRate',
+      'merchantCommissionRate',
     ],
   );
   final val = FoodPricingConfiguration(
@@ -149,7 +150,7 @@ FoodPricingConfiguration _$FoodPricingConfigurationFromJson(
     taxRate: $checkedConvert('taxRate', (v) => v as num),
     merchantCommissionRate: $checkedConvert(
       'merchantCommissionRate',
-      (v) => v as num? ?? 0.1,
+      (v) => v as num,
     ),
   );
   return val;
@@ -163,5 +164,5 @@ Map<String, dynamic> _$FoodPricingConfigurationToJson(
   'minimumFare': instance.minimumFare,
   'platformFeeRate': instance.platformFeeRate,
   'taxRate': instance.taxRate,
-  'merchantCommissionRate': ?instance.merchantCommissionRate,
+  'merchantCommissionRate': instance.merchantCommissionRate,
 };

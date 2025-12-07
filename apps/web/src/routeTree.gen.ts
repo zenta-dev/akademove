@@ -55,6 +55,7 @@ import { Route as DashMerchantSalesRouteImport } from './routes/dash/merchant/sa
 import { Route as DashMerchantProfileRouteImport } from './routes/dash/merchant/profile'
 import { Route as DashMerchantOrdersRouteImport } from './routes/dash/merchant/orders'
 import { Route as DashMerchantMenuRouteImport } from './routes/dash/merchant/menu'
+import { Route as DashMerchantAvailabilityRouteImport } from './routes/dash/merchant/availability'
 import { Route as DashDriverScheduleRouteImport } from './routes/dash/driver/schedule'
 import { Route as DashDriverRatingsRouteImport } from './routes/dash/driver/ratings'
 import { Route as DashDriverProfileRouteImport } from './routes/dash/driver/profile'
@@ -307,6 +308,12 @@ const DashMerchantMenuRoute = DashMerchantMenuRouteImport.update({
   path: '/menu',
   getParentRoute: () => DashMerchantRouteRoute,
 } as any)
+const DashMerchantAvailabilityRoute =
+  DashMerchantAvailabilityRouteImport.update({
+    id: '/availability',
+    path: '/availability',
+    getParentRoute: () => DashMerchantRouteRoute,
+  } as any)
 const DashDriverScheduleRoute = DashDriverScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
@@ -464,6 +471,7 @@ export interface FileRoutesByFullPath {
   '/dash/driver/profile': typeof DashDriverProfileRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/availability': typeof DashMerchantAvailabilityRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
@@ -528,6 +536,7 @@ export interface FileRoutesByTo {
   '/dash/driver/profile': typeof DashDriverProfileRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/availability': typeof DashMerchantAvailabilityRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
@@ -600,6 +609,7 @@ export interface FileRoutesById {
   '/dash/driver/profile': typeof DashDriverProfileRoute
   '/dash/driver/ratings': typeof DashDriverRatingsRoute
   '/dash/driver/schedule': typeof DashDriverScheduleRoute
+  '/dash/merchant/availability': typeof DashMerchantAvailabilityRoute
   '/dash/merchant/menu': typeof DashMerchantMenuRoute
   '/dash/merchant/orders': typeof DashMerchantOrdersRoute
   '/dash/merchant/profile': typeof DashMerchantProfileRoute
@@ -671,6 +681,7 @@ export interface FileRouteTypes {
     | '/dash/driver/profile'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
+    | '/dash/merchant/availability'
     | '/dash/merchant/menu'
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
@@ -735,6 +746,7 @@ export interface FileRouteTypes {
     | '/dash/driver/profile'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
+    | '/dash/merchant/availability'
     | '/dash/merchant/menu'
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
@@ -806,6 +818,7 @@ export interface FileRouteTypes {
     | '/dash/driver/profile'
     | '/dash/driver/ratings'
     | '/dash/driver/schedule'
+    | '/dash/merchant/availability'
     | '/dash/merchant/menu'
     | '/dash/merchant/orders'
     | '/dash/merchant/profile'
@@ -1181,6 +1194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashMerchantMenuRouteImport
       parentRoute: typeof DashMerchantRouteRoute
     }
+    '/dash/merchant/availability': {
+      id: '/dash/merchant/availability'
+      path: '/availability'
+      fullPath: '/dash/merchant/availability'
+      preLoaderRoute: typeof DashMerchantAvailabilityRouteImport
+      parentRoute: typeof DashMerchantRouteRoute
+    }
     '/dash/driver/schedule': {
       id: '/dash/driver/schedule'
       path: '/schedule'
@@ -1451,6 +1471,7 @@ const DashDriverRouteRouteWithChildren = DashDriverRouteRoute._addFileChildren(
 )
 
 interface DashMerchantRouteRouteChildren {
+  DashMerchantAvailabilityRoute: typeof DashMerchantAvailabilityRoute
   DashMerchantMenuRoute: typeof DashMerchantMenuRoute
   DashMerchantOrdersRoute: typeof DashMerchantOrdersRoute
   DashMerchantProfileRoute: typeof DashMerchantProfileRoute
@@ -1460,6 +1481,7 @@ interface DashMerchantRouteRouteChildren {
 }
 
 const DashMerchantRouteRouteChildren: DashMerchantRouteRouteChildren = {
+  DashMerchantAvailabilityRoute: DashMerchantAvailabilityRoute,
   DashMerchantMenuRoute: DashMerchantMenuRoute,
   DashMerchantOrdersRoute: DashMerchantOrdersRoute,
   DashMerchantProfileRoute: DashMerchantProfileRoute,

@@ -22,6 +22,12 @@ enum MerchantKey {
   location(r'location'),
   @JsonValue(r'isActive')
   isActive(r'isActive'),
+  @JsonValue(r'isOnline')
+  isOnline(r'isOnline'),
+  @JsonValue(r'isTakingOrders')
+  isTakingOrders(r'isTakingOrders'),
+  @JsonValue(r'operatingStatus')
+  operatingStatus(r'operatingStatus'),
   @JsonValue(r'rating')
   rating(r'rating'),
   @JsonValue(r'document')

@@ -13,8 +13,9 @@ Method | HTTP request | Description
 [**merchantActivate**](MerchantApi.md#merchantactivate) | **POST** /merchants/{id}/activate | 
 [**merchantAnalytics**](MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [**merchantBestSellers**](MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
-[**merchantDeactivate**](MerchantApi.md#merchantdeactivate) | **POST** /merchants/{id}/deactivate | 
+[**merchantDeactivate**](MerchantApi.md#merchantdeactivate) | **PATCH** /merchants/{id}/deactivate | 
 [**merchantGet**](MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
+[**merchantGetAvailabilityStatus**](MerchantApi.md#merchantgetavailabilitystatus) | **GET** /merchants/{id}/availability/status | 
 [**merchantGetMine**](MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [**merchantList**](MerchantApi.md#merchantlist) | **GET** /merchants | 
 [**merchantMenuCreate**](MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
@@ -28,6 +29,9 @@ Method | HTTP request | Description
 [**merchantOrderReject**](MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
 [**merchantPopulars**](MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [**merchantRemove**](MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
+[**merchantSetOnlineStatus**](MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
+[**merchantSetOperatingStatus**](MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
+[**merchantSetOrderTakingStatus**](MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
 [**merchantUpdate**](MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 
 
@@ -279,6 +283,47 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantGetAvailabilityStatus**
+> MerchantGetAvailabilityStatus200Response merchantGetAvailabilityStatus(id)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+
+try {
+    final response = api.merchantGetAvailabilityStatus(id);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantGetAvailabilityStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+
+### Return type
+
+[**MerchantGetAvailabilityStatus200Response**](MerchantGetAvailabilityStatus200Response.md)
 
 ### Authorization
 
@@ -906,6 +951,135 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantSetOnlineStatus**
+> MerchantGetMine200ResponseBody merchantSetOnlineStatus(id, merchantSetOnlineStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final MerchantSetOnlineStatusRequest merchantSetOnlineStatusRequest = ; // MerchantSetOnlineStatusRequest | 
+
+try {
+    final response = api.merchantSetOnlineStatus(id, merchantSetOnlineStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantSetOnlineStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **merchantSetOnlineStatusRequest** | [**MerchantSetOnlineStatusRequest**](MerchantSetOnlineStatusRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantSetOperatingStatus**
+> MerchantGetMine200ResponseBody merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final MerchantSetOperatingStatusRequest merchantSetOperatingStatusRequest = ; // MerchantSetOperatingStatusRequest | 
+
+try {
+    final response = api.merchantSetOperatingStatus(id, merchantSetOperatingStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantSetOperatingStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **merchantSetOperatingStatusRequest** | [**MerchantSetOperatingStatusRequest**](MerchantSetOperatingStatusRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **merchantSetOrderTakingStatus**
+> MerchantGetMine200ResponseBody merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getMerchantApi();
+final String id = id_example; // String | 
+final MerchantSetOrderTakingStatusRequest merchantSetOrderTakingStatusRequest = ; // MerchantSetOrderTakingStatusRequest | 
+
+try {
+    final response = api.merchantSetOrderTakingStatus(id, merchantSetOrderTakingStatusRequest);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling MerchantApi->merchantSetOrderTakingStatus: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **merchantSetOrderTakingStatusRequest** | [**MerchantSetOrderTakingStatusRequest**](MerchantSetOrderTakingStatusRequest.md)|  | 
+
+### Return type
+
+[**MerchantGetMine200ResponseBody**](MerchantGetMine200ResponseBody.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

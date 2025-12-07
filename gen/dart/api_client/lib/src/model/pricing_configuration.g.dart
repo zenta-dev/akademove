@@ -19,7 +19,7 @@ abstract class _$PricingConfigurationCWProxy {
 
   PricingConfiguration perKgRate(num perKgRate);
 
-  PricingConfiguration merchantCommissionRate(num? merchantCommissionRate);
+  PricingConfiguration merchantCommissionRate(num merchantCommissionRate);
 
   /// Creates a new instance with the provided field values.
   /// Passing `null` to a nullable field nullifies it, while `null` for a non-nullable field is ignored. To update a single field use `PricingConfiguration(...).copyWith.fieldName(value)`.
@@ -35,7 +35,7 @@ abstract class _$PricingConfigurationCWProxy {
     num platformFeeRate,
     num taxRate,
     num perKgRate,
-    num? merchantCommissionRate,
+    num merchantCommissionRate,
   });
 }
 
@@ -68,7 +68,7 @@ class _$PricingConfigurationCWProxyImpl
   PricingConfiguration perKgRate(num perKgRate) => call(perKgRate: perKgRate);
 
   @override
-  PricingConfiguration merchantCommissionRate(num? merchantCommissionRate) =>
+  PricingConfiguration merchantCommissionRate(num merchantCommissionRate) =>
       call(merchantCommissionRate: merchantCommissionRate);
 
   @override
@@ -117,10 +117,11 @@ class _$PricingConfigurationCWProxyImpl
           // ignore: cast_nullable_to_non_nullable
           : perKgRate as num,
       merchantCommissionRate:
-          merchantCommissionRate == const $CopyWithPlaceholder()
+          merchantCommissionRate == const $CopyWithPlaceholder() ||
+              merchantCommissionRate == null
           ? _value.merchantCommissionRate
           // ignore: cast_nullable_to_non_nullable
-          : merchantCommissionRate as num?,
+          : merchantCommissionRate as num,
     );
   }
 }
@@ -149,6 +150,7 @@ PricingConfiguration _$PricingConfigurationFromJson(
       'platformFeeRate',
       'taxRate',
       'perKgRate',
+      'merchantCommissionRate',
     ],
   );
   final val = PricingConfiguration(
@@ -160,7 +162,7 @@ PricingConfiguration _$PricingConfigurationFromJson(
     perKgRate: $checkedConvert('perKgRate', (v) => v as num),
     merchantCommissionRate: $checkedConvert(
       'merchantCommissionRate',
-      (v) => v as num? ?? 0.1,
+      (v) => v as num,
     ),
   );
   return val;
@@ -175,5 +177,5 @@ Map<String, dynamic> _$PricingConfigurationToJson(
   'platformFeeRate': instance.platformFeeRate,
   'taxRate': instance.taxRate,
   'perKgRate': instance.perKgRate,
-  'merchantCommissionRate': ?instance.merchantCommissionRate,
+  'merchantCommissionRate': instance.merchantCommissionRate,
 };

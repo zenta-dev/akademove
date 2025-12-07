@@ -122,6 +122,7 @@ Class | Method | HTTP request | Description
 [*ChatApi*](doc/ChatApi.md) | [**quickMessageUpdate**](doc/ChatApi.md#quickmessageupdate) | **PATCH** /quick-messages/:id | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**auditList**](doc/ConfigurationApi.md#auditlist) | **GET** /audit-logs | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGet**](doc/ConfigurationApi.md#configurationget) | **GET** /configurations/{key} | 
+[*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationGetBusinessConfig**](doc/ConfigurationApi.md#configurationgetbusinessconfig) | **GET** /configurations/business | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationList**](doc/ConfigurationApi.md#configurationlist) | **GET** /configurations | 
 [*ConfigurationApi*](doc/ConfigurationApi.md) | [**configurationUpdate**](doc/ConfigurationApi.md#configurationupdate) | **PUT** /configurations/{key} | 
 [*CouponApi*](doc/CouponApi.md) | [**couponActivate**](doc/CouponApi.md#couponactivate) | **POST** /coupons/{id}/activate | 
@@ -169,8 +170,9 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantActivate**](doc/MerchantApi.md#merchantactivate) | **POST** /merchants/{id}/activate | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantAnalytics**](doc/MerchantApi.md#merchantanalytics) | **GET** /merchants/{id}/analytics | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantBestSellers**](doc/MerchantApi.md#merchantbestsellers) | **GET** /merchants/best-sellers | 
-[*MerchantApi*](doc/MerchantApi.md) | [**merchantDeactivate**](doc/MerchantApi.md#merchantdeactivate) | **POST** /merchants/{id}/deactivate | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantDeactivate**](doc/MerchantApi.md#merchantdeactivate) | **PATCH** /merchants/{id}/deactivate | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGet**](doc/MerchantApi.md#merchantget) | **GET** /merchants/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantGetAvailabilityStatus**](doc/MerchantApi.md#merchantgetavailabilitystatus) | **GET** /merchants/{id}/availability/status | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantGetMine**](doc/MerchantApi.md#merchantgetmine) | **GET** /merchants/mine | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantList**](doc/MerchantApi.md#merchantlist) | **GET** /merchants | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantMenuCreate**](doc/MerchantApi.md#merchantmenucreate) | **POST** /merchants/{merchantId}/menus | 
@@ -184,6 +186,9 @@ Class | Method | HTTP request | Description
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantOrderReject**](doc/MerchantApi.md#merchantorderreject) | **POST** /merchants/{merchantId}/orders/orders/{id}/reject | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantPopulars**](doc/MerchantApi.md#merchantpopulars) | **GET** /merchants/populars | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantRemove**](doc/MerchantApi.md#merchantremove) | **DELETE** /merchants/{id} | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOnlineStatus**](doc/MerchantApi.md#merchantsetonlinestatus) | **PATCH** /merchants/{id}/availability/online | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOperatingStatus**](doc/MerchantApi.md#merchantsetoperatingstatus) | **PATCH** /merchants/{id}/availability/operating-status | 
+[*MerchantApi*](doc/MerchantApi.md) | [**merchantSetOrderTakingStatus**](doc/MerchantApi.md#merchantsetordertakingstatus) | **PATCH** /merchants/{id}/availability/order-taking | 
 [*MerchantApi*](doc/MerchantApi.md) | [**merchantUpdate**](doc/MerchantApi.md#merchantupdate) | **PUT** /merchants/{id} | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationDelete**](doc/NotificationApi.md#notificationdelete) | **DELETE** /notifications/{id} | 
 [*NotificationApi*](doc/NotificationApi.md) | [**notificationGetUnreadCount**](doc/NotificationApi.md#notificationgetunreadcount) | **GET** /notifications/unread-count | 
@@ -294,6 +299,7 @@ Class | Method | HTTP request | Description
  - [BroadcastStatus](doc/BroadcastStatus.md)
  - [BroadcastType](doc/BroadcastType.md)
  - [BroadcastUpdateRequest](doc/BroadcastUpdateRequest.md)
+ - [BusinessConfiguration](doc/BusinessConfiguration.md)
  - [Cart](doc/Cart.md)
  - [CartItem](doc/CartItem.md)
  - [ChatList200Response](doc/ChatList200Response.md)
@@ -302,6 +308,7 @@ Class | Method | HTTP request | Description
  - [CompleteDriverQuiz](doc/CompleteDriverQuiz.md)
  - [Configuration](doc/Configuration.md)
  - [ConfigurationGet200Response](doc/ConfigurationGet200Response.md)
+ - [ConfigurationGetBusinessConfig200Response](doc/ConfigurationGetBusinessConfig200Response.md)
  - [ConfigurationKey](doc/ConfigurationKey.md)
  - [ConfigurationList200Response](doc/ConfigurationList200Response.md)
  - [Contact](doc/Contact.md)
@@ -433,6 +440,8 @@ Class | Method | HTTP request | Description
  - [MerchantBestSellers200ResponseDataInnerMerchant](doc/MerchantBestSellers200ResponseDataInnerMerchant.md)
  - [MerchantCategory](doc/MerchantCategory.md)
  - [MerchantDeactivateRequest](doc/MerchantDeactivateRequest.md)
+ - [MerchantGetAvailabilityStatus200Response](doc/MerchantGetAvailabilityStatus200Response.md)
+ - [MerchantGetAvailabilityStatus200ResponseData](doc/MerchantGetAvailabilityStatus200ResponseData.md)
  - [MerchantGetMine200Response](doc/MerchantGetMine200Response.md)
  - [MerchantGetMine200ResponseBody](doc/MerchantGetMine200ResponseBody.md)
  - [MerchantKey](doc/MerchantKey.md)
@@ -442,6 +451,9 @@ Class | Method | HTTP request | Description
  - [MerchantMenuList200Response](doc/MerchantMenuList200Response.md)
  - [MerchantOrderAccept200Response](doc/MerchantOrderAccept200Response.md)
  - [MerchantPopulars200Response](doc/MerchantPopulars200Response.md)
+ - [MerchantSetOnlineStatusRequest](doc/MerchantSetOnlineStatusRequest.md)
+ - [MerchantSetOperatingStatusRequest](doc/MerchantSetOperatingStatusRequest.md)
+ - [MerchantSetOrderTakingStatusRequest](doc/MerchantSetOrderTakingStatusRequest.md)
  - [Newsletter](doc/Newsletter.md)
  - [NewsletterKey](doc/NewsletterKey.md)
  - [NewsletterStatus](doc/NewsletterStatus.md)

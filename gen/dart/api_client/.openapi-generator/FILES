@@ -61,6 +61,7 @@ doc/BroadcastStats200ResponseData.md
 doc/BroadcastStatus.md
 doc/BroadcastType.md
 doc/BroadcastUpdateRequest.md
+doc/BusinessConfiguration.md
 doc/Cart.md
 doc/CartItem.md
 doc/ChatApi.md
@@ -71,6 +72,7 @@ doc/CompleteDriverQuiz.md
 doc/Configuration.md
 doc/ConfigurationApi.md
 doc/ConfigurationGet200Response.md
+doc/ConfigurationGetBusinessConfig200Response.md
 doc/ConfigurationKey.md
 doc/ConfigurationList200Response.md
 doc/Contact.md
@@ -209,6 +211,8 @@ doc/MerchantBestSellers200ResponseDataInnerMenu.md
 doc/MerchantBestSellers200ResponseDataInnerMerchant.md
 doc/MerchantCategory.md
 doc/MerchantDeactivateRequest.md
+doc/MerchantGetAvailabilityStatus200Response.md
+doc/MerchantGetAvailabilityStatus200ResponseData.md
 doc/MerchantGetMine200Response.md
 doc/MerchantGetMine200ResponseBody.md
 doc/MerchantKey.md
@@ -218,6 +222,9 @@ doc/MerchantMenuKey.md
 doc/MerchantMenuList200Response.md
 doc/MerchantOrderAccept200Response.md
 doc/MerchantPopulars200Response.md
+doc/MerchantSetOnlineStatusRequest.md
+doc/MerchantSetOperatingStatusRequest.md
+doc/MerchantSetOrderTakingStatusRequest.md
 doc/Newsletter.md
 doc/NewsletterKey.md
 doc/NewsletterStatus.md
@@ -470,6 +477,7 @@ lib/src/model/broadcast_stats200_response_data.dart
 lib/src/model/broadcast_status.dart
 lib/src/model/broadcast_type.dart
 lib/src/model/broadcast_update_request.dart
+lib/src/model/business_configuration.dart
 lib/src/model/cart.dart
 lib/src/model/cart_item.dart
 lib/src/model/chat_list200_response.dart
@@ -478,6 +486,7 @@ lib/src/model/chat_send200_response.dart
 lib/src/model/complete_driver_quiz.dart
 lib/src/model/configuration.dart
 lib/src/model/configuration_get200_response.dart
+lib/src/model/configuration_get_business_config200_response.dart
 lib/src/model/configuration_key.dart
 lib/src/model/configuration_list200_response.dart
 lib/src/model/contact.dart
@@ -609,6 +618,8 @@ lib/src/model/merchant_best_sellers200_response_data_inner_menu.dart
 lib/src/model/merchant_best_sellers200_response_data_inner_merchant.dart
 lib/src/model/merchant_category.dart
 lib/src/model/merchant_deactivate_request.dart
+lib/src/model/merchant_get_availability_status200_response.dart
+lib/src/model/merchant_get_availability_status200_response_data.dart
 lib/src/model/merchant_get_mine200_response.dart
 lib/src/model/merchant_get_mine200_response_body.dart
 lib/src/model/merchant_key.dart
@@ -618,6 +629,9 @@ lib/src/model/merchant_menu_key.dart
 lib/src/model/merchant_menu_list200_response.dart
 lib/src/model/merchant_order_accept200_response.dart
 lib/src/model/merchant_populars200_response.dart
+lib/src/model/merchant_set_online_status_request.dart
+lib/src/model/merchant_set_operating_status_request.dart
+lib/src/model/merchant_set_order_taking_status_request.dart
 lib/src/model/newsletter.dart
 lib/src/model/newsletter_key.dart
 lib/src/model/newsletter_status.dart
@@ -779,4 +793,3 @@ lib/src/model/wallet_monthly_summary_response.dart
 lib/src/model/wallet_top_up200_response.dart
 lib/src/model/withdraw_request.dart
 pubspec.yaml
-test/user_me_change_password_request_test.dart
