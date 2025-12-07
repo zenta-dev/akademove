@@ -40,12 +40,8 @@
 		"turbo": "^2.6.3"
 	},
 	"lint-staged": {
-		"*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
-			"biome check --write ."
-		],
-		"*.{dart}": [
-			"melos fix && melos format"
-		]
+		"*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [],
+		"*.{dart}": []
 	},
 	"packageManager": "bun@1.2.21"
 }
