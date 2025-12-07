@@ -1,4 +1,5 @@
 import 'package:akademove/core/_export.dart';
+import 'package:akademove/features/driver/data/models/quiz_persistence_model.dart';
 import 'package:api_client/api_client.dart';
 
 class StartDriverQuizRequest {
@@ -109,153 +110,303 @@ class QuizResult {
   final DateTime? completedAt;
 }
 
+/// Driver Quiz Repository
+/// Handles quiz operations with local persistence and real API integration
 class DriverQuizRepository extends BaseRepository {
-  const DriverQuizRepository({required ApiClient apiClient})
-    : _apiClient = apiClient;
+  DriverQuizRepository({
+    required ApiClient apiClient,
+    required KeyValueService keyValueService,
+  }) : _apiClient = apiClient,
+       _keyValueService = keyValueService;
 
-  // ignore: unused_field - Will be used when API is implemented
   final ApiClient _apiClient;
+  final KeyValueService _keyValueService;
 
+  /// Get persisted quiz attempt from local storage
+  Future<QuizAttemptPersistence?> _getPersistedAttempt() async {
+    try {
+      final json = await _keyValueService.get<String>(KeyValueKeys.quizAttempt);
+      if (json == null || json.isEmpty) return null;
+      return QuizAttemptPersistence.fromJsonString(json);
+    } catch (e) {
+      logger.w('Failed to get persisted quiz attempt: $e');
+      return null;
+    }
+  }
+
+  /// Save quiz attempt to local storage
+  Future<void> _savePersistedAttempt(QuizAttemptPersistence attempt) async {
+    try {
+      await _keyValueService.set(
+        KeyValueKeys.quizAttempt,
+        attempt.toJsonString(),
+      );
+    } catch (e) {
+      logger.e('Failed to save persisted quiz attempt: $e');
+    }
+  }
+
+  /// Clear persisted quiz attempt
+  Future<void> _clearPersistedAttempt() async {
+    try {
+      await _keyValueService.remove(KeyValueKeys.quizAttempt);
+    } catch (e) {
+      logger.e('Failed to clear persisted quiz attempt: $e');
+    }
+  }
+
+  /// Convert API question to local model
+  QuizQuestion _mapApiQuestion(dynamic apiQuestion) {
+    return QuizQuestion(
+      id: apiQuestion['id'] as String,
+      question: apiQuestion['question'] as String,
+      type: apiQuestion['type'] as String,
+      category: apiQuestion['category'] as String,
+      points: (apiQuestion['points'] as num).toInt(),
+      displayOrder: (apiQuestion['displayOrder'] as num).toInt(),
+      options: List<dynamic>.from(apiQuestion['options'] as List)
+          .map(
+            (opt) => QuizOption(
+              id: opt['id'] as String,
+              text: opt['text'] as String,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  /// Start a new quiz attempt
   Future<BaseResponse<QuizAttempt>> startQuiz(
     StartDriverQuizRequest request,
   ) async {
     return guard(() async {
-      // TODO: Implement when API client is generated
-      // final res = await _apiClient.getDriverQuizAnswerApi().startQuiz(
-      //   questionIds: request.questionIds,
-      //   category: request.category,
-      // );
+      // Call API to start quiz
+      final response = await _apiClient
+          .getDriverQuizAnswerApi()
+          .driverQuizAnswerStartQuiz(
+            startDriverQuiz: StartDriverQuiz(
+              questionIds: request.questionIds,
+              // category is optional and passed as null to use server default
+            ),
+          );
 
-      // Mock response for now
-      final mockQuestions = [
-        QuizQuestion(
-          id: '1',
-          question:
-              'What should you do if a passenger asks you to exceed the speed limit?',
-          type: 'MULTIPLE_CHOICE',
-          category: 'SAFETY',
-          points: 10,
-          displayOrder: 1,
-          options: [
-            QuizOption(
-              id: 'a',
-              text: 'Follow their request to maintain good rating',
-            ),
-            QuizOption(
-              id: 'b',
-              text: 'Politely refuse and explain safety regulations',
-            ),
-            QuizOption(
-              id: 'c',
-              text: 'Ask for additional payment for speeding',
-            ),
-            QuizOption(id: 'd', text: 'Ignore their request'),
-          ],
-        ),
-        QuizQuestion(
-          id: '2',
-          question:
-              'How should you handle a situation where you get lost during navigation?',
-          type: 'MULTIPLE_CHOICE',
-          category: 'NAVIGATION',
-          points: 10,
-          displayOrder: 2,
-          options: [
-            QuizOption(id: 'a', text: 'Keep driving until you find the way'),
-            QuizOption(
-              id: 'b',
-              text: 'Pull over safely and use GPS or ask for directions',
-            ),
-            QuizOption(id: 'c', text: 'Ask the passenger for directions'),
-            QuizOption(id: 'd', text: 'Cancel the trip'),
-          ],
-        ),
-      ];
+      if (response.data == null) {
+        throw RepositoryError(
+          'Failed to start quiz: empty response',
+          code: ErrorCode.unknown,
+        );
+      }
 
-      final mockAttempt = QuizAttempt(
-        attemptId: 'mock-attempt-${DateTime.now().millisecondsSinceEpoch}',
-        questions: mockQuestions,
-        totalQuestions: mockQuestions.length,
-        totalPoints: mockQuestions.fold(0, (sum, q) => sum + q.points),
-        passingScore: 70,
+      final data = response.data!;
+      final apiData = data.data;
+
+      final attempt = QuizAttempt(
+        attemptId: apiData.attemptId,
+        questions: (apiData.questions ?? []).map(_mapApiQuestion).toList(),
+        totalQuestions: apiData.totalQuestions.toInt() ?? 0,
+        totalPoints: apiData.totalPoints.toInt() ?? 0,
+        passingScore: apiData.passingScore.toInt() ?? 70,
+      );
+
+      // Persist attempt locally
+      await _savePersistedAttempt(
+        QuizAttemptPersistence(
+          attemptId: attempt.attemptId,
+          status: 'IN_PROGRESS',
+          currentQuestionIndex: 0,
+          selectedAnswers: {},
+          answeredQuestions: {},
+          totalQuestions: attempt.totalQuestions,
+          lastSyncTime: DateTime.now().toIso8601String(),
+        ),
       );
 
       return SuccessResponse(
-        message: 'Quiz started successfully',
-        data: mockAttempt,
+        message: data.message ?? 'Quiz started successfully',
+        data: attempt,
       );
     });
   }
 
+  /// Submit an answer to a question
   Future<BaseResponse<Map<String, dynamic>>> submitAnswer(
     SubmitDriverQuizAnswerRequest request,
   ) async {
     return guard(() async {
-      // TODO: Implement when API client is generated
-      // final res = await _apiClient.getDriverQuizAnswerApi().submitAnswer(
-      //   attemptId: request.attemptId,
-      //   questionId: request.questionId,
-      //   selectedOptionId: request.selectedOptionId,
-      // );
+      // Call API to submit answer
+      final response = await _apiClient
+          .getDriverQuizAnswerApi()
+          .driverQuizAnswerSubmitAnswer(
+            submitDriverQuizAnswer: SubmitDriverQuizAnswer(
+              attemptId: request.attemptId,
+              questionId: request.questionId,
+              selectedOptionId: request.selectedOptionId,
+            ),
+          );
 
-      // Mock response
-      final isCorrect =
-          request.selectedOptionId == 'b'; // Mock: option 'b' is correct
+      if (response.data == null) {
+        throw RepositoryError(
+          'Failed to submit answer: empty response',
+          code: ErrorCode.unknown,
+        );
+      }
+
+      final data = response.data!;
       final responseData = {
-        'isCorrect': isCorrect,
-        'pointsEarned': isCorrect ? 10 : 0,
-        'correctOptionId': isCorrect ? request.selectedOptionId : 'b',
-        'explanation': isCorrect
-            ? 'Correct! Safety should always be the priority.'
-            : 'Incorrect. Never compromise safety for ratings.',
+        'isCorrect': data.data.isCorrect ?? false,
+        'pointsEarned': data.data.pointsEarned.toInt() ?? 0,
+        'correctOptionId': data.data.correctOptionId,
+        'explanation': data.data.explanation,
       };
 
+      // Update persisted attempt with selected answer
+      final persisted = await _getPersistedAttempt();
+      if (persisted != null && persisted.attemptId == request.attemptId) {
+        final updatedAnswers = {...persisted.selectedAnswers};
+        updatedAnswers[request.questionId] = request.selectedOptionId;
+
+        final updatedQuestions = {...persisted.answeredQuestions};
+        updatedQuestions.add(request.questionId);
+
+        await _savePersistedAttempt(
+          persisted.copyWith(
+            selectedAnswers: updatedAnswers,
+            answeredQuestions: updatedQuestions,
+            lastSyncTime: DateTime.now().toIso8601String(),
+          ),
+        );
+      }
+
       return SuccessResponse(
-        message: 'Answer submitted successfully',
+        message: data.message ?? 'Answer submitted successfully',
         data: responseData,
       );
     });
   }
 
+  /// Complete the quiz attempt
   Future<BaseResponse<QuizResult>> completeQuiz(
     CompleteDriverQuizRequest request,
   ) async {
     return guard(() async {
-      // TODO: Implement when API client is generated
-      // final res = await _apiClient.getDriverQuizAnswerApi().completeQuiz(
-      //   attemptId: request.attemptId,
-      // );
+      // Call API to complete quiz
+      final response = await _apiClient
+          .getDriverQuizAnswerApi()
+          .driverQuizAnswerCompleteQuiz(
+            completeDriverQuiz: CompleteDriverQuiz(
+              attemptId: request.attemptId,
+            ),
+          );
 
-      // Mock response - assume 80% pass rate
-      final mockResult = QuizResult(
-        attemptId: request.attemptId,
-        status: 'COMPLETED',
-        totalQuestions: 2,
-        correctAnswers: 2,
-        scorePercentage: 80.0,
-        passed: true,
-        earnedPoints: 20,
-        totalPoints: 20,
-        completedAt: DateTime.now(),
+      if (response.data == null) {
+        throw RepositoryError(
+          'Failed to complete quiz: empty response',
+          code: ErrorCode.unknown,
+        );
+      }
+
+      final data = response.data!;
+      final resultData = data.data;
+
+      final result = QuizResult(
+        attemptId: resultData.attemptId,
+        status: resultData.status.value,
+        totalQuestions: resultData.totalQuestions,
+        correctAnswers: resultData.correctAnswers,
+        scorePercentage: (resultData.scorePercentage).toDouble(),
+        passed: (resultData.scorePercentage >= 70),
+        earnedPoints: resultData.earnedPoints,
+        totalPoints: resultData.totalPoints,
+        completedAt: resultData.completedAt,
       );
 
+      // Update persisted attempt with completion status
+      final persisted = await _getPersistedAttempt();
+      if (persisted != null && persisted.attemptId == request.attemptId) {
+        await _savePersistedAttempt(
+          persisted.copyWith(
+            status: result.status,
+            lastSyncTime: DateTime.now().toIso8601String(),
+          ),
+        );
+      }
+
       return SuccessResponse(
-        message: 'Quiz completed successfully',
-        data: mockResult,
+        message: data.message ?? 'Quiz completed successfully',
+        data: result,
       );
     });
   }
 
+  /// Get the latest quiz attempt status
   Future<BaseResponse<QuizResult?>> getLatestAttempt() async {
     return guard(() async {
-      // TODO: Implement when API client is generated
-      // final res = await _apiClient.getDriverQuizAnswerApi().getMyLatestAttempt();
+      try {
+        // Try to fetch latest from server
+        final response = await _apiClient
+            .getDriverQuizAnswerApi()
+            .driverQuizAnswerGetMyLatestAttempt();
 
-      // Mock response - no previous attempt
-      return SuccessResponse(
-        message: 'Latest quiz attempt retrieved successfully',
-        data: null,
-      );
+        if (response.data != null) {
+          final resultData = response.data!.data;
+
+          // Calculate if passed (score >= 70)
+          final scorePercentage = resultData.totalPoints > 0
+              ? (resultData.earnedPoints / resultData.totalPoints) * 100
+              : 0.0;
+
+          final result = QuizResult(
+            attemptId: resultData.id,
+            status: resultData.status.value,
+            totalQuestions: resultData.totalQuestions,
+            correctAnswers: resultData.correctAnswers,
+            scorePercentage: scorePercentage,
+            passed: scorePercentage >= 70,
+            earnedPoints: resultData.earnedPoints,
+            totalPoints: resultData.totalPoints,
+            completedAt: resultData.completedAt,
+          );
+
+          // Update persisted attempt with server state
+          final persisted = await _getPersistedAttempt();
+          if (persisted != null) {
+            await _savePersistedAttempt(
+              persisted.copyWith(
+                status: result.status,
+                lastSyncTime: DateTime.now().toIso8601String(),
+              ),
+            );
+          }
+
+          return SuccessResponse(
+            message:
+                response.data!.message ??
+                'Latest quiz attempt retrieved successfully',
+            data: result,
+          );
+        }
+
+        return SuccessResponse(message: 'No quiz attempt found', data: null);
+      } catch (e) {
+        // Server call failed, try to return persisted state
+        logger.w('Failed to fetch from server, checking cache: $e');
+        final persisted = await _getPersistedAttempt();
+        if (persisted != null && persisted.status != 'IN_PROGRESS') {
+          // We have a completed attempt cached, but can't get full result
+          return SuccessResponse(
+            message: 'Latest quiz attempt retrieved successfully (cached)',
+            data: null,
+          );
+        }
+        rethrow;
+      }
+    });
+  }
+
+  /// Clear quiz attempt cache (after successful completion/submission)
+  Future<void> clearQuizCache() async {
+    return guard(() async {
+      await _clearPersistedAttempt();
     });
   }
 }
