@@ -814,6 +814,10 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     _$result,
     opt: true,
   );
+  static Map<String, dynamic>? _$answerFeedback(DriverQuizState v) =>
+      v.answerFeedback;
+  static const Field<DriverQuizState, Map<String, dynamic>> _f$answerFeedback =
+      Field('answerFeedback', _$answerFeedback, opt: true);
 
   @override
   final MappableFields<DriverQuizState> fields = const {
@@ -825,6 +829,7 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
     #selectedAnswerId: _f$selectedAnswerId,
     #answeredQuestions: _f$answeredQuestions,
     #result: _f$result,
+    #answerFeedback: _f$answerFeedback,
   };
 
   static DriverQuizState _instantiate(DecodingData data) {
@@ -837,6 +842,7 @@ class DriverQuizStateMapper extends ClassMapperBase<DriverQuizState> {
       selectedAnswerId: data.dec(_f$selectedAnswerId),
       answeredQuestions: data.dec(_f$answeredQuestions),
       result: data.dec(_f$result),
+      answerFeedback: data.dec(_f$answerFeedback),
     );
   }
 
@@ -883,6 +889,8 @@ extension DriverQuizStateValueCopy<$R, $Out>
 
 abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+  get answerFeedback;
   $R call({
     CubitState? state,
     String? message,
@@ -892,6 +900,7 @@ abstract class DriverQuizStateCopyWith<$R, $In extends DriverQuizState, $Out>
     String? selectedAnswerId,
     Set<String>? answeredQuestions,
     QuizResult? result,
+    Map<String, dynamic>? answerFeedback,
   });
   DriverQuizStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
     Then<$Out2, $R2> t,
@@ -907,6 +916,15 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
   late final ClassMapperBase<DriverQuizState> $mapper =
       DriverQuizStateMapper.ensureInitialized();
   @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+  get answerFeedback => $value.answerFeedback != null
+      ? MapCopyWith(
+          $value.answerFeedback!,
+          (v, t) => ObjectCopyWith(v, $identity, t),
+          (v) => call(answerFeedback: v),
+        )
+      : null;
+  @override
   $R call({
     CubitState? state,
     Object? message = $none,
@@ -916,6 +934,7 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
     Object? selectedAnswerId = $none,
     Set<String>? answeredQuestions,
     Object? result = $none,
+    Object? answerFeedback = $none,
   }) => $apply(
     FieldCopyWithData({
       if (state != null) #state: state,
@@ -927,6 +946,7 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
       if (selectedAnswerId != $none) #selectedAnswerId: selectedAnswerId,
       if (answeredQuestions != null) #answeredQuestions: answeredQuestions,
       if (result != $none) #result: result,
+      if (answerFeedback != $none) #answerFeedback: answerFeedback,
     }),
   );
   @override
@@ -945,6 +965,7 @@ class _DriverQuizStateCopyWithImpl<$R, $Out>
       or: $value.answeredQuestions,
     ),
     result: data.get(#result, or: $value.result),
+    answerFeedback: data.get(#answerFeedback, or: $value.answerFeedback),
   );
 
   @override

@@ -14,6 +14,7 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
     this.selectedAnswerId,
     this.answeredQuestions = const <String>{},
     this.result,
+    this.answerFeedback,
   });
 
   final QuizAttempt? attempt;
@@ -21,6 +22,7 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
   final String? selectedAnswerId;
   final Set<String> answeredQuestions;
   final QuizResult? result;
+  final Map<String, dynamic>? answerFeedback;
 
   @override
   DriverQuizState toInitial() => DriverQuizState();
@@ -36,6 +38,7 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
     String? selectedAnswerId,
     Set<String>? answeredQuestions,
     QuizResult? result,
+    Map<String, dynamic>? answerFeedback,
   }) => copyWith(
     state: CubitState.success,
     message: message,
@@ -44,6 +47,7 @@ class DriverQuizState extends BaseState2 with DriverQuizStateMappable {
     selectedAnswerId: selectedAnswerId ?? this.selectedAnswerId,
     answeredQuestions: answeredQuestions ?? this.answeredQuestions,
     result: result ?? this.result,
+    answerFeedback: answerFeedback ?? this.answerFeedback,
   );
 
   @override

@@ -41,6 +41,11 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       final selectedAnswerId = state.selectedAnswerId;
 
       if (attempt == null || currentIndex == null || selectedAnswerId == null) {
+        emit(
+          state.toFailure(
+            ServiceError('Please select an answer before submitting'),
+          ),
+        );
         return;
       }
 
@@ -63,6 +68,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
         state.toSuccess(
           message: res.message,
           answeredQuestions: newAnsweredQuestions,
+          answerFeedback: res.data, // Store feedback for UI display
         ),
       );
     } on BaseError catch (e, st) {
@@ -100,6 +106,17 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
     }
   }
 
+  /// Jump to a specific question by index
+  Future<void> jumpToQuestion(int index) async {
+    final attempt = state.attempt;
+
+    if (attempt != null && index >= 0 && index < attempt.questions.length) {
+      emit(
+        state.toSuccess(currentQuestionIndex: index, selectedAnswerId: null),
+      );
+    }
+  }
+
   Future<void> completeQuiz() async {
     try {
       final attempt = state.attempt;
@@ -112,6 +129,9 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
       final request = CompleteDriverQuizRequest(attemptId: attempt.attemptId);
 
       final res = await _quizRepository.completeQuiz(request);
+
+      // Clear cache after completion
+      await _quizRepository.clearQuizCache();
 
       emit(
         state.toSuccess(
@@ -144,7 +164,7 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
   }
 
   void reset() {
-    emit(state);
+    emit(state.toInitial());
   }
 
   // Getters
