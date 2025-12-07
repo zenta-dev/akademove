@@ -27,19 +27,37 @@ import {
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { hasAccess } from "@/lib/actions";
+import { getSession } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
-export const Route = createFileRoute("/dash/driver/quiz")({
+export const Route = createFileRoute("/(auth)/sign-up/driver/quiz")({
 	head: () => ({
 		meta: [{ title: SUB_ROUTE_TITLES.DRIVER.QUIZ ?? "Driver Quiz" }],
 	}),
 	beforeLoad: async () => {
-		const ok = await hasAccess(["DRIVER"]);
-		if (!ok) redirect({ to: "/", throw: true });
-		return { allowed: ok };
+		// Check if user is authenticated and is a DRIVER
+		const session = await getSession();
+		if (!session || session.role !== "DRIVER") {
+			redirect({ to: "/sign-up/driver", throw: true });
+		}
+
+		// Check if user has already passed the quiz
+		try {
+			const driverResult = await orpcClient.driver.getMine();
+			const driver = driverResult.body.data;
+
+			// If quiz is already passed, redirect to sign-in to establish proper session
+			if (driver.quizStatus === "PASSED") {
+				redirect({ to: "/sign-in", throw: true });
+			}
+		} catch (error) {
+			console.error("Failed to check driver status:", error);
+			redirect({ to: "/sign-up/driver", throw: true });
+		}
+
+		return { allowed: true };
 	},
 	component: RouteComponent,
 });
@@ -194,8 +212,8 @@ function RouteComponent() {
 		});
 	}, [completeQuizMutation, quizAttempt]);
 
-	const handleGoToDashboard = useCallback(() => {
-		navigate({ to: "/dash/driver" });
+	const handleGoToSignIn = useCallback(() => {
+		navigate({ to: "/sign-in" });
 	}, [navigate]);
 
 	if (driverLoading || attemptLoading) {
@@ -206,7 +224,7 @@ function RouteComponent() {
 		);
 	}
 
-	// If driver has passed the quiz, show success message
+	// If driver has passed the quiz, redirect to sign-in
 	if (driverData?.body.data.quizStatus === "PASSED") {
 		return (
 			<div className="mx-auto max-w-2xl py-8">
@@ -239,8 +257,8 @@ function RouteComponent() {
 						</div>
 					</CardContent>
 					<CardFooter className="justify-center">
-						<Button onClick={handleGoToDashboard}>
-							Go to Dashboard
+						<Button onClick={handleGoToSignIn}>
+							Go to Sign In
 							<ArrowRight className="ml-2 h-4 w-4" />
 						</Button>
 					</CardFooter>
@@ -313,8 +331,8 @@ function RouteComponent() {
 					</CardContent>
 					<CardFooter className="flex justify-center gap-4">
 						{quizResult.passed ? (
-							<Button onClick={handleGoToDashboard}>
-								Go to Dashboard
+							<Button onClick={handleGoToSignIn}>
+								Go to Sign In
 								<ArrowRight className="ml-2 h-4 w-4" />
 							</Button>
 						) : (
