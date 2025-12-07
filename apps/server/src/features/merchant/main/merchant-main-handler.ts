@@ -187,4 +187,152 @@ export const MerchantMainHandler = priv.router({
 				body: { message: m.server_merchant_deactivated(), data: result },
 			};
 		}),
+	setOnlineStatus: priv.setOnlineStatus
+
+		.use(requireRoles("MERCHANT", "SYSTEM"))
+		.handler(async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Merchants can only update their own availability
+			if (context.user.role === "MERCHANT") {
+				const merchant = await context.repo.merchant.main.get(params.id);
+				if (merchant.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_merchant_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			log.info(
+				{ merchantId: params.id, isOnline: body.isOnline },
+				"[MerchantMainHandler] Setting online status",
+			);
+
+			const result = await context.svc.db.transaction(async (tx) => {
+				return await context.repo.merchant.main.setOnlineStatus(
+					params.id,
+					body.isOnline,
+					{ tx },
+				);
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Merchant online status updated",
+					data: result,
+				},
+			};
+		}),
+	setOrderTakingStatus: priv.setOrderTakingStatus
+
+		.use(requireRoles("MERCHANT", "SYSTEM"))
+		.handler(async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Merchants can only update their own availability
+			if (context.user.role === "MERCHANT") {
+				const merchant = await context.repo.merchant.main.get(params.id);
+				if (merchant.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_merchant_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			log.info(
+				{ merchantId: params.id, isTakingOrders: body.isTakingOrders },
+				"[MerchantMainHandler] Setting order-taking status",
+			);
+
+			const result = await context.svc.db.transaction(async (tx) => {
+				// Validate merchant is online before allowing to take orders
+				const merchantBasic = await context.repo.merchant.main.getMerchantBasic(
+					params.id,
+					{ tx },
+				);
+
+				if (!merchantBasic) {
+					throw new AuthError("Merchant not found", {
+						code: "NOT_FOUND",
+					});
+				}
+
+				if (body.isTakingOrders && !merchantBasic.isOnline) {
+					throw new AuthError("Merchant must be online to take orders", {
+						code: "BAD_REQUEST",
+					});
+				}
+
+				return await context.repo.merchant.main.setOrderTakingStatus(
+					params.id,
+					body.isTakingOrders,
+					{ tx },
+				);
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Merchant order-taking status updated",
+					data: result,
+				},
+			};
+		}),
+	setOperatingStatus: priv.setOperatingStatus
+
+		.use(requireRoles("MERCHANT", "SYSTEM"))
+		.handler(async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Merchants can only update their own availability
+			if (context.user.role === "MERCHANT") {
+				const merchant = await context.repo.merchant.main.get(params.id);
+				if (merchant.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_merchant_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			log.info(
+				{
+					merchantId: params.id,
+					operatingStatus: body.operatingStatus,
+				},
+				"[MerchantMainHandler] Setting operating status",
+			);
+
+			const result = await context.svc.db.transaction(async (tx) => {
+				return await context.repo.merchant.main.setOperatingStatus(
+					params.id,
+					body.operatingStatus,
+					{ tx },
+				);
+			});
+
+			return {
+				status: 200,
+				body: {
+					message: "Merchant operating status updated",
+					data: result,
+				},
+			};
+		}),
+	getAvailabilityStatus: priv.getAvailabilityStatus
+
+		.use(requireRoles("ALL"))
+		.handler(async ({ context, input: { params } }) => {
+			const merchantBasic = await context.repo.merchant.main.getMerchantBasic(
+				params.id,
+			);
+
+			if (!merchantBasic) {
+				throw new AuthError("Merchant not found", {
+					code: "NOT_FOUND",
+				});
+			}
+
+			return {
+				status: 200,
+				body: {
+					message: "Merchant availability status retrieved",
+					data: merchantBasic,
+				},
+			};
+		}),
 });

@@ -62,6 +62,7 @@ export class MerchantMainRepository extends BaseRepository {
 
 		return {
 			...item,
+			phone: item.phone ?? undefined,
 			location: item.location ?? undefined,
 			documentId: item.document ?? undefined,
 			imageId: item.image ?? undefined,
@@ -772,6 +773,157 @@ export class MerchantMainRepository extends BaseRepository {
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "deactivate");
+		}
+	}
+
+	/**
+	 * Updates merchant online status
+	 * @param id - Merchant ID
+	 * @param isOnline - Online status
+	 * @param opts - Optional transaction context
+	 */
+	async setOnlineStatus(
+		id: string,
+		isOnline: boolean,
+		opts?: WithTx,
+	): Promise<Merchant> {
+		try {
+			const db = opts?.tx ?? this.db;
+			const result = await db
+				.update(tables.merchant)
+				.set({ isOnline, updatedAt: new Date() })
+				.where(eq(tables.merchant.id, id))
+				.returning();
+
+			if (result.length === 0) {
+				throw new RepositoryError(`Merchant with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const composed = await MerchantMainRepository.composeEntity(
+				result[0],
+				this.#storage,
+			);
+			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
+			return composed;
+		} catch (error) {
+			throw this.handleError(error, "setOnlineStatus");
+		}
+	}
+
+	/**
+	 * Updates merchant order-taking status
+	 * @param id - Merchant ID
+	 * @param isTakingOrders - Order-taking status
+	 * @param opts - Optional transaction context
+	 */
+	async setOrderTakingStatus(
+		id: string,
+		isTakingOrders: boolean,
+		opts?: WithTx,
+	): Promise<Merchant> {
+		try {
+			const db = opts?.tx ?? this.db;
+			const result = await db
+				.update(tables.merchant)
+				.set({ isTakingOrders, updatedAt: new Date() })
+				.where(eq(tables.merchant.id, id))
+				.returning();
+
+			if (result.length === 0) {
+				throw new RepositoryError(`Merchant with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const composed = await MerchantMainRepository.composeEntity(
+				result[0],
+				this.#storage,
+			);
+			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
+			return composed;
+		} catch (error) {
+			throw this.handleError(error, "setOrderTakingStatus");
+		}
+	}
+
+	/**
+	 * Updates merchant operating status
+	 * @param id - Merchant ID
+	 * @param operatingStatus - Operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+	 * @param opts - Optional transaction context
+	 */
+	async setOperatingStatus(
+		id: string,
+		operatingStatus: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE",
+		opts?: WithTx,
+	): Promise<Merchant> {
+		try {
+			const db = opts?.tx ?? this.db;
+			const result = await db
+				.update(tables.merchant)
+				.set({ operatingStatus, updatedAt: new Date() })
+				.where(eq(tables.merchant.id, id))
+				.returning();
+
+			if (result.length === 0) {
+				throw new RepositoryError(`Merchant with id "${id}" not found`, {
+					code: "NOT_FOUND",
+				});
+			}
+
+			const composed = await MerchantMainRepository.composeEntity(
+				result[0],
+				this.#storage,
+			);
+			await this.setCache(id, composed, { expirationTtl: CACHE_TTLS["1h"] });
+			return composed;
+		} catch (error) {
+			throw this.handleError(error, "setOperatingStatus");
+		}
+	}
+
+	/**
+	 * Gets merchant by ID with basic fields
+	 * @param id - Merchant ID
+	 * @param opts - Optional transaction context
+	 */
+	async getMerchantBasic(
+		id: string,
+		opts?: WithTx,
+	): Promise<{
+		id: string;
+		isOnline: boolean;
+		isTakingOrders: boolean;
+		operatingStatus: "OPEN" | "CLOSED" | "BREAK" | "MAINTENANCE";
+	} | null> {
+		try {
+			const db = opts?.tx ?? this.db;
+			const result = await db.query.merchant.findFirst({
+				where: (f, op) => op.eq(f.id, id),
+				columns: {
+					id: true,
+					isOnline: true,
+					isTakingOrders: true,
+					operatingStatus: true,
+				},
+			});
+
+			return result
+				? {
+						id: result.id,
+						isOnline: result.isOnline,
+						isTakingOrders: result.isTakingOrders,
+						operatingStatus: result.operatingStatus as
+							| "OPEN"
+							| "CLOSED"
+							| "BREAK"
+							| "MAINTENANCE",
+					}
+				: null;
+		} catch (error) {
+			throw this.handleError(error, "getMerchantBasic");
 		}
 	}
 }

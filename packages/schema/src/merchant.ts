@@ -15,6 +15,10 @@ export const MerchantCategorySchema = z
 	.enum(CONSTANTS.MERCHANT_CATEGORIES)
 	.describe("Primary merchant category");
 
+export const MerchantOperatingStatusSchema = z
+	.enum(CONSTANTS.MERCHANT_OPERATING_STATUSES)
+	.describe("Merchant operating status");
+
 export const MerchantSchema = z.object({
 	id: z.uuid(),
 	userId: z.string(),
@@ -26,6 +30,15 @@ export const MerchantSchema = z.object({
 	address: z.string(),
 	location: CoordinateSchema.optional(),
 	isActive: z.boolean(),
+	isOnline: z
+		.boolean()
+		.describe("Whether merchant is currently online/available"),
+	isTakingOrders: z
+		.boolean()
+		.describe("Whether merchant is actively taking orders (subset of online)"),
+	operatingStatus: MerchantOperatingStatusSchema.describe(
+		"Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)",
+	),
 	rating: z.number(),
 	document: z.url().optional(),
 	image: z.url().optional(),
@@ -44,6 +57,9 @@ export const InsertMerchantSchema = MerchantSchema.omit({
 	userId: true,
 	rating: true,
 	isActive: true,
+	isOnline: true,
+	isTakingOrders: true,
+	operatingStatus: true,
 	document: true,
 	image: true,
 	categories: true,
@@ -107,6 +123,30 @@ export const DeactivateMerchantSchema = z.object({
 		.describe("Reason for deactivation"),
 });
 export type DeactivateMerchant = z.infer<typeof DeactivateMerchantSchema>;
+
+export const SetMerchantOnlineStatusSchema = z.object({
+	merchantId: z.uuid(),
+	isOnline: z.boolean(),
+});
+export type SetMerchantOnlineStatus = z.infer<
+	typeof SetMerchantOnlineStatusSchema
+>;
+
+export const SetMerchantOrderTakingStatusSchema = z.object({
+	merchantId: z.uuid(),
+	isTakingOrders: z.boolean(),
+});
+export type SetMerchantOrderTakingStatus = z.infer<
+	typeof SetMerchantOrderTakingStatusSchema
+>;
+
+export const SetMerchantOperatingStatusSchema = z.object({
+	merchantId: z.uuid(),
+	operatingStatus: MerchantOperatingStatusSchema,
+});
+export type SetMerchantOperatingStatus = z.infer<
+	typeof SetMerchantOperatingStatusSchema
+>;
 
 export const MerchantSchemaRegistries = {
 	MerchantCategory: { schema: MerchantCategorySchema, strategy: "output" },

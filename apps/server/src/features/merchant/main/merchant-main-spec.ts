@@ -2,6 +2,7 @@ import { oc } from "@orpc/contract";
 import {
 	DeactivateMerchantSchema,
 	FlatUpdateMerchantSchema,
+	MerchantOperatingStatusSchema,
 	MerchantSchema,
 } from "@repo/schema/merchant";
 import { UnifiedPaginationQuerySchema } from "@repo/schema/pagination";
@@ -269,7 +270,7 @@ export const MerchantMainSpec = {
 	deactivate: oc
 		.route({
 			tags: [FEATURE_TAGS.MERCHANT],
-			method: "POST",
+			method: "PATCH",
 			path: "/{id}/deactivate",
 			inputStructure: "detailed",
 			outputStructure: "detailed",
@@ -282,5 +283,93 @@ export const MerchantMainSpec = {
 		)
 		.output(
 			createSuccesSchema(MerchantSchema, "Merchant deactivated successfully"),
+		),
+
+	setOnlineStatus: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "PATCH",
+			path: "/{id}/availability/online",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ isOnline: z.boolean() }),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				MerchantSchema,
+				"Merchant online status updated successfully",
+			),
+		),
+
+	setOrderTakingStatus: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "PATCH",
+			path: "/{id}/availability/order-taking",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ isTakingOrders: z.boolean() }),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				MerchantSchema,
+				"Merchant order-taking status updated successfully",
+			),
+		),
+
+	setOperatingStatus: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "PATCH",
+			path: "/{id}/availability/operating-status",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: z.object({ operatingStatus: MerchantOperatingStatusSchema }),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				MerchantSchema,
+				"Merchant operating status updated successfully",
+			),
+		),
+
+	getAvailabilityStatus: oc
+		.route({
+			tags: [FEATURE_TAGS.MERCHANT],
+			method: "GET",
+			path: "/{id}/availability/status",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+			}),
+		)
+		.output(
+			createSuccesSchema(
+				z.object({
+					id: z.string(),
+					isOnline: z.boolean(),
+					isTakingOrders: z.boolean(),
+					operatingStatus: MerchantOperatingStatusSchema,
+				}),
+				"Merchant availability status retrieved successfully",
+			),
 		),
 };

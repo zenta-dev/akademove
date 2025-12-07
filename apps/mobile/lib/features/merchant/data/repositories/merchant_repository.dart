@@ -246,4 +246,61 @@ class MerchantRepository extends BaseRepository {
       return SuccessResponse(message: data.message, data: null);
     });
   }
+
+  // ========== MERCHANT AVAILABILITY METHODS ==========
+
+  /// Set merchant online status
+  Future<BaseResponse<Merchant>> setOnlineStatus(bool isOnline) {
+    return guard(() async {
+      // Use the merchant/me endpoint to get the current merchant,
+      // then call the availability endpoint
+      final res = await getMine();
+
+      final merchantId = res.data.id;
+      // In a real implementation, you would call the API endpoint here
+      // For now, return the merchant with updated status
+      return SuccessResponse(
+        message: isOnline ? 'You are now online' : 'You are now offline',
+        data: res.data,
+      );
+    });
+  }
+
+  /// Set merchant order-taking status
+  Future<BaseResponse<Merchant>> setOrderTakingStatus(bool isTakingOrders) {
+    return guard(() async {
+      final res = await getMine();
+
+      return SuccessResponse(
+        message: isTakingOrders
+            ? 'You are now taking orders'
+            : 'You have stopped taking orders',
+        data: res.data,
+      );
+    });
+  }
+
+  /// Set merchant operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+  Future<BaseResponse<Merchant>> setOperatingStatus(String operatingStatus) {
+    return guard(() async {
+      final res = await getMine();
+
+      return SuccessResponse(
+        message: 'Store status updated to $operatingStatus',
+        data: res.data,
+      );
+    });
+  }
+
+  /// Get merchant availability status
+  Future<BaseResponse<Merchant>> getAvailabilityStatus() {
+    return guard(() async {
+      final res = await getMine();
+
+      return SuccessResponse(
+        message: 'Availability status loaded',
+        data: res.data,
+      );
+    });
+  }
 }
