@@ -89,5 +89,13 @@ final authRouter = ShellRoute(
         );
       },
     ),
+    GoRoute(
+      name: Routes.driverQuiz.name,
+      path: Routes.driverQuiz.path,
+      builder: (context, state) => BlocProvider(
+        create: (_) => sl<DriverQuizCubit>(),
+        child: const DriverQuizScreen(),
+      ),
+    ),
   ],
 );

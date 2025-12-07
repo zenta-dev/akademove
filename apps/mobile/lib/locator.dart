@@ -100,7 +100,13 @@ void _setupRepository() {
     ..registerLazySingleton(
       () => QuickMessageRepository(apiClient: sl<ApiClient>()),
     )
-    ..registerLazySingleton(() => ReportRepository(apiClient: sl<ApiClient>()));
+    ..registerLazySingleton(() => ReportRepository(apiClient: sl<ApiClient>()))
+    ..registerLazySingleton(
+      () => DriverQuizRepository(
+        apiClient: sl<ApiClient>(),
+        keyValueService: sl<KeyValueService>(),
+      ),
+    );
 }
 
 void _setupCubit() {
@@ -234,5 +240,8 @@ void _setupCubit() {
         notificationRepository: sl<NotificationRepository>(),
       ),
     )
-    ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()));
+    ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()))
+    ..registerFactory(
+      () => DriverQuizCubit(quizRepository: sl<DriverQuizRepository>()),
+    );
 }

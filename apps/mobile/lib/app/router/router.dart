@@ -24,6 +24,7 @@ enum Routes {
   authResetPassword('/auth/reset-password'),
   authEmailVerificationPending('/auth/email-verification-pending'),
   authVerifyEmail('/auth/verify-email'),
+  driverQuiz('/auth/driver-quiz'),
 
   ///
   /// User Routes
