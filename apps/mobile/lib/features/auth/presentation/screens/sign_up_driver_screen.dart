@@ -158,10 +158,9 @@ class _SignUpDriverScreenState extends State<SignUpDriverScreen> {
       type: ToastType.success,
     );
     context.read<SignUpCubit>().reset();
-    context.pushReplacementNamed(
-      Routes.authEmailVerificationPending.name,
-      queryParameters: {'email': email},
-    );
+    // Redirect to driver quiz (required before accessing driver features)
+    // Driver must complete and pass quiz before being approved by operator
+    context.pushReplacementNamed(Routes.driverQuiz.name);
   }
 
   void _handleSignUpFailure(BuildContext context, String? error) {
