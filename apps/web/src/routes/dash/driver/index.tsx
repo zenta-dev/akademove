@@ -1,12 +1,7 @@
 import { m } from "@repo/i18n";
 import type { Order } from "@repo/schema/order";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-	createFileRoute,
-	Link,
-	redirect,
-	useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import {
 	Activity,
 	AlertCircle,
@@ -20,7 +15,7 @@ import {
 	Star,
 	TrendingUp,
 } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,7 +29,7 @@ import {
 } from "@/components/ui/card";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/")({
@@ -42,20 +37,27 @@ export const Route = createFileRoute("/dash/driver/")({
 	beforeLoad: async () => {
 		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
+
+		// Check driver verification status
+		try {
+			const driverResult = await orpcClient.driver.getMine();
+			const driver = driverResult.body.data;
+
+			// If quiz not passed, redirect to quiz page
+			if (driver.quizStatus !== "PASSED") {
+				redirect({ to: "/sign-up/driver/quiz", throw: true });
+			}
+		} catch (error) {
+			console.error("Failed to check driver status:", error);
+			redirect({ to: "/", throw: true });
+		}
+
 		return { allowed: ok };
-	},
-	loader: ({ context }) => {
-		return { allowed: context.allowed };
 	},
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { allowed } = Route.useLoaderData();
-	const navigate = useNavigate();
-
-	if (!allowed) navigate({ to: "/" });
-
 	// Fetch driver data
 	const { data: driverData, isLoading: driverLoading } = useQuery(
 		orpcQuery.driver.getMine.queryOptions({
@@ -63,6 +65,32 @@ function RouteComponent() {
 			refreshInterval: 30000,
 		}),
 	);
+
+	// Show verification status toast on mount or when driverData changes
+	useEffect(() => {
+		if (!driverData?.body?.data) return;
+
+		const status = driverData.body.data.status;
+		if (status === "PENDING") {
+			toast.info("Account Pending Approval", {
+				description:
+					"An admin will review your documents and activate your account soon.",
+				duration: 5000,
+			});
+		} else if (status === "REJECTED") {
+			toast.error("Account Rejected", {
+				description:
+					"Your account has been rejected. Please contact support for more information.",
+				duration: Number.POSITIVE_INFINITY,
+			});
+		} else if (status === "INACTIVE") {
+			toast.warning("Account Inactive", {
+				description:
+					"Your account has been deactivated. Please contact support.",
+				duration: Number.POSITIVE_INFINITY,
+			});
+		}
+	}, [driverData?.body?.data]);
 
 	// Fetch wallet data for earnings
 	const { data: walletData, isLoading: walletLoading } = useQuery(
