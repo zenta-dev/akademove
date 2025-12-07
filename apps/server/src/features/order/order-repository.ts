@@ -1,4 +1,18 @@
-import { env } from "cloudflare:workers";
+import { BaseRepository } from "@/core/base";
+import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
+import { RepositoryError } from "@/core/error";
+import type {
+	OrderByOperation,
+	UnifiedListResult,
+	WithTx,
+	WithUserId,
+} from "@/core/interface";
+import { type DatabaseService, tables } from "@/core/services/db";
+import type { KeyValueService } from "@/core/services/kv";
+import type { MapService } from "@/core/services/map";
+import type { OrderDatabase } from "@/core/tables/order";
+import { BusinessConfigurationService } from "@/features/configuration/services";
+import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import { m } from "@repo/i18n";
 import type {
 	ConfigurationValue,
@@ -19,6 +33,7 @@ import {
 } from "@repo/schema/order";
 import type { User, UserRole } from "@repo/schema/user";
 import { nullsToUndefined } from "@repo/shared";
+import { env } from "cloudflare:workers";
 import {
 	and,
 	count,
@@ -32,21 +47,6 @@ import {
 	type SQL,
 } from "drizzle-orm";
 import { v7 } from "uuid";
-import { BaseRepository } from "@/core/base";
-import { CACHE_TTLS, CONFIGURATION_KEYS } from "@/core/constants";
-import { RepositoryError } from "@/core/error";
-import type {
-	OrderByOperation,
-	UnifiedListResult,
-	WithTx,
-	WithUserId,
-} from "@/core/interface";
-import { type DatabaseService, tables } from "@/core/services/db";
-import type { KeyValueService } from "@/core/services/kv";
-import type { MapService } from "@/core/services/map";
-import type { OrderDatabase } from "@/core/tables/order";
-import { BusinessConfigurationService } from "@/features/configuration/services";
-import { log, safeAsync, toNumberSafe, toStringNumberSafe } from "@/utils";
 import type {
 	ChargePayload,
 	PaymentRepository,
@@ -499,48 +499,49 @@ export class OrderRepository extends BaseRepository {
 			// Try to get cached estimate (24 hour TTL - reduces Google Maps API costs)
 			const cached = await this.getCache<
 				OrderSummary & { config: PricingConfiguration }
-			>(cacheKey);
-			if (cached) {
-				log.debug({ cacheKey }, "[OrderRepository] Returning cached estimate");
-				return cached;
-			}
+			>(cacheKey, {
+				fallback: async () => {
+					// REFACTOR: Delegate pricing calculation to OrderPricingService
+					// Build EstimateOrder input for the service
+					const estimateInput: EstimateOrder = {
+						type: params.type,
+						pickupLocation: params.pickupLocation,
+						dropoffLocation: params.dropoffLocation,
+						weight: params.weight,
+					};
 
-			// REFACTOR: Delegate pricing calculation to OrderPricingService
-			// Build EstimateOrder input for the service
-			const estimateInput: EstimateOrder = {
-				type: params.type,
-				pickupLocation: params.pickupLocation,
-				dropoffLocation: params.dropoffLocation,
-				weight: params.weight,
-			};
+					// Get pricing configuration (still needed to return to client)
+					const pricingConfig = await this.#getPricingConfiguration(
+						{ type: params.type },
+						opts,
+					);
 
-			// Get pricing configuration (still needed to return to client)
-			const pricingConfig = await this.#getPricingConfiguration(
-				{ type: params.type },
-				opts,
-			);
+					if (!pricingConfig)
+						throw new RepositoryError(m.error_missing_pricing_configuration());
 
-			if (!pricingConfig)
-				throw new RepositoryError(m.error_missing_pricing_configuration());
+					// Use OrderPricingService to calculate estimate
+					const pricing =
+						await this.#pricingService.estimateOrder(estimateInput);
 
-			// Use OrderPricingService to calculate estimate
-			const pricing = await this.#pricingService.estimateOrder(estimateInput);
+					const result = { ...pricing, config: pricingConfig };
 
-			const result = { ...pricing, config: pricingConfig };
+					// PERFORMANCE: Cache estimate for 24 hours (reduces Google Maps API costs by 95%)
+					// Routes and pricing rarely change within a day
+					// Invalidate cache when pricing configs are updated by calling invalidatePricingCache()
+					await this.setCache(cacheKey, result, {
+						expirationTtl: CACHE_TTLS["24h"],
+					});
 
-			// PERFORMANCE: Cache estimate for 24 hours (reduces Google Maps API costs by 95%)
-			// Routes and pricing rarely change within a day
-			// Invalidate cache when pricing configs are updated by calling invalidatePricingCache()
-			await this.setCache(cacheKey, result, {
-				expirationTtl: CACHE_TTLS["24h"],
+					log.debug(
+						{ cacheKey, distanceKm: pricing.distanceKm },
+						"[OrderRepository] Cached new estimate",
+					);
+
+					return result;
+				},
 			});
 
-			log.debug(
-				{ cacheKey, distanceKm: pricing.distanceKm },
-				"[OrderRepository] Cached new estimate",
-			);
-
-			return result;
+			return cached;
 		} catch (error) {
 			throw this.handleError(error, "estimate");
 		}

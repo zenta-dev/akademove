@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/l10n/l10n.dart';
+import 'package:api_client/api_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +20,13 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   void initState() {
     super.initState();
     context.read<DriverCubit>().init();
+  }
+
+  void listenForIncomingOrders() {
+    final driverHomeCubit = context.watch<DriverHomeCubit>();
+    if (driverHomeCubit.state.incomingOrder != null) {
+      showIncomingOrderDialog(driverHomeCubit.state.incomingOrder!);
+    }
   }
 
   @override
@@ -60,6 +68,40 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         );
       },
     );
+  }
+
+  void showIncomingOrderDialog(Order order) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.new_order_request),
+        content: Text(
+          context
+              .l10n
+              .you_have_a_new_order_request_from_customer_please_check_your_orders_page,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<DriverHomeCubit>().clearIncomingOrder();
+            },
+            child: Text(context.l10n.dismiss),
+          ),
+          PrimaryButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.read<DriverHomeCubit>().setCurrentOrder(order);
+              // context.push(Routes.driverOrderDetails.pathWithParams(order.id));
+            },
+            child: Text(context.l10n.view_order),
+          ),
+        ],
+      ),
+    ).then((_) {
+      // Clear incoming order after dialog is dismissed
+      context.read<DriverHomeCubit>().clearIncomingOrder();
+    });
   }
 
   Widget _buildWelcomeCard(BuildContext context, DriverState state) {

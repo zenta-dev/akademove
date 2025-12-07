@@ -11,6 +11,7 @@ import type { DriverDatabase } from "@/core/tables/driver";
 import { UserAdminRepository } from "@/features/user/admin/user-admin-repository";
 import { log } from "@/utils";
 import { m } from "@repo/i18n";
+import type { Coordinate } from "@repo/schema";
 import {
 	type Driver,
 	DriverKeySchema,
@@ -89,12 +90,6 @@ export class DriverMainRepository extends BaseRepository {
 		return nullsToUndefined({
 			...item,
 			user,
-			currentLocation: item.currentLocation ?? undefined,
-			lastLocationUpdate: item.lastLocationUpdate ?? undefined,
-			lastCancellationDate: item.lastCancellationDate ?? undefined,
-			quizAttemptId: item.quizAttemptId ?? undefined,
-			quizScore: item.quizScore ?? undefined,
-			quizCompletedAt: item.quizCompletedAt ?? undefined,
 			studentCardId: item.studentCard,
 			driverLicenseId: item.driverLicense,
 			vehicleCertificateId: item.vehicleCertificate,
@@ -427,6 +422,8 @@ export class DriverMainRepository extends BaseRepository {
 				.update(tables.driver)
 				.set({
 					...item,
+					lastLocationUpdate:
+						item.currentLocation !== undefined ? new Date() : undefined,
 					studentCard: existing.studentCardId,
 					driverLicense: existing.driverLicenseId,
 					vehicleCertificate: existing.vehicleCertificateId,
@@ -444,6 +441,34 @@ export class DriverMainRepository extends BaseRepository {
 			return result;
 		} catch (error) {
 			throw this.handleError(error, "update");
+		}
+	}
+
+	async updateLocation(id: string, coord: Coordinate): Promise<Driver> {
+		try {
+			const existing = await this.#getFromDB(id);
+			if (!existing)
+				throw new RepositoryError(m.error_driver_not_found(), {
+					code: "NOT_FOUND",
+				});
+			const [updated] = await this.db
+				.update(tables.driver)
+				.set({ currentLocation: coord, lastLocationUpdate: new Date() })
+				.where(eq(tables.driver.id, id))
+				.returning();
+			const user = await this.db.query.user.findFirst({
+				with: { userBadges: { with: { badge: true } } },
+				where: (f, op) => op.eq(f.id, existing.userId),
+			});
+			if (!user) throw new RepositoryError(m.error_user_not_found());
+			const result = await DriverMainRepository.composeEntity(
+				{ ...updated, user },
+				this.#storage,
+			);
+			await this.setCache(id, result, { expirationTtl: CACHE_TTLS["24h"] });
+			return result;
+		} catch (error) {
+			throw this.handleError(error, "mark as online");
 		}
 	}
 

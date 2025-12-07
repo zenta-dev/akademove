@@ -41,7 +41,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
     _stopLocationTracking();
     return super.close();
   }
- 
+
   Future<void> acceptOrder(String orderId) async =>
       await taskManager.execute('DOC-aO1-$orderId', () async {
         try {
@@ -226,10 +226,7 @@ class DriverOrderCubit extends BaseCubit<DriverOrderState> {
       // Update location on server
       await _driverRepository.updateLocation(
         driverId: driverRes.data.id,
-        location: UpdateDriverLocationRequest(
-          x: position.longitude,
-          y: position.latitude,
-        ),
+        location: Coordinate(x: position.longitude, y: position.latitude),
       );
 
       logger.d(

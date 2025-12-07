@@ -125,6 +125,21 @@ export const DriverMainSpec = {
 			}),
 		)
 		.output(createSuccesSchema(DriverSchema, "Driver updated successfully")),
+	updateLocation: oc
+		.route({
+			tags: [FEATURE_TAGS.DRIVER],
+			method: "PUT",
+			path: "/{id}/location",
+			inputStructure: "detailed",
+			outputStructure: "detailed",
+		})
+		.input(
+			z.object({
+				params: z.object({ id: z.string() }),
+				body: CoordinateSchema,
+			}),
+		)
+		.output(createSuccesSchema(DriverSchema, "Driver updated successfully")),
 	markAsOnline: oc
 		.route({
 			tags: [FEATURE_TAGS.DRIVER],

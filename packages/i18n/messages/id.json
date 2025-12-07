@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "driver_approval": "Persetujuan Driver",
   "about_benefits_drivers_1": "Penghasilan tambahan yang fleksibel",
   "about_benefits_drivers_2": "Integrasi jadwal kuliah otomatis",
   "about_benefits_drivers_3": "Sistem leaderboard & badge reward",

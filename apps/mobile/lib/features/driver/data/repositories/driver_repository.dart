@@ -18,13 +18,6 @@ class GetDriverNearbyQuery {
   final UserGender? gender;
 }
 
-class UpdateDriverLocationRequest {
-  const UpdateDriverLocationRequest({required this.x, required this.y});
-
-  final double x;
-  final double y;
-}
-
 class DriverRepository extends BaseRepository {
   const DriverRepository({required ApiClient apiClient})
     : _apiClient = apiClient;
@@ -100,13 +93,12 @@ class DriverRepository extends BaseRepository {
 
   Future<BaseResponse<Driver>> updateLocation({
     required String driverId,
-    required UpdateDriverLocationRequest location,
+    required Coordinate location,
   }) {
     return guard(() async {
-      final res = await _apiClient.getDriverApi().driverUpdate(
+      final res = await _apiClient.getDriverApi().driverUpdateLocation(
         id: driverId,
-        currentLocationX: location.x,
-        currentLocationY: location.y,
+        coordinate: location,
       );
       final data =
           res.data ??
@@ -127,7 +119,6 @@ class DriverRepository extends BaseRepository {
     MultipartFile? driverLicense,
     MultipartFile? vehicleCertificate,
     Bank? bank,
-    UpdateDriverLocationRequest? currentLocation,
   }) {
     return guard(() async {
       final res = await _apiClient.getDriverApi().driverUpdate(
@@ -139,8 +130,6 @@ class DriverRepository extends BaseRepository {
         vehicleCertificate: vehicleCertificate,
         bankProvider: bank?.provider.value,
         bankNumber: bank?.number,
-        currentLocationX: currentLocation?.x,
-        currentLocationY: currentLocation?.y,
       );
       final data =
           res.data ??

@@ -1,7 +1,7 @@
-import { m } from "@repo/i18n";
-import { trimObjectValues } from "@repo/shared";
 import { AuthError } from "@/core/error";
 import { createORPCRouter } from "@/core/router/orpc";
+import { m } from "@repo/i18n";
+import { trimObjectValues } from "@repo/shared";
 import { DriverMainSpec } from "./driver-main-spec";
 
 const { priv } = createORPCRouter(DriverMainSpec);
@@ -62,6 +62,31 @@ export const DriverMainHandler = priv.router({
 			body: { message: m.server_driver_updated(), data: result },
 		};
 	}),
+	updateLocation: priv.updateLocation.handler(
+		async ({ context, input: { params, body } }) => {
+			// IDOR Protection: Drivers can only update their own profile
+			// Admins/Operators can update any driver
+			if (context.user.role === "DRIVER") {
+				const driver = await context.repo.driver.main.get(params.id);
+				if (driver.userId !== context.user.id) {
+					throw new AuthError(m.error_only_update_own_driver_profile(), {
+						code: "FORBIDDEN",
+					});
+				}
+			}
+
+			const data = trimObjectValues(body);
+			const result = await context.repo.driver.main.updateLocation(
+				params.id,
+				data,
+			);
+
+			return {
+				status: 200,
+				body: { message: m.server_driver_updated(), data: result },
+			};
+		},
+	),
 	markAsOnline: priv.markAsOnline.handler(
 		async ({ context, input: { params } }) => {
 			// IDOR Protection: Drivers can only update their own profile
@@ -83,7 +108,7 @@ export const DriverMainHandler = priv.router({
 			};
 		},
 	),
-	markAsOffline: priv.markAsOffline	.handler(
+	markAsOffline: priv.markAsOffline.handler(
 		async ({ context, input: { params } }) => {
 			// IDOR Protection: Drivers can only update their own profile
 			// Admins/Operators can update any driver

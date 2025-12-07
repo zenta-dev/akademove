@@ -23,7 +23,6 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   final ConfigurationRepository _configurationRepository;
 
   Timer? _locationUpdateTimer;
-  String? _driverId;
   double? _platformFeeRate;
 
   Future<void> init() async {
@@ -48,17 +47,16 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
       await taskManager.execute("DHC-lDP1", () async {
         try {
           final res = await _driverRepository.getMine();
-          _driverId = res.data.id;
 
           emit(
             state.toSuccess(
               myDriver: res.data,
-              isOnline: res.data.isTakingOrder,
+              isOnline: res.data.isOnline,
               message: res.message,
             ),
           );
 
-          if (res.data.isTakingOrder) {
+          if (res.data.isOnline) {
             await _connectToDriverPool();
             _startLocationTracking();
           }
@@ -107,7 +105,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
   Future<void> toggleOnlineStatus() async =>
       await taskManager.execute('DHC-tOS3', () async {
-        final driverId = _driverId;
+        final driverId = state.myDriver?.id;
         if (driverId == null) return;
 
         try {
@@ -122,7 +120,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
           emit(
             state.toSuccess(
               myDriver: res.data,
-              isOnline: res.data.isTakingOrder,
+              isOnline: res.data.isOnline,
               message: res.message,
             ),
           );
@@ -159,7 +157,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   Future<void> _updateLocation() async {
-    final driverId = _driverId;
+    final driverId = state.myDriver?.id;
     if (driverId == null || !state.isOnline) return;
 
     try {
@@ -179,10 +177,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
 
       await _driverRepository.updateLocation(
         driverId: driverId,
-        location: UpdateDriverLocationRequest(
-          x: position.longitude,
-          y: position.latitude,
-        ),
+        location: Coordinate(x: position.longitude, y: position.latitude),
       );
 
       logger.d(
@@ -197,60 +192,59 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
     }
   }
 
-  Future<void> _connectToDriverPool() async =>
-      await taskManager.execute('DHC-cTDP5', () async {
+  Future<void> _connectToDriverPool() async {
+    try {
+      const driverPool = 'driver-pool';
+
+      Future<void> handleMessage(Map<String, dynamic> json) async {
         try {
-          const driverPool = 'driver-pool';
+          final envelope = OrderEnvelope.fromJson(json);
+          logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
 
-          Future<void> handleMessage(Map<String, dynamic> json) async {
-            try {
-              final envelope = OrderEnvelope.fromJson(json);
-              logger.d('[DriverHomeCubit] - Driver Pool Message: $envelope');
-
-              if (envelope.e == OrderEnvelopeEvent.OFFER) {
-                // New order offer received
-                final order = envelope.p.detail?.order;
-                if (order != null) {
-                  emit(state.toSuccess(incomingOrder: order));
-                }
-              }
-
-              if (envelope.e == OrderEnvelopeEvent.CANCELED) {
-                // Order was cancelled before driver could accept
-                clearIncomingOrder();
-              }
-
-              if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
-                // Order no longer available (accepted by another driver)
-                clearIncomingOrder();
-              }
-            } catch (e, st) {
-              logger.e(
-                '[DriverHomeCubit] - Error handling WebSocket message: $e',
-                error: e,
-                stackTrace: st,
-              );
+          if (envelope.e == OrderEnvelopeEvent.OFFER) {
+            // New order offer received
+            final order = envelope.p.detail?.order;
+            if (order != null) {
+              emit(state.toSuccess(incomingOrder: order));
             }
           }
 
-          await _webSocketService.connect(
-            driverPool,
-            '${UrlConstants.wsBaseUrl}/$driverPool',
-            onMessage: (msg) async {
-              final json = (msg as String).parseJson();
-              if (json is Map<String, dynamic>) await handleMessage(json);
-            },
-          );
+          if (envelope.e == OrderEnvelopeEvent.CANCELED) {
+            // Order was cancelled before driver could accept
+            clearIncomingOrder();
+          }
 
-          logger.i('[DriverHomeCubit] - Connected to driver pool WebSocket');
+          if (envelope.e == OrderEnvelopeEvent.UNAVAILABLE) {
+            // Order no longer available (accepted by another driver)
+            clearIncomingOrder();
+          }
         } catch (e, st) {
           logger.e(
-            '[DriverHomeCubit] - Error connecting to driver pool: $e',
+            '[DriverHomeCubit] - Error handling WebSocket message: $e',
             error: e,
             stackTrace: st,
           );
         }
-      });
+      }
+
+      await _webSocketService.connect(
+        driverPool,
+        '${UrlConstants.wsBaseUrl}/$driverPool',
+        onMessage: (msg) async {
+          final json = (msg as String).parseJson();
+          if (json is Map<String, dynamic>) await handleMessage(json);
+        },
+      );
+
+      logger.i('[DriverHomeCubit] - Connected to driver pool WebSocket');
+    } catch (e, st) {
+      logger.e(
+        '[DriverHomeCubit] - Error connecting to driver pool: $e',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
 
   Future<void> _disconnectDriverPool() async {
     try {
@@ -266,7 +260,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void clearIncomingOrder() {
-    emit(state.toSuccess(incomingOrder: null));
+    emit(state.copyWith(incomingOrder: null));
   }
 
   void setCurrentOrder(Order order) {
@@ -274,7 +268,7 @@ class DriverHomeCubit extends BaseCubit<DriverHomeState> {
   }
 
   void clearCurrentOrder() {
-    emit(state.toSuccess(currentOrder: null));
+    emit(state.copyWith(currentOrder: null));
   }
 
   /// Calculate total driver earnings from orders after platform commission

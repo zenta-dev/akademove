@@ -13,6 +13,26 @@ class ListOrderQuery extends UnifiedQuery {
   });
 
   final List<OrderStatus> statuses;
+
+  ListOrderQuery copyWith({
+    List<OrderStatus>? statuses,
+    int? limit,
+    int? page,
+    String? cursor,
+    String? query,
+    String? sortBy,
+    PaginationOrder? orderBy,
+  }) {
+    return ListOrderQuery(
+      statuses: statuses ?? this.statuses,
+      limit: limit ?? this.limit,
+      page: page ?? this.page,
+      cursor: cursor ?? this.cursor,
+      query: query ?? this.query,
+      sortBy: sortBy ?? this.sortBy,
+      orderBy: orderBy ?? this.orderBy,
+    );
+  }
 }
 
 class EstimateOrderQuery {
@@ -58,7 +78,11 @@ class OrderRepository extends BaseRepository {
             code: ErrorCode.notFound,
           ));
 
-      return SuccessResponse(message: data.message, data: data.data);
+      return SuccessResponse(
+        message: data.message,
+        data: data.data,
+        paginationResult: data.pagination,
+      );
     });
   }
 

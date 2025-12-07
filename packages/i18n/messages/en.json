@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "driver_approval": "Driver Approval",
   "about_benefits_drivers_1": "Flexible additional income",
   "about_benefits_drivers_2": "Automatic class schedule integration",
   "about_benefits_drivers_3": "Leaderboard & badge reward system",

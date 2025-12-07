@@ -8,6 +8,7 @@ import {
 } from "./common.js";
 import { CONSTANTS, DRIVER_QUIZ_STATUSES } from "./constants.js";
 import { extractSchemaKeysAsEnum } from "./enum.helper.js";
+import { flattenZodObject } from "./flatten.helper.ts";
 import { CoordinateSchema } from "./position.js";
 import { UserSchema } from "./user.js";
 
@@ -87,7 +88,6 @@ export const UpdateDriverSchema = DriverSchema.pick({
 	driverLicense: true,
 	vehicleCertificate: true,
 	bank: true,
-	isTakingOrder: true,
 })
 	.extend({
 		currentLocation: CoordinateSchema.optional(),
@@ -95,6 +95,10 @@ export const UpdateDriverSchema = DriverSchema.pick({
 	})
 	.partial();
 export type UpdateDriver = z.infer<typeof UpdateDriverSchema>;
+
+export const FlatUpdateDriverSchema =
+	flattenZodObject(UpdateDriverSchema).partial();
+export type FlatUpdateDriver = z.infer<typeof FlatUpdateDriverSchema>;
 
 export const DriverScheduleSchema = z.object({
 	id: z.uuid(),
