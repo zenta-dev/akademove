@@ -46,7 +46,7 @@ import {
 	DropzoneContent,
 	DropzoneEmptyState,
 } from "@/components/ui/shadcn-io/dropzone";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 import { createPhotoPreviewUrl } from "@/utils/file";
 import { scrollToField } from "@/utils/form";
@@ -75,11 +75,8 @@ function RouteComponent() {
 		orpcQuery.auth.signUpDriver.mutationOptions({
 			onSuccess: async () => {
 				toast.success(m.success_placeholder({ action: m.driver_sign_up() }));
-				await Promise.all([
-					router.invalidate(),
-					queryClient.invalidateQueries(),
-					router.navigate({ to: localizeHref("/sign-in") }),
-				]);
+				// Redirect to quiz route instead of sign-in
+				await router.navigate({ to: localizeHref("/sign-up/driver/quiz") });
 			},
 			onError: (error) => {
 				toast.error(
