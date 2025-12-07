@@ -65,6 +65,38 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  /// Get merchant list with advanced filtering and search
+  /// Used for user home screen merchant list with:
+  /// - Search by name
+  /// - Filter by active/open status
+  /// - Pagination with cursor
+  Future<BaseResponse<List<Merchant>>> listWithFilters({
+    String? query,
+    bool isActive = true,
+    String? sortBy, // 'rating' for bestsellers, 'distance' for nearby
+    int? limit,
+    String? cursor, // Cursor-based pagination
+  }) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantList(
+        query: query,
+        isActive: isActive,
+        sortBy: sortBy,
+        limit: limit,
+        cursor: cursor,
+      );
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Merchants not found',
+            code: ErrorCode.unknown,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   /// Get best-selling menu items across all merchants
   /// Used for mart home screen to show popular products
   Future<BaseResponse<List<MerchantBestSellers200ResponseDataInner>>>

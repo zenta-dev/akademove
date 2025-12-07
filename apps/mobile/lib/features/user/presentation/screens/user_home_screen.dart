@@ -166,7 +166,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           EdgeInsetsGeometry.all(4.dg),
                     ),
                 onPressed: () {
-                  // TODO: Navigate to all merchants screen when implemented
+                  context.pushNamed(Routes.userListMerchant.name);
                 },
                 child: Row(
                   children: [
@@ -191,7 +191,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
 
   Widget _buildPopularMerchants() {
     return SizedBox(
-      height: double.infinity,
+      height: 166.h,
       width: double.infinity,
       child: BlocBuilder<UserHomeCubit, UserHomeState>(
         builder: (context, state) {
@@ -203,7 +203,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               itemBuilder: (context, index) => Button(
                 style: const ButtonStyle.ghost(density: ButtonDensity.compact),
                 onPressed: () {
-                  // TODO: Navigate to merchant detail screen when implemented
+                  context.pushNamed(
+                    Routes.userMerchantDetail.name,
+                    pathParameters: {
+                      'merchantId': state.popularMerchants[index].id,
+                    },
+                  );
                 },
                 child: LimitedBox(
                   maxWidth: 111.w,

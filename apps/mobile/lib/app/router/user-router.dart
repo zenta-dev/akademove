@@ -164,6 +164,14 @@ final userRouter = StatefulShellRoute.indexedStack(
           builder: (context, state) => const UserMartCategoryScreen(),
         ),
         GoRoute(
+          name: Routes.userListMerchant.name,
+          path: Routes.userListMerchant.path,
+          builder: (context, state) => BlocProvider(
+            create: (_) => sl<UserMerchantListCubit>(),
+            child: const UserMerchantListScreen(),
+          ),
+        ),
+        GoRoute(
           name: Routes.userMenuDetail.name,
           path: Routes.userMenuDetail.path,
           builder: (context, state) {

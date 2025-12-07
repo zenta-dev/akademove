@@ -143,6 +143,9 @@ export class MerchantMainRepository extends BaseRepository {
 				isActive,
 				minRating,
 				maxRating,
+				maxDistance,
+				latitude,
+				longitude,
 			} = query ?? {};
 
 			const orderBy = (
@@ -178,6 +181,74 @@ export class MerchantMainRepository extends BaseRepository {
 			}
 			if (maxRating !== undefined) {
 				clauses.push(lte(tables.merchant.rating, maxRating));
+			}
+
+			// Add distance filtering using PostGIS if user location provided
+			if (maxDistance && latitude && longitude) {
+				// Filter merchants within max distance using PostGIS ST_DWithin
+				// ST_DWithin uses meters as default unit for geography type
+				clauses.push(
+					sql`ST_DWithin(
+						${tables.merchant.location}::geography,
+						ST_MakePoint(${longitude}, ${latitude})::geography,
+						${maxDistance}
+					)`,
+				);
+
+				// Sort by distance if specified
+				if (sortBy === "distance") {
+					// Override orderBy to sort by distance
+					const orderByDistance = (
+						_f: typeof tables.merchant._.columns,
+						op: OrderByOperation,
+					) => {
+						const distanceExpr = sql`ST_Distance(
+							${tables.merchant.location}::geography,
+							ST_MakePoint(${longitude}, ${latitude})::geography
+						)`;
+						return op.asc(distanceExpr);
+					};
+
+					// Execute with custom distance ordering
+					if (cursor) {
+						const result = await this.db.query.merchant.findMany({
+							where: (_f, op) => op.and(...clauses),
+							orderBy: orderByDistance,
+							limit: limit + 1,
+						});
+
+						const rows = await Promise.all(
+							result.map((r) =>
+								MerchantMainRepository.composeEntity(r, this.#storage),
+							),
+						);
+						return { rows };
+					}
+
+					const offset = ((page ?? 1) - 1) * limit;
+					const result = await this.db.query.merchant.findMany({
+						where: (_f, op) => op.and(...clauses),
+						orderBy: orderByDistance,
+						limit,
+						offset,
+					});
+
+					const rows = await Promise.all(
+						result.map((r) =>
+							MerchantMainRepository.composeEntity(r, this.#storage),
+						),
+					);
+
+					const totalCount = await this.#getQueryCount(search ?? "", {
+						categories,
+						isActive,
+						minRating,
+						maxRating,
+					});
+					const totalPages = Math.ceil(totalCount / limit);
+
+					return { rows, totalPages };
+				}
 			}
 
 			if (cursor) {

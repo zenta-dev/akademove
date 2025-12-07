@@ -1,6 +1,8 @@
 export 'bank_provider_selector_widget.dart';
 export 'checklist_indicator_widget.dart';
 export 'list_places_widget.dart';
+export 'merchant_card_widget.dart';
+export 'merchant_list_search_bar_widget.dart';
 export 'payment_method_picker_widget.dart';
 export 'pick_gender_widget.dart';
 export 'pick_location_card_widget.dart';

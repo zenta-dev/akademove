@@ -35,6 +35,42 @@ const MerchantListQuerySchema = UnifiedPaginationQuerySchema.safeExtend({
 		.optional(),
 	minRating: z.coerce.number().min(0).max(5).optional(),
 	maxRating: z.coerce.number().min(0).max(5).optional(),
+	sortBy: z
+		.enum([
+			"rating",
+			"distance",
+			"popularity",
+			"name",
+			"createdAt",
+			"updatedAt",
+		])
+		.optional()
+		.describe(
+			"Sort merchants by rating (bestsellers), distance (nearby), or other fields",
+		),
+	order: z
+		.enum(["asc", "desc"])
+		.optional()
+		.describe("Sort order: ascending or descending"),
+	cursor: z
+		.string()
+		.optional()
+		.describe("Cursor for pagination (ISO 8601 timestamp)"),
+	maxDistance: z.coerce
+		.number()
+		.positive()
+		.optional()
+		.describe(
+			"Filter merchants within max distance in meters (requires lat/lon)",
+		),
+	latitude: z.coerce
+		.number()
+		.optional()
+		.describe("User latitude for distance calculation (WGS84)"),
+	longitude: z.coerce
+		.number()
+		.optional()
+		.describe("User longitude for distance calculation (WGS84)"),
 });
 
 export type MerchantListQuery = z.infer<typeof MerchantListQuerySchema>;

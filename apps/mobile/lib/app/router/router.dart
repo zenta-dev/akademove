@@ -8,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart' show LucideIcons;
 
-part 'user-router.dart';
+part 'auth-router.dart';
 part 'driver-router.dart';
 part 'merchant-router.dart';
-part 'auth-router.dart';
+part 'user-router.dart';
 
 enum Routes {
   authSplash('/auth'),
@@ -44,10 +44,12 @@ enum Routes {
   userDeliverySummary('/user/home/delivery/summary'),
   userDeliveryPayment('/user/home/delivery/payment'),
   userMart('/user/home/mart'),
+  userMerchantDetail('/user/home/merchant/:merchantId'),
   userMartCategory('/user/home/mart/category'),
   userMenuDetail('/user/home/mart/menu/:menuId'),
   userCart('/user/home/cart'),
   userOrderConfirm('/user/home/cart/confirm'),
+  userListMerchant('/user/home/mart/list-merchant'),
   userWallet('/user/home/wallet'),
   userWalletTopUp('/user/home/wallet/topup'),
   userWalletTopUpInsertAmount('/user/home/wallet/topup/insert-amount'),
