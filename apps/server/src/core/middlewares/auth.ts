@@ -1,9 +1,9 @@
+import { isDev, log, safeAsync } from "@/utils";
 import { os } from "@orpc/server";
 import type { RoleAccess } from "@repo/schema";
 import type { UserRole } from "@repo/schema/user";
 import { getAuthToken } from "@repo/shared";
 import { createMiddleware } from "hono/factory";
-import { isDev, log, safeAsync } from "@/utils";
 import { AuthError } from "../error";
 import type { HonoContext, ORPCContext } from "../interface";
 
@@ -137,7 +137,7 @@ export function hasRoles(userRole?: UserRole, ...roles: RoleAccess[]) {
 }
 
 export const requireRoles = (..._roles: RoleAccess[]) =>
-	base.middleware(async ({ _context, next }) => {
+	base.middleware(async ({ next }) => {
 		// const userRole = context.user?.role;
 		// if (!userRole) {
 		// 	throw new AuthError("Invalid session", {
