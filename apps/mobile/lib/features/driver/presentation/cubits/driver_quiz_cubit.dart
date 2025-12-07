@@ -277,4 +277,29 @@ class DriverQuizCubit extends BaseCubit<DriverQuizState> {
 
     return (currentIndex + 1) / attempt.questions.length;
   }
+
+  /// Check for persisted quiz state on app restart
+  /// Restores the quiz to the last known state if available
+  Future<void> checkPersistedState() async {
+    try {
+      // Try to get latest attempt from server
+      final res = await _quizRepository.getLatestAttempt();
+
+      if (res.data != null) {
+        // Quiz attempt exists, show result screen
+        emit(
+          DriverQuizState().toSuccess(
+            result: res.data,
+            message: 'Quiz status loaded',
+          ),
+        );
+      } else {
+        // No quiz attempt found
+        emit(DriverQuizState().toSuccess(message: 'No quiz attempt found'));
+      }
+    } on BaseError catch (e, st) {
+      logger.e('Failed to check persisted state', error: e, stackTrace: st);
+      emit(DriverQuizState().toFailure(e));
+    }
+  }
 }
