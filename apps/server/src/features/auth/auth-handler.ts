@@ -46,19 +46,33 @@ export const AuthHandler = pub.router({
 					context.repo.badge.main.getByCode("NEW_CUSTOMER", opts),
 				]);
 
-				await context.repo.badge.user.create(
-					{
-						userId: result.user.id,
-						badgeId: newCustomerBadge.id,
-					},
-					opts,
-				);
+				const [signInResult] = await Promise.all([
+					context.repo.auth.signIn(data, opts),
+					context.repo.badge.user.create(
+						{
+							userId: result.user.id,
+							badgeId: newCustomerBadge.id,
+						},
+						opts,
+					),
+				]);
+
+				if (!signInResult.user.banned) {
+					context.resHeaders?.set(
+						"Set-Cookie",
+						composeAuthCookieValue({
+							token: signInResult.token,
+							isDev,
+							maxAge: 7 * 24 * 60 * 60,
+						}),
+					);
+				}
 
 				return {
 					status: 201,
 					body: {
 						message: m.server_user_created(),
-						data: nullToUndefined(result),
+						data: nullToUndefined(signInResult),
 					},
 				} as const;
 			} catch (error) {
@@ -82,7 +96,9 @@ export const AuthHandler = pub.router({
 						context.repo.auth.signUpDriver(data, opts),
 						context.repo.badge.main.getByCode("NEW_DRIVER", opts),
 					]);
-					await Promise.allSettled([
+
+					const [signInResult] = await Promise.all([
+						context.repo.auth.signIn(data, opts),
 						context.repo.driver.main.create(
 							{
 								...data.detail,
@@ -99,11 +115,22 @@ export const AuthHandler = pub.router({
 						),
 					]);
 
+					if (!signInResult.user.banned) {
+						context.resHeaders?.set(
+							"Set-Cookie",
+							composeAuthCookieValue({
+								token: signInResult.token,
+								isDev,
+								maxAge: 7 * 24 * 60 * 60,
+							}),
+						);
+					}
+
 					return {
 						status: 201,
 						body: {
 							message: m.server_driver_registered(),
-							data: nullToUndefined(result),
+							data: nullToUndefined(signInResult),
 						},
 					} as const;
 				} catch (error) {
@@ -132,7 +159,9 @@ export const AuthHandler = pub.router({
 						context.repo.auth.signUpMerchant(data, opts),
 						context.repo.badge.main.getByCode("NEW_MERCHANT", opts),
 					]);
-					await Promise.all([
+
+					const [signInResult] = await Promise.all([
+						context.repo.auth.signIn(data),
 						context.repo.merchant.main.create(
 							{
 								...data.detail,
@@ -149,11 +178,22 @@ export const AuthHandler = pub.router({
 						),
 					]);
 
+					if (!signInResult.user.banned) {
+						context.resHeaders?.set(
+							"Set-Cookie",
+							composeAuthCookieValue({
+								token: signInResult.token,
+								isDev,
+								maxAge: 7 * 24 * 60 * 60,
+							}),
+						);
+					}
+
 					return {
 						status: 201,
 						body: {
 							message: m.server_merchant_registered(),
-							data: nullToUndefined(result),
+							data: nullToUndefined(signInResult),
 						},
 					} as const;
 				} catch (error) {

@@ -32,7 +32,7 @@ import { SUB_ROUTE_TITLES } from "@/lib/constants";
 import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
-export const Route = createFileRoute("/(auth)/sign-up/driver/quiz")({
+export const Route = createFileRoute("/(auth)/quiz/driver")({
 	head: () => ({
 		meta: [{ title: SUB_ROUTE_TITLES.DRIVER.QUIZ ?? "Driver Quiz" }],
 	}),

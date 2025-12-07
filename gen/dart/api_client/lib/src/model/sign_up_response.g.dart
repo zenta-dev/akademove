@@ -7,6 +7,8 @@ part of 'sign_up_response.dart';
 // **************************************************************************
 
 abstract class _$SignUpResponseCWProxy {
+  SignUpResponse token(String token);
+
   SignUpResponse user(User user);
 
   /// Creates a new instance with the provided field values.
@@ -16,7 +18,7 @@ abstract class _$SignUpResponseCWProxy {
   /// ```dart
   /// SignUpResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  SignUpResponse call({User user});
+  SignUpResponse call({String token, User user});
 }
 
 /// Callable proxy for `copyWith` functionality.
@@ -25,6 +27,9 @@ class _$SignUpResponseCWProxyImpl implements _$SignUpResponseCWProxy {
   const _$SignUpResponseCWProxyImpl(this._value);
 
   final SignUpResponse _value;
+
+  @override
+  SignUpResponse token(String token) => call(token: token);
 
   @override
   SignUpResponse user(User user) => call(user: user);
@@ -37,8 +42,15 @@ class _$SignUpResponseCWProxyImpl implements _$SignUpResponseCWProxy {
   /// ```dart
   /// SignUpResponse(...).copyWith(id: 12, name: "My name")
   /// ```
-  SignUpResponse call({Object? user = const $CopyWithPlaceholder()}) {
+  SignUpResponse call({
+    Object? token = const $CopyWithPlaceholder(),
+    Object? user = const $CopyWithPlaceholder(),
+  }) {
     return SignUpResponse(
+      token: token == const $CopyWithPlaceholder() || token == null
+          ? _value.token
+          // ignore: cast_nullable_to_non_nullable
+          : token as String,
       user: user == const $CopyWithPlaceholder() || user == null
           ? _value.user
           // ignore: cast_nullable_to_non_nullable
@@ -60,8 +72,9 @@ extension $SignUpResponseCopyWith on SignUpResponse {
 
 SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
     $checkedCreate('SignUpResponse', json, ($checkedConvert) {
-      $checkKeys(json, requiredKeys: const ['user']);
+      $checkKeys(json, requiredKeys: const ['token', 'user']);
       final val = SignUpResponse(
+        token: $checkedConvert('token', (v) => v as String),
         user: $checkedConvert(
           'user',
           (v) => User.fromJson(v as Map<String, dynamic>),
@@ -71,4 +84,4 @@ SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
     });
 
 Map<String, dynamic> _$SignUpResponseToJson(SignUpResponse instance) =>
-    <String, dynamic>{'user': instance.user.toJson()};
+    <String, dynamic>{'token': instance.token, 'user': instance.user.toJson()};

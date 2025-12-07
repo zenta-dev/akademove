@@ -126,6 +126,7 @@ export type SignInResponse = z.infer<typeof SignInResponseSchema>;
 
 export const SignUpResponseSchema = z.object({
 	user: UserSchema,
+	token: z.string(),
 });
 export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
 

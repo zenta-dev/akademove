@@ -68,11 +68,15 @@ export class AuthRepository extends BaseRepository {
 	 * @param params - Email, password, and optional client agent
 	 * @returns Token and user data
 	 */
-	async signIn(params: SignIn & { clientAgent?: ClientAgent }) {
+	async signIn(
+		params: SignIn & { clientAgent?: ClientAgent },
+		opts?: PartialWithTx,
+	) {
+		const db = opts?.tx ?? this.db;
 		try {
 			return await this.#sessionService.signIn(params, {
 				getUserWithAccount: async (email: string) => {
-					return await this.db.query.user.findFirst({
+					return await db.query.user.findFirst({
 						with: {
 							accounts: {
 								columns: { password: true },
@@ -84,7 +88,7 @@ export class AuthRepository extends BaseRepository {
 					});
 				},
 				getUserById: async (id: string) => {
-					return await this.db.query.user.findFirst({
+					return await db.query.user.findFirst({
 						with: {
 							userBadges: { with: { badge: true } },
 						},

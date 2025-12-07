@@ -2,6 +2,7 @@ import type { Bank, Time } from "@repo/schema/common";
 import { CONSTANTS, DRIVER_QUIZ_STATUSES } from "@repo/schema/constants";
 import { relations, sql } from "drizzle-orm";
 import {
+	bigint,
 	boolean,
 	geometry,
 	integer,
@@ -27,7 +28,7 @@ export const driver = pgTable(
 			.notNull()
 			.unique()
 			.references(() => user.id, { onDelete: "cascade" }),
-		studentId: integer("student_id").notNull().unique(),
+		studentId: bigint("student_id", { mode: "number" }).notNull().unique(),
 		licensePlate: text("license_plate").notNull().unique(),
 		status: driverStatus().notNull().default("PENDING"),
 		quizStatus: driverQuizStatus("quiz_status")

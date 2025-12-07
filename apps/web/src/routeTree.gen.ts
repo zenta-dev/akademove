@@ -72,13 +72,13 @@ import { Route as DashAdminAnalyticsRouteImport } from './routes/dash/admin/anal
 import { Route as authSignUpUserRouteImport } from './routes/(auth)/sign-up/user'
 import { Route as authSignUpMerchantRouteImport } from './routes/(auth)/sign-up/merchant'
 import { Route as authSignUpDriverRouteImport } from './routes/(auth)/sign-up/driver'
+import { Route as authQuizDriverRouteImport } from './routes/(auth)/quiz/driver'
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorContactsIndexRouteImport } from './routes/dash/operator/contacts/index'
 import { Route as DashAdminContactsIndexRouteImport } from './routes/dash/admin/contacts/index'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
 import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
-import { Route as authSignUpDriverQuizRouteImport } from './routes/(auth)/sign-up/driver/quiz'
 
 const supportRouteRoute = supportRouteRouteImport.update({
   id: '/(support)',
@@ -394,6 +394,11 @@ const authSignUpDriverRoute = authSignUpDriverRouteImport.update({
   path: '/sign-up/driver',
   getParentRoute: () => authRouteRoute,
 } as any)
+const authQuizDriverRoute = authQuizDriverRouteImport.update({
+  id: '/quiz/driver',
+  path: '/quiz/driver',
+  getParentRoute: () => authRouteRoute,
+} as any)
 const DashOperatorCouponsIndexRoute =
   DashOperatorCouponsIndexRouteImport.update({
     id: '/coupons/',
@@ -426,11 +431,6 @@ const DashAdminContactsIdRoute = DashAdminContactsIdRouteImport.update({
   path: '/contacts/$id',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
-const authSignUpDriverQuizRoute = authSignUpDriverQuizRouteImport.update({
-  id: '/quiz',
-  path: '/quiz',
-  getParentRoute: () => authSignUpDriverRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -455,7 +455,8 @@ export interface FileRoutesByFullPath {
   '/faq': typeof supportFaqRoute
   '/help': typeof supportHelpRoute
   '/status': typeof supportStatusRoute
-  '/sign-up/driver': typeof authSignUpDriverRouteWithChildren
+  '/quiz/driver': typeof authQuizDriverRoute
+  '/sign-up/driver': typeof authSignUpDriverRoute
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
@@ -494,7 +495,6 @@ export interface FileRoutesByFullPath {
   '/dash/merchant/': typeof DashMerchantIndexRoute
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
-  '/sign-up/driver/quiz': typeof authSignUpDriverQuizRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
@@ -520,7 +520,8 @@ export interface FileRoutesByTo {
   '/faq': typeof supportFaqRoute
   '/help': typeof supportHelpRoute
   '/status': typeof supportStatusRoute
-  '/sign-up/driver': typeof authSignUpDriverRouteWithChildren
+  '/quiz/driver': typeof authQuizDriverRoute
+  '/sign-up/driver': typeof authSignUpDriverRoute
   '/sign-up/merchant': typeof authSignUpMerchantRoute
   '/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
@@ -559,7 +560,6 @@ export interface FileRoutesByTo {
   '/dash/merchant': typeof DashMerchantIndexRoute
   '/dash/operator': typeof DashOperatorIndexRoute
   '/dash/user': typeof DashUserIndexRoute
-  '/sign-up/driver/quiz': typeof authSignUpDriverQuizRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
@@ -593,7 +593,8 @@ export interface FileRoutesById {
   '/(support)/faq': typeof supportFaqRoute
   '/(support)/help': typeof supportHelpRoute
   '/(support)/status': typeof supportStatusRoute
-  '/(auth)/sign-up/driver': typeof authSignUpDriverRouteWithChildren
+  '/(auth)/quiz/driver': typeof authQuizDriverRoute
+  '/(auth)/sign-up/driver': typeof authSignUpDriverRoute
   '/(auth)/sign-up/merchant': typeof authSignUpMerchantRoute
   '/(auth)/sign-up/user': typeof authSignUpUserRoute
   '/dash/admin/analytics': typeof DashAdminAnalyticsRoute
@@ -632,7 +633,6 @@ export interface FileRoutesById {
   '/dash/merchant/': typeof DashMerchantIndexRoute
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
-  '/(auth)/sign-up/driver/quiz': typeof authSignUpDriverQuizRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
@@ -665,6 +665,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/help'
     | '/status'
+    | '/quiz/driver'
     | '/sign-up/driver'
     | '/sign-up/merchant'
     | '/sign-up/user'
@@ -704,7 +705,6 @@ export interface FileRouteTypes {
     | '/dash/merchant/'
     | '/dash/operator/'
     | '/dash/user/'
-    | '/sign-up/driver/quiz'
     | '/dash/admin/contacts/$id'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
@@ -730,6 +730,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/help'
     | '/status'
+    | '/quiz/driver'
     | '/sign-up/driver'
     | '/sign-up/merchant'
     | '/sign-up/user'
@@ -769,7 +770,6 @@ export interface FileRouteTypes {
     | '/dash/merchant'
     | '/dash/operator'
     | '/dash/user'
-    | '/sign-up/driver/quiz'
     | '/dash/admin/contacts/$id'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
@@ -802,6 +802,7 @@ export interface FileRouteTypes {
     | '/(support)/faq'
     | '/(support)/help'
     | '/(support)/status'
+    | '/(auth)/quiz/driver'
     | '/(auth)/sign-up/driver'
     | '/(auth)/sign-up/merchant'
     | '/(auth)/sign-up/user'
@@ -841,7 +842,6 @@ export interface FileRouteTypes {
     | '/dash/merchant/'
     | '/dash/operator/'
     | '/dash/user/'
-    | '/(auth)/sign-up/driver/quiz'
     | '/dash/admin/contacts/$id'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
@@ -1313,6 +1313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignUpDriverRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(auth)/quiz/driver': {
+      id: '/(auth)/quiz/driver'
+      path: '/quiz/driver'
+      fullPath: '/quiz/driver'
+      preLoaderRoute: typeof authQuizDriverRouteImport
+      parentRoute: typeof authRouteRoute
+    }
     '/dash/operator/coupons/': {
       id: '/dash/operator/coupons/'
       path: '/coupons'
@@ -1355,32 +1362,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminContactsIdRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
-    '/(auth)/sign-up/driver/quiz': {
-      id: '/(auth)/sign-up/driver/quiz'
-      path: '/quiz'
-      fullPath: '/sign-up/driver/quiz'
-      preLoaderRoute: typeof authSignUpDriverQuizRouteImport
-      parentRoute: typeof authSignUpDriverRoute
-    }
   }
 }
-
-interface authSignUpDriverRouteChildren {
-  authSignUpDriverQuizRoute: typeof authSignUpDriverQuizRoute
-}
-
-const authSignUpDriverRouteChildren: authSignUpDriverRouteChildren = {
-  authSignUpDriverQuizRoute: authSignUpDriverQuizRoute,
-}
-
-const authSignUpDriverRouteWithChildren =
-  authSignUpDriverRoute._addFileChildren(authSignUpDriverRouteChildren)
 
 interface authRouteRouteChildren {
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authResetPasswordRoute: typeof authResetPasswordRoute
   authSignInRoute: typeof authSignInRoute
-  authSignUpDriverRoute: typeof authSignUpDriverRouteWithChildren
+  authQuizDriverRoute: typeof authQuizDriverRoute
+  authSignUpDriverRoute: typeof authSignUpDriverRoute
   authSignUpMerchantRoute: typeof authSignUpMerchantRoute
   authSignUpUserRoute: typeof authSignUpUserRoute
 }
@@ -1389,7 +1379,8 @@ const authRouteRouteChildren: authRouteRouteChildren = {
   authForgotPasswordRoute: authForgotPasswordRoute,
   authResetPasswordRoute: authResetPasswordRoute,
   authSignInRoute: authSignInRoute,
-  authSignUpDriverRoute: authSignUpDriverRouteWithChildren,
+  authQuizDriverRoute: authQuizDriverRoute,
+  authSignUpDriverRoute: authSignUpDriverRoute,
   authSignUpMerchantRoute: authSignUpMerchantRoute,
   authSignUpUserRoute: authSignUpUserRoute,
 }

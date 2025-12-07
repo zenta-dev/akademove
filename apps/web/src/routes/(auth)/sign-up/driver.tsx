@@ -73,10 +73,10 @@ function RouteComponent() {
 
 	const mutation = useMutation(
 		orpcQuery.auth.signUpDriver.mutationOptions({
-			onSuccess: async () => {
+			onSuccess: () => {
 				toast.success(m.success_placeholder({ action: m.driver_sign_up() }));
 				// Redirect to quiz route instead of sign-in
-				await router.navigate({ to: localizeHref("/sign-up/driver/quiz") });
+				router.navigate({ to: "/quiz/driver" });
 			},
 			onError: (error) => {
 				toast.error(
