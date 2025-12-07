@@ -47,6 +47,24 @@ void main() {
       // TODO
     });
 
+    // Whether merchant is currently online/available
+    // bool isOnline
+    test('to test the property `isOnline`', () async {
+      // TODO
+    });
+
+    // Whether merchant is actively taking orders (subset of online)
+    // bool isTakingOrders
+    test('to test the property `isTakingOrders`', () async {
+      // TODO
+    });
+
+    // Current operating status (OPEN, CLOSED, BREAK, MAINTENANCE)
+    // String operatingStatus
+    test('to test the property `operatingStatus`', () async {
+      // TODO
+    });
+
     // num rating
     test('to test the property `rating`', () async {
       // TODO

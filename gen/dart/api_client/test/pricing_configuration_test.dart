@@ -36,5 +36,10 @@ void main() {
     test('to test the property `perKgRate`', () async {
       // TODO
     });
+
+    // num merchantCommissionRate
+    test('to test the property `merchantCommissionRate`', () async {
+      // TODO
+    });
   });
 }

@@ -10,6 +10,7 @@ import * as configuration from "@/core/tables/configuration";
 import * as contact from "@/core/tables/contact";
 import * as coupon from "@/core/tables/coupon";
 import * as driver from "@/core/tables/driver";
+import * as driverApprovalReview from "@/core/tables/driver-approval-review";
 import * as driverQuizAnswer from "@/core/tables/driver-quiz-answer";
 import * as driverQuizQuestion from "@/core/tables/driver-quiz-question";
 import * as emergency from "@/core/tables/emergency";
@@ -35,6 +36,7 @@ export const tables = {
 	...contact,
 	...coupon,
 	...driver,
+	...driverApprovalReview,
 	...driverQuizAnswer,
 	...driverQuizQuestion,
 	...emergency,

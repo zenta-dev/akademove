@@ -36,12 +36,17 @@ void main() {
       // TODO
     });
 
+    //Future<MerchantGetAvailabilityStatus200Response> merchantGetAvailabilityStatus(String id) async
+    test('test merchantGetAvailabilityStatus', () async {
+      // TODO
+    });
+
     //Future<MerchantGetMine200Response> merchantGetMine() async
     test('test merchantGetMine', () async {
       // TODO
     });
 
-    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode, Object categories, Object isActive, num minRating, num maxRating }) async
+    //Future<MerchantPopulars200Response> merchantList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, String order, PaginationMode mode, Object categories, Object isActive, num minRating, num maxRating, num maxDistance, num latitude, num longitude }) async
     test('test merchantList', () async {
       // TODO
     });
@@ -98,6 +103,21 @@ void main() {
 
     //Future<BadgeRemove200Response> merchantRemove(String id) async
     test('test merchantRemove', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetMine200ResponseBody> merchantSetOnlineStatus(String id, MerchantSetOnlineStatusRequest merchantSetOnlineStatusRequest) async
+    test('test merchantSetOnlineStatus', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetMine200ResponseBody> merchantSetOperatingStatus(String id, MerchantSetOperatingStatusRequest merchantSetOperatingStatusRequest) async
+    test('test merchantSetOperatingStatus', () async {
+      // TODO
+    });
+
+    //Future<MerchantGetMine200ResponseBody> merchantSetOrderTakingStatus(String id, MerchantSetOrderTakingStatusRequest merchantSetOrderTakingStatusRequest) async
+    test('test merchantSetOrderTakingStatus', () async {
       // TODO
     });
 

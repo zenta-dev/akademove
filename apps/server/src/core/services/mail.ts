@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { ContactResponseEmail } from "emails/contact-response";
+import { DriverApprovalStatusEmail } from "emails/driver-approval-status";
 import { EmailVerificationEmail } from "emails/email-verification";
 import { InvitationEmail } from "emails/invitation";
 import { ResetPasswordEmail } from "emails/reset-password";
@@ -42,6 +43,18 @@ interface SendContactResponseProps {
 	respondedBy: string;
 }
 
+interface SendDriverApprovalStatusProps {
+	to: string;
+	driverName: string;
+	status: "APPROVED" | "REJECTED";
+	reason?: string;
+	rejectionDetails?: {
+		studentCard?: string;
+		driverLicense?: string;
+		vehicleRegistration?: string;
+	};
+}
+
 interface SendEmailOptions {
 	from?: string;
 	to: string | string[];
@@ -58,6 +71,7 @@ export interface MailService {
 	sendInvitation(props: SendInvitationProps): Promise<void>;
 	sendEmailVerification(props: SendEmailVerificationProps): Promise<void>;
 	sendContactResponse(props: SendContactResponseProps): Promise<void>;
+	sendDriverApprovalStatus(props: SendDriverApprovalStatusProps): Promise<void>;
 }
 
 export const MAIL_FROMS = {
@@ -173,6 +187,34 @@ export class ResendMailService implements MailService {
 			console.error("[MailService] sendContactResponse error:", error);
 			if (error instanceof MailError) throw error;
 			throw new MailError("Failed to send contact response email");
+		}
+	}
+
+	async sendDriverApprovalStatus(
+		props: SendDriverApprovalStatusProps,
+	): Promise<void> {
+		try {
+			const subject =
+				props.status === "APPROVED"
+					? "Your AkadeMove Driver Application Approved ✓"
+					: "Action Required: Your AkadeMove Driver Application";
+
+			await this.#send(
+				React.createElement(DriverApprovalStatusEmail, {
+					driverName: props.driverName,
+					status: props.status,
+					reason: props.reason,
+					rejectionDetails: props.rejectionDetails,
+				}),
+				{
+					from: MAIL_FROMS.DEFAULT,
+					to: props.to,
+					subject,
+				},
+			);
+		} catch (error) {
+			if (error instanceof MailError) throw error;
+			throw new MailError("Failed to send driver approval email");
 		}
 	}
 

@@ -16,6 +16,11 @@ void main() {
       // TODO
     });
 
+    //Future<ConfigurationGetBusinessConfig200Response> configurationGetBusinessConfig() async
+    test('test configurationGetBusinessConfig', () async {
+      // TODO
+    });
+
     //Future<ConfigurationList200Response> configurationList({ String cursor, Object limit, String direction, Object page, String query, String sortBy, PaginationOrder order, PaginationMode mode }) async
     test('test configurationList', () async {
       // TODO

@@ -20,6 +20,7 @@ import type { ChatRepository } from "@/features/chat/chat-repository";
 import type { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import type { ContactRepository } from "@/features/contact/contact-repository";
 import type { CouponRepository } from "@/features/coupon/coupon-repository";
+import type { DriverApprovalRepository } from "@/features/driver/approval/driver-approval-repository";
 import type { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import type { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
 import type {
@@ -121,6 +122,7 @@ export interface RepositoryContext {
 	driver: {
 		main: DriverMainRepository;
 		schedule: DriverScheduleRepository;
+		approval: DriverApprovalRepository;
 	};
 	driverQuizQuestion: DriverQuizQuestionRepository;
 	driverQuizAnswer: DriverQuizAnswerRepository;

@@ -734,6 +734,9 @@ class MerchantApi {
   /// * [isActive]
   /// * [minRating]
   /// * [maxRating]
+  /// * [maxDistance]
+  /// * [latitude]
+  /// * [longitude]
   /// * [cancelToken] - A [CancelToken] that can be used to cancel the operation
   /// * [headers] - Can be used to add additional headers to the request
   /// * [extras] - Can be used to add flags to the request
@@ -750,12 +753,15 @@ class MerchantApi {
     Object? page,
     String? query,
     String? sortBy,
-    PaginationOrder? order = PaginationOrder.desc,
+    String? order,
     PaginationMode? mode = PaginationMode.offset,
     Object? categories,
     Object? isActive,
     num? minRating,
     num? maxRating,
+    num? maxDistance,
+    num? latitude,
+    num? longitude,
     CancelToken? cancelToken,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? extra,
@@ -789,6 +795,9 @@ class MerchantApi {
       if (isActive != null) r'isActive': isActive,
       if (minRating != null) r'minRating': minRating,
       if (maxRating != null) r'maxRating': maxRating,
+      if (maxDistance != null) r'maxDistance': maxDistance,
+      if (latitude != null) r'latitude': latitude,
+      if (longitude != null) r'longitude': longitude,
     };
 
     final _response = await _dio.request<Object>(

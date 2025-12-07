@@ -80,29 +80,87 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
     final primaryColor = context.colorScheme.primary;
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.quiz_outlined, size: 64, color: primaryColor),
+            const SizedBox(height: 24),
+            Text(
+              'Driver Knowledge Quiz',
+              style: context.typography.h2,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.',
+              style: context.typography.large,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            // Quiz Info Box
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.gray.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Quiz Information',
+                    style: context.typography.medium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildInfoBullet(
+                    'You will be presented with multiple-choice questions',
+                  ),
+                  _buildInfoBullet(
+                    'Cover topics: Safety, Navigation, Customer Service, Platform Rules',
+                  ),
+                  _buildInfoBullet('Passing score: 70%'),
+                  _buildInfoBullet(
+                    'You must pass this quiz to be eligible for driver approval',
+                  ),
+                  _buildInfoBullet('Take your time - there is no time limit'),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: IconButton(
+                variance: ButtonVariance.primary,
+                onPressed: () => _quizCubit.startQuiz(),
+                icon: const Icon(Icons.play_arrow),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoBullet(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
         children: [
-          Icon(Icons.quiz_outlined, size: 64, color: primaryColor),
-          const SizedBox(height: 24),
           Text(
-            'Driver Knowledge Quiz',
-            style: context.typography.h2,
-            textAlign: TextAlign.center,
+            '• ',
+            style: context.typography.small.copyWith(
+              color: Colors.gray.shade600,
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Complete this quiz to demonstrate your understanding of driver guidelines, safety protocols, and platform rules.',
-            style: context.typography.large,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: IconButton(
-              variance: ButtonVariance.primary,
-              onPressed: () => _quizCubit.startQuiz(),
-              icon: const Icon(Icons.play_arrow),
+          Expanded(
+            child: Text(
+              text,
+              style: context.typography.small.copyWith(
+                color: Colors.gray.shade600,
+              ),
             ),
           ),
         ],
@@ -190,6 +248,68 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             ],
           ),
         ),
+
+        // Question Navigation Buttons
+        if (attempt != null && attempt.questions.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Jump to question:',
+                  style: context.typography.small.copyWith(
+                    color: Colors.gray.shade600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: List.generate(attempt.questions.length, (index) {
+                    final isCurrentQuestion = index == currentQuestionIndex;
+                    final isAnswered = state.answeredQuestions.contains(
+                      attempt.questions[index].id,
+                    );
+
+                    return GestureDetector(
+                      onTap: () => _quizCubit.jumpToQuestion(index),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: isCurrentQuestion
+                              ? primaryColor
+                              : isAnswered
+                              ? Colors.green.shade100
+                              : Colors.transparent,
+                          border: Border.all(
+                            color: isCurrentQuestion
+                                ? primaryColor
+                                : Colors.gray.shade300,
+                          ),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            color: isCurrentQuestion
+                                ? Colors.white
+                                : isAnswered
+                                ? Colors.green.shade700
+                                : Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }
@@ -225,6 +345,68 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
             Text(question.question as String, style: context.typography.medium),
 
             const SizedBox(height: 16),
+
+            // Answer Feedback if submitted
+            if (state.answeredQuestions.contains(question.id as String) &&
+                state.answerFeedback != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: (state.answerFeedback!['isCorrect'] ?? false)
+                      ? Colors.green.shade50
+                      : Colors.red.shade50,
+                  border: Border.all(
+                    color: (state.answerFeedback!['isCorrect'] ?? false)
+                        ? Colors.green.shade200
+                        : Colors.red.shade200,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      (state.answerFeedback!['isCorrect'] ?? false)
+                          ? Icons.check_circle
+                          : Icons.cancel,
+                      color: (state.answerFeedback!['isCorrect'] ?? false)
+                          ? Colors.green.shade700
+                          : Colors.red.shade700,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            (state.answerFeedback!['isCorrect'] ?? false)
+                                ? 'Correct!'
+                                : 'Incorrect',
+                            style: context.typography.medium.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  (state.answerFeedback!['isCorrect'] ?? false)
+                                  ? Colors.green.shade700
+                                  : Colors.red.shade700,
+                            ),
+                          ),
+                          if (state.answerFeedback!['pointsEarned'] != null)
+                            Text(
+                              '+${state.answerFeedback!['pointsEarned']} points earned',
+                              style: context.typography.small.copyWith(
+                                color:
+                                    (state.answerFeedback!['isCorrect'] ??
+                                        false)
+                                    ? Colors.green.shade700
+                                    : Colors.red.shade700,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
             // Options
             ...(question.options as List).map((option) {
@@ -307,85 +489,138 @@ class _DriverQuizScreenState extends State<DriverQuizScreen> {
     final passed = result.passed as bool;
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Result Icon
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: passed ? Colors.green.shade100 : Colors.red.shade100,
-              shape: BoxShape.circle,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Result Icon
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: passed ? Colors.green.shade100 : Colors.red.shade100,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                passed ? Icons.check_circle : Icons.cancel,
+                size: 64,
+                color: passed ? Colors.green.shade700 : Colors.red.shade700,
+              ),
             ),
-            child: Icon(
-              passed ? Icons.check_circle : Icons.cancel,
-              size: 64,
-              color: Colors.white,
+
+            const SizedBox(height: 24),
+
+            // Result Message
+            Text(
+              passed ? 'Congratulations!' : 'Quiz Not Passed',
+              style: context.typography.h2.copyWith(
+                color: passed ? Colors.green.shade700 : Colors.red.shade700,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
 
-          const SizedBox(height: 24),
+            const SizedBox(height: 8),
 
-          // Result Message
-          Text(
-            passed ? 'Congratulations!' : 'Quiz Not Passed',
-            style: context.typography.h2.copyWith(
-              color: passed ? Colors.green.shade700 : Colors.red.shade700,
+            Text(
+              passed
+                  ? 'You have successfully passed the driver knowledge quiz!'
+                  : 'Don\'t worry, you can try again!',
+              style: context.typography.large,
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 24),
 
-          Text(
-            passed
-                ? 'You have successfully passed the driver knowledge quiz!'
-                : 'You did not pass the quiz. Please try again.',
-            style: context.typography.large,
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(height: 24),
-
-          // Score Details
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.gray.shade100,
-              borderRadius: BorderRadius.circular(8),
+            // Score Details
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.gray.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  _buildScoreRow(
+                    'Score',
+                    '${(result.scorePercentage as num).toInt()}%',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildScoreRow(
+                    'Correct Answers',
+                    '${result.correctAnswers}/${result.totalQuestions}',
+                  ),
+                  const SizedBox(height: 8),
+                  _buildScoreRow('Points Earned', '${result.earnedPoints}'),
+                  const SizedBox(height: 8),
+                  _buildScoreRow('Total Points', '${result.totalPoints}'),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                _buildScoreRow(
-                  'Score',
-                  '${(result.scorePercentage as num).toInt()}%',
+
+            const SizedBox(height: 24),
+
+            // Not Passed Alert
+            if (!passed)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  border: Border.all(color: Colors.red.shade200),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                const SizedBox(height: 8),
-                _buildScoreRow(
-                  'Correct Answers',
-                  '${result.correctAnswers}/${result.totalQuestions}',
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red.shade700),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Not Passed',
+                            style: context.typography.medium.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'You need at least 70% to pass. Please review the material and try again.',
+                            style: context.typography.small.copyWith(
+                              color: Colors.red.shade700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                _buildScoreRow('Points Earned', '${result.earnedPoints}'),
-                const SizedBox(height: 8),
-                _buildScoreRow('Total Points', '${result.totalPoints}'),
-              ],
-            ),
-          ),
+              ),
 
-          const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          // Action Button
-          SizedBox(
-            width: double.infinity,
-            child: IconButton(
-              variance: ButtonVariance.secondary,
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.arrow_back),
+            // Action Button
+            SizedBox(
+              width: double.infinity,
+              child: passed
+                  ? IconButton(
+                      variance: ButtonVariance.primary,
+                      onPressed: () => Navigator.of(
+                        context,
+                      ).pushReplacementNamed('/sign-in'),
+                      icon: const Icon(Icons.arrow_forward),
+                    )
+                  : IconButton(
+                      variance: ButtonVariance.secondary,
+                      onPressed: () {
+                        _quizCubit.reset();
+                        _quizCubit.startQuiz();
+                      },
+                      icon: const Icon(Icons.refresh),
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

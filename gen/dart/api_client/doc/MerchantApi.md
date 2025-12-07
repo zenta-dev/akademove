@@ -374,7 +374,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **merchantList**
-> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating)
+> MerchantPopulars200Response merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating, maxDistance, latitude, longitude)
 
 
 
@@ -389,15 +389,18 @@ final String direction = direction_example; // String |
 final Object page = ; // Object | 
 final String query = query_example; // String | 
 final String sortBy = sortBy_example; // String | 
-final PaginationOrder order = ; // PaginationOrder | 
+final String order = order_example; // String | 
 final PaginationMode mode = ; // PaginationMode | 
 final Object categories = ; // Object | 
 final Object isActive = ; // Object | 
 final num minRating = 8.14; // num | 
 final num maxRating = 8.14; // num | 
+final num maxDistance = 8.14; // num | 
+final num latitude = 8.14; // num | 
+final num longitude = 8.14; // num | 
 
 try {
-    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating);
+    final response = api.merchantList(cursor, limit, direction, page, query, sortBy, order, mode, categories, isActive, minRating, maxRating, maxDistance, latitude, longitude);
     print(response);
 } catch on DioException (e) {
     print('Exception when calling MerchantApi->merchantList: $e\n');
@@ -414,12 +417,15 @@ Name | Type | Description  | Notes
  **page** | [**Object**](.md)|  | [optional] 
  **query** | **String**|  | [optional] 
  **sortBy** | **String**|  | [optional] 
- **order** | [**PaginationOrder**](.md)|  | [optional] [default to desc]
+ **order** | **String**|  | [optional] 
  **mode** | [**PaginationMode**](.md)|  | [optional] [default to offset]
  **categories** | [**Object**](.md)|  | [optional] 
  **isActive** | [**Object**](.md)|  | [optional] 
  **minRating** | **num**|  | [optional] 
  **maxRating** | **num**|  | [optional] 
+ **maxDistance** | **num**|  | [optional] 
+ **latitude** | **num**|  | [optional] 
+ **longitude** | **num**|  | [optional] 
 
 ### Return type
 

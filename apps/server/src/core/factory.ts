@@ -24,6 +24,7 @@ import { ChatRepository } from "@/features/chat/chat-repository";
 import { ConfigurationRepository } from "@/features/configuration/configuration-repository";
 import { ContactRepository } from "@/features/contact/contact-repository";
 import { CouponRepository } from "@/features/coupon/coupon-repository";
+import { DriverApprovalRepository } from "@/features/driver/approval/driver-approval-repository";
 import { DriverMainRepository } from "@/features/driver/main/driver-main-repository";
 import { DriverScheduleRepository } from "@/features/driver/schedule/driver-schedule-repository";
 import {
@@ -247,6 +248,11 @@ export function getRepositories(
 		driver: {
 			main: new DriverMainRepository(svc.db, svc.kv, svc.storage),
 			schedule: new DriverScheduleRepository(svc.db, svc.kv),
+			approval: new DriverApprovalRepository(
+				"driverApprovalReview",
+				svc.kv,
+				svc.db,
+			),
 		},
 		driverQuizQuestion,
 		driverQuizAnswer,

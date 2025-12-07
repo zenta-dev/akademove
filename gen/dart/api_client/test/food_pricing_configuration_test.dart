@@ -32,5 +32,10 @@ void main() {
     test('to test the property `taxRate`', () async {
       // TODO
     });
+
+    // num merchantCommissionRate
+    test('to test the property `merchantCommissionRate`', () async {
+      // TODO
+    });
   });
 }
