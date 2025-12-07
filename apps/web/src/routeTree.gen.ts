@@ -76,8 +76,10 @@ import { Route as authQuizDriverRouteImport } from './routes/(auth)/quiz/driver'
 import { Route as DashOperatorCouponsIndexRouteImport } from './routes/dash/operator/coupons/index'
 import { Route as DashOperatorContactsIndexRouteImport } from './routes/dash/operator/contacts/index'
 import { Route as DashAdminContactsIndexRouteImport } from './routes/dash/admin/contacts/index'
+import { Route as DashOperatorDriverApprovalDriverIdRouteImport } from './routes/dash/operator/driver-approval/$driverId'
 import { Route as DashOperatorCouponsNewRouteImport } from './routes/dash/operator/coupons/new'
 import { Route as DashOperatorContactsIdRouteImport } from './routes/dash/operator/contacts/$id'
+import { Route as DashAdminDriverApprovalDriverIdRouteImport } from './routes/dash/admin/driver-approval/$driverId'
 import { Route as DashAdminContactsIdRouteImport } from './routes/dash/admin/contacts/$id'
 
 const supportRouteRoute = supportRouteRouteImport.update({
@@ -416,6 +418,12 @@ const DashAdminContactsIndexRoute = DashAdminContactsIndexRouteImport.update({
   path: '/contacts/',
   getParentRoute: () => DashAdminRouteRoute,
 } as any)
+const DashOperatorDriverApprovalDriverIdRoute =
+  DashOperatorDriverApprovalDriverIdRouteImport.update({
+    id: '/driver-approval/$driverId',
+    path: '/driver-approval/$driverId',
+    getParentRoute: () => DashOperatorRouteRoute,
+  } as any)
 const DashOperatorCouponsNewRoute = DashOperatorCouponsNewRouteImport.update({
   id: '/coupons/new',
   path: '/coupons/new',
@@ -426,6 +434,12 @@ const DashOperatorContactsIdRoute = DashOperatorContactsIdRouteImport.update({
   path: '/contacts/$id',
   getParentRoute: () => DashOperatorRouteRoute,
 } as any)
+const DashAdminDriverApprovalDriverIdRoute =
+  DashAdminDriverApprovalDriverIdRouteImport.update({
+    id: '/driver-approval/$driverId',
+    path: '/driver-approval/$driverId',
+    getParentRoute: () => DashAdminRouteRoute,
+  } as any)
 const DashAdminContactsIdRoute = DashAdminContactsIdRouteImport.update({
   id: '/contacts/$id',
   path: '/contacts/$id',
@@ -496,8 +510,10 @@ export interface FileRoutesByFullPath {
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
@@ -561,8 +577,10 @@ export interface FileRoutesByTo {
   '/dash/operator': typeof DashOperatorIndexRoute
   '/dash/user': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts': typeof DashAdminContactsIndexRoute
   '/dash/operator/contacts': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons': typeof DashOperatorCouponsIndexRoute
@@ -634,8 +652,10 @@ export interface FileRoutesById {
   '/dash/operator/': typeof DashOperatorIndexRoute
   '/dash/user/': typeof DashUserIndexRoute
   '/dash/admin/contacts/$id': typeof DashAdminContactsIdRoute
+  '/dash/admin/driver-approval/$driverId': typeof DashAdminDriverApprovalDriverIdRoute
   '/dash/operator/contacts/$id': typeof DashOperatorContactsIdRoute
   '/dash/operator/coupons/new': typeof DashOperatorCouponsNewRoute
+  '/dash/operator/driver-approval/$driverId': typeof DashOperatorDriverApprovalDriverIdRoute
   '/dash/admin/contacts/': typeof DashAdminContactsIndexRoute
   '/dash/operator/contacts/': typeof DashOperatorContactsIndexRoute
   '/dash/operator/coupons/': typeof DashOperatorCouponsIndexRoute
@@ -706,8 +726,10 @@ export interface FileRouteTypes {
     | '/dash/operator/'
     | '/dash/user/'
     | '/dash/admin/contacts/$id'
+    | '/dash/admin/driver-approval/$driverId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
+    | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
@@ -771,8 +793,10 @@ export interface FileRouteTypes {
     | '/dash/operator'
     | '/dash/user'
     | '/dash/admin/contacts/$id'
+    | '/dash/admin/driver-approval/$driverId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
+    | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts'
     | '/dash/operator/contacts'
     | '/dash/operator/coupons'
@@ -843,8 +867,10 @@ export interface FileRouteTypes {
     | '/dash/operator/'
     | '/dash/user/'
     | '/dash/admin/contacts/$id'
+    | '/dash/admin/driver-approval/$driverId'
     | '/dash/operator/contacts/$id'
     | '/dash/operator/coupons/new'
+    | '/dash/operator/driver-approval/$driverId'
     | '/dash/admin/contacts/'
     | '/dash/operator/contacts/'
     | '/dash/operator/coupons/'
@@ -1341,6 +1367,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashAdminContactsIndexRouteImport
       parentRoute: typeof DashAdminRouteRoute
     }
+    '/dash/operator/driver-approval/$driverId': {
+      id: '/dash/operator/driver-approval/$driverId'
+      path: '/driver-approval/$driverId'
+      fullPath: '/dash/operator/driver-approval/$driverId'
+      preLoaderRoute: typeof DashOperatorDriverApprovalDriverIdRouteImport
+      parentRoute: typeof DashOperatorRouteRoute
+    }
     '/dash/operator/coupons/new': {
       id: '/dash/operator/coupons/new'
       path: '/coupons/new'
@@ -1354,6 +1387,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dash/operator/contacts/$id'
       preLoaderRoute: typeof DashOperatorContactsIdRouteImport
       parentRoute: typeof DashOperatorRouteRoute
+    }
+    '/dash/admin/driver-approval/$driverId': {
+      id: '/dash/admin/driver-approval/$driverId'
+      path: '/driver-approval/$driverId'
+      fullPath: '/dash/admin/driver-approval/$driverId'
+      preLoaderRoute: typeof DashAdminDriverApprovalDriverIdRouteImport
+      parentRoute: typeof DashAdminRouteRoute
     }
     '/dash/admin/contacts/$id': {
       id: '/dash/admin/contacts/$id'
@@ -1418,6 +1458,7 @@ interface DashAdminRouteRouteChildren {
   DashAdminUsersRoute: typeof DashAdminUsersRoute
   DashAdminIndexRoute: typeof DashAdminIndexRoute
   DashAdminContactsIdRoute: typeof DashAdminContactsIdRoute
+  DashAdminDriverApprovalDriverIdRoute: typeof DashAdminDriverApprovalDriverIdRoute
   DashAdminContactsIndexRoute: typeof DashAdminContactsIndexRoute
 }
 
@@ -1432,6 +1473,7 @@ const DashAdminRouteRouteChildren: DashAdminRouteRouteChildren = {
   DashAdminUsersRoute: DashAdminUsersRoute,
   DashAdminIndexRoute: DashAdminIndexRoute,
   DashAdminContactsIdRoute: DashAdminContactsIdRoute,
+  DashAdminDriverApprovalDriverIdRoute: DashAdminDriverApprovalDriverIdRoute,
   DashAdminContactsIndexRoute: DashAdminContactsIndexRoute,
 }
 
@@ -1495,6 +1537,7 @@ interface DashOperatorRouteRouteChildren {
   DashOperatorIndexRoute: typeof DashOperatorIndexRoute
   DashOperatorContactsIdRoute: typeof DashOperatorContactsIdRoute
   DashOperatorCouponsNewRoute: typeof DashOperatorCouponsNewRoute
+  DashOperatorDriverApprovalDriverIdRoute: typeof DashOperatorDriverApprovalDriverIdRoute
   DashOperatorContactsIndexRoute: typeof DashOperatorContactsIndexRoute
   DashOperatorCouponsIndexRoute: typeof DashOperatorCouponsIndexRoute
 }
@@ -1510,6 +1553,8 @@ const DashOperatorRouteRouteChildren: DashOperatorRouteRouteChildren = {
   DashOperatorIndexRoute: DashOperatorIndexRoute,
   DashOperatorContactsIdRoute: DashOperatorContactsIdRoute,
   DashOperatorCouponsNewRoute: DashOperatorCouponsNewRoute,
+  DashOperatorDriverApprovalDriverIdRoute:
+    DashOperatorDriverApprovalDriverIdRoute,
   DashOperatorContactsIndexRoute: DashOperatorContactsIndexRoute,
   DashOperatorCouponsIndexRoute: DashOperatorCouponsIndexRoute,
 }

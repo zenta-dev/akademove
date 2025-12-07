@@ -26,90 +26,7 @@ class CompleteDriverQuizRequest {
 
   final String attemptId;
 }
-
-class QuizQuestion {
-  const QuizQuestion({
-    required this.id,
-    required this.question,
-    required this.type,
-    required this.category,
-    required this.points,
-    required this.displayOrder,
-    required this.options,
-  });
-
-  final String id;
-  final String question;
-  final String type;
-  final String category;
-  final int points;
-  final int displayOrder;
-  final List<QuizOption> options;
-}
-
-class QuizOption {
-  const QuizOption({required this.id, required this.text});
-
-  final String id;
-  final String text;
-}
-
-class QuizAttempt {
-  const QuizAttempt({
-    required this.attemptId,
-    required this.questions,
-    required this.totalQuestions,
-    required this.totalPoints,
-    required this.passingScore,
-  });
-
-  final String attemptId;
-  final List<QuizQuestion> questions;
-  final int totalQuestions;
-  final int totalPoints;
-  final int passingScore;
-}
-
-class QuizAnswer {
-  const QuizAnswer({
-    required this.questionId,
-    required this.selectedOptionId,
-    required this.isCorrect,
-    required this.pointsEarned,
-    required this.answeredAt,
-  });
-
-  final String questionId;
-  final String selectedOptionId;
-  final bool isCorrect;
-  final int pointsEarned;
-  final DateTime answeredAt;
-}
-
-class QuizResult {
-  const QuizResult({
-    required this.attemptId,
-    required this.status,
-    required this.totalQuestions,
-    required this.correctAnswers,
-    required this.scorePercentage,
-    required this.passed,
-    required this.earnedPoints,
-    required this.totalPoints,
-    required this.completedAt,
-  });
-
-  final String attemptId;
-  final String status;
-  final int totalQuestions;
-  final int correctAnswers;
-  final double scorePercentage;
-  final bool passed;
-  final int earnedPoints;
-  final int totalPoints;
-  final DateTime? completedAt;
-}
-
+  
 /// Driver Quiz Repository
 /// Handles quiz operations with local persistence and real API integration
 class DriverQuizRepository extends BaseRepository {
@@ -156,14 +73,16 @@ class DriverQuizRepository extends BaseRepository {
   }
 
   /// Convert API question to local model
-  QuizQuestion _mapApiQuestion(dynamic apiQuestion) {
+  QuizQuestion _mapApiQuestion(
+    DriverQuizQuestionGetQuizQuestions200ResponseDataInner apiQuestion) {
+
     return QuizQuestion(
-      id: apiQuestion['id'] as String,
-      question: apiQuestion['question'] as String,
-      type: apiQuestion['type'] as String,
-      category: apiQuestion['category'] as String,
-      points: (apiQuestion['points'] as num).toInt(),
-      displayOrder: (apiQuestion['displayOrder'] as num).toInt(),
+      id: apiQuestion.id,
+      question: apiQuestion.question,
+      type: apiQuestion.type,
+      category: apiQuestion.category,
+      points: apiQuestion.points.toInt(),
+      displayOrder: apiQuestion.displayOrder.toInt(),
       options: List<dynamic>.from(apiQuestion['options'] as List)
           .map(
             (opt) => QuizOption(
@@ -202,10 +121,10 @@ class DriverQuizRepository extends BaseRepository {
 
       final attempt = QuizAttempt(
         attemptId: apiData.attemptId,
-        questions: (apiData.questions ?? []).map(_mapApiQuestion).toList(),
-        totalQuestions: apiData.totalQuestions.toInt() ?? 0,
-        totalPoints: apiData.totalPoints.toInt() ?? 0,
-        passingScore: apiData.passingScore.toInt() ?? 70,
+        questions: (apiData.questions).map(_mapApiQuestion).toList(),
+        totalQuestions: apiData.totalQuestions.toInt(),
+        totalPoints: apiData.totalPoints.toInt(),
+        passingScore: apiData.passingScore.toInt(),
       );
 
       // Persist attempt locally
@@ -221,10 +140,7 @@ class DriverQuizRepository extends BaseRepository {
         ),
       );
 
-      return SuccessResponse(
-        message: data.message ?? 'Quiz started successfully',
-        data: attempt,
-      );
+      return SuccessResponse(message: data.message, data: attempt);
     });
   }
 
@@ -253,8 +169,8 @@ class DriverQuizRepository extends BaseRepository {
 
       final data = response.data!;
       final responseData = {
-        'isCorrect': data.data.isCorrect ?? false,
-        'pointsEarned': data.data.pointsEarned.toInt() ?? 0,
+        'isCorrect': data.data.isCorrect,
+        'pointsEarned': data.data.pointsEarned.toInt(),
         'correctOptionId': data.data.correctOptionId,
         'explanation': data.data.explanation,
       };
@@ -277,10 +193,7 @@ class DriverQuizRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(
-        message: data.message ?? 'Answer submitted successfully',
-        data: responseData,
-      );
+      return SuccessResponse(message: data.message, data: responseData);
     });
   }
 
@@ -331,10 +244,7 @@ class DriverQuizRepository extends BaseRepository {
         );
       }
 
-      return SuccessResponse(
-        message: data.message ?? 'Quiz completed successfully',
-        data: result,
-      );
+      return SuccessResponse(message: data.message, data: result);
     });
   }
 
@@ -380,7 +290,7 @@ class DriverQuizRepository extends BaseRepository {
 
           return SuccessResponse(
             message:
-                response.data!.message ??
+                response.data?.message ??
                 'Latest quiz attempt retrieved successfully',
             data: result,
           );
