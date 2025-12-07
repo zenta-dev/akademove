@@ -65,20 +65,56 @@ function RouteComponent() {
 					return;
 				}
 
-				// Check if user is a driver and needs to take quiz
+				// Check if user is a driver and needs to take quiz or verify account
 				if (user.role === "DRIVER") {
-					// Fetch driver data to check quiz status
+					// Fetch driver data to check quiz status and verification
 					try {
 						const driverResult = await orpcClient.driver.getMine();
 						if (driverResult.status === 200) {
 							const driver = driverResult.body.data;
-							// If driver hasn't passed quiz, redirect to quiz
+
+							// If quiz not passed, redirect to quiz
 							if (driver.quizStatus !== "PASSED") {
 								await Promise.all([
 									router.invalidate(),
 									queryClient.invalidateQueries(),
-									router.navigate({ to: localizeHref("/dash/driver/quiz") }),
+									router.navigate({ to: localizeHref("/sign-up/driver/quiz") }),
 								]);
+								return;
+							}
+
+							// If driver not approved, show verification toast and go to dashboard
+							if (driver.status !== "APPROVED") {
+								await Promise.all([
+									router.invalidate(),
+									queryClient.invalidateQueries(),
+								]);
+
+								if (driver.status === "PENDING") {
+									toast.info(
+										m.account_pending_approval?.() ||
+											"Account Pending Approval",
+										{
+											description:
+												m.admin_will_review_and_activate_your_account?.() ||
+												"An admin will review your documents and activate your account soon.",
+										},
+									);
+								} else if (driver.status === "REJECTED") {
+									toast.error(m.account_rejected?.() || "Account Rejected", {
+										description:
+											m.your_account_has_been_rejected_contact_support?.() ||
+											"Your account has been rejected. Please contact support for more information.",
+									});
+								} else if (driver.status === "INACTIVE") {
+									toast.warning(m.account_inactive?.() || "Account Inactive", {
+										description:
+											m.your_account_has_been_deactivated?.() ||
+											"Your account has been deactivated. Please contact support.",
+									});
+								}
+
+								await router.navigate({ to: localizeHref("/dash/driver") });
 								return;
 							}
 						}
@@ -88,7 +124,7 @@ function RouteComponent() {
 					}
 				}
 
-				// Normal flow for non-drivers or drivers who passed quiz
+				// Normal flow for non-drivers or drivers who passed quiz and are approved
 				await Promise.all([
 					router.invalidate(),
 					queryClient.invalidateQueries(),
