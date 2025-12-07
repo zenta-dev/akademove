@@ -12,6 +12,18 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get new_order_request => 'New order request';
+
+  @override
+  String get you_have_a_new_order_request_from_customer_please_check_your_orders_page => 'You have a new order request from customer, please check your Orders page.';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get view_order => 'View Order';
+
+  @override
   String get no_show => 'No Show';
 
   @override

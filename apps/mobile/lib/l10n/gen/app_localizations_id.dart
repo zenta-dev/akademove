@@ -12,6 +12,18 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get new_order_request => 'Permintaan pesanan baru';
+
+  @override
+  String get you_have_a_new_order_request_from_customer_please_check_your_orders_page => 'Anda memiliki permintaan pesanan baru dari pelanggan, silakan periksa halaman Pesanan Anda.';
+
+  @override
+  String get dismiss => 'Tutup';
+
+  @override
+  String get view_order => 'Lihat Pesanan';
+
+  @override
   String get no_show => 'Tidak Hadir';
 
   @override

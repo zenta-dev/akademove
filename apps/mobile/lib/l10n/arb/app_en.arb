@@ -1,5 +1,9 @@
 {
 	"@@locale": "en",
+	"new_order_request": "New order request",
+	"you_have_a_new_order_request_from_customer_please_check_your_orders_page": "You have a new order request from customer, please check your Orders page.",
+	"dismiss": "Dismiss",
+	"view_order": "View Order",
 	"no_show": "No Show",
 	"popular_merchants": "Popular merchants",
 	"choose_the_service_that_you_want": "Choose the service that you want",

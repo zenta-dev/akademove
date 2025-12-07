@@ -97,6 +97,30 @@ abstract class AppLocalizations {
     Locale('id')
   ];
 
+  /// No description provided for @new_order_request.
+  ///
+  /// In en, this message translates to:
+  /// **'New order request'**
+  String get new_order_request;
+
+  /// No description provided for @you_have_a_new_order_request_from_customer_please_check_your_orders_page.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a new order request from customer, please check your Orders page.'**
+  String get you_have_a_new_order_request_from_customer_please_check_your_orders_page;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @view_order.
+  ///
+  /// In en, this message translates to:
+  /// **'View Order'**
+  String get view_order;
+
   /// No description provided for @no_show.
   ///
   /// In en, this message translates to:

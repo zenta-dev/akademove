@@ -28,6 +28,7 @@ Method | HTTP request | Description
 [**driverSubmitRejection**](DriverApi.md#driversubmitrejection) | **POST** /drivers/{id}/approval-review/submit-rejection | 
 [**driverUpdate**](DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [**driverUpdateDocumentStatus**](DriverApi.md#driverupdatedocumentstatus) | **POST** /drivers/{id}/approval-review/update-document | 
+[**driverUpdateLocation**](DriverApi.md#driverupdatelocation) | **PUT** /drivers/{id}/location | 
 [**driverVerifyQuiz**](DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
 
 
@@ -884,6 +885,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**DriverGetReview200Response**](DriverGetReview200Response.md)
+
+### Authorization
+
+[bearer_auth](../README.md#bearer_auth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **driverUpdateLocation**
+> DriverGetMine200ResponseBody driverUpdateLocation(id, coordinate)
+
+
+
+### Example
+```dart
+import 'package:api_client/api.dart';
+
+final api = ApiClient().getDriverApi();
+final String id = id_example; // String | 
+final Coordinate coordinate = ; // Coordinate | 
+
+try {
+    final response = api.driverUpdateLocation(id, coordinate);
+    print(response);
+} catch on DioException (e) {
+    print('Exception when calling DriverApi->driverUpdateLocation: $e\n');
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **id** | **String**|  | 
+ **coordinate** | [**Coordinate**](Coordinate.md)|  | 
+
+### Return type
+
+[**DriverGetMine200ResponseBody**](DriverGetMine200ResponseBody.md)
 
 ### Authorization
 

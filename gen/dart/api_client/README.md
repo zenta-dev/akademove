@@ -153,6 +153,7 @@ Class | Method | HTTP request | Description
 [*DriverApi*](doc/DriverApi.md) | [**driverSubmitRejection**](doc/DriverApi.md#driversubmitrejection) | **POST** /drivers/{id}/approval-review/submit-rejection | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdate**](doc/DriverApi.md#driverupdate) | **PUT** /drivers/{id} | 
 [*DriverApi*](doc/DriverApi.md) | [**driverUpdateDocumentStatus**](doc/DriverApi.md#driverupdatedocumentstatus) | **POST** /drivers/{id}/approval-review/update-document | 
+[*DriverApi*](doc/DriverApi.md) | [**driverUpdateLocation**](doc/DriverApi.md#driverupdatelocation) | **PUT** /drivers/{id}/location | 
 [*DriverApi*](doc/DriverApi.md) | [**driverVerifyQuiz**](doc/DriverApi.md#driververifyquiz) | **POST** /drivers/{id}/approval-review/verify-quiz | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerCompleteQuiz**](doc/DriverQuizAnswerApi.md#driverquizanswercompletequiz) | **POST** /driver-quiz-answers/complete | 
 [*DriverQuizAnswerApi*](doc/DriverQuizAnswerApi.md) | [**driverQuizAnswerGetAttempt**](doc/DriverQuizAnswerApi.md#driverquizanswergetattempt) | **GET** /driver-quiz-answers/{attemptId} | 
