@@ -2,33 +2,7 @@ import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/driver/data/models/quiz_persistence_model.dart';
 import 'package:api_client/api_client.dart';
 
-class StartDriverQuizRequest {
-  const StartDriverQuizRequest({this.questionIds, this.category});
 
-  final List<String>? questionIds;
-  final String? category;
-}
-
-class SubmitDriverQuizAnswerRequest {
-  const SubmitDriverQuizAnswerRequest({
-    required this.attemptId,
-    required this.questionId,
-    required this.selectedOptionId,
-  });
-
-  final String attemptId;
-  final String questionId;
-  final String selectedOptionId;
-}
-
-class CompleteDriverQuizRequest {
-  const CompleteDriverQuizRequest({required this.attemptId});
-
-  final String attemptId;
-}
-  
-/// Driver Quiz Repository
-/// Handles quiz operations with local persistence and real API integration
 class DriverQuizRepository extends BaseRepository {
   DriverQuizRepository({
     required ApiClient apiClient,
@@ -71,29 +45,7 @@ class DriverQuizRepository extends BaseRepository {
       logger.e('Failed to clear persisted quiz attempt: $e');
     }
   }
-
-  /// Convert API question to local model
-  QuizQuestion _mapApiQuestion(
-    DriverQuizQuestionGetQuizQuestions200ResponseDataInner apiQuestion) {
-
-    return QuizQuestion(
-      id: apiQuestion.id,
-      question: apiQuestion.question,
-      type: apiQuestion.type,
-      category: apiQuestion.category,
-      points: apiQuestion.points.toInt(),
-      displayOrder: apiQuestion.displayOrder.toInt(),
-      options: List<dynamic>.from(apiQuestion['options'] as List)
-          .map(
-            (opt) => QuizOption(
-              id: opt['id'] as String,
-              text: opt['text'] as String,
-            ),
-          )
-          .toList(),
-    );
-  }
-
+  
   /// Start a new quiz attempt
   Future<BaseResponse<QuizAttempt>> startQuiz(
     StartDriverQuizRequest request,

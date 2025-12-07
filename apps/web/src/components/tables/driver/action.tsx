@@ -1,6 +1,7 @@
 import { m } from "@repo/i18n";
 import type { Driver } from "@repo/schema/driver";
-import { MoreHorizontal } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { CheckCircle, MoreHorizontal } from "lucide-react";
 import { ActivateDriverDialog } from "@/components/dialogs/activate-driver";
 import { ApproveDriverDialog } from "@/components/dialogs/approve-driver";
 import { RejectDriverDialog } from "@/components/dialogs/reject-driver";
@@ -14,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const DriverActionTable = ({ val }: { val: Driver }) => {
+	const navigate = useNavigate();
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -26,6 +29,20 @@ export const DriverActionTable = ({ val }: { val: Driver }) => {
 				<DropdownMenuLabel>{m.actions()}</DropdownMenuLabel>
 				{val.status === "PENDING" && (
 					<>
+						<Button
+							className="justify-start p-2 text-start font-normal"
+							variant="ghost"
+							size="sm"
+							onClick={() =>
+								navigate({
+									to: "/dash/admin/driver-approval/$driverId",
+									params: { driverId: val.id },
+								})
+							}
+						>
+							<CheckCircle className="mr-2 h-4 w-4" />
+							Review Application
+						</Button>
 						<ApproveDriverDialog driverId={val.id} />
 						<RejectDriverDialog driverId={val.id} />
 					</>

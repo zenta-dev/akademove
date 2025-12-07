@@ -172,6 +172,35 @@ export const DRIVER_COLUMNS = [
 		},
 	},
 	{
+		id: "quizStatus",
+		accessorKey: "quizStatus",
+		header: "Quiz Status",
+		cell: ({ row }) => {
+			const quizStatus = row.getValue("quizStatus") as string;
+			const quizScore = row.original.quizScore;
+
+			const statusColors: Record<string, string> = {
+				NOT_STARTED: "bg-gray-100 text-gray-700",
+				IN_PROGRESS: "bg-blue-100 text-blue-700",
+				PASSED: "bg-green-100 text-green-700",
+				FAILED: "bg-red-100 text-red-700",
+			};
+
+			const color = statusColors[quizStatus] || "bg-gray-100 text-gray-700";
+
+			return (
+				<div className="flex flex-col items-start gap-1">
+					<Badge variant="secondary" className={color}>
+						{quizStatus}
+					</Badge>
+					{quizScore && (
+						<span className="text-muted-foreground text-xs">{quizScore}%</span>
+					)}
+				</div>
+			);
+		},
+	},
+	{
 		id: "isOnline",
 		accessorKey: "isOnline",
 		header: m.is_online(),
