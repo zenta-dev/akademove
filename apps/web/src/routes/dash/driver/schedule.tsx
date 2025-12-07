@@ -55,7 +55,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery, queryClient } from "@/lib/orpc";
+import { orpcClient, orpcQuery, queryClient } from "@/lib/orpc";
 
 export const Route = createFileRoute("/dash/driver/schedule")({
 	validateSearch: (values) => {
@@ -67,6 +67,18 @@ export const Route = createFileRoute("/dash/driver/schedule")({
 	beforeLoad: async () => {
 		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
+
+		// Check if driver has passed quiz
+		try {
+			const driverResult = await orpcClient.driver.getMine();
+			if (driverResult.body.data.quizStatus !== "PASSED") {
+				redirect({ to: "/sign-up/driver/quiz", throw: true });
+			}
+		} catch (error) {
+			console.error("Failed to check quiz status:", error);
+			redirect({ to: "/", throw: true });
+		}
+
 		return { allowed: ok };
 	},
 	loader: ({ context }) => {

@@ -21,7 +21,7 @@ import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasAccess } from "@/lib/actions";
 import { SUB_ROUTE_TITLES } from "@/lib/constants";
-import { orpcQuery } from "@/lib/orpc";
+import { orpcClient, orpcQuery } from "@/lib/orpc";
 import { cn } from "@/utils/cn";
 
 export const Route = createFileRoute("/dash/driver/ratings")({
@@ -34,6 +34,18 @@ export const Route = createFileRoute("/dash/driver/ratings")({
 	beforeLoad: async () => {
 		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
+
+		// Check if driver has passed quiz
+		try {
+			const driverResult = await orpcClient.driver.getMine();
+			if (driverResult.body.data.quizStatus !== "PASSED") {
+				redirect({ to: "/sign-up/driver/quiz", throw: true });
+			}
+		} catch (error) {
+			console.error("Failed to check quiz status:", error);
+			redirect({ to: "/", throw: true });
+		}
+
 		return { allowed: ok };
 	},
 	loader: ({ context }) => {

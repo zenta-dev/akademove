@@ -60,6 +60,18 @@ export const Route = createFileRoute("/dash/driver/earnings")({
 	beforeLoad: async () => {
 		const ok = await hasAccess(["DRIVER"]);
 		if (!ok) redirect({ to: "/", throw: true });
+
+		// Check if driver has passed quiz
+		try {
+			const driverResult = await orpcClient.driver.getMine();
+			if (driverResult.body.data.quizStatus !== "PASSED") {
+				redirect({ to: "/sign-up/driver/quiz", throw: true });
+			}
+		} catch (error) {
+			console.error("Failed to check quiz status:", error);
+			redirect({ to: "/", throw: true });
+		}
+
 		return { allowed: ok };
 	},
 	loader: ({ context }) => {
