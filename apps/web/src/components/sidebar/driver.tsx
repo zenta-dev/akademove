@@ -28,7 +28,7 @@ const navMain = Object.freeze([
 	},
 	{
 		title: "Quiz",
-		href: localizeHref("/dash/driver/quiz"),
+		href: localizeHref("/sign-up/driver/quiz"),
 		icon: ClipboardList,
 	},
 	{
