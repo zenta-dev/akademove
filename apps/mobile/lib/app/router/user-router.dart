@@ -172,6 +172,29 @@ final userRouter = StatefulShellRoute.indexedStack(
           ),
         ),
         GoRoute(
+          name: Routes.userMerchantDetail.name,
+          path: Routes.userMerchantDetail.path,
+          builder: (context, state) {
+            final merchantId = state.pathParameters['merchantId'] ?? '';
+            final extra = state.extra as Map<String, dynamic>?;
+            final merchant = extra?['merchant'] as Merchant?;
+            final isSummary = extra?['isSummary'] as bool? ?? false;
+            if (merchant == null) {
+              // Fallback if merchant data not passed
+              return const UserMartScreen();
+            }
+
+            return BlocProvider(
+              create: (_) => sl<UserMerchantDetailCubit>(),
+              child: UserMerchantDetailScreen(
+                merchantId: merchantId,
+                merchant: merchant,
+                isSummary: isSummary,
+              ),
+            );
+          },
+        ),
+        GoRoute(
           name: Routes.userMenuDetail.name,
           path: Routes.userMenuDetail.path,
           builder: (context, state) {

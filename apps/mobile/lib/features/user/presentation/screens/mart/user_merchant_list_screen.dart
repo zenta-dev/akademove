@@ -1,3 +1,4 @@
+import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/user/presentation/cubits/_export.dart';
 import 'package:akademove/features/user/presentation/state/_export.dart';
@@ -6,14 +7,8 @@ import 'package:akademove/features/user/presentation/widgets/merchant_list_searc
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-/// User merchant list screen
-/// Displays merchants with:
-/// - Search by name
-/// - Filter for nearby/bestsellers
-/// - Infinite scroll pagination
-/// - Pull-to-refresh
-/// - Real-time availability status
 class UserMerchantListScreen extends StatefulWidget {
   const UserMerchantListScreen({super.key});
 
@@ -32,12 +27,8 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
     _searchDebounce = Debouncer(milliseconds: 500);
     _scrollController.addListener(_onScroll);
 
-    // Load merchants on screen open
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<UserMerchantListCubit>().loadMerchants(
-        nearby: true, // Default: show nearby merchants
-        bestsellers: false,
-      );
+      context.read<UserMerchantListCubit>().loadMerchants();
     });
   }
 
@@ -73,7 +64,7 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Merchants'),
+        title: const Text('Popular Merchants'),
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -142,13 +133,10 @@ class _UserMerchantListScreenState extends State<UserMerchantListScreen> {
         return MerchantCardWidget(
           merchant: merchant,
           onTap: () {
-            // Navigate to merchant detail screen
-            // Example: context.push('/merchant/${merchant.id}');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Viewing ${merchant.name}'),
-                duration: const Duration(milliseconds: 500),
-              ),
+            context.pushNamed(
+              Routes.userMerchantDetail.name,
+              pathParameters: {'merchantId': merchant.id},
+              extra: {'merchant': merchant},
             );
           },
         );
@@ -201,7 +189,7 @@ class _EmptyView extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Try adjusting your filters or search',
+            'Try adjusting your search',
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: Colors.grey[500]),

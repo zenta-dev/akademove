@@ -1403,20 +1403,13 @@ class UserMerchantListStateMapper
     opt: true,
     def: '',
   );
-  static bool _$showNearby(UserMerchantListState v) => v.showNearby;
-  static const Field<UserMerchantListState, bool> _f$showNearby = Field(
-    'showNearby',
-    _$showNearby,
-    opt: true,
-    def: true,
-  );
-  static bool _$showBestsellers(UserMerchantListState v) => v.showBestsellers;
-  static const Field<UserMerchantListState, bool> _f$showBestsellers = Field(
-    'showBestsellers',
-    _$showBestsellers,
-    opt: true,
-    def: false,
-  );
+  // static bool _$showBestsellers(UserMerchantListState v) => v.showBestsellers;
+  // static const Field<UserMerchantListState, bool> _f$showBestsellers = Field(
+  //   'showBestsellers',
+  //   _$showBestsellers,
+  //   opt: true,
+  //   def: false,
+  // );
   static CubitState _$state(UserMerchantListState v) => v.state;
   static const Field<UserMerchantListState, CubitState> _f$state = Field(
     'state',
@@ -1438,13 +1431,12 @@ class UserMerchantListStateMapper
   );
 
   @override
-  final MappableFields<UserMerchantListState> fields = const {
+  final MappableFields<UserMerchantListState> fields = {
     #merchants: _f$merchants,
     #hasMore: _f$hasMore,
     #cursor: _f$cursor,
     #searchQuery: _f$searchQuery,
-    #showNearby: _f$showNearby,
-    #showBestsellers: _f$showBestsellers,
+    // #showBestsellers: _f$showBestsellers,
     #state: _f$state,
     #message: _f$message,
     #error: _f$error,
@@ -1456,8 +1448,7 @@ class UserMerchantListStateMapper
       hasMore: data.dec(_f$hasMore),
       cursor: data.dec(_f$cursor),
       searchQuery: data.dec(_f$searchQuery),
-      showNearby: data.dec(_f$showNearby),
-      showBestsellers: data.dec(_f$showBestsellers),
+      // showBestsellers: data.dec(_f$showBestsellers),
       state: data.dec(_f$state),
       message: data.dec(_f$message),
       error: data.dec(_f$error),
@@ -1579,8 +1570,7 @@ class _UserMerchantListStateCopyWithImpl<$R, $Out>
     hasMore: data.get(#hasMore, or: $value.hasMore),
     cursor: data.get(#cursor, or: $value.cursor),
     searchQuery: data.get(#searchQuery, or: $value.searchQuery),
-    showNearby: data.get(#showNearby, or: $value.showNearby),
-    showBestsellers: data.get(#showBestsellers, or: $value.showBestsellers),
+    // showBestsellers: data.get(#showBestsellers, or: $value.showBestsellers),
     state: data.get(#state, or: $value.state),
     message: data.get(#message, or: $value.message),
     error: data.get(#error, or: $value.error),

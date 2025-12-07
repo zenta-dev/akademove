@@ -15,3 +15,4 @@ part 'user_location_state.dart';
 part 'user_delivery_state.dart';
 part 'user_mart_state.dart';
 part 'user_merchant_list_state.dart';
+part 'user_merchant_detail_state.dart';  

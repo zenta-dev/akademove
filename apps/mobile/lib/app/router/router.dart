@@ -1,6 +1,7 @@
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/features/shared/_export.dart';
+import 'package:akademove/features/user/presentation/cubits/user_merchant_detail_cubit.dart';
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
@@ -109,6 +110,7 @@ enum Routes {
 
 final router = GoRouter(
   initialLocation: Routes.authSplash.path,
+  debugLogDiagnostics: true,
   routes: [
     authRouter,
     userRouter,

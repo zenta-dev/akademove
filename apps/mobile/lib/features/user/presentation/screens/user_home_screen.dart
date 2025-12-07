@@ -2,6 +2,7 @@ import 'package:akademove/app/router/router.dart';
 import 'package:akademove/core/_export.dart';
 import 'package:akademove/features/features.dart';
 import 'package:akademove/gen/assets.gen.dart';
+
 import 'package:akademove/l10n/l10n.dart';
 import 'package:akademove/locator.dart';
 import 'package:api_client/api_client.dart';
@@ -166,16 +167,19 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                           EdgeInsetsGeometry.all(4.dg),
                     ),
                 onPressed: () {
+                  print('🔵 View All clicked!');
+                  print('🔵 Route name: ${Routes.userListMerchant.name}');
+                  print('🔵 Route path: ${Routes.userListMerchant.path}');
+
                   context.pushNamed(Routes.userListMerchant.name);
+
+                  print('🔵 Navigation called');
                 },
                 child: Row(
                   children: [
                     Text(
                       context.l10n.view_all,
-                      style: context.typography.small.copyWith(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: context.typography.small.copyWith(fontSize: 12.sp),
                     ),
                     Icon(LucideIcons.chevronRight, size: 10.sp),
                   ],
@@ -208,6 +212,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                     pathParameters: {
                       'merchantId': state.popularMerchants[index].id,
                     },
+                    extra: {'merchant': state.popularMerchants[index]},
                   );
                 },
                 child: LimitedBox(

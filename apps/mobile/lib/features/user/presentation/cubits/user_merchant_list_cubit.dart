@@ -9,56 +9,46 @@ class UserMerchantListCubit extends BaseCubit<UserMerchantListState> {
 
   final MerchantRepository _merchantRepository;
 
-  /// Load initial merchants with filters
+  /// Load initial popular merchants (no nearby logic)
   /// This is called when opening the merchant list screen
-  /// By default shows nearby merchants (sorted by distance)
-  Future<void> loadMerchants({
-    bool nearby = true,
-    bool bestsellers = false,
-  }) async => await taskManager.execute(
-    'UMLC-lM-${nearby ? "nearby" : ""}-${bestsellers ? "bestsellers" : ""}',
-    () async {
-      try {
-        emit(state.toLoading());
+  /// Always shows popular merchants sorted by popularity/rating
+  Future<void> loadMerchants() async =>
+      await taskManager.execute('UMLC-lM-popular', () async {
+        try {
+          emit(state.toLoading());
 
-        // Determine sort order based on filters
-        String? sortBy;
-        if (bestsellers) {
-          sortBy = 'rating'; // Best sellers: sort by rating
-        } else if (nearby) {
-          sortBy = 'distance'; // Nearby: sort by distance
+          // If searching, use listWithFilters; otherwise use getPopulars
+          final res = state.searchQuery.isEmpty
+              ? await _merchantRepository.getPopulars()
+              : await _merchantRepository.listWithFilters(
+                  query: state.searchQuery,
+                  isActive: true, // Only show open merchants
+                  sortBy: 'popularity', // Always sort by popularity
+                  limit: 20,
+                  cursor: null,
+                );
+
+          emit(
+            state.toSuccess(
+              merchants: res.data,
+              hasMore:
+                  res.data.length >=
+                  20, // If received 20 items, likely more exist
+              cursor: res.data.isNotEmpty
+                  ? res.data.last.updatedAt.toIso8601String()
+                  : null,
+              message: res.message,
+            ),
+          );
+        } on BaseError catch (e, st) {
+          logger.e(
+            '[UserMerchantListCubit] - loadMerchants Error: ${e.message}',
+            error: e,
+            stackTrace: st,
+          );
+          emit(state.toFailure(e));
         }
-
-        final res = await _merchantRepository.listWithFilters(
-          query: state.searchQuery.isEmpty ? null : state.searchQuery,
-          isActive: true, // Only show open merchants
-          sortBy: sortBy,
-          limit: 20,
-          cursor: null,
-        );
-
-        emit(
-          state.toSuccess(
-            merchants: res.data,
-            hasMore:
-                res.data.length >=
-                20, // If received 20 items, likely more exist
-            cursor: res.data.isNotEmpty
-                ? res.data.last.updatedAt.toIso8601String()
-                : null,
-            message: res.message,
-          ),
-        );
-      } on BaseError catch (e, st) {
-        logger.e(
-          '[UserMerchantListCubit] - loadMerchants Error: ${e.message}',
-          error: e,
-          stackTrace: st,
-        );
-        emit(state.toFailure(e));
-      }
-    },
-  );
+      });
 
   /// Load next page of merchants (pagination)
   /// Called when user scrolls to 80% of the list
@@ -71,17 +61,10 @@ class UserMerchantListCubit extends BaseCubit<UserMerchantListState> {
         try {
           emit(state.toLoading());
 
-          String? sortBy;
-          if (state.showBestsellers) {
-            sortBy = 'rating';
-          } else if (state.showNearby) {
-            sortBy = 'distance';
-          }
-
           final res = await _merchantRepository.listWithFilters(
             query: state.searchQuery.isEmpty ? null : state.searchQuery,
             isActive: true,
-            sortBy: sortBy,
+            sortBy: 'popularity', // Always sort by popularity
             limit: 20,
             cursor: state.cursor,
           );
@@ -113,37 +96,18 @@ class UserMerchantListCubit extends BaseCubit<UserMerchantListState> {
     emit(state.updateSearchQuery(query));
 
     // Then load merchants with new search term
-    await loadMerchants(
-      nearby: state.showNearby,
-      bestsellers: state.showBestsellers,
-    );
+    await loadMerchants();
   }
 
   /// Clear search query and reload
   Future<void> clearSearch() async {
     emit(state.updateSearchQuery(''));
-    await loadMerchants(
-      nearby: state.showNearby,
-      bestsellers: state.showBestsellers,
-    );
+    await loadMerchants();
   }
 
   /// Refresh the entire list (pull-to-refresh)
   Future<void> refresh() async {
-    await loadMerchants(
-      nearby: state.showNearby,
-      bestsellers: state.showBestsellers,
-    );
-  }
-
-  /// Toggle nearby merchants filter
-  void toggleNearby(bool value) {
-    emit(state.toggleNearby(value));
-  }
-
-  /// Toggle bestsellers filter
-  void toggleBestsellers(bool value) {
-    emit(state.toggleBestsellers(value));
+    await loadMerchants();
   }
 
   /// Reset to initial state

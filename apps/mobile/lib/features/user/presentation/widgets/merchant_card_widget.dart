@@ -44,7 +44,7 @@ class MerchantCardWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                _AvailabilityBadge(isActive: merchant.isActive ?? true),
+                _AvailabilityBadge(isActive: merchant.isActive),
               ],
             ),
             SizedBox(height: 8.h),
@@ -53,26 +53,16 @@ class MerchantCardWidget extends StatelessWidget {
             Row(
               children: [
                 // Rating
-                _RatingWidget(rating: (merchant.rating ?? 0).toDouble()),
+                _RatingWidget(rating: (merchant.rating).toDouble()),
                 SizedBox(width: 12.w),
 
-                // Distance (if available)
-                Expanded(
-                  child: Text(
-                    '📍 Distance info',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+                
               ],
             ),
             SizedBox(height: 8.h),
 
             // Categories chips
-            if ((merchant.categories ?? []).isNotEmpty)
+            if ((merchant.categories).isNotEmpty)
               Wrap(
                 spacing: 6.w,
                 runSpacing: 4.h,

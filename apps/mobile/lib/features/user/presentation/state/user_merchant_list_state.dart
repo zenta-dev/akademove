@@ -11,8 +11,6 @@ class UserMerchantListState extends BaseState2
     this.hasMore = true,
     this.cursor,
     this.searchQuery = '',
-    this.showNearby = true,
-    this.showBestsellers = false,
     super.state,
     super.message,
     super.error,
@@ -29,12 +27,6 @@ class UserMerchantListState extends BaseState2
 
   /// Current search query
   final String searchQuery;
-
-  /// Filter: show nearby merchants (location-based)
-  final bool showNearby;
-
-  /// Filter: show bestsellers (high rating/popularity)
-  final bool showBestsellers;
 
   bool get isEmpty => merchants.isEmpty;
 
@@ -83,16 +75,6 @@ class UserMerchantListState extends BaseState2
   /// Update search query
   UserMerchantListState updateSearchQuery(String query) {
     return copyWith(searchQuery: query);
-  }
-
-  /// Toggle nearby filter
-  UserMerchantListState toggleNearby(bool value) {
-    return copyWith(showNearby: value);
-  }
-
-  /// Toggle bestsellers filter
-  UserMerchantListState toggleBestsellers(bool value) {
-    return copyWith(showBestsellers: value);
   }
 
   /// Reset to initial state

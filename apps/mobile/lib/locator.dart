@@ -5,6 +5,8 @@ import 'package:api_client/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import 'features/user/presentation/cubits/user_merchant_detail_cubit.dart';
+
 final GetIt sl = GetIt.instance;
 
 void setupLocator() {
@@ -245,6 +247,10 @@ void _setupCubit() {
       () => NotificationCubit(
         notificationRepository: sl<NotificationRepository>(),
       ),
+    )
+    ..registerFactory(
+      () =>
+          UserMerchantDetailCubit(merchantRepository: sl<MerchantRepository>()),
     )
     ..registerFactory(() => ReportCubit(repository: sl<ReportRepository>()))
     ..registerFactory(

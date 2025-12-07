@@ -38,6 +38,21 @@ class MerchantRepository extends BaseRepository {
     });
   }
 
+  Future<BaseResponse<Merchant>> getById(String merchantId) {
+    return guard(() async {
+      final res = await _apiClient.getMerchantApi().merchantGet(id: merchantId);
+
+      final data =
+          res.data ??
+          (throw const RepositoryError(
+            'Merchant not found',
+            code: ErrorCode.notFound,
+          ));
+
+      return SuccessResponse(message: data.message, data: data.data);
+    });
+  }
+
   /// Get list of merchants with optional category filter
   /// Used for UserMart category screens (ATK, Printing, Food, etc.)
   Future<BaseResponse<List<Merchant>>> list({
@@ -256,7 +271,6 @@ class MerchantRepository extends BaseRepository {
       // then call the availability endpoint
       final res = await getMine();
 
-      final merchantId = res.data.id;
       // In a real implementation, you would call the API endpoint here
       // For now, return the merchant with updated status
       return SuccessResponse(
